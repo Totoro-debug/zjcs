@@ -264,6 +264,12 @@ namespace Zjcs.Presentation.Inventory
                 Image image = imageNode.GetComponent<Image>();
                 if (image != null) image.sprite = itemSprite;
             }
+            RectTransform qualityNode = iconNodes.Values.FirstOrDefault(node => node.name == "QualityImg");
+            if (qualityNode != null)
+            {
+                Image qualityImage = qualityNode.GetComponent<Image>();
+                if (qualityImage != null) qualityImage.sprite = assets.FindQualityBackground(item.Quality);
+            }
             RectTransform fakeIcon = iconNodes.Values.FirstOrDefault(node => node.name == "FakeIcon");
             if (fakeIcon != null)
             {

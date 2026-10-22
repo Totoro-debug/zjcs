@@ -24,6 +24,17 @@ namespace Zjcs.Presentation.Inventory
     public sealed class OfficialInventoryAssetCatalog : ScriptableObject
     {
         public const string DefaultResourcePath = "Inventory/OfficialInventoryAssetCatalog";
+        private static readonly string[] QualityBackgroundFiles =
+        {
+            "ImgQuality_White-031a03cab0.png",
+            "ImgQuality_White-031a03cab0.png",
+            "ImgQuality_Blue-42b8cb9630.png",
+            "ImgQuality_Purple-0b40a53021.png",
+            "ImgQuality_Orange-78887320b0.png",
+            "ImgQuality_Gold-5f018c42e0.png",
+            "ImgQuality_Red-caa09e6943.png",
+            "ImgQuality_Multicolour-93374ebc65.png"
+        };
 
         [SerializeField] private TextAsset uiData;
         [SerializeField] private TextAsset sourceManifest;
@@ -60,6 +71,12 @@ namespace Zjcs.Presentation.Inventory
             if (!icons.TryGetValue(itemId.ToString(System.Globalization.CultureInfo.InvariantCulture), out object raw)) return null;
             Dictionary<string, object> icon = Object(raw);
             return FindSprite(Text(icon, "file"));
+        }
+
+        public Sprite FindQualityBackground(int quality)
+        {
+            return quality >= 0 && quality < QualityBackgroundFiles.Length
+                ? FindSprite(QualityBackgroundFiles[quality]) : null;
         }
 
         public string FindText(string key)
@@ -159,6 +176,9 @@ namespace Zjcs.Presentation.Inventory
             foreach (InventorySpriteBinding binding in sprites)
                 if (binding == null || string.IsNullOrEmpty(binding.sourcePath) || binding.sprite == null)
                     throw new InvalidOperationException("An official inventory sprite binding is missing.");
+            for (int quality = 0; quality < 8; quality++)
+                if (FindQualityBackground(quality) == null)
+                    throw new InvalidOperationException("An official inventory quality background is not bound: " + quality);
 
             Dictionary<string, object> templates = Object(root["templates"]);
             foreach (object rawTemplate in templates.Values)

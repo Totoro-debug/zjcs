@@ -21,6 +21,8 @@ namespace Zjcs.Editor.Inventory
                 throw new BuildFailedException("Run scripts/prepare_unity_inventory_assets.py and import the official inventory payload first.");
 
             string spritesRoot = Payload + "Art/sprites";
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            ConfigureSpriteImporters(spritesRoot);
             string[] guids = AssetDatabase.FindAssets("t:Sprite", new[] { spritesRoot });
             if (guids.Length < 1500)
                 throw new BuildFailedException("The restored official inventory sprite set is incomplete: " + guids.Length);
@@ -55,6 +57,22 @@ namespace Zjcs.Editor.Inventory
                 || catalog.LoadRowTemplate("bag", "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ") == null)
                 throw new BuildFailedException("Official inventory panel or scroll row metadata is missing.");
             Debug.Log("Official inventory UI, row templates and sprite bindings imported and validated.");
+        }
+
+        private static void ConfigureSpriteImporters(string spritesRoot)
+        {
+            string[] textureGuids = AssetDatabase.FindAssets("t:Texture2D", new[] { spritesRoot });
+            foreach (string guid in textureGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (importer == null || (importer.textureType == TextureImporterType.Sprite
+                    && importer.spriteImportMode == SpriteImportMode.Single && !importer.mipmapEnabled)) continue;
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.mipmapEnabled = false;
+                importer.SaveAndReimport();
+            }
         }
 
         private static void EnsureFolders()

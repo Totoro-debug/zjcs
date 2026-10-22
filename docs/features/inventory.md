@@ -16,7 +16,7 @@
 
 `scripts/prepare_unity_inventory_assets.py` 按物品来源清单核对 JSON 与 1,672 条官方素材哈希，将已转换的官方行囊／详情层级数据和对应 Sprite 恢复至 `unity/Assets/Official/Inventory`；`OfficialInventoryAssetCatalog` 可读取原窗口模板、列表行、官方分类绑定、物品图标映射及图标 prefab 选择顺序。当前尚未完成素材导入及 ScriptableObject 绑定；Unity 编译仍受其他模块的 `AudioClip` 解析错误阻断，不能视为运行时已接入。
 
-`OfficialInventoryPanelView.Initialize` 已能依据官方行囊模板构造竖屏 Canvas、分类页签、排序控件、滚动列表、物品图标和基础详情窗口。图标绑定按各官方 prefab 实际子节点名称匹配图像、缺图文字与数量，而非假定所有物品共用空图标层级。数量显示已按官方 `CultureNumberArg.Compact`、简中 `NumberCultureFormatter_CN` 及 `NumberFormatHelper` 迁移 10,000 进位、3 位有效数字和“万／亿／兆／京”单位。该组件目前尚无场景／导航入口接线，也未通过 Unity 资源导入及运行验证。品质底图、碎片合成进度、完整筛选行为和各类详情动作尚未实现；基础详情目前只有关闭／取消行为，不能替代官方专用详情流程。
+`OfficialInventoryPanelView.Initialize` 已能依据官方行囊模板构造竖屏 Canvas、分类页签、排序控件、滚动列表、物品图标和基础详情窗口。图标绑定按各官方 prefab 实际子节点名称匹配图像、缺图文字与数量，而非假定所有物品共用空图标层级；品质图按官方 `ItemIcon.QualityImg` 和 `ItemIconConfig.GetQualityBgImage` 的枚举索引绑定 APK 中的白、蓝、紫、橙、金、红、彩虹背景（None 与白色共用白底）。`scripts/prepare_unity_inventory_assets.py` 与[品质来源清单](../../assets/reference/inventory-quality-backgrounds-source-manifest.json)核对七张输出 PNG 哈希及原 APK AssetBundle。数量显示已按官方 `CultureNumberArg.Compact`、简中 `NumberCultureFormatter_CN` 及 `NumberFormatHelper` 迁移 10,000 进位、3 位有效数字和“万／亿／兆／京”单位。该组件目前尚无场景／导航入口接线，也未通过 Unity 资源导入及运行验证。碎片合成进度、完整筛选行为和各类详情动作尚未实现；基础详情目前只有关闭／取消行为，不能替代官方专用详情流程。
 
 `OfflineInventoryCatalog.DetailKind` 按原 `ItemDetailDialogFactory.GetItemDetailDialogType` 的顺序判定技能、外观／家具及可使用物品的专用详情类别；可用物品的工具包、快挂机和物品使用效果仅在原 `CanUse` 分支下分类。
 
@@ -42,7 +42,7 @@
 
 ## 尚未实现
 
-- 行囊场景／导航入口及 Unity 导入后的实际显示；现有代码已生成基础分类、排序、列表和简易详情控件，但尚未验证官方 UI 树与 Sprite 的实际导入绑定。品质底图、红点排序、碎片进度、完整筛选交互及独立装备详情仍未实现。
+- 行囊场景／导航入口及 Unity 导入后的实际显示；现有代码已生成基础分类、排序、列表和简易详情控件，但尚未验证官方 UI 树与 Sprite 的实际导入绑定。红点排序、碎片进度、完整筛选交互及独立装备详情仍未实现。
 - 来源导航、宝箱及特殊物品的官方专用详情与本地结算；奖励反馈、随机、扣费、取消、保存失败回滚尚未接线。
 - 恢复其余官方 Unity 代码、配置、prefab、资源与调用关系，完成页面返回栈、实际入口和跨模块界面接线。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
