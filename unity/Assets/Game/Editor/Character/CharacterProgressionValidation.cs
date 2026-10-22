@@ -23,13 +23,14 @@ namespace Zjcs.Editor.Character
             "Assets/Official/CharacterCreation/wardrobe-ui.json",
             "Assets/Official/Character/character-panels.json",
             "Assets/Official/Character/source-manifest.json",
-            "Assets/Official/Skills/skill-runtime-rules.json"
+            "Assets/Official/Skills/skill-runtime-rules.json",
+            "Assets/Official/Skills/skills.json"
         };
         private static readonly string[] CatalogFields =
         {
             "characterOverview", "characterProperties", "progressionRules", "timedAppearanceItems",
             "wardrobeItems", "wardrobeRules", "wardrobeUi", "characterPanels", "sourceManifest",
-            "skillRules"
+            "skillRules", "skillRecommendations"
         };
         private const string SpriteRoot = "Assets/Official/Character/Art/";
 
