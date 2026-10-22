@@ -1,0 +1,191 @@
+# Unity 素材管理
+
+[返回文档索引](README.md)
+
+本页记录 Unity 官方素材的来源、转换、快照恢复与日常验收。工程入口为 [`unity/`](../unity/)；模块完成范围见[工程与启动流程](features/unity-project.md)。
+
+## 目录与版本管理
+
+- `unity/Assets/Game/` 保存纳入 Git 的 Unity 场景、C#、shader、配置及稳定 `.meta`。
+- `unity/Assets/Official/` 保存独立管理的官方素材载荷，不在 Git 中；不得向该目录写入手写代码。
+- Unity 的 `Library/`、`Temp/`、`Obj/`、`Logs/`、`UserSettings/` 与 IDE 生成文件不提交、不进入素材快照。
+- `.tools/` 保存 APK、CDN 缓存、提取工具、开发依赖和素材快照；不提交且不进入 Windows 导出。
+- `assets/reference/` 只保存来源记录和必要参照。运行时素材必须由 Unity 工程打包并随游戏交付。
+- 原始 AssetBundle 与编译 shader 不默认视为 Windows 可用资源；须恢复、转换、绑定并验证目标平台表现。
+
+## 官方来源与转换
+
+官方内容的查找顺序为固定 APK、匹配清单的原版本 CDN 补充分包、适用的新版官方同名包。保留真实版本、URL、bundle / 对象名及输入输出哈希；原版本 CDN 按 `854_156383` 的清单校验，新版同名包按独立记录核验，不可伪装成原版本补包。
+
+按需提取时复用 `scripts/official_apk.py` 的 `Apk` 读取器及 CAB 依赖解析。提取命令先读 APK，再读已校验且有来源凭据的缓存；音频使用 `WwiseBnk` 分包流程。完整操作见 [`assets/reference/SOURCES.md`](../assets/reference/SOURCES.md)。
+
+Unity 优先恢复官方 prefab、场景层级、骨骼、动画、材质和引用。只有在确有需要时才转换格式或适配 Windows。新增载荷时，同步更新模块来源清单、实际输入输出哈希、Unity `.meta` 和显式加载绑定；下载或复制原始 bundle 不代表完成迁移。
+
+导入 AssetBundle 前须核对来源清单、文件哈希、序列化 Unity 版本、BuildTarget 和 CAB 外部依赖。`AssetBundle.LoadFromFile` 失败或报序列化头不匹配时，属于资源导入错误；即使 Unity 编辑器已启动并通过项目编译，也不能据此判断编辑器缺失。不要反复安装编辑器或 Hub 来处理此类错误；先恢复依赖闭包并用兼容流程转换为 Unity 原生资产，再验证目标平台和运行表现。Editor 导入工具应保留原始异常和 bundle 路径，提供版本、目标平台及 CAB 依赖的诊断方向。
+
+## Spine 角色动画迁移决策
+
+用户已确认：当前没有 Spine 正式授权，角色 Spine 4.2 内容采用无需额外购买 Spine 授权的迁移路线。继续使用官方贴图、图集、骨骼、网格、权重、换装附件和动画数据，独立实现数据转换，以 Unity 原生资产及 2D Animation 为优先承载方式，按实际差异补齐 C# 播放和换装适配。该决策先落实到男女角色预览、创角与正式换装，并供共享角色显示调用方沿用。
+
+这是已确认的技术适配方向，尚未证明现有 Spine 4.2 数据可完整转换，也不代表 Unity 2D Animation 能直接导入 Spine 文件。Unity 包版本须与本项目 `2022.3.57f1c2` 匹配，安装、导入、脚本绑定和实际运行均待实现与验证；不得仅凭安装依赖或生成转换文件标记完成。功能状态分别维护在[角色创建与正式换装](features/character-creation.md)和[人物属性、经验、位阶与衣柜](features/character.md)。
+
+实施与验证要求：
+
+1. 先核对官方角色数据、配置及调用关系，按真实使用范围恢复骨骼变换、插槽层级、附件切换、图集裁剪／旋转、网格权重／变形、约束、动画曲线／混合及事件；保留原动作时序、染色、换装组合和界面锚点。转换代码与必要适配独立编写，不复制、翻译、改名或反编译 Spine runtime 来构造所谓免费替代。
+2. 同时考虑开发转换工具与游戏运行时的依赖。历史 `@esotericsoftware/spine-core@4.2.110` 也是 Spine runtime，不能把“只用于离线转换”或“npm 可下载”当作已有免费授权；旧脚本和缓存保留作历史追溯，新增免费迁移链须明确排除未获授权的 runtime 依赖。实际替换完成前，不声称旧依赖已移除或所有历史产物已重建。
+3. 用男女角色和实际外观组合在 Unity 中逐项核对待机、所需动作、动画切换、染色、换装和动画事件；接入共享显示后检查对应调用方。输入输出哈希、转换方式及绑定仍按模块来源清单登记，兼容缺项和运行结论写在所属功能页。
+4. 保持原角色表现和交互为目标。本次批准不包括自绘、重新设计动作、静态图／逐帧降级或改用其他动画系统；出现无法保持的表现差异时，先继续查找官方数据与适配方法，仍无法解决再说明具体缺项并请求处理意见。角色流程可继续推进，不再以缺少 Spine Unity runtime 为由重复询问购买决策。
+
+依赖与许可依据：[Unity 2022.3 的 2D Animation 说明](https://docs.unity3d.com/cn/2022.3/Manual/Quickstart2DSetup.html)、[Spine Editor / runtime 许可](https://esotericsoftware.com/spine-editor-license)。这些链接用于说明工具能力与许可边界，不作为本项目转换兼容性或功能已完成的证据。
+
+## Android 资源迁移到 Windows
+
+本流程适用于所有地图、家园、角色、装备、技能、UI、特效和音频模块。默认路径是**已校验 Android 输入 → 恢复 Unity 原生资产 → 恢复官方脚本和依赖 → Windows 导入、绑定与运行验证**。先按本节判断所处阶段，再处理所属模块；不必重装 Hub 或全量处理其他模块。
+
+Unity Editor 能尝试加载其他平台的 Bundle，但其中的平台专用格式可能无法读取或渲染；Windows Player 需要适用于 Windows 的资源。Editor 内加载成功也不能证明成品可用。依据：[Unity 的平台说明](https://docs.unity.cn/2023.2/Documentation/Manual/AssetBundles-Preparing.html)、[跨平台说明](https://activation.unity3d.com/blog/engine-platform/unity-asset-bundles-tips-pitfalls)。本项目 `2022.3.57f1` 原包在 `2022.3.57f1c2` 编辑器中的直接加载曾报序列化版本不匹配；该实测不能推导出所有同系列版本都兼容或都不兼容。
+
+### 1. 定位模块和核对环境
+
+先查所属功能／地图页、官方调用代码及配置，确定实际 prefab／场景／对象路径和动态选择器，再查 bundle 索引。仓库存在 `.codegraph/` 时先用 CodeGraph 定位代码。例如以下问题中的模块名、符号和资源名应换成本次范围：
+
+```powershell
+codegraph explore "OfficialHomeAssetTools ImportPrefab HomeRoot FurnitureBedDialog"
+rg -n 'map_11|furniture|目标资源名' .tools/source-packages/cloud-research/bundle-inventory.json
+& .\scripts\unity.ps1 info
+```
+
+编辑器路径从 [`unity-tools.json`](../unity-tools.json) 读取，当前为 `D:/Tool/Unity/Editor/Unity.exe`、`2022.3.57f1c2`。Hub 可选，离线转换不要求安装 Android Build Support；只有需要构建／运行 Android 对照程序时才单独考虑对应模块。Windows Build Support 用于 Windows 构建，不能修复 Android 包内的 shader 或缺失 CAB。项目当前的 [`Packages/manifest.json`](../unity/Packages/manifest.json) 不代表 URP、UGUI、TMP、Wwise 等依赖已经恢复，须按模块核对原程序集和组件版本；角色 Spine 内容按[原生动画迁移决策](#spine-角色动画迁移决策)转换与适配，不要求恢复官方 Spine runtime。
+
+必要时按需提取或补下载原版本文件：
+
+```powershell
+python -B scripts/fetch_official_assets.py --extract 'prefabs_map_map_11(_minimap)?\.bundle$'
+python -B scripts/fetch_official_cloud_assets.py --extract '目标 bundle 名称正则'
+```
+
+提取主包不自动收集全部依赖；未命中名称、`Not packaged or cached`、哈希失败各有不同含义。不要以“索引中存在”代替实际文件核验，也不要把新版包改名填入原版本缓存。
+
+### 2. 一键检查并准备 CAB 依赖闭包
+
+统一入口为 [`prepare_unity_bundle_inputs.py`](../scripts/prepare_unity_bundle_inputs.py)。使用能加载 `.tools/character-art-python` 内 UnityPy 1.25.4 的 Python；本机该工具目录为 Python 3.12 的扩展模块，Python ABI 不匹配时应换用兼容解释器，安装方法见 [SOURCES.md](../assets/reference/SOURCES.md)。脚本自动加载该工具目录，不需修改系统 Python 环境。
+
+仅检查时不生成转换目录：
+
+```powershell
+python -B scripts/prepare_unity_bundle_inputs.py --bundle defaultpackage_assets_prefabs_map_map_10_minimap.bundle
+```
+
+准备一个模块的多个主包时重复 `--bundle`；以下是其他地图的命令模板，名称须先与清单核对：
+
+```powershell
+$mapId = 11
+python -B scripts/prepare_unity_bundle_inputs.py `
+  --bundle "defaultpackage_assets_prefabs_map_map_$mapId.bundle" `
+  --bundle "defaultpackage_assets_prefabs_map_map_$($mapId)_minimap.bundle" `
+  --stage-dir "output/android-map-$mapId-inputs"
+if ($LASTEXITCODE -ne 0) { throw '先处理缺包或校验错误，停止后续转换' }
+```
+
+同一工具也适用于 UI，例如：
+
+```powershell
+python -B scripts/prepare_unity_bundle_inputs.py `
+  --bundle defaultpackage_assets_prefabs_ui_furniture.bundle `
+  --stage-dir output/android-home-ui-inputs
+```
+
+脚本复用 [`official_apk.py`](../scripts/official_apk.py) 的 `Apk`、`canonical_bundle_name` 和 [`official_cloud_cache.py`](../scripts/official_cloud_cache.py) 的 `CloudCache`：验证固定 APK SHA256，按原清单核对 bundle 大小和 MD5，核对 CDN 来源凭据及 SHA256，递归解析序列化文件的外部引用，并从固定 APK 加载所需 Unity 内置资源。默认显示主包的 Unity 版本、BuildTarget 和外部引用数量；`--verbose` 显示各级依赖。
+
+退出码 `0` 表示输入校验和序列化文件级依赖闭包完成，`1` 表示失败。指定 `--stage-dir` 时，只接受仓库 `output/` 内尚不存在的子目录；成功后输出解码后的 Bundle／内置文件和 `source-manifest.json`。该清单记录真实 APK/CDN 来源、请求的主包、所有输入的原始大小／MD5／SHA256、解码方式、解码后哈希、CAB、Unity 版本、平台及依赖边。原包缓存不改动，工具不联网、不改 Unity 工程、不自动混入新版文件；已有目标目录拒绝覆盖。缺 CAB 时打印 `MISSING: 引用方 -> 外部路径` 并停止，不生成可误认为完整输入的目录。
+
+这是**转换输入准备工具**，不是所有资源的一键 Windows 转换器。闭包按整个 bundle 收集，可能包括目标对象未使用的依赖；脚本不会自行删除或忽略这些引用。确需缩小范围时，从目标对象的 PPtr、原调用和动态加载关系建立对象级闭包，并将每项取舍写入所属模块的转换工具及来源清单，不能直接忽略 `MISSING`。
+
+缺包时先复核索引和原版本缓存，再查 [`missing-resource-classification.json`](../assets/reference/official-map/missing-resource-classification.json)；依赖名为 CAB 时可核对独立新版包实际包含的 CAB。已有 [`official_counterpart_assets.py`](../scripts/official_counterpart_assets.py) 的 `CounterpartAssets` 供模块转换器显式核验和解析同 CAB 的新版候选，统一准备工具保持原版本范围。CAB 同名只是候选依据，仍须验证对象、字段、依赖、平台与本模块用途，单独记录真实版本和输入哈希，保留原版本缺项。找不到或无法判断兼容时按“缺失与不确定内容”报告检索范围并询问处理，继续不依赖该缺项的工作。
+
+### 3. 按资产类型恢复 Unity 原生文件
+
+| 输入类型 | 恢复方法 | 必须保留与核对 |
+| --- | --- | --- |
+| 配置、TextAsset、Luban、EC／MessagePack | 优先复用 `official_tables.py`、`official_ec_codec.py`、`official_map_codec.py` 及模块解码器，输出 JSON／bytes；参考 `prepare_unity_map10_data.py`、`prepare_unity_combat_catalog.py` | 真实表行、字段、ID、顺序、公式、调用绑定及输入输出哈希 |
+| Prefab、场景、Mesh、材质、动画、粒子、Timeline | 将完整输入集交给 AssetRipper 恢复 Unity 可编辑资产，或使用模块专用 UnityPy 转换器逐对象恢复 | 层级、Transform、RectTransform、组件、网格、骨骼、曲线、粒子模块、材质属性、对象身份及相互引用 |
+| Texture、Sprite、图集、字体 | 解码原贴图／字体，保留或恢复 TextureImporter、Sprite 与图集参数 | 色彩空间、透明度、尺寸、filter/wrap、mipmap、PPU、pivot、border、裁剪、旋转、图集 UV 和字体材质 |
+| Shader、渲染管线及渲染功能 | 查官方 shader 源码、shader 名称和属性、URP 及 Renderer 配置；以对应源码在目标平台重编译 | Pass、关键字、混合、裁剪、队列、stencil、深度、光照和 renderer feature；Android 编译数据不直接当作 Windows shader |
+| 音频、Wwise bank | 沿原事件→bank→媒体映射恢复本地音频；Wwise 路线须核对相应 Windows 运行库和 bank 平台，必要时依据原媒体转换为 Unity 可用音频 | 原事件、播放时机、循环、响度、声道、采样率、混音及包来源；Android 原生库不能用于 Windows |
+| MonoBehaviour、第三方组件、原生插件 | 按官方源码／反编译实现恢复 C# 类和插件依赖，再按已确认范围适配离线及 Windows | 原字段与序列化绑定、程序集／类身份、调用顺序、事件、功能行为；不能用空类或 schema 占位当作完成 |
+
+已有解码 schema 入口 [`official_unity_schema.py`](../scripts/official_unity_schema.py) 的 `ScriptSchemas.read` 及 `unity_schema_types.cs` 用于读取官方序列化字段，不是运行时插件或官方脚本的替代。源码检索目录为 `.tools/source-packages/official-code/` 下的 `client-source/`、`common-source/`、`framework-source/`、`managed/decoded/` 等；URP、UGUI 等参照也在该目录，逐项确认所需依赖后才加入 Unity Packages／程序集。
+
+本机 AssetRipper 位于 `.tools/assetripper-1.3.14/AssetRipper.GUI.Free.exe`。已核对该版本 CLI 只有 GUI 服务启动参数，没有通用的输入／导出 CLI 参数；不要编造 `--input`、`--output` 或把 `--headless` 当成自动转换。可先运行：
+
+```powershell
+& .\.tools\assetripper-1.3.14\AssetRipper.GUI.Free.exe --help
+Start-Process -FilePath .\.tools\assetripper-1.3.14\AssetRipper.GUI.Free.exe -ArgumentList @('--log', 'false') -WindowStyle Hidden
+```
+
+在其浏览器界面加载本模块准备好的整个输入目录，按真实源 Unity 版本解析，导出到本次专用的 `output/<模块>-native/`。修改导出设置时记录版本、设置和影响；具体按钮／设置以本机实际界面为准。[AssetRipper 官方项目](https://github.com/AssetRipper/AssetRipper) 提供原生资产恢复能力，但恢复质量须逐类型核对。本机已有日志显示默认 `ShaderExportMode: Dummy`；这类占位 shader 不能进入已验收资产。导出脚本同样可能只是反编译或占位结果，必须核对官方实现。若版本提供本地 HTTP 自动化，先核对该版本实际路由和请求格式，再把有效调用固化进模块转换工具，不复用未验证的端点。
+
+从导出结果的目标对象出发收集所需原生资产闭包，保持其 `.meta`、GUID、fileID 和依赖对应；不要只复制根 prefab，也不要直接搬入整个导出工程的 `ProjectSettings`、`Packages` 或脚本。目标工程中已有同 GUID／同名共享资源时，先核对来源与内容，复用或显式重映射，不能覆盖其他模块的素材。导出缺脚本、dummy shader、丢失 Sprite／材质／动画引用时回到对应类型恢复，不能通过删组件、换通用材质或猜坐标取得表面上的成功。
+
+如果在兼容 Editor 中临时使用 `AssetBundle.LoadFromFile` 恢复资产，须先装配并保持全部依赖包，再加载目标对象；Unity 不会自动加载这些依赖，见 [2022.3 依赖说明](https://docs.unity3d.com/2022.3/Documentation/Manual/AssetBundles-Dependencies.html)。保存 prefab 前还须将其引用的 Mesh、Material、Texture 等持久化为项目资产并重绑引用；`Instantiate` 后直接 `SaveAsPrefabAsset` 不能证明依赖已落盘。卸载原 Bundle、关闭并重开工程后仍可加载，才可排除对内存中 Bundle 对象的依赖。
+
+### 4. 接入 Windows 工程并验证
+
+将已核对的原生载荷放入 `unity/Assets/Official/<模块>/`；手写官方迁移代码、离线适配、shader 和编辑器工具放入 `unity/Assets/Game/` 对应目录。保留稳定 `.meta`，更新本模块来源清单及 `assets/reference/SOURCES.md`。来源记录包含原始／解码／最终文件哈希、官方对象路径及 pathID、转换工具和设置、依赖映射及真实脚本／shader 适配范围；临时 `source-manifest.json` 只记录准备输入，不能代替最终 prefab／贴图等输出来源。
+
+恢复官方资源提供方、catalog、场景或 `Resources` 等显式加载绑定；同时检查由配置、名称、ID、反射、动画事件及其他模块动态选择的资源。运行时资源解析改为随游戏交付的本地资产；网络和服务端决策沿用所属功能页已确认的离线方案。模块工具须将**转换／导入**和**验证已有原生资产**分开，验证入口不应在原生资产缺失时静默重试原始 Android Bundle。现有 Map10／Home 的直接 Bundle 导入入口不代表通用恢复链已经完成，后续接入须按本流程替换。
+
+首先检查新增原生资产的 GUID／fileID、`AssetDatabase.GetDependencies` 结果、缺失脚本、组件字段与事件、Mesh／材质／Sprite／字体／动画／音频引用，以及 shader 支持和材质属性。Unity 内置资源 GUID 按实际内置映射处理，不当成缺文件；源内容本来允许为空的字段与损坏引用须区分。随后在 Windows 目标导入、编译，卸载原 Bundle 并重启工程，验证真实入口、层级布局、动画／特效／音频、交互、配置绑定、存档恢复及受影响共享调用方。图形验证不能只用 `-nographics`，shader 可编译也不能代替画面对照。
+
+静态检查及启动命令：
+
+```powershell
+python -B scripts/check_unity_project.py
+& .\scripts\unity.ps1 open
+```
+
+按本模块 Editor 校验入口和规则测试验证；全局 `ProjectTools.Validate` 还会检查其他模块，某一未完成地图导致全局失败时应保留其真实原因，同时运行本模块独立入口，不把全局失败或静态通过代替本模块结论。只有实际需要交付本地 Windows Bundle 时，才从恢复后的原生资产以 `BuildPipeline.BuildAssetBundles(..., BuildTarget.StandaloneWindows64)` 重建，并核对生成的依赖包和本地加载清单；普通 Unity 场景／prefab 引用可随 Player 打包，无需额外 Bundle。更改构建／分包链时按影响验证临时 Windows 构建；正式成品仍遵守本文发布限制。
+
+更新唯一功能／地图页，区分输入已取得、依赖已收齐、资产已恢复、脚本已绑定和实际运行验证范围；不能将其中一个阶段写成整个功能完成。完成后将可重建的转换步骤保留为模块工具，删除本次 `output/` 下的输入副本、导出临时工程、日志、截图与独立存档；只清理本会话目录。素材快照按实际备份需求生成，不要求每个模块重建全量快照。
+
+### 常见失败的处理顺序
+
+| 现象 | 首先检查 | 处理方向 |
+| --- | --- | --- |
+| `Editor is missing`／文件版本不匹配 | `unity.ps1 info`、实际 exe 路径／版本与 `unity-tools.json` | 仅在确实缺失时修正工具环境；Hub 不是必需项 |
+| `Invalid serialized file version`／CAB 头错误 | 原包哈希、解码方式、包和序列化文件各自版本、错误所指 CAB | 保留真实版本，采用可解析的恢复工具；禁止改版本字符串或预期哈希绕过检查 |
+| `MISSING`／`Dependency wasn't found` | 完整 CAB 路径、引用方、原 APK／CDN 索引、新版独立记录 | 补齐真实依赖或建立有依据的对象级范围；不自行把丢失引用变为 null |
+| 粉色、黑色、透明度／遮罩／排序异常 | 占位 shader、目标 GPU 支持、URP／Renderer、关键字及原材质字段 | 恢复 shader 源码和管线，核对原参数并验证实际图像；版本号相同不保证渲染正确 |
+| 缺脚本、反序列化失败、事件不触发 | 类／程序集名、插件版本、字段布局、反编译与 schema 的区别 | 恢复实际组件和业务调用，按既定单机方案适配，不用空壳占位 |
+| Editor 可用而重启／Windows 构建后失效 | 未持久化的 Bundle 对象、GUID/fileID、动态绑定、平台插件和本地分包 | 原生资产落盘并重绑，从 Windows 原生资产重建交付内容，在干净加载状态复验 |
+
+## Unity 素材快照
+
+使用 [`unity_asset_pack.py`](../scripts/unity_asset_pack.py) 创建、校验和恢复 Unity 官方载荷快照：
+
+```powershell
+python -B scripts/unity_asset_pack.py create
+python -B scripts/unity_asset_pack.py verify .tools/asset-packs/unity-official-<sha>.zip
+python -B scripts/unity_asset_pack.py restore .tools/asset-packs/unity-official-<sha>.zip --unity-root <工程>/unity
+```
+
+ZIP 清单登记逐文件 SHA256 和 Unity 版本。恢复前先验证并暂存全包；发生内容冲突时默认停止，复核后才显式使用 `--replace`。快照放在 `.tools/asset-packs/`，不进入 Git 或运行时。
+
+素材快照必须与其记录的代码和绑定匹配。较早快照不能证明当前新增载荷已经备份；若当前代码哈希不符，应在匹配代码下恢复，再按后续来源记录重建新增模块并完成导入验证。
+
+## 日常功能验收
+
+功能验收直接使用 Unity 工程、本地转换素材和已有导入缓存。独立素材 ZIP 用于备份与恢复，Windows 成品用于发布，两者都不是每项功能验收的前置步骤。
+
+| 改动范围 | 必做验证 | 按需执行 |
+| --- | --- | --- |
+| 文档与约定 | 文档检查及差异检查 | 无需导入、素材打包或导出 |
+| 规则、状态与脚本 | 相关规则测试、所选资源引用检查；涉及交互时验证实际入口 | 共用规则按调用方扩大回归 |
+| UI、场景与动画 | 工程内集成测试及实际显示、交互验证 | 新素材先导入；需图形渲染的测试不使用无头模式 |
+| 模块素材、转换与动态绑定 | 模块来源和输出哈希、显式加载绑定、资源加载测试 | 共享资源迁移按依赖扩大范围 |
+| 构建、分包或更新成品 | Windows 构建、导出后启动及改动范围验证 | 首次构建或引擎变化时全量核验 |
+
+Unity 框架静态检查为 `python -B scripts/check_unity_project.py`，Unity 内检查入口为 `Zjcs.Editor.ProjectTools.Validate`。静态检查不能代替编辑器导入、编译和实际运行。资源引用按所选文件和模块范围检查，不能代替来源哈希核验、动态加载测试或跨模块回归。
+
+## Windows 发布
+
+Windows 正式成品统一输出到 `D:/Desktop/杖剑传说/`，入口为 `杖剑传说.exe`。完整 Unity 游戏尚未整体验证前，不得发布、覆盖现有成品或修改桌面快捷方式。只有需要验证导出行为、修改构建链或用户要求更新成品时才构建；复用正式目录的增量基准。
