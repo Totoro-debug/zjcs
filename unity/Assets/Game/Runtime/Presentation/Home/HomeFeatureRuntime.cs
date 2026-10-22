@@ -47,6 +47,7 @@ namespace Zjcs.Presentation.Home
         public HomeConditionContext Context => context;
         public int BlessingLevel { get; private set; } = 1;
         public HomeEnvironmentView Environment => environment;
+        public HomeSceneView Scene => scene;
 
         public string CharacterName => profile?.Save.Player.CharacterName ?? string.Empty;
         public int Level => profile?.Save.Player.Level ?? 1;
