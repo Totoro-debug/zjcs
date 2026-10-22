@@ -180,7 +180,7 @@ namespace Zjcs.Presentation.Character
             statusRect.sizeDelta = new Vector2(900f, 40f);
             statusRect.anchoredPosition = new Vector2(0f, 8f);
             statusText = statusObject.GetComponent<Text>();
-            statusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            statusText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             statusText.fontSize = 20;
             statusText.alignment = TextAnchor.MiddleCenter;
             statusText.color = new Color(1f, 0.85f, 0.5f);
@@ -259,7 +259,7 @@ namespace Zjcs.Presentation.Character
                 labelRect.offsetMin = Vector2.zero;
                 labelRect.offsetMax = Vector2.zero;
                 Text labelText = labelObject.GetComponent<Text>();
-                labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 labelText.fontSize = 16;
                 labelText.alignment = TextAnchor.MiddleCenter;
                 labelText.color = Color.white;
@@ -410,7 +410,7 @@ namespace Zjcs.Presentation.Character
                 labelRect.sizeDelta = new Vector2(0f, 34f);
                 labelRect.anchoredPosition = new Vector2(0f, 4f);
                 Text text = labelObject.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.fontSize = 18;
                 text.alignment = TextAnchor.MiddleCenter;
                 text.color = Color.white;
@@ -466,7 +466,7 @@ namespace Zjcs.Presentation.Character
             starTextRect.offsetMin = Vector2.zero;
             starTextRect.offsetMax = Vector2.zero;
             Text starText = starTextObject.GetComponent<Text>();
-            starText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            starText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             starText.fontSize = 30;
             starText.alignment = TextAnchor.MiddleCenter;
             starText.color = new Color(1f, 0.85f, 0.3f);
@@ -494,7 +494,7 @@ namespace Zjcs.Presentation.Character
             promoteTextRect.offsetMin = Vector2.zero;
             promoteTextRect.offsetMax = Vector2.zero;
             Text promoteText = promoteTextObject.GetComponent<Text>();
-            promoteText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            promoteText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             promoteText.fontSize = 18;
             promoteText.alignment = TextAnchor.MiddleCenter;
             promoteText.color = Color.white;
@@ -521,7 +521,7 @@ namespace Zjcs.Presentation.Character
             detailTextRect.offsetMin = Vector2.zero;
             detailTextRect.offsetMax = Vector2.zero;
             Text detailText = detailTextObject.GetComponent<Text>();
-            detailText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            detailText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             detailText.fontSize = 18;
             detailText.alignment = TextAnchor.MiddleCenter;
             detailText.color = Color.white;
@@ -531,7 +531,7 @@ namespace Zjcs.Presentation.Character
             detailButton.targetGraphic = detailImage;
             detailButton.onClick.AddListener(() => OpenSkillDetail(skillId));
             Text text = label.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = 18;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = !available ? new Color(0.6f, 0.6f, 0.6f)
@@ -670,7 +670,7 @@ namespace Zjcs.Presentation.Character
                 labelRect.offsetMin = Vector2.zero;
                 labelRect.offsetMax = Vector2.zero;
                 Text label = labelObject.GetComponent<Text>();
-                label.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 label.fontSize = 20;
                 label.alignment = TextAnchor.MiddleLeft;
                 label.color = Color.white;
@@ -749,7 +749,7 @@ namespace Zjcs.Presentation.Character
             bodyRect.offsetMin = Vector2.zero;
             bodyRect.offsetMax = Vector2.zero;
             Text text = body.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = 24;
             text.color = Color.white;
             text.alignment = TextAnchor.UpperLeft;
@@ -827,7 +827,7 @@ namespace Zjcs.Presentation.Character
             titleRect.anchorMax = new Vector2(1f, 0.86f);
             titleRect.sizeDelta = new Vector2(0f, 54f);
             Text title = titleObject.GetComponent<Text>();
-            title.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            title.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             title.fontSize = 28;
             title.alignment = TextAnchor.MiddleCenter;
             title.color = Color.white;
@@ -884,7 +884,7 @@ namespace Zjcs.Presentation.Character
             rect.anchorMax = new Vector2(0.92f, top);
             rect.sizeDelta = new Vector2(0f, 40f);
             Text text = line.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = 24;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = color;
@@ -912,7 +912,7 @@ namespace Zjcs.Presentation.Character
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
             Text text = textObject.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = 26;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = Color.white;
@@ -995,7 +995,7 @@ namespace Zjcs.Presentation.Character
                 hintRect.anchorMax = new Vector2(0.5f, 0.92f);
                 hintRect.sizeDelta = new Vector2(420f, 50f);
                 Text text = hint.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.fontSize = 26;
                 text.alignment = TextAnchor.MiddleCenter;
                 text.color = Color.white;
