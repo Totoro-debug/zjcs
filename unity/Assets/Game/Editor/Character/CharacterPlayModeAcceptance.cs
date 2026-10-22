@@ -242,8 +242,9 @@ namespace Zjcs.Editor.Character
             Require(reloaded.Save.Player.Skills.SelectedPlan == switchedPlan,
                 "The switched skill plan was not persisted to the profile save.");
 
-            Debug.Log("[Character acceptance] Play Mode logic passed: panel built, equip icon rendered, "
-                + "skill plan switched and title/save persisted. Rendering and pointer input need a windowed run.");
+            Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
+                + "skill plan switched and title/save persisted. Equip icon rendering and pointer input "
+                + "need a windowed run.");
             Finish(true, null);
         }
 
