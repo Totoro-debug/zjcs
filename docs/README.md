@@ -27,7 +27,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [星命契约与累计属性](features/astrological.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [战斗执行](features/battle-execution.md) | 未完成 | 官方规则、公共 HUD 和基础运行控制器已接入；阶段场景装配、玩家模型、完整单位 HUD 及战斗演出待完成 |
 | [羁绊冒险](features/bond-adventure.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
-| [新建存档与角色创建](features/character-creation.md) | 未完成 | 创角前官方开场已接通：跳过条件 21003、`BeforeFight → 官方录像回放 → AfterFight`、战后转场与 5 秒等待、创角界面单次打开、创角后 `FirstStory`，Play Mode 已实测通过；战场地形、怪物贴图、剧情贴图／立绘／语音等共用战斗与剧情表现资源仍待补齐，明细见所属页 |
+| [新建存档与角色创建](features/character-creation.md) | 未完成 | 官方字体已核实，捏脸、固定／HSV 染色、草稿恢复、双槽位正式保存回读与剑／法杖选择已通过 Unity Play Mode 和两种竖屏尺寸画面检查；开场战斗及剧情表现资源、`FirstStory` 完整衔接仍待补齐验证，幻装试穿按用户确认另做，明细见所属页 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 | 人物入口、官方衣柜基础交互与 24 fps profile idle 模型已接入；综合属性、染色渲染及 Play Mode 验收待完成 |
 | [主城、家园与离线产出](features/city-and-home.md) | 未完成 | 已记录官方 HUD、菜单、14类装置、交互／环境／教学及完整待实现范围；官方载荷与部分本地底层已恢复，主城流程及实际运行验收未完成 |
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
