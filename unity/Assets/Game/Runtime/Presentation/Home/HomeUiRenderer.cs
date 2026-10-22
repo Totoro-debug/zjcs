@@ -123,6 +123,12 @@ namespace Zjcs.Presentation.Home
                 text.ForceMeshUpdate();
                 RectTransform parentRect = pair.Value.transform.parent as RectTransform;
                 if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                HorizontalOrVerticalLayoutGroup group = pair.Value.transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+                if (group != null && group is HorizontalLayoutGroup)
+                {
+                    group.childControlWidth = false;
+                    group.childForceExpandWidth = false;
+                }
                 RectTransform textRect = (RectTransform)pair.Value.transform;
                 if (textRect.rect.width < 1f)
                 {
@@ -165,6 +171,12 @@ namespace Zjcs.Presentation.Home
                 text.ForceMeshUpdate();
                 RectTransform parentRect = pair.Value.transform.parent as RectTransform;
                 if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                HorizontalOrVerticalLayoutGroup group = pair.Value.transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+                if (group != null && group is HorizontalLayoutGroup)
+                {
+                    group.childControlWidth = false;
+                    group.childForceExpandWidth = false;
+                }
                 RectTransform textRect = (RectTransform)pair.Value.transform;
                 if (textRect.rect.width < 1f)
                 {
@@ -196,6 +208,12 @@ namespace Zjcs.Presentation.Home
                 text.ForceMeshUpdate();
                 RectTransform parentRect = pair.Value.transform.parent as RectTransform;
                 if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                HorizontalOrVerticalLayoutGroup group = pair.Value.transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+                if (group != null && group is HorizontalLayoutGroup)
+                {
+                    group.childControlWidth = false;
+                    group.childForceExpandWidth = false;
+                }
                 RectTransform textRect = (RectTransform)pair.Value.transform;
                 if (textRect.rect.width < 1f)
                 {
