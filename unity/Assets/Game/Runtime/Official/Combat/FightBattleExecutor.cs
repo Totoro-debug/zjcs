@@ -12,6 +12,9 @@ namespace Zjcs.Combat.Official
 
     public sealed class FightBattleExecutor
     {
+        /// <summary>Official GameMoveTime used by the scene view for one grid cell.</summary>
+        public const float MovementSecondsPerCell = 0.5f;
+        private const float DefaultStepSeconds = 0.35f;
         private readonly FightBattleCheckpoint checkpoint;
         private readonly FightBattleHitExecutor hitExecutor;
         private readonly List<FightBattleUnitState> units = new List<FightBattleUnitState>();
@@ -94,6 +97,8 @@ namespace Zjcs.Combat.Official
             var damageEvents = new List<FightBattleDamageEvent>();
             var performedTargets = new List<FightBattleUnitState>();
             var checkedSlots = new HashSet<int>();
+            float stepDuration = 0f;
+            float stepActionDuration = -1f;
 
             while (true)
             {
@@ -111,9 +116,13 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
 
-                ExecuteSkill(actor, skill, targets, damageEvents);
+                ExecuteSkill(actor, skill, targets, damageEvents, out float castLastDelay);
                 skillState.RunSkill(skill.Slot);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
+                stepDuration = Math.Max(stepDuration, ResolveDuration(skill, castLastDelay));
+                float actionDuration = ResolveActionDuration(skill, castLastDelay);
+                if (actionDuration >= 0)
+                    stepActionDuration = Math.Max(stepActionDuration, actionDuration);
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 var cast = new FightBattleSkillCastEvent
@@ -142,7 +151,7 @@ namespace Zjcs.Combat.Official
             RefreshTurnUnits();
             UpdateOutcome(globalRound);
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
-                globalRound, movements, casts, damageEvents);
+                globalRound, movements, casts, damageEvents, stepDuration, stepActionDuration);
             checkpoint.Counter = counter;
             checkpoint.RandomSeed = random.Seed;
             checkpoint.Receipts.Add(new FightBattleStepReceipt
@@ -192,11 +201,31 @@ namespace Zjcs.Combat.Official
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
-            List<FightBattleUnitState> targets, List<FightBattleDamageEvent> damageEvents)
+            List<FightBattleUnitState> targets, List<FightBattleDamageEvent> damageEvents,
+            out float lastDelay)
         {
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = skill.Hits;
-            if (skill.HitGraphRootEntityIds.Count > 0)
+            if (skill.HitGraphRoots.Count > 0)
+            {
+                var collected = new List<FightBattleHitDefinition>();
+                foreach (FightBattleHitRoot root in skill.HitGraphRoots)
+                {
+                    List<FightBattleHitDefinition> rootHits = FightBattleHitCollector.Collect(
+                        skill.HitGraphEntities, root.EntityId);
+                    if (rootHits.Count > 0)
+                    {
+                        // The delay and anchor belong to the reference edge, not to the shared hit
+                        // entity, so the first node of this root takes the configured values.
+                        rootHits[0].Delay = root.Delay;
+                        rootHits[0].Anchor = root.Anchor;
+                        rootHits[0].IgnoreAICount = root.IgnoreAICount;
+                    }
+                    collected.AddRange(rootHits);
+                }
+                hits = collected;
+            }
+            else if (skill.HitGraphRootEntityIds.Count > 0)
             {
                 var collected = new List<FightBattleHitDefinition>();
                 foreach (int rootEntityId in skill.HitGraphRootEntityIds)
@@ -205,8 +234,11 @@ namespace Zjcs.Combat.Official
             }
             else if (skill.HitGraphRootEntityId > 0)
                 hits = FightBattleHitCollector.Collect(skill.HitGraphEntities, skill.HitGraphRootEntityId);
+
+            lastDelay = 0f;
             foreach (FightBattleHitDefinition hit in hits)
             {
+                if (hit.Delay > lastDelay) lastDelay = hit.Delay;
                 List<FightBattleUnitState> hitTargets = FightBattleTargeting.SelectHitTargets(targets,
                     hit.TargetMode, hit.RandomCount, random);
                 foreach (FightBattleUnitState target in hitTargets)
@@ -224,6 +256,8 @@ namespace Zjcs.Combat.Official
                         SkillItemId = skill.ItemId,
                         HitEntityId = hit.EntityId,
                         DamageType = hit.DamageType,
+                        Delay = hit.Delay,
+                        Anchor = hit.Anchor,
                         IsCure = resolved.IsCure,
                         Critical = resolved.Type.Critical,
                         Block = resolved.Type.Block,
@@ -243,12 +277,41 @@ namespace Zjcs.Combat.Official
             FightDamageFalloff.EndCast(units, skill);
         }
 
+        /// <summary>
+        /// Skill lifetime in seconds from the official duration configuration. "AllEnded" values are
+        /// relative to the last configured hit delay; a never-ending skill is paced to its last hit.
+        /// </summary>
+        private static float ResolveDuration(FightBattleSkillDefinition skill, float lastDelay)
+        {
+            if (skill.AllRelevantEndedDuration >= 0f) return lastDelay + skill.AllRelevantEndedDuration;
+            if (skill.AllEndedDuration >= 0f) return lastDelay + skill.AllEndedDuration;
+            if (skill.Duration >= 0f) return Math.Max(lastDelay, skill.Duration);
+            return lastDelay;
+        }
+
+        private static float ResolveActionDuration(FightBattleSkillDefinition skill, float lastDelay)
+        {
+            if (skill.AllRelevantEndedActionDuration >= 0f)
+                return lastDelay + skill.AllRelevantEndedActionDuration;
+            if (skill.AllEndedActionDuration >= 0f) return lastDelay + skill.AllEndedActionDuration;
+            if (skill.ActionDuration >= 0f) return Math.Max(lastDelay, skill.ActionDuration);
+            return -1f;
+        }
+
         private FightBattleStepEvent CreateEvent(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, List<FightBattleUnitState> targets,
             Dictionary<int, long> before, int globalRound,
             List<FightBattleMovementEvent> movements, List<FightBattleSkillCastEvent> casts,
-            List<FightBattleDamageEvent> damageEvents)
+            List<FightBattleDamageEvent> damageEvents, float skillDuration, float actionDuration)
         {
+            float movementSeconds = 0f;
+            if (movements != null)
+                foreach (FightBattleMovementEvent movement in movements)
+                    if (movement != null && movement.Path != null && movement.Path.Count > 1)
+                        movementSeconds = Math.Max(movementSeconds,
+                            (movement.Path.Count - 1) * MovementSecondsPerCell);
+            float duration = Math.Max(skillDuration, movementSeconds);
+            if (duration <= 0f) duration = DefaultStepSeconds;
             var result = new FightBattleStepEvent
             {
                 ActorId = actor.Id,
@@ -258,6 +321,8 @@ namespace Zjcs.Combat.Official
                 SkillEntityId = casts.Count > 0 ? casts[0].SkillEntityId : skill == null ? 0 : skill.EntityId,
                 SkillItemId = casts.Count > 0 ? casts[0].SkillItemId : skill == null ? 0 : skill.ItemId,
                 Kind = targets.Count == 0 ? 0 : casts.Count == 0 && skill == null ? 1 : 2,
+                ActionDuration = actionDuration,
+                Duration = Math.Min(10f, Math.Max(0.2f, duration)),
                 Movements = movements,
                 SkillCasts = casts,
                 DamageEvents = damageEvents ?? new List<FightBattleDamageEvent>()

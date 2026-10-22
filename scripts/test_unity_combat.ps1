@@ -61,6 +61,8 @@ $officialSkill = $officialCatalog.CreateSkill(16100, 0, 16100, 1, 1, 0, $null)
 $officialStatus = $officialCatalog.CreateStatus(16104, 2, 1, 1, 16100, 16100)
 Assert-Combat ($officialCatalog.EntityCount -gt 1000) 'Official combat catalog did not merge the pinned entity tables'
 Assert-Combat ($officialSkill.HitGraphRootEntityId -eq 0 -and $officialSkill.HitGraphRootEntityIds.Count -eq 1 -and $officialSkill.HitGraphRootEntityIds[0] -eq 16101 -and $officialSkill.TargetType -eq 1 -and $officialSkill.SkillTargetType -eq 0 -and $officialSkill.Range.Count -eq 1 -and $officialSkill.HitGraphEntities.Count -gt 0) 'Official skill definition, target kinds, range, or ordered hit graph root mapping mismatch'
+Assert-Combat ($officialSkill.HitGraphRoots.Count -eq 1 -and [Math]::Abs($officialSkill.HitGraphRoots[0].Delay - 0.7) -lt 0.001 -and $officialSkill.HitGraphRoots[0].Anchor -eq 0) 'Official skill root hit delay or anchor mismatch'
+Assert-Combat ([Math]::Abs($officialSkill.ActionDuration - 2.6) -lt 0.001 -and [Math]::Abs($officialSkill.Duration - 3.2) -lt 0.001 -and $officialSkill.AllRelevantEndedActionDuration -lt 0 -and $officialSkill.AllRelevantEndedDuration -lt 0) 'Official skill action/lifetime duration mapping mismatch'
 $multiRootSkill = $officialCatalog.CreateSkill(56930, 0, 56930, 1, 1, 0, $null)
 Assert-Combat (($multiRootSkill.HitGraphRootEntityIds -join ',') -eq '56131,56131,56131') 'Official repeated hit roots did not preserve their configured order'
 Assert-Combat ($officialStatus.FalloffTarget -eq 1 -and $officialStatus.FalloffPercent -eq 4000 -and $officialStatus.RootSkillIds -contains 16100) 'Official falloff status mapping mismatch'

@@ -34,7 +34,10 @@ namespace Zjcs.Combat.Official
                     FixedDamageProperty = entity.FixedDamageProperty,
                     DamageParam = entity.DamageParam,
                     TargetMode = targetMode,
-                    RandomCount = randomCount
+                    RandomCount = randomCount,
+                    Delay = entity.Delay,
+                    Anchor = entity.Anchor,
+                    IgnoreAICount = entity.IgnoreAICount
                 });
 
             CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
