@@ -269,7 +269,20 @@ namespace Zjcs.Presentation.Character
                 upgradeButton.targetGraphic = upgradeImage;
                 int capturedType = itemType;
                 upgradeButton.onClick.AddListener(() => UpgradeSlot(capturedType, slot));
+                SkillSlotDrag drag = slots[index].gameObject.AddComponent<SkillSlotDrag>();
+                drag.ItemType = itemType;
+                drag.Slot = slot;
+                drag.Dropped = SwapSkillSlots;
             }
+        }
+
+        private void SwapSkillSlots(int itemType, int fromSlot, int toSlot)
+        {
+            ProgressionResult result = progression.SwapSkillSlots(itemType, fromSlot, toSlot);
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            Refresh();
+            Changed?.Invoke();
         }
 
         private void UpgradeSlot(int itemType, int slot)
