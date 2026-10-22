@@ -119,6 +119,31 @@ namespace Zjcs.Presentation.Home
         }
 
         /// <summary>Sets the text of a descendant of the named node.</summary>
+        public void ReplaceExactText(string from, string to)
+        {
+            foreach (GameObject node in nodes.Values)
+            {
+                TMP_Text text = node.GetComponent<TMP_Text>();
+                if (text != null && text.text == from) text.text = to;
+            }
+        }
+
+        public bool SetTextUnderPath(string parentName, string childPath, string value)
+        {
+            string marker = "/" + parentName + "/";
+            string suffix = "/" + childPath;
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (pair.Key.IndexOf(marker, StringComparison.Ordinal) < 0) continue;
+                if (!pair.Key.EndsWith(suffix, StringComparison.Ordinal)) continue;
+                TMP_Text text = pair.Value.GetComponent<TMP_Text>();
+                if (text == null) continue;
+                text.text = value ?? string.Empty;
+                return true;
+            }
+            return false;
+        }
+
         public bool SetTextUnder(string parentName, string childName, string value)
         {
             string marker = "/" + parentName + "/";
