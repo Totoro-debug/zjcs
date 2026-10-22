@@ -189,7 +189,7 @@ namespace Zjcs.Presentation.Character
                 bodyRect.offsetMin = Vector2.zero;
                 bodyRect.offsetMax = Vector2.zero;
                 Text text = body.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                text.font = CharacterPanelNodeFactory.UiFont;
                 text.fontSize = 26;
                 text.color = Color.white;
                 text.alignment = TextAnchor.UpperLeft;
@@ -212,7 +212,7 @@ namespace Zjcs.Presentation.Character
                 labelRect.offsetMin = Vector2.zero;
                 labelRect.offsetMax = Vector2.zero;
                 Text labelText = label.GetComponent<Text>();
-                labelText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                labelText.font = CharacterPanelNodeFactory.UiFont;
                 labelText.fontSize = 26;
                 labelText.alignment = TextAnchor.MiddleCenter;
                 labelText.color = Color.white;
@@ -248,7 +248,7 @@ namespace Zjcs.Presentation.Character
             rect.sizeDelta = new Vector2(900f, 40f);
             rect.anchoredPosition = new Vector2(0f, 8f);
             statusText = statusObject.GetComponent<Text>();
-            statusText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            statusText.font = CharacterPanelNodeFactory.UiFont;
             statusText.fontSize = 20;
             statusText.alignment = TextAnchor.MiddleCenter;
             statusText.color = new Color(1f, 0.85f, 0.5f);
@@ -437,7 +437,7 @@ namespace Zjcs.Presentation.Character
             bodyRect.offsetMin = Vector2.zero;
             bodyRect.offsetMax = Vector2.zero;
             Text text = body.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = 25;
             text.color = Color.white;
             text.alignment = TextAnchor.UpperLeft;
@@ -483,7 +483,7 @@ namespace Zjcs.Presentation.Character
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
             Text text = textObject.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = 26;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = Color.white;
