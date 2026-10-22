@@ -71,6 +71,7 @@ namespace Zjcs.Combat.Official
                     TargetMode = targetMode,
                     RandomCount = randomCount,
                     Delay = entity.Delay,
+                    DelayDistFactor = entity.DelayDistFactor,
                     Anchor = entity.Anchor,
                     IgnoreAICount = entity.IgnoreAICount,
                     Scope = entity.Scope == null

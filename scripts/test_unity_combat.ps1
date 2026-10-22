@@ -87,6 +87,10 @@ $scopeHit = $officialSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 161
 Assert-Combat ($null -ne $scopeHit -and $scopeHit.Scope.Count -eq 48 -and $scopeHit.AllowEmptyScope -and $scopeHit.Scope[0].X -eq 0 -and $scopeHit.Scope[0].Y -eq -2) 'Official hit scope mapping mismatch'
 $plainHit = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12861 } | Select-Object -First 1
 Assert-Combat ($null -ne $plainHit -and $plainHit.Scope.Count -eq 1 -and $plainHit.Scope[0].X -eq 0 -and $plainHit.Scope[0].Y -eq 0) 'Official single-cell hit scope mapping mismatch'
+$delaySkill = $officialCatalog.CreateSkill(12330, 0, 0, 1, 1, 0, $null)
+$delayHit = $delaySkill.HitGraphEntities | Where-Object { $_.EntityId -eq 12331 } | Select-Object -First 1
+Assert-Combat ($null -ne $delayHit -and [Math]::Abs($delayHit.DelayDistFactor - 0.04) -lt 0.0001) 'Official delay distance factor mapping mismatch'
+Assert-Combat ($null -ne $plainHit -and [Math]::Abs($plainHit.DelayDistFactor - 0.125) -lt 0.0001) 'Official chained hit distance delay factor mismatch'
 $orderedSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
 Assert-Combat ($orderedSkill.Range.Count -eq 24 -and $orderedSkill.Range[0].Y -eq -1 -and $orderedSkill.Range[1].X -eq -1 -and $orderedSkill.Range[2].X -eq 1 -and $orderedSkill.Range[3].Y -eq 1 -and $orderedSkill.Range[4].X -eq 2) 'Official skill range order was not preserved'
 $moveSkill = $officialCatalog.CreateSkill(15980, 0, 0, 1, 1, 0, $null)
