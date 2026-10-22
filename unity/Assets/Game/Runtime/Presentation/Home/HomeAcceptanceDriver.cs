@@ -111,7 +111,20 @@ namespace Zjcs.Presentation.Home
                 return "stage " + runtime.Environment.Stage + " time " + runtime.Environment.Hour + ":" +
                        runtime.Environment.Minute + " moon " + runtime.Environment.MoonPhase;
             });
-            ok &= Check("input", () =>
+            ok &= Check("rewards", () =>
+            {
+                runtime.RefreshRewards();
+                Assert(runtime.Session.RandomRewards.Count > 0, "random reward slots filled");
+                Assert(runtime.Rewards != null && runtime.Rewards.Count > 0, "reward visuals instantiated");
+                OfflineHomeRandomRewardSlot slot = runtime.Session.RandomRewards
+                    .FirstOrDefault(value => value.ItemId > 0 && value.Count > 0);
+                Assert(slot != null, "an active reward");
+                long gained = runtime.TryCollectRandomReward(slot.Slot);
+                Assert(gained > 0, "reward collected");
+                Assert(runtime.Session.RandomRewards.All(value => value.Slot != slot.Slot || value.ItemId == 0),
+                    "slot cleared");
+                return "slots " + runtime.Session.RandomRewards.Count + " visuals " + runtime.Rewards.Count;
+            });            ok &= Check("input", () =>
             {
                 int bed = runtime.Scene.HitTest(new Vector2(8.4f, -1.62f));
                 int cart = runtime.Scene.HitTest(new Vector2(-8.9f, -4.5f));
@@ -125,6 +138,7 @@ namespace Zjcs.Presentation.Home
                 runtime.Scene.MoveCamera(new Vector2(200000f, 0f));
                 Vector3 back = runtime.Scene.Position;
                 Assert(back.x <= right.x, "clamped drag");
+                runtime.Scene.ResetCamera();
                 return "bed/cart quads ok, clamp x " + right.x.ToString("0.00") + " -> " + back.x.ToString("0.00");
             });            yield return CheckUi(runtime, value => ok &= value);
             ok &= Check("persistence", () =>

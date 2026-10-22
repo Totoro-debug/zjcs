@@ -251,6 +251,7 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<string, HomeUiPanel> panels = new Dictionary<string, HomeUiPanel>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> furnitureNames = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> furnitureTypeNames = new Dictionary<string, string>(StringComparer.Ordinal);
+        private readonly List<string> additionalSpriteFolders = new List<string>();
         private TMP_FontAsset font;
 
         public string Folder { get; }
@@ -296,6 +297,25 @@ namespace Zjcs.Presentation.Home
 
         public HomeUiPanel Panel(string key) => panels.TryGetValue(key, out HomeUiPanel panel) ? panel : null;
 
+        public void LoadPanelExtension(string path)
+        {
+            HomeUiData extension = Read<HomeUiData>(path);
+            if (extension == null || extension.panels == null || extension.panels.Length == 0)
+                throw new InvalidDataException("The official home panel extension is missing or empty.");
+            foreach (HomeUiPanel panel in extension.panels)
+            {
+                if (panel == null || string.IsNullOrEmpty(panel.key) || panel.root == null)
+                    throw new InvalidDataException("The official home panel extension contains an invalid panel.");
+                panels[panel.key] = panel;
+            }
+            string moduleFolder = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(moduleFolder)) additionalSpriteFolders.Add(Path.Combine(moduleFolder, "sprites"));
+            foreach (HomeDynamicSprite sprite in extension.dynamic_sprites ?? Array.Empty<HomeDynamicSprite>())
+                if (sprite != null && !string.IsNullOrEmpty(sprite.key)) dynamicSprites[sprite.key] = sprite.file;
+            foreach (HomeTextPair text in extension.texts ?? Array.Empty<HomeTextPair>())
+                if (text != null && !string.IsNullOrEmpty(text.key)) texts[text.key] = text.value ?? string.Empty;
+        }
+
         public string LocalizedText(string key, string fallback = null)
         {
             if (string.IsNullOrEmpty(key)) return fallback ?? string.Empty;
@@ -331,7 +351,9 @@ namespace Zjcs.Presentation.Home
             if (string.IsNullOrEmpty(file)) return null;
             if (textures.TryGetValue(file, out Texture2D cached)) return cached;
             string path = Path.Combine(Folder, "sprites", file);
-            if (!File.Exists(path)) return null;
+            if (!File.Exists(path))
+                path = additionalSpriteFolders.Select(folder => Path.Combine(folder, file)).FirstOrDefault(File.Exists);
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
             var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             if (!texture.LoadImage(File.ReadAllBytes(path)))
             {

@@ -31,6 +31,8 @@ namespace Zjcs.Presentation.Home
         private HomeEnvironmentView environment;
         private HomeRewardView rewards;
         private HomeHudView hud;
+        private TreasureGachaRuntimeCatalog treasureGachaCatalog;
+        private OfflineTreasureGachaService treasureGacha;
         private HomeConditionContext context;
         private Action onClose;
         private string slotId;
@@ -45,9 +47,14 @@ namespace Zjcs.Presentation.Home
         public OfficialHomeRules Rules => rules;
         public OfflineMainlineProgressSession Profile => profile;
         public HomeConditionContext Context => context;
+        public OfflineTreasureGachaService TreasureGacha => treasureGacha;
+        public TreasureGachaRuntimeCatalog TreasureGachaCatalog => treasureGachaCatalog;
         public int BlessingLevel { get; private set; } = 1;
         public HomeEnvironmentView Environment => environment;
         public HomeSceneView Scene => scene;
+        public HomeRewardView Rewards => rewards;
+
+        public void RefreshRewards() => rewards?.Refresh();
 
         public string CharacterName => profile?.Save.Player.CharacterName ?? string.Empty;
         public int Level => profile?.Save.Player.Level ?? 1;
@@ -76,6 +83,10 @@ namespace Zjcs.Presentation.Home
             profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             profile.Reload();
             catalog = HomeAssetCatalog.LoadDefault();
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "TreasureGacha", "ui.json"));
+            treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
+            treasureGacha = new OfflineTreasureGachaService(profile, treasureGachaCatalog);
             rules = OfficialHomeRules.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
@@ -232,6 +243,7 @@ namespace Zjcs.Presentation.Home
             if (type == 0) hud.ShowBed();
             else if (type == 10) hud.ShowCart();
             else if (type == 6) hud.ShowMail();
+            else if (type == 9) hud.ShowTreasureGacha();
             else hud.ShowFurniturePlaceholder(type);
         }
 
@@ -415,6 +427,7 @@ namespace Zjcs.Presentation.Home
             try
             {
                 session.AdvanceTo(now);
+                rewards?.Refresh();
                 DrainHomeInventory();
                 hud?.RefreshCounts();
             }
