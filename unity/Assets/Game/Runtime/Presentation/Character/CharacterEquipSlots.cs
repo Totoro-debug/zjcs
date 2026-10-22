@@ -353,6 +353,27 @@ namespace Zjcs.Presentation.Character
                 }
                 long instanceId = instance.InstanceId;
                 button.onClick.AddListener(() => SelectCandidate(instanceId));
+                OfflineEquippedSlot worn = player.Equipment.Equipped
+                    .FirstOrDefault(value => value.Position == selectedPosition);
+                OfflineEquipmentInstance current = worn == null ? null
+                    : player.Equipment.Instances.FirstOrDefault(value => value.InstanceId == worn.InstanceId);
+                if (current != null && score > ItemScore(player, current))
+                {
+                    var better = new GameObject("BetterMark", typeof(RectTransform), typeof(Text));
+                    better.transform.SetParent(row, false);
+                    RectTransform betterRect = (RectTransform)better.transform;
+                    betterRect.anchorMin = new Vector2(0f, 1f);
+                    betterRect.anchorMax = new Vector2(0f, 1f);
+                    betterRect.pivot = new Vector2(0f, 1f);
+                    betterRect.sizeDelta = new Vector2(100f, 24f);
+                    betterRect.anchoredPosition = new Vector2(6f, -4f);
+                    Text betterText = better.GetComponent<Text>();
+                    betterText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                    betterText.fontSize = 16;
+                    betterText.color = new Color(0.55f, 1f, 0.55f);
+                    betterText.text = "\u66f4\u4f18";
+                    betterText.raycastTarget = false;
+                }
                 rows.Add(row.gameObject);
             }
             if (emptyTip != null) emptyTip.SetActive(rows.Count == 0);
@@ -479,8 +500,10 @@ namespace Zjcs.Presentation.Character
             var lines = new List<int>(props.Keys);
             lines.Sort();
             float top = 0.62f;
+            int shown = 0;
             foreach (int propType in lines)
             {
+                if (shown >= 6) break;
                 OfficialPropDefinition definition = progression.Catalog.Props.Get(propType);
                 if (definition == null || props[propType] == 0) continue;
                 RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(propRowTemplate), content,
@@ -498,6 +521,17 @@ namespace Zjcs.Presentation.Character
                 if (valueText != null) valueText.text = OfficialPropFormat.Value(definition, props[propType]);
                 top -= 0.07f;
                 if (top < 0.14f) break;
+                shown++;
+            }
+            foreach (OfflineEquipmentTerm term in instance.Terms ?? new List<OfflineEquipmentTerm>())
+            {
+                if (term == null) continue;
+                string termName = term.Type == 1
+                    ? (progression.Catalog.Props.Get(term.PropertyType)?.Name ?? ("\u5c5e\u6027 " + term.PropertyType))
+                    : "\u7279\u6b8a\u8bcd\u6761";
+                string factor = term.Type == 1 ? " \u00d7" + term.Factor.ToString("0.##",
+                    CultureInfo.InvariantCulture) : string.Empty;
+                AddTermLine(content, termName + factor, ref top);
             }
             Button replace = CreateCompareButton(content, "更换", new Vector2(-260f, 40f),
                 new Color(0.86f, 0.55f, 0.3f, 0.95f));
@@ -629,6 +663,23 @@ namespace Zjcs.Presentation.Character
             Button close = CreateCompareButton(middle, "关闭", new Vector2(140f, 30f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(ClosePromote);
+        }
+
+        private void AddTermLine(RectTransform parent, string value, ref float top)
+        {
+            if (top < 0.08f) return;
+            RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(propRowTemplate), parent,
+                new Dictionary<string, RectTransform>(StringComparer.Ordinal),
+                new Dictionary<string, Button>(StringComparer.Ordinal));
+            row.name = "EquipDetailTerm";
+            row.anchorMin = new Vector2(0.08f, top);
+            row.anchorMax = new Vector2(0.92f, top);
+            row.sizeDelta = new Vector2(0f, 40f);
+            Text label = row.GetComponentsInChildren<Text>(true).FirstOrDefault(text => text.name == "Key");
+            Text valueText = row.GetComponentsInChildren<Text>(true).FirstOrDefault(text => text.name == "Text");
+            if (label != null) label.text = "\u8bcd\u6761";
+            if (valueText != null) valueText.text = value;
+            top -= 0.05f;
         }
 
         private void AddPromoteLine(RectTransform parent, string value, ref float top, Color color)
