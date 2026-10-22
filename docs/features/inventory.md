@@ -12,7 +12,11 @@
 
 ## 完整还原部分
 
-`OfflineInventoryCatalog.Query` 从固定版物品表和 `GameSettings` 读取分类，将装备档案中的独立装备实例与堆叠物品分别列出，按 `ShowInBag` 过滤，并实现原 `PlayerBagPanel` 的类型、品质和取得时间排序。原版 `BagItemClientComparer` 的穿戴与限时优先级、反向排序规则也已迁移。`OfflineMainlineProgressSession.ApplyInventoryTransaction` 提供同一玩家存档的事务提交和事件幂等记录；`OfflineInventoryOperations` 提供堆叠增减、逐份取得／到期记录、严格“大于”到期判断和最早到期消耗。
+`OfflineInventoryCatalog.Query` 从固定版物品表和 `GameSettings` 读取分类，将装备档案中的独立装备实例与堆叠物品分别列出，并按 `ShowInBag` 过滤。现有比较器只覆盖部分装备穿戴／限时优先级；尚未接入 `BagItemClientComparer` 的红点分数、已用装备排序及逐字段反向规则，不能视为原排序已迁移。原版类型排序只反转类型优先级，品质排序只反转品质，取得时间排序只反转取得时间；红点仍按红点类型降序，其余键保持原方向。`OfflineMainlineProgressSession.ApplyInventoryTransaction` 提供同一玩家存档的事务提交和事件幂等记录；`OfflineInventoryOperations` 提供堆叠增减、逐份取得／到期记录、严格“大于”到期判断和最早到期消耗。
+
+`scripts/prepare_unity_inventory_assets.py` 按物品来源清单核对 JSON 与 1,672 条官方素材哈希，将已转换的官方行囊／详情层级数据和对应 Sprite 恢复至 `unity/Assets/Official/Inventory`；`OfficialInventoryAssetCatalog` 可读取原窗口模板、列表行、官方分类绑定、物品图标映射及图标 prefab 选择顺序。当前尚未完成素材导入及 ScriptableObject 绑定；Unity 编译仍受其他模块的 `AudioClip` 解析错误阻断，不能视为运行时已接入。
+
+`OfflineInventoryCatalog.DetailKind` 按原 `ItemDetailDialogFactory.GetItemDetailDialogType` 的顺序判定技能、外观／家具及可使用物品的专用详情类别；可用物品的工具包、快挂机和物品使用效果仅在原 `CanUse` 分支下分类。
 
 上述规则和存档代码尚未接入实际行囊窗口、物品详情及使用流程；尚无本功能在 Unity 完整接入并运行验收的结论。原代码、配置、已转换素材和旧引擎测试不作为界面及玩法已还原的证据。
 
@@ -24,7 +28,7 @@
 
 用户确认的缺图物品保留真实名称、数量与品质框，不绘制替代图；赛季宝石旧回收分支关闭且不补造回收奖励。
 
-原版资源检索确认12个物品图标没有对应 Sprite（物品 ID：1370、1475—1478、1484—1487、1719、3034、3036）；沿 `ItemIconDefault.FakeIcon` 显示物品名末四字，行囊及通用物品控件共用此兜底，保留品质框和数量，不用其他图片代替。原始资源检索范围和缺项记录见[物品来源清单](../../assets/reference/bag-items-source-manifest.json)及[素材来源](../../assets/reference/SOURCES.md)。
+原版 APK 和 CDN 资源逐项核对了清单列出的24个候选图标包：22个 CDN 缓存匹配原清单大小／MD5及收据 SHA256，2个 APK ZIP 项匹配原清单大小／MD5；UnityPy 1.25.4 解码并扫描 Sprite 与 Texture2D 后，12个目标对象名均不在对应包中。范围与校验结果记于[物品来源清单](../../assets/reference/bag-items-source-manifest.json)。这些图标确认为原版资源缺项。原 `ItemIconHelper.GetFakeIcon` 取本地化物品名末四字，宝箱碎片先按 `Formula.GetTreasureIdByPieceId` 转为宝箱 ID；行囊及通用图标应复用此规则，保留官方品质框和数量，不以其他图片代替。原 `ItemIconManagerConfig` 按物品 ID 特配、物品类型、默认 prefab 的顺序选图标模板，Unity 目录读取层现已提供对应模板映射和缺图文本截取入口，仍待实际控件及界面接入。
 
 用户于2026-10-19授权补齐特殊物品本地结算，替代此前砥石仅预览的边界。服务端请求的资格复核、物品扣除、词条生成、自动锁定及修复退款改由同一本地存档事务提交；保存失败整体回滚，取消不消耗也不推进随机数。工具包重置保留已积累的产量和解锁状态。
 
@@ -36,7 +40,7 @@
 
 ## 尚未实现
 
-- 行囊原 prefab／素材恢复、场景入口、分类控件、列表图标、筛选排序交互及独立装备详情窗口。
+- 行囊场景入口、分类控件、列表图标与品质／数量表现、筛选排序交互及独立装备详情窗口；已转换官方 UI 树和 Sprite 尚未在 Unity 导入、构建并实际显示。
 - 来源导航、宝箱及特殊物品的官方专用详情与本地结算；奖励反馈、随机、扣费、取消、保存失败回滚尚未接线。
 - 恢复其余官方 Unity 代码、配置、prefab、资源与调用关系，完成页面返回栈、实际入口和跨模块界面接线。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
@@ -56,6 +60,8 @@
 修复工具包331使用原确认窗口和成功文案，按 `GameSettings.ResetHangUpIdList` 重置3—9号生产项至初始1级，逐级汇总 `hang_up_upgrade_material.LevelUpCost` 全额返还。
 
 特殊物品按原 `ItemDetailDialogFactory` 分派至宝箱／自选、随机合成、幻兽碎片、古遗物／碎片、技能碎片、改名、祝福卡、裂隙次数、配方分解、修复及砥石专用流程。料理、装备碎片、技能和家园外观详情接入各自模块；确认后统一扣除实际物品、发放奖励并保存，取消不结算。
+
+原 `Player.ShowBagCanUseItemRedDot` 先要求物品数量大于0，再检查 `GameSettings.ShowCanUseRedDotItemTypes` 白名单；装备碎片、普通物品碎片、随机古遗物碎片和幻兽碎片分别以对应合成表需求数量判断，祝福卡检查周期卡配置、购买次数和最大持续天数，料理配方检查配方映射、料理配置及 `IsLimit`，其余白名单类型直接亮点。原比较器中红点分数为可用时的 `RedDotType`，否则为0。当前离线行囊尚未恢复上述全部合成表、周期卡支付计数和料理限制状态，也未把此判断接入排序及图标红点；不得以数量或物品类型近似替代。依据为官方 [Player.ShowBagCanUseItemRedDot](../../.tools/source-packages/official-code/common-source/Common/Player.cs)、`CanMergeEquipPiece`、`CanMergeItemPiece`、`CanMergeRandomTreasurePiece`、`CanMergePetPiece`、`CanUsePeriodCardItem`、`CanUseCookingFormula` 与 [BagItemClientComparer.GetScore](../../.tools/source-packages/official-code/common-source/BagItemClientComparer.cs)。
 
 物品详情按原 `ItemSourceDataManager.Register` 的顺序列出获取途径，覆盖固定表349条及合成、料理、祈愿、宝箱、关卡、国度商人、地图资源和地区古遗物动态来源。来源槽位按当前详情 prefab 的原 `ItemDetailDialog.ItemSourceGo` 字段路径挂载，兼容特殊物品详情 prefab；保留屏蔽条件、原限制提示、商人地图／实体／区域／商店组及需求总数。快捷购买、合成按“需求总数减已持有数量”初始化，地图来源将目标和数量交给原资源指引。料理来源按原处理器打开料理面板；没有导航接口的关卡来源不新增跳转行为。活动导航保留原 `NavigateKey`、`NavigateType` 与完整参数；圣诞入口进入原伐木活动入口，音乐节、春节、周年庆和万圣节按活动日历及存档开服时间进入各自原入口。来源目标覆盖商店弹窗时保留原详情与页面栈，关闭商店后恢复详情来源上下文，再次返回恢复行囊。
 

@@ -19,6 +19,7 @@ namespace Zjcs.Offline.Progression
         Equipment,
         Gem,
         Skill,
+        MonsterSkill,
         SkillPiece,
         EquipmentPiece,
         ItemPiece,
@@ -29,8 +30,10 @@ namespace Zjcs.Offline.Progression
         Pet,
         PetSkill,
         Appearance,
+        HonorTitle,
         AppearanceChest,
         HomeDecoration,
+        FurnitureDecoration,
         HangUpMaterial,
         SkillSkin,
         WrapItem,
@@ -44,6 +47,10 @@ namespace Zjcs.Offline.Progression
         ResetHangUp,
         VoidFissureTimes,
         PetPieceMerge,
+        ChangeName,
+        JumpToUse,
+        MergeEquipment,
+        PeriodCard,
         UseItem
     }
 
@@ -142,8 +149,8 @@ namespace Zjcs.Offline.Progression
             if (item == null) return OfflineInventoryDetailKind.Item;
             if (IsType(catalog, "EquipTypes", itemType)) return OfflineInventoryDetailKind.Equipment;
             if (itemType == 309) return OfflineInventoryDetailKind.Gem;
-            if (IsType(catalog, "SkillTypes", itemType) || IsType(catalog, "MonsterSkillTypes", itemType))
-                return OfflineInventoryDetailKind.Skill;
+            if (IsType(catalog, "SkillTypes", itemType)) return OfflineInventoryDetailKind.Skill;
+            if (IsType(catalog, "MonsterSkillTypes", itemType)) return OfflineInventoryDetailKind.MonsterSkill;
             if (IsType(catalog, "SkillPieceTypes", itemType)) return OfflineInventoryDetailKind.SkillPiece;
             switch (itemType)
             {
@@ -155,33 +162,34 @@ namespace Zjcs.Offline.Progression
                 case 323: return OfflineInventoryDetailKind.Cooking;
                 case 404: return OfflineInventoryDetailKind.PetSkill;
                 case 400: return OfflineInventoryDetailKind.Pet;
-                case 405: return OfflineInventoryDetailKind.PetPieceMerge;
-                case 339: return OfflineInventoryDetailKind.Appearance;
-                case 352: return OfflineInventoryDetailKind.HangUpMaterial;
+                case 353: return OfflineInventoryDetailKind.HangUpMaterial;
                 case 425: return OfflineInventoryDetailKind.SkillSkin;
                 case 50: return OfflineInventoryDetailKind.WrapItem;
                 case 434: return OfflineInventoryDetailKind.AttributeReplace;
-                case 322: return OfflineInventoryDetailKind.CookingFormula;
-                case 345: return OfflineInventoryDetailKind.ResetHangUp;
-                case 315: return OfflineInventoryDetailKind.FastHangUp;
-                case 341: return OfflineInventoryDetailKind.RandomTreasureChest;
-                case 342: return OfflineInventoryDetailKind.TreasureChest;
-                case 343: return OfflineInventoryDetailKind.SkillPieceChest;
             }
 
-            if (IsType(catalog, "AppearanceChestTypes", itemType)) return OfflineInventoryDetailKind.AppearanceChest;
+            if (itemType == 339) return OfflineInventoryDetailKind.HonorTitle;
             if (IsType(catalog, "AppearanceTypes", itemType)) return OfflineInventoryDetailKind.Appearance;
-            if (IsType(catalog, "HomeDecorationTypes", itemType)) return OfflineInventoryDetailKind.HomeDecoration;
+            if (IsType(catalog, "HomeDecorationTypes", itemType)) return OfflineInventoryDetailKind.FurnitureDecoration;
             if (!Bool(item, "CanUse")) return OfflineInventoryDetailKind.Item;
+            if (IsType(catalog, "AppearanceChestTypes", itemType)) return OfflineInventoryDetailKind.AppearanceChest;
+            if (itemType == 322) return OfflineInventoryDetailKind.CookingFormula;
+            if (itemType == 315) return OfflineInventoryDetailKind.FastHangUp;
+            if (itemType == 345) return OfflineInventoryDetailKind.ResetHangUp;
             switch (Int(item, "ItemUseEffectType"))
             {
+                case 1: return OfflineInventoryDetailKind.ChangeName;
+                case 2: return OfflineInventoryDetailKind.JumpToUse;
+                case 3: return OfflineInventoryDetailKind.TreasureChest;
                 case 4: return OfflineInventoryDetailKind.DelegateTask;
+                case 5: return OfflineInventoryDetailKind.MergeEquipment;
                 case 6: return OfflineInventoryDetailKind.VoidFissureTimes;
                 case 7: return OfflineInventoryDetailKind.CookingFormula;
                 case 8: return OfflineInventoryDetailKind.Cooking;
                 case 9: return OfflineInventoryDetailKind.EquipmentPiece;
                 case 10: return OfflineInventoryDetailKind.ItemPiece;
                 case 11: return OfflineInventoryDetailKind.PetPieceMerge;
+                case 12: return OfflineInventoryDetailKind.PeriodCard;
                 case 13: return OfflineInventoryDetailKind.RandomTreasureChest;
                 case 14: return OfflineInventoryDetailKind.RandomTreasurePiece;
                 case 15: return OfflineInventoryDetailKind.TreasureChest;
