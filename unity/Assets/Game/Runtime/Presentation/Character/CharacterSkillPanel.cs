@@ -252,6 +252,11 @@ namespace Zjcs.Presentation.Character
             int[] equipped = listType == ActiveSkillItemType
                 ? profile.Plans[plan].ActiveSkills : listType == PassiveSkillItemType
                     ? profile.Plans[plan].PassiveSkills : Array.Empty<int>();
+            if (listType == PieceItemType)
+            {
+                RefreshPieceList();
+                return;
+            }
             var owned = profile.Skills.Where(skill => skill != null && skill.ClassId > 0)
                 .ToDictionary(skill => skill.ClassId, skill => skill.Rank);
             var entries = new List<int>();
@@ -259,7 +264,8 @@ namespace Zjcs.Presentation.Character
             {
                 if (definition.ItemType != listType) continue;
                 bool has = owned.ContainsKey(definition.ClassId);
-                if (!has && !(showAll != null && showAll.isOn)) continue;
+                bool craftable = !has && HasPiece(definition.PieceItemId);
+                if (!has && !craftable && !(showAll != null && showAll.isOn)) continue;
                 if (has && Array.IndexOf(equipped, definition.ClassId) >= 0) continue;
                 entries.Add(definition.ClassId);
             }
@@ -281,6 +287,63 @@ namespace Zjcs.Presentation.Character
                 if (row != null) listRows.Add(row);
             }
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
+        }
+
+        private bool HasPiece(int pieceItemId)
+        {
+            if (pieceItemId <= 0) return false;
+            return progression.Player.Inventory.Any(value => value != null
+                && value.ItemId == pieceItemId && value.Count > 0);
+        }
+
+        private int SkillPieceId(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillRules?.Skills
+                .FirstOrDefault(value => value.ClassId == skillId);
+            return definition == null ? 0 : definition.PieceItemId;
+        }
+
+        private void RefreshPieceList()
+        {
+            var pieces = progression.Player.Inventory
+                .Where(value => value != null && value.Count > 0 && progression.Catalog.ItemType(value.ItemId) == PieceItemType)
+                .OrderByDescending(value => Quality(value.ItemId)).ThenByDescending(value => value.ItemId).ToList();
+            foreach (OfflineItemStack stack in pieces)
+            {
+                var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), skillGrid,
+                    rowNodes, rowButtons);
+                Transform mount = FindDeep(row, "Anchor") ?? row;
+                BuildSkillIcon(stack.ItemId, mount, "SkillIcon");
+                var labelObject = new GameObject("SkillPieceLabel", typeof(RectTransform), typeof(Text));
+                labelObject.transform.SetParent(row, false);
+                RectTransform labelRect = (RectTransform)labelObject.transform;
+                labelRect.anchorMin = new Vector2(0f, 0f);
+                labelRect.anchorMax = new Vector2(1f, 0f);
+                labelRect.pivot = new Vector2(0.5f, 0f);
+                labelRect.sizeDelta = new Vector2(0f, 34f);
+                labelRect.anchoredPosition = new Vector2(0f, 4f);
+                Text text = labelObject.GetComponent<Text>();
+                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.fontSize = 18;
+                text.alignment = TextAnchor.MiddleCenter;
+                text.color = Color.white;
+                text.text = ItemName(stack.ItemId) + " \u00d7" + stack.Count.ToString("N0", CultureInfo.InvariantCulture);
+                text.raycastTarget = false;
+                LayoutElement element = row.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
+                element.preferredHeight = 150f;
+                element.minHeight = 150f;
+                listRows.Add(row.gameObject);
+            }
+            if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
+        }
+
+        private string ItemName(int itemId)
+        {
+            Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
+            return item == null ? itemId.ToString(CultureInfo.InvariantCulture)
+                : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
         }
 
         private GameObject BuildSkillRow(int skillId, bool has, bool available)
@@ -334,7 +397,8 @@ namespace Zjcs.Presentation.Character
             text.alignment = TextAnchor.MiddleCenter;
             text.color = !available ? new Color(0.6f, 0.6f, 0.6f)
                 : has ? Color.white : new Color(1f, 0.55f, 0.45f);
-            text.text = SkillName(skillId) + (available ? string.Empty : "\uff08\u804c\u4e1a\u4e0d\u7b26\uff09");
+            text.text = SkillName(skillId) + (available ? string.Empty : "\uff08\u804c\u4e1a\u4e0d\u7b26\uff09")
+                + (has ? string.Empty : HasPiece(SkillPieceId(skillId)) ? "\uff08\u53ef\u5408\u6210\uff09" : string.Empty);
             text.raycastTarget = false;
             LayoutElement element = row.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
             element.preferredHeight = 150f;
