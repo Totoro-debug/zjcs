@@ -8,6 +8,98 @@
 
 本页记录 Unity 共用战斗规则、格网执行和公共 HUD 的实际迁移状态。范围为各玩法和地图共用的战斗部分，不包含副本、活动等模式各自的入口、专属规则与结算页。已有部分规则、官方 HUD 组件构建和共用会话控制器；`OfficialMap10GameRuntime.BeginBattle` 已调用控制器，但玩家技能、怪物 CD、倍速、完整 HUD、场景和演出仍有缺口，并存在可复现的跨波次选敌错误，不能视为通用战斗过程已完整还原。开场剧情的 `OpeningFightPlayback` 是记录播放，不替代通用战斗运行时。
 
+### 原始官方功能与证据范围
+
+下面按行为列出原版通用战斗功能，供迁移与逐项核对使用，不表示这些功能已经接入 Unity。依据为固定版本 `854_156383` 的[客户端反编译源码](../../.tools/source-packages/official-code/client-source/)、[共享组件与配置类型](../../.tools/source-packages/official-code/common-source/Common/)，以及已提取的 [rules.json](../../assets/official/rules.json)、[battle-rules.json](../../assets/official/battle-rules.json)、[skill-rules.json](../../assets/official/skill-rules.json)。表中类名均相对前述源码根目录；具体技能、命中图、状态与单位 ID 沿用目录数据，不以少量样例替代全量配置。
+
+客户端可以证明面板、请求、响应消费、数据结构与表现流程；共享组件中声明的配置不能单独证明完整服务端决策已取得。单机确认规则见“自定义实现”，尚需还原或核对的部分见“尚未实现”。特定玩法控件仅在其原显示条件下存在。
+
+### 进入、准备、回合与结束
+
+| 编号 | 原始官方功能 | 官方入口、条件与行为 |
+| --- | --- | --- |
+| F01 | 战斗建立、场景加载与释放 | `FightRoot`、`FightSceneRoot`、`GamePlayManager` 建立会话、加载／激活／停用／释放战斗场景。`FightSceneRoot` 使用 `Assets/Prefabs/EcEntity/Fight/FightStage/{sceneID}/{game_scene}`，不能用地图上生成几个单位代替原场景。 |
+| F02 | 模式面板与延迟显示 | `FightMainPanelLoader.Load/GetPrefabGuid/Unload` 根据记录战斗、普通战斗、录像回放选择面板，消费 `StageInfo.ShowMainPanelDelay`，取消时停止延迟加载并释放实例；`FightMainPanelExtBehaviour` 可覆盖公共显示／结束行为。 |
+| F03 | 战斗阶段与阶段事件 | `GameStatus` 定义 Preparing、PlayStart、Play、Pause、EntryTransition、EntryTransitionFinished、BattleEnd、BattleEndTransition、BattleEndTransitionFinished、End。各阶段驱动 UI、生成、镜头、时标和清理；这是状态集合，不假定每种模式都按枚举顺序经过全部状态。 |
+| F04 | 准备、就绪与自动开始倒计时 | `FightMainPanelReadyUI`、`GameTeamReadyCountDownUI`、`FightMainPanel.RefreshPrepareAutoStartUI` 消费就绪状态、准备截止时间、自动就绪开关与打断操作；`StageInfo.SkipPrepareStatus/UserStart` 等控制阶段入口。团队请求的本地替代须服从所属页方案。 |
+| F05 | 波次、入场与回合推进 | 波次事件通知技能栏等订阅者刷新；`StageInfo.MaxRound/IsPlayerRoundLimit/PlayerRoundLimit` 和 `GameProgressUI` 区分全局回合、个人回合及限制，临近上限改变颜色并播放倒计时。行动队列和波次生命周期必须与入场、死亡和技能结束一致。 |
+| F06 | 胜负与结束时序 | `MyFightResult`、`MyFightResultSucMonsterDie`、`MyFightResultFailedPlayerDie/FailedGuard/FailedPlayerDuel` 等对应不同结果组件；根据阶段／模式判定，不一律简化为任意敌人或玩家 HP 归零。公共层输出结果、完成演出和清理，奖励、下一关、剧情分支由所属玩法接收。 |
+| F07 | 退出与切到后台 | `FightMainPanelLeaveHandler` 为录像、观战及各玩法选择处理器；`DefaultFightMainPanelLeaveHandler` 区分战斗中、队长／成员及确认提示。`FightMainPanelSwitchOutBtnUI` 按结果能否立即离开，否则请求后台切出；`StageInfo.LeaveInPreparing/LeaveInPlaying/Background` 控制可用性，切出不等同结束。 |
+
+### 站位、格网、移动与目标
+
+| 编号 | 原始官方功能 | 官方入口、条件与行为 |
+| --- | --- | --- |
+| F08 | 出生阵型与地形 | `FightSceneInfo`、`MyFightGridGround`、`MyFightRoleGrid`、`GridMoverComponentInfo` 定义场景坐标、地面／高度、身体占格、通行与边阻挡、出生偏移、方向与翻转。`WalkableGroundTypeKey/WalkableGroundTypeServerOverrideKey/MoveMask` 按单位消费，不能合并成所有单位通行的掩码。 |
+| F09 | 准备阶段拖拽站位 | [`PrepareBattlePlayerDrag`](../../.tools/source-packages/official-code/client-source/PrepareBattlePlayerDrag.cs) 与 `PrepareBattlePlayerDragBase` 要求 Preparing、允许改站位、同阵营等条件；非匹配情况下还检查队伍／助战，自己已就绪与操纵他人有独立权限。拾起／放下 Playable、拖拽阈值、鼠标到格网、边界／占位检查、最近合法格、失败回退均有原实现，不是无限制任意拖动。 |
+| F10 | 可调整区域与本队／NPC 控制 | `ChangeBattlePosHandler` 按 `TeamChangePosRange`、阵营 `EntryPosList`、队伍偏移或副本中心确定范围，偶数尺寸有半格中心修正；仅准备且允许时显示范围。可控自己、所属 NPC、匹配 NPC 或辅助机器人等分支影响占位交换；普通队友不自动获得控制权。原请求区分队伍站位与本场偏移。 |
+| F11 | 特殊中途加入站位 | `ChangePosHandler` 按 `Stage.JoinInMiddle` 选择普通或灵魂站位工具；`PrepareBattlePlayerSoulDrag` 在允许观战加入时预览、选择合法位置并提交偏移。此为模式功能，不能直接启用为单机通用拖拽。 |
+| F12 | 寻路、移动与位移 | 官方 `AStarUtils`、`MyFightGridMover`、`MyFightActionSkillMove` 消费 MoveDist、通行掩码、占位、逐段路径、持续时间、朝向和移动 Playable；`FightSkillComponentInfo.SourceMoveList` 按 Delay 排序，还包含技能自身位移。传送、保持距离、固定方向等受技能 AI 配置控制。 |
+| F13 | 自动选择目标与施法范围 | `FightSkillComponentInfo.Range` 明确从近到远排列，近战范围包含四向；`HitTargetType` 包含自己、敌人、友方、非自身友方、所有、无目标、主人、自身召唤物、其他真人友方、玩家与 NPC 友方。`SkillTargetType` 区分点、实体、可站立点、技能方向可站立点、跟随实体与锁定实体；`HitTargetActionType` 还限制可起效行为。 |
+| F14 | AI 优先级、嘲讽与混乱 | `SkillAiCfg` 与技能 `AiPriorityId` 包含角色类别分组、属性最值、低血目标、忽略状态、嘲讽／混乱时能否释放、距离／朝向等条件。旧 `AiPriorityTypes/LastAIPriorityTypes` 已标废弃；仅读取旧字段或统一按血量百分比排序不能代表官方 AI。未取得的服务端评分不写成已复刻。 |
+| F15 | 点击单位查看详情 | `FightRoleClickInput` 及玩家／NPC／怪物／宠物等派生类先校验命中和查询条件，再打开对应信息或定制回调。它与自动选敌不同；没有把点击模型或常规技能图标解释为通用手动指定攻击目标。 |
+
+### 技能、命中与状态生命周期
+
+| 编号 | 原始官方功能 | 官方入口、条件与行为 |
+| --- | --- | --- |
+| F16 | 实际技能列表与属性快照 | `FightSkillListDataPlayerProvider/FightSkillListDataMonsterProvider` 提供玩家装备方案、怪物技能、等级／品阶、技能属性、CD 和事件。职业／宠物限制、被动与来源属性须由实际存档／单位配置装配，不以空列表、统一默认值代替。 |
+| F17 | 消耗、CD 与释放次数 | `FightSkillData.CD`、`FightSkillComponentInfo.CostType/MustHaveValidCost/ResetCDAtStart/LimitedTimes/ResetReleasedTimeOnNextWave` 约束可释放性、开场 CD、每场次数及换波重置。`FightStatusSkillModifyCD/SkillPermanentReduceCd/SkillStopCd` 等还会修改冷却；必须保留触发条件和更新时点。 |
+| F18 | 技能动作与结束条件 | `MyFightSkillAgent` 发送开始／结束事件；`FightSkillComponentInfo` 分开配置 ActionDuration、Duration，以及等待 Hit/Move 或全部 Hit/Move/Damage/child Skill 完成后的时间。负值可代表持续不自动结束，不能只用固定间隔整回合瞬间结算。 |
+| F19 | 子技能、重放与触发限制 | `FightSkillReplayCfg`、`ReplayMaxCountEachRound`、`FightSkillExtSkill`、`CanTriggerChild/CanTriggerStatusEntityIds` 控制重放、额外施放与子状态白名单。旧 `ExtSkill` 字段标废弃并指向 `FightSkillExtSkill`；主动槽检查、重放和被动触发须分开计数。 |
+| F20 | 命中图、延时与目标锚点 | `HitCfg` 和 `MyFightHitBase` 保留 ClassId、Delay、作用锚点、目标跟随、范围格与 Playable；`MyFightHitFixed/NormalNext/Chained/RandomTarget/CustomTarget/TriggerSkill` 覆盖固定、后继、链式、随机、自定目标与触发技能命中。`IgnoreAICount`、延时覆盖、命中时临时属性及吸血等附加组件按实体消费。 |
+| F21 | 伤害、治疗与命中反馈 | `FightDamageComponentInfo`、公式与命中结算保留属性／等级／位阶／场景修正、暴击、格挡、闪避、免疫及伤害衰减等原分支；`MyFightDamage` 驱动来源命中与目标受击、通用／普通／暴击／格挡／触发状态 Playable，并有零伤害与隐藏飘字配置。技能、被动来源和实际 HP、治疗、护盾结算分别记录。 |
+| F22 | 状态装配、持续与叠加 | [`FightStatusComponentInfo`](../../.tools/source-packages/official-code/common-source/Common/FightStatusComponentInfo.cs) 明确回合跟随对象、开始／结束更新点、持续回合（-1 无限）、跟随对象销毁移除、同状态平行／新顶旧／旧顶新、可驱散、层数／随机步距／最大层数、叠时／上限、同来源条件、叠层重置时长、层数缩放属性及固定属性快照。死亡禁用／复活重启、韧性门槛和行为限制也不能遗漏。 |
+| F23 | 状态事件与条件触发 | `FightStatusOnStart/OnEnd`、`RoundStart/RoundBeforeEnd/RoundEnd/GlobalRoundUpdate/RoundPeriodic/RoundInterval`、`ActionStart/ActionEnd`、`SkillStart/SkillEnd`、`Hit*`、`RoleDie/KillSkill`、`StackChange` 等组件按事件触发；另有属性／技能／状态条件、状态转移／移除／持续变化、伤害累计和自定义伤害。实际组件参数和触发来源必须一同恢复，不能统一在回合末处理。 |
+| F24 | 控制、属性、行动条与防护 | `FightStatusProp*`、`FightStatusLogicComponentInfo`、行动／状态禁止配置、HP 条件／限制、CD／重放组件及护盾组件共同改变可行动作、属性和结算；`FightStatusShield*` 区分普通、持续、一次性和无敌等类型。`FightRoleResilienceInfo` 还配置破韧状态、技能、伤害比例／上限与个人回合恢复，`HpPliesId` 对应生命层数据，不能用一个 HP 数字覆盖全部。 |
+| F25 | 召唤与附属单位生命周期 | `FightHitSummonComponentInfo`、`FightHitSummonMonsterCfg/PetCfg/GridItemCfg/SmartGridItemCfg/VoodooDollCfg`、`FightStatusHitSummon` 与角色生成组件保留召唤类型、来源／主人、生成、计数及销毁关系；死亡与复活、来源结束后的状态／附属对象处理按实际组件，不能把所有召唤物当普通下一波怪物。 |
+
+### HUD、详情与公共控件
+
+| 编号 | 原始官方功能 | 官方入口、条件与行为 |
+| --- | --- | --- |
+| F26 | 进度与行动时间轴 | `GameProgressUI` 显示个人／全局回合、上限和预警；`GameRoundUI` 按 NextTime 和间距移动队列，`GameRoundCharacterItem` 恢复玩家／NPC／怪物头像、阵营、主角色标识、受击／死亡／待机／行动动画与移除时序。 |
+| F27 | 单位名称、HP 与死亡标识 | `GamePlayerHUD` 负责玩家／NPC 名称与信息绑定；生命显示分别由 `GameCharacterHpUI`、`FightRoleFightHpView` 等消费，`GamePlayerHpStatus` 呈现相关状态。名称 HUD 不是完整血量实现。 |
+| F28 | Boss 栏、护盾、多段血量与韧性 | `FightMainPanelBossUI.CheckShowBossCondition` 选存活、为 Boss、位于敌方视野内的怪物，最多同时显示两个并动态替换；`FightMainPanelBossUIItem` 绑定名称、头像、状态、HP／盾与韧性。`FightBossHpAndShieldBar` 根据多条血／盾组合切换填充和平滑表现；`MyFightRoleResilience` 按比值显示，最大值为0时隐藏。 |
+| F29 | 单位状态图标与详情 | `FightStatusController` 池化展示状态，订阅应用、结束、禁用、层数、回合与自定义计数变化，并限制图标排布、提供详情。图标、叠层数字、持续回合、禁用态与移除必须对应真实状态实例。 |
+| F30 | 阶段状态与说明弹窗 | `FightMainPanelStageStatus` 汇总 `StageInfo.Status`、自定义与实际阶段状态并去重，绑定图标／底图，点击 `FightStageStatusDialog` 展示明细；无条目时按原逻辑禁用或隐藏。 |
+| F31 | 技能槽、详情与宠物能量 | `FightMainPanelSkillUI`、`FightMainPanelMonsterSkillUI` 接收技能开始／结束、CD、列表和换波事件；`GameSkillIcon` 有 Ready、Applied、InCD、Ended、LimitedTimes、ProfessionLimit、Disabled 状态，含品质、图标及详情。`GamePetSkillIcon` 按实际宠物／进化／辅助技能显示图标、品质、能量百分比和放电动画，无宠物有独立占位逻辑。常规槽的 DebugBtn 不作为正式施法按钮。 |
+| F32 | 准备阶段切换技能方案与警告 | `FightMainPanelSkillUI.ShowSkillPlanPanelCondition` 在准备阶段检查不匹配／禁用技能及宠物提示和忽略选项；打开 `FightChangeSkillPlanHandlerPanel` 前尝试取消就绪。养成和方案编辑规则归[技能页](skills.md)，战斗负责入口、阶段门槛、快照刷新和提示。 |
+| F33 | 倍速、文案与锁定 | `FightMainPanelSpeedUI.InitValidGameSpeeds/SwitchSpeed` 按模式、条件解锁、团队／成员／加入／匹配等限制生成可选档、切换 `FightComponent.Speed`、更新文案与锁定状态。回放走本地逻辑，原联网模式走对应请求，结束／停用恢复时标。具体配置见下表。 |
+| F34 | 快进 | `FightMainPanel` 按功能解锁、阶段支持、角色权限、真人组队、观战／回放条件控制显示；`FightMainPanelFastForwardUI` 用未缩放时间等待解锁延时，在允许阶段发起一次请求或本地快进，处理失败、不可用提示和停用复位。快进与倍率切换是两个功能。 |
+| F35 | 镜头跟随与自由镜头 | `FightMainPanelCameraUI` 切换跟随模式；准备阶段不能按普通按钮切换，初始化结合观战、GM、`GameCameraDefautLock` 与 `FightMainPanelExtBehaviour`。`StageInfo.ChangeCameraMode` 和观战／录像条件影响显示，不等同只移动 UI。 |
+| F36 | 托管与战斗内背包入口 | `FightMainPanelHostingUI` 按 `FightUtils.CanHosting` 或注入条件显示托管状态并打开 `GameHostingDialog`；`FightMainPanelBagUI` 打开配置的 DialogType 并显示红点。是否保留及可用模式按所属功能页，不默认赋予战斗中自由换装／用物品。 |
+| F37 | 录像保存、回放与剧情跳过 | `FightMainPanelSaveRecordUI` 按功能开关、支持的阶段、回放／观战条件记录本场保存意愿并提示；`FightMainPanelRecordFight` 消费剧情的可跳过信号、延迟显示跳过并调用 OnSkipBtn。录像保存／回放不等于活动战斗断点恢复，开场记录播放也不是通用执行器。 |
+| F38 | 观战、聊天及模式扩展 | `FightMainPanelAudienceUI` 切换观战对象、自由镜头与对应技能提供者，部分模式可选择加入位置；`FightMainPanelChatUI` 切换迷你聊天／快捷入口。`FightMainPanelSecretArea` 的 Boss 伤害含实际伤害绝对值加护盾伤害、历史峰值提示；竞技决赛支援等也有独立控件。这些仅记录原版能力，离线关闭／替代与玩法专属统计沿所属页，不扩为通用单人规则。 |
+| F39 | 战报与技能统计 | `FightEndReportPanelProvider` 按阶段与报告配置选择个人或全员报告；`FightEndReportPlayerTabView/FightEndReportSkillTabView` 等分角色与技能展示，技能项含施放／命中次数、每目标平均次数、实际伤害、治疗、护盾及占比、增益／减益状态次数。公共层须提供可追溯事件与统计；报告入口和胜负奖励页面由模式接线。 |
+
+### 官方倍率与节奏配置
+
+以下为固定版本 `rules.json → game_settings` 中的原值，不能把档位文字当实际倍率，也不能默认所有模式开放四档。
+
+| `Battle` 配置 | 原值与含义 |
+| --- | --- |
+| `Speeds` / `SpeedUIs` | 索引0：实际1.0、文案 `1`；索引1：实际1.5、文案 `2`；索引2：实际2.0、文案 `3`；索引3：实际2.5、文案 `4`。最终按钮样式仍消费原 prefab。 |
+| `PlayModeSpeeds` Type0（None） | 索引0无条件，索引1条件 `[3005]`，索引2条件 `[144]`；条件 ID 须按原条件系统判断，不自行改成免费全开。 |
+| Type12（RecordPlayback） | 索引0／1／2／3均无附加条件；`RecordPlaybackSpeedDefaultIndex=0`。 |
+| Type13（FreeBattle）、Type20（LegionPlunder） | 分别只配置索引1、索引2；模式标签来自 `GamePlayModeType`，保留原模式边界。 |
+| `RoundCountDown` | 5，回合上限临近时的提示配置；具体上限仍由阶段决定。 |
+
+全局 `GameMaxRound=10000` 是兜底，不覆盖阶段／个人上限；`DelayUnlockGameFastforwardBtnTime=1.0` 为快进按钮延迟，`GameCameraDefautLock=true` 为默认镜头配置。原 `RealTeamGameSpeed=1.5`、`CreatePlayerRecordFightSpeed=1.5` 属相应模式配置，不据此决定离线所有战斗速度。
+
+`GamePlayManager.UpdateTimeScale` 在准备阶段恢复1，在 PlayStart／Play／EntryTransition／BattleEndTransition 应用战斗速度，其他阶段按原分支处理，End 释放并复位；不能仅凭 Pause 枚举推定此函数会将时标置0。`GameSoundSpeedController` 用 Wwise RTPC 同步速度。逻辑、移动、技能 Playable、UI 动画与声音需分别核对使用缩放或未缩放时间的原意；快进解锁延迟等明确使用未缩放时间的控件不随意改动。
+
+### 模型、场景、演出与资源
+
+| 编号 | 原始官方功能 | 官方入口与恢复要求 |
+| --- | --- | --- |
+| F40 | 玩家、NPC 与怪物外观 | `MyFightRoleCharacter`、`PlayerAnimatorAppearance` 及单位组件绑定玩家复合外观、职业／装备／皮肤／武器、NPC 与怪物模型；保留原骨骼、贴图、材质、网格、层序、尺寸、方向、翻转与挂点。外观目录映射不能代替运行时组合与换装。 |
+| F41 | 生成、行动、受击、死亡与召唤演出 | `MyFightRoleCharacter` 的生成／延迟／可见性／开场死亡／死亡 Playable，`MyFightActionSkillMove` 的路径演出，技能、命中与伤害 Playable 共同驱动动画；来源与召唤物关系、死亡后移除／隐藏和复活状态按组件保留，不一直播放待机。 |
+| F42 | 技能特效、范围、飘字与声音 | `MyFightHitBase` 恢复范围格、来源到目标／目标锚点、偏移与延迟；`MyFightDamage` 区分伤害类型与反馈。官方 HUD 包含普通／暴击／格挡、合并飘字、治疗、自定义动作、免疫、致盲、闪避和重置 CD 等资源；具体音效、震动／镜头等效果按实际 Playable 绑定消费，不自行配近似资源。 |
+| F43 | UI 层级与完整生命周期 | `FightMainPanel` 动态装配各子控件，订阅／撤销阶段、实体、技能等事件，停用时释放实例和重置；保留原布局、锚点、字体、遮罩、滚动、布局组、按钮命中、图标旋转与 Animator。Windows 竖屏按比例适配须与输入和遮挡一并验证。 |
+
+现有 `Assets/Official/Combat/HUD/panels-runtime.json` 的30项是已恢复资源子集：11项为主面板、倍速、托管、Boss栏／项、行动头像、阶段状态弹窗／项、技能、宠物技能与状态项；19项为各类飘字。它不表示官方面板总共只有30项，也不表示镜头、快进、准备、录像、方案切换、详情、战报及模式动态 prefab 已接入。后续按原引用与完整资源索引继续提取和恢复；未提取不等于原资源缺失。场景、shader、字体、音频、动态选用资源及依赖的迁移与显式加载统一遵守[素材管理](../asset-management.md)。
+
 ## 完整还原部分
 
 `FightDamageFormula`、`FightDamageResolver`、`FightDamageSettlement`、`FightSkillState`、`FightTurnQueue`、`FightBattleTargeting`、`FightBattleHitCollector`、`FightBattleHitExecutor`、`FightDamageFalloff` 和 `FightBattleExecutor` 位于 [`Runtime/Official/Combat`](../../unity/Assets/Game/Runtime/Official/Combat/)。它们覆盖公式伤害与治疗、命中结算、技能状态、行动队列、目标选择、命中图收集、部分状态衰减及带回执的分步执行／恢复。
@@ -16,7 +108,7 @@
 
 [`FightBattleGrid`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs) 保存格网地形、占位与边阻挡，并按官方 `AStarUtils` 的四方向代价和 MoveMask 规则计算路径；[`FightBattleExecutor`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) 在技能超出范围时按 MoveDist 尝试移动，再重新选择目标。每个单位回合按技能槽检查可用技能，技能状态记录施放、次数限制与冷却，步骤事件记录移动、施放和目标。Map10 的 `BuildCheckpoint` 已从战斗 JSON 装配基础格网、出生位置和波次；当前位置只在步骤结束后直接赋给模型，未消费路径事件恢复逐格移动演出，也未完整消费地形、身体占格及阵型字段。
 
-公共 HUD 的官方 prefab 树、sprite、字体和 Spine 骨骼输入由 [`prepare_unity_battle_assets.py`](../../scripts/prepare_unity_battle_assets.py) 按来源哈希恢复到 `Assets/Official/Combat`；原 HUD 有 30 个 prefab、701 个 sprite。[`OfficialBattleHudCatalog`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)、[`OfficialBattleHudRenderer`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs) 和 [`OfficialBattleHudView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs) 已有隔离 Unity 工程导入及逐 prefab UI 组件树检查。视图支持回合文本、按 `GameRoundUI` 的 NextTime 排序和间距参数呈现行动时间轴、技能图标、冷却、次数耗尽态，并可由步骤事件刷新行动态和技能施放态。Map10 调用端目前把技能图标和时间轴头像均解析成同一张 `C_none` 占位图，未传阵营图标；玩家也未装配技能，因此不能以视图接口存在认定 HUD 的实际内容已接通。原版 `GameSkillIcon` 的常规技能图标不是手动施法按钮，prefab 中 `DebugBtn` 保持禁用。
+公共 HUD 的官方 prefab 树、sprite、字体和 Spine 骨骼输入由 [`prepare_unity_battle_assets.py`](../../scripts/prepare_unity_battle_assets.py) 按来源哈希恢复到 `Assets/Official/Combat`；当前已恢复的 HUD 子集有30个 prefab、701个 sprite。[`OfficialBattleHudCatalog`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)、[`OfficialBattleHudRenderer`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs) 和 [`OfficialBattleHudView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs) 已有隔离 Unity 工程导入及逐 prefab UI 组件树检查。视图支持回合文本、按 `GameRoundUI` 的 NextTime 排序和间距参数呈现行动时间轴、技能图标、冷却、次数耗尽态，并可由步骤事件刷新行动态和技能施放态。Map10 调用端目前把技能图标和时间轴头像均解析成同一张 `C_none` 占位图，未传阵营图标；玩家也未装配技能，因此不能以视图接口存在认定 HUD 的实际内容已接通。原版 `GameSkillIcon` 的常规技能图标不是手动施法按钮，prefab 中 `DebugBtn` 保持禁用。
 
 怪物外观来源已恢复为407个 Spine 模型绑定，343个怪物 ID 映射见 `OfficialBattleModelCatalog` 及 `model-identities.json`；[`OfficialBattleSceneView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs) 可按调用端提供的模型键和网格映射实例化骨骼，并按 `Spawned` 延迟显示后续波次。Map10 对玩家返回空模型键，继续使用地图 avatar；对怪物调用模型目录解析，但把所有步骤动画固定为 `idle_01`，朝向回调还会覆盖目录缩放。当前视图直接依赖 `Spine.Unity.SkeletonAnimation`，尚未落实角色动画的[原生转换方案](../asset-management.md#spine-角色动画迁移决策)。模型绑定数不代表贴图、实际尺寸、动作及画面已通过。
 
@@ -24,10 +116,10 @@
 
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
-- 规则：重新运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择和多目标衰减。另用当前 C# 规则直接构造双波次场景，已复现无技能玩家跨20格击杀未生成第二波单位，详见下表；现有回归通过不代表这一缺陷不存在。
+- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择和多目标衰减。另用当前 C# 规则直接构造双波次场景，已复现无技能玩家跨20格击杀未生成第二波单位，详见待实现清单；现有回归通过不代表这一缺陷不存在。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
-- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。当前主工程以 Unity 2022.3.57f1c2、Direct3D 11 启动复核，但编译失败：`OfficialMap10GameRuntime` 调用不存在的 `PlayMapTalkDialog`，并以四参数调用没有对应重载的 `PlayStory`；`CommerceFeatureRuntime` 两处调用不存在的 `CommerceTransactionResult` 双参数构造函数，另调用不存在的 `OfflineCommerceOffers.ActivateFirstPurchase`。本轮未执行到 Editor 规则入口和 Play Mode。
-- Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均未通过本轮运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
+- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。已执行的主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，但编译失败：`OfficialMap10GameRuntime` 调用不存在的 `PlayMapTalkDialog`，并以四参数调用没有对应重载的 `PlayStory`；`CommerceFeatureRuntime` 两处调用不存在的 `CommerceTransactionResult` 双参数构造函数，另调用不存在的 `OfflineCommerceOffers.ActivateFirstPurchase`。该次启动未执行到 Editor 规则入口和 Play Mode。
+- Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
 
 ## 自定义实现
 
@@ -46,25 +138,86 @@
 
 ## 尚未实现
 
-当前调用链的具体缺口如下；官方客户端来源位于 `.tools/source-packages/official-code/client-source/`，共享状态位于 `common-source/Common/`。这里只记录已定位的客户端行为、配置消费和本地实现差异，不推定 APK 内存在完整服务器决策实现。
+以下清单覆盖上面 F01—F43 的公共战斗迁移范围；未勾选表示尚有实现、接线或验证工作，不表示相关官方资源不存在。已具备的算法、配置、资源或接口以“完整还原部分”的实际边界为准。模式功能另有保留／关闭／替代决定时，执行该决定，不以此清单擅自重新开放。
 
-| 检查项 | 官方依据与当前实际差异 |
-| --- | --- |
-| 玩家技能与普攻 | `FightMainPanelSkillUI`、`FightSkillListDataPlayerProvider` 消费实际装备技能及施放／结束／CD 事件。`OfficialMap10GameRuntime.BuildCheckpoint` 只将主动技能装配给怪物，玩家 `Skills` 和技能槽为空；`FightBattleExecutor.Step` 无施放时走 `ExecuteBasic`，直接选择目标伤害，无攻击距离和移动检查。不能作为官方默认普攻的完整复刻。 |
-| 怪物 CD、属性与被动 | 官方 `FightSkillData.CD` 和 `FightSkillListDataMonsterProvider.GetSkillLeftCD` 保留技能冷却。`Map10RuntimeSkill` 只有实体、物品、品阶和槽位，调用端没有设置 `FightOfficialSkillBinding.Cooldown`，默认0；还显式传空技能属性、未消费 `PassiveSkills`。同一 `enemySkillBindings` 列表聚合所有怪物再按实体／槽过滤，相同技能组合还可能重复装配槽位并抛异常。 |
-| 波次推进与选敌 | `Initialize` 将未来波次单位标为 `Ended`，场景视图也等待 `Spawned`；但 `FightBattleTargeting.Select` 只排除空对象、死亡和不可选目标，不排除 `Ended`／未来波次。实际复现：第一波单位2仍存活，第二波单位3的 `Spawned=false`、`Ended=true`，玩家1无技能却跨20格将单位3的HP从10打到0。未来波次也被移动占位集合纳入。 |
-| 站位、移动与目标条件 | `MyFightActionSkillMove` 按路径逐段播放移动 Playable、计时和朝向。当前 `OfficialBattleSceneView.Refresh` 及 Map10 直接设置终点位置，未使用 `Movements.Path` 播放路径；格网只做部分数据装配。选敌工具虽接受嘲讽／混乱参数，实际执行器未传入对应状态；出生阵型的方向、翻转、视野组和完整身体占格也未贯通。未把未定位的手动拖拽站位或点选施法写成原版通用规则。 |
-| 回合与节奏 | `GameProgressUI` 按阶段选择玩家回合或全局回合，临近上限时改变颜色并播放倒计时动画；当前 HUD 只格式化全局回合和上限。Map10 每0.35秒完整执行一个单位行动，未等待技能、命中、移动或死亡演出；单步骤的多招只在执行结束后一起刷新。 |
-| HUD与单位反馈 | 原 `GamePlayerHUD`、`FightMainPanelBossUI`、`FightMainPanelBossUIItem`、`FightMainPanelStageStatus` 维护单位生命、护盾、韧性、状态及Boss筛选／切换。当前公共视图只有回合、技能槽和时间轴的部分刷新，缺少上述绑定；Map10 的图标／头像为统一占位，阵营未绑定。技能品质、职业限制／禁用态、施放结束及宠物能量等原版状态也未完整恢复。 |
-| 倍速与公共控件 | `FightMainPanelSpeedUI.InitValidGameSpeeds`／`SwitchSpeed` 按官方配置切换 `FightComponent.Speed` 并更新文字、锁定态，结束时复位。当前 `OnBattleHudControl` 只处理包含 `Leave` 的路径，倍速点击无业务处理；执行与时间轴均用未缩放时间，没有对应倍速调度。其他公共按钮也不能以 Button 已创建认定功能可用。 |
-| 模型、缩放与动作 | `MyFightRoleCharacter`、`PlayerAnimatorAppearance` 和 `MyFightActionSkillMove` 驱动外观、生成／移动／死亡及技能 Playable。当前怪物仅待机，玩家模型未进入共用视图；模型目录的缩放为0.01，而 Map10 朝向回调将 `localScale` 写成 `(±1,1,1)`，覆盖原尺寸、放大100倍。大量材质主贴图未绑定；`Refresh` 也不因 `Hp==0` 移除尸体或驱动死亡流程。 |
-| 状态与技能生命周期 | 规则装配目前只读取状态基础字段及伤害衰减等部分组件；执行链没有贯通完整加状态、持续回合、反击、召唤、护盾和韧性事件。`BuildCheckpoint` 未消费怪物 `ResilienceInfo`／`HpPliesId` 等数据，不能以已有配置或伤害公式认定这些战斗行为完成。 |
-| 本地恢复 | 控制器有恢复检查点参数，规则回执重放有测试；但 Map10 未保存活动战斗检查点，`LeaveBattle` 销毁会话，只保存地图进度，重新入场不等于继续原战斗。模式专属奖励、胜负页及剧情分支仍在所属页维护。 |
+### 会话、阶段与进度（F01—F07）
 
-- 把完整官方技能、状态、反击、召唤和行动事件生命周期接入同一战斗调度；当前执行器的规则覆盖不等于完整官方生命周期。
-- 从原版场景 prefab、`FightSceneInfo` 及战斗阶段／波次数据恢复公共战斗场景、地图几何、地面、格网占位和单位生成，并让格网移动事件驱动场景模型。已确认 `FightSceneRoot` 使用 `Assets/Prefabs/EcEntity/Fight/FightStage/{sceneID}/{game_scene}`；原版本 APK／CDN 中检出的261个战斗阶段包均已取得并校验，另有677份官方 `.geom` 场景数据。资源并非已确认缺失，但尚未转换为 Windows 可用场景、导入 Unity 并绑定会话控制器；运行时仍无通用地图几何与地面装配器。
-- 将官方玩家复合外观、怪物 Spine 模型、角色动作、技能演出及受击／死亡表现接入统一战斗运行时。当前怪物身份表有343项；玩家外观组合与模型生命周期尚未接入，`OfficialBattleSceneView` 的模型键、方向和动画映射仍由调用端提供。
-- 将公共 HUD 与执行事件持续绑定，补齐玩家和单位血量／韧性／状态、Boss 栏、阶段状态及受击／死亡演出。官方 `FightMainPanelBossUI.CheckShowBossCondition` 只收录存活、处于敌方视野内的 Boss，最多同时显示两个；[`FightMainPanelBossUI`](../../.tools/source-packages/official-code/client-source/FightMainPanelBossUI.cs) 与 [`FightMainPanelBossUIItem`](../../.tools/source-packages/official-code/client-source/FightMainPanelBossUIItem.cs) 分别维护实体筛选/切换和生命护盾、韧性、头像名称、状态图标。相应 prefab 已在 HUD 官方资源中恢复，但离线状态目前没有护盾值、Boss 态筛选/栏位切换及状态图标绑定；行动时间轴的队列、位置及原版 prefab 已接入，具体玩家／怪物头像、阵营图标的数据解析器尚未由玩法入口绑定，完整画面和事件流程仍未由 Unity 实际运行验证。
-- 依据 `MyFightRoleCharacter`、`PlayerAnimatorAppearance` 和官方外观资源绑定玩家复合模型；接入各职业动作、怪物动作、格网移动插值、受击与死亡流程。现有 Spine 怪物身份表不能替代玩家角色组合外观和动作驱动。
-- 按项目要求清点运行时配置、场景几何和动态资源的来源、哈希及显式加载绑定，并完成 Unity 编辑器导入、主工程编译、战斗运行和存档恢复验证。
-- 各玩法模式的入场、胜负、奖励和退出流程由所属功能页处理，不属于本次公共战斗迁移范围。
+- [ ] 将各战斗入口需要的 Stage、GamePlayMode、PVE／PVP 上下文、胜负条件、回合限制及官方配置装配到共用会话。当前执行链部分公式上下文固定 `stageType=0/isPvp=false`；须按保留玩法传递，不能据此开放已关闭 PVP。
+- [ ] 接通准备、开始、战斗、暂停、入场过渡、战斗结束、结束过渡和释放事件及对应面板，保留模式跳过准备、延迟面板和外部覆盖条件。当前 Map10 定时调用 `Advance` 不构成完整阶段机。
+- [ ] 接入就绪、取消就绪、准备倒计时、自动开始与失败提示；仅在适用的本地模式恢复，团队或服务器时间的替代按所属页已确认范围处理。
+- [ ] 修复跨波次选敌和占位：`Initialize` 虽标未来单位 `Ended`，`FightBattleTargeting.Select` 却未排除 `Ended`／未来波次，移动占位也纳入未来单位。已复现：第一波单位2存活时，无技能玩家1跨20格把尚未生成的第二波单位3从10HP打至0；该例的 `Spawned=false/Ended=true`。补齐生成、入队、可选、占位、退场和下一波切换的一致性及回归。
+- [ ] 接通个人／全局回合、临近上限的颜色与倒计时、不同阶段上限和上限结果；当前 HUD 仅格式化全局回合与上限。
+- [ ] 将技能动作、命中、移动、伤害、子技能与死亡完成条件纳入调度，逐事件刷新表现。当前 Map10 约每0.35秒完整执行一个单位行动，多招结束后才整体刷新，未等待演出。
+- [ ] 按实际结果组件判定胜负，提供结果事件、终止后防重复执行、结束演出及资源清理；把结果交给所属玩法的胜负页、奖励、下一关和剧情分支，不能把原报告消费误作已取得奖励生成规则。
+- [ ] 恢复离开按钮可见条件、阶段／模式限制、确认提示和后台切出差异，处理取消、失败、重复点击及释放。当前 `OnBattleHudControl` 仅按包含 `Leave` 的路径处理，其他控制路径尚未形成对应业务流程。
+
+### 站位、场景与选敌（F08—F15）
+
+- [ ] 从原 prefab、`FightSceneInfo`、阶段／波次数据恢复公共场景、地面、格网、几何、坐标映射、出生点与相机。已取得并校验的261个战斗阶段包及677份官方 `.geom` 不等于 Windows 原生场景已恢复；当前没有通用几何／地面装配器。
+- [ ] 按单位恢复 MoveMask、地面高度、身体多格占位、边阻挡、出生方向、Rotation、FlipX、ViewGroup 和阵型偏移；当前 `BuildCheckpoint` 只装配部分基础字段，不能使用统一可通行掩码替代单位差异。
+- [ ] 接入原准备阶段拖拽：阶段／阵营／队伍或助战／就绪／所有权门槛、允许区域、拾起放下、屏幕到格网、阈值、非法位置提示与回退，保留鼠标拖拽真实输入。自己的 NPC 站位与出战快照按[NPC 助战](npc-assistance.md)接线，不将普通队友控制权扩大。
+- [ ] 按 `ChangeBattlePosHandler` 恢复范围中心、偶数尺寸半格偏移、最近合法格、占位检查和允许的交换。原请求仅证明提交内容及回包处理；本地站位持久化和失败恢复需与对应入口贯通。
+- [ ] 将 `Movements.Path` 和技能 `SourceMoveList` 驱动逐格／逐段模型移动、计时、朝向与 Playable，恢复保持距离、传送、固定方向和移动中目标变化的适用配置；当前视图直接设终点。
+- [ ] 补齐目标种类、范围点顺序、可站立点、跟随／锁定、HitTargetActionType、角色类别与状态筛选。现有工具虽接受嘲讽／混乱参数，实际执行器未传对应状态，不能以接口存在视为已接入。
+- [ ] 接通 `AiPriorityId` 及其有效条件、属性排序与组别，保留已确认的确定性本地决策边界；不使用废弃字段或臆造缺少的服务端评分。
+- [ ] 恢复单位 collider、查询条件与玩家／NPC／怪物／宠物详情入口，验证 UI 遮挡不会点到场景目标；详情点击不新增手动施法。中途加入／灵魂拖拽仅在所属玩法确认保留时接线。
+
+### 技能、CD、命中与状态（F16—F25）
+
+- [ ] 从实际角色存档装配装备技能、槽序、等级／品阶、技能属性、被动、职业与其他来源状态，并在准备阶段变更后刷新快照。当前 `BuildCheckpoint` 玩家 `Skills` 与技能槽为空，无法形成正常技能循环。
+- [ ] 核对无技能／无可释放技能的正式行为。当前 `FightBattleExecutor.ExecuteBasic` 直接选目标伤害，缺少攻击范围和移动检查，不能认定为官方完整默认普攻；有依据后接入并补回归。
+- [ ] 恢复怪物技能 CD、属性与被动：`Map10RuntimeSkill` 未承载 CD，`FightOfficialSkillBinding.Cooldown` 默认0，调用端还传空属性且未消费 `PassiveSkills`。按原配置消费，不能把怪物默认全技能无 CD 当规则。
+- [ ] 修复所有怪物共用 `enemySkillBindings` 后按实体／槽过滤造成的串用／重复槽位风险；同技能组合的多个怪物应独立装配状态，不因聚合而重复或抛异常。
+- [ ] 接入消耗与有效消耗条件、开场 CD、更新时点、次数限制、换波重置、CD 增减／停止／永久调整，以及职业、禁止动作、条件状态限制；检查技能互相影响后的下一招选择。
+- [ ] 保留每槽主动施放、Replay、子技能、额外施放与被动触发的独立身份和计数，贯通父子施放、白名单、触发上限与结束清理；按配置等待实际结束，不把所有负持续时间强制改为固定值。
+- [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。
+- [ ] 将完整伤害／治疗配置、等级与位阶修正、特殊属性、场景修正和命中分支接入真实单位。保留伤害衰减、概率和状态24181等已确认本地规则；公式单测通过不替代完整装备、怪物及状态集成。
+- [ ] 按 `FightStatusComponentInfo` 恢复全量状态基础字段与实际组件：持续对象／时点、平行或替换、驱散、叠层／随机步距／共享层数、叠时／上限、同来源条件、重置时间、层数属性缩放及固定快照。
+- [ ] 贯通状态的应用、启动、回合／行动／技能／命中／伤害／击杀／死亡／层数变化／结束触发，条件检查、移除、转移及禁用／复活重启。当前装配仅有基础字段和部分衰减组件，不能视为完整事件生命周期。
+- [ ] 将控制／禁止动作、属性修改、行动条、HP 门槛与限制、反击、累计／自定义伤害和治疗修正等组件接入执行顺序，并用实际配置覆盖来源与目标变化。
+- [ ] 恢复盾值、类型与消耗、破盾及其事件；恢复怪物 `ResilienceInfo` 的破韧／恢复、关联状态技能，以及 `HpPliesId` 的生命层逻辑与显示，不能以普通 HP 或饰品图标替代。
+- [ ] 按原召唤配置恢复怪物／宠物／格网对象等生成与属性、主人／来源、数量限制、入队、可选与占位、死亡／销毁联动；保留死亡和复活相关状态，不将所有附属单位套成普通敌人。
+
+### HUD、详情与报告（F26—F32、F39、F43）
+
+- [ ] 将技能图标、品质、详情参数、时间轴头像、阵营和主角色标识绑定真实数据。当前 Map10 对技能与头像均返回同一 `C_none`，不传阵营；玩家空技能又使技能栏没有真实内容。
+- [ ] 恢复队列移动、行动态、受击／死亡动画、死亡后的移除与新单位插入；现有 NextTime 排序和间距布局只覆盖其中一部分。
+- [ ] 绑定名称、单位 HP、血量变化、死亡标识与配置控制的显示条件，分别接入名称 HUD 和血条组件，不混淆 `GamePlayerHUD` 的职责。
+- [ ] 绑定 Boss 存活／敌方视野过滤、最多两栏与替换、名称头像、HP／盾组合、多层血量平滑变化、韧性及状态；当前未具备完整防护状态与筛选切换接线。
+- [ ] 恢复单位状态图标池、排序／排布、层数／回合／自定义数字、禁用／消失与详情输入；阶段状态按来源合并去重、显示说明弹窗和空态。
+- [ ] 贯通技能 Ready／Applied／InCD／Ended／LimitedTimes／ProfessionLimit／Disabled 等图标状态、开始和结束事件，保持正式 DebugBtn 禁用；完成真实 CD 与次数显示而非仅图标对象构建。
+- [ ] 恢复宠物与进化／辅助技能、解锁前布局、无宠物占位、实际能量变化与放电动画；数据和养成规则按[宠物页](pets.md)接入。
+- [ ] 恢复准备阶段方案入口、取消就绪再切换、技能不匹配／禁用／宠物提示与忽略分支；对应存档与规则沿[技能页](skills.md)，避免只开弹窗而不刷新战斗快照。
+- [ ] 建立按角色／技能／被动来源的战斗统计与可追溯回执，补齐施放／命中／伤害／治疗／盾／状态计数与占比、报告详情所需属性；按报告配置选择个人／全员视图。秘境含盾的模式伤害与已确认通用 HP 损失归因分别按所属口径记录。
+- [ ] 恢复原层级、动态子 prefab、文字与本地化格式、字体、滚动／遮罩／布局、窗口开关和事件解绑；验证比例缩放、遮挡与鼠标命中，不能仅检查 Button／Text 已生成。
+
+### 倍速与其他公共控件（F33—F38）
+
+- [ ] 接通倍速点击、有效档与条件解锁、模式／权限限制、按钮档位文案、当前档恢复与时标复位；使用原 `Speeds` 与 `SpeedUIs` 对应关系，不把文案2／3／4直接当实际2／3／4倍。
+- [ ] 让战斗调度、移动、命中／技能／死亡演出与原本应受倍率影响的 UI／声音响应同一速度；保留明确不缩放的控件时间。当前调度和时间轴主要使用未缩放时间，点击倍速没有业务处理。
+- [ ] 恢复快进显示条件、1秒延迟、允许阶段、防重、不可用与失败提示及停用复位；本地快进须消费同一状态与事件，不能跳过必要结算或假定等于切高倍速。
+- [ ] 接入镜头跟随／自由模式、准备限制、默认锁定与外部模式覆盖，恢复原相机坐标和范围，实际检查角色移动时的镜头行为。
+- [ ] 按所属玩法保留范围处理托管、战斗内背包及红点、后台切出、录像保存意愿、录像／剧情跳过。每项须贯通条件、状态、提示与本地持久化；未确定的模式行为先定位消费链，不补造规则。
+- [ ] 对观战对象、观战技能提供者、灵魂加入、决赛支援、聊天、特定 Boss 统计等原版能力保留可追溯记录，并按[离线访问范围](offline-access.md)、[副本](dungeons.md)及所属模式页执行关闭或替代。真实聊天不恢复联网；尚未确认的模式差异不擅自选 NPC 替代。
+
+### 模型、动画、特效与音频（F40—F43）
+
+- [ ] 将玩家真实复合外观、职业／武器／装备／皮肤与 NPC、宠物、召唤物接入共用场景；当前 Map10 玩家模型键为空，仍沿用地图 avatar，模型身份表不能替代玩家组合外观。
+- [ ] 落实已确认的免费 Spine 数据迁移：复用官方贴图、骨骼、网格与动画，独立转换 Unity 原生动画，补齐播放／换装。当前场景视图直接依赖 `Spine.Unity.SkeletonAnimation`，不能把第三方 runtime 存在写成迁移完成。
+- [ ] 修复尺寸、方向和材质：目录缩放0.01被 Map10 朝向回调写为 `(±1,1,1)`，覆盖后放大100倍；核对 root、局部变换和翻转。Combat/Spine 材质文本核对的2620份中2555份主贴图为空，须查官方 atlas／纹理与绑定，不能据此认定源贴图缺失。
+- [ ] 根据角色和怪物实际动作／Playable 映射待机、生成、移动、施放、受击、死亡、复活及召唤。当前全部映射 `idle_01`，模型位置直接跳变，HP归零也未驱动完整死亡／移除；相同动画重播、延迟可见与中断也须恢复。
+- [ ] 还原命中范围、弹道／链式／来源到目标特效、挂点、层序、材质／shader、延时和销毁，并与每次施放／命中身份绑定，避免整回合只播放最终状态。
+- [ ] 接入19类已恢复飘字资源的实际伤害／治疗／免疫／闪避／致盲／CD 等事件、合并条件、位置与时长；恢复 Playable 关联音频及 Wwise 依赖／速度响应，采用有依据的 Windows 适配，不自行换近似音效或静态图。
+
+### 本地状态、资源与完成验证
+
+- [ ] 保存和恢复活动战斗的完整上下文、阶段／波次、单位／技能／状态、随机流、时间线和回执；接入入口与退出恢复，而非只有控制器恢复参数。当前 Map10 `LeaveBattle` 销毁会话，仅保存地图进度，重新入场不等于续战。
+- [ ] 将胜负交接和奖励回执与所属玩法存档贯通，覆盖重复点击、重复加载、退出／重启及已结算记录，防止重复奖励；具体奖励公式或服务器决策未取得时按所属页说明缺口，不自行推定。
+- [ ] 对尚未恢复的动态 UI、阶段场景、模型、Playable、材质／shader、音频和 CAB 依赖按原清单补取、转换、导入并显式绑定；同步真实版本、来源、输入输出哈希。所有入口运行时仅使用随游戏交付的本地资源，断网可用。
+- [ ] 对新增或修复的阶段、未来波次、同技能多怪物、范围／移动、CD／消耗、状态事件、盾／韧性、召唤及恢复运行有意义的规则回归；既有97个公式向量及规则检查不覆盖全部待实现行为。
+- [ ] 解决主工程编译阻塞后执行 Editor 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`。已有启动尝试受 Map10 对话／剧情调用和商城交易接口共5处编译错误阻塞；这只是已执行检查的结果，不是所有剩余错误的穷举。
+- [ ] 在 Unity Play Mode 从真实入口完成准备／拖拽／方案、回合／波次、选敌／移动、技能与 CD、HUD／详情、倍率／快进／镜头、胜负／退出及重启恢复；用真实鼠标／键盘操作，检查画面、遮挡、状态和存档，不以直接调用回调代替输入。
+- [ ] 实际查看玩家／NPC／怪物／宠物／召唤物、地面、血条、状态、时间轴、动作、特效与音频；覆盖不同职业／技能、重复怪物、Boss／多波、不同竖屏比例、死亡／复活等受影响分支。没有实际画面验证的项目继续标为未完成。
+- [ ] 按改动影响检查 Windows 原生材质／动画／音频与离线打包；仅在涉及导出行为或用户要求时增量构建 Windows Player。公共模块完成不代替各地图／玩法的完整游戏验收，不据此发布或覆盖正式成品。
+
+上述清单中的模式结算、技能／宠物养成、NPC 雇佣消耗与真人功能取舍仍以所属功能页为唯一规则维护点；本页维护公共接口、事件、表现和接线缺口，不复制或擅自修改模式规则。
