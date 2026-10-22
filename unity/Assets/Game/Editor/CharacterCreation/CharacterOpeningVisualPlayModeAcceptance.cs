@@ -243,8 +243,12 @@ namespace Zjcs.Editor.CharacterCreation
                     stage.orthographicSize = savedSize;
                 }
                 StartCoroutine(session.Playback.Play());
-                yield return null;
-                yield return null;
+                float roundDeadline = Time.realtimeSinceStartup + 15f;
+                while (session.Playback.Round < 1 && Time.realtimeSinceStartup < roundDeadline) yield return null;
+                Require(session.Playback.TimelineItems > 0, "official action timeline was not populated");
+                Debug.Log("[Opening visual] timeline items=" + session.Playback.TimelineItems
+                          + " round=" + session.Playback.Round);
+                yield return Capture("visual-timeline");
                 session.Playback.RequestFastForward();
                 float playDeadline = Time.realtimeSinceStartup + 60f;
                 while (!session.Playback.Finished && Time.realtimeSinceStartup < playDeadline) yield return null;

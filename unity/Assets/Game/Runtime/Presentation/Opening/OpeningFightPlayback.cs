@@ -31,6 +31,13 @@ namespace Zjcs.Presentation.Opening
         private GameObject skipButton;
         private TMPro.TMP_Text roundText;
         private string roundTemplate = string.Empty;
+        private Transform timelineContainer;
+        private readonly List<GameObject> timelineItems = new List<GameObject>();
+        private readonly Dictionary<int, GameObject> timelineById = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, float> nextActionTime = new Dictionary<int, float>();
+        private int actingEntityId;
+        private bool timelineUnavailable;
+        private OfficialBattleHudCatalog timelineCatalog;
         private bool skipRequested;
         private bool skipButtonPending;
         private float skipButtonAvailableAt;
@@ -54,6 +61,7 @@ namespace Zjcs.Presentation.Opening
         public int Round { get; private set; }
         public int SpawnedUnits => units.Count;
         public int PreparedUnits { get; private set; }
+        public int TimelineItems => timelineItems.Count;
 
         public void RequestFastForward()
         {
@@ -186,6 +194,8 @@ namespace Zjcs.Presentation.Opening
                 break;
             }
             if (roundText == null) log("官方录像回合文本节点缺失");
+            timelineContainer = ui.Find("/FightMainPanelRecordFight/Content/Top/FixedContent/RoundUI/Linear")?.transform;
+            if (timelineContainer == null) log("官方录像行动时间轴容器缺失，跳过时间轴");
             skipButton = FindNode(hud, "SkipBtn");
             if (skipButton != null)
             {
@@ -245,6 +255,13 @@ namespace Zjcs.Presentation.Opening
         private void RemoveEntity(int entityId)
         {
             entityState.Remove(entityId);
+            nextActionTime.Remove(entityId);
+            if (timelineById.TryGetValue(entityId, out GameObject timelineItem))
+            {
+                if (timelineItem != null) UnityEngine.Object.Destroy(timelineItem);
+                timelineById.Remove(entityId);
+                timelineItems.Remove(timelineItem);
+            }
             if (!units.TryGetValue(entityId, out SkeletonAnimation unit)) return;
             if (unit != null) UnityEngine.Object.Destroy(unit.gameObject);
             units.Remove(entityId);
@@ -262,9 +279,12 @@ namespace Zjcs.Presentation.Opening
                 case "FightRoundNewModification":
                     Round = OpeningJson.Int(step.Data, "GlobalRound");
                     UpdateRoundText();
+                    RebuildTimeline();
+                    break;
+                case "FightRoundUpdateDataModification":
+                    ApplyRoundUpdate(step);
                     break;
                 case "FightPersonalRoundNewModification":
-                case "FightRoundUpdateDataModification":
                 case "FightRootStatusDataModification":
                     break;
                 case "FightStatusInvokeModification":
@@ -278,10 +298,84 @@ namespace Zjcs.Presentation.Opening
             }
         }
 
+        private void ApplyRoundUpdate(OpeningRecordStep step)
+        {
+            if (!step.Data.TryGetValue("Data", out object raw) || !(raw is Dictionary<string, object> data)) return;
+            if (!data.TryGetValue("EntityId", out object idValue) || !(idValue is Dictionary<string, object> id)) return;
+            int entityId = OpeningJson.Int(id, "EntityId");
+            if (entityId <= 0) return;
+            nextActionTime[entityId] = (float)OpeningJson.Number(data, "NextTime");
+        }
+
+        private void RebuildTimeline()
+        {
+            if (timelineContainer == null || timelineUnavailable) return;
+            foreach (GameObject item in timelineItems) if (item != null) UnityEngine.Object.Destroy(item);
+            timelineItems.Clear();
+            timelineById.Clear();
+            if (timelineCatalog == null)
+            {
+                try { timelineCatalog = OfficialBattleHudCatalog.LoadDefault(); }
+                catch (Exception error)
+                {
+                    timelineUnavailable = true;
+                    log("官方行动时间轴资源不可用: " + error.Message);
+                    return;
+                }
+                if (timelineCatalog == null) { timelineUnavailable = true; return; }
+            }
+            var renderer = new OfficialBattleHudRenderer(timelineCatalog);
+            // Only rendered fighters belong on the action timeline; record effect
+            // entities also live in entityState and must not create entries.
+            var ids = new List<int>(units.Keys);
+            ids.Sort((left, right) =>
+            {
+                float leftTime = nextActionTime.TryGetValue(left, out float l) ? l : float.MaxValue;
+                float rightTime = nextActionTime.TryGetValue(right, out float r) ? r : float.MaxValue;
+                int compare = leftTime.CompareTo(rightTime);
+                return compare != 0 ? compare : left.CompareTo(right);
+            });
+            float width = ((RectTransform)timelineContainer).rect.width;
+            if (width <= 1f) width = 800f;
+            for (int index = 0; index < ids.Count; index++)
+            {
+                GameObject item;
+                try { item = renderer.Create("round_character", timelineContainer); }
+                catch (Exception error)
+                {
+                    timelineUnavailable = true;
+                    log("官方行动时间轴条目创建失败: " + error.Message);
+                    return;
+                }
+                item.name = "RoundCharacter_" + ids[index];
+                item.SetActive(true);
+                var rect = (RectTransform)item.transform;
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = new Vector2(-width * 0.5f + (index + 0.5f) * width / ids.Count, 0f);
+                timelineItems.Add(item);
+                timelineById[ids[index]] = item;
+            }
+            ApplyActingHighlight();
+        }
+
+        private void ApplyActingHighlight()
+        {
+            foreach (KeyValuePair<int, GameObject> entry in timelineById)
+            {
+                if (entry.Value == null) continue;
+                bool acting = entry.Key == actingEntityId;
+                foreach (Transform child in entry.Value.GetComponentsInChildren<Transform>(true))
+                    if (child.name == "WeGo") child.gameObject.SetActive(acting);
+            }
+        }
+
         private void PlayActing(OpeningRecordStep step)
         {
             if (!step.Data.TryGetValue("RoundEntityId", out object raw) || !(raw is Dictionary<string, object> id)) return;
             int entityId = OpeningJson.Int(id, "EntityId");
+            actingEntityId = entityId;
+            ApplyActingHighlight();
             if (units.TryGetValue(entityId, out SkeletonAnimation unit) && unit != null)
                 Play(entityId, unit, "attack_01", false);
         }
