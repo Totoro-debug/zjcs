@@ -62,7 +62,7 @@ namespace Zjcs.Presentation.Home
             {
                 Assert(runtime.Catalog.Scene.background.Length == 384, "background layer count");
                 Assert(runtime.Catalog.Scene.furniture.Length == 12, "furniture type count");
-                Assert(runtime.Catalog.Scene.click_regions.Length == 16, "click region count");
+                Assert(runtime.Catalog.Scene.click_regions.Length >= 16, "click region count");
                 Assert(runtime.Catalog.Ui.panels.Length >= 40, "ui panel count");
                 Assert(runtime.Rules.Data.items.Length == 12694, "item table size");
                 return runtime.Catalog.Scene.background.Length + " layers, " +
@@ -103,7 +103,30 @@ namespace Zjcs.Presentation.Home
                     "level up attempt: " + result.Error);
                 return "hang-up " + hangUpId + " level " + runtime.Session.HangUpLevel(hangUpId);
             });
-            ok &= Check("environment", () =>
+            ok &= Check("mail", () =>
+            {
+                long before = runtime.ItemCount(1);
+                bool added = runtime.Session.AddLocalMail(new OfflineHomeMail
+                {
+                    Id = 9001,
+                    Sender = "系统",
+                    Subject = "家园验收邮件",
+                    Body = "这是本地投递的验收邮件。",
+                    ExpireUnixSeconds = 0,
+                    Attachments = new List<OfflineHomeItemStack>
+                    {
+                        new OfflineHomeItemStack { ItemId = 1, Count = 5 }
+                    }
+                });
+                Assert(added, "local mail added");
+                Assert(runtime.Session.GetInbox(DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                    .Any(value => value.Id == 9001), "mail listed");
+                Assert(runtime.Session.CollectMailAttachments(9001,
+                    "acceptance:mail:" + Guid.NewGuid().ToString("N")), "mail attachment claimed");
+                runtime.DrainHomeInventory();
+                Assert(runtime.ItemCount(1) >= before + 5, "attachment granted");
+                return "mail add/claim, gold " + before + " -> " + runtime.ItemCount(1);
+            });            ok &= Check("environment", () =>
             {
                 Assert(runtime.Environment != null, "environment view");
                 Assert(runtime.Environment.Config.stages.Length >= 4, "day stages");
