@@ -264,10 +264,13 @@ namespace Zjcs.Presentation.Home
 
         private readonly HomeSceneView scene;
         private readonly Func<bool> blocked;
+        private Func<Vector2, int> rewardHit;
         private Vector2 pressPosition;
         private Vector2 lastPosition;
         private bool dragging;
         private bool pressed;
+
+        public void SetRewardHit(Func<Vector2, int> hit) => rewardHit = hit;
 
         public HomeInputController(HomeSceneView scene, Func<bool> blocked = null)
         {
@@ -276,6 +279,7 @@ namespace Zjcs.Presentation.Home
         }
 
         public event Action<int> FurnitureClicked;
+        public event Action<int> RewardClicked;
 
         public void Update()
         {
@@ -303,6 +307,11 @@ namespace Zjcs.Presentation.Home
                     Vector2 world = scene.ScreenToWorld(Input.mousePosition);
                     int type = scene.HitTest(world);
                     if (type >= 0) FurnitureClicked?.Invoke(type);
+                    else
+                    {
+                        int reward = rewardHit?.Invoke(world) ?? -1;
+                        if (reward >= 0) RewardClicked?.Invoke(reward);
+                    }
                 }
                 dragging = false;
             }

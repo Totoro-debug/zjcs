@@ -544,6 +544,73 @@ def load_rewards():
     }
 
 
+def load_reward_visuals():
+    """Official slot positions, leaf prefabs and the first animal pose."""
+    home = read(OFFICIAL / "home.json")
+    data = read(OFFICIAL / "home-random-rewards" / "catalog.json")
+    positions = home.get("slots") or {}
+    ground = data["grounds"]["Ground"]
+    slots = []
+    for index, slot in enumerate(ground.get("slots") or []):
+        position = positions.get(slot.get("path"))
+        if not position:
+            continue
+        slots.append({
+            "index": index,
+            "position": position,
+            "order": slot.get("order", 5),
+            "direction": slot.get("direction", 0),
+            "prefabIndex": slot.get("prefab_index", -1),
+        })
+    leaves = []
+    for key, layers in (data.get("leaves") or {}).items():
+        if not layers:
+            continue
+        layer = layers[0]
+        sprite = layer.get("sprite") or {}
+        leaves.append({
+            "name": key.rsplit("/", 1)[-1].replace(".prefab", ""),
+            "sprite": (sprite.get("file") or "").rsplit("/", 1)[-1],
+            "order": layer.get("sorting_order", 5),
+            "vertices": [value for point in (layer.get("vertices") or []) for value in point],
+        })
+    animals = {}
+    skeletons = data.get("skeletons") or {}
+    for item_id, ids in (ground.get("prefabs") or {}).items():
+        models = []
+        for skeleton_id in ids:
+            skeleton = skeletons.get(skeleton_id)
+            if skeleton is None:
+                skeleton = next((value for key, value in skeletons.items() if key.startswith(skeleton_id)), None)
+            if not skeleton:
+                continue
+            frames = skeleton.get("frames") or []
+            if not frames:
+                continue
+            textures = skeleton.get("textures") or {}
+            layers = []
+            for layer in frames[0]:
+                page = layer.get("page") or ""
+                layers.append({
+                    "page": (textures.get(page) or "").rsplit("/", 1)[-1],
+                    "order": layer.get("order", 0),
+                    "vertices": layer.get("vertices") or [],
+                    "uv": layer.get("uv") or [],
+                    "triangles": layer.get("triangles") or [],
+                })
+            models.append({"scale": skeleton.get("scale", 0.01), "layers": layers})
+        if models:
+            animals[item_id] = models
+    return {
+        "version": "854_156383",
+        "slots": slots,
+        "leaves": leaves,
+        "animals": [
+            {"itemId": int(item_id), "models": models}
+            for item_id, models in animals.items()
+        ],
+    }
+
 def load_mail():
     mail = read(OFFICIAL / "home-mail" / "ui.json")
     owls = read(OFFICIAL / "home-mail" / "owls.json")
@@ -614,9 +681,10 @@ def build():
     environment = load_environment()
     rewards = load_rewards()
     mail = load_mail()
+    reward_visuals = load_reward_visuals()
     tips = load_tips()
 
-    sprites, prepared = stage_sprites([scene, ui, actors, environment, rewards, mail, tips])
+    sprites, prepared = stage_sprites([scene, ui, actors, environment, rewards, mail, tips, reward_visuals])
     icons, prepared_icons = stage_icons(rules)
     sprites.update(icons)
     prepared += prepared_icons
@@ -630,6 +698,7 @@ def build():
         ("environment.json", environment),
         ("rewards.json", rewards),
         ("mail.json", mail),
+        ("reward-visuals.json", reward_visuals),
         ("tips.json", tips),
     ):
         path = write(name, payload)

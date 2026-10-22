@@ -29,6 +29,7 @@ namespace Zjcs.Presentation.Home
         private HomeSceneView scene;
         private HomeInputController input;
         private HomeEnvironmentView environment;
+        private HomeRewardView rewards;
         private HomeHudView hud;
         private HomeConditionContext context;
         private Action onClose;
@@ -82,8 +83,11 @@ namespace Zjcs.Presentation.Home
             lastAdvanceUnix = Now();
             scene = new HomeSceneView(catalog, transform);
             environment = new HomeEnvironmentView(scene, Now());
+            rewards = new HomeRewardView(this, catalog, transform);
             input = new HomeInputController(scene, () => hud != null && hud.AnyModalOpen);
             input.FurnitureClicked += OnFurnitureClicked;
+            input.RewardClicked += OnRewardClicked;
+            input.SetRewardHit(OnRewardHit);
             hud = new HomeHudView(this, uiParent);
             hud.Build();
             ApplyFurnitureStates();
@@ -176,6 +180,24 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        private int OnRewardHit(Vector2 world) => rewards == null ? -1 : rewards.HitTest(world);
+
+        private void OnRewardClicked(int slot)
+        {
+            long gained = TryCollectRandomReward(slot);
+            if (gained <= 0) hud?.ShowNotice("该奖励暂时无法领取");
+        }
+
+        public long TryCollectRandomReward(int slot)
+        {
+            string receipt = "home:reward:" + slotId + ":" + slot + ":" + Guid.NewGuid().ToString("N");
+            bool collected = session.CollectRandomReward(slot, receipt);
+            if (!collected) return 0;
+            DrainHomeInventory();
+            rewards?.Refresh();
+            hud?.RefreshAll();
+            return 1;
+        }
         private void OnFurnitureClicked(int type)
         {
             HomeFurnitureRecord record = rules.FurnitureOf(type);
@@ -367,6 +389,7 @@ namespace Zjcs.Presentation.Home
 
         public void Close()
         {
+            if (rewards != null) rewards.Dispose();
             if (scene != null) scene.Dispose();
             scene = null;
             if (catalog != null) catalog.Release();
