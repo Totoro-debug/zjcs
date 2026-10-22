@@ -258,18 +258,22 @@ namespace Zjcs.Presentation.Inventory
             iconRoot.anchoredPosition = Vector2.zero;
 
             Sprite itemSprite = assets.FindItemSprite(item.ItemId);
-            if (iconNodes.TryGetValue("/ItemIconEmpty/Content/mask/icon", out RectTransform imageNode))
+            RectTransform imageNode = iconNodes.Values.FirstOrDefault(node => node.name == "icon");
+            if (imageNode != null)
             {
                 Image image = imageNode.GetComponent<Image>();
                 if (image != null) image.sprite = itemSprite;
             }
-            if (iconNodes.TryGetValue("/ItemIconEmpty/Content/mask/FakeIcon", out RectTransform fakeIcon))
+            RectTransform fakeIcon = iconNodes.Values.FirstOrDefault(node => node.name == "FakeIcon");
+            if (fakeIcon != null)
             {
                 Text label = fakeIcon.GetComponent<Text>();
                 if (label != null) label.text = itemSprite == null ? OfficialItemName(item) : string.Empty;
                 fakeIcon.gameObject.SetActive(itemSprite == null);
             }
-            if (iconNodes.TryGetValue("/ItemIconEmpty/Content/BgCountText/CountText", out RectTransform countNode))
+            RectTransform countNode = iconNodes.FirstOrDefault(pair =>
+                pair.Key.EndsWith("/BgCountText/CountText", StringComparison.Ordinal)).Value;
+            if (countNode != null)
             {
                 Text count = countNode.GetComponent<Text>();
                 if (count != null) count.text = FormatCount(item.Count);
