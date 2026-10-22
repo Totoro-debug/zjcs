@@ -80,7 +80,12 @@ namespace Zjcs.Combat.Official
                     AllowEmptyScope = entity.AllowEmptyScope,
                     AppliedStatuses = entity.AppliedStatuses == null
                         ? new List<FightBattleStatusApplication>()
-                        : new List<FightBattleStatusApplication>(entity.AppliedStatuses)
+                        : new List<FightBattleStatusApplication>(entity.AppliedStatuses),
+                    DisperseChance = entity.DisperseChance,
+                    DisperseStatusTypes = entity.DisperseStatusTypes == null
+                        ? new List<int>() : new List<int>(entity.DisperseStatusTypes),
+                    DisperseCount = entity.DisperseCount,
+                    DisperseRandom = entity.DisperseRandom
                 });
 
             CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
