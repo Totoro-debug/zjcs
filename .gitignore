@@ -1,0 +1,47 @@
+# Local development tools
+.tools/
+
+# Local render outputs, logs, and scratch files
+output/*
+tmp/*
+__pycache__/
+
+# Independent asset pack payloads; code and compact pack metadata stay in Git.
+/assets/official/
+/assets/characters/
+/assets/reference/*
+!/assets/reference/SOURCES.md
+!/assets/reference/LEGACY_SOURCES.md
+
+# Keep pack archives and complete file inventories out of Git at any location.
+zjcs-assets-*.zip
+zjcs-assets-*.zip.manifest.json
+_asset-pack-manifest.json
+# Keep the single documentation index, feature/map pages and asset guide in Git.
+/docs/*
+!/docs/features/
+!/docs/maps/
+!/docs/README.md
+!/docs/asset-management.md
+
+# Local code navigation index.
+/.codegraph/
+
+# Unity project: keep source, settings and stable .meta files; exclude local caches.
+/unity/Library/
+/unity/Temp/
+/unity/Obj/
+/unity/Logs/
+/unity/UserSettings/
+/unity/MemoryCaptures/
+/unity/Recordings/
+/unity/.vs/
+/unity/.idea/
+/unity/*.csproj
+/unity/*.sln
+/unity/*.slnx
+/unity/*.user
+/unity/*.pidb
+/unity/*.booproj
+/unity/Assets/Official/*
+!/unity/Assets/Official/.gitkeep
