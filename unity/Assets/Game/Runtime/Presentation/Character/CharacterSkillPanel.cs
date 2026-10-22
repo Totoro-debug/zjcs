@@ -265,6 +265,9 @@ namespace Zjcs.Presentation.Character
             }
             entries.Sort((left, right) =>
             {
+                bool leftFavorite = OfflineSkillProgression.IsFavorite(profile, left);
+                bool rightFavorite = OfflineSkillProgression.IsFavorite(profile, right);
+                if (leftFavorite != rightFavorite) return rightFavorite ? 1 : -1;
                 int quality = Quality(right).CompareTo(Quality(left));
                 return quality != 0 ? quality : right.CompareTo(left);
             });
@@ -296,6 +299,35 @@ namespace Zjcs.Presentation.Character
             labelRect.pivot = new Vector2(0.5f, 0f);
             labelRect.sizeDelta = new Vector2(0f, 34f);
             labelRect.anchoredPosition = new Vector2(0f, 4f);
+            var starObject = new GameObject("SkillFavorite", typeof(RectTransform), typeof(Image), typeof(Button));
+            starObject.transform.SetParent(row, false);
+            RectTransform starRect = (RectTransform)starObject.transform;
+            starRect.anchorMin = new Vector2(1f, 1f);
+            starRect.anchorMax = new Vector2(1f, 1f);
+            starRect.pivot = new Vector2(1f, 1f);
+            starRect.sizeDelta = new Vector2(44f, 44f);
+            starRect.anchoredPosition = new Vector2(-6f, -6f);
+            Image starImage = starObject.GetComponent<Image>();
+            starImage.color = new Color(1f, 1f, 1f, 0f);
+            starImage.raycastTarget = true;
+            var starTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            starTextObject.transform.SetParent(starObject.transform, false);
+            RectTransform starTextRect = (RectTransform)starTextObject.transform;
+            starTextRect.anchorMin = Vector2.zero;
+            starTextRect.anchorMax = Vector2.one;
+            starTextRect.offsetMin = Vector2.zero;
+            starTextRect.offsetMax = Vector2.zero;
+            Text starText = starTextObject.GetComponent<Text>();
+            starText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            starText.fontSize = 30;
+            starText.alignment = TextAnchor.MiddleCenter;
+            starText.color = new Color(1f, 0.85f, 0.3f);
+            starText.raycastTarget = false;
+            starText.text = OfflineSkillProgression.IsFavorite(progression.Player.Skills, skillId)
+                ? "\u2605" : "\u2606";
+            Button starButton = starObject.GetComponent<Button>();
+            starButton.targetGraphic = starImage;
+            starButton.onClick.AddListener(() => ToggleFavorite(skillId));
             Text text = label.GetComponent<Text>();
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 18;
@@ -356,6 +388,15 @@ namespace Zjcs.Presentation.Character
             foreach (Button value in root.GetComponentsInChildren<Button>(true)) value.enabled = false;
             foreach (Graphic value in root.GetComponentsInChildren<Graphic>(true)) value.raycastTarget = false;
             return root.gameObject;
+        }
+
+        private void ToggleFavorite(int skillId)
+        {
+            ProgressionResult result = progression.ToggleSkillFavorite(skillId);
+            LastMessage = result.Message ?? result.Status.ToString();
+            if (!result.IsApplied) return;
+            Refresh();
+            Changed?.Invoke();
         }
 
         private void SelectTab(int itemType)

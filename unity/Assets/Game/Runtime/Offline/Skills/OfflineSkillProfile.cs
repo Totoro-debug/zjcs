@@ -13,6 +13,7 @@ namespace Zjcs.Offline.Skills
         public int[] PassiveSlotLevels = { 1, 1, 1, 1 };
         public List<OfflineSkillBlessRecord> BlessRecords = new List<OfflineSkillBlessRecord>();
         public List<OfflineOwnedSkill> Skills = new List<OfflineOwnedSkill>();
+        public List<int> FavoriteSkills = new List<int>();
         public List<OfflineSkillItemCount> Items = new List<OfflineSkillItemCount>();
 
         public static OfflineSkillPlan[] CreatePlans()
@@ -36,7 +37,8 @@ namespace Zjcs.Offline.Skills
                 PassiveSlotLevels = Copy(PassiveSlotLevels),
                 BlessRecords = new List<OfflineSkillBlessRecord>(),
                 Skills = new List<OfflineOwnedSkill>(),
-                Items = new List<OfflineSkillItemCount>()
+                Items = new List<OfflineSkillItemCount>(),
+                FavoriteSkills = FavoriteSkills == null ? new List<int>() : new List<int>(FavoriteSkills)
             };
             for (int i = 0; i < copy.Plans.Length; i++)
                 copy.Plans[i] = Plans[i] == null ? null : Plans[i].Clone();
