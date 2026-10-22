@@ -85,6 +85,7 @@ namespace Zjcs.Presentation.Combat
                 nextHud.RefreshSkillSlots(checkpoint, skillIcon);
                 nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
                 nextHud.RefreshBoss(checkpoint, UnitName);
+                nextHud.RefreshStageStatus(checkpoint);
                 nextScene.Refresh(checkpoint);
                 executor = nextExecutor;
                 hudView = nextHud;
@@ -122,6 +123,7 @@ namespace Zjcs.Presentation.Combat
                 hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                     timelineFactionResolver, true);
                 hudView.RefreshBoss(result.Checkpoint, UnitName);
+                hudView.RefreshStageStatus(result.Checkpoint);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
                 if (result.Checkpoint.Finished) phases.BeginBattleEnd();

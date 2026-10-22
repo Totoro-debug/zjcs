@@ -189,9 +189,31 @@ namespace Zjcs.Presentation.Combat
         /// <summary>
         /// Binds the official boss panel: at most two living bosses whose wave has spawned, matching
         /// FightMainPanelBossUI.CheckShowBossCondition (boss monster types, enemy side). HP uses the
-        /// filled TopImg; shield, HpPlies, resilience and status lists stay hidden until their state
-        /// and the missing Slider component are available.
+        /// filled TopImg and the official status list shows background + stack count; shield, HpPlies
+        /// and resilience stay hidden until their state (and the missing Slider component) exist.
         /// </summary>
+        private const string StageStatusPath =
+            "/FightMainPanel/Content/Top/FixedContent/StageStatus";
+
+        /// <summary>
+        /// Official stage status strip: visible while the configured fight_stage_status row has any
+        /// view status. The pinned fight_status table is empty, so per-status icons cannot be bound
+        /// and the icon slot stays hidden instead of showing an unrelated sprite.
+        /// </summary>
+        public void RefreshStageStatus(FightBattleCheckpoint checkpoint)
+        {
+            if (checkpoint == null) return;
+            GameObject strip = renderer.Find(StageStatusPath);
+            if (strip == null) return;
+            List<int> viewStatuses = checkpoint.StageStatus == null
+                ? new List<int>() : FightStageStatusRuntime.ViewStatusIds(checkpoint.StageStatus);
+            bool visible = viewStatuses.Count > 0;
+            strip.SetActive(visible);
+            if (!visible) return;
+            GameObject icon = renderer.Find(StageStatusPath + "/StatusUI/StatusImg");
+            if (icon != null) icon.SetActive(false);
+        }
+
         public void RefreshBoss(FightBattleCheckpoint checkpoint,
             Func<FightBattleUnitState, string> nameResolver = null)
         {

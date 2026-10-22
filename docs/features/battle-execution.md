@@ -148,7 +148,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 命中位移按官方 `FightDamageComponent.MoveCfg` 接入：默认 `Distance=-1` 表示不位移，`Distance>0` 时沿来源到受击者的方向击退、`TowardsTargetPos=true` 时改为拉近，支持偏移与取消斜向，目标格被占或越界时自动尝试更短距离，位移作为受击者移动事件输出；带 `DoMoveConditions` 的配置保持不执行。核心规则里 134 个伤害实体配置了有效位移，`BasePercent`／`AffectedByProp` 缩放与移动行为实体仍未消费。
 
-阶段状态已按官方 `fight_stage_status` 接入：`FightStageStatusCatalog` 从 `rules.json` 读取 `stage.Status` 到 ClassId 的映射与每行配置（Status、CharacterStatus、GlobalRoundStatus、FactionGlobalRoundStatus、TargetIdStatus、ProfessionStatus、GlobalRoundStatusDelay、ReleaseEveryGlobalRound、ViewStatusBlackList），视图列表与官方 `FightStageStatusInfoParser.GetViewStatusList` 一致（并集去黑名单）。`FightStageStatusRuntime` 在开战时按全体、角色类型、职业与目标怪物 ID 施加状态，并在全局回合达到 Delay 的整数倍时施加全局／阵营全局状态；检查点保存该配置并可往返，负延迟会被拒绝。战场没有独立阶段实体，阶段级状态暂施加到全部单位。Map10 中只有 9910 阶段配置了阶段状态（ClassId 1），而该阶段在入口处直接完成、不进入战斗，因此当前主线战斗不会触发阶段状态；状态本身的效果与 HUD 阶段状态面板仍未接入。
+阶段状态已按官方 `fight_stage_status` 接入：`FightStageStatusCatalog` 从 `rules.json` 读取 `stage.Status` 到 ClassId 的映射与每行配置（Status、CharacterStatus、GlobalRoundStatus、FactionGlobalRoundStatus、TargetIdStatus、ProfessionStatus、GlobalRoundStatusDelay、ReleaseEveryGlobalRound、ViewStatusBlackList），视图列表与官方 `FightStageStatusInfoParser.GetViewStatusList` 一致（并集去黑名单）。`FightStageStatusRuntime` 在开战时按全体、角色类型、职业与目标怪物 ID 施加状态，并在全局回合达到 Delay 的整数倍时施加全局／阵营全局状态；检查点保存该配置并可往返，负延迟会被拒绝。战场没有独立阶段实体，阶段级状态暂施加到全部单位。Map10 中只有 9910 阶段配置了阶段状态（ClassId 1），而该阶段在入口处直接完成、不进入战斗，因此当前主线战斗不会触发阶段状态；状态本身的效果仍未接入。主面板阶段状态条已按检查点配置显示：`RefreshStageStatus` 在 `ViewStatusIds` 非空时显示官方 `StageStatus` 节点，否则隐藏；图标槽保持隐藏，因为固定 APK 的 `fight_status.g.bytes` 只有 1 字节（状态图标／背景表为空），官方解析器同样取不到图标。阶段状态弹窗（名称／描述列表）仍未接入。
 
 目标选择已按官方 `FightSkillComponentInfo.Range` 的近到远顺序优先：未配置 AI 优先属性时，候选按其在 `Range` 列表中的下标排序（越靠前越近），射程内目标优先于射程外目标，射程外仍保留给移动规划；显式 `AiPriorityPropType` 优先属性仍先于射程顺序，完全并列时沿用原有属性／血量与 ID 比较。命中范围 `HitCfg.Scope`／`FightHit*ComponentInfo.Scope` 的解析与范围命中见下一段。
 
@@ -213,7 +213,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 - [ ] 保留每槽主动施放、Replay、子技能、额外施放与被动触发的独立身份和计数，贯通父子施放、白名单、触发上限与结束清理；按配置等待实际结束，不把所有负持续时间强制改为固定值。
 - [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。命中延迟、`ActOnSouce` 锚点、`Scope` 范围命中、按距离计算的延迟、固定／治疗命中节点、命中驱散与命中位移已接入；仍缺命中特效锚点／跟随、Scope 的 `NotSameTarget` 等标志与区域过滤、按 Delay 分帧结算与覆盖延时。
 - [ ] 将完整伤害／治疗配置、等级与位阶修正、特殊属性、场景修正和命中分支接入真实单位；命中 `DamageActionType` 的伤害／治疗／无动作已按官方区分，控制与状态类动作（50+）仍未结算。保留伤害衰减、概率和状态24181等已确认本地规则；公式单测通过不替代完整装备、怪物及状态集成。
-- [ ] 状态基础字段与生命周期、阶段状态（`fight_stage_status`）、命中附加状态（`FightDamageComponent.StatusList`）已接入；命中附加状态（含随机单条）、驱散、位移与吸血也已接入；尚无属性／护盾／减伤等状态效果、阶段状态面板、共享层数、同来源条件与层数属性缩放；子组件已可从 APK 补出（属性 664、护盾 53、减伤 34 等），但运行时尚未读取；尚缺属性／护盾／控制／事件结算、共享层数、同来源条件判定、层数属性缩放，以及从命中和被动施加状态的链路。
+- [ ] 状态基础字段与生命周期、阶段状态（`fight_stage_status` 配置与状态条显示）、命中附加状态（`FightDamageComponent.StatusList`）已接入；命中附加状态（含随机单条）、驱散、位移与吸血也已接入；尚无属性／护盾／减伤等状态效果、阶段状态面板、共享层数、同来源条件与层数属性缩放；子组件已可从 APK 补出（属性 664、护盾 53、减伤 34 等），但运行时尚未读取；尚缺属性／护盾／控制／事件结算、共享层数、同来源条件判定、层数属性缩放，以及从命中和被动施加状态的链路。
 - [ ] 贯通状态的应用、启动、回合／行动／技能／命中／伤害／击杀／死亡／层数变化／结束触发，条件检查、移除、转移及禁用／复活重启。当前装配仅有基础字段和部分衰减组件，不能视为完整事件生命周期。
 - [ ] 将控制／禁止动作、属性修改、行动条、HP 门槛与限制、反击、累计／自定义伤害和治疗修正等组件接入执行顺序，并用实际配置覆盖来源与目标变化。
 - [ ] 恢复盾值、类型与消耗、破盾及其事件；恢复怪物 `ResilienceInfo` 的破韧／恢复、关联状态技能，以及 `HpPliesId` 的生命层逻辑与显示，不能以普通 HP 或饰品图标替代。
