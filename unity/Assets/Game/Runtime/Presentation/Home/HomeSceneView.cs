@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<int, List<HomeQuad>> clickRegions = new Dictionary<int, List<HomeQuad>>();
         private readonly Dictionary<string, Material> materials = new Dictionary<string, Material>(StringComparer.Ordinal);
         private readonly List<HomeSceneLayer> furnitureLayers = new List<HomeSceneLayer>();
+        private readonly List<KeyValuePair<string, GameObject>> layerObjects = new List<KeyValuePair<string, GameObject>>();
 
         public GameObject Root { get; }
         public Camera Camera { get; private set; }
@@ -138,6 +139,7 @@ namespace Zjcs.Presentation.Home
             mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
             mesh.RecalculateBounds();
             filter.mesh = mesh;
+            layerObjects.Add(new KeyValuePair<string, GameObject>(layer.path ?? string.Empty, go));
             renderer.sharedMaterial = Material(texture);
             renderer.sortingOrder = order;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -164,6 +166,22 @@ namespace Zjcs.Presentation.Home
         }
 
         public void SetAllFurnitureVisible(bool visible) { Root.SetActive(visible); }
+
+        /// <summary>Toggles the official light groups by their serialized node path.</summary>
+        public void SetLayerGroupVisible(string pathFragment, bool visible)
+        {
+            if (string.IsNullOrEmpty(pathFragment)) return;
+            foreach (KeyValuePair<string, GameObject> pair in layerObjects)
+            {
+                if (pair.Value == null || pair.Key.IndexOf(pathFragment, StringComparison.Ordinal) < 0) continue;
+                pair.Value.SetActive(visible);
+            }
+        }
+
+        public void SetNightVisuals(bool night)
+        {
+            SetLayerGroupVisible("/Background/Back_Ground/FX_Star", night);
+        }
 
         /// <summary>Walks the official click quadrilaterals in world space.</summary>
         public int HitTest(Vector2 world)

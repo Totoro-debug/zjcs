@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.Home
         private HomeAssetCatalog catalog;
         private HomeSceneView scene;
         private HomeInputController input;
+        private HomeEnvironmentView environment;
         private HomeHudView hud;
         private HomeConditionContext context;
         private Action onClose;
@@ -44,6 +45,7 @@ namespace Zjcs.Presentation.Home
         public OfflineMainlineProgressSession Profile => profile;
         public HomeConditionContext Context => context;
         public int BlessingLevel { get; private set; } = 1;
+        public HomeEnvironmentView Environment => environment;
 
         public string CharacterName => profile?.Save.Player.CharacterName ?? string.Empty;
         public int Level => profile?.Save.Player.Level ?? 1;
@@ -79,6 +81,7 @@ namespace Zjcs.Presentation.Home
             session = OpenSession();
             lastAdvanceUnix = Now();
             scene = new HomeSceneView(catalog, transform);
+            environment = new HomeEnvironmentView(scene, Now());
             input = new HomeInputController(scene, () => hud != null && hud.AnyModalOpen);
             input.FurnitureClicked += OnFurnitureClicked;
             hud = new HomeHudView(this, uiParent);
@@ -377,6 +380,7 @@ namespace Zjcs.Presentation.Home
         private void Update()
         {
             input?.Update();
+            environment?.Tick(Time.unscaledDeltaTime);
             hud?.Tick();
             advanceTimer += Time.unscaledDeltaTime;
             if (advanceTimer < 5f) return;
