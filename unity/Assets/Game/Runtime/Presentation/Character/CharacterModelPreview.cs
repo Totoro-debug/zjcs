@@ -40,7 +40,7 @@ namespace Zjcs.Presentation.Character
                 || !manifest.TryGetValue("files", out object rawFiles))
                 throw new FormatException("Character model package is not pinned to 854_156383.");
             fileHashes = AsObject(rawFiles, "character model package hashes");
-            string catalogText = ReadText(UriPrefix + "catalog.json");
+            string catalogText = ReadText(UriPrefix + "wardrobe/catalog.json");
             catalog = AsObject(OfficialEquipmentJson.Parse(catalogText), "character model catalog");
         }
 
