@@ -1,0 +1,328 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Zjcs.Presentation.Opening
+{
+    /// <summary>Official story UI payload: prefab layout trees plus one sprite atlas.</summary>
+    public sealed class OpeningUiData
+    {
+        public string Manifest = string.Empty;
+        public int AtlasWidth;
+        public int AtlasHeight;
+        public byte[] AtlasBytes;
+        public readonly Dictionary<string, OpeningUiSprite> Sprites =
+            new Dictionary<string, OpeningUiSprite>(StringComparer.Ordinal);
+        public readonly Dictionary<string, OpeningUiNode> Prefabs =
+            new Dictionary<string, OpeningUiNode>(StringComparer.Ordinal);
+
+        public static OpeningUiData Parse(byte[] bytes, string directory)
+        {
+            Dictionary<string, object> root = OpeningJson.Object(OpeningJson.Parse(bytes), "ui");
+            var data = new OpeningUiData { Manifest = OpeningJson.String(root, "manifest") };
+            if (data.Manifest != OpeningAssets.Manifest)
+                throw new FormatException("Opening UI manifest is not pinned.");
+            Dictionary<string, object> atlas = OpeningJson.Object(root["atlas"], "atlas");
+            data.AtlasWidth = OpeningJson.Int(atlas, "width");
+            data.AtlasHeight = OpeningJson.Int(atlas, "height");
+            string atlasPath = Path.Combine(directory, OpeningJson.String(atlas, "file"));
+            if (!File.Exists(atlasPath)) throw new FileNotFoundException("Opening UI atlas is missing.", atlasPath);
+            data.AtlasBytes = File.ReadAllBytes(atlasPath);
+            foreach (KeyValuePair<string, object> entry in OpeningJson.Object(root["sprites"], "sprites"))
+            {
+                Dictionary<string, object> sprite = OpeningJson.Object(entry.Value, "sprite");
+                List<object> pivot = OpeningJson.Array(sprite["pivot"], "pivot");
+                List<object> border = null;
+                if (sprite.TryGetValue("border", out object borderValue)) border = OpeningJson.Array(borderValue, "border");
+                data.Sprites[entry.Key] = new OpeningUiSprite
+                {
+                    Name = entry.Key,
+                    X = OpeningJson.Int(sprite, "x"),
+                    Y = OpeningJson.Int(sprite, "y"),
+                    Width = OpeningJson.Int(sprite, "w"),
+                    Height = OpeningJson.Int(sprite, "h"),
+                    Pivot = new Vector2((float)OpeningJson.ToNumber(pivot[0]), (float)OpeningJson.ToNumber(pivot[1])),
+                    Border = border == null ? Vector4.zero : new Vector4(
+                        (float)OpeningJson.ToNumber(border[0]), (float)OpeningJson.ToNumber(border[1]),
+                        (float)OpeningJson.ToNumber(border[2]), (float)OpeningJson.ToNumber(border[3])),
+                    PixelsPerUnit = (float)OpeningJson.Number(sprite, "ppu", 100),
+                };
+            }
+            foreach (object item in OpeningJson.Array(root["prefabs"], "prefabs"))
+            {
+                Dictionary<string, object> prefab = OpeningJson.Object(item, "prefab");
+                data.Prefabs[OpeningJson.String(prefab, "key")] = ParseNode(OpeningJson.Object(prefab["root"], "root"));
+            }
+            return data;
+        }
+
+        private static OpeningUiNode ParseNode(Dictionary<string, object> node)
+        {
+            var converted = new OpeningUiNode
+            {
+                Name = OpeningJson.String(node, "name"),
+                Path = OpeningJson.String(node, "path"),
+                Active = OpeningJson.Bool(node, "active", true),
+                Button = OpeningJson.Bool(node, "button"),
+                Mask = OpeningJson.Bool(node, "mask"),
+                HasImage = OpeningJson.Bool(node, "has_image"),
+                HasText = OpeningJson.Bool(node, "has_text"),
+                Sprite = OpeningJson.String(node, "sprite"),
+                Alpha = (float)OpeningJson.Number(node, "alpha", 1),
+                Type = OpeningJson.Int(node, "image_type"),
+                PreserveAspect = OpeningJson.Bool(node, "image_preserve_aspect"),
+                TextValue = OpeningJson.String(node, "text_value"),
+                FontSize = (float)OpeningJson.Number(node, "text_font_size", 32),
+                AnchorMin = ReadVector(node, "anchor_min", new Vector2(0.5f, 0.5f)),
+                AnchorMax = ReadVector(node, "anchor_max", new Vector2(0.5f, 0.5f)),
+                AnchoredPosition = ReadVector(node, "anchored_position", Vector2.zero),
+                SizeDelta = ReadVector(node, "size_delta", Vector2.zero),
+                Pivot = ReadVector(node, "pivot", new Vector2(0.5f, 0.5f)),
+                Scale = ReadVector(node, "scale", Vector2.one),
+            };
+            converted.ImageColor = ReadColor(node, "image_color", Color.white);
+            converted.TextColor = ReadColor(node, "text_color", Color.white);
+            if (node.TryGetValue("children", out object children) && children is List<object> list)
+                foreach (object item in list) converted.Children.Add(ParseNode(OpeningJson.Object(item, "child")));
+            return converted;
+        }
+
+        private static Vector2 ReadVector(Dictionary<string, object> node, string key, Vector2 fallback)
+        {
+            if (node == null || !node.TryGetValue(key, out object value) || !(value is List<object> list) || list.Count < 2)
+                return fallback;
+            return new Vector2((float)OpeningJson.ToNumber(list[0]), (float)OpeningJson.ToNumber(list[1]));
+        }
+
+        private static Color ReadColor(Dictionary<string, object> node, string key, Color fallback)
+        {
+            if (node == null || !node.TryGetValue(key, out object value) || !(value is List<object> list) || list.Count < 4)
+                return fallback;
+            return new Color((float)OpeningJson.ToNumber(list[0]), (float)OpeningJson.ToNumber(list[1]),
+                (float)OpeningJson.ToNumber(list[2]), (float)OpeningJson.ToNumber(list[3]));
+        }
+    }
+
+    public sealed class OpeningUiSprite
+    {
+        public string Name = string.Empty;
+        public int X;
+        public int Y;
+        public int Width;
+        public int Height;
+        public Vector2 Pivot = new Vector2(0.5f, 0.5f);
+        public Vector4 Border;
+        public float PixelsPerUnit = 100;
+    }
+
+    public sealed class OpeningUiNode
+    {
+        public string Name = string.Empty;
+        public string Path = string.Empty;
+        public bool Active = true;
+        public bool Button;
+        public bool Mask;
+        public bool HasImage;
+        public bool HasText;
+        public string Sprite = string.Empty;
+        public Color ImageColor = Color.white;
+        public Color TextColor = Color.white;
+        public int Type;
+        public bool PreserveAspect;
+        public string TextValue = string.Empty;
+        public float FontSize = 32;
+        public float Alpha = 1;
+        public Vector2 AnchorMin = new Vector2(0.5f, 0.5f);
+        public Vector2 AnchorMax = new Vector2(0.5f, 0.5f);
+        public Vector2 AnchoredPosition = Vector2.zero;
+        public Vector2 SizeDelta = Vector2.zero;
+        public Vector2 Pivot = new Vector2(0.5f, 0.5f);
+        public Vector2 Scale = Vector2.one;
+        public readonly List<OpeningUiNode> Children = new List<OpeningUiNode>();
+    }
+
+    /// <summary>Instantiates official story panels from the shipped layout payload.</summary>
+    public sealed class OpeningUiView : IDisposable
+    {
+        private readonly OpeningUiData data;
+        private readonly TMP_FontAsset font;
+        private readonly Texture2D atlas;
+        private readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+        private readonly Dictionary<string, GameObject> bindings = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+        private readonly GameObject root;
+
+        public OpeningUiView(OpeningUiData data, TMP_FontAsset font, Transform parent, int sortingOrder)
+        {
+            this.data = data ?? throw new ArgumentNullException(nameof(data));
+            this.font = font;
+            atlas = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!atlas.LoadImage(data.AtlasBytes))
+                throw new InvalidOperationException("Opening UI atlas could not be decoded.");
+            atlas.name = "OpeningUiAtlas";
+            var canvasObject = new GameObject("OpeningCanvas", typeof(RectTransform), typeof(Canvas),
+                typeof(CanvasScaler), typeof(GraphicRaycaster));
+            this.root = canvasObject;
+            canvasObject.transform.SetParent(parent, false);
+            Canvas canvas = canvasObject.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = sortingOrder;
+            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080, 1920);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 0.5f;
+        }
+
+        public Transform Root => root.transform;
+
+        public GameObject Create(string key, Transform parent = null)
+        {
+            if (!data.Prefabs.TryGetValue(key, out OpeningUiNode node))
+                throw new InvalidOperationException("Official story UI prefab is missing: " + key);
+            bindings.Clear();
+            GameObject created = Build(node, parent == null ? root.transform : parent);
+            created.name = "Opening_" + key;
+            return created;
+        }
+
+        public GameObject Find(string path)
+        {
+            return bindings.TryGetValue(path, out GameObject value) ? value : null;
+        }
+
+        public bool SetText(string path, string value)
+        {
+            GameObject node = Find(path);
+            if (node != null)
+            {
+                TMP_Text text = node.GetComponent<TMP_Text>();
+                if (text != null) { text.text = value ?? string.Empty; return true; }
+            }
+            foreach (KeyValuePair<string, GameObject> entry in bindings)
+            {
+                if (!entry.Key.EndsWith(path, StringComparison.Ordinal)) continue;
+                TMP_Text text = entry.Value.GetComponent<TMP_Text>();
+                if (text != null) { text.text = value ?? string.Empty; return true; }
+            }
+            return false;
+        }
+
+        public bool SetFirstTextEnding(string suffix, string value)
+        {
+            foreach (KeyValuePair<string, GameObject> entry in bindings)
+            {
+                if (!entry.Key.EndsWith(suffix, StringComparison.Ordinal)) continue;
+                TMP_Text text = entry.Value.GetComponent<TMP_Text>();
+                if (text != null) { text.text = value ?? string.Empty; return true; }
+            }
+            return false;
+        }
+
+        public bool SetActive(string path, bool active)
+        {
+            GameObject node = Find(path);
+            if (node == null) return false;
+            node.SetActive(active);
+            return true;
+        }
+
+        public bool SetActiveEnding(string suffix, bool active)
+        {
+            foreach (KeyValuePair<string, GameObject> entry in bindings)
+            {
+                if (!entry.Key.EndsWith(suffix, StringComparison.Ordinal)) continue;
+                entry.Value.SetActive(active);
+                return true;
+            }
+            return false;
+        }
+
+        public GameObject FindEnding(string suffix)
+        {
+            foreach (KeyValuePair<string, GameObject> entry in bindings)
+                if (entry.Key.EndsWith(suffix, StringComparison.Ordinal)) return entry.Value;
+            return null;
+        }
+
+        private GameObject Build(OpeningUiNode node, Transform parent)
+        {
+            var gameObject = new GameObject(node.Name, typeof(RectTransform));
+            gameObject.SetActive(false);
+            var rect = (RectTransform)gameObject.transform;
+            rect.SetParent(parent, false);
+            // A few official containers are point-anchored with a zero size and rely on
+            // their panel script to stretch them; without that script their stretched
+            // children would collapse, so those containers inherit the parent rect.
+            bool container = node.Children.Count > 0
+                && node.AnchorMin == node.AnchorMax && node.SizeDelta == Vector2.zero;
+            rect.anchorMin = container ? Vector2.zero : node.AnchorMin;
+            rect.anchorMax = container ? Vector2.one : node.AnchorMax;
+            rect.anchoredPosition = container ? Vector2.zero : node.AnchoredPosition;
+            rect.sizeDelta = container ? Vector2.zero : node.SizeDelta;
+            rect.pivot = container ? new Vector2(0.5f, 0.5f) : node.Pivot;
+            rect.localScale = new Vector3(node.Scale.x, node.Scale.y, 1);
+            if (node.Alpha < 0.999f) gameObject.AddComponent<CanvasGroup>().alpha = node.Alpha;
+            if (node.HasImage)
+            {
+                Image image = gameObject.AddComponent<Image>();
+                TryGetSprite(node.Sprite, out Sprite sprite);
+                image.sprite = sprite;
+                image.color = node.ImageColor;
+                image.type = (Image.Type)Mathf.Clamp(node.Type, 0, (int)Image.Type.Filled);
+                image.preserveAspect = node.PreserveAspect;
+                if (node.Type == (int)Image.Type.Sliced && node.Sprite.Length > 0) image.type = Image.Type.Sliced;
+            }
+            if (node.HasText)
+            {
+                TextMeshProUGUI text = gameObject.AddComponent<TextMeshProUGUI>();
+                if (font != null) text.font = font;
+                text.text = node.TextValue ?? string.Empty;
+                text.fontSize = Mathf.Max(1, node.FontSize);
+                text.color = node.TextColor;
+                // The official TMP alignment/margin fields are not decodable from the
+                // pinned bundle, so dialogue body text uses the left-aligned layout the
+                // prefab reserves for TalkText while names stay centered.
+                bool body = node.Name.EndsWith("TalkText", StringComparison.Ordinal);
+                text.alignment = body ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.Center;
+                text.enableWordWrapping = body;
+                text.overflowMode = TextOverflowModes.Overflow;
+                text.margin = body ? new Vector4(36, 24, 36, 24) : Vector4.zero;
+                text.raycastTarget = false;
+            }
+            if (node.Button)
+            {
+                if (gameObject.GetComponent<Image>() == null)
+                    gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
+                gameObject.AddComponent<Button>();
+            }
+            if (node.Mask) gameObject.AddComponent<Mask>().showMaskGraphic = false;
+            if (!string.IsNullOrEmpty(node.Path)) bindings[node.Path] = gameObject;
+            foreach (OpeningUiNode child in node.Children) Build(child, rect);
+            gameObject.SetActive(node.Active);
+            return gameObject;
+        }
+
+        private bool TryGetSprite(string name, out Sprite sprite)
+        {
+            sprite = null;
+            if (string.IsNullOrEmpty(name) || !data.Sprites.TryGetValue(name, out OpeningUiSprite entry)) return false;
+            if (sprites.TryGetValue(name, out sprite)) return true;
+            var rect = new Rect(entry.X, entry.Y, entry.Width, entry.Height);
+            sprite = Sprite.Create(atlas, rect, entry.Pivot, entry.PixelsPerUnit, 0, SpriteMeshType.FullRect, entry.Border);
+            sprite.name = name;
+            sprites[name] = sprite;
+            return true;
+        }
+
+        public void Dispose()
+        {
+            foreach (Sprite sprite in sprites.Values) if (sprite != null) UnityEngine.Object.Destroy(sprite);
+            sprites.Clear();
+            if (atlas != null) UnityEngine.Object.Destroy(atlas);
+            if (root != null) UnityEngine.Object.Destroy(root);
+        }
+    }
+}
