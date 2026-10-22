@@ -70,6 +70,7 @@ namespace Zjcs.Combat.Official
                     DamageParam = entity.DamageParam,
                     TargetMode = targetMode,
                     RandomCount = randomCount,
+                    ActionType = entity.ActionType,
                     Delay = entity.Delay,
                     DelayDistFactor = entity.DelayDistFactor,
                     Anchor = entity.Anchor,

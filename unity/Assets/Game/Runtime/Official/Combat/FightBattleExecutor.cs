@@ -241,6 +241,7 @@ namespace Zjcs.Combat.Official
                     int damageId = NextDamageId();
                     FightBattleHitResult resolved = hitExecutor.Apply(random, damageId, actor, target,
                         skill, hit, 0, false, 0.0, new List<int>());
+                    if (resolved.Formula == null && resolved.Settlement == null) continue;
                     var damage = new FightBattleDamageEvent
                     {
                         DamageId = damageId,
