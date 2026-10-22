@@ -403,6 +403,40 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        public ProgressionResult SetEquipmentLocked(long instanceId, bool locked, string eventId)
+        {
+            if (instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment instance and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                if (!OfflineEquipmentOperations.SetLocked(player.Equipment, instanceId, locked))
+                    throw new InvalidOperationException("The equipment lock state cannot be changed.");
+            }, eventId);
+        }
+
+        public ProgressionResult DecomposeEquipment(long instanceId, string eventId,
+            out IReadOnlyDictionary<int, long> rewards)
+        {
+            rewards = new Dictionary<int, long>();
+            if (EquipmentCatalog == null || instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment instance and event ID are required.");
+            IReadOnlyDictionary<int, long> gained = null;
+            ProgressionResult result = session.ApplyCharacterMutation(player =>
+            {
+                gained = OfflineEquipmentOperations.Decompose(player, EquipmentCatalog, instanceId);
+                if (gained == null) throw new InvalidOperationException("The equipment cannot be decomposed.");
+            }, eventId);
+            if (gained != null) rewards = gained;
+            return result;
+        }
+
+        public ProgressionResult TakeOffEquipped(int position, string eventId)
+        {
+            if (EquipmentCatalog == null || position <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment position and event ID are required.");
+            return TakeOffEquipment(EquipmentCatalog, position, eventId);
+        }
+
         public EquipmentUpgradeQuote QuoteEquipmentUpgrade(int position)
         {
             if (EquipmentCatalog == null || position <= 0) return null;

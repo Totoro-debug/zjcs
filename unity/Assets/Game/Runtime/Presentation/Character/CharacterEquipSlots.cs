@@ -39,6 +39,8 @@ namespace Zjcs.Presentation.Character
         private GameObject promoteDialog;
         private int promotePosition;
         private Transform slotRoot;
+        private Text statusText;
+        private long pendingDecomposeId;
         private long compareInstanceId;
         private readonly Dictionary<string, RectTransform> listNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> listButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -71,10 +73,20 @@ namespace Zjcs.Presentation.Character
             detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
             propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
             promoteTemplate = CharacterModelPackage.AsObject(screens["equip_promote"], "equip_promote");
-            compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
-            detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
-            propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
-            promoteTemplate = CharacterModelPackage.AsObject(screens["equip_promote"], "equip_promote");
+            var statusObject = new GameObject("EquipSlotsStatus", typeof(RectTransform), typeof(Text));
+            statusObject.transform.SetParent(transform, false);
+            RectTransform statusRect = (RectTransform)statusObject.transform;
+            statusRect.anchorMin = new Vector2(0.5f, 0f);
+            statusRect.anchorMax = new Vector2(0.5f, 0f);
+            statusRect.pivot = new Vector2(0.5f, 0f);
+            statusRect.sizeDelta = new Vector2(900f, 40f);
+            statusRect.anchoredPosition = new Vector2(0f, 8f);
+            statusText = statusObject.GetComponent<Text>();
+            statusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            statusText.fontSize = 20;
+            statusText.alignment = TextAnchor.MiddleCenter;
+            statusText.color = new Color(1f, 0.85f, 0.5f);
+            statusText.raycastTarget = false;
         }
 
         public void Refresh(Transform characterRoot)
@@ -501,6 +513,65 @@ namespace Zjcs.Presentation.Character
             Button close = CreateCompareButton(content, "关闭", new Vector2(260f, 40f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(CloseDetail);
+            Button locked = CreateCompareButton(content, instance.Locked ? "解锁" : "锁定",
+                new Vector2(-260f, 124f), new Color(0.5f, 0.65f, 0.85f, 0.95f));
+            locked.onClick.AddListener(() => ToggleLock(instance));
+            Button decompose = CreateCompareButton(content, "分解", new Vector2(0f, 124f),
+                new Color(0.85f, 0.4f, 0.4f, 0.95f));
+            decompose.onClick.AddListener(() => Decompose(instance));
+            Button takeOff = CreateCompareButton(content, "卸下", new Vector2(260f, 124f),
+                new Color(0.6f, 0.6f, 0.6f, 0.95f));
+            takeOff.onClick.AddListener(() => TakeOff(instance));
+        }
+
+        private void ToggleLock(OfflineEquipmentInstance instance)
+        {
+            ProgressionResult result = progression.SetEquipmentLocked(instance.InstanceId, !instance.Locked,
+                "character-equip-lock-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void Decompose(OfflineEquipmentInstance instance)
+        {
+            if (pendingDecomposeId != instance.InstanceId)
+            {
+                pendingDecomposeId = instance.InstanceId;
+                SetStatus("再次点击分解以确认。");
+                return;
+            }
+            ProgressionResult result = progression.DecomposeEquipment(instance.InstanceId,
+                "character-equip-decompose-" + Guid.NewGuid().ToString("N"), out IReadOnlyDictionary<int, long> rewards);
+            pendingDecomposeId = 0;
+            SetStatus(result.IsApplied
+                ? "分解完成：" + string.Join("、", rewards.Select(pair =>
+                    ItemName(pair.Key) + " ×" + pair.Value.ToString("N0", CultureInfo.InvariantCulture)))
+                : result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void TakeOff(OfflineEquipmentInstance instance)
+        {
+            int position = OfflineEquipmentOperations.PositionForItem(equipment, instance.ItemId);
+            ProgressionResult result = progression.TakeOffEquipped(position,
+                "character-equip-takeoff-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void SetStatus(string message)
+        {
+            LastMessage = message ?? string.Empty;
+            if (statusText != null) statusText.text = LastMessage;
         }
 
         private void OpenPromote(int position)
@@ -613,6 +684,7 @@ namespace Zjcs.Presentation.Character
 
         private void CloseDetail()
         {
+            pendingDecomposeId = 0;
             if (detailDialog != null) Destroy(detailDialog);
             detailDialog = null;
         }
