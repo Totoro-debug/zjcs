@@ -111,7 +111,9 @@ namespace Zjcs.Offline.Progression
                 BaseLevel = Player.Level,
                 PlayerRank = Player.Rank,
                 CurrentSeasonRank = Player.SeasonRank,
-                CurrentSeasonId = 0,
+                // Single-player seasons are represented by the current season rank, matching the
+                // equipment blessing records that already use Player.SeasonRank as their season id.
+                CurrentSeasonId = Player.SeasonRank,
                 PlayerBlessLevel = experience.BlessLevel,
                 CurrentProfessionChain = ProfessionChain(Player.Wardrobe.Profession)
             };
