@@ -319,6 +319,8 @@ namespace Zjcs.Editor.Character
                 "Load official gem and equipment upgrade material items with icons");
             Require(loaded.ProfessionName(1).Length > 0 && loaded.ProfessionIconUri(1).Length > 0,
                 "Load the official profession name and icon");
+            Require(loaded.SkillMergePiece(10000) == 10 && loaded.SkillMergePiece(10001) > 0,
+                "Load the official skill merge piece counts");
             Require(loaded.Rows("system_level_limit").Any(row => Convert.ToInt32(row["SubRank"],
                     System.Globalization.CultureInfo.InvariantCulture) == 1
                     && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
