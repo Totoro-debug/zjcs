@@ -28,6 +28,8 @@ namespace Zjcs.Presentation.Combat
         public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
+        /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
+        public float LastStepSeconds { get; private set; } = 0.35f;
         public FightBattlePhase Phase => phases.Phase;
         public int SpeedIndex => speedIndex;
         public double SpeedMultiplier => speedMultiplier;
@@ -115,6 +117,8 @@ namespace Zjcs.Presentation.Combat
                 hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
                 hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                     timelineFactionResolver, true);
+                LastStepSeconds = result.Event != null && result.Event.Duration > 0f
+                    ? result.Event.Duration : 0.35f;
                 if (result.Checkpoint.Finished) phases.BeginBattleEnd();
                 StepCompleted?.Invoke(result);
                 return result;

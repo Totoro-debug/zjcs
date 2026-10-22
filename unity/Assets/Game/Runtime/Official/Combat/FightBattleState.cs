@@ -105,7 +105,16 @@ namespace Zjcs.Combat.Official
         public int FalloffCastId;
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
         public List<int> HitGraphRootEntityIds = new List<int>();
+        public List<FightBattleHitRoot> HitGraphRoots = new List<FightBattleHitRoot>();
         public int HitGraphRootEntityId;
+        // Official FightSkillComponentInfo action/lifetime durations (seconds, -1 = never ends by
+        // itself; the "AllEnded"/"AllRelevantEnded" values are relative to the last hit/move end).
+        public float ActionDuration = -1f;
+        public float AllEndedActionDuration = -1f;
+        public float AllRelevantEndedActionDuration = -1f;
+        public float Duration = -1f;
+        public float AllEndedDuration = -1f;
+        public float AllRelevantEndedDuration = -1f;
         public List<FightBattleHitEntity> HitGraphEntities = new List<FightBattleHitEntity>();
         public bool HasCustomDamage;
         public long CustomDamage;
@@ -134,6 +143,9 @@ namespace Zjcs.Combat.Official
         public long DamageParam;
         public int TargetMode;
         public int RandomCount = 1;
+        public float Delay;
+        public int Anchor;
+        public bool IgnoreAICount;
         public bool HasCustomDamage;
         public long CustomDamage;
         public double DamageRate = 1.0;
@@ -155,6 +167,21 @@ namespace Zjcs.Combat.Official
         public List<int> CustomTargetHits = new List<int>();
         public List<int> RandomTargetHits = new List<int>();
         public int MiniHitTargetCount = 1;
+        // Reference configuration of the edge that introduced this hit node (HitCfg.Delay and
+        // HitCfg.ActOnSouce anchor). The same entity can be referenced from several parents; the
+        // first reference wins for the shared node.
+        public float Delay;
+        public int Anchor;
+        public bool IgnoreAICount;
+    }
+
+    [Serializable]
+    public sealed class FightBattleHitRoot
+    {
+        public int EntityId;
+        public float Delay;
+        public int Anchor;
+        public bool IgnoreAICount;
     }
 
     [Serializable]
@@ -220,6 +247,10 @@ namespace Zjcs.Combat.Official
         public int SkillEntityId;
         public int SkillItemId;
         public int Kind;
+        // Presentation pacing resolved from the official skill action/lifetime configuration and
+        // the configured hit delays. Negative action duration means the skill never ends by itself.
+        public float ActionDuration = -1f;
+        public float Duration = -1f;
         public List<int> TargetIds = new List<int>();
         public List<FightBattleHpChange> HpChanges = new List<FightBattleHpChange>();
         public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();

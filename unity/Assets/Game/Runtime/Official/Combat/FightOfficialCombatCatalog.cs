@@ -220,18 +220,25 @@ namespace Zjcs.Combat.Official
                 PriorityProperty = ai == null ? 0 : Int(ai, "AiPriorityPropType"),
                 PriorityFindMax = ai == null || Bool(ai, "AiPriorityFindMax", true),
                 Properties = CopyProperties(properties),
+                ActionDuration = Float(skill, "ActionDuration", -1f),
+                AllEndedActionDuration = Float(skill, "AllEndedActionDuration", -1f),
+                AllRelevantEndedActionDuration = Float(skill, "AllRelevantEndedActionDuration", -1f),
+                Duration = Float(skill, "Duration", -1f),
+                AllEndedDuration = Float(skill, "AllEndedDuration", -1f),
+                AllRelevantEndedDuration = Float(skill, "AllRelevantEndedDuration", -1f),
                 HitGraphEntities = new List<FightBattleHitEntity>()
             };
 
             var pending = new Queue<int>();
             var visited = new HashSet<int>();
-            AddHitChildren(skill, pending, result.HitGraphRootEntityIds);
+            var references = new Dictionary<int, FightBattleHitReference>();
+            AddHitChildren(skill, pending, result.HitGraphRoots, result.HitGraphRootEntityIds, references);
             while (pending.Count > 0)
             {
                 int hitId = pending.Dequeue();
                 if (hitId <= 0 || !visited.Add(hitId)) continue;
                 Dictionary<string, object> hitComponents = RequiredEntity(hitId);
-                FightBattleHitEntity hit = CreateHitEntity(hitId, hitComponents, pending);
+                FightBattleHitEntity hit = CreateHitEntity(hitId, hitComponents, pending, references);
                 result.HitGraphEntities.Add(hit);
             }
             if (result.HitGraphEntities.Count == 0)
@@ -563,7 +570,7 @@ namespace Zjcs.Combat.Official
         }
 
         private FightBattleHitEntity CreateHitEntity(int id, Dictionary<string, object> components,
-            Queue<int> pending)
+            Queue<int> pending, Dictionary<int, FightBattleHitReference> references)
         {
             Dictionary<string, object> damage = null;
             foreach (string name in new[] { "FightHitSummonComponent", "FightHitChainedComponent",
@@ -576,6 +583,12 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> custom = Component(components, "FightHitCustomTargetComponent");
             Dictionary<string, object> random = Component(components, "FightHitRandomTargetComponent");
             var result = new FightBattleHitEntity { EntityId = id, MiniHitTargetCount = 1 };
+            if (references.TryGetValue(id, out FightBattleHitReference reference))
+            {
+                result.Delay = reference.Delay;
+                result.Anchor = reference.Anchor;
+                result.IgnoreAICount = reference.IgnoreAICount;
+            }
             if (damage != null)
             {
                 result.HasFixedDamage = true;
@@ -586,30 +599,52 @@ namespace Zjcs.Combat.Official
                 result.FixedDamageProperty = Int(damage, "FixedDamageProp");
                 result.DamageParam = Long(damage, "DamageParam");
             }
-            if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits, pending);
-            if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits, pending);
+            if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits, pending, references);
+            if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits, pending, references);
             if (random != null)
             {
-                AddIntArray(random, "HitList", result.RandomTargetHits, pending);
+                AddIntArray(random, "HitList", result.RandomTargetHits, pending, references);
                 result.MiniHitTargetCount = Int(random, "MiniHitTargetCount", 1);
             }
             return result;
         }
 
         private static void AddHitChildren(Dictionary<string, object> skill, Queue<int> pending,
-            List<int> roots)
+            List<FightBattleHitRoot> roots, List<int> rootIds,
+            Dictionary<int, FightBattleHitReference> references)
         {
             foreach (object item in Array(Required(skill, "HitList"), "skill HitList"))
             {
                 Dictionary<string, object> entry = Object(item, "skill hit reference");
                 int id = Int(entry, "ClassId");
-                roots.Add(id);
+                var root = new FightBattleHitRoot
+                {
+                    EntityId = id,
+                    Delay = Float(entry, "Delay", 0f),
+                    Anchor = Int(entry, "ActOnSouce"),
+                    IgnoreAICount = Bool(entry, "IgnoreAICount")
+                };
+                roots.Add(root);
+                rootIds.Add(id);
                 pending.Enqueue(id);
+                AddReference(references, id, root.Delay, root.Anchor, root.IgnoreAICount);
             }
         }
 
+        private static void AddReference(Dictionary<int, FightBattleHitReference> references, int id,
+            float delay, int anchor, bool ignoreAICount)
+        {
+            if (id <= 0 || references.ContainsKey(id)) return;
+            references.Add(id, new FightBattleHitReference
+            {
+                Delay = delay,
+                Anchor = anchor,
+                IgnoreAICount = ignoreAICount
+            });
+        }
+
         private static void AddIntArray(Dictionary<string, object> component, string field,
-            List<int> output, Queue<int> pending)
+            List<int> output, Queue<int> pending, Dictionary<int, FightBattleHitReference> references)
         {
             object raw;
             if (!component.TryGetValue(field, out raw) || raw == null) return;
@@ -621,7 +656,24 @@ namespace Zjcs.Combat.Official
                     : Int(reference, "ClassId");
                 output.Add(id);
                 pending.Enqueue(id);
+                if (reference != null)
+                    AddReference(references, id, Float(reference, "Delay", 0f),
+                        Int(reference, "ActOnSouce"), Bool(reference, "IgnoreAICount"));
             }
+        }
+
+        private sealed class FightBattleHitReference
+        {
+            public float Delay;
+            public int Anchor;
+            public bool IgnoreAICount;
+        }
+
+        private static float Float(Dictionary<string, object> value, string key, float fallback)
+        {
+            object raw;
+            return value.TryGetValue(key, out raw) && raw != null
+                ? Convert.ToSingle(raw, CultureInfo.InvariantCulture) : fallback;
         }
 
         private static List<FightPropertyValue> CopyProperties(IList<FightPropertyValue> properties)
