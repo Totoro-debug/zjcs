@@ -320,6 +320,20 @@ def restore() -> dict:
     profession_names = {profession: profession_names[key] for profession, key in profession_name_map.items()
                         if key in profession_names}
     unit_sources.update(profession_name_sources)
+    skill_quality_rank = {}
+    for row in rules.get("skill_rank", []):
+        quality = int(row.get("Quality", 0))
+        rank = int(row.get("Rank", 0))
+        if quality <= 0: continue
+        if quality not in skill_quality_rank or rank < skill_quality_rank[quality][0]:
+            skill_quality_rank[quality] = (rank, int(row.get("Piece", 0)))
+    skill_merge_pieces = {}
+    for item in rules["item"]:
+        item_type = int(item.get("ItemType", 0))
+        if item_type not in (100, 101): continue
+        entry = skill_quality_rank.get(int(item.get("Quality", 0)))
+        if entry is not None and entry[1] > 0:
+            skill_merge_pieces[str(item["ClassId"])] = entry[1]
     profession_icons = {}
     sprite_files = {path.name: path for path in (ROOT / "assets/official/sprites").glob("*.png")}
     for row in rules["profession_base"]:
@@ -345,6 +359,7 @@ def restore() -> dict:
         "item_icons": item_icons,
         "profession_names": profession_names,
         "profession_icons": profession_icons,
+        "skill_merge_pieces": skill_merge_pieces,
     }
     payloads = (
         ("character-progression.json", progression),

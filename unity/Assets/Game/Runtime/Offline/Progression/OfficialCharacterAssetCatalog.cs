@@ -138,6 +138,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, string> itemIcons;
         private readonly Dictionary<int, string> professionNames;
         private readonly Dictionary<int, string> professionIcons;
+        private readonly Dictionary<int, int> skillMergePieces;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -155,7 +156,8 @@ namespace Zjcs.Offline.Progression
             OfficialPropCatalog props,
             Dictionary<int, string> itemIcons,
             Dictionary<int, string> professionNames,
-            Dictionary<int, string> professionIcons)
+            Dictionary<int, string> professionIcons,
+            Dictionary<int, int> skillMergePieces)
         {
             this.tables = tables;
             this.items = items;
@@ -177,11 +179,17 @@ namespace Zjcs.Offline.Progression
             this.itemIcons = itemIcons;
             this.professionNames = professionNames;
             this.professionIcons = professionIcons;
+            this.skillMergePieces = skillMergePieces;
         }
 
         public string ProfessionName(int profession)
         {
             return professionNames.TryGetValue(profession, out string name) ? name : string.Empty;
+        }
+
+        public int SkillMergePiece(int skillId)
+        {
+            return skillMergePieces.TryGetValue(skillId, out int pieces) ? pieces : 0;
         }
 
         public string ProfessionIconUri(int profession)
@@ -687,6 +695,12 @@ namespace Zjcs.Offline.Progression
                 foreach (KeyValuePair<string, object> entry in nameMap)
                     professionNames[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
                         = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
+            var skillMergePieces = new Dictionary<int, int>();
+            if (progression.TryGetValue("skill_merge_pieces", out object mergeRows)
+                && mergeRows is Dictionary<string, object> mergeMap)
+                foreach (KeyValuePair<string, object> entry in mergeMap)
+                    skillMergePieces[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                        = Convert.ToInt32(entry.Value, CultureInfo.InvariantCulture);
             var professionIcons = new Dictionary<int, string>();
             if (progression.TryGetValue("profession_icons", out object iconRows2)
                 && iconRows2 is Dictionary<string, object> iconMap2)
@@ -710,7 +724,7 @@ namespace Zjcs.Offline.Progression
                 levelExperience, limits, bless, timedAppearanceItems, propertyIds, levelProps, wardrobeTables,
                 wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes,
                 OfficialPropCatalog.Parse(progressionJson, overviewJson), itemIcons, professionNames,
-                professionIcons);
+                professionIcons, skillMergePieces);
         }
 
         private static List<Dictionary<string, object>> Rows(string table,

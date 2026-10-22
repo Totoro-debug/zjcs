@@ -238,6 +238,35 @@ namespace Zjcs.Offline.Progression
             }
         }
 
+        public int SkillMergePiece(int skillId)
+        {
+            return catalog.SkillMergePiece(skillId);
+        }
+
+        /// <summary>Merges the official skill piece count into the skill item and records ownership.</summary>
+        public ProgressionResult MergeSkill(int skillId)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillDefinition definition = SkillDefinition(skillId);
+            if (definition == null || definition.PieceItemId <= 0)
+                return Invalid("The selected skill cannot be merged.");
+            if (Player.Skills.Skills.Any(value => value != null && value.ClassId == skillId))
+                return Invalid("The skill is already owned.");
+            int pieces = catalog.SkillMergePiece(skillId);
+            OfflineItemStack stack = Player.Inventory.FirstOrDefault(value => value.ItemId == definition.PieceItemId);
+            if (pieces <= 0 || stack == null || stack.Count < pieces)
+                return Invalid("Not enough skill pieces.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                stack.Count -= pieces;
+                OfflineItemStack skill = player.Inventory.FirstOrDefault(value => value.ItemId == skillId);
+                if (skill == null) player.Inventory.Add(new OfflineItemStack { ItemId = skillId, Count = 1 });
+                else skill.Count += 1;
+                player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = skillId, Rank = 1 });
+            }, "skill-merge-" + skillId.ToString(CultureInfo.InvariantCulture) + "-"
+                + Guid.NewGuid().ToString("N"));
+        }
+
         public ProgressionResult SwapSkillSlots(int itemType, int fromSlot, int toSlot)
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");

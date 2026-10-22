@@ -780,10 +780,42 @@ namespace Zjcs.Presentation.Character
                 lines.Add("\u4e0b\u4e00\u7b49\u9636\uff1a" + string.Join("\u3001", cost.Items.Select(item =>
                     ItemName(item.ItemId) + " \u00d7" + item.Count)));
             text.text = string.Join("\n", lines);
-            Button install = CreatePanelButton(content, "\u5b89\u88c5", new Vector2(-160f, 40f),
+            bool owned = progression.Player.Skills.Skills.Any(value =>
+                value != null && value.ClassId == skillId);
+            int mergePieces = progression.SkillMergePiece(skillId);
+            bool mergeable = !owned && mergePieces > 0;
+            Button install = CreatePanelButton(content, owned ? "\u5b89\u88c5" : mergeable ? "\u5408\u6210"
+                : "\u672a\u62e5\u6709", new Vector2(-160f, 40f),
                 new Color(0.86f, 0.55f, 0.3f, 0.95f));
+            bool confirmingMerge = false;
             install.onClick.AddListener(() =>
             {
+                if (mergeable)
+                {
+                    long ownedPieces = progression.Player.Inventory
+                        .Where(value => value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+                    if (ownedPieces < mergePieces)
+                    {
+                        SetStatus("\u788e\u7247\u4e0d\u8db3\uff1a" + ownedPieces + "/" + mergePieces);
+                        return;
+                    }
+                    if (!confirmingMerge)
+                    {
+                        confirmingMerge = true;
+                        Text label = install.GetComponentInChildren<Text>();
+                        if (label != null) label.text = "\u786e\u8ba4\u5408\u6210";
+                        SetStatus("\u518d\u6b21\u70b9\u51fb\u5408\u6210\u4ee5\u786e\u8ba4\uff08"
+                            + mergePieces + " \u7247\uff09");
+                        return;
+                    }
+                    ProgressionResult merged = progression.MergeSkill(skillId);
+                    SetStatus(merged.Message ?? merged.Status.ToString());
+                    if (!merged.IsApplied) return;
+                    CloseSkillDetail();
+                    Refresh();
+                    Changed?.Invoke();
+                    return;
+                }
                 CloseSkillDetail();
                 Install(skillId);
             });
