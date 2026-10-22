@@ -89,7 +89,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 ### 人物入口、窗口与共享表现
 
 - [ ] 将现有创角后“人物”入口与正式头像／底栏人物入口统一到当前存档槽，接通 `profession/skills/pet` 跳转的实际接收方，返回时恢复原顶栏、底栏、公共人物资料和主页状态。
-- [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新；绑定职业名称／图标、人物称号／有效期及各槽位状态。
+- [x] 人物页职业按钮已绑定 `profession_name_{enum}` 本地化名称与 `ProfessionBase.Icon2` 图标（31 个职业有名称、31 个有图标），称号与有效期、各槽位状态已分别接入。
+- [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新。
 - [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 字体／材质／描边、状态切换动画、原动画／音效和本地化字段，以及物品图标、材料行和空状态。
 - [x] 生命周期已补：`OnDestroy` 停止经验协程、关闭弹窗与子页、销毁衣柜覆盖层；`CharacterFeatureRuntime` 订阅 `Application.lowMemory` 调用原 `OnLowMemory` 回收未显示子页；弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗。待实际画面回归确认。
 
@@ -171,7 +172,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 | 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 技能档案已进入人物主存档，人物按钮直接打开原技能面板；三方案切换／改名、八槽显示、列表安装替换／卸下已接线，战斗读取 `EquippedActiveSkills/PassiveSkills`。剩余：切换动画、安装遮罩与拖拽、详情／推荐／培养与成就页。 |
 | 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
 | 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
-| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 位阶页已接主要字段与突破；`UpgradeNotifyDialog`、位阶教学、材料说明和职业按钮事件仍未接线，职业按钮只有未被消费的 `profession` 事件，储存经验规则按钮的 `StoredExperienceHelpRequested` 亦无接收方。 |
+| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮已显示官方职业名称与图标，点击仍只有未被消费的 `profession` 事件；位阶页已接主要字段、突破与教学，`UpgradeNotifyDialog` 与材料说明仍缺；储存经验说明已由规则按钮打开。 |
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 

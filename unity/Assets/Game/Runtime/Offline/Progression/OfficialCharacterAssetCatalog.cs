@@ -123,6 +123,8 @@ namespace Zjcs.Offline.Progression
         private Dictionary<int, Dictionary<string, object>> conditionCache;
         private readonly OfficialPropCatalog props;
         private readonly Dictionary<int, string> itemIcons;
+        private readonly Dictionary<int, string> professionNames;
+        private readonly Dictionary<int, string> professionIcons;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -138,7 +140,9 @@ namespace Zjcs.Offline.Progression
             Dictionary<string, object> defaultAppearance,
             HashSet<int> appearanceItemTypes,
             OfficialPropCatalog props,
-            Dictionary<int, string> itemIcons)
+            Dictionary<int, string> itemIcons,
+            Dictionary<int, string> professionNames,
+            Dictionary<int, string> professionIcons)
         {
             this.tables = tables;
             this.items = items;
@@ -158,6 +162,18 @@ namespace Zjcs.Offline.Progression
             this.appearanceItemTypes = appearanceItemTypes;
             this.props = props;
             this.itemIcons = itemIcons;
+            this.professionNames = professionNames;
+            this.professionIcons = professionIcons;
+        }
+
+        public string ProfessionName(int profession)
+        {
+            return professionNames.TryGetValue(profession, out string name) ? name : string.Empty;
+        }
+
+        public string ProfessionIconUri(int profession)
+        {
+            return professionIcons.TryGetValue(profession, out string icon) ? icon : string.Empty;
         }
 
         public OfficialPropCatalog Props => props;
@@ -652,6 +668,18 @@ namespace Zjcs.Offline.Progression
             foreach (KeyValuePair<string, object> rank in Object(overview, "ranks"))
                 rankBySubRank[int.Parse(rank.Key, CultureInfo.InvariantCulture)]
                     = Integer(Object(rank.Value, "rank entry"), "rank");
+            var professionNames = new Dictionary<int, string>();
+            if (progression.TryGetValue("profession_names", out object nameRows)
+                && nameRows is Dictionary<string, object> nameMap)
+                foreach (KeyValuePair<string, object> entry in nameMap)
+                    professionNames[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                        = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
+            var professionIcons = new Dictionary<int, string>();
+            if (progression.TryGetValue("profession_icons", out object iconRows2)
+                && iconRows2 is Dictionary<string, object> iconMap2)
+                foreach (KeyValuePair<string, object> entry in iconMap2)
+                    professionIcons[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                        = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
             var itemIcons = new Dictionary<int, string>();
             if (progression.TryGetValue("item_icons", out object iconRows)
                 && iconRows is Dictionary<string, object> iconMap)
@@ -668,7 +696,8 @@ namespace Zjcs.Offline.Progression
             return new OfficialCharacterCatalog(tables, items, skins, appearances, allowed,
                 levelExperience, limits, bless, timedAppearanceItems, propertyIds, levelProps, wardrobeTables,
                 wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes,
-                OfficialPropCatalog.Parse(progressionJson, overviewJson), itemIcons);
+                OfficialPropCatalog.Parse(progressionJson, overviewJson), itemIcons, professionNames,
+                professionIcons);
         }
 
         private static List<Dictionary<string, object>> Rows(string table,

@@ -263,6 +263,7 @@ namespace Zjcs.Presentation.Character
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (characterModel != null) characterModel.Refresh();
             RefreshHonorTitle();
+            RefreshProfession();
         }
 
         public ProgressionResult AwardExperience(long amount, string eventId)
@@ -479,6 +480,30 @@ namespace Zjcs.Presentation.Character
             rankPanel.Open(transform);
         }
 
+        private void RefreshProfession()
+        {
+            int profession = progression.Player.Wardrobe.Profession;
+            RectTransform button = nodes.Values.FirstOrDefault(value => value.name == "CharacterPanelProfessionBtn");
+            if (button == null) return;
+            Text text = button.GetComponentsInChildren<Text>(true)
+                .FirstOrDefault(value => value.name == "Text");
+            if (text != null)
+            {
+                string professionName = progression.Catalog.ProfessionName(profession);
+                text.text = string.IsNullOrEmpty(professionName)
+                    ? "\u804c\u4e1a " + profession : professionName;
+            }
+            Image icon = button.GetComponentsInChildren<Image>(true)
+                .FirstOrDefault(value => value.name == "Item");
+            if (icon != null)
+            {
+                string uri = progression.Catalog.ProfessionIconUri(profession);
+                Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+                icon.sprite = sprite;
+                icon.enabled = sprite != null;
+            }
+        }
+
         private void RefreshHonorTitle()
         {
             const string providerPath =
@@ -611,6 +636,7 @@ namespace Zjcs.Presentation.Character
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (characterModel != null) characterModel.Refresh();
             RefreshHonorTitle();
+            RefreshProfession();
         }
 
         private void SetCharacterModelOnly(bool onlyModel)
