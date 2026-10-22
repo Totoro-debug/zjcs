@@ -106,7 +106,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 在已实现的基础／职业／衣柜分块与六组战力评分上，接入装备词条／套装／共鸣／星石、职业累计等级、技能阶位／槽位等级、幻兽及其他有效来源；`ScoreLevelGroupId` 的 `score_level_group` 与 `level_number` 表尚未纳入固定目录（当前只影响元素亲和属性）。
 - [x] 属性行详情已接：概要行与细分行可点击打开说明层，显示 `character-properties.json` 中的图标、名称与只读说明；说明层复用原 `CharacterDetailPropsDialog` 框架，原 `EntryDetailDialog` 预制体未提取。
 - [ ] 补齐普通经验、储存经验、赐福／满赐福各状态的原数字格式、颜色、说明按钮、上限状态和滑条；将 `AwardExperience` 演出与实际奖励、升级延时及成功写盘后的原时长连接，失败不播放。
-- [ ] 位阶页已绑定当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、等级／满位阶状态和突破；剩余：原 `UpgradeNotifyDialog` 成功通知、首个缺料图标定位与缺料原提示、`PlayerSubRankRemainTime` 的位阶／赛季开放倒计时。离线按[离线开放条件](offline-access.md)保留人物等级与材料条件，不等待服务器位阶，因此 `RankUnlock`／倒计时状态当前不出现。`bindings.rank` 已提取全部字段可继续补齐。
+- [ ] 位阶页已绑定当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、等级／满位阶状态和突破；成功通知已接：突破后弹出原 `UpgradeNotifyDialog` 语义的提示层（位阶前后名称与基础属性变化），确认关闭；原预制体未提取，提示层复用属性弹窗框架。剩余：首个缺料图标定位与缺料原提示、`PlayerSubRankRemainTime` 的位阶／赛季开放倒计时。离线按[离线开放条件](offline-access.md)保留人物等级与材料条件，不等待服务器位阶，因此 `RankUnlock`／倒计时状态当前不出现。`bindings.rank` 已提取全部字段可继续补齐。
 - [x] 10 级位阶教学已接：打开位阶页且未领取时弹出教学说明（材料与奖励、只能领取一次），阅读即记 `RankTutorialSeen`，点击领取调用 `ClaimRankTutorial` 发放白垩石片×2与罗拉×2000，重复领取由服务拒绝。原教学预制体未提取，说明层复用属性弹窗框架。
 - [ ] 核验经验跨位阶、跨等级和当季赐福边界及实际读档结果；补“返回家园触发/中断恢复”的原入口条件（当前为打开位阶页触发）。
 
@@ -177,7 +177,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 | 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 技能档案已进入人物主存档，人物按钮直接打开原技能面板；三方案切换／改名、八槽显示、列表安装替换／卸下已接线，战斗读取 `EquippedActiveSkills/PassiveSkills`。剩余：切换动画、安装遮罩与拖拽、详情／推荐／培养与成就页。 |
 | 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
 | 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
-| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮已显示官方职业名称与图标，点击仍只有未被消费的 `profession` 事件；位阶页已接主要字段、突破与教学，`UpgradeNotifyDialog` 与材料说明仍缺；储存经验说明已由规则按钮打开。 |
+| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮已显示官方职业名称与图标，点击仍只有未被消费的 `profession` 事件；位阶页已接主要字段、突破、成功通知与教学，材料说明与首个缺料定位仍缺；储存经验说明已由规则按钮打开。 |
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 
