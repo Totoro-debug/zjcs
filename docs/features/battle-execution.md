@@ -6,7 +6,7 @@
 
 ## 功能简介
 
-本页记录 Unity 共用战斗规则、格网执行和公共 HUD 的实际迁移状态。范围为各玩法和地图共用的战斗部分，不包含副本、活动等模式各自的入口、专属规则与结算页。已有部分规则、官方 HUD 组件构建和共用会话控制器；`OfficialMap10GameRuntime.BeginBattle` 已调用控制器，但玩家技能、怪物 CD、倍速、完整 HUD、场景和演出仍有缺口，并存在可复现的跨波次选敌错误，不能视为通用战斗过程已完整还原。开场剧情的 `OpeningFightPlayback` 是记录播放，不替代通用战斗运行时。
+本页记录 Unity 共用战斗规则、格网执行和公共 HUD 的实际迁移状态。范围为各玩法和地图共用的战斗部分，不包含副本、活动等模式各自的入口、专属规则与结算页。已有部分规则、官方 HUD 组件构建和共用会话控制器；`OfficialMap10GameRuntime.BeginBattle` 已调用控制器，玩家技能与被动属性可从存档装配，跨波次选敌错误已修复并有回归，但阶段机、倍速、完整 HUD、场景、动作演出与状态生命周期仍有缺口，不能视为通用战斗过程已完整还原。开场剧情的 `OpeningFightPlayback` 是记录播放，不替代通用战斗运行时。
 
 ### 原始官方功能与证据范围
 
@@ -108,7 +108,11 @@
 
 [`FightBattleGrid`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs) 保存格网地形、占位与边阻挡，并按官方 `AStarUtils` 的四方向代价和 MoveMask 规则计算路径；[`FightBattleExecutor`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) 在技能超出范围时按 MoveDist 尝试移动，再重新选择目标。每个单位回合按技能槽检查可用技能，技能状态记录施放、次数限制与冷却，步骤事件记录移动、施放和目标。Map10 的 `BuildCheckpoint` 已从战斗 JSON 装配基础格网、出生位置和波次；当前位置只在步骤结束后直接赋给模型，未消费路径事件恢复逐格移动演出，也未完整消费地形、身体占格及阵型字段。
 
-公共 HUD 的官方 prefab 树、sprite、字体和 Spine 骨骼输入由 [`prepare_unity_battle_assets.py`](../../scripts/prepare_unity_battle_assets.py) 按来源哈希恢复到 `Assets/Official/Combat`；当前已恢复的 HUD 子集有30个 prefab、701个 sprite。[`OfficialBattleHudCatalog`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)、[`OfficialBattleHudRenderer`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs) 和 [`OfficialBattleHudView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs) 已有隔离 Unity 工程导入及逐 prefab UI 组件树检查。视图支持回合文本、按 `GameRoundUI` 的 NextTime 排序和间距参数呈现行动时间轴、技能图标、冷却、次数耗尽态，并可由步骤事件刷新行动态和技能施放态。Map10 调用端目前把技能图标和时间轴头像均解析成同一张 `C_none` 占位图，未传阵营图标；玩家也未装配技能，因此不能以视图接口存在认定 HUD 的实际内容已接通。原版 `GameSkillIcon` 的常规技能图标不是手动施法按钮，prefab 中 `DebugBtn` 保持禁用。
+跨波次生成与可选状态已统一：`FightBattleTargeting.IsSelectable` 要求单位存活、可选中且不属于未生成的后续波次，目标选择、命中目标收集与移动占位共用这一判定；`FightBattleExecutor.Initialize` 将后续波次单位标为 `Ended` 并排除出行动队列，`SpawnNextWaveIfCleared` 在清场后恢复生成、入队和可选中状态。`FightBattleCheckpointRules.Validate` 在恢复及步骤结束时校验“后续波次不得标记已生成、其单位必须 Ended”。无可用技能的单位不再伪造跨图普攻，改为不造成伤害，避免绕过范围、消耗与命中图。
+
+玩家技能已从统一存档装配：技能档案 `OfflineSkillProfile` 加入 `OfflinePlayerProgress` 并随角色主存档校验；选择初始武器时按 `rules.json` 的 `SkillOptionsWhenChooseSword/Wand` 授予初始主动技能并放入方案一槽位0。[`FightOfficialSkillItemCatalog`](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialSkillItemCatalog.cs) 解析 `rules.json` 的 `skill` 表得到技能道具到 `EcEntityId` 的映射；Map10 战斗入口按当前方案读取主动技能、阶位与槽位等级，并单独为每个怪物装配自身技能，避免此前共享绑定列表造成的重复槽位与串用。`FightOfficialCombatCatalog` 新增 `CalculateSkillProps`、`CalculatePassiveSkillProps` 与 `CalculateSkillCooldown`，按官方 `CalcSkillProps` 规则读取 `entity_prop`、`entity_prop_group_level` 与数值表；主动技能属性加入命中结算的来源属性，被动技能属性在推导 MaxHp、速度和移动距离前并入单位属性。技能冷却按 `BattleFormula.SkillCD` 从 CD 属性计算，原数据没有 CD 属性时为0，不自行编造冷却值。
+
+公共 HUD 的官方 prefab 树、sprite、字体和 Spine 骨骼输入由 [`prepare_unity_battle_assets.py`](../../scripts/prepare_unity_battle_assets.py) 按来源哈希恢复到 `Assets/Official/Combat`；当前已恢复的 HUD 子集有30个 prefab、701个 sprite。[`OfficialBattleHudCatalog`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)、[`OfficialBattleHudRenderer`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs) 和 [`OfficialBattleHudView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs) 已有隔离 Unity 工程导入及逐 prefab UI 组件树检查。视图支持回合文本、按 `GameRoundUI` 的 NextTime 排序和间距参数呈现行动时间轴、技能图标、冷却、次数耗尽态，并可由步骤事件刷新行动态和技能施放态。玩家已有实际技能，技能栏可显示技能图标与冷却；Map10 仍把技能图标和时间轴头像解析成同一张 `C_none` 占位图，未传阵营图标，因此不能以视图接口存在认定 HUD 的实际内容已接通。原版 `GameSkillIcon` 的常规技能图标不是手动施法按钮，prefab 中 `DebugBtn` 保持禁用。
 
 怪物外观来源已恢复为407个 Spine 模型绑定，343个怪物 ID 映射见 `OfficialBattleModelCatalog` 及 `model-identities.json`；[`OfficialBattleSceneView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs) 可按调用端提供的模型键和网格映射实例化骨骼，并按 `Spawned` 延迟显示后续波次。Map10 对玩家返回空模型键，继续使用地图 avatar；对怪物调用模型目录解析，但把所有步骤动画固定为 `idle_01`，朝向回调还会覆盖目录缩放。当前视图直接依赖 `Spine.Unity.SkeletonAnimation`，尚未落实角色动画的[原生转换方案](../asset-management.md#spine-角色动画迁移决策)。模型绑定数不代表贴图、实际尺寸、动作及画面已通过。
 
@@ -116,9 +120,9 @@
 
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
-- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择和多目标衰减。另用当前 C# 规则直接构造双波次场景，已复现无技能玩家跨20格击杀未生成第二波单位，详见待实现清单；现有回归通过不代表这一缺陷不存在。
+- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
-- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。已执行的主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，但编译失败：`OfficialMap10GameRuntime` 调用不存在的 `PlayMapTalkDialog`，并以四参数调用没有对应重载的 `PlayStory`；`CommerceFeatureRuntime` 两处调用不存在的 `CommerceTransactionResult` 双参数构造函数，另调用不存在的 `OfflineCommerceOffers.ActivateFirstPurchase`。该次启动未执行到 Editor 规则入口和 Play Mode。
+- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。之后的重跑未能启动，因为另一 Unity 实例正打开同一工程，未能在本轮确认编译与 Editor 规则入口结果。
 - Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
 
 ## 自定义实现
@@ -145,7 +149,6 @@
 - [ ] 将各战斗入口需要的 Stage、GamePlayMode、PVE／PVP 上下文、胜负条件、回合限制及官方配置装配到共用会话。当前执行链部分公式上下文固定 `stageType=0/isPvp=false`；须按保留玩法传递，不能据此开放已关闭 PVP。
 - [ ] 接通准备、开始、战斗、暂停、入场过渡、战斗结束、结束过渡和释放事件及对应面板，保留模式跳过准备、延迟面板和外部覆盖条件。当前 Map10 定时调用 `Advance` 不构成完整阶段机。
 - [ ] 接入就绪、取消就绪、准备倒计时、自动开始与失败提示；仅在适用的本地模式恢复，团队或服务器时间的替代按所属页已确认范围处理。
-- [ ] 修复跨波次选敌和占位：`Initialize` 虽标未来单位 `Ended`，`FightBattleTargeting.Select` 却未排除 `Ended`／未来波次，移动占位也纳入未来单位。已复现：第一波单位2存活时，无技能玩家1跨20格把尚未生成的第二波单位3从10HP打至0；该例的 `Spawned=false/Ended=true`。补齐生成、入队、可选、占位、退场和下一波切换的一致性及回归。
 - [ ] 接通个人／全局回合、临近上限的颜色与倒计时、不同阶段上限和上限结果；当前 HUD 仅格式化全局回合与上限。
 - [ ] 将技能动作、命中、移动、伤害、子技能与死亡完成条件纳入调度，逐事件刷新表现。当前 Map10 约每0.35秒完整执行一个单位行动，多招结束后才整体刷新，未等待演出。
 - [ ] 按实际结果组件判定胜负，提供结果事件、终止后防重复执行、结束演出及资源清理；把结果交给所属玩法的胜负页、奖励、下一关和剧情分支，不能把原报告消费误作已取得奖励生成规则。
@@ -164,11 +167,10 @@
 
 ### 技能、CD、命中与状态（F16—F25）
 
-- [ ] 从实际角色存档装配装备技能、槽序、等级／品阶、技能属性、被动、职业与其他来源状态，并在准备阶段变更后刷新快照。当前 `BuildCheckpoint` 玩家 `Skills` 与技能槽为空，无法形成正常技能循环。
-- [ ] 核对无技能／无可释放技能的正式行为。当前 `FightBattleExecutor.ExecuteBasic` 直接选目标伤害，缺少攻击范围和移动检查，不能认定为官方完整默认普攻；有依据后接入并补回归。
-- [ ] 恢复怪物技能 CD、属性与被动：`Map10RuntimeSkill` 未承载 CD，`FightOfficialSkillBinding.Cooldown` 默认0，调用端还传空属性且未消费 `PassiveSkills`。按原配置消费，不能把怪物默认全技能无 CD 当规则。
-- [ ] 修复所有怪物共用 `enemySkillBindings` 后按实体／槽过滤造成的串用／重复槽位风险；同技能组合的多个怪物应独立装配状态，不因聚合而重复或抛异常。
-- [ ] 接入消耗与有效消耗条件、开场 CD、更新时点、次数限制、换波重置、CD 增减／停止／永久调整，以及职业、禁止动作、条件状态限制；检查技能互相影响后的下一招选择。
+- [ ] 从实际角色存档装配装备技能、槽序、等级／品阶、技能属性、被动、职业与其他来源状态，并在准备阶段变更后刷新快照。当前已会从技能档案读取方案主动技能、初始武器技能、阶位与槽位等级，并消费主动技能属性、被动属性与冷却；装备提供的技能、职业限制与其他加成仍待接入。
+- [ ] 核对无技能／无可释放技能的正式行为。执行器已不再伪造普攻，无可用技能时不造成伤害；官方在有技能但全部不可释放时是否有等待、移动或其它表现仍缺少证据，确认后接入并补回归。
+- [ ] 处理技能消耗与开场条件：`Map10RuntimeSkill` 仍未携带每技能 CD，当前 CD 由官方属性表计算；消费、`MustHaveValidCost`、开场 CD 更新时点、次数限制、换波重置、CD 增减／停止／永久调整，以及职业、禁止动作、条件状态限制仍待接入。
+- [ ] 消费怪物被动技能的状态部分：被动属性已并入单位属性，但 `PassiveStatusIdList` 对应的被动状态尚未在战斗开始时装配。
 - [ ] 保留每槽主动施放、Replay、子技能、额外施放与被动触发的独立身份和计数，贯通父子施放、白名单、触发上限与结束清理；按配置等待实际结束，不把所有负持续时间强制改为固定值。
 - [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。
 - [ ] 将完整伤害／治疗配置、等级与位阶修正、特殊属性、场景修正和命中分支接入真实单位。保留伤害衰减、概率和状态24181等已确认本地规则；公式单测通过不替代完整装备、怪物及状态集成。
@@ -180,7 +182,7 @@
 
 ### HUD、详情与报告（F26—F32、F39、F43）
 
-- [ ] 将技能图标、品质、详情参数、时间轴头像、阵营和主角色标识绑定真实数据。当前 Map10 对技能与头像均返回同一 `C_none`，不传阵营；玩家空技能又使技能栏没有真实内容。
+- [ ] 将技能图标、品质、详情参数、时间轴头像、阵营和主角色标识绑定真实数据。玩家技能已装配，技能栏有实际技能与冷却；Map10 仍对技能图标和头像返回同一 `C_none`，不传阵营图标。
 - [ ] 恢复队列移动、行动态、受击／死亡动画、死亡后的移除与新单位插入；现有 NextTime 排序和间距布局只覆盖其中一部分。
 - [ ] 绑定名称、单位 HP、血量变化、死亡标识与配置控制的显示条件，分别接入名称 HUD 和血条组件，不混淆 `GamePlayerHUD` 的职责。
 - [ ] 绑定 Boss 存活／敌方视野过滤、最多两栏与替换、名称头像、HP／盾组合、多层血量平滑变化、韧性及状态；当前未具备完整防护状态与筛选切换接线。
