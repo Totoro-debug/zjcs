@@ -192,6 +192,8 @@ namespace Zjcs.Combat.Official
         // hit only applies to the selected target(s).
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         public bool AllowEmptyScope;
+        // Official FightDamageComponent.StatusList entries applied when this hit lands.
+        public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
         public bool HasCustomDamage;
         public long CustomDamage;
         public double DamageRate = 1.0;
@@ -223,6 +225,17 @@ namespace Zjcs.Combat.Official
         public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         public bool AllowEmptyScope;
+        public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusApplication
+    {
+        public int StatusId;
+        // 1 = skill source, 2 = damage target (official DamageStatusCfg.ETargetType).
+        public int TargetType = 2;
+        public float Chance = 1f;
+        public float LessThanHpPer = -1f;
     }
 
     [Serializable]
