@@ -1,0 +1,141 @@
+using System;
+using System.Collections.Generic;
+using Spine.Unity;
+using UnityEngine;
+using Zjcs.Combat.Official;
+
+namespace Zjcs.Presentation.Combat
+{
+    public sealed class OfficialBattleSceneView : IDisposable
+    {
+        private readonly OfficialBattleModelCatalog catalog;
+        private readonly Transform root;
+        private readonly Func<FightBattleUnitState, string> modelKey;
+        private readonly Func<FightGridPoint, Vector3> gridToWorld;
+        private readonly Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent;
+        private readonly Action<Transform, FightBattleUnitState> orientUnit;
+        private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
+
+        private sealed class UnitView
+        {
+            public FightBattleUnitState State;
+            public SkeletonAnimation Skeleton;
+            public OfficialBattleModelBinding Binding;
+            public string CurrentAnimation;
+        }
+
+        public OfficialBattleSceneView(OfficialBattleModelCatalog catalog, Transform root,
+            Func<FightBattleUnitState, string> modelKey, OfficialBattleGridMapper gridMapper,
+            Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent,
+            Action<Transform, FightBattleUnitState> orientUnit)
+        {
+            this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
+            this.root = root != null ? root : throw new ArgumentNullException(nameof(root));
+            this.modelKey = modelKey ?? this.catalog.ResolveModelKey;
+            if (gridMapper == null) throw new ArgumentNullException(nameof(gridMapper));
+            gridToWorld = gridMapper.GridToWorld;
+            this.animationForEvent = animationForEvent ?? throw new ArgumentNullException(nameof(animationForEvent));
+            this.orientUnit = orientUnit ?? throw new ArgumentNullException(nameof(orientUnit));
+        }
+
+        public void Refresh(FightBattleCheckpoint checkpoint, FightBattleStepEvent stepEvent = null)
+        {
+            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            var present = new HashSet<int>();
+            foreach (FightBattleUnitState state in checkpoint.Units)
+            {
+                if (state == null || !IsWaveSpawned(checkpoint, state.Id)) continue;
+                present.Add(state.Id);
+                string key = modelKey(state);
+                if (string.IsNullOrEmpty(key)) continue;
+                UnitView view = GetOrCreate(state);
+                view.State = state;
+                view.Skeleton.transform.position = gridToWorld(new FightGridPoint(state.X, state.Y));
+                orientUnit(view.Skeleton.transform, state);
+                if (stepEvent != null && (stepEvent.ActorId == state.Id
+                    || (stepEvent.TargetIds != null && stepEvent.TargetIds.Contains(state.Id))))
+                    Play(view, animationForEvent(state, stepEvent), false);
+                else if (string.IsNullOrEmpty(view.CurrentAnimation))
+                    Play(view, "idle_01", true);
+            }
+
+            var removed = new List<int>();
+            foreach (KeyValuePair<int, UnitView> entry in units)
+                if (!present.Contains(entry.Key)) removed.Add(entry.Key);
+            foreach (int id in removed)
+            {
+                UnityEngine.Object.Destroy(units[id].Skeleton.gameObject);
+                units.Remove(id);
+            }
+        }
+
+        public void Play(int unitId, string animation, bool loop = false)
+        {
+            if (!units.TryGetValue(unitId, out UnitView view))
+                throw new KeyNotFoundException("Battle unit view is not mounted: " + unitId);
+            Play(view, animation, loop);
+        }
+
+        public void Dispose()
+        {
+            foreach (UnitView view in units.Values)
+                if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
+            units.Clear();
+        }
+
+        private UnitView GetOrCreate(FightBattleUnitState state)
+        {
+            if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
+            string key = modelKey(state);
+            OfficialBattleModelBinding binding = catalog.Find(key);
+            if (binding == null)
+                throw new KeyNotFoundException("Official battle model binding is missing for unit " + state.Id + ": " + key);
+
+            var gameObject = new GameObject("BattleUnit_" + state.Id);
+            gameObject.transform.SetParent(root, false);
+            SkeletonAnimation skeleton = gameObject.AddComponent<SkeletonAnimation>();
+            skeleton.skeletonDataAsset = binding.skeleton;
+            skeleton.initialSkinName = binding.skin;
+            skeleton.Initialize(true);
+            if (skeleton.Skeleton == null)
+            {
+                UnityEngine.Object.Destroy(gameObject);
+                throw new InvalidOperationException("Official battle skeleton failed to initialize: " + key);
+            }
+            if (binding.scale <= 0)
+            {
+                UnityEngine.Object.Destroy(gameObject);
+                throw new InvalidOperationException("Official battle model scale is invalid: " + key);
+            }
+            gameObject.transform.localScale = Vector3.one * binding.scale;
+            var view = new UnitView { State = state, Skeleton = skeleton, Binding = binding };
+            units.Add(state.Id, view);
+            return view;
+        }
+
+        private static bool IsWaveSpawned(FightBattleCheckpoint checkpoint, int unitId)
+        {
+            if (checkpoint.Waves == null || checkpoint.Waves.Count == 0) return true;
+            foreach (FightBattleWaveState wave in checkpoint.Waves)
+            {
+                if (wave == null || wave.UnitIds == null || !wave.UnitIds.Contains(unitId)) continue;
+                return wave.Spawned;
+            }
+            return true;
+        }
+
+        private static void Play(UnitView view, string animation, bool loop)
+        {
+            if (string.IsNullOrEmpty(animation)) return;
+            string spineName = null;
+            foreach (OfficialBattleAnimationAlias alias in view.Binding.animations)
+                if (alias.name == animation) { spineName = alias.spineName; break; }
+            if (spineName == null)
+                throw new InvalidOperationException("Official animation alias is missing: " + animation + " for unit " + view.State.Id);
+            if (view.CurrentAnimation == spineName && view.Skeleton.AnimationState.GetCurrent(0) != null)
+                return;
+            view.Skeleton.AnimationState.SetAnimation(0, spineName, loop);
+            view.CurrentAnimation = spineName;
+        }
+    }
+}

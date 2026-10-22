@@ -12,11 +12,15 @@ namespace Zjcs.Presentation.World
         [SerializeField] private int sortingOrderOffset;
 
         private SequencePayload sequence;
+        private SequencePayload idleSequence;
         private Mesh generatedMesh;
         private Material generatedMaterial;
         private MeshRenderer meshRenderer;
         private int currentFrame = -1;
         private float elapsed;
+        private bool loopAnimation = true;
+        private bool restoreIdleWhenFinished;
+        private bool animationFinished;
         private bool hasBaseLocalPosition;
         private Vector3 baseLocalPosition;
 
@@ -30,10 +34,21 @@ namespace Zjcs.Presentation.World
 
         private void Update()
         {
-            if (sequence == null || sequence.frames.Length == 0) return;
+            if (sequence == null || sequence.frames.Length == 0 || animationFinished) return;
 
             elapsed += Time.deltaTime;
-            int frame = Mathf.FloorToInt(elapsed * sequence.fps) % sequence.frames.Length;
+            int frame = Mathf.FloorToInt(elapsed * sequence.fps);
+            if (loopAnimation) frame %= sequence.frames.Length;
+            else if (frame >= sequence.frames.Length)
+            {
+                if (restoreIdleWhenFinished && idleSequence != null && sequence != idleSequence)
+                {
+                    SetSequence(idleSequence, true, false);
+                    return;
+                }
+                frame = sequence.frames.Length - 1;
+                animationFinished = true;
+            }
             if (frame != currentFrame) ApplyFrame(frame);
         }
 
@@ -48,6 +63,13 @@ namespace Zjcs.Presentation.World
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             TextAsset source = Resources.Load<TextAsset>("Map10/Monsters/" + id);
             if (source == null) throw new InvalidOperationException("Official Map10 monster payload is missing: " + id);
+            Initialize(source, id);
+        }
+
+        public void Initialize(TextAsset source, int id)
+        {
+            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            if (source == null) throw new ArgumentNullException(nameof(source));
             SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
             ValidatePayload(loaded, id);
 
@@ -80,7 +102,34 @@ namespace Zjcs.Presentation.World
                 baseLocalPosition = transform.localPosition;
                 hasBaseLocalPosition = true;
             }
-            transform.localPosition = baseLocalPosition + new Vector3(loaded.offsetX, loaded.offsetY, 0f);
+            idleSequence = loaded;
+            SetSequence(loaded, true, false);
+        }
+
+        public void PlayAnimation(TextAsset source, bool loop, bool restoreIdleOnComplete)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (monsterId <= 0 || generatedMesh == null || generatedMaterial == null)
+                throw new InvalidOperationException("Official Map10 entity Spine view is not initialized.");
+            SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
+            ValidatePayload(loaded, monsterId);
+            Texture2D atlas = Resources.Load<Texture2D>(loaded.textureResource);
+            if (atlas == null)
+                throw new InvalidOperationException("Official Map10 story actor atlas is missing: " + loaded.textureResource);
+            generatedMaterial.mainTexture = atlas;
+            meshRenderer.sortingOrder = loaded.sortingOrder + sortingOrderOffset;
+            SetSequence(loaded, loop, restoreIdleOnComplete);
+        }
+
+        private void SetSequence(SequencePayload value, bool loop, bool restoreIdle)
+        {
+            sequence = value;
+            loopAnimation = loop;
+            restoreIdleWhenFinished = restoreIdle;
+            animationFinished = false;
+            elapsed = 0f;
+            currentFrame = -1;
+            transform.localPosition = baseLocalPosition + new Vector3(value.offsetX, value.offsetY, 0f);
             ApplyFrame(0);
         }
 
@@ -97,7 +146,7 @@ namespace Zjcs.Presentation.World
         {
             if (value == null || value.format != 1 || value.mapClassId != 10 || value.monsterId != expectedMonsterId
                 || value.fps <= 0 || value.frames == null || value.frames.Length == 0
-                || string.IsNullOrEmpty(value.animation) || string.IsNullOrEmpty(value.textureResource))
+                || string.IsNullOrEmpty(value.textureResource))
                 throw new InvalidOperationException("Official Map10 monster animation payload is invalid: " + expectedMonsterId);
 
             foreach (Frame frame in value.frames)

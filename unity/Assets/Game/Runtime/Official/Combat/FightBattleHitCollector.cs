@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+
+namespace Zjcs.Combat.Official
+{
+    public static class FightBattleHitCollector
+    {
+        public static List<FightBattleHitDefinition> Collect(IReadOnlyList<FightBattleHitEntity> entities,
+            int rootEntityId)
+        {
+            if (entities == null) throw new ArgumentNullException(nameof(entities));
+            var result = new List<FightBattleHitDefinition>();
+            Collect(entities, rootEntityId, result, new HashSet<int>(), 0, 0, 1);
+            return result;
+        }
+
+        private static void Collect(IReadOnlyList<FightBattleHitEntity> entities, int entityId,
+            List<FightBattleHitDefinition> result, HashSet<int> ancestors, int depth,
+            int targetMode, int randomCount)
+        {
+            if (entityId <= 0 || depth > 12 || ancestors.Contains(entityId)) return;
+            FightBattleHitEntity entity = Find(entities, entityId);
+            if (entity == null) return;
+            var branch = new HashSet<int>(ancestors) { entityId };
+
+            if (entity.HasFixedDamage)
+                result.Add(new FightBattleHitDefinition
+                {
+                    EntityId = entity.EntityId,
+                    DamageId = entity.DamageId,
+                    DamageType = entity.DamageType,
+                    BasicProperty = entity.BasicProperty,
+                    DamageProperty = entity.DamageProperty,
+                    FixedDamageProperty = entity.FixedDamageProperty,
+                    DamageParam = entity.DamageParam,
+                    TargetMode = targetMode,
+                    RandomCount = randomCount
+                });
+
+            CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
+                targetMode, randomCount);
+            CollectChildren(entities, entity.CustomTargetHits, result, branch, depth + 1, 1, 0);
+            CollectChildren(entities, entity.RandomTargetHits, result, branch, depth + 1, 2,
+                Math.Max(1, entity.MiniHitTargetCount));
+        }
+
+        private static void CollectChildren(IReadOnlyList<FightBattleHitEntity> entities,
+            List<int> children, List<FightBattleHitDefinition> result, HashSet<int> ancestors,
+            int depth, int targetMode, int randomCount)
+        {
+            if (children == null) return;
+            for (int i = 0; i < children.Count; i++)
+                Collect(entities, children[i], result, ancestors, depth, targetMode, randomCount);
+        }
+
+        private static FightBattleHitEntity Find(IReadOnlyList<FightBattleHitEntity> entities, int id)
+        {
+            for (int i = 0; i < entities.Count; i++)
+                if (entities[i] != null && entities[i].EntityId == id) return entities[i];
+            return null;
+        }
+    }
+}
