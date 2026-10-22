@@ -113,6 +113,22 @@ namespace Zjcs.Presentation.Home
                 TMP_Text text = pair.Value.GetComponent<TMP_Text>();
                 if (text == null || text.GetType() != typeof(TextMeshProUGUI)) continue;
                 text.text = value ?? string.Empty;
+                LayoutElement element = pair.Value.GetComponent<LayoutElement>();
+                if (element == null) element = pair.Value.AddComponent<LayoutElement>();
+                Vector2 preferred = text.GetPreferredValues(value ?? string.Empty);
+                element.preferredWidth = Mathf.Max(24f, preferred.x + 8f);
+                element.preferredHeight = Mathf.Max(20f, text.fontSize + 4f);
+                element.flexibleWidth = 0f;
+                element.minWidth = element.preferredWidth;
+                text.ForceMeshUpdate();
+                RectTransform parentRect = pair.Value.transform.parent as RectTransform;
+                if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                RectTransform textRect = (RectTransform)pair.Value.transform;
+                if (textRect.rect.width < 1f)
+                {
+                    textRect.sizeDelta = new Vector2(Mathf.Max(24f, preferred.x + 8f), textRect.sizeDelta.y);
+                    text.ForceMeshUpdate();
+                }
                 return true;
             }
             return false;
@@ -139,6 +155,22 @@ namespace Zjcs.Presentation.Home
                 TMP_Text text = pair.Value.GetComponent<TMP_Text>();
                 if (text == null) continue;
                 text.text = value ?? string.Empty;
+                LayoutElement element = pair.Value.GetComponent<LayoutElement>();
+                if (element == null) element = pair.Value.AddComponent<LayoutElement>();
+                Vector2 preferred = text.GetPreferredValues(value ?? string.Empty);
+                element.preferredWidth = Mathf.Max(24f, preferred.x + 8f);
+                element.preferredHeight = Mathf.Max(20f, text.fontSize + 4f);
+                element.flexibleWidth = 0f;
+                element.minWidth = element.preferredWidth;
+                text.ForceMeshUpdate();
+                RectTransform parentRect = pair.Value.transform.parent as RectTransform;
+                if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                RectTransform textRect = (RectTransform)pair.Value.transform;
+                if (textRect.rect.width < 1f)
+                {
+                    textRect.sizeDelta = new Vector2(Mathf.Max(24f, preferred.x + 8f), textRect.sizeDelta.y);
+                    text.ForceMeshUpdate();
+                }
                 return true;
             }
             return false;
@@ -154,6 +186,22 @@ namespace Zjcs.Presentation.Home
                 TMP_Text text = pair.Value.GetComponent<TMP_Text>();
                 if (text == null) continue;
                 text.text = value ?? string.Empty;
+                LayoutElement element = pair.Value.GetComponent<LayoutElement>();
+                if (element == null) element = pair.Value.AddComponent<LayoutElement>();
+                Vector2 preferred = text.GetPreferredValues(value ?? string.Empty);
+                element.preferredWidth = Mathf.Max(24f, preferred.x + 8f);
+                element.preferredHeight = Mathf.Max(20f, text.fontSize + 4f);
+                element.flexibleWidth = 0f;
+                element.minWidth = element.preferredWidth;
+                text.ForceMeshUpdate();
+                RectTransform parentRect = pair.Value.transform.parent as RectTransform;
+                if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+                RectTransform textRect = (RectTransform)pair.Value.transform;
+                if (textRect.rect.width < 1f)
+                {
+                    textRect.sizeDelta = new Vector2(Mathf.Max(24f, preferred.x + 8f), textRect.sizeDelta.y);
+                    text.ForceMeshUpdate();
+                }
                 return true;
             }
             return false;
