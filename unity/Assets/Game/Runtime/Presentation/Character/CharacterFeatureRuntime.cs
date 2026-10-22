@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 
@@ -28,6 +29,7 @@ namespace Zjcs.Presentation.Character
 
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
             progression = new OfflineCharacterProgressionService(session, assetCatalog.Load());
+            TryRegisterEquipmentProperties();
             ProgressionResult wardrobe = progression.InitializeWardrobe("wardrobe-initialize");
             if (wardrobe.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(wardrobe.Message ?? "Character wardrobe initialization failed.");
@@ -41,6 +43,20 @@ namespace Zjcs.Presentation.Character
             panelView.Initialize(assetCatalog, progression);
             panelView.OfficialModuleRequested -= ForwardNavigation;
             panelView.OfficialModuleRequested += ForwardNavigation;
+        }
+
+        private void TryRegisterEquipmentProperties()
+        {
+            try
+            {
+                OfficialEquipmentCatalog equipment = OfficialEquipmentAssetCatalog.LoadDefault().Load();
+                progression.AddPropertySource(new OfflineEquipmentPropSource(equipment,
+                    progression.Catalog.RankOfSubRank));
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Official equipment properties are unavailable: " + error.Message);
+            }
         }
 
         public void Refresh()
