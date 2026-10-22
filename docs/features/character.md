@@ -49,6 +49,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 人物属性管线按固定版 `PlayerPropContext`／`PropChunkFactory` 分块实现：[CharacterPropCalculator](../../unity/Assets/Game/Runtime/Offline/Progression/CharacterPropCalculator.cs) 构建 `BattleBasic`、`Profession`、`Appearance` 分块并按原 `HandleBaseProps`、`HandlePercentProps`、`HandleScaleProps` 顺序处理战斗外属性，用 `CalcCombatRatingCommon` 的 Base／NonBase／BaseRate／BasePercent／Advanced／NonBasePercent 六组、`ScoreBase` 递归和 `CommonCombatRatingRefData` 计算分块战力；[OfficialPropCatalog](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropCatalog.cs) 解析 352 条 `prop_cfg`、显示名／说明／图标、分类、单位本地化与相对属性，[OfficialPropFormat](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropFormat.cs) 复刻原 `FormatPropString` 的万／亿与百分比格式。生成脚本在 `character-progression.json` 中新增 `prop_units`、`prop_categories`，并从原预制体提取属性弹窗的 `PropCatalogCfgList` 与细分分组绑定。
 
+[CharacterRankPanel](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterRankPanel.cs) 绑定原 `CharacterUpgradePanel`：当前／下一位阶名称（`rank name`＋`sub`）、位阶星级（按 `player_subrank` 的同一大位阶分组，`GetState` 的已亮／下一枚／未亮）、当前等级与基础等级上限、下一位阶等级上限、`PropCatalog.Base` 基础属性前后值、`player_subrank.Items` 材料（原 `MapId`、持有／需求、品质底图与 `item_icons` 图标）、`LimitState` 的无限制／等级不足／满位阶状态和 `UseItemBtn` 突破。突破成功后刷新面板并保持同一实例；原 `UpgradeNotifyDialog` 与 10 级教学仍未接线。
+
 [CharacterPropPanels](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPropPanels.cs) 绑定人物页概要属性行与综合／细分属性弹窗：概要行读取原 `CharacterPanelPropPanel` 绑定（`PropCatalog=9`、`SlotPropItems` 与原 `row`／`row_fields` 模板），弹窗使用 `character_props` 原层级和 `PropCatalogCfgList`（主要属性 `Main`、附加属性 `Addition`），细分按原 `PropDialogDetailedPropItem` 分组、`mPropCatalogList=[Main,Addition]` 过滤，并支持逐组折叠／展开。[CharacterPanelNodeFactory](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPanelNodeFactory.cs) 统一还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask 与按钮；人物页和弹窗使用独立节点索引，关闭弹窗只销毁弹窗本身。
 
 [OfficialWardrobePanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialWardrobePanelView.cs) 按 `wardrobe-ui.json` 的原控件树、`AppendAppearanceFirstTabItem.mTabGroupObj` 与 `AppendAppearanceSecondTabItem.mItemType` 绑定大类和子类；穿戴列表读取已拥有物品并按原可穿规则筛选，称号使用原双列模板，穿脱、称号、风尚经验、规则/属性弹窗及倒计时经人物进度服务处理。已到期物品在衣柜打开期间同步并从人物状态卸下。
@@ -57,7 +59,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 当前已完成固定版数据恢复、人物存档入口、衣柜基础交互、人物页 idle 模型播放、属性分块／战力管线以及概要属性和综合／细分属性弹窗；1,563 个可穿戴外观项、1,723 个皮肤定义通过 `CharacterProgressionValidation.BindOfficialCatalogs` 绑定验证，人物属性图标与面板 Sprite 由官方清单导入，基础属性断言为 300/60/60/48，职业 1 的 FeatureProps 使其战斗外生命为 327。`CharacterProgressionValidation.Run` 新增属性管线断言（352 条 prop_cfg、主要属性 4 行、附加属性 96 行、战力为正、人物基础细分 60 攻击、万／百分比格式）。
 
-属性管线的当前验证范围：`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 使用 Roslyn 单独编译通过；同一 `Evaluate` 管线在同步的 Mono 校验程序中对 `character-progression.json`／`character-overview.json` 运行通过。Unity Editor 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 画面验证尚未执行（验证时另一会话正占用该工程实例）。装备、技能、幻兽、古遗物、星石、料理、额外、公会、星命与 NPC 分块仍为 0，因此战力只覆盖基础、职业和衣柜来源。称号在人物页的展示与官方 HSV 染色结果渲染尚未完成。官方衣柜树没有染色控件；原 HSV 编辑入口属于 `ChangeAppearancePanel`，不在本次衣柜界面范围内。
+属性与位阶模块的当前验证范围：`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 使用 Roslyn 单独编译通过；同一 `Evaluate` 管线在同步的 Mono 校验程序中对 `character-progression.json`／`character-overview.json` 运行通过。位阶面板的等级上限、星级分组、材料图标和突破状态读取同一目录，尚未在 Unity 画面中验证。Unity Editor 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 画面验证尚未执行（验证时另一会话正占用该工程实例）。装备、技能、幻兽、古遗物、星石、料理、额外、公会、星命与 NPC 分块仍为 0，因此战力只覆盖基础、职业和衣柜来源。称号在人物页的展示与官方 HSV 染色结果渲染尚未完成。官方衣柜树没有染色控件；原 HSV 编辑入口属于 `ChangeAppearancePanel`，不在本次衣柜界面范围内。
 
 ## 自定义实现
 
@@ -95,7 +97,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 在已实现的基础／职业／衣柜分块与六组战力评分上，接入装备词条／套装／共鸣／星石、职业累计等级、技能阶位／槽位等级、幻兽及其他有效来源；`ScoreLevelGroupId` 的 `score_level_group` 与 `level_number` 表尚未纳入固定目录（当前只影响元素亲和属性）。
 - [ ] 属性名称／单位／说明的只读详情与属性来源图标仍在弹窗中缺失：当前概要行与细分行已按原名称、万／亿数值、百分比、相对属性与空值隐藏生成，但未接入点击属性行打开的 `EntryDetailDialog` 说明浮层。
 - [ ] 补齐普通经验、储存经验、赐福／满赐福各状态的原数字格式、颜色、说明按钮、上限状态和滑条；将 `AwardExperience` 演出与实际奖励、升级延时及成功写盘后的原时长连接，失败不播放。
-- [ ] 位阶页（`CharacterUpgradePanel`）尚未绑定：当前仅用原面板层级提供 `UseItemBtn` 突破与结果文本，缺当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、首个缺料定位、原提示与 `UpgradeNotifyDialog`。`bindings.rank` 已从 APK 提取 `CharacterUpgradePanel`／`CharacterUpgradePanelStarItem` 字段，可直接接线。原位阶／赛季开放倒计时的单机处理沿用[离线开放条件](offline-access.md)，保留人物等级与材料条件。
+- [ ] 位阶页已绑定当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、等级／满位阶状态和突破；剩余：原 `UpgradeNotifyDialog` 成功通知、首个缺料图标定位与缺料原提示、`PlayerSubRankRemainTime` 的位阶／赛季开放倒计时。离线按[离线开放条件](offline-access.md)保留人物等级与材料条件，不等待服务器位阶，因此 `RankUnlock`／倒计时状态当前不出现。`bindings.rank` 已提取全部字段可继续补齐。
 - [ ] 接通10级返回家园教学、材料说明、一次领取白垩石片2个和罗拉2000、教学中断恢复及防重复领取；核验经验跨位阶、跨等级和当季赐福边界及实际读档结果。
 
 ### 人物装备五槽
@@ -147,7 +149,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 | 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 人物按钮仅发出 `OfficialModuleRequested("skills")`，`CharacterFeatureRuntime` 转发 `NavigationRequested`，创建流程没有订阅该事件。`OfflineSkillProgression` 已有安装/替换/卸下与培养规则，但 `OfflineSkillProfile` 未进入统一人物主存档，技能运行面板、槽位交互、方案选择和战斗读取未接通。 |
 | 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
 | 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
-| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮只有未被消费的 `profession` 事件；储存经验规则按钮的 `StoredExperienceHelpRequested` 亦无接收方。成长操作已有服务，不能据此认定职业、位阶教学、材料说明和领取表现全部还原。 |
+| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 位阶页已接主要字段与突破；`UpgradeNotifyDialog`、位阶教学、材料说明和职业按钮事件仍未接线，职业按钮只有未被消费的 `profession` 事件，储存经验规则按钮的 `StoredExperienceHelpRequested` 亦无接收方。 |
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 

@@ -296,6 +296,13 @@ namespace Zjcs.Editor.Character
             Require(OfficialPropFormat.Value(props.Get(1), 60) == "60"
                 && OfficialPropFormat.Value(props.Get(58), 5000) == "50%",
                 "Format an integer property and a percent property through prop_cfg");
+            Require(loaded.ItemIconUri(43003).Length > 0 && loaded.FindItem(43003) != null,
+                "Resolve the official rank material icon and item row");
+            Require(loaded.Rows("system_level_limit").Any(row => Convert.ToInt32(row["SubRank"],
+                    System.Globalization.CultureInfo.InvariantCulture) == 1
+                    && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
+                && loaded.Rows("player_subrank").Count == 40,
+                "Read the official rank level limit and sub-rank divisions");
         }
 
         private static void Require(bool condition, string step)

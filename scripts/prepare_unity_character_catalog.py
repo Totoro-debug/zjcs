@@ -163,6 +163,18 @@ def restore_sprites(manifests: list[dict]) -> list[dict]:
     visit(properties)
     panels = json.loads((TARGET / "character-panels.json").read_text(encoding="utf-8"))
     visit(panels)
+    icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
+    icon_item_ids = {str(item_id) for row in json.loads((ROOT / "assets/official/rules.json")
+                    .read_text(encoding="utf-8"))["player_subrank"] for item_id in (row.get("Items") or {})}
+    for item_id in icon_item_ids:
+        icon = icons.get(item_id)
+        if isinstance(icon, dict) and isinstance(icon.get("file"), str):
+            referenced.add(icon["file"])
+    for name in ("ImgQuality_White-031a03cab0.png", "ImgQuality_Blue-42b8cb9630.png",
+                 "ImgQuality_Purple-0b40a53021.png", "ImgQuality_Orange-78887320b0.png",
+                 "ImgQuality_Gold-5f018c42e0.png", "ImgQuality_Red-caa09e6943.png",
+                 "ImgQuality_Multicolour-93374ebc65.png"):
+        referenced.add("res://assets/official/sprites/" + name)
     if not referenced or any(path not in resources for path in referenced):
         missing = sorted(path for path in referenced if path not in resources)
         raise ValueError("Character sprite sources are not covered by official manifests: " + ", ".join(missing[:8]))
@@ -272,6 +284,10 @@ def restore() -> dict:
         wardrobe_items.update(int(item_id) for item_id in (rank.get("Items") or {}))
     filtered_rules = {name: rules[name] for name in RULE_TABLES if name != "item"}
     filtered_rules["item"] = [row for row in rules["item"] if row["ClassId"] in wardrobe_items]
+    icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
+    item_icons = {str(row["ClassId"]): icons[str(row["ClassId"])]["file"]
+                  for row in filtered_rules["item"]
+                  if str(row["ClassId"]) in icons and isinstance(icons[str(row["ClassId"])], dict)}
     from npc_travel_language import language
     unit_keys = {row["Unit"] for row in rules["prop_cfg"] if row.get("Unit")}
     prop_units, unit_sources = language(unit_keys)
@@ -286,6 +302,7 @@ def restore() -> dict:
         "property_ids": property_ids,
         "prop_units": prop_units,
         "prop_categories": prop_categories,
+        "item_icons": item_icons,
     }
     payloads = (
         ("character-progression.json", progression),

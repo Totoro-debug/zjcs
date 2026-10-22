@@ -135,6 +135,7 @@ namespace Zjcs.Presentation.Character
         private CharacterModelPreview characterModel;
         private OfficialWardrobePanelView wardrobeView;
         private CharacterPropPanels propPanels;
+        private CharacterRankPanel rankPanel;
 
         public event Action CloseRequested;
 
@@ -148,6 +149,7 @@ namespace Zjcs.Presentation.Character
         {
             if (!Input.GetKeyDown(KeyCode.Escape)) return;
             if (propPanels != null && propPanels.HandleEscape()) return;
+            if (rankPanel != null && rankPanel.IsOpen) { rankPanel.Close(); return; }
             if (activeDialog != null) CloseDialog();
             else if (wardrobeView != null)
             {
@@ -339,8 +341,7 @@ namespace Zjcs.Presentation.Character
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/AppearanceBtn",
                 OpenWardrobe);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotRank",
-                () => { RankUpgradeRequested?.Invoke(); ShowOfficialDialog(ReadScreens().rank_upgrade,
-                    "CharacterUpgradePanel", true); });
+                OpenRankPanel);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotProp",
                 OpenProperties);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotLevel/ExpTitle/BtnGo/RuleBtn",
@@ -376,6 +377,16 @@ namespace Zjcs.Presentation.Character
             propPanels = holder.AddComponent<CharacterPropPanels>();
             propPanels.Initialize(assets, progression.Catalog,
                 () => progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
+            rankPanel = holder.AddComponent<CharacterRankPanel>();
+            rankPanel.Initialize(assets, progression);
+            rankPanel.Upgraded += Refresh;
+        }
+
+        private void OpenRankPanel()
+        {
+            RankUpgradeRequested?.Invoke();
+            if (rankPanel == null) throw new InvalidOperationException("The rank panel is not initialized.");
+            rankPanel.Open(transform);
         }
 
         private void InitializeCharacterModel()
