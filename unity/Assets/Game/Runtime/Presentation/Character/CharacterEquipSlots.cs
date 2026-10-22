@@ -29,7 +29,10 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> itemTemplate;
         private Dictionary<string, object> rowTemplate;
         private Dictionary<string, object> listTemplate;
+        private Dictionary<string, object> compareTemplate;
         private GameObject listDialog;
+        private GameObject compareDialog;
+        private long compareInstanceId;
         private readonly Dictionary<string, RectTransform> listNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> listButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private RectTransform listContent;
@@ -57,6 +60,8 @@ namespace Zjcs.Presentation.Character
             itemTemplate = CharacterModelPackage.AsObject(screens["item"], "item");
             rowTemplate = CharacterModelPackage.AsObject(screens["equip_row"], "equip_row");
             listTemplate = CharacterModelPackage.AsObject(screens["equipment"], "equipment");
+            compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
+            compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
         }
 
         public void Refresh(Transform characterRoot)
@@ -263,7 +268,7 @@ namespace Zjcs.Presentation.Character
                     button.targetGraphic = graphic;
                 }
                 long instanceId = instance.InstanceId;
-                button.onClick.AddListener(() => Wear(instanceId));
+                button.onClick.AddListener(() => SelectCandidate(instanceId));
                 rows.Add(row.gameObject);
             }
             if (emptyTip != null) emptyTip.SetActive(rows.Count == 0);
@@ -296,6 +301,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (compareDialog != null) Destroy(compareDialog);
+            compareDialog = null;
             if (listDialog != null) Destroy(listDialog);
             listDialog = null;
             rows.Clear();
@@ -307,9 +314,146 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (compareDialog != null)
+            {
+                Destroy(compareDialog);
+                compareDialog = null;
+                return true;
+            }
             if (listDialog == null) return false;
             CloseList();
             return true;
+        }
+
+        private void SelectCandidate(long instanceId)
+        {
+            OfflineEquippedSlot equipped = progression.Player.Equipment.Equipped
+                .FirstOrDefault(value => value.Position == selectedPosition);
+            if (equipped != null && equipped.InstanceId != instanceId)
+                ShowCompare(equipped.InstanceId, instanceId);
+            else
+                Wear(instanceId);
+        }
+
+        private void ShowCompare(long currentId, long candidateId)
+        {
+            if (compareDialog != null) Destroy(compareDialog);
+            OfflinePlayerProgress player = progression.Player;
+            OfflineEquipmentInstance current = player.Equipment.Instances
+                .FirstOrDefault(value => value.InstanceId == currentId);
+            OfflineEquipmentInstance candidate = player.Equipment.Instances
+                .FirstOrDefault(value => value.InstanceId == candidateId);
+            if (current == null || candidate == null) return;
+            compareInstanceId = candidateId;
+            compareDialog = new GameObject("CharacterPanelEquipComparePanel", typeof(RectTransform));
+            compareDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)compareDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(compareTemplate), root, nodes, buttons);
+            RectTransform compareSlot = nodes.Values.FirstOrDefault(value => value.name == "CompareSlot");
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            var panels = compareSlot == null ? new List<RectTransform>()
+                : compareSlot.Cast<Transform>().Select(value => (RectTransform)value).ToList();
+            string[] labels = { "当前", "更换" };
+            for (int i = 0; i < panels.Count && i < 2; i++)
+            {
+                OfflineEquipmentInstance instance = i == 0 ? current : candidate;
+                FillComparePanel(panels[i], instance, labels[i]);
+            }
+            if (content != null)
+            {
+                Button confirm = CreateCompareButton(content, "确定", new Vector2(-150f, 60f),
+                    new Color(0.86f, 0.55f, 0.3f, 0.95f));
+                confirm.onClick.AddListener(() => Wear(compareInstanceId));
+                Button cancel = CreateCompareButton(content, "取消", new Vector2(150f, 60f),
+                    new Color(0.45f, 0.45f, 0.45f, 0.95f));
+                cancel.onClick.AddListener(() =>
+                {
+                    if (compareDialog != null) Destroy(compareDialog);
+                    compareDialog = null;
+                });
+            }
+        }
+
+        private void FillComparePanel(RectTransform panel, OfflineEquipmentInstance instance, string label)
+        {
+            for (int i = panel.childCount - 1; i >= 0; i--)
+                if (panel.GetChild(i).name.StartsWith("Compare", StringComparison.Ordinal))
+                    Destroy(panel.GetChild(i).gameObject);
+            GameObject icon = BuildItemIcon(instance, panel);
+            if (icon != null)
+            {
+                icon.name = "CompareIcon";
+                RectTransform iconRect = (RectTransform)icon.transform;
+                iconRect.anchorMin = new Vector2(0.5f, 0.62f);
+                iconRect.anchorMax = new Vector2(0.5f, 0.62f);
+                iconRect.sizeDelta = new Vector2(180f, 180f);
+                iconRect.anchoredPosition = Vector2.zero;
+            }
+            var labelObject = new GameObject("CompareName", typeof(RectTransform), typeof(Text));
+            labelObject.transform.SetParent(panel, false);
+            RectTransform labelRect = (RectTransform)labelObject.transform;
+            labelRect.anchorMin = new Vector2(0f, 0.5f);
+            labelRect.anchorMax = new Vector2(1f, 0.5f);
+            labelRect.sizeDelta = new Vector2(0f, 40f);
+            Text text = labelObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 24;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = Color.white;
+            text.text = label + "：" + ItemName(instance.ItemId);
+            var scoreObject = new GameObject("CompareScore", typeof(RectTransform), typeof(Text));
+            scoreObject.transform.SetParent(panel, false);
+            RectTransform scoreRect = (RectTransform)scoreObject.transform;
+            scoreRect.anchorMin = new Vector2(0f, 0.44f);
+            scoreRect.anchorMax = new Vector2(1f, 0.44f);
+            scoreRect.sizeDelta = new Vector2(0f, 40f);
+            Text score = scoreObject.GetComponent<Text>();
+            score.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            score.fontSize = 22;
+            score.alignment = TextAnchor.MiddleCenter;
+            score.color = new Color(1f, 0.85f, 0.5f);
+            score.text = "评分：" + ItemScore(progression.Player, instance)
+                .ToString(CultureInfo.InvariantCulture);
+        }
+
+        private Button CreateCompareButton(RectTransform parent, string label, Vector2 position, Color color)
+        {
+            var buttonObject = new GameObject("Compare" + label, typeof(RectTransform), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)buttonObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0f);
+            rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(240f, 76f);
+            rect.anchoredPosition = position;
+            buttonObject.GetComponent<Image>().color = color;
+            var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            textObject.transform.SetParent(buttonObject.transform, false);
+            RectTransform textRect = (RectTransform)textObject.transform;
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            Text text = textObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 26;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = Color.white;
+            text.text = label;
+            return buttonObject.GetComponent<Button>();
+        }
+
+        private string ItemName(int itemId)
+        {
+            Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
+            return item == null ? itemId.ToString(CultureInfo.InvariantCulture)
+                : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
         }
 
         private static Transform FindDeep(Transform parent, string name)
