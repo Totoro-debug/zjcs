@@ -48,6 +48,8 @@ namespace Zjcs.Presentation.Character
         private readonly List<GameObject> materialIcons = new List<GameObject>();
         private Dictionary<string, object> itemTemplate;
         private Dictionary<string, object> rowTemplate;
+        private Dictionary<string, object> infoTemplate;
+        private GameObject tutorialDialog;
         private string levelFormat;
         private string limitFormat;
 
@@ -69,6 +71,7 @@ namespace Zjcs.Presentation.Character
                 CharacterModelPackage.AsObject(screens["rank_upgrade"], "rank_upgrade"));
             itemTemplate = CharacterModelPackage.AsObject(screens["item"], "item");
             rowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
+            infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
             levelFormat = ReadTemplateText(template, "/UpgradeLevelGO/LevelPreText", "等级 {0}/{1}");
             limitFormat = ReadTemplateText(template, "/UpgradeLevelGO/Value/LevelPostText", "等级上限开放至{0}级");
             rankTemplates = panels.TryGetValue("bindings", out object bindingRaw)
@@ -96,10 +99,13 @@ namespace Zjcs.Presentation.Character
             factory.Build(template, rect, nodes, buttons);
             Bind();
             Refresh();
+            ShowTutorialIfPending();
         }
 
         public void Close()
         {
+            if (tutorialDialog != null) Destroy(tutorialDialog);
+            tutorialDialog = null;
             if (dialog != null) Destroy(dialog);
             dialog = null;
             nodes.Clear();
@@ -129,6 +135,101 @@ namespace Zjcs.Presentation.Character
             if (starGroup != null)
                 foreach (Transform child in starGroup)
                     starItems.Add(child.gameObject);
+        }
+
+        private void ShowTutorialIfPending()
+        {
+            if (tutorialDialog != null || !progression.HasPendingRankTutorial) return;
+            ProgressionResult seen = progression.MarkRankTutorialSeen(
+                "character-rank-tutorial-seen-" + Guid.NewGuid().ToString("N"));
+            LastMessage = seen.Message ?? LastMessage;
+            tutorialDialog = new GameObject("RankTutorialDialog", typeof(RectTransform));
+            tutorialDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)tutorialDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("TutorialBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseTutorial);
+            var panel = new GameObject("RankTutorialPanel", typeof(RectTransform));
+            panel.transform.SetParent(root, false);
+            RectTransform panelRect = (RectTransform)panel.transform;
+            panelRect.anchorMin = Vector2.zero;
+            panelRect.anchorMax = Vector2.one;
+            panelRect.offsetMin = Vector2.zero;
+            panelRect.offsetMax = Vector2.zero;
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), panelRect, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "\u4f4d\u9636\u6559\u5b66";
+            if (content != null)
+            {
+                foreach (RectTransform child in content) child.gameObject.SetActive(false);
+                var body = new GameObject("RankTutorialText", typeof(RectTransform), typeof(Text));
+                body.transform.SetParent(content, false);
+                RectTransform bodyRect = (RectTransform)body.transform;
+                bodyRect.anchorMin = new Vector2(0.08f, 0.2f);
+                bodyRect.anchorMax = new Vector2(0.92f, 0.92f);
+                bodyRect.offsetMin = Vector2.zero;
+                bodyRect.offsetMax = Vector2.zero;
+                Text text = body.GetComponent<Text>();
+                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.fontSize = 26;
+                text.color = Color.white;
+                text.alignment = TextAnchor.UpperLeft;
+                text.horizontalOverflow = HorizontalWrapMode.Wrap;
+                text.text = "\u8fbe\u5230 10 \u7ea7\u540e\u53ef\u9886\u53d6\u4f4d\u9636\u6559\u5b66\u5956\u52b1\uff1a\n"
+                    + "\u767d\u57a9\u77f3\u7247 \u00d7 2\n\u7f57\u62c9 \u00d7 2000\n\n"
+                    + "\u6e05\u7406\u6b64\u8bf4\u660e\u540e\u53ef\u4e00\u6b21\u9886\u53d6\uff0c\u91cd\u590d\u9886\u53d6\u5c06\u88ab\u62d2\u7edd\u3002";
+                var claim = new GameObject("RankTutorialClaim", typeof(RectTransform), typeof(Image), typeof(Button));
+                claim.transform.SetParent(content, false);
+                RectTransform claimRect = (RectTransform)claim.transform;
+                claimRect.anchorMin = new Vector2(0.5f, 0.08f);
+                claimRect.anchorMax = new Vector2(0.5f, 0.08f);
+                claimRect.sizeDelta = new Vector2(260f, 76f);
+                claim.GetComponent<Image>().color = new Color(0.86f, 0.55f, 0.3f, 0.95f);
+                var label = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                label.transform.SetParent(claim.transform, false);
+                RectTransform labelRect = (RectTransform)label.transform;
+                labelRect.anchorMin = Vector2.zero;
+                labelRect.anchorMax = Vector2.one;
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+                Text labelText = label.GetComponent<Text>();
+                labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                labelText.fontSize = 26;
+                labelText.alignment = TextAnchor.MiddleCenter;
+                labelText.color = Color.white;
+                labelText.text = "\u9886\u53d6\u5956\u52b1";
+                claim.GetComponent<Button>().onClick.AddListener(ClaimTutorial);
+            }
+        }
+
+        private void ClaimTutorial()
+        {
+            ProgressionResult result = progression.ClaimRankTutorial(
+                "character-rank-tutorial-claim-" + Guid.NewGuid().ToString("N"));
+            LastMessage = result.Message ?? result.Status.ToString();
+            if (!result.IsApplied) return;
+            CloseTutorial();
+            Refresh();
+        }
+
+        private void CloseTutorial()
+        {
+            if (tutorialDialog != null) Destroy(tutorialDialog);
+            tutorialDialog = null;
         }
 
         private void Refresh()

@@ -42,6 +42,9 @@ namespace Zjcs.Presentation.Character
         private int selectedType;
         private int selectedSlot = -1;
         private int plan;
+        private int pendingSkillId;
+        private int pendingType;
+        private GameObject installMask;
 
         public event Action Changed;
         public string LastMessage { get; private set; } = string.Empty;
@@ -82,6 +85,10 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            if (installMask != null) Destroy(installMask);
+            installMask = null;
+            pendingSkillId = 0;
+            pendingType = 0;
             if (panel != null) Destroy(panel);
             panel = null;
             listRows.Clear();
@@ -229,7 +236,9 @@ namespace Zjcs.Presentation.Character
                     level.text = skillId == 0 ? string.Empty : "Lv" + slotLevel.ToString(CultureInfo.InvariantCulture);
                 }
                 Transform selected = FindDeep(child, "SelAnimGo");
-                if (selected != null) selected.gameObject.SetActive(selectedType == itemType && selectedSlot == index);
+                bool highlighted = selectedType == itemType
+                    && (selectedSlot == index || (pendingSkillId != 0 && pendingType == itemType));
+                if (selected != null) selected.gameObject.SetActive(highlighted);
                 index++;
             }
         }
@@ -346,6 +355,7 @@ namespace Zjcs.Presentation.Character
 
         private void SelectTab(int itemType)
         {
+            ClearPendingInstall();
             listType = itemType;
             selectedType = 0;
             selectedSlot = -1;
@@ -354,6 +364,13 @@ namespace Zjcs.Presentation.Character
 
         private void SelectSlot(int itemType, int slot)
         {
+            if (pendingSkillId != 0 && pendingType == itemType)
+            {
+                int skillId = pendingSkillId;
+                ClearPendingInstall();
+                EquipToSlot(skillId, slot);
+                return;
+            }
             if (selectedType == itemType && selectedSlot == slot)
             {
                 Unequip(itemType, slot);
@@ -368,12 +385,59 @@ namespace Zjcs.Presentation.Character
         private void Install(int skillId)
         {
             if (listType == PieceItemType) return;
-            int slot = selectedType == listType && selectedSlot >= 0 ? selectedSlot : FirstEmptySlot(listType);
-            if (slot < 0)
+            if (selectedType != listType || selectedSlot < 0)
             {
-                LastMessage = "四个技能槽均已安装。";
+                BeginInstall(skillId);
                 return;
             }
+            EquipToSlot(skillId, selectedSlot);
+        }
+
+        private void BeginInstall(int skillId)
+        {
+            pendingSkillId = skillId;
+            pendingType = listType;
+            selectedType = pendingType;
+            selectedSlot = -1;
+            if (installMask == null && panel != null)
+            {
+                installMask = new GameObject("SkillInstallMask", typeof(RectTransform), typeof(Image));
+                installMask.transform.SetParent(panel.transform, false);
+                RectTransform maskRect = (RectTransform)installMask.transform;
+                maskRect.anchorMin = Vector2.zero;
+                maskRect.anchorMax = Vector2.one;
+                maskRect.offsetMin = Vector2.zero;
+                maskRect.offsetMax = Vector2.zero;
+                installMask.transform.SetSiblingIndex(0);
+                Image image = installMask.GetComponent<Image>();
+                image.color = new Color(0f, 0f, 0f, 0.42f);
+                image.raycastTarget = false;
+                var hint = new GameObject("SkillInstallHint", typeof(RectTransform), typeof(Text));
+                hint.transform.SetParent(installMask.transform, false);
+                RectTransform hintRect = (RectTransform)hint.transform;
+                hintRect.anchorMin = new Vector2(0.5f, 0.92f);
+                hintRect.anchorMax = new Vector2(0.5f, 0.92f);
+                hintRect.sizeDelta = new Vector2(420f, 50f);
+                Text text = hint.GetComponent<Text>();
+                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.fontSize = 26;
+                text.alignment = TextAnchor.MiddleCenter;
+                text.color = Color.white;
+                text.text = "选择技能槽安装";
+            }
+            Refresh();
+        }
+
+        private void ClearPendingInstall()
+        {
+            pendingSkillId = 0;
+            pendingType = 0;
+            if (installMask != null) Destroy(installMask);
+            installMask = null;
+        }
+
+        private void EquipToSlot(int skillId, int slot)
+        {
             ProgressionResult result = progression.EquipSkill(skillId, slot);
             LastMessage = result.Message ?? result.Status.ToString();
             if (!result.IsApplied) return;
