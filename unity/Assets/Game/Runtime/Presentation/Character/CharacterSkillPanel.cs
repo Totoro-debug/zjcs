@@ -794,7 +794,15 @@ namespace Zjcs.Presentation.Character
                 CloseSkillDetail();
                 OpenPromote(skillId);
             });
-            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(160f, 40f),
+            bool favorite = OfflineSkillProgression.IsFavorite(progression.Player.Skills, skillId);
+            Button star = CreatePanelButton(content, favorite ? "\u53d6\u6d88\u6536\u85cf" : "\u6536\u85cf",
+                new Vector2(320f, 40f), new Color(1f, 0.8f, 0.3f, 0.95f));
+            star.onClick.AddListener(() =>
+            {
+                ToggleFavorite(skillId);
+                CloseSkillDetail();
+            });
+            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(480f, 40f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(CloseSkillDetail);
         }
