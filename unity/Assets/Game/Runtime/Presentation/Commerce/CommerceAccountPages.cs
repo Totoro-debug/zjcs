@@ -173,12 +173,50 @@ namespace Zjcs.Presentation.Commerce
             Transform content = Find(dialog, "BgPanel/Content/AwardScroll/Viewport/Content");
             if (content == null) return;
             ClearChildren(content);
-            foreach (CommerceAccumulatedAward award in runtime.Offers.CurrentAccumulatedAwards())
+            RectTransform contentRect = content as RectTransform;
+            if (contentRect != null) contentRect.sizeDelta = new Vector2(1000f, 0f);
+            VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
+            if (contentLayout != null)
             {
+                contentLayout.spacing = 8f;
+                contentLayout.padding = new RectOffset(12, 12, 12, 40);
+                contentLayout.childControlWidth = false;
+                contentLayout.childControlHeight = false;
+                contentLayout.childForceExpandWidth = false;
+                contentLayout.childForceExpandHeight = false;
+            }
+            int group = -1;
+            foreach (CommerceAccumulatedAward award in runtime.Catalog.Data.accumulatedAwards
+                         .OrderBy(value => value.group).ThenBy(value => value.level))
+            {
+                if (award.group != group)
+                {
+                    group = award.group;
+                    CreateAccumulatedGroupHeader(content, group);
+                }
                 GameObject row = CreateAccumulatedRow(content, award);
                 row.name = "Accumulated_" + award.level;
             }
             OfficialCommercePrefabRenderer.RebuildLayout(content.gameObject);
+        }
+
+        private void CreateAccumulatedGroupHeader(Transform content, int group)
+        {
+            var headerObject = new GameObject("AccumulatedGroup_" + group,
+                typeof(RectTransform), typeof(TextMeshProUGUI), typeof(LayoutElement));
+            RectTransform rect = headerObject.GetComponent<RectTransform>();
+            rect.SetParent(content, false);
+            rect.sizeDelta = new Vector2(940f, 44f);
+            LayoutElement layout = headerObject.GetComponent<LayoutElement>();
+            layout.preferredWidth = 940f;
+            layout.preferredHeight = 44f;
+            TextMeshProUGUI text = headerObject.GetComponent<TextMeshProUGUI>();
+            text.font = runtime.ChineseTmpFont;
+            text.fontSize = 24f;
+            text.color = new Color(0.95f, 0.85f, 0.45f, 1f);
+            text.alignment = TextAlignmentOptions.Left;
+            text.raycastTarget = false;
+            text.text = "星眷第 " + group + " 组";
         }
 
         private GameObject CreateAccumulatedRow(Transform content, CommerceAccumulatedAward award)
@@ -186,7 +224,7 @@ namespace Zjcs.Presentation.Commerce
             var row = new GameObject("AccumulatedRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
             RectTransform rect = row.GetComponent<RectTransform>();
             rect.SetParent(content, false);
-            rect.sizeDelta = new Vector2(620, 130);
+            rect.sizeDelta = new Vector2(940, 130);
             var layout = row.GetComponent<HorizontalLayoutGroup>();
             layout.childAlignment = TextAnchor.MiddleLeft;
             layout.spacing = 12;
