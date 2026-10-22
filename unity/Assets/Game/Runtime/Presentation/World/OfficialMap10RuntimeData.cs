@@ -468,6 +468,10 @@ namespace Zjcs.Presentation.World
         public string[] receipts = Array.Empty<string>();
         public string[] nativeDialogAwardReceipts = Array.Empty<string>();
         public Map10RuntimeBattleResult[] battleResults = Array.Empty<Map10RuntimeBattleResult>();
+        public string activeBattle = string.Empty;
+        public int activeBattleStageId;
+        public int activeBattlePlacementId;
+        public long activeBattleSavedAt;
     }
 
     [Serializable]
