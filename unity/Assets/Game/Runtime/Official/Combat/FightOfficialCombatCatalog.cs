@@ -320,13 +320,33 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> falloff = Component(components, "FightStatusDamageFalloffComponent");
             if (status == null) throw new InvalidOperationException("Official entity is not a status: " + classId);
 
+            int durationRound = Int(status, "DurationRound");
             var result = new FightBattleStatusState
             {
                 InstanceId = instanceId,
                 ClassId = classId,
                 StatusType = Int(status, "StatusType"),
-                DurationRound = Int(status, "DurationRound"),
+                DurationRound = durationRound,
+                CurDurationRound = durationRound,
+                StartRound = -1,
+                RoundTarget = Int(status, "RoundTarget"),
+                RoundUpdateTiming = Int(status, "RoundUpdateTiming"),
+                RemoveAtRoundTargetDestroy = Bool(status, "RemoveAtRoundTargetDestroy"),
+                ActionBehOfSameStatus = Int(status, "ActionBehOfSameStatus"),
+                CanDispersed = Bool(status, "CanDispersed"),
+                IsAddDurationRound = Bool(status, "IsAddDurationRound"),
+                MaxAddDurationRound = Int(status, "MaxAddDurationRound", 100),
+                IsResetDurationWhenStack = Bool(status, "IsResetDurationWhenStack"),
+                ScalePropWhenChangeStacked = Bool(status, "ScalePropWhenChangeStacked"),
+                ApplyIgnoreResilience = Bool(status, "ApplyIgnoreResilience"),
+                ForbiddenOnApplicatorDie = Bool(status, "ForbiddenOnApplicatorDie"),
+                FollowRoundUpdateTimingOnGlobalRound = Bool(status,
+                    "FollowRoundUpdateTimingOnGlobalRound"),
+                IsFixedProp = Bool(status, "IsFixedProp"),
                 StackCount = Int(status, "InitStackCount", 1),
+                AddStackedCount = Int(status, "AddStackedCount", 1),
+                AddStackedRandomMinCount = Int(status, "AddStackedRandomMinCount", 1),
+                AddStackedRandomMaxCount = Int(status, "AddStackedRandomMaxCount", 1),
                 MaxStackedCount = Int(status, "MaxStackedCount"),
                 IsOpenStack = Bool(status, "IsOpenStack"),
                 OwnerId = ownerId,
