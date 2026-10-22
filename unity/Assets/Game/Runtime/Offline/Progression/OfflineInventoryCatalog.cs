@@ -68,6 +68,7 @@ namespace Zjcs.Offline.Progression
         public string IconUri { get; internal set; }
         public bool IsEquipped { get; internal set; }
         public bool IsTimed { get; internal set; }
+        public bool CanOverlap { get; internal set; }
         public OfflineInventoryDetailKind DetailKind { get; internal set; }
     }
 
@@ -112,6 +113,7 @@ namespace Zjcs.Offline.Progression
                     AcquiredAtUnixSeconds = acquired,
                     ExpiresAtUnixSeconds = expiry,
                     IsTimed = IsTimed(item) || expiry > 0,
+                    CanOverlap = Bool(item, "CanOverlap"),
                     DetailKind = DetailKind(catalog, item, itemType)
                 });
             }
@@ -133,6 +135,7 @@ namespace Zjcs.Offline.Progression
                     InstanceId = equipment.InstanceId,
                     IsEquipped = save.Player.Equipment.Equipped.Any(slot => slot.InstanceId == equipment.InstanceId),
                     IsTimed = IsTimed(item),
+                    CanOverlap = Bool(item, "CanOverlap"),
                     DetailKind = OfflineInventoryDetailKind.Equipment
                 });
             }
