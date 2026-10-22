@@ -92,6 +92,25 @@ namespace Zjcs.Editor.Character
         }
 
         [InitializeOnLoadMethod]
+        private static void AutoRunInWindowedEditor()
+        {
+            string autorun = Environment.GetEnvironmentVariable("ZJCS_CHARACTER_AUTORUN");
+            Debug.Log("[Character acceptance] autorun check env=" + (autorun ?? "<null>"));
+            if (autorun != "1") return;
+            if (Application.isBatchMode || EditorApplication.isPlayingOrWillChangePlaymode) return;
+            EditorApplication.update -= AutoRunTick;
+            EditorApplication.update += AutoRunTick;
+        }
+
+        private static void AutoRunTick()
+        {
+            if (EditorApplication.isCompiling || EditorApplication.isUpdating) return;
+            EditorApplication.update -= AutoRunTick;
+            Debug.Log("[Character acceptance] autorun start");
+            if (!SessionState.GetBool(ActiveKey, false)) Run();
+        }
+
+        [InitializeOnLoadMethod]
         private static void RestoreAfterDomainReload()
         {
             if (!SessionState.GetBool(ActiveKey, false)) return;
@@ -111,7 +130,9 @@ namespace Zjcs.Editor.Character
             bool passed = SessionState.GetInt(ResultKey, 1) == 0;
             if (Directory.Exists(root)) Directory.Delete(root, true);
             SessionState.SetBool(ActiveKey, false);
-            if (Application.isBatchMode) EditorApplication.Exit(passed ? 0 : 1);
+            if (Application.isBatchMode
+                || Environment.GetEnvironmentVariable("ZJCS_CHARACTER_AUTORUN") == "1")
+                EditorApplication.Exit(passed ? 0 : 1);
         }
 
         private static void OnUpdate()
@@ -221,6 +242,7 @@ namespace Zjcs.Editor.Character
             Button skillButton = FindButton("CharacterPanelSkillBtn");
             skillButton.onClick.Invoke();
             yield return WaitFrames(3);
+            yield return Capture("character-02-skills");
             Button nextPlan = FindButton("NextPlanBtn");
             Require(nextPlan != null, "The skill plan switch button is missing.");
             int beforePlan = progression.Player.Skills.SelectedPlan;
@@ -234,6 +256,7 @@ namespace Zjcs.Editor.Character
                 "The title could not be worn through the character service.");
             view.Refresh();
             yield return WaitFrames(2);
+            yield return Capture("character-03-title");
 
             int switchedPlan = progression.Player.Skills.SelectedPlan;
             OfflineMainlineProgressSession reloaded = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
@@ -252,6 +275,19 @@ namespace Zjcs.Editor.Character
         {
             return UnityEngine.Object.FindObjectsOfType<Button>(true)
                 .FirstOrDefault(button => button != null && button.name == name);
+        }
+
+        private static IEnumerator Capture(string name)
+        {
+            if (Application.isBatchMode) yield break;
+            string directory = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
+                "output", "character-captures");
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, name + ".png");
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(path);
+            for (int i = 0; i < 120 && !File.Exists(path); i++) yield return null;
+            Debug.Log("[Character acceptance] snapshot " + path + " exists=" + File.Exists(path));
         }
 
         private static IEnumerator WaitFrames(int count)
