@@ -49,7 +49,7 @@ namespace Zjcs.Combat.Official
                 }
             }
 
-            candidates.Sort((left, right) => Compare(left, right, skill));
+            candidates.Sort((left, right) => CompareCandidates(actor, left, right, skill));
             if (targetType == 1 || targetType == 2 || targetType == 3 || targetType == 8 || targetType == 9)
                 if (candidates.Count > 1) candidates.RemoveRange(1, candidates.Count - 1);
             return candidates;
@@ -131,6 +131,41 @@ namespace Zjcs.Combat.Official
                 available.RemoveAt(index);
             }
             return selected;
+        }
+
+        /// <summary>
+        /// Official <c>FightSkillComponentInfo.Range</c> is ordered from near to far and targeting
+        /// depends on that order to prefer closer targets. An explicit AI priority property still
+        /// wins; in-range candidates are preferred over out-of-range ones so movement planning can
+        /// use them, and all other ties fall back to the existing comparison.
+        /// </summary>
+        private static int CompareCandidates(FightBattleUnitState actor,
+            FightBattleUnitState left, FightBattleUnitState right, FightBattleSkillDefinition skill)
+        {
+            if (skill == null || skill.PriorityProperty > 0)
+                return Compare(left, right, skill);
+            if (skill.Range != null && skill.Range.Count > 0)
+            {
+                int leftIndex = RangeIndex(actor, left, skill.Range);
+                int rightIndex = RangeIndex(actor, right, skill.Range);
+                if (leftIndex >= 0 && rightIndex >= 0)
+                {
+                    if (leftIndex != rightIndex) return leftIndex.CompareTo(rightIndex);
+                }
+                else if (leftIndex >= 0) return -1;
+                else if (rightIndex >= 0) return 1;
+            }
+            return Compare(left, right, skill);
+        }
+
+        private static int RangeIndex(FightBattleUnitState actor, FightBattleUnitState target,
+            IReadOnlyList<FightGridPoint> range)
+        {
+            int dx = target.X - actor.X;
+            int dy = target.Y - actor.Y;
+            for (int i = 0; i < range.Count; i++)
+                if (range[i].X == dx && range[i].Y == dy) return i;
+            return -1;
         }
 
         private static int Compare(FightBattleUnitState left, FightBattleUnitState right,
