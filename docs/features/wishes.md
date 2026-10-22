@@ -125,6 +125,8 @@
 
 ### 已核实的来源与验证范围
 
+`Zjcs.Presentation.Wishes.asmdef` 显式引用 `Zjcs.Offline.Commerce`，供 `OfficialWishAssetCatalog` 复用 `CommercePrefab`；仅引用 Commerce 表现程序集不会传递这项编译依赖。`Zjcs.Editor.asmdef` 直接引用祈愿表现程序集，供 `OfficialWishAssetTools` 导入目录。`WishScreenController.ShowResult` 从 `Transform.gameObject` 获取结果容器，结果与馈赠奖励行统一调用已有的 `AddAwardLine`。祈愿表现及其编辑器工具已在主工程通过 C# 编译；全工程编译仍被家园未实现的 `ShowTreasureGacha/ShowPetGacha` 调用阻塞，尚未验证开场校验入口和祈愿的 Play Mode 流程。这些接线修正不代表祈愿完整流程已经验收。
+
 固定 APK 经现有 `Apk` 读取器核验；原 Luban 构造器重新解码 `gacha/chest/reward_rule/random_reward/profession_base/skill/item/achievement/game_settings/gacha_pity_probability`，十张表与 `assets/official/rules.json` 一致。上述七个关键 prefab 已直接读取；`wish-performance` 的 `90` 个资源及 `17` 份客户端代码、`wish-visuals` 的 `29` 个资源及 `4` 份行为代码、两份主输出的哈希与现有清单一致。此核对不等于逐项复核全部输入对象或 Unity 运行通过。兑换与购买另按其原表、调用方和既有来源清单核对，未混入新版或自绘替代。
 
 本页记录源码、配置、资源与接线核查范围。祈愿未完成 Editor 导入／编译验收，未进行接通流程的 Play Mode 逻辑、真实输入、画面、连续动画、音频、存档恢复及 Windows Player 验证，不能标为通过。文档补全只检查文档结构、引用与差异，不以工程其他模块的检查或旧引擎测试代替祈愿验收。
