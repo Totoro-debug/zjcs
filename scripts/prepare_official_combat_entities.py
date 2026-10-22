@@ -1,10 +1,10 @@
-"""Enrich the pinned combat EC payload with the components the first export skipped.
+"""Extract combat EC components that are absent from both pinned combat payloads.
 
-The committed ``assets/official/skill-rules.json`` only carries six component types
-(FightSkill / FightStatus / four FightHit*). The APK stores many more components on the same
-entities (status prop components, StatusEnd, extra skill components, ...). This script keeps every
-existing entity and value untouched and only *adds* the missing components, so the runtime can opt
-into them without changing anything that is already verified.
+``battle-rules.json`` already carries the status prop/shield/damage-reduce components used by the
+combat rules; this script only fills the remaining gaps. On the pinned APK that currently means
+world/visibility components (``VisibilityHideComponent`` etc.) for 23 entities, not combat effects.
+Every existing entity and value is kept untouched and only missing components are added.
+
 
 Outputs (local, gitignored like the rest of ``assets/official``):
 
