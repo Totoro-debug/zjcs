@@ -285,6 +285,7 @@ namespace Zjcs.Combat.Official
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage);
                     ApplyHitStatuses(actor, target, hit, random);
+                    ApplyHitDisperse(target, hit, random);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -382,6 +383,35 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        /// <summary>
+        /// Official <c>DisperseStatus</c>: removes dispersible statuses of the configured types from
+        /// the damaged target, either the first ones or a random subset.
+        /// </summary>
+        private static void ApplyHitDisperse(FightBattleUnitState target, FightBattleHitDefinition hit,
+            FightRandomStream random)
+        {
+            if (target == null || hit == null || hit.DisperseStatusTypes == null
+                || hit.DisperseStatusTypes.Count == 0 || target.Statuses.Count == 0) return;
+            if (hit.DisperseChance < 1f && random.Next() > hit.DisperseChance) return;
+            var candidates = new List<FightBattleStatusState>();
+            foreach (FightBattleStatusState status in target.Statuses)
+                if (status != null && status.CanDispersed
+                    && hit.DisperseStatusTypes.Contains(status.StatusType)) candidates.Add(status);
+            if (candidates.Count == 0) return;
+            int count = hit.DisperseCount <= 0 ? candidates.Count : Math.Min(hit.DisperseCount, candidates.Count);
+            if (count < candidates.Count && hit.DisperseRandom)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    int index = Math.Min((int)(random.Next() * candidates.Count), candidates.Count - 1);
+                    candidates[i] = candidates[index];
+                    candidates[index] = candidates[candidates.Count - 1];
+                    candidates.RemoveAt(candidates.Count - 1);
+                }
+            }
+            for (int i = 0; i < count; i++) target.Statuses.Remove(candidates[i]);
         }
 
         /// <summary>

@@ -194,6 +194,11 @@ namespace Zjcs.Combat.Official
         public bool AllowEmptyScope;
         // Official FightDamageComponent.StatusList entries applied when this hit lands.
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
+        // Official FightDamageComponent.DisperseStatus (status types, count, chance, random pick).
+        public float DisperseChance;
+        public List<int> DisperseStatusTypes = new List<int>();
+        public int DisperseCount;
+        public bool DisperseRandom;
         public bool HasCustomDamage;
         public long CustomDamage;
         public double DamageRate = 1.0;
@@ -226,6 +231,10 @@ namespace Zjcs.Combat.Official
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         public bool AllowEmptyScope;
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
+        public float DisperseChance;
+        public List<int> DisperseStatusTypes = new List<int>();
+        public int DisperseCount;
+        public bool DisperseRandom;
     }
 
     [Serializable]

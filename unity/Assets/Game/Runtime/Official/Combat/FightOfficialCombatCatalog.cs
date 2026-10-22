@@ -643,6 +643,22 @@ namespace Zjcs.Combat.Official
             return value;
         }
 
+        /// <summary>Reads <c>FightDamageComponent.DisperseStatus</c> (dispel on hit).</summary>
+        private void AddDisperseStatus(int damageId, FightBattleHitEntity output)
+        {
+            if (damageId <= 0 || output == null
+                || !entities.TryGetValue(damageId, out Dictionary<string, object> components)
+                || !components.TryGetValue("FightDamageComponent", out object raw)
+                || !(raw is Dictionary<string, object> damage)
+                || !damage.TryGetValue("DisperseStatus", out object rawDisperse)
+                || !(rawDisperse is Dictionary<string, object> disperse)) return;
+            output.DisperseChance = Float(disperse, "BasePercent", 0f);
+            output.DisperseCount = Int(disperse, "Count");
+            output.DisperseRandom = Bool(disperse, "IsRandom");
+            AddIntArray(disperse, "TargetTypes", output.DisperseStatusTypes,
+                new Queue<int>(), new Dictionary<int, FightBattleHitReference>());
+        }
+
         /// <summary>
         /// Reads <c>FightDamageComponent.StatusList</c>: statuses applied when a hit carrying this
         /// damage id lands (target type, probability and remaining-HP condition).
@@ -711,7 +727,8 @@ namespace Zjcs.Combat.Official
         {
             Dictionary<string, object> damage = null;
             foreach (string name in new[] { "FightHitSummonComponent", "FightHitChainedComponent",
-                "FightHitCustomTargetComponent", "FightHitRandomTargetComponent" })
+                "FightHitCustomTargetComponent", "FightHitRandomTargetComponent",
+                "FightHitFixedComponent" })
             {
                 damage = Component(components, name);
                 if (damage != null) break;
@@ -733,6 +750,7 @@ namespace Zjcs.Combat.Official
                 result.ActionType = Int(damage, "DamageActionType", 4);
                 result.DamageId = Int(damage, "DamageId");
                 AddStatusApplications(result.DamageId, result.AppliedStatuses);
+                AddDisperseStatus(result.DamageId, result);
                 result.DamageType = Int(damage, "DamageType");
                 result.BasicProperty = Int(damage, "DamageBasicProp", 1);
                 result.DamageProperty = Int(damage, "DamageProp");
