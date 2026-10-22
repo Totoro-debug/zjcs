@@ -46,6 +46,8 @@
 
 [prepare_battle_spine_pages.py](../../scripts/prepare_battle_spine_pages.py) 从固定 APK 中经 `models-source-manifest.json` 验证的 Texture2D 解出 5 只开场怪物（3803／3281／3282／3283／3481）与两名剧情角色（8401／8402）的 9 张图集页，核对 atlas `size:` 后绑定到既有 Spine 材质；`OfficialBattleModelCatalog` 的 identities／identitiesManifest 已指向真实资源。剧情角色不是玩家外观，而是官方 NPC 骨骼：录像中 1017 的 `NpcClassId=8401` 对应 `body_8401`、1018 的 8402 对应 `body_8402`。这两具骨骼不在 409 条战斗模型身份表内，因此新增 `Resources/Opening/OpeningNpcModelCatalog` 资产直接引用已转换的 SkeletonDataAsset，[OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 优先按该目录生成单位（动作按官方 clip 同名回退），怪物仍走 `OfficialBattleModelCatalog` 的身份表。单位排序显式置于场景排序层之上，避免被 21 层的背景遮住。战前顺序按官方 `GAME_ENTITY_LIST` 先于 `BeforeFight`：进入场景 → 生成实体与 HUD → `BeforeFight` → 录像 → `AfterFight`。
 
+隔离最小工程（仅 Opening/Combat 程序集与官方载荷）在 Unity `2022.3.57f1c2` Play Mode、3840×2160 Game 视图实测：142 个战场批次与 23 个粒子挂载、官方正交相机（size 7.0）全部装配且批次均有贴图；录像 18 个单位（16 怪物 + 2 剧情角色）按官方格网生成并渲染；`BeforeFight` 官方台词、角色名与两名官方立绘显示；快进结束。实测修掉三处迁移缺陷：单位缩放重复应用了 SkeletonDataAsset 已包含的 0.01 导入缩放（渲染仅 0.0006）、NPC 8401 缺少 `body_8401` skin 且其 SkeletonDataAsset 指向未转换的 atlas GUID。动画帧连续性、技能特效与战斗音效仍未验证。
+
 剧情 UI 图集改为按 4096 上限分页导出（`atlas.png`／`atlas-1.png`／`atlas-2.png`）：加入立绘后单页曾达 1024×17,860，超出 Unity 纹理上传上限，`Texture2D.LoadImage` 直接报 `Texture has out of range width / height`，整块开场 UI 无法解码；`OpeningUi` 现按每个 Sprite 的 atlas 索引加载对应页并共享矩形。剧情文本改用官方 TMP 序列化字段：[prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 按 TMP 3.x 布局逐节点读取 fontSize、fontWeight、fontStyle、alignment（`0xFFFF` 时取水平/垂直轴组合）、margin、wordWrap、overflow、autoSize 范围和 fontColor，并由 [OpeningUi](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 原样应用；`TalkText` 为 42 px、自动缩放下限 18、TopLeft、无边距，`NpcNameText` 为 48 px 金色居中，不再是此前的近似排版。录像面板的回合文本按官方模板“回合：{0}/{1}”随 `FightRoundNewModification.GlobalRound` 更新。录像没有独立的伤害／技能消息类型，但 `GAME_ENTITY_ADD` 中确有 `FightSkillComponent`、`FightDamageComponent` 与 `FightStatusComponent`：包含来源／目标、技能 ID、`DamageResult`、状态来源与持续信息；当前 `OpeningFightPlayback` 尚未解析和展示这些临时实体，也未接入原 `CharacterDamageUIManager` 的过滤、颜色与 prefab 设置。因此伤害值可从原录像恢复，相关运行时表现仍未完成。
 
 ### 官方字体与原生 UI
@@ -100,8 +102,8 @@
 
 ### 仍需验证的部分
 
-7. **本轮改动的 Play Mode 验证。** 战场装配、Spine 图页绑定、NPC 单位、TMP 官方排版与战前顺序的代码与数据已完成。借用一次主工程可编译窗口运行 `CharacterOpeningPlayModeAcceptance` 时发现并修复了剧情 UI 图集超限（当时 1024×17,860 无法上传，导致整块开场 UI 解码失败）；修复后的三页图集与 NPC 目录尚未重跑通过：主工程随后又被其他会话未完成的 `OfflineWishService`／商城模块错误阻塞，隔离工程复验也先后被 `WishScreenController`、`OfficialMap10AudioPlayer` 等未提交改动的缺失引用与类型错误拦住，说明当前工作区不存在可稳定编译的快照；需在并发改动停止后重跑同一验收。
-8. **异常分支验收。** 新增 [CharacterOpeningFaultPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningFaultPlayModeAcceptance.cs)（菜单 `Zjcs/Validate/Opening Fault Play Mode`）：把已交付载荷复制到隔离目录，逐项制造缺失录像、缺失剧情、损坏图集页、缺失战场载荷，断言各自抛出文档记录的类型，并验证载荷失败后流程仍回调打开创角。本轮未运行（编译被并发改动阻塞），超时与保存失败分支仍未构造。
+7. **主工程完整启动链验证。** 战场、单位、对白与快进已在隔离最小工程 Play Mode 通过（见“完整还原部分”）；主工程的 `Bootstrap` 启动链仍因其他会话未提交模块的编译错误无法复验。真实输入验收（`Zjcs/Validate/Opening Real Input Play Mode`）本轮未运行。
+8. **异常分支验收。** [CharacterOpeningFaultPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningFaultPlayModeAcceptance.cs) 已在隔离工程通过：缺失录像、缺失剧情、损坏图集页、缺失战场载荷各自抛出文档记录的异常类型，且载荷失败后流程仍回调打开创角。超时与保存失败分支仍未构造。
 9. **实际输入验收。** 新增 [CharacterOpeningRealInputPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningRealInputPlayModeAcceptance.cs)（菜单 `Zjcs/Validate/Opening Real Input Play Mode`）：聚焦 Game 视图后用 Win32 `SetCursorPos`/`mouse_event` 在官方 `NextBtn` 的实际屏幕位置点击，断言 `BeforeFight` 对白推进，不再直接调用 `onClick`。本轮未运行；快进按钮与创角面板命中区域尚未纳入。
 10. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
 

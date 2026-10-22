@@ -395,16 +395,16 @@ namespace Zjcs.Presentation.Opening
             }
             // The unit root already carries the stage root plus the official grid origin.
             gameObject.transform.localPosition = new Vector3(entity.GridX, entity.GridY, 0);
-            // Official fight stages place these models at their prefab scale inside a
-            // world whose root matrix is offset by thousands of units. The offline arena
-            // is grid-metered, so the first model establishes one shared factor that keeps
-            // the official relative sizes between units.
+            // The converted SkeletonDataAssets already carry the official import scale
+            // (0.01), so the pose bounds are measured instead of re-applying the catalog
+            // scale. The first model establishes one shared world factor that keeps the
+            // official relative sizes between units.
             if (scaleFactor <= 0f)
             {
-                float height = skeleton.Skeleton.Data.Height * binding.scale;
-                scaleFactor = height > 0.0001f ? 1.2f / height : 100f;
+                float height = MeasureHeight(skeleton.Skeleton);
+                scaleFactor = height > 0.0001f ? 1.2f / height : 1f;
             }
-            gameObject.transform.localScale = Vector3.one * binding.scale * scaleFactor;
+            gameObject.transform.localScale = Vector3.one * scaleFactor;
             // The official stage renders its ground through sorting layers up to 21;
             // fighters must sort in front of that scenery.
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
@@ -412,6 +412,14 @@ namespace Zjcs.Presentation.Opening
             units.Add(entity.EntityId, skeleton);
             bindings.Add(entity.EntityId, binding);
             Play(entity.EntityId, skeleton, "idle_01", true);
+        }
+
+        private static float MeasureHeight(Spine.Skeleton skeleton)
+        {
+            if (skeleton == null) return 0f;
+            float[] buffer = null;
+            skeleton.GetBounds(out _, out _, out _, out float height, ref buffer);
+            return height;
         }
 
         private static bool HasBoundTexture(SkeletonDataAsset data)
