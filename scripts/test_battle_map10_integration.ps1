@@ -4,6 +4,14 @@ $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
 $sources = Get-ChildItem $combat -Filter '*.cs' -File | Select-Object -ExpandProperty FullName
 Add-Type -Path $sources
 
+function Convert-Properties($map) {
+    $list = [System.Collections.Generic.List[Zjcs.Combat.Official.FightPropertyValue]]::new()
+    foreach ($entry in $map.GetEnumerator()) {
+        $list.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = [int]$entry.Key; Value = [long]$entry.Value })
+    }
+    return ,$list
+}
+
 function Assert-Integration($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Text($path) { return [System.IO.File]::ReadAllText((Join-Path $root $path)) }
 function Get-Sha($path) {
@@ -61,17 +69,15 @@ $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 1; Value
 $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 2; Value = 50 })
 $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 3; Value = 5000 })
 $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 4; Value = 50 })
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 50; Value = 5000 })
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 51; Value = 50000 })
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 52; Value = 50 })
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 53; Value = 50 })
 $player.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new()
 $player.Turn.Id = 1; $player.Turn.Hp = 5000; $player.Turn.Speed = 50
 $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
-$playerSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
-$playerSkill.Slot = 0; $playerSkill.EntityId = 12860; $playerSkill.ItemId = 10012; $playerSkill.TargetType = 1
-$playerSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
-$playerSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(2, 0))
-$playerHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
-$playerHit.EntityId = 12861; $playerHit.DamageId = 12869; $playerHit.DamageType = 8
-$playerHit.HasCustomDamage = $true; $playerHit.CustomDamage = 500; $playerHit.TargetMode = 0; $playerHit.Delay = 0.3
-$playerSkill.Hits.Add($playerHit)
+$playerSkillProps = Convert-Properties ($catalog.CalculateSkillProps(12860, 1, 30, 3))
+$playerSkill = $catalog.CreateSkill(12860, 0, 10012, 1, 30, 3, $playerSkillProps)
 $player.Skills.Add($playerSkill)
 $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = $playerSkill.LimitedTimes })
 $checkpoint.Units.Add($player)
@@ -105,8 +111,11 @@ foreach ($waveData in $roster.Waves | Sort-Object Index) {
         foreach ($property in $unit.Properties) { if ($property.Id -eq 4) { $unit.Turn.Speed = $property.Value } }
         $unit.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
         foreach ($active in $source.ActiveSkills) {
+            $rank = [Math]::Max(1, [int]$active.Rank)
+            $skillProps = Convert-Properties ($catalog.CalculateSkillProps([int]$active.EntityId, $rank,
+                [Math]::Max(1, $unit.Level), [Math]::Max(1, $unit.SubRank)))
             $skill = $catalog.CreateSkill([int]$active.EntityId, [int]$active.Slot, [int]$active.ItemId,
-                [Math]::Max(1, [int]$active.Rank), [Math]::Max(1, $unit.Level), [Math]::Max(1, $unit.SubRank), $null)
+                $rank, [Math]::Max(1, $unit.Level), [Math]::Max(1, $unit.SubRank), $skillProps)
             $unit.Skills.Add($skill)
             $unit.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{
                 Slot = $skill.Slot; LimitedTimes = $skill.LimitedTimes
