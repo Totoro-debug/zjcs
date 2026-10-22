@@ -100,7 +100,7 @@
 
 ### 仍需验证的部分
 
-7. **本轮改动的 Play Mode 验证。** 战场装配、Spine 图页绑定、NPC 单位、TMP 官方排版与战前顺序的代码与数据已完成。借用一次主工程可编译窗口运行 `CharacterOpeningPlayModeAcceptance` 时发现并修复了剧情 UI 图集超限（当时 1024×17,860 无法上传，导致整块开场 UI 解码失败）；修复后的三页图集与 NPC 目录尚未重跑通过，之后主工程编译又被其他会话未完成的 `OfflineWishService`／商城模块错误阻塞。
+7. **本轮改动的 Play Mode 验证。** 战场装配、Spine 图页绑定、NPC 单位、TMP 官方排版与战前顺序的代码与数据已完成。借用一次主工程可编译窗口运行 `CharacterOpeningPlayModeAcceptance` 时发现并修复了剧情 UI 图集超限（当时 1024×17,860 无法上传，导致整块开场 UI 解码失败）；修复后的三页图集与 NPC 目录尚未重跑通过：主工程随后又被其他会话未完成的 `OfflineWishService`／商城模块错误阻塞，隔离工程复验也先后被 `WishScreenController`、`OfficialMap10AudioPlayer` 等未提交改动的缺失引用与类型错误拦住，说明当前工作区不存在可稳定编译的快照；需在并发改动停止后重跑同一验收。
 8. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
 9. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
 10. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
