@@ -88,7 +88,7 @@
 
 ## 已执行检查与边界
 
-- `python -B scripts/check_unity_project.py` 通过：27534 个 GUID 的静态元数据检查通过；该检查不代替 Editor 导入、编译或运行。
+- `python -B scripts/check_unity_project.py` 通过：27788 个 GUID 的静态元数据检查通过；该检查不代替 Editor 导入、编译或运行。
 - 隔离 Unity 工程（`D:/Desktop/zjcs-commerce-acceptance`，复制当前 `Assets/Packages/ProjectSettings`）使用 `Unity 2022.3.57f1c2` 完成 Editor 导入与 C# 编译，`CommercePlayModeAcceptance` 通过：官方主窗口／直购／代金券／每日／每周／首购／星眷／兑换 prefab 实际创建，代金券支付、免费赠礼、单买／整组互斥、首购激活与领取、兑换、保存重开，以及另一玩法新增库存后商城购买不清零。该验收在隔离工程把不相关的 Map10 运行入口替换为桩，商城代码本身未裁剪；共享工程当时被另一模块未完成的 `HomeHudView.TreasureGacha.cs` 编译错误阻塞，不能据此声称共享工程已完成 Editor 验收。
 - Play Mode 实际捕获 11 张画面并逐张检查：直购主页、确认框、物品详情、活动页、每日礼包、每日已购、每周礼包、首购、首购已激活、兑换、重开。画面确认官方角色立绘、标题、六档商品、每日三档、每周六档、首购三天奖励、兑换滑条和官方按钮均实际渲染；同时记录活动入口文字、礼品图标数量、首购顶部信息区和每日整组价格区仍有版式差异，未把差异写成已完成。
 - 验收的按钮输入通过 `ExecuteEvents` 向真实 Unity UI 控件派发点击并等待界面状态，不是直接调用业务方法；尚未用操作系统鼠标覆盖遮挡、滚动、拖拽和键盘焦点。
