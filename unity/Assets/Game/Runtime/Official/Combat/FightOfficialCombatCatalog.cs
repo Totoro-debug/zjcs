@@ -675,19 +675,21 @@ namespace Zjcs.Combat.Official
         /// Reads <c>FightDamageComponent.StatusList</c>: statuses applied when a hit carrying this
         /// damage id lands (target type, probability and remaining-HP condition).
         /// </summary>
-        private void AddStatusApplications(int damageId, List<FightBattleStatusApplication> output)
+        private void AddStatusApplications(int damageId, FightBattleHitEntity output)
         {
             if (damageId <= 0 || output == null
                 || !entities.TryGetValue(damageId, out Dictionary<string, object> components)
                 || !components.TryGetValue("FightDamageComponent", out object raw)
-                || !(raw is Dictionary<string, object> damage)
-                || !damage.TryGetValue("StatusList", out object list) || list == null) return;
+                || !(raw is Dictionary<string, object> damage)) return;
+            output.StatusListRandomOne = Bool(damage, "StatusListRandomOne");
+            List<FightBattleStatusApplication> applications = output.AppliedStatuses;
+            if (!damage.TryGetValue("StatusList", out object list) || list == null) return;
             foreach (object item in Array(list, "StatusList"))
             {
                 Dictionary<string, object> row = Object(item, "StatusList entry");
                 int statusId = Int(row, "StatusId");
                 if (statusId <= 0) continue;
-                output.Add(new FightBattleStatusApplication
+                applications.Add(new FightBattleStatusApplication
                 {
                     StatusId = statusId,
                     TargetType = Int(row, "TargetType", 2),
@@ -780,7 +782,7 @@ namespace Zjcs.Combat.Official
                 result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
                 result.ActionType = Int(damage, "DamageActionType", 4);
                 result.DamageId = Int(damage, "DamageId");
-                AddStatusApplications(result.DamageId, result.AppliedStatuses);
+                AddStatusApplications(result.DamageId, result);
                 AddDisperseStatus(result.DamageId, result);
                 AddHitMove(result.DamageId, result);
                 result.DamageType = Int(damage, "DamageType");

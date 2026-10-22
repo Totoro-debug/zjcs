@@ -81,6 +81,7 @@ namespace Zjcs.Combat.Official
                     AppliedStatuses = entity.AppliedStatuses == null
                         ? new List<FightBattleStatusApplication>()
                         : new List<FightBattleStatusApplication>(entity.AppliedStatuses),
+                    StatusListRandomOne = entity.StatusListRandomOne,
                     DisperseChance = entity.DisperseChance,
                     DisperseStatusTypes = entity.DisperseStatusTypes == null
                         ? new List<int>() : new List<int>(entity.DisperseStatusTypes),

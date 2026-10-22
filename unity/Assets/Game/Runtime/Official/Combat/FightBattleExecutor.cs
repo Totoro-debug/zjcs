@@ -459,22 +459,33 @@ namespace Zjcs.Combat.Official
             FightBattleHitDefinition hit, FightRandomStream random)
         {
             if (statusCatalog == null || hit.AppliedStatuses == null) return;
-            foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
+            if (hit.StatusListRandomOne && hit.AppliedStatuses.Count > 1)
             {
-                if (application == null || application.StatusId <= 0) continue;
-                FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
-                if (owner == null || owner.Hp <= 0) continue;
-                if (application.LessThanHpPer >= 0f
-                    && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) continue;
-                if (application.Chance < 1f && random.Next() > application.Chance) continue;
-                int instanceId = 1;
-                foreach (FightBattleStatusState existing in owner.Statuses)
-                    if (existing != null && existing.InstanceId >= instanceId)
-                        instanceId = existing.InstanceId + 1;
-                FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,
-                    owner.Id, actor.Id, instanceId);
-                FightStatusLifecycle.Apply(owner, template, -1, instanceId);
+                int index = Math.Min((int)(random.Next() * hit.AppliedStatuses.Count),
+                    hit.AppliedStatuses.Count - 1);
+                ApplyHitStatus(actor, target, hit.AppliedStatuses[index], random);
+                return;
             }
+            foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
+                ApplyHitStatus(actor, target, application, random);
+        }
+
+        private void ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleStatusApplication application, FightRandomStream random)
+        {
+            if (application == null || application.StatusId <= 0) return;
+            FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
+            if (owner == null || owner.Hp <= 0) return;
+            if (application.LessThanHpPer >= 0f
+                && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return;
+            if (application.Chance < 1f && random.Next() > application.Chance) return;
+            int instanceId = 1;
+            foreach (FightBattleStatusState existing in owner.Statuses)
+                if (existing != null && existing.InstanceId >= instanceId)
+                    instanceId = existing.InstanceId + 1;
+            FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,
+                owner.Id, actor.Id, instanceId);
+            FightStatusLifecycle.Apply(owner, template, -1, instanceId);
         }
 
         /// <summary>
