@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Spine.Unity;
+using TMPro;
 using UnityEngine;
 using Zjcs.Combat.Official;
 
@@ -47,6 +49,32 @@ namespace Zjcs.Presentation.Combat
             gridToWorld = gridMapper.GridToWorld;
             this.animationForEvent = animationForEvent ?? throw new ArgumentNullException(nameof(animationForEvent));
             this.orientUnit = orientUnit ?? throw new ArgumentNullException(nameof(orientUnit));
+        }
+
+        /// <summary>
+        /// Spawns one official-coloured damage label per resolved hit at the target grid position.
+        /// Blinding/dodge/immunity labels have no localised text in the payload yet and are skipped
+        /// instead of showing a fake number.
+        /// </summary>
+        public void ShowDamageFloats(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
+            TMP_FontAsset font, OfficialBattleDamageColors colors)
+        {
+            if (stepEvent == null || stepEvent.DamageEvents == null || checkpoint == null
+                || font == null || colors == null) return;
+            foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
+            {
+                if (damage == null || damage.Damage == 0) continue;
+                if (damage.Dodge || damage.Immunity || damage.Blinding) continue;
+                FightBattleUnitState unit = null;
+                foreach (FightBattleUnitState candidate in checkpoint.Units)
+                    if (candidate != null && candidate.Id == damage.TargetId) { unit = candidate; break; }
+                if (unit == null) continue;
+                Vector3 position = gridToWorld(new FightGridPoint(unit.X, unit.Y))
+                    + new Vector3(colors.Spacing.x, 1.2f + colors.Spacing.y, colors.Spacing.z);
+                OfficialBattleDamageFloat.Spawn(root, font,
+                    Math.Abs(damage.Damage).ToString(CultureInfo.InvariantCulture),
+                    colors.Resolve(damage), position);
+            }
         }
 
         public void Refresh(FightBattleCheckpoint checkpoint, FightBattleStepEvent stepEvent = null)
