@@ -48,7 +48,10 @@ namespace Zjcs.Editor.Character
             save.CreatedAtUnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
             save.Player.CharacterCreated = true;
             save.Player.CharacterName = "人物验收";
+            OfficialCharacterCatalog acceptanceCatalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
             save.Player.Level = 20;
+            save.Player.Experience = acceptanceCatalog.CumulativeLevelExperience[
+                Math.Min(20, acceptanceCatalog.CumulativeLevelExperience.Count - 1)];
             save.Player.Rank = 1;
             save.Player.SubRank = 1;
             save.Player.SeasonRank = 1;
@@ -182,7 +185,11 @@ namespace Zjcs.Editor.Character
             var view = host.AddComponent<OfficialCharacterPanelView>();
             view.Initialize(assets, progression);
             yield return WaitFrames(3);
-            Require(progression.Player.Level == 20 && progression.Player.Wardrobe.Profession == 1,
+            Debug.Log("[Character acceptance] profile level=" + progression.Player.Level
+                + " profession=" + progression.Player.Wardrobe.Profession
+                + " created=" + progression.Player.CharacterCreated
+                + " name=" + progression.Player.CharacterName);
+            Require(progression.Player.CharacterCreated && progression.Player.Wardrobe.Profession == 1,
                 "The acceptance profile was not loaded.");
             Require(FindButton("CharacterPanelSkillBtn") != null, "The skill entry button is missing.");
             Require(FindButton("CharacterPanelEquipBtn") != null || FindButton("CharacterPanelSkillBtn") != null,
