@@ -21,6 +21,7 @@ namespace Zjcs.Presentation.Combat
         private bool paused;
         private bool ownsTimeScale;
         private readonly FightBattlePhaseMachine phases = new FightBattlePhaseMachine();
+        private FightOfficialCombatCatalog combatCatalog;
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
@@ -67,6 +68,7 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleHudCatalog resolvedHudCatalog = hudCatalog != null
                 ? hudCatalog : OfficialBattleHudCatalog.LoadDefault();
 
+            combatCatalog = resolvedCombatAssets.Load();
             FightBattleExecutor nextExecutor = restoreCheckpoint
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
                 : resolvedCombatAssets.BeginBattle(checkpoint);
@@ -82,7 +84,7 @@ namespace Zjcs.Presentation.Combat
                 nextHud.Refresh(checkpoint);
                 nextHud.RefreshSkillSlots(checkpoint, skillIcon);
                 nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
-                nextHud.RefreshBoss(checkpoint);
+                nextHud.RefreshBoss(checkpoint, UnitName);
                 nextScene.Refresh(checkpoint);
                 executor = nextExecutor;
                 hudView = nextHud;
@@ -119,7 +121,7 @@ namespace Zjcs.Presentation.Combat
                 hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
                 hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                     timelineFactionResolver, true);
-                hudView.RefreshBoss(result.Checkpoint);
+                hudView.RefreshBoss(result.Checkpoint, UnitName);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
                 if (result.Checkpoint.Finished) phases.BeginBattleEnd();
@@ -234,6 +236,7 @@ namespace Zjcs.Presentation.Combat
             sceneView = null;
             hudView = null;
             hudRoot = null;
+            combatCatalog = null;
             skillIconResolver = null;
             timelinePortraitResolver = null;
             timelineFactionResolver = null;
@@ -252,6 +255,12 @@ namespace Zjcs.Presentation.Combat
         private void OnSpeedCycled()
         {
             CycleSpeed();
+        }
+
+        private string UnitName(FightBattleUnitState unit)
+        {
+            return unit == null || unit.MonsterId <= 0 || combatCatalog == null
+                ? null : combatCatalog.MonsterName(unit.MonsterId);
         }
 
         private void OnPhaseChanged(FightBattlePhase previous, FightBattlePhase next)
