@@ -136,7 +136,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 状态基础生命周期已按官方 `FightStatusComponentInfo` 落地：`FightBattleStatusState` 保存 RoundTarget、DurationRound、CurDurationRound、StartRound、RoundUpdateTiming、RemoveAtRoundTargetDestroy、ActionBehOfSameStatus、CanDispersed、IsAddDurationRound／MaxAddDurationRound、IsResetDurationWhenStack、叠层层数与随机步距、MaxStackedCount、来源类型等基础字段；`FightStatusLifecycle` 按官方公式计算剩余回合（`Max(0, CurDurationRound - (round - StartRound))`，负数表示无限），实现叠时扩展与上限、叠层上限、Parallel／Immediate／Discard 同名状态处理，并在回合开始／结束时按 RoundTarget 与 Timing 到期移除、对 RoundTarget 已销毁的状态执行移除。执行器在开战初始化回合、每个单位回合开始／结束及步骤末调用该生命周期。状态的属性、护盾、控制、事件触发与命中施加仍未实现。
 
-技能自身位移已接入 `FightSkillComponent.SourceMoveList`：按 `Delay` 排序保存`FightBattleSkillMove`（移动行为 ID、偏移、朝向模式、距离、条件标记）；执行器支持`Distance=-1` 拉到目标旁可站立点与 `Distance>=0` 且 `RelativeToTarget` 的直线进退，按格网通行、占位与身体占格寻路，目标格被占时自动尝试更短距离，产生逐格 `Movements` 并更新朝向；带 `DoMoveConditions` 或非 `RelativeToTarget` 的配置保持不执行，不用猜测替代。当前战斗载荷只包含 6 类 EC 组件（Skill／Status／四种 Hit），状态属性、护盾、触发等子组件不在其中，实现这些效果前需要扩展官方载荷提取范围。
+技能自身位移已接入 `FightSkillComponent.SourceMoveList`：按 `Delay` 排序保存`FightBattleSkillMove`（移动行为 ID、偏移、朝向模式、距离、条件标记）；执行器支持`Distance=-1` 拉到目标旁可站立点与 `Distance>=0` 且 `RelativeToTarget` 的直线进退，按格网通行、占位与身体占格寻路，目标格被占时自动尝试更短距离，产生逐格 `Movements` 并更新朝向；带 `DoMoveConditions` 或非 `RelativeToTarget` 的配置保持不执行，不用猜测替代。初版战斗载荷只包含 6 类 EC 组件（Skill／Status／四种 Hit）；实际上 APK 的同类实体还带有大量子组件。新增 `scripts/prepare_official_combat_entities.py`（需 UnityPy 1.25.4 与 msgpack）以“只增不改”的方式补齐：保留 `skill-rules.json` 的全部实体与既有字段，从固定 APK 的 `config_ec` 中解码缺失组件，输出本地 `assets/official/combat-entities-full.json`（3824 个实体全部匹配，新增 664 个 `FightStatusPropComponent`、53 个 `FightStatusShieldPersistentComponent`、34 个 `FightStatusDamageReducePerComponent`、146 个 `StatusEndComponent` 等，另有 622 个组件因反编译格式与数据版本不一致解码失败并记入清单）。运行时尚未读取这份扩展载荷，状态属性／护盾／触发结算仍待接入。
 
 目标选择已按官方 `FightSkillComponentInfo.Range` 的近到远顺序优先：未配置 AI 优先属性时，候选按其在 `Range` 列表中的下标排序（越靠前越近），射程内目标优先于射程外目标，射程外仍保留给移动规划；显式 `AiPriorityPropType` 优先属性仍先于射程顺序，完全并列时沿用原有属性／血量与 ID 比较。命中范围 `HitCfg.Scope`／`FightHit*ComponentInfo.Scope` 的解析与范围命中见下一段。
 
@@ -201,7 +201,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 - [ ] 保留每槽主动施放、Replay、子技能、额外施放与被动触发的独立身份和计数，贯通父子施放、白名单、触发上限与结束清理；按配置等待实际结束，不把所有负持续时间强制改为固定值。
 - [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。命中延迟、`ActOnSouce` 锚点、`Scope` 范围命中与按距离计算的延迟已接入；仍缺命中特效锚点／跟随、Scope 的 `NotSameTarget` 等标志与区域过滤、按 Delay 分帧结算与覆盖延时。
 - [ ] 将完整伤害／治疗配置、等级与位阶修正、特殊属性、场景修正和命中分支接入真实单位；命中 `DamageActionType` 的伤害／治疗／无动作已按官方区分，控制与状态类动作（50+）仍未结算。保留伤害衰减、概率和状态24181等已确认本地规则；公式单测通过不替代完整装备、怪物及状态集成。
-- [ ] 状态基础字段与生命周期已恢复：回合对象／时点、平行／替换／丢弃、叠层与随机步距字段、叠时／上限、重置时间、销毁联动与剩余回合公式；尚缺属性／护盾／控制／事件组件、共享层数、同来源条件判定、层数属性缩放的实际结算，以及从命中和被动施加状态的链路。
+- [ ] 状态基础字段与生命周期已恢复：回合对象／时点、平行／替换／丢弃、叠层与随机步距字段、叠时／上限、重置时间、销毁联动与剩余回合公式；子组件已可从 APK 补出（属性 664、护盾 53、减伤 34 等），但运行时尚未读取；尚缺属性／护盾／控制／事件结算、共享层数、同来源条件判定、层数属性缩放，以及从命中和被动施加状态的链路。
 - [ ] 贯通状态的应用、启动、回合／行动／技能／命中／伤害／击杀／死亡／层数变化／结束触发，条件检查、移除、转移及禁用／复活重启。当前装配仅有基础字段和部分衰减组件，不能视为完整事件生命周期。
 - [ ] 将控制／禁止动作、属性修改、行动条、HP 门槛与限制、反击、累计／自定义伤害和治疗修正等组件接入执行顺序，并用实际配置覆盖来源与目标变化。
 - [ ] 恢复盾值、类型与消耗、破盾及其事件；恢复怪物 `ResilienceInfo` 的破韧／恢复、关联状态技能，以及 `HpPliesId` 的生命层逻辑与显示，不能以普通 HP 或饰品图标替代。
