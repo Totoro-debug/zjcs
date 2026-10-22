@@ -19,9 +19,21 @@ namespace Zjcs.Presentation.World
     {
         public int Id;
         public int GameId;
+        public int Type;
         public int MaxRound;
         public int Repeat;
         public bool CanFastforward;
+        public bool IsPlayerRoundLimit;
+        public int PlayerRoundLimit;
+        public float ShowMainPanelDelay;
+        public bool SkipPrepareStatus;
+        public bool UserStart;
+        public bool LeaveInPreparing;
+        public bool LeaveInPlaying;
+        public bool Background;
+        public bool ChangeCameraMode;
+        public bool JoinInMiddle;
+        public bool DismissTeamWhenLeaveOrEnd;
         public int[] WaveArrayIds;
     }
 

@@ -469,12 +469,16 @@ namespace Zjcs.Combat.Official
             bool victory = playerHp > 0 && enemyHp == 0;
             bool defeated = playerHp == 0;
             bool timeout = round > checkpoint.MaxRound;
-            checkpoint.Finished = victory || defeated || timeout;
+            // Official StageInfo may cap the main player's personal rounds independently of the
+            // global round limit. Reason 4 distinguishes it from the global timeout (reason 3).
+            bool playerRoundLimit = checkpoint.IsPlayerRoundLimit && checkpoint.PlayerRoundLimit > 0
+                && RequiredUnit(1).SkillState.Round >= checkpoint.PlayerRoundLimit;
+            checkpoint.Finished = victory || defeated || timeout || playerRoundLimit;
             checkpoint.Outcome = new FightBattleOutcome
             {
                 Finished = checkpoint.Finished,
                 Won = victory,
-                Reason = victory ? 1 : defeated ? 2 : timeout ? 3 : 0,
+                Reason = victory ? 1 : defeated ? 2 : timeout ? 3 : playerRoundLimit ? 4 : 0,
                 Round = round,
                 PlayerHp = playerHp,
                 EnemyHp = enemyHp,
