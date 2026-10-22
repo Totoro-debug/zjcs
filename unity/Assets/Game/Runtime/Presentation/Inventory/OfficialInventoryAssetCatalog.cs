@@ -105,6 +105,14 @@ namespace Zjcs.Presentation.Inventory
                 ? Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
         }
 
+        public string FindItemTypeText(int itemType)
+        {
+            Dictionary<string, object> itemTypes = Object(Parsed()["item_types"]);
+            string id = itemType.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return itemTypes.TryGetValue(id, out object key)
+                ? FindText(Convert.ToString(key, System.Globalization.CultureInfo.InvariantCulture)) : string.Empty;
+        }
+
         public string FindItemIconTemplateName(int itemId, int itemType)
         {
             Dictionary<string, object> templates = Object(Parsed()["icon_templates"]);
