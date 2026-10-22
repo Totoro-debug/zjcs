@@ -120,9 +120,11 @@
 
 倍速已按官方配置接通：`FightBattleSpeedSettings` 从 `game_settings.Battle` 读取 `Speeds`／`SpeedUIs`／`PlayModeSpeeds`，按钮文案与实际倍率分开；`ConfigureSpeeds` 用 `OfficialCharacterCatalog.EvaluateCondition` 判断速度所需官方条件（等级、地图解锁与组合条件，缺少依据的条件保持锁定），`CycleSpeed` 只在可用档位间切换，并通过 `Time.timeScale` 同步战斗步骤、移动插值与模型动画。HUD 已挂载官方 `FightMainPanelSpeedUI` 按钮，`RefreshSpeed` 绑定当前文案与锁定图标；`DisposeSession` 恢复时标。快进、阶段机、Pause 的业务语义与声音 RTPC 同步仍未接入。
 
+每次命中都会生成 `FightBattleDamageEvent`，记录伤害序号、来源、目标、技能实体／道具、命中节点、伤害类型、暴击／格挡／闪避／免疫／致盲标记、结算值、绝对伤害与命中前后 HP；这些事件随步骤回执保存，可用于飘字与战报追溯。`FightBattleStatistics` 同时累计每单位的施放、命中、承伤、造成／承受伤害与治疗，以及每技能的施放、命中、伤害与治疗，数值取实际 HP 结算结果，因此已包含衰减、溢出与致死截断。
+
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
-- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
+- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位、命中伤害事件与战斗统计，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
 - Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。随后另一 Unity 实例持续占用工程，未能在编辑器内重跑；改用该 Unity 版本的 Roslyn，以主工程已编译程序集与 UnityEngine 模块为引用分别编译 `Zjcs.Combat.Official`、`Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Offline.CharacterCreation`、`Zjcs.Presentation.Combat`、`Zjcs.Presentation.World`，均无编译错误。这不替代 Unity 编辑器自身的导入、域重载与 Play Mode。
 - Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
@@ -192,7 +194,7 @@
 - [ ] 贯通技能 Ready／Applied／InCD／Ended／LimitedTimes／ProfessionLimit／Disabled 等图标状态、开始和结束事件，保持正式 DebugBtn 禁用；完成真实 CD 与次数显示而非仅图标对象构建。
 - [ ] 恢复宠物与进化／辅助技能、解锁前布局、无宠物占位、实际能量变化与放电动画；数据和养成规则按[宠物页](pets.md)接入。
 - [ ] 恢复准备阶段方案入口、取消就绪再切换、技能不匹配／禁用／宠物提示与忽略分支；对应存档与规则沿[技能页](skills.md)，避免只开弹窗而不刷新战斗快照。
-- [ ] 建立按角色／技能／被动来源的战斗统计与可追溯回执，补齐施放／命中／伤害／治疗／盾／状态计数与占比、报告详情所需属性；按报告配置选择个人／全员视图。秘境含盾的模式伤害与已确认通用 HP 损失归因分别按所属口径记录。
+- [ ] 战斗统计已记录每单位施放／命中／承伤／伤害／治疗与每技能施放／命中／伤害／治疗；仍需按被动与状态的独立来源归因，补齐盾值、状态次数、每目标平均次数与占比、报告属性快照，并按报告配置选择个人／全员视图。秘境含盾的模式伤害与已确认通用 HP 损失归因分别按所属口径记录。
 - [ ] 恢复原层级、动态子 prefab、文字与本地化格式、字体、滚动／遮罩／布局、窗口开关和事件解绑；验证比例缩放、遮挡与鼠标命中，不能仅检查 Button／Text 已生成。
 
 ### 倍速与其他公共控件（F33—F38）
@@ -211,7 +213,7 @@
 - [ ] 修复尺寸、方向和材质：朝向回调已改为保留目录缩放、只翻转 X 轴符号；Combat/Spine 材质文本核对的2620份中2555份主贴图为空，须查官方 atlas／纹理与绑定，不能据此认定源贴图缺失。
 - [ ] 根据角色和怪物实际动作／Playable 映射待机、生成、移动、施放、受击、死亡、复活及召唤。当前全部映射 `idle_01`，移动位置已按路径插值但动作未切换，HP归零也未驱动完整死亡／移除；相同动画重播、延迟可见与中断也须恢复。
 - [ ] 还原命中范围、弹道／链式／来源到目标特效、挂点、层序、材质／shader、延时和销毁，并与每次施放／命中身份绑定，避免整回合只播放最终状态。
-- [ ] 接入19类已恢复飘字资源的实际伤害／治疗／免疫／闪避／致盲／CD 等事件、合并条件、位置与时长；恢复 Playable 关联音频及 Wwise 依赖／速度响应，采用有依据的 Windows 适配，不自行换近似音效或静态图。
+- [ ] 接入19类已恢复飘字资源的实际伤害／治疗／免疫／闪避／致盲／CD 等事件、合并条件、位置与时长。已恢复的 `damage_*` prefab 中，伤害类 prefab 的 `NumberText` 节点在原始面板里由数字渲染组件承载，本次只恢复了 UI 层级，未取得该组件，因此不能用普通文本冒充官方数字表现；免疫／闪避／致盲类 `NumberText` 是文本节点，可后续按事件绑定。恢复 Playable 关联音频及 Wwise 依赖／速度响应，采用有依据的 Windows 适配，不自行换近似音效或静态图。
 
 ### 本地状态、资源与完成验证
 

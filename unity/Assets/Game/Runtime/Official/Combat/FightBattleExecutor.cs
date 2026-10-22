@@ -91,6 +91,7 @@ namespace Zjcs.Combat.Official
             for (int i = 0; i < units.Count; i++) before[units[i].Id] = units[i].Hp;
             var movements = new List<FightBattleMovementEvent>();
             var casts = new List<FightBattleSkillCastEvent>();
+            var damageEvents = new List<FightBattleDamageEvent>();
             var performedTargets = new List<FightBattleUnitState>();
             var checkedSlots = new HashSet<int>();
 
@@ -110,8 +111,9 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
 
-                ExecuteSkill(actor, skill, targets);
+                ExecuteSkill(actor, skill, targets, damageEvents);
                 skillState.RunSkill(skill.Slot);
+                checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 checkedSlots.Add(skill.Slot);
                 performedTargets.AddRange(targets);
                 var cast = new FightBattleSkillCastEvent
@@ -140,7 +142,7 @@ namespace Zjcs.Combat.Official
             RefreshTurnUnits();
             UpdateOutcome(globalRound);
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
-                globalRound, movements, casts);
+                globalRound, movements, casts, damageEvents);
             checkpoint.Counter = counter;
             checkpoint.RandomSeed = random.Seed;
             checkpoint.Receipts.Add(new FightBattleStepReceipt
@@ -190,7 +192,7 @@ namespace Zjcs.Combat.Official
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
-            List<FightBattleUnitState> targets)
+            List<FightBattleUnitState> targets, List<FightBattleDamageEvent> damageEvents)
         {
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = skill.Hits;
@@ -208,8 +210,35 @@ namespace Zjcs.Combat.Official
                 List<FightBattleUnitState> hitTargets = FightBattleTargeting.SelectHitTargets(targets,
                     hit.TargetMode, hit.RandomCount, random);
                 foreach (FightBattleUnitState target in hitTargets)
-                    hitExecutor.Apply(random, NextDamageId(), actor, target, skill, hit,
-                        0, false, 0.0, new List<int>());
+                {
+                    long beforeHp = target.Hp;
+                    int damageId = NextDamageId();
+                    FightBattleHitResult resolved = hitExecutor.Apply(random, damageId, actor, target,
+                        skill, hit, 0, false, 0.0, new List<int>());
+                    var damage = new FightBattleDamageEvent
+                    {
+                        DamageId = damageId,
+                        SourceId = actor.Id,
+                        TargetId = target.Id,
+                        SkillEntityId = skill.EntityId,
+                        SkillItemId = skill.ItemId,
+                        HitEntityId = hit.EntityId,
+                        DamageType = hit.DamageType,
+                        IsCure = resolved.IsCure,
+                        Critical = resolved.Type.Critical,
+                        Block = resolved.Type.Block,
+                        Dodge = resolved.Type.Dodge,
+                        Immunity = resolved.Type.Immunity,
+                        Blinding = resolved.Type.Blinding,
+                        Damage = resolved.Settlement == null ? 0 : resolved.Settlement.RealDamageValue,
+                        AbsoluteDamage = resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
+                        BeforeHp = beforeHp,
+                        AfterHp = target.Hp,
+                        MaxHp = target.MaxHp
+                    };
+                    damageEvents.Add(damage);
+                    checkpoint.Statistics.RecordHit(damage);
+                }
             }
             FightDamageFalloff.EndCast(units, skill);
         }
@@ -217,7 +246,8 @@ namespace Zjcs.Combat.Official
         private FightBattleStepEvent CreateEvent(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, List<FightBattleUnitState> targets,
             Dictionary<int, long> before, int globalRound,
-            List<FightBattleMovementEvent> movements, List<FightBattleSkillCastEvent> casts)
+            List<FightBattleMovementEvent> movements, List<FightBattleSkillCastEvent> casts,
+            List<FightBattleDamageEvent> damageEvents)
         {
             var result = new FightBattleStepEvent
             {
@@ -229,7 +259,8 @@ namespace Zjcs.Combat.Official
                 SkillItemId = casts.Count > 0 ? casts[0].SkillItemId : skill == null ? 0 : skill.ItemId,
                 Kind = targets.Count == 0 ? 0 : casts.Count == 0 && skill == null ? 1 : 2,
                 Movements = movements,
-                SkillCasts = casts
+                SkillCasts = casts,
+                DamageEvents = damageEvents ?? new List<FightBattleDamageEvent>()
             };
             foreach (FightBattleUnitState target in targets)
                 if (!result.TargetIds.Contains(target.Id)) result.TargetIds.Add(target.Id);
