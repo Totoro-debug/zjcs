@@ -52,6 +52,7 @@
 ## 验证、素材管理与发布
 
 - 按影响范围运行规则测试、Unity 内集成检查及必要的实际界面验证。静态入口为 `python -B scripts/check_unity_project.py`，Unity 内入口为 `Zjcs.Editor.ProjectTools.Validate`；静态检查不能代替编辑器导入、编译和实际运行。详细边界见 [日常功能验收](docs/asset-management.md#日常功能验收)。
+- 游戏功能、UI、场景、动画或资源绑定变动须在 Unity Play Mode 实际运行受影响流程，检查真实渲染画面、输入命中、状态变化及涉及的存档恢复；自动调用方法／按钮回调只证明对应逻辑，不代替鼠标、键盘、拖拽和遮挡验证。画面验证不得使用 `-nographics`，须实际查看运行画面或运行时截图；按 [实际运行验证方法与要求](docs/asset-management.md#实际运行验证方法与要求)执行，发现失败先定位、修复并重跑。结果分别说明静态检查、Editor 导入／编译、Play Mode 逻辑／输入／画面和按需 Windows Player 验证范围，未执行或阻塞项不得写成通过。
 - 使用本机现有素材与导入缓存；新增／修改需导入的素材先导入，纯代码／文档变化不全量重导入。资源检查覆盖受影响加载脚本、目录、动态绑定和共享调用方；删除后检查父目录及引用方，共享底层或导出链变化按影响扩大回归。
 - `unity/Assets/Game/` 保存受 Git 管理的场景、C#、shader、配置及 `.meta`；`Runtime/Official/` 为官方代码，`Runtime/Offline/` 为单机适配。`unity/Assets/Official/` 保存独立素材载荷及其 `.meta`，不得放手写代码。Unity 缓存与 IDE 产物不提交、不进入快照。
 - `.tools/` 保存原始包、工具与缓存，不提交、不进入游戏导出；`assets/reference/` 保存来源及必要参照，运行时只使用随游戏打包交付的本地资源。`assets/official/`、`assets/characters/`、`assets/reference/` 模块目录按独立 ZIP 管理，完整目录和恢复规则见 [素材管理](docs/asset-management.md)。
