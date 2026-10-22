@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> listItemTemplate;
         private Dictionary<string, object> itemTemplate;
         private Dictionary<string, object> promoteTemplate;
+        private Dictionary<string, object> infoTemplate;
         private GameObject panel;
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -41,6 +42,7 @@ namespace Zjcs.Presentation.Character
         private Text statusText;
         private GameObject promoteDialog;
         private int promoteSkillId;
+        private GameObject detailDialog;
         private readonly List<GameObject> listRows = new List<GameObject>();
         private int listType = ActiveSkillItemType;
         private int selectedType;
@@ -68,6 +70,7 @@ namespace Zjcs.Presentation.Character
             listItemTemplate = CharacterModelPackage.AsObject(screens["skill_list_item"], "skill_list_item");
             itemTemplate = CharacterModelPackage.AsObject(screens["item"], "item");
             promoteTemplate = CharacterModelPackage.AsObject(screens["skill_promote"], "skill_promote");
+            infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
         }
 
         public void Open(Transform parent)
@@ -90,6 +93,8 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            if (detailDialog != null) Destroy(detailDialog);
+            detailDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
             promoteDialog = null;
             if (installMask != null) Destroy(installMask);
@@ -111,6 +116,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (detailDialog != null)
+            {
+                CloseSkillDetail();
+                return true;
+            }
             if (promoteDialog != null)
             {
                 ClosePromote();
@@ -484,6 +494,33 @@ namespace Zjcs.Presentation.Character
             Button promoteButton = promoteObject.GetComponent<Button>();
             promoteButton.targetGraphic = promoteImage;
             promoteButton.onClick.AddListener(() => OpenPromote(skillId));
+            var detailObject = new GameObject("SkillDetail", typeof(RectTransform), typeof(Image), typeof(Button));
+            detailObject.transform.SetParent(row, false);
+            RectTransform detailRect = (RectTransform)detailObject.transform;
+            detailRect.anchorMin = new Vector2(1f, 0f);
+            detailRect.anchorMax = new Vector2(1f, 0f);
+            detailRect.pivot = new Vector2(1f, 0f);
+            detailRect.sizeDelta = new Vector2(88f, 36f);
+            detailRect.anchoredPosition = new Vector2(-100f, 6f);
+            Image detailImage = detailObject.GetComponent<Image>();
+            detailImage.color = new Color(0.4f, 0.55f, 0.75f, 0.9f);
+            var detailTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            detailTextObject.transform.SetParent(detailObject.transform, false);
+            RectTransform detailTextRect = (RectTransform)detailTextObject.transform;
+            detailTextRect.anchorMin = Vector2.zero;
+            detailTextRect.anchorMax = Vector2.one;
+            detailTextRect.offsetMin = Vector2.zero;
+            detailTextRect.offsetMax = Vector2.zero;
+            Text detailText = detailTextObject.GetComponent<Text>();
+            detailText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            detailText.fontSize = 18;
+            detailText.alignment = TextAnchor.MiddleCenter;
+            detailText.color = Color.white;
+            detailText.raycastTarget = false;
+            detailText.text = "\u8be6\u60c5";
+            Button detailButton = detailObject.GetComponent<Button>();
+            detailButton.targetGraphic = detailImage;
+            detailButton.onClick.AddListener(() => OpenSkillDetail(skillId));
             Text text = label.GetComponent<Text>();
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 18;
@@ -569,6 +606,88 @@ namespace Zjcs.Presentation.Character
         {
             LastMessage = message ?? string.Empty;
             if (statusText != null) statusText.text = LastMessage;
+        }
+
+        private void OpenSkillDetail(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            if (definition == null) return;
+            CloseSkillDetail();
+            detailDialog = new GameObject("SkillDetailDialog", typeof(RectTransform));
+            detailDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)detailDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("DetailBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseSkillDetail);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            if (title != null) title.text = SkillName(skillId);
+            if (content == null) return;
+            foreach (RectTransform child in content) child.gameObject.SetActive(false);
+            var body = new GameObject("SkillDetailText", typeof(RectTransform), typeof(Text));
+            body.transform.SetParent(content, false);
+            RectTransform bodyRect = (RectTransform)body.transform;
+            bodyRect.anchorMin = new Vector2(0.08f, 0.32f);
+            bodyRect.anchorMax = new Vector2(0.92f, 0.92f);
+            bodyRect.offsetMin = Vector2.zero;
+            bodyRect.offsetMax = Vector2.zero;
+            Text text = body.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 24;
+            text.color = Color.white;
+            text.alignment = TextAnchor.UpperLeft;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            var lines = new List<string>
+            {
+                "\u7c7b\u578b\uff1a" + (definition.ItemType == ActiveSkillItemType ? "\u6218\u6280" : "\u79d8\u6cd5"),
+                "\u7b49\u9636\uff1a" + rank + " / " + definition.MaximumRank,
+                "\u788e\u7247\uff1a" + ItemName(definition.PieceItemId) + " \u00d7"
+                    + progression.Player.Inventory.Where(value => value.ItemId == definition.PieceItemId)
+                        .Sum(value => value.Count)
+            };
+            OfflineSkillRankCost cost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
+            if (cost != null)
+                lines.Add("\u4e0b\u4e00\u7b49\u9636\uff1a" + string.Join("\u3001", cost.Items.Select(item =>
+                    ItemName(item.ItemId) + " \u00d7" + item.Count)));
+            text.text = string.Join("\n", lines);
+            Button install = CreatePanelButton(content, "\u5b89\u88c5", new Vector2(-160f, 40f),
+                new Color(0.86f, 0.55f, 0.3f, 0.95f));
+            install.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                Install(skillId);
+            });
+            Button promote = CreatePanelButton(content, "\u57f9\u517b", new Vector2(0f, 40f),
+                new Color(0.55f, 0.7f, 0.9f, 0.95f));
+            promote.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                OpenPromote(skillId);
+            });
+            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(160f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseSkillDetail);
+        }
+
+        private void CloseSkillDetail()
+        {
+            if (detailDialog != null) Destroy(detailDialog);
+            detailDialog = null;
         }
 
         private void OpenPromote(int skillId)
@@ -787,6 +906,8 @@ namespace Zjcs.Presentation.Character
         {
             pendingSkillId = 0;
             pendingType = 0;
+            if (detailDialog != null) Destroy(detailDialog);
+            detailDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
             promoteDialog = null;
             if (installMask != null) Destroy(installMask);
