@@ -359,7 +359,7 @@ namespace Zjcs.Presentation.Character
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotProp",
                 OpenProperties);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotLevel/ExpTitle/BtnGo/RuleBtn",
-                () => StoredExperienceHelpRequested?.Invoke());
+                OpenStoredExperienceHelp);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelProfessionBtn",
                 () => OfficialModuleRequested?.Invoke("profession"));
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelSkillBtn",
@@ -400,6 +400,39 @@ namespace Zjcs.Presentation.Character
             skillPanel = holder.AddComponent<CharacterSkillPanel>();
             skillPanel.Initialize(assets, progression);
             skillPanel.Changed += Refresh;
+        }
+
+        private void OpenStoredExperienceHelp()
+        {
+            StoredExperienceHelpRequested?.Invoke();
+            ShowOfficialDialog(ReadScreens().character_props, "StoredExperienceHelp", false);
+            Dictionary<string, object> overview = (Dictionary<string, object>)OfficialEquipmentJson.Parse(
+                assets.CharacterOverview.text);
+            Dictionary<string, object> texts = (Dictionary<string, object>)overview["texts"];
+            string title = Convert.ToString(texts["player_exp_max_title"], System.Globalization.CultureInfo.InvariantCulture);
+            string body = Convert.ToString(texts["player_exp_max_desc1"], System.Globalization.CultureInfo.InvariantCulture)
+                + "\n\n" + Convert.ToString(texts["player_exp_max_desc2"], System.Globalization.CultureInfo.InvariantCulture);
+            Text titleText = dialogNodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            SetText(titleText, title);
+            RectTransform content = dialogNodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            if (content != null)
+            {
+                var bodyObject = new GameObject("StoredExperienceBody", typeof(RectTransform), typeof(Text));
+                bodyObject.transform.SetParent(content, false);
+                RectTransform bodyRect = (RectTransform)bodyObject.transform;
+                bodyRect.anchorMin = new Vector2(0.05f, 0.1f);
+                bodyRect.anchorMax = new Vector2(0.95f, 0.95f);
+                bodyRect.offsetMin = Vector2.zero;
+                bodyRect.offsetMax = Vector2.zero;
+                Text text = bodyObject.GetComponent<Text>();
+                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.fontSize = 26;
+                text.color = Color.white;
+                text.supportRichText = true;
+                text.alignment = TextAnchor.UpperLeft;
+                text.text = body;
+            }
         }
 
         private void OpenSkillPanel()
