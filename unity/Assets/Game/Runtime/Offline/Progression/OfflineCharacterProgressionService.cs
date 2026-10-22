@@ -404,7 +404,51 @@ namespace Zjcs.Offline.Progression
         {
             player.Wardrobe.FashionExperience = catalog.FashionExperience(player.Inventory,
                 player.Wardrobe.LimitedTitleCollection);
-            player.Wardrobe.AppearanceLevel = catalog.AppearanceLevel(player.Wardrobe.FashionExperience);
+            int calculated = catalog.AppearanceLevel(player.Wardrobe.FashionExperience);
+            // Original SyncAppearanceLevelFromExp only lowers the stored level; raising it requires
+            // the wardrobe upgrade button (CanUpgradeAppearanceLevel / TryUpgradeAppearanceLevel).
+            if (calculated < player.Wardrobe.AppearanceLevel)
+                player.Wardrobe.AppearanceLevel = calculated;
+        }
+
+        public int AppearanceLevelMax => catalog.AppearanceLevelMax;
+
+        public bool IsMaxAppearanceLevel => catalog.IsMaxAppearanceLevel(Player.Wardrobe.AppearanceLevel);
+
+        public bool CanUpgradeAppearanceLevel(out int level, out int newLevel)
+        {
+            level = Player.Wardrobe.AppearanceLevel;
+            newLevel = catalog.AppearanceLevel(Player.Wardrobe.FashionExperience);
+            return newLevel > level;
+        }
+
+        public float AppearanceLevelFill()
+        {
+            int level = Player.Wardrobe.AppearanceLevel;
+            if (catalog.IsMaxAppearanceLevel(level)) return 1f;
+            long current = Player.Wardrobe.FashionExperience - catalog.AppearanceLevelExperience(level);
+            long required = catalog.AppearanceLevelNextExperience(level) - catalog.AppearanceLevelExperience(level);
+            return required <= 0 ? 0f : Math.Max(0f, Math.Min(1f, (float)current / required));
+        }
+
+        public ProgressionResult UpgradeAppearanceLevel(string eventId)
+        {
+            if (string.IsNullOrWhiteSpace(eventId)) return Invalid("An appearance level event ID is required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                int level = player.Wardrobe.AppearanceLevel;
+                long experience = catalog.FashionExperience(player.Inventory, player.Wardrobe.LimitedTitleCollection);
+                int newLevel = catalog.AppearanceLevel(experience);
+                if (newLevel <= level)
+                    throw new InvalidOperationException("The appearance experience is not enough to upgrade.");
+                player.Wardrobe.FashionExperience = experience;
+                player.Wardrobe.AppearanceLevel = newLevel;
+            }, eventId);
+        }
+
+        public IReadOnlyDictionary<int, long> AppearancePropertiesGained(int fromLevel, int toLevel)
+        {
+            return catalog.AppearancePropertiesBetween(fromLevel, toLevel);
         }
 
         private WardrobeAppearanceState ReadAppearance(OfflineWardrobeProgress saved)
