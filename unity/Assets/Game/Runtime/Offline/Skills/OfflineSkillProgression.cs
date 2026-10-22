@@ -419,6 +419,12 @@ namespace Zjcs.Offline.Skills
             return null;
         }
 
+        /// <summary>Public availability check used by the skill list profession mismatch marker.</summary>
+        public static bool IsAvailableFor(OfflineSkillDefinition definition, OfflineSkillPlayerContext player)
+        {
+            return definition != null && player != null && IsAvailable(definition, player);
+        }
+
         private static bool IsAvailable(OfflineSkillDefinition definition, OfflineSkillPlayerContext player)
         {
             if (definition.ItemType != ActiveSkillItemType && definition.ItemType != PassiveSkillItemType) return false;
