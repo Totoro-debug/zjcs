@@ -32,7 +32,8 @@ namespace Zjcs.Presentation.Character
             TryRegisterEquipmentProperties();
             try
             {
-                progression.AttachSkillRules(assetCatalog.LoadSkillRules());
+                OfficialSkillRecommendationSet recommendations = assetCatalog.LoadSkillRecommendations();
+                progression.AttachSkillRules(assetCatalog.LoadSkillRules(), recommendations.recommendations);
             }
             catch (Exception error)
             {

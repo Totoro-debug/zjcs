@@ -43,6 +43,7 @@ namespace Zjcs.Presentation.Character
         private GameObject promoteDialog;
         private int promoteSkillId;
         private GameObject detailDialog;
+        private GameObject recommendDialog;
         private readonly List<GameObject> listRows = new List<GameObject>();
         private int listType = ActiveSkillItemType;
         private int selectedType;
@@ -93,6 +94,8 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            if (recommendDialog != null) Destroy(recommendDialog);
+            recommendDialog = null;
             if (detailDialog != null) Destroy(detailDialog);
             detailDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
@@ -116,6 +119,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (recommendDialog != null)
+            {
+                CloseRecommendations();
+                return true;
+            }
             if (detailDialog != null)
             {
                 CloseSkillDetail();
@@ -162,6 +170,7 @@ namespace Zjcs.Presentation.Character
             BindButtonName("PrevPlanBtn", () => SwitchPlan(-1));
             BindButtonName("FastLevelUpBtn", UpgradeAllSlots);
             BindButtonName("FastPromotionBtn", PromoteAllSkills);
+            BindButtonName("RecommendBtn", OpenRecommendations);
             var statusObject = new GameObject("SkillPanelStatus", typeof(RectTransform), typeof(Text));
             statusObject.transform.SetParent(panel.transform, false);
             RectTransform statusRect = (RectTransform)statusObject.transform;
@@ -608,6 +617,99 @@ namespace Zjcs.Presentation.Character
             if (statusText != null) statusText.text = LastMessage;
         }
 
+        private void OpenRecommendations()
+        {
+            IReadOnlyList<OfficialSkillRecommendation> recommendations =
+                progression.RecommendationsForProfession(progression.Player.Wardrobe.Profession);
+            if (recommendations.Count == 0)
+            {
+                SetStatus("\u5f53\u524d\u804c\u4e1a\u6682\u65e0\u63a8\u8350\u65b9\u6848\u3002");
+                return;
+            }
+            if (recommendDialog != null) Destroy(recommendDialog);
+            recommendDialog = new GameObject("SkillRecommendDialog", typeof(RectTransform));
+            recommendDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)recommendDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("RecommendBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseRecommendations);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "\u6280\u80fd\u63a8\u8350";
+            if (content == null) return;
+            foreach (RectTransform child in content) child.gameObject.SetActive(false);
+            float top = 0.9f;
+            foreach (OfficialSkillRecommendation recommendation in recommendations)
+            {
+                if (top < 0.14f) break;
+                var rowObject = new GameObject("RecommendRow", typeof(RectTransform));
+                rowObject.transform.SetParent(content, false);
+                RectTransform row = (RectTransform)rowObject.transform;
+                row.anchorMin = new Vector2(0.06f, top);
+                row.anchorMax = new Vector2(0.94f, top);
+                row.sizeDelta = new Vector2(0f, 110f);
+                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                labelObject.transform.SetParent(row, false);
+                RectTransform labelRect = (RectTransform)labelObject.transform;
+                labelRect.anchorMin = new Vector2(0f, 0f);
+                labelRect.anchorMax = new Vector2(0.72f, 1f);
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+                Text label = labelObject.GetComponent<Text>();
+                label.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                label.fontSize = 20;
+                label.alignment = TextAnchor.MiddleLeft;
+                label.color = Color.white;
+                label.horizontalOverflow = HorizontalWrapMode.Wrap;
+                label.text = recommendation.name + "\n" + string.Join("\u3001",
+                    recommendation.CoreSkillList.Select(ItemName).Where(value => value.Length > 0));
+                Button apply = CreatePanelButton(row, "\u5e94\u7528", new Vector2(0f, 0f),
+                    new Color(0.86f, 0.55f, 0.3f, 0.95f));
+                RectTransform applyRect = (RectTransform)apply.transform;
+                applyRect.anchorMin = new Vector2(1f, 0.5f);
+                applyRect.anchorMax = new Vector2(1f, 0.5f);
+                applyRect.pivot = new Vector2(1f, 0.5f);
+                applyRect.sizeDelta = new Vector2(120f, 48f);
+                applyRect.anchoredPosition = Vector2.zero;
+                OfficialSkillRecommendation captured = recommendation;
+                apply.onClick.AddListener(() => ApplyRecommendation(captured));
+                top -= 0.13f;
+            }
+            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(0f, 20f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseRecommendations);
+        }
+
+        private void ApplyRecommendation(OfficialSkillRecommendation recommendation)
+        {
+            ProgressionResult result = progression.ApplySkillRecommendation(recommendation);
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseRecommendations();
+            Refresh();
+            Changed?.Invoke();
+        }
+
+        private void CloseRecommendations()
+        {
+            if (recommendDialog != null) Destroy(recommendDialog);
+            recommendDialog = null;
+        }
+
         private void OpenSkillDetail(int skillId)
         {
             OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
@@ -906,6 +1008,8 @@ namespace Zjcs.Presentation.Character
         {
             pendingSkillId = 0;
             pendingType = 0;
+            if (recommendDialog != null) Destroy(recommendDialog);
+            recommendDialog = null;
             if (detailDialog != null) Destroy(detailDialog);
             detailDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);

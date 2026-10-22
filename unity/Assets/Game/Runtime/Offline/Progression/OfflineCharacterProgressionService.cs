@@ -35,12 +35,70 @@ namespace Zjcs.Offline.Progression
         }
 
         public OfflineSkillRules SkillRules { get; private set; }
+        public IReadOnlyList<OfficialSkillRecommendation> SkillRecommendations { get; private set; }
+            = Array.Empty<OfficialSkillRecommendation>();
         public OfflineSkillProgression SkillProgression { get; private set; }
 
-        public void AttachSkillRules(OfflineSkillRules rules)
+        public void AttachSkillRules(OfflineSkillRules rules,
+            IEnumerable<OfficialSkillRecommendation> recommendations = null)
         {
             SkillRules = rules;
             SkillProgression = rules == null ? null : new OfflineSkillProgression(rules);
+            SkillRecommendations = recommendations == null
+                ? Array.Empty<OfficialSkillRecommendation>() : recommendations.ToArray();
+        }
+
+        public IReadOnlyList<OfficialSkillRecommendation> RecommendationsForProfession(int profession)
+        {
+            return SkillRecommendations.Where(value => value != null && value.Profession == profession)
+                .OrderBy(value => value.Id).ToArray();
+        }
+
+        /// <summary>Installs every owned skill of a recommendation into the current plan.</summary>
+        public ProgressionResult ApplySkillRecommendation(OfficialSkillRecommendation recommendation)
+        {
+            if (recommendation == null || SkillProgression == null)
+                return Invalid("Official skill recommendations are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillPlayerContext context = SkillContext();
+            int applied = 0;
+            int skipped = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                applied += TryRecommend(clone, context, recommendation.ActiveSkillList, i, ref skipped);
+                applied += TryRecommend(clone, context, recommendation.PassiveSkillList, i, ref skipped);
+            }
+            if (applied == 0)
+                return new ProgressionResult
+                {
+                    Status = ProgressionResultStatus.InvalidState,
+                    Message = "\u63a8\u8350\u65b9\u6848\u4e2d\u6ca1\u6709\u5df2\u62e5\u6709\u4e14\u53ef\u5b89\u88c5\u7684\u6280\u80fd\u3002"
+                };
+            ProgressionResult result = session.ApplyCharacterMutation(player => player.Skills = clone,
+                "skill-recommend-" + recommendation.Id.ToString(CultureInfo.InvariantCulture) + "-"
+                + Guid.NewGuid().ToString("N"));
+            if (result.IsApplied)
+                result.Message = "\u5df2\u5b89\u88c5 " + applied.ToString(CultureInfo.InvariantCulture)
+                    + " \u4e2a\u63a8\u8350\u6280\u80fd\uff0c\u8df3\u8fc7 "
+                    + skipped.ToString(CultureInfo.InvariantCulture) + " \u4e2a\u672a\u62e5\u6709\u6280\u80fd\u3002";
+            return result;
+        }
+
+        private int TryRecommend(OfflineSkillProfile profile, OfflineSkillPlayerContext context, int[] skills,
+            int slot, ref int skipped)
+        {
+            if (skills == null || slot >= skills.Length) return 0;
+            int skillId = skills[slot];
+            if (skillId <= 0) return 0;
+            if (!profile.Skills.Any(value => value != null && value.ClassId == skillId))
+            {
+                skipped++;
+                return 0;
+            }
+            OfflineSkillResult result = SkillProgression.Equip(profile, context, skillId, slot);
+            if (result.IsApplied) return 1;
+            skipped++;
+            return 0;
         }
 
         public OfflineSkillPlayerContext SkillContext()
