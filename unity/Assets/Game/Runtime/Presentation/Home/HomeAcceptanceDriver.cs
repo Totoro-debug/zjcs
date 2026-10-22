@@ -111,7 +111,22 @@ namespace Zjcs.Presentation.Home
                 return "stage " + runtime.Environment.Stage + " time " + runtime.Environment.Hour + ":" +
                        runtime.Environment.Minute + " moon " + runtime.Environment.MoonPhase;
             });
-            yield return CheckUi(runtime, value => ok &= value);
+            ok &= Check("input", () =>
+            {
+                int bed = runtime.Scene.HitTest(new Vector2(8.4f, -1.62f));
+                int cart = runtime.Scene.HitTest(new Vector2(-8.9f, -4.5f));
+                Assert(bed == 0, "bed hit=" + bed);
+                Assert(cart == 10, "cart hit=" + cart);
+                Assert(runtime.Scene.HitTest(new Vector2(0f, 40f)) == -1, "empty area must not hit");
+                Vector3 start = runtime.Scene.Position;
+                runtime.Scene.MoveCamera(new Vector2(-100000f, 0f));
+                Vector3 right = runtime.Scene.Position;
+                Assert(right.x > start.x, "drag moves camera");
+                runtime.Scene.MoveCamera(new Vector2(200000f, 0f));
+                Vector3 back = runtime.Scene.Position;
+                Assert(back.x <= right.x, "clamped drag");
+                return "bed/cart quads ok, clamp x " + right.x.ToString("0.00") + " -> " + back.x.ToString("0.00");
+            });            yield return CheckUi(runtime, value => ok &= value);
             ok &= Check("persistence", () =>
             {
                 string homePath = slots.GetHomePath(slotId);
