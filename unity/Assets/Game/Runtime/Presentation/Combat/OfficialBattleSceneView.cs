@@ -84,6 +84,9 @@ namespace Zjcs.Presentation.Combat
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
                 if (state == null || !IsWaveSpawned(checkpoint, state.Id)) continue;
+                // Dead units leave the battlefield; the official death AnimationClip is not migrated
+                // yet, so the model is removed without a death animation.
+                if (state.Hp <= 0) continue;
                 present.Add(state.Id);
                 if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
                 {
