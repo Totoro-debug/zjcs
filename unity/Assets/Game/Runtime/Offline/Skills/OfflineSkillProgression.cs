@@ -485,6 +485,7 @@ namespace Zjcs.Offline.Skills
             target.BlessRecords = source.BlessRecords;
             target.Skills = source.Skills;
             target.Items = source.Items;
+            target.FavoriteSkills = source.FavoriteSkills;
         }
 
         private static Dictionary<int, long> Cost(OfflineSkillItemCount[] items)
