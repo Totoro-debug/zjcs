@@ -15,7 +15,6 @@ namespace Zjcs.Presentation.Opening
     public sealed class OpeningFightPlayback
     {
         private const float SkipButtonDelaySeconds = 0.5f;
-        private const float PlaybackSpeed = 1.5f;
 
         private readonly OpeningAssets assets;
         private readonly OpeningUiView ui;
@@ -23,23 +22,29 @@ namespace Zjcs.Presentation.Opening
         private readonly Func<bool> showSkipButton;
         private readonly OfficialBattleModelCatalog models;
         private readonly Transform world;
+        private readonly OpeningBattlefield battlefield;
         private readonly Dictionary<int, SkeletonAnimation> units = new Dictionary<int, SkeletonAnimation>();
         private readonly Dictionary<int, OfficialBattleModelBinding> bindings =
             new Dictionary<int, OfficialBattleModelBinding>();
         private readonly Dictionary<int, OpeningRecordEntity> entityState = new Dictionary<int, OpeningRecordEntity>();
         private GameObject hud;
         private GameObject skipButton;
+        private TMPro.TMP_Text roundText;
+        private string roundTemplate = string.Empty;
         private bool skipRequested;
+        private bool skipButtonPending;
+        private float skipButtonAvailableAt;
         private float scaleFactor;
         private readonly HashSet<string> skippedModels = new HashSet<string>(StringComparer.Ordinal);
 
         public OpeningFightPlayback(OpeningAssets assets, OpeningUiView ui, OfficialBattleModelCatalog models,
-            Transform world, Func<bool> showSkipButton, Action<string> log)
+            Transform world, OpeningBattlefield battlefield, Func<bool> showSkipButton, Action<string> log)
         {
             this.assets = assets ?? throw new ArgumentNullException(nameof(assets));
             this.ui = ui ?? throw new ArgumentNullException(nameof(ui));
             this.models = models;
             this.world = world ?? throw new ArgumentNullException(nameof(world));
+            this.battlefield = battlefield;
             this.showSkipButton = showSkipButton ?? (() => false);
             this.log = log ?? (_ => { });
         }
@@ -55,7 +60,11 @@ namespace Zjcs.Presentation.Opening
             skipRequested = true;
         }
 
-        public IEnumerator Play()
+        /// <summary>
+        /// Official order: the stage scene loads, then GAME_ENTITY_LIST places every
+        /// unit, and only then does the story controller play BeforeFight.
+        /// </summary>
+        public IEnumerator Prepare()
         {
             OpeningRecord record = assets.Record;
             MountHud();
@@ -64,21 +73,43 @@ namespace Zjcs.Presentation.Opening
                 entityState[entity.EntityId] = entity;
                 TryCreateUnit(entity);
             }
+            FrameCamera();
             yield return null;
+        }
 
-            if (showSkipButton()) yield return ShowSkipButtonAfterDelay();
+        public IEnumerator Play()
+        {
+            OpeningRecord record = assets.Record;
+            if (units.Count == 0 && PreparedUnits == 0)
+            {
+                MountHud();
+                foreach (OpeningRecordEntity entity in record.Entities)
+                {
+                    entityState[entity.EntityId] = entity;
+                    TryCreateUnit(entity);
+                }
+                FrameCamera();
+                yield return null;
+            }
+
+            skipButtonPending = showSkipButton();
+            skipButtonAvailableAt = Time.time + SkipButtonDelaySeconds;
 
             for (int roundIndex = 0; roundIndex < record.Rounds.Count; roundIndex++)
             {
                 if (skipRequested) break;
                 OpeningRecordRound round = record.Rounds[roundIndex];
-                Round = roundIndex;
-                float roundStart = Time.unscaledTime;
+                float roundStart = Time.time;
                 foreach (OpeningRecordStep step in round.Steps)
                 {
                     if (skipRequested) break;
-                    float wait = step.Time / PlaybackSpeed - (Time.unscaledTime - roundStart);
-                    if (wait > 0f) yield return new WaitForSecondsRealtime(wait);
+                    float dispatchAt = roundStart + step.Time / record.FightSpeed;
+                    while (Time.time < dispatchAt)
+                    {
+                        ShowSkipButtonWhenReady();
+                        yield return null;
+                    }
+                    ShowSkipButtonWhenReady();
                     Dispatch(step);
                 }
                 yield return null;
@@ -102,15 +133,40 @@ namespace Zjcs.Presentation.Opening
             skipButton = null;
         }
 
-        private IEnumerator ShowSkipButtonAfterDelay()
+        private void FrameCamera()
         {
-            yield return new WaitForSecondsRealtime(SkipButtonDelaySeconds);
-            if (skipButton == null) yield break;
+            if (battlefield == null || battlefield.StageCamera == null) return;
+            Camera camera = battlefield.StageCamera;
+            Vector3 center = Vector3.zero;
+            int count = 0;
+            foreach (OpeningRecordEntity entity in entityState.Values)
+            {
+                if (entity.GridX == 0 && entity.GridY == 0) continue;
+                center += new Vector3(entity.GridX, entity.GridY, 0f);
+                count++;
+            }
+            if (count > 0) center /= count;
+            else center = new Vector3(battlefield.Size.x * 0.5f, battlefield.Size.y * 0.5f, 0f);
+            Vector3 position = camera.transform.position;
+            Vector3 gridCenter = battlefield.GridToWorld(center.x, center.y);
+            camera.transform.position = new Vector3(gridCenter.x, gridCenter.y, position.z);
+        }
+
+        private void UpdateRoundText()
+        {
+            if (roundText == null) return;
+            int total = assets.Record.Rounds.Count;
+            int current = Mathf.Clamp(Round + 1, 1, Mathf.Max(1, total));
+            if (string.IsNullOrEmpty(roundTemplate)) roundText.text = current + "/" + total;
+            else roundText.text = roundTemplate.Replace("{0}", current.ToString())
+                .Replace("{1}", total.ToString());
+        }
+
+        private void ShowSkipButtonWhenReady()
+        {
+            if (!skipButtonPending || Time.time < skipButtonAvailableAt || skipButton == null) return;
+            skipButtonPending = false;
             skipButton.SetActive(true);
-            Button button = skipButton.GetComponent<Button>() ?? skipButton.GetComponentInChildren<Button>(true);
-            if (button == null) yield break;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(RequestFastForward);
         }
 
         private void MountHud()
@@ -122,8 +178,25 @@ namespace Zjcs.Presentation.Opening
             }
             hud = ui.Create("record_fight_hud");
             hud.SetActive(true);
+            foreach (TMPro.TMP_Text text in hud.GetComponentsInChildren<TMPro.TMP_Text>(true))
+            {
+                if (!text.name.EndsWith("RoundText", StringComparison.Ordinal)) continue;
+                roundText = text;
+                roundTemplate = text.text ?? string.Empty;
+                break;
+            }
+            if (roundText == null) log("官方录像回合文本节点缺失");
             skipButton = FindNode(hud, "SkipBtn");
-            if (skipButton != null) skipButton.SetActive(false);
+            if (skipButton != null)
+            {
+                skipButton.SetActive(false);
+                Button button = skipButton.GetComponent<Button>() ?? skipButton.GetComponentInChildren<Button>(true);
+                if (button != null)
+                {
+                    button.onClick.RemoveAllListeners();
+                    button.onClick.AddListener(RequestFastForward);
+                }
+            }
         }
 
         private static GameObject FindNode(GameObject root, string suffix)
@@ -184,11 +257,14 @@ namespace Zjcs.Presentation.Opening
             switch (type)
             {
                 case "FightRoundActingDataModification":
-                case "FightPersonalRoundNewModification":
-                case "FightRoundNewModification":
-                case "FightRoundUpdateDataModification":
                     PlayActing(step);
                     break;
+                case "FightRoundNewModification":
+                    Round = OpeningJson.Int(step.Data, "GlobalRound");
+                    UpdateRoundText();
+                    break;
+                case "FightPersonalRoundNewModification":
+                case "FightRoundUpdateDataModification":
                 case "FightRootStatusDataModification":
                     break;
                 case "FightStatusInvokeModification":
@@ -204,7 +280,7 @@ namespace Zjcs.Presentation.Opening
 
         private void PlayActing(OpeningRecordStep step)
         {
-            if (!step.Data.TryGetValue("EntityId", out object raw) || !(raw is Dictionary<string, object> id)) return;
+            if (!step.Data.TryGetValue("RoundEntityId", out object raw) || !(raw is Dictionary<string, object> id)) return;
             int entityId = OpeningJson.Int(id, "EntityId");
             if (units.TryGetValue(entityId, out SkeletonAnimation unit) && unit != null)
                 Play(entityId, unit, "attack_01", false);
@@ -235,18 +311,25 @@ namespace Zjcs.Presentation.Opening
         private void TryCreateUnit(OpeningRecordEntity entity)
         {
             if (entity == null || units.ContainsKey(entity.EntityId)) return;
+            if (models == null) return;
+            string key;
             if (entity.CharacterType == "Npc")
             {
-                // Official renders these two characters from the player appearance pipeline;
-                // the offline module has no appearance fighter binding yet.
-                log("录像角色单位缺少外观绑定，暂不生成模型: " + entity.EntityId + " (" + entity.Profession + ")");
-                return;
+                if (battlefield == null || !battlefield.TryGetNpcModel(entity.NpcClassId, out key))
+                {
+                    log("录像剧情角色缺少官方 NPC 骨骼绑定: " + entity.EntityId + " ("
+                        + entity.NpcClassId + " " + entity.Profession + ")");
+                    return;
+                }
             }
-            if (entity.MonsterId <= 0 || models == null) return;
-            if (!assets.Stage.Models.TryGetValue(entity.MonsterId, out string key) || string.IsNullOrEmpty(key))
+            else
             {
-                log("官方怪物模型标识缺失: " + entity.MonsterId);
-                return;
+                if (entity.MonsterId <= 0) return;
+                if (!assets.Stage.Models.TryGetValue(entity.MonsterId, out key) || string.IsNullOrEmpty(key))
+                {
+                    log("官方怪物模型标识缺失: " + entity.MonsterId);
+                    return;
+                }
             }
             PreparedUnits++;
             OfficialBattleModelBinding binding = models.Find(key);
@@ -269,23 +352,28 @@ namespace Zjcs.Presentation.Opening
             }
             if (!HasBoundTexture(skeleton.SkeletonDataAsset))
             {
-                // The pinned battle Spine payload ships this model without its atlas
+                // The pinned battle Spine payload ships most models without their atlas
                 // texture page; rendering it would show an untextured white mesh.
-                if (skippedModels.Add(key)) log("官方怪物模型缺少贴图页，暂不显示: " + key);
+                if (skippedModels.Add(key)) log("官方战斗模型缺少贴图页，暂不显示: " + key);
                 UnityEngine.Object.Destroy(gameObject);
                 return;
             }
+            // The unit root already carries the stage root plus the official grid origin.
             gameObject.transform.localPosition = new Vector3(entity.GridX, entity.GridY, 0);
             // Official fight stages place these models at their prefab scale inside a
             // world whose root matrix is offset by thousands of units. The offline arena
             // is grid-metered, so the first model establishes one shared factor that keeps
-            // the official relative sizes between monsters.
+            // the official relative sizes between units.
             if (scaleFactor <= 0f)
             {
                 float height = skeleton.Skeleton.Data.Height * binding.scale;
                 scaleFactor = height > 0.0001f ? 1.2f / height : 100f;
             }
             gameObject.transform.localScale = Vector3.one * binding.scale * scaleFactor;
+            // The official stage renders its ground through sorting layers up to 21;
+            // fighters must sort in front of that scenery.
+            foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
+                renderer.sortingOrder = 30000 - entity.GridY * 2;
             Play(entity.EntityId, skeleton, "idle_01", true);
             units.Add(entity.EntityId, skeleton);
             bindings.Add(entity.EntityId, binding);

@@ -248,6 +248,13 @@ namespace Zjcs.Presentation.Opening
         public int Id;
         public string Name = string.Empty;
         public string PortraitPath = string.Empty;
+        public string PortraitPrefabKey = string.Empty;
+        public bool NeedFlipOnRight;
+        public Vector2 PortraitFaceOffset;
+        public readonly Dictionary<string, string> PortraitFaceSprites =
+            new Dictionary<string, string>(StringComparer.Ordinal);
+        public readonly Dictionary<string, Vector2> PortraitFaceOffsets =
+            new Dictionary<string, Vector2>(StringComparer.Ordinal);
     }
 
     public sealed class OpeningGridCell
@@ -297,6 +304,7 @@ namespace Zjcs.Presentation.Opening
     {
         public long GameId;
         public int StageId;
+        public float FightSpeed;
         public byte[] Compressed;
         public readonly List<OpeningRecordEntity> Entities = new List<OpeningRecordEntity>();
         public readonly List<OpeningRecordRound> Rounds = new List<OpeningRecordRound>();
@@ -353,6 +361,23 @@ namespace Zjcs.Presentation.Opening
                     record.StatusChangeValue = OpeningJson.Number(body, "Val").ToString(CultureInfo.InvariantCulture);
             }
 
+            bool foundFightSpeed = false;
+            foreach (object rawEntity in entities)
+            {
+                Dictionary<string, object> entity = OpeningJson.Object(rawEntity, "entity");
+                foreach (object rawComponent in OpeningJson.Array(entity["ComponentList"], "ComponentList"))
+                {
+                    Dictionary<string, object> component = OpeningJson.Object(rawComponent, "component");
+                    if (!OpeningJson.String(component, "$type").EndsWith(".FightComponent, GameServer", StringComparison.Ordinal))
+                        continue;
+                    record.FightSpeed = (float)OpeningJson.Number(component, "Speed");
+                    foundFightSpeed = record.FightSpeed > 0f;
+                    break;
+                }
+                if (foundFightSpeed) break;
+            }
+            if (!foundFightSpeed) throw new FormatException("Opening fight record has no valid FightComponent speed.");
+
             foreach (object item in entities)
                 record.Entities.Add(OpeningRecordEntity.Parse(OpeningJson.Object(item, "entity")));
             foreach (object item in OpeningJson.Array(root["RoundMsgList"], "RoundMsgList"))
@@ -377,6 +402,7 @@ namespace Zjcs.Presentation.Opening
         public int Faction;
         public float Level;
         public string Profession = string.Empty;
+        public int NpcClassId;
         public readonly HashSet<string> Components = new HashSet<string>(StringComparer.Ordinal);
 
         public static OpeningRecordEntity Parse(Dictionary<string, object> node)
@@ -420,6 +446,9 @@ namespace Zjcs.Presentation.Opening
                         break;
                     case "CharacterComponent":
                         entity.Profession = OpeningJson.String(component, "Profession");
+                        if (component.TryGetValue("TargetData", out object target)
+                            && target is Dictionary<string, object> targetData)
+                            entity.NpcClassId = OpeningJson.Int(targetData, "NpcClassId");
                         break;
                 }
             }
@@ -477,6 +506,7 @@ namespace Zjcs.Presentation.Opening
         public OpeningStageData Stage { get; private set; }
         public OpeningRecord Record { get; private set; }
         public OpeningUiData Ui { get; private set; }
+        public Dictionary<string, string> VoiceFiles { get; private set; }
 
         public static string Directory => Path.Combine(Application.streamingAssetsPath, Folder);
 
@@ -488,6 +518,7 @@ namespace Zjcs.Presentation.Opening
                 Stage = ParseStage(Read("opening-stage.json")),
                 Record = OpeningRecord.Parse(Read("opening-record.bytes")),
                 Ui = OpeningUiData.Parse(Read("ui/opening-ui.json"), Path.Combine(Directory, "ui")),
+                VoiceFiles = ParseVoices(Read("opening-voices.json")),
             };
             if (assets.Record.StageId != assets.Stage.StageId)
                 throw new FormatException("Opening record stage differs from the official stage data.");
@@ -580,9 +611,51 @@ namespace Zjcs.Presentation.Opening
                     Id = id,
                     Name = OpeningJson.String(role, "name"),
                     PortraitPath = OpeningJson.String(role, "portrait"),
+                    PortraitPrefabKey = OpeningJson.String(role, "portrait_prefab"),
+                    NeedFlipOnRight = OpeningJson.Bool(role, "need_flip_on_right"),
+                    PortraitFaceOffset = ReadRoleVector(role, "portrait_face_offset"),
                 };
+                if (role.TryGetValue("portrait_sprites", out object rawSprites))
+                    foreach (KeyValuePair<string, object> sprite in OpeningJson.Object(rawSprites, "portrait sprites"))
+                        data.Roles[id].PortraitFaceSprites[sprite.Key] = sprite.Value as string ?? string.Empty;
+                if (role.TryGetValue("portrait_face_offsets", out object rawOffsets))
+                    foreach (KeyValuePair<string, object> offset in OpeningJson.Object(rawOffsets, "portrait face offsets"))
+                    {
+                        List<object> values = OpeningJson.Array(offset.Value, "portrait face offset");
+                        if (values.Count < 2) throw new FormatException("Opening portrait face offset is incomplete.");
+                        data.Roles[id].PortraitFaceOffsets[offset.Key] = new Vector2(
+                            (float)OpeningJson.ToNumber(values[0]), (float)OpeningJson.ToNumber(values[1]));
+                    }
             }
             return data;
+        }
+
+        private static Dictionary<string, string> ParseVoices(byte[] bytes)
+        {
+            Dictionary<string, object> root = OpeningJson.Object(OpeningJson.Parse(bytes), "opening voices");
+            if (OpeningJson.String(root, "manifest") != Manifest)
+                throw new FormatException("Opening voice payload manifest is not pinned.");
+            var result = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (object item in OpeningJson.Array(root["voices"], "opening voices"))
+            {
+                Dictionary<string, object> voice = OpeningJson.Object(item, "opening voice");
+                string eventName = OpeningJson.String(voice, "event");
+                string file = OpeningJson.String(voice, "file");
+                if (string.IsNullOrEmpty(eventName) || string.IsNullOrEmpty(file)
+                    || !file.StartsWith("voices/", StringComparison.Ordinal)
+                    || file.Contains("..") || file.IndexOf('\\') >= 0 || Path.IsPathRooted(file)
+                    || result.ContainsKey(eventName))
+                    throw new FormatException("Opening voice mapping is invalid: " + eventName);
+                result.Add(eventName, file);
+            }
+            return result;
+        }
+
+        private static Vector2 ReadRoleVector(Dictionary<string, object> role, string key)
+        {
+            if (!role.TryGetValue(key, out object raw) || !(raw is List<object> values) || values.Count < 2)
+                return Vector2.zero;
+            return new Vector2((float)OpeningJson.ToNumber(values[0]), (float)OpeningJson.ToNumber(values[1]));
         }
 
         private static OpeningStageData ParseStage(byte[] bytes)

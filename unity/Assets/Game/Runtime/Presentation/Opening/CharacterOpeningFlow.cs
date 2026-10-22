@@ -36,6 +36,7 @@ namespace Zjcs.Presentation.Opening
         private OpeningStoryPlayer story;
         private OpeningFightPlayback playback;
         private AudioSource voiceAudio;
+        private OpeningBattlefield battlefield;
         private Camera worldCamera;
         private GameObject worldRoot;
         private bool leftFight;
@@ -87,9 +88,13 @@ namespace Zjcs.Presentation.Opening
             yield return Prepare(status, error => failed = error);
             if (!failed)
             {
-                yield return story.Play("BeforeFight");
+                // Official order: the stage scene and its GAME_ENTITY_LIST units exist
+                // before the BeforeFight story graph starts.
                 playback = new OpeningFightPlayback(assets, ui, TryLoadModels(),
-                    worldRoot.transform, forceSkipButton, Log);
+                    battlefield != null ? battlefield.UnitRoot : worldRoot.transform, battlefield,
+                    forceSkipButton, Log);
+                yield return playback.Prepare();
+                yield return story.Play("BeforeFight");
                 yield return playback.Play();
                 leftFight = false;
                 yield return story.Play("AfterFight");
@@ -162,6 +167,27 @@ namespace Zjcs.Presentation.Opening
         private void EnsureCamera()
         {
             if (worldCamera != null) return;
+            if (OpeningBattlefield.PayloadExists)
+            {
+                try
+                {
+                    battlefield = OpeningBattlefield.Load(transform, Log);
+                    worldCamera = battlefield.StageCamera;
+                    Log("官方开场战场已装配: 批次=" + battlefield.BatchCount + " 粒子=" + battlefield.ParticleCount
+                        + " 格网=" + battlefield.Size.x + "x" + battlefield.Size.y);
+                    return;
+                }
+                catch (Exception error)
+                {
+                    Debug.LogException(error, this);
+                    Log("官方开场战场装配失败，使用空场景继续: " + error.Message);
+                    if (battlefield != null) { battlefield.Dispose(); battlefield = null; }
+                }
+            }
+            else
+            {
+                Log("官方开场战场载荷缺失: " + OpeningBattlefield.PayloadPath);
+            }
             var cameraObject = new GameObject("OpeningFightCamera", typeof(Camera));
             worldCamera = cameraObject.GetComponent<Camera>();
             worldCamera.orthographic = true;
@@ -176,6 +202,7 @@ namespace Zjcs.Presentation.Opening
 
         private void DestroyWorld()
         {
+            if (battlefield != null) { battlefield.Dispose(); battlefield = null; }
             if (worldRoot != null) Destroy(worldRoot);
             worldRoot = null;
             if (worldCamera != null) Destroy(worldCamera.gameObject);

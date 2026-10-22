@@ -76,6 +76,14 @@ namespace Zjcs.Presentation.Opening
                 PreserveAspect = OpeningJson.Bool(node, "image_preserve_aspect"),
                 TextValue = OpeningJson.String(node, "text_value"),
                 FontSize = (float)OpeningJson.Number(node, "text_font_size", 32),
+                FontWeight = OpeningJson.Int(node, "text_font_weight", 400),
+                FontStyle = OpeningJson.Int(node, "text_font_style"),
+                Alignment = OpeningJson.Int(node, "text_alignment"),
+                Margin = ReadVector4(node, "text_margin"),
+                WordWrap = OpeningJson.Bool(node, "text_word_wrap"),
+                Overflow = OpeningJson.Int(node, "text_overflow"),
+                AutoSizing = OpeningJson.Bool(node, "text_auto_sizing"),
+                FontSizeRange = ReadVector(node, "text_font_size_range", Vector2.zero),
                 AnchorMin = ReadVector(node, "anchor_min", new Vector2(0.5f, 0.5f)),
                 AnchorMax = ReadVector(node, "anchor_max", new Vector2(0.5f, 0.5f)),
                 AnchoredPosition = ReadVector(node, "anchored_position", Vector2.zero),
@@ -95,6 +103,14 @@ namespace Zjcs.Presentation.Opening
             if (node == null || !node.TryGetValue(key, out object value) || !(value is List<object> list) || list.Count < 2)
                 return fallback;
             return new Vector2((float)OpeningJson.ToNumber(list[0]), (float)OpeningJson.ToNumber(list[1]));
+        }
+
+        private static Vector4 ReadVector4(Dictionary<string, object> node, string key)
+        {
+            if (node == null || !node.TryGetValue(key, out object value) || !(value is List<object> list) || list.Count < 4)
+                return Vector4.zero;
+            return new Vector4((float)OpeningJson.ToNumber(list[0]), (float)OpeningJson.ToNumber(list[1]),
+                (float)OpeningJson.ToNumber(list[2]), (float)OpeningJson.ToNumber(list[3]));
         }
 
         private static Color ReadColor(Dictionary<string, object> node, string key, Color fallback)
@@ -134,6 +150,14 @@ namespace Zjcs.Presentation.Opening
         public bool PreserveAspect;
         public string TextValue = string.Empty;
         public float FontSize = 32;
+        public int FontWeight = 400;
+        public int FontStyle;
+        public int Alignment;
+        public Vector4 Margin;
+        public bool WordWrap;
+        public int Overflow;
+        public bool AutoSizing;
+        public Vector2 FontSizeRange = Vector2.zero;
         public float Alpha = 1;
         public Vector2 AnchorMin = new Vector2(0.5f, 0.5f);
         public Vector2 AnchorMax = new Vector2(0.5f, 0.5f);
@@ -221,6 +245,41 @@ namespace Zjcs.Presentation.Opening
             return false;
         }
 
+        public bool SetTextEnding(GameObject scope, string suffix, string value)
+        {
+            if (scope == null) return false;
+            foreach (Transform child in scope.GetComponentsInChildren<Transform>(true))
+            {
+                if (!child.name.EndsWith(suffix, StringComparison.Ordinal)) continue;
+                TMP_Text text = child.GetComponent<TMP_Text>();
+                if (text == null) continue;
+                text.text = value ?? string.Empty;
+                return true;
+            }
+            return false;
+        }
+
+        public bool SetImage(GameObject scope, string nodeName, string spriteName, bool enabled, Vector2 offset)
+        {
+            if (scope == null) return false;
+            Transform target = null;
+            foreach (Transform child in scope.GetComponentsInChildren<Transform>(true))
+                if (child.name == nodeName) { target = child; break; }
+            if (target == null) return false;
+            Image image = target.GetComponent<Image>();
+            if (image == null) return false;
+            image.sprite = null;
+            image.enabled = false;
+            if (enabled && TryGetSprite(spriteName, out Sprite sprite))
+            {
+                image.sprite = sprite;
+                image.enabled = true;
+                image.SetNativeSize();
+            }
+            ((RectTransform)target).anchoredPosition = offset;
+            return true;
+        }
+
         public bool SetActive(string path, bool active)
         {
             GameObject node = Find(path);
@@ -281,15 +340,22 @@ namespace Zjcs.Presentation.Opening
                 if (font != null) text.font = font;
                 text.text = node.TextValue ?? string.Empty;
                 text.fontSize = Mathf.Max(1, node.FontSize);
+                text.fontWeight = (FontWeight)Mathf.Clamp(node.FontWeight, 100, 900);
+                text.fontStyle = (FontStyles)Mathf.Max(0, node.FontStyle);
                 text.color = node.TextColor;
-                // The official TMP alignment/margin fields are not decodable from the
-                // pinned bundle, so dialogue body text uses the left-aligned layout the
-                // prefab reserves for TalkText while names stay centered.
-                bool body = node.Name.EndsWith("TalkText", StringComparison.Ordinal);
-                text.alignment = body ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.Center;
-                text.enableWordWrapping = body;
-                text.overflowMode = TextOverflowModes.Overflow;
-                text.margin = body ? new Vector4(36, 24, 36, 24) : Vector4.zero;
+                // Alignment, margins, wrapping, overflow and auto-sizing are the
+                // official TMP_Text serialized values (0xFFFF alignment resolves
+                // through the horizontal/vertical axis fields during extraction).
+                text.alignment = (TextAlignmentOptions)node.Alignment;
+                text.margin = node.Margin;
+                text.enableWordWrapping = node.WordWrap;
+                text.overflowMode = (TextOverflowModes)Mathf.Clamp(node.Overflow, 0, 6);
+                if (node.AutoSizing && node.FontSizeRange.y > 0f)
+                {
+                    text.enableAutoSizing = true;
+                    text.fontSizeMin = node.FontSizeRange.x;
+                    text.fontSizeMax = node.FontSizeRange.y;
+                }
                 text.raycastTarget = false;
             }
             if (node.Button)
