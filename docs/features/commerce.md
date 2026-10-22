@@ -50,6 +50,7 @@
 - 兑换使用官方 `commerce_exchange`：滑条、加减、最大值、兑换前后物品与数量；零余额时选择量为 0，余额不足弹出前往直购确认，成功领取后关闭兑换。
 - 确认使用官方 `commerce_confirm`：标题、礼包图、奖励图标、代金券或货币价格；购买时以确认时的完整报价（期数、已购数、价格、奖励集合）复核，状态变化返回 `StaleQuote` 并回滚。
 - 规则与价格表使用官方 `commerce_rule`、`commerce_price_table` 面板；代金券／星眷规则读取原 `rule_tip` 文案，价格表按 `money_cost` 的 `StartValue` 排序显示。
+- 奖励图标使用官方 `commerce_item_detail`（`ItemDetailDialog`）显示图标、名称、品质、数量、基础说明和关闭按钮；奖励图标由 `CreateItemIcon` 统一加点击入口。
 - 物品图标由 [`CommerceItemIcons`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceItemIcons.cs) 按官方 `ItemIcon` 组成（品质底、图标、数量条、可选底部名称），奖励列表、首购槽、每日奖励、每周礼物与星眷档位共用。
 
 ### 存档与交易
@@ -69,7 +70,7 @@
 - 活动页四个入口按官方 `ActivityCommonEntry` prefab 生成，但每日／每周／首购／兑换的图标、标题和位置是本地组合，未接入原活动入口表、活动开放条件或动态活动目录。
 - 首购预览使用官方 `ImgItem_FirstPay/FirstPay1/FirstPay2` 武器图，未恢复原角色模型预览、武器属性比较和装备详情弹窗。
 - 星眷档位行按官方核心奖励 prefab 与物品图标组合，未恢复原 15 组完整 LayoutElement、进度线、锁定展示项、主副奖励分区和多奖励轮播。
-- 规则／价格表内容使用官方面板和官方文案，但行布局由运行时生成；活动入口、物品详情、TMPEffect、TMProWarp、原生动画、粒子和大部分按钮音效未恢复。
+- 规则／价格表内容使用官方面板和官方文案，但行布局由运行时生成；物品详情只使用官方 `ItemDetailDialog` 图标、名称、品质、数量、基础说明和关闭，未接使用／分解／来源／限时等原交互；活动入口、TMPEffect、TMProWarp、原生动画、粒子和大部分按钮音效未恢复。
 - 十进制金额购买是离线模拟，不接真实支付；代金券按本地库存扣除；周期卡、月卡属性、赛季换组和原服务器订单不接。
 
 ## 尚未实现
@@ -77,7 +78,7 @@
 - 月度奖励、七日祈愿和星眷完整页面；周期卡页签当前按锁定功能隐藏。规则和缺项见[月卡与星眷](monthly-card.md#尚未实现)。
 - 原活动入口目录、活动开放条件、每日／每周红点 agent、活动页布局和动态活动资源。
 - 首购原角色模型／骨骼预览、武器比较、`FirstPayPreviewAppearance` 动画和 `FirstPayDialog` 原生动画。
-- 物品详情弹窗、奖励图标点击、货币余额点击详情；当前奖励图标只展示数量与名称。
+- 物品详情的原使用／分解按钮、来源列表、限时说明、属性详情和货币余额点击详情；当前奖励图标点击可打开基础物品详情，但不执行物品操作。
 - 原 prefab 的 Animator／Animation、PopupWindow 开关动画、UIBloom、TMPEffect／TMProWarp、原生粒子、字体材质和全部按钮音效；仅播放 `Main_Cursor_Normal`。
 - 星眷 15 组完整布局、主副奖励分区、多奖励轮播、进度线和末组锁定项。
 - 活动页入口视觉、礼品图标内数量文字、首购顶部白色信息区、每日整组价格区的最终版式仍需按原 prefab 校正。
@@ -88,7 +89,7 @@
 
 - `python -B scripts/check_unity_project.py` 通过：27534 个 GUID 的静态元数据检查通过；该检查不代替 Editor 导入、编译或运行。
 - 隔离 Unity 工程（`D:/Desktop/zjcs-commerce-acceptance`，复制当前 `Assets/Packages/ProjectSettings`）使用 `Unity 2022.3.57f1c2` 完成 Editor 导入与 C# 编译，`CommercePlayModeAcceptance` 通过：官方主窗口／直购／代金券／每日／每周／首购／星眷／兑换 prefab 实际创建，代金券支付、免费赠礼、单买／整组互斥、首购激活与领取、兑换、保存重开，以及另一玩法新增库存后商城购买不清零。该验收在隔离工程把不相关的 Map10 运行入口替换为桩，商城代码本身未裁剪；共享工程当时被另一模块未完成的 `HomeHudView.TreasureGacha.cs` 编译错误阻塞，不能据此声称共享工程已完成 Editor 验收。
-- Play Mode 实际捕获 10 张画面并逐张检查：直购主页、确认框、活动页、每日礼包、每日已购、每周礼包、首购、首购已激活、兑换、重开。画面确认官方角色立绘、标题、六档商品、每日三档、每周六档、首购三天奖励、兑换滑条和官方按钮均实际渲染；同时记录活动入口文字、礼品图标数量、首购顶部信息区和每日整组价格区仍有版式差异，未把差异写成已完成。
+- Play Mode 实际捕获 11 张画面并逐张检查：直购主页、确认框、物品详情、活动页、每日礼包、每日已购、每周礼包、首购、首购已激活、兑换、重开。画面确认官方角色立绘、标题、六档商品、每日三档、每周六档、首购三天奖励、兑换滑条和官方按钮均实际渲染；同时记录活动入口文字、礼品图标数量、首购顶部信息区和每日整组价格区仍有版式差异，未把差异写成已完成。
 - 验收的按钮输入通过 `ExecuteEvents` 向真实 Unity UI 控件派发点击并等待界面状态，不是直接调用业务方法；尚未用操作系统鼠标覆盖遮挡、滚动、拖拽和键盘焦点。
 - HUD 入口逻辑另由 `CommerceHudPlayModeAcceptance` 在 Play Mode 验证：官方 `WorldCanvas` 的 `FunctionEntryPhoto/EntryBtnFolded` 点击后实际打开商城，首购入口创建成功、标题为「首购」且红点显示。该验收只挂载官方 Map10 UI 与商城运行入口，不进入完整 Map10 地图场景；HUD 在真实地图中的遮挡、层级和最终位置仍未验收。
 - 未执行 Windows Player 构建或运行；完整游戏验收前不发布或覆盖 `D:/Desktop/杖剑传说/`。

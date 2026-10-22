@@ -185,6 +185,26 @@ namespace Zjcs.Editor.Commerce
             yield return WaitUntil(() => FindByName("CommerceConfirm") != null, "The purchase confirmation did not open.");
             yield return WaitFrames(2);
             yield return Capture("commerce-02-confirm");
+            GameObject rewardIcon = null;
+            foreach (Transform transform in UnityEngine.Object.FindObjectsOfType<Transform>(true))
+            {
+                if (!transform.name.StartsWith("ItemIcon_", StringComparison.Ordinal)
+                    || !transform.gameObject.activeInHierarchy) continue;
+                if (transform.GetComponent<Button>() == null) continue;
+                rewardIcon = transform.gameObject;
+                break;
+            }
+            Require(rewardIcon != null, "A clickable reward icon was not created in the confirmation.");
+            ExecuteEvents.Execute(rewardIcon, new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left,
+            }, ExecuteEvents.pointerClickHandler);
+            yield return WaitUntil(() => FindByName("CommerceItemDetail") != null,
+                "Clicking a reward icon did not open the official item detail dialog.");
+            yield return Capture("commerce-03-item-detail");
+            ClickInDialog("CommerceItemDetail", "CommonBtn_11");
+            yield return WaitFrames(2);
+            Require(FindByName("CommerceItemDetail") == null, "The item detail dialog did not close.");
             ClickActivePayButton();
             yield return WaitUntil(() => FindByName("CommerceConfirm") == null, "The confirmation did not close after purchase.");
             Require(Amount(controller, 16) == voucher0 - 6, "Voucher payment did not deduct the official six vouchers.");

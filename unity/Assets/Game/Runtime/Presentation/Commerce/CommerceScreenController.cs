@@ -808,6 +808,7 @@ namespace Zjcs.Presentation.Commerce
                 case DialogKind.Confirm: return "CommerceConfirm";
                 case DialogKind.Rule: return "CommerceRule";
                 case DialogKind.PriceTable: return "CommercePriceTable";
+                case DialogKind.ItemDetail: return "CommerceItemDetail";
                 default: return null;
             }
         }
@@ -824,6 +825,7 @@ namespace Zjcs.Presentation.Commerce
                 case "CommerceConfirm": return DialogKind.Confirm;
                 case "CommerceRule": return DialogKind.Rule;
                 case "CommercePriceTable": return DialogKind.PriceTable;
+                case "CommerceItemDetail": return DialogKind.ItemDetail;
                 default: return DialogKind.None;
             }
         }
