@@ -268,15 +268,19 @@ namespace Zjcs.Presentation.Character
                 int quality = Quality(right).CompareTo(Quality(left));
                 return quality != 0 ? quality : right.CompareTo(left);
             });
+            OfflineSkillPlayerContext context = progression.SkillContext();
             foreach (int skillId in entries)
             {
-                GameObject row = BuildSkillRow(skillId, owned.ContainsKey(skillId));
+                OfflineSkillDefinition definition = progression.SkillRules.Skills
+                    .FirstOrDefault(value => value.ClassId == skillId);
+                bool available = OfflineSkillProgression.IsAvailableFor(definition, context);
+                GameObject row = BuildSkillRow(skillId, owned.ContainsKey(skillId), available);
                 if (row != null) listRows.Add(row);
             }
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
         }
 
-        private GameObject BuildSkillRow(int skillId, bool has)
+        private GameObject BuildSkillRow(int skillId, bool has, bool available)
         {
             var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -296,8 +300,9 @@ namespace Zjcs.Presentation.Character
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.fontSize = 18;
             text.alignment = TextAnchor.MiddleCenter;
-            text.color = has ? Color.white : new Color(1f, 0.55f, 0.45f);
-            text.text = SkillName(skillId);
+            text.color = !available ? new Color(0.6f, 0.6f, 0.6f)
+                : has ? Color.white : new Color(1f, 0.55f, 0.45f);
+            text.text = SkillName(skillId) + (available ? string.Empty : "\uff08\u804c\u4e1a\u4e0d\u7b26\uff09");
             text.raycastTarget = false;
             LayoutElement element = row.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
             element.preferredHeight = 150f;
