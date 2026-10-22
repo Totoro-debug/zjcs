@@ -1376,6 +1376,8 @@ read_official_native.py 沿固定 v31 metadata 的 image／type／method token �
 
 原男女骨骼按24 fps转换男13种／女14种 UI／地图姿态及独立压缩部件，完整分辨率 atlas、colormap、绑定皮肤、主副武器／背饰 follower 和正背面切换来自原包。32种独立装扮特效使用原 PlayerEffect/UI 与 Renderer prefab、UIParticle 缩放、ParticleSystem 参数及骨骼／插槽／附件跟随；4种有 HasEffect 标记的主武器在集成 prefab 内使用 Spine，检查无独立 ParticleSystem。没有绘制替代素材。
 
+人物页 profile idle 运行载荷由 `scripts/prepare_character_model_runtime.py` 按男性/女性职业1/10所需的四种原始24 fps待机姿态、网格和贴图构建至 `unity/Assets/StreamingAssets/Character/character-models.zip`。包内 catalog、姿态、网格和贴图运行数据共 7,566 个文件；ZIP SHA256、生成器哈希、逐项输入哈希及 URI 同哈希副本映射记于 `assets/reference/character-appearance/source-manifest.json` 的 `runtime_pack`；五份关联人物来源清单也逐份登记哈希。Unity 运行时校验包内 SHA256，不直接加载 Android AssetBundle。
+
 原战斗 Spine 包保留全部迁移皮肤与所需 follower，`prepare_battle_spine.py` 生成每种皮肤依赖页面；运行时仅载入当前组合使用的图集页。所有动态纹理、JSON 及 mesh.gz 已纳入显式资源绑定和 Windows 分包清单。限时装扮重复获得的续期按用户确认的配置叠加与上限处理，差异在[人物与衣柜](../../docs/features/character.md)记录。
 
 ## 装备界面与碎片选择
@@ -1408,7 +1410,11 @@ Compatibility Canvas 不自动解码 sRGB 采样，`prepare_battle_linear_textur
 
 ## 创角过场与反馈
 
-`prepare_character_creation_performance.py` 从固定 APK `854_156383` 的 `CreatePlayerPanel` prefab 转换其命名动画、动画事件、男女角色 SkeletonGraphic 变换、原始 ButtonSound／UIClickSound、两个 UIMesh 溶解高亮及 TransformReorderer 顺序曲线；动画、路径和资源输入／输出 SHA256 见 [creation-performance/source-manifest.json](creation-performance/source-manifest.json)。Wwise 音频使用原版 `WwiseBnk` 包并由 [audio source manifest](creation-performance/audio/source-manifest.json) 校验，运行时驱动与原始溶解网格渲染尚待 Unity 接入。该 prefab 没有独立 ParticleSystem，演出效果来自其动画、材质和角色动作；无新版替代包或自绘资源。
+固定 APK `854_156383` 的 `CreatePlayerPanel` prefab 动画数据由 `CharacterCreationPerformanceTools.BuildAndValidate` 转换为 13 个 Unity AnimationClip，恢复男女选择、页面切换、选择高亮与 glow 循环；同时恢复两个 UIMesh 溶解网格和 `TransformReorderer` 性别层级曲线。原 `defaultpackage_unityshaders.bundle` 的 `UI/EffectDissolve` shader 按实测 bundle／程序哈希核验，并适配为 Windows HLSL `CharacterCreationEffectDissolve.shader`；输入、输出哈希及官方代码来源见 [creation-performance-source-manifest.json](character-creation/creation-performance-source-manifest.json)。Wwise 音频使用原版 `WwiseBnk` 包并由 [audio source manifest](creation-performance/audio/source-manifest.json) 校验；`Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 四个 UI 事件的 Unity 本地 OGG 副本及哈希也登记在该清单，由 `CharacterCreationAssetCatalog.FindAudio` 和 `CharacterCreationFlowController.PlayUiSound` 分发。Unity Editor 资产、shader 和来源哈希校验已通过；Play Mode 运行表现待验收。该 prefab 没有独立 ParticleSystem，效果来自官方动画、材质和角色动作；未使用新版替代包或自绘资源。
+
+开场剧情与录像由 `scripts/prepare_character_creation_opening.py` 从固定 APK `854_156383` 与已转换官方剧情数据提取：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，bundle hash `50ee5a2f1b0c5236442618152533e59d`，34,004 字节 GZip，解压 14 回合／1,168 步／19 个实体）、`BeforeFight`／`AfterFight` 剧情图（`defaultpackage_assets_scriptableconfig_story_storyfight.bundle`，hash `157d0f0d505963840eae965ebef2846e`）、`FirstStory` 剧情图（`defaultpackage_assets_scriptableconfig_story_map10story_basicguide.bundle`，hash `ef2a5f3244e4a8d01713cac78aeafffe`）、`dialog` CSV 的三段共 6 条对白与 840100／840200 角色行、`stage` 表第 20 行（`Type=33`、`GameId=902`）及`game_902` 网格地面、波次怪物 3803／3282／3281／3283／3481 与 `model-identities.json` 的怪物模型键。剧情 UI 从 `defaultpackage_assets_prefabs_ui_story.bundle`、`defaultpackage_assets_prefabs_ui_global.bundle` 与`defaultpackage_assets_prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight.bundle` 导出 7 个 prefab 的RectTransform 层级、图片颜色、按钮与文本节点；官方图片经 prefab 内运行时代理取图，导出载荷不含 sprite 引用，该缺项已记入[新建存档与角色创建](../../docs/features/character-creation.md)。输入输出、每项来源与 SHA256 见 [opening-source-manifest.json](character-creation/opening-source-manifest.json)，运行时载荷位于 `unity/Assets/StreamingAssets/Opening/`。未使用新版替代包或自绘素材。
+
+DIY 外观选项缩略图使用固定 APK `854_156383` 的 `defaultpackage_assets_image_ui_playerskin.bundle`（APK entry `assets/yoo/DefaultPackage/d9e385395fb855fe84340d2e1c152e18.bundle`）。`scripts/prepare_character_creation_skin_icons.py` 按原 Sprite 名提取 155 张 PNG，校验 bundle MD5、APK SHA256 与男女六类 141 个选项图标；Unity 载荷及输入／输出哈希见 [player skin icon source manifest](character-creation/player-skin-icons-source-manifest.json)。`CharacterCreationAssetTools.Validate` 将其作为 Sprite 绑定到创角目录并在选项控件显示，Editor 校验已通过，Play Mode 表现待验收。没有绘制或替代图标。
 
 ## NPC邀请、探索首领与节庆首领
 

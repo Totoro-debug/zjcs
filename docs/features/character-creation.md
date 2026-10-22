@@ -1,4 +1,4 @@
-# 角色创建与正式换装
+# 新建存档与角色创建
 
 [总索引](../README.md)
 
@@ -6,9 +6,7 @@
 
 ## 功能简介
 
-每个新建存档首次进入选择男性／女性、装扮、名字和战士／法师；正式角色从外观入口打开换装。
-
-Unity 已有按存档槽位保存的创角草稿存储层；角色创建界面、正式角色数据和换装流程尚未接入。
+从新建本地存档开始，完成体型选择、外观捏脸、手动命名与初始武器选择；角色创建完成后可打开人物页。正式角色换装与衣柜规则见[人物属性、经验、位阶与衣柜](character.md)。
 
 ### 原始官方开场与创角流程
 
@@ -22,65 +20,66 @@ Unity 已有按存档槽位保存的创角草稿存储层；角色创建界面�
 6. **打开创角。** `OpenCreatePlayerPanel` 在未命中配置跳过条件时播放黑幕，打开全局 `CreatePlayerPanel` 后关闭黑幕、释放剩余加载页延迟任务并发出 `OnPrepareCreatePlayerReady`。进入战斗场景时，`OnSceneUpdate` 也会释放加载页延迟任务。销毁入口或战斗面板时须沿原调用关系解除事件订阅、清除控制器并取消剧情令牌，避免重复触发。
 7. **创建外观、命名与创角后剧情。** 原 `CreatePlayerPanel` 承接体型、外观与命名；[CreatePlayerSetNameSubPanel.ConfirmCreate / RunFirstStory](../../.tools/source-packages/official-code/client-source/CreatePlayerSetNameSubPanel.cs) 正常新角色分支先提交 `OperPlayerCreateAppearance`，成功后提交 `OperPlayerCreateCharacter`；预创建分支使用 `OperPlayerPreCreateCreateCharacter`。成功后清除预创建状态，关闭创角面板，在 `FirstStory` 存在且 `CheckCanRun` 允许时启动该剧情，使用黑幕等待剧情窗口打开，并发布玩家信息；`MainUIRoot` 收到 `FirstStory` 结束时恢复 Home 音乐。[ChooseInitialWeaponNode.ProcessSucc](../../.tools/source-packages/official-code/client-source/ChooseInitialWeaponNode.cs) 在服务器故事节点成功后写入初始武器，但它与 `FirstStory` 的具体连线及触发位置尚未核对剧情图，不将其推测为固定节点顺序。离线手动命名、初始武器按钮及本地存档差异见下文。
 
-### 当前离线流程与缺口
+### 当前离线开场实现
 
-[CharacterCreationFlowController.CreateSlot / OpenSlot](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 当前在新建槽位或打开未创角槽位时，读取草稿后直接调用 `ShowCreation()`；未接入上述开场入口、`BeforeFight`、官方战斗录像、`AfterFight`、返回主场景等待及对应黑幕／加载页生命周期。提交角色后直接进入本地初始武器选择及完成页，未接入官方 `FirstStory`。现有 [CharacterCreationPlayModeAcceptance.RunScenario](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs) 从“新建存档 → 体型页”开始，不能作为初始剧情战斗已完成的证据。
+[CharacterCreationFlowController.CreateSlot / OpenSlot](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 在新建槽位或打开未创角槽位时调用 [CharacterOpeningFlow.Begin](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs)；`Begin` 先按 `ShouldSkipNewbieCutscene` 判定跳过，未跳过时依次执行 `BeforeFight` → 官方录像回放 → `AfterFight` → 战斗到主场景等待 → 打开创角面板。提交角色后 [SubmitCharacter](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 调用 `PlayFirstStory`，`FirstStory` 结束后再进入本地初始武器选择。开场剧情的跳过节流、回放时钟、快进与失败回退见下文“自定义实现”。
 
 ## 完整还原部分
 
-Unity [CharacterCreationDraftStore](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 按选中槽位读写 `character-draft.json`，使用版本 4 格式，校验页面、男女两套完整外观字段、颜色格式和字段分组；读取支持现有 JSON 保存层的备份恢复，写入经格式校验并原子替换。该层不生成默认外观、不迁移旧版本草稿，也不覆盖槽位正式进度。
+固定版 `854_156383` 的创角数据、`CreatePlayerPanel`、`CreatePlayerPanelDIYContent`、选项条目、颜色滑块及 `ConfirmDialog` 已恢复为 Unity 可导入资产。`CharacterCreationAssetTools.Validate` 会绑定目录资产并核对创角 prefab、确认弹窗、音效、155 个选项 Sprite 及来源哈希；该 Editor 入口已在 Unity `2022.3.57f1c2` 执行通过。官方客户端规则定位见 [CreatePlayerPanel.cs](../../.tools/source-packages/official-code/client-source/CreatePlayerPanel.cs)、[CreatePlayerDIYContent.cs](../../.tools/source-packages/official-code/client-source/CreatePlayerDIYContent.cs) 和 [AppearanceUtils.cs](../../.tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs)。
 
-草稿读写还会加载 [CharacterCreationAssetCatalog](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationAssetCatalog.cs) 中由官方 `appearance-options.json` 解析出的男女发型、眉毛、眼睛、嘴型、妆容和特征 ID 集合；未知或性别不匹配的部件 ID 会使草稿校验失败。官方选项目录结构、非空列表、重复 ID 和身体归属在目录加载时校验。[CharacterCreationDraftJson](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 对草稿拒绝未知及重复字段并校验 JSON 语法。
+开场输入由 [prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 从固定 APK 与已转换官方数据提取，输出与哈希见 [opening source manifest](../../assets/reference/character-creation/opening-source-manifest.json)：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，34,004 字节 GZip，解压后 14 回合、1,168 步、19 个实体、`GameResultMsg=null`）、`BeforeFight`／`AfterFight` 剧情图（`..._story_storyfight.bundle`）、`FirstStory` 剧情图（`..._story_map10story_basicguide.bundle`）、三段共 6 条对白与两名角色（840100 薇兰、840200 绯乐）、`stage` 表 20 行（`Type=33` RecordFight、`GameId=902` → 场景 `game_902`、波次怪物 3803/3282/3281/3283/3481）及网格地面。剧情 UI 由同一脚本从 `prefabs_ui_story`／`prefabs_ui_global`／`prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight` 导出 7 个 prefab 的 RectTransform 层级、图片颜色、按钮与文本节点，供 [OpeningUiView](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 在运行时还原。
 
-Unity 载荷现包含原 CreatePlayerPanel 层级／演出目录、男女外观选项目录、正式换装面板字段、衣柜规则及衣柜 UI 数据；Editor 入口 [CharacterCreationAssetTools](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationAssetTools.cs) 绑定并核对载荷哈希。以上是数据恢复，不等于原角色 prefab、Spine 骨骼／动画、UI 图片及可运行界面已经接入。
+创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [creation performance source manifest](../../assets/reference/character-creation/creation-performance-source-manifest.json)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。Editor 校验已通过，Play Mode 画面和转场事件仍待验收。
+
+六类男女外观选项使用官方配置 ID，缩略图来自 `defaultpackage_assets_image_ui_playerskin.bundle`；155 个 Sprite 和输入输出哈希见 [player skin icon source manifest](../../assets/reference/character-creation/player-skin-icons-source-manifest.json)。肤色、发色与瞳色范围、固定颜色及 HSV 配置从官方角色目录读取。
+
+男女预览模型已从固定版 Spine 4.2 数据转换为 Unity 原生骨骼、网格、材质和 Animator；烘焙输入输出及缺项见 [native character model bake manifest](../../assets/reference/character-creation/native-character-model-bake-source-manifest.json)。
+
+创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
 
 ## 自定义实现
 
-以下为已确认的单机处理要求与动画技术适配决策，尚未代表完整 Unity 流程已经接入或验收。
+存档槽、创角草稿和正式角色资料由 [CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs)、[CharacterCreationOfflineService](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs)、[CharacterCreationDraftStore](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 与 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 接入本地 JSON 保存。各槽独立保存草稿；提交角色时写入选中槽，草稿损坏可保留原文件副本后重新开始，不覆盖正式角色数据。写入失败会阻止页面切换并显示提示。
 
-男女角色预览、创角演出与正式换装采用用户已确认的免费方案：将官方 Spine 4.2 角色数据独立转换为 Unity 原生动画，并补齐必要的播放、换装及染色适配。共用实现边界、旧 Spine 工具依赖处理和验证要求统一见[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)。兼容性、实际表现及运行链尚待验证；本次未确认静态预览降级或重绘角色。
+离线流程不提供随机名字。官方 `CreatePlayerSetNameSubPanel` 的随机名调用服务端 `OperPlayerGetRandomName(Sex)`，没有本地生成规则；按用户确认隐藏随机名按钮，玩家必须手动输入名字。
 
-离线创角不提供随机生成名字的功能，玩家必须自行输入名字。原版随机名按钮调用服务端 `OperPlayerGetRandomName(Sex)`，没有迁移成本地名字库或生成规则；Unity 草稿不保存随机名状态。
+初始武器选项依据官方 `ChooseInitialWeaponNode.ProcessSucc` 和 `WeaponType` 数值 `200`（剑）、`201`（法杖）写入本地角色。由于官方节点由服务器故事流程触发，离线实现用本地按钮承接该选择；选择完成后进入人物页入口。
 
-创角草稿与正式进度在本地分别保存，包含男女独立外观；损坏草稿不覆盖正式档，保存失败整体回滚。旧格式兼容迁移不开放，版本不符或缺少必需字段时不得补造外观。无效草稿的恢复界面及失败状态提示仍未接入。
+官方染色遮罩 `ethnicity_06`、`ethnicity_07`、`ethnicity_22` 至 `ethnicity_27` 共 8 张经用户核对固定 APK、相关原版本 CDN 包及新版同名包仍缺失。按用户确认保留全部选项；缺少遮罩时沿官方空遮罩行为不染色，预览不生成或替代官方遮罩。
 
-各存档分别保留自己的创角草稿；体型页返回存档选择后可恢复编辑，正式创角只写入所选档。多存档入口及切换规则见[设置、拍照与本地存档](settings-and-save.md#多存档与角色切换)。
+开场跳过条件沿用官方 `MainUIRoot.mSkipNewbieCutsceneConditionId = 21003`：`CompositeOrCondition[21001 PlayerChannel(130077), 21002 PlayerMedia(C520612)]`。离线 SDK 桩的渠道／媒体均为空，因此判定为不跳过；`CharacterOpeningFlow.ShouldSkipNewbieCutscene` 保留该白名单比较，未另造“看过一次就跳过”的规则。每槽观看状态按用户确认只做进程内标记（`PlayedSlots`），重启游戏后未创角槽位会重新播放，不写入槽位存档。
 
-官方开场录像流程及待实现范围见上文；旧原型初始战斗的取消不能作为取消官方开场剧情的依据。正式改名通过行囊中的原改名物品流程完成，按实际物品扣除并与本地存档事务一起提交；见[行囊、物品与宝箱](inventory.md)。
+开场播放由 [OpeningStoryPlayer](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningStoryPlayer.cs) 按官方节点语义执行：`StartStoryNode` 不阻断；`WaitForSecondsNode` 在 `NeedMask` 时先挂全屏透明遮罩再等待，遮罩由后续对话或开面板节点的 `Reset` 关闭；`DialogNode` 打开官方 `OptionTalkDialog` 层级，按 `dialog.csv` 的 `StoryName+DialogId`、`Order` 顺序显示对白与角色名，`AutoPlay` 配置按官方 120 秒／2 秒节奏自动推进；`ShowBlackMaskNode`／`CloseBlackMaskNode` 为硬切纯黑遮罩；`HideAllUINode`／`ShowAllUINode` 在节点结束时生效；`OpenShowPanelNode`／`CloseWindowNode` 打开和关闭 `Story/ExitFightTransitionPanel`；`LeaveStoryFightNode` 关闭战斗场景；`PlayBlackScreenStoryNode` 打开 `Global/FirstStoryPanel` 并在 `mIsKeepBlackScreen` 时保持黑幕；`PlayEnterGameTransitionNode` 打开开场转场面板；`PlayPlayableNode` 的两个 GUID（`e52fba61…`、`32bc3f4c…`）不在固定版五包 AssetTable 内，按官方空句柄行为跳过并记录；`HomePlayerPlayActionNode` 在没有家园环境时按官方异常分支 `SafeEnd` 进入快进。`SafeEnd` 后后续只展示类节点按 `ClientRunNode.InternalSkip` 语义直接跳过，仅保留关闭、离开和 UI 环境节点。
+
+录像回放由 [OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 驱动：先 GZip 解压并按 `GameServer`→`Console` 之外的原始 JSON 解析 `FightProcessRecordData`（[OpeningRecord](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningData.cs)），生成实体与回合步骤；回放按官方 `NormalPlaybackStrategy` 的时钟模型逐回合、逐步骤等待 `step.Time`（相对回合起点），并按官方 `CreatePlayerRecordFightSpeed = 1.5` 折算实际等待；`GAME_ENTITY_ADD`／`GAME_ENTITY_REMOVE` 增删单位，`Fight*Round*Modification` 触发当前行动者动作，`GAME_FASTFORWARD` 走跳跃到结尾（应用录像内快照），`GAME_PLAY_STATUS_CHANGE` 与 `GAME_MODIFACTION_RUN_BATTLE_END`／`_RUN_END` 记录状态。快进按钮按官方 `IsShowRecordFightSkipButton || Gm` 决定是否请求，延迟 `mShowSkipBtnTime = 500` 毫秒显示，点击后只推进到结尾而非加速；实装 `IsShowRecordFightSkipButton = false`，正常流程不显示按钮。
+
+事件顺序按官方控制：`BeforeFight` 播放完成后才开始录像，录像结束触发 `AfterFight`，`AfterFight` 内 `LeaveStoryFightNode` 发起战斗到主场景切换；[CharacterOpeningFlow](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs) 等待该切换最多 5 秒，超时记录错误后仍打开创角面板，并使同一槽位只打开一次创角、只记录一次已播放。加载失败（缺文件、解析异常）按官方“回放返回 false”分支记录错误后直接打开创角。创角成功后的 `FirstStory` 先关闭创角面板，再以黑幕播放剧情，`FirstStory` 结束（或本轮无剧情可播）后进入本地初始武器选择，初始武器仍按已确认的离线按钮承接官方 `ChooseInitialWeaponNode` 的 `200`／`201` 数值。
+
+已在 Unity `2022.3.57f1c2` 实际运行 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs)（未使用 `-nographics`，720×1280 Game 视图；运行截图作为本次验证依据，不纳入仓库）：官方跳过条件 21003 的命中与不命中分支、三段剧情的 6 条对白与角色名、录像解析（19 实体／14 回合／1168 步）、`game_902` 场景绑定、回放单位解析与快进结束、`AfterFight` 转场与黑幕、创角面板单次打开、同进程再次进入不重播均通过；并断言 `BeforeFight` 官方台词“又到最后的时刻了，我们上吧！”与角色名“薇兰”实际出现在界面上。画面检查确认黑幕与对话正文按官方布局显示，回放阶段为黑场（原因见下文缺项 1～2），未出现报错或卡死。
 
 ## 尚未实现
 
-### 初始剧情战斗及创角衔接
+以下缺项按影响范围分列；共用战斗规则与场景装配仍由[战斗执行](battle-execution.md)维护，不在此重复。
 
-以下环节均待实现或验证，须完成整条流程后才可将初始剧情战斗标为完成。官方流程和分支以上文为准，共用战斗底层的当前能力与缺项见[战斗执行](battle-execution.md)，不在本页重复维护共用规则。
+### 开场战斗表现资源
 
-1. **取得并核实完整官方输入。** 从固定 APK、原版本 CDN 及适用的新版同名包按项目来源顺序定位 `Story/CreatePlayerFightRecord.bytes` 的实际所属 bundle、内部 TextAsset 和 CAB 依赖，核验输入大小与哈希；实际执行 GZip 解压和录像解析，确认录像内阶段、场景、单位、外观、技能及事件引用。继续定位 `BeforeFight`、`AfterFight`、`FirstStory` 剧情图、子图、对白和动态资源，以及 `MainUIRoot` 的跳过条件、`FightMainPanelRecordFight` 的快进按钮参数。当前仅确认代码中的资源路径与调用关系，尚未完成这些资源的定位／提取／解析；检索未命中不代表官方内容缺失。
-2. **恢复 Windows 可运行资产。** 按[Android → Windows 流程](../asset-management.md#android-资源迁移到-windows)对实际 bundle 使用 `prepare_unity_bundle_inputs.py --bundle <原清单完整包名>` 检查版本、平台和递归 CAB 依赖，恢复场景、地面、镜头、官方 UI、角色／怪物模型、材质、shader、技能特效和音频。角色沿已确认的 Spine 4.2 → Unity 原生动画方案迁移。同步来源清单、输入输出哈希和显式动态加载绑定；准备输入或导入资源不等于回放已运行。
-3. **接通本地录像与剧情调度。** 依据官方录像解析器、回放调用方和剧情节点恢复本地播放，接通 `BeforeFight → StartPlayFight → 录像事件 → AfterFight`；保留原单位、数值、时序、镜头、对白、动作、受击／死亡、HUD 及音效顺序，接入共用战斗表现。按官方配置实现观战、延迟显示快进和 `DoFastforward` 的事件推进；不得用重新随机模拟、静态画面或自编战斗替代录像。
-4. **接通启动、离场和创角界面。** 将开场入口接到新建存档流程，恢复配置跳过、战后 `Fight → Home` 等待与 5 秒超时行为、黑幕、加载页任务释放和创角就绪通知，处理回放返回 `false` 的官方回退分支；其他输入缺失、解压或解析异常需有明确错误反馈与可恢复路径，不能未经确认静默跳过。补齐取消、销毁、重复进入及事件解绑，使战后仅打开一次创角界面，并保留现有草稿和正式存档保护。
-5. **核对离线状态与创角后衔接。** 查清原跳过条件的实际配置和剧情节点所依赖的服务器状态／请求／响应消费，区分可直接迁移的客户端行为与缺少的服务器决策。每槽观看状态是否持久化、退出或崩溃后重播／续播的粒度、旧槽位和已有草稿如何进入，以及服务器条件如何本地判定，尚未确认，不把进程内 `sLastPlayStoryPlayerId` 擅改为永久跳过；取得证据仍不能确定时按项目约定提出具体规则问题。恢复并核对 `FirstStory` 的进入条件、图节点、初始武器节点连线及主场景音乐衔接，保留已确认的本地手动命名与武器选择差异；不据服务器节点名称补造奖励或状态变化。
-6. **完成实际流程验收。** 扩展 `CharacterCreationPlayModeAcceptance` 或所属功能集成入口，用独立存档在 Unity 中验证首次进入完整播放、官方条件跳过、快进显示与执行、战后返回和黑幕、创角页面及命名保存、`FirstStory` 与已确认武器选择的衔接。覆盖再次进入、不同槽位隔离、播放中退出、回放失败、解压／解析失败、超时和保存失败；仅对有依据或用户确认的恢复规则作断言。实际检查画面、模型动作、镜头、对白、特效、音效与输入，记录真实验证范围；本项尚未执行，不以现有创角资源校验或静态检查替代。
+1. **战场几何与演出。** 官方 game_902 场景网格、材质、shader、粒子与技能特效尚未按[Android → Windows 流程](../asset-management.md#android-资源迁移到-windows)迁移为 Unity 运行资产，回放期间只有空的录像战斗面板，没有地形、镜头推拉、技能特效与战斗音效。
+2. **怪物 Spine 贴图页。** 固定版战斗 Spine 来源清单只包含 47 张图集页，monster_3803 等模型的 .atlas.txt 引用的贴图页未在清单内，对应材质的 _MainTex 为空。为避免出现无贴图白色网格，[OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 对缺少图集页的模型记录一次日志后不生成视图，因此当前回放画面没有怪物模型；补齐共用战斗 Spine 载荷后会自动恢复渲染。
+3. **玩家／剧情角色单位。** 录像中 1017／1018 两名 Npc 角色的外观由玩家外观管线渲染，离线尚无战斗角色外观绑定，当前只记录诊断日志、不生成模型。
+4. **单位 HUD 与回合条。** 录像战斗面板只挂载官方 FightMainPanelRecordFight 面板（且其图片 sprites 未导出），回合文本、行动时间轴、技能槽、伤害数字与受击表现未接入回放事件。
 
-### 创角部分的其他未完成项
+### 剧情表现资源
 
-- 按[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)恢复男女骨骼、网格、附件、原动作曲线及事件，接通 Unity 原生播放、动态换装和染色；验证所需约束、遮罩、层级及动画切换的兼容性。角色资源已经恢复或预处理不等于已接通 Unity 预览。
-- 将官方创角／换装 UI 图像及音效转换为 Windows 可用载荷，绑定原 prefab 层级、布局、动画事件和按钮音效；当前已恢复的 JSON 目录还没有完整 Unity 可运行界面。
-- 迁移男女外观选项、部件染色、角色预览、原动画事件、手动命名、职业选择、正式易容费用、性别冲突确认和衣柜互斥规则，接通 CreatePlayerPanel、ChangeAppearancePanel 与实际角色入口；不实现服务端随机名功能。
-- 将正式外观、职业和改名物品交易并入现有槽位进度事务，接入各槽位草稿恢复、失败反馈与回滚。
-- 尚未在 Unity 中验证创角规则、正常操作、动画／音效、保存恢复和失败回滚；
+5. **剧情 UI 贴图与动画。** 官方 TalkDialog、StoryMask、Mask、ExitFightTransitionPanel、EnterGameStoryTransitionPanel、FirstStoryPanel 的图片在 prefab 内通过 StateSpriteAssetProxyConfig 等运行时代理取图，导出的布局因此没有 sprite 引用；对话底板、黑幕图、转场美术与 prefab 动画（显示／关闭曲线）目前缺失，对话正文与角色名直接绘制在官方 RectTransform 位置上，转场面板以 0.2 秒等待代替原展示动画。
+6. **TMP 排版字段。** 固定版 bundle 未保留 TMP 序列化类型树，字号／对齐／边距无法按字段读取；当前正文使用左上对齐与固定边距、角色名居中，属于待核对的排版近似，不是官方数值。
+7. **立绘与语音。** 对白角色 840100／840200 的官方立绘 prefab（UI/Portrait/Npc_Portrait_84xx）与 cry3 表情未迁移；Wwise 事件 prologue_main_1_01、1_02、2_01、2_02、3_01、3_02 未导出为本地音频，OpeningStoryPlayer 只记录缺失日志。
+8. **战前单位预生成时序。** 官方在场景加载后先落 GAME_ENTITY_LIST 实体、再播 BeforeFight；当前实现在 BeforeFight 结束后才生成回放单位，等待补齐战场装配后按官方顺序调整。
 
-### 依据与代码定位
+### 仍需验证的部分
 
-以下为官方来源、既有规则与回归参考：
-
-、[InitialWeaponCondition.cs](../../.tools/source-packages/official-code/common-source/Common/InitialWeaponCondition.cs)、[PlayerProfessionDataEx.cs](../../.tools/source-packages/official-code/common-source/Common/PlayerProfessionDataEx.cs)、[ChooseInitialWeaponNode.cs](../../.tools/source-packages/official-code/client-source/ChooseInitialWeaponNode.cs)、[CreatePlayerPanel](../../.tools/source-packages/official-code/client-source/CreatePlayerPanel.cs)
-
-[CreatePlayerSelectSexContent](../../.tools/source-packages/official-code/client-source/CreatePlayerSelectSexContent.cs)、[CreaterPlayerRunAnimation](../../.tools/source-packages/official-code/client-source/CreaterPlayerRunAnimation.cs)、[CreatPlayerRoleContent](../../.tools/source-packages/official-code/client-source/CreatPlayerRoleContent.cs)、[AppendAppearanceGridItem](../../.tools/source-packages/official-code/client-source/AppendAppearanceGridItem.cs)、[AppearanceUtils](../../.tools/source-packages/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs)
-
-[wardrobe source manifest](../../assets/reference/wardrobe/source-manifest.json)、[free-parts source manifest](../../assets/reference/character-genders/free-parts-source-manifest.json)
-
-[creation performance source manifest](../../assets/reference/creation-performance/source-manifest.json)
-
-[ItemUseEffectChangeName](../../.tools/source-packages/official-code/client-source/ItemUseEffectChangeName.cs)、[PlayerOperUtils](../../.tools/source-packages/official-code/client-source/PlayerOperUtils.cs)、[character-genders](../../assets/reference/character-genders)
-
-[prepare_map_player_actions.py](../../scripts/prepare_map_player_actions.py)、[official_appearance_catalog.py](../../scripts/official_appearance_catalog.py)
+9. **FirstStory 端到端画面。** 创角提交流程已接入 FirstStory（黑幕、对话、HomePlayerPlayActionNode 的 SafeEnd 快进、开场转场、显示全部 UI），但 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs) 只覆盖创角前开场；创角后剧情与初始武器选择的衔接仍须在完整流程中实测。
+10. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
+11. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
+12. **创角提交存档回读。** 现有 [CharacterCreationPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs) 在本次运行中于初始武器选择处失败：`CharacterCreationOfflineService.TrySetInitialWeapon` 通过 `OfflineMainlineProgressSession.OpenCharacter` 读回的 `CharacterCreated` 为 false，提示“请先完成角色创建”。该读回与 `OfflineMainlineProgressSession`／`CharacterCreationOfflineService` 的并行未提交修改同时存在，不属于本次开场流程范围，未在本页擅自改动其存档语义；开场流程的跳过标记与创角后 `FirstStory` 调用使用 `SkipOpeningForAcceptance`／`SkipFirstStoryForAcceptance` 验收开关，不依赖该回读。
+13. **共用战斗目录修复。** OfficialBattleModelCatalog.asset 原本未序列化 identities／identitiesManifest，导致怪物身份表无法装配；本次在资源上补齐这两个引用，战斗模块的 Editor 校验仍受 Map10 资源校验失败影响，未整体跑通 Zjcs.Editor.ProjectTools.Validate。
