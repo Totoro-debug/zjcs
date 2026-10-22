@@ -350,7 +350,8 @@ def restore() -> dict:
     progression = {
         "manifest": "854_156383",
         "rules": filtered_rules,
-        "tables": {name: fidelity[name] for name in FIDELITY_TABLES},
+        "tables": dict({name: fidelity[name] for name in FIDELITY_TABLES},
+                       equip_piece_merge=rules.get("equip_piece_merge", [])),
         "role_prop_group": [dict(row) for row in role_groups],
         "level_prop": level_props,
         "property_ids": property_ids,

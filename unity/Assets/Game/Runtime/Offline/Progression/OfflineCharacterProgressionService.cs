@@ -676,6 +676,62 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        public IReadOnlyList<int> MergeableEquipmentPieces()
+        {
+            var result = new List<int>();
+            foreach (Dictionary<string, object> row in catalog.Rows("equip_piece_merge"))
+            {
+                int pieceId = Convert.ToInt32(row["Id"], CultureInfo.InvariantCulture);
+                int count = Convert.ToInt32(row["PieceMergeCount"], CultureInfo.InvariantCulture);
+                if (count <= 0) continue;
+                if (Player.Inventory.Where(value => value.ItemId == pieceId).Sum(value => value.Count) >= count)
+                    result.Add(pieceId);
+            }
+            return result.OrderBy(value => value).ToArray();
+        }
+
+        public IReadOnlyList<int> EquipmentMergeCandidates(int pieceId)
+        {
+            Dictionary<string, object> row = catalog.Rows("equip_piece_merge")
+                .FirstOrDefault(value => Convert.ToInt32(value["Id"], CultureInfo.InvariantCulture) == pieceId);
+            if (row == null || !(row.TryGetValue("EquipIdList", out object raw)
+                && raw is List<object> list)) return Array.Empty<int>();
+            return list.Select(value => Convert.ToInt32(value, CultureInfo.InvariantCulture))
+                .Where(value => EquipmentCatalog?.Find("item", value) != null).ToArray();
+        }
+
+        public ProgressionResult MergeEquipmentPiece(int pieceId, int equipId)
+        {
+            if (EquipmentCatalog == null) return Invalid("Official equipment rules are unavailable.");
+            Dictionary<string, object> row = catalog.Rows("equip_piece_merge")
+                .FirstOrDefault(value => Convert.ToInt32(value["Id"], CultureInfo.InvariantCulture) == pieceId);
+            if (row == null) return Invalid("The selected equipment piece cannot be merged.");
+            int count = Convert.ToInt32(row["PieceMergeCount"], CultureInfo.InvariantCulture);
+            if (Player.Inventory.Where(value => value.ItemId == pieceId).Sum(value => value.Count) < count)
+                return Invalid("Not enough equipment pieces.");
+            if (!EquipmentMergeCandidates(pieceId).Contains(equipId))
+                return Invalid("The selected equipment is not part of this merge table.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                long instanceId = player.Equipment.NextInstanceId;
+                OfflineEquipmentInstance generated = OfficialEquipmentGenerator.Generate(EquipmentCatalog, equipId,
+                    instanceId, new EquipmentRollContext
+                    {
+                        DropLevel = Math.Max(1, player.Level),
+                        PlayerLevel = player.Level,
+                        SubRank = player.SubRank,
+                        SourceOperate = 0
+                    }, () => (float)new System.Random(BitConverter.ToInt32(
+                        Guid.NewGuid().ToByteArray(), 0)).NextDouble());
+                if (generated == null) throw new InvalidOperationException("The equipment could not be generated.");
+                OfflineItemStack piece = player.Inventory.First(value => value.ItemId == pieceId);
+                piece.Count -= count;
+                player.Equipment.Instances.Add(generated);
+                player.Equipment.NextInstanceId = instanceId + 1;
+            }, "equip-piece-merge-" + pieceId.ToString(CultureInfo.InvariantCulture) + "-"
+                + Guid.NewGuid().ToString("N"));
+        }
+
         public IReadOnlyDictionary<int, long> InheritanceCost(int selectedTerms)
         {
             if (EquipmentCatalog == null) return new Dictionary<int, long>();
