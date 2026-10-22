@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
 
@@ -56,6 +57,7 @@ namespace Zjcs.Presentation.Home
             yield return null;
 
             HideForeignCanvases();
+            DumpFullscreen();
             ok &= Check("catalog", () =>
             {
                 Assert(runtime.Catalog.Scene.background.Length == 384, "background layer count");
@@ -133,6 +135,32 @@ namespace Zjcs.Presentation.Home
                     && name.IndexOf("Opening", StringComparison.OrdinalIgnoreCase) < 0) continue;
                 canvas.gameObject.SetActive(false);
             }
+        }
+        private void DumpFullscreen()
+        {
+            foreach (Image image in Resources.FindObjectsOfTypeAll<Image>())
+            {
+                if (image == null || !image.isActiveAndEnabled || image.color.a < 0.5f) continue;
+                RectTransform rect = image.rectTransform;
+                if (rect == null || rect.rect.width < 900 || rect.rect.height < 1200) continue;
+                log.Add("IMG " + PathOf(rect) + " sprite=" + (image.sprite == null ? "null" : image.sprite.name)
+                        + " color=" + image.color + " size=" + rect.rect.width + "x" + rect.rect.height);
+            }
+            foreach (Camera camera in Resources.FindObjectsOfTypeAll<Camera>())
+                if (camera != null && camera.name == "Home Camera")
+                    log.Add("CAM clear=" + camera.clearFlags + " bg=" + camera.backgroundColor
+                            + " pos=" + camera.transform.position);
+        }
+
+        private static string PathOf(Transform transform)
+        {
+            string path = transform.name;
+            while (transform.parent != null)
+            {
+                transform = transform.parent;
+                path = transform.name + "/" + path;
+            }
+            return path;
         }
         private void Finish(bool ok)
         {

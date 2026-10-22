@@ -154,7 +154,8 @@ namespace Zjcs.Presentation.Home
             {
                 HomeUiRenderer money = Renderer();
                 GameObject entry = money.Create("money", list, null);
-                money.SetSpriteByPrefix("IconImg", CurrencyIcons[index]);
+                string icon = host.Rules.ItemIcon(CurrencyItems[index]);
+                money.SetSpriteByPrefix("IconImg", string.IsNullOrEmpty(icon) ? CurrencyIcons[index] : icon);
                 entry.name = "Money_" + CurrencyItems[index];
                 entry.AddComponent<TopBarCurrency>().Renderer = money;
             }

@@ -34,6 +34,8 @@ namespace Zjcs.Presentation.Home
     public sealed class HomeColorMap
     {
         public float[] _Color;
+        public float[] _Color1;
+        public float[] _Color2;
         public float[] _Flip;
         public float[] _RendererColor;
     }

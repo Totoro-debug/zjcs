@@ -135,7 +135,21 @@ namespace Zjcs.Presentation.Home
             Color color = Color.white;
             if (layer.color != null && layer.color.Length >= 4)
                 color = new Color(layer.color[0], layer.color[1], layer.color[2], layer.color[3]);
-            mesh.colors = new[] { color, color, color, color };
+            HomeColorMap palette = layer.materials != null && layer.materials.Length > 0 ? layer.materials[0].colors : null;
+            if (palette != null && palette._Color1 != null && palette._Color1.Length >= 4
+                && palette._Color2 != null && palette._Color2.Length >= 4)
+            {
+                // The official sky/background ColorBlend materials author a two-colour
+                // gradient; the extracted animation clips that animate them are not
+                // available yet, so the serialized base colours are applied per vertex.
+                Color bottom = new Color(palette._Color1[0], palette._Color1[1], palette._Color1[2], palette._Color1[3]) * color;
+                Color top = new Color(palette._Color2[0], palette._Color2[1], palette._Color2[2], palette._Color2[3]) * color;
+                mesh.colors = new[] { bottom, bottom, top, top };
+            }
+            else
+            {
+                mesh.colors = new[] { color, color, color, color };
+            }
             mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
             mesh.RecalculateBounds();
             filter.mesh = mesh;
