@@ -235,6 +235,8 @@ namespace Zjcs.Combat.Official
                 }
                 foreach (FightBattleUnitState target in hitTargets)
                 {
+                    float hitDelay = HitDelay(actor, target, hit);
+                    if (hitDelay > lastDelay) lastDelay = hitDelay;
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
                     FightBattleHitResult resolved = hitExecutor.Apply(random, damageId, actor, target,
@@ -248,7 +250,7 @@ namespace Zjcs.Combat.Official
                         SkillItemId = skill.ItemId,
                         HitEntityId = hit.EntityId,
                         DamageType = hit.DamageType,
-                        Delay = hit.Delay,
+                        Delay = hitDelay,
                         Anchor = hit.Anchor,
                         IsCure = resolved.IsCure,
                         Critical = resolved.Type.Critical,
@@ -361,6 +363,20 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        /// <summary>
+        /// Official <c>CalcSkillHitDelay</c>: <c>FinalDelay = Delay + distance * DelayDistFactor</c>
+        /// where the distance is measured from the hit start position to the hit position. Hits
+        /// anchored on the source cast position therefore keep their configured delay.
+        /// </summary>
+        private static float HitDelay(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleHitDefinition hit)
+        {
+            if (hit.Anchor != 0) return hit.Delay;
+            double dx = target.X - actor.X;
+            double dy = target.Y - actor.Y;
+            return hit.Delay + (float)(Math.Sqrt(dx * dx + dy * dy) * hit.DelayDistFactor);
         }
 
         /// <summary>

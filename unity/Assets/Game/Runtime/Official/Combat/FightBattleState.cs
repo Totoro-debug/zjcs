@@ -182,6 +182,7 @@ namespace Zjcs.Combat.Official
         public int TargetMode;
         public int RandomCount = 1;
         public float Delay;
+        public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
         // Official HitScopCfg.Pos offsets: the damage area around the hit anchor. Empty means the
@@ -213,6 +214,7 @@ namespace Zjcs.Combat.Official
         // HitCfg.ActOnSouce anchor). The same entity can be referenced from several parents; the
         // first reference wins for the shared node.
         public float Delay;
+        public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();

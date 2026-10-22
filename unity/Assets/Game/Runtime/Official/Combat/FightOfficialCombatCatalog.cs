@@ -682,6 +682,7 @@ namespace Zjcs.Combat.Official
             if (damage != null)
             {
                 result.HasFixedDamage = true;
+                result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
                 result.DamageId = Int(damage, "DamageId");
                 result.DamageType = Int(damage, "DamageType");
                 result.BasicProperty = Int(damage, "DamageBasicProp", 1);
