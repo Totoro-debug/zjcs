@@ -1,4 +1,4 @@
-"""Decode the fixed-version Map10 terrain geometry export."""
+"""Decode the pinned map geometry exports."""
 from __future__ import annotations
 
 import json
@@ -24,12 +24,18 @@ def _metadata(source: str, data: bytes, offset: int):
     return value, end
 
 
-def decode(data: bytes) -> list[dict]:
-    if len(data) < 16 or data[:8] != MAGIC or data[8:9] != b"|":
-        raise Map10GeometryError("Map10 geometry header is invalid")
-    version = int.from_bytes(data[9:12], "little")
-    if version != VERSION:
-        raise Map10GeometryError(f"Unsupported Map10 geometry version: {version}")
+def version(data: bytes) -> int:
+    if len(data) < 16 or data[:8] != MAGIC:
+        raise Map10GeometryError("Geometry header is invalid")
+    if data[8:9] == b"|":
+        return int.from_bytes(data[9:12], "little")
+    return int.from_bytes(data[8:12], "little")
+
+
+def decode(data: bytes, expected_version: int = VERSION) -> list[dict]:
+    actual_version = version(data)
+    if actual_version != expected_version:
+        raise Map10GeometryError(f"Unsupported geometry version: {actual_version}")
 
     first_metadata_length = struct.unpack_from("<I", data, 12)[0]
     source = data.decode("latin1")
