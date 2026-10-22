@@ -14,9 +14,9 @@
 
 Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属性文本、限时外观配置、原衣柜规则/物品/UI 数据及其引用图片。生成入口为 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)，输出与官方输入哈希登记于 `unity/Assets/Official/Character/source-manifest.json`；`OfficialCharacterAssetCatalog.FindSprite` 按原资源 URI 查找人物与衣柜 Sprite，编辑器绑定及来源核对入口为 [CharacterProgressionValidation](../../unity/Assets/Game/Editor/Character/CharacterProgressionValidation.cs) 的 `BindOfficialCatalogs`。
 
-[OfflineCharacterExperience](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterExperience.cs) 按绑定配置计算等级、储存经验、赐福等级和进度比例，并计算已确认的限时外观续期；[OfflineCharacterProgressionService](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs) 将经验奖励、位阶材料支付、10级教学奖励、穿戴/卸下、称号、染色、限时到期和衣柜进度写入共享人物进度事务；[OfflineWardrobeRules](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineWardrobeRules.cs) 解析互斥皮肤、绑定部件及装备皮肤回退。属性的基础比率、百分比、转换和倍率处理位于 `OfficialCharacterProperties`。
+[OfficialCharacterPanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialCharacterPanelView.cs) 按已恢复的人物、属性和位阶面板层级构建基础 Unity UI，并绑定等级/经验、位阶材料操作及属性弹窗；[CharacterFeatureRuntime.OpenProfile](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterFeatureRuntime.cs) 从角色存档槽创建页面运行时，并初始化基础衣柜皮肤/染色、同步已到期外观。[OfflineCharacterExperience](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterExperience.cs) 按绑定配置计算等级、储存经验、赐福等级和进度比例，并计算已确认的限时外观续期；[OfflineCharacterProgressionService](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs) 将经验奖励、位阶材料支付、10级教学奖励、穿戴/卸下、称号、染色、限时到期和衣柜进度写入共享人物进度事务，并提供 `BaseBattleProperties` 读取入口；[OfflineWardrobeRules](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineWardrobeRules.cs) 解析互斥皮肤、绑定部件及装备皮肤回退。人物目录从原始 `level_prop.g.bytes` 解码等级、位阶及职业组属性，`OfficialCharacterAssetCatalog.CalcCharacterBaseBattleProperties` 按官方 `BattleFormulaHandler.CalcCharacterBattlePropsWithoutProfession` 的等级、位阶、职业组顺序合并。属性的基础比率、百分比、转换和倍率处理位于 `OfficialCharacterProperties`。
 
-当前完成的是数据恢复、规则目录绑定和人物存档服务层；尚无人物页或衣柜运行入口，编辑器目录绑定/验证尚未在 Unity 执行，经验领取界面插值、完整来源属性合并与战力、官方人物层级与衣柜交互也未完成。素材恢复和静态 GUID 检查不构成人物功能运行验收。
+当前完成的是数据恢复、规则目录绑定、基础战斗属性原表解码/合并、人物进度事务和可由代码调用的基础人物 UI；基础属性尚未接入人物页数值、综合属性管线及实战读取。`OfficialCharacterAssetCatalog` 从官方 `wardrobe-rules.json` 读取默认皮肤映射，将 4 条 `ItemType=339` 且 `SkinDict=null` 的称号记录排除出皮肤穿戴目录，由独立称号逻辑处理；其余 1,563 个可穿戴外观项、1,723 个皮肤定义通过 `CharacterProgressionValidation.BindOfficialCatalogs` 的 Unity 编辑器绑定验证，基础属性断言为 300/60/60/48，537 张人物 Sprite 已导入并绑定。此入口只验证目录和资源绑定，不代表游戏内人物流程验收通过。游戏内可达的人物入口和人物创建后正式身份资料接入尚未完成；角色模型/动画、衣柜运行界面及完整交互、属性来源明细、经验领取结果动画、属性合并与战力计算仍未完成。静态 GUID 检查不构成人物功能运行验收。
 
 ## 自定义实现
 
@@ -30,8 +30,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ## 尚未实现
 
-- 接通实际人物入口、人物页和位阶/经验交互；完成经验领取成功后的官方时长动画、储存经验规则说明、教学触发/恢复和返回家园条件，并在 UI 中表现失败与保存结果。
-- 迁移 `PlayerPropContext` 分块属性合并与战力公式，接入装备、职业、技能、幻兽、古遗物、公会、星命和衣柜属性来源，使人物页、战斗属性及评分读取同一结果。
+- 将 `CharacterFeatureRuntime.OpenProfile` 接入可达的人物入口，补齐角色正式身份资料；完成经验领取成功后的官方时长动画、储存经验规则说明、教学触发/恢复和返回家园条件，并在 UI 中表现失败与保存结果。
+- 在已恢复的等级、位阶和职业组基础属性上，迁移 `PlayerPropContext` 其余分块属性合并与战力公式；接入装备、职业、技能、幻兽、古遗物、公会、星命和衣柜属性来源，使人物页、战斗属性及评分读取同一结果。
 - 将已恢复的官方人物页/衣柜 prefab 层级、坐标、控件字段、人物模型/动画及音效接入 Unity；完成类别、称号、筛选、互斥、装备外观回退、染色、时限显示与到期卸下、收藏经验及衣柜属性交互。
 - 在 Unity 中执行资源导入、目录绑定、规则核对和运行验收，覆盖正常操作、动画/音效、读档恢复及事务失败回滚；静态检查和既有引擎结果不替代 Unity 验收。
 
@@ -58,6 +58,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 以下为官方来源、既有规则与回归参考；
 
 [PlayerPropContext](../../.tools/source-packages/official-code/common-source/Common/PlayerPropContext.cs)、
+
+[LevelPropParser.GetProps](../../.tools/source-packages/official-code/common-source/Common/LevelPropParser.cs)、[BattleFormulaHandler.CalcCharacterBattlePropsWithoutProfession](../../.tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs)、[角色属性原表来源与输出哈希](../../unity/Assets/Official/Character/source-manifest.json)、
 
 、[PlayerExpSlider](../../.tools/source-packages/official-code/client-source/PlayerExpSlider.cs)、[PlayerLevelText](../../.tools/source-packages/official-code/client-source/PlayerLevelText.cs)、[PlayerBlessLevelUtils](../../.tools/source-packages/official-code/common-source/Common/PlayerBlessLevelUtils.cs)、
 
