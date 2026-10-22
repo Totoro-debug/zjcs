@@ -100,6 +100,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, int> rankBySubRank;
         private readonly Dictionary<string, object> defaultAppearance;
         private readonly HashSet<int> appearanceItemTypes;
+        private readonly OfficialPropCatalog props;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -113,7 +114,8 @@ namespace Zjcs.Offline.Progression
             Dictionary<int, Dictionary<string, object>> wardrobeDefinitions,
             Dictionary<int, int> rankBySubRank,
             Dictionary<string, object> defaultAppearance,
-            HashSet<int> appearanceItemTypes)
+            HashSet<int> appearanceItemTypes,
+            OfficialPropCatalog props)
         {
             this.tables = tables;
             this.items = items;
@@ -131,7 +133,10 @@ namespace Zjcs.Offline.Progression
             this.rankBySubRank = rankBySubRank;
             this.defaultAppearance = defaultAppearance;
             this.appearanceItemTypes = appearanceItemTypes;
+            this.props = props;
         }
+
+        public OfficialPropCatalog Props => props;
 
         public IReadOnlyList<CharacterLevelLimitRecord> LevelLimits => levelLimits;
         public IReadOnlyList<CharacterBlessLevelRecord> BlessLevels => blessLevels;
@@ -170,6 +175,19 @@ namespace Zjcs.Offline.Progression
         public int RankOfSubRank(int subRank)
         {
             return rankBySubRank.TryGetValue(subRank, out int rank) ? rank : 0;
+        }
+
+        /// <summary>
+        /// Official initial active skill id of the starting weapon
+        /// (<c>SkillOptionsWhenChooseSword</c> / <c>SkillOptionsWhenChooseWand</c>).
+        /// </summary>
+        public int InitialActiveSkill(bool wand)
+        {
+            Dictionary<string, object> settings = Rows("game_settings").FirstOrDefault();
+            if (settings == null) return 0;
+            List<int> ids = Integers(settings,
+                wand ? "SkillOptionsWhenChooseWand" : "SkillOptionsWhenChooseSword").ToList();
+            return ids.Count == 0 ? 0 : ids[0];
         }
 
         public IReadOnlyDictionary<int, int> DefaultSkins(int sex, int profession)
@@ -475,7 +493,8 @@ namespace Zjcs.Offline.Progression
                 throw new FormatException("Official character catalogs are incomplete.");
             return new OfficialCharacterCatalog(tables, items, skins, appearances, allowed,
                 levelExperience, limits, bless, timedAppearanceItems, propertyIds, levelProps, wardrobeTables,
-                wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes);
+                wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes,
+                OfficialPropCatalog.Parse(progressionJson, overviewJson));
         }
 
         private static List<Dictionary<string, object>> Rows(string table,
