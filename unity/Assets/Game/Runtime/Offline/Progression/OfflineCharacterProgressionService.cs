@@ -258,7 +258,11 @@ namespace Zjcs.Offline.Progression
                 return Invalid("Not enough skill pieces.");
             return session.ApplyCharacterMutation(player =>
             {
-                stack.Count -= pieces;
+                OfflineItemStack target = player.Inventory
+                    .FirstOrDefault(value => value.ItemId == definition.PieceItemId);
+                if (target == null || target.Count < pieces)
+                    throw new InvalidOperationException("Not enough skill pieces.");
+                target.Count -= pieces;
                 OfflineItemStack skill = player.Inventory.FirstOrDefault(value => value.ItemId == skillId);
                 if (skill == null) player.Inventory.Add(new OfflineItemStack { ItemId = skillId, Count = 1 });
                 else skill.Count += 1;
