@@ -50,8 +50,7 @@ namespace Zjcs.Presentation.Character
             try
             {
                 OfficialEquipmentCatalog equipment = OfficialEquipmentAssetCatalog.LoadDefault().Load();
-                progression.AddPropertySource(new OfflineEquipmentPropSource(equipment,
-                    progression.Catalog.RankOfSubRank));
+                progression.AttachEquipmentCatalog(equipment);
             }
             catch (Exception error)
             {
