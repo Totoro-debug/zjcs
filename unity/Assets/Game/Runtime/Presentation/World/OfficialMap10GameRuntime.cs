@@ -1488,6 +1488,9 @@ namespace Zjcs.Presentation.World
             };
             OfficialCombatAssetCatalog combatAssets = OfficialCombatAssetCatalog.LoadDefault();
             FightOfficialCombatCatalog combatCatalog = combatAssets.Load();
+            FightStageStatusCatalog stageStatuses = combatAssets.LoadStageStatusCatalog();
+            checkpoint.StageStatus = stageStatuses.CreateCheckpointConfig(
+                stageStatuses.ClassIdOfStage(stage.Id));
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             var formula = combatAssets.LoadDamageFormula();
             // Final battle props from the official chunk pipeline. The raw level/rank table only

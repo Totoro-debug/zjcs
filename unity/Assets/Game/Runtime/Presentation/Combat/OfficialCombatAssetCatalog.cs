@@ -62,12 +62,26 @@ namespace Zjcs.Presentation.Combat
 
         public FightBattleExecutor BeginBattle(FightBattleCheckpoint checkpoint)
         {
-            return FightBattleExecutor.Begin(checkpoint, LoadDamageFormula(), new FightDamageSettlement());
+            return FightBattleExecutor.Begin(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
+                Load());
         }
 
         public FightBattleExecutor RestoreBattle(FightBattleCheckpoint checkpoint)
         {
-            return FightBattleExecutor.Restore(checkpoint, LoadDamageFormula(), new FightDamageSettlement());
+            return FightBattleExecutor.Restore(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
+                Load());
+        }
+
+        private FightStageStatusCatalog loadedStageStatus;
+
+        public FightStageStatusCatalog LoadStageStatusCatalog()
+        {
+            if (loadedStageStatus == null)
+            {
+                if (rules == null) throw new InvalidOperationException("Official rules TextAsset is not bound.");
+                loadedStageStatus = FightStageStatusCatalog.Parse(rules.text);
+            }
+            return loadedStageStatus;
         }
 
         private static FightOfficialCombatSourceManifest ReadManifest(TextAsset asset, string name)

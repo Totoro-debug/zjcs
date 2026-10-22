@@ -255,6 +255,32 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleStatusGroup
+    {
+        public int Key;
+        public List<int> Status = new List<int>();
+    }
+
+    /// <summary>
+    /// Official <c>fight_stage_status</c> row: which statuses the battle stage applies to the stage
+    /// itself, to each character type, to target ids, to professions, and every N global rounds.
+    /// </summary>
+    [Serializable]
+    public sealed class FightBattleStageStatusConfig
+    {
+        public int ClassId;
+        public List<int> Status = new List<int>();
+        public List<FightBattleStatusGroup> CharacterStatus = new List<FightBattleStatusGroup>();
+        public List<int> GlobalRoundStatus = new List<int>();
+        public List<FightBattleStatusGroup> FactionGlobalRoundStatus = new List<FightBattleStatusGroup>();
+        public List<int> TargetIdStatus = new List<int>();
+        public List<FightBattleStatusGroup> ProfessionStatus = new List<FightBattleStatusGroup>();
+        public float GlobalRoundStatusDelay;
+        public bool ReleaseEveryGlobalRound;
+        public List<int> ViewStatusBlackList = new List<int>();
+    }
+
+    [Serializable]
     public sealed class FightBattleCheckpoint
     {
         public const int CurrentSchema = 1;
@@ -276,6 +302,7 @@ namespace Zjcs.Combat.Official
         public bool Finished;
         public List<FightBattleUnitState> Units = new List<FightBattleUnitState>();
         public List<FightBattleWaveState> Waves = new List<FightBattleWaveState>();
+        public FightBattleStageStatusConfig StageStatus;
         public FightBattleGrid Grid;
         public FightTurnQueueState Timeline = new FightTurnQueueState();
         public FightBattleOutcome Outcome = new FightBattleOutcome();
@@ -360,6 +387,28 @@ namespace Zjcs.Combat.Official
                 || checkpoint.Outcome.EnemyHp > checkpoint.Outcome.EnemyMaxHp
                 || checkpoint.Outcome.Finished != checkpoint.Finished)
                 throw new ArgumentException("Fight checkpoint timeline or outcome is invalid.", nameof(checkpoint));
+            FightBattleStageStatusConfig stageStatus = checkpoint.StageStatus;
+            if (stageStatus != null)
+            {
+                if (stageStatus.ClassId < 0 || stageStatus.GlobalRoundStatusDelay < 0f
+                    || stageStatus.Status == null || stageStatus.GlobalRoundStatus == null
+                    || stageStatus.TargetIdStatus == null || stageStatus.ViewStatusBlackList == null
+                    || stageStatus.CharacterStatus == null || stageStatus.FactionGlobalRoundStatus == null
+                    || stageStatus.ProfessionStatus == null)
+                    throw new ArgumentException("Fight checkpoint stage status is invalid.", nameof(checkpoint));
+                foreach (FightBattleStatusGroup group in stageStatus.CharacterStatus)
+                    if (group == null || group.Status == null)
+                        throw new ArgumentException("Fight checkpoint stage character status is invalid.",
+                            nameof(checkpoint));
+                foreach (FightBattleStatusGroup group in stageStatus.FactionGlobalRoundStatus)
+                    if (group == null || group.Status == null)
+                        throw new ArgumentException("Fight checkpoint stage faction status is invalid.",
+                            nameof(checkpoint));
+                foreach (FightBattleStatusGroup group in stageStatus.ProfessionStatus)
+                    if (group == null || group.Status == null)
+                        throw new ArgumentException("Fight checkpoint stage profession status is invalid.",
+                            nameof(checkpoint));
+            }
             // Statistics were added after the first checkpoints existed; treat missing collections as
             // an empty accumulator instead of rejecting an otherwise valid running battle.
             if (checkpoint.Statistics == null) checkpoint.Statistics = new FightBattleStatistics();
