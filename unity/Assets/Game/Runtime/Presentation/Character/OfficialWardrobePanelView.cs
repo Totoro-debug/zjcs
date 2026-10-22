@@ -151,13 +151,12 @@ namespace Zjcs.Presentation.Character
                 showAllToggle.onValueChanged.AddListener(_ => RefreshGrid());
             }
 
-            Button ruleButton = ButtonEnding("/RuleBtn");
+            Button ruleButton = ButtonEnding("/RuleBtn") ?? ButtonTrimmed("RuleBtn");
             if (ruleButton != null) ruleButton.onClick.AddListener(() => ShowRuleDialog());
             Button propertiesButton = ButtonEnding("/PropBtn");
             if (propertiesButton != null) propertiesButton.onClick.AddListener(() => ShowPropertiesDialog());
             Button upgradeButton = ButtonEnding("/UpgradeBtn");
-            if (upgradeButton != null) upgradeButton.onClick.AddListener(() =>
-                ShowStatus("风尚等级依据已拥有外观的品质自动累计。"));
+            if (upgradeButton != null) upgradeButton.onClick.AddListener(OnUpgradeAppearanceLevel);
 
             List<Button> bottomTabs = buttons.Where(pair => pair.Key.Contains("/Content/BottomGo/TabBottom/TabGroup/"))
                 .OrderBy(pair => pair.Key, StringComparer.Ordinal).Select(pair => pair.Value).ToList();
@@ -397,13 +396,68 @@ namespace Zjcs.Presentation.Character
 
         private void RefreshFashionHeader()
         {
-            string experienceText = LookupText("ui_append_appearance_level_with_desc");
-            if (!string.IsNullOrEmpty(experienceText))
-                experienceText = experienceText.Replace("{0}", progression.Player.Wardrobe.AppearanceLevel.ToString(CultureInfo.InvariantCulture));
-            Text level = FindTextByPath("/AppearanceLevelcontent/ExpSlider/Info/EvaluationtTitleText/EvaluationText");
-            SetText(level, experienceText);
-            Text exp = FindTextByPath("/AppearanceLevelcontent/ExpSlider/Info/ExpText");
-            SetText(exp, progression.Player.Wardrobe.FashionExperience.ToString("N0", CultureInfo.InvariantCulture));
+            int level = progression.Player.Wardrobe.AppearanceLevel;
+            Text levelText = FindTextByPath("/AppearanceLevelcontent/ExpSlider/Info/EvaluationtTitleText/EvaluationText");
+            SetText(levelText, level.ToString(CultureInfo.InvariantCulture));
+            Text expText = FindTextByPath("/AppearanceLevelcontent/ExpSlider/Info/ExpText");
+            if (expText != null)
+            {
+                if (progression.IsMaxAppearanceLevel)
+                {
+                    expText.text = "已满级";
+                }
+                else
+                {
+                    long current = progression.Player.Wardrobe.FashionExperience
+                        - progression.Catalog.AppearanceLevelExperience(level);
+                    long required = progression.Catalog.AppearanceLevelNextExperience(level)
+                        - progression.Catalog.AppearanceLevelExperience(level);
+                    expText.text = Math.Max(0, current).ToString("N0", CultureInfo.InvariantCulture) + "/"
+                        + Math.Max(0, required).ToString("N0", CultureInfo.InvariantCulture);
+                }
+            }
+            RectTransform sliderRect = NodeEnding("/AppearanceLevelcontent/ExpSlider/Slider");
+            if (sliderRect != null)
+            {
+                Slider slider = sliderRect.GetComponent<Slider>();
+                if (slider == null) slider = sliderRect.gameObject.AddComponent<Slider>();
+                Transform fill = sliderRect.Find("SliderImg");
+                if (fill != null)
+                {
+                    slider.fillRect = (RectTransform)fill;
+                    slider.targetGraphic = fill.GetComponent<Graphic>();
+                }
+                slider.minValue = 0f;
+                slider.maxValue = 1f;
+                slider.interactable = false;
+                slider.value = progression.AppearanceLevelFill();
+            }
+        }
+
+        private void OnUpgradeAppearanceLevel()
+        {
+            if (progression.IsMaxAppearanceLevel)
+            {
+                ShowStatus("潮流等级已达上限。");
+                return;
+            }
+            if (!progression.CanUpgradeAppearanceLevel(out int level, out int newLevel))
+            {
+                ShowStatus("风尚经验不足。");
+                return;
+            }
+            ProgressionResult result = progression.UpgradeAppearanceLevel(EventId("wardrobe-level-up"));
+            ShowResult(result);
+            if (!result.IsApplied) return;
+            RefreshWardrobe();
+            IReadOnlyDictionary<int, long> gained = progression.AppearancePropertiesGained(level, newLevel);
+            if (gained.Count > 0) ShowUpgradePropsDialog(level, newLevel, gained);
+        }
+
+        private Button ButtonTrimmed(string name)
+        {
+            return buttons.Where(pair => pair.Key.TrimEnd().EndsWith("/" + name, StringComparison.Ordinal))
+                .Select(pair => pair.Value).FirstOrDefault();
         }
 
         private void RefreshGrid()
@@ -563,19 +617,109 @@ namespace Zjcs.Presentation.Character
         {
             if (activeDialog != null) Destroy(activeDialog);
             activeDialog = CreateDialog("wardrobe_rules", "潮流等级规则");
-            string[] descriptions = { "ui_append_appearance_level_rule_content_1",
-                "ui_append_appearance_level_rule_content_2", "ui_append_appearance_level_rule_content_3" };
-            AddDialogCopy(activeDialog.transform, string.Join("\n\n", descriptions.Select(LookupText)), 20);
+            Transform content = FindDeep(activeDialog.transform, "RewardPreviewGo");
+            if (content == null) return;
+            List<Dictionary<string, object>> groups = progression.Catalog.WardrobeRows("fashion_exp_group")
+                .OrderBy(row => Convert.ToInt32(row["GroupId"], CultureInfo.InvariantCulture)).ToList();
+            string titleFormat = LookupText("ui_append_appearance_rule_fashion_title");
+            for (int index = 0; index < groups.Count; index++)
+            {
+                Dictionary<string, object> group = groups[index];
+                int groupId = Convert.ToInt32(group["GroupId"], CultureInfo.InvariantCulture);
+                RectTransform row = BuildDialogRow("wardrobe_rule_row", content);
+                Text title = FindTextDeep(row, "TitleText");
+                SetText(title, titleFormat.Replace("{0}", (index + 2).ToString(CultureInfo.InvariantCulture))
+                    .Replace("{1}", LookupText("fashion_exp_group_" + groupId)));
+                Transform data = FindDeep(row, "ListDataGo");
+                if (data == null) continue;
+                for (int i = data.childCount - 1; i >= 0; i--) Destroy(data.GetChild(i).gameObject);
+                List<object> qualities = CharacterModelPackage.AsArray(group["FashionQualityList"], "qualities");
+                List<object> values = CharacterModelPackage.AsArray(group["FashionExpList"], "values");
+                for (int i = 0; i < qualities.Count && i < values.Count; i++)
+                {
+                    int quality = Convert.ToInt32(qualities[i], CultureInfo.InvariantCulture);
+                    RectTransform value = BuildDialogRow("wardrobe_rule_value", data);
+                    SetText(FindTextDeep(value, "DataText1"), QualityName(quality));
+                    SetText(FindTextDeep(value, "DataText2"),
+                        Convert.ToInt64(values[i], CultureInfo.InvariantCulture).ToString("N0", CultureInfo.InvariantCulture));
+                }
+            }
         }
 
         private void ShowPropertiesDialog()
         {
             if (activeDialog != null) Destroy(activeDialog);
             activeDialog = CreateDialog("wardrobe_props", "潮流等级属性加成");
-            IReadOnlyDictionary<int, long> values = progression.AppearanceProperties(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            string content = values.Count == 0 ? "暂无属性加成。"
-                : string.Join("\n", values.OrderBy(pair => pair.Key).Select(pair => pair.Key + "    +" + pair.Value));
-            AddDialogCopy(activeDialog.transform, content, 22);
+            PopulateLevelRows(activeDialog, progression.Player.Wardrobe.AppearanceLevel + 20, null);
+        }
+
+        private void ShowUpgradePropsDialog(int fromLevel, int toLevel, IReadOnlyDictionary<int, long> gained)
+        {
+            if (activeDialog != null) Destroy(activeDialog);
+            activeDialog = CreateDialog("wardrobe_props",
+                "潮流等级达到 " + toLevel.ToString(CultureInfo.InvariantCulture));
+            PopulateLevelRows(activeDialog, toLevel, gained, fromLevel);
+        }
+
+        private void PopulateLevelRows(GameObject dialog, int limitLevel,
+            IReadOnlyDictionary<int, long> gained = null, int fromLevel = -1)
+        {
+            Text level = FindTextDeep(dialog.transform, "LevelTxt");
+            SetText(level, "潮流等级："
+                + progression.Player.Wardrobe.AppearanceLevel.ToString(CultureInfo.InvariantCulture));
+            Transform data = FindDeep(dialog.transform, "ListDataGo");
+            if (data == null) return;
+            for (int i = data.childCount - 1; i >= 0; i--) Destroy(data.GetChild(i).gameObject);
+            int current = progression.Player.Wardrobe.AppearanceLevel;
+            IEnumerable<Dictionary<string, object>> rows = progression.Catalog.WardrobeRows("appearance_prop")
+                .Where(row => Convert.ToInt32(row["Level"], CultureInfo.InvariantCulture) <= limitLevel)
+                .OrderBy(row => Convert.ToInt32(row["Level"], CultureInfo.InvariantCulture));
+            if (gained != null)
+                rows = gained.Count == 0 ? Enumerable.Empty<Dictionary<string, object>>() : rows
+                    .Where(row => Convert.ToInt32(row["Level"], CultureInfo.InvariantCulture) > fromLevel);
+            foreach (Dictionary<string, object> row in rows)
+            {
+                int levelValue = Convert.ToInt32(row["Level"], CultureInfo.InvariantCulture);
+                RectTransform item = BuildDialogRow("wardrobe_prop_row", data);
+                SetText(FindTextDeep(item, "LevelTxt"),
+                    "等级：" + levelValue.ToString(CultureInfo.InvariantCulture));
+                Dictionary<string, object> attributes = CharacterModelPackage.AsObject(row["Attribuate"], "attributes");
+                var parts = new List<string>();
+                foreach (KeyValuePair<string, object> attribute in attributes)
+                {
+                    int propType = int.Parse(attribute.Key, CultureInfo.InvariantCulture);
+                    long value = Convert.ToInt64(attribute.Value, CultureInfo.InvariantCulture);
+                    OfficialPropDefinition definition = progression.Catalog.Props.Get(propType);
+                    parts.Add((definition == null ? propType.ToString(CultureInfo.InvariantCulture) : definition.Name)
+                        + " +" + OfficialPropFormat.Value(definition, value));
+                }
+                SetText(FindTextDeep(item, "PropTxt"), string.Join("  ", parts));
+                Text active = FindTextDeep(item, "ActivedTxt");
+                if (active != null) active.gameObject.SetActive(levelValue <= current);
+                Transform mask = FindDeep(item, "Mask");
+                if (mask != null) mask.gameObject.SetActive(levelValue > current);
+            }
+        }
+
+        private RectTransform BuildDialogRow(string templateName, Transform parent)
+        {
+            Dictionary<string, object> template = CharacterModelPackage.AsObject(templates[templateName], templateName);
+            OfficialCharacterPanelNode node = ReadNode(CharacterModelPackage.AsObject(template["root"],
+                templateName + " root"));
+            return BuildNode(node, parent);
+        }
+
+        private static Text FindTextDeep(Transform parent, string name)
+        {
+            Transform found = FindDeep(parent, name);
+            return found == null ? null : found.GetComponent<Text>();
+        }
+
+        private string QualityName(int quality)
+        {
+            string[] names = { "None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow" };
+            string name = LookupText("Quality." + names[Mathf.Clamp(quality, 0, names.Length - 1)]);
+            return string.IsNullOrEmpty(name) ? quality.ToString(CultureInfo.InvariantCulture) : name;
         }
 
         private GameObject CreateDialog(string templateName, string title)

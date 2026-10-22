@@ -82,6 +82,14 @@ namespace Zjcs.Offline.Progression
         }
     }
 
+    /// <summary>Local character state used to evaluate official condition ids.</summary>
+    public sealed class OfficialConditionContext
+    {
+        public int Level;
+        public HashSet<int> UnlockedMapClassIds = new HashSet<int>();
+        public HashSet<int> RegionCodes = new HashSet<int>();
+    }
+
     public sealed class OfficialCharacterCatalog
     {
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
@@ -100,6 +108,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, int> rankBySubRank;
         private readonly Dictionary<string, object> defaultAppearance;
         private readonly HashSet<int> appearanceItemTypes;
+        private Dictionary<int, Dictionary<string, object>> conditionCache;
         private readonly OfficialPropCatalog props;
         private readonly Dictionary<int, string> itemIcons;
 
@@ -184,6 +193,93 @@ namespace Zjcs.Offline.Progression
         public int RankOfSubRank(int subRank)
         {
             return rankBySubRank.TryGetValue(subRank, out int rank) ? rank : 0;
+        }
+
+        /// <summary>
+        /// Evaluates one official condition id (rules.json <c>conditions</c>) against the local
+        /// character state. Condition types that need data this save does not own stay false
+        /// instead of being opened for free.
+        /// </summary>
+        public bool EvaluateCondition(int conditionId, OfficialConditionContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            return EvaluateConditionNode(FindCondition(conditionId), context, new HashSet<int>());
+        }
+
+        private Dictionary<string, object> FindCondition(int conditionId)
+        {
+            if (conditionCache == null)
+            {
+                conditionCache = new Dictionary<int, Dictionary<string, object>>();
+                foreach (Dictionary<string, object> row in Rows("conditions"))
+                {
+                    int classId = Integer(row, "ClassId");
+                    if (classId > 0 && !conditionCache.ContainsKey(classId)) conditionCache.Add(classId, row);
+                }
+            }
+            return conditionCache.TryGetValue(conditionId, out Dictionary<string, object> condition)
+                ? condition : null;
+        }
+
+        private bool EvaluateConditionNode(Dictionary<string, object> row,
+            OfficialConditionContext context, HashSet<int> visiting)
+        {
+            if (row == null) return false;
+            if (!row.TryGetValue("Condition", out object raw) || !(raw is Dictionary<string, object> condition))
+                return false;
+            string type = Text(condition, "_type");
+            switch (type)
+            {
+                case "NoneCondition":
+                    return true;
+                case "LevelCondition":
+                    return Compare(context.Level, Integer(condition, "Level"), Text(condition, "Op"));
+                case "CompositeAndCondition":
+                    foreach (int id in Integers(condition, "Ids"))
+                        if (!EvaluateConditionId(id, context, visiting)) return false;
+                    return true;
+                case "CompositeOrCondition":
+                    foreach (int id in Integers(condition, "Ids"))
+                        if (EvaluateConditionId(id, context, visiting)) return true;
+                    return false;
+                case "MapUnlockCondition":
+                    return context.UnlockedMapClassIds.Contains(Integer(condition, "MapClassId"));
+                case "RegionCodeCondition":
+                    bool contains = false;
+                    foreach (int code in Integers(condition, "RegionCodes"))
+                        if (context.RegionCodes.Contains(code)) { contains = true; break; }
+                    return Boolean(condition, "Not") ? !contains : contains;
+                default:
+                    return false;
+            }
+        }
+
+        private bool EvaluateConditionId(int conditionId, OfficialConditionContext context,
+            HashSet<int> visiting)
+        {
+            if (conditionId <= 0 || !visiting.Add(conditionId)) return false;
+            try
+            {
+                return EvaluateConditionNode(FindCondition(conditionId), context, visiting);
+            }
+            finally
+            {
+                visiting.Remove(conditionId);
+            }
+        }
+
+        private static bool Compare(int value, int expected, string op)
+        {
+            switch (op)
+            {
+                case ">=": return value >= expected;
+                case ">": return value > expected;
+                case "<=": return value <= expected;
+                case "<": return value < expected;
+                case "==": return value == expected;
+                case "!=": return value != expected;
+                default: return false;
+            }
         }
 
         /// <summary>
@@ -317,16 +413,55 @@ namespace Zjcs.Offline.Progression
 
         public int AppearanceLevel(long experience)
         {
-            Dictionary<string, object> row = Rows("level_exp").FirstOrDefault(value => Integer(value, "Id") == 6);
-            if (row == null || !(row.TryGetValue("Exp", out object value) && value is List<object> levels))
-                throw new FormatException("Official appearance experience table is missing.");
+            IReadOnlyList<long> levels = AppearanceLevelExperienceTable();
             int level = 0;
             for (int index = 0; index < levels.Count; index++)
             {
-                if (experience < Convert.ToInt64(levels[index], CultureInfo.InvariantCulture)) break;
+                if (experience < levels[index]) break;
                 level = index;
             }
             return level;
+        }
+
+        public int AppearanceLevelMax => Math.Max(0, AppearanceLevelExperienceTable().Count - 1);
+
+        public bool IsMaxAppearanceLevel(int level)
+        {
+            return level >= AppearanceLevelMax;
+        }
+
+        public long AppearanceLevelExperience(int level)
+        {
+            IReadOnlyList<long> levels = AppearanceLevelExperienceTable();
+            return levels[Math.Max(0, Math.Min(levels.Count - 1, level))];
+        }
+
+        public long AppearanceLevelNextExperience(int level)
+        {
+            return AppearanceLevelExperience(level + 1);
+        }
+
+        public IReadOnlyList<long> AppearanceLevelExperienceTable()
+        {
+            Dictionary<string, object> row = Rows("level_exp").FirstOrDefault(value => Integer(value, "Id") == 6);
+            if (row == null || !(row.TryGetValue("Exp", out object value) && value is List<object> levels))
+                throw new FormatException("Official appearance experience table is missing.");
+            return levels.Select(level => Convert.ToInt64(level, CultureInfo.InvariantCulture)).ToArray();
+        }
+
+        public IReadOnlyDictionary<int, long> AppearancePropertiesBetween(int fromLevel, int toLevel)
+        {
+            var result = new Dictionary<int, long>();
+            foreach (Dictionary<string, object> row in WardrobeRows("appearance_prop"))
+            {
+                int level = Integer(row, "Level");
+                if (level <= fromLevel || level > toLevel) continue;
+                if (!(row.TryGetValue("Attribuate", out object value)
+                    && value is Dictionary<string, object> attributes)) continue;
+                foreach (KeyValuePair<string, object> attribute in attributes)
+                    AddProperty(result, attribute.Key, Convert.ToInt64(attribute.Value, CultureInfo.InvariantCulture));
+            }
+            return result;
         }
 
         public IReadOnlyDictionary<int, long> AppearanceProperties(int appearanceLevel,
