@@ -766,10 +766,16 @@ namespace Zjcs.Combat.Official
                 damage = Component(components, name);
                 if (damage != null) break;
             }
+            Dictionary<string, object> hemophagia = Component(components, "FightHitExtHemophagiaComponent");
             Dictionary<string, object> chained = Component(components, "FightHitChainedComponent");
             Dictionary<string, object> custom = Component(components, "FightHitCustomTargetComponent");
             Dictionary<string, object> random = Component(components, "FightHitRandomTargetComponent");
-            var result = new FightBattleHitEntity { EntityId = id, MiniHitTargetCount = 1 };
+            var result = new FightBattleHitEntity
+            {
+                EntityId = id,
+                MiniHitTargetCount = 1,
+                HemophagiaProperty = hemophagia == null ? 0 : Int(hemophagia, "HemophagiaPropType")
+            };
             if (references.TryGetValue(id, out FightBattleHitReference reference))
             {
                 result.Delay = reference.Delay;
