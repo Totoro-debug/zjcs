@@ -11,9 +11,8 @@ namespace Zjcs.Presentation.Opening
     public sealed class OpeningUiData
     {
         public string Manifest = string.Empty;
-        public int AtlasWidth;
-        public int AtlasHeight;
-        public byte[] AtlasBytes;
+        public readonly List<byte[]> AtlasBytes = new List<byte[]>();
+        public readonly List<OpeningUiSprite> AtlasPages = new List<OpeningUiSprite>();
         public readonly Dictionary<string, OpeningUiSprite> Sprites =
             new Dictionary<string, OpeningUiSprite>(StringComparer.Ordinal);
         public readonly Dictionary<string, OpeningUiNode> Prefabs =
@@ -25,12 +24,25 @@ namespace Zjcs.Presentation.Opening
             var data = new OpeningUiData { Manifest = OpeningJson.String(root, "manifest") };
             if (data.Manifest != OpeningAssets.Manifest)
                 throw new FormatException("Opening UI manifest is not pinned.");
-            Dictionary<string, object> atlas = OpeningJson.Object(root["atlas"], "atlas");
-            data.AtlasWidth = OpeningJson.Int(atlas, "width");
-            data.AtlasHeight = OpeningJson.Int(atlas, "height");
-            string atlasPath = Path.Combine(directory, OpeningJson.String(atlas, "file"));
-            if (!File.Exists(atlasPath)) throw new FileNotFoundException("Opening UI atlas is missing.", atlasPath);
-            data.AtlasBytes = File.ReadAllBytes(atlasPath);
+            var atlases = new List<Dictionary<string, object>>();
+            if (root.TryGetValue("atlases", out object pages) && pages is List<object> pageList)
+                foreach (object entry in pageList)
+                    atlases.Add(OpeningJson.Object(entry, "atlas page"));
+            else
+                atlases.Add(OpeningJson.Object(root["atlas"], "atlas"));
+            foreach (Dictionary<string, object> atlas in atlases)
+            {
+                string atlasPath = Path.Combine(directory, OpeningJson.String(atlas, "file"));
+                if (!File.Exists(atlasPath)) throw new FileNotFoundException("Opening UI atlas is missing.", atlasPath);
+                byte[] pageBytes = File.ReadAllBytes(atlasPath);
+                data.AtlasBytes.Add(pageBytes);
+                data.AtlasPages.Add(new OpeningUiSprite
+                {
+                    Width = OpeningJson.Int(atlas, "width"),
+                    Height = OpeningJson.Int(atlas, "height"),
+                    Name = OpeningJson.String(atlas, "file"),
+                });
+            }
             foreach (KeyValuePair<string, object> entry in OpeningJson.Object(root["sprites"], "sprites"))
             {
                 Dictionary<string, object> sprite = OpeningJson.Object(entry.Value, "sprite");
@@ -49,6 +61,7 @@ namespace Zjcs.Presentation.Opening
                         (float)OpeningJson.ToNumber(border[0]), (float)OpeningJson.ToNumber(border[1]),
                         (float)OpeningJson.ToNumber(border[2]), (float)OpeningJson.ToNumber(border[3])),
                     PixelsPerUnit = (float)OpeningJson.Number(sprite, "ppu", 100),
+                    Atlas = OpeningJson.Int(sprite, "atlas"),
                 };
             }
             foreach (object item in OpeningJson.Array(root["prefabs"], "prefabs"))
@@ -132,6 +145,7 @@ namespace Zjcs.Presentation.Opening
         public Vector2 Pivot = new Vector2(0.5f, 0.5f);
         public Vector4 Border;
         public float PixelsPerUnit = 100;
+        public int Atlas;
     }
 
     public sealed class OpeningUiNode
@@ -173,7 +187,7 @@ namespace Zjcs.Presentation.Opening
     {
         private readonly OpeningUiData data;
         private readonly TMP_FontAsset font;
-        private readonly Texture2D atlas;
+        private readonly List<Texture2D> atlases = new List<Texture2D>();
         private readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
         private readonly Dictionary<string, GameObject> bindings = new Dictionary<string, GameObject>(StringComparer.Ordinal);
         private readonly GameObject root;
@@ -182,10 +196,14 @@ namespace Zjcs.Presentation.Opening
         {
             this.data = data ?? throw new ArgumentNullException(nameof(data));
             this.font = font;
-            atlas = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            if (!atlas.LoadImage(data.AtlasBytes))
-                throw new InvalidOperationException("Opening UI atlas could not be decoded.");
-            atlas.name = "OpeningUiAtlas";
+            for (int index = 0; index < data.AtlasBytes.Count; index++)
+            {
+                var page = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (!page.LoadImage(data.AtlasBytes[index]))
+                    throw new InvalidOperationException("Opening UI atlas could not be decoded: page " + index);
+                page.name = "OpeningUiAtlas_" + index;
+                atlases.Add(page);
+            }
             var canvasObject = new GameObject("OpeningCanvas", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             this.root = canvasObject;
@@ -376,8 +394,10 @@ namespace Zjcs.Presentation.Opening
             sprite = null;
             if (string.IsNullOrEmpty(name) || !data.Sprites.TryGetValue(name, out OpeningUiSprite entry)) return false;
             if (sprites.TryGetValue(name, out sprite)) return true;
+            if (entry.Atlas < 0 || entry.Atlas >= atlases.Count) return false;
             var rect = new Rect(entry.X, entry.Y, entry.Width, entry.Height);
-            sprite = Sprite.Create(atlas, rect, entry.Pivot, entry.PixelsPerUnit, 0, SpriteMeshType.FullRect, entry.Border);
+            sprite = Sprite.Create(atlases[entry.Atlas], rect, entry.Pivot, entry.PixelsPerUnit, 0,
+                SpriteMeshType.FullRect, entry.Border);
             sprite.name = name;
             sprites[name] = sprite;
             return true;
@@ -387,7 +407,8 @@ namespace Zjcs.Presentation.Opening
         {
             foreach (Sprite sprite in sprites.Values) if (sprite != null) UnityEngine.Object.Destroy(sprite);
             sprites.Clear();
-            if (atlas != null) UnityEngine.Object.Destroy(atlas);
+            foreach (Texture2D atlas in atlases) if (atlas != null) UnityEngine.Object.Destroy(atlas);
+            atlases.Clear();
             if (root != null) UnityEngine.Object.Destroy(root);
         }
     }

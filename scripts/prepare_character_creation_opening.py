@@ -621,37 +621,64 @@ def portrait_prefabs(apk, sprites, schemas, story, prefabs):
 
 
 def pack_atlas(sprite_cache, target):
+    """Pack official sprites into one or more Unity-uploadable atlas pages.
+
+    A fixed 1024 px shelf grew the sheet past Unity's texture limit once the portrait
+    pages were added, which made Texture2D.LoadImage fail for the whole opening UI.
+    Sprites are now shelf-packed into 4096 px pages; the page index travels with every
+    sprite so the runtime can bind the matching texture.
+    """
     from PIL import Image
-    entries = {}
-    ordered = sorted((entry for entry in sprite_cache.images.items() if entry[1]),
-                     key=lambda item: str(item[0]))
-    width = 1024
+    limit = 4096
+    ordered = [(entry, sprite) for entry, sprite in sprite_cache.images.items() if sprite]
+    ordered.sort(key=lambda item: (-item[1]["image"].size[1], str(item[0])))
+    pages = []
+    current = []
     x = 0
     y = 0
     row_height = 0
-    placements = []
     for key, sprite in ordered:
         w, h = sprite["image"].size
-        if x + w > width:
+        if w > limit or h > limit:
+            raise ValueError("Official opening sprite exceeds a 4096 texture: " + str(key))
+        if x + w > limit:
             x = 0
             y += row_height + 2
             row_height = 0
-        placements.append((key, sprite, x, y))
+        if y + h > limit:
+            pages.append(current)
+            current = []
+            x = 0
+            y = 0
+            row_height = 0
+        current.append((key, sprite, x, y))
         x += w + 2
         row_height = max(row_height, h)
-    height = y + row_height
-    height = max(1, (height + 3) & ~3)
-    atlas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    for key, sprite, px, py in placements:
-        atlas.paste(sprite["image"], (px, py))
-        entries[str(sprite["key"])] = {
-            "x": px, "y": height - py - sprite["image"].size[1],
-            "w": sprite["image"].size[0], "h": sprite["image"].size[1],
-            "pivot": sprite["pivot"], "border": sprite["border"], "ppu": sprite["ppu"],
-        }
+    if current:
+        pages.append(current)
+
+    entries = {}
+    atlases = []
     target.parent.mkdir(parents=True, exist_ok=True)
-    atlas.save(target)
-    return entries, atlas.size, len(placements)
+    for index, placements in enumerate(pages):
+        height = max(1, max(py + sprite["image"].size[1] for _, sprite, _, py in placements))
+        height = (height + 3) & ~3
+        atlas = Image.new("RGBA", (limit, height), (0, 0, 0, 0))
+        for _, sprite, px, py in placements:
+            atlas.paste(sprite["image"], (px, py))
+        name = "atlas.png" if index == 0 else "atlas-" + str(index) + ".png"
+        atlas.save(target.parent / name)
+        atlases.append({"file": name, "width": limit, "height": height})
+        for _, sprite, px, py in placements:
+            entries[str(sprite["key"])] = {
+                "x": px, "y": height - py - sprite["image"].size[1],
+                "w": sprite["image"].size[0], "h": sprite["image"].size[1],
+                "pivot": sprite["pivot"], "border": sprite["border"], "ppu": sprite["ppu"],
+                "atlas": index,
+            }
+    if len(entries) != len(ordered):
+        raise ValueError("Opening atlas lost sprites during packing.")
+    return entries, atlases, len(entries)
 
 
 def ui_payload(apk, target_dir, story):
@@ -670,11 +697,11 @@ def ui_payload(apk, target_dir, story):
                         "root": convert_prefab(apk, sprites, schemas, hud_path, FIGHT_HUD_BUNDLE)})
     except StopIteration:
         pass
-    atlas_path = target_dir / "atlas.png"
-    entries, size, count = pack_atlas(sprites, atlas_path)
-    payload = {"manifest": VERSION, "atlas": {"file": "atlas.png", "width": size[0], "height": size[1]},
+    entries, atlases, count = pack_atlas(sprites, target_dir / "atlas.png")
+    payload = {"manifest": VERSION, "atlas": atlases[0], "atlases": atlases,
                "sprites": entries, "prefabs": prefabs}
-    return payload, atlas_path, sprites.failures, count, portrait_sources, sprites.sources
+    atlas_paths = [target_dir / entry["file"] for entry in atlases]
+    return payload, atlas_paths, sprites.failures, count, portrait_sources, sprites.sources
 
 
 def main():
@@ -692,13 +719,14 @@ def main():
     outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-record.bytes", record["bytes"]))
 
-    ui, atlas_path, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
+    ui, atlas_paths, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
         apk, PAYLOAD / "ui", story)
     outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(PAYLOAD / "ui" / "opening-ui.json", json_bytes(ui)))
-    outputs.append({"path": atlas_path.relative_to(ROOT).as_posix(), "bytes": atlas_path.stat().st_size,
-                    "sha256": sha256(atlas_path.read_bytes())})
+    for atlas_path in atlas_paths:
+        outputs.append({"path": atlas_path.relative_to(ROOT).as_posix(), "bytes": atlas_path.stat().st_size,
+                        "sha256": sha256(atlas_path.read_bytes())})
 
     manifest = {
         "manifest": VERSION,
@@ -720,7 +748,7 @@ def main():
         "stage": {"source": stage["source"], "stage_id": stage["stage_id"], "game_id": stage["game_id"],
                   "scene": stage["scene"], "monsters": stage["monsters"], "cells": len(stage["grid"]["cells"])},
         "ui": {"prefabs": [entry["key"] for entry in ui["prefabs"]], "sprites": atlas_sprites,
-               "atlas": ui["atlas"], "unresolved": failures,
+               "atlas": ui["atlas"], "atlases": ui["atlases"], "unresolved": failures,
                "portrait_sources": portrait_sources, "sources": ui_sources},
         "outputs": sorted(outputs, key=lambda entry: entry["path"]),
     }
