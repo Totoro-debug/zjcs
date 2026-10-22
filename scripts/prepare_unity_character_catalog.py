@@ -170,6 +170,12 @@ def restore_sprites(manifests: list[dict]) -> list[dict]:
         icon = icons.get(item_id)
         if isinstance(icon, dict) and isinstance(icon.get("file"), str):
             referenced.add(icon["file"])
+    for item in json.loads((ROOT / "assets/official/rules.json").read_text(encoding="utf-8"))["item"]:
+        if item.get("ItemType") not in (100, 101, 111):
+            continue
+        icon = icons.get(str(item["ClassId"]))
+        if isinstance(icon, dict) and isinstance(icon.get("file"), str):
+            referenced.add(icon["file"])
     for name in ("ImgQuality_White-031a03cab0.png", "ImgQuality_Blue-42b8cb9630.png",
                  "ImgQuality_Purple-0b40a53021.png", "ImgQuality_Orange-78887320b0.png",
                  "ImgQuality_Gold-5f018c42e0.png", "ImgQuality_Red-caa09e6943.png",
@@ -279,6 +285,7 @@ def restore() -> dict:
     wardrobe_items = {int(key) for key in wardrobe_rules["items"]}
     fashion_types = set(game_settings["AppearanceTypes"]) | set(game_settings["HomeDecorationTypes"]) | {425}
     wardrobe_items.update(row["ClassId"] for row in rules["item"] if row.get("ItemType") in fashion_types)
+    wardrobe_items.update(row["ClassId"] for row in rules["item"] if row.get("ItemType") in (100, 101, 111))
     wardrobe_items.update([1, 43003])
     for rank in rules["player_subrank"]:
         wardrobe_items.update(int(item_id) for item_id in (rank.get("Items") or {}))

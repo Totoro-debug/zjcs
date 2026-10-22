@@ -137,6 +137,7 @@ namespace Zjcs.Presentation.Character
         private CharacterPropPanels propPanels;
         private CharacterRankPanel rankPanel;
         private CharacterEquipSlots equipSlots;
+        private CharacterSkillPanel skillPanel;
         private Text honorTimeText;
         private GameObject honorTimeContent;
         private Text honorPropText;
@@ -159,6 +160,7 @@ namespace Zjcs.Presentation.Character
             if (propPanels != null && propPanels.HandleEscape()) return;
             if (rankPanel != null && rankPanel.IsOpen) { rankPanel.Close(); return; }
             if (equipSlots != null && equipSlots.HandleEscape()) return;
+            if (skillPanel != null && skillPanel.HandleEscape()) return;
             if (activeDialog != null) CloseDialog();
             else if (wardrobeView != null)
             {
@@ -361,7 +363,7 @@ namespace Zjcs.Presentation.Character
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelProfessionBtn",
                 () => OfficialModuleRequested?.Invoke("profession"));
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelSkillBtn",
-                () => OfficialModuleRequested?.Invoke("skills"));
+                OpenSkillPanel);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelPetBtn",
                 () => OfficialModuleRequested?.Invoke("pet"));
             string closePath = buttons.Keys.FirstOrDefault(path => path.StartsWith(CharacterScreenPath, StringComparison.Ordinal)
@@ -395,6 +397,21 @@ namespace Zjcs.Presentation.Character
             equipSlots = holder.AddComponent<CharacterEquipSlots>();
             equipSlots.Initialize(assets, progression, progression.EquipmentCatalog);
             equipSlots.Changed += Refresh;
+            skillPanel = holder.AddComponent<CharacterSkillPanel>();
+            skillPanel.Initialize(assets, progression);
+            skillPanel.Changed += Refresh;
+        }
+
+        private void OpenSkillPanel()
+        {
+            OfficialModuleRequested?.Invoke("skills");
+            if (skillPanel == null) throw new InvalidOperationException("The skill panel is not initialized.");
+            if (progression.SkillRules == null)
+            {
+                Debug.LogWarning("Official skill rules are unavailable.");
+                return;
+            }
+            skillPanel.Open(transform);
         }
 
         private void OpenRankPanel()

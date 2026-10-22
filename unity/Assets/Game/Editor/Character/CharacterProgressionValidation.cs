@@ -22,12 +22,14 @@ namespace Zjcs.Editor.Character
             "Assets/Official/CharacterCreation/wardrobe-rules.json",
             "Assets/Official/CharacterCreation/wardrobe-ui.json",
             "Assets/Official/Character/character-panels.json",
-            "Assets/Official/Character/source-manifest.json"
+            "Assets/Official/Character/source-manifest.json",
+            "Assets/Official/Skills/skill-runtime-rules.json"
         };
         private static readonly string[] CatalogFields =
         {
             "characterOverview", "characterProperties", "progressionRules", "timedAppearanceItems",
-            "wardrobeItems", "wardrobeRules", "wardrobeUi", "characterPanels", "sourceManifest"
+            "wardrobeItems", "wardrobeRules", "wardrobeUi", "characterPanels", "sourceManifest",
+            "skillRules"
         };
         private const string SpriteRoot = "Assets/Official/Character/Art/";
 
@@ -260,7 +262,8 @@ namespace Zjcs.Editor.Character
 
         private static void ValidatePropertyPipeline()
         {
-            OfficialCharacterCatalog loaded = OfficialCharacterAssetCatalog.LoadDefault().Load();
+            OfficialCharacterAssetCatalog assetCatalog = OfficialCharacterAssetCatalog.LoadDefault();
+            OfficialCharacterCatalog loaded = assetCatalog.Load();
             OfficialPropCatalog props = loaded.Props;
             Require(props.Count >= 300 && props.ByCatalog((int)OfficialPropCatalogType.Main).Count == 4
                 && props.ByCatalog((int)OfficialPropCatalogType.Addition).Count > 80,
@@ -298,6 +301,10 @@ namespace Zjcs.Editor.Character
                 "Format an integer property and a percent property through prop_cfg");
             Require(loaded.ItemIconUri(43003).Length > 0 && loaded.FindItem(43003) != null,
                 "Resolve the official rank material icon and item row");
+            Zjcs.Offline.Skills.OfflineSkillRules skillRules = assetCatalog.LoadSkillRules();
+            Require(skillRules.Skills.Length == 394
+                && loaded.FindItem(10000) != null && loaded.ItemIconUri(10000).Length > 0,
+                "Load the official skill definitions, skill item and skill icon");
             Require(loaded.Rows("system_level_limit").Any(row => Convert.ToInt32(row["SubRank"],
                     System.Globalization.CultureInfo.InvariantCulture) == 1
                     && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
