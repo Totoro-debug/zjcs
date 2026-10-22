@@ -32,9 +32,13 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> compareTemplate;
         private Dictionary<string, object> detailTemplate;
         private Dictionary<string, object> propRowTemplate;
+        private Dictionary<string, object> promoteTemplate;
         private GameObject listDialog;
         private GameObject compareDialog;
         private GameObject detailDialog;
+        private GameObject promoteDialog;
+        private int promotePosition;
+        private Transform slotRoot;
         private long compareInstanceId;
         private readonly Dictionary<string, RectTransform> listNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> listButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -66,14 +70,17 @@ namespace Zjcs.Presentation.Character
             compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
             detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
             propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
+            promoteTemplate = CharacterModelPackage.AsObject(screens["equip_promote"], "equip_promote");
             compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
             detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
             propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
+            promoteTemplate = CharacterModelPackage.AsObject(screens["equip_promote"], "equip_promote");
         }
 
         public void Refresh(Transform characterRoot)
         {
             if (characterRoot == null) return;
+            slotRoot = characterRoot;
             foreach ((int position, string nodeName) in Slots)
             {
                 Transform slot = FindDeep(characterRoot, nodeName);
@@ -362,6 +369,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (promoteDialog != null) Destroy(promoteDialog);
+            promoteDialog = null;
             if (compareDialog != null) Destroy(compareDialog);
             compareDialog = null;
             if (listDialog != null) Destroy(listDialog);
@@ -375,6 +384,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (promoteDialog != null)
+            {
+                ClosePromote();
+                return true;
+            }
             if (detailDialog != null)
             {
                 CloseDetail();
@@ -478,10 +492,119 @@ namespace Zjcs.Presentation.Character
             });
             Button upgrade = CreateCompareButton(content, "强化", new Vector2(0f, 40f),
                 new Color(0.4f, 0.55f, 0.75f, 0.95f));
-            upgrade.onClick.AddListener(() => LastMessage = "装备强化面板尚未接入。");
+            upgrade.onClick.AddListener(() => OpenPromote(OfflineEquipmentOperations.PositionForItem(equipment,
+                instance.ItemId)));
             Button close = CreateCompareButton(content, "关闭", new Vector2(260f, 40f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(CloseDetail);
+        }
+
+        private void OpenPromote(int position)
+        {
+            if (equipment == null || position <= 0) return;
+            ClosePromote();
+            promotePosition = position;
+            EquipmentUpgradeQuote quote = progression.QuoteEquipmentUpgrade(position);
+            promoteDialog = new GameObject("EquipPromotePanel", typeof(RectTransform));
+            promoteDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)promoteDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(promoteTemplate), root, nodes, buttons);
+            RectTransform middle = nodes.Values.FirstOrDefault(value => value.name == "MiddleGo");
+            if (middle == null) return;
+            var titleObject = new GameObject("PromoteTitle", typeof(RectTransform), typeof(Text));
+            titleObject.transform.SetParent(middle, false);
+            RectTransform titleRect = (RectTransform)titleObject.transform;
+            titleRect.anchorMin = new Vector2(0f, 0.88f);
+            titleRect.anchorMax = new Vector2(1f, 0.88f);
+            titleRect.sizeDelta = new Vector2(0f, 50f);
+            Text title = titleObject.GetComponent<Text>();
+            title.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            title.fontSize = 28;
+            title.alignment = TextAnchor.MiddleCenter;
+            title.color = Color.white;
+            title.text = quote == null ? "装备强化"
+                : "装备强化  Lv" + quote.CurrentLevel.ToString(CultureInfo.InvariantCulture)
+                  + " → Lv" + quote.NextLevel.ToString(CultureInfo.InvariantCulture);
+            float top = 0.78f;
+            if (quote != null && !string.IsNullOrEmpty(quote.LimitKey))
+            {
+                AddPromoteLine(middle, LimitText(quote), ref top, new Color(1f, 0.6f, 0.55f));
+            }
+            if (quote?.Cost != null)
+            {
+                foreach (KeyValuePair<int, long> cost in quote.Cost)
+                {
+                    long owned = progression.Player.Inventory.Where(value => value.ItemId == cost.Key)
+                        .Sum(value => value.Count);
+                    bool enough = owned >= cost.Value;
+                    AddPromoteLine(middle, ItemName(cost.Key) + "：" + owned.ToString("N0",
+                        CultureInfo.InvariantCulture) + "/" + cost.Value.ToString("N0", CultureInfo.InvariantCulture),
+                        ref top, enough ? Color.white : new Color(1f, 0.6f, 0.55f));
+                }
+            }
+            Button upgrade = CreateCompareButton(middle, "强化", new Vector2(-140f, 30f),
+                new Color(0.86f, 0.55f, 0.3f, 0.95f));
+            upgrade.onClick.AddListener(DoUpgrade);
+            Button close = CreateCompareButton(middle, "关闭", new Vector2(140f, 30f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(ClosePromote);
+        }
+
+        private void AddPromoteLine(RectTransform parent, string value, ref float top, Color color)
+        {
+            var line = new GameObject("PromoteLine", typeof(RectTransform), typeof(Text));
+            line.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)line.transform;
+            rect.anchorMin = new Vector2(0.08f, top);
+            rect.anchorMax = new Vector2(0.92f, top);
+            rect.sizeDelta = new Vector2(0f, 40f);
+            Text text = line.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 24;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = color;
+            text.text = value;
+            top -= 0.09f;
+        }
+
+        private string LimitText(EquipmentUpgradeQuote quote)
+        {
+            switch (quote.LimitKey)
+            {
+                case "ui_equip_not_equipped": return "该部位尚未穿戴装备。";
+                case "function_limit_subrank": return "需要位阶 " + quote.LimitValue;
+                case "function_limit_level": return "需要等级 " + quote.LimitValue;
+                case "function_limit_bless_level": return "需要赐福等级 " + quote.LimitValue;
+                case "EquipPromotePanel.MaxSubRankLevel": return "其他部位等级不足。";
+                case "EquipPromotePanel.LimitGapLevel": return "与最低部位等级差超过限制。";
+                case "PlayerUseItemContent.Max": return "已达到上限。";
+                default: return quote.LimitKey;
+            }
+        }
+
+        private void DoUpgrade()
+        {
+            ProgressionResult result = progression.UpgradeEquipment(promotePosition,
+                "character-equip-upgrade-" + promotePosition.ToString(CultureInfo.InvariantCulture) + "-"
+                + Guid.NewGuid().ToString("N"));
+            LastMessage = result.Message ?? result.Status.ToString();
+            if (!result.IsApplied) return;
+            ClosePromote();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void ClosePromote()
+        {
+            if (promoteDialog != null) Destroy(promoteDialog);
+            promoteDialog = null;
         }
 
         private void CloseDetail()
