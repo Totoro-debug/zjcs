@@ -38,6 +38,9 @@ namespace Zjcs.Presentation.Opening
         private int actingEntityId;
         private bool timelineUnavailable;
         private OfficialBattleHudCatalog timelineCatalog;
+        private RectTransform damageLayer;
+        private TMPro.TMP_FontAsset damageFont;
+        private bool damageFontLoaded;
         private bool skipRequested;
         private bool skipButtonPending;
         private float skipButtonAvailableAt;
@@ -62,6 +65,7 @@ namespace Zjcs.Presentation.Opening
         public int SpawnedUnits => units.Count;
         public int PreparedUnits { get; private set; }
         public int TimelineItems => timelineItems.Count;
+        public int DamageNumbers { get; private set; }
 
         public void RequestFastForward()
         {
@@ -194,6 +198,13 @@ namespace Zjcs.Presentation.Opening
                 break;
             }
             if (roundText == null) log("官方录像回合文本节点缺失");
+            var layerObject = new GameObject("OpeningDamageLayer", typeof(RectTransform));
+            layerObject.transform.SetParent(ui.Root, false);
+            damageLayer = (RectTransform)layerObject.transform;
+            damageLayer.anchorMin = Vector2.zero;
+            damageLayer.anchorMax = Vector2.one;
+            damageLayer.offsetMin = Vector2.zero;
+            damageLayer.offsetMax = Vector2.zero;
             timelineContainer = ui.Find("/FightMainPanelRecordFight/Content/Top/FixedContent/RoundUI/Linear")?.transform;
             if (timelineContainer == null) log("官方录像行动时间轴容器缺失，跳过时间轴");
             skipButton = FindNode(hud, "SkipBtn");
@@ -250,6 +261,69 @@ namespace Zjcs.Presentation.Opening
             OpeningRecordEntity entity = OpeningRecordEntity.Parse(raw);
             entityState[entity.EntityId] = entity;
             TryCreateUnit(entity);
+            if (raw.TryGetValue("ComponentList", out object components) && components is List<object> list)
+                foreach (object item in list)
+                    if (item is Dictionary<string, object> component
+                        && OpeningJson.String(component, "$type").Contains("FightDamageComponent"))
+                        ShowDamage(component);
+        }
+
+        private void ShowDamage(Dictionary<string, object> component)
+        {
+            if (damageLayer == null || battlefield == null || battlefield.StageCamera == null) return;
+            if (!component.TryGetValue("DamageResult", out object resultValue)
+                || !(resultValue is Dictionary<string, object> result)) return;
+            long value = (long)OpeningJson.Number(result, "DamageValue");
+            if (value == 0) return;
+            string type = OpeningJson.String(result, "ResultType");
+            string element = OpeningJson.String(result, "SkillElementType");
+            bool crit = false, block = false, immunity = false;
+            if (result.TryGetValue("DamageTypeData", out object flagsValue)
+                && flagsValue is Dictionary<string, object> flags)
+            {
+                crit = OpeningJson.Bool(flags, "IsCrit");
+                block = OpeningJson.Bool(flags, "IsBlock");
+                immunity = OpeningJson.Bool(flags, "IsImmunity");
+                if (OpeningJson.Bool(flags, "IsDodge")) return;
+            }
+            if (!result.TryGetValue("Pos", out object posValue) || !(posValue is Dictionary<string, object> position)) return;
+            Vector3 world = battlefield.GridToWorld(OpeningJson.Int(position, "X"),
+                OpeningJson.Int(position, "Y")) + new Vector3(0f, 0.7f, 0f);
+            Vector3 screen = battlefield.StageCamera.WorldToScreenPoint(world);
+            if (screen.z < 0f) return;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(damageLayer, screen, null,
+                    out Vector2 local)) return;
+            var labelObject = new GameObject("OpeningDamage", typeof(RectTransform));
+            labelObject.transform.SetParent(damageLayer, false);
+            var label = labelObject.AddComponent<TMPro.TextMeshProUGUI>();
+            label.font = ResolveDamageFont();
+            label.fontSize = 36f;
+            label.alignment = TMPro.TextAlignmentOptions.Center;
+            label.raycastTarget = false;
+            bool cure = string.Equals(type, "Cure", StringComparison.Ordinal);
+            long shown = Math.Abs(value);
+            label.text = cure ? "+" + shown : shown.ToString();
+            string variant = immunity ? "immunity" : crit ? "crit" : block ? "block" : "normal";
+            Color color = battlefield.ResolveDamageColor(element, variant, type);
+            labelObject.AddComponent<OpeningDamageFloat>().Initialize(label, local, color);
+            DamageNumbers++;
+        }
+
+        private TMPro.TMP_FontAsset ResolveDamageFont()
+        {
+            if (damageFontLoaded) return damageFont;
+            damageFontLoaded = true;
+            try
+            {
+                OfficialBattleHudCatalog catalog = OfficialBattleHudCatalog.LoadDefault();
+                if (catalog != null) damageFont = catalog.Font;
+            }
+            catch (Exception error)
+            {
+                log("官方伤害数字字体不可用，使用 TMP 默认字体: " + error.Message);
+            }
+            if (damageFont == null) damageFont = TMPro.TMP_Settings.defaultFontAsset;
+            return damageFont;
         }
 
         private void RemoveEntity(int entityId)

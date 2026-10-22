@@ -20,6 +20,10 @@ namespace Zjcs.Presentation.Opening
         private readonly List<GameObject> particles = new List<GameObject>();
         private readonly GameObject root;
         private readonly Dictionary<int, string> npcModels = new Dictionary<int, string>();
+        private readonly Dictionary<string, Dictionary<string, Color>> damageColors =
+            new Dictionary<string, Dictionary<string, Color>>(StringComparer.Ordinal);
+        private Color damageCureColor = Color.white;
+        private Color damageDefaultColor = Color.white;
         private readonly Vector3 gridOrigin;
 
         private OpeningBattlefield(GameObject root, Camera camera, Transform unitRoot, Vector3 rootOffset,
@@ -105,6 +109,8 @@ namespace Zjcs.Presentation.Opening
             {
                 BatchCount = instance.BatchCount,
             };
+            if (data.TryGetValue("damage_colors", out object colorValue))
+                instance.ReadDamageColors(OpeningJson.Object(colorValue, "damage colors"));
             if (data.TryGetValue("npc_models", out object npcValue))
             {
                 foreach (object item in OpeningJson.Array(npcValue, "npc models"))
@@ -133,6 +139,48 @@ namespace Zjcs.Presentation.Opening
             List<object> entry = OpeningJson.Array(grid["entry"], "grid entry");
             return new Vector2Int(Convert.ToInt32(OpeningJson.ToNumber(entry[0])),
                 Convert.ToInt32(OpeningJson.ToNumber(entry[1])));
+        }
+
+        private void ReadDamageColors(Dictionary<string, object> data)
+        {
+            foreach (KeyValuePair<string, object> element in OpeningJson.Object(data["elements"], "damage elements"))
+            {
+                var variants = new Dictionary<string, Color>(StringComparer.Ordinal);
+                foreach (KeyValuePair<string, object> variant in
+                         OpeningJson.Object(element.Value, "damage variants"))
+                    variants[variant.Key] = ReadColor(OpeningJson.Array(variant.Value, "damage color"));
+                damageColors[element.Key] = variants;
+            }
+            damageCureColor = ReadColor(OpeningJson.Array(data["cure"], "cure color"));
+            damageDefaultColor = ReadColor(OpeningJson.Array(data["default"], "default color"));
+        }
+
+        /// <summary>Official damage text colour for an element and result variant.</summary>
+        public Color ResolveDamageColor(string elementName, string variant, string resultType)
+        {
+            if (string.Equals(resultType, "Cure", StringComparison.Ordinal)) return damageCureColor;
+            string key = ElementKey(elementName);
+            if (key != null && damageColors.TryGetValue(key, out Dictionary<string, Color> variants))
+            {
+                if (!string.IsNullOrEmpty(variant) && variants.TryGetValue(variant, out Color color)) return color;
+                if (variants.TryGetValue("normal", out Color normal)) return normal;
+            }
+            return damageDefaultColor;
+        }
+
+        private static string ElementKey(string name)
+        {
+            switch (name)
+            {
+                case "None": return "0";
+                case "Wind": return "100";
+                case "Water": return "101";
+                case "Fire": return "102";
+                case "Light": return "103";
+                case "Dark": return "104";
+                case "Abyss": return "200";
+                default: return null;
+            }
         }
 
         private Vector3 ReadGridOrigin(Dictionary<string, object> data)
@@ -265,7 +313,7 @@ namespace Zjcs.Presentation.Opening
             {
                 material.SetTexture("_MainTex", texture);
             }
-            else
+            else if (!string.IsNullOrEmpty(textureName))
             {
                 log("官方战场粒子材质贴图缺失: " + textureName);
             }
