@@ -22,7 +22,7 @@ def build():
         raise ValueError("The official UI catalog does not match its pinned source manifest")
 
     screens = json.loads(UI.read_text(encoding="utf-8"))
-    names = ("character", "character_props", "rank_upgrade", "character_prop_row", "character_prop_group", "item", "equipment", "equip_row", "equip_compare", "skills", "skill_list_item")
+    names = ("character", "character_props", "rank_upgrade", "character_prop_row", "character_prop_group", "item", "equipment", "equip_row", "equip_compare", "equip_detail", "skills", "skill_list_item")
     if any(name not in screens for name in names):
         raise ValueError("An original character panel is missing from the official UI catalog")
     from prepare_character_prop_bindings import BindingReader

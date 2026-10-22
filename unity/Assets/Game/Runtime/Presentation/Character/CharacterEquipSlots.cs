@@ -30,8 +30,11 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> rowTemplate;
         private Dictionary<string, object> listTemplate;
         private Dictionary<string, object> compareTemplate;
+        private Dictionary<string, object> detailTemplate;
+        private Dictionary<string, object> propRowTemplate;
         private GameObject listDialog;
         private GameObject compareDialog;
+        private GameObject detailDialog;
         private long compareInstanceId;
         private readonly Dictionary<string, RectTransform> listNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> listButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -61,7 +64,11 @@ namespace Zjcs.Presentation.Character
             rowTemplate = CharacterModelPackage.AsObject(screens["equip_row"], "equip_row");
             listTemplate = CharacterModelPackage.AsObject(screens["equipment"], "equipment");
             compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
+            detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
+            propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
             compareTemplate = CharacterModelPackage.AsObject(screens["equip_compare"], "equip_compare");
+            detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
+            propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
         }
 
         public void Refresh(Transform characterRoot)
@@ -91,7 +98,12 @@ namespace Zjcs.Presentation.Character
                 {
                     button.onClick.RemoveAllListeners();
                     int captured = position;
-                    button.onClick.AddListener(() => OpenList(characterRoot, captured));
+                    long capturedInstance = instance == null ? 0 : instance.InstanceId;
+                    button.onClick.AddListener(() =>
+                    {
+                        if (capturedInstance != 0) OpenDetail(characterRoot, capturedInstance);
+                        else OpenList(characterRoot, captured);
+                    });
                 }
             }
         }
@@ -314,6 +326,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (detailDialog != null)
+            {
+                CloseDetail();
+                return true;
+            }
             if (compareDialog != null)
             {
                 Destroy(compareDialog);
@@ -323,6 +340,105 @@ namespace Zjcs.Presentation.Character
             if (listDialog == null) return false;
             CloseList();
             return true;
+        }
+
+        private void OpenDetail(Transform characterRoot, long instanceId)
+        {
+            OfflineEquipmentInstance instance = progression.Player.Equipment.Instances
+                .FirstOrDefault(value => value.InstanceId == instanceId);
+            if (instance == null) return;
+            CloseDetail();
+            detailDialog = new GameObject("CharacterPanelEquipDetailPanel", typeof(RectTransform));
+            detailDialog.transform.SetParent(characterRoot, false);
+            RectTransform root = (RectTransform)detailDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("DetailBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseDetail);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            string name = ItemName(instance.ItemId);
+            if (title != null) title.text = name;
+            if (content == null) return;
+            var nameObject = new GameObject("EquipDetailName", typeof(RectTransform), typeof(Text));
+            nameObject.transform.SetParent(content, false);
+            RectTransform nameRect = (RectTransform)nameObject.transform;
+            nameRect.anchorMin = new Vector2(0f, 0.9f);
+            nameRect.anchorMax = new Vector2(1f, 0.9f);
+            nameRect.sizeDelta = new Vector2(0f, 44f);
+            Text nameText = nameObject.GetComponent<Text>();
+            nameText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            nameText.fontSize = 28;
+            nameText.alignment = TextAnchor.MiddleCenter;
+            nameText.color = Color.white;
+            nameText.text = name + "  Lv" + instance.ItemLevel.ToString(CultureInfo.InvariantCulture);
+            RectTransform iconParent = content;
+            GameObject icon = BuildItemIcon(instance, iconParent);
+            if (icon != null)
+            {
+                icon.name = "EquipDetailIcon";
+                RectTransform iconRect = (RectTransform)icon.transform;
+                iconRect.anchorMin = new Vector2(0.5f, 0.78f);
+                iconRect.anchorMax = new Vector2(0.5f, 0.78f);
+                iconRect.sizeDelta = new Vector2(140f, 140f);
+                iconRect.anchoredPosition = Vector2.zero;
+            }
+            Dictionary<int, long> props = propSource.ItemProps(progression.Player, instance);
+            var lines = new List<int>(props.Keys);
+            lines.Sort();
+            float top = 0.62f;
+            foreach (int propType in lines)
+            {
+                OfficialPropDefinition definition = progression.Catalog.Props.Get(propType);
+                if (definition == null || props[propType] == 0) continue;
+                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(propRowTemplate), content,
+                    new Dictionary<string, RectTransform>(StringComparer.Ordinal),
+                    new Dictionary<string, Button>(StringComparer.Ordinal));
+                row.name = "EquipDetailProp";
+                row.anchorMin = new Vector2(0.08f, top);
+                row.anchorMax = new Vector2(0.92f, top);
+                row.sizeDelta = new Vector2(0f, 44f);
+                Text label = row.GetComponentsInChildren<Text>(true)
+                    .FirstOrDefault(value => value.name == "Key");
+                Text valueText = row.GetComponentsInChildren<Text>(true)
+                    .FirstOrDefault(value => value.name == "Text");
+                if (label != null) label.text = definition.Name;
+                if (valueText != null) valueText.text = OfficialPropFormat.Value(definition, props[propType]);
+                top -= 0.07f;
+                if (top < 0.14f) break;
+            }
+            Button replace = CreateCompareButton(content, "更换", new Vector2(-260f, 40f),
+                new Color(0.86f, 0.55f, 0.3f, 0.95f));
+            replace.onClick.AddListener(() =>
+            {
+                CloseDetail();
+                OpenList(characterRoot, OfflineEquipmentOperations.PositionForItem(equipment, instance.ItemId));
+            });
+            Button upgrade = CreateCompareButton(content, "强化", new Vector2(0f, 40f),
+                new Color(0.4f, 0.55f, 0.75f, 0.95f));
+            upgrade.onClick.AddListener(() => LastMessage = "装备强化面板尚未接入。");
+            Button close = CreateCompareButton(content, "关闭", new Vector2(260f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseDetail);
+        }
+
+        private void CloseDetail()
+        {
+            if (detailDialog != null) Destroy(detailDialog);
+            detailDialog = null;
         }
 
         private void SelectCandidate(long instanceId)
