@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
+using Zjcs.Offline.Progression;
 
 namespace Zjcs.Presentation.Home
 {
@@ -13,7 +15,7 @@ namespace Zjcs.Presentation.Home
     /// Main-city HUD rebuilt from the official panels: top bar, avatar, five-tab
     /// bottom bar, function menu and the furniture/mail windows.
     /// </summary>
-    public sealed class HomeHudView
+    public sealed partial class HomeHudView
     {
         private static readonly string[] CurrencyIcons = { "Money_1", "Money_2", "Money_15" };
         private static readonly int[] CurrencyItems = { 1, 2, 15 };
@@ -40,6 +42,11 @@ namespace Zjcs.Presentation.Home
         private HomeUiRenderer activeDialogRenderer;
         private bool cartOpen;
         private bool bedOpen;
+        private HomeUiRenderer petGachaRenderer;
+        private GameObject petGachaPanel;
+        private GameObject petResultLayer;
+        private int petHistoryPage;
+        private bool petHundredSuppressChoice;
 
         private readonly string[] tabNames = { "Character", "TravelNote", "Home", "Legion", "Mainland" };
 
@@ -280,6 +287,176 @@ namespace Zjcs.Presentation.Home
             Notify(name + " 的内部页面由所属功能模块提供");
         }
 
+        public void ShowPetGacha()
+        {
+            OpenDialog("pet_exchange_shell", (renderer, panel) =>
+            {
+                petGachaRenderer = renderer;
+                petGachaPanel = panel;
+                BindPetGachaShell(renderer);
+                ShowPetTab("gacha");
+                RefreshPetGachaPanel();
+            });
+        }
+
+        private void BindPetGachaShell(HomeUiRenderer renderer)
+        {
+            Bind(renderer, "/PetGachaPanel/BgPanel1/Content/BottomGo/CloseBtn_dark", CloseDialog);
+            Bind(renderer, "/PetGachaPanel/BgPanel1/Content/BottomGo/TabBottom /TabGroup/GachaPanelTabItem",
+                () => ShowPetTab("gacha"));
+            Bind(renderer, "/PetGachaPanel/BgPanel1/Content/BottomGo/TabBottom /TabGroup/ShopPanelTabItem",
+                () => ShowPetTab("shop"));
+            Bind(renderer, "/PetGachaPanel/BgPanel1/Content/BottomGo/TabBottom /TabGroup/AchievementTabItem",
+                () => ShowPetTab("achievement"));
+            Bind(renderer, "/PetGachaPanel/BgPanel1/Content/BottomGo/TabBottom /TabGroup/ActivityGachaPanelTabItem",
+                () => Notify("活动结缘未包含在固定版日常结缘范围内"));
+
+            string main = "/PetGachaPanel/BgPanel1/Content/MiddleGo/PetGachaSubPanel/Content/";
+            Bind(renderer, main + "GachaBtnContent/GachaOneTimesBtn/CommonBtn_CostItem", () => RequestPetDraw(1));
+            Bind(renderer, main + "GachaBtnContent/GachaTenTimesBtn/CommonBtn_CostItem", () => RequestPetDraw(10));
+            Bind(renderer, main + "GachaBtnContent/GachaHundredTimesBtn/CommonBtn_CostItem", () => RequestPetDraw(100));
+            Bind(renderer, main + "PityBgImage/Txt1/DetailBtn", ShowPetGachaDetails);
+            Bind(renderer, main + "ScoreRewardUI/ScoreInfoBtn", ShowPetScoreRewards);
+            Bind(renderer, main + "ScoreRewardUI/ImageBg/ImageBg1/GetRewardBtn", ShowPetScoreRewards);
+            renderer.SetActive("/PetGachaPanel/BgPanel1/Content/MiddleGo/ShopContent/TopGo/RefreshGo/RefreshInfoGo/RefreshBtn", false);
+        }
+
+        private static void Bind(HomeUiRenderer renderer, string path, Action action)
+        {
+            Button button = renderer.Find<Button>(path);
+            if (button != null) button.onClick.AddListener(() => action?.Invoke());
+        }
+
+        private void ShowPetTab(string tab)
+        {
+            if (petGachaRenderer == null) return;
+            string middle = "/PetGachaPanel/BgPanel1/Content/MiddleGo/";
+            petGachaRenderer.SetActive(middle + "PetGachaSubPanel", tab == "gacha");
+            petGachaRenderer.SetActive(middle + "ShopContent", tab == "shop");
+            petGachaRenderer.SetActive(middle + "AchievementPanel", tab == "achievement");
+            if (tab == "shop") RefreshPetShop();
+            if (tab == "achievement") RefreshPetCountAchievements();
+        }
+
+        private void RefreshPetGachaPanel()
+        {
+            if (petGachaRenderer == null || host.PetGacha == null) return;
+            string prefix = "/PetGachaPanel/BgPanel1/Content/MiddleGo/PetGachaSubPanel/Content/";
+            int count = host.PetGacha.DailyCount(DateTime.Now);
+            petGachaRenderer.SetText(prefix + "DailyCountText/Text",
+                "今日已结缘 " + count.ToString(CultureInfo.InvariantCulture) + "/"
+                + host.PetGachaCatalog.Settings.DailyLimit.ToString(CultureInfo.InvariantCulture) + " 次");
+            petGachaRenderer.SetText(prefix + "ScoreRewardUI/ScoreInfoBtn/TextScore",
+                "<color=#CBCF61>" + host.PetGacha.State.Score.ToString(CultureInfo.InvariantCulture) + "</color>");
+            PetGachaRewardRule rule = host.PetGachaCatalog.Rule(host.PetGacha.State.TotalDrawCount < 10 ? 20401 : 20400);
+            PetGachaRandomReward orange = rule == null ? null : host.PetGachaCatalog.RandomReward(53102);
+            int left = Math.Max(1, 80 - host.PetGacha.PityMissCount(53102));
+            petGachaRenderer.SetText(prefix + "PityBgImage/Txt1/TextTip",
+                "再结缘 " + left.ToString(CultureInfo.InvariantCulture) + " 次内必得传说幻兽");
+            if (orange != null && orange.ItemIds.Length > 0)
+                petGachaRenderer.SetActive(prefix + "GachaBtnContent/GachaHundredTimesBtn", true);
+        }
+
+        private void RequestPetDraw(int count, bool confirmedHundred = false,
+            bool suppressHundredPrompt = false, bool confirmedQuickBuy = false)
+        {
+            if (host.PetGacha == null) { Notify("结缘规则未载入"); return; }
+            DateTime localNow = DateTime.Now;
+            if (count == 100 && !confirmedHundred && host.PetGacha.ShouldConfirmHundred(localNow))
+            {
+                ShowPetConfirm("百次结缘", "本次将连续结缘100次，确认继续吗？", true,
+                    suppress => RequestPetDraw(count, true, suppress, false));
+                return;
+            }
+
+            int missing = Math.Max(0, count - (int)Math.Min(int.MaxValue,
+                host.Profile.InventoryCount(host.PetGachaCatalog.Gacha.CostItemId)));
+            if (missing > 0 && host.Level >= 41 && !confirmedQuickBuy)
+            {
+                long cost = (long)missing * host.PetGachaCatalog.Settings.QuickBuyPrice;
+                ShowPetConfirm("补足结缘材料", "当前缺少 " + missing + " 个结缘材料，将消耗 "
+                    + cost.ToString(CultureInfo.InvariantCulture) + " 晨星补足，确认继续吗？", false,
+                    _ => RequestPetDraw(count, confirmedHundred, suppressHundredPrompt, true));
+                return;
+            }
+
+            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            PetGachaResult result = host.PetGacha.Draw(count,
+                "home:pet-gacha:draw:" + slotId() + ":" + Guid.NewGuid().ToString("N"), now,
+                confirmedHundred || count != 100 || !host.PetGacha.ShouldConfirmHundred(localNow),
+                suppressHundredPrompt, confirmedQuickBuy);
+            if (!result.IsApplied && result.Code != PetGachaResultCode.Unchanged)
+            {
+                Notify(string.IsNullOrEmpty(result.Message) ? PetGachaError(result.Code) : result.Message);
+                return;
+            }
+            RefreshPetGachaPanel();
+            ShowPetGachaResult(result.Awards, count);
+        }
+
+        private string slotId() => host.ActiveProfileSlotId;
+
+        private static string PetGachaError(PetGachaResultCode code) => code switch
+        {
+            PetGachaResultCode.InsufficientItems => "结缘材料不足",
+            PetGachaResultCode.DailyLimit => "今日结缘次数已达上限",
+            PetGachaResultCode.ConditionNotMet => "当前结缘入口不可用",
+            PetGachaResultCode.NotReady => "奖励尚未达成或已领取",
+            _ => "结缘未能完成"
+        };
+
+        private void ShowPetGachaResult(IReadOnlyList<OfflinePetGachaAward> awards, int count)
+        {
+            ClosePetLayer(ref petResultLayer);
+            HomeUiRenderer renderer = CreatePetLayer("pet_gacha_result", out petResultLayer);
+            OfflinePetGachaAward first = awards == null ? null : awards.FirstOrDefault();
+            PetGachaItem firstItem = first == null ? null : host.PetGachaCatalog.Item(first.ItemId);
+            renderer.SetTextByName("NameText", firstItem?.Name ?? "结缘结果");
+            renderer.SetTextByName("TypeText", first == null ? string.Empty : QualityText(first.Quality));
+            renderer.SetTextByName("DescText", PetAwardSummary(awards));
+            if (firstItem != null)
+            {
+                renderer.SetSpriteByName("ItemImg", catalog.FindSprite(firstItem.IconFile));
+                renderer.SetSpriteByName("ItemIcon", catalog.FindSprite(firstItem.IconFile));
+            }
+            renderer.SetTextByName("FreeCount", "今日已结缘 " + host.PetGacha.DailyCount(DateTime.Now)
+                + "/" + host.PetGachaCatalog.Settings.DailyLimit);
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/CloseBtn", () => ClosePetLayer(ref petResultLayer));
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/SkipBtn", () => ClosePetLayer(ref petResultLayer));
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaOneTimesBtn/CommonBtn_CostItem",
+                () => RequestPetDraw(1));
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaTenTimesBtn/CommonBtn_CostItem",
+                () => RequestPetDraw(10));
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaHundredTimesBtn/CommonBtn_CostItem",
+                () => RequestPetDraw(100));
+            if (count == 1) renderer.SetActive("/GachaResultPanel/BgPanel1/Content/MiddleGo/OneGrid", true);
+        }
+
+        private string PetAwardSummary(IReadOnlyList<OfflinePetGachaAward> awards)
+        {
+            if (awards == null || awards.Count == 0) return "没有取得奖励记录";
+            return string.Join("\n", awards.Select(award =>
+            {
+                PetGachaItem item = host.PetGachaCatalog.Item(award.ItemId);
+                string line = (item?.Name ?? award.ItemId.ToString(CultureInfo.InvariantCulture)) + " x" + award.Count;
+                if (award.ConvertedCount > 0)
+                {
+                    PetGachaItem converted = host.PetGachaCatalog.Item(award.ConvertedItemId);
+                    line += "，重复转换为 " + (converted?.Name ?? award.ConvertedItemId.ToString(CultureInfo.InvariantCulture))
+                        + " x" + award.ConvertedCount;
+                }
+                return line;
+            }).ToArray());
+        }
+
+        private static string QualityText(int quality) => quality switch
+        {
+            4 => "传说",
+            3 => "史诗",
+            2 => "精良",
+            _ => "普通"
+        };
+
         private void Notify(string message)
         {
             if (toast == null) return;
@@ -358,12 +535,15 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            OnDialogClosing();
             if (activeDialog != null) UnityEngine.Object.Destroy(activeDialog);
             activeDialog = null;
             activeDialogRenderer = null;
             cartOpen = false;
             bedOpen = false;
         }
+
+        partial void OnDialogClosing();
 
         public void ShowRepair(int type)
         {
