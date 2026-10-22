@@ -584,6 +584,27 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        /// <summary>Whether the (possibly enriched) catalog has this component for the entity.</summary>
+        public bool HasComponent(int entityId, string componentName)
+        {
+            if (string.IsNullOrEmpty(componentName)) return false;
+            return entities.TryGetValue(entityId, out Dictionary<string, object> components)
+                && components.ContainsKey(componentName);
+        }
+
+        /// <summary>Reads a component dictionary for callers that implement optional effects.</summary>
+        public bool TryGetComponent(int entityId, string componentName,
+            out IReadOnlyDictionary<string, object> component)
+        {
+            component = null;
+            if (string.IsNullOrEmpty(componentName)
+                || !entities.TryGetValue(entityId, out Dictionary<string, object> components)
+                || !components.TryGetValue(componentName, out object value)
+                || !(value is Dictionary<string, object> dictionary)) return false;
+            component = dictionary;
+            return true;
+        }
+
         private void AddEntities(Dictionary<string, object> root)
         {
             Dictionary<string, object> values = Object(Required(root, "entities"), "entities");
