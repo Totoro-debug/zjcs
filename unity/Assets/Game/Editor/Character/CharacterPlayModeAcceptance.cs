@@ -194,8 +194,17 @@ namespace Zjcs.Editor.Character
             Require(FindButton("CharacterPanelSkillBtn") != null, "The skill entry button is missing.");
             Require(FindButton("CharacterPanelEquipBtn") != null || FindButton("CharacterPanelSkillBtn") != null,
                 "The character panel buttons were not bound.");
-            Require(UnityEngine.Object.FindObjectsOfType<Image>(true).Any(image =>
-                image.name == "icon" && image.enabled && image.sprite != null),
+            Image[] icons = UnityEngine.Object.FindObjectsOfType<Image>(true)
+                .Where(image => image.name == "icon").ToArray();
+            Image[] allImages = UnityEngine.Object.FindObjectsOfType<Image>(true);
+            Debug.Log("[Character acceptance] icon images=" + icons.Length + " with sprite="
+                + icons.Count(image => image.enabled && image.sprite != null)
+                + " allImages=" + allImages.Length + " allWithSprite="
+                + allImages.Count(image => image.sprite != null)
+                + " equipped=" + progression.Player.Equipment.Equipped.Count
+                + " instances=" + progression.Player.Equipment.Instances.Count
+                + " names=" + string.Join(",", allImages.Take(12).Select(image => image.name)));
+            Require(icons.Any(image => image.enabled && image.sprite != null),
                 "The equipped item icon was not rendered from the official sprite catalog.");
 
             Button skillButton = FindButton("CharacterPanelSkillBtn");
