@@ -122,7 +122,7 @@
 
 每次命中都会生成 `FightBattleDamageEvent`，记录伤害序号、来源、目标、技能实体／道具、命中节点、伤害类型、暴击／格挡／闪避／免疫／致盲标记、结算值、绝对伤害与命中前后 HP；命中动作按官方 `FightHitBaseComponentInfo.DamageActionType` 区分：5 治疗（即使技能类型不是治疗也会回血）、4 伤害、0 无动作（不结算 HP、不写伤害事件，但技能仍记为已施放）；这些事件随步骤回执保存，可用于飘字与战报追溯。`FightBattleStatistics` 同时累计每单位的施放、命中、承伤、造成／承受伤害与治疗，以及每技能的施放、命中、伤害与治疗，数值取实际 HP 结算结果，因此已包含衰减、溢出与致死截断。 `FightBattleReportBuilder` 在此基础上生成结算报告数据：阶段、胜负、原因、回合、双方血量、总伤害／治疗，以及逐单位的施放／命中／承伤／伤害／治疗与逐技能的施放／命中／伤害／治疗；官方结算面板 prefab 尚未接入，当前只有数据结构与回归。
 
-伤害飘字已接入：`OfficialBattleSceneView.ShowDamageFloats` 在每次新步骤后按伤害事件在受击者格位生成 TextMeshPro 飘字，数字取实际结算值，字体用官方 `TMP_FontAsset`，颜色来自官方 `battle-hud/rules.json` 的 `damage_settings`（7 种元素 × Normal/Crit/Block、治疗与默认色，由 `scripts/prepare_unity_combat_damage_colors.py` 导出到 `Resources/Combat/damage-colors`）；闪避／免疫／致盲因缺少本地化文本暂不生成数字，官方飘字 AnimationClip 尚未迁移，暂用 0.9 秒上升淡出，与开场战斗飘字的本地处理一致。
+伤害飘字已接入：`OfficialBattleSceneView.ShowDamageFloats` 在每次新步骤后按伤害事件在受击者格位生成 TextMeshPro 飘字，数字取实际结算值，伤害事件新增 `ElementType` 并按技能元素选择官方元素色，字体用官方 `TMP_FontAsset`，颜色来自官方 `battle-hud/rules.json` 的 `damage_settings`（7 种元素 × Normal/Crit/Block、治疗与默认色，由 `scripts/prepare_unity_combat_damage_colors.py` 导出到 `Resources/Combat/damage-colors`）；闪避／免疫／致盲因缺少本地化文本暂不生成数字，官方飘字 AnimationClip 尚未迁移，暂用 0.9 秒上升淡出，与开场战斗飘字的本地处理一致。
 
 `FightBattlePhaseMachine` 按官方 `GameStatus` 提供 Preparing、PlayStart、Play、Pause、EntryTransition、EntryTransitionFinished、BattleEnd、BattleEndTransition、BattleEndTransitionFinished、End 的合法迁移与准备倒计时；单机主线可跳过准备，`Ready` 结束倒计时，倒计时归零只触发一次自动开始请求。`OfficialBattleRuntimeController` 已接入该状态机：开始即进入 PlayStart→Play，暂停只允许在 Play 与 Pause 间切换，步骤产生结束结果时进入 BattleEnd，释放时进入 End 并复位时标，阶段变化通过 `PhaseChanged` 交给玩法处理。准备面板、就绪 UI、倒计时显示、入场与结束演出尚未接各模式面板。
 
