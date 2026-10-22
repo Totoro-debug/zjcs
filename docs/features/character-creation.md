@@ -46,7 +46,7 @@
 
 [prepare_battle_spine_pages.py](../../scripts/prepare_battle_spine_pages.py) 从固定 APK 中经 `models-source-manifest.json` 验证的 Texture2D 解出 5 只开场怪物（3803／3281／3282／3283／3481）与两名剧情角色（8401／8402）的 9 张图集页，核对 atlas `size:` 后绑定到既有 Spine 材质；`OfficialBattleModelCatalog` 的 identities／identitiesManifest 已指向真实资源。剧情角色不是玩家外观，而是官方 NPC 骨骼：录像中 1017 的 `NpcClassId=8401` 对应 `body_8401`、1018 的 8402 对应 `body_8402`；离线 [OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 按该映射生成单位，与怪物共用同一套动作别名。单位排序显式置于场景排序层之上，避免被 21 层的背景遮住。战前顺序按官方 `GAME_ENTITY_LIST` 先于 `BeforeFight`：进入场景 → 生成实体与 HUD → `BeforeFight` → 录像 → `AfterFight`。
 
-剧情文本改用官方 TMP 序列化字段：[prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 按 TMP 3.x 布局逐节点读取 fontSize、fontWeight、fontStyle、alignment（`0xFFFF` 时取水平/垂直轴组合）、margin、wordWrap、overflow、autoSize 范围和 fontColor，并由 [OpeningUi](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 原样应用；`TalkText` 为 42 px、自动缩放下限 18、TopLeft、无边距，`NpcNameText` 为 48 px 金色居中，不再是此前的近似排版。录像面板的回合文本按官方模板“回合：{0}/{1}”随 `FightRoundNewModification.GlobalRound` 更新。录像消息只含实体增删、回合、行动者、EnemyInView、StatusInvoke 与快进，没有伤害、技能与状态数值，因此伤害数字、技能槽和受击数值无法从录像驱动。
+剧情文本改用官方 TMP 序列化字段：[prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 按 TMP 3.x 布局逐节点读取 fontSize、fontWeight、fontStyle、alignment（`0xFFFF` 时取水平/垂直轴组合）、margin、wordWrap、overflow、autoSize 范围和 fontColor，并由 [OpeningUi](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 原样应用；`TalkText` 为 42 px、自动缩放下限 18、TopLeft、无边距，`NpcNameText` 为 48 px 金色居中，不再是此前的近似排版。录像面板的回合文本按官方模板“回合：{0}/{1}”随 `FightRoundNewModification.GlobalRound` 更新。录像没有独立的伤害／技能消息类型，但 `GAME_ENTITY_ADD` 中确有 `FightSkillComponent`、`FightDamageComponent` 与 `FightStatusComponent`：包含来源／目标、技能 ID、`DamageResult`、状态来源与持续信息；当前 `OpeningFightPlayback` 尚未解析和展示这些临时实体，也未接入原 `CharacterDamageUIManager` 的过滤、颜色与 prefab 设置。因此伤害值可从原录像恢复，相关运行时表现仍未完成。
 
 ### 官方字体与原生 UI
 
@@ -91,7 +91,7 @@
 1. **技能特效与战斗音效。** 场景 sprite／瓦片／粒子与相机已迁移（见上），但回放仍未把录像里的技能特效实体（`GAME_ENTITY_ADD` 中大量临时实体）与战斗音效（battle Wwise 包）接入；`Sprites/Ground-Dissolve`、`Effect/Noise_Mask_Pro` 的官方材质参数与 URP 2D 光照仍以 `Sprites/Default` 替代，属于渲染差异。
 2. **其余怪物 Spine 图集页。** 开场 5 只怪物与 2 名剧情角色的 9 张图集页已补齐并绑定；1678 个战斗骨骼引用的 2,348 个页名中仍有 2,301 张（约 98%）未导出，其他玩法遇到未补页的模型仍会跳过渲染。
 3. **玩家外观单位。** 录像剧情角色按官方 NPC 骨骼渲染；自建角色进入战斗时的官方复合外观、换装与战斗动作仍未接入，模型目录目前只覆盖怪物与 NPC。
-4. **行动时间轴与技能槽。** 回合文本已接；录像只有实体增删、回合、行动者、EnemyInView、StatusInvoke 与快进，没有技能、伤害或状态数值消息，行动时间轴只能按 `FightRoundUpdateDataModification.NextTime` 排序，技能槽、伤害数字与受击数值无法由录像驱动。
+4. **行动时间轴、伤害与状态表现。** 当前仅按 `FightRoundUpdateDataModification` 的 `Data`／`State` 驱动回合行动，表现统一使用 `attack_01`。官方 `GAME_ENTITY_ADD` 中带有技能、伤害、状态和死亡组件，含精确技能／来源／目标 ID、`DamageResult` 与伤害结果标志；运行时尚未按官方组件生命周期消费它们，未接入 `CharacterDamageUIManager` 对应的伤害样式／过滤、技能演出绑定、状态图标与状态触发反馈。逐击伤害值可由原录像恢复；技能槽与行动时间轴是否能完整恢复仍需核对原 `FightSkillAgentComponent.SlotSkillItemDatas`、战斗 HUD 与录像数据绑定。
 
 ### 剧情表现资源
 
@@ -101,10 +101,9 @@
 ### 仍需验证的部分
 
 7. **本轮改动的 Play Mode 验证。** 战场装配、Spine 图页绑定、NPC 单位、TMP 官方排版与战前顺序的代码与数据已完成，但本轮结束时主工程编译被其他会话未完成的 `CharacterPropCalculator`／商城模块编译错误阻塞，`CharacterOpeningPlayModeAcceptance` 未能运行；上述画面上限结论尚待编译恢复后实测。
-8. **FirstStory 端到端画面。** 创角提交流程已接入 FirstStory（黑幕、对话、HomePlayerPlayActionNode 的 SafeEnd 快进、开场转场、显示全部 UI），但 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs) 只覆盖创角前开场；创角后剧情与初始武器选择的衔接仍须在完整流程中实测。
-9. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
-10. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
-11. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
+8. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
+9. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
+10. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
 
 ### 本次明确排除的功能
 
