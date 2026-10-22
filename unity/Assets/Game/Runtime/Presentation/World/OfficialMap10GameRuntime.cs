@@ -185,7 +185,7 @@ namespace Zjcs.Presentation.World
 
             if (battleController != null)
             {
-                battleStepTimer -= Time.unscaledDeltaTime;
+                battleStepTimer -= Time.deltaTime;
                 if (battleStepTimer <= 0f)
                 {
                     battleStepTimer = 0.35f;
@@ -196,7 +196,6 @@ namespace Zjcs.Presentation.World
                         else
                         {
                             battleController.Advance();
-                            UpdateAvatarFromBattle();
                             if (battleController.Checkpoint.Finished) FinishBattle();
                         }
                     }
@@ -1347,8 +1346,9 @@ namespace Zjcs.Presentation.World
 
             battleController = new GameObject("Map10OfficialBattle").AddComponent<OfficialBattleRuntimeController>();
             battleController.transform.SetParent(transform, false);
-            battleController.StepCompleted += OnBattleStep;
+
             battleController.HudControlClicked += OnBattleHudControl;
+
             OfficialBattleGridMapper mapper = new OfficialBattleGridMapper(battleRoot, grid);
             Sprite fallbackPortrait = uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
@@ -1357,7 +1357,16 @@ namespace Zjcs.Presentation.World
                 _ => fallbackPortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
                 (_, __) => "idle_01",
-                (root, unit) => root.localScale = new Vector3(unit.Direction == 1 ? -1f : 1f, 1f, 1f));
+                (root, unit) =>
+                {
+                    Vector3 scale = root.localScale;
+                    scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
+                    root.localScale = scale;
+                });
+            battleController.AttachUnitTransform(1, avatar.transform);
+            battleController.ConfigureSpeeds(
+                OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
+                IsBattleSpeedConditionMet);
             battleStepTimer = 0.8f;
             pendingInteraction = entity;
             battleCompletion = completed;
@@ -1608,18 +1617,6 @@ namespace Zjcs.Presentation.World
             return result;
         }
 
-        private void OnBattleStep(FightBattleExecutionResult result)
-        {
-            if (result == null || result.Event == null) return;
-            FightBattleUnitState player = result.Checkpoint.Units.FirstOrDefault(value => value.Id == 1);
-            if (player != null && avatar != null)
-            {
-                avatar.transform.position = battleRoot.TransformPoint(new Vector3(
-                    result.Checkpoint.Grid.OriginX + player.X,
-                    result.Checkpoint.Grid.OriginY + player.Y,
-                    result.Checkpoint.Grid.OriginZ));
-            }
-        }
 
         private void OnBattleHudControl(string path)
         {
@@ -1627,16 +1624,6 @@ namespace Zjcs.Presentation.World
                 LeaveBattle();
         }
 
-        private void UpdateAvatarFromBattle()
-        {
-            FightBattleUnitState player = battleController == null || battleController.Checkpoint == null
-                ? null : battleController.Checkpoint.Units.FirstOrDefault(value => value.Id == 1);
-            if (player == null || battleRoot == null) return;
-            avatar.transform.position = battleRoot.TransformPoint(new Vector3(
-                battleController.Checkpoint.Grid.OriginX + player.X,
-                battleController.Checkpoint.Grid.OriginY + player.Y,
-                battleController.Checkpoint.Grid.OriginZ));
-        }
 
         private void FinishBattle()
         {
@@ -1714,7 +1701,6 @@ namespace Zjcs.Presentation.World
             battleCompletion = null;
             if (battleController != null)
             {
-                battleController.StepCompleted -= OnBattleStep;
                 battleController.HudControlClicked -= OnBattleHudControl;
                 battleController.DisposeSession();
                 Destroy(battleController.gameObject);
@@ -2375,7 +2361,6 @@ namespace Zjcs.Presentation.World
             if (entityView != null) entityView.EntitySelected -= OnEntitySelected;
             if (battleController != null)
             {
-                battleController.StepCompleted -= OnBattleStep;
                 battleController.HudControlClicked -= OnBattleHudControl;
                 battleController.DisposeSession();
                 Destroy(battleController.gameObject);
@@ -2415,6 +2400,17 @@ namespace Zjcs.Presentation.World
                 .Select(value => new FightPropertyValue { Id = value.Key, Value = value.Value }).ToList();
         }
 
+        /// <summary>
+        /// Evaluates the official condition ids attached to the battle speed table against the local
+        /// character. Types this save cannot prove stay locked instead of opening for free.
+        /// </summary>
+        private bool IsBattleSpeedConditionMet(int conditionId)
+        {
+            var context = new OfficialConditionContext { Level = progression.Player.Level };
+            foreach (int mapClassId in progression.Player.UnlockedMapClassIds)
+                context.UnlockedMapClassIds.Add(mapClassId);
+            return progression.Catalog.EvaluateCondition(conditionId, context);
+        }
         private static long Property(IDictionary<int, long> properties, int id)
         {
             return properties.TryGetValue(id, out long value) ? value : 0;

@@ -106,7 +106,7 @@
 
 [`FightOfficialCombatCatalog`](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs) 从随工程交付的 Combat JSON 及来源清单装配单位、技能、命中图与状态数据。目录绑定和编辑器规则入口在 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs) 与 [`FightCombatValidation.cs`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)。规则数据位于 [`Assets/Official/Combat`](../../unity/Assets/Official/Combat/)；其来源清单记录原始来源及转换输出。
 
-[`FightBattleGrid`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs) 保存格网地形、占位与边阻挡，并按官方 `AStarUtils` 的四方向代价和 MoveMask 规则计算路径；[`FightBattleExecutor`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) 在技能超出范围时按 MoveDist 尝试移动，再重新选择目标。每个单位回合按技能槽检查可用技能，技能状态记录施放、次数限制与冷却，步骤事件记录移动、施放和目标。Map10 的 `BuildCheckpoint` 已从战斗 JSON 装配基础格网、出生位置和波次；当前位置只在步骤结束后直接赋给模型，未消费路径事件恢复逐格移动演出，也未完整消费地形、身体占格及阵型字段。
+[`FightBattleGrid`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs) 保存格网地形、占位与边阻挡，并按官方 `AStarUtils` 的四方向代价和 MoveMask 规则计算路径；[`FightBattleExecutor`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) 在技能超出范围时按 MoveDist 尝试移动，再重新选择目标。每个单位回合按技能槽检查可用技能，技能状态记录施放、次数限制与冷却，步骤事件记录移动、施放和目标。Map10 的 `BuildCheckpoint` 已从战斗 JSON 装配基础格网、出生位置和波次；`OfficialBattleSceneView` 现按步骤 `Movements` 的逐格路径以官方移动节奏推进模型位置，地图 avatar 通过 `AttachUnitTransform` 交给同一套移动播放，不再逐步瞬移。地形高度、身体占格与阵型字段仍未完整消费。
 
 跨波次生成与可选状态已统一：`FightBattleTargeting.IsSelectable` 要求单位存活、可选中且不属于未生成的后续波次，目标选择、命中目标收集与移动占位共用这一判定；`FightBattleExecutor.Initialize` 将后续波次单位标为 `Ended` 并排除出行动队列，`SpawnNextWaveIfCleared` 在清场后恢复生成、入队和可选中状态。`FightBattleCheckpointRules.Validate` 在恢复及步骤结束时校验“后续波次不得标记已生成、其单位必须 Ended”。无可用技能的单位不再伪造跨图普攻，改为不造成伤害，避免绕过范围、消耗与命中图。
 
@@ -114,15 +114,17 @@
 
 公共 HUD 的官方 prefab 树、sprite、字体和 Spine 骨骼输入由 [`prepare_unity_battle_assets.py`](../../scripts/prepare_unity_battle_assets.py) 按来源哈希恢复到 `Assets/Official/Combat`；当前已恢复的 HUD 子集有30个 prefab、701个 sprite。[`OfficialBattleHudCatalog`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs)、[`OfficialBattleHudRenderer`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs) 和 [`OfficialBattleHudView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs) 已有隔离 Unity 工程导入及逐 prefab UI 组件树检查。视图支持回合文本、按 `GameRoundUI` 的 NextTime 排序和间距参数呈现行动时间轴、技能图标、冷却、次数耗尽态，并可由步骤事件刷新行动态和技能施放态。玩家已有实际技能，技能栏可显示技能图标与冷却；Map10 仍把技能图标和时间轴头像解析成同一张 `C_none` 占位图，未传阵营图标，因此不能以视图接口存在认定 HUD 的实际内容已接通。原版 `GameSkillIcon` 的常规技能图标不是手动施法按钮，prefab 中 `DebugBtn` 保持禁用。
 
-怪物外观来源已恢复为407个 Spine 模型绑定，343个怪物 ID 映射见 `OfficialBattleModelCatalog` 及 `model-identities.json`；[`OfficialBattleSceneView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs) 可按调用端提供的模型键和网格映射实例化骨骼，并按 `Spawned` 延迟显示后续波次。Map10 对玩家返回空模型键，继续使用地图 avatar；对怪物调用模型目录解析，但把所有步骤动画固定为 `idle_01`，朝向回调还会覆盖目录缩放。当前视图直接依赖 `Spine.Unity.SkeletonAnimation`，尚未落实角色动画的[原生转换方案](../asset-management.md#spine-角色动画迁移决策)。模型绑定数不代表贴图、实际尺寸、动作及画面已通过。
+怪物外观来源已恢复为407个 Spine 模型绑定，343个怪物 ID 映射见 `OfficialBattleModelCatalog` 及 `model-identities.json`；[`OfficialBattleSceneView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs) 可按调用端提供的模型键和网格映射实例化骨骼，并按 `Spawned` 延迟显示后续波次，同时把步骤移动路径按每格0.5秒的节奏插值到模型或已挂接的 avatar。Map10 对玩家返回空模型键，改用地图 avatar 并经 `AttachUnitTransform` 驱动；对怪物调用模型目录解析，但把所有步骤动画固定为 `idle_01`。朝向回调改为保留模型目录缩放、只翻转 X 轴符号，此前覆盖缩放的问题已修。当前视图直接依赖 `Spine.Unity.SkeletonAnimation`，尚未落实角色动画的[原生转换方案](../asset-management.md#spine-角色动画迁移决策)。模型绑定数不代表贴图、实际尺寸、动作及画面已通过。
 
-[`OfficialBattleRuntimeController`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs) 提供共用战斗会话入口：`Begin` 可新建或恢复检查点，`Advance` 执行下一步并刷新官方回合文本、行动时间轴、技能槽及战斗模型；`StepCompleted` 和 `HudControlClicked` 将步骤及官方面板交互转交给玩法入口。控制器要求入口传入检查点、网格映射、技能／时间轴图标、角色模型键、动作及朝向绑定；它不代替各玩法的阶段数据装配。`OfficialBattleSceneView.Refresh` 现按 `FightBattleWaveState.Spawned` 延迟实例化未生成波次的单位。
+[`OfficialBattleRuntimeController`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs) 提供共用战斗会话入口：`Begin` 可新建或恢复检查点，`Advance` 执行下一步并刷新官方回合文本、行动时间轴、技能槽及战斗模型；`StepCompleted`、`HudControlClicked` 和 `SpeedChanged` 将步骤、面板交互与倍速变更转交给玩法入口。控制器要求入口传入检查点、网格映射、技能／时间轴图标、角色模型键、动作及朝向绑定；它不代替各玩法的阶段数据装配。`OfficialBattleSceneView.Refresh` 现按 `FightBattleWaveState.Spawned` 延迟实例化未生成波次的单位。
+
+倍速已按官方配置接通：`FightBattleSpeedSettings` 从 `game_settings.Battle` 读取 `Speeds`／`SpeedUIs`／`PlayModeSpeeds`，按钮文案与实际倍率分开；`ConfigureSpeeds` 用 `OfficialCharacterCatalog.EvaluateCondition` 判断速度所需官方条件（等级、地图解锁与组合条件，缺少依据的条件保持锁定），`CycleSpeed` 只在可用档位间切换，并通过 `Time.timeScale` 同步战斗步骤、移动插值与模型动画。HUD 已挂载官方 `FightMainPanelSpeedUI` 按钮，`RefreshSpeed` 绑定当前文案与锁定图标；`DisposeSession` 恢复时标。快进、阶段机、Pause 的业务语义与声音 RTPC 同步仍未接入。
 
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
-- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
+- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
-- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。之后的重跑未能启动，因为另一 Unity 实例正打开同一工程，未能在本轮确认编译与 Editor 规则入口结果。
+- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。随后另一 Unity 实例持续占用工程，未能在编辑器内重跑；改用该 Unity 版本的 Roslyn，以主工程已编译程序集与 UnityEngine 模块为引用分别编译 `Zjcs.Combat.Official`、`Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Offline.CharacterCreation`、`Zjcs.Presentation.Combat`、`Zjcs.Presentation.World`，均无编译错误。这不替代 Unity 编辑器自身的导入、域重载与 Play Mode。
 - Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
 
 ## 自定义实现
@@ -160,7 +162,7 @@
 - [ ] 按单位恢复 MoveMask、地面高度、身体多格占位、边阻挡、出生方向、Rotation、FlipX、ViewGroup 和阵型偏移；当前 `BuildCheckpoint` 只装配部分基础字段，不能使用统一可通行掩码替代单位差异。
 - [ ] 接入原准备阶段拖拽：阶段／阵营／队伍或助战／就绪／所有权门槛、允许区域、拾起放下、屏幕到格网、阈值、非法位置提示与回退，保留鼠标拖拽真实输入。自己的 NPC 站位与出战快照按[NPC 助战](npc-assistance.md)接线，不将普通队友控制权扩大。
 - [ ] 按 `ChangeBattlePosHandler` 恢复范围中心、偶数尺寸半格偏移、最近合法格、占位检查和允许的交换。原请求仅证明提交内容及回包处理；本地站位持久化和失败恢复需与对应入口贯通。
-- [ ] 将 `Movements.Path` 和技能 `SourceMoveList` 驱动逐格／逐段模型移动、计时、朝向与 Playable，恢复保持距离、传送、固定方向和移动中目标变化的适用配置；当前视图直接设终点。
+- [ ] 将技能 `SourceMoveList`、保持距离、传送、固定方向和移动中目标变化接入移动播放；`Movements.Path` 已按逐格节奏驱动模型与 avatar，但尚未消费官方每段移动时长、移动 Playable 和移动中目标变化。
 - [ ] 补齐目标种类、范围点顺序、可站立点、跟随／锁定、HitTargetActionType、角色类别与状态筛选。现有工具虽接受嘲讽／混乱参数，实际执行器未传对应状态，不能以接口存在视为已接入。
 - [ ] 接通 `AiPriorityId` 及其有效条件、属性排序与组别，保留已确认的确定性本地决策边界；不使用废弃字段或臆造缺少的服务端评分。
 - [ ] 恢复单位 collider、查询条件与玩家／NPC／怪物／宠物详情入口，验证 UI 遮挡不会点到场景目标；详情点击不新增手动施法。中途加入／灵魂拖拽仅在所属玩法确认保留时接线。
@@ -195,8 +197,8 @@
 
 ### 倍速与其他公共控件（F33—F38）
 
-- [ ] 接通倍速点击、有效档与条件解锁、模式／权限限制、按钮档位文案、当前档恢复与时标复位；使用原 `Speeds` 与 `SpeedUIs` 对应关系，不把文案2／3／4直接当实际2／3／4倍。
-- [ ] 让战斗调度、移动、命中／技能／死亡演出与原本应受倍率影响的 UI／声音响应同一速度；保留明确不缩放的控件时间。当前调度和时间轴主要使用未缩放时间，点击倍速没有业务处理。
+- [ ] 补齐倍速的模式／权限限制与部分档位：当前按官方 `Speeds`／`SpeedUIs`／`PlayModeSpeeds` 解析、按钮文案与倍率分离、条件按本地存档判断并在切换时应用 `Time.timeScale`；`RecordPlaybackSpeedDefaultIndex`、团队／成员／观战差异及当前档跨战斗恢复仍待接通。
+- [ ] 让战斗调度、命中／技能／死亡演出与原本应受倍率影响的 UI／声音响应同一速度；当前战斗步骤、移动插值和模型播放受 `Time.timeScale` 影响，时间轴仍使用未缩放时间，声音 Wwise RTPC 同步尚未接入。
 - [ ] 恢复快进显示条件、1秒延迟、允许阶段、防重、不可用与失败提示及停用复位；本地快进须消费同一状态与事件，不能跳过必要结算或假定等于切高倍速。
 - [ ] 接入镜头跟随／自由模式、准备限制、默认锁定与外部模式覆盖，恢复原相机坐标和范围，实际检查角色移动时的镜头行为。
 - [ ] 按所属玩法保留范围处理托管、战斗内背包及红点、后台切出、录像保存意愿、录像／剧情跳过。每项须贯通条件、状态、提示与本地持久化；未确定的模式行为先定位消费链，不补造规则。
@@ -206,8 +208,8 @@
 
 - [ ] 将玩家真实复合外观、职业／武器／装备／皮肤与 NPC、宠物、召唤物接入共用场景；当前 Map10 玩家模型键为空，仍沿用地图 avatar，模型身份表不能替代玩家组合外观。
 - [ ] 落实已确认的免费 Spine 数据迁移：复用官方贴图、骨骼、网格与动画，独立转换 Unity 原生动画，补齐播放／换装。当前场景视图直接依赖 `Spine.Unity.SkeletonAnimation`，不能把第三方 runtime 存在写成迁移完成。
-- [ ] 修复尺寸、方向和材质：目录缩放0.01被 Map10 朝向回调写为 `(±1,1,1)`，覆盖后放大100倍；核对 root、局部变换和翻转。Combat/Spine 材质文本核对的2620份中2555份主贴图为空，须查官方 atlas／纹理与绑定，不能据此认定源贴图缺失。
-- [ ] 根据角色和怪物实际动作／Playable 映射待机、生成、移动、施放、受击、死亡、复活及召唤。当前全部映射 `idle_01`，模型位置直接跳变，HP归零也未驱动完整死亡／移除；相同动画重播、延迟可见与中断也须恢复。
+- [ ] 修复尺寸、方向和材质：朝向回调已改为保留目录缩放、只翻转 X 轴符号；Combat/Spine 材质文本核对的2620份中2555份主贴图为空，须查官方 atlas／纹理与绑定，不能据此认定源贴图缺失。
+- [ ] 根据角色和怪物实际动作／Playable 映射待机、生成、移动、施放、受击、死亡、复活及召唤。当前全部映射 `idle_01`，移动位置已按路径插值但动作未切换，HP归零也未驱动完整死亡／移除；相同动画重播、延迟可见与中断也须恢复。
 - [ ] 还原命中范围、弹道／链式／来源到目标特效、挂点、层序、材质／shader、延时和销毁，并与每次施放／命中身份绑定，避免整回合只播放最终状态。
 - [ ] 接入19类已恢复飘字资源的实际伤害／治疗／免疫／闪避／致盲／CD 等事件、合并条件、位置与时长；恢复 Playable 关联音频及 Wwise 依赖／速度响应，采用有依据的 Windows 适配，不自行换近似音效或静态图。
 

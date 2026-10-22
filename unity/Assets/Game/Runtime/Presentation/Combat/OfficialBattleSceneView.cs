@@ -15,6 +15,17 @@ namespace Zjcs.Presentation.Combat
         private readonly Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent;
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
+        private readonly Dictionary<int, Transform> attachedTransforms = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, UnitMotion> motions = new Dictionary<int, UnitMotion>();
+        private readonly List<int> motionScratch = new List<int>();
+        private const float SecondsPerCell = 0.5f;
+
+        private sealed class UnitMotion
+        {
+            public List<Vector3> Points;
+            public float Elapsed;
+            public float Duration;
+        }
 
         private sealed class UnitView
         {
@@ -46,11 +57,17 @@ namespace Zjcs.Presentation.Combat
             {
                 if (state == null || !IsWaveSpawned(checkpoint, state.Id)) continue;
                 present.Add(state.Id);
+                if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
+                {
+                    PlaceUnit(state.Id, attached, state, stepEvent);
+                    orientUnit(attached, state);
+                    continue;
+                }
                 string key = modelKey(state);
                 if (string.IsNullOrEmpty(key)) continue;
                 UnitView view = GetOrCreate(state);
                 view.State = state;
-                view.Skeleton.transform.position = gridToWorld(new FightGridPoint(state.X, state.Y));
+                PlaceUnit(state.Id, view.Skeleton.transform, state, stepEvent);
                 orientUnit(view.Skeleton.transform, state);
                 if (stepEvent != null && (stepEvent.ActorId == state.Id
                     || (stepEvent.TargetIds != null && stepEvent.TargetIds.Contains(state.Id))))
@@ -66,7 +83,35 @@ namespace Zjcs.Presentation.Combat
             {
                 UnityEngine.Object.Destroy(units[id].Skeleton.gameObject);
                 units.Remove(id);
+                motions.Remove(id);
             }
+        }
+
+        /// <summary>
+        /// Attaches an existing transform (for example the map avatar used for the main player) to a
+        /// battle unit so the same grid movement playback drives it instead of teleporting it.
+        /// </summary>
+        public void AttachUnitTransform(int unitId, Transform transform)
+        {
+            if (transform == null) throw new ArgumentNullException(nameof(transform));
+            attachedTransforms[unitId] = transform;
+        }
+
+        public void DetachUnitTransform(int unitId)
+        {
+            attachedTransforms.Remove(unitId);
+            motions.Remove(unitId);
+        }
+
+        private void PlaceUnit(int unitId, Transform body, FightBattleUnitState state,
+            FightBattleStepEvent stepEvent)
+        {
+            Vector3 target = gridToWorld(new FightGridPoint(state.X, state.Y));
+            FightBattleMovementEvent movement = FindMovement(stepEvent, unitId);
+            if (movement != null && movement.Path != null && movement.Path.Count > 1)
+                BeginMotion(unitId, body, movement);
+            else if (!motions.ContainsKey(unitId))
+                body.position = target;
         }
 
         public void Play(int unitId, string animation, bool loop = false)
@@ -76,11 +121,72 @@ namespace Zjcs.Presentation.Combat
             Play(view, animation, loop);
         }
 
+        /// <summary>
+        /// Advances in-progress grid movement. Each cell takes the official move time; the caller
+        /// scales the delta with the battle speed so movement follows the same clock as combat.
+        /// </summary>
+        public void Tick(float deltaTime)
+        {
+            if (motions.Count == 0 || deltaTime <= 0f) return;
+            motionScratch.Clear();
+            motionScratch.AddRange(motions.Keys);
+            foreach (int unitId in motionScratch)
+            {
+                UnitMotion motion = motions[unitId];
+                Transform body = Body(unitId);
+                if (body == null)
+                {
+                    motions.Remove(unitId);
+                    continue;
+                }
+                motion.Elapsed += deltaTime;
+                float percent = motion.Duration <= 0f ? 1f : Mathf.Clamp01(motion.Elapsed / motion.Duration);
+                int segments = motion.Points.Count - 1;
+                float position = percent * segments;
+                int index = Mathf.Min(Mathf.FloorToInt(position), segments - 1);
+                float segment = position - index;
+                body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], segment);
+                if (percent >= 1f)
+                {
+                    body.position = motion.Points[motion.Points.Count - 1];
+                    motions.Remove(unitId);
+                }
+            }
+        }
+
+        private void BeginMotion(int unitId, Transform body, FightBattleMovementEvent movement)
+        {
+            var motion = new UnitMotion { Points = new List<Vector3>(movement.Path.Count) };
+            foreach (FightGridPoint point in movement.Path) motion.Points.Add(gridToWorld(point));
+            if (motion.Points.Count <= 1) return;
+            body.position = motion.Points[0];
+            motion.Duration = (motion.Points.Count - 1) * SecondsPerCell;
+            motions[unitId] = motion;
+        }
+
+        private Transform Body(int unitId)
+        {
+            if (attachedTransforms.TryGetValue(unitId, out Transform attached) && attached != null)
+                return attached;
+            return units.TryGetValue(unitId, out UnitView view) && view.Skeleton != null
+                ? view.Skeleton.transform : null;
+        }
+
+        private static FightBattleMovementEvent FindMovement(FightBattleStepEvent stepEvent, int unitId)
+        {
+            if (stepEvent == null || stepEvent.Movements == null) return null;
+            foreach (FightBattleMovementEvent movement in stepEvent.Movements)
+                if (movement != null && movement.UnitId == unitId) return movement;
+            return null;
+        }
+
         public void Dispose()
         {
             foreach (UnitView view in units.Values)
                 if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
             units.Clear();
+            motions.Clear();
+            attachedTransforms.Clear();
         }
 
         private UnitView GetOrCreate(FightBattleUnitState state)

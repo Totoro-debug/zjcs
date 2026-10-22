@@ -89,6 +89,38 @@ namespace Zjcs.Combat.Official
         public int CooldownPropertyId => cooldownPropertyId;
 
         /// <summary>
+        /// Official battle speed table, populated together with the damage formula from
+        /// <c>rules.json → game_settings.Battle</c>.
+        /// </summary>
+        public FightBattleSpeedSettings SpeedSettings { get; private set; }
+
+        private static FightBattleSpeedSettings ReadSpeedSettings(Dictionary<string, object> battle)
+        {
+            var settings = new FightBattleSpeedSettings();
+            foreach (object value in Array(Required(battle, "Speeds"), "Battle.Speeds"))
+                settings.Speeds.Add(Convert.ToDouble(value, CultureInfo.InvariantCulture));
+            foreach (object value in Array(Required(battle, "SpeedUIs"), "Battle.SpeedUIs"))
+                settings.Labels.Add(Convert.ToString(value, CultureInfo.InvariantCulture));
+            foreach (object item in Array(Required(battle, "PlayModeSpeeds"), "Battle.PlayModeSpeeds"))
+            {
+                Dictionary<string, object> mode = Object(item, "Battle.PlayModeSpeeds entry");
+                var parsed = new FightBattleSpeedMode { Type = Int(mode, "Type") };
+                foreach (object entryItem in Array(Required(mode, "Speeds"), "Battle.PlayModeSpeeds speeds"))
+                {
+                    Dictionary<string, object> entry = Object(entryItem, "Battle.PlayModeSpeeds speed");
+                    var speed = new FightBattleSpeedEntry { Index = Int(entry, "SpeedIndex") };
+                    speed.Conditions.AddRange(IntArray(entry, "Conditions"));
+                    parsed.Speeds.Add(speed);
+                }
+                settings.Modes.Add(parsed);
+            }
+            settings.RecordPlaybackDefaultIndex = Int(battle, "RecordPlaybackSpeedDefaultIndex");
+            if (!settings.IsValid)
+                throw new FormatException("Official battle speed configuration is incomplete.");
+            return settings;
+        }
+
+        /// <summary>
         /// Passive skill properties (<c>BattleFormula.CalcSkillPassiveProps</c>) from the skill item
         /// row's passive rank/level/factor configuration. The result is merged into the owner's
         /// battle properties before MaxHp, speed and move distance are derived.
@@ -134,6 +166,7 @@ namespace Zjcs.Combat.Official
 
             Dictionary<string, object> gameSettings = Object(Required(rules, "game_settings"), "game_settings");
             Dictionary<string, object> battleSettings = Object(Required(gameSettings, "Battle"), "Battle settings");
+            SpeedSettings = ReadSpeedSettings(battleSettings);
             var config = new FightDamageFormulaConfig
             {
                 FixedDamageLimitPercent = Int(battleSettings, "FixedDmgLimitPercent"),
