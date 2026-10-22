@@ -117,7 +117,7 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
 
-                ExecuteSkill(actor, skill, targets, damageEvents, out float castLastDelay);
+                ExecuteSkill(actor, skill, targets, damageEvents, movements, out float castLastDelay);
                 skillState.RunSkill(skill.Slot);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration, ResolveDuration(skill, castLastDelay));
@@ -209,7 +209,7 @@ namespace Zjcs.Combat.Official
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleDamageEvent> damageEvents,
-            out float lastDelay)
+            List<FightBattleMovementEvent> movements, out float lastDelay)
         {
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = skill.Hits;
@@ -281,7 +281,101 @@ namespace Zjcs.Combat.Official
                     checkpoint.Statistics.RecordHit(damage);
                 }
             }
+            ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
             FightDamageFalloff.EndCast(units, skill);
+        }
+
+        /// <summary>
+        /// Applies official FightSKillMoveCfg self displacement. Only the direction/target cases that
+        /// can be resolved without the move-behaviour entity and subclass move conditions are applied:
+        /// Distance -1 pulls the caster next to the target, and Distance >= 0 with
+        /// RelativeToTarget moves that many cells toward/away from the target.
+        /// </summary>
+        private void ApplySourceMoves(FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            List<FightBattleUnitState> targets, List<FightBattleMovementEvent> movements,
+            ref float lastDelay)
+        {
+            if (skill.SourceMoves == null || skill.SourceMoves.Count == 0) return;
+            if (movements == null) return;
+            foreach (FightBattleSkillMove move in skill.SourceMoves)
+            {
+                if (move == null || move.HasConditions) continue;
+                FightBattleUnitState target = null;
+                foreach (FightBattleUnitState candidate in targets)
+                    if (candidate != null && candidate.Id != actor.Id) { target = candidate; break; }
+                if (target == null) continue;
+                if (move.Delay > lastDelay) lastDelay = move.Delay;
+                if (move.Distance < 0)
+                {
+                    MoveNextToTarget(actor, target, move, movements);
+                    continue;
+                }
+                if (move.Direction != 1) continue; // RelativeToSource / TowardsPathSides not modelled
+                int stepX = Math.Sign(target.X - actor.X);
+                int stepY = Math.Sign(target.Y - actor.Y);
+                if (!move.TowardsTargetPos) { stepX = -stepX; stepY = -stepY; }
+                if (move.CancelDiagonally && stepX != 0 && stepY != 0)
+                {
+                    if (Math.Abs(target.X - actor.X) >= Math.Abs(target.Y - actor.Y)) stepY = 0;
+                    else stepX = 0;
+                }
+                for (int distance = move.Distance; distance > 0; distance--)
+                {
+                    var desired = new FightGridPoint(actor.X + stepX * distance + move.OffsetX,
+                        actor.Y + stepY * distance + move.OffsetY);
+                    if (TryMoveActor(actor, desired, distance, movements)) break;
+                }
+            }
+        }
+
+        private void MoveNextToTarget(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleSkillMove move, List<FightBattleMovementEvent> movements)
+        {
+            var candidates = new List<FightGridPoint>
+            {
+                new FightGridPoint(target.X + move.OffsetX, target.Y + move.OffsetY - 1),
+                new FightGridPoint(target.X + move.OffsetX - 1, target.Y + move.OffsetY),
+                new FightGridPoint(target.X + move.OffsetX + 1, target.Y + move.OffsetY),
+                new FightGridPoint(target.X + move.OffsetX, target.Y + move.OffsetY + 1)
+            };
+            candidates.Sort((left, right) =>
+                (Math.Abs(left.X - actor.X) + Math.Abs(left.Y - actor.Y))
+                .CompareTo(Math.Abs(right.X - actor.X) + Math.Abs(right.Y - actor.Y)));
+            HashSet<FightGridPoint> occupied = OccupiedPositions(actor.Id);
+            FightBattleGrid grid = checkpoint.Grid;
+            if (grid == null) return;
+            foreach (FightGridPoint candidate in candidates)
+            {
+                if (!grid.CanStand(candidate, actor.MoveMask, occupied)) continue;
+                if (!grid.Contains(candidate)) continue;
+                if (TryMoveActor(actor, candidate, 64, movements)) return;
+            }
+        }
+
+        private bool TryMoveActor(FightBattleUnitState actor, FightGridPoint desired, int maxStep,
+            List<FightBattleMovementEvent> movements)
+        {
+            FightBattleGrid grid = checkpoint.Grid;
+            if (grid == null || maxStep <= 0) return false;
+            HashSet<FightGridPoint> occupied = OccupiedPositions(actor.Id);
+            var start = new FightGridPoint(actor.X, actor.Y);
+            List<FightGridPoint> path = grid.FindPath(start, desired, actor.MoveMask,
+                maxStep + 1, 0, true, actor.BodyOffsets, occupied);
+            if (path == null || path.Count <= 1) return false;
+            int steps = Math.Min(maxStep, path.Count - 1);
+            var movement = new FightBattleMovementEvent { UnitId = actor.Id };
+            movement.Path.Add(start);
+            for (int i = 1; i <= steps; i++)
+            {
+                FightGridPoint previous = path[i - 1];
+                FightGridPoint next = path[i];
+                actor.Direction = Direction(previous, next);
+                actor.X = next.X;
+                actor.Y = next.Y;
+                movement.Path.Add(next);
+            }
+            movements.Add(movement);
+            return true;
         }
 
         /// <summary>

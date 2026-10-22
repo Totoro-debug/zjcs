@@ -229,6 +229,7 @@ namespace Zjcs.Combat.Official
                 HitGraphEntities = new List<FightBattleHitEntity>()
             };
 
+            AddSourceMoves(skill, result.SourceMoves);
             var pending = new Queue<int>();
             var visited = new HashSet<int>();
             var references = new Dictionary<int, FightBattleHitReference>();
@@ -619,6 +620,43 @@ namespace Zjcs.Combat.Official
             if (!entities.TryGetValue(id, out value))
                 throw new KeyNotFoundException("Official combat entity is absent: " + id);
             return value;
+        }
+
+        private static void AddSourceMoves(Dictionary<string, object> skill,
+            List<FightBattleSkillMove> output)
+        {
+            object raw;
+            if (!skill.TryGetValue("SourceMoveList", out raw) || raw == null) return;
+            foreach (object item in Array(raw, "SourceMoveList"))
+            {
+                Dictionary<string, object> row = Object(item, "skill move");
+                int offsetX = 0;
+                int offsetY = 0;
+                if (row.TryGetValue("Offset", out object offsetValue) && offsetValue != null)
+                {
+                    Dictionary<string, object> offset = Object(offsetValue, "skill move offset");
+                    offsetX = Int(offset, "X");
+                    offsetY = Int(offset, "Y");
+                }
+                bool hasConditions = false;
+                if (row.TryGetValue("DoMoveConditions", out object conditions) && conditions != null)
+                    hasConditions = Array(conditions, "DoMoveConditions").Count > 0;
+                output.Add(new FightBattleSkillMove
+                {
+                    MoveBehaviourId = Int(row, "MoveBehaviourId"),
+                    Delay = Float(row, "Delay", 0f),
+                    OffsetX = offsetX,
+                    OffsetY = offsetY,
+                    TowardsTargetPos = Bool(row, "TowardsTargetPos"),
+                    Direction = Int(row, "SkillMoveDirection"),
+                    Distance = Int(row, "Distance", -1),
+                    BasePercent = Float(row, "BasePercent", 1f),
+                    AffectedByProp = Bool(row, "AffectedByProp"),
+                    CancelDiagonally = Bool(row, "CancelDiagonally"),
+                    HasConditions = hasConditions
+                });
+            }
+            output.Sort((left, right) => left.Delay.CompareTo(right.Delay));
         }
 
         private FightBattleHitEntity CreateHitEntity(int id, Dictionary<string, object> components,
