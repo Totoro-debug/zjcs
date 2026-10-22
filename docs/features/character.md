@@ -35,6 +35,24 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - 将已恢复的官方人物页/衣柜 prefab 层级、坐标、控件字段、人物模型/动画及音效接入 Unity；完成类别、称号、筛选、互斥、装备外观回退、染色、时限显示与到期卸下、收藏经验及衣柜属性交互。
 - 在 Unity 中执行资源导入、目录绑定、规则核对和运行验收，覆盖正常操作、动画/音效、读档恢复及事务失败回滚；静态检查和既有引擎结果不替代 Unity 验收。
 
+### 人物界面与官方调用关系的差异
+
+人物界面尚未完整迁移。以下按固定版客户端源码、当前 Unity 运行时代码和实际载荷核对；“已接线”不代表已通过实际输入、画面或存档恢复验收。装备、技能和幻兽的完整规则范围分别见[装备](equipment.md)、[技能](skills.md)与[幻兽](pets.md)。
+
+| 范围 | 官方调用关系 | 当前实现与缺口 |
+| --- | --- | --- |
+| 人物模型 | `CharacterPanel.RefreshAppearance`、`SwitchAnimCallBack`、`AppendAppearanceContent.PlayAnim/GetSwitchAnimData/GetLoopAnimData` | `CharacterModelPreview` 已接衣柜解析和网格播放；运行包仅含男女 `100/idle_01`、`200/idle_01` 四份姿态。目录中职业 0–30 的 profile 记录不能代表职业切换流程或全部动作已接通；衣柜分类 `show_*` 切换和 `appearance` 循环、HSV 材质/遮罩、人物页称号及实际装备驱动的外观同步仍缺失。模型还采用按包围盒缩放居中，尚未完成与官方画面的比例、位置核验。 |
+| 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext` 合并分块并更新战力 | `OfficialCharacterPanelView.Refresh` 只更新等级、经验、位阶；属性按钮只构建弹窗模板，未绑定综合数值、细分来源、页签或说明。`BaseBattleProperties` 与 `AppearanceProperties` 已有数据接口，Map10 战斗调用基础值并累加衣柜值，但尚无人物页/战斗共用的完整分块属性与评分管线。 |
+| 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 空槽候选或已穿详情 | 官方五槽为主武器、副武器、头盔、衣服、靴子。当前人物 UI 未绑定五槽实例、图标、强化/星石状态、副武器职业解锁或点击入口；`OfflineEquipmentOperations` 有穿脱等规则，仍未由人物页调用。穿脱只改 `Equipment.Equipped`，未同步官方 `PlayerAppearanceHandler.Player_OnEquipUpdate` 对应的武器外观；衣柜解析读取的 `Wardrobe.WornSkins` 尚未与实际装备连接。 |
+| 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 人物按钮仅发出 `OfficialModuleRequested("skills")`，`CharacterFeatureRuntime` 转发 `NavigationRequested`，创建流程没有订阅该事件。`OfflineSkillProgression` 已有安装/替换/卸下与培养规则，但 `OfflineSkillProfile` 未进入统一人物主存档，技能运行面板、槽位交互、方案选择和战斗读取未接通。 |
+| 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
+| 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
+| 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮只有未被消费的 `profession` 事件；储存经验规则按钮的 `StoredExperienceHelpRequested` 亦无接收方。成长操作已有服务，不能据此认定职业、位阶教学、材料说明和领取表现全部还原。 |
+
+共享界面还存在两项直接影响完整性的代码缺口：`OfficialCharacterPanelView.BuildNode` 没有恢复目录中的布局组、`ContentSizeFitter`、`ScrollRect`、原 TMP 字体/材质、状态切换器或按钮音效，仅创建基础 Image/Text/Button/Mask/LayoutElement/Slider；`CloseDialog` 清空索引后重新 `BuildNode(characterRoot, transform)`，却不销毁既有主页，反复关闭属性/位阶弹窗会累积主页层级。上述为源码可确认的问题，尚未在实际画面中复现。
+
+验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（22,050 个 GUID）；`character-models.zip` 内清单登记的 7,566 个载荷 SHA256 全部一致。Unity `2022.3.57f1c2` 在尝试执行 `Zjcs.Editor.ProjectTools.Validate` 前编译失败：`OfficialMap10GameRuntime` 缺少 `PlayMapTalkDialog` 且 `PlayStory` 参数不匹配，`CommerceFeatureRuntime` 两处 `CommerceTransactionResult` 构造参数不匹配且缺少 `ActivateFirstPurchase`。因此本次没有执行该 Editor 校验方法、Play Mode 逻辑/真实输入/画面/存档恢复或 Windows Player 验证；本节是代码与载荷检查结论。
+
 ### 待迁移的规则与表现
 
 以下要求均须在 Unity 中重新接入和验证；它们描述迁移目标，不构成当前实现结论。
