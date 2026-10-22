@@ -306,6 +306,19 @@ namespace Zjcs.Editor.Character
             Require(skillRules.Skills.Length == 394
                 && loaded.FindItem(10000) != null && loaded.ItemIconUri(10000).Length > 0,
                 "Load the official skill definitions, skill item and skill icon");
+            OfficialSkillRecommendationSet recommendations = assetCatalog.LoadSkillRecommendations();
+            var skillIds = new HashSet<int>(skillRules.Skills.Select(value => value.ClassId));
+            Require(recommendations.recommendations.Length > 0
+                && recommendations.recommendations.All(value => value != null
+                    && loaded.ProfessionName(value.Profession).Length > 0
+                    && value.ActiveSkillList.All(skillIds.Contains)
+                    && value.PassiveSkillList.All(skillIds.Contains)),
+                "Load official skill recommendations with valid professions and skill ids");
+            Require(loaded.FindItem(5001) != null && loaded.ItemIconUri(5001).Length > 0
+                && loaded.FindItem(41300) != null && loaded.ItemIconUri(41300).Length > 0,
+                "Load official gem and equipment upgrade material items with icons");
+            Require(loaded.ProfessionName(1).Length > 0 && loaded.ProfessionIconUri(1).Length > 0,
+                "Load the official profession name and icon");
             Require(loaded.Rows("system_level_limit").Any(row => Convert.ToInt32(row["SubRank"],
                     System.Globalization.CultureInfo.InvariantCulture) == 1
                     && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
