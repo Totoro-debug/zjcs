@@ -216,6 +216,24 @@ namespace Zjcs.Editor.Commerce
             yield return WaitUntil(() => FindByName("CommerceActivity_daily") != null, "The activity entries did not populate.");
             yield return Capture("commerce-03-activity");
 
+            ClickByName("DirectPayTabItem");
+            yield return WaitFrames(2);
+            ClickUnder("AccumulatedPayEntryGo", "BgImg");
+            yield return WaitUntil(() => FindByName("CommerceAccumulated") != null,
+                "The accumulated-pay page did not open.");
+            yield return WaitFrames(2);
+            yield return Capture("commerce-03b-accumulated");
+            int accumulatedRows = 0;
+            foreach (Transform transform in UnityEngine.Object.FindObjectsOfType<Transform>(true))
+                if (transform.name.StartsWith("Accumulated_", StringComparison.Ordinal)
+                    && transform.gameObject.activeInHierarchy) accumulatedRows++;
+            Require(accumulatedRows >= 75, "The accumulated page did not show all 15 groups.");
+            ClickInDialog("CommerceAccumulated", "CloseBtn");
+            yield return WaitFrames(2);
+            Require(FindByName("CommerceAccumulated") == null, "The accumulated page did not close.");
+            ClickByName("ActivityEntryTabItem");
+            yield return WaitFrames(2);
+
             ClickByName("CommerceActivity_daily");
             yield return WaitUntil(() => FindByName("CommerceDaily") != null, "The daily gift dialog did not open.");
             yield return WaitFrames(2);
@@ -377,6 +395,23 @@ namespace Zjcs.Editor.Commerce
             foreach (Transform transform in UnityEngine.Object.FindObjectsOfType<Transform>(true))
                 if (transform.name == name && transform.gameObject.activeInHierarchy) return transform.gameObject;
             return null;
+        }
+
+        private static void ClickUnder(string parentName, string childName)
+        {
+            foreach (Transform parent in UnityEngine.Object.FindObjectsOfType<Transform>(true))
+            {
+                if (parent.name.Trim() != parentName) continue;
+                foreach (Transform child in parent.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child.name.Trim() != childName) continue;
+                    Button button = child.GetComponent<Button>();
+                    if (button == null) continue;
+                    Click(button);
+                    return;
+                }
+            }
+            throw new InvalidOperationException("The official control was not found under " + parentName + ": " + childName);
         }
 
         private static void ClickByName(string name)
