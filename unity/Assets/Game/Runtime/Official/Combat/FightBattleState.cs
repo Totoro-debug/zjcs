@@ -181,6 +181,9 @@ namespace Zjcs.Combat.Official
         public long DamageParam;
         public int TargetMode;
         public int RandomCount = 1;
+        // Official ActionType from FightHitBaseComponentInfo.DamageActionType: 4 Damage, 5 Cure,
+        // 0 None. Synthetic definitions default to Damage.
+        public int ActionType = 4;
         public float Delay;
         public float DelayDistFactor;
         public int Anchor;
@@ -217,6 +220,7 @@ namespace Zjcs.Combat.Official
         public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
+        public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         public bool AllowEmptyScope;
     }
