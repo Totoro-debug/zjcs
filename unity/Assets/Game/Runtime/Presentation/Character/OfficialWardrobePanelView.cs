@@ -716,7 +716,7 @@ namespace Zjcs.Presentation.Character
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
             Text text = textObject.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = 26;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = Color.white;
@@ -875,7 +875,7 @@ namespace Zjcs.Presentation.Character
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             Text text = textObject.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = size;
             text.color = new Color32(46, 43, 39, 255);
             text.alignment = TextAnchor.MiddleLeft;
@@ -895,7 +895,7 @@ namespace Zjcs.Presentation.Character
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             Text text = go.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = 20;
             text.color = new Color32(255, 231, 179, 255);
             text.alignment = TextAnchor.MiddleCenter;
@@ -1012,7 +1012,7 @@ namespace Zjcs.Presentation.Character
             if (source.text != null)
             {
                 Text text = instance.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                text.font = CharacterPanelNodeFactory.UiFont;
                 string localized = string.IsNullOrEmpty(source.localization_key)
                     ? string.Empty : LookupText(source.localization_key);
                 text.text = string.IsNullOrEmpty(localized) ? source.text.value ?? string.Empty : localized;
@@ -1188,7 +1188,7 @@ namespace Zjcs.Presentation.Character
             rect.sizeDelta = new Vector2(160f, 24f);
             rect.anchoredPosition = offset;
             Text text = obj.GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = size;
             text.alignment = alignment;
             text.horizontalOverflow = HorizontalWrapMode.Overflow;
@@ -1229,7 +1229,7 @@ namespace Zjcs.Presentation.Character
             }
             Text text = found.GetComponent<Text>();
             if (text == null) text = found.gameObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = size;
             text.color = new Color32(45, 39, 33, 255);
             text.alignment = TextAnchor.MiddleCenter;
@@ -1255,7 +1255,7 @@ namespace Zjcs.Presentation.Character
             }
             Text text = found.GetComponent<Text>();
             if (text == null) text = found.gameObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = CharacterPanelNodeFactory.UiFont;
             text.fontSize = title ? 12 : 11;
             text.color = new Color32(118, 91, 61, 255);
             text.alignment = TextAnchor.MiddleCenter;
