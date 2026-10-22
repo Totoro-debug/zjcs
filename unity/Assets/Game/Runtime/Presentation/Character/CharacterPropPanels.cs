@@ -30,6 +30,7 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> dialogBindings;
         private Dictionary<string, object> overview;
         private GameObject dialog;
+        private GameObject detailDialog;
         private RectTransform summarySlot;
         private readonly List<GameObject> summaryRows = new List<GameObject>();
 
@@ -89,6 +90,7 @@ namespace Zjcs.Presentation.Character
                 GameObject row = CreateRow(CharacterModelPackage.AsObject(overview["row"], "character row"),
                     summarySlot, namePath, valuePath, linePath, definition.Name, FormatValue(definition, value, relative));
                 if (row == null) continue;
+                AttachDetail(row, definition);
                 summaryRows.Add(row);
                 index++;
             }
@@ -189,9 +191,110 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (detailDialog != null)
+            {
+                CloseDetail();
+                return true;
+            }
             if (dialog == null) return false;
             CloseDialog();
             return true;
+        }
+
+        private void CloseDetail()
+        {
+            if (detailDialog != null) Destroy(detailDialog);
+            detailDialog = null;
+        }
+
+        private void ShowPropDetail(OfficialPropDefinition definition)
+        {
+            if (definition == null) return;
+            CloseDetail();
+            Dictionary<string, object> panels = CharacterModelPackage.AsObject(
+                OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "panels");
+            Dictionary<string, object> screens = CharacterModelPackage.AsObject(panels["screens"], "screens");
+            Dictionary<string, object> detailScreen = CharacterModelPackage.AsObject(screens["character_props"],
+                "character_props");
+            detailDialog = new GameObject("CharacterPropDetail", typeof(RectTransform));
+            detailDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)detailDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("DetailBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.45f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseDetail);
+            var panel = new GameObject("PropDetailDialog", typeof(RectTransform));
+            panel.transform.SetParent(root, false);
+            RectTransform panelRect = (RectTransform)panel.transform;
+            panelRect.anchorMin = Vector2.zero;
+            panelRect.anchorMax = Vector2.one;
+            panelRect.offsetMin = Vector2.zero;
+            panelRect.offsetMax = Vector2.zero;
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailScreen), panelRect, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = definition.EntryName.Length > 0 ? definition.EntryName : definition.Name;
+            if (content != null)
+            {
+                foreach (RectTransform child in content) child.gameObject.SetActive(false);
+                Sprite icon = string.IsNullOrEmpty(definition.IconUri) ? null : assets.FindSprite(definition.IconUri);
+                if (icon != null)
+                {
+                    var iconObject = new GameObject("PropDetailIcon", typeof(RectTransform), typeof(Image));
+                    iconObject.transform.SetParent(content, false);
+                    RectTransform iconRect = (RectTransform)iconObject.transform;
+                    iconRect.anchorMin = new Vector2(0.5f, 0.86f);
+                    iconRect.anchorMax = new Vector2(0.5f, 0.86f);
+                    iconRect.sizeDelta = new Vector2(96f, 96f);
+                    Image image = iconObject.GetComponent<Image>();
+                    image.sprite = icon;
+                    image.preserveAspect = true;
+                }
+                var body = new GameObject("PropDetailText", typeof(RectTransform), typeof(Text));
+                body.transform.SetParent(content, false);
+                RectTransform bodyRect = (RectTransform)body.transform;
+                bodyRect.anchorMin = new Vector2(0.08f, 0.08f);
+                bodyRect.anchorMax = new Vector2(0.92f, 0.78f);
+                bodyRect.offsetMin = Vector2.zero;
+                bodyRect.offsetMax = Vector2.zero;
+                Text text = body.GetComponent<Text>();
+                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.fontSize = 25;
+                text.color = Color.white;
+                text.supportRichText = true;
+                text.alignment = TextAnchor.UpperLeft;
+                text.horizontalOverflow = HorizontalWrapMode.Wrap;
+                text.text = string.IsNullOrEmpty(definition.Description)
+                    ? definition.Name : definition.Description;
+            }
+        }
+
+        private void AttachDetail(GameObject row, OfficialPropDefinition definition)
+        {
+            if (row == null || definition == null) return;
+            Image graphic = row.GetComponent<Image>();
+            if (graphic == null)
+            {
+                graphic = row.AddComponent<Image>();
+                graphic.color = new Color(1f, 1f, 1f, 0f);
+            }
+            Button button = row.GetComponent<Button>() ?? row.AddComponent<Button>();
+            button.targetGraphic = graphic;
+            button.onClick.AddListener(() => ShowPropDetail(definition));
+            foreach (Button child in row.GetComponentsInChildren<Button>(true))
+                if (child != button) child.onClick.AddListener(() => ShowPropDetail(definition));
         }
 
         private void BuildOverall(RectTransform content, Dictionary<string, RectTransform> nodes)
@@ -220,6 +323,7 @@ namespace Zjcs.Presentation.Character
                     GameObject row = CreateRow(rowTemplate, slot,
                         "/Key", "/Text", "/Button", definition.Name, FormatValue(definition, value, relative));
                     if (row == null) continue;
+                    AttachDetail(row, definition);
                     count++;
                 }
                 if (title != null) title.gameObject.SetActive(count > 0);
@@ -270,6 +374,7 @@ namespace Zjcs.Presentation.Character
                     Image background = row.transform.childCount > 0
                         ? row.transform.GetChild(0).GetComponent<Image>() : null;
                     if (background != null) background.enabled = rows % 2 == 0;
+                    AttachDetail(row, definition);
                     rows++;
                 }
                 detailSlot.gameObject.SetActive(false);
