@@ -152,7 +152,7 @@ namespace Zjcs.Presentation.Home
             nodes[path] = gameObject;
 
             Image image = null;
-            if (source.image != null)
+            if (HasImage(source.image))
             {
                 image = gameObject.AddComponent<Image>();
                 Sprite sprite = source.image.sprite == null ? null : catalog.FindSprite(source.image.sprite.file);
@@ -163,22 +163,22 @@ namespace Zjcs.Presentation.Home
                 image.enabled = sprite != null;
                 image.raycastTarget = false;
             }
-            if (source.text != null) CreateText(source, gameObject);
+            if (HasText(source)) CreateText(source, gameObject);
             if (source.mask && image != null)
             {
                 Mask mask = gameObject.AddComponent<Mask>();
                 mask.showMaskGraphic = true;
             }
             if (source.rectmask2d) gameObject.AddComponent<RectMask2D>();
-            if (source.layout != null) CreateLayout(source.layout, gameObject);
-            if (source.grid != null) CreateGrid(source.grid, gameObject);
+            if (HasLayout(source.layout)) CreateLayout(source.layout, gameObject);
+            if (HasGrid(source.grid)) CreateGrid(source.grid, gameObject);
             if (source.size_fitter != null && source.size_fitter.Length >= 2)
             {
                 ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
                 fitter.horizontalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(source.size_fitter[0], 0, 2);
                 fitter.verticalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(source.size_fitter[1], 0, 2);
             }
-            if (source.layout_element != null)
+            if (HasLayoutElement(source.layout_element))
             {
                 LayoutElement element = gameObject.AddComponent<LayoutElement>();
                 HomeUiLayoutElement model = source.layout_element;
@@ -190,7 +190,7 @@ namespace Zjcs.Presentation.Home
                 element.flexibleWidth = Pair(model.flexible, 0, -1f);
                 element.flexibleHeight = Pair(model.flexible, 1, -1f);
             }
-            if (source.aspect_fitter != null)
+            if (HasAspect(source.aspect_fitter))
             {
                 AspectRatioFitter fitter = gameObject.AddComponent<AspectRatioFitter>();
                 fitter.aspectMode = (AspectRatioFitter.AspectMode)Mathf.Clamp(source.aspect_fitter.mode, 0, 4);
@@ -223,12 +223,53 @@ namespace Zjcs.Presentation.Home
 
             foreach (HomeUiNode child in source.children ?? Array.Empty<HomeUiNode>())
                 Build(child, gameObject.transform, bind);
-            if (source.scroll != null) CreateScroll(source.scroll, gameObject);
+            if (HasScroll(source.scroll)) CreateScroll(source.scroll, gameObject);
             if (Array.IndexOf(source.scripts ?? Array.Empty<string>(), "Slider") >= 0) CreateSlider(gameObject);
             return gameObject;
         }
 
+        private static bool HasImage(HomeUiImage image)
+            => image != null && (image.sprite != null || image.color != null);
+
+        private static bool HasLayout(HomeUiLayout layout)
+            => layout != null && (layout.padding != null || layout.expand != null
+                || layout.control != null || layout.child_scale != null || layout.spacing > 0f);
+
+        private static bool HasGrid(HomeUiGrid grid)
+            => grid != null && (grid.cell != null || grid.spacing != null || grid.padding != null
+                || grid.count > 0 || grid.constraint > 0);
+
+        private static bool HasLayoutElement(HomeUiLayoutElement element)
+            => element != null && (element.min != null || element.preferred != null
+                || element.flexible != null || element.ignore);
+
+        private static bool HasAspect(HomeUiAspect aspect) => aspect != null && aspect.ratio > 0f;
+
+        private static bool HasScroll(HomeUiScroll scroll)
+            => scroll != null && (scroll.horizontal || scroll.vertical || scroll.sensitivity > 0f
+                || scroll.elasticity > 0f || scroll.deceleration > 0f);
+        private static bool HasText(HomeUiNode source)
+        {
+            if (source.text == null) return false;
+            return source.text.font_size > 0f
+                || !string.IsNullOrEmpty(source.text.value)
+                || !string.IsNullOrEmpty(source.localization_key);
+        }
         private void CreateText(HomeUiNode source, GameObject gameObject)
+        {
+            try
+            {
+                CreateTextCore(source, gameObject);
+            }
+            catch (Exception error)
+            {
+                throw new InvalidOperationException("Home UI text failed at " + (source.path ?? source.name)
+                    + " catalog=" + (catalog != null) + " text=" + (source.text != null)
+                    + " font=" + (catalog != null && catalog.Font != null), error);
+            }
+        }
+
+        private void CreateTextCore(HomeUiNode source, GameObject gameObject)
         {
             TextMeshProUGUI text = gameObject.AddComponent<TextMeshProUGUI>();
             text.font = catalog.Font;

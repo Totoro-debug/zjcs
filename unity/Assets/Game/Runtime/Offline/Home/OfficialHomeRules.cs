@@ -74,6 +74,7 @@ namespace Zjcs.Offline.Home
         public int effectFixedProp;
         public int maxStoreProp;
         public int finallyEffectPercentProp;
+        public bool initAutoUnlock;
         public int initialExtraRewardSeconds;
         public string icon;
     }

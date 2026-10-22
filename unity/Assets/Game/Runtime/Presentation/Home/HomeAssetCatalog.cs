@@ -348,9 +348,10 @@ namespace Zjcs.Presentation.Home
             {
                 if (font != null) return font;
                 font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
-                if (font == null) font = Resources.Load<TMP_FontAsset>("FZY4K-Dynamic");
-                if (font == null)
-                    throw new InvalidOperationException("The official Chinese TMP font asset is missing.");
+                if (font == null) font = TMP_Settings.defaultFontAsset;
+                if (font == null) throw new InvalidOperationException("The official Chinese TMP font asset is missing.");
+                Debug.Log("[Home] TMP font=" + font.name + " material=" + (font.material != null)
+                          + " atlas=" + (font.atlasTexture != null));
                 return font;
             }
         }

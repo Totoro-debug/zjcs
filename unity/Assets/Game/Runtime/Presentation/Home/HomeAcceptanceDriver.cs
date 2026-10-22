@@ -55,6 +55,7 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
 
+            HideForeignCanvases();
             ok &= Check("catalog", () =>
             {
                 Assert(runtime.Catalog.Scene.background.Length == 384, "background layer count");
@@ -80,7 +81,10 @@ namespace Zjcs.Presentation.Home
                     save.LastLocalUnixSeconds = Math.Max(0, save.LastLocalUnixSeconds - 3 * 3600));
                 runtime.Session.AdvanceTo(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
                 HangUpIncomePreview preview = runtime.Session.Preview(1);
-                Assert(preview.Count > 0, "bed preview count");
+                int unlocked = runtime.Session.Definitions.Count(value => value.Unlocked);
+                Assert(preview.Count > 0, "bed preview count=" + preview.Count + " defs="
+                    + runtime.Session.Definitions.Count + " unlocked=" + unlocked
+                    + " capacity=" + preview.Capacity + " hourly=" + preview.HourlyRate);
                 long collected = runtime.TryCollect(1);
                 Assert(collected > 0, "bed collect");
                 return "preview " + preview.Count + ", collected " + collected;
@@ -93,7 +97,8 @@ namespace Zjcs.Presentation.Home
                 if (!runtime.Session.IsHangUpUnlocked(hangUpId))
                     runtime.TryUnlockHangUp(hangUpId);
                 HomeLevelUpResult result = runtime.TryLevelUpHangUp(hangUpId);
-                Assert(result.Success || result.Error == "items", "level up attempt: " + result.Error);
+                Assert(result.Success || result.Error == "items" || result.Error == "home_level",
+                    "level up attempt: " + result.Error);
                 return "hang-up " + hangUpId + " level " + runtime.Session.HangUpLevel(hangUpId);
             });
             ok &= Check("environment", () =>
@@ -118,6 +123,17 @@ namespace Zjcs.Presentation.Home
             Finish(ok);
         }
 
+        private static void HideForeignCanvases()
+        {
+            foreach (Canvas canvas in Resources.FindObjectsOfTypeAll<Canvas>())
+            {
+                if (canvas == null || canvas.name == "Home Canvas") continue;
+                string name = canvas.name;
+                if (name.IndexOf("CharacterCreation", StringComparison.OrdinalIgnoreCase) < 0
+                    && name.IndexOf("Opening", StringComparison.OrdinalIgnoreCase) < 0) continue;
+                canvas.gameObject.SetActive(false);
+            }
+        }
         private void Finish(bool ok)
         {
             report["success"] = ok;

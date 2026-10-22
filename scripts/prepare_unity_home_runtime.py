@@ -205,7 +205,14 @@ def load_ui():
         OFFICIAL / "ui.json",
     ):
         data = read(source)
-        for key, panel in (data.get("panels") or {}).items():
+        source_panels = data.get("panels")
+        if not isinstance(source_panels, dict):
+            # ui.json stores panels directly under the top-level keys.
+            source_panels = {
+                key: value for key, value in data.items()
+                if isinstance(value, dict) and isinstance(value.get("root"), dict)
+            }
+        for key, panel in source_panels.items():
             if key in panels:
                 continue
             panels[key] = trim_prefab(panel)
@@ -317,6 +324,7 @@ def load_rules():
             "effectFixedProp": row.get("EffectFixedPropType"),
             "maxStoreProp": row.get("MaxStorePropType"),
             "finallyEffectPercentProp": row.get("FinallyEffectPercentPropType"),
+            "initAutoUnlock": bool(row.get("InitAutoUnlock")),
             "initialExtraRewardSeconds": row.get("InitialExtraRewardSeconds"),
             "icon": row.get("Icon") or "",
         })
