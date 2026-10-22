@@ -246,8 +246,20 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleHitDefinition hit in hits)
             {
                 if (hit.Delay > lastDelay) lastDelay = hit.Delay;
-                List<FightBattleUnitState> hitTargets = FightBattleTargeting.SelectHitTargets(targets,
-                    hit.TargetMode, hit.RandomCount, random);
+                List<FightBattleUnitState> hitTargets;
+                if (hit.Scope != null && hit.Scope.Count > 0)
+                {
+                    List<FightBattleUnitState> scopeTargets = FightBattleTargeting.SelectScopeTargets(
+                        actor, units, skill, targets.Count > 0 ? targets[0] : null, hit);
+                    hitTargets = hit.TargetMode == 2
+                        ? FightBattleTargeting.SelectHitTargets(scopeTargets, 2, hit.RandomCount, random)
+                        : scopeTargets;
+                }
+                else
+                {
+                    hitTargets = FightBattleTargeting.SelectHitTargets(targets,
+                        hit.TargetMode, hit.RandomCount, random);
+                }
                 foreach (FightBattleUnitState target in hitTargets)
                 {
                     long beforeHp = target.Hp;
