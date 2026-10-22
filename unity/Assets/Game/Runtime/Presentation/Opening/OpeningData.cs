@@ -508,7 +508,12 @@ namespace Zjcs.Presentation.Opening
         public OpeningUiData Ui { get; private set; }
         public Dictionary<string, string> VoiceFiles { get; private set; }
 
-        public static string Directory => Path.Combine(Application.streamingAssetsPath, Folder);
+        /// <summary>Acceptance-only payload root; null keeps the shipped StreamingAssets folder.</summary>
+        public static string DirectoryOverride;
+
+        public static string Directory => string.IsNullOrEmpty(DirectoryOverride)
+            ? Path.Combine(Application.streamingAssetsPath, Folder)
+            : DirectoryOverride;
 
         public static OpeningAssets LoadDefault()
         {

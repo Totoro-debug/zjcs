@@ -46,12 +46,18 @@ namespace Zjcs.Presentation.Opening
         public int ParticleCount => particles.Count;
         public GameObject Root => root;
 
-        public static bool PayloadExists =>
-            File.Exists(Path.Combine(Application.streamingAssetsPath, PayloadPath));
+        /// <summary>Acceptance-only payload override; null keeps the shipped StreamingAssets path.</summary>
+        public static string PayloadOverride;
+
+        private static string ResolvePayloadPath() => string.IsNullOrEmpty(PayloadOverride)
+            ? Path.Combine(Application.streamingAssetsPath, PayloadPath)
+            : PayloadOverride;
+
+        public static bool PayloadExists => File.Exists(ResolvePayloadPath());
 
         public static OpeningBattlefield Load(Transform parent, Action<string> log)
         {
-            string path = Path.Combine(Application.streamingAssetsPath, PayloadPath);
+            string path = ResolvePayloadPath();
             if (!File.Exists(path))
                 throw new FileNotFoundException("Opening battlefield payload is missing.", path);
             Dictionary<string, object> data = OpeningJson.Object(
