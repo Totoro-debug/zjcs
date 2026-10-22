@@ -14,6 +14,8 @@ Map10 已接入固定版官方地图定义、导航网格、原生地形网格�
 
 ## 自定义实现
 
+`OfficialMap10GameRuntime.RunStoryGraph` 对 `RemoveMapExclusiveNpcNode` 只保留一个分支：配置删除 playable 时先播放，再删除 NPC 并沿 `Exit` 继续；未配置时直接删除。执行顺序依据官方 `RemoveMapEntitiesByCfgNode.PlayPlayables/OnPlayableStop`。工程启用 Unity 内置 `unitywebrequest` 与 `unitywebrequestaudio` 模块，供 `OfficialMap10AudioPlayer` 从本地文件 URI 解码音频；模块启用不代表音频播放已验收。
+
 地形与怪物动画使用官方原始网格、纹理、骨骼帧数据，经 Unity MeshRenderer 适配为 Windows 原生资产；未自绘或用静态图替代。现有本地地图进度 DTO、地图寻路和战斗执行器尚未由 Map10 运行时调用。
 
 ## 尚未实现

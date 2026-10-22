@@ -891,10 +891,6 @@ namespace Zjcs.Presentation.World
                             AddStoryEntity(node, new Vector2(nearPlayer.X, nearPlayer.Y));
                             nodeId = StoryNext(node, "Exit");
                             continue;
-                        case "RemoveMapExclusiveNpcNode":
-                            RemoveStoryEntities(node.removeEntityClassIds);
-                            nodeId = StoryNext(node, "Exit");
-                            continue;
                         case "MapEntityMoveNode":
                             int entityNodeId = StoryNext(node, "OperateEntity");
                             if (!storyEntities.TryGetValue(entityNodeId, out GameObject movingEntity))
