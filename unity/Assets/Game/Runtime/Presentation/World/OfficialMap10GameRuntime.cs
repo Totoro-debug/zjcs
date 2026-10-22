@@ -196,6 +196,7 @@ namespace Zjcs.Presentation.World
                         {
                             battleController.Advance();
                             battleStepTimer = battleController.LastStepSeconds;
+                            SaveActiveBattle(false);
                             if (battleController.Checkpoint.Finished) FinishBattle();
                         }
                     }
@@ -1326,16 +1327,22 @@ namespace Zjcs.Presentation.World
                 completed?.Invoke();
                 return;
             }
-            BeginBattle(entity, stage, roster, scene, completed);
+            FightBattleCheckpoint resume = completed == null
+                ? TryLoadActiveBattle(stageId, entity.PlacementId) : null;
+            BeginBattle(entity, stage, roster, scene, completed, resume);
         }
 
         private void BeginBattle(Map10RuntimeEntity entity, Map10RuntimeStage stage,
-            Map10RuntimeRoster roster, Map10RuntimeBattleScene scene, Action completed)
+            Map10RuntimeRoster roster, Map10RuntimeBattleScene scene, Action completed,
+            FightBattleCheckpoint resume = null)
         {
-            FightBattleCheckpoint checkpoint = BuildCheckpoint(entity, stage, roster, scene);
+            FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
+            FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
             Map10RuntimeFactionInfo playerFaction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
             Map10RuntimePoint playerEntry = playerFaction.EntryPosList[0];
-            var entryPoint = new FightGridPoint(playerEntry.X, playerEntry.Y);
+            var entryPoint = mainPlayer == null
+                ? new FightGridPoint(playerEntry.X, playerEntry.Y)
+                : new FightGridPoint(mainPlayer.X, mainPlayer.Y);
             var grid = checkpoint.Grid;
             Vector3 battlePlayerPoint = new Vector3(grid.OriginX + entryPoint.X,
                 grid.OriginY + entryPoint.Y, grid.OriginZ);
@@ -1363,7 +1370,8 @@ namespace Zjcs.Presentation.World
                     Vector3 scale = root.localScale;
                     scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
                     root.localScale = scale;
-                });
+                },
+                null, null, null, resume != null);
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
@@ -1376,6 +1384,69 @@ namespace Zjcs.Presentation.World
 
         private Action battleCompletion;
         private Map10RuntimeStage activeBattleStage;
+
+        /// <summary>
+        /// Persists the running battle so a map re-entry after closing the game can restore it. The
+        /// checkpoint serializer lives in the rules assembly and keeps every unit, skill, status,
+        /// timeline, receipt and statistics field.
+        /// </summary>
+        private void SaveActiveBattle(bool force)
+        {
+            if (battleController == null || activeBattleStage == null || pendingInteraction == null) return;
+            FightBattleCheckpoint checkpoint = battleController.Checkpoint;
+            if (checkpoint == null || checkpoint.Finished) return;
+            if (!force && checkpoint.Counter - lastActiveSaveCounter < 5) return;
+            try
+            {
+                localSave.activeBattle = FightBattleCheckpointSerializer.Save(checkpoint);
+                localSave.activeBattleStageId = activeBattleStage.Id;
+                localSave.activeBattlePlacementId = pendingInteraction.PlacementId;
+                localSave.activeBattleSavedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                lastActiveSaveCounter = checkpoint.Counter;
+                SaveLocalProgress();
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error, this);
+            }
+        }
+
+        private FightBattleCheckpoint TryLoadActiveBattle(int stageId, int placementId)
+        {
+            if (string.IsNullOrEmpty(localSave.activeBattle)
+                || localSave.activeBattleStageId != stageId
+                || localSave.activeBattlePlacementId != placementId) return null;
+            try
+            {
+                FightBattleCheckpoint checkpoint = FightBattleCheckpointSerializer.Load(localSave.activeBattle);
+                if (checkpoint.Finished)
+                {
+                    ClearActiveBattle();
+                    SaveLocalProgress();
+                    return null;
+                }
+                ShowOfficialNotice("继续上次战斗");
+                return checkpoint;
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error, this);
+                ClearActiveBattle();
+                SaveLocalProgress();
+                return null;
+            }
+        }
+
+        private void ClearActiveBattle()
+        {
+            localSave.activeBattle = string.Empty;
+            localSave.activeBattleStageId = 0;
+            localSave.activeBattlePlacementId = 0;
+            localSave.activeBattleSavedAt = 0;
+            lastActiveSaveCounter = 0;
+        }
+
+        private int lastActiveSaveCounter;
 
         private FightBattleCheckpoint BuildCheckpoint(Map10RuntimeEntity entity, Map10RuntimeStage stage,
             Map10RuntimeRoster roster, Map10RuntimeBattleScene scene)
@@ -1679,6 +1750,7 @@ namespace Zjcs.Presentation.World
                 }
             }
 
+            ClearActiveBattle();
             Action completed = DestroyBattleSession();
             SaveLocalProgress();
             if (!cleared) ShowOfficialNotice("战斗失败");
@@ -1694,6 +1766,7 @@ namespace Zjcs.Presentation.World
                 ShowOfficialNotice("当前阶段不能离开战斗");
                 return;
             }
+            ClearActiveBattle();
             Action callback = DestroyBattleSession();
             SaveLocalProgress();
             callback?.Invoke();
@@ -1702,6 +1775,7 @@ namespace Zjcs.Presentation.World
         private void AbortBattle()
         {
             if (battleController == null) return;
+            ClearActiveBattle();
             DestroyBattleSession();
             SaveLocalProgress();
         }
