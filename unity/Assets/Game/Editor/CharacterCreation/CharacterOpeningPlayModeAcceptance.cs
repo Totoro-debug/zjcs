@@ -102,9 +102,6 @@ namespace Zjcs.Editor.CharacterCreation
 
         private static void OnRuntimeLog(string message, string stackTrace, LogType type)
         {
-            // The shared battle Spine payload currently ships materials whose _MainTex is
-            // unbound; that asset gap belongs to the combat module and is reported there.
-            if (message != null && message.Contains("Material is missing texture")) return;
             if ((type == LogType.Error || type == LogType.Exception) && SessionState.GetInt(ResultKey, 1) == 2)
                 Finish(false, new InvalidOperationException(message + "\n" + stackTrace));
         }
@@ -173,8 +170,27 @@ namespace Zjcs.Editor.CharacterCreation
                 return playback != null && playback.PreparedUnits > 0;
             }, "The official record playback did not spawn units or advance rounds.");
             OpeningFightPlayback running = (OpeningFightPlayback)Field(flow, "playback").GetValue(flow);
+            OpeningBattlefield battlefield = (OpeningBattlefield)Field(flow, "battlefield").GetValue(flow);
+            Require(battlefield != null, "The official game_902 battlefield was not mounted.");
+            Require(battlefield.BatchCount == 142 && battlefield.ParticleCount == 23,
+                "The official game_902 geometry or particle mounts are incomplete: batches="
+                + battlefield.BatchCount + " particles=" + battlefield.ParticleCount);
+            Require(battlefield.StageCamera != null && battlefield.StageCamera.orthographic,
+                "The official opening battlefield camera was not restored.");
+            MeshFilter[] stageMeshes = battlefield.Root.GetComponentsInChildren<MeshFilter>(false);
+            Require(stageMeshes.Length == 142, "The official stage mesh batches were not created: " + stageMeshes.Length);
+            foreach (MeshFilter stageMesh in stageMeshes)
+            {
+                MeshRenderer renderer = stageMesh.GetComponent<MeshRenderer>();
+                Require(renderer != null && renderer.sharedMaterial != null
+                    && renderer.sharedMaterial.mainTexture != null,
+                    "An official game_902 mesh has no bound texture: " + stageMesh.name);
+            }
+            Require(running.SpawnedUnits > 0, "No official Spine battle unit was rendered.");
             Debug.Log("[Opening acceptance] playback resolved units=" + running.PreparedUnits
-                + " rendered=" + running.SpawnedUnits + " round=" + running.Round);
+                + " rendered=" + running.SpawnedUnits + " round=" + running.Round
+                + " stageMeshes=" + stageMeshes.Length + " stageParticles=" + battlefield.ParticleCount
+                + " stageCamera=" + battlefield.StageCamera.name);
             yield return Capture("opening-fight");
 
             running.RequestFastForward();

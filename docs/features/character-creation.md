@@ -38,6 +38,16 @@
 
 创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
 
+### 开场战场、录像单位与剧情排版
+
+官方 `game_902` 战斗阶段是 2D 场景：固定版 `defaultpackage_assets_prefabs_ecentity_fight_fightstage_902.bundle`（80,054 字节，md5 `67c160d271bba532c38a428252304295`，APK 内）中的 `Assets/Prefabs/EcEntity/Fight/FightStage/902/game_902.prefab` 含 144 个 SpriteRenderer、4 个 Tilemap（2,921 块有效瓦片）、23 个 ParticleSystem、2 个正交相机（Main size 7.0），**没有任何 Mesh 或 MeshRenderer**；地面、墙体与装饰都是 sprite 与瓦片。格网不在场景内，来自 `stage` 表 20 行：27×24、origin `(-1.5,-2.5)`、69 个阻挡格、玩家入口 `(13,10)`，16 个怪物出生点与录像 `GridTransformComponent.MyPos` 完全一致。
+
+[prepare_opening_battlefield.py](../../scripts/prepare_opening_battlefield.py) 按 prefab 世界变换把 sprite 与瓦片展平为按图集页、排序层和 order 分组的四边形批次（142 批、15,816 顶点、23,724 索引），导出 10 张官方图集/特效贴图、23 个粒子挂载和两个相机，写入 `StreamingAssets/Opening/battlefield/game_902.json`；来源与逐贴图哈希见 [opening battlefield source manifest](../../assets/reference/character-creation/opening-battlefield-source-manifest.json)。[OpeningBattlefield](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningBattlefield.cs) 在运行时装配批次、粒子与相机，单位根同时携带场景根偏移 `(5000,0,0)` 和格网 origin，录像单位与 NPC 直接使用官方格网坐标。原场景 6 个 shader 只有 Android GLES3 程序且工程未引入 URP，因此批次与粒子改用 Unity 内建 `Sprites/Default` 绘制，属渲染管线适配差异；`Sprites/Ground-Dissolve` 的溶解参数与 `Effect/Noise_Mask_Pro` 的关键字组合尚未迁移。
+
+[prepare_battle_spine_pages.py](../../scripts/prepare_battle_spine_pages.py) 从固定 APK 中经 `models-source-manifest.json` 验证的 Texture2D 解出 5 只开场怪物（3803／3281／3282／3283／3481）与两名剧情角色（8401／8402）的 9 张图集页，核对 atlas `size:` 后绑定到既有 Spine 材质；`OfficialBattleModelCatalog` 的 identities／identitiesManifest 已指向真实资源。剧情角色不是玩家外观，而是官方 NPC 骨骼：录像中 1017 的 `NpcClassId=8401` 对应 `body_8401`、1018 的 8402 对应 `body_8402`；离线 [OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 按该映射生成单位，与怪物共用同一套动作别名。单位排序显式置于场景排序层之上，避免被 21 层的背景遮住。战前顺序按官方 `GAME_ENTITY_LIST` 先于 `BeforeFight`：进入场景 → 生成实体与 HUD → `BeforeFight` → 录像 → `AfterFight`。
+
+剧情文本改用官方 TMP 序列化字段：[prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 按 TMP 3.x 布局逐节点读取 fontSize、fontWeight、fontStyle、alignment（`0xFFFF` 时取水平/垂直轴组合）、margin、wordWrap、overflow、autoSize 范围和 fontColor，并由 [OpeningUi](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 原样应用；`TalkText` 为 42 px、自动缩放下限 18、TopLeft、无边距，`NpcNameText` 为 48 px 金色居中，不再是此前的近似排版。录像面板的回合文本按官方模板“回合：{0}/{1}”随 `FightRoundNewModification.GlobalRound` 更新。录像消息只含实体增删、回合、行动者、EnemyInView、StatusInvoke 与快进，没有伤害、技能与状态数值，因此伤害数字、技能槽和受击数值无法从录像驱动。
+
 ### 官方字体与原生 UI
 
 已核对固定 APK 的 `defaultpackage_assets_textmesh_pro_rawfonts_fzy4k.bundle` 中 `FZY4K` TextAsset：原始方正粗圆 TTF 与 `Assets/Official/Commerce/Art/fonts/FZY4K.ttf` 逐字节一致，SHA256 为 `90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386`，创角使用 `Resources/Combat/FZY4K-Dynamic.asset`，没有使用替代字体。
@@ -70,7 +80,7 @@
 
 事件顺序按官方控制：`BeforeFight` 播放完成后才开始录像，录像结束触发 `AfterFight`，`AfterFight` 内 `LeaveStoryFightNode` 发起战斗到主场景切换；[CharacterOpeningFlow](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs) 等待该切换最多 5 秒，超时记录错误后仍打开创角面板，并使同一槽位只打开一次创角、只记录一次已播放。加载失败（缺文件、解析异常）按官方“回放返回 false”分支记录错误后直接打开创角。创角成功后的 `FirstStory` 先关闭创角面板，再以黑幕播放剧情，`FirstStory` 结束（或本轮无剧情可播）后进入本地初始武器选择，初始武器仍按已确认的离线按钮承接官方 `ChooseInitialWeaponNode` 的 `200`／`201` 数值。
 
-已在 Unity `2022.3.57f1c2` 实际运行 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs)（未使用 `-nographics`，720×1280 Game 视图；运行截图作为本次验证依据，不纳入仓库）：官方跳过条件 21003 的命中与不命中分支、三段剧情的 6 条对白与角色名、录像解析（19 实体／14 回合／1168 步）、`game_902` 场景绑定、回放单位解析与快进结束、`AfterFight` 转场与黑幕、创角面板单次打开、同进程再次进入不重播均通过；并断言 `BeforeFight` 官方台词“又到最后的时刻了，我们上吧！”与角色名“薇兰”实际出现在界面上。画面检查确认黑幕与对话正文按官方布局显示，回放阶段为黑场（原因见下文缺项 1～2），未出现报错或卡死。
+已在 Unity `2022.3.57f1c2` 实际运行 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs)（未使用 `-nographics`，720×1280 Game 视图；运行截图作为本次验证依据，不纳入仓库）：官方跳过条件 21003 的命中与不命中分支、三段剧情的 6 条对白与角色名、录像解析（19 实体／14 回合／1168 步）、`game_902` 场景绑定、回放单位解析与快进结束、`AfterFight` 转场与黑幕、创角面板单次打开、同进程再次进入不重播均通过；并断言 `BeforeFight` 官方台词“又到最后的时刻了，我们上吧！”与角色名“薇兰”实际出现在界面上。画面检查确认黑幕与对话正文按官方布局显示。该次运行发生在战场与图页迁移前，回放阶段为黑场；战场、图页与 NPC 单位迁移后的画面须重跑验收，见下。
 
 ## 尚未实现
 
@@ -78,24 +88,23 @@
 
 ### 开场战斗表现资源
 
-1. **战场几何与演出。** 官方 game_902 场景网格、材质、shader、粒子与技能特效尚未按[Android → Windows 流程](../asset-management.md#android-资源迁移到-windows)迁移为 Unity 运行资产，回放期间只有空的录像战斗面板，没有地形、镜头推拉、技能特效与战斗音效。
-2. **怪物 Spine 贴图页。** 固定版战斗 Spine 来源清单只包含 47 张图集页，monster_3803 等模型的 .atlas.txt 引用的贴图页未在清单内，对应材质的 _MainTex 为空。为避免出现无贴图白色网格，[OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 对缺少图集页的模型记录一次日志后不生成视图，因此当前回放画面没有怪物模型；补齐共用战斗 Spine 载荷后会自动恢复渲染。
-3. **玩家／剧情角色单位。** 录像中 1017／1018 两名 Npc 角色的外观由玩家外观管线渲染，离线尚无战斗角色外观绑定，当前只记录诊断日志、不生成模型。
-4. **单位 HUD 与回合条。** 录像战斗面板只挂载官方 FightMainPanelRecordFight 面板（且其图片 sprites 未导出），回合文本、行动时间轴、技能槽、伤害数字与受击表现未接入回放事件。
+1. **技能特效与战斗音效。** 场景 sprite／瓦片／粒子与相机已迁移（见上），但回放仍未把录像里的技能特效实体（`GAME_ENTITY_ADD` 中大量临时实体）与战斗音效（battle Wwise 包）接入；`Sprites/Ground-Dissolve`、`Effect/Noise_Mask_Pro` 的官方材质参数与 URP 2D 光照仍以 `Sprites/Default` 替代，属于渲染差异。
+2. **其余怪物 Spine 图集页。** 开场 5 只怪物与 2 名剧情角色的 9 张图集页已补齐并绑定；1678 个战斗骨骼引用的 2,348 个页名中仍有 2,301 张（约 98%）未导出，其他玩法遇到未补页的模型仍会跳过渲染。
+3. **玩家外观单位。** 录像剧情角色按官方 NPC 骨骼渲染；自建角色进入战斗时的官方复合外观、换装与战斗动作仍未接入，模型目录目前只覆盖怪物与 NPC。
+4. **行动时间轴与技能槽。** 回合文本已接；录像只有实体增删、回合、行动者、EnemyInView、StatusInvoke 与快进，没有技能、伤害或状态数值消息，行动时间轴只能按 `FightRoundUpdateDataModification.NextTime` 排序，技能槽、伤害数字与受击数值无法由录像驱动。
 
 ### 剧情表现资源
 
-5. **剧情 UI 贴图与动画。** 官方 TalkDialog、StoryMask、Mask、ExitFightTransitionPanel、EnterGameStoryTransitionPanel、FirstStoryPanel 的图片在 prefab 内通过 StateSpriteAssetProxyConfig 等运行时代理取图，导出的布局因此没有 sprite 引用；对话底板、黑幕图、转场美术与 prefab 动画（显示／关闭曲线）目前缺失，对话正文与角色名直接绘制在官方 RectTransform 位置上，转场面板以 0.2 秒等待代替原展示动画。
-6. **TMP 排版字段。** 固定版 bundle 未保留 TMP 序列化类型树，字号／对齐／边距无法按字段读取；当前正文使用左上对齐与固定边距、角色名居中，属于待核对的排版近似，不是官方数值。
-7. **立绘与语音。** 对白角色 840100／840200 的官方立绘 prefab（UI/Portrait/Npc_Portrait_84xx）与 cry3 表情未迁移；Wwise 事件 prologue_main_1_01、1_02、2_01、2_02、3_01、3_02 未导出为本地音频，OpeningStoryPlayer 只记录缺失日志。
-8. **战前单位预生成时序。** 官方在场景加载后先落 GAME_ENTITY_LIST 实体、再播 BeforeFight；当前实现在 BeforeFight 结束后才生成回放单位，等待补齐战场装配后按官方顺序调整。
+5. **剧情 UI 动画与个别代理贴图。** 6 个剧情面板与录像面板的原生 RectTransform、TMP 字段与 47 张 Sprite 已随 `opening-ui.json`／`atlas.png` 导出并有运行时绑定（`/Mask/BloomBg`、`SaveToggle/Btn` 为 alpha 0 的隐藏态；立绘表情与 `BorderActive` 由运行时代理取图）；仍缺各 prefab 的显示／关闭动画曲线，转场面板以 0.2 秒等待代替原展示动画，`StateSpriteAssetProxyConfig` 上的状态图未逐一导出。
+6. **立绘与语音的完整表现。** 对白角色 8401／8402 的官方立绘 prefab、`Main` 与 cry3 表情已由 `prepare_character_creation_opening.py` 导出并由 `OpeningStoryPlayer` 挂到官方左右挂点；6 条 Wwise 语音事件已从固定 APK 的 `voice_prologue` bank 解出（`Opening/voices/*.wav` 供运行时播放，`Opening/voice/*.ogg` 为可复现导出），见 [voice source manifest](../../assets/reference/character-creation/opening-voice-source-manifest.json)。尚未逐条试听核对口型/节奏，也未验证全部表情与语音的停止切换。
 
 ### 仍需验证的部分
 
-9. **FirstStory 端到端画面。** 创角提交流程已接入 FirstStory（黑幕、对话、HomePlayerPlayActionNode 的 SafeEnd 快进、开场转场、显示全部 UI），但 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs) 只覆盖创角前开场；创角后剧情与初始武器选择的衔接仍须在完整流程中实测。
-10. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
-11. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
-12. **共用战斗目录修复。** OfficialBattleModelCatalog.asset 原本未序列化 identities／identitiesManifest，导致怪物身份表无法装配；本次在资源上补齐这两个引用，战斗模块的 Editor 校验仍受 Map10 资源校验失败影响，未整体跑通 Zjcs.Editor.ProjectTools.Validate。
+7. **本轮改动的 Play Mode 验证。** 战场装配、Spine 图页绑定、NPC 单位、TMP 官方排版与战前顺序的代码与数据已完成，但本轮结束时主工程编译被其他会话未完成的 `CharacterPropCalculator`／商城模块编译错误阻塞，`CharacterOpeningPlayModeAcceptance` 未能运行；上述画面上限结论尚待编译恢复后实测。
+8. **FirstStory 端到端画面。** 创角提交流程已接入 FirstStory（黑幕、对话、HomePlayerPlayActionNode 的 SafeEnd 快进、开场转场、显示全部 UI），但 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs) 只覆盖创角前开场；创角后剧情与初始武器选择的衔接仍须在完整流程中实测。
+9. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
+10. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
+11. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
 
 ### 本次明确排除的功能
 

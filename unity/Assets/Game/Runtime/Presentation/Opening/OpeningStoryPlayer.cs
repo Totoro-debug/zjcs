@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,8 +21,15 @@ namespace Zjcs.Presentation.Opening
         private readonly Action onLeaveFight;
         private readonly Func<bool> isGm;
         private readonly AudioSource audio;
+        private readonly Dictionary<string, AudioClip> voiceClips = new Dictionary<string, AudioClip>(StringComparer.Ordinal);
 
         private GameObject dialogPanel;
+        private GameObject leftPortrait;
+        private GameObject rightPortrait;
+        private string leftPortraitPath = string.Empty;
+        private string rightPortraitPath = string.Empty;
+        private string currentPortraitPath = string.Empty;
+        private bool currentPortraitOnLeft;
         private GameObject blackMask;
         private GameObject invisibleMask;
         private readonly List<GameObject> windows = new List<GameObject>();
@@ -196,7 +204,8 @@ namespace Zjcs.Presentation.Opening
             Button next = FindButton(dialogPanel, "NextBtn");
             foreach (OpeningDialogLine line in lines)
             {
-                ApplyLine(line);
+                yield return ApplyLine(line);
+                if (audio != null) audio.Stop();
                 PlayVoice(line);
                 if (skipMode) continue;
                 confirmClicked = false;
@@ -216,20 +225,202 @@ namespace Zjcs.Presentation.Opening
             }
         }
 
-        private void ApplyLine(OpeningDialogLine line)
+        private IEnumerator ApplyLine(OpeningDialogLine line)
         {
             assets.Story.Roles.TryGetValue(line.RoleId, out OpeningRole role);
-            if (!ui.SetFirstTextEnding("NpcNameText", role == null ? string.Empty : role.Name))
+            if (role != null) yield return PresentPortrait(role, line.RoleFace);
+            if (!ui.SetTextEnding(dialogPanel, "NpcNameText", role == null ? string.Empty : role.Name))
                 log("开场剧情说话人节点缺失");
-            if (!ui.SetFirstTextEnding("TalkText", line.Text))
+            if (!ui.SetTextEnding(dialogPanel, "TalkText", line.Text))
                 log("开场剧情正文节点缺失");
+        }
+
+        private IEnumerator PresentPortrait(OpeningRole role, string face)
+        {
+            if (string.IsNullOrEmpty(role.PortraitPrefabKey))
+            {
+                log("官方对白角色立绘未绑定: " + role.Id);
+                yield break;
+            }
+
+            if (!string.IsNullOrEmpty(currentPortraitPath) && currentPortraitPath == role.PortraitPath)
+            {
+                SetPortraitFace(currentPortraitOnLeft ? leftPortrait : rightPortrait, role, face);
+                yield break;
+            }
+
+            if (string.IsNullOrEmpty(currentPortraitPath))
+            {
+                currentPortraitOnLeft = true;
+                leftPortrait = CreatePortrait(role, true, face);
+                leftPortraitPath = role.PortraitPath;
+                SetPortraitColor(leftPortrait, Color.white);
+                currentPortraitPath = role.PortraitPath;
+                yield break;
+            }
+
+            SetPortraitColor(currentPortraitOnLeft ? leftPortrait : rightPortrait,
+                new Color(0.6f, 0.6f, 0.6f, 1f));
+            currentPortraitOnLeft = !currentPortraitOnLeft;
+            if (currentPortraitOnLeft)
+            {
+                if (leftPortraitPath != role.PortraitPath)
+                {
+                    if (leftPortrait != null) UnityEngine.Object.Destroy(leftPortrait);
+                    leftPortrait = CreatePortrait(role, true, face);
+                    leftPortraitPath = role.PortraitPath;
+                }
+                else SetPortraitFace(leftPortrait, role, face);
+                SetPortraitColor(leftPortrait, Color.white);
+            }
+            else
+            {
+                if (rightPortraitPath != role.PortraitPath)
+                {
+                    if (rightPortrait != null) UnityEngine.Object.Destroy(rightPortrait);
+                    rightPortrait = CreatePortrait(role, false, face);
+                    rightPortraitPath = role.PortraitPath;
+                }
+                else SetPortraitFace(rightPortrait, role, face);
+                SetPortraitColor(rightPortrait, Color.white);
+            }
+            currentPortraitPath = role.PortraitPath;
+            yield return null;
+        }
+
+        private GameObject CreatePortrait(OpeningRole role, bool left, string face)
+        {
+            Transform parent = FindPortraitParent(left);
+            if (parent == null)
+            {
+                log("官方对白立绘挂点缺失: " + (left ? "Left" : "Right"));
+                return null;
+            }
+            GameObject portrait = ui.Create(role.PortraitPrefabKey, parent);
+            portrait.name = "OpeningPortrait_" + role.Id;
+            if (!left && !role.NeedFlipOnRight)
+            {
+                Vector3 scale = portrait.transform.localScale;
+                scale.x = -Mathf.Abs(scale.x);
+                portrait.transform.localScale = scale;
+            }
+            SetPortraitFace(portrait, role, face);
+            return portrait;
+        }
+
+        private Transform FindPortraitParent(bool left)
+        {
+            if (dialogPanel == null) return null;
+            string[] path = left
+                ? new[] { "Content", "CharacterAndTalkContent", "CharacterGroup", "LeftCharacter", "Locator", "PortraitParent" }
+                : new[] { "Content", "CharacterAndTalkContent", "CharacterGroup", "RightCharacter", "Mask", "Locator", "PortraitParent" };
+            Transform current = dialogPanel.transform;
+            foreach (string part in path)
+            {
+                current = FindDirectChild(current, part);
+                if (current == null) return null;
+            }
+            return current;
+        }
+
+        private static Transform FindDirectChild(Transform parent, string name)
+        {
+            foreach (Transform child in parent) if (child.name == name) return child;
+            return null;
+        }
+
+        private void SetPortraitFace(GameObject portrait, OpeningRole role, string face)
+        {
+            if (portrait == null) return;
+            string spriteName = string.Empty;
+            bool enabled = !string.IsNullOrEmpty(face)
+                && role.PortraitFaceSprites.TryGetValue(face, out spriteName);
+            Vector2 offset = role.PortraitFaceOffsets.TryGetValue(face ?? string.Empty, out Vector2 faceOffset)
+                ? faceOffset : role.PortraitFaceOffset;
+            if (!ui.SetImage(portrait, "Face", enabled ? spriteName : string.Empty, enabled, offset))
+                log("官方对白立绘表情节点缺失: " + role.Id);
+        }
+
+        private static void SetPortraitColor(GameObject portrait, Color color)
+        {
+            if (portrait == null) return;
+            foreach (Transform child in portrait.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name != "Main" && child.name != "Face") continue;
+                Image image = child.GetComponent<Image>();
+                if (image != null) image.color = color;
+            }
         }
 
         private void PlayVoice(OpeningDialogLine line)
         {
-            // The fixed-version local payload ships no Wwise bank for these events.
-            if (string.IsNullOrEmpty(line.Voice) || line.DialogType != "Voice") return;
-            log("开场剧情语音尚未接入本地资源: " + line.Voice);
+            if (audio == null || string.IsNullOrEmpty(line.Voice) || line.DialogType != "Voice") return;
+            if (!assets.VoiceFiles.TryGetValue(line.Voice, out string relativePath))
+            {
+                log("官方开场语音事件没有本地绑定: " + line.Voice);
+                return;
+            }
+            if (!voiceClips.TryGetValue(line.Voice, out AudioClip clip))
+            {
+                string path = Path.Combine(OpeningAssets.Directory,
+                    relativePath.Replace('/', Path.DirectorySeparatorChar));
+                try { clip = ReadPcmWave(path, line.Voice); }
+                catch (System.Exception error)
+                {
+                    log("官方开场语音读取失败 " + line.Voice + ": " + error.Message);
+                    return;
+                }
+                voiceClips.Add(line.Voice, clip);
+            }
+            audio.clip = clip;
+            audio.Play();
+        }
+
+        private static AudioClip ReadPcmWave(string path, string eventName)
+        {
+            byte[] data = File.ReadAllBytes(path);
+            if (data.Length < 44 || data[0] != 'R' || data[1] != 'I' || data[2] != 'F' || data[3] != 'F'
+                || data[8] != 'W' || data[9] != 'A' || data[10] != 'V' || data[11] != 'E')
+                throw new InvalidDataException("Opening voice WAV header is invalid: " + eventName);
+
+            int channels = 0;
+            int sampleRate = 0;
+            int bitsPerSample = 0;
+            int audioFormat = 0;
+            int audioOffset = -1;
+            int audioLength = 0;
+            for (int offset = 12; offset + 8 <= data.Length;)
+            {
+                int length = BitConverter.ToInt32(data, offset + 4);
+                int content = offset + 8;
+                if (length < 0 || content + length > data.Length)
+                    throw new InvalidDataException("Opening voice WAV chunk is invalid: " + eventName);
+                if (data[offset] == 'f' && data[offset + 1] == 'm' && data[offset + 2] == 't' && data[offset + 3] == ' ')
+                {
+                    if (length < 16) throw new InvalidDataException("Opening voice WAV format is incomplete: " + eventName);
+                    audioFormat = BitConverter.ToInt16(data, content);
+                    channels = BitConverter.ToInt16(data, content + 2);
+                    sampleRate = BitConverter.ToInt32(data, content + 4);
+                    bitsPerSample = BitConverter.ToInt16(data, content + 14);
+                }
+                else if (data[offset] == 'd' && data[offset + 1] == 'a' && data[offset + 2] == 't' && data[offset + 3] == 'a')
+                {
+                    audioOffset = content;
+                    audioLength = length;
+                }
+                offset = content + length + (length & 1);
+            }
+            if (audioFormat != 1 || channels <= 0 || sampleRate <= 0 || bitsPerSample != 16
+                || audioOffset < 0 || audioLength == 0 || audioLength % (channels * 2) != 0)
+                throw new InvalidDataException("Opening voice is not supported PCM16: " + eventName);
+
+            int sampleCount = audioLength / 2;
+            var samples = new float[sampleCount];
+            for (int i = 0; i < sampleCount; i++)
+                samples[i] = BitConverter.ToInt16(data, audioOffset + i * 2) / 32768f;
+            AudioClip clip = AudioClip.Create(eventName, sampleCount / channels, channels, sampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
         }
 
         private static Button FindButton(GameObject root, string suffix)
@@ -273,9 +464,15 @@ namespace Zjcs.Presentation.Opening
 
         private void CloseDialogs()
         {
+            if (audio != null) audio.Stop();
             if (dialogPanel == null) return;
             UnityEngine.Object.Destroy(dialogPanel);
             dialogPanel = null;
+            leftPortrait = null;
+            rightPortrait = null;
+            leftPortraitPath = string.Empty;
+            rightPortraitPath = string.Empty;
+            currentPortraitPath = string.Empty;
         }
 
         private void ShowInvisibleMask()
@@ -326,6 +523,9 @@ namespace Zjcs.Presentation.Opening
         public void Dispose()
         {
             Abort();
+            foreach (AudioClip clip in voiceClips.Values)
+                if (clip != null) UnityEngine.Object.Destroy(clip);
+            voiceClips.Clear();
             if (blackMask != null) UnityEngine.Object.Destroy(blackMask);
             if (invisibleMask != null) UnityEngine.Object.Destroy(invisibleMask);
             blackMask = null;

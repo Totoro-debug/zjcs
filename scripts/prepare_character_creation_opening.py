@@ -14,6 +14,7 @@ import gzip
 import hashlib
 import io
 import json
+import math
 import re
 import struct
 import sys
@@ -254,6 +255,16 @@ class SpriteCache:
         self.apk = apk
         self.images = {}
         self.failures = {}
+        self.sources = {}
+
+    def record_source(self, obj, kind, object_path=""):
+        key = obj.assets_file.name + ":" + str(obj.path_id)
+        if key not in self.sources:
+            record = self.apk.provenance(obj)
+            record.update(kind=kind, raw_sha256=sha256(obj.get_raw_data()))
+            if object_path:
+                record["object"] = object_path
+            self.sources[key] = record
 
     def sprite_image(self, assets_file, file_id, path_id):
         key = (file_id, path_id)
@@ -264,10 +275,13 @@ class SpriteCache:
             self.failures[str(key)] = "not a sprite object"
             self.images[key] = None
             return None
+        self.record_source(sprite, "Sprite")
         data = sprite.read()
         rd = data.m_RD
         if data.m_SpriteAtlas is not None and data.m_SpriteAtlas.path_id:
-            atlas = data.m_SpriteAtlas.read()
+            atlas_object = data.m_SpriteAtlas.deref()
+            self.record_source(atlas_object, "SpriteAtlas")
+            atlas = atlas_object.read()
             render_data = dict(atlas.m_RenderDataMap).get(data.m_RenderDataKey)
             if render_data is None:
                 self.failures[str(key)] = "sprite atlas has no matching render data"
@@ -278,7 +292,9 @@ class SpriteCache:
             self.failures[str(key)] = "sprite has no texture"
             self.images[key] = None
             return None
-        texture = rd.texture.read()
+        texture_object = rd.texture.deref()
+        self.record_source(texture_object, "Texture2D")
+        texture = texture_object.read()
         image = texture.image
         rect = rd.textureRect
         left = int(rect.x)
@@ -329,18 +345,79 @@ def decode_image(fields):
     }
 
 
+TMP_ALIGNMENT_CONVERTED = 65535
+TMP_HORIZONTAL = {1, 2, 4, 8, 16, 32}
+TMP_VERTICAL = {256, 512, 1024, 2048, 4096, 8192, 16384}
+
+
+def tmp_text_base(raw, name):
+    """Return the official TMP text plus the offset where its fixed field block starts.
+
+    The pinned bundles carry no TMP type tree, so the layout is read from the
+    known TMP 3.x serialization order. The text string is length-prefixed and
+    four-byte aligned, then two material arrays precede the fixed block whose
+    absolute position therefore depends only on the string and array counts.
+    """
+    if len(raw) < 92:
+        raise ValueError("TMP component is too small: " + name)
+    length = struct.unpack_from("<i", raw, 88)[0]
+    if length < 0 or 92 + length > len(raw):
+        raise ValueError("Unexpected TMP text string: " + name)
+    text = raw[92:92 + length].decode("utf-8")
+    aligned = (92 + length + 3) & ~3
+    shared = struct.unpack_from("<i", raw, aligned + 28)[0]
+    if shared < 0 or aligned + 44 + 12 * shared > len(raw):
+        raise ValueError("Unexpected TMP shared material count: " + name)
+    materials = struct.unpack_from("<i", raw, aligned + 44 + 12 * shared)[0]
+    if materials < 0:
+        raise ValueError("Unexpected TMP material count: " + name)
+    base = aligned + 12 * (shared + materials)
+    if base + 368 > len(raw):
+        raise ValueError("TMP component has no official layout block: " + name)
+    return text, base
+
+
 def decode_text(raw, name):
-    """Decode the stable TMP tail fields (color, size, alignment, margins)."""
-    if len(raw) < 200:
-        return None
-    # Walk candidate float fields: pick the largest plausible font size and a
-    # color quadruple whose alpha is close to 1.
-    best = {"font_size": 0.0, "color": None, "alignment": 0, "margin": [0.0, 0.0, 0.0, 0.0]}
-    for offset in range(88, len(raw) - 4, 4):
-        value = struct.unpack_from("<f", raw, offset)[0]
-        if 8.0 <= value <= 120.0 and abs(value - round(value)) < 0.001 and value > best["font_size"]:
-            best["font_size"] = float(value)
-    return best
+    """Decode the official TMP_Text serialized fields of one prefab text node."""
+    text, base = tmp_text_base(raw, name)
+    font_size = struct.unpack_from("<f", raw, base + 192)[0]
+    font_weight = struct.unpack_from("<i", raw, base + 200)[0]
+    auto_sizing = raw[base + 204] != 0
+    font_size_min, font_size_max = struct.unpack_from("<2f", raw, base + 208)
+    font_style = struct.unpack_from("<i", raw, base + 216)[0]
+    horizontal, vertical, alignment = struct.unpack_from("<3i", raw, base + 220)
+    word_wrap = raw[base + 256] != 0
+    overflow = struct.unpack_from("<i", raw, base + 264)[0]
+    margin = list(struct.unpack_from("<4f", raw, base + 352))
+    color = [round(float(value), 6) for value in struct.unpack_from("<4f", raw, base + 52)]
+    if not 0.0 < font_size <= 400.0:
+        raise ValueError("Unexpected TMP font size %s: %s" % (font_size, name))
+    if not all(math.isfinite(value) and abs(value) <= 1000.0 for value in margin):
+        raise ValueError("Unexpected TMP margin: " + name)
+    if overflow not in range(7):
+        raise ValueError("Unexpected TMP overflow mode: " + name)
+    if not all(0.0 <= value <= 1.0 for value in color):
+        raise ValueError("Unexpected TMP font color: " + name)
+    if alignment != TMP_ALIGNMENT_CONVERTED:
+        if alignment not in {h | v for h in TMP_HORIZONTAL for v in TMP_VERTICAL}:
+            raise ValueError("Unexpected TMP alignment: " + name)
+    else:
+        if horizontal not in TMP_HORIZONTAL or vertical not in TMP_VERTICAL:
+            raise ValueError("Unexpected TMP axis alignment: " + name)
+        alignment = horizontal | vertical
+    return {
+        "text": text,
+        "font_size": float(font_size),
+        "font_weight": int(font_weight),
+        "font_style": int(font_style),
+        "auto_sizing": bool(auto_sizing),
+        "font_size_range": [float(font_size_min), float(font_size_max)],
+        "alignment": int(alignment),
+        "word_wrap": bool(word_wrap),
+        "overflow": int(overflow),
+        "margin": [float(value) for value in margin],
+        "color": color,
+    }
 
 
 def prefab_walk(go):
@@ -361,6 +438,7 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
                     for ptr in [val]), None)
     if pointer is None:
         pointer = next(ptr for entry, ptr in apk.container(bundle) if entry.endswith("/" + path.rsplit("/", 1)[-1]))
+    sprites.record_source(pointer.deref(), "GameObjectPrefab", path)
     root_go = pointer.read()
     assets_file = pointer.assetsfile
     def build(go, parent_path):
@@ -406,12 +484,18 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
                             node["sprite"] = sprite["key"]
                 elif cls in ("TextMeshProUGUI", "TextMeshPro"):
                     node["has_text"] = True
-                    decoded = decode_text(raw, go.m_Name) or {}
-                    node["text_value"] = ""
-                    node["text_font_size"] = decoded.get("font_size") or 32.0
-                    node["text_color"] = decoded.get("color") or [1.0, 1.0, 1.0, 1.0]
-                    node["text_alignment"] = 0
-                    node["text_margin"] = [0.0, 0.0, 0.0, 0.0]
+                    decoded = decode_text(raw, node_path)
+                    node["text_value"] = decoded["text"]
+                    node["text_font_size"] = decoded["font_size"]
+                    node["text_font_weight"] = decoded["font_weight"]
+                    node["text_font_style"] = decoded["font_style"]
+                    node["text_color"] = decoded["color"]
+                    node["text_alignment"] = decoded["alignment"]
+                    node["text_margin"] = decoded["margin"]
+                    node["text_word_wrap"] = decoded["word_wrap"]
+                    node["text_overflow"] = decoded["overflow"]
+                    node["text_auto_sizing"] = decoded["auto_sizing"]
+                    node["text_font_size_range"] = decoded["font_size_range"]
                 elif cls in ("Button", "UIButton"):
                     node["button"] = True
                 elif cls in ("Mask", "RectMask2D"):
@@ -433,6 +517,107 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
         return node
 
     return build(root_go, "")
+
+
+def find_sprite(apk, sprites, class_id, sprite_name):
+    bundle = "image_ui_npc_npc_individual_" + str(class_id)
+    suffix = "/" + sprite_name + ".png"
+    matches = [(path, pointer) for path, pointer in apk.container(bundle)
+               if pointer.type.name == "Sprite" and path.endswith(suffix)]
+    if len(matches) != 1:
+        raise ValueError("Expected one official portrait Sprite " + bundle + suffix
+                         + ", found " + str(len(matches)))
+    path, pointer = matches[0]
+    sprite = sprites.sprite_image(pointer.assetsfile, pointer.m_FileID, pointer.m_PathID)
+    if sprite is None:
+        raise ValueError("Official portrait Sprite could not be decoded: " + path)
+    return sprite
+
+
+def set_prefab_image_sprite(root, node_name, sprite_key):
+    pending = [root]
+    matches = []
+    while pending:
+        node = pending.pop()
+        if node["name"] == node_name and node["has_image"]:
+            matches.append(node)
+        pending.extend(node["children"])
+    if len(matches) != 1:
+        raise ValueError("Official portrait prefab has no unique Image node " + node_name)
+    matches[0]["sprite"] = sprite_key
+
+
+def portrait_prefabs(apk, sprites, schemas, story, prefabs):
+    faces_by_role = {}
+    for line in story["dialogues"]:
+        if line["role_id"] and line["role_face"]:
+            faces_by_role.setdefault(str(line["role_id"]), set()).add(line["role_face"])
+
+    sources = {}
+    for role_id, role in story["roles"].items():
+        class_id = int(role_id) // 100
+        expected_path = "UI/Portrait/Npc_Portrait_" + str(class_id)
+        if role["portrait"] != expected_path:
+            raise ValueError("Opening story portrait path differs from its role ID: " + role_id)
+        bundle = "prefabs_ui_portrait"
+        prefab_path = "Assets/Prefabs/UI/Portrait/Npc_Portrait_" + str(class_id) + ".prefab"
+        root_obj = next((pointer for path, pointer in apk.container(bundle) if path == prefab_path), None)
+        if root_obj is None:
+            raise ValueError("Official opening portrait prefab is missing: " + prefab_path)
+        portrait_component = None
+        portrait_data = None
+        for game_object, _ in prefab_walk(root_obj.read()):
+            for entry in game_object.m_Component:
+                component = entry.component.deref()
+                if component.type.name != "MonoBehaviour":
+                    continue
+                script = component.read(check_read=False).m_Script.read()
+                if script.m_ClassName == "PortraitFace":
+                    if portrait_component is not None:
+                        raise ValueError("Official portrait has multiple PortraitFace components: " + prefab_path)
+                    portrait_component = component
+                    portrait_data = schemas.read(component)
+        if portrait_data is None:
+            raise ValueError("Official portrait configuration is missing: " + prefab_path)
+        sprites.record_source(portrait_component, "PortraitFace", prefab_path)
+        class_faces = {entry["Type"]: entry for entry in portrait_data["mFacesProxy"]}
+        requested_faces = faces_by_role.get(role_id, set())
+        if not requested_faces.issubset(class_faces):
+            raise ValueError("Opening story references a missing official portrait expression: "
+                             + role_id + " " + str(sorted(requested_faces - class_faces.keys())))
+
+        key = "portrait_" + str(class_id)
+        portrait_root = convert_prefab(apk, sprites, schemas, prefab_path, bundle)
+        main_name = "npc_portrait_" + str(class_id)
+        main_sprite = find_sprite(apk, sprites, class_id, main_name)
+        set_prefab_image_sprite(portrait_root, "Main", main_sprite["key"])
+
+        face_sprites = {}
+        for face in sorted(requested_faces):
+            proxy = class_faces[face]["FaceSpriteProxy"]
+            if not proxy["mAssetGuid"]:
+                raise ValueError("Official portrait expression has an empty Sprite GUID: " + face)
+            face_name = main_name + "_" + face
+            face_sprite = find_sprite(apk, sprites, class_id, face_name)
+            face_sprites[face] = face_sprite["key"]
+
+        role["portrait_prefab"] = key
+        role["portrait_sprites"] = face_sprites
+        role["need_flip_on_right"] = bool(portrait_data["mNeedFlipOnRight"])
+        common_offset = portrait_data.get("mFaceCommonOffset") or {"x": 0.0, "y": 0.0}
+        role["portrait_face_offset"] = [float(common_offset["x"]), float(common_offset["y"])]
+        role["portrait_face_offsets"] = {
+            entry["Type"]: [float(entry["Offset"]["x"]), float(entry["Offset"]["y"])]
+            for entry in portrait_data.get("mFaceOffsets") or []
+        }
+        prefabs.append({"key": key, "root": portrait_root})
+        sources[role_id] = {
+            "prefab": dict(apk.provenance(root_obj.deref()), object=prefab_path,
+                            raw_sha256=sha256(root_obj.deref().get_raw_data())),
+            "portrait_face": dict(apk.provenance(portrait_component),
+                                  raw_sha256=sha256(portrait_component.get_raw_data())),
+        }
+    return sources
 
 
 def pack_atlas(sprite_cache, target):
@@ -469,7 +654,7 @@ def pack_atlas(sprite_cache, target):
     return entries, atlas.size, len(placements)
 
 
-def ui_payload(apk, target_dir):
+def ui_payload(apk, target_dir, story):
     from official_unity_schema import ScriptSchemas
 
     schemas = ScriptSchemas()
@@ -477,6 +662,7 @@ def ui_payload(apk, target_dir):
     prefabs = []
     for key, (path, bundle) in UI_PANELS.items():
         prefabs.append({"key": key, "root": convert_prefab(apk, sprites, schemas, path, bundle)})
+    portrait_sources = portrait_prefabs(apk, sprites, schemas, story, prefabs)
     try:
         hud_path = next(entry for entry, _ in apk.container(FIGHT_HUD_BUNDLE)
                         if entry.endswith("/" + FIGHT_HUD_PREFAB + ".prefab"))
@@ -488,7 +674,7 @@ def ui_payload(apk, target_dir):
     entries, size, count = pack_atlas(sprites, atlas_path)
     payload = {"manifest": VERSION, "atlas": {"file": "atlas.png", "width": size[0], "height": size[1]},
                "sprites": entries, "prefabs": prefabs}
-    return payload, atlas_path, sprites.failures, count
+    return payload, atlas_path, sprites.failures, count, portrait_sources, sprites.sources
 
 
 def main():
@@ -502,13 +688,14 @@ def main():
     OFFICIAL_DATA.mkdir(parents=True, exist_ok=True)
     PAYLOAD.mkdir(parents=True, exist_ok=True)
     outputs = []
-    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(OFFICIAL_DATA / "opening-stage.json", json_bytes(stage)))
-    outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-record.bytes", record["bytes"]))
 
-    ui, atlas_path, failures, atlas_sprites = ui_payload(apk, PAYLOAD / "ui")
+    ui, atlas_path, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
+        apk, PAYLOAD / "ui", story)
+    outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(story)))
+    outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(PAYLOAD / "ui" / "opening-ui.json", json_bytes(ui)))
     outputs.append({"path": atlas_path.relative_to(ROOT).as_posix(), "bytes": atlas_path.stat().st_size,
                     "sha256": sha256(atlas_path.read_bytes())})
@@ -533,7 +720,8 @@ def main():
         "stage": {"source": stage["source"], "stage_id": stage["stage_id"], "game_id": stage["game_id"],
                   "scene": stage["scene"], "monsters": stage["monsters"], "cells": len(stage["grid"]["cells"])},
         "ui": {"prefabs": [entry["key"] for entry in ui["prefabs"]], "sprites": atlas_sprites,
-               "atlas": ui["atlas"], "unresolved": failures},
+               "atlas": ui["atlas"], "unresolved": failures,
+               "portrait_sources": portrait_sources, "sources": ui_sources},
         "outputs": sorted(outputs, key=lambda entry: entry["path"]),
     }
     REFERENCE.parent.mkdir(parents=True, exist_ok=True)
