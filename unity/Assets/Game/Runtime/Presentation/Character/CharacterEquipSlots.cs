@@ -113,6 +113,23 @@ namespace Zjcs.Presentation.Character
                     GameObject icon = BuildItemIcon(instance, mount);
                     if (icon != null) icon.transform.SetParent(mount, false);
                 }
+                else if (CharacterPanelNodeFactory.UiFont != null)
+                {
+                    var empty = new GameObject("EmptySlot", typeof(RectTransform), typeof(Text));
+                    empty.transform.SetParent(mount, false);
+                    RectTransform emptyRect = (RectTransform)empty.transform;
+                    emptyRect.anchorMin = Vector2.zero;
+                    emptyRect.anchorMax = Vector2.one;
+                    emptyRect.offsetMin = Vector2.zero;
+                    emptyRect.offsetMax = Vector2.zero;
+                    Text emptyText = empty.GetComponent<Text>();
+                    emptyText.font = CharacterPanelNodeFactory.UiFont;
+                    emptyText.fontSize = 18;
+                    emptyText.alignment = TextAnchor.MiddleCenter;
+                    emptyText.color = new Color(0.7f, 0.7f, 0.7f);
+                    emptyText.text = "未装备";
+                    emptyText.raycastTarget = false;
+                }
                 GameObject locked = FindDeep(slot, "Lock")?.gameObject;
                 if (locked != null) locked.SetActive(!IsUnlocked(position));
                 Button button = slot.GetComponentInChildren<Button>(true);
