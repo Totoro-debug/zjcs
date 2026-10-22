@@ -17,6 +17,40 @@ namespace Zjcs.Presentation.Character
     {
         private readonly OfficialCharacterAssetCatalog assets;
 
+        private static Font uiFont;
+        private static bool fontLogged;
+
+        /// <summary>
+        /// UGUI fallback font: the built-in LegacyRuntime font has no CJK glyphs, so prefer an OS CJK
+        /// family and fall back to the built-in resource when no system font can be created.
+        /// </summary>
+        public static Font UiFont
+        {
+            get
+            {
+                if (uiFont != null) return uiFont;
+                if (Application.isBatchMode) return null;
+                try
+                {
+                    uiFont = Font.CreateDynamicFontFromOSFont(
+                        new[] { "Microsoft YaHei", "Microsoft YaHei UI", "SimHei", "Arial" }, 24);
+                }
+                catch (Exception) { uiFont = null; }
+                if (uiFont == null)
+                {
+                    try { uiFont = CharacterPanelNodeFactory.UiFont; }
+                    catch (Exception) { uiFont = null; }
+                }
+                if (!fontLogged)
+                {
+                    fontLogged = true;
+                    UnityEngine.Debug.Log("[Character] UI fallback font: "
+                        + (uiFont == null ? "<none>" : uiFont.name));
+                }
+                return uiFont;
+            }
+        }
+
         public CharacterPanelNodeFactory(OfficialCharacterAssetCatalog assets)
         {
             this.assets = assets ?? throw new ArgumentNullException(nameof(assets));
@@ -50,10 +84,10 @@ namespace Zjcs.Presentation.Character
                 image.preserveAspect = source.image.preserve_aspect;
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
             }
-            if (source.text != null)
+            if (source.text != null && CharacterPanelNodeFactory.UiFont != null)
             {
                 Text text = instance.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                text.font = CharacterPanelNodeFactory.UiFont;
                 text.text = source.text.value ?? string.Empty;
                 text.color = ColorValue(source.text.color, Color.black);
                 text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));

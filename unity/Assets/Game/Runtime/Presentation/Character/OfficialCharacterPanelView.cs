@@ -452,7 +452,7 @@ namespace Zjcs.Presentation.Character
                 bodyRect.offsetMin = Vector2.zero;
                 bodyRect.offsetMax = Vector2.zero;
                 Text text = bodyObject.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                text.font = CharacterPanelNodeFactory.UiFont;
                 text.fontSize = 26;
                 text.color = Color.white;
                 text.supportRichText = true;
@@ -600,7 +600,15 @@ namespace Zjcs.Presentation.Character
                 throw new FormatException("The official character page has no PlayerModelRoot mount.");
             characterModel = mount.GetComponent<CharacterModelPreview>();
             if (characterModel == null) characterModel = mount.gameObject.AddComponent<CharacterModelPreview>();
-            characterModel.Initialize(progression);
+            try
+            {
+                characterModel.Initialize(progression);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Character model preview is unavailable: " + error.Message);
+                characterModel = null;
+            }
             Text name = FindText("CharacterName") ?? FindText("PlayerName") ?? FindText("NameText");
             SetText(name, progression.Player.CharacterName);
         }
