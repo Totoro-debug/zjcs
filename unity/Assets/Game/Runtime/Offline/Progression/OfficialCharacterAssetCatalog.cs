@@ -488,6 +488,18 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
+        /// <summary>Original <c>AppendAppearanceInfo.EffectProp</c> of an owned title.</summary>
+        public IReadOnlyDictionary<int, long> TitleProperties(int itemId)
+        {
+            var result = new Dictionary<int, long>();
+            if (!wardrobeDefinitions.TryGetValue(itemId, out Dictionary<string, object> definition)
+                || !(definition.TryGetValue("EffectProp", out object value)
+                    && value is Dictionary<string, object> attributes)) return result;
+            foreach (KeyValuePair<string, object> attribute in attributes)
+                AddProperty(result, attribute.Key, Convert.ToInt64(attribute.Value, CultureInfo.InvariantCulture));
+            return result;
+        }
+
         public int ItemType(int itemId)
         {
             return items.TryGetValue(itemId, out Dictionary<string, object> item) ? Integer(item, "ItemType") : 0;
