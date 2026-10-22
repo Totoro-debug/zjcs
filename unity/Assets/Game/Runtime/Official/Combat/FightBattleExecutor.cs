@@ -287,6 +287,7 @@ namespace Zjcs.Combat.Official
                     ApplyHitStatuses(actor, target, hit, random);
                     ApplyHitDisperse(target, hit, random);
                     ApplyHitMove(actor, target, hit, movements);
+                    ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -390,6 +391,50 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        /// <summary>
+        /// Official <c>FightHitExtHemophagiaComponent</c>: heals the skill source by the configured
+        /// lifesteal property. The property is treated as a 10000-based percent (the pinned prop
+        /// table does not mark it, so the scale is an explicit local assumption) and the heal is
+        /// recorded as a cure event so statistics and replay stay consistent.
+        /// </summary>
+        private void ApplyHemophagia(FightBattleUnitState actor, FightBattleHitDefinition hit,
+            FightBattleDamageEvent applied, float delay, FightBattleSkillDefinition skill,
+            List<FightBattleDamageEvent> events)
+        {
+            if (hit.HemophagiaProperty <= 0 || applied == null || applied.IsCure) return;
+            long dealt = Math.Abs(applied.Damage);
+            if (dealt <= 0) return;
+            long property = GetProperty(actor, hit.HemophagiaProperty);
+            if (property <= 0) return;
+            double rate = property / 10000.0;
+            if (rate > 1.0) rate = 1.0;
+            long heal = (long)Math.Round(dealt * rate);
+            if (heal <= 0) return;
+            long before = actor.Hp;
+            actor.Hp = Math.Min(actor.MaxHp, actor.Hp + heal);
+            long actual = actor.Hp - before;
+            if (actual <= 0) return;
+            var cure = new FightBattleDamageEvent
+            {
+                DamageId = applied.DamageId,
+                SourceId = actor.Id,
+                TargetId = actor.Id,
+                SkillEntityId = skill == null ? 0 : skill.EntityId,
+                SkillItemId = skill == null ? 0 : skill.ItemId,
+                HitEntityId = hit.EntityId,
+                DamageType = 1,
+                Delay = delay,
+                Anchor = hit.Anchor,
+                IsCure = true,
+                Damage = actual,
+                BeforeHp = before,
+                AfterHp = actor.Hp,
+                MaxHp = actor.MaxHp
+            };
+            events.Add(cure);
+            checkpoint.Statistics.RecordHit(cure);
         }
 
         /// <summary>
