@@ -140,6 +140,36 @@ namespace Zjcs.Presentation.Character
                 }
             }
             SetIcon(nodes, instance.ItemId, item);
+            RectTransform bottom = nodes.Values.FirstOrDefault(value => value.name == "BottomText");
+            if (bottom != null)
+            {
+                Text text = bottom.GetComponent<Text>();
+                if (text != null)
+                {
+                    text.gameObject.SetActive(instance.BlessLevel > 0);
+                    text.text = instance.BlessLevel > 0
+                        ? "祝福+" + instance.BlessLevel.ToString(CultureInfo.InvariantCulture)
+                        : string.Empty;
+                }
+            }
+            string marker = SlotMarker(instance);
+            if (!string.IsNullOrEmpty(marker))
+            {
+                var badge = new GameObject("SlotMarker", typeof(RectTransform), typeof(Text));
+                badge.transform.SetParent(root, false);
+                RectTransform badgeRect = (RectTransform)badge.transform;
+                badgeRect.anchorMin = new Vector2(0f, 1f);
+                badgeRect.anchorMax = new Vector2(0f, 1f);
+                badgeRect.pivot = new Vector2(0f, 1f);
+                badgeRect.sizeDelta = new Vector2(120f, 24f);
+                badgeRect.anchoredPosition = new Vector2(4f, -2f);
+                Text badgeText = badge.GetComponent<Text>();
+                badgeText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                badgeText.fontSize = 14;
+                badgeText.color = new Color(1f, 0.85f, 0.4f);
+                badgeText.text = marker;
+                badgeText.raycastTarget = false;
+            }
             DisableInteraction(root.gameObject);
             return root.gameObject;
         }
@@ -169,6 +199,25 @@ namespace Zjcs.Presentation.Character
                         ? MissingIconText(Convert.ToString(item["Name"], CultureInfo.InvariantCulture)) : string.Empty;
                 }
             }
+        }
+
+        private string SlotMarker(OfflineEquipmentInstance instance)
+        {
+            if (equipment == null) return string.Empty;
+            int position = OfflineEquipmentOperations.PositionForItem(equipment, instance.ItemId);
+            int skinType = position == 10 ? 7 : position == 14 ? 8 : position == 12 ? 5 : 0;
+            if (skinType != 0 && progression.Player.Wardrobe.WornItems.Any(value => value.Type == skinType))
+                return "幻装";
+            EquipmentUpgradeQuote quote = OfflineEquipmentOperations.QuoteUpgrade(progression.Player, equipment,
+                position, progression.Player.SeasonRank, BlessLevel(), progression.Player.Level,
+                progression.Player.MaxProfessionRank);
+            return quote.CanUpgrade ? "可强化" : string.Empty;
+        }
+
+        private int BlessLevel()
+        {
+            CharacterExperienceSnapshot experience = progression.Experience();
+            return experience.BlessLevel;
         }
 
         private static string MissingIconText(string name)
