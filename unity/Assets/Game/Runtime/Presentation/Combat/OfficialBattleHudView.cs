@@ -230,7 +230,7 @@ namespace Zjcs.Presentation.Combat
         /// official buff/abnormal background. Per-status icons are not mapped in the payload yet, so
         /// the icon slot stays hidden instead of showing an unrelated sprite.
         /// </summary>
-        private void RefreshBossStatuses(Transform parent, FightBattleUnitState unit)
+        private bool RefreshBossStatuses(Transform parent, FightBattleUnitState unit)
         {
             for (int i = parent.childCount - 1; i >= 0; i--)
             {
@@ -238,7 +238,8 @@ namespace Zjcs.Presentation.Combat
                 child.SetActive(false);
                 UnityEngine.Object.Destroy(child);
             }
-            if (unit == null || unit.Statuses == null) return;
+            if (unit == null || unit.Statuses == null) return false;
+            int created = 0;
             foreach (FightBattleStatusState status in unit.Statuses)
             {
                 if (status == null || status.StackCount <= 0) continue;
@@ -254,7 +255,9 @@ namespace Zjcs.Presentation.Combat
                 if (countText != null)
                     countText.text = status.StackCount > 1
                         ? status.StackCount.ToString(CultureInfo.InvariantCulture) : string.Empty;
+                created++;
             }
+            return created > 0;
         }
 
         private void BindBossItem(string path, FightBattleUnitState unit,
@@ -276,9 +279,12 @@ namespace Zjcs.Presentation.Combat
             if (nameText != null && hasName) nameText.text = name;
             bossRenderer.SetActive(path + "/TextName", hasName && nameText != null);
             GameObject statusList = bossRenderer.Find(path + "/StatusList");
-            if (statusList != null) RefreshBossStatuses(statusList.transform, unit);
+            if (statusList != null)
+            {
+                bool hasStatuses = RefreshBossStatuses(statusList.transform, unit);
+                bossRenderer.SetActive(path + "/StatusList", hasStatuses);
+            }
             bossRenderer.SetActive(path + "/Resilience", false);
-            bossRenderer.SetActive(path + "/StatusList", false);
         }
 
         private Image ImageAt(string path)
@@ -411,11 +417,12 @@ namespace Zjcs.Presentation.Combat
             return true;
         }
 
-        private static void RefreshTimelineCard(GameObject card, FightBattleUnitState unit,
+        private const string FactionPlayerIcon = "res://assets/official/battle-hud/sprites/ImgWe-8447ae550c.png";
+        private const string FactionEnemyIcon = "res://assets/official/battle-hud/sprites/ImgEnemy-db0a1794e6.png";
+
+        private void RefreshTimelineCard(GameObject card, FightBattleUnitState unit,
             Sprite portrait, Sprite factionSprite, bool acting)
         {
-            if (portrait == null)
-                throw new InvalidOperationException("Official battle timeline portrait is not bound for unit " + unit.Id);
             bool monster = unit.MonsterId > 0;
             string iconPath = monster
                 ? "IconGo/MonsterIconImg"
@@ -423,7 +430,7 @@ namespace Zjcs.Presentation.Combat
             Transform icon = card.transform.Find(iconPath);
             Image image = icon == null ? null : icon.GetComponent<Image>();
             if (image == null) throw new InvalidOperationException("Official battle timeline portrait node is missing: " + iconPath);
-            image.sprite = portrait;
+            if (portrait != null) image.sprite = portrait;
             Transform monsterIcon = card.transform.Find("IconGo/MonsterIconImg");
             Transform playerIcon = card.transform.Find("IconGo/PlayerHeadETC2Go");
             if (monsterIcon != null) monsterIcon.gameObject.SetActive(monster);
@@ -434,8 +441,10 @@ namespace Zjcs.Presentation.Combat
             Image factionImage = faction == null ? null : faction.GetComponent<Image>();
             if (factionImage != null)
             {
-                factionImage.sprite = factionSprite;
-                faction.gameObject.SetActive(factionSprite != null);
+                Sprite sprite = factionSprite ?? resolvedCatalog.FindSprite(
+                    unit.Side == 1 ? FactionPlayerIcon : FactionEnemyIcon);
+                factionImage.sprite = sprite;
+                faction.gameObject.SetActive(sprite != null);
             }
         }
 

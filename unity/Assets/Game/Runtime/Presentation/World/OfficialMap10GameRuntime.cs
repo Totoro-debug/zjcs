@@ -1364,7 +1364,7 @@ namespace Zjcs.Presentation.World
             };
             battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
                 skillIconResolver,
-                _ => fallbackPortrait,
+                unit => unit.MonsterId > 0 ? null : fallbackPortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
                 (_, __) => "idle_01",
                 (root, unit) =>
