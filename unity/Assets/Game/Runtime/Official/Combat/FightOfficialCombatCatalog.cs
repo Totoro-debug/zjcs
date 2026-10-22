@@ -643,6 +643,32 @@ namespace Zjcs.Combat.Official
             return value;
         }
 
+        /// <summary>
+        /// Reads <c>FightDamageComponent.StatusList</c>: statuses applied when a hit carrying this
+        /// damage id lands (target type, probability and remaining-HP condition).
+        /// </summary>
+        private void AddStatusApplications(int damageId, List<FightBattleStatusApplication> output)
+        {
+            if (damageId <= 0 || output == null
+                || !entities.TryGetValue(damageId, out Dictionary<string, object> components)
+                || !components.TryGetValue("FightDamageComponent", out object raw)
+                || !(raw is Dictionary<string, object> damage)
+                || !damage.TryGetValue("StatusList", out object list) || list == null) return;
+            foreach (object item in Array(list, "StatusList"))
+            {
+                Dictionary<string, object> row = Object(item, "StatusList entry");
+                int statusId = Int(row, "StatusId");
+                if (statusId <= 0) continue;
+                output.Add(new FightBattleStatusApplication
+                {
+                    StatusId = statusId,
+                    TargetType = Int(row, "TargetType", 2),
+                    Chance = Float(row, "BasePercent", 1f),
+                    LessThanHpPer = Float(row, "LessThanHpPer", -1f)
+                });
+            }
+        }
+
         private static void AddSourceMoves(Dictionary<string, object> skill,
             List<FightBattleSkillMove> output)
         {
@@ -706,6 +732,7 @@ namespace Zjcs.Combat.Official
                 result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
                 result.ActionType = Int(damage, "DamageActionType", 4);
                 result.DamageId = Int(damage, "DamageId");
+                AddStatusApplications(result.DamageId, result.AppliedStatuses);
                 result.DamageType = Int(damage, "DamageType");
                 result.BasicProperty = Int(damage, "DamageBasicProp", 1);
                 result.DamageProperty = Int(damage, "DamageProp");

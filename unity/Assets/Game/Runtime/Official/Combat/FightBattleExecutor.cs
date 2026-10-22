@@ -284,6 +284,7 @@ namespace Zjcs.Combat.Official
                     };
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage);
+                    ApplyHitStatuses(actor, target, hit, random);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -381,6 +382,33 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        /// <summary>
+        /// Applies the official damage status list: each entry picks the skill source or the damage
+        /// target, checks the remaining-HP condition and probability, then adds the status through
+        /// the shared lifecycle (duration starts at the owner's next round update).
+        /// </summary>
+        private void ApplyHitStatuses(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleHitDefinition hit, FightRandomStream random)
+        {
+            if (statusCatalog == null || hit.AppliedStatuses == null) return;
+            foreach (FightBattleStatusApplication application in hit.AppliedStatuses)
+            {
+                if (application == null || application.StatusId <= 0) continue;
+                FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
+                if (owner == null || owner.Hp <= 0) continue;
+                if (application.LessThanHpPer >= 0f
+                    && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) continue;
+                if (application.Chance < 1f && random.Next() > application.Chance) continue;
+                int instanceId = 1;
+                foreach (FightBattleStatusState existing in owner.Statuses)
+                    if (existing != null && existing.InstanceId >= instanceId)
+                        instanceId = existing.InstanceId + 1;
+                FightBattleStatusState template = statusCatalog.CreateStatus(application.StatusId,
+                    owner.Id, actor.Id, instanceId);
+                FightStatusLifecycle.Apply(owner, template, -1, instanceId);
+            }
         }
 
         /// <summary>

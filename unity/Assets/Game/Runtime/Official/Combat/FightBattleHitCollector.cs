@@ -77,7 +77,10 @@ namespace Zjcs.Combat.Official
                     IgnoreAICount = entity.IgnoreAICount,
                     Scope = entity.Scope == null
                         ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),
-                    AllowEmptyScope = entity.AllowEmptyScope
+                    AllowEmptyScope = entity.AllowEmptyScope,
+                    AppliedStatuses = entity.AppliedStatuses == null
+                        ? new List<FightBattleStatusApplication>()
+                        : new List<FightBattleStatusApplication>(entity.AppliedStatuses)
                 });
 
             CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
