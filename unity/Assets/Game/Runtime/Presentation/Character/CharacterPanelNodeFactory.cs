@@ -219,6 +219,8 @@ namespace Zjcs.Presentation.Character
             if (scroll == null) scroll = instance.AddComponent<ScrollRect>();
             Transform viewport = FindDeep(instance.transform, "Viewport") ?? FindDeep(instance.transform, "Viewprot");
             Transform content = viewport == null ? null : FindDeep(viewport, "Content");
+            if (content == null && viewport != null && viewport.childCount > 0)
+                content = viewport.GetChild(0);
             if (viewport == null || content == null)
             {
                 Debug.LogWarning("Original scroll rect has no viewport or content: " + instance.name);
