@@ -149,6 +149,7 @@ namespace Zjcs.Offline.Home
             var result = new List<OfflineHomeIncomeDefinition>();
             foreach (HomeHangUpRecord record in rules.HangUps)
             {
+                if (record.levelRuleId <= 0) continue;
                 HomeHangUpRewardRecord reward = rules.HangUpReward(record.rewardId);
                 if (reward == null) continue;
                 int level = HangUpLevel(session, record, blessingLevel);
@@ -156,7 +157,9 @@ namespace Zjcs.Offline.Home
                 if (levelNumber <= 0) levelNumber = 1;
                 HomeRewardRuleRecord rule = rules.SelectRewardRule(reward.rewardRuleId, context);
                 if (rule == null || rule.ids == null || rule.ids.Length == 0) continue;
-                bool unlocked = session.IsHangUpUnlocked(record.id) && rules.IsMet(record.unlock, context);
+                bool autoUnlocked = record.initAutoUnlock || record.unlock == null
+                    || record.unlock._type == "NoneCondition" || record.unlock._type == "AlwaysCondition";
+                bool unlocked = (session.IsHangUpUnlocked(record.id) || autoUnlocked) && rules.IsMet(record.unlock, context);
                 if (record.bindFurniture >= 0 && !session.OwnsFurniture(record.bindFurniture)) unlocked = false;
                 HomeFastHangUpRecord fast = rules.FastHangUp(record.fastHangUpId);
                 result.Add(new OfflineHomeIncomeDefinition

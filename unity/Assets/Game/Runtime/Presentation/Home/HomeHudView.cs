@@ -71,7 +71,7 @@ namespace Zjcs.Presentation.Home
             go.transform.SetParent(null, false);
             canvas = go.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 40;
+            canvas.sortingOrder = 60;
             CanvasScaler scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
