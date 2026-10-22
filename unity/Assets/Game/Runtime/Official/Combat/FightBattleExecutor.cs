@@ -21,11 +21,15 @@ namespace Zjcs.Combat.Official
         private readonly Dictionary<int, FightBattleUnitState> unitById = new Dictionary<int, FightBattleUnitState>();
         private readonly FightTurnQueue turns;
         private readonly FightRandomStream random;
+        private readonly FightOfficialCombatCatalog statusCatalog;
+        private int lastGlobalRound;
 
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
-            FightDamageSettlement settlement, bool initialize)
+            FightDamageSettlement settlement, bool initialize,
+            FightOfficialCombatCatalog statusCatalog = null)
         {
             this.checkpoint = checkpoint ?? throw new ArgumentNullException(nameof(checkpoint));
+            this.statusCatalog = statusCatalog;
             FightBattleCheckpointRules.Validate(checkpoint, !initialize);
             if (formula == null) throw new ArgumentNullException(nameof(formula));
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
@@ -41,6 +45,7 @@ namespace Zjcs.Combat.Official
             if (!unitById.ContainsKey(1))
                 throw new ArgumentException("Fight roster does not contain the main player unit.", nameof(checkpoint));
             turns = new FightTurnQueue(checkpoint.Timeline, Turns());
+            lastGlobalRound = turns.GlobalRound();
             random = new FightRandomStream(checkpoint.RandomSeed);
             if (initialize) Initialize();
         }
@@ -48,15 +53,17 @@ namespace Zjcs.Combat.Official
         public FightBattleCheckpoint State => checkpoint;
 
         public static FightBattleExecutor Begin(FightBattleCheckpoint checkpoint,
-            FightDamageFormula formula, FightDamageSettlement settlement)
+            FightDamageFormula formula, FightDamageSettlement settlement,
+            FightOfficialCombatCatalog statusCatalog = null)
         {
-            return new FightBattleExecutor(checkpoint, formula, settlement, true);
+            return new FightBattleExecutor(checkpoint, formula, settlement, true, statusCatalog);
         }
 
         public static FightBattleExecutor Restore(FightBattleCheckpoint checkpoint,
-            FightDamageFormula formula, FightDamageSettlement settlement)
+            FightDamageFormula formula, FightDamageSettlement settlement,
+            FightOfficialCombatCatalog statusCatalog = null)
         {
-            return new FightBattleExecutor(checkpoint, formula, settlement, false);
+            return new FightBattleExecutor(checkpoint, formula, settlement, false, statusCatalog);
         }
 
         public FightBattleExecutionResult Step(int sequence, int counter)
@@ -153,6 +160,13 @@ namespace Zjcs.Combat.Official
 
             SpawnNextWaveIfCleared();
             RefreshTurnUnits();
+            int globalRoundAfter = turns.GlobalRound();
+            if (globalRoundAfter != lastGlobalRound)
+            {
+                lastGlobalRound = globalRoundAfter;
+                FightStageStatusRuntime.ApplyGlobalRound(checkpoint.StageStatus, statusCatalog,
+                    units, globalRoundAfter);
+            }
             UpdateOutcome(globalRound);
             var stepEvent = CreateEvent(actor, eventSkill, performedTargets, before,
                 globalRound, movements, casts, damageEvents, stepDuration, stepActionDuration);
@@ -176,6 +190,9 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusState status in unit.Statuses)
                     FightStatusLifecycle.Initialize(status, 0);
             }
+            if (checkpoint.StageStatus != null && statusCatalog != null)
+                FightStageStatusRuntime.ApplyStart(checkpoint.StageStatus, statusCatalog, units, 0);
+            lastGlobalRound = turns.GlobalRound();
 
             if (checkpoint.Waves.Count > 0)
             {
