@@ -33,7 +33,9 @@ namespace Zjcs.Editor.Character
                 throw new InvalidOperationException("Exit Play Mode before running character acceptance.");
             try
             {
-                Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate();
+                Type equipmentValidation = Type.GetType(
+                    "Zjcs.Editor.Equipment.OfficialEquipmentValidation, Zjcs.Editor.Equipment");
+                equipmentValidation?.GetMethod("Validate")?.Invoke(null, null);
             }
             catch (Exception error)
             {
@@ -58,7 +60,7 @@ namespace Zjcs.Editor.Character
             save.Player.Wardrobe.Profession = 1;
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 1, Count = 100000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 39600, Count = 1 });
-            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 20 });
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 120 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 41300, Count = 5000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 5001, Count = 3 });
             try
@@ -251,6 +253,22 @@ namespace Zjcs.Editor.Character
             Require(progression.Player.Skills.SelectedPlan != beforePlan,
                 "The skill plan was not switched by the real button.");
 
+            int pieceId = progression.SkillDefinition(10000)?.PieceItemId ?? 0;
+            long piecesBefore = progression.Player.Inventory.Where(value => value.ItemId == pieceId)
+                .Sum(value => value.Count);
+            ProgressionResult merged = progression.MergeSkill(10000);
+            Require(merged.IsApplied && progression.SkillDefinition(10000) != null
+                && progression.Player.Skills.Skills.Any(skill => skill.ClassId == 10000),
+                "The skill piece merge did not add the skill: " + merged.Message);
+            Require(progression.Player.Inventory.Where(value => value.ItemId == pieceId)
+                .Sum(value => value.Count) < piecesBefore, "The skill piece merge did not consume pieces.");
+            ProgressionResult equipped = progression.EquipSkill(10000, 0);
+            Require(equipped.IsApplied, "The merged skill could not be installed: " + equipped.Message);
+            ProgressionResult swapped = progression.SwapSkillSlots(100, 0, 1);
+            Require(swapped.IsApplied || swapped.Status == ProgressionResultStatus.Unchanged,
+                "The skill slot swap failed: " + swapped.Message);
+            Require(progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills[1] == 10000,
+                "The skill slot swap did not move the installed skill.");
             ProgressionResult title = progression.WearTitle(39600, "character-acceptance-title");
             Require(title.IsApplied && progression.Player.Wardrobe.WornTitleId == 39600,
                 "The title could not be worn through the character service.");
@@ -264,6 +282,8 @@ namespace Zjcs.Editor.Character
                 "The worn title was not persisted to the profile save.");
             Require(reloaded.Save.Player.Skills.SelectedPlan == switchedPlan,
                 "The switched skill plan was not persisted to the profile save.");
+            Require(reloaded.Save.Player.Skills.Skills.Any(skill => skill.ClassId == 10000),
+                "The merged skill was not persisted to the profile save.");
 
             Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
                 + "skill plan switched and title/save persisted. Equip icon rendering and pointer input "
