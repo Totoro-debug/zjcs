@@ -159,8 +159,11 @@ namespace Zjcs.Presentation.Home
                 image.sprite = sprite;
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, (int)Image.Type.Filled);
                 image.preserveAspect = source.image.preserve_aspect;
-                image.color = ColorValue(source.image.color, Color.white);
-                image.enabled = sprite != null;
+                Color tint = ColorValue(source.image.color, Color.white);
+                // A missing official sprite must not render as an opaque white block.
+                if (sprite == null) tint.a = 0f;
+                image.color = tint;
+                image.enabled = true;
                 image.raycastTarget = false;
             }
             if (HasText(source)) CreateText(source, gameObject);

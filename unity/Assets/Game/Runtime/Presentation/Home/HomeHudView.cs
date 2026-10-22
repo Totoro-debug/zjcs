@@ -103,6 +103,9 @@ namespace Zjcs.Presentation.Home
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             BuildAvatar();
+            // Official fade/screenshot guider nodes start hidden; their white mask must not cover the scene.
+            homeRenderer.SetActiveByName("Guider", false);
+            homeRenderer.SetActiveByName("HomeFadeProxy", false);
         }
 
         private void BuildAvatar()
