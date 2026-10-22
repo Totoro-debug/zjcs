@@ -148,8 +148,9 @@ namespace Zjcs.Offline.Progression
                 });
             }
 
+            bool compareRedDot = result.All(item => item.CanUseRedDot.HasValue);
             Comparison<OfflineInventoryItemView> comparer = (left, right) => Compare(left, right,
-                typePriority, sort, reverse, nowUnixSeconds);
+                typePriority, sort, reverse, nowUnixSeconds, compareRedDot);
             result.Sort(comparer);
             return result;
         }
@@ -211,9 +212,17 @@ namespace Zjcs.Offline.Progression
         }
 
         private static int Compare(OfflineInventoryItemView left, OfflineInventoryItemView right,
-            IReadOnlyDictionary<int, int> typePriority, OfflineInventorySort sort, bool reverse, long nowUnixSeconds)
+            IReadOnlyDictionary<int, int> typePriority, OfflineInventorySort sort, bool reverse,
+            long nowUnixSeconds, bool compareRedDot)
         {
             int result;
+            if (compareRedDot)
+            {
+                long leftRedDot = left.CanUseRedDot == true ? left.RedDotType : 0;
+                long rightRedDot = right.CanUseRedDot == true ? right.RedDotType : 0;
+                result = CompareScore(leftRedDot, rightRedDot, true);
+                if (result != 0) return result;
+            }
             if (sort != OfflineInventorySort.GetTime)
             {
                 result = CompareScore(left.IsEquipped ? 1 : 0, right.IsEquipped ? 1 : 0, true);
