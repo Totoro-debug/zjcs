@@ -182,6 +182,19 @@ $integrationResult = $integrationBattle.Step(0, 1)
 Assert-Combat ($integrationResult.Event.ActorId -eq 1 -and $integrationResult.Event.SkillEntityId -eq 12860) 'Configured battle did not execute official skill 12860'
 Assert-Combat ($integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.Outcome.Won -and $integrationCheckpoint.Finished) 'Official skill and falloff status did not produce the expected battle victory'
 Assert-Combat ($integrationResult.Event.HpChanges.Count -eq 1 -and $integrationResult.Event.HpChanges[0].Before -eq 236 -and $integrationResult.Event.HpChanges[0].After -eq 0) 'Configured battle did not record the complete status-modified HP change'
+Assert-Combat ($integrationResult.Event.DamageEvents.Count -eq 6) 'Battle step did not record every resolved hit as a damage event'
+$firstDamageEvent = $integrationResult.Event.DamageEvents[0]
+Assert-Combat ($firstDamageEvent.SourceId -eq 1 -and $firstDamageEvent.TargetId -eq 2 -and $firstDamageEvent.SkillEntityId -eq 12860 -and $firstDamageEvent.SkillItemId -eq 12860 -and -not $firstDamageEvent.IsCure) 'Damage event identity or source attribution mismatch'
+Assert-Combat ($firstDamageEvent.BeforeHp -eq 236 -and $firstDamageEvent.AfterHp -lt 236 -and $firstDamageEvent.MaxHp -eq 236) 'Damage event HP snapshot mismatch'
+Assert-Combat ([Math]::Abs($firstDamageEvent.Damage) -gt 0 -and $firstDamageEvent.Damage -lt 0) 'Damage event settlement sign mismatch'
+$playerStats = $integrationCheckpoint.Statistics.Unit(1)
+$enemyStats = $integrationCheckpoint.Statistics.Unit(2)
+$integrationSkillStats = $integrationCheckpoint.Statistics.Skill(1, 12860, 12860)
+Assert-Combat ($playerStats.Casts -eq 1 -and $playerStats.Hits -eq 6 -and $playerStats.DamageDealt -eq 236) 'Player battle statistics did not accumulate the official skill'
+Assert-Combat ($enemyStats.HitsTaken -eq 6 -and $enemyStats.DamageTaken -eq 236 -and $enemyStats.HealTaken -eq 0) 'Target battle statistics did not accumulate received damage'
+Assert-Combat ($integrationSkillStats.Casts -eq 1 -and $integrationSkillStats.Hits -eq 6 -and $integrationSkillStats.Damage -eq 236) 'Per-skill statistics did not accumulate cast, hits and damage'
+$healthDamageEvent = $integrationResult.Event.DamageEvents | Where-Object { $_.AfterHp -eq 0 } | Select-Object -First 1
+Assert-Combat ($null -ne $healthDamageEvent) 'The lethal hit was not recorded with its post-hit HP'
 $integrationRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
     $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $integrationReplay = $integrationRestored.Step(0, 1)

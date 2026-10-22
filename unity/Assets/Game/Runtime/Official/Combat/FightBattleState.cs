@@ -198,6 +198,7 @@ namespace Zjcs.Combat.Official
         public FightBattleGrid Grid;
         public FightTurnQueueState Timeline = new FightTurnQueueState();
         public FightBattleOutcome Outcome = new FightBattleOutcome();
+        public FightBattleStatistics Statistics = new FightBattleStatistics();
         public List<FightBattleStepReceipt> Receipts = new List<FightBattleStepReceipt>();
     }
 
@@ -221,6 +222,7 @@ namespace Zjcs.Combat.Official
         public int Kind;
         public List<int> TargetIds = new List<int>();
         public List<FightBattleHpChange> HpChanges = new List<FightBattleHpChange>();
+        public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
     }
@@ -272,6 +274,13 @@ namespace Zjcs.Combat.Official
                 || checkpoint.Outcome.EnemyHp > checkpoint.Outcome.EnemyMaxHp
                 || checkpoint.Outcome.Finished != checkpoint.Finished)
                 throw new ArgumentException("Fight checkpoint timeline or outcome is invalid.", nameof(checkpoint));
+            // Statistics were added after the first checkpoints existed; treat missing collections as
+            // an empty accumulator instead of rejecting an otherwise valid running battle.
+            if (checkpoint.Statistics == null) checkpoint.Statistics = new FightBattleStatistics();
+            if (checkpoint.Statistics.Units == null)
+                checkpoint.Statistics.Units = new List<FightBattleUnitStatistics>();
+            if (checkpoint.Statistics.Skills == null)
+                checkpoint.Statistics.Skills = new List<FightBattleSkillStatistics>();
 
             var ids = new HashSet<int>();
             foreach (FightBattleUnitState unit in checkpoint.Units)
