@@ -265,7 +265,7 @@ namespace Zjcs.Presentation.Opening
             {
                 material.SetTexture("_MainTex", texture);
             }
-            else
+            else if (!string.IsNullOrEmpty(textureName))
             {
                 log("官方战场粒子材质贴图缺失: " + textureName);
             }
