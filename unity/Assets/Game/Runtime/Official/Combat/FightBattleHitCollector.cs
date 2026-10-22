@@ -37,7 +37,10 @@ namespace Zjcs.Combat.Official
                     RandomCount = randomCount,
                     Delay = entity.Delay,
                     Anchor = entity.Anchor,
-                    IgnoreAICount = entity.IgnoreAICount
+                    IgnoreAICount = entity.IgnoreAICount,
+                    Scope = entity.Scope == null
+                        ? new List<FightGridPoint>() : new List<FightGridPoint>(entity.Scope),
+                    AllowEmptyScope = entity.AllowEmptyScope
                 });
 
             CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,

@@ -110,6 +110,61 @@ namespace Zjcs.Combat.Official
             return inRange;
         }
 
+        /// <summary>
+        /// Official hit Scope: the damage area is the configured <c>HitScopCfg.Pos</c> offsets around
+        /// the hit anchor (target position for <c>OnTarget</c>, the caster position for
+        /// <c>OnSourceCastPos</c> variants). Only units matching the skill's hit-target side are
+        /// considered. Random hits keep the full area for their own random selection.
+        /// </summary>
+        public static List<FightBattleUnitState> SelectScopeTargets(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
+            FightBattleUnitState primary, FightBattleHitDefinition hit)
+        {
+            var result = new List<FightBattleUnitState>();
+            if (actor == null || units == null || hit == null || hit.Scope == null
+                || hit.Scope.Count == 0) return result;
+            int centerX = hit.Anchor == 0 && primary != null ? primary.X : actor.X;
+            int centerY = hit.Anchor == 0 && primary != null ? primary.Y : actor.Y;
+            foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
+                skill == null ? 1 : skill.TargetType))
+            {
+                int dx = unit.X - centerX;
+                int dy = unit.Y - centerY;
+                bool inScope = false;
+                for (int i = 0; i < hit.Scope.Count; i++)
+                    if (hit.Scope[i].X == dx && hit.Scope[i].Y == dy) { inScope = true; break; }
+                if (inScope) result.Add(unit);
+            }
+            result.Sort((left, right) => CompareCandidates(actor, left, right, skill));
+            if (hit.TargetMode != 1 && hit.TargetMode != 2 && result.Count > 1)
+                result.RemoveRange(1, result.Count - 1);
+            return result;
+        }
+
+        private static List<FightBattleUnitState> ScopeCandidates(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> units, int targetType)
+        {
+            var result = new List<FightBattleUnitState>();
+            foreach (FightBattleUnitState unit in units)
+            {
+                if (!IsSelectable(unit)) continue;
+                bool sameSide = unit.Side == actor.Side;
+                switch (targetType)
+                {
+                    case 0: if (unit.Id == actor.Id) result.Add(unit); break;
+                    case 1: if (!sameSide) result.Add(unit); break;
+                    case 2: if (sameSide) result.Add(unit); break;
+                    case 3: if (sameSide && unit.Id != actor.Id) result.Add(unit); break;
+                    case 8: if (sameSide && unit.Id != actor.Id && unit.CharacterType == 1) result.Add(unit); break;
+                    case 9: if (sameSide && (unit.CharacterType == 1 || unit.CharacterType == 4)) result.Add(unit); break;
+                    case 4: result.Add(unit); break;
+                    case 6: if (unit.Id == actor.MasterId) result.Add(unit); break;
+                    case 7: if (unit.MasterId == actor.Id) result.Add(unit); break;
+                }
+            }
+            return result;
+        }
+
         public static List<FightBattleUnitState> SelectHitTargets(IReadOnlyList<FightBattleUnitState> candidates,
             int targetMode, int randomCount, FightRandomStream random)
         {

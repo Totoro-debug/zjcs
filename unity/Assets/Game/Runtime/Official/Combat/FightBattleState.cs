@@ -184,6 +184,10 @@ namespace Zjcs.Combat.Official
         public float Delay;
         public int Anchor;
         public bool IgnoreAICount;
+        // Official HitScopCfg.Pos offsets: the damage area around the hit anchor. Empty means the
+        // hit only applies to the selected target(s).
+        public List<FightGridPoint> Scope = new List<FightGridPoint>();
+        public bool AllowEmptyScope;
         public bool HasCustomDamage;
         public long CustomDamage;
         public double DamageRate = 1.0;
@@ -211,6 +215,8 @@ namespace Zjcs.Combat.Official
         public float Delay;
         public int Anchor;
         public bool IgnoreAICount;
+        public List<FightGridPoint> Scope = new List<FightGridPoint>();
+        public bool AllowEmptyScope;
     }
 
     [Serializable]

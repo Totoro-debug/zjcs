@@ -83,6 +83,10 @@ Assert-Combat $badSkillItemCatalogRejected 'Official skill item catalog accepted
 $pigName = $officialCatalog.MonsterName(3206)
 Assert-Combat ($pigName -eq [string]::new([char[]]@(0x91CE, 0x732A))) 'Official monster name lookup mismatch'
 Assert-Combat ($null -eq $officialCatalog.MonsterName(0) -and $null -eq $officialCatalog.MonsterName(999999)) 'Monster name lookup invented a name for an unknown id'
+$scopeHit = $officialSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 16101 } | Select-Object -First 1
+Assert-Combat ($null -ne $scopeHit -and $scopeHit.Scope.Count -eq 48 -and $scopeHit.AllowEmptyScope -and $scopeHit.Scope[0].X -eq 0 -and $scopeHit.Scope[0].Y -eq -2) 'Official hit scope mapping mismatch'
+$plainHit = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12861 } | Select-Object -First 1
+Assert-Combat ($null -ne $plainHit -and $plainHit.Scope.Count -eq 1 -and $plainHit.Scope[0].X -eq 0 -and $plainHit.Scope[0].Y -eq 0) 'Official single-cell hit scope mapping mismatch'
 $orderedSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
 Assert-Combat ($orderedSkill.Range.Count -eq 24 -and $orderedSkill.Range[0].Y -eq -1 -and $orderedSkill.Range[1].X -eq -1 -and $orderedSkill.Range[2].X -eq 1 -and $orderedSkill.Range[3].Y -eq 1 -and $orderedSkill.Range[4].X -eq 2) 'Official skill range order was not preserved'
 $moveSkill = $officialCatalog.CreateSkill(15980, 0, 0, 1, 1, 0, $null)

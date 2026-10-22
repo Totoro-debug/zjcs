@@ -689,6 +689,20 @@ namespace Zjcs.Combat.Official
                 result.FixedDamageProperty = Int(damage, "FixedDamageProp");
                 result.DamageParam = Long(damage, "DamageParam");
             }
+            foreach (Dictionary<string, object> holder in new[] { chained, custom, random, damage })
+            {
+                if (holder == null || !holder.ContainsKey("Scope")) continue;
+                result.AllowEmptyScope = Bool(holder, "AllowEmptyScope");
+                foreach (object scopeItem in Array(holder["Scope"], "hit scope"))
+                {
+                    Dictionary<string, object> scope = Object(scopeItem, "hit scope entry");
+                    object rawPos;
+                    if (!scope.TryGetValue("Pos", out rawPos) || rawPos == null) continue;
+                    Dictionary<string, object> pos = Object(rawPos, "hit scope position");
+                    result.Scope.Add(new FightGridPoint(Int(pos, "X"), Int(pos, "Y")));
+                }
+                break;
+            }
             if (chained != null) AddIntArray(chained, "NextHitList", result.ChainedHits, pending, references);
             if (custom != null) AddIntArray(custom, "HitList", result.CustomTargetHits, pending, references);
             if (random != null)
