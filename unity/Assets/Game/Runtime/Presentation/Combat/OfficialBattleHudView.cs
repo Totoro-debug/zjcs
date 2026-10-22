@@ -19,11 +19,18 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleHudRenderer skillRenderer;
         private readonly OfficialBattleHudRenderer timelineRenderer;
         private readonly OfficialBattleHudRenderer speedRenderer;
+        private readonly OfficialBattleHudRenderer bossRenderer;
         private const string SpeedRootPath = "/FightMainPanelSpeedUI";
         private const string SpeedButtonPath = "/FightMainPanelSpeedUI/Btn";
         private const string SpeedLabelPath = "/FightMainPanelSpeedUI/Btn/Text";
         private const string SpeedLockedPath = "/FightMainPanelSpeedUI/Btn/Locked";
         private GameObject speedRoot;
+        private GameObject bossRoot;
+        private const string BossRootPath = "/FightMainPanelBossUI";
+        private const string BossFrontPath = "/FightMainPanelBossUI/Anim/FrontItem";
+        private const string BossBehindPath = "/FightMainPanelBossUI/Anim/BehindItem";
+        private const int MaxBossCount = 2;
+        private readonly List<FightBattleUnitState> bossUnits = new List<FightBattleUnitState>();
         private readonly Dictionary<int, GameObject> skillCards = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> timelineCards = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, Vector3> timelineFrom = new Dictionary<int, Vector3>();
@@ -46,6 +53,7 @@ namespace Zjcs.Presentation.Combat
             skillRenderer = new OfficialBattleHudRenderer(resolved);
             timelineRenderer = new OfficialBattleHudRenderer(resolved);
             speedRenderer = new OfficialBattleHudRenderer(resolved);
+            bossRenderer = new OfficialBattleHudRenderer(resolved);
         }
 
         public GameObject Mount(Transform parent)
@@ -68,6 +76,8 @@ namespace Zjcs.Presentation.Combat
                     button.onClick.AddListener(() => SpeedCycled?.Invoke());
             });
             speedRoot.name = "FightMainPanelSpeedUI";
+            bossRoot = bossRenderer.Create("boss", root.transform);
+            bossRoot.SetActive(false);
             return root;
         }
 
@@ -172,6 +182,62 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
+        /// <summary>
+        /// Binds the official boss panel: at most two living bosses whose wave has spawned, matching
+        /// FightMainPanelBossUI.CheckShowBossCondition (boss monster types, enemy side). HP uses the
+        /// filled TopImg; shield, HpPlies, resilience and status lists stay hidden until their state
+        /// and the missing Slider component are available.
+        /// </summary>
+        public void RefreshBoss(FightBattleCheckpoint checkpoint)
+        {
+            if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            if (bossRoot == null) return;
+            bossUnits.Clear();
+            foreach (FightBattleUnitState unit in checkpoint.Units)
+            {
+                if (unit == null || unit.Hp <= 0 || unit.Ended || unit.Side == 1 || unit.MonsterId <= 0)
+                    continue;
+                if (unit.MonsterType < 3 || unit.MonsterType > 5) continue;
+                if (!IsWaveSpawned(checkpoint, unit.Id)) continue;
+                bossUnits.Add(unit);
+                if (bossUnits.Count >= MaxBossCount) break;
+            }
+            if (bossUnits.Count == 0)
+            {
+                bossRoot.SetActive(false);
+                return;
+            }
+            bossRoot.SetActive(true);
+            BindBossItem(BossFrontPath, bossUnits[0]);
+            if (bossUnits.Count > 1)
+            {
+                bossRenderer.SetActive(BossBehindPath, true);
+                BindBossItem(BossBehindPath, bossUnits[1]);
+            }
+            else bossRenderer.SetActive(BossBehindPath, false);
+        }
+
+        private void BindBossItem(string path, FightBattleUnitState unit)
+        {
+            bossRenderer.SetActive(path, true);
+            Image top = ImageAt(path + "/HpBg/TopImg");
+            if (top != null)
+            {
+                top.type = Image.Type.Filled;
+                top.fillAmount = unit.MaxHp <= 0 ? 0f : Mathf.Clamp01((float)unit.Hp / unit.MaxHp);
+            }
+            bossRenderer.SetActive(path + "/HpBg/CenterImg", false);
+            bossRenderer.SetActive(path + "/HpBg/CurrentPliesText", false);
+            bossRenderer.SetActive(path + "/TextName", false);
+            bossRenderer.SetActive(path + "/Resilience", false);
+            bossRenderer.SetActive(path + "/StatusList", false);
+        }
+
+        private Image ImageAt(string path)
+        {
+            GameObject node = bossRenderer.Find(path);
+            return node == null ? null : node.GetComponent<Image>();
+        }
         public void RefreshTimeline(FightBattleCheckpoint checkpoint,
             Func<FightBattleUnitState, Sprite> portraitIcon,
             Func<FightBattleUnitState, Sprite> factionIcon = null, bool animate = true)
