@@ -286,8 +286,8 @@ namespace Zjcs.Editor.Character
                 "The merged skill was not persisted to the profile save.");
 
             Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
-                + "skill plan switched and title/save persisted. Equip icon rendering and pointer input "
-                + "need a windowed run.");
+                + "skill merged from pieces, skill slots swapped, plan and title persisted. Equip icon "
+                + "rendering and pointer input need a windowed run.");
             Finish(true, null);
         }
 
