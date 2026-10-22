@@ -590,12 +590,34 @@ namespace Zjcs.Presentation.Character
             }
             else
             {
-                ProgressionResult wear = progression.WearAppearance(id, DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                    EventId("wardrobe-wear"));
-                ShowResult(wear);
+                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                WardrobeConflictTip conflict = progression.PreviewAppearanceConflict(id, now);
+                if (conflict.HasConflict) ShowStatus(ConflictText(conflict));
+                ProgressionResult wear = progression.WearAppearance(id, now, EventId("wardrobe-wear"));
+                if (!conflict.HasConflict) ShowResult(wear);
             }
             if (model != null) model.Refresh();
             RefreshWardrobe();
+        }
+
+        private string ConflictText(WardrobeConflictTip conflict)
+        {
+            string target = SkinTypeName(conflict.TargetType);
+            string lost = string.Join("\u3001", conflict.LostTypes.Distinct()
+                .Select(SkinTypeName).Where(value => !string.IsNullOrEmpty(value)));
+            if (string.IsNullOrEmpty(lost)) return "\u7a7f\u6234" + target + "\u540e\u90e8\u5206\u5916\u89c2\u5c06\u88ab\u906e\u6321\u3002";
+            if (conflict.IsCycle) return "\u7a7f\u6234" + target + "\u4e0e\u5df2\u7a7f\u6234\u7684" + lost
+                + "\u4e92\u65a5\uff0c\u7a7f\u6234\u540e\u5c06\u88ab\u906e\u6321\u3002";
+            return "\u7a7f\u6234" + target + "\u5c06\u906e\u6321\uff1a" + lost + "\u3002";
+        }
+
+        private string SkinTypeName(int skinType)
+        {
+            string[] names = { "eye", "brow", "mouth", "hair", "ethnicity", "body", "faceDecoration",
+                "pWeapon", "sWeapon", "faceShape", "facePaint", "headDecoration", "backDecoration" };
+            if (skinType < 0 || skinType >= names.Length) return string.Empty;
+            string value = LookupText("ui_append_appearance_type_" + names[skinType]);
+            return string.IsNullOrEmpty(value) ? names[skinType] : value;
         }
 
         private void SelectTitle(int id)

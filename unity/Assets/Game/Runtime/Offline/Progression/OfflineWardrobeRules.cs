@@ -33,6 +33,14 @@ namespace Zjcs.Offline.Progression
         public Dictionary<int, OfflineAppearanceDye> DyeByType = new Dictionary<int, OfflineAppearanceDye>();
     }
 
+    public sealed class WardrobeConflictTip
+    {
+        public bool HasConflict;
+        public bool IsCycle;
+        public int TargetType;
+        public List<int> LostTypes = new List<int>();
+    }
+
     public sealed class WardrobeResolution
     {
         public Dictionary<int, int> SkinByType { get; } = new Dictionary<int, int>();
@@ -140,6 +148,69 @@ namespace Zjcs.Offline.Progression
                 foreach (int binding in definition.BindingSkinIds ?? Array.Empty<int>())
                     if (skins.TryGetValue(binding, out WardrobeSkinDefinition bound)) result.SkinByType[bound.Type] = binding;
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Original <c>TryGetConflictTip</c>: resolve the effective skins before and after wearing the
+        /// item and report the part that would be hidden, or a mutex cycle that suppresses the item.
+        /// </summary>
+        public static WardrobeConflictTip PreviewWear(WardrobeAppearanceState state, int itemId, long now,
+            IReadOnlyDictionary<int, WardrobeItemDefinition> items,
+            IReadOnlyDictionary<int, WardrobeSkinDefinition> skins, ISet<string> allowedSexProfessions)
+        {
+            var result = new WardrobeConflictTip();
+            if (state == null || items == null || skins == null || allowedSexProfessions == null
+                || !items.TryGetValue(itemId, out WardrobeItemDefinition item)
+                || !item.SkinBySex.TryGetValue(state.Sex, out int skinId)
+                || !skins.TryGetValue(skinId, out WardrobeSkinDefinition skin)) return result;
+            result.TargetType = skin.Type;
+            WardrobeResolution before = Resolve(state, items, skins, allowedSexProfessions);
+            var afterState = new WardrobeAppearanceState
+            {
+                Sex = state.Sex,
+                Profession = state.Profession,
+                BaseSkinByType = new Dictionary<int, int>(state.BaseSkinByType),
+                EquippedSkinBySlot = new Dictionary<int, int>(state.EquippedSkinBySlot),
+                AppendedItemByType = new Dictionary<int, int>(state.AppendedItemByType),
+                WearTimeByType = new Dictionary<int, long>(state.WearTimeByType),
+                DyeByType = new Dictionary<int, OfflineAppearanceDye>(state.DyeByType)
+            };
+            afterState.AppendedItemByType[skin.Type] = itemId;
+            afterState.WearTimeByType[skin.Type] = now;
+            WardrobeResolution after = Resolve(afterState, items, skins, allowedSexProfessions);
+            if (after.CycleTypes.Contains(skin.Type))
+            {
+                result.HasConflict = true;
+                result.IsCycle = true;
+                result.LostTypes.AddRange(after.CycleTypes);
+                return result;
+            }
+            if (after.MutuallySuppressedTypes.Contains(skin.Type))
+            {
+                result.HasConflict = true;
+                result.IsCycle = true;
+                foreach (KeyValuePair<int, int> worn in state.AppendedItemByType)
+                {
+                    if (worn.Key == skin.Type || !items.TryGetValue(worn.Value, out WardrobeItemDefinition other)
+                        || !other.SkinBySex.TryGetValue(state.Sex, out int otherSkin)
+                        || !skins.TryGetValue(otherSkin, out WardrobeSkinDefinition otherDefinition)) continue;
+                    if (!before.EffectiveAppendedSkins.Contains(otherSkin)) continue;
+                    if (Filters(otherSkin, skinId, skins)) result.LostTypes.Add(worn.Key);
+                }
+                return result;
+            }
+            foreach (KeyValuePair<int, int> worn in state.AppendedItemByType)
+            {
+                if (worn.Key == skin.Type || !items.TryGetValue(worn.Value, out WardrobeItemDefinition other)
+                    || !other.SkinBySex.TryGetValue(state.Sex, out int otherSkin)) continue;
+                if (!before.EffectiveAppendedSkins.Contains(otherSkin)) continue;
+                if (before.SkinByType.TryGetValue(worn.Key, out int beforeSkin) && beforeSkin != otherSkin) continue;
+                if (after.EffectiveAppendedSkins.Contains(otherSkin)) continue;
+                result.LostTypes.Add(worn.Key);
+            }
+            result.LostTypes = result.LostTypes.Distinct().ToList();
+            result.HasConflict = result.LostTypes.Count > 0;
             return result;
         }
 

@@ -352,6 +352,12 @@ namespace Zjcs.Offline.Progression
                 catalog.Appearances, catalog.Skins, catalog.AllowedSkins);
         }
 
+        public WardrobeConflictTip PreviewAppearanceConflict(int itemId, long nowUnixSeconds)
+        {
+            return OfflineWardrobeRules.PreviewWear(ReadAppearance(Player.Wardrobe), itemId, nowUnixSeconds,
+                catalog.Appearances, catalog.Skins, catalog.AllowedSkins);
+        }
+
         public bool CanWearAppearance(int itemId, long nowUnixSeconds)
         {
             if (Player.Wardrobe.WornItems.Any(item => item.Id == itemId)) return true;
