@@ -403,6 +403,86 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        public IReadOnlyList<int> GemCandidates(long instanceId)
+        {
+            return EquipmentCatalog == null ? Array.Empty<int>()
+                : OfflineEquipmentOperations.GemCandidates(Player, EquipmentCatalog, instanceId);
+        }
+
+        public ProgressionResult InlayGem(long instanceId, int gemItemId, string eventId)
+        {
+            if (EquipmentCatalog == null || instanceId <= 0 || gemItemId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment, gem and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                if (!OfflineEquipmentOperations.InlayGem(player, EquipmentCatalog, instanceId, gemItemId,
+                        condition => EvaluateGemCondition(condition)))
+                    throw new InvalidOperationException("The gem cannot be inlaid.");
+            }, eventId);
+        }
+
+        public ProgressionResult TakeOffGem(long instanceId, int gemSlot, string eventId)
+        {
+            if (EquipmentCatalog == null || instanceId <= 0 || gemSlot < 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment, gem slot and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                if (!OfflineEquipmentOperations.TakeOffGem(player, instanceId, gemSlot))
+                    throw new InvalidOperationException("The gem cannot be removed.");
+            }, eventId);
+        }
+
+        private bool EvaluateGemCondition(Dictionary<string, object> condition)
+        {
+            if (condition == null || EquipmentCatalog == null) return false;
+            object rawType = condition.TryGetValue("_type", out object type) ? type : null;
+            string conditionType = rawType == null ? string.Empty
+                : Convert.ToString(rawType, CultureInfo.InvariantCulture);
+            if (conditionType == "CompositeAndCondition")
+            {
+                if (!(condition.TryGetValue("Ids", out object ids) && ids is List<object> list)) return false;
+                foreach (object id in list)
+                    if (!EvaluateGemConditionId(Convert.ToInt32(id, CultureInfo.InvariantCulture))) return false;
+                return true;
+            }
+            return EvaluateGemConditionNode(condition);
+        }
+
+        private bool EvaluateGemConditionId(int conditionId)
+        {
+            Dictionary<string, object> row = EquipmentCatalog.Find("conditions", conditionId);
+            if (row == null || !(row.TryGetValue("Condition", out object value)
+                && value is Dictionary<string, object> condition)) return false;
+            return EvaluateGemCondition(condition);
+        }
+
+        private bool EvaluateGemConditionNode(Dictionary<string, object> condition)
+        {
+            string conditionType = Convert.ToString(condition.TryGetValue("_type", out object value) ? value : null,
+                CultureInfo.InvariantCulture);
+            int level = Convert.ToInt32(condition.TryGetValue("Level", out object levelValue) ? levelValue : 0,
+                CultureInfo.InvariantCulture);
+            switch (conditionType)
+            {
+                case "LevelCondition":
+                    return Player.Level >= level;
+                case "EquipLevelCondition":
+                {
+                    int position = Convert.ToInt32(condition.TryGetValue("EquipPos", out object pos) ? pos : 0,
+                        CultureInfo.InvariantCulture);
+                    OfflineEquipmentSlotProgress slot = Player.Equipment.SlotProgress
+                        .FirstOrDefault(item => item.Position == position);
+                    if (slot == null) return false;
+                    int slotLevel = slot.BaseLevel + slot.BlessLevels
+                        .Where(item => item.SeasonId == Player.SeasonRank).Select(item => item.Level)
+                        .DefaultIfEmpty(0).Max();
+                    return slotLevel >= level;
+                }
+                default:
+                    return false;
+            }
+        }
+
         public ProgressionResult SetEquipmentLocked(long instanceId, bool locked, string eventId)
         {
             if (instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))

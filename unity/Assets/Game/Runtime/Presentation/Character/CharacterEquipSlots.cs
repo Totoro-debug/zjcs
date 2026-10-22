@@ -37,6 +37,8 @@ namespace Zjcs.Presentation.Character
         private GameObject compareDialog;
         private GameObject detailDialog;
         private GameObject promoteDialog;
+        private GameObject gemDialog;
+        private long gemInstanceId;
         private int promotePosition;
         private Transform slotRoot;
         private Text statusText;
@@ -406,6 +408,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (gemDialog != null) Destroy(gemDialog);
+            gemDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
             promoteDialog = null;
             if (compareDialog != null) Destroy(compareDialog);
@@ -421,6 +425,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (gemDialog != null)
+            {
+                CloseGems();
+                return true;
+            }
             if (promoteDialog != null)
             {
                 ClosePromote();
@@ -556,6 +565,123 @@ namespace Zjcs.Presentation.Character
             Button takeOff = CreateCompareButton(content, "卸下", new Vector2(260f, 124f),
                 new Color(0.6f, 0.6f, 0.6f, 0.95f));
             takeOff.onClick.AddListener(() => TakeOff(instance));
+            Button gems = CreateCompareButton(content, "星石", new Vector2(0f, 208f),
+                new Color(0.55f, 0.7f, 0.9f, 0.95f));
+            gems.onClick.AddListener(() => OpenGems(instance));
+        }
+
+        private void OpenGems(OfflineEquipmentInstance instance)
+        {
+            CloseGems();
+            gemInstanceId = instance.InstanceId;
+            gemDialog = new GameObject("EquipmentGems", typeof(RectTransform));
+            gemDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)gemDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("GemBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseGems);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "星石";
+            if (content == null) return;
+            float top = 0.86f;
+            foreach (OfflineEquipmentGem gem in instance.Gems ?? new List<OfflineEquipmentGem>())
+            {
+                AddGemRow(content, "孔" + (gem.Slot + 1) + "：" + ItemName(gem.ItemId),
+                    "卸下", ref top, () => RemoveGem(instance, gem.Slot));
+            }
+            foreach (int gemItemId in progression.GemCandidates(instance.InstanceId))
+            {
+                int captured = gemItemId;
+                long owned = progression.Player.Inventory.Where(value => value.ItemId == captured)
+                    .Sum(value => value.Count);
+                AddGemRow(content, ItemName(captured) + "（" + owned + "）",
+                    "镶嵌", ref top, () => InlayGem(instance, captured));
+            }
+            if (top > 0.8f) AddGemRow(content, "无可用星石。", null, ref top, null);
+            Button close = CreateCompareButton(content, "关闭", new Vector2(0f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseGems);
+        }
+
+        private void AddGemRow(RectTransform parent, string label, string action, ref float top, Action onClick)
+        {
+            var rowObject = new GameObject("GemRow", typeof(RectTransform));
+            rowObject.transform.SetParent(parent, false);
+            RectTransform row = (RectTransform)rowObject.transform;
+            row.anchorMin = new Vector2(0.06f, top);
+            row.anchorMax = new Vector2(0.94f, top);
+            row.sizeDelta = new Vector2(0f, 44f);
+            var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            textObject.transform.SetParent(row, false);
+            RectTransform textRect = (RectTransform)textObject.transform;
+            textRect.anchorMin = new Vector2(0f, 0f);
+            textRect.anchorMax = new Vector2(0.68f, 1f);
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            Text text = textObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 22;
+            text.alignment = TextAnchor.MiddleLeft;
+            text.color = Color.white;
+            text.text = label;
+            if (action != null && onClick != null)
+            {
+                Button button = CreateCompareButton(row, action, new Vector2(0f, 0f),
+                    new Color(0.55f, 0.7f, 0.9f, 0.95f));
+                RectTransform buttonRect = (RectTransform)button.transform;
+                buttonRect.anchorMin = new Vector2(1f, 0.5f);
+                buttonRect.anchorMax = new Vector2(1f, 0.5f);
+                buttonRect.pivot = new Vector2(1f, 0.5f);
+                buttonRect.sizeDelta = new Vector2(120f, 44f);
+                buttonRect.anchoredPosition = Vector2.zero;
+                button.onClick.AddListener(() => onClick());
+            }
+            top -= 0.075f;
+        }
+
+        private void InlayGem(OfflineEquipmentInstance instance, int gemItemId)
+        {
+            ProgressionResult result = progression.InlayGem(instance.InstanceId, gemItemId,
+                "character-gem-inlay-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseGems();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void RemoveGem(OfflineEquipmentInstance instance, int slot)
+        {
+            ProgressionResult result = progression.TakeOffGem(instance.InstanceId, slot,
+                "character-gem-takeoff-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseGems();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void CloseGems()
+        {
+            if (gemDialog != null) Destroy(gemDialog);
+            gemDialog = null;
         }
 
         private void ToggleLock(OfflineEquipmentInstance instance)
