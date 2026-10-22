@@ -50,6 +50,7 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> rowTemplate;
         private Dictionary<string, object> infoTemplate;
         private GameObject tutorialDialog;
+        private GameObject noticeDialog;
         private string levelFormat;
         private string limitFormat;
 
@@ -104,6 +105,8 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            if (noticeDialog != null) Destroy(noticeDialog);
+            noticeDialog = null;
             if (tutorialDialog != null) Destroy(tutorialDialog);
             tutorialDialog = null;
             if (dialog != null) Destroy(dialog);
@@ -335,11 +338,109 @@ namespace Zjcs.Presentation.Character
 
         private void Upgrade()
         {
+            int fromSubRank = progression.Player.SubRank;
             ProgressionResult result = progression.UpgradeSubRank("character-rank-up-" + Guid.NewGuid().ToString("N"));
             LastMessage = result.Message ?? result.Status.ToString();
             if (!result.IsApplied) return;
             Refresh();
+            ShowUpgradeNotice(fromSubRank, progression.Player.SubRank);
             Upgraded?.Invoke();
+        }
+
+        private void ShowUpgradeNotice(int fromSubRank, int toSubRank)
+        {
+            if (noticeDialog != null) Destroy(noticeDialog);
+            noticeDialog = new GameObject("UpgradeNoticeDialog", typeof(RectTransform));
+            noticeDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)noticeDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("NoticeBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseNotice);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "位阶突破";
+            if (content == null) return;
+            foreach (RectTransform child in content) child.gameObject.SetActive(false);
+            var body = new GameObject("UpgradeNoticeText", typeof(RectTransform), typeof(Text));
+            body.transform.SetParent(content, false);
+            RectTransform bodyRect = (RectTransform)body.transform;
+            bodyRect.anchorMin = new Vector2(0.08f, 0.2f);
+            bodyRect.anchorMax = new Vector2(0.92f, 0.92f);
+            bodyRect.offsetMin = Vector2.zero;
+            bodyRect.offsetMax = Vector2.zero;
+            Text text = body.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 25;
+            text.color = Color.white;
+            text.alignment = TextAnchor.UpperLeft;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            var lines = new List<string>
+            {
+                RankName(RankRecord(fromSubRank)) + " → " + RankName(RankRecord(toSubRank))
+            };
+            IReadOnlyDictionary<int, long> before = progression.Catalog.CalcCharacterBaseBattleProperties(
+                progression.Player.Level, fromSubRank);
+            IReadOnlyDictionary<int, long> after = progression.Catalog.CalcCharacterBaseBattleProperties(
+                progression.Player.Level, toSubRank);
+            foreach (OfficialPropDefinition definition in progression.Catalog.Props.ByCatalog(0))
+            {
+                long oldValue = CharacterPropFormula.Raw(before, definition.PropType);
+                long newValue = CharacterPropFormula.Raw(after, definition.PropType);
+                if (oldValue == newValue) continue;
+                lines.Add(definition.Name + "：" + OfficialPropFormat.Value(definition, oldValue)
+                    + " → " + OfficialPropFormat.Value(definition, newValue));
+            }
+            text.text = string.Join("\n", lines);
+            Button confirm = CreatePanelButton(content, "确定", new Vector2(0f, 40f),
+                new Color(0.86f, 0.55f, 0.3f, 0.95f));
+            confirm.onClick.AddListener(CloseNotice);
+        }
+
+        private Button CreatePanelButton(RectTransform parent, string label, Vector2 position, Color color)
+        {
+            var buttonObject = new GameObject("NoticeButton", typeof(RectTransform), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)buttonObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0f);
+            rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(240f, 76f);
+            rect.anchoredPosition = position;
+            buttonObject.GetComponent<Image>().color = color;
+            var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            textObject.transform.SetParent(buttonObject.transform, false);
+            RectTransform textRect = (RectTransform)textObject.transform;
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            Text text = textObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 26;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = Color.white;
+            text.text = label;
+            return buttonObject.GetComponent<Button>();
+        }
+
+        private void CloseNotice()
+        {
+            if (noticeDialog != null) Destroy(noticeDialog);
+            noticeDialog = null;
         }
 
         private GameObject PropRow(RectTransform parent, string name, string value)

@@ -1356,8 +1356,14 @@ namespace Zjcs.Presentation.World
             OfficialBattleGridMapper mapper = new OfficialBattleGridMapper(battleRoot, grid);
             Sprite fallbackPortrait = uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
+            OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
+            Func<int, Sprite> skillIconResolver = itemId =>
+            {
+                Sprite icon = skillIcons == null ? null : skillIcons.Find(itemId);
+                return icon != null ? icon : fallbackPortrait;
+            };
             battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
-                _ => fallbackPortrait,
+                skillIconResolver,
                 _ => fallbackPortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
                 (_, __) => "idle_01",
