@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> infoTemplate;
         private GameObject tutorialDialog;
         private GameObject noticeDialog;
+        private Text statusText;
         private string levelFormat;
         private string limitFormat;
 
@@ -99,6 +100,7 @@ namespace Zjcs.Presentation.Character
             rect.offsetMax = Vector2.zero;
             factory.Build(template, rect, nodes, buttons);
             Bind();
+            CreateStatusText();
             Refresh();
             ShowTutorialIfPending();
         }
@@ -235,6 +237,57 @@ namespace Zjcs.Presentation.Character
             tutorialDialog = null;
         }
 
+        private void CreateStatusText()
+        {
+            var statusObject = new GameObject("RankStatus", typeof(RectTransform), typeof(Text));
+            statusObject.transform.SetParent(transform, false);
+            RectTransform rect = (RectTransform)statusObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0f);
+            rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(900f, 40f);
+            rect.anchoredPosition = new Vector2(0f, 8f);
+            statusText = statusObject.GetComponent<Text>();
+            statusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            statusText.fontSize = 20;
+            statusText.alignment = TextAnchor.MiddleCenter;
+            statusText.color = new Color(1f, 0.85f, 0.5f);
+            statusText.raycastTarget = false;
+        }
+
+        private void RefreshStatus(Dictionary<string, object> nextRank, bool isMax)
+        {
+            if (statusText == null) return;
+            if (isMax || nextRank == null)
+            {
+                statusText.text = "\u5df2\u8fbe\u6700\u9ad8\u4f4d\u9636\u3002";
+                return;
+            }
+            if (!(nextRank.TryGetValue("Items", out object itemsRaw)
+                && itemsRaw is Dictionary<string, object> items))
+            {
+                statusText.text = string.Empty;
+                return;
+            }
+            var missing = new List<string>();
+            foreach (KeyValuePair<string, object> entry in items)
+            {
+                int itemId = int.Parse(entry.Key, CultureInfo.InvariantCulture);
+                long required = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+                long owned = progression.Player.Inventory.Where(stack => stack.ItemId == itemId)
+                    .Sum(stack => stack.Count);
+                if (owned < required) missing.Add(ItemName(itemId) + " " + owned + "/" + required);
+            }
+            statusText.text = missing.Count == 0 ? string.Empty : "\u6750\u6599\u4e0d\u8db3\uff1a" + string.Join("\u3001", missing);
+        }
+
+        private string ItemName(int itemId)
+        {
+            Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
+            return item == null ? itemId.ToString(CultureInfo.InvariantCulture)
+                : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
+        }
+
         private void Refresh()
         {
             if (dialog == null) return;
@@ -264,6 +317,7 @@ namespace Zjcs.Presentation.Character
             RefreshMaterials(player, nextRank, isMax);
             ApplyLimitState(player, isMax, baseLimit);
             if (maxCannotMake != null) maxCannotMake.SetActive(isMax);
+            RefreshStatus(nextRank, isMax);
         }
 
         private void RefreshStars(int subRank)
