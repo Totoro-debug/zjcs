@@ -701,6 +701,20 @@ namespace Zjcs.Offline.Progression
             player.Wardrobe.WornSkins = player.Wardrobe.WornSkins.OrderBy(skin => skin.Type).ToList();
         }
 
+        public bool IsWardrobeItemNew(int itemId)
+        {
+            return itemId > 0 && !Player.Wardrobe.SeenItems.Contains(itemId);
+        }
+
+        public ProgressionResult MarkWardrobeItemSeen(int itemId)
+        {
+            if (itemId <= 0 || Player.Wardrobe.SeenItems.Contains(itemId))
+                return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
+            return session.ApplyCharacterMutation(player => player.Wardrobe.SeenItems.Add(itemId),
+                "wardrobe-seen-" + itemId.ToString(CultureInfo.InvariantCulture) + "-"
+                + Guid.NewGuid().ToString("N"));
+        }
+
         public ProgressionResult WearAppearance(int itemId, long nowUnixSeconds, string eventId)
         {
             return session.ApplyCharacterMutation(player =>

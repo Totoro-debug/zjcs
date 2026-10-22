@@ -582,13 +582,25 @@ namespace Zjcs.Presentation.Character
             SetText(state, entry.ItemId == 0 ? string.Empty
                 : selected ? "\u5df2\u7a7f" : wearable ? string.Empty : "\u4e0d\u53ef\u7a7f");
             if (state != null) state.color = selected ? new Color(0.55f, 1f, 0.55f) : new Color(1f, 0.6f, 0.55f);
+            Text newBadge = EnsureBadge(card.transform, "WardrobeNew", new Vector2(0f, 1f),
+                new Vector2(6f, -4f), TextAnchor.UpperLeft, 14);
+            bool isNew = entry.ItemId > 0 && progression.IsWardrobeItemNew(entry.ItemId);
+            SetText(newBadge, isNew ? "\u65b0" : string.Empty);
+            if (newBadge != null) newBadge.color = new Color(1f, 0.85f, 0.3f);
 
             Text expiry = EnsureExpiryText(card.transform, title);
             expiry.text = entry.ItemId == 0 ? string.Empty : Remaining(entry.ItemId, title);
         }
 
+        private void MarkSeen(int itemId)
+        {
+            if (itemId > 0 && progression.IsWardrobeItemNew(itemId))
+                progression.MarkWardrobeItemSeen(itemId);
+        }
+
         private void SelectAppearance(int id, int type)
         {
+            MarkSeen(id);
             if (id == 0)
             {
                 int skinType = OfflineWardrobeRules.SkinTypeForItemType(type);
