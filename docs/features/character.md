@@ -43,6 +43,8 @@
 
 ## 完整还原部分
 
+人物程序集 [`Zjcs.Presentation.Character.asmdef`](../../unity/Assets/Game/Runtime/Presentation/Character/Zjcs.Presentation.Character.asmdef) 显式引用 `Zjcs.Offline.Skills`，使 `CharacterSkillPanel` 的技能方案类型可被 Unity 编译器解析。此引用及 Map10 网格 UV 的类型修复后，同版本 Unity Editor 全工程脚本编译成功并加载 `Zjcs.Editor.CharacterCreation`；该结论仅覆盖脚本编译与程序集加载，不代表人物页或开场 Play Mode 验收通过。
+
 Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属性文本、限时外观配置、原衣柜规则/物品/UI 数据及其引用图片。生成入口为 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)，输出与官方输入哈希登记于 `unity/Assets/Official/Character/source-manifest.json`；`OfficialCharacterAssetCatalog.FindSprite` 按原资源 URI 查找人物与衣柜 Sprite，编辑器绑定及来源核对入口为 [CharacterProgressionValidation](../../unity/Assets/Game/Editor/Character/CharacterProgressionValidation.cs) 的 `BindOfficialCatalogs`。
 
 [OfficialCharacterPanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialCharacterPanelView.cs) 按已恢复的人物、属性和位阶面板层级构建 Unity UI，并绑定等级/经验、位阶材料操作、属性弹窗和官方 `AppearanceBtn`；[CharacterFeatureRuntime.OpenProfile](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterFeatureRuntime.cs) 从人物存档槽打开页面。[CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 在新建或选中已有角色后提供“人物”入口，关闭人物页返回当前存档流程。
@@ -110,8 +112,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 - [x] 五槽实例、已穿图标、品质底图、等级、副武器职业解锁、空槽／已穿与空列表状态已接线；装备主／副／额外／套装属性与分块战力已进入人物属性。
 - [ ] 补齐强化／祝福等级显示、星石小图、幻装标记、缺装／更优／可强化提示点与原红点；装备图标已纳入人物目录 `item_icons`（1,223 件装备），未覆盖项仍走原 `MissingIconText` 末四字降级。
-- [x] 已穿槽点击打开候选列表；选中候选后打开原 `CharacterPanelEquipComparePanel` 框架的双栏比较（当前／更换名称与装备评分），确认后经 `WearEquipment` 替换并刷新；原 `CharacterPanelEquipDetailPanel` 的完整物品详情、词条与强化入口仍未接线。
-- [ ] 连接已穿详情（`CharacterPanelEquipDetailPanel`）、部位星石影响与原套装/职业检查提示。
+- [x] 已穿槽点击打开原 `CharacterPanelEquipDetailPanel` 框架的详情层（图标、名称、等级、主／副／额外属性与评分来源），提供“更换／强化／关闭”；更换进入候选列表，选中候选后打开原 `CharacterPanelEquipComparePanel` 框架的双栏比较（当前／更换名称与装备评分），确认后经 `WearEquipment` 替换并刷新。原详情内部件与词条专属控件未提取，词条与星石仍以属性行展示/未展示。
+- [ ] 连接强化（`EquipPromotePanel`）、部位星石影响与原套装／职业检查提示；详情层“强化”当前只给出未接线提示。
 - [ ] 连通[装备](equipment.md)的强化、继承、星石、词条、锁定、分解与碎片合成，复用同一实例 ID、背包、部位强化档案及原子存档事务；卸下入口按原位置归入背包流程。
 
 ### 技能安装与附属入口
