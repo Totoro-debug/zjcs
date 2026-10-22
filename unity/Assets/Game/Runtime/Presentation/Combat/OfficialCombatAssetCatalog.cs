@@ -26,28 +26,39 @@ namespace Zjcs.Presentation.Combat
 
         public FightOfficialCombatCatalog Load()
         {
+            if (loadedCatalog != null) return loadedCatalog;
             FightOfficialCombatSourceManifest skillSource = ReadManifest(skillSourceManifest, "skill-rules.json");
             FightOfficialCombatSourceManifest battleSource = ReadManifest(battleSourceManifest, "battle-rules.json");
             if (skillRules == null || battleRules == null)
                 throw new InvalidOperationException("Official combat rule TextAssets are not bound.");
 
-            return FightOfficialCombatCatalog.Load(skillRules.text, skillSource.OutputSha256,
+            loadedCatalog = FightOfficialCombatCatalog.Load(skillRules.text, skillSource.OutputSha256,
                 skillSource.Manifest, battleRules.text, battleSource.OutputSha256, battleSource.Manifest);
+            return loadedCatalog;
         }
 
         public FightDamageFormula LoadDamageFormula()
         {
+            if (loadedFormula != null) return loadedFormula;
             if (rules == null) throw new InvalidOperationException("Official rules TextAsset is not bound.");
             FightOfficialCombatSourceManifest source = ReadManifest(rulesSourceManifest, "rules.json");
-            return Load().CreateDamageFormula(rules.text, source.OutputSha256, source.Manifest);
+            loadedFormula = Load().CreateDamageFormula(rules.text, source.OutputSha256, source.Manifest);
+            return loadedFormula;
         }
 
         public FightOfficialSkillItemCatalog LoadSkillItems()
         {
+            if (loadedSkillItems != null) return loadedSkillItems;
             if (rules == null) throw new InvalidOperationException("Official rules TextAsset is not bound.");
             FightOfficialCombatSourceManifest source = ReadManifest(rulesSourceManifest, "rules.json");
-            return FightOfficialSkillItemCatalog.Load(rules.text, source.OutputSha256, source.Manifest);
+            loadedSkillItems = FightOfficialSkillItemCatalog.Load(rules.text, source.OutputSha256,
+                source.Manifest);
+            return loadedSkillItems;
         }
+
+        private FightOfficialCombatCatalog loadedCatalog;
+        private FightDamageFormula loadedFormula;
+        private FightOfficialSkillItemCatalog loadedSkillItems;
 
         public FightBattleExecutor BeginBattle(FightBattleCheckpoint checkpoint)
         {

@@ -18,6 +18,12 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleHudRenderer renderer;
         private readonly OfficialBattleHudRenderer skillRenderer;
         private readonly OfficialBattleHudRenderer timelineRenderer;
+        private readonly OfficialBattleHudRenderer speedRenderer;
+        private const string SpeedRootPath = "/FightMainPanelSpeedUI";
+        private const string SpeedButtonPath = "/FightMainPanelSpeedUI/Btn";
+        private const string SpeedLabelPath = "/FightMainPanelSpeedUI/Btn/Text";
+        private const string SpeedLockedPath = "/FightMainPanelSpeedUI/Btn/Locked";
+        private GameObject speedRoot;
         private readonly Dictionary<int, GameObject> skillCards = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> timelineCards = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, Vector3> timelineFrom = new Dictionary<int, Vector3>();
@@ -31,6 +37,7 @@ namespace Zjcs.Presentation.Combat
         private bool timelineMoving;
 
         public event Action<string> ControlClicked;
+        public event Action SpeedCycled;
 
         public OfficialBattleHudView(OfficialBattleHudCatalog catalog)
         {
@@ -38,6 +45,7 @@ namespace Zjcs.Presentation.Combat
             renderer = new OfficialBattleHudRenderer(resolved);
             skillRenderer = new OfficialBattleHudRenderer(resolved);
             timelineRenderer = new OfficialBattleHudRenderer(resolved);
+            speedRenderer = new OfficialBattleHudRenderer(resolved);
         }
 
         public GameObject Mount(Transform parent)
@@ -53,7 +61,31 @@ namespace Zjcs.Presentation.Combat
             if (timelineSlot == null) throw new InvalidOperationException("Official battle timeline slot is missing.");
             timelineSlot.gameObject.SetActive(true);
             timelineBounds = new Vector2(timelineSlot.rect.xMax, timelineSlot.rect.xMin);
+            speedRoot = speedRenderer.Create("speed", root.transform, (path, node) =>
+            {
+                Button button = node.GetComponent<Button>();
+                if (button != null && path == SpeedButtonPath)
+                    button.onClick.AddListener(() => SpeedCycled?.Invoke());
+            });
+            speedRoot.name = "FightMainPanelSpeedUI";
             return root;
+        }
+
+        /// <summary>
+        /// Binds the official speed button to the resolved speed table. The button text is the
+        /// official <c>SpeedUIs</c> label, not the multiplier; the lock icon is shown when no
+        /// alternative official speed is currently selectable.
+        /// </summary>
+        public void RefreshSpeed(FightBattleSpeedSettings settings, int index,
+            IReadOnlyList<int> unlocked)
+        {
+            if (settings == null || speedRoot == null) return;
+            bool canSwitch = unlocked != null && unlocked.Count > 1;
+            speedRenderer.SetText(SpeedLabelPath, settings.Label(index));
+            speedRenderer.SetActive(SpeedLockedPath, !canSwitch);
+            GameObject button = speedRenderer.Find(SpeedButtonPath);
+            Button component = button == null ? null : button.GetComponent<Button>();
+            if (component != null) component.interactable = true;
         }
 
         public void Refresh(FightBattleCheckpoint checkpoint)

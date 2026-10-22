@@ -93,6 +93,8 @@ Assert-Combat ($officialCatalog.CalculateSkillCooldown(16020, 1, 101, 11, $empty
 $sourceCooldown = [System.Collections.Generic.Dictionary[int,long]]::new()
 $sourceCooldown[$officialCatalog.CooldownPropertyId] = 3
 Assert-Combat ($officialCatalog.CalculateSkillCooldown(16020, 1, 101, 11, $sourceCooldown) -eq 3) 'Official skill cooldown did not consume the CD property'
+$defaultSpeeds = [Zjcs.Combat.Official.FightBattleSpeedSettings]::Default()
+Assert-Combat (($defaultSpeeds.Resolve(0, $null) -join ',') -eq '0') 'Default speed settings resolved more than the unconditional speed'
 $configSource = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $configSource.Id = 1; $configSource.Hp = 100; $configSource.MaxHp = 100
 $configTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -160,6 +162,15 @@ foreach ($property in $rules.prop_cfg) {
 
 $formula = $officialCatalog.CreateDamageFormula(
     $rulesJson, $citySource.data_sha256.'rules.json', $citySource.manifest)
+$speeds = $officialCatalog.SpeedSettings
+Assert-Combat ($speeds.Speeds.Count -eq 4 -and $speeds.Speeds[1] -eq 1.5 -and $speeds.Label(2) -eq '3') 'Official battle speed table or label mapping mismatch'
+$lockedSpeeds = $speeds.Resolve(0, { param($id) $false })
+Assert-Combat ($lockedSpeeds.Count -eq 1 -and $lockedSpeeds[0] -eq 0) 'Official battle speed conditions were opened without evidence'
+$levelSpeeds = $speeds.Resolve(0, { param($id) $id -eq 3005 })
+Assert-Combat (($levelSpeeds -join ',') -eq '0,1') 'Official level-gated battle speed was not resolved'
+$allSpeeds = $speeds.Resolve(0, { param($id) $true })
+Assert-Combat (($allSpeeds -join ',') -eq '0,1,2') 'Official None-mode speed list did not keep its configured indexes'
+Assert-Combat ($speeds.Multiplier(0) -eq 1.0 -and $speeds.Multiplier(3) -eq 2.5 -and $speeds.Multiplier(99) -eq 1.0) 'Official speed multiplier fell back to the UI label'
 $integrationCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
 $integrationCheckpoint.StageId = 22001; $integrationCheckpoint.RandomSeed = 1
 $integrationCheckpoint.Units.Add($integrationPlayer); $integrationCheckpoint.Units.Add($integrationEnemy)
