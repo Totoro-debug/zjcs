@@ -620,6 +620,58 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        public IReadOnlyDictionary<int, long> PurifyCost(int lockedCount)
+        {
+            if (EquipmentCatalog == null) return new Dictionary<int, long>();
+            Dictionary<string, object> row = EquipmentCatalog.Rows("equip_purify_cost")
+                .FirstOrDefault(value => Convert.ToInt32(value["Count"], CultureInfo.InvariantCulture) == lockedCount);
+            if (row == null || !(row.TryGetValue("Cost", out object raw)
+                && raw is Dictionary<string, object> cost)) return new Dictionary<int, long>();
+            var result = new Dictionary<int, long>();
+            foreach (KeyValuePair<string, object> entry in cost)
+                result[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                    = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+            return result;
+        }
+
+        /// <summary>Rerolls every unlocked term, keeping the indices in <paramref name="keepIndices"/>.</summary>
+        public ProgressionResult PurifyEquipment(long instanceId, IReadOnlyCollection<int> keepIndices, string eventId)
+        {
+            if (EquipmentCatalog == null || instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment instance and event ID are required.");
+            OfflineEquipmentInstance instance = Player.Equipment.Instances
+                .FirstOrDefault(value => value.InstanceId == instanceId);
+            if (instance == null || instance.Terms == null || instance.Terms.Count == 0)
+                return Invalid("The equipment has no terms to purify.");
+            var keep = new HashSet<int>(keepIndices ?? Array.Empty<int>());
+            if (keep.Any(index => index < 0 || index >= instance.Terms.Count)
+                || keep.Count >= instance.Terms.Count)
+                return Invalid("Select fewer terms to keep before purifying.");
+            IReadOnlyDictionary<int, long> cost = PurifyCost(keep.Count);
+            if (cost.Count == 0) return Invalid("The official purify cost is unavailable.");
+            foreach (KeyValuePair<int, long> entry in cost)
+                if (Player.Inventory.Where(value => value.ItemId == entry.Key).Sum(value => value.Count) < entry.Value)
+                    return Invalid("Not enough purify materials.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                foreach (KeyValuePair<int, long> entry in cost)
+                {
+                    OfflineItemStack stack = player.Inventory.First(value => value.ItemId == entry.Key);
+                    stack.Count -= entry.Value;
+                }
+                OfflineEquipmentInstance target = player.Equipment.Instances
+                    .First(value => value.InstanceId == instanceId);
+                var random = new System.Random(BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
+                for (int index = 0; index < target.Terms.Count; index++)
+                {
+                    if (keep.Contains(index)) continue;
+                    OfflineEquipmentTerm generated = OfficialEquipmentGenerator.GenerateReplacement(
+                        EquipmentCatalog, target.ItemId, target.Terms, () => (float)random.NextDouble());
+                    if (generated != null) target.Terms[index] = generated;
+                }
+            }, eventId);
+        }
+
         public ProgressionResult SetEquipmentLocked(long instanceId, bool locked, string eventId)
         {
             if (instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))

@@ -39,6 +39,10 @@ namespace Zjcs.Presentation.Character
         private GameObject promoteDialog;
         private GameObject gemDialog;
         private GameObject inheritDialog;
+        private GameObject purifyDialog;
+        private long purifyInstanceId;
+        private readonly HashSet<int> purifyKeep = new HashSet<int>();
+        private Text purifyCostText;
         private long gemInstanceId;
         private int promotePosition;
         private Transform slotRoot;
@@ -426,6 +430,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (purifyDialog != null) Destroy(purifyDialog);
+            purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
             inheritDialog = null;
             if (gemDialog != null) Destroy(gemDialog);
@@ -445,6 +451,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (purifyDialog != null)
+            {
+                ClosePurify();
+                return true;
+            }
             if (inheritDialog != null)
             {
                 CloseInherit();
@@ -771,8 +782,133 @@ namespace Zjcs.Presentation.Character
 
         private void CloseInherit()
         {
+            if (purifyDialog != null) Destroy(purifyDialog);
+            purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
             inheritDialog = null;
+        }
+
+        private void OpenPurify(OfflineEquipmentInstance instance)
+        {
+            ClosePurify();
+            purifyInstanceId = instance.InstanceId;
+            purifyKeep.Clear();
+            purifyDialog = new GameObject("EquipmentPurify", typeof(RectTransform));
+            purifyDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)purifyDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("PurifyBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(ClosePurify);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "\u8bcd\u6761\u7cbe\u70bc";
+            if (content == null) return;
+            float top = 0.82f;
+            for (int index = 0; index < (instance.Terms?.Count ?? 0); index++)
+            {
+                if (top < 0.2f) break;
+                int captured = index;
+                OfflineEquipmentTerm term = instance.Terms[index];
+                string name = term != null && term.Type == 1
+                    ? (progression.Catalog.Props.Get(term.PropertyType)?.Name ?? ("\u5c5e\u6027 " + term.PropertyType))
+                        + " \u00d7" + term.Factor.ToString("0.##", CultureInfo.InvariantCulture)
+                    : "\u7279\u6b8a\u8bcd\u6761";
+                var rowObject = new GameObject("PurifyTerm", typeof(RectTransform));
+                rowObject.transform.SetParent(content, false);
+                RectTransform row = (RectTransform)rowObject.transform;
+                row.anchorMin = new Vector2(0.08f, top);
+                row.anchorMax = new Vector2(0.92f, top);
+                row.sizeDelta = new Vector2(0f, 52f);
+                if (CharacterPanelNodeFactory.UiFont != null)
+                {
+                    var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                    labelObject.transform.SetParent(row, false);
+                    RectTransform labelRect = (RectTransform)labelObject.transform;
+                    labelRect.anchorMin = new Vector2(0f, 0f);
+                    labelRect.anchorMax = new Vector2(0.75f, 1f);
+                    labelRect.offsetMin = Vector2.zero;
+                    labelRect.offsetMax = Vector2.zero;
+                    Text label = labelObject.GetComponent<Text>();
+                    label.font = CharacterPanelNodeFactory.UiFont;
+                    label.fontSize = 22;
+                    label.alignment = TextAnchor.MiddleLeft;
+                    label.color = Color.white;
+                    label.text = "\u4fdd\u7559\uff1a" + name;
+                }
+                var toggleObject = new GameObject("KeepToggle", typeof(RectTransform), typeof(Image), typeof(Toggle));
+                toggleObject.transform.SetParent(row, false);
+                RectTransform toggleRect = (RectTransform)toggleObject.transform;
+                toggleRect.anchorMin = new Vector2(0.85f, 0.5f);
+                toggleRect.anchorMax = new Vector2(0.85f, 0.5f);
+                toggleRect.sizeDelta = new Vector2(40f, 40f);
+                Toggle toggle = toggleObject.GetComponent<Toggle>();
+                toggle.targetGraphic = toggleObject.GetComponent<Image>();
+                toggle.onValueChanged.AddListener(value =>
+                {
+                    if (value) purifyKeep.Add(captured); else purifyKeep.Remove(captured);
+                    RefreshPurifyCost();
+                });
+                top -= 0.1f;
+            }
+            var costObject = new GameObject("PurifyCost", typeof(RectTransform));
+            costObject.transform.SetParent(content, false);
+            RectTransform costRect = (RectTransform)costObject.transform;
+            costRect.anchorMin = new Vector2(0.08f, 0.16f);
+            costRect.anchorMax = new Vector2(0.92f, 0.16f);
+            costRect.sizeDelta = new Vector2(0f, 40f);
+            purifyCostText = costObject.AddComponent<Text>();
+            purifyCostText.font = CharacterPanelNodeFactory.UiFont;
+            purifyCostText.fontSize = 20;
+            purifyCostText.alignment = TextAnchor.MiddleCenter;
+            purifyCostText.color = new Color(1f, 0.85f, 0.5f);
+            RefreshPurifyCost();
+            Button confirm = CreateCompareButton(content, "\u7cbe\u70bc", new Vector2(-120f, 40f),
+                new Color(0.85f, 0.6f, 0.85f, 0.95f));
+            confirm.onClick.AddListener(DoPurify);
+            Button close = CreateCompareButton(content, "\u5173\u95ed", new Vector2(120f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(ClosePurify);
+        }
+
+        private void RefreshPurifyCost()
+        {
+            if (purifyCostText == null) return;
+            IReadOnlyDictionary<int, long> cost = progression.PurifyCost(purifyKeep.Count);
+            purifyCostText.text = "\u4fdd\u7559 " + purifyKeep.Count + " \u6761\uff0c\u6d88\u8017\uff1a"
+                + string.Join("\u3001", cost.Select(pair => ItemName(pair.Key) + " \u00d7" + pair.Value));
+        }
+
+        private void DoPurify()
+        {
+            ProgressionResult result = progression.PurifyEquipment(purifyInstanceId, purifyKeep,
+                "character-equip-purify-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            ClosePurify();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void ClosePurify()
+        {
+            if (purifyDialog != null) Destroy(purifyDialog);
+            purifyDialog = null;
+            purifyCostText = null;
         }
 
         private void ToggleLock(OfflineEquipmentInstance instance)
