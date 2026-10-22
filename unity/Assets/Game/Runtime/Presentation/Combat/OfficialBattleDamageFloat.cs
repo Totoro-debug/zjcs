@@ -31,7 +31,10 @@ namespace Zjcs.Presentation.Combat
             label.text = text;
             label.color = tint;
             label.enableWordWrapping = false;
+            label.sortingOrder = 50;
             gameObject.transform.localScale = Vector3.one * 0.02f;
+            Camera camera = Camera.main;
+            if (camera != null) gameObject.transform.rotation = camera.transform.rotation;
             var result = gameObject.AddComponent<OfficialBattleDamageFloat>();
             result.label = label;
             result.start = position;
