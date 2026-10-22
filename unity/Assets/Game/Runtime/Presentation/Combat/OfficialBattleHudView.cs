@@ -20,6 +20,8 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleHudRenderer timelineRenderer;
         private readonly OfficialBattleHudRenderer speedRenderer;
         private readonly OfficialBattleHudRenderer bossRenderer;
+        private readonly OfficialBattleHudCatalog resolvedCatalog;
+        private readonly OfficialBattleHudRenderer statusRenderer;
         private const string SpeedRootPath = "/FightMainPanelSpeedUI";
         private const string SpeedButtonPath = "/FightMainPanelSpeedUI/Btn";
         private const string SpeedLabelPath = "/FightMainPanelSpeedUI/Btn/Text";
@@ -49,11 +51,13 @@ namespace Zjcs.Presentation.Combat
         public OfficialBattleHudView(OfficialBattleHudCatalog catalog)
         {
             OfficialBattleHudCatalog resolved = catalog ?? OfficialBattleHudCatalog.LoadDefault();
+            resolvedCatalog = resolved;
             renderer = new OfficialBattleHudRenderer(resolved);
             skillRenderer = new OfficialBattleHudRenderer(resolved);
             timelineRenderer = new OfficialBattleHudRenderer(resolved);
             speedRenderer = new OfficialBattleHudRenderer(resolved);
             bossRenderer = new OfficialBattleHudRenderer(resolved);
+            statusRenderer = new OfficialBattleHudRenderer(resolved);
         }
 
         public GameObject Mount(Transform parent)
@@ -218,6 +222,36 @@ namespace Zjcs.Presentation.Combat
             else bossRenderer.SetActive(BossBehindPath, false);
         }
 
+        private const string BossBuffBackground = "res://assets/official/sprites/BG_Buff-87eea09694.png";
+        private const string BossAbnormalBackground = "res://assets/official/sprites/BG_Abnormal-56ca57608c.png";
+
+        /// <summary>
+        /// Official boss status list: one status_item per active status with its stack count and the
+        /// official buff/abnormal background. Per-status icons are not mapped in the payload yet, so
+        /// the icon slot stays hidden instead of showing an unrelated sprite.
+        /// </summary>
+        private void RefreshBossStatuses(Transform parent, FightBattleUnitState unit)
+        {
+            for (int i = parent.childCount - 1; i >= 0; i--)
+                UnityEngine.Object.Destroy(parent.GetChild(i).gameObject);
+            if (unit == null || unit.Statuses == null) return;
+            foreach (FightBattleStatusState status in unit.Statuses)
+            {
+                if (status == null || status.StackCount <= 0) continue;
+                GameObject item = statusRenderer.Create("status_item", parent);
+                Image background = item.GetComponent<Image>();
+                Sprite sprite = resolvedCatalog.FindSprite(status.StatusType == 1
+                    ? BossBuffBackground : BossAbnormalBackground);
+                if (background != null && sprite != null) background.sprite = sprite;
+                Transform icon = item.transform.Find("StatusImg");
+                if (icon != null) icon.gameObject.SetActive(false);
+                Transform count = item.transform.Find("CountTxt");
+                TMP_Text countText = count == null ? null : count.GetComponent<TMP_Text>();
+                if (countText != null && status.StackCount > 1)
+                    countText.text = status.StackCount.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
         private void BindBossItem(string path, FightBattleUnitState unit,
             Func<FightBattleUnitState, string> nameResolver)
         {
@@ -236,6 +270,8 @@ namespace Zjcs.Presentation.Combat
             bool hasName = !string.IsNullOrWhiteSpace(name);
             if (nameText != null && hasName) nameText.text = name;
             bossRenderer.SetActive(path + "/TextName", hasName && nameText != null);
+            GameObject statusList = bossRenderer.Find(path + "/StatusList");
+            if (statusList != null) RefreshBossStatuses(statusList.transform, unit);
             bossRenderer.SetActive(path + "/Resilience", false);
             bossRenderer.SetActive(path + "/StatusList", false);
         }
