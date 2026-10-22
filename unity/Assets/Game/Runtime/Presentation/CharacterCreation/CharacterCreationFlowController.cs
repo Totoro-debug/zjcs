@@ -53,6 +53,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private Coroutine pendingSave;
         private GameObject characterFeatureRoot;
         private CharacterFeatureRuntime characterRuntime;
+        private Zjcs.Presentation.Home.HomeFeatureRuntime homeRuntime;
         private OfficialCharacterPanelView characterPanel;
         private CharacterCreationNativeModelPreview malePreview;
         private CharacterCreationNativeModelPreview femalePreview;
@@ -1202,9 +1203,47 @@ namespace Zjcs.Presentation.CharacterCreation
             Button enterMap = AddButton(screen.transform, "进入初始岛", 24, EnterInitialIsland,
                 new Color32(76, 91, 71, 255), 74);
             Place(enterMap.GetComponent<RectTransform>(), new Vector2(0.16f, 0.29f), new Vector2(0.84f, 0.38f));
+            Button enterHome = AddButton(screen.transform, "进入家园", 24, EnterHome,
+                new Color32(74, 88, 96, 255), 74);
+            Place(enterHome.GetComponent<RectTransform>(), new Vector2(0.16f, 0.18f), new Vector2(0.84f, 0.27f));
             Button slots = AddButton(screen.transform, "返回存档", 24, () => ShowSlots(),
                 new Color32(122, 86, 46, 255), 74);
-            Place(slots.GetComponent<RectTransform>(), new Vector2(0.16f, 0.18f), new Vector2(0.84f, 0.27f));
+            Place(slots.GetComponent<RectTransform>(), new Vector2(0.16f, 0.07f), new Vector2(0.84f, 0.16f));
+        }
+
+        private void EnterHome()
+        {
+            if (string.IsNullOrEmpty(slotId) || !service.HasCharacter(slotId)
+                || service.GetInitialWeaponType(slotId) == 0)
+            {
+                ShowComplete("请先完成角色创建和职业选择。");
+                return;
+            }
+
+            try
+            {
+                homeRuntime = Zjcs.Presentation.Home.HomeFeatureRuntime.Begin(slotId,
+                    Application.persistentDataPath, canvas.transform, OnHomeClosed);
+                if (screen != null) screen.SetActive(false);
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error, this);
+                if (homeRuntime != null)
+                {
+                    Destroy(homeRuntime.gameObject);
+                    homeRuntime = null;
+                }
+                if (screen != null) screen.SetActive(true);
+                ShowComplete("家园未能打开：" + error.Message);
+            }
+        }
+
+        private void OnHomeClosed()
+        {
+            homeRuntime = null;
+            if (screen != null) screen.SetActive(true);
+            ShowComplete("已返回主菜单");
         }
 
         private void EnterInitialIsland()
