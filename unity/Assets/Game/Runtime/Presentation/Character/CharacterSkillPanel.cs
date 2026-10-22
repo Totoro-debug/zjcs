@@ -221,7 +221,45 @@ namespace Zjcs.Presentation.Character
                     button.targetGraphic = image;
                 }
                 button.onClick.AddListener(() => SelectSlot(itemType, slot));
+                var upgradeObject = new GameObject("SlotUpgrade", typeof(RectTransform), typeof(Image),
+                    typeof(Button));
+                upgradeObject.transform.SetParent(slots[index], false);
+                RectTransform upgradeRect = (RectTransform)upgradeObject.transform;
+                upgradeRect.anchorMin = new Vector2(1f, 0f);
+                upgradeRect.anchorMax = new Vector2(1f, 0f);
+                upgradeRect.pivot = new Vector2(1f, 0f);
+                upgradeRect.sizeDelta = new Vector2(64f, 32f);
+                upgradeRect.anchoredPosition = new Vector2(-4f, 4f);
+                Image upgradeImage = upgradeObject.GetComponent<Image>();
+                upgradeImage.color = new Color(0.4f, 0.55f, 0.75f, 0.9f);
+                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                labelObject.transform.SetParent(upgradeObject.transform, false);
+                RectTransform labelRect = (RectTransform)labelObject.transform;
+                labelRect.anchorMin = Vector2.zero;
+                labelRect.anchorMax = Vector2.one;
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+                Text labelText = labelObject.GetComponent<Text>();
+                labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                labelText.fontSize = 16;
+                labelText.alignment = TextAnchor.MiddleCenter;
+                labelText.color = Color.white;
+                labelText.raycastTarget = false;
+                labelText.text = "\u5347\u7ea7";
+                Button upgradeButton = upgradeObject.GetComponent<Button>();
+                upgradeButton.targetGraphic = upgradeImage;
+                int capturedType = itemType;
+                upgradeButton.onClick.AddListener(() => UpgradeSlot(capturedType, slot));
             }
+        }
+
+        private void UpgradeSlot(int itemType, int slot)
+        {
+            ProgressionResult result = progression.UpgradeSkillSlot(itemType, slot);
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            Refresh();
+            Changed?.Invoke();
         }
 
         private void Refresh()
