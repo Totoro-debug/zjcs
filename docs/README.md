@@ -62,7 +62,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [古遗物扭蛋与女神牌](features/treasure-gacha.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 | 工程设置、空启动场景及编辑器检查入口 |
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
-| [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
+| [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 | 官方奖池、概率及界面来源已核对；Unity 女神像仍为占位入口，抽取、积分／馈赠、详情／历史与演出未接通 |
 | [命运果实探寻](features/world-exploration.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [世界地图](features/world-map.md) | 未完成 | 地图 DTO、导航、寻路与进度规则 |
 
