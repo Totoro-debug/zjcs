@@ -128,6 +128,24 @@ namespace Zjcs.Presentation.Inventory
                 : null;
         }
 
+        public Dictionary<string, object> LoadAttachmentTemplate(int attachmentId)
+        {
+            Dictionary<string, object> attachments = Object(Parsed()["attachments"]);
+            if (!attachments.TryGetValue(attachmentId.ToString(System.Globalization.CultureInfo.InvariantCulture), out object raw))
+                return null;
+            return LoadTemplate(Text(Object(raw), "template"));
+        }
+
+        public int FindAttachmentLayer(int attachmentId)
+        {
+            Dictionary<string, object> attachments = Object(Parsed()["attachments"]);
+            if (!attachments.TryGetValue(attachmentId.ToString(System.Globalization.CultureInfo.InvariantCulture), out object raw))
+                throw new FormatException("Official inventory icon attachment is missing: " + attachmentId);
+            Dictionary<string, object> attachment = Object(raw);
+            return attachment.TryGetValue("layer", out object layer)
+                ? Convert.ToInt32(layer, System.Globalization.CultureInfo.InvariantCulture) : 0;
+        }
+
         public void ValidateBindings()
         {
             if (bindingsValidated) return;
@@ -148,6 +166,15 @@ namespace Zjcs.Presentation.Inventory
                 Dictionary<string, object> template = Object(rawTemplate);
                 if (template.TryGetValue("root", out object rawTemplateRoot))
                     ValidateTreeSprites(Object(rawTemplateRoot));
+            }
+            Dictionary<string, object> attachments = Object(root["attachments"]);
+            foreach (object rawAttachment in attachments.Values)
+            {
+                string templateName = Text(Object(rawAttachment), "template");
+                if (!templates.TryGetValue(templateName, out object attachmentTemplate)
+                    || !Object(attachmentTemplate).TryGetValue("root", out object attachmentRoot))
+                    throw new FormatException("Official inventory attachment template is missing: " + templateName);
+                ValidateTreeSprites(Object(attachmentRoot));
             }
             Dictionary<string, object> icons = Object(root["icons"]);
             foreach (object rawIcon in icons.Values)

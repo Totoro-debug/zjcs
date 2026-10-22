@@ -42,7 +42,7 @@
 
 ## 尚未实现
 
-- 行囊场景／导航入口及 Unity 导入后的实际显示；现有代码已生成基础分类、排序、列表和简易详情控件，但尚未验证官方 UI 树与 Sprite 的实际导入绑定。品质底图、红点、碎片进度、完整筛选交互及独立装备详情仍未实现。
+- 行囊场景／导航入口及 Unity 导入后的实际显示；现有代码已生成基础分类、排序、列表和简易详情控件，但尚未验证官方 UI 树与 Sprite 的实际导入绑定。品质底图、红点排序、碎片进度、完整筛选交互及独立装备详情仍未实现。
 - 来源导航、宝箱及特殊物品的官方专用详情与本地结算；奖励反馈、随机、扣费、取消、保存失败回滚尚未接线。
 - 恢复其余官方 Unity 代码、配置、prefab、资源与调用关系，完成页面返回栈、实际入口和跨模块界面接线。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
@@ -63,7 +63,7 @@
 
 特殊物品按原 `ItemDetailDialogFactory` 分派至宝箱／自选、随机合成、幻兽碎片、古遗物／碎片、技能碎片、改名、祝福卡、裂隙次数、配方分解、修复及砥石专用流程。料理、装备碎片、技能和家园外观详情接入各自模块；确认后统一扣除实际物品、发放奖励并保存，取消不结算。
 
-原 `Player.ShowBagCanUseItemRedDot` 先要求物品数量大于0，再检查 `GameSettings.ShowCanUseRedDotItemTypes` 白名单；装备碎片、普通物品碎片、随机古遗物碎片和幻兽碎片分别以对应合成表需求数量判断，祝福卡检查周期卡配置、购买次数和最大持续天数，料理配方检查配方映射、料理配置及 `IsLimit`，其余白名单类型直接亮点。原比较器中红点分数为可用时的 `RedDotType`，否则为0。当前离线行囊尚未恢复上述全部合成表、周期卡支付计数和料理限制状态，也未把此判断接入排序及图标红点；不得以数量或物品类型近似替代。依据为官方 [Player.ShowBagCanUseItemRedDot](../../.tools/source-packages/official-code/common-source/Common/Player.cs)、`CanMergeEquipPiece`、`CanMergeItemPiece`、`CanMergeRandomTreasurePiece`、`CanMergePetPiece`、`CanUsePeriodCardItem`、`CanUseCookingFormula` 与 [BagItemClientComparer.GetScore](../../.tools/source-packages/official-code/common-source/BagItemClientComparer.cs)。
+原 `Player.ShowBagCanUseItemRedDot` 先要求物品数量大于0，再检查 `GameSettings.ShowCanUseRedDotItemTypes` 白名单；装备碎片、普通物品碎片、随机古遗物碎片和幻兽碎片分别以对应合成表需求数量判断，祝福卡检查周期卡配置、购买次数和最大持续天数，料理配方检查配方映射、料理配置及 `IsLimit`，其余白名单类型直接亮点。当前运行规则载荷已接入白名单和装备／普通物品碎片合成阈值；Unity 库存视图对这两类碎片及其余无专用条件的白名单物品使用官方附件8红点、15蓝点。其他四类专用条件在本地运行时中仍为未知状态，暂不显示；红点优先级排序尚未接入。随机兑换与周期卡项目表见[物品来源清单](../../assets/reference/bag-items-source-manifest.json)，幻兽、料理和周期卡支付表的 APK 提取哈希见[官方规则清单](../../assets/reference/official-city/rules-manifest.json)；资源均已取得，尚需将对应玩家状态接入本地库存运行时，不能将其称为资源缺失。原比较器中红点分数为可用时的 `RedDotType`，否则为0。依据为官方 [Player.ShowBagCanUseItemRedDot](../../.tools/source-packages/official-code/common-source/Common/Player.cs)、`CanMergeEquipPiece`、`CanMergeItemPiece`、`CanMergeRandomTreasurePiece`、`CanMergePetPiece`、`CanUsePeriodCardItem`、`CanUseCookingFormula`、[ItemIconAttachmentType](../../.tools/source-packages/official-code/client-source/ItemIconAttachmentType.cs) 与 [BagItemClientComparer.GetScore](../../.tools/source-packages/official-code/common-source/BagItemClientComparer.cs)。
 
 物品详情按原 `ItemSourceDataManager.Register` 的顺序列出获取途径，覆盖固定表349条及合成、料理、祈愿、宝箱、关卡、国度商人、地图资源和地区古遗物动态来源。来源槽位按当前详情 prefab 的原 `ItemDetailDialog.ItemSourceGo` 字段路径挂载，兼容特殊物品详情 prefab；保留屏蔽条件、原限制提示、商人地图／实体／区域／商店组及需求总数。快捷购买、合成按“需求总数减已持有数量”初始化，地图来源将目标和数量交给原资源指引。料理来源按原处理器打开料理面板；没有导航接口的关卡来源不新增跳转行为。活动导航保留原 `NavigateKey`、`NavigateType` 与完整参数；圣诞入口进入原伐木活动入口，音乐节、春节、周年庆和万圣节按活动日历及存档开服时间进入各自原入口。来源目标覆盖商店弹窗时保留原详情与页面栈，关闭商店后恢复详情来源上下文，再次返回恢复行囊。
 
