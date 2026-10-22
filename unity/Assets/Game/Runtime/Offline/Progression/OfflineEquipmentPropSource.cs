@@ -37,6 +37,7 @@ namespace Zjcs.Offline.Progression
                 CharacterPropFormula.Merge(result, ItemProps(player, instance));
             }
             CharacterPropFormula.Merge(result, SuitProps(player));
+            CharacterPropFormula.Merge(result, ResonanceProps(player));
             return result;
         }
 
@@ -52,6 +53,37 @@ namespace Zjcs.Offline.Progression
                 rating += context.Common(item);
             }
             return rating;
+        }
+
+        /// <summary>
+        /// Official <c>EquipResonanceInfo</c>: the highest consecutive resonance level whose
+        /// "equipped items at or above this level" count is met; its effect replaces lower levels.
+        /// </summary>
+        public Dictionary<int, long> ResonanceProps(OfflinePlayerProgress player)
+        {
+            var result = new Dictionary<int, long>();
+            var levels = new List<int>();
+            foreach (OfflineEquippedSlot slot in player.Equipment.Equipped)
+            {
+                OfflineEquipmentInstance instance = Find(player, slot.InstanceId);
+                if (instance != null) levels.Add(instance.ItemLevel + instance.BlessLevel);
+            }
+            Dictionary<string, object> active = null;
+            foreach (Dictionary<string, object> row in catalog.Rows("equip_resonance")
+                .OrderBy(value => Integer(value, "Level")))
+            {
+                int requiredLevel = Integer(row, "EquipLevel");
+                int requiredCount = Integer(row, "EquipCount");
+                if (requiredCount <= 0 || levels.Count(value => value >= requiredLevel) < requiredCount)
+                    break;
+                active = row;
+            }
+            if (active == null || !(active.TryGetValue("Effect", out object raw)
+                && raw is Dictionary<string, object> effect)) return result;
+            foreach (KeyValuePair<string, object> entry in effect)
+                result[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                    = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+            return result;
         }
 
         /// <summary>Combined properties of a single equipped item (without the suit bonus).</summary>
