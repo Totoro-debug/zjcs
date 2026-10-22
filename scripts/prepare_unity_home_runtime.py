@@ -51,7 +51,7 @@ RULE_TABLES = [
 
 REWARD_RULE_IDS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 100, 101, 102, 11100,
                    11000, 11001, 11002, 11003, 11004, 11005, 11006, 11007,
-                   10010, 10012, 10013}
+                   10010, 10012, 10013, 11050}
 
 PROGRESS_SCRIPT = "OfflineHomeRuntime"
 
@@ -144,7 +144,7 @@ def trim_prefab(panel):
 def collect_sprites(node, files):
     if isinstance(node, dict):
         for key, value in node.items():
-            if key == "file" and isinstance(value, str):
+            if key in ("file", "page") and isinstance(value, str) and value:
                 files.add(value)
             else:
                 collect_sprites(value, files)
@@ -606,7 +606,8 @@ def load_reward_visuals():
                     "uv": layer.get("uv") or [],
                     "triangles": layer.get("triangles") or [],
                 })
-            models.append({"scale": skeleton.get("scale", 0.01), "layers": layers})
+            if layers:
+                models.append({"scale": skeleton.get("scale", 0.01), "layers": layers})
         if models:
             animals[item_id] = models
     return {
@@ -649,6 +650,28 @@ def stage_sprites(payloads):
         copies[source.name] = digest(source.read_bytes())
     return copies, prepared
 
+
+def stage_reward_pages(reward_visuals):
+    """Copy the animal texture pages referenced by the first-pose meshes."""
+    SPRITE_DIR.mkdir(parents=True, exist_ok=True)
+    source_dir = OFFICIAL / "home-random-rewards" / "sprites"
+    copies = {}
+    prepared = 0
+    for animal in reward_visuals.get("animals") or []:
+        for model in animal.get("models") or []:
+            for layer in model.get("layers") or []:
+                name = layer.get("page") or ""
+                if not name or name in copies:
+                    continue
+                source = source_dir / name
+                if not source.is_file():
+                    raise FileNotFoundError(f"Missing reward page: {source}")
+                target = SPRITE_DIR / name
+                if not target.is_file() or target.stat().st_size != source.stat().st_size:
+                    shutil.copyfile(source, target)
+                    prepared += 1
+                copies[name] = digest(source.read_bytes())
+    return copies, prepared
 
 def stage_icons(rules):
     """Copy the item icons referenced by home rewards, costs and tokens."""
@@ -693,6 +716,9 @@ def build():
     tips = load_tips()
 
     sprites, prepared = stage_sprites([scene, ui, actors, environment, rewards, mail, tips, reward_visuals])
+    pages, prepared_pages = stage_reward_pages(reward_visuals)
+    sprites.update(pages)
+    prepared += prepared_pages
     icons, prepared_icons = stage_icons(rules)
     sprites.update(icons)
     prepared += prepared_icons

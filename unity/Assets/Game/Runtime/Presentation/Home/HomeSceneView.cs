@@ -237,6 +237,13 @@ namespace Zjcs.Presentation.Home
 
         public Vector2 ScreenToWorld(Vector2 screen) => Camera.ScreenToWorldPoint(screen);
 
+        public void ResetCamera()
+        {
+            if (Camera == null || camera.position == null) return;
+            Camera.transform.position = Clamp(new Vector3(camera.position[0], camera.position[1],
+                camera.position.Length > 2 ? camera.position[2] : -10f));
+        }
+
         public void MoveCamera(Vector2 deltaPixels)
         {
             if (Camera == null) return;

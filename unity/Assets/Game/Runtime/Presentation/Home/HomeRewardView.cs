@@ -91,6 +91,8 @@ namespace Zjcs.Presentation.Home
             Refresh();
         }
 
+        public int Count => items.Count;
+
         public void Refresh()
         {
             foreach (GameObject item in items.Values) if (item != null) UnityEngine.Object.Destroy(item);
@@ -121,6 +123,9 @@ namespace Zjcs.Presentation.Home
             else created = BuildAnimal(item.transform, reward.ItemId, slot.order);
             if (!created)
             {
+                Debug.LogWarning("[Home] reward visual failed slot=" + slot.index + " item=" + reward.ItemId
+                    + " leaves=" + (data.leaves == null ? 0 : data.leaves.Length)
+                    + " animals=" + (data.animals == null ? 0 : data.animals.Length));
                 UnityEngine.Object.Destroy(item);
                 return null;
             }
@@ -143,7 +148,9 @@ namespace Zjcs.Presentation.Home
         {
             HomeAnimalVisual animal = data.animals?.FirstOrDefault(value => value.itemId == itemId);
             if (animal == null || animal.models == null || animal.models.Length == 0) return false;
-            HomeAnimalModel model = animal.models[Mathf.Abs(parent.name.GetHashCode()) % animal.models.Length];
+            HomeAnimalModel[] usable = animal.models.Where(value => value.layers != null && value.layers.Length > 0).ToArray();
+            if (usable.Length == 0) return false;
+            HomeAnimalModel model = usable[Mathf.Abs(parent.name.GetHashCode()) % usable.Length];
             bool any = false;
             foreach (HomeAnimalLayer layer in model.layers ?? Array.Empty<HomeAnimalLayer>())
             {
