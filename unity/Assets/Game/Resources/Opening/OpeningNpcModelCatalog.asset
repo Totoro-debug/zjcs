@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07cdd656b394459602806054d855fb2, type: 3}
+  m_Name: OpeningNpcModelCatalog
+  m_EditorClassIdentifier: 
+  entries:
+  - classId: 8401
+    skeleton: {fileID: 11400000, guid: 03cfea9aee099194aafc44673934e2cc, type: 2}
+    skin: 
+    scale: 0.01
+  - classId: 8402
+    skeleton: {fileID: 11400000, guid: a2a133236e5060d418ada1e6b488b6fc, type: 2}
+    skin: body_8402
+    scale: 0.01

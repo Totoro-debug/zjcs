@@ -308,14 +308,49 @@ namespace Zjcs.Presentation.Opening
                 }
         }
 
+        /// <summary>
+        /// The opening record's NPC characters are official NPC Spine models. Their
+        /// skeletons live in the shared battle Spine payload but are not monster
+        /// identities, so the opening catalog binds them directly by NpcClassId.
+        /// </summary>
+        private void OpenNpcBinding(OpeningRecordEntity entity, out OfficialBattleModelBinding binding,
+            out string key)
+        {
+            binding = null;
+            key = string.Empty;
+            OpeningNpcModelCatalog npcCatalog = OpeningNpcModelCatalog.LoadDefault();
+            if (npcCatalog != null && npcCatalog.TryGet(entity.NpcClassId, out Spine.Unity.SkeletonDataAsset skeleton,
+                    out string skin, out float scale))
+            {
+                key = "opening_npc_" + entity.NpcClassId;
+                binding = new OfficialBattleModelBinding
+                {
+                    key = key,
+                    skin = skin,
+                    scale = scale,
+                    skeleton = skeleton,
+                    animations = Array.Empty<OfficialBattleAnimationAlias>(),
+                };
+                PreparedUnits++;
+                return;
+            }
+            if (battlefield != null && battlefield.TryGetNpcModel(entity.NpcClassId, out key))
+            {
+                PreparedUnits++;
+                binding = models.Find(key);
+            }
+        }
+
         private void TryCreateUnit(OpeningRecordEntity entity)
         {
             if (entity == null || units.ContainsKey(entity.EntityId)) return;
             if (models == null) return;
             string key;
+            OfficialBattleModelBinding binding;
             if (entity.CharacterType == "Npc")
             {
-                if (battlefield == null || !battlefield.TryGetNpcModel(entity.NpcClassId, out key))
+                OpenNpcBinding(entity, out binding, out key);
+                if (binding == null)
                 {
                     log("录像剧情角色缺少官方 NPC 骨骼绑定: " + entity.EntityId + " ("
                         + entity.NpcClassId + " " + entity.Profession + ")");
@@ -330,13 +365,13 @@ namespace Zjcs.Presentation.Opening
                     log("官方怪物模型标识缺失: " + entity.MonsterId);
                     return;
                 }
-            }
-            PreparedUnits++;
-            OfficialBattleModelBinding binding = models.Find(key);
-            if (binding == null)
-            {
-                log("官方战斗模型绑定缺失: " + key);
-                return;
+                PreparedUnits++;
+                binding = models.Find(key);
+                if (binding == null)
+                {
+                    log("官方战斗模型绑定缺失: " + key);
+                    return;
+                }
             }
             var gameObject = new GameObject("RecordUnit_" + entity.EntityId);
             gameObject.transform.SetParent(world, false);
@@ -374,9 +409,9 @@ namespace Zjcs.Presentation.Opening
             // fighters must sort in front of that scenery.
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
                 renderer.sortingOrder = 30000 - entity.GridY * 2;
-            Play(entity.EntityId, skeleton, "idle_01", true);
             units.Add(entity.EntityId, skeleton);
             bindings.Add(entity.EntityId, binding);
+            Play(entity.EntityId, skeleton, "idle_01", true);
         }
 
         private static bool HasBoundTexture(SkeletonDataAsset data)
@@ -400,6 +435,10 @@ namespace Zjcs.Presentation.Opening
                 skeleton.AnimationState.SetAnimation(0, animation.spineName, loop);
                 return;
             }
+            // NPC skeletons are not part of the monster alias table; their official
+            // clips carry the same names, so use the exact clip when present.
+            if (skeleton.Skeleton != null && skeleton.Skeleton.Data.FindAnimation(alias) != null)
+                skeleton.AnimationState.SetAnimation(0, alias, loop);
         }
     }
 }
