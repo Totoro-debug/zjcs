@@ -212,13 +212,17 @@ namespace Zjcs.Presentation.Character
         {
             if (equipment == null) return string.Empty;
             int position = OfflineEquipmentOperations.PositionForItem(equipment, instance.ItemId);
+            var markers = new List<string>();
             int skinType = position == 10 ? 7 : position == 14 ? 8 : position == 12 ? 5 : 0;
             if (skinType != 0 && progression.Player.Wardrobe.WornItems.Any(value => value.Type == skinType))
-                return "幻装";
+                markers.Add("幻装");
+            if (instance.Gems != null && instance.Gems.Count > 0)
+                markers.Add("宝石" + instance.Gems.Count.ToString(CultureInfo.InvariantCulture));
             EquipmentUpgradeQuote quote = OfflineEquipmentOperations.QuoteUpgrade(progression.Player, equipment,
                 position, progression.Player.SeasonRank, BlessLevel(), progression.Player.Level,
                 progression.Player.MaxProfessionRank);
-            return quote.CanUpgrade ? "可强化" : string.Empty;
+            if (quote.CanUpgrade) markers.Add("可强化");
+            return string.Join("·", markers);
         }
 
         private int BlessLevel()
