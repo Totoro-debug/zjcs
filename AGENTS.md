@@ -11,6 +11,7 @@
 
 - 游戏实现使用 Unity、C#，开发入口为 `unity/`。固定版 AssetBundle 包头确认为 Unity `2022.3.57f1`；当前项目与本机编辑器使用 `2022.3.57f1c2`，须按实际版本与资源兼容依据验证。渲染管线及第三方依赖按官方代码、资源和配置逐项恢复，不能把空框架视为原工程已恢复。
 - 用户已明确授权将原版游戏迁移为 Windows Unity 版本，尽量复用官方代码、玩法、界面、布局、动画、音效与流程。多人／联网／真人／组队／赛季／商城及服务端决策沿用现有功能文档中已确认的离线适配；缺少的客户端逻辑优先依据设计文档与官方实现补齐。无法依据现有内容实现的范围如实记录在所属功能文档，不猜造规则。按模块实际迁移、验证并更新文档。
+- 角色 Spine 4.2 内容采用用户已确认的免费迁移方案：复用官方贴图、骨骼、网格及动画数据，独立转换为 Unity 原生动画，并按需补齐 C# 播放与换装适配；不以购买／安装 Spine runtime 为前置条件。共享规则见 `docs/asset-management.md#spine-角色动画迁移决策`；该决策不代表转换兼容性或角色动画已验证，也不授权静态图降级或自绘替代。
 - Unity 各模块接入后须按对应范围重新验证；已有设计结论不能替代实际实现和验收。
 
 ### Unity 迁移优先级与单机适配
@@ -74,8 +75,8 @@
 
 ### 工具依赖与角色重建
 
-- 提取依赖为 `UnityPy==1.25.4`（安装到 `.tools/character-art-python`）及 `@esotericsoftware/spine-core@4.2.110`（安装到 `.tools/character-art-node`）；完整安装命令见 `assets/reference/SOURCES.md`。
-- 重建当前男角色时，先按以下最小范围提取，再运行转换脚本：
+- 提取依赖为 `UnityPy==1.25.4`（安装到 `.tools/character-art-python`）。历史角色重建流程使用过 `@esotericsoftware/spine-core@4.2.110`（`.tools/character-art-node`）；保留其来源与已有产物记录，但不能把 npm 可下载视为免费授权，也不作为当前原生动画方案的必装依赖。后续转换按 `docs/asset-management.md#spine-角色动画迁移决策` 独立实现。
+- 历史男角色重建入口如下；原包提取仍可复用，运行旧转换脚本前须确认其 Spine 依赖，不能作为当前免费方案已可用的证明：
 
  ```powershell
  python scripts/fetch_official_assets.py --extract 'character_model_(male_1|common)(_atlas_default|_colormap_default)?\.bundle$|character_pweapon_atlas_default\.bundle$'
