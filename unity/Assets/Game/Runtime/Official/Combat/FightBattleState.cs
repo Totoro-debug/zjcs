@@ -199,6 +199,8 @@ namespace Zjcs.Combat.Official
         public List<int> DisperseStatusTypes = new List<int>();
         public int DisperseCount;
         public bool DisperseRandom;
+        // Official FightDamageComponent.MoveCfg: displacement applied to the damaged unit.
+        public FightBattleSkillMove HitMove;
         public bool HasCustomDamage;
         public long CustomDamage;
         public double DamageRate = 1.0;
@@ -235,6 +237,7 @@ namespace Zjcs.Combat.Official
         public List<int> DisperseStatusTypes = new List<int>();
         public int DisperseCount;
         public bool DisperseRandom;
+        public FightBattleSkillMove HitMove;
     }
 
     [Serializable]

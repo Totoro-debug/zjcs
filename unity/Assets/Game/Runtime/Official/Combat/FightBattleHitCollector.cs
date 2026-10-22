@@ -85,7 +85,21 @@ namespace Zjcs.Combat.Official
                     DisperseStatusTypes = entity.DisperseStatusTypes == null
                         ? new List<int>() : new List<int>(entity.DisperseStatusTypes),
                     DisperseCount = entity.DisperseCount,
-                    DisperseRandom = entity.DisperseRandom
+                    DisperseRandom = entity.DisperseRandom,
+                    HitMove = entity.HitMove == null ? null : new FightBattleSkillMove
+                    {
+                        MoveBehaviourId = entity.HitMove.MoveBehaviourId,
+                        Delay = entity.HitMove.Delay,
+                        OffsetX = entity.HitMove.OffsetX,
+                        OffsetY = entity.HitMove.OffsetY,
+                        TowardsTargetPos = entity.HitMove.TowardsTargetPos,
+                        Direction = entity.HitMove.Direction,
+                        Distance = entity.HitMove.Distance,
+                        BasePercent = entity.HitMove.BasePercent,
+                        AffectedByProp = entity.HitMove.AffectedByProp,
+                        CancelDiagonally = entity.HitMove.CancelDiagonally,
+                        HasConditions = entity.HitMove.HasConditions
+                    }
                 });
 
             CollectChildren(entities, entity.ChainedHits, result, branch, depth + 1,
