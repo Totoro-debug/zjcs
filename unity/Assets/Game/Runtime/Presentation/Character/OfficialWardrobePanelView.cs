@@ -622,11 +622,93 @@ namespace Zjcs.Presentation.Character
 
         private void SelectTitle(int id)
         {
-            ProgressionResult result = id == 0
-                ? progression.TakeOffTitle(EventId("wardrobe-title-takeoff"))
-                : progression.WearTitle(id, EventId("wardrobe-title-wear"));
-            ShowResult(result);
-            RefreshWardrobe();
+            if (id == 0)
+            {
+                ProgressionResult takeOff = progression.TakeOffTitle(EventId("wardrobe-title-takeoff"));
+                ShowResult(takeOff);
+                RefreshWardrobe();
+                return;
+            }
+            ShowTitleDetail(id);
+        }
+
+        private void ShowTitleDetail(int itemId)
+        {
+            if (activeDialog != null) Destroy(activeDialog);
+            Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
+            string name = item == null ? itemId.ToString(CultureInfo.InvariantCulture)
+                : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
+            activeDialog = CreateDialog("wardrobe_props", name);
+            Transform content = FindDeep(activeDialog.transform, "ListDataGo");
+            if (content != null)
+                for (int i = content.childCount - 1; i >= 0; i--) Destroy(content.GetChild(i).gameObject);
+            Text level = FindTextDeep(activeDialog.transform, "LevelTxt");
+            SetText(level, name);
+            var lines = new List<string>();
+            if (item != null)
+                lines.Add("品质：" + QualityName(Convert.ToInt32(item["Quality"],
+                    CultureInfo.InvariantCulture)));
+            long expiry = progression.Player.Wardrobe.Expiries.Where(value => value.ItemId == itemId)
+                .Select(value => value.ExpiresAtUnixSeconds).DefaultIfEmpty(0).Max();
+            if (expiry > 0) lines.Add("剩余：" + Remaining(itemId, true));
+            IReadOnlyDictionary<int, long> props = progression.Catalog.TitleProperties(itemId);
+            foreach (KeyValuePair<int, long> prop in props)
+            {
+                OfficialPropDefinition definition = progression.Catalog.Props.Get(prop.Key);
+                if (definition != null)
+                    lines.Add(definition.Name + " +" + OfficialPropFormat.Value(definition, prop.Value));
+            }
+            if (content != null)
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    RectTransform row = BuildDialogRow("wardrobe_prop_row", content);
+                    SetText(FindTextDeep(row, "LevelTxt"), lines[i]);
+                    SetText(FindTextDeep(row, "PropTxt"), string.Empty);
+                    Transform active = FindDeep(row, "ActivedTxt");
+                    if (active != null) active.gameObject.SetActive(false);
+                    Transform mask = FindDeep(row, "Mask");
+                    if (mask != null) mask.gameObject.SetActive(false);
+                }
+            }
+            Button action = EnsureDialogButton(activeDialog.transform, "穿戴");
+            action.onClick.AddListener(() =>
+            {
+                ProgressionResult result = progression.WearTitle(itemId, EventId("wardrobe-title-wear"));
+                ShowResult(result);
+                if (activeDialog != null) Destroy(activeDialog);
+                activeDialog = null;
+                RefreshWardrobe();
+            });
+        }
+
+        private Button EnsureDialogButton(Transform parent, string label)
+        {
+            Transform found = FindDeep(parent, "WardrobeTitleAction");
+            if (found != null) return found.GetComponent<Button>();
+            var buttonObject = new GameObject("WardrobeTitleAction", typeof(RectTransform), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)buttonObject.transform;
+            rect.anchorMin = new Vector2(0.5f, 0f);
+            rect.anchorMax = new Vector2(0.5f, 0f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(240f, 72f);
+            rect.anchoredPosition = new Vector2(0f, 40f);
+            buttonObject.GetComponent<Image>().color = new Color(0.86f, 0.55f, 0.3f, 0.95f);
+            var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+            textObject.transform.SetParent(buttonObject.transform, false);
+            RectTransform textRect = (RectTransform)textObject.transform;
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            Text text = textObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 26;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.color = Color.white;
+            text.text = label;
+            return buttonObject.GetComponent<Button>();
         }
 
         private void ShowResult(ProgressionResult result)
