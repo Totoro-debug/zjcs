@@ -46,6 +46,8 @@ namespace Zjcs.Presentation.Character
         private long termTargetId;
         private readonly HashSet<int> termInheritKeep = new HashSet<int>();
         private Text termInheritCostText;
+        private GameObject pieceDialog;
+        private RectTransform pieceContent;
         private readonly HashSet<int> purifyKeep = new HashSet<int>();
         private Text purifyCostText;
         private long gemInstanceId;
@@ -437,6 +439,8 @@ namespace Zjcs.Presentation.Character
         {
             if (termInheritDialog != null) Destroy(termInheritDialog);
             termInheritDialog = null;
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
@@ -461,6 +465,11 @@ namespace Zjcs.Presentation.Character
             if (termInheritDialog != null)
             {
                 CloseTermInherit();
+                return true;
+            }
+            if (pieceDialog != null)
+            {
+                ClosePieceMerge();
                 return true;
             }
             if (purifyDialog != null)
@@ -966,6 +975,8 @@ namespace Zjcs.Presentation.Character
         {
             if (termInheritDialog != null) Destroy(termInheritDialog);
             termInheritDialog = null;
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
@@ -1092,9 +1103,115 @@ namespace Zjcs.Presentation.Character
         {
             if (termInheritDialog != null) Destroy(termInheritDialog);
             termInheritDialog = null;
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             purifyCostText = null;
+        }
+
+        private void OpenPieceMerge()
+        {
+            ClosePieceMerge();
+            pieceDialog = new GameObject("EquipmentPieceMerge", typeof(RectTransform));
+            pieceDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)pieceDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("PieceBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(ClosePieceMerge);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            pieceContent = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "\u788e\u7247\u5408\u6210";
+            if (pieceContent == null) return;
+            ShowPieceList();
+        }
+
+        private void ShowPieceList()
+        {
+            ClearPieceContent();
+            IReadOnlyList<int> pieces = progression.MergeableEquipmentPieces();
+            float top = 0.84f;
+            foreach (int pieceId in pieces)
+            {
+                if (top < 0.2f) break;
+                int captured = pieceId;
+                long owned = progression.Player.Inventory.Where(value => value.ItemId == pieceId)
+                    .Sum(value => value.Count);
+                AddGemRow(pieceContent, ItemName(pieceId) + "\uff08" + owned + "\uff09", "\u9009\u62e9",
+                    ref top, () => ShowPieceCandidates(captured));
+            }
+            if (pieces.Count == 0)
+                AddGemRow(pieceContent, "\u6ca1\u6709\u53ef\u5408\u6210\u7684\u88c5\u5907\u788e\u7247\u3002",
+                    null, ref top, null);
+            AddPieceClose();
+        }
+
+        private void ShowPieceCandidates(int pieceId)
+        {
+            ClearPieceContent();
+            IReadOnlyList<int> candidates = progression.EquipmentMergeCandidates(pieceId);
+            float top = 0.84f;
+            foreach (int equipId in candidates)
+            {
+                if (top < 0.2f) break;
+                int captured = equipId;
+                AddGemRow(pieceContent, ItemName(equipId), "\u5408\u6210", ref top,
+                    () => DoPieceMerge(pieceId, captured));
+            }
+            if (candidates.Count == 0)
+                AddGemRow(pieceContent, "\u6ca1\u6709\u53ef\u9009\u7684\u88c5\u5907\u3002", null, ref top, null);
+            AddGemRow(pieceContent, "\u8fd4\u56de", "\u8fd4\u56de", ref top, ShowPieceList);
+            AddPieceClose();
+        }
+
+        private void AddPieceClose()
+        {
+            Button close = CreateCompareButton(pieceContent, "\u5173\u95ed", new Vector2(0f, 20f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(ClosePieceMerge);
+        }
+
+        private void DoPieceMerge(int pieceId, int equipId)
+        {
+            ProgressionResult result = progression.MergeEquipmentPiece(pieceId, equipId);
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            ClosePieceMerge();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void ClearPieceContent()
+        {
+            if (pieceContent == null) return;
+            for (int i = pieceContent.childCount - 1; i >= 0; i--)
+            {
+                GameObject child = pieceContent.GetChild(i).gameObject;
+                if (child.name == "Text") continue;
+                Destroy(child);
+            }
+        }
+
+        private void ClosePieceMerge()
+        {
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
+            pieceContent = null;
         }
 
         private void ToggleLock(OfflineEquipmentInstance instance)

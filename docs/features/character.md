@@ -124,7 +124,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [x] 已接“同赛季完整继承”：详情“继承”列出同类型装备，确认后由 `Inherit` 模式 0 把来源词条/宝石完整转移到目标并消耗来源，目标保持穿戴；目标随后为锁定态。跨赛季自选词条继承（模式 1、`InheritCost`）仍缺选择界面。
 - [x] 词条精炼已接：详情“精炼”层可勾选要保留的词条，按保留数量读取 `equip_purify_cost` 扣除材料，其余词条经 `OfficialEquipmentGenerator.GenerateReplacement` 重掷并保存。
 - [x] 跨赛季自选词条继承已接：继承层每个来源提供“完整／选词条”两种入口，选词条时按勾选数量读取 `equip_inherit_cost` 扣料，仅复制勾选词条、其余用 `GenerateReplacement` 重掷。
-- [ ] 装备碎片合成仍待连通；卸下后的背包展示沿用背包模块。
+- [x] 装备碎片合成已接：详情“碎片合成”列出持有量足够的碎片，选择目标装备后按 `equip_piece_merge.PieceMergeCount` 扣碎片并经 `OfficialEquipmentGenerator` 生成实例加入装备列表。
+- [ ] 卸下后的背包展示沿用背包模块。
 
 ### 技能安装与附属入口
 
