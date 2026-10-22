@@ -238,6 +238,27 @@ namespace Zjcs.Offline.Progression
             }
         }
 
+        public ProgressionResult SwapSkillSlots(int itemType, int fromSlot, int toSlot)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            if ((itemType != 100 && itemType != 101) || fromSlot < 0 || fromSlot > 3 || toSlot < 0 || toSlot > 3)
+                return Invalid("A valid skill type and slot pair are required.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillPlan plan = clone.Plans[clone.SelectedPlan];
+            int[] slots = itemType == 100 ? plan.ActiveSkills : plan.PassiveSkills;
+            if (slots == null || fromSlot >= slots.Length || toSlot >= slots.Length)
+                return Invalid("The selected skill plan has no such slot.");
+            if (slots[fromSlot] == slots[toSlot])
+                return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
+            int swapped = slots[fromSlot];
+            slots[fromSlot] = slots[toSlot];
+            slots[toSlot] = swapped;
+            return session.ApplyCharacterMutation(player => player.Skills = clone,
+                "skill-swap-" + itemType.ToString(CultureInfo.InvariantCulture) + "-"
+                + fromSlot.ToString(CultureInfo.InvariantCulture) + "-"
+                + toSlot.ToString(CultureInfo.InvariantCulture) + "-" + Guid.NewGuid().ToString("N"));
+        }
+
         public ProgressionResult ToggleSkillFavorite(int skillId)
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
