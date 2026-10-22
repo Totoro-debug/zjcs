@@ -20,12 +20,15 @@ namespace Zjcs.Presentation.Combat
         private double speedMultiplier = 1.0;
         private bool paused;
         private bool ownsTimeScale;
+        private readonly FightBattlePhaseMachine phases = new FightBattlePhaseMachine();
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
         public event Action<int> SpeedChanged;
+        public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
+        public FightBattlePhase Phase => phases.Phase;
         public int SpeedIndex => speedIndex;
         public double SpeedMultiplier => speedMultiplier;
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;
@@ -84,6 +87,9 @@ namespace Zjcs.Presentation.Combat
                 skillIconResolver = skillIcon;
                 timelinePortraitResolver = timelinePortrait;
                 timelineFactionResolver = timelineFactionIcon;
+                phases.PhaseChanged += OnPhaseChanged;
+                phases.Begin(true);
+                phases.StartPlay();
             }
             catch
             {
@@ -109,6 +115,7 @@ namespace Zjcs.Presentation.Combat
                 hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
                 hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
                     timelineFactionResolver, true);
+                if (result.Checkpoint.Finished) phases.BeginBattleEnd();
                 StepCompleted?.Invoke(result);
                 return result;
             }
@@ -162,9 +169,19 @@ namespace Zjcs.Presentation.Combat
         public void SetPaused(bool value)
         {
             if (paused == value) return;
+            if (value)
+            {
+                if (!phases.Pause()) return;
+            }
+            else if (!phases.Resume()) return;
             paused = value;
             ApplyTimeScale();
         }
+
+        /// <summary>Confirms readiness for modes that show the official prepare phase.</summary>
+        public bool Ready() => phases.Ready();
+
+        public bool StartPlay() => phases.StartPlay();
 
         private void ApplyTimeScale()
         {
@@ -192,6 +209,8 @@ namespace Zjcs.Presentation.Combat
                 hudView.ControlClicked -= OnHudControlClicked;
                 hudView.SpeedCycled -= OnSpeedCycled;
             }
+            phases.PhaseChanged -= OnPhaseChanged;
+            phases.Finish();
             sceneView?.Dispose();
             if (hudRoot != null) Destroy(hudRoot);
             if (ownsTimeScale)
@@ -226,6 +245,16 @@ namespace Zjcs.Presentation.Combat
         private void OnSpeedCycled()
         {
             CycleSpeed();
+        }
+
+        private void OnPhaseChanged(FightBattlePhase previous, FightBattlePhase next)
+        {
+            if (next == FightBattlePhase.End && ownsTimeScale)
+            {
+                Time.timeScale = 1f;
+                ownsTimeScale = false;
+            }
+            PhaseChanged?.Invoke(previous, next);
         }
     }
 }
