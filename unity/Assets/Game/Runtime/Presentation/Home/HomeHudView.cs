@@ -403,6 +403,19 @@ namespace Zjcs.Presentation.Home
             HomePreview(hangUpId, out long count, out long capacity, out double hourly);
             renderer.SetTextByName("ValueTxt", count + "/" + capacity);
             renderer.SetTextByName("DataText", "每小时 " + Format(hourly));
+            renderer.SetTextUnder("FurniturePropItemBlessLevel", "Text", host.BlessingLevel.ToString());
+            renderer.SetTextUnder("FurniturePropItemLossGoddessNums", "Text", "0");
+            renderer.SetTextUnder("FurniturePropItemBase", "Text", Format(hourly));
+            renderer.SetTextUnder("FurniturePropItem", "Text", Format(hourly));
+            renderer.SetTextUnder("FurniturePropItem (1)", "Text", Format(capacity));
+            renderer.SetTextUnder("FurniturePropItemLevelAddOfBase", "Text", "0");
+            renderer.SetTextUnder("FurniturePropItemGodessAddOfBase", "Text", "0");
+            renderer.SetTextUnder("FurniturePropItem1", "Text", "0");
+            renderer.SetTextUnder("FurniturePropItemTreasure", "Text", "0");
+            renderer.SetTextUnder("FurniturePropItemMonthCard", "Text", "0");
+            renderer.SetTextUnder("AstrologicalPropItem", "Text", "0");
+            string expName = host.Rules.ItemName(50);
+            if (!string.IsNullOrEmpty(expName)) renderer.SetTextByName("NameTxt", expName);
             Button collect = FirstButton(renderer, "CollectBtn");
             if (collect != null)
             {

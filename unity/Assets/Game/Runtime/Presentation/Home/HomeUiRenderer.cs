@@ -118,6 +118,21 @@ namespace Zjcs.Presentation.Home
             return false;
         }
 
+        /// <summary>Sets the text of a descendant of the named node.</summary>
+        public bool SetTextUnder(string parentName, string childName, string value)
+        {
+            string marker = "/" + parentName + "/";
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (pair.Key.IndexOf(marker, StringComparison.Ordinal) < 0) continue;
+                if (!pair.Key.EndsWith("/" + childName, StringComparison.Ordinal)) continue;
+                TMP_Text text = pair.Value.GetComponent<TMP_Text>();
+                if (text == null) continue;
+                text.text = value ?? string.Empty;
+                return true;
+            }
+            return false;
+        }
         public bool SetActiveByName(string name, bool active)
         {
             bool changed = false;
