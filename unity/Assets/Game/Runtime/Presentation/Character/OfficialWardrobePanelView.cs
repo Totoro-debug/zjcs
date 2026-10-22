@@ -558,6 +558,14 @@ namespace Zjcs.Presentation.Character
             }
             Text label = EnsureLabel(card.transform, title ? 16 : 15, title);
             label.text = name;
+            int quality = entry.ItemId == 0 ? 0 : Quality(entry.ItemId);
+            Text badge = EnsureBadge(card.transform, "WardrobeQuality", new Vector2(1f, 1f),
+                new Vector2(-4f, -4f), TextAnchor.UpperRight, 13);
+            SetText(badge, entry.ItemId == 0 ? string.Empty : QualityName(quality));
+            if (badge != null) badge.color = QualityColor(quality);
+            bool wearable = entry.ItemId == 0 || title
+                || progression.CanWearAppearance(entry.ItemId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            if (icon != null) icon.color = wearable ? Color.white : new Color(0.55f, 0.55f, 0.55f, 0.7f);
 
             bool selected = entry.ItemId == 0
                 ? title ? progression.Player.Wardrobe.WornTitleId == 0
@@ -569,6 +577,11 @@ namespace Zjcs.Presentation.Character
             if (takeOff != null) takeOff.gameObject.SetActive(entry.ItemId == 0 && !title);
             Transform selectedIcon = FindDeep(card.transform, "SelectedImg");
             if (selectedIcon != null) selectedIcon.gameObject.SetActive(selected);
+            Text state = EnsureBadge(card.transform, "WardrobeState", new Vector2(0f, 0f),
+                new Vector2(6f, 4f), TextAnchor.LowerLeft, 13);
+            SetText(state, entry.ItemId == 0 ? string.Empty
+                : selected ? "\u5df2\u7a7f" : wearable ? string.Empty : "\u4e0d\u53ef\u7a7f");
+            if (state != null) state.color = selected ? new Color(0.55f, 1f, 0.55f) : new Color(1f, 0.6f, 0.55f);
 
             Text expiry = EnsureExpiryText(card.transform, title);
             expiry.text = entry.ItemId == 0 ? string.Empty : Remaining(entry.ItemId, title);
@@ -1160,6 +1173,44 @@ namespace Zjcs.Presentation.Character
         {
             Button button = ButtonEnding("/" + suffix);
             if (button != null) button.onClick.AddListener(() => action());
+        }
+
+        private Text EnsureBadge(Transform parent, string name, Vector2 anchor, Vector2 offset,
+            TextAnchor alignment, int size)
+        {
+            Transform found = parent.Find(name);
+            var obj = found == null ? new GameObject(name, typeof(RectTransform), typeof(Text)) : found.gameObject;
+            if (found == null) obj.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)obj.transform;
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.pivot = anchor;
+            rect.sizeDelta = new Vector2(160f, 24f);
+            rect.anchoredPosition = offset;
+            Text text = obj.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = size;
+            text.alignment = alignment;
+            text.horizontalOverflow = HorizontalWrapMode.Overflow;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
+            text.supportRichText = true;
+            text.raycastTarget = false;
+            return text;
+        }
+
+        private static Color QualityColor(int quality)
+        {
+            switch (quality)
+            {
+                case 1: return new Color(0.9f, 0.9f, 0.9f);
+                case 2: return new Color(0.35f, 0.75f, 1f);
+                case 3: return new Color(0.8f, 0.45f, 1f);
+                case 4: return new Color(1f, 0.6f, 0.25f);
+                case 5: return new Color(1f, 0.85f, 0.35f);
+                case 6: return new Color(1f, 0.4f, 0.4f);
+                case 7: return new Color(1f, 0.55f, 0.9f);
+                default: return Color.white;
+            }
         }
 
         private Text EnsureLabel(Transform parent, int size, bool title)
