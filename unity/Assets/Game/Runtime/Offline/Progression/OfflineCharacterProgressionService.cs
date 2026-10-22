@@ -541,6 +541,35 @@ namespace Zjcs.Offline.Progression
             }
         }
 
+        public IReadOnlyList<OfflineEquipmentInstance> InheritCandidates(long targetInstanceId)
+        {
+            if (EquipmentCatalog == null) return Array.Empty<OfflineEquipmentInstance>();
+            OfflineEquipmentInstance target = Player.Equipment.Instances
+                .FirstOrDefault(value => value.InstanceId == targetInstanceId);
+            if (target == null) return Array.Empty<OfflineEquipmentInstance>();
+            int type = catalog.ItemType(target.ItemId);
+            return Player.Equipment.Instances.Where(value => value.InstanceId != targetInstanceId
+                    && catalog.ItemType(value.ItemId) == type)
+                .OrderByDescending(value => value.ItemLevel).ThenBy(value => value.InstanceId).ToArray();
+        }
+
+        /// <summary>Same-season full inheritance: the source instance is consumed and the target receives its terms and gems.</summary>
+        public ProgressionResult InheritEquipment(long sourceInstanceId, long targetInstanceId, string eventId)
+        {
+            if (EquipmentCatalog == null || sourceInstanceId <= 0 || targetInstanceId <= 0
+                || sourceInstanceId == targetInstanceId || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("Valid source and target equipment are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                EquipmentInheritanceResult result = OfflineEquipmentOperations.Inherit(player, EquipmentCatalog,
+                    0, sourceInstanceId, targetInstanceId, null,
+                    instance => catalog.ItemType(instance.ItemId) == catalog.ItemType(
+                        player.Equipment.Instances.First(value => value.InstanceId == targetInstanceId).ItemId),
+                    (itemId, terms) => null);
+                if (result == null) throw new InvalidOperationException("The equipment inheritance is invalid.");
+            }, eventId);
+        }
+
         public ProgressionResult SetEquipmentLocked(long instanceId, bool locked, string eventId)
         {
             if (instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))

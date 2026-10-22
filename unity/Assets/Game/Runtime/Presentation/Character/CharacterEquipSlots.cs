@@ -38,6 +38,7 @@ namespace Zjcs.Presentation.Character
         private GameObject detailDialog;
         private GameObject promoteDialog;
         private GameObject gemDialog;
+        private GameObject inheritDialog;
         private long gemInstanceId;
         private int promotePosition;
         private Transform slotRoot;
@@ -408,6 +409,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (inheritDialog != null) Destroy(inheritDialog);
+            inheritDialog = null;
             if (gemDialog != null) Destroy(gemDialog);
             gemDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
@@ -425,6 +428,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (inheritDialog != null)
+            {
+                CloseInherit();
+                return true;
+            }
             if (gemDialog != null)
             {
                 CloseGems();
@@ -565,6 +573,9 @@ namespace Zjcs.Presentation.Character
             Button takeOff = CreateCompareButton(content, "卸下", new Vector2(260f, 124f),
                 new Color(0.6f, 0.6f, 0.6f, 0.95f));
             takeOff.onClick.AddListener(() => TakeOff(instance));
+            Button inherit = CreateCompareButton(content, "继承", new Vector2(260f, 208f),
+                new Color(0.7f, 0.6f, 0.85f, 0.95f));
+            inherit.onClick.AddListener(() => OpenInherit(instance));
             Button gems = CreateCompareButton(content, "星石", new Vector2(0f, 208f),
                 new Color(0.55f, 0.7f, 0.9f, 0.95f));
             gems.onClick.AddListener(() => OpenGems(instance));
@@ -682,6 +693,69 @@ namespace Zjcs.Presentation.Character
         {
             if (gemDialog != null) Destroy(gemDialog);
             gemDialog = null;
+        }
+
+        private void OpenInherit(OfflineEquipmentInstance target)
+        {
+            CloseInherit();
+            inheritDialog = new GameObject("EquipmentInherit", typeof(RectTransform));
+            inheritDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)inheritDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("InheritBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseInherit);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "继承";
+            if (content == null) return;
+            IReadOnlyList<OfflineEquipmentInstance> candidates = progression.InheritCandidates(target.InstanceId);
+            float top = 0.84f;
+            foreach (OfflineEquipmentInstance candidate in candidates)
+            {
+                if (top < 0.14f) break;
+                OfflineEquipmentInstance captured = candidate;
+                AddGemRow(content, ItemName(candidate.ItemId) + "  Lv" + candidate.ItemLevel + "  \u8bc4\u5206 "
+                    + ItemScore(progression.Player, candidate), "\u7ee7\u627f", ref top,
+                    () => DoInherit(captured, target));
+            }
+            if (candidates.Count == 0)
+                AddGemRow(content, "\u6ca1\u6709\u53ef\u7ee7\u627f\u7684\u540c\u7c7b\u88c5\u5907\u3002",
+                    null, ref top, null);
+            Button close = CreateCompareButton(content, "\u5173\u95ed", new Vector2(0f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseInherit);
+        }
+
+        private void DoInherit(OfflineEquipmentInstance source, OfflineEquipmentInstance target)
+        {
+            ProgressionResult result = progression.InheritEquipment(source.InstanceId, target.InstanceId,
+                "character-equip-inherit-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseInherit();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void CloseInherit()
+        {
+            if (inheritDialog != null) Destroy(inheritDialog);
+            inheritDialog = null;
         }
 
         private void ToggleLock(OfflineEquipmentInstance instance)
