@@ -227,6 +227,7 @@ namespace Zjcs.Presentation.Character
             Refresh(progression.Experience());
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
+            if (characterModel != null) characterModel.Refresh();
         }
 
         public ProgressionResult AwardExperience(long amount, string eventId)
@@ -436,6 +437,7 @@ namespace Zjcs.Presentation.Character
             SetCharacterModelOnly(false);
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
+            if (characterModel != null) characterModel.Refresh();
         }
 
         private void SetCharacterModelOnly(bool onlyModel)
