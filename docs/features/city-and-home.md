@@ -76,7 +76,8 @@
 - 场景与交互：[`HomeSceneView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs) 用官方 384 个 sprite 四边形、sorting 顺序与点击四边形重建家园；家具按 `/X/Repaired` 与 `/X/Unrepair` 切换四态表现；相机使用官方 `orthographic_size`、`border_center/extents` 与 `drag_sensitivity` 计算夹取，`HomeInputController` 采用 `kDraggingSqrOffsetThread = 1` 的 1 像素拖动阈值，指针在 UI 上或模态窗口打开时不触发设施。
 - HUD 与窗口：[`HomeHudView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs) 由官方 `home`、`top_bar`、`money`、`player_icon`、`bottom_bar`、`functions`、`repair`、`bed`、`cart`、`mail_*`、`fast_idle` 面板树生成 UGUI；顶栏显示实际背包货币（1/2/15），底栏五入口可选中并提示所属模块，功能菜单可展开收起，床铺显示存量／容量并领取或免费加速，小推车按 `hang_up` 行列出解锁／升级／领取，邮箱列出本地邮件并支持阅读、全部已读与领取附件。
 - 入口与发奖：[`CharacterCreationFlowController`](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 的完成界面新增「进入家园」，调用 `HomeFeatureRuntime.Begin`；[`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 打开角色存档与家园存档、每 5 秒按本地时间推进产出、把领取物写入角色背包（经验道具 50 交给 `AwardExperience`），交易失败不改内存状态。
-- 当前限制：床铺等级按官方 `UseBlessingLevel` 取赐福等级，离线暂以 1 计算，女神像／探索等属性来源未接入；随机奖励仅生成数据定义，29 个槽位的动物／落叶场景对象与点击尚未实例化；装潢、昼夜环境、教学图、牛车以外的设施页面仍是待办；场景骨骼（43 个 Spine 实例）未绘制。
+- 环境：[`HomeEnvironmentView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeEnvironmentView.cs) 读取官方 `HomeEnvironmentConfig`（`HomeTimeScale=30`、`DayStageList`、`HomeLightTimeConfigs`、`EffectLightOn/Off`、`MoonConfig`、`MeteorConfig`），按官方时间倍率推进昼夜、切换 `DoorLight/LobbyLight/BedRoomLight/StudyLight/DeskLight/DiningTableLight` 灯光组、计算月相与流星窗口。原天空／太阳颜色曲线与流星粒子模板在 `HomeEnvironmentConfig` 的动画剪辑与粒子资产中，尚未导出，故未自造颜色关键帧。
+- 当前限制：床铺等级按官方 `UseBlessingLevel` 取赐福等级，离线暂以 1 计算，女神像／探索等属性来源未接入；随机奖励仅生成数据定义，29 个槽位的动物／落叶场景对象与点击尚未实例化；装潢与教学图、牛车以外的设施页面仍是待办；场景骨骼（43 个 Spine 实例）与月相／流星贴图未绘制。
 
 人物／衣柜、行囊和商城已有各自的部分运行时实现，但家园场景、底栏／头像／储物箱／菜单尚未连接这些模块。人物页当前由 `CharacterCreationFlowController.OpenCharacterProfile` 独立打开；其实际完成与验证范围见[人物页](character.md)，不在本页重复认定完成。
 

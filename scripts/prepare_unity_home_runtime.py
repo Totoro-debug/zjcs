@@ -463,11 +463,51 @@ def load_actors():
 
 
 def load_environment():
+    decor = read(OFFICIAL / "home-decor" / "catalog.json")
+    config = decor["home_environment"]
+    moon = read(OFFICIAL / "home-environment" / "moon.json")
+    player = read(OFFICIAL / "home-player" / "player.json")
+    meteor = (player.get("meteor") or {}).get("config") or config.get("MeteorConfig") or {}
+
+    def moment(value):
+        value = value or {}
+        return {"hour": value.get("Hour", 0), "minute": value.get("Minute", 0), "second": value.get("Second", 0)}
+
+    lights = []
+    for row in config.get("HomeLightTimeConfigs") or []:
+        lights.append({
+            "begin": moment(row.get("BeginTime")),
+            "lights": [{"name": item.get("Name", ""), "on": bool(item.get("IsOn"))}
+                       for item in row.get("DefaultLights") or []],
+        })
     return {
-        "moon": read(OFFICIAL / "home-environment" / "moon.json"),
-        "clouds": read(OFFICIAL / "home-environment" / "clouds.json"),
-        "snow": read(OFFICIAL / "home-snow" / "snow.json"),
-        "decor": read(OFFICIAL / "home-decor" / "catalog.json"),
+        "version": "854_156383",
+        "config": {
+            "timeScale": config.get("HomeTimeScale", 30.0),
+            "secondsPerMinute": config.get("SecondsPerMinute", 60),
+            "minutesPerHour": config.get("MinutesPerHour", 60),
+            "hoursPerDay": config.get("HoursPerDay", 24),
+            "daysPerMonth": config.get("DaysPerMonth", 30),
+            "monthsPerYear": config.get("MonthsPerYear", 12),
+            "refreshDay": moment(config.get("RefreshDayTime")),
+            "stages": [{"stage": row.get("Stage"), "time": moment(row.get("Time"))}
+                       for row in config.get("DayStageList") or []],
+            "lightTimes": lights,
+            "effectLightOn": moment(config.get("EffectLightOnTime")),
+            "effectLightOff": moment(config.get("EffectLightOffTime")),
+            "moon": config.get("MoonConfig") or moon.get("config") or {},
+            "meteor": {
+                "begin": moment(meteor.get("BeginTime")),
+                "end": moment(meteor.get("EndTime")),
+                "probability": meteor.get("Probability", 0.0),
+                "interval": meteor.get("Interval", 0),
+            },
+        },
+        "moonVariants": [
+            {"index": int(key), "sprite": value.get("moon", {}).get("sprite", {}).get("file", "")
+             .rsplit("/", 1)[-1]}
+            for key, value in sorted(moon.get("variants", {}).items(), key=lambda item: int(item[0]))
+        ],
     }
 
 
