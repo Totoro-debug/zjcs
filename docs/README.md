@@ -12,6 +12,8 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 
 所有功能与地图共用 [Android 资源迁移到 Windows 流程](asset-management.md#android-资源迁移到-windows)，其中提供版本／平台核对、递归 CAB 依赖准备脚本、原生资产恢复、脚本／shader／插件适配及 Windows 验证方法。素材快照与日常验收也统一见 [素材管理](asset-management.md)。
 
+游戏功能的 [实际运行验证方法与要求](asset-management.md#实际运行验证方法与要求)统一规定 Play Mode 启动、真实输入与画面检查、状态及存档恢复、失败修复和完成标准；静态检查、Editor 导入／编译与实际运行结论须分别说明。
+
 角色预览、创角与换装采用已确认的 [Spine 数据转换为 Unity 原生动画方案](asset-management.md#spine-角色动画迁移决策)，转换和运行兼容性仍待验证；相关功能保持未完成。
 
 ## 功能验收
