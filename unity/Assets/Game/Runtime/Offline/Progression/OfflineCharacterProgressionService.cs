@@ -100,6 +100,19 @@ namespace Zjcs.Offline.Progression
                 SkillProgression.UpgradeAllSlots(profile, context), "skill-slot-upgrade-all");
         }
 
+        public ProgressionResult PromoteSkill(int skillId)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            return RunSkillMutation((profile, context) =>
+                SkillProgression.PromoteSkill(profile, context, skillId),
+                "skill-promote-" + skillId.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public OfflineSkillDefinition SkillDefinition(int skillId)
+        {
+            return SkillRules?.Skills?.FirstOrDefault(value => value.ClassId == skillId);
+        }
+
         public ProgressionResult PromoteAllSkills()
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
