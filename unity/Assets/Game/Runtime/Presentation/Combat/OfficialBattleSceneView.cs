@@ -73,7 +73,7 @@ namespace Zjcs.Presentation.Combat
                     + new Vector3(colors.Spacing.x, 1.2f + colors.Spacing.y, colors.Spacing.z);
                 OfficialBattleDamageFloat.Spawn(root, font,
                     Math.Abs(damage.Damage).ToString(CultureInfo.InvariantCulture),
-                    colors.Resolve(damage), position);
+                    colors.Resolve(damage, damage.ElementType), position);
             }
         }
 

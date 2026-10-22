@@ -18,6 +18,7 @@ namespace Zjcs.Combat.Official
         public int SkillItemId;
         public int HitEntityId;
         public int DamageType;
+        public int ElementType;
         public float Delay;
         public int Anchor;
         public bool IsCure;

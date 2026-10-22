@@ -80,9 +80,11 @@ $damagePlayer = New-Unit 1 1 0 0 500 1000
 $damageTarget = New-Unit 2 2 1 0 800 1000
 $damageSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
 $damageSkill.SkillType = 0
+$damageSkill.ElementType = 101
 $damageSkill.Hits.Add((New-Hit 4 8 30))
 $damageResult = Invoke-ActionBattle $damageSkill $damagePlayer @($damageTarget) 1
 Assert-Action ($damageResult.Event.DamageEvents.Count -eq 1 -and -not $damageResult.Event.DamageEvents[0].IsCure) 'Damage-action hit was not treated as damage'
 Assert-Action ($damageTarget.Hp -eq 770) 'Damage-action hit applied the wrong amount'
+Assert-Action ($damageResult.Event.DamageEvents[0].ElementType -eq 101) 'Damage event lost the skill element type'
 
 Write-Output 'Battle hit action checks passed: cure action, no-action hits and normal damage actions.'
