@@ -83,7 +83,7 @@
 
 验证边界：`python -B scripts/check_unity_project.py` 的静态元数据检查通过；家园清单输出的文件存在性、SHA256 和 GUID 核对通过。`OfficialHomeAssetTools.ValidateMigratedAssets` 提供 Editor 资产与场景检查入口，但严格脚本／Shader 检查未取得通过结论；此处不沿用其他模块早期编译报错作为当前阻塞判定。主城 Editor 导入／编译、Play Mode 逻辑／真实输入／画面／保存恢复以及 Windows Player 表现均未取得完整验收结论。
 
-本轮补充证据与缺口：家园离线源码（`Offline/Home/*.cs`）与表现层源码（`Presentation/Home/*.cs`）用 Unity 同版本 Roslyn 单独编译无错误；运行的 Unity 编辑器已在 `Library/ScriptAssemblies` 生成 `Zjcs.Presentation.Home.dll` 与包含「进入家园」的 `Zjcs.Presentation.CharacterCreation.dll`，说明编辑器编译通过；`check_unity_project.py` 本轮仅报告 `StreamingAssets/Opening/voices` 等其他会话的元数据缺项，家园新增文件无报错。尚未执行家园 Play Mode 画面／鼠标输入／存证恢复验证，也没有 Windows Player 构建或截图，因此不得据此认定主城已可玩。
+本轮补充证据与缺口：家园离线源码（`Offline/Home/*.cs`）与表现层源码（`Presentation/Home/*.cs`）用 Unity 同版本 Roslyn 单独编译无错误；运行的 Unity 编辑器已在 `Library/ScriptAssemblies` 生成 `Zjcs.Presentation.Home.dll` 与包含「进入家园」的 `Zjcs.Presentation.CharacterCreation.dll`，说明编辑器编译通过；`check_unity_project.py` 本轮仅报告 `StreamingAssets/Opening/voices` 等其他会话的元数据缺项，家园新增文件无报错。已加入 Play Mode 验收驱动 [`HomeAcceptanceLauncher`](../../unity/Assets/Game/Editor/Home/HomeAcceptanceLauncher.cs) 与 [`HomeAcceptanceDriver`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeAcceptanceDriver.cs)：用隔离存档进入家园、维修家具、领取与升级挂机、打开床铺／小推车／邮箱／功能菜单、渲染截图并写 `output/home-acceptance/report.json`。2026-10-23 00:40 的批次运行被并行会话未完成的 `CommerceScreenController` 编译错误阻断（`OpenDaily/OpenWeekly/OpenFirstPay/OpenAccumulated/OpenExchange/AddRewardIcons/OpenPriceTable` 不存在），家园代码本身未报错；因此尚未取得 Play Mode 画面／鼠标输入／存档恢复结论，也没有 Windows Player 构建或截图。
 
 ## 自定义实现
 
