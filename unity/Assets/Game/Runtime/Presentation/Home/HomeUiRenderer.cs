@@ -150,6 +150,8 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        private readonly Dictionary<int, GameObject> valueLabels = new Dictionary<int, GameObject>();
+
         public bool SetTextUnderPath(string parentName, string childPath, string value)
         {
             string marker = "/" + parentName + "/";
@@ -158,36 +160,43 @@ namespace Zjcs.Presentation.Home
             {
                 if (pair.Key.IndexOf(marker, StringComparison.Ordinal) < 0) continue;
                 if (!pair.Key.EndsWith(suffix, StringComparison.Ordinal)) continue;
-                TMP_Text text = pair.Value.GetComponent<TMP_Text>();
-                if (text == null) continue;
+                Transform valueParent = pair.Value.transform.parent;
+                if (valueParent == null) continue;
+                // The official Value node controls child width in a layout group, which
+                // collapses the cloned TMP text to zero width.  A dedicated label keeps a
+                // stretched rect and the official font/colour.
+                GameObject label = EnsureValueLabel(valueParent);
+                TMP_Text text = label.GetComponent<TMP_Text>();
                 text.text = value ?? string.Empty;
-                LayoutElement element = pair.Value.GetComponent<LayoutElement>();
-                if (element == null) element = pair.Value.AddComponent<LayoutElement>();
-                Vector2 preferred = text.GetPreferredValues(value ?? string.Empty);
-                element.preferredWidth = Mathf.Max(24f, preferred.x + 8f);
-                element.preferredHeight = Mathf.Max(20f, text.fontSize + 4f);
-                element.flexibleWidth = 0f;
-                element.minWidth = element.preferredWidth;
-                text.ForceMeshUpdate();
-                RectTransform parentRect = pair.Value.transform.parent as RectTransform;
-                if (parentRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-                HorizontalOrVerticalLayoutGroup group = pair.Value.transform.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
-                if (group != null && group is HorizontalLayoutGroup)
-                {
-                    group.childControlWidth = false;
-                    group.childForceExpandWidth = false;
-                }
-                RectTransform textRect = (RectTransform)pair.Value.transform;
-                if (textRect.rect.width < 1f)
-                {
-                    textRect.sizeDelta = new Vector2(Mathf.Max(24f, preferred.x + 8f), textRect.sizeDelta.y);
-                    text.ForceMeshUpdate();
-                }
+                pair.Value.SetActive(false);
                 return true;
             }
             return false;
         }
 
+        private GameObject EnsureValueLabel(Transform parent)
+        {
+            int key = parent.GetInstanceID();
+            if (valueLabels.TryGetValue(key, out GameObject cached) && cached != null) return cached;
+            var go = new GameObject("ValueLabel", typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = new Vector2(4f, 0f);
+            rect.offsetMax = new Vector2(-4f, 0f);
+            rect.localScale = Vector3.one;
+            var label = go.AddComponent<TextMeshProUGUI>();
+            label.font = catalog.Font;
+            label.fontSize = 30f;
+            label.color = new Color(0.13f, 0.13f, 0.13f, 1f);
+            label.alignment = TextAlignmentOptions.Center;
+            label.enableWordWrapping = false;
+            label.overflowMode = TextOverflowModes.Overflow;
+            label.raycastTarget = false;
+            valueLabels[key] = go;
+            return go;
+        }
         public bool SetTextUnder(string parentName, string childName, string value)
         {
             string marker = "/" + parentName + "/";
