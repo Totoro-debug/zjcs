@@ -90,6 +90,7 @@ namespace Zjcs.Combat.Official
             var skillState = new FightSkillState(actor.SkillState);
             int actorRound = unchecked(actor.SkillState.Round + 1);
             skillState.BeginRound(actorRound);
+            FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart);
             var before = new Dictionary<int, long>();
             for (int i = 0; i < units.Count; i++) before[units[i].Id] = units[i].Hp;
             var movements = new List<FightBattleMovementEvent>();
@@ -146,6 +147,8 @@ namespace Zjcs.Combat.Official
             turn.ActionRound = actor.SkillState.Round;
             SynchronizeTurn(actor);
             turns.Finish(turn);
+            FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingEnd);
+            FightStatusLifecycle.RemoveDestroyedTargets(units);
 
             SpawnNextWaveIfCleared();
             RefreshTurnUnits();
@@ -167,7 +170,11 @@ namespace Zjcs.Combat.Official
         private void Initialize()
         {
             foreach (FightBattleUnitState unit in units)
+            {
                 new FightSkillState(unit.SkillState).Initialize(unit.SkillCooldownChangeAtStart);
+                foreach (FightBattleStatusState status in unit.Statuses)
+                    FightStatusLifecycle.Initialize(status, 0);
+            }
 
             if (checkpoint.Waves.Count > 0)
             {

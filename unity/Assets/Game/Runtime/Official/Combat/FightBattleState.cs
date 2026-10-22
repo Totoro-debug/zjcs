@@ -55,8 +55,27 @@ namespace Zjcs.Combat.Official
         public int InstanceId;
         public int ClassId;
         public int StatusType;
+        // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
         public int DurationRound;
+        public int CurDurationRound;
+        public int StartRound;
+        public int RoundTarget;
+        public int RoundUpdateTiming;
+        public bool RemoveAtRoundTargetDestroy;
+        public int ActionBehOfSameStatus;
+        public bool CanDispersed;
+        public bool IsAddDurationRound;
+        public int MaxAddDurationRound = 100;
+        public bool IsResetDurationWhenStack;
+        public bool ScalePropWhenChangeStacked;
+        public bool ApplyIgnoreResilience;
+        public bool ForbiddenOnApplicatorDie;
+        public bool FollowRoundUpdateTimingOnGlobalRound;
+        public bool IsFixedProp;
         public int StackCount = 1;
+        public int AddStackedCount = 1;
+        public int AddStackedRandomMinCount = 1;
+        public int AddStackedRandomMaxCount = 1;
         public int MaxStackedCount;
         public bool IsOpenStack;
         public int OwnerId;
