@@ -367,6 +367,8 @@ namespace Zjcs.Presentation.Inventory
             var detailNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             BuildNode(Object(rawRoot, "item detail root"), root, detailNodes);
             SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/NameGo/NameText", OfficialItemName(item));
+            SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/TypeText",
+                assets.FindItemTypeText(item.ItemType));
             SetDetailText(detailNodes, "/ItemDetailDialog/BgDialog1/Content/TopGo/CountGo/CountContent/CountText",
                 FormatCount(item.Count));
             Sprite sprite = assets.FindItemSprite(item.ItemId);
