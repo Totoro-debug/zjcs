@@ -471,7 +471,7 @@ namespace Zjcs.Presentation.Commerce
             AddActivityEntry("CommerceActivity_weekly", Localized("ui_weekly_pay_gift_title", "每周礼包"),
                 Sprite("note_WeeklyActivities"), OpenWeekly);
             AddActivityEntry("CommerceActivity_first", Localized("ui_first_pay_entry_title", "首购"),
-                Sprite("ImgItem_FirstPay"), OpenFirstPay);
+                Sprite("Activity_FirstPay"), OpenFirstPay);
             AddActivityEntry("CommerceActivity_exchange", "耀星兑换",
                 runtime.FindItemSprite(runtime.Catalog.Data.settings.flareStarItemId), OpenExchange);
             RefreshActivityEntryDots();
@@ -971,5 +971,6 @@ namespace Zjcs.Presentation.Commerce
         }
     }
 }
+
 
 
