@@ -155,17 +155,20 @@ namespace Zjcs.Presentation.Character
                 }
                 nameButton.targetGraphic = graphic;
                 nameButton.onClick.AddListener(BeginRename);
-                planInput = nameRect.GetComponent<InputField>();
-                if (planInput == null)
+                if (planName != null)
                 {
-                    planInput = nameRect.gameObject.AddComponent<InputField>();
-                    planInput.textComponent = planName;
-                    planInput.targetGraphic = graphic;
-                    planInput.lineType = InputField.LineType.SingleLine;
-                    planInput.characterLimit = 16;
-                    planInput.onEndEdit.AddListener(CommitRename);
+                    planInput = nameRect.GetComponent<InputField>();
+                    if (planInput == null)
+                    {
+                        planInput = nameRect.gameObject.AddComponent<InputField>();
+                        planInput.textComponent = planName;
+                        planInput.targetGraphic = graphic;
+                        planInput.lineType = InputField.LineType.SingleLine;
+                        planInput.characterLimit = 16;
+                        planInput.onEndEdit.AddListener(CommitRename);
+                    }
+                    planInput.interactable = false;
                 }
-                planInput.interactable = false;
             }
             BindButtonName("PrevPlanBtn", () => SwitchPlan(-1));
             BindButtonName("FastLevelUpBtn", UpgradeAllSlots);
