@@ -93,6 +93,71 @@ namespace Zjcs.Offline.Progression
             return ApplySkillProfile(clone, result, "skill-rename-" + plan.ToString(CultureInfo.InvariantCulture));
         }
 
+        public ProgressionResult UpgradeAllSkillSlots()
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            return RunSkillMutation((profile, context) =>
+                SkillProgression.UpgradeAllSlots(profile, context), "skill-slot-upgrade-all");
+        }
+
+        public ProgressionResult PromoteAllSkills()
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            return RunSkillMutation((profile, context) =>
+                SkillProgression.PromoteAllSkills(profile, context), "skill-promote-all");
+        }
+
+        private ProgressionResult RunSkillMutation(
+            Func<OfflineSkillProfile, OfflineSkillPlayerContext, OfflineSkillResult> operation, string eventId)
+        {
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            SyncSkillItems(clone, Player.Inventory);
+            Dictionary<int, long> before = SkillItemCounts(clone);
+            OfflineSkillResult result = operation(clone, SkillContext());
+            if (result == null) return Invalid("The skill operation returned no result.");
+            if (!result.IsApplied)
+                return new ProgressionResult
+                {
+                    Status = result.Code == OfflineSkillResultCode.Unchanged
+                        ? ProgressionResultStatus.Unchanged : ProgressionResultStatus.InvalidState,
+                    Message = result.Message
+                };
+            Dictionary<int, long> after = SkillItemCounts(clone);
+            ProgressionResult applied = session.ApplyCharacterMutation(player =>
+            {
+                player.Skills = clone;
+                foreach (KeyValuePair<int, long> entry in after)
+                {
+                    before.TryGetValue(entry.Key, out long previous);
+                    long consumed = previous - entry.Value;
+                    if (consumed <= 0) continue;
+                    OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == entry.Key);
+                    if (stack == null) throw new InvalidOperationException("A skill cost item is missing.");
+                    stack.Count = Math.Max(0, stack.Count - consumed);
+                }
+            }, eventId + "-" + Guid.NewGuid().ToString("N"));
+            return applied.IsApplied ? new ProgressionResult { Status = ProgressionResultStatus.Applied } : applied;
+        }
+
+        private static Dictionary<int, long> SkillItemCounts(OfflineSkillProfile profile)
+        {
+            var counts = new Dictionary<int, long>();
+            foreach (OfflineSkillItemCount item in profile.Items)
+                if (item != null && item.ItemId > 0) counts[item.ItemId] = item.Count;
+            return counts;
+        }
+
+        private void SyncSkillItems(OfflineSkillProfile profile, List<OfflineItemStack> inventory)
+        {
+            profile.Items.Clear();
+            foreach (OfflineItemStack stack in inventory)
+            {
+                if (stack == null || stack.Count <= 0) continue;
+                if (stack.ItemId != 1 && catalog.ItemType(stack.ItemId) != 111) continue;
+                profile.Items.Add(new OfflineSkillItemCount { ItemId = stack.ItemId, Count = stack.Count });
+            }
+        }
+
         public ProgressionResult ToggleSkillFavorite(int skillId)
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");

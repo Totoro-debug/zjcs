@@ -37,6 +37,7 @@ namespace Zjcs.Presentation.Character
         private RectTransform skillGrid;
         private GameObject emptyTip;
         private Toggle showAll;
+        private Text statusText;
         private readonly List<GameObject> listRows = new List<GameObject>();
         private int listType = ActiveSkillItemType;
         private int selectedType;
@@ -138,6 +139,22 @@ namespace Zjcs.Presentation.Character
                 planInput.interactable = false;
             }
             BindButtonName("PrevPlanBtn", () => SwitchPlan(-1));
+            BindButtonName("FastLevelUpBtn", UpgradeAllSlots);
+            BindButtonName("FastPromotionBtn", PromoteAllSkills);
+            var statusObject = new GameObject("SkillPanelStatus", typeof(RectTransform), typeof(Text));
+            statusObject.transform.SetParent(panel.transform, false);
+            RectTransform statusRect = (RectTransform)statusObject.transform;
+            statusRect.anchorMin = new Vector2(0.5f, 0f);
+            statusRect.anchorMax = new Vector2(0.5f, 0f);
+            statusRect.pivot = new Vector2(0.5f, 0f);
+            statusRect.sizeDelta = new Vector2(900f, 40f);
+            statusRect.anchoredPosition = new Vector2(0f, 8f);
+            statusText = statusObject.GetComponent<Text>();
+            statusText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            statusText.fontSize = 20;
+            statusText.alignment = TextAnchor.MiddleCenter;
+            statusText.color = new Color(1f, 0.85f, 0.5f);
+            statusText.raycastTarget = false;
             BindButtonName("NextPlanBtn", () => SwitchPlan(1));
             activeGroup = FindDeep("ActiveSkill");
             passiveGroup = FindDeep("PassiveSkill");
@@ -452,6 +469,30 @@ namespace Zjcs.Presentation.Character
             foreach (Button value in root.GetComponentsInChildren<Button>(true)) value.enabled = false;
             foreach (Graphic value in root.GetComponentsInChildren<Graphic>(true)) value.raycastTarget = false;
             return root.gameObject;
+        }
+
+        private void UpgradeAllSlots()
+        {
+            ProgressionResult result = progression.UpgradeAllSkillSlots();
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            Refresh();
+            Changed?.Invoke();
+        }
+
+        private void PromoteAllSkills()
+        {
+            ProgressionResult result = progression.PromoteAllSkills();
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            Refresh();
+            Changed?.Invoke();
+        }
+
+        private void SetStatus(string message)
+        {
+            LastMessage = message ?? string.Empty;
+            if (statusText != null) statusText.text = LastMessage;
         }
 
         private void ToggleFavorite(int skillId)

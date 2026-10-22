@@ -188,7 +188,6 @@ namespace Zjcs.Presentation.World
                 battleStepTimer -= Time.deltaTime;
                 if (battleStepTimer <= 0f)
                 {
-                    battleStepTimer = 0.35f;
                     try
                     {
                         if (battleController.Checkpoint == null || battleController.Checkpoint.Finished)
@@ -196,12 +195,14 @@ namespace Zjcs.Presentation.World
                         else
                         {
                             battleController.Advance();
+                            battleStepTimer = battleController.LastStepSeconds;
                             if (battleController.Checkpoint.Finished) FinishBattle();
                         }
                     }
                     catch (Exception error)
                     {
                         Debug.LogException(error, this);
+                        battleStepTimer = 0.5f;
                         AbortBattle();
                         ShowOfficialNotice("战斗未完成，本次结果未记录");
                     }
