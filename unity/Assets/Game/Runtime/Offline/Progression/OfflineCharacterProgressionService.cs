@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Zjcs.Offline.Equipment;
 
 namespace Zjcs.Offline.Progression
 {
@@ -23,6 +24,14 @@ namespace Zjcs.Offline.Progression
         public OfflinePlayerProgress Player => session.Save.Player;
         public OfficialCharacterCatalog Catalog => catalog;
         public CharacterPropCalculator PropertyCalculator => propertyCalculator;
+        public OfficialEquipmentCatalog EquipmentCatalog { get; private set; }
+
+        public void AttachEquipmentCatalog(OfficialEquipmentCatalog equipment)
+        {
+            EquipmentCatalog = equipment;
+            if (equipment != null)
+                propertyCalculator.AddSource(new OfflineEquipmentPropSource(equipment, catalog.RankOfSubRank));
+        }
 
         public CharacterPropSnapshot EvaluateProps(long nowUnixSeconds)
         {
@@ -169,6 +178,60 @@ namespace Zjcs.Offline.Progression
                 if (player.Level < 10) throw new InvalidOperationException("The rank tutorial is not unlocked.");
                 player.RankTutorialSeen = true;
             }, eventId);
+        }
+
+        /// <summary>Original <c>Player.OnEquipUpdate</c>: wear an equipment instance and sync its appearance skin.</summary>
+        public ProgressionResult WearEquipment(OfficialEquipmentCatalog equipment, long instanceId, string eventId)
+        {
+            if (equipment == null || instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment instance and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                if (!OfflineEquipmentOperations.Wear(player.Equipment, equipment, instanceId,
+                        player.Wardrobe.Profession))
+                    throw new InvalidOperationException("This equipment cannot be worn by the current character.");
+                SynchronizeEquipmentSkins(player, equipment);
+            }, eventId);
+        }
+
+        public ProgressionResult TakeOffEquipment(OfficialEquipmentCatalog equipment, int position, string eventId)
+        {
+            if (equipment == null || position <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment position and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                if (!OfflineEquipmentOperations.TakeOff(player.Equipment, position))
+                    throw new InvalidOperationException("There is no equipment in this slot.");
+                SynchronizeEquipmentSkins(player, equipment);
+            }, eventId);
+        }
+
+        /// <summary>
+        /// Original <c>EquipSkinDict</c>: worn equipment supplies the body and weapon skins, while
+        /// the remaining parts keep the wardrobe or base skin.
+        /// </summary>
+        private void SynchronizeEquipmentSkins(OfflinePlayerProgress player, OfficialEquipmentCatalog equipment)
+        {
+            player.Wardrobe.WornSkins.RemoveAll(skin => skin.Type == 5 || skin.Type == 7 || skin.Type == 8);
+            foreach (OfflineEquippedSlot slot in player.Equipment.Equipped.OrderBy(value => value.Position))
+            {
+                OfflineEquipmentInstance instance = player.Equipment.Instances
+                    .FirstOrDefault(value => value.InstanceId == slot.InstanceId);
+                if (instance == null) continue;
+                Dictionary<string, object> row = equipment.Find("equip", instance.ItemId);
+                if (row == null || !row.TryGetValue("AppendAppearanceItemId", out object raw)
+                    || Convert.ToInt32(raw, CultureInfo.InvariantCulture) <= 0) continue;
+                int appearanceItemId = Convert.ToInt32(raw, CultureInfo.InvariantCulture);
+                if (!catalog.Appearances.TryGetValue(appearanceItemId, out WardrobeItemDefinition appearance)
+                    || appearance.SkinBySex == null) continue;
+                if (!appearance.SkinBySex.TryGetValue(player.Wardrobe.Sex, out int skinId)
+                    || skinId <= 0) continue;
+                int type = slot.Position == 10 ? 7 : slot.Position == 14 ? 8 : slot.Position == 12 ? 5 : 0;
+                if (type == 0) continue;
+                player.Wardrobe.WornSkins.RemoveAll(skin => skin.Type == type);
+                player.Wardrobe.WornSkins.Add(new OfflineAppearanceSkin { Type = type, Id = skinId });
+            }
+            player.Wardrobe.WornSkins = player.Wardrobe.WornSkins.OrderBy(skin => skin.Type).ToList();
         }
 
         public ProgressionResult WearAppearance(int itemId, long nowUnixSeconds, string eventId)

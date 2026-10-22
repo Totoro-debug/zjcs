@@ -49,6 +49,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 人物属性管线按固定版 `PlayerPropContext`／`PropChunkFactory` 分块实现：[CharacterPropCalculator](../../unity/Assets/Game/Runtime/Offline/Progression/CharacterPropCalculator.cs) 构建 `BattleBasic`、`Profession`、`Equip`、`Appearance` 分块并按原 `HandleBaseProps`、`HandlePercentProps`、`HandleScaleProps` 顺序处理战斗外属性，用 `CalcCombatRatingCommon` 的 Base／NonBase／BaseRate／BasePercent／Advanced／NonBasePercent 六组、`ScoreBase` 递归和 `CommonCombatRatingRefData` 计算分块战力；[OfficialPropCatalog](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropCatalog.cs) 解析 352 条 `prop_cfg`、显示名／说明／图标、分类、单位本地化与相对属性，[OfficialPropFormat](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropFormat.cs) 复刻原 `FormatPropString` 的万／亿与百分比格式。生成脚本在 `character-progression.json` 中新增 `prop_units`、`prop_categories`，并从原预制体提取属性弹窗的 `PropCatalogCfgList` 与细分分组绑定。
 
+[CharacterEquipSlots](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterEquipSlots.cs) 绑定原五槽 `CharacterPanelEquipItem`：主武器 10、副武器 14、头盔 11、衣服 12、靴子 13，显示已穿装备图标（品质底图、`item_icons` 或原缺失图标文本）、等级与副武器职业解锁（`profession_base.Rank > 1`）；空槽点击打开原 `CharacterPanelEquipListPanel`，候选按装备评分（原 `EquipItemComparer` 的 Score→Quality→ClassId 降序）列出本部位且职业可穿实例，点击经 `OfflineEquipmentOperations.Wear` 穿戴并同步 `Wardrobe.WornSkins` 的 body／pWeapon／sWeapon 皮肤。已穿槽的原详情／比较面板仍待接线。
+
 [OfflineEquipmentPropSource](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.cs) 实现原 `EquipPropChunk`：按 `equip`／`equip_type` 的 `Main`／`Sec`／`Other` 属性类、强化等级（`SlotProgress.BaseLevel`）、祝福等级、位阶差与 `equip_suit` 套装阈值合并装备分块，并以逐件装备属性计算装备分块战力；装备目录缺失时 `CharacterFeatureRuntime` 记录警告并继续运行。装备属性使用 `equipment-runtime-rules.json` 的 `props` 等级表与 `equip_attributes*` 数据。
 
 [CharacterRankPanel](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterRankPanel.cs) 绑定原 `CharacterUpgradePanel`：当前／下一位阶名称（`rank name`＋`sub`）、位阶星级（按 `player_subrank` 的同一大位阶分组，`GetState` 的已亮／下一枚／未亮）、当前等级与基础等级上限、下一位阶等级上限、`PropCatalog.Base` 基础属性前后值、`player_subrank.Items` 材料（原 `MapId`、持有／需求、品质底图与 `item_icons` 图标）、`LimitState` 的无限制／等级不足／满位阶状态和 `UseItemBtn` 突破。突破成功后刷新面板并保持同一实例；原 `UpgradeNotifyDialog` 与 10 级教学仍未接线。
@@ -104,9 +106,10 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ### 人物装备五槽
 
-- [ ] 绑定五槽实例、空槽／已穿图标、职业限制、副武器解锁、强化／祝福等级、星石小图、幻装标记及原缺装／更优／可强化等提示点。
-- [ ] 连接空槽候选、已穿详情、更换、单双栏比较、原排序、空列表和新获得标记；比较读取原评分及部位星石影响，确认前执行原职业／套装检查，穿脱后同步模型、属性和战力。
-- [ ] 将人物入口与[装备](equipment.md)中的强化、继承、星石、词条、锁定、分解、碎片合成及奖励流程连通，复用同一实例 ID、背包、部位强化档案及原子存档事务。
+- [x] 五槽实例、已穿图标、品质底图、等级、副武器职业解锁、空槽／已穿与空列表状态已接线；装备主／副／额外／套装属性与分块战力已进入人物属性。
+- [ ] 补齐强化／祝福等级显示、星石小图、幻装标记、缺装／更优／可强化提示点与原红点；装备图标改为正式装备图标目录（当前仅秩位材料与部分物品有图标，其余走原 `MissingIconText` 末四字降级）。
+- [ ] 连接已穿详情、更换、单双栏比较、比较评分与部位星石影响、确认前职业／套装检查；当前已穿槽点击尚未打开 `CharacterPanelEquipDetailPanel`。
+- [ ] 连通[装备](equipment.md)的强化、继承、星石、词条、锁定、分解与碎片合成，复用同一实例 ID、背包、部位强化档案及原子存档事务；卸下入口按原位置归入背包流程。
 
 ### 技能安装与附属入口
 
@@ -147,7 +150,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 | --- | --- | --- |
 | 人物模型 | `CharacterPanel.RefreshAppearance`、`SwitchAnimCallBack`、`AppendAppearanceContent.PlayAnim/GetSwitchAnimData/GetLoopAnimData` | `CharacterModelPreview` 已接衣柜解析和网格播放；运行包仅含男女 `100/idle_01`、`200/idle_01` 四份姿态。目录中职业 0–30 的 profile 记录不能代表职业切换流程或全部动作已接通；衣柜分类 `show_*` 切换和 `appearance` 循环、HSV 材质/遮罩、人物页称号及实际装备驱动的外观同步仍缺失。模型还采用按包围盒缩放居中，尚未完成与官方画面的比例、位置核验。 |
 | 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext` 合并分块并更新战力 | 已接 `CharacterPropCalculator` 分块、`CharacterPropPanels` 概要行与综合／细分弹窗（含页签、来源顺序、相对属性、折叠展开）。剩余：装备／技能／幻兽等分块来源、属性行点击说明浮层、`ScoreLevelGroupId` 等级系数；Map10 战斗尚未改为读取同一 `CharacterPropSnapshot`。 |
-| 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 空槽候选或已穿详情 | 装备属性已进入人物属性分块与战力，`OfflineEquipmentOperations` 已具备穿脱、强化、继承、分解与星石规则。人物 UI 仍未绑定五槽实例、图标、强化/星石状态、副武器职业解锁或点击入口；穿脱尚未同步武器外观与 `Wardrobe.WornSkins`。 |
+| 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 空槽候选或已穿详情 | 五槽已绑定实例、图标、等级与副武器解锁，空槽候选按原评分排序并可穿戴，穿脱经 `OfflineEquipmentOperations` 与身体／武器皮肤同步；已穿槽详情／比较、强化与星石显示尚未接线。 |
 | 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 人物按钮仅发出 `OfficialModuleRequested("skills")`，`CharacterFeatureRuntime` 转发 `NavigationRequested`，创建流程没有订阅该事件。`OfflineSkillProgression` 已有安装/替换/卸下与培养规则，但 `OfflineSkillProfile` 未进入统一人物主存档，技能运行面板、槽位交互、方案选择和战斗读取未接通。 |
 | 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
 | 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
