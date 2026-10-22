@@ -109,7 +109,7 @@ namespace Zjcs.Editor.Character
                 && baseProps.TryGetValue(loaded.PropertyIds["BaseDefence"], out long defence) && defence == 60
                 && baseProps.TryGetValue(loaded.PropertyIds["BaseSpeed"], out long speed) && speed == 48,
                 "Load official level, subrank and role-group properties in order");
-            ValidateCharacterSourceHashes(assets[CatalogPaths.Length - 1].text);
+            ValidateCharacterSourceHashes(assets[Array.IndexOf(CatalogFields, "sourceManifest")].text);
             foreach (string source in new[]
             {
                 "res://assets/official/sprites/CharacterRank_1-45973bcfb0.png",
