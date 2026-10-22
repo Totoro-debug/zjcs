@@ -22,6 +22,8 @@ namespace Zjcs.Presentation.Combat
         private bool ownsTimeScale;
         private readonly FightBattlePhaseMachine phases = new FightBattlePhaseMachine();
         private FightOfficialCombatCatalog combatCatalog;
+        private OfficialBattleHudCatalog hudCatalog;
+        private OfficialBattleDamageColors damageColors;
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
@@ -69,6 +71,8 @@ namespace Zjcs.Presentation.Combat
                 ? hudCatalog : OfficialBattleHudCatalog.LoadDefault();
 
             combatCatalog = resolvedCombatAssets.Load();
+            hudCatalog = resolvedHudCatalog;
+            damageColors = OfficialBattleDamageColors.Load();
             FightBattleExecutor nextExecutor = restoreCheckpoint
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
                 : resolvedCombatAssets.BeginBattle(checkpoint);
@@ -124,6 +128,8 @@ namespace Zjcs.Presentation.Combat
                     timelineFactionResolver, true);
                 hudView.RefreshBoss(result.Checkpoint, UnitName);
                 hudView.RefreshStageStatus(result.Checkpoint);
+                if (!result.Replayed)
+                    sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
                 if (result.Checkpoint.Finished) phases.BeginBattleEnd();
@@ -239,6 +245,8 @@ namespace Zjcs.Presentation.Combat
             hudView = null;
             hudRoot = null;
             combatCatalog = null;
+            hudCatalog = null;
+            damageColors = null;
             skillIconResolver = null;
             timelinePortraitResolver = null;
             timelineFactionResolver = null;
