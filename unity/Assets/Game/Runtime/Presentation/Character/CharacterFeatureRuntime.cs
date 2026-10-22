@@ -30,6 +30,14 @@ namespace Zjcs.Presentation.Character
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
             progression = new OfflineCharacterProgressionService(session, assetCatalog.Load());
             TryRegisterEquipmentProperties();
+            try
+            {
+                progression.AttachSkillRules(assetCatalog.LoadSkillRules());
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Official skill progression rules are unavailable: " + error.Message);
+            }
             ProgressionResult wardrobe = progression.InitializeWardrobe("wardrobe-initialize");
             if (wardrobe.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(wardrobe.Message ?? "Character wardrobe initialization failed.");

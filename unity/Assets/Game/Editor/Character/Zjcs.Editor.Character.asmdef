@@ -1,8 +1,13 @@
 {
   "name": "Zjcs.Editor.Character",
   "rootNamespace": "Zjcs.Editor.Character",
-  "references": ["Zjcs.Offline.Progression"],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "Zjcs.Offline.Progression",
+    "Zjcs.Offline.Skills"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "overrideReferences": false,

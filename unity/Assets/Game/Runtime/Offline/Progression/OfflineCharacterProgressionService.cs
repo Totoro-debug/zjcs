@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Zjcs.Offline.Equipment;
+using Zjcs.Offline.Skills;
 
 namespace Zjcs.Offline.Progression
 {
@@ -31,6 +32,98 @@ namespace Zjcs.Offline.Progression
             EquipmentCatalog = equipment;
             if (equipment != null)
                 propertyCalculator.AddSource(new OfflineEquipmentPropSource(equipment, catalog.RankOfSubRank));
+        }
+
+        public OfflineSkillRules SkillRules { get; private set; }
+        public OfflineSkillProgression SkillProgression { get; private set; }
+
+        public void AttachSkillRules(OfflineSkillRules rules)
+        {
+            SkillRules = rules;
+            SkillProgression = rules == null ? null : new OfflineSkillProgression(rules);
+        }
+
+        public OfflineSkillPlayerContext SkillContext()
+        {
+            CharacterExperienceSnapshot experience = Experience();
+            return new OfflineSkillPlayerContext
+            {
+                Profession = Player.Wardrobe.Profession,
+                SubRank = Player.SubRank,
+                BaseLevel = Player.Level,
+                PlayerRank = Player.Rank,
+                CurrentSeasonRank = Player.SeasonRank,
+                CurrentSeasonId = 0,
+                PlayerBlessLevel = experience.BlessLevel,
+                CurrentProfessionChain = ProfessionChain(Player.Wardrobe.Profession)
+            };
+        }
+
+        private HashSet<int> ProfessionChain(int profession)
+        {
+            var chain = new HashSet<int>();
+            int current = profession;
+            while (current > 0 && chain.Add(current))
+            {
+                int parent = 0;
+                foreach (Dictionary<string, object> row in catalog.Rows("profession_base"))
+                {
+                    if (Convert.ToInt32(row["Profession"], CultureInfo.InvariantCulture) != current) continue;
+                    parent = Convert.ToInt32(row["PrePro"], CultureInfo.InvariantCulture);
+                    break;
+                }
+                current = parent;
+            }
+            return chain;
+        }
+
+        public ProgressionResult SelectSkillPlan(int plan)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillResult result = SkillProgression.SelectPlan(clone, plan);
+            return ApplySkillProfile(clone, result, "skill-plan-" + plan.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public ProgressionResult RenameSkillPlan(int plan, string name)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillResult result = SkillProgression.RenamePlan(clone, plan, name);
+            return ApplySkillProfile(clone, result, "skill-rename-" + plan.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public ProgressionResult EquipSkill(int skillId, int slot)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillResult result = SkillProgression.Equip(clone, SkillContext(), skillId, slot);
+            return ApplySkillProfile(clone, result, "skill-equip-" + skillId.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public ProgressionResult UnequipSkill(int itemType, int slot)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillResult result = SkillProgression.Unequip(clone, itemType, slot);
+            return ApplySkillProfile(clone, result, "skill-unequip-" + itemType.ToString(CultureInfo.InvariantCulture)
+                + "-" + slot.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private ProgressionResult ApplySkillProfile(OfflineSkillProfile profile, OfflineSkillResult result,
+            string eventId)
+        {
+            if (result == null) return Invalid("The skill operation returned no result.");
+            if (!result.IsApplied)
+                return new ProgressionResult
+                {
+                    Status = result.Code == OfflineSkillResultCode.Unchanged
+                        ? ProgressionResultStatus.Unchanged : ProgressionResultStatus.InvalidState,
+                    Message = result.Message
+                };
+            ProgressionResult applied = session.ApplyCharacterMutation(player => player.Skills = profile,
+                eventId + "-" + Guid.NewGuid().ToString("N"));
+            return applied.IsApplied ? new ProgressionResult { Status = ProgressionResultStatus.Applied } : applied;
         }
 
         public CharacterPropSnapshot EvaluateProps(long nowUnixSeconds)

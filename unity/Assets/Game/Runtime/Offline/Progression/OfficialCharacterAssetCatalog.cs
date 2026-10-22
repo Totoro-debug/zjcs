@@ -28,6 +28,7 @@ namespace Zjcs.Offline.Progression
         [SerializeField] private TextAsset wardrobeUi;
         [SerializeField] private TextAsset characterPanels;
         [SerializeField] private TextAsset sourceManifest;
+        [SerializeField] private TextAsset skillRules;
         [SerializeField] private OfficialCharacterSpriteBinding[] sprites = System.Array.Empty<OfficialCharacterSpriteBinding>();
 
         public TextAsset CharacterOverview => characterOverview;
@@ -39,6 +40,7 @@ namespace Zjcs.Offline.Progression
         public TextAsset WardrobeUi => wardrobeUi;
         public TextAsset CharacterPanels => characterPanels;
         public TextAsset SourceManifest => sourceManifest;
+        public TextAsset SkillRules => skillRules;
 
         public Sprite FindSprite(string sourceUri)
         {
@@ -68,10 +70,20 @@ namespace Zjcs.Offline.Progression
         {
             if (characterOverview == null || characterProperties == null || progressionRules == null
                 || timedAppearanceItems == null || wardrobeItems == null || characterPanels == null
-                || wardrobeRules == null || wardrobeUi == null || sourceManifest == null)
+                || wardrobeRules == null || wardrobeUi == null || sourceManifest == null || skillRules == null)
                 throw new InvalidOperationException("Official character TextAssets are not bound.");
             if (sprites == null || sprites.Length == 0 || System.Array.Exists(sprites, value => value == null || value.sprite == null))
                 throw new InvalidOperationException("Official character sprite bindings are incomplete.");
+        }
+
+        public Zjcs.Offline.Skills.OfflineSkillRules LoadSkillRules()
+        {
+            ValidateBindings();
+            Zjcs.Offline.Skills.OfflineSkillRules rules = JsonUtility.FromJson<Zjcs.Offline.Skills.OfflineSkillRules>(
+                skillRules.text);
+            if (rules == null || rules.Skills == null || rules.Skills.Length == 0)
+                throw new InvalidOperationException("Official skill progression rules are invalid.");
+            return rules;
         }
 
         public OfficialCharacterCatalog Load()
