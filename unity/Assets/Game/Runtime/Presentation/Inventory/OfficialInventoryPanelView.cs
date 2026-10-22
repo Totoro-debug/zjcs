@@ -14,6 +14,7 @@ namespace Zjcs.Presentation.Inventory
     {
         private const string PanelPath = "/PlayerBagPanel";
         private const string ScrollPath = "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ";
+        private static readonly string[] CountSuffixes = { "", "万", "亿", "兆", "京" };
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, OfflineInventorySort> sortOptionPaths = new Dictionary<string, OfflineInventorySort>(StringComparer.Ordinal);
         private readonly List<OfflineInventoryItemView> displayedItems = new List<OfflineInventoryItemView>();
@@ -531,6 +532,24 @@ namespace Zjcs.Presentation.Inventory
             return left ? TextAnchor.MiddleLeft : right ? TextAnchor.MiddleRight : TextAnchor.MiddleCenter;
         }
 
-        private static string FormatCount(long count) => count.ToString(CultureInfo.InvariantCulture);
+        private static string FormatCount(long count)
+        {
+            double value = count;
+            int symbolIndex = 0;
+            while (value >= 10000d && symbolIndex < CountSuffixes.Length - 1)
+            {
+                value /= 10000d;
+                symbolIndex++;
+            }
+
+            string number = value.ToString(CultureInfo.InvariantCulture);
+            int decimalPoint = number.IndexOf('.');
+            if (decimalPoint >= 0)
+                number = decimalPoint >= 3
+                    ? number.Substring(0, decimalPoint)
+                    : number.Substring(0, Math.Min(4, number.Length));
+            return double.Parse(number, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
+                + CountSuffixes[symbolIndex];
+        }
     }
 }
