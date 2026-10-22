@@ -561,8 +561,10 @@ def load_npc_models() -> list[dict]:
             raise ValueError("Official NPC class has no unique battle Spine skeleton: " + str(class_id))
         key = matches[0]
         entry = skeletons[key]
+        skins = entry.get("skins") or []
+        skin = entry.get("skin") or (skins[0] if len(skins) == 1 else "")
         models.append({"class_id": class_id, "skeleton": key,
-                       "skin": entry.get("skin") or "", "scale": float(entry.get("scale") or 1.0),
+                       "skin": skin, "scale": float(entry.get("scale") or 1.0),
                        "file": PurePosixPath(entry["file"]).stem})
     return models
 

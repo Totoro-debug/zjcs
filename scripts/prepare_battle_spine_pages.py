@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import io
 import json
+import re
 import sys
 from pathlib import Path, PurePosixPath
 
@@ -206,7 +207,6 @@ def find_page_texture(apk, base: str) -> dict:
     export, so the pinned APK is searched for the Texture2D whose object name
     (the page name without its content suffix) matches exactly.
     """
-    import re
     object_name = re.sub(r"-[0-9a-f]{10}$", "", base)
     matches = []
     for record in apk.bundles:
@@ -233,6 +233,31 @@ def find_page_texture(apk, base: str) -> dict:
     value = pointer.deref()
     return {"bundle": name, "path_id": int(value.path_id), "object": object_name,
             "container": path, "sha256": "", "source_kind": "pinned-apk-scan"}
+
+
+def bind_atlas_asset(stem: str) -> None:
+    """Point the converted SkeletonDataAsset at its own converted atlas asset.
+
+    A few combined skeletons still reference the atlas GUID of the pre-conversion
+    asset, which leaves every page material unresolved and the mesh untextured.
+    """
+    root = SPINE_ROOT
+    skeleton_data = root / (stem + "_SkeletonData.asset")
+    atlas_meta = root / (stem + "_Atlas.asset.meta")
+    if not skeleton_data.exists() or not atlas_meta.exists():
+        return
+    atlas_guid = re.search(r"guid: ([0-9a-f]{32})", atlas_meta.read_text(encoding="utf-8"))
+    if atlas_guid is None:
+        raise ValueError("Converted battle atlas has no GUID: " + stem)
+    text = skeleton_data.read_text(encoding="utf-8")
+    match = re.search(r"(atlasAssets:\n(?:\s*- \{fileID: 11400000, guid: )([0-9a-f]{32})(, type: 2\}\n?)+)", text)
+    if match is None:
+        raise ValueError("Converted SkeletonDataAsset has no atlas reference: " + stem)
+    if match.group(2) == atlas_guid.group(1):
+        return
+    updated = re.sub(r"(- \{fileID: 11400000, guid: )[0-9a-f]{32}(, type: 2\})",
+                     r"\g<1>" + atlas_guid.group(1) + r"\g<2>", text, count=1)
+    skeleton_data.write_text(updated, encoding="utf-8")
 
 
 def bind_material(mat: Path, guid: str) -> str:
@@ -294,6 +319,7 @@ def build(monsters: tuple[int, ...], npcs: tuple[int, ...], all_pages: bool) -> 
     entries, textures, failures = [], {}, {}
     skeletons = {}
     for monster, stem in sorted(stem_by_monster.items()):
+        bind_atlas_asset(stem)
         atlas_path = SPINE_ROOT / (stem + ".atlas.txt")
         if not atlas_path.exists():
             raise ValueError("Converted battle atlas is missing: " + str(atlas_path))
