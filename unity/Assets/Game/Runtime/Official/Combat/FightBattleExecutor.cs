@@ -111,7 +111,8 @@ namespace Zjcs.Combat.Official
                     units, skill);
                 if (targets.Count == 0 && MoveIntoSkillRange(actor, skill, movements))
                     targets = FightBattleTargeting.SelectInSkillRange(actor, units, skill);
-                if (targets.Count == 0)
+                if (targets.Count == 0
+                    && !FightBattleTargeting.HasCasterAreaTargets(actor, units, skill))
                 {
                     checkedSlots.Add(skill.Slot);
                     continue;
@@ -212,35 +213,7 @@ namespace Zjcs.Combat.Official
             List<FightBattleMovementEvent> movements, out float lastDelay)
         {
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
-            IReadOnlyList<FightBattleHitDefinition> hits = skill.Hits;
-            if (skill.HitGraphRoots.Count > 0)
-            {
-                var collected = new List<FightBattleHitDefinition>();
-                foreach (FightBattleHitRoot root in skill.HitGraphRoots)
-                {
-                    List<FightBattleHitDefinition> rootHits = FightBattleHitCollector.Collect(
-                        skill.HitGraphEntities, root.EntityId);
-                    if (rootHits.Count > 0)
-                    {
-                        // The delay and anchor belong to the reference edge, not to the shared hit
-                        // entity, so the first node of this root takes the configured values.
-                        rootHits[0].Delay = root.Delay;
-                        rootHits[0].Anchor = root.Anchor;
-                        rootHits[0].IgnoreAICount = root.IgnoreAICount;
-                    }
-                    collected.AddRange(rootHits);
-                }
-                hits = collected;
-            }
-            else if (skill.HitGraphRootEntityIds.Count > 0)
-            {
-                var collected = new List<FightBattleHitDefinition>();
-                foreach (int rootEntityId in skill.HitGraphRootEntityIds)
-                    collected.AddRange(FightBattleHitCollector.Collect(skill.HitGraphEntities, rootEntityId));
-                hits = collected;
-            }
-            else if (skill.HitGraphRootEntityId > 0)
-                hits = FightBattleHitCollector.Collect(skill.HitGraphEntities, skill.HitGraphRootEntityId);
+            IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
 
             lastDelay = 0f;
             foreach (FightBattleHitDefinition hit in hits)

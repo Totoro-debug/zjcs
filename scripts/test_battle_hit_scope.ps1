@@ -92,4 +92,27 @@ Assert-Scope ($randomResult.Event.DamageEvents.Count -eq 1) 'Random scope hit co
 $randomTargetId = $randomResult.Event.DamageEvents[0].TargetId
 Assert-Scope ($randomTargetId -eq 2 -or $randomTargetId -eq 3) 'Random scope selected a unit outside the area'
 
-Write-Output 'Battle hit scope checks passed: target-anchored AoE, source-anchored AoE, empty scope and random hits inside scope.'
+
+# Point-target skills with no enemy in Range may detonate their Scope around the caster.
+$pointPlayer = New-Unit 1 1 0 0 1000
+$pointNear = New-Unit 2 2 0 1 5000
+$pointSkill = New-ScopeSkill 4005 0 @(0, 0, 0, 1) 0 1 1
+$pointSkill.SkillTargetType = 0
+$pointResult = Invoke-ScopeBattle $pointSkill @($pointPlayer, $pointNear)
+Assert-Scope ($pointResult.Event.DamageEvents.Count -eq 1 -and $pointNear.Hp -eq 4995) 'Caster-centred point area did not hit the nearby enemy'
+$pointCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$pointCheckpoint.Units.Add($pointPlayer); $pointCheckpoint.Units.Add($pointNear)
+$ready = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($pointPlayer,
+    [Zjcs.Combat.Official.FightBattleUnitState[]]@($pointPlayer, $pointNear), 1)
+Assert-Scope ($null -ne $ready -and $ready.EntityId -eq 4005) 'Point area skill was not considered ready with a caster-area target'
+
+# The same point skill is not released when nothing is inside its area.
+$emptyPointPlayer = New-Unit 1 1 0 0 1000
+$emptyPointEnemy = New-Unit 2 2 6 6 5000
+$emptyPointSkill = New-ScopeSkill 4006 0 @(0, 0, 0, 1) 0 1 1
+$emptyPointSkill.SkillTargetType = 0
+$emptyPointResult = Invoke-ScopeBattle $emptyPointSkill @($emptyPointPlayer, $emptyPointEnemy)
+Assert-Scope ($emptyPointResult.Event.DamageEvents.Count -eq 0 -and $emptyPointEnemy.Hp -eq 5000) 'Point area skill was released without any target in range'
+
+
+Write-Output 'Battle hit scope checks passed: target-anchored AoE, source-anchored AoE, empty scope, random hits inside scope and caster-centred point area release.'

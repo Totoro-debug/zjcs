@@ -73,7 +73,8 @@ namespace Zjcs.Combat.Official
                 if (skill == null || !skill.RangeVerified) continue;
                 List<FightBattleUnitState> targets = Select(actor, units, skill.TargetType,
                     skill: skill);
-                if (targets.Count == 0 && skill.TargetType != 5) continue;
+                if (targets.Count == 0 && skill.TargetType != 5
+                    && !HasCasterAreaTargets(actor, units, skill)) continue;
                 if (skill.SkillType == 3)
                 {
                     bool needsHealing = false;
@@ -139,6 +140,23 @@ namespace Zjcs.Combat.Official
             if (hit.TargetMode != 1 && hit.TargetMode != 2 && result.Count > 1)
                 result.RemoveRange(1, result.Count - 1);
             return result;
+        }
+
+        /// <summary>
+        /// Point-target skills (<c>SkillTargetType=Point</c>) detonate their hit Scope at the chosen
+        /// grid point. When no enemy stands inside the configured Range, official AI may still cast
+        /// such a skill centred on the caster (for example 16100 with Range (0,0)); this checks whether
+        /// doing so would hit at least one valid target.
+        /// </summary>
+        public static bool HasCasterAreaTargets(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill)
+        {
+            if (actor == null || skill == null || skill.SkillTargetType != 0) return false;
+            List<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
+            foreach (FightBattleHitDefinition hit in hits)
+                if (hit != null && hit.Scope != null && hit.Scope.Count > 0
+                    && SelectScopeTargets(actor, units, skill, null, hit).Count > 0) return true;
+            return false;
         }
 
         private static List<FightBattleUnitState> ScopeCandidates(FightBattleUnitState actor,
