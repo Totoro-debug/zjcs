@@ -128,11 +128,13 @@
 
 Map10 阶段行中的官方上下文已进入 Unity DTO：`Type`、`IsPlayerRoundLimit`、`PlayerRoundLimit`、`ShowMainPanelDelay`、`SkipPrepareStatus`、`UserStart`、`LeaveInPreparing`、`LeaveInPlaying`、`Background`、`ChangeCameraMode`、`JoinInMiddle`、`DismissTeamWhenLeaveOrEnd` 及 `CanFastforward`。检查点新增个人回合上限字段，执行器在主玩家个人回合达到 `PlayerRoundLimit` 时结束战斗并以结果原因4区分全局超时；战斗进行中若阶段 `LeaveInPlaying=false`，Map10 拒绝离开请求并提示，避免把官方禁止离开的阶段当作可随时退出。`ShowMainPanelDelay`、`SkipPrepareStatus`、`CanFastforward` 等字段已读入但尚未驱动面板延迟、准备阶段与快进。
 
+Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、波次已生成、敌方且 `MonsterType` 为3–5的单位，最多两个，按顺序绑定 `FrontItem` 与 `BehindItem`，HP 用 Filled 的 `TopImg.fillAmount`；无 Boss 时隐藏整个面板。盾、多层血量、韧性、名称、头像与状态列表暂时隐藏，等对应状态模型、Slider 组件与可用名称来源补齐后再显示，不用占位文本冒充官方名称。官方怪物名称在当前规则载荷中是乱码（原表按错误编码解码），因此不显示名称而不是显示错误文字。
+
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
 - 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位、命中伤害事件与战斗统计、官方命中延迟与技能动作／持续时间映射，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）；阶段机另由 `scripts/test_battle_phase_machine.ps1` 通过，覆盖准备倒计时、就绪、一次性自动开始、Play／Pause、入场与结束迁移、释放及非法顺序拒绝；步骤时序由 `scripts/test_battle_step_timing.ps1` 通过，覆盖命中延迟、根引用锚点／延迟、动作时长、持续时间回退与移动补时；个人回合上限由 `scripts/test_battle_stage_limits.ps1` 通过，覆盖达到上限以原因4结束、结束后拒绝继续执行、关闭上限与0上限不生效。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
-- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。随后另一 Unity 实例持续占用工程，未能在编辑器内重跑；改用该 Unity 版本的 Roslyn，以主工程已编译程序集与 UnityEngine 模块为引用分别编译 `Zjcs.Combat.Official`、`Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Offline.CharacterCreation`、`Zjcs.Presentation.Combat`、`Zjcs.Presentation.World`，均无编译错误。这不替代 Unity 编辑器自身的导入、域重载与 Play Mode。
+- Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。随后另一 Unity 实例持续占用工程，未能在编辑器内重跑；改用该 Unity 版本的 Roslyn，以主工程已编译程序集与 UnityEngine 模块为引用分别编译 `Zjcs.Combat.Official`、`Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Offline.CharacterCreation`、`Zjcs.Presentation.Combat`、`Zjcs.Presentation.World`，均无编译错误。后续轮次继续以同样方式编译 `Combat`、`Presentation.Combat` 及含阶段字段的 HEAD 版 `Presentation.World` 通过。Boss 栏、倍速按钮与技能图标等 HUD 接线尚未在 Play Mode 中查看实际画面。这不替代 Unity 编辑器自身的导入、域重载与 Play Mode。
 - Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
 
 ## 自定义实现
@@ -195,7 +197,7 @@ Map10 阶段行中的官方上下文已进入 Unity DTO：`Type`、`IsPlayerRoun
 - [ ] 将技能图标、品质、详情参数、时间轴头像、阵营和主角色标识绑定真实数据。玩家技能已装配，技能栏有实际技能与冷却；Map10 仍对技能图标和头像返回同一 `C_none`，不传阵营图标。
 - [ ] 恢复队列移动、行动态、受击／死亡动画、死亡后的移除与新单位插入；现有 NextTime 排序和间距布局只覆盖其中一部分。
 - [ ] 绑定名称、单位 HP、血量变化、死亡标识与配置控制的显示条件，分别接入名称 HUD 和血条组件，不混淆 `GamePlayerHUD` 的职责。
-- [ ] 绑定 Boss 存活／敌方视野过滤、最多两栏与替换、名称头像、HP／盾组合、多层血量平滑变化、韧性及状态；当前未具备完整防护状态与筛选切换接线。
+- [ ] 绑定 Boss 存活／敌方视野过滤、最多两栏与替换、名称头像、HP／盾组合、多层血量平滑变化、韧性及状态；已按官方条件筛选存活、已生成波次、敌方且 `MonsterType` 为3–5的 Boss，最多两栏绑定 `FrontItem`/`BehindItem` 并以 `TopImg.fillAmount` 显示 HP；盾、多层血量、韧性（缺 Slider 组件）、名称（官方名称为乱码）、头像、状态列表与替换动画仍未接线。“敌方视野”暂以波次已生成为准。
 - [ ] 恢复单位状态图标池、排序／排布、层数／回合／自定义数字、禁用／消失与详情输入；阶段状态按来源合并去重、显示说明弹窗和空态。
 - [ ] 贯通技能 Ready／Applied／InCD／Ended／LimitedTimes／ProfessionLimit／Disabled 等图标状态、开始和结束事件，保持正式 DebugBtn 禁用；完成真实 CD 与次数显示而非仅图标对象构建。
 - [ ] 恢复宠物与进化／辅助技能、解锁前布局、无宠物占位、实际能量变化与放电动画；数据和养成规则按[宠物页](pets.md)接入。
