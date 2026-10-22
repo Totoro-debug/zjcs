@@ -93,6 +93,15 @@ namespace Zjcs.Offline.Progression
             return ApplySkillProfile(clone, result, "skill-rename-" + plan.ToString(CultureInfo.InvariantCulture));
         }
 
+        public ProgressionResult UpgradeSkillSlot(int itemType, int slot)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            return RunSkillMutation((profile, context) =>
+                SkillProgression.UpgradeSlot(profile, context, itemType, slot),
+                "skill-slot-upgrade-" + itemType.ToString(CultureInfo.InvariantCulture)
+                + "-" + slot.ToString(CultureInfo.InvariantCulture));
+        }
+
         public ProgressionResult UpgradeAllSkillSlots()
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
