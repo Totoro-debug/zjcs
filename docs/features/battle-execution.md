@@ -122,9 +122,11 @@
 
 每次命中都会生成 `FightBattleDamageEvent`，记录伤害序号、来源、目标、技能实体／道具、命中节点、伤害类型、暴击／格挡／闪避／免疫／致盲标记、结算值、绝对伤害与命中前后 HP；这些事件随步骤回执保存，可用于飘字与战报追溯。`FightBattleStatistics` 同时累计每单位的施放、命中、承伤、造成／承受伤害与治疗，以及每技能的施放、命中、伤害与治疗，数值取实际 HP 结算结果，因此已包含衰减、溢出与致死截断。
 
+`FightBattlePhaseMachine` 按官方 `GameStatus` 提供 Preparing、PlayStart、Play、Pause、EntryTransition、EntryTransitionFinished、BattleEnd、BattleEndTransition、BattleEndTransitionFinished、End 的合法迁移与准备倒计时；单机主线可跳过准备，`Ready` 结束倒计时，倒计时归零只触发一次自动开始请求。`OfficialBattleRuntimeController` 已接入该状态机：开始即进入 PlayStart→Play，暂停只允许在 Play 与 Pause 间切换，步骤产生结束结果时进入 BattleEnd，释放时进入 End 并复位时标，阶段变化通过 `PhaseChanged` 交给玩法处理。准备面板、就绪 UI、倒计时显示、入场与结束演出尚未接各模式面板。
+
 规则检查入口为 [`FightCombatValidation.RunSmokeTest`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)，菜单为 `Zjcs/Combat/Run Rule Smoke Test`。`Zjcs.Editor.ProjectTools.Validate` 还会装载官方战斗目录并运行规则检查。实际验证范围如下：
 
-- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位、命中伤害事件与战斗统计，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）。
+- 规则：已运行 `scripts/test_unity_combat.ps1` 通过，覆盖97个固定公式样例及战斗目录装配、技能／状态、命中图、衰减、胜负、检查点恢复、随机流、时间线、目标选择、多目标衰减、技能道具到 EC 实体映射、初始武器技能、技能／被动属性计算、官方倍速表与条件档位、命中伤害事件与战斗统计，以及跨波次生成与可选状态回归（未生成单位不中选、不被命中、不占位，清场后立即可选）；阶段机另由 `scripts/test_battle_phase_machine.ps1` 通过，覆盖准备倒计时、就绪、一次性自动开始、Play／Pause、入场与结束迁移、释放及非法顺序拒绝。
 - 静态：`python -B scripts/check_unity_project.py` 通过。材质文本核对发现 Combat/Spine 下2620份 `.mat` 中2555份 `_MainTex` 为 `{fileID: 0}`，怪物材质也在其中；这是绑定缺口，不据此宣称官方原始贴图缺失。
 - Editor：HUD 的隔离组件树检查覆盖30个 prefab、701张 sprite、228个 Image、85个文本、26个按钮、23个布局组、43个适配器和2个滚动视图。本轮主工程检查使用 Unity 2022.3.57f1c2、Direct3D 11 启动，编译已越过此前的 Map10 对话／剧情与商城交易错误，止于 `OfficialMap10GameRuntime` 引用 `TMPro` 时所在程序集缺少 TextMeshPro 引用；已补 `Zjcs.Presentation.World` 的 `Unity.TextMeshPro` 引用。随后另一 Unity 实例持续占用工程，未能在编辑器内重跑；改用该 Unity 版本的 Roslyn，以主工程已编译程序集与 UnityEngine 模块为引用分别编译 `Zjcs.Combat.Official`、`Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Offline.CharacterCreation`、`Zjcs.Presentation.Combat`、`Zjcs.Presentation.World`，均无编译错误。这不替代 Unity 编辑器自身的导入、域重载与 Play Mode。
 - Play Mode：当前通用战斗的真实入口、鼠标／键盘命中、HUD 画面、角色／怪物动作、特效、音频和退出恢复均尚未完成运行验证；主工程编译阻塞不能被静态检查或规则回归代替。未构建或验证 Windows Player。
@@ -151,8 +153,8 @@
 ### 会话、阶段与进度（F01—F07）
 
 - [ ] 将各战斗入口需要的 Stage、GamePlayMode、PVE／PVP 上下文、胜负条件、回合限制及官方配置装配到共用会话。当前执行链部分公式上下文固定 `stageType=0/isPvp=false`；须按保留玩法传递，不能据此开放已关闭 PVP。
-- [ ] 接通准备、开始、战斗、暂停、入场过渡、战斗结束、结束过渡和释放事件及对应面板，保留模式跳过准备、延迟面板和外部覆盖条件。当前 Map10 定时调用 `Advance` 不构成完整阶段机。
-- [ ] 接入就绪、取消就绪、准备倒计时、自动开始与失败提示；仅在适用的本地模式恢复，团队或服务器时间的替代按所属页已确认范围处理。
+- [ ] 接通准备、开始、战斗、暂停、入场过渡、战斗结束、结束过渡和释放事件及对应面板，保留模式跳过准备、延迟面板和外部覆盖条件。阶段机与控制器事件已具备，Map10 仍按定时器调用 `Advance`，尚未把各阶段接到面板、演出与模式入口。
+- [ ] 接入就绪、取消就绪、准备倒计时、自动开始与失败提示；`FightBattlePhaseMachine` 已提供准备倒计时、`Ready`、一次性自动开始请求与就绪校验，缺准备面板、倒计时显示与失败提示。仅在适用的本地模式恢复，团队或服务器时间的替代按所属页已确认范围处理。
 - [ ] 接通个人／全局回合、临近上限的颜色与倒计时、不同阶段上限和上限结果；当前 HUD 仅格式化全局回合与上限。
 - [ ] 将技能动作、命中、移动、伤害、子技能与死亡完成条件纳入调度，逐事件刷新表现。当前 Map10 约每0.35秒完整执行一个单位行动，多招结束后才整体刷新，未等待演出。
 - [ ] 按实际结果组件判定胜负，提供结果事件、终止后防重复执行、结束演出及资源清理；把结果交给所属玩法的胜负页、奖励、下一关和剧情分支，不能把原报告消费误作已取得奖励生成规则。
