@@ -60,9 +60,14 @@ namespace Zjcs.Offline.Progression
         public string GuildName = string.Empty;
         public List<OfflineItemStack> Inventory = new List<OfflineItemStack>();
         public string CommerceStateJson = string.Empty;
+        public OfflineWishProgress Wishes = new OfflineWishProgress();
+        public OfflineTreasureGachaProgress TreasureGacha = new OfflineTreasureGachaProgress();
+        public OfflinePetGachaProgress PetGacha = new OfflinePetGachaProgress();
+        public OfflineFruitTreeProgress FruitTree = new OfflineFruitTreeProgress();
         public List<string> AppliedInventoryEventIds = new List<string>();
         public long InventoryRandomState;
         public List<int> UnlockedMapClassIds = new List<int>();
+        public List<OfflineRankUnlockTime> RankUnlockTimes = new List<OfflineRankUnlockTime>();
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
@@ -81,6 +86,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineAppearanceDye> Dyes = new List<OfflineAppearanceDye>();
         public List<OfflineTimedAppearance> Expiries = new List<OfflineTimedAppearance>();
         public List<int> LimitedTitleCollection = new List<int>();
+        public List<int> SeenItems = new List<int>();
         public int WornTitleId;
         public long FashionExperience;
         public int AppearanceLevel;
@@ -359,7 +365,7 @@ namespace Zjcs.Offline.Progression
         }
 
         public ProgressionResult SetPlayerProgress(int level, int rank, int subRank, int maxProfessionRank,
-            string guildName, IEnumerable<int> unlockedMapClassIds)
+            string guildName, IEnumerable<int> unlockedMapClassIds, long nowUnixSeconds = 0)
         {
             if (level < 0 || rank < 0 || subRank < 0 || maxProfessionRank < 0 || guildName == null)
                 return Result(ProgressionResultStatus.InvalidState, message: "Player progression values are invalid.");
@@ -369,6 +375,18 @@ namespace Zjcs.Offline.Progression
             next.Player.SubRank = subRank;
             next.Player.MaxProfessionRank = maxProfessionRank;
             next.Player.GuildName = guildName;
+            if (next.Player.RankUnlockTimes == null)
+                next.Player.RankUnlockTimes = new List<OfflineRankUnlockTime>();
+            long acquiredAt = nowUnixSeconds > 0 ? nowUnixSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            for (int acquiredRank = Save.Player.Rank + 1; acquiredRank <= rank; acquiredRank++)
+            {
+                if (next.Player.RankUnlockTimes.Any(value => value.Rank == acquiredRank)) continue;
+                next.Player.RankUnlockTimes.Add(new OfflineRankUnlockTime
+                {
+                    Rank = acquiredRank,
+                    UnixSeconds = acquiredAt
+                });
+            }
             next.Player.UnlockedMapClassIds = new List<int>();
             if (unlockedMapClassIds != null)
                 foreach (int id in unlockedMapClassIds)
@@ -631,6 +649,10 @@ namespace Zjcs.Offline.Progression
                 || save.Player.SeasonBaseLevel < 0 || save.Player.MaxProfessionRank < 0 || save.Player.GuildName == null
                 || save.Player.CharacterName == null || save.Player.CharacterName.Length > 64
                 || (save.Player.CharacterCreated && string.IsNullOrWhiteSpace(save.Player.CharacterName))
+                || save.Player.Wishes == null || !OfflineWishProgress.IsValid(save.Player.Wishes)
+                || save.Player.TreasureGacha == null || !OfflineTreasureGachaProgress.IsValid(save.Player.TreasureGacha)
+                || save.Player.PetGacha == null || !OfflinePetGachaProgress.IsValid(save.Player.PetGacha)
+                || save.Player.FruitTree == null || !OfflineFruitTreeProgress.IsValid(save.Player.FruitTree)
                 || (save.Player.InitialWeaponType != 0 && save.Player.InitialWeaponType != 200
                     && save.Player.InitialWeaponType != 201)
                 || save.Player.Wardrobe == null || save.Player.Equipment == null
@@ -639,6 +661,7 @@ namespace Zjcs.Offline.Progression
                 || save.Player.AppliedInventoryEventIds.Count > 200000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
+                || save.Player.RankUnlockTimes == null || save.Player.RankUnlockTimes.Count > 100
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
                 || save.World.CompletedEntityTags.Count > 100000 || save.World.ActivatedGoddessRegions.Count > 100000
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
@@ -655,6 +678,10 @@ namespace Zjcs.Offline.Progression
                 || !ValidateWardrobe(save.Player.Wardrobe, save.Player.Inventory)
                 || !ValidateEquipment(save.Player.Equipment)) return false;
             if (!UniquePositiveIds(save.Player.UnlockedMapClassIds)) return false;
+            var rankUnlocks = new HashSet<int>();
+            foreach (OfflineRankUnlockTime unlock in save.Player.RankUnlockTimes)
+                if (unlock == null || unlock.Rank <= 0 || unlock.Rank > save.Player.Rank
+                    || unlock.UnixSeconds < 0 || !rankUnlocks.Add(unlock.Rank)) return false;
             var mapIds = new HashSet<int>();
             foreach (OfflineMapProgress map in save.World.Maps)
             {
@@ -684,9 +711,25 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Inventory == null) save.Player.Inventory = new List<OfflineItemStack>();
             if (save.Player.AppliedInventoryEventIds == null) save.Player.AppliedInventoryEventIds = new List<string>();
             if (save.Player.CommerceStateJson == null) save.Player.CommerceStateJson = string.Empty;
+            if (save.Player.Wishes == null) save.Player.Wishes = new OfflineWishProgress();
+            OfflineWishProgress.Normalize(save.Player.Wishes);
+            if (save.Player.TreasureGacha == null) save.Player.TreasureGacha = new OfflineTreasureGachaProgress();
+            OfflineTreasureGachaProgress.Normalize(save.Player.TreasureGacha);
+            if (save.Player.PetGacha == null) save.Player.PetGacha = new OfflinePetGachaProgress();
+            OfflinePetGachaProgress.Normalize(save.Player.PetGacha);
+            if (save.Player.FruitTree == null) save.Player.FruitTree = new OfflineFruitTreeProgress();
+            OfflineFruitTreeProgress.Normalize(save.Player.FruitTree);
             foreach (OfflineItemStack stack in save.Player.Inventory)
                 if (stack != null && stack.UnitRecords == null) stack.UnitRecords = new List<OfflineItemUnitRecord>();
             if (save.Player.UnlockedMapClassIds == null) save.Player.UnlockedMapClassIds = new List<int>();
+            if (save.Player.RankUnlockTimes == null) save.Player.RankUnlockTimes = new List<OfflineRankUnlockTime>();
+            if (save.Player.RankUnlockTimes.Count == 0 && save.Player.Rank > 0)
+            {
+                long acquiredAt = save.CreatedAtUnixSeconds > 0 ? save.CreatedAtUnixSeconds
+                    : DateTimeOffset.Now.ToUnixTimeSeconds();
+                for (int rank = 1; rank <= save.Player.Rank; rank++)
+                    save.Player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = rank, UnixSeconds = acquiredAt });
+            }
             if (save.Player.AppliedCharacterEventIds == null) save.Player.AppliedCharacterEventIds = new List<string>();
             if (save.Player.Wardrobe == null) save.Player.Wardrobe = new OfflineWardrobeProgress();
             if (save.Player.Equipment == null) save.Player.Equipment = new OfflineEquipmentProfile();
@@ -703,6 +746,7 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Wardrobe.Dyes == null) save.Player.Wardrobe.Dyes = new List<OfflineAppearanceDye>();
             if (save.Player.Wardrobe.Expiries == null) save.Player.Wardrobe.Expiries = new List<OfflineTimedAppearance>();
             if (save.Player.Wardrobe.LimitedTitleCollection == null) save.Player.Wardrobe.LimitedTitleCollection = new List<int>();
+            if (save.Player.Wardrobe.SeenItems == null) save.Player.Wardrobe.SeenItems = new List<int>();
             if (save.World.Maps == null) save.World.Maps = new List<OfflineMapProgress>();
             if (save.World.BattleCounts == null) save.World.BattleCounts = new List<OfflineMapBattleCount>();
             if (save.World.CompletedEntityTags == null) save.World.CompletedEntityTags = new List<string>();
@@ -775,7 +819,7 @@ namespace Zjcs.Offline.Progression
                 || wardrobe.BaseSkins.Count > 64 || wardrobe.WornSkins.Count > 64
                 || wardrobe.WornItems.Count > 64 || wardrobe.WearTimes.Count > 64
                 || wardrobe.Dyes.Count > 64 || wardrobe.Expiries.Count > 20000
-                || wardrobe.LimitedTitleCollection.Count > 20000)
+                || wardrobe.LimitedTitleCollection.Count > 20000 || wardrobe.SeenItems.Count > 20000)
                 return false;
             if (!UniqueAppearanceTypes(wardrobe.BaseSkins) || !UniqueAppearanceTypes(wardrobe.WornSkins)
                 || !UniqueAppearanceTypes(wardrobe.WornItems)) return false;
@@ -791,7 +835,8 @@ namespace Zjcs.Offline.Progression
             foreach (OfflineTimedAppearance value in wardrobe.Expiries)
                 if (value == null || value.ItemId <= 0 || value.ExpiresAtUnixSeconds < 0
                     || !expiryItems.Add(value.ItemId) || inventory.All(item => item.ItemId != value.ItemId)) return false;
-            return UniquePositiveIds(wardrobe.LimitedTitleCollection);
+            return UniquePositiveIds(wardrobe.LimitedTitleCollection)
+                && UniquePositiveIds(wardrobe.SeenItems);
         }
 
         private static bool UniqueAppearanceTypes(List<OfflineAppearanceSkin> values)
