@@ -289,7 +289,7 @@ namespace Zjcs.Offline.Progression
                 case 340:
                     int treasurePieceRequireCount = MergeRequiredCount(catalog, item, itemType,
                         randomTreasurePieceRequirements);
-                    return treasurePieceRequireCount > 0 ? count >= treasurePieceRequireCount : (bool?)null;
+                    return treasurePieceRequireCount > 0 ? count >= treasurePieceRequireCount : false;
                 case 322:
                 case 336:
                 case 402: return null;
