@@ -1370,10 +1370,12 @@ namespace Zjcs.Presentation.World
                 IsBattleSpeedConditionMet);
             battleStepTimer = 0.8f;
             pendingInteraction = entity;
+            activeBattleStage = stage;
             battleCompletion = completed;
         }
 
         private Action battleCompletion;
+        private Map10RuntimeStage activeBattleStage;
 
         private FightBattleCheckpoint BuildCheckpoint(Map10RuntimeEntity entity, Map10RuntimeStage stage,
             Map10RuntimeRoster roster, Map10RuntimeBattleScene scene)
@@ -1406,6 +1408,8 @@ namespace Zjcs.Presentation.World
             {
                 StageId = stage.Id,
                 MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
+                IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
+                PlayerRoundLimit = stage.PlayerRoundLimit,
                 RandomSeed = StableSeed(slotId, stage.Id),
                 Grid = grid
             };
@@ -1684,6 +1688,12 @@ namespace Zjcs.Presentation.World
         private void LeaveBattle()
         {
             if (battleController == null) return;
+            if (battleController.IsBattleActive && activeBattleStage != null
+                && !activeBattleStage.LeaveInPlaying)
+            {
+                ShowOfficialNotice("当前阶段不能离开战斗");
+                return;
+            }
             Action callback = DestroyBattleSession();
             SaveLocalProgress();
             callback?.Invoke();
@@ -1700,6 +1710,7 @@ namespace Zjcs.Presentation.World
         {
             Action callback = battleCompletion;
             battleCompletion = null;
+            activeBattleStage = null;
             if (battleController != null)
             {
                 battleController.HudControlClicked -= OnBattleHudControl;

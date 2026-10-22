@@ -31,6 +31,7 @@ namespace Zjcs.Presentation.Combat
         /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
         public float LastStepSeconds { get; private set; } = 0.35f;
         public FightBattlePhase Phase => phases.Phase;
+        public bool IsBattleActive => phases.IsBattleActive;
         public int SpeedIndex => speedIndex;
         public double SpeedMultiplier => speedMultiplier;
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;

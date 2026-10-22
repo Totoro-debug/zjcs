@@ -213,6 +213,10 @@ namespace Zjcs.Combat.Official
         public int StageId;
         public int Mode;
         public int MaxRound = 25;
+        // Official StageInfo player-round limit (IsPlayerRoundLimit/PlayerRoundLimit). Zero or a
+        // disabled flag keeps the global MaxRound as the only limit.
+        public bool IsPlayerRoundLimit;
+        public int PlayerRoundLimit;
         public int Sequence;
         public int Counter;
         public int RandomSeed;
@@ -293,6 +297,7 @@ namespace Zjcs.Combat.Official
             if (checkpoint.StageId <= 0 || checkpoint.MaxRound <= 0 || checkpoint.Sequence < 0
                 || checkpoint.Counter < 0 || checkpoint.DamageEventSerial < 0 || checkpoint.RandomSeed < 1
                 || checkpoint.RandomSeed >= FightRandomStream.Modulus || checkpoint.FalloffSerial < 0
+                || checkpoint.PlayerRoundLimit < 0
                 || checkpoint.WaveIndex < 0 || checkpoint.WaveIndex >= Math.Max(1, checkpoint.Waves?.Count ?? 0))
                 throw new ArgumentException("Fight checkpoint header is invalid.", nameof(checkpoint));
             if (checkpoint.Units == null || checkpoint.Waves == null || checkpoint.Timeline == null
