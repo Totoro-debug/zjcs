@@ -93,6 +93,15 @@ namespace Zjcs.Offline.Progression
             return ApplySkillProfile(clone, result, "skill-rename-" + plan.ToString(CultureInfo.InvariantCulture));
         }
 
+        public ProgressionResult ToggleSkillFavorite(int skillId)
+        {
+            if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
+            OfflineSkillProfile clone = Player.Skills.Clone();
+            OfflineSkillResult result = SkillProgression.ToggleFavorite(clone, skillId);
+            return ApplySkillProfile(clone, result,
+                "skill-favorite-" + skillId.ToString(CultureInfo.InvariantCulture));
+        }
+
         public ProgressionResult EquipSkill(int skillId, int slot)
         {
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");

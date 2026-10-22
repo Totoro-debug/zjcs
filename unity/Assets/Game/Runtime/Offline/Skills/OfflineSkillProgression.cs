@@ -26,6 +26,7 @@ namespace Zjcs.Offline.Skills
             if (profile.BlessRecords == null) profile.BlessRecords = new List<OfflineSkillBlessRecord>();
             if (profile.Skills == null) profile.Skills = new List<OfflineOwnedSkill>();
             if (profile.Items == null) profile.Items = new List<OfflineSkillItemCount>();
+            if (profile.FavoriteSkills == null) profile.FavoriteSkills = new List<int>();
             if (profile.ActiveSlotLevels == null) profile.ActiveSlotLevels = new[] { 1, 1, 1, 1 };
             if (profile.PassiveSlotLevels == null) profile.PassiveSlotLevels = new[] { 1, 1, 1, 1 };
             if (profile.Plans == null) profile.Plans = OfflineSkillProfile.CreatePlans();
@@ -44,7 +45,8 @@ namespace Zjcs.Offline.Skills
             if (profile == null || profile.Version != 1 || profile.SelectedPlan < 0 || profile.SelectedPlan >= 3
                 || profile.Plans == null || profile.Plans.Length != 3
                 || !ValidLevels(profile.ActiveSlotLevels) || !ValidLevels(profile.PassiveSlotLevels)
-                || profile.BlessRecords == null || profile.Skills == null || profile.Items == null)
+                || profile.BlessRecords == null || profile.Skills == null || profile.Items == null
+                || profile.FavoriteSkills == null)
                 return false;
 
             var seasons = new HashSet<int>();
@@ -55,6 +57,9 @@ namespace Zjcs.Offline.Skills
             var owned = new HashSet<int>();
             foreach (OfflineOwnedSkill skill in profile.Skills)
                 if (skill == null || skill.ClassId <= 0 || skill.Rank <= 0 || !owned.Add(skill.ClassId)) return false;
+            var favoriteIds = new HashSet<int>();
+            foreach (int favorite in profile.FavoriteSkills)
+                if (favorite <= 0 || !favoriteIds.Add(favorite)) return false;
             var itemIds = new HashSet<int>();
             foreach (OfflineSkillItemCount item in profile.Items)
                 if (item == null || item.ItemId <= 0 || item.Count < 0 || !itemIds.Add(item.ItemId)) return false;
@@ -132,6 +137,20 @@ namespace Zjcs.Offline.Skills
             if (values == null) return false;
             foreach (int value in values) if (value != 0) return false;
             return true;
+        }
+
+        public OfflineSkillResult ToggleFavorite(OfflineSkillProfile profile, int skillId)
+        {
+            if (!IsValidProfile(profile)) return Result(OfflineSkillResultCode.InvalidProfile);
+            if (skillId <= 0 || FindOwned(profile, skillId) == null)
+                return Result(OfflineSkillResultCode.SkillNotOwned);
+            if (!profile.FavoriteSkills.Remove(skillId)) profile.FavoriteSkills.Add(skillId);
+            return Result(OfflineSkillResultCode.Applied);
+        }
+
+        public static bool IsFavorite(OfflineSkillProfile profile, int skillId)
+        {
+            return profile != null && profile.FavoriteSkills != null && profile.FavoriteSkills.Contains(skillId);
         }
 
         public OfflineSkillResult SelectPlan(OfflineSkillProfile profile, int plan)
