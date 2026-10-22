@@ -83,6 +83,8 @@ Assert-Combat $badSkillItemCatalogRejected 'Official skill item catalog accepted
 $pigName = $officialCatalog.MonsterName(3206)
 Assert-Combat ($pigName -eq [string]::new([char[]]@(0x91CE, 0x732A))) 'Official monster name lookup mismatch'
 Assert-Combat ($null -eq $officialCatalog.MonsterName(0) -and $null -eq $officialCatalog.MonsterName(999999)) 'Monster name lookup invented a name for an unknown id'
+$moveSkill = $officialCatalog.CreateSkill(15980, 0, 0, 1, 1, 0, $null)
+Assert-Combat ($moveSkill.SourceMoves.Count -eq 1 -and [Math]::Abs($moveSkill.SourceMoves[0].Delay - 0.5667) -lt 0.001 -and $moveSkill.SourceMoves[0].Distance -eq -1 -and $moveSkill.SourceMoves[0].Direction -eq 1 -and $moveSkill.SourceMoves[0].TowardsTargetPos -and -not $moveSkill.SourceMoves[0].HasConditions) 'Official skill SourceMoveList mapping mismatch'
 $monsterSkillProps = $officialCatalog.CalculateSkillProps(16020, 1, 101, 11)
 Assert-Combat ($monsterSkillProps.Count -eq 0) 'Official monster skill property factors produced unexpected properties'
 $attackPassiveFactors = [System.Collections.Generic.Dictionary[int,long]]::new()

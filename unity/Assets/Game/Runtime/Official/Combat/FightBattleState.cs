@@ -148,6 +148,25 @@ namespace Zjcs.Combat.Official
         public long SkillCost;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();
+        // Official FightSKillMoveCfg entries from FightSkillComponent.SourceMoveList (sorted by
+        // Delay). DoMoveConditions entries cannot be evaluated locally and are flagged.
+        public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleSkillMove
+    {
+        public int MoveBehaviourId;
+        public float Delay;
+        public int OffsetX;
+        public int OffsetY;
+        public bool TowardsTargetPos;
+        public int Direction;
+        public int Distance = -1;
+        public float BasePercent = 1f;
+        public bool AffectedByProp;
+        public bool CancelDiagonally;
+        public bool HasConditions;
     }
 
     [Serializable]
