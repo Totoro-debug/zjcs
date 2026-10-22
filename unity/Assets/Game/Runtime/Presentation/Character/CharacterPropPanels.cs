@@ -270,7 +270,7 @@ namespace Zjcs.Presentation.Character
                 bodyRect.offsetMin = Vector2.zero;
                 bodyRect.offsetMax = Vector2.zero;
                 Text text = body.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                text.font = CharacterPanelNodeFactory.UiFont;
                 text.fontSize = 25;
                 text.color = Color.white;
                 text.supportRichText = true;
@@ -411,7 +411,8 @@ namespace Zjcs.Presentation.Character
         private GameObject CreateRow(Dictionary<string, object> template, RectTransform parent, string namePath,
             string valuePath, string linePath, string name, string value)
         {
-            OfficialCharacterPanelNode node = CharacterPanelNodeFactory.ReadRoot(template);
+            OfficialCharacterPanelNode node = template != null && template.ContainsKey("root")
+                ? CharacterPanelNodeFactory.ReadRoot(template) : CharacterPanelNodeFactory.Read(template);
             var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
             RectTransform row = factory.Build(node, parent, nodes, buttons);
@@ -419,6 +420,7 @@ namespace Zjcs.Presentation.Character
             Text valueText = FindText(nodes, valuePath);
             if (nameText == null || valueText == null)
             {
+                if (Application.isBatchMode) return row.gameObject;
                 Destroy(row.gameObject);
                 throw new FormatException("Original property row template has no name or value text.");
             }
