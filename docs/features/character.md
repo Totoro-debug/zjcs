@@ -129,7 +129,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 - [ ] 对已接入的一级／二级分类、穿脱和筛选补齐原所有选中／已穿／品质／新获得／性别／职业标记及原提示文案，保留原排序、卸下首项和副武器实际装备检查；物品数／职业／穿戴状态变化时自动刷新。
 - [x] 恢复 `TryGetConflictTip` 语义：`OfflineWardrobeRules.PreviewWear` 对穿戴前后的有效皮肤集合各解析一次，返回会被遮挡的部件或互斥环类型；衣柜列表穿戴时先提示再继续原穿戴请求。部件名称取原 `ui_append_appearance_type_*` 本地化，原冲突提示模板 `ui_append_appearance_conflict_tip` 未在固定目录中提取，当前以部件名拼接提示。
-- [ ] 同步称号双列实际渲染、主页称号、限时倒计时及到期后拥有／穿戴状态。
+- [x] 人物页称号已接 `HonorTitleItemProvider/Slot` 与 `HonorTitleTimeLimitContent`：显示已佩戴称号图标、剩余天／小时／分钟／秒并在到期时隐藏，`TitlePropContent` 读取 `AppendAppearanceInfo.EffectProp`（当前固定目录中称号 `EffectProp` 均为空，故属性行暂不显示）。
+- [ ] 同步称号双列实际渲染、限时倒计时及到期后拥有／穿戴状态。
 - [ ] 连接物品／称号详情、首次收藏经验、品质／有效期／属性、原试穿窗口，接通任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
 - [x] 潮流等级升级已按原规则实现：`RefreshWardrobeProgress` 只在经验对应等级低于已存等级时回落（`SyncAppearanceLevelFromExp`），`UpgradeBtn` 使用 `CanUpgradeAppearanceLevel → UpgradeAppearanceLevel` 跨级提升，满级／经验不足给出状态提示；头部显示当前等级、本级经验／所需经验与滑条填充，满级显示上限状态。
 - [x] 属性与规则弹窗改用 `wardrobe-ui.json` 的原 `wardrobe_props`／`wardrobe_prop_row`／`wardrobe_rules`／`wardrobe_rule_row`／`wardrobe_rule_value` 模板：属性按 `appearance_prop` 逐级列出至当前级 +20，显示等级、属性名称与数值、已激活状态；规则按 4 组 `fashion_exp_group` 逐组列出品质与收藏经验；跨级升级后弹出新增属性行。原 `AperaanceUpgradePropDialog` 预制体未提取，跨级弹窗复用属性弹窗模板。

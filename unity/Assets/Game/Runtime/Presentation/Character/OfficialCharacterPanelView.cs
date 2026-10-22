@@ -137,6 +137,12 @@ namespace Zjcs.Presentation.Character
         private CharacterPropPanels propPanels;
         private CharacterRankPanel rankPanel;
         private CharacterEquipSlots equipSlots;
+        private Text honorTimeText;
+        private GameObject honorTimeContent;
+        private Text honorPropText;
+        private GameObject honorPropContent;
+        private long honorTitleExpiry;
+        private float honorClock;
 
         public event Action CloseRequested;
 
@@ -148,6 +154,7 @@ namespace Zjcs.Presentation.Character
 
         private void Update()
         {
+            TickHonorTitle();
             if (!Input.GetKeyDown(KeyCode.Escape)) return;
             if (propPanels != null && propPanels.HandleEscape()) return;
             if (rankPanel != null && rankPanel.IsOpen) { rankPanel.Close(); return; }
@@ -228,6 +235,7 @@ namespace Zjcs.Presentation.Character
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (characterModel != null) characterModel.Refresh();
+            RefreshHonorTitle();
         }
 
         public ProgressionResult AwardExperience(long amount, string eventId)
@@ -396,6 +404,95 @@ namespace Zjcs.Presentation.Character
             rankPanel.Open(transform);
         }
 
+        private void RefreshHonorTitle()
+        {
+            const string providerPath =
+                "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/HonorTitleItemProvider/Slot";
+            const string timePath =
+                "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/HonorTitleTimeLimitContent";
+            OfflineWardrobeProgress wardrobe = progression.Player.Wardrobe;
+            int itemId = wardrobe.WornTitleId;
+            RectTransform slot = nodes.TryGetValue(providerPath, out RectTransform mount) ? mount : null;
+            if (slot != null)
+            {
+                for (int i = slot.childCount - 1; i >= 0; i--) Destroy(slot.GetChild(i).gameObject);
+                string uri = progression.Catalog.ItemIconUri(itemId);
+                Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+                if (sprite != null)
+                {
+                    var icon = new GameObject("TitleIcon", typeof(RectTransform), typeof(Image));
+                    icon.transform.SetParent(slot, false);
+                    RectTransform rect = (RectTransform)icon.transform;
+                    rect.anchorMin = Vector2.zero;
+                    rect.anchorMax = Vector2.one;
+                    rect.offsetMin = Vector2.zero;
+                    rect.offsetMax = Vector2.zero;
+                    Image image = icon.GetComponent<Image>();
+                    image.sprite = sprite;
+                    image.preserveAspect = true;
+                    image.raycastTarget = false;
+                }
+            }
+            honorTimeContent = nodes.TryGetValue(timePath, out RectTransform timeRoot) ? timeRoot.gameObject : null;
+            honorTimeText = FindTextByPath("/RemainTimeText");
+            honorPropText = FindTextByPath("/TitlePropContent/PropText");
+            honorPropContent = nodes.TryGetValue(timePath + "/TitlePropContent", out RectTransform propRoot)
+                ? propRoot.gameObject : null;
+            honorTitleExpiry = itemId == 0 ? 0 : wardrobe.Expiries
+                .Where(value => value.ItemId == itemId).Select(value => value.ExpiresAtUnixSeconds)
+                .DefaultIfEmpty(0).Max();
+            IReadOnlyDictionary<int, long> props = itemId == 0
+                ? new Dictionary<int, long>() : progression.Catalog.TitleProperties(itemId);
+            if (honorPropText != null)
+            {
+                var parts = new List<string>();
+                foreach (KeyValuePair<int, long> prop in props.OrderBy(pair => pair.Key))
+                {
+                    OfficialPropDefinition definition = progression.Catalog.Props.Get(prop.Key);
+                    if (definition == null) continue;
+                    parts.Add(definition.Name + " +" + OfficialPropFormat.Value(definition, prop.Value));
+                }
+                honorPropText.text = string.Join("\u3001", parts);
+            }
+            if (honorPropContent != null) honorPropContent.SetActive(props.Count > 0);
+            if (honorTimeContent != null) honorTimeContent.SetActive(honorTitleExpiry > 0);
+            UpdateHonorTimeText();
+        }
+
+        private void TickHonorTitle()
+        {
+            if (honorTitleExpiry <= 0 || honorTimeText == null) return;
+            honorClock += Time.unscaledDeltaTime;
+            if (honorClock < 1f) return;
+            honorClock = 0f;
+            UpdateHonorTimeText();
+        }
+
+        private void UpdateHonorTimeText()
+        {
+            if (honorTimeText == null) return;
+            long remaining = honorTitleExpiry - DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (remaining <= 0)
+            {
+                honorTimeText.text = string.Empty;
+                if (honorTimeContent != null) honorTimeContent.SetActive(false);
+                return;
+            }
+            long days = remaining / 86400;
+            long hours = remaining % 86400 / 3600;
+            long minutes = remaining % 3600 / 60;
+            long seconds = remaining % 60;
+            honorTimeText.text = days > 0 ? days + "\u5929" + hours + "\u5c0f\u65f6"
+                : hours > 0 ? hours + "\u5c0f\u65f6" + minutes + "\u5206\u949f"
+                : minutes > 0 ? minutes + "\u5206\u949f" + seconds + "\u79d2" : seconds + "\u79d2";
+        }
+
+        private Text FindTextByPath(string suffix)
+        {
+            return nodes.Where(pair => pair.Key.EndsWith(suffix, StringComparison.Ordinal))
+                .Select(pair => pair.Value.GetComponent<Text>()).FirstOrDefault(value => value != null);
+        }
+
         private void InitializeCharacterModel()
         {
             const string modelPath = "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PlayerModelRoot";
@@ -438,6 +535,7 @@ namespace Zjcs.Presentation.Character
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (characterModel != null) characterModel.Refresh();
+            RefreshHonorTitle();
         }
 
         private void SetCharacterModelOnly(bool onlyModel)
