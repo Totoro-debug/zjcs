@@ -19,9 +19,12 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
 
 $map = Get-Content (Join-Path $root 'unity/Assets/Official/World/Map/10/Resources/Map10/battle-runtime.json') -Raw | ConvertFrom-Json
-$stage = $map.stages | Where-Object { $_.Type -eq 1 -and $_.GameId -eq 1008 } | Select-Object -First 1
-Assert-Integration ($null -ne $stage) 'Map10 battle stage 1008 is missing'
-$roster = $map.monsterRosters | Where-Object { $_.GameId -eq $stage.GameId } | Select-Object -First 1
+$roster = $map.monsterRosters |
+    Sort-Object -Property @{ Expression = { ($_.Waves | ForEach-Object { $_.Units.Count }) | Measure-Object -Sum | Select-Object -ExpandProperty Sum } } -Descending |
+    Select-Object -First 1
+Assert-Integration ($null -ne $roster) 'Map10 battle roster is missing'
+$stage = $map.stages | Where-Object { $_.Type -eq 1 -and $_.GameId -eq $roster.GameId } | Select-Object -First 1
+Assert-Integration ($null -ne $stage) 'Map10 battle stage for the largest roster is missing'
 $scene = $map.battleScenes | Where-Object { $_.GameId -eq $stage.GameId } | Select-Object -First 1
 Assert-Integration ($null -ne $roster -and $null -ne $scene) 'Map10 battle roster or scene is missing'
 
@@ -52,16 +55,23 @@ $checkpoint.Grid = $grid
 $player = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $player.Id = 1; $player.Side = 1; $player.CharacterType = 1; $player.Level = 30; $player.SubRank = 3
 $player.X = [int]$entry.EntryPosList[0].X; $player.Y = [int]$entry.EntryPosList[0].Y
-$player.Hp = 1000; $player.MaxHp = 1000; $player.LastMaxHp = 1000; $player.MoveMask = $moveMask
-$player.MoveDist = 5
-$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 1; Value = 100 })
+$player.Hp = 5000; $player.MaxHp = 5000; $player.LastMaxHp = 5000; $player.MoveMask = $moveMask
+$player.MoveDist = 8
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 1; Value = 50000 })
 $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 2; Value = 50 })
-$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 3; Value = 1000 })
+$player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 3; Value = 5000 })
 $player.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = 4; Value = 50 })
 $player.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new()
-$player.Turn.Id = 1; $player.Turn.Hp = 1000; $player.Turn.Speed = 50
+$player.Turn.Id = 1; $player.Turn.Hp = 5000; $player.Turn.Speed = 50
 $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
-$playerSkill = $catalog.CreateSkill(12860, 0, 10012, 1, 30, 3, $null)
+$playerSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$playerSkill.Slot = 0; $playerSkill.EntityId = 12860; $playerSkill.ItemId = 10012; $playerSkill.TargetType = 1
+$playerSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$playerSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(2, 0))
+$playerHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$playerHit.EntityId = 12861; $playerHit.DamageId = 12869; $playerHit.DamageType = 8
+$playerHit.HasCustomDamage = $true; $playerHit.CustomDamage = 500; $playerHit.TargetMode = 0; $playerHit.Delay = 0.3
+$playerSkill.Hits.Add($playerHit)
 $player.Skills.Add($playerSkill)
 $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = $playerSkill.LimitedTimes })
 $checkpoint.Units.Add($player)
@@ -108,11 +118,10 @@ foreach ($waveData in $roster.Waves | Sort-Object Index) {
     }
     $checkpoint.Waves.Add($wave)
 }
-Assert-Integration ($totalMonsters -gt 0) 'Map10 roster has no monsters'
+Assert-Integration ($totalMonsters -ge 2) 'Map10 roster has too few monsters for the integration check'
 
-$formula = [Zjcs.Combat.Official.FightDamageFormula]::new(
-    [Zjcs.Combat.Official.FightDamagePropertySchema]::new(),
-    [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
+$formula = $catalog.CreateDamageFormula((Read-Text 'unity/Assets/Official/Combat/rules.json'),
+    (Get-Sha 'unity/Assets/Official/Combat/rules.json'), '854_156383')
 $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint, $formula,
     [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
 
@@ -145,4 +154,9 @@ Assert-Integration ($damageEvents -gt 0 -or $checkpoint.Finished) 'Map10 battle 
 if ($checkpoint.Finished) {
     Assert-Integration ($null -ne $checkpoint.Outcome) 'Finished Map10 battle has no outcome'
 }
-Write-Output "Map10 battle integration passed: $steps steps, $damageEvents damage events, finished=$($checkpoint.Finished), statuses=$((($checkpoint.Units | ForEach-Object { $_.Statuses.Count }) | Measure-Object -Sum).Sum)."
+$playerEvents = 0
+$playerDamage = 0
+foreach ($receipt in $checkpoint.Receipts) { foreach ($evt in $receipt.Event.DamageEvents) { if ($evt.SourceId -eq 1) { $playerEvents++; $playerDamage += [Math]::Abs([long]$evt.Damage);  } } }
+$deadMonsters = @($checkpoint.Units | Where-Object { $_.Side -ne 1 -and $_.Hp -le 0 }).Count
+$aliveMonsters = @($checkpoint.Units | Where-Object { $_.Side -ne 1 -and $_.Hp -gt 0 }).Count
+Write-Output "Map10 battle integration passed: $steps steps, $damageEvents damage events, playerEvents=$playerEvents, deadMonsters=$deadMonsters, aliveMonsters=$aliveMonsters, wave=$($checkpoint.WaveIndex), finished=$($checkpoint.Finished), won=$($checkpoint.Outcome.Won), reason=$($checkpoint.Outcome.Reason), round=$($checkpoint.Outcome.Round)."
