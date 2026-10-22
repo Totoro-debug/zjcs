@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Inventory
         private static readonly Color ProgressLackColor = new Color(0.96862745f, 0.32156864f, 0.21568628f, 1f);
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, OfflineInventorySort> sortOptionPaths = new Dictionary<string, OfflineInventorySort>(StringComparer.Ordinal);
+        private readonly Dictionary<string, OfflineInventorySort> sortByTab = new Dictionary<string, OfflineInventorySort>(StringComparer.Ordinal);
         private readonly List<OfflineInventoryItemView> displayedItems = new List<OfflineInventoryItemView>();
         private OfficialInventoryAssetCatalog assets;
         private OfficialEquipmentCatalog rules;
@@ -109,6 +110,7 @@ namespace Zjcs.Presentation.Inventory
             detailWindow = null;
             nodes.Clear();
             sortOptionPaths.Clear();
+            sortByTab.Clear();
             displayedItems.Clear();
             for (int i = transform.childCount - 1; i >= 0; i--) Destroy(transform.GetChild(i).gameObject);
         }
@@ -162,6 +164,8 @@ namespace Zjcs.Presentation.Inventory
                 {
                     if (!isOn) return;
                     currentTab = tab;
+                    sort = SortForTab(tab.NameKey);
+                    RefreshSortOptionStates();
                     SetDetailText(nodes, titlePath, assets.FindText(tab.NameKey));
                     Refresh();
                 });
@@ -210,6 +214,7 @@ namespace Zjcs.Presentation.Inventory
                         button.onClick.AddListener(() =>
                         {
                             sort = value;
+                            sortByTab[currentTab.NameKey] = value;
                             reverse = false;
                             RefreshSortOptionStates();
                             SetSortArrow(reverseButtonNode, false);
@@ -226,12 +231,19 @@ namespace Zjcs.Presentation.Inventory
                 else button.onClick.AddListener(() =>
                 {
                     sort = value;
+                    sortByTab[currentTab.NameKey] = value;
                     reverse = false;
                     RefreshSortOptionStates();
                     Refresh();
                 });
             }
             RefreshSortOptionStates();
+        }
+
+        private OfflineInventorySort SortForTab(string tabName)
+        {
+            return sortByTab.TryGetValue(tabName, out OfflineInventorySort value)
+                ? value : OfflineInventorySort.Type;
         }
 
         private void RefreshSortOptionStates()
