@@ -25,7 +25,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [星命契约与累计属性](features/astrological.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [战斗执行](features/battle-execution.md) | 未完成 | 规则核心、配置装配与分步执行；未接通完整玩法 |
 | [羁绊冒险](features/bond-adventure.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
-| [角色创建与正式换装](features/character-creation.md) | 未完成 | 每存档创角草稿及官方部件 ID 校验；角色流程、官方界面与衣柜未接入 |
+| [角色创建与正式换装](features/character-creation.md) | 未完成 | 创角前 `BeforeFight → 官方战斗录像 → AfterFight`、战后转场及创角后 `FirstStory` 尚未接入，官方流程与完整待实现范围见所属页；每存档创角草稿及官方部件 ID 校验；角色流程、官方界面与衣柜未接入 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 | 固定版人物/衣柜目录、Sprite 与离线存档规则服务；人物页、衣柜交互、完整属性汇总及 Unity 验收待完成 |
 | [主城、家园与离线产出](features/city-and-home.md) | 未完成 | 离线收益计算器；未接入家园流程 |
 | [图鉴分类、筛选与只读详情](features/codex.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
