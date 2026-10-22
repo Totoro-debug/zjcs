@@ -104,7 +104,7 @@
 
 7. **主工程完整启动链验证。** 战场、单位、对白与快进已在隔离最小工程 Play Mode 通过（见“完整还原部分”）；主工程的 `Bootstrap` 启动链仍因其他会话未提交模块的编译错误无法复验。真实输入验收（`Zjcs/Validate/Opening Real Input Play Mode`）本轮未运行。
 8. **异常分支验收。** [CharacterOpeningFaultPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningFaultPlayModeAcceptance.cs) 已在隔离工程通过：缺失录像、缺失剧情、损坏图集页、缺失战场载荷各自抛出文档记录的异常类型，且载荷失败后流程仍回调打开创角。超时与保存失败分支仍未构造。
-9. **实际输入验收。** 新增 [CharacterOpeningRealInputPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningRealInputPlayModeAcceptance.cs)（菜单 `Zjcs/Validate/Opening Real Input Play Mode`）：聚焦 Game 视图后用 Win32 `SetCursorPos`/`mouse_event` 在官方 `NextBtn` 的实际屏幕位置点击，断言 `BeforeFight` 对白推进，不再直接调用 `onClick`。本轮未运行；快进按钮与创角面板命中区域尚未纳入。
+9. **实际输入验收范围。** [CharacterOpeningRealInputPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningRealInputPlayModeAcceptance.cs) 已在隔离工程通过：聚焦 Game 视图后用 Win32 `SetCursorPos`/`mouse_event` 在官方 `NextBtn` 实际屏幕位置点击，`BeforeFight` 对白随之推进（不调用 `onClick`）。快进按钮（正常流程不显示）与创角面板的命中区域仍未用真实鼠标验证。
 10. **共用战斗目录修复。** `OfficialBattleModelCatalog.asset` 的 `sourceModels`／`sourceManifest`／`identities`／`identitiesManifest` 已全部指向真实资源 GUID；`Zjcs.Editor.ProjectTools.Validate` 的其余部分仍受 Map10 资源校验与其他会话未完成模块影响，未整体跑通。
 
 ### 本次明确排除的功能
