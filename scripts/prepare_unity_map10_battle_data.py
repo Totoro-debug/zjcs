@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from official_apk import Apk, ROOT
@@ -17,9 +18,17 @@ PLACEMENTS_SOURCE = ("config_mapinfowrap", "Assets/Config/MapInfoWrap/mapinfowra
 MAP_STAGE_TABLE = ("config_luban", "Assets/Config/Luban/map_stage.g.bytes", "TbMapToStageInfo")
 STAGE_TABLE = ("config_luban", "Assets/Config/Luban/stage.g.bytes", "TbStageInfo")
 ARRAY_TABLE = ("config_luban", "Assets/Config/Luban/stage_monster_array.g.bytes", "TbStageMonsterArrayInfo")
+SKILL_TABLE = ("config_luban", "Assets/Config/Luban/skill.g.bytes", "TbSkillInfo")
 BATTLE_SCENES_PATH = ROOT / "assets/official/battle-stages.json"
 BATTLE_SCENES_MANIFEST_PATH = ROOT / "assets/reference/official-map/battle-stages-source-manifest.json"
+COMBAT_RULES_PATH = ROOT / "assets/official/battle-rules.json"
+COMBAT_RULES_MANIFEST_PATH = ROOT / "unity/Assets/Official/Combat/battle-rules-source-manifest.json"
+SKILL_RULES_PATH = ROOT / "assets/official/skill-rules.json"
+SKILL_RULES_MANIFEST_PATH = ROOT / "unity/Assets/Official/Combat/skill-rules-source-manifest.json"
+GENERAL_RULES_PATH = ROOT / "assets/official/rules.json"
+GENERAL_RULES_MANIFEST_PATH = ROOT / "assets/reference/official-city/source-manifest.json"
 PARSER_SOURCE_PATH = ROOT / ".tools/source-packages/official-code/common-source/Common/StageMonsterArrayInfoParser.cs"
+COMMON_SOURCE = ROOT / ".tools/source-packages/official-code/common-source/Common"
 REFERENCE_MANIFEST_PATH = ROOT / "assets/reference/official-map/map10-battles-source-manifest.json"
 
 
@@ -116,6 +125,193 @@ def collect_battle_data(stage_rows: list[dict], arrays: dict[int, dict], scenes:
     return selected_arrays, selected_scenes
 
 
+def _read_verified_json(payload_path: Path, manifest_path: Path, hash_field: str) -> tuple[dict, dict]:
+    payload = payload_path.read_bytes()
+    manifest_bytes = manifest_path.read_bytes()
+    manifest = json.loads(manifest_bytes.decode("utf-8"))
+    section, separator, field = hash_field.partition(".")
+    expected_hash = manifest.get(section)
+    if separator and isinstance(expected_hash, dict):
+        expected_hash = expected_hash.get(field)
+    if manifest.get("manifest") != VERSION or expected_hash != sha256(payload):
+        raise ValueError("Official catalog differs from its pinned source manifest: " + str(payload_path))
+    return json.loads(payload.decode("utf-8")), {
+        "path": payload_path.relative_to(ROOT).as_posix(),
+        "sha256": sha256(payload),
+        "source_manifest": manifest_path.relative_to(ROOT).as_posix(),
+        "source_manifest_sha256": sha256(manifest_bytes),
+    }
+
+
+def _read_property_ids() -> tuple[dict[str, int], str]:
+    path = COMMON_SOURCE / "PropType.cs"
+    source = path.read_text(encoding="utf-8-sig")
+    values = {name: int(value) for name, value in
+              re.findall(r"\b(\w+)\s*=\s*(\d+)", source)}
+    if not values or values.get("MaxHp") != 3 or values.get("Attack") != 1:
+        raise ValueError("Pinned PropType enum could not be decoded")
+    return values, sha256(path.read_bytes())
+
+
+def calculate_monster_properties(group: dict, level: float, sub_rank: int,
+                                 combat_rules: dict, property_ids: dict[str, int]) -> dict[int, int]:
+    """Port CalcMonsterBattleProps for the fixed Map10 stage levels."""
+    if abs(level - round(level)) >= 1e-5:
+        raise ValueError("Map10 monster level requires the official fractional-level interpolation path")
+    role_prop_id = int(group["PropCfg"]["PropGroupId"])
+    role_group = next((row for row in combat_rules["tables"]["role_prop_group"]
+                       if int(row["ID"]) == role_prop_id and int(row["SubRank"]) == sub_rank), None)
+    if role_group is None:
+        raise ValueError("Official monster role property group is missing")
+
+    props_by_class = combat_rules["props"]
+    prop_class_id = int(role_group["LevelPropID"])
+    row = props_by_class.get(str(prop_class_id), {}).get("rows", {}).get(str(int(round(level))))
+    if row is None:
+        raise ValueError("Official monster level property row is missing")
+    props = {int(key): int(value) for key, value in row.items()}
+    extra_class_id = int(role_group.get("ExtraLevelPropID") or 0)
+    if extra_class_id:
+        extra = props_by_class.get(str(extra_class_id), {}).get("rows", {}).get(str(int(round(level))))
+        if extra is None:
+            raise ValueError("Official extra monster level property row is missing")
+        for key, value in extra.items():
+            prop_id = int(key)
+            props[prop_id] = props.get(prop_id, 0) + int(value)
+
+    def id_of(name: str) -> int:
+        return int(property_ids.get(name, 0))
+
+    def get(name: str) -> int:
+        return props.get(id_of(name), 0) if id_of(name) else 0
+
+    def increment(name: str, reference: int, rate: int) -> None:
+        prop_id = id_of(name)
+        if prop_id and rate:
+            props[prop_id] = props.get(prop_id, 0) + int(reference * (rate / 10000.0))
+
+    base_properties = ("MaxHp", "Attack", "Defence", "Speed")
+    for name in base_properties:
+        increment("Base" + name, get("Base" + name), get("Base" + name + "Rate"))
+    for name in base_properties:
+        rate_name = "Base" + name + "Percent"
+        rate = get(rate_name)
+        if rate:
+            increment(name, get("Base" + name), rate)
+            props.pop(id_of(rate_name), None)
+    for name in ("ElementMaster", "ElementResistance", "KongFuMaster", "KongFuResistance",
+                 "EffectRate", "EffectDodge"):
+        increment(name, get(name), get(name + "Percent"))
+    for name in base_properties:
+        base_id = id_of("Base" + name)
+        base_value = props.pop(base_id, 0) if base_id else 0
+        if base_value:
+            prop_id = id_of(name)
+            props[prop_id] = props.get(prop_id, 0) + base_value
+
+    for name in ("MaxHp", "Attack", "Defence", "Speed", "EffectDodge"):
+        scale_id = id_of(name + "Scale")
+        scale = props.get(scale_id, 0) if scale_id else 0
+        if not scale:
+            continue
+        base_value = get("Base" + name)
+        prop_id = id_of(name)
+        reference = props.get(prop_id, 0) + base_value
+        props[prop_id] = max(1, props.get(prop_id, 0) + int(reference * (scale / 10000.0)))
+        props.pop(scale_id, None)
+
+    factors = {int(key): int(value) for key, value in group["PropCfg"]["PropFactors"].items()}
+    props = {prop_id: int(value * (factors[prop_id] / 10000.0))
+             for prop_id, value in props.items() if prop_id in factors}
+    for name in ("MaxHp", "Attack", "Defence", "Speed"):
+        prop_id = id_of(name)
+        if prop_id in props:
+            props[prop_id] = max(1, props[prop_id])
+    for key, value in (group.get("ExtraProps") or {}).items():
+        prop_id = int(key)
+        props[prop_id] = props.get(prop_id, 0) + int(value)
+    return props
+
+
+def collect_monster_rosters(stage_rows: list[dict], arrays: dict[int, dict], scenes: dict[str, dict],
+                            combat_rules: dict, general_rules: dict, skill_rows: list[dict],
+                            skill_entities: dict, property_ids: dict[str, int]) -> list[dict]:
+    skill_info = {int(row["ClassId"]): row for row in skill_rows}
+    items = {int(row["ClassId"]): row for row in general_rules["item"]}
+    monster_groups = {(int(row["MonsterId"]), int(row["GroupNo"])): row
+                      for row in combat_rules["tables"]["monster_group"]}
+    rosters = []
+    for stage in sorted(stage_rows, key=lambda row: int(row["Id"])):
+        waves = []
+        for wave_index, group_monster_ids in enumerate(stage.get("WaveMonsterIds") or []):
+            array_id = int(stage["WaveArrayIds"][wave_index])
+            formation = sorted(arrays[array_id]["Monsters"], key=lambda value: int(value["GroupId"]))
+            origins = scenes[str(int(stage["GameId"]))]["FightRoleMonsterNormalComponent"]["WaveOriPos"]
+            origin = origins[wave_index]
+            units = []
+            group_index = -1
+            previous_group_id = None
+            for position in formation:
+                group_id = int(position["GroupId"])
+                if previous_group_id is None or group_id != previous_group_id:
+                    group_index += 1
+                    previous_group_id = group_id
+                if group_index >= len(group_monster_ids):
+                    raise ValueError("Official formation group exceeds the stage monster list")
+                monster_id = int(group_monster_ids[group_index])
+                group_no = int(stage["MonsterGroupNo"])
+                monster_group = monster_groups.get((monster_id, group_no))
+                if monster_group is None:
+                    raise ValueError("Official monster group configuration is missing: "
+                                     + str(monster_id) + "/" + str(group_no))
+                level = (float(stage["Level"]) + int(stage.get("MonsterLevelAdd") or 0)
+                         + float(position.get("LevelAdd") or 0))
+                skills = []
+                for slot, item_id_value in enumerate(monster_group.get("ActiveSkills") or []):
+                    item_id = int(item_id_value)
+                    info = skill_info.get(item_id)
+                    item = items.get(item_id)
+                    if info is None or item is None:
+                        raise ValueError("Official monster skill item is missing: " + str(item_id))
+                    entity_id = int(info["EcEntityId"])
+                    if str(entity_id) not in skill_entities:
+                        raise ValueError("Official monster skill entity is missing: " + str(entity_id))
+                    skills.append({"Slot": slot, "ItemId": item_id, "EntityId": entity_id,
+                                   "Rank": int(item["Rank"])})
+                units.append({
+                    "MonsterId": monster_id,
+                    "MonsterGroupNo": group_no,
+                    "Level": level,
+                    "SubRank": int(stage["SubRank"]),
+                    "Position": {"X": int(origin["X"]) + int(position["Pos"]["X"]),
+                                 "Y": int(origin["Y"]) + int(position["Pos"]["Y"])},
+                    "FormationGroupId": group_id,
+                    "FormationGroupIndex": group_index,
+                    "MonsterType": int(position["MonsterType"]),
+                    "Faction": int(position["Faction"]),
+                    "Rotation": int(position["Rot"]),
+                    "FlipX": bool(position["FlipX"]),
+                    "ViewGroup": int(position["ViewGroup"]),
+                    "WaveIndex": wave_index,
+                    "Properties": [{"Id": prop_id, "Value": value}
+                                   for prop_id, value in sorted(calculate_monster_properties(
+                                       monster_group, level, int(stage["SubRank"]), combat_rules,
+                                       property_ids).items())],
+                    "ActiveSkills": skills,
+                    "PassiveSkills": list(monster_group.get("PassiveSkills") or []),
+                    "DeactivePassiveSkills": list(monster_group.get("DeactivePassiveSkills") or []),
+                    "HpPliesId": int(monster_group.get("HpPliesId") or 0),
+                    "ResilienceInfo": monster_group.get("ResilienceInfo"),
+                })
+            if group_index + 1 != len(group_monster_ids):
+                raise ValueError("Official formation group count differs from the stage monster list")
+            waves.append({"Index": wave_index, "ArrayId": array_id, "Origin": origin, "Units": units})
+        rosters.append({"StageId": int(stage["Id"]), "GameId": int(stage["GameId"]),
+                        "MaxRound": int(stage["MaxRound"]), "MonsterGroupNo": int(stage["MonsterGroupNo"]),
+                        "Level": float(stage["Level"]), "SubRank": int(stage["SubRank"]), "Waves": waves})
+    return rosters
+
+
 def write_meta(path: Path, importer: str) -> None:
     relative = path.relative_to(ROOT / "unity").as_posix()
     guid = hashlib.md5(("zjcs-official:" + relative).encode("utf-8")).hexdigest()
@@ -190,32 +386,62 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
     all_arrays = array_data["InfoDict"]
     array_source = source_record(apk, array_obj, ARRAY_TABLE[1], array_bytes)
 
+    skill_obj = apk.asset(SKILL_TABLE[0], SKILL_TABLE[1])
+    skill_bytes = text_asset_bytes(skill_obj)
+    skill_rows = constructors.table(skill_bytes, SKILL_TABLE[2])
+    if not isinstance(skill_rows, list):
+        raise ValueError("Official skill table schema differs from TbSkillInfo")
+    skill_source = source_record(apk, skill_obj, SKILL_TABLE[1], skill_bytes)
+
+    combat_rules, combat_rules_source = _read_verified_json(
+        COMBAT_RULES_PATH, COMBAT_RULES_MANIFEST_PATH, "output_sha256")
+    skill_rules, skill_rules_source = _read_verified_json(
+        SKILL_RULES_PATH, SKILL_RULES_MANIFEST_PATH, "output_sha256")
+    general_rules, general_rules_source = _read_verified_json(
+        GENERAL_RULES_PATH, GENERAL_RULES_MANIFEST_PATH, "data_sha256.rules.json")
+    property_ids, property_type_hash = _read_property_ids()
+
     scene_manifest = json.loads(BATTLE_SCENES_MANIFEST_PATH.read_text(encoding="utf-8"))
     scene_payload = BATTLE_SCENES_PATH.read_bytes()
     if scene_manifest.get("manifest") != VERSION or scene_manifest.get("output", {}).get("sha256") != sha256(scene_payload):
         raise ValueError("Official battle scene payload differs from its source manifest")
     all_scenes = json.loads(scene_payload.decode("utf-8"))["stages"]
     arrays, scenes = collect_battle_data(stage_rows, all_arrays, all_scenes)
+    rosters = collect_monster_rosters(stage_rows, all_arrays, scenes, combat_rules, general_rules,
+                                      skill_rows, skill_rules["entities"], property_ids)
 
     parser_hash = sha256(PARSER_SOURCE_PATH.read_bytes())
     scene_manifest_hash = sha256(BATTLE_SCENES_MANIFEST_PATH.read_bytes())
+    formula_sources = {}
+    for name in ("BattleFormulaHandler.cs", "RolePropGroupInfo.cs", "LevelPropParser.cs",
+                 "LevelPropBinaryReader.cs", "Formula.cs", "StageMonsterArrayInfoParser.cs",
+                 "SkillInfoParser.cs", "TbSkillInfo.cs"):
+        path = COMMON_SOURCE / name
+        formula_sources[name] = {"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
+    formula_sources["PropType.cs"] = {
+        "path": (COMMON_SOURCE / "PropType.cs").relative_to(ROOT).as_posix(),
+        "sha256": property_type_hash,
+    }
     payload = {
         "manifest": VERSION,
         "mapClassId": 10,
         "stages": sorted(stage_rows, key=lambda row: int(row["Id"])),
         "monsterArrays": arrays,
         "battleScenes": scenes,
+        "monsterRosters": rosters,
         "formationOrder": "StageMonsterArrayInfoParser.PostParse sorts Monsters by GroupId",
+        "rosterRules": "StageMonsterArrayInfoParser.GenerateMonsters repeats each monster id for every position in its contiguous GroupId; MonsterGroupNo comes from StageInfo.",
     }
     payload_bytes = json_bytes(payload)
     manifest = {
         "format": 1,
         "manifest": VERSION,
         "mapClassId": 10,
-        "operation": "Read original Luban tables and preserve all Map10 stage, formation, and battle-grid fields; formation ordering follows StageMonsterArrayInfoParser.PostParse.",
+        "operation": "Read original Luban stage, formation and skill tables; preserve battle grids; expand official GroupId formations and calculate monster properties using CalcMonsterBattleProps.",
         "inputs": {
             "stage_table": stage_source,
             "monster_array_table": array_source,
+            "skill_table": skill_source,
             "stage_monster_array_parser": {
                 "path": PARSER_SOURCE_PATH.relative_to(ROOT).as_posix(),
                 "sha256": parser_hash,
@@ -228,6 +454,10 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
                 "source_manifest": BATTLE_SCENES_MANIFEST_PATH.relative_to(ROOT).as_posix(),
                 "source_manifest_sha256": scene_manifest_hash,
             },
+            "battle_rules": combat_rules_source,
+            "skill_rules": skill_rules_source,
+            "general_rules": general_rules_source,
+            "official_formula_sources": formula_sources,
         },
         "output": {
             "path": "Assets/Official/World/Map/10/map10-battles.json",
