@@ -1490,12 +1490,10 @@ namespace Zjcs.Presentation.World
             FightOfficialCombatCatalog combatCatalog = combatAssets.Load();
             FightOfficialSkillItemCatalog skillItems = combatAssets.LoadSkillItems();
             var formula = combatAssets.LoadDamageFormula();
-            var playerProperties = new Dictionary<int, long>(progression.BaseBattleProperties());
-            foreach (KeyValuePair<int, long> property in progression.AppearanceProperties(DateTimeOffset.UtcNow.ToUnixTimeSeconds()))
-            {
-                playerProperties.TryGetValue(property.Key, out long current);
-                playerProperties[property.Key] = checked(current + property.Value);
-            }
+            // Final battle props from the official chunk pipeline. The raw level/rank table only
+            // carries Base* properties, so using it directly leaves MaxHp/Attack unconverted.
+            var playerProperties = new Dictionary<int, long>(
+                progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).OutOfFightBattleProps);
             int playerSubRank = progression.Player.SubRank;
             ApplyPlayerPassiveSkills(combatCatalog, skillItems, playerProperties, playerSubRank);
             Map10RuntimeFactionInfo faction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
