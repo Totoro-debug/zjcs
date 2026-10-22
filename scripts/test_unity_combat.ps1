@@ -80,6 +80,9 @@ try {
     [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load($rulesJson, ('0' * 64), $citySource.manifest)
 } catch { $badSkillItemCatalogRejected = $true }
 Assert-Combat $badSkillItemCatalogRejected 'Official skill item catalog accepted a mismatched rules digest'
+$pigName = $officialCatalog.MonsterName(3206)
+Assert-Combat ($pigName -eq [string]::new([char[]]@(0x91CE, 0x732A))) 'Official monster name lookup mismatch'
+Assert-Combat ($null -eq $officialCatalog.MonsterName(0) -and $null -eq $officialCatalog.MonsterName(999999)) 'Monster name lookup invented a name for an unknown id'
 $monsterSkillProps = $officialCatalog.CalculateSkillProps(16020, 1, 101, 11)
 Assert-Combat ($monsterSkillProps.Count -eq 0) 'Official monster skill property factors produced unexpected properties'
 $attackPassiveFactors = [System.Collections.Generic.Dictionary[int,long]]::new()

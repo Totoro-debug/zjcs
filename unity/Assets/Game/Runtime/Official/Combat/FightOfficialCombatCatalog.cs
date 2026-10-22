@@ -354,6 +354,38 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        private Dictionary<int, string> monsterNames;
+
+        /// <summary>
+        /// Official monster display name from the pinned monster table: CustomTypeName when the
+        /// monster has a variant name, otherwise Memo. Returns null for unknown monsters.
+        /// </summary>
+        public string MonsterName(int monsterId)
+        {
+            if (monsterId <= 0) return null;
+            if (monsterNames == null)
+            {
+                monsterNames = new Dictionary<int, string>();
+                object raw;
+                if (battleTables.TryGetValue("monster", out raw) && raw is List<object> rows)
+                {
+                    foreach (object item in rows)
+                    {
+                        Dictionary<string, object> row = item as Dictionary<string, object>;
+                        if (row == null) continue;
+                        int id = Int(row, "Id");
+                        string name = Convert.ToString(row.TryGetValue("CustomTypeName", out object custom)
+                            ? custom : null, CultureInfo.InvariantCulture);
+                        if (string.IsNullOrWhiteSpace(name))
+                            name = Convert.ToString(row.TryGetValue("Memo", out object memo) ? memo : null,
+                                CultureInfo.InvariantCulture);
+                        if (id > 0 && !string.IsNullOrWhiteSpace(name) && !monsterNames.ContainsKey(id))
+                            monsterNames.Add(id, name.Trim());
+                    }
+                }
+            }
+            return monsterNames.TryGetValue(monsterId, out string result) ? result : null;
+        }
         public int EntityCount => entities.Count;
 
         private static readonly IReadOnlyDictionary<int, long> EmptyProps =

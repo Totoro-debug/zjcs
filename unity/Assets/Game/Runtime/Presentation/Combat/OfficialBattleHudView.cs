@@ -188,7 +188,8 @@ namespace Zjcs.Presentation.Combat
         /// filled TopImg; shield, HpPlies, resilience and status lists stay hidden until their state
         /// and the missing Slider component are available.
         /// </summary>
-        public void RefreshBoss(FightBattleCheckpoint checkpoint)
+        public void RefreshBoss(FightBattleCheckpoint checkpoint,
+            Func<FightBattleUnitState, string> nameResolver = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (bossRoot == null) return;
@@ -208,16 +209,17 @@ namespace Zjcs.Presentation.Combat
                 return;
             }
             bossRoot.SetActive(true);
-            BindBossItem(BossFrontPath, bossUnits[0]);
+            BindBossItem(BossFrontPath, bossUnits[0], nameResolver);
             if (bossUnits.Count > 1)
             {
                 bossRenderer.SetActive(BossBehindPath, true);
-                BindBossItem(BossBehindPath, bossUnits[1]);
+                BindBossItem(BossBehindPath, bossUnits[1], nameResolver);
             }
             else bossRenderer.SetActive(BossBehindPath, false);
         }
 
-        private void BindBossItem(string path, FightBattleUnitState unit)
+        private void BindBossItem(string path, FightBattleUnitState unit,
+            Func<FightBattleUnitState, string> nameResolver)
         {
             bossRenderer.SetActive(path, true);
             Image top = ImageAt(path + "/HpBg/TopImg");
@@ -228,7 +230,12 @@ namespace Zjcs.Presentation.Combat
             }
             bossRenderer.SetActive(path + "/HpBg/CenterImg", false);
             bossRenderer.SetActive(path + "/HpBg/CurrentPliesText", false);
-            bossRenderer.SetActive(path + "/TextName", false);
+            string name = nameResolver == null ? null : nameResolver(unit);
+            GameObject nameNode = bossRenderer.Find(path + "/TextName");
+            TMP_Text nameText = nameNode == null ? null : nameNode.GetComponent<TMP_Text>();
+            bool hasName = !string.IsNullOrWhiteSpace(name);
+            if (nameText != null && hasName) nameText.text = name;
+            bossRenderer.SetActive(path + "/TextName", hasName && nameText != null);
             bossRenderer.SetActive(path + "/Resilience", false);
             bossRenderer.SetActive(path + "/StatusList", false);
         }
