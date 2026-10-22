@@ -193,6 +193,8 @@ python scripts/prepare_dungeon_assets.py
 
 逐资源身份和输出 SHA256 见 [official-city/source-manifest.json](official-city/source-manifest.json)，配置证据见 [rules-manifest.json](official-city/rules-manifest.json)，程序集证据见 [code-manifest.json](official-city/code-manifest.json)，音乐见 [audio-manifest.json](official-city/audio-manifest.json)，基础包可用性见 [bundle-availability.json](official-city/bundle-availability.json)。
 
+2026-10-23：家园运行层从既有 `assets/official/home.json`、`home-completion/{scene,ui}.json`、`rules.json`、`home-random-rewards/catalog.json`、`home-mail/ui.json`、`home-tutorial/talk.json` 等已登记输出整理出 `unity/Assets/StreamingAssets/Home/{scene,ui,rules,rewards,mail,actors,environment,tips}.json` 并复制 647 个被引用贴图；合并规则、数量、输入来源与每个输出的 SHA256 记录在 [source-manifest.json](../../unity/Assets/StreamingAssets/Home/source-manifest.json)，生成器为 [`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py)。该步骤不重新解析 APK、不新增或替换美术，运行时按显式清单加载这些本地文件。
+
 `.tools/` 保留官方缓存和提取依赖，游戏运行不加载 DLL，不使用 Python / Node / vgmstream。
 
 **尚未完整还原全部功能。后续来源记录中的阶段数量用于追溯，不替代当前功能说明。

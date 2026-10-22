@@ -66,9 +66,23 @@
 
 计算依据为官方 [`HangUpUtils`](../../.tools/source-packages/official-code/common-source/Common/HangUpUtils.cs) 的收益量、结算量和容量合并逻辑；客户端 `BedFurniture`、`CartFurniture` 与 `BaseHangUpFurniture` 确认床铺和小推车的家具入口与领取流程。`ProfileSlotCatalog.GetHomePath` 与 `OfflineHomeIncomeSession.Open(ProfileSlotCatalog, ...)` 已将家园存档定位到当前角色槽目录；Unity 尚无家园收益配置加载器、角色属性提供方、启动会话入口或连接实际玩家背包的调用方，因此会话层仍未接入实际游戏流程，不能视为游戏内功能已完成。
 
+### 家园运行层接入（本轮）
+
+以下为按官方源码接入的实际代码，尚未完成 Play Mode 画面／真实输入验收。
+
+- 配置装载：[`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py) 把 `assets/official/home.json`、`home-completion/scene.json`、`ui.json`、`rules.json`、`home-random-rewards/catalog.json` 等整理为 `unity/Assets/StreamingAssets/Home/{scene,ui,rules,rewards}.json` 并复制 647 个被引用贴图，输出 [`source-manifest.json`](../../unity/Assets/StreamingAssets/Home/source-manifest.json) 记录哈希。`OfficialHomeRules.LoadDefault()` 读取同一载荷，保留家具13行、挂机12行、`furniture_level_rule` 595行、`hang_up_reward` 11行、升级材料、皮肤、功能开放与奖励规则。
+- 规则移植：[`OfflineHomeProgression`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeProgression.cs) 复刻 `FurnitureBase.GetState`（已拥有→可维修→锁定→维修预告的判断顺序）、`DoRepair` 的费用与 `AdditionalRepairList` 前置校验、`UnlockHangUp`、`HangUpLevelUpPanel` 的等级上限（`home_level.FurnitureLevelUpLimit`）与 `hang_up_upgrade_material` 材料，并按 `HangUpUtils` 公式（`HourlyOutput * LevelNum * 加成 + 固定值`，容量 = 36小时产出）生成挂机定义。条件求值覆盖 `Level/Rank/SubRank/MaxProfessionRank/CompositeAnd/Or/HasItem/StoryCount/StoryStatus/MapUnlock/LogicalNot` 等类型，未识别的条件类型记录在 `Unresolved`，不默认通过。
+- 存档与事务：[`OfflineHomeIncomeSession`](../../unity/Assets/Game/Runtime/Offline/Home/OfflineHomeIncomeSession.cs) 新增家具拥有、挂机等级／解锁、装潢选择与发奖序号字段，`Mutate` 以候选存档方式提交并带回执去重；`AcknowledgeInventory` 在奖励真正进入角色背包后清理暂存，`Reconfigure` 在家具维修、挂机升级后重建收益目录。
+- 场景与交互：[`HomeSceneView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs) 用官方 384 个 sprite 四边形、sorting 顺序与点击四边形重建家园；家具按 `/X/Repaired` 与 `/X/Unrepair` 切换四态表现；相机使用官方 `orthographic_size`、`border_center/extents` 与 `drag_sensitivity` 计算夹取，`HomeInputController` 采用 `kDraggingSqrOffsetThread = 1` 的 1 像素拖动阈值，指针在 UI 上或模态窗口打开时不触发设施。
+- HUD 与窗口：[`HomeHudView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs) 由官方 `home`、`top_bar`、`money`、`player_icon`、`bottom_bar`、`functions`、`repair`、`bed`、`cart`、`mail_*`、`fast_idle` 面板树生成 UGUI；顶栏显示实际背包货币（1/2/15），底栏五入口可选中并提示所属模块，功能菜单可展开收起，床铺显示存量／容量并领取或免费加速，小推车按 `hang_up` 行列出解锁／升级／领取，邮箱列出本地邮件并支持阅读、全部已读与领取附件。
+- 入口与发奖：[`CharacterCreationFlowController`](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 的完成界面新增「进入家园」，调用 `HomeFeatureRuntime.Begin`；[`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 打开角色存档与家园存档、每 5 秒按本地时间推进产出、把领取物写入角色背包（经验道具 50 交给 `AwardExperience`），交易失败不改内存状态。
+- 当前限制：床铺等级按官方 `UseBlessingLevel` 取赐福等级，离线暂以 1 计算，女神像／探索等属性来源未接入；随机奖励仅生成数据定义，29 个槽位的动物／落叶场景对象与点击尚未实例化；装潢、昼夜环境、教学图、牛车以外的设施页面仍是待办；场景骨骼（43 个 Spine 实例）未绘制。
+
 人物／衣柜、行囊和商城已有各自的部分运行时实现，但家园场景、底栏／头像／储物箱／菜单尚未连接这些模块。人物页当前由 `CharacterCreationFlowController.OpenCharacterProfile` 独立打开；其实际完成与验证范围见[人物页](character.md)，不在本页重复认定完成。
 
 验证边界：`python -B scripts/check_unity_project.py` 的静态元数据检查通过；家园清单输出的文件存在性、SHA256 和 GUID 核对通过。`OfficialHomeAssetTools.ValidateMigratedAssets` 提供 Editor 资产与场景检查入口，但严格脚本／Shader 检查未取得通过结论；此处不沿用其他模块早期编译报错作为当前阻塞判定。主城 Editor 导入／编译、Play Mode 逻辑／真实输入／画面／保存恢复以及 Windows Player 表现均未取得完整验收结论。
+
+本轮补充证据与缺口：家园离线源码（`Offline/Home/*.cs`）与表现层源码（`Presentation/Home/*.cs`）用 Unity 同版本 Roslyn 单独编译无错误；运行的 Unity 编辑器已在 `Library/ScriptAssemblies` 生成 `Zjcs.Presentation.Home.dll` 与包含「进入家园」的 `Zjcs.Presentation.CharacterCreation.dll`，说明编辑器编译通过；`check_unity_project.py` 本轮仅报告 `StreamingAssets/Opening/voices` 等其他会话的元数据缺项，家园新增文件无报错。尚未执行家园 Play Mode 画面／鼠标输入／存证恢复验证，也没有 Windows Player 构建或截图，因此不得据此认定主城已可玩。
 
 ## 自定义实现
 
@@ -86,12 +100,12 @@
 
 ## 尚未实现
 
-上方两张表中的未接通项均属于待实现范围。跨模块玩法只维护主城入口与衔接要求，内部规则和进度以所属页为准；关闭项须完成对应入口处理，但不实现原联网业务。
+上方两张表中的未接通项均属于待实现范围。跨模块玩法只维护主城入口与衔接要求，内部规则和进度以所属页为准；关闭项须完成对应入口处理，但不实现原联网业务。下列第一条已由本轮代码部分落实，剩余缺口按原样保留。
 
-- 主流程与 HUD：接通正式角色进入／返回家园、生命周期、原顶部栏／头像、五入口底栏、功能菜单、任务追踪、战斗结果提示、活动挂载、红／蓝点与新解锁标记；连接已有独立人物／行囊等模块，按单机政策处理原联网入口。
-- 设施与场景输入：恢复14类装置的原场景对象和适用的四态、条件、维修／自动维修、费用、通知、模型切换、剧情与点击分发；接通原碰撞、镜头边界、拖动阈值及模态遮挡。原 `RepairStoryName`、`AdditionalRepairList`、`CanLevelUp` 与空费用逐条核对，挂机等级／容量另按原挂机表装配。
-- 收益与存档：将 `OfflineHomeIncomeSession` 接入角色启动、退出／切档、运行中累计、完整角色属性、家具等级／容量／费用、升级先结算及实际玩家背包。加载原 `hang_up`、`furniture_level_rule`、免费／道具加速和奖励配置；实际经验交给人物成长服务，随机装备生成独立实例，不只增加家园内部的通用物品计数。
-- 邮箱、随机奖励及回收：将邮件本地投递／读领删接口接入原功能52条件、窗口／分页／附件和猫头鹰状态；装配 `home_random_reward_type`、29槽位、奖励组／奖励表及家具限制，将令牌领取映射到已确认的实际奖励语义。`HomeAwardRetrieve` 只读取真实可回收来源；无源奖励不得生成，缺失的服务端裁决按本页已确认范围处理，新增未确定细节另行确认。
+- 主流程与 HUD：已接通「正式角色→进入家园」、官方场景与四态家具、顶栏货币、底栏五入口、功能菜单折叠、床铺／小推车／邮箱窗口与存档事务。仍缺：底栏其余四页的真实页面与返回状态、头像美术图与经验环、任务追踪／战斗结果提示、活动挂载、红蓝点与新解锁标记、窗口动画与音频，以及 Play Mode 真实输入验收。
+- 设施与场景输入：已按四种状态与点击四边形接通床铺、小推车、邮箱、维修对话框；桌面／餐桌／炼丹炉／女神像／果树／储物箱／售货机／扭蛋机／星命／飞艇仅按四态切换模型并提示所属模块，未接入各自页面。原 `AutoRepairCondition`、非空维修费用与 `CanLevelUp` 行仍按表逐条核对，当前 13 行费用为空、`CanLevelUp=false`。
+- 收益与存档：已将 `OfflineHomeIncomeSession` 接入角色启动、退出、运行中累计、完整角色属性（基础＋外观）、家具等级／容量／费用、升级先结算与真实背包（经验走 `AwardExperience`）。仍缺：赐福等级真实来源（女神／探索／古遗物／月卡／星命）、原 `hang_up` 全部免费／道具加速配置的界面选择（当前免费加速按 `fast_hang_up.freeHours` 执行，时间结晶选择未做）、随机装备生成独立实例（当前按权重选物品并叠加数量）。
+- 邮箱、随机奖励及回收：邮箱已接入原面板树、未读优先排序、阅读、全部已读与附件领取；随机奖励已解析 29 槽位／类型间隔／组与奖励权重并写入存档，但场景中的动物／落叶对象、模型动画与点击领取尚未实例化。`HomeAwardRetrieve` 回收窗口未接入。
 - 教学与角色：接通六张教学图及诺诺九张强制行为图、执行队列、场景站位／动作、对白、按钮引导、镜头／遮罩和实际操作成功回执；保存并恢复当前节点、待执行队列与必要表现，失败不推进教学。
 - 环境与装潢：接通原昼夜、受光、灯光分层／互斥、天气、云／月相／积雪／降雪／流星、换肤和固定位置装潢；连接原动画、粒子、材质和音频调用，拍照入口按所属页接线。
 - 资源与平台：按[共用 Android → Windows 迁移流程](../asset-management.md#android-资源迁移到-windows)恢复真实官方脚本、第三方依赖及 shader／材质，替换占位组件并核对序列化字段、GUID 和调用关系；覆盖动态选择的家具／主题／天气／奖励／NPC／UI／音频显式加载，完成随包本地交付。已有来源清单的原始输入已取得，不将未接入或占位代码记为官方内容缺失。

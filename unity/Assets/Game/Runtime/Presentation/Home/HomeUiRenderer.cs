@@ -1,0 +1,353 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Zjcs.Presentation.Home
+{
+    /// <summary>
+    /// Builds the official home UGUI trees from ``Home/ui.json``.  It follows the
+    /// same node schema as the commerce renderer: anchors, layout groups, masks,
+    /// scroll rects, buttons and TMP text.
+    /// </summary>
+    public sealed class HomeUiRenderer
+    {
+        private readonly HomeAssetCatalog catalog;
+        private readonly Dictionary<string, GameObject> nodes = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+
+        public HomeUiRenderer(HomeAssetCatalog catalog)
+        {
+            this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
+        }
+
+        public string RootName { get; private set; }
+
+        public GameObject Create(string panelKey, Transform parent, Action<string, GameObject> bind = null)
+        {
+            HomeUiPanel panel = catalog.Panel(panelKey);
+            if (panel == null || panel.root == null)
+                throw new KeyNotFoundException("Official home panel is missing: " + panelKey);
+            nodes.Clear();
+            GameObject root = CreateNode(panel.root, parent, bind);
+            RootName = root.name;
+            return root;
+        }
+
+        public GameObject CreateNode(HomeUiNode source, Transform parent, Action<string, GameObject> bind = null)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return Build(source, parent, bind);
+        }
+
+        public GameObject Find(string path) => nodes.TryGetValue(path, out GameObject value) ? value : null;
+
+        public T Find<T>(string path) where T : Component
+        {
+            GameObject node = Find(path);
+            return node == null ? null : node.GetComponent<T>();
+        }
+
+        public bool SetText(string path, string value)
+        {
+            TMP_Text text = Find<TMP_Text>(path);
+            if (text == null) return false;
+            text.text = value ?? string.Empty;
+            return true;
+        }
+
+        public bool SetSprite(string path, Sprite sprite)
+        {
+            Image image = Find<Image>(path);
+            if (image == null) return false;
+            image.sprite = sprite;
+            image.enabled = sprite != null;
+            return true;
+        }
+
+        public bool SetSpriteByPrefix(string name, string file)
+        {
+            Sprite sprite = catalog.FindSprite(file);
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
+                Image image = pair.Value.GetComponent<Image>();
+                if (image == null) continue;
+                image.sprite = sprite;
+                image.enabled = sprite != null;
+                return true;
+            }
+            return false;
+        }
+
+        public bool SetSpriteByName(string name, Sprite sprite)
+        {
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
+                Image image = pair.Value.GetComponent<Image>();
+                if (image == null) continue;
+                image.sprite = sprite;
+                image.enabled = sprite != null;
+                return true;
+            }
+            return false;
+        }
+
+        public bool SetActive(string path, bool active)
+        {
+            GameObject node = Find(path);
+            if (node == null) return false;
+            node.SetActive(active);
+            return true;
+        }
+
+        /// <summary>Sets the first text node whose name matches, ignoring the full path.</summary>
+        public bool SetTextByName(string name, string value)
+        {
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
+                TMP_Text text = pair.Value.GetComponent<TMP_Text>();
+                if (text == null || text.GetType() != typeof(TextMeshProUGUI)) continue;
+                text.text = value ?? string.Empty;
+                return true;
+            }
+            return false;
+        }
+
+        public bool SetActiveByName(string name, bool active)
+        {
+            bool changed = false;
+            foreach (KeyValuePair<string, GameObject> pair in nodes)
+            {
+                if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
+                pair.Value.SetActive(active);
+                changed = true;
+            }
+            return changed;
+        }
+
+        public IEnumerable<GameObject> AllNodes => nodes.Values;
+
+        private GameObject Build(HomeUiNode source, Transform parent, Action<string, GameObject> bind)
+        {
+            var gameObject = new GameObject(source.name, typeof(RectTransform));
+            RectTransform rect = (RectTransform)gameObject.transform;
+            rect.SetParent(parent, false);
+            rect.anchorMin = Vector2Value(source.anchor_min, new Vector2(0.5f, 0.5f));
+            rect.anchorMax = Vector2Value(source.anchor_max, new Vector2(0.5f, 0.5f));
+            rect.anchoredPosition = Vector2Value(source.anchored_position, Vector2.zero);
+            rect.sizeDelta = Vector2Value(source.size_delta, Vector2.zero);
+            rect.pivot = Vector2Value(source.pivot, new Vector2(0.5f, 0.5f));
+            float[] scale = source.scale;
+            rect.localScale = scale != null && scale.Length >= 3
+                ? new Vector3(scale[0], scale[1], scale[2])
+                : scale != null && scale.Length >= 2 ? new Vector3(scale[0], scale[1], 1) : Vector3.one;
+            rect.localEulerAngles = new Vector3(0, 0, source.rotation);
+            gameObject.SetActive(source.active);
+            string path = string.IsNullOrEmpty(source.path) ? source.name : source.path;
+            nodes[path] = gameObject;
+
+            Image image = null;
+            if (source.image != null)
+            {
+                image = gameObject.AddComponent<Image>();
+                Sprite sprite = source.image.sprite == null ? null : catalog.FindSprite(source.image.sprite.file);
+                image.sprite = sprite;
+                image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, (int)Image.Type.Filled);
+                image.preserveAspect = source.image.preserve_aspect;
+                image.color = ColorValue(source.image.color, Color.white);
+                image.enabled = sprite != null;
+                image.raycastTarget = false;
+            }
+            if (source.text != null) CreateText(source, gameObject);
+            if (source.mask && image != null)
+            {
+                Mask mask = gameObject.AddComponent<Mask>();
+                mask.showMaskGraphic = true;
+            }
+            if (source.rectmask2d) gameObject.AddComponent<RectMask2D>();
+            if (source.layout != null) CreateLayout(source.layout, gameObject);
+            if (source.grid != null) CreateGrid(source.grid, gameObject);
+            if (source.size_fitter != null && source.size_fitter.Length >= 2)
+            {
+                ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
+                fitter.horizontalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(source.size_fitter[0], 0, 2);
+                fitter.verticalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(source.size_fitter[1], 0, 2);
+            }
+            if (source.layout_element != null)
+            {
+                LayoutElement element = gameObject.AddComponent<LayoutElement>();
+                HomeUiLayoutElement model = source.layout_element;
+                element.ignoreLayout = model.ignore;
+                element.minWidth = Pair(model.min, 0, -1f);
+                element.minHeight = Pair(model.min, 1, -1f);
+                element.preferredWidth = Pair(model.preferred, 0, -1f);
+                element.preferredHeight = Pair(model.preferred, 1, -1f);
+                element.flexibleWidth = Pair(model.flexible, 0, -1f);
+                element.flexibleHeight = Pair(model.flexible, 1, -1f);
+            }
+            if (source.aspect_fitter != null)
+            {
+                AspectRatioFitter fitter = gameObject.AddComponent<AspectRatioFitter>();
+                fitter.aspectMode = (AspectRatioFitter.AspectMode)Mathf.Clamp(source.aspect_fitter.mode, 0, 4);
+                fitter.aspectRatio = Mathf.Max(0.001f, source.aspect_fitter.ratio);
+            }
+            if (source.alpha > 0f && source.alpha < 0.999f)
+            {
+                CanvasGroup group = gameObject.AddComponent<CanvasGroup>();
+                group.alpha = Mathf.Clamp01(source.alpha);
+            }
+            bool toggle = Array.IndexOf(source.scripts ?? Array.Empty<string>(), "Toggle") >= 0;
+            bool tabItem = Array.IndexOf(source.scripts ?? Array.Empty<string>(), "TabItem") >= 0;
+            if (source.button || toggle || tabItem)
+            {
+                Graphic target = image != null ? (Graphic)image : gameObject.GetComponent<Graphic>();
+                if (target != null) target.raycastTarget = true;
+                if (toggle)
+                {
+                    Toggle control = gameObject.AddComponent<Toggle>();
+                    control.targetGraphic = target;
+                    bind?.Invoke(path, gameObject);
+                }
+                else
+                {
+                    Button button = gameObject.AddComponent<Button>();
+                    button.targetGraphic = target;
+                    bind?.Invoke(path, gameObject);
+                }
+            }
+
+            foreach (HomeUiNode child in source.children ?? Array.Empty<HomeUiNode>())
+                Build(child, gameObject.transform, bind);
+            if (source.scroll != null) CreateScroll(source.scroll, gameObject);
+            if (Array.IndexOf(source.scripts ?? Array.Empty<string>(), "Slider") >= 0) CreateSlider(gameObject);
+            return gameObject;
+        }
+
+        private void CreateText(HomeUiNode source, GameObject gameObject)
+        {
+            TextMeshProUGUI text = gameObject.AddComponent<TextMeshProUGUI>();
+            text.font = catalog.Font;
+            string value = catalog.LocalizedText(source.localization_key, source.text.value);
+            text.text = RestoreMidsize(value, source.text.font_size);
+            text.fontSize = Mathf.Max(1, source.text.font_size);
+            text.color = ColorValue(source.text.color, Color.white);
+            text.alignment = Alignment(source.text.horizontal, source.text.vertical);
+            text.enableWordWrapping = true;
+            text.overflowMode = TextOverflowModes.Truncate;
+            text.richText = true;
+            text.raycastTarget = false;
+        }
+
+        private static string RestoreMidsize(string source, float baseSize)
+        {
+            if (string.IsNullOrEmpty(source) || source.IndexOf("<midsize=", StringComparison.Ordinal) < 0) return source;
+            return Regex.Replace(source, @"<midsize=([0-9]+(?:\.[0-9]+)?)>", match =>
+            {
+                float size = float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                float offset = (baseSize - size) * 0.5f * (38.04f / 40f);
+                return "<voffset=" + (offset / Mathf.Max(1f, baseSize)).ToString("0.#####", CultureInfo.InvariantCulture)
+                    + "em><size=" + size.ToString("0.###", CultureInfo.InvariantCulture) + ">";
+            }).Replace("</midsize>", "</size></voffset>");
+        }
+
+        private void CreateScroll(HomeUiScroll source, GameObject gameObject)
+        {
+            ScrollRect scroll = gameObject.AddComponent<ScrollRect>();
+            scroll.horizontal = source.horizontal;
+            scroll.vertical = source.vertical;
+            scroll.inertia = source.inertia;
+            scroll.movementType = (ScrollRect.MovementType)Mathf.Clamp(source.movement, 0, 2);
+            scroll.scrollSensitivity = source.sensitivity <= 0 ? 20 : source.sensitivity;
+            scroll.elasticity = source.elasticity;
+            scroll.decelerationRate = source.deceleration <= 0 ? 0.135f : source.deceleration;
+            Transform viewport = FindDescendant(gameObject.transform, "Viewport", "ViewPort", "Viewprot");
+            Transform content = FindDescendant(gameObject.transform, "Content");
+            if (viewport != null) scroll.viewport = viewport as RectTransform;
+            if (content != null) scroll.content = content as RectTransform;
+        }
+
+        private static void CreateSlider(GameObject gameObject)
+        {
+            Slider slider = gameObject.AddComponent<Slider>();
+            Transform fill = FindDescendant(gameObject.transform, "Fill");
+            Transform handle = FindDescendant(gameObject.transform, "Handle");
+            Transform area = FindDescendant(gameObject.transform, "Handle Slide Area");
+            slider.fillRect = fill as RectTransform;
+            slider.handleRect = (handle ?? area) as RectTransform;
+            slider.targetGraphic = slider.handleRect == null ? null : slider.handleRect.GetComponent<Graphic>();
+            slider.direction = Slider.Direction.LeftToRight;
+            slider.minValue = 0;
+            slider.maxValue = 100;
+            slider.wholeNumbers = true;
+        }
+
+        private static void CreateLayout(HomeUiLayout source, GameObject gameObject)
+        {
+            HorizontalOrVerticalLayoutGroup group = source.axis == 0
+                ? (HorizontalOrVerticalLayoutGroup)gameObject.AddComponent<HorizontalLayoutGroup>()
+                : gameObject.AddComponent<VerticalLayoutGroup>();
+            int[] padding = source.padding ?? Array.Empty<int>();
+            if (padding.Length >= 4) group.padding = new RectOffset(padding[0], padding[1], padding[2], padding[3]);
+            group.childAlignment = (TextAnchor)Mathf.Clamp(source.alignment, 0, 8);
+            group.spacing = source.spacing;
+            group.childForceExpandWidth = Flag(source.expand, 0);
+            group.childForceExpandHeight = Flag(source.expand, 1);
+            group.childControlWidth = Flag(source.control, 0);
+            group.childControlHeight = Flag(source.control, 1);
+            group.childScaleWidth = Flag(source.child_scale, 0);
+            group.childScaleHeight = Flag(source.child_scale, 1);
+            group.reverseArrangement = source.reverse;
+        }
+
+        private static void CreateGrid(HomeUiGrid source, GameObject gameObject)
+        {
+            GridLayoutGroup group = gameObject.AddComponent<GridLayoutGroup>();
+            int[] padding = source.padding ?? Array.Empty<int>();
+            if (padding.Length >= 4) group.padding = new RectOffset(padding[0], padding[1], padding[2], padding[3]);
+            group.childAlignment = (TextAnchor)Mathf.Clamp(source.alignment, 0, 8);
+            group.startCorner = (GridLayoutGroup.Corner)Mathf.Clamp(source.corner, 0, 3);
+            group.startAxis = (GridLayoutGroup.Axis)Mathf.Clamp(source.axis, 0, 1);
+            group.cellSize = Vector2Value(source.cell, Vector2.zero);
+            group.spacing = Vector2Value(source.spacing, Vector2.zero);
+            group.constraint = (GridLayoutGroup.Constraint)Mathf.Clamp(source.constraint, 0, 2);
+            group.constraintCount = Mathf.Max(1, source.count);
+        }
+
+        private static bool Flag(bool[] flags, int index) => flags != null && flags.Length > index && flags[index];
+
+        private static float Pair(float[] values, int index, float fallback) =>
+            values != null && values.Length > index ? values[index] : fallback;
+
+        private static Transform FindDescendant(Transform parent, params string[] names)
+        {
+            foreach (Transform child in parent)
+            {
+                foreach (string name in names)
+                    if (child.name == name) return child;
+                Transform nested = FindDescendant(child, names);
+                if (nested != null) return nested;
+            }
+            return null;
+        }
+
+        private static TextAlignmentOptions Alignment(int horizontal, int vertical)
+        {
+            int h = Mathf.Clamp(horizontal, 0, 2);
+            int v = Mathf.Clamp(vertical, 0, 2);
+            if (v == 0) return h == 0 ? TextAlignmentOptions.TopLeft : h == 1 ? TextAlignmentOptions.Top : TextAlignmentOptions.TopRight;
+            if (v == 1) return h == 0 ? TextAlignmentOptions.Left : h == 1 ? TextAlignmentOptions.Center : TextAlignmentOptions.Right;
+            return h == 0 ? TextAlignmentOptions.BottomLeft : h == 1 ? TextAlignmentOptions.Bottom : TextAlignmentOptions.BottomRight;
+        }
+
+        private static Vector2 Vector2Value(float[] values, Vector2 fallback) =>
+            values != null && values.Length >= 2 ? new Vector2(values[0], values[1]) : fallback;
+
+        private static Color ColorValue(float[] values, Color fallback) =>
+            values != null && values.Length >= 4 ? new Color(values[0], values[1], values[2], values[3]) : fallback;
+    }
+}
