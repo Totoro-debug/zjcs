@@ -65,7 +65,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 当前已完成固定版数据恢复、人物存档入口、衣柜基础交互、人物页 idle 模型播放、属性分块／战力管线以及概要属性和综合／细分属性弹窗；1,563 个可穿戴外观项、1,723 个皮肤定义通过 `CharacterProgressionValidation.BindOfficialCatalogs` 绑定验证，人物属性图标与面板 Sprite 由官方清单导入，基础属性断言为 300/60/60/48，职业 1 的 FeatureProps 使其战斗外生命为 327。`CharacterProgressionValidation.Run` 新增属性管线断言（352 条 prop_cfg、主要属性 4 行、附加属性 96 行、战力为正、人物基础细分 60 攻击、万／百分比格式）。
 
-属性、位阶与装备五槽的当前验证范围：`python -B scripts/check_unity_project.py` 静态元数据检查通过（23,948 个 GUID）；`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 使用 Roslyn 单独编译通过；同一 `Evaluate` 管线在同步的 Mono 校验程序中对 `character-progression.json`／`character-overview.json` 运行通过，并在生成一件 20000 主武器后验证攻击 60→84、战力 786→867、装备明细来源出现。Unity Editor 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 画面验证尚未执行（验证时另一会话正占用该工程实例）。技能、幻兽、古遗物、星石、料理、额外、公会、星命与 NPC 分块仍为 0，因此战力覆盖基础、职业、装备与衣柜来源。称号在人物页的展示与官方 HSV 染色结果渲染尚未完成。官方衣柜树没有染色控件；原 HSV 编辑入口属于 `ChangeAppearancePanel`，不在本次衣柜界面范围内。
+属性、位阶、装备五槽、技能与潮流等级的当前验证范围：`Zjcs.Offline.Skills` 的技能方案／安装／替换／卸下／改名在 Mono 校验程序中通过；穿戴互斥预览、潮流等级跨级与属性/规则弹窗模板由同一目录驱动。`python -B scripts/check_unity_project.py` 静态元数据检查通过（24,959 个 GUID）；`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 使用 Roslyn 单独编译通过；同一 `Evaluate` 管线在同步的 Mono 校验程序中对 `character-progression.json`／`character-overview.json` 运行通过，并在生成一件 20000 主武器后验证攻击 60→84、战力 786→867、装备明细来源出现。Unity Editor 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 画面验证尚未执行（验证时另一会话正占用该工程实例）。技能、幻兽、古遗物、星石、料理、额外、公会、星命与 NPC 分块仍为 0，因此战力覆盖基础、职业、装备与衣柜来源。人物页称号图标与剩余时间已显示；官方 HSV 染色结果渲染尚未完成。官方衣柜树没有染色控件；原 HSV 编辑入口属于 `ChangeAppearancePanel`，不在本次衣柜界面范围内。
 
 ## 自定义实现
 
@@ -80,7 +80,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 ## 尚未实现
 
 - 储存经验说明已接原 `player_exp_max_title/desc1/desc2` 文本并在人物页规则按钮打开说明层；仍缺经验领取成功后的奖励演出与升级延时衔接、位阶教学触发/恢复和返回家园条件，失败与保存结果也只在状态文本体现。
-- 已接入装备主／副／额外与套装属性；仍缺装备共鸣、星石、特殊词条（`equip_attributes_passive_skill` 的被动技能等价属性）与技能、幻兽、古遗物、料理、额外、公会、NPC、星命来源。`CharacterPropCalculator` 的 `IOfflineCharacterPropSource` 注册点可供后续分块接入，人物页、战斗属性和评分需统一读取同一快照。
+- 已接入装备主／副／额外与套装属性及人物页、位阶、五槽、技能、衣柜的界面；仍缺装备共鸣、星石、特殊词条（`equip_attributes_passive_skill` 的被动技能等价属性）与技能分块、幻兽、古遗物、料理、额外、公会、NPC、星命属性来源。Map10 战斗与家园仍各自拼装基础＋衣柜属性，尚未改为读取 `EvaluateProps` 快照。
 - 将人物/衣柜换装后的遮罩与 HSV 染色接入帧网格渲染，并核对原染色入口、互斥提示和称号在人物页的显示；原衣柜底部技能幻彩/家园装潢子页仍需接到所属功能入口。
 - 在 Unity Play Mode 中验证人物与衣柜完整流程、不同性别/职业模型、穿脱和读档恢复；全工程编辑器验证还需先修复 `OfficialMap10TerrainView` 与共享战斗网格检查阻塞。
 
@@ -165,7 +165,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 
-验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（23,948 个 GUID）；属性模块以 Roslyn 单独编译 `Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过，并用同步的 Mono 校验程序对属性目录与 `Evaluate` 管线运行断言通过（基础 300/60/60/48、职业 FeatureProps、装备分块、战力、人物基础细分、数字格式）。Unity `2022.3.57f1c2` 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 逻辑／真实输入／画面／存档恢复尚未执行：验证期间另一会话持续占用工程实例，batchmode 无法打开同一项目。
+验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（24,959 个 GUID）；属性模块以 Roslyn 单独编译 `Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过，并用同步的 Mono 校验程序对属性目录与 `Evaluate` 管线运行断言通过（基础 300/60/60/48、职业 FeatureProps、装备分块、战力、人物基础细分、数字格式）。Unity `2022.3.57f1c2` 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 逻辑／真实输入／画面／存档恢复尚未执行：验证期间另一会话持续占用工程实例，batchmode 无法打开同一项目。
 
 ### 待迁移的规则与表现
 
