@@ -33,6 +33,7 @@ TEXTURES = ROOT / "unity/Assets/Official/Opening/Battlefield/Resources/OpeningBa
 REFERENCE = ROOT / "assets/reference/character-creation/opening-battlefield-source-manifest.json"
 STAGE_ID = 902
 LAYOUT_SOURCE = ROOT / "assets/official/battle-stages.json"
+DAMAGE_RULES = ROOT / "assets/official/battle-hud/rules.json"
 
 TEXTURE_META = """fileFormatVersion: 2
 guid: {guid}
@@ -569,6 +570,32 @@ def load_npc_models() -> list[dict]:
     return models
 
 
+def damage_colors() -> dict:
+    """Official damage number colours (element/variant) from the battle HUD rules."""
+    data = json.loads(DAMAGE_RULES.read_text(encoding="utf-8"))["damage_settings"]
+
+    def text_color(entry):
+        value = entry["TextColor"]
+        return [round(float(value[channel]), 6) for channel in ("r", "g", "b", "a")]
+
+    elements = {}
+    for row in data["ElementDamageColors"]:
+        variants = {}
+        for name in ("Normal", "Crit", "Block", "Immunity"):
+            if name in row:
+                variants[name.lower()] = text_color(row[name])
+        elements[str(int(row["ElementType"]))] = variants
+    return {
+        "elements": elements,
+        "cure": text_color(data["ElementCureColor"]),
+        "skill_cost": text_color(data["SkillCostDamageColor"]),
+        "status_damage": text_color(data["StatusDamageColor"]),
+        "status_cure": text_color(data["StatusCureColor"]),
+        "default": text_color(data["DefaultColor"]),
+        "spacing": [round(float(data["DamageUISpacing"][axis]), 6) for axis in ("x", "y", "z")],
+    }
+
+
 def load_grid() -> dict:
     data = json.loads(SCENES.read_text(encoding="utf-8"))
     stage = data["stages"][str(STAGE_ID)]
@@ -661,6 +688,7 @@ def build() -> int:
         "batches": payload_batches,
         "particles": particles,
         "npc_models": load_npc_models(),
+        "damage_colors": damage_colors(),
     }
     data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     target = PAYLOAD / "game_902.json"
