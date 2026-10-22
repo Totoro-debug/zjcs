@@ -233,7 +233,11 @@ namespace Zjcs.Presentation.Combat
         private void RefreshBossStatuses(Transform parent, FightBattleUnitState unit)
         {
             for (int i = parent.childCount - 1; i >= 0; i--)
-                UnityEngine.Object.Destroy(parent.GetChild(i).gameObject);
+            {
+                GameObject child = parent.GetChild(i).gameObject;
+                child.SetActive(false);
+                UnityEngine.Object.Destroy(child);
+            }
             if (unit == null || unit.Statuses == null) return;
             foreach (FightBattleStatusState status in unit.Statuses)
             {
@@ -247,8 +251,9 @@ namespace Zjcs.Presentation.Combat
                 if (icon != null) icon.gameObject.SetActive(false);
                 Transform count = item.transform.Find("CountTxt");
                 TMP_Text countText = count == null ? null : count.GetComponent<TMP_Text>();
-                if (countText != null && status.StackCount > 1)
-                    countText.text = status.StackCount.ToString(CultureInfo.InvariantCulture);
+                if (countText != null)
+                    countText.text = status.StackCount > 1
+                        ? status.StackCount.ToString(CultureInfo.InvariantCulture) : string.Empty;
             }
         }
 
