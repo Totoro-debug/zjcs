@@ -278,8 +278,24 @@ namespace Zjcs.Presentation.Inventory
                     && (item.DetailKind != OfflineInventoryDetailKind.Equipment || item.IsEquipped);
                 countNode.gameObject.SetActive(showCount);
             }
+            AddRedDot(item, iconNodes);
             Button iconButton = iconRoot.GetComponent<Button>();
             if (iconButton != null) iconButton.onClick.AddListener(() => OpenItem(item));
+        }
+
+        private void AddRedDot(OfflineInventoryItemView item, Dictionary<string, RectTransform> iconNodes)
+        {
+            if (item.CanUseRedDot != true) return;
+            int attachmentId = item.RedDotType == 2 ? 8 : item.RedDotType == 1 ? 15 : 0;
+            if (attachmentId == 0) return;
+            RectTransform attachmentParent = iconNodes.Values.FirstOrDefault(node => node.name == "ItemIconAttachment");
+            Dictionary<string, object> template = assets.LoadAttachmentTemplate(attachmentId);
+            if (attachmentParent == null || template == null || !template.TryGetValue("root", out object rawRoot))
+                throw new FormatException("Official inventory red-dot attachment is incomplete.");
+            var attachmentNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            RectTransform root = BuildNode(Object(rawRoot, "item icon attachment"), attachmentParent, attachmentNodes);
+            int layer = assets.FindAttachmentLayer(attachmentId);
+            root.SetSiblingIndex(Mathf.Clamp(layer, 0, attachmentParent.childCount - 1));
         }
 
         private void OpenItem(OfflineInventoryItemView item)

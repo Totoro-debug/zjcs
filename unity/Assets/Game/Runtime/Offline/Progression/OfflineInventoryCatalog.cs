@@ -69,6 +69,8 @@ namespace Zjcs.Offline.Progression
         public bool IsEquipped { get; internal set; }
         public bool IsTimed { get; internal set; }
         public bool CanOverlap { get; internal set; }
+        public bool? CanUseRedDot { get; internal set; }
+        public int RedDotType { get; internal set; }
         public OfflineInventoryDetailKind DetailKind { get; internal set; }
     }
 
@@ -114,6 +116,8 @@ namespace Zjcs.Offline.Progression
                     ExpiresAtUnixSeconds = expiry,
                     IsTimed = IsTimed(item) || expiry > 0,
                     CanOverlap = Bool(item, "CanOverlap"),
+                    CanUseRedDot = CanUseRedDot(catalog, item, stack.Count),
+                    RedDotType = Int(item, "RedDotType"),
                     DetailKind = DetailKind(catalog, item, itemType)
                 });
             }
@@ -136,6 +140,8 @@ namespace Zjcs.Offline.Progression
                     IsEquipped = save.Player.Equipment.Equipped.Any(slot => slot.InstanceId == equipment.InstanceId),
                     IsTimed = IsTimed(item),
                     CanOverlap = Bool(item, "CanOverlap"),
+                    CanUseRedDot = CanUseRedDot(catalog, item, 1),
+                    RedDotType = Int(item, "RedDotType"),
                     DetailKind = OfflineInventoryDetailKind.Equipment
                 });
             }
@@ -252,6 +258,31 @@ namespace Zjcs.Offline.Progression
                 return types.Keys.Any(value => int.TryParse(value, NumberStyles.Integer,
                     CultureInfo.InvariantCulture, out int parsed) && parsed == itemType);
             return false;
+        }
+
+        private static bool? CanUseRedDot(OfficialEquipmentCatalog catalog, Dictionary<string, object> item, long count)
+        {
+            if (count <= 0) return false;
+            if (!catalog.GameSettings.TryGetValue("ShowCanUseRedDotItemTypes", out object rawTypes)
+                || !(rawTypes is List<object> types))
+                throw new FormatException("Official item red-dot type settings are missing.");
+            int itemType = Int(item, "ItemType");
+            if (!types.Any(value => Convert.ToInt32(value, CultureInfo.InvariantCulture) == itemType)) return false;
+
+            string mergeTable;
+            switch (itemType)
+            {
+                case 326: mergeTable = "equip_piece_merge"; break;
+                case 334: mergeTable = "item_piece_merge"; break;
+                case 322:
+                case 336:
+                case 340:
+                case 402: return null;
+                default: return true;
+            }
+
+            Dictionary<string, object> merge = catalog.Find(mergeTable, Int(item, "ClassId"), "Id");
+            return merge != null && count >= Int(merge, "PieceMergeCount");
         }
 
         private static bool Bool(Dictionary<string, object> value, string key) =>
