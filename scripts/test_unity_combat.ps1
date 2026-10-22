@@ -83,6 +83,8 @@ Assert-Combat $badSkillItemCatalogRejected 'Official skill item catalog accepted
 $pigName = $officialCatalog.MonsterName(3206)
 Assert-Combat ($pigName -eq [string]::new([char[]]@(0x91CE, 0x732A))) 'Official monster name lookup mismatch'
 Assert-Combat ($null -eq $officialCatalog.MonsterName(0) -and $null -eq $officialCatalog.MonsterName(999999)) 'Monster name lookup invented a name for an unknown id'
+$orderedSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
+Assert-Combat ($orderedSkill.Range.Count -eq 24 -and $orderedSkill.Range[0].Y -eq -1 -and $orderedSkill.Range[1].X -eq -1 -and $orderedSkill.Range[2].X -eq 1 -and $orderedSkill.Range[3].Y -eq 1 -and $orderedSkill.Range[4].X -eq 2) 'Official skill range order was not preserved'
 $moveSkill = $officialCatalog.CreateSkill(15980, 0, 0, 1, 1, 0, $null)
 Assert-Combat ($moveSkill.SourceMoves.Count -eq 1 -and [Math]::Abs($moveSkill.SourceMoves[0].Delay - 0.5667) -lt 0.001 -and $moveSkill.SourceMoves[0].Distance -eq -1 -and $moveSkill.SourceMoves[0].Direction -eq 1 -and $moveSkill.SourceMoves[0].TowardsTargetPos -and -not $moveSkill.SourceMoves[0].HasConditions) 'Official skill SourceMoveList mapping mismatch'
 $monsterSkillProps = $officialCatalog.CalculateSkillProps(16020, 1, 101, 11)
