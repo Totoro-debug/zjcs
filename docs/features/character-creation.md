@@ -30,13 +30,27 @@
 
 开场输入由 [prepare_character_creation_opening.py](../../scripts/prepare_character_creation_opening.py) 从固定 APK 与已转换官方数据提取，输出与哈希见 [opening source manifest](../../assets/reference/character-creation/opening-source-manifest.json)：`Assets/Config/Story/CreatePlayerFightRecord.bytes`（bundle `defaultpackage_assets_config_story.bundle`，34,004 字节 GZip，解压后 14 回合、1,168 步、19 个实体、`GameResultMsg=null`）、`BeforeFight`／`AfterFight` 剧情图（`..._story_storyfight.bundle`）、`FirstStory` 剧情图（`..._story_map10story_basicguide.bundle`）、三段共 6 条对白与两名角色（840100 薇兰、840200 绯乐）、`stage` 表 20 行（`Type=33` RecordFight、`GameId=902` → 场景 `game_902`、波次怪物 3803/3282/3281/3283/3481）及网格地面。剧情 UI 由同一脚本从 `prefabs_ui_story`／`prefabs_ui_global`／`prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight` 导出 7 个 prefab 的 RectTransform 层级、图片颜色、按钮与文本节点，供 [OpeningUiView](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi.cs) 在运行时还原。
 
-创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [creation performance source manifest](../../assets/reference/character-creation/creation-performance-source-manifest.json)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。Editor 校验已通过，Play Mode 画面和转场事件仍待验收。
+创角过场从固定版本 `CreatePlayerPanel` 官方 prefab 动画数据恢复 13 个命名片段、男女两份 UIMesh 溶解网格和角色层级顺序曲线，生成资产及来源哈希见 [creation performance source manifest](../../assets/reference/character-creation/creation-performance-source-manifest.json)。`CharacterCreationPerformanceTools.BuildAndValidate` 将曲线转为 Unity AnimationClip；`CharacterCreationEffectDissolve.shader` 是官方 `UI/EffectDissolve` 的 Windows HLSL 适配，按原 dissolve 参数、边缘颜色、Blend 和 stencil 设置绘制。Editor 校验已通过；创角面板在 Play Mode 中完成了体型、外观、命名页切换与截图检查，未单独逐帧验收全部溶解曲线和音效。
 
 六类男女外观选项使用官方配置 ID，缩略图来自 `defaultpackage_assets_image_ui_playerskin.bundle`；155 个 Sprite 和输入输出哈希见 [player skin icon source manifest](../../assets/reference/character-creation/player-skin-icons-source-manifest.json)。肤色、发色与瞳色范围、固定颜色及 HSV 配置从官方角色目录读取。
 
-男女预览模型已从固定版 Spine 4.2 数据转换为 Unity 原生骨骼、网格、材质和 Animator；烘焙输入输出及缺项见 [native character model bake manifest](../../assets/reference/character-creation/native-character-model-bake-source-manifest.json)。
+男女创角预览由 [CharacterCreationMeshFramePlayer](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationMeshFramePlayer.cs) 使用 Unity MeshRenderer 播放已校验的官方 24 fps 网格帧，包含 `home/idle_01` 与 `map/run_01`；不依赖 Spine runtime。打包脚本 [prepare_character_creation_meshes.py](../../scripts/prepare_character_creation_meshes.py) 复用固定来源的骨骼转换缓存、贴图及染色遮罩，输出 `StreamingAssets/CharacterCreation/creation-meshes.zip`，输入输出与逐文件哈希见 [native mesh source manifest](../../assets/reference/character-creation/native-mesh-source-manifest.json)。`CharacterCreationMeshFrameDye.shader` 适配官方 HSV 遮罩公式，按原部件层序、选中皮肤和染色参数绘制。此处验证范围为创角预览，不代表地图角色与其他 Animator 调用方已完成迁移。
 
 创角按钮使用的 `Main_Page`、`Main_Cursor_Normal`、`Main_Tag`、`Main_Cursor_Back` 音效已转为本地 OGG 并由 [audio source manifest](../../assets/reference/creation-performance/audio/source-manifest.json) 校验。DIY 恢复默认外观使用官方 `ui_reset_appearance_tip_text` 确认键及官方弹窗 prefab；固定版本地语言资源未包含该键的文本，Unity 离线界面使用中文提示。
+
+### 官方字体与原生 UI
+
+已核对固定 APK 的 `defaultpackage_assets_textmesh_pro_rawfonts_fzy4k.bundle` 中 `FZY4K` TextAsset：原始方正粗圆 TTF 与 `Assets/Official/Commerce/Art/fonts/FZY4K.ttf` 逐字节一致，SHA256 为 `90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386`，创角使用 `Resources/Combat/FZY4K-Dynamic.asset`，没有使用替代字体。
+
+旧恢复 prefab 缺少原 MonoBehaviour 字段，不能显示完整 UGUI/TMP 内容；[prepare_character_creation_runtime_ui.py](../../scripts/prepare_character_creation_runtime_ui.py) 与 [CharacterCreationUiTools](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationUiTools.cs) 从已核验原始字段恢复三个原生 prefab、47 张原 Sprite、RectTransform、TMP 样式、遮罩、布局、滚动、CanvasGroup 及选择状态。页标题沿原 `StepTitles` 与语言包显示“选择体型／装扮形象／取个名吧”，HSV 滑块沿 `EditCustomColorBlock.GenerateTexture` 生成渐变。输入输出及生成工具哈希见 [runtime UI source manifest](../../assets/reference/character-creation/runtime-ui-source-manifest.json) 与 [native UI source manifest](../../assets/reference/character-creation/native-ui-source-manifest.json)。
+
+### 捏脸与本地保存验证
+
+已在 Unity `2022.3.57f1c2` 非 `-nographics` Play Mode 实际运行 [CharacterCreationPlayModeAcceptance.PrepareAndRun](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs)，使用隔离存档，检查 720×1280 与 450×800 Game 视图截图：男女体型、女性六类外观、肤色／发色／瞳色固定色板、自定义 HSV、原生动画帧推进、发型选中框、重置取消／确认、返回与草稿恢复、空名拒绝、手动命名、正式 JSON 保存后重新打开、两个槽位独立保存，以及剑／法杖选择均通过。原字体对创角初始文本的字形覆盖检查通过，角色网格、渐变条、文本和底部导航已人工核对截图。
+
+捏脸保存修复了 `OfflineMainlineProgressSession.UniqueAppearanceTypes` 误拒绝官方 `PlayerSkinType.Eye = 0` 的问题；旧逻辑会使已创建角色回读失败。`LocalJsonSaveFile` 对 Windows 短暂占用导致的原子替换错误作有限重试，保留原有原子替换与有效存档。创角启动时移除商城控制器自动创建的额外存档选择遮罩，避免拦截创角输入。
+
+本次按用户指定只验收捏脸与保存：验收脚本隔离创角前开场与创角后 `FirstStory`，不据此证明剧情到初始武器的完整衔接；“幻装试穿”另做。捏脸控件通过 EventSystem 射线命中与软件指针事件验证，文本通过 TMP 输入值验证，尚未以实体鼠标与键盘操作验收；槽位、弹窗及武器按钮部分直接派发按钮事件。未构建或发布 Windows 成品。
 
 ## 自定义实现
 
@@ -81,5 +95,8 @@
 9. **FirstStory 端到端画面。** 创角提交流程已接入 FirstStory（黑幕、对话、HomePlayerPlayActionNode 的 SafeEnd 快进、开场转场、显示全部 UI），但 [CharacterOpeningPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterOpeningPlayModeAcceptance.cs) 只覆盖创角前开场；创角后剧情与初始武器选择的衔接仍须在完整流程中实测。
 10. **异常分支。** 录像解压失败、实体列表缺失、剧情图缺失、窗口资源缺失、超时与保存失败仅按代码路径实现并记录日志，未逐项构造故障做 Play Mode 验收。
 11. **实际输入。** 开场验收通过脚本调用按钮 `onClick`／`pointerClickHandler` 推进，尚未用真实鼠标点击验证对话推进、快进按钮与创角面板的命中区域。
-12. **创角提交存档回读。** 现有 [CharacterCreationPlayModeAcceptance](../../unity/Assets/Game/Editor/CharacterCreation/CharacterCreationPlayModeAcceptance.cs) 在本次运行中于初始武器选择处失败：`CharacterCreationOfflineService.TrySetInitialWeapon` 通过 `OfflineMainlineProgressSession.OpenCharacter` 读回的 `CharacterCreated` 为 false，提示“请先完成角色创建”。该读回与 `OfflineMainlineProgressSession`／`CharacterCreationOfflineService` 的并行未提交修改同时存在，不属于本次开场流程范围，未在本页擅自改动其存档语义；开场流程的跳过标记与创角后 `FirstStory` 调用使用 `SkipOpeningForAcceptance`／`SkipFirstStoryForAcceptance` 验收开关，不依赖该回读。
-13. **共用战斗目录修复。** OfficialBattleModelCatalog.asset 原本未序列化 identities／identitiesManifest，导致怪物身份表无法装配；本次在资源上补齐这两个引用，战斗模块的 Editor 校验仍受 Map10 资源校验失败影响，未整体跑通 Zjcs.Editor.ProjectTools.Validate。
+12. **共用战斗目录修复。** OfficialBattleModelCatalog.asset 原本未序列化 identities／identitiesManifest，导致怪物身份表无法装配；本次在资源上补齐这两个引用，战斗模块的 Editor 校验仍受 Map10 资源校验失败影响，未整体跑通 Zjcs.Editor.ProjectTools.Validate。
+
+### 本次明确排除的功能
+
+“幻装试穿”入口尚未接通，原说明仍显示 `{0}` 占位内容；用户已确认本次只验收捏脸与保存，试穿另做。

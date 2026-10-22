@@ -741,7 +741,8 @@ namespace Zjcs.Offline.Progression
         {
             var types = new HashSet<int>();
             foreach (OfflineAppearanceSkin value in values)
-                if (value == null || value.Type <= 0 || value.Id < 0 || !types.Add(value.Type)) return false;
+                // Official PlayerSkinType.Eye is zero, including base and creation skins.
+                if (value == null || value.Type < 0 || value.Id < 0 || !types.Add(value.Type)) return false;
             return true;
         }
 
