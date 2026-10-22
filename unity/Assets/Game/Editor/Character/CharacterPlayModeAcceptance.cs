@@ -31,6 +31,14 @@ namespace Zjcs.Editor.Character
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running character acceptance.");
+            try
+            {
+                Zjcs.Editor.Equipment.OfficialEquipmentValidation.Validate();
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Character acceptance could not install the equipment catalog: " + error.Message);
+            }
             string root = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
                 "output", "character-smoke-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(root);

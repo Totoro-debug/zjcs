@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.Character
             if (source.text != null)
             {
                 Text text = instance.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.text = source.text.value ?? string.Empty;
                 text.color = ColorValue(source.text.color, Color.black);
                 text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));

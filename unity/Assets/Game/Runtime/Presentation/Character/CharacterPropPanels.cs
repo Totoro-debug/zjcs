@@ -270,7 +270,7 @@ namespace Zjcs.Presentation.Character
                 bodyRect.offsetMin = Vector2.zero;
                 bodyRect.offsetMax = Vector2.zero;
                 Text text = body.GetComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.fontSize = 25;
                 text.color = Color.white;
                 text.supportRichText = true;
