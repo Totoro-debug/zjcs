@@ -31,6 +31,7 @@ namespace Zjcs.Presentation.Inventory
 
         private Dictionary<string, object> parsed;
         private Dictionary<string, Sprite> spriteByName;
+        private bool bindingsValidated;
 
         public static OfficialInventoryAssetCatalog LoadDefault()
         {
@@ -59,6 +60,14 @@ namespace Zjcs.Presentation.Inventory
             if (!icons.TryGetValue(itemId.ToString(System.Globalization.CultureInfo.InvariantCulture), out object raw)) return null;
             Dictionary<string, object> icon = Object(raw);
             return FindSprite(Text(icon, "file"));
+        }
+
+        public string FindText(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return string.Empty;
+            Dictionary<string, object> texts = Object(Parsed()["texts"]);
+            return texts.TryGetValue(key, out object value)
+                ? Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
         }
 
         public string FindItemIconTemplateName(int itemId, int itemType)
@@ -121,6 +130,7 @@ namespace Zjcs.Presentation.Inventory
 
         public void ValidateBindings()
         {
+            if (bindingsValidated) return;
             if (uiData == null || sourceManifest == null || sprites == null || sprites.Length < 1500)
                 throw new InvalidOperationException("Official inventory data and sprite bindings are incomplete.");
             Dictionary<string, object> root = Parsed();
@@ -146,6 +156,7 @@ namespace Zjcs.Presentation.Inventory
                 if (FindSprite(Text(icon, "file")) == null)
                     throw new InvalidOperationException("An official inventory item sprite is not bound: " + Text(icon, "file"));
             }
+            bindingsValidated = true;
         }
 
         private Dictionary<string, object> Parsed()
