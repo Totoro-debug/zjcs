@@ -45,15 +45,25 @@
 
 Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属性文本、限时外观配置、原衣柜规则/物品/UI 数据及其引用图片。生成入口为 [prepare_unity_character_catalog.py](../../scripts/prepare_unity_character_catalog.py)，输出与官方输入哈希登记于 `unity/Assets/Official/Character/source-manifest.json`；`OfficialCharacterAssetCatalog.FindSprite` 按原资源 URI 查找人物与衣柜 Sprite，编辑器绑定及来源核对入口为 [CharacterProgressionValidation](../../unity/Assets/Game/Editor/Character/CharacterProgressionValidation.cs) 的 `BindOfficialCatalogs`。
 
-[OfficialCharacterPanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialCharacterPanelView.cs) 按已恢复的人物、属性和位阶面板层级构建基础 Unity UI，并绑定等级/经验、位阶材料操作及属性弹窗；[CharacterFeatureRuntime.OpenProfile](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterFeatureRuntime.cs) 从角色存档槽创建页面运行时，并初始化基础衣柜皮肤/染色、同步已到期外观。[OfflineCharacterExperience](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterExperience.cs) 按绑定配置计算等级、储存经验、赐福等级和进度比例，并计算已确认的限时外观续期；[OfflineCharacterProgressionService](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs) 将经验奖励、位阶材料支付、10级教学奖励、穿戴/卸下、称号、染色、限时到期和衣柜进度写入共享人物进度事务，并提供 `BaseBattleProperties` 读取入口；[OfflineWardrobeRules](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineWardrobeRules.cs) 解析互斥皮肤、绑定部件及装备皮肤回退。人物目录从原始 `level_prop.g.bytes` 解码等级、位阶及职业组属性，`OfficialCharacterAssetCatalog.CalcCharacterBaseBattleProperties` 按官方 `BattleFormulaHandler.CalcCharacterBattlePropsWithoutProfession` 的等级、位阶、职业组顺序合并。属性的基础比率、百分比、转换和倍率处理位于 `OfficialCharacterProperties`。
+[OfficialCharacterPanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialCharacterPanelView.cs) 按已恢复的人物、属性和位阶面板层级构建 Unity UI，并绑定等级/经验、位阶材料操作、属性弹窗和官方 `AppearanceBtn`；[CharacterFeatureRuntime.OpenProfile](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterFeatureRuntime.cs) 从人物存档槽打开页面。[CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs) 在新建或选中已有角色后提供“人物”入口，关闭人物页返回当前存档流程。
 
-当前完成的是数据恢复、规则目录绑定、基础战斗属性原表解码/合并、人物进度事务和可由代码调用的基础人物 UI；基础属性尚未接入人物页数值、综合属性管线及实战读取。`OfficialCharacterAssetCatalog` 从官方 `wardrobe-rules.json` 读取默认皮肤映射，将 4 条 `ItemType=339` 且 `SkinDict=null` 的称号记录排除出皮肤穿戴目录，由独立称号逻辑处理；其余 1,563 个可穿戴外观项、1,723 个皮肤定义通过 `CharacterProgressionValidation.BindOfficialCatalogs` 的 Unity 编辑器绑定验证，基础属性断言为 300/60/60/48，537 张人物 Sprite 已导入并绑定。此入口只验证目录和资源绑定，不代表游戏内人物流程验收通过。游戏内可达的人物入口和人物创建后正式身份资料接入尚未完成；角色模型/动画、衣柜运行界面及完整交互、属性来源明细、经验领取结果动画、属性合并与战力计算仍未完成。静态 GUID 检查不构成人物功能运行验收。
+人物属性管线按固定版 `PlayerPropContext`／`PropChunkFactory` 分块实现：[CharacterPropCalculator](../../unity/Assets/Game/Runtime/Offline/Progression/CharacterPropCalculator.cs) 构建 `BattleBasic`、`Profession`、`Appearance` 分块并按原 `HandleBaseProps`、`HandlePercentProps`、`HandleScaleProps` 顺序处理战斗外属性，用 `CalcCombatRatingCommon` 的 Base／NonBase／BaseRate／BasePercent／Advanced／NonBasePercent 六组、`ScoreBase` 递归和 `CommonCombatRatingRefData` 计算分块战力；[OfficialPropCatalog](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropCatalog.cs) 解析 352 条 `prop_cfg`、显示名／说明／图标、分类、单位本地化与相对属性，[OfficialPropFormat](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialPropFormat.cs) 复刻原 `FormatPropString` 的万／亿与百分比格式。生成脚本在 `character-progression.json` 中新增 `prop_units`、`prop_categories`，并从原预制体提取属性弹窗的 `PropCatalogCfgList` 与细分分组绑定。
+
+[CharacterPropPanels](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPropPanels.cs) 绑定人物页概要属性行与综合／细分属性弹窗：概要行读取原 `CharacterPanelPropPanel` 绑定（`PropCatalog=9`、`SlotPropItems` 与原 `row`／`row_fields` 模板），弹窗使用 `character_props` 原层级和 `PropCatalogCfgList`（主要属性 `Main`、附加属性 `Addition`），细分按原 `PropDialogDetailedPropItem` 分组、`mPropCatalogList=[Main,Addition]` 过滤，并支持逐组折叠／展开。[CharacterPanelNodeFactory](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPanelNodeFactory.cs) 统一还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask 与按钮；人物页和弹窗使用独立节点索引，关闭弹窗只销毁弹窗本身。
+
+[OfficialWardrobePanelView](../../unity/Assets/Game/Runtime/Presentation/Character/OfficialWardrobePanelView.cs) 按 `wardrobe-ui.json` 的原控件树、`AppendAppearanceFirstTabItem.mTabGroupObj` 与 `AppendAppearanceSecondTabItem.mItemType` 绑定大类和子类；穿戴列表读取已拥有物品并按原可穿规则筛选，称号使用原双列模板，穿脱、称号、风尚经验、规则/属性弹窗及倒计时经人物进度服务处理。已到期物品在衣柜打开期间同步并从人物状态卸下。
+
+[CharacterModelPreview](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterModelPreview.cs) 在官方 `PlayerModelRoot` 播放男性/女性职业 1/10 的 24 fps 原网格帧动画。运行包由 [prepare_character_model_runtime.py](../../scripts/prepare_character_model_runtime.py) 按 profile 使用的四种待机姿态、网格和贴图生成至 `unity/Assets/StreamingAssets/Character/character-models.zip`；包内每个载荷有 SHA256 校验，外部来源清单 `assets/reference/character-appearance/source-manifest.json` 记录包哈希、输入文件与五份 854_156383 关联来源清单。模型按已保存衣柜/装备皮肤解析换装，不依赖 Spine runtime。
+
+当前已完成固定版数据恢复、人物存档入口、衣柜基础交互、人物页 idle 模型播放、属性分块／战力管线以及概要属性和综合／细分属性弹窗；1,563 个可穿戴外观项、1,723 个皮肤定义通过 `CharacterProgressionValidation.BindOfficialCatalogs` 绑定验证，人物属性图标与面板 Sprite 由官方清单导入，基础属性断言为 300/60/60/48，职业 1 的 FeatureProps 使其战斗外生命为 327。`CharacterProgressionValidation.Run` 新增属性管线断言（352 条 prop_cfg、主要属性 4 行、附加属性 96 行、战力为正、人物基础细分 60 攻击、万／百分比格式）。
+
+属性管线的当前验证范围：`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 使用 Roslyn 单独编译通过；同一 `Evaluate` 管线在同步的 Mono 校验程序中对 `character-progression.json`／`character-overview.json` 运行通过。Unity Editor 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 画面验证尚未执行（验证时另一会话正占用该工程实例）。装备、技能、幻兽、古遗物、星石、料理、额外、公会、星命与 NPC 分块仍为 0，因此战力只覆盖基础、职业和衣柜来源。称号在人物页的展示与官方 HSV 染色结果渲染尚未完成。官方衣柜树没有染色控件；原 HSV 编辑入口属于 `ChangeAppearancePanel`，不在本次衣柜界面范围内。
 
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
-人物页与衣柜中的角色显示、换装和染色沿用[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)；共用转换能力与人物显示调用方接通后仍须在本模块验证。
+人物页与衣柜中的角色显示沿用[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)；当前 profile idle 已接通免费原生帧网格路线，衣柜换装从人物状态刷新模型。HSV 染色数据仍保存在进度服务，但材质/遮罩着色和实际页面验证未接通。
 
 用户补证普通经验在当季基础上限后继续提升显示等级，超出部分为当季赐福，赛末回到当季基础上限。服务端经验路由未取得，本地按此处理并保留赛季记录。
 
@@ -61,17 +71,17 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ## 尚未实现
 
-- 将 `CharacterFeatureRuntime.OpenProfile` 接入可达的人物入口，补齐角色正式身份资料；完成经验领取成功后的官方时长动画、储存经验规则说明、教学触发/恢复和返回家园条件，并在 UI 中表现失败与保存结果。
-- 在已恢复的等级、位阶和职业组基础属性上，迁移 `PlayerPropContext` 其余分块属性合并与战力公式；接入装备、职业、技能、幻兽、古遗物、公会、星命和衣柜属性来源，使人物页、战斗属性及评分读取同一结果。
-- 将已恢复的官方人物页/衣柜 prefab 层级、坐标、控件字段、人物模型/动画及音效接入 Unity；完成类别、称号、筛选、互斥、装备外观回退、染色、时限显示与到期卸下、收藏经验及衣柜属性交互。
-- 在 Unity 中执行资源导入、目录绑定、规则核对和运行验收，覆盖正常操作、动画/音效、读档恢复及事务失败回滚；静态检查和既有引擎结果不替代 Unity 验收。
+- 补齐经验领取成功后的官方时长动画、储存经验规则说明、教学触发/恢复和返回家园条件，并在 UI 中表现失败与保存结果。
+- 在已恢复的基础、职业和衣柜分块上接入装备（词条／套装／共鸣／星石）、技能、幻兽、古遗物、料理、额外、公会、NPC 与星命属性来源，使人物页、战斗属性和评分读取同一结果；当前 `CharacterPropCalculator` 已预留 `IOfflineCharacterPropSource` 注册点。
+- 将人物/衣柜换装后的遮罩与 HSV 染色接入帧网格渲染，并核对原染色入口、互斥提示和称号在人物页的显示；原衣柜底部技能幻彩/家园装潢子页仍需接到所属功能入口。
+- 在 Unity Play Mode 中验证人物与衣柜完整流程、不同性别/职业模型、穿脱和读档恢复；全工程编辑器验证还需先修复 `OfficialMap10TerrainView` 与共享战斗网格检查阻塞。
 
 ### 人物入口、窗口与共享表现
 
 - [ ] 将现有创角后“人物”入口与正式头像／底栏人物入口统一到当前存档槽，接通 `profession/skills/pet` 跳转的实际接收方，返回时恢复原顶栏、底栏、公共人物资料和主页状态。
 - [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新；绑定职业名称／图标、人物称号／有效期及各槽位状态。
-- [ ] 恢复人物、属性、位阶及附属弹窗的布局组、`ContentSizeFitter`、滚动／裁切、状态切换、TMP 字体／材质／描边、原动画／音效和本地化字段；补齐动态生成的属性行、物品图标、材料行及空状态。
-- [ ] 修复 `CloseDialog` 重复构建主页、弹窗与主页按钮索引混用及关闭目标选择，保证顶层返回、遮罩阻挡、Escape、反复开关及同一页只有一份有效层级；按原生命周期解除事件、取消协程并回收模型／贴图／子页资源。
+- [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 字体／材质／描边、状态切换动画、原动画／音效和本地化字段，以及物品图标、材料行和空状态。
+- [ ] 按原生命周期解除事件、取消协程并回收模型／贴图／子页资源（`OnLowMemory` 回收未显示子页）。`CloseDialog` 重复构建主页与弹窗按钮索引混用已改为独立索引、只销毁弹窗，待实际画面回归确认。
 
 ### 人物模型、外观同步与染色
 
@@ -82,10 +92,10 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ### 属性、战力、等级与位阶
 
-- [ ] 恢复上文全部有效属性分块与战力公式，将现有基础属性、衣柜接口及各所属系统接入同一计算结果；覆盖装备词条／套装／共鸣／星石、职业累计等级、实际技能阶位／槽位等级、幻兽及其他有效来源。
-- [ ] 生成人物主页概要行、综合／细分页签、原顺序来源组、关联百分比、属性名称／单位／说明和展开／折叠；属性说明只读，明细按各来源原截断处理。
+- [ ] 在已实现的基础／职业／衣柜分块与六组战力评分上，接入装备词条／套装／共鸣／星石、职业累计等级、技能阶位／槽位等级、幻兽及其他有效来源；`ScoreLevelGroupId` 的 `score_level_group` 与 `level_number` 表尚未纳入固定目录（当前只影响元素亲和属性）。
+- [ ] 属性名称／单位／说明的只读详情与属性来源图标仍在弹窗中缺失：当前概要行与细分行已按原名称、万／亿数值、百分比、相对属性与空值隐藏生成，但未接入点击属性行打开的 `EntryDetailDialog` 说明浮层。
 - [ ] 补齐普通经验、储存经验、赐福／满赐福各状态的原数字格式、颜色、说明按钮、上限状态和滑条；将 `AwardExperience` 演出与实际奖励、升级延时及成功写盘后的原时长连接，失败不播放。
-- [ ] 为位阶页绑定当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、首个缺料定位及不足提示，接通突破成功通知与动态刷新。原位阶／赛季开放倒计时的单机处理沿用[离线开放条件](offline-access.md)，保留人物等级与材料条件。
+- [ ] 位阶页（`CharacterUpgradePanel`）尚未绑定：当前仅用原面板层级提供 `UseItemBtn` 突破与结果文本，缺当前／下一位阶、星级、等级限制、基础属性前后值、材料持有／需求、首个缺料定位、原提示与 `UpgradeNotifyDialog`。`bindings.rank` 已从 APK 提取 `CharacterUpgradePanel`／`CharacterUpgradePanelStarItem` 字段，可直接接线。原位阶／赛季开放倒计时的单机处理沿用[离线开放条件](offline-access.md)，保留人物等级与材料条件。
 - [ ] 接通10级返回家园教学、材料说明、一次领取白垩石片2个和罗拉2000、教学中断恢复及防重复领取；核验经验跨位阶、跨等级和当季赐福边界及实际读档结果。
 
 ### 人物装备五槽
@@ -132,16 +142,16 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 | 范围 | 官方调用关系 | 当前实现与缺口 |
 | --- | --- | --- |
 | 人物模型 | `CharacterPanel.RefreshAppearance`、`SwitchAnimCallBack`、`AppendAppearanceContent.PlayAnim/GetSwitchAnimData/GetLoopAnimData` | `CharacterModelPreview` 已接衣柜解析和网格播放；运行包仅含男女 `100/idle_01`、`200/idle_01` 四份姿态。目录中职业 0–30 的 profile 记录不能代表职业切换流程或全部动作已接通；衣柜分类 `show_*` 切换和 `appearance` 循环、HSV 材质/遮罩、人物页称号及实际装备驱动的外观同步仍缺失。模型还采用按包围盒缩放居中，尚未完成与官方画面的比例、位置核验。 |
-| 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext` 合并分块并更新战力 | `OfficialCharacterPanelView.Refresh` 只更新等级、经验、位阶；属性按钮只构建弹窗模板，未绑定综合数值、细分来源、页签或说明。`BaseBattleProperties` 与 `AppearanceProperties` 已有数据接口，Map10 战斗调用基础值并累加衣柜值，但尚无人物页/战斗共用的完整分块属性与评分管线。 |
+| 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext` 合并分块并更新战力 | 已接 `CharacterPropCalculator` 分块、`CharacterPropPanels` 概要行与综合／细分弹窗（含页签、来源顺序、相对属性、折叠展开）。剩余：装备／技能／幻兽等分块来源、属性行点击说明浮层、`ScoreLevelGroupId` 等级系数；Map10 战斗尚未改为读取同一 `CharacterPropSnapshot`。 |
 | 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 空槽候选或已穿详情 | 官方五槽为主武器、副武器、头盔、衣服、靴子。当前人物 UI 未绑定五槽实例、图标、强化/星石状态、副武器职业解锁或点击入口；`OfflineEquipmentOperations` 有穿脱等规则，仍未由人物页调用。穿脱只改 `Equipment.Equipped`，未同步官方 `PlayerAppearanceHandler.Player_OnEquipUpdate` 对应的武器外观；衣柜解析读取的 `Wardrobe.WornSkins` 尚未与实际装备连接。 |
 | 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 人物按钮仅发出 `OfficialModuleRequested("skills")`，`CharacterFeatureRuntime` 转发 `NavigationRequested`，创建流程没有订阅该事件。`OfflineSkillProgression` 已有安装/替换/卸下与培养规则，但 `OfflineSkillProfile` 未进入统一人物主存档，技能运行面板、槽位交互、方案选择和战斗读取未接通。 |
 | 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
 | 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
 | 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮只有未被消费的 `profession` 事件；储存经验规则按钮的 `StoredExperienceHelpRequested` 亦无接收方。成长操作已有服务，不能据此认定职业、位阶教学、材料说明和领取表现全部还原。 |
 
-共享界面还存在两项直接影响完整性的代码缺口：`OfficialCharacterPanelView.BuildNode` 没有恢复目录中的布局组、`ContentSizeFitter`、`ScrollRect`、原 TMP 字体/材质、状态切换器或按钮音效，仅创建基础 Image/Text/Button/Mask/LayoutElement/Slider；`CloseDialog` 清空索引后重新 `BuildNode(characterRoot, transform)`，却不销毁既有主页，反复关闭属性/位阶弹窗会累积主页层级。上述为源码可确认的问题，尚未在实际画面中复现。
+界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 
-验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（22,050 个 GUID）；`character-models.zip` 内清单登记的 7,566 个载荷 SHA256 全部一致。Unity `2022.3.57f1c2` 在尝试执行 `Zjcs.Editor.ProjectTools.Validate` 前编译失败：`OfficialMap10GameRuntime` 缺少 `PlayMapTalkDialog` 且 `PlayStory` 参数不匹配，`CommerceFeatureRuntime` 两处 `CommerceTransactionResult` 构造参数不匹配且缺少 `ActivateFirstPurchase`。因此本次没有执行该 Editor 校验方法、Play Mode 逻辑/真实输入/画面/存档恢复或 Windows Player 验证；本节是代码与载荷检查结论。
+验证边界：属性模块以 Roslyn 单独编译 `Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过，并用同步的 Mono 校验程序对属性目录与 `Evaluate` 管线运行断言通过（基础 300/60/60/48、职业 FeatureProps、战力、人物基础细分、数字格式）。Unity `2022.3.57f1c2` 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 逻辑／真实输入／画面／存档恢复尚未执行：验证期间另一会话持续占用工程实例，batchmode 无法打开同一项目。`python -B scripts/check_unity_project.py` 本次被其他会话未提交的 `HomeAcceptanceDriver.cs` 缺少 `.meta` 阻塞，不计入本模块结论。
 
 ### 待迁移的规则与表现
 
