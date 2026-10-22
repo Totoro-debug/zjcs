@@ -286,6 +286,7 @@ namespace Zjcs.Combat.Official
                     checkpoint.Statistics.RecordHit(damage);
                     ApplyHitStatuses(actor, target, hit, random);
                     ApplyHitDisperse(target, hit, random);
+                    ApplyHitMove(actor, target, hit, movements);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -362,6 +363,12 @@ namespace Zjcs.Combat.Official
         private bool TryMoveActor(FightBattleUnitState actor, FightGridPoint desired, int maxStep,
             List<FightBattleMovementEvent> movements)
         {
+            return TryMoveUnit(actor, desired, maxStep, movements);
+        }
+
+        private bool TryMoveUnit(FightBattleUnitState actor, FightGridPoint desired, int maxStep,
+            List<FightBattleMovementEvent> movements)
+        {
             FightBattleGrid grid = checkpoint.Grid;
             if (grid == null || maxStep <= 0) return false;
             HashSet<FightGridPoint> occupied = OccupiedPositions(actor.Id);
@@ -383,6 +390,35 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        /// <summary>
+        /// Official <c>FightDamageComponent.MoveCfg</c>: pushes or pulls the damaged unit along the
+        /// source-to-target vector by the configured distance, falling back to shorter distances
+        /// when the destination is blocked. The default (-1) means no displacement.
+        /// </summary>
+        private void ApplyHitMove(FightBattleUnitState actor, FightBattleUnitState target,
+            FightBattleHitDefinition hit, List<FightBattleMovementEvent> movements)
+        {
+            FightBattleSkillMove move = hit == null ? null : hit.HitMove;
+            if (move == null || move.HasConditions || move.Distance <= 0 || movements == null
+                || target.Hp <= 0) return;
+            if (move.Direction != 0 && move.Direction != 1) return;
+            int stepX = Math.Sign(target.X - actor.X);
+            int stepY = Math.Sign(target.Y - actor.Y);
+            if (move.TowardsTargetPos) { stepX = -stepX; stepY = -stepY; }
+            if (move.CancelDiagonally && stepX != 0 && stepY != 0)
+            {
+                if (Math.Abs(target.X - actor.X) >= Math.Abs(target.Y - actor.Y)) stepY = 0;
+                else stepX = 0;
+            }
+            if (stepX == 0 && stepY == 0) return;
+            for (int distance = move.Distance; distance > 0; distance--)
+            {
+                var desired = new FightGridPoint(target.X + stepX * distance + move.OffsetX,
+                    target.Y + stepY * distance + move.OffsetY);
+                if (TryMoveUnit(target, desired, distance, movements)) break;
+            }
         }
 
         /// <summary>

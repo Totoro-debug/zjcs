@@ -643,6 +643,18 @@ namespace Zjcs.Combat.Official
             return value;
         }
 
+        /// <summary>Reads <c>FightDamageComponent.MoveCfg</c> (knockback/pull on hit).</summary>
+        private void AddHitMove(int damageId, FightBattleHitEntity output)
+        {
+            if (damageId <= 0 || output == null
+                || !entities.TryGetValue(damageId, out Dictionary<string, object> components)
+                || !components.TryGetValue("FightDamageComponent", out object raw)
+                || !(raw is Dictionary<string, object> damage)
+                || !damage.TryGetValue("MoveCfg", out object rawMove)
+                || !(rawMove is Dictionary<string, object> move)) return;
+            output.HitMove = ParseMove(move);
+        }
+
         /// <summary>Reads <c>FightDamageComponent.DisperseStatus</c> (dispel on hit).</summary>
         private void AddDisperseStatus(int damageId, FightBattleHitEntity output)
         {
@@ -685,6 +697,38 @@ namespace Zjcs.Combat.Official
             }
         }
 
+        private static FightBattleSkillMove ParseMove(Dictionary<string, object> row,
+            int offsetX = int.MinValue, int offsetY = int.MinValue, bool? hasConditions = null)
+        {
+            if (offsetX == int.MinValue)
+            {
+                offsetX = 0;
+                offsetY = 0;
+                if (row.TryGetValue("Offset", out object offsetValue) && offsetValue != null)
+                {
+                    Dictionary<string, object> offset = Object(offsetValue, "move offset");
+                    offsetX = Int(offset, "X");
+                    offsetY = Int(offset, "Y");
+                }
+            }
+            bool conditions = hasConditions ?? (row.TryGetValue("DoMoveConditions", out object sourceConditions)
+                && sourceConditions != null && Array(sourceConditions, "DoMoveConditions").Count > 0);
+            return new FightBattleSkillMove
+            {
+                MoveBehaviourId = Int(row, "MoveBehaviourId"),
+                Delay = Float(row, "Delay", 0f),
+                OffsetX = offsetX,
+                OffsetY = offsetY,
+                TowardsTargetPos = Bool(row, "TowardsTargetPos"),
+                Direction = Int(row, "SkillMoveDirection"),
+                Distance = Int(row, "Distance", -1),
+                BasePercent = Float(row, "BasePercent", 1f),
+                AffectedByProp = Bool(row, "AffectedByProp"),
+                CancelDiagonally = Bool(row, "CancelDiagonally"),
+                HasConditions = conditions
+            };
+        }
+
         private static void AddSourceMoves(Dictionary<string, object> skill,
             List<FightBattleSkillMove> output)
         {
@@ -704,20 +748,7 @@ namespace Zjcs.Combat.Official
                 bool hasConditions = false;
                 if (row.TryGetValue("DoMoveConditions", out object conditions) && conditions != null)
                     hasConditions = Array(conditions, "DoMoveConditions").Count > 0;
-                output.Add(new FightBattleSkillMove
-                {
-                    MoveBehaviourId = Int(row, "MoveBehaviourId"),
-                    Delay = Float(row, "Delay", 0f),
-                    OffsetX = offsetX,
-                    OffsetY = offsetY,
-                    TowardsTargetPos = Bool(row, "TowardsTargetPos"),
-                    Direction = Int(row, "SkillMoveDirection"),
-                    Distance = Int(row, "Distance", -1),
-                    BasePercent = Float(row, "BasePercent", 1f),
-                    AffectedByProp = Bool(row, "AffectedByProp"),
-                    CancelDiagonally = Bool(row, "CancelDiagonally"),
-                    HasConditions = hasConditions
-                });
+                output.Add(ParseMove(row, offsetX, offsetY, hasConditions));
             }
             output.Sort((left, right) => left.Delay.CompareTo(right.Delay));
         }
@@ -751,6 +782,7 @@ namespace Zjcs.Combat.Official
                 result.DamageId = Int(damage, "DamageId");
                 AddStatusApplications(result.DamageId, result.AppliedStatuses);
                 AddDisperseStatus(result.DamageId, result);
+                AddHitMove(result.DamageId, result);
                 result.DamageType = Int(damage, "DamageType");
                 result.BasicProperty = Int(damage, "DamageBasicProp", 1);
                 result.DamageProperty = Int(damage, "DamageProp");
