@@ -66,6 +66,21 @@ namespace Zjcs.Presentation.Character
             }
         }
 
+        private void OnEnable()
+        {
+            Application.lowMemory += OnLowMemory;
+        }
+
+        private void OnDisable()
+        {
+            Application.lowMemory -= OnLowMemory;
+        }
+
+        private void OnLowMemory()
+        {
+            if (panelView != null) panelView.HandleLowMemory();
+        }
+
         public void Refresh()
         {
             if (progression == null) throw new InvalidOperationException("Open a selected profile before refreshing the character page.");

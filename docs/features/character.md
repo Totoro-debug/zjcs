@@ -89,7 +89,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 将现有创角后“人物”入口与正式头像／底栏人物入口统一到当前存档槽，接通 `profession/skills/pet` 跳转的实际接收方，返回时恢复原顶栏、底栏、公共人物资料和主页状态。
 - [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新；绑定职业名称／图标、人物称号／有效期及各槽位状态。
 - [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 字体／材质／描边、状态切换动画、原动画／音效和本地化字段，以及物品图标、材料行和空状态。
-- [ ] 按原生命周期解除事件、取消协程并回收模型／贴图／子页资源（`OnLowMemory` 回收未显示子页）。`CloseDialog` 重复构建主页与弹窗按钮索引混用已改为独立索引、只销毁弹窗，待实际画面回归确认。
+- [x] 生命周期已补：`OnDestroy` 停止经验协程、关闭弹窗与子页、销毁衣柜覆盖层；`CharacterFeatureRuntime` 订阅 `Application.lowMemory` 调用原 `OnLowMemory` 回收未显示子页；弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗。待实际画面回归确认。
 
 ### 人物模型、外观同步与染色
 
@@ -134,7 +134,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [x] 恢复 `TryGetConflictTip` 语义：`OfflineWardrobeRules.PreviewWear` 对穿戴前后的有效皮肤集合各解析一次，返回会被遮挡的部件或互斥环类型；衣柜列表穿戴时先提示再继续原穿戴请求。部件名称取原 `ui_append_appearance_type_*` 本地化，原冲突提示模板 `ui_append_appearance_conflict_tip` 未在固定目录中提取，当前以部件名拼接提示。
 - [x] 人物页称号已接 `HonorTitleItemProvider/Slot` 与 `HonorTitleTimeLimitContent`：显示已佩戴称号图标、剩余天／小时／分钟／秒并在到期时隐藏，`TitlePropContent` 读取 `AppendAppearanceInfo.EffectProp`（当前固定目录中称号 `EffectProp` 均为空，故属性行暂不显示）。
 - [ ] 同步称号双列实际渲染、限时倒计时及到期后拥有／穿戴状态。
-- [ ] 连接物品／称号详情、首次收藏经验、品质／有效期／属性、原试穿窗口，接通任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
+- [x] 称号详情已接：点击称号卡打开详情层（品质、剩余有效期、称号属性）并可穿戴；原 `HonorTitleItemDetailDialog` 预制体未提取，详情复用衣柜属性弹窗框架。
+- [ ] 补齐物品详情、首次收藏经验、原试穿窗口（`PreviewAppearanceDialog`）及任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
 - [x] 潮流等级升级已按原规则实现：`RefreshWardrobeProgress` 只在经验对应等级低于已存等级时回落（`SyncAppearanceLevelFromExp`），`UpgradeBtn` 使用 `CanUpgradeAppearanceLevel → UpgradeAppearanceLevel` 跨级提升，满级／经验不足给出状态提示；头部显示当前等级、本级经验／所需经验与滑条填充，满级显示上限状态。
 - [x] 属性与规则弹窗改用 `wardrobe-ui.json` 的原 `wardrobe_props`／`wardrobe_prop_row`／`wardrobe_rules`／`wardrobe_rule_row`／`wardrobe_rule_value` 模板：属性按 `appearance_prop` 逐级列出至当前级 +20，显示等级、属性名称与数值、已激活状态；规则按 4 组 `fashion_exp_group` 逐组列出品质与收藏经验；跨级升级后弹出新增属性行。原 `AperaanceUpgradePropDialog` 预制体未提取，跨级弹窗复用属性弹窗模板。
 - [ ] 原潮流等级「属性」弹窗使用 `AppearancePropDialog` 的循环列表与 `AppearancePropLevelItem`（内含 `PlayerPropItem`），当前以同一模板的静态行与文本实现；待实际画面核对行高、滚动定位（原 `GetCenterIndex`）和已激活渐变。

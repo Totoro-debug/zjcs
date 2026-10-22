@@ -153,6 +153,31 @@ namespace Zjcs.Presentation.Character
         public event Action StoredExperienceHelpRequested;
         public event Action<string> OfficialModuleRequested;
 
+        private void OnDestroy()
+        {
+            if (experienceAnimation != null) StopCoroutine(experienceAnimation);
+            experienceAnimation = null;
+            CloseDialog();
+            if (propPanels != null) propPanels.CloseDialog();
+            if (rankPanel != null) rankPanel.Close();
+            if (equipSlots != null) equipSlots.CloseList();
+            if (skillPanel != null) skillPanel.Close();
+            if (wardrobeView != null) Destroy(wardrobeView.gameObject);
+            wardrobeView = null;
+        }
+
+        /// <summary>
+        /// Original <c>CharacterPanel.OnLowMemory</c>: release sub pages that are no longer shown.
+        /// </summary>
+        public void HandleLowMemory()
+        {
+            if (!gameObject.activeInHierarchy) return;
+            if (wardrobeView != null && !wardrobeView.gameObject.activeSelf) CloseWardrobe();
+            if (rankPanel != null && !rankPanel.IsOpen) rankPanel.Close();
+            if (equipSlots != null && !equipSlots.IsOpen) equipSlots.CloseList();
+            if (skillPanel != null && !skillPanel.IsOpen) skillPanel.Close();
+        }
+
         private void Update()
         {
             TickHonorTitle();
