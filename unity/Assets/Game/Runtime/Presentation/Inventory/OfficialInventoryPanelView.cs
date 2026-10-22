@@ -15,6 +15,8 @@ namespace Zjcs.Presentation.Inventory
         private const string PanelPath = "/PlayerBagPanel";
         private const string ScrollPath = "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ";
         private static readonly string[] CountSuffixes = { "", "万", "亿", "兆", "京" };
+        private static readonly Color ProgressEnoughColor = new Color(0.79607844f, 0.81176472f, 0.38039216f, 1f);
+        private static readonly Color ProgressLackColor = new Color(0.96862745f, 0.32156864f, 0.21568628f, 1f);
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, OfflineInventorySort> sortOptionPaths = new Dictionary<string, OfflineInventorySort>(StringComparer.Ordinal);
         private readonly List<OfflineInventoryItemView> displayedItems = new List<OfflineInventoryItemView>();
@@ -289,9 +291,32 @@ namespace Zjcs.Presentation.Inventory
                     && (item.DetailKind != OfflineInventoryDetailKind.Equipment || item.IsEquipped);
                 countNode.gameObject.SetActive(showCount);
             }
+            ApplyMergeProgress(item, iconNodes);
             AddRedDot(item, iconNodes);
             Button iconButton = iconRoot.GetComponent<Button>();
             if (iconButton != null) iconButton.onClick.AddListener(() => OpenItem(item));
+        }
+
+        private static void ApplyMergeProgress(OfflineInventoryItemView item,
+            Dictionary<string, RectTransform> iconNodes)
+        {
+            if (item.MergeRequiredCount <= 0 || item.ItemType != 326 && item.ItemType != 334 && item.ItemType != 340)
+                return;
+            RectTransform progress = iconNodes.Values.FirstOrDefault(node => node.name == "Progress");
+            if (progress == null)
+                throw new FormatException("Original item icon merge progress node is missing: " + item.ItemType);
+            progress.gameObject.SetActive(true);
+            RectTransform currentNode = iconNodes.Values.FirstOrDefault(node => node.name == "LeftTxt"
+                && node.parent != null && node.parent.parent == progress);
+            RectTransform requiredNode = iconNodes.Values.FirstOrDefault(node => node.name == "RightTxt"
+                && node.parent != null && node.parent.parent == progress);
+            Text current = currentNode == null ? null : currentNode.GetComponent<Text>();
+            Text required = requiredNode == null ? null : requiredNode.GetComponent<Text>();
+            if (current == null || required == null)
+                throw new FormatException("Original item icon merge progress labels are missing: " + item.ItemType);
+            current.text = FormatCount(item.Count);
+            current.color = item.Count >= item.MergeRequiredCount ? ProgressEnoughColor : ProgressLackColor;
+            required.text = FormatCount(item.MergeRequiredCount);
         }
 
         private void AddRedDot(OfflineInventoryItemView item, Dictionary<string, RectTransform> iconNodes)
