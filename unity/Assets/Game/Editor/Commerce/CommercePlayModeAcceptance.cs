@@ -177,6 +177,14 @@ namespace Zjcs.Editor.Commerce
             Require(FindByName("CommerceDirect_1") != null, "The official PayDirectPayItem prefab was not created.");
             Require(FindAnyByName("CommerceVoucher_1") != null, "The official PayVoucherItem prefab was not created.");
             yield return Capture("commerce-01-direct");
+            ClickInDialog("CommerceMain", "RuleBtn");
+            yield return WaitUntil(() => FindByName("CommercePriceTable") != null,
+                "The official price table did not open.");
+            yield return WaitFrames(2);
+            yield return Capture("commerce-01b-price-table");
+            controller.CloseCurrentDialog();
+            yield return WaitFrames(2);
+            Require(FindByName("CommercePriceTable") == null, "The price table did not close.");
 
             long voucher0 = Amount(controller, 16);
             long flare0 = Amount(controller, 15);
@@ -238,6 +246,14 @@ namespace Zjcs.Editor.Commerce
             yield return WaitUntil(() => FindByName("CommerceDaily") != null, "The daily gift dialog did not open.");
             yield return WaitFrames(2);
             yield return Capture("commerce-04-daily");
+            ClickInDialog("CommerceDaily", "RuleBtn");
+            yield return WaitUntil(() => FindByName("CommerceRule") != null,
+                "The official daily rule dialog did not open.");
+            yield return WaitFrames(2);
+            yield return Capture("commerce-04b-rule");
+            controller.CloseCurrentDialog();
+            yield return WaitFrames(2);
+            Require(FindByName("CommerceRule") == null, "The daily rule dialog did not close.");
             long diamondBeforeFree = Amount(controller, 2);
             ClickInDialog("CommerceDaily", "BgImg (1)");
             Debug.Log("[Commerce acceptance] daily free can=" + runtime.Offers.CanClaimDailyFree()
