@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Zjcs.Offline.Equipment;
+using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using UnityEngine;
 
@@ -53,13 +54,18 @@ namespace Zjcs.Offline.Progression
         public bool HasActiveSeasonRecord;
         public bool RankTutorialSeen;
         public bool RankTutorialRewardClaimed;
+        public string CharacterName = string.Empty;
+        public bool CharacterCreated;
+        public int InitialWeaponType;
         public string GuildName = string.Empty;
         public List<OfflineItemStack> Inventory = new List<OfflineItemStack>();
+        public string CommerceStateJson = string.Empty;
         public List<string> AppliedInventoryEventIds = new List<string>();
         public long InventoryRandomState;
         public List<int> UnlockedMapClassIds = new List<int>();
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
+        public OfflineSkillProfile Skills = new OfflineSkillProfile();
         public List<string> AppliedCharacterEventIds = new List<string>();
     }
 
@@ -214,6 +220,43 @@ namespace Zjcs.Offline.Progression
                 LocalJsonSaveFile.Write(path, JsonUtility.ToJson(save, true), IsValidSaveJson);
             }
             return new OfflineMainlineProgressSession(path, catalog, save, result.Status);
+        }
+
+        public static OfflineMainlineProgressSession OpenForCommerce(ProfileSlotCatalog slots, string slotId)
+        {
+            if (slots == null) throw new ArgumentNullException(nameof(slots));
+            if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile slot does not exist.");
+            string path = slots.GetProgressPath(slotId);
+            SaveReadResult result = LocalJsonSaveFile.Read(path, IsValidSaveJson);
+            if (result.Status == SaveReadStatus.Corrupt)
+                throw new InvalidDataException("The selected profile progress save is corrupt.");
+            if (result.Json == null)
+                throw new FileNotFoundException("The selected profile has no character progress save.", path);
+            OfflineMainlineSave save = ParseSave(result.Json);
+            return new OfflineMainlineProgressSession(path, null, save, result.Status);
+        }
+
+        public static OfflineMainlineProgressSession OpenCharacter(ProfileSlotCatalog slots, string slotId)
+        {
+            if (slots == null) throw new ArgumentNullException(nameof(slots));
+            string path = slots.GetProgressPath(slotId);
+            SaveReadResult result = LocalJsonSaveFile.Read(path, IsValidSaveJson);
+            if (result.Status == SaveReadStatus.Corrupt)
+                throw new InvalidDataException("The selected profile progress save is corrupt.");
+            OfflineMainlineSave save = result.Json == null ? new OfflineMainlineSave() : ParseSave(result.Json);
+            return new OfflineMainlineProgressSession(path, null, save, result.Status);
+        }
+
+        /// <summary>
+        /// Re-reads the profile from disk so a feature that owns a long-lived session never
+        /// writes over inventory or character changes committed by another feature.
+        /// </summary>
+        public void Reload()
+        {
+            SaveReadResult result = LocalJsonSaveFile.Read(savePath, IsValidSaveJson);
+            if (result.Status == SaveReadStatus.Corrupt)
+                throw new InvalidDataException("The selected profile progress save is corrupt.");
+            if (result.Json != null) Save = ParseSave(result.Json);
         }
 
         public ProgressionResult InitializeMap(int mapClassId, IReadOnlyList<int> regionIds)
@@ -387,6 +430,8 @@ namespace Zjcs.Offline.Progression
         {
             task = null;
             readyToClaim = false;
+            if (catalog == null)
+                return Result(ProgressionResultStatus.Unsupported, message: "This session only exposes character progress.");
             foreach (OfficialMainlineTaskDefinition candidate in catalog.OrderedTasks)
             {
                 if (Save.Tasks.ClaimedMainlineTaskIds.Contains(candidate.classId)) continue;
@@ -414,6 +459,8 @@ namespace Zjcs.Offline.Progression
 
         public ProgressionResult ClaimTask(int classId)
         {
+            if (catalog == null)
+                return Result(ProgressionResultStatus.Unsupported, classId, message: "This session only exposes character progress.");
             if (!catalog.TryGetTask(classId, out OfficialMainlineTaskDefinition task))
                 return Result(ProgressionResultStatus.MissingTask, classId, message: "Task is not in the pinned mainline catalog.");
             if (Save.Tasks.ClaimedMainlineTaskIds.Contains(classId))
@@ -582,8 +629,15 @@ namespace Zjcs.Offline.Progression
                 || save.CreatedAtUnixSeconds < 0
                 || save.Player.BlessingExperience < 0 || save.Player.SubRank < 0 || save.Player.SeasonRank < 0
                 || save.Player.SeasonBaseLevel < 0 || save.Player.MaxProfessionRank < 0 || save.Player.GuildName == null
-                || save.Player.Wardrobe == null || save.Player.Equipment == null || save.Player.AppliedCharacterEventIds.Count > 200000
+                || save.Player.CharacterName == null || save.Player.CharacterName.Length > 64
+                || (save.Player.CharacterCreated && string.IsNullOrWhiteSpace(save.Player.CharacterName))
+                || (save.Player.InitialWeaponType != 0 && save.Player.InitialWeaponType != 200
+                    && save.Player.InitialWeaponType != 201)
+                || save.Player.Wardrobe == null || save.Player.Equipment == null
+                || save.Player.Skills == null || !OfflineSkillProgression.IsValid(save.Player.Skills)
+                || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
+                || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
                 || save.World.CompletedEntityTags.Count > 100000 || save.World.ActivatedGoddessRegions.Count > 100000
@@ -629,12 +683,15 @@ namespace Zjcs.Offline.Progression
             if (save.Tasks == null) save.Tasks = new OfflineTaskProgress();
             if (save.Player.Inventory == null) save.Player.Inventory = new List<OfflineItemStack>();
             if (save.Player.AppliedInventoryEventIds == null) save.Player.AppliedInventoryEventIds = new List<string>();
+            if (save.Player.CommerceStateJson == null) save.Player.CommerceStateJson = string.Empty;
             foreach (OfflineItemStack stack in save.Player.Inventory)
                 if (stack != null && stack.UnitRecords == null) stack.UnitRecords = new List<OfflineItemUnitRecord>();
             if (save.Player.UnlockedMapClassIds == null) save.Player.UnlockedMapClassIds = new List<int>();
             if (save.Player.AppliedCharacterEventIds == null) save.Player.AppliedCharacterEventIds = new List<string>();
             if (save.Player.Wardrobe == null) save.Player.Wardrobe = new OfflineWardrobeProgress();
             if (save.Player.Equipment == null) save.Player.Equipment = new OfflineEquipmentProfile();
+            if (save.Player.Skills == null) save.Player.Skills = new OfflineSkillProfile();
+            OfflineSkillProgression.Normalize(save.Player.Skills);
             if (save.Player.Equipment.Instances == null) save.Player.Equipment.Instances = new List<OfflineEquipmentInstance>();
             if (save.Player.Equipment.Equipped == null) save.Player.Equipment.Equipped = new List<OfflineEquippedSlot>();
             if (save.Player.Equipment.SlotProgress == null) save.Player.Equipment.SlotProgress = new List<OfflineEquipmentSlotProgress>();

@@ -101,6 +101,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<string, object> defaultAppearance;
         private readonly HashSet<int> appearanceItemTypes;
         private readonly OfficialPropCatalog props;
+        private readonly Dictionary<int, string> itemIcons;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -115,7 +116,8 @@ namespace Zjcs.Offline.Progression
             Dictionary<int, int> rankBySubRank,
             Dictionary<string, object> defaultAppearance,
             HashSet<int> appearanceItemTypes,
-            OfficialPropCatalog props)
+            OfficialPropCatalog props,
+            Dictionary<int, string> itemIcons)
         {
             this.tables = tables;
             this.items = items;
@@ -134,9 +136,16 @@ namespace Zjcs.Offline.Progression
             this.defaultAppearance = defaultAppearance;
             this.appearanceItemTypes = appearanceItemTypes;
             this.props = props;
+            this.itemIcons = itemIcons;
         }
 
         public OfficialPropCatalog Props => props;
+
+        /// <summary>Original <c>ItemInfo.RawIcon</c> sprite of an item when it is part of the pinned character catalog.</summary>
+        public string ItemIconUri(int itemId)
+        {
+            return itemIcons.TryGetValue(itemId, out string icon) ? icon : string.Empty;
+        }
 
         public IReadOnlyList<CharacterLevelLimitRecord> LevelLimits => levelLimits;
         public IReadOnlyList<CharacterBlessLevelRecord> BlessLevels => blessLevels;
@@ -484,6 +493,12 @@ namespace Zjcs.Offline.Progression
             foreach (KeyValuePair<string, object> rank in Object(overview, "ranks"))
                 rankBySubRank[int.Parse(rank.Key, CultureInfo.InvariantCulture)]
                     = Integer(Object(rank.Value, "rank entry"), "rank");
+            var itemIcons = new Dictionary<int, string>();
+            if (progression.TryGetValue("item_icons", out object iconRows)
+                && iconRows is Dictionary<string, object> iconMap)
+                foreach (KeyValuePair<string, object> entry in iconMap)
+                    itemIcons[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                        = Convert.ToString(entry.Value, CultureInfo.InvariantCulture);
             var appearanceItemTypes = new HashSet<int>();
             Dictionary<string, object> settings = Rows("game_settings", tables).FirstOrDefault();
             if (settings != null) appearanceItemTypes.UnionWith(Integers(settings, "AppearanceTypes"));
@@ -494,7 +509,7 @@ namespace Zjcs.Offline.Progression
             return new OfficialCharacterCatalog(tables, items, skins, appearances, allowed,
                 levelExperience, limits, bless, timedAppearanceItems, propertyIds, levelProps, wardrobeTables,
                 wardrobeDefinitions, rankBySubRank, Object(appearanceRules, "defaults"), appearanceItemTypes,
-                OfficialPropCatalog.Parse(progressionJson, overviewJson));
+                OfficialPropCatalog.Parse(progressionJson, overviewJson), itemIcons);
         }
 
         private static List<Dictionary<string, object>> Rows(string table,
