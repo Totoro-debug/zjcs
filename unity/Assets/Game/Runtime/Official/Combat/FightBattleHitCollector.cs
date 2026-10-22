@@ -14,6 +14,41 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        /// <summary>
+        /// Collects every hit of a skill in execution order, applying the configured root-reference
+        /// delay/anchor to the first node of each root. Shared by the executor and by area targeting.
+        /// </summary>
+        public static List<FightBattleHitDefinition> CollectAll(FightBattleSkillDefinition skill)
+        {
+            if (skill == null) throw new ArgumentNullException(nameof(skill));
+            if (skill.HitGraphRoots != null && skill.HitGraphRoots.Count > 0)
+            {
+                var collected = new List<FightBattleHitDefinition>();
+                foreach (FightBattleHitRoot root in skill.HitGraphRoots)
+                {
+                    List<FightBattleHitDefinition> rootHits = Collect(skill.HitGraphEntities, root.EntityId);
+                    if (rootHits.Count > 0)
+                    {
+                        rootHits[0].Delay = root.Delay;
+                        rootHits[0].Anchor = root.Anchor;
+                        rootHits[0].IgnoreAICount = root.IgnoreAICount;
+                    }
+                    collected.AddRange(rootHits);
+                }
+                return collected;
+            }
+            if (skill.HitGraphRootEntityIds != null && skill.HitGraphRootEntityIds.Count > 0)
+            {
+                var collected = new List<FightBattleHitDefinition>();
+                foreach (int rootEntityId in skill.HitGraphRootEntityIds)
+                    collected.AddRange(Collect(skill.HitGraphEntities, rootEntityId));
+                return collected;
+            }
+            if (skill.HitGraphRootEntityId > 0)
+                return Collect(skill.HitGraphEntities, skill.HitGraphRootEntityId);
+            return skill.Hits ?? new List<FightBattleHitDefinition>();
+        }
+
         private static void Collect(IReadOnlyList<FightBattleHitEntity> entities, int entityId,
             List<FightBattleHitDefinition> result, HashSet<int> ancestors, int depth,
             int targetMode, int randomCount)
