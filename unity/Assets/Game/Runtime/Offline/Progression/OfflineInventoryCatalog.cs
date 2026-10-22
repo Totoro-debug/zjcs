@@ -78,7 +78,7 @@ namespace Zjcs.Offline.Progression
     {
         public static IReadOnlyList<OfflineInventoryItemView> Query(OfflineMainlineSave save,
             OfficialEquipmentCatalog catalog, IReadOnlyList<int> tabTypes, OfflineInventorySort sort,
-            bool reverse, long nowUnixSeconds)
+            bool reverse, long nowUnixSeconds, IReadOnlyDictionary<int, int> randomTreasurePieceRequirements = null)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
             if (save.Player == null || save.Player.Inventory == null || save.Player.Equipment == null)
@@ -116,7 +116,7 @@ namespace Zjcs.Offline.Progression
                     ExpiresAtUnixSeconds = expiry,
                     IsTimed = IsTimed(item) || expiry > 0,
                     CanOverlap = Bool(item, "CanOverlap"),
-                    CanUseRedDot = CanUseRedDot(catalog, item, stack.Count),
+                    CanUseRedDot = CanUseRedDot(catalog, item, stack.Count, randomTreasurePieceRequirements),
                     RedDotType = Int(item, "RedDotType"),
                     DetailKind = DetailKind(catalog, item, itemType)
                 });
@@ -140,7 +140,7 @@ namespace Zjcs.Offline.Progression
                     IsEquipped = save.Player.Equipment.Equipped.Any(slot => slot.InstanceId == equipment.InstanceId),
                     IsTimed = IsTimed(item),
                     CanOverlap = Bool(item, "CanOverlap"),
-                    CanUseRedDot = CanUseRedDot(catalog, item, 1),
+                    CanUseRedDot = CanUseRedDot(catalog, item, 1, randomTreasurePieceRequirements),
                     RedDotType = Int(item, "RedDotType"),
                     DetailKind = OfflineInventoryDetailKind.Equipment
                 });
@@ -260,7 +260,8 @@ namespace Zjcs.Offline.Progression
             return false;
         }
 
-        private static bool? CanUseRedDot(OfficialEquipmentCatalog catalog, Dictionary<string, object> item, long count)
+        private static bool? CanUseRedDot(OfficialEquipmentCatalog catalog, Dictionary<string, object> item,
+            long count, IReadOnlyDictionary<int, int> randomTreasurePieceRequirements)
         {
             if (count <= 0) return false;
             if (!catalog.GameSettings.TryGetValue("ShowCanUseRedDotItemTypes", out object rawTypes)
@@ -274,9 +275,13 @@ namespace Zjcs.Offline.Progression
             {
                 case 326: mergeTable = "equip_piece_merge"; break;
                 case 334: mergeTable = "item_piece_merge"; break;
+                case 340:
+                    int itemId = Int(item, "ClassId");
+                    return randomTreasurePieceRequirements != null
+                        && randomTreasurePieceRequirements.TryGetValue(itemId, out int requireCount)
+                        ? count >= requireCount : (bool?)null;
                 case 322:
                 case 336:
-                case 340:
                 case 402: return null;
                 default: return true;
             }
