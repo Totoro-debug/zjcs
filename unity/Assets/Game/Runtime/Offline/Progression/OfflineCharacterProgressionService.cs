@@ -672,6 +672,42 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        public IReadOnlyDictionary<int, long> InheritanceCost(int selectedTerms)
+        {
+            if (EquipmentCatalog == null) return new Dictionary<int, long>();
+            Dictionary<string, object> row = EquipmentCatalog.Rows("equip_inherit_cost")
+                .FirstOrDefault(value => Convert.ToInt32(value["Count"], CultureInfo.InvariantCulture) == selectedTerms);
+            if (row == null || !(row.TryGetValue("Cost", out object raw)
+                && raw is Dictionary<string, object> cost)) return new Dictionary<int, long>();
+            var result = new Dictionary<int, long>();
+            foreach (KeyValuePair<string, object> entry in cost)
+                result[int.Parse(entry.Key, CultureInfo.InvariantCulture)]
+                    = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+            return result;
+        }
+
+        /// <summary>Cross-season inheritance: only the selected source terms are copied, the rest are rerolled.</summary>
+        public ProgressionResult InheritEquipmentSelected(long sourceInstanceId, long targetInstanceId,
+            IReadOnlyCollection<int> selectedTerms, string eventId)
+        {
+            if (EquipmentCatalog == null || sourceInstanceId <= 0 || targetInstanceId <= 0
+                || sourceInstanceId == targetInstanceId || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("Valid source and target equipment are required.");
+            var selected = new HashSet<int>(selectedTerms ?? Array.Empty<int>());
+            if (selected.Count == 0) return Invalid("Select at least one term to inherit.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                var random = new System.Random(BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0));
+                EquipmentInheritanceResult result = OfflineEquipmentOperations.Inherit(player, EquipmentCatalog,
+                    1, sourceInstanceId, targetInstanceId, selected,
+                    instance => catalog.ItemType(instance.ItemId) == catalog.ItemType(
+                        player.Equipment.Instances.First(value => value.InstanceId == targetInstanceId).ItemId),
+                    (itemId, terms) => OfficialEquipmentGenerator.GenerateReplacement(
+                        EquipmentCatalog, itemId, terms, () => (float)random.NextDouble()));
+                if (result == null) throw new InvalidOperationException("The equipment inheritance is invalid.");
+            }, eventId);
+        }
+
         public ProgressionResult SetEquipmentLocked(long instanceId, bool locked, string eventId)
         {
             if (instanceId <= 0 || string.IsNullOrWhiteSpace(eventId))

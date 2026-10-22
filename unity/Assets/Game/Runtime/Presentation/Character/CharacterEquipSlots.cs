@@ -41,6 +41,11 @@ namespace Zjcs.Presentation.Character
         private GameObject inheritDialog;
         private GameObject purifyDialog;
         private long purifyInstanceId;
+        private GameObject termInheritDialog;
+        private long termSourceId;
+        private long termTargetId;
+        private readonly HashSet<int> termInheritKeep = new HashSet<int>();
+        private Text termInheritCostText;
         private readonly HashSet<int> purifyKeep = new HashSet<int>();
         private Text purifyCostText;
         private long gemInstanceId;
@@ -430,6 +435,8 @@ namespace Zjcs.Presentation.Character
 
         public void CloseList()
         {
+            if (termInheritDialog != null) Destroy(termInheritDialog);
+            termInheritDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
@@ -451,6 +458,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (termInheritDialog != null)
+            {
+                CloseTermInherit();
+                return true;
+            }
             if (purifyDialog != null)
             {
                 ClosePurify();
@@ -756,9 +768,7 @@ namespace Zjcs.Presentation.Character
             {
                 if (top < 0.14f) break;
                 OfflineEquipmentInstance captured = candidate;
-                AddGemRow(content, ItemName(candidate.ItemId) + "  Lv" + candidate.ItemLevel + "  \u8bc4\u5206 "
-                    + ItemScore(progression.Player, candidate), "\u7ee7\u627f", ref top,
-                    () => DoInherit(captured, target));
+                AddInheritRow(content, candidate, target, ref top);
             }
             if (candidates.Count == 0)
                 AddGemRow(content, "\u6ca1\u6709\u53ef\u7ee7\u627f\u7684\u540c\u7c7b\u88c5\u5907\u3002",
@@ -766,6 +776,178 @@ namespace Zjcs.Presentation.Character
             Button close = CreateCompareButton(content, "\u5173\u95ed", new Vector2(0f, 40f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(CloseInherit);
+        }
+
+        private void AddInheritRow(RectTransform parent, OfflineEquipmentInstance source,
+            OfflineEquipmentInstance target, ref float top)
+        {
+            var rowObject = new GameObject("InheritRow", typeof(RectTransform));
+            rowObject.transform.SetParent(parent, false);
+            RectTransform row = (RectTransform)rowObject.transform;
+            row.anchorMin = new Vector2(0.06f, top);
+            row.anchorMax = new Vector2(0.94f, top);
+            row.sizeDelta = new Vector2(0f, 52f);
+            if (CharacterPanelNodeFactory.UiFont != null)
+            {
+                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                labelObject.transform.SetParent(row, false);
+                RectTransform labelRect = (RectTransform)labelObject.transform;
+                labelRect.anchorMin = new Vector2(0f, 0f);
+                labelRect.anchorMax = new Vector2(0.55f, 1f);
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+                Text label = labelObject.GetComponent<Text>();
+                label.font = CharacterPanelNodeFactory.UiFont;
+                label.fontSize = 20;
+                label.alignment = TextAnchor.MiddleLeft;
+                label.color = Color.white;
+                label.text = ItemName(source.ItemId) + "  Lv" + source.ItemLevel + "  \u8bc4\u5206 "
+                    + ItemScore(progression.Player, source);
+            }
+            Button full = CreateCompareButton(row, "\u5b8c\u6574", new Vector2(0f, 0f),
+                new Color(0.7f, 0.6f, 0.85f, 0.95f));
+            RectTransform fullRect = (RectTransform)full.transform;
+            fullRect.anchorMin = new Vector2(1f, 0.5f);
+            fullRect.anchorMax = new Vector2(1f, 0.5f);
+            fullRect.pivot = new Vector2(1f, 0.5f);
+            fullRect.sizeDelta = new Vector2(110f, 44f);
+            fullRect.anchoredPosition = Vector2.zero;
+            full.onClick.AddListener(() => DoInherit(source, target));
+            Button terms = CreateCompareButton(row, "\u9009\u8bcd\u6761", new Vector2(0f, 0f),
+                new Color(0.55f, 0.7f, 0.9f, 0.95f));
+            RectTransform termsRect = (RectTransform)terms.transform;
+            termsRect.anchorMin = new Vector2(1f, 0.5f);
+            termsRect.anchorMax = new Vector2(1f, 0.5f);
+            termsRect.pivot = new Vector2(1f, 0.5f);
+            termsRect.sizeDelta = new Vector2(110f, 44f);
+            termsRect.anchoredPosition = new Vector2(-120f, 0f);
+            terms.onClick.AddListener(() => OpenTermInherit(source, target));
+            top -= 0.1f;
+        }
+
+        private void OpenTermInherit(OfflineEquipmentInstance source, OfflineEquipmentInstance target)
+        {
+            CloseTermInherit();
+            termSourceId = source.InstanceId;
+            termTargetId = target.InstanceId;
+            termInheritKeep.Clear();
+            termInheritDialog = new GameObject("EquipmentTermInherit", typeof(RectTransform));
+            termInheritDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)termInheritDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("TermBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            blocker.GetComponent<Button>().onClick.AddListener(CloseTermInherit);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(detailTemplate), root, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "Content");
+            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
+                .FirstOrDefault(text => text != null && text.name == "TitleText");
+            if (title != null) title.text = "\u9009\u62e9\u7ee7\u627f\u8bcd\u6761";
+            if (content == null) return;
+            float top = 0.82f;
+            for (int index = 0; index < (source.Terms?.Count ?? 0); index++)
+            {
+                if (top < 0.2f) break;
+                int captured = index;
+                OfflineEquipmentTerm term = source.Terms[index];
+                string name = term != null && term.Type == 1
+                    ? (progression.Catalog.Props.Get(term.PropertyType)?.Name ?? ("\u5c5e\u6027 " + term.PropertyType))
+                    : "\u7279\u6b8a\u8bcd\u6761";
+                var rowObject = new GameObject("TermRow", typeof(RectTransform));
+                rowObject.transform.SetParent(content, false);
+                RectTransform row = (RectTransform)rowObject.transform;
+                row.anchorMin = new Vector2(0.08f, top);
+                row.anchorMax = new Vector2(0.92f, top);
+                row.sizeDelta = new Vector2(0f, 48f);
+                if (CharacterPanelNodeFactory.UiFont != null)
+                {
+                    var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                    labelObject.transform.SetParent(row, false);
+                    RectTransform labelRect = (RectTransform)labelObject.transform;
+                    labelRect.anchorMin = new Vector2(0f, 0f);
+                    labelRect.anchorMax = new Vector2(0.8f, 1f);
+                    labelRect.offsetMin = Vector2.zero;
+                    labelRect.offsetMax = Vector2.zero;
+                    Text label = labelObject.GetComponent<Text>();
+                    label.font = CharacterPanelNodeFactory.UiFont;
+                    label.fontSize = 20;
+                    label.alignment = TextAnchor.MiddleLeft;
+                    label.color = Color.white;
+                    label.text = name;
+                }
+                var toggleObject = new GameObject("KeepToggle", typeof(RectTransform), typeof(Image), typeof(Toggle));
+                toggleObject.transform.SetParent(row, false);
+                RectTransform toggleRect = (RectTransform)toggleObject.transform;
+                toggleRect.anchorMin = new Vector2(0.88f, 0.5f);
+                toggleRect.anchorMax = new Vector2(0.88f, 0.5f);
+                toggleRect.sizeDelta = new Vector2(36f, 36f);
+                Toggle toggle = toggleObject.GetComponent<Toggle>();
+                toggle.targetGraphic = toggleObject.GetComponent<Image>();
+                toggle.onValueChanged.AddListener(value =>
+                {
+                    if (value) termInheritKeep.Add(captured); else termInheritKeep.Remove(captured);
+                    RefreshTermInheritCost();
+                });
+                top -= 0.1f;
+            }
+            var costObject = new GameObject("TermCost", typeof(RectTransform));
+            costObject.transform.SetParent(content, false);
+            RectTransform costRect = (RectTransform)costObject.transform;
+            costRect.anchorMin = new Vector2(0.08f, 0.16f);
+            costRect.anchorMax = new Vector2(0.92f, 0.16f);
+            costRect.sizeDelta = new Vector2(0f, 40f);
+            termInheritCostText = costObject.AddComponent<Text>();
+            termInheritCostText.font = CharacterPanelNodeFactory.UiFont;
+            termInheritCostText.fontSize = 20;
+            termInheritCostText.alignment = TextAnchor.MiddleCenter;
+            termInheritCostText.color = new Color(1f, 0.85f, 0.5f);
+            RefreshTermInheritCost();
+            Button confirm = CreateCompareButton(content, "\u7ee7\u627f", new Vector2(-120f, 40f),
+                new Color(0.7f, 0.6f, 0.85f, 0.95f));
+            confirm.onClick.AddListener(DoTermInherit);
+            Button close = CreateCompareButton(content, "\u5173\u95ed", new Vector2(120f, 40f),
+                new Color(0.45f, 0.45f, 0.45f, 0.95f));
+            close.onClick.AddListener(CloseTermInherit);
+        }
+
+        private void RefreshTermInheritCost()
+        {
+            if (termInheritCostText == null) return;
+            IReadOnlyDictionary<int, long> cost = progression.InheritanceCost(termInheritKeep.Count);
+            termInheritCostText.text = "\u9009 " + termInheritKeep.Count + " \u6761\uff0c\u6d88\u8017\uff1a"
+                + (cost.Count == 0 ? "\u65e0" : string.Join("\u3001",
+                    cost.Select(pair => ItemName(pair.Key) + " \u00d7" + pair.Value)));
+        }
+
+        private void DoTermInherit()
+        {
+            ProgressionResult result = progression.InheritEquipmentSelected(termSourceId, termTargetId,
+                termInheritKeep, "character-equip-inherit-terms-" + Guid.NewGuid().ToString("N"));
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            CloseTermInherit();
+            CloseInherit();
+            CloseDetail();
+            Changed?.Invoke();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void CloseTermInherit()
+        {
+            if (termInheritDialog != null) Destroy(termInheritDialog);
+            termInheritDialog = null;
+            termInheritCostText = null;
         }
 
         private void DoInherit(OfflineEquipmentInstance source, OfflineEquipmentInstance target)
@@ -782,6 +964,8 @@ namespace Zjcs.Presentation.Character
 
         private void CloseInherit()
         {
+            if (termInheritDialog != null) Destroy(termInheritDialog);
+            termInheritDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             if (inheritDialog != null) Destroy(inheritDialog);
@@ -906,6 +1090,8 @@ namespace Zjcs.Presentation.Character
 
         private void ClosePurify()
         {
+            if (termInheritDialog != null) Destroy(termInheritDialog);
+            termInheritDialog = null;
             if (purifyDialog != null) Destroy(purifyDialog);
             purifyDialog = null;
             purifyCostText = null;
