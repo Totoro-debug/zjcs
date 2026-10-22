@@ -166,6 +166,14 @@ def restore_sprites(manifests: list[dict]) -> list[dict]:
     icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
     icon_item_ids = {str(item_id) for row in json.loads((ROOT / "assets/official/rules.json")
                     .read_text(encoding="utf-8"))["player_subrank"] for item_id in (row.get("Items") or {})}
+    sprite_files = {path.name for path in (ROOT / "assets/official/sprites").glob("*.png")}
+    for profession in json.loads((ROOT / "assets/official/rules.json").read_text(encoding="utf-8"))["profession_base"]:
+        for field in ("Icon2", "Icon1", "Icon3"):
+            base = str(profession.get(field) or "").rsplit("/", 1)[-1]
+            match = next((name for name in sprite_files if base and name.startswith(base + "-")), None)
+            if match:
+                referenced.add("res://assets/official/sprites/" + match)
+                break
     for item_id in icon_item_ids:
         icon = icons.get(item_id)
         if isinstance(icon, dict) and isinstance(icon.get("file"), str):
@@ -299,6 +307,30 @@ def restore() -> dict:
     from npc_travel_language import language
     unit_keys = {row["Unit"] for row in rules["prop_cfg"] if row.get("Unit")}
     prop_units, unit_sources = language(unit_keys)
+    profession_source = (ROOT / ".tools/source-packages/official-code/common-source/Common/Profession.cs"
+                         ).read_text(encoding="utf-8-sig")
+    profession_enum = {int(value): name for name, value in
+                       re.findall(r"^\s*(\w+)\s*=\s*(\d+)", profession_source, re.M)} if "= 0" in profession_source else {}
+    if not profession_enum:
+        profession_enum = {index: name for index, name in enumerate(
+            re.findall(r"^\s*(\w+)\s*,?\s*$", profession_source, re.M))}
+    profession_name_map = {str(row["Profession"]): "profession_name_" + profession_enum.get(row["Profession"], "")
+                           for row in rules["profession_base"]}
+    profession_names, profession_name_sources = language(set(profession_name_map.values()))
+    profession_names = {profession: profession_names[key] for profession, key in profession_name_map.items()
+                        if key in profession_names}
+    unit_sources.update(profession_name_sources)
+    profession_icons = {}
+    sprite_files = {path.name: path for path in (ROOT / "assets/official/sprites").glob("*.png")}
+    for row in rules["profession_base"]:
+        for field in ("Icon2", "Icon1", "Icon3"):
+            name = str(row.get(field) or "").rsplit("/", 1)[-1]
+            if not name: continue
+            for file_name, path in sprite_files.items():
+                if file_name.startswith(name + "-"):
+                    profession_icons[str(row["Profession"])] = "res://assets/official/sprites/" + file_name
+                    break
+            if str(row["Profession"]) in profession_icons: break
     properties_data = json.loads((ROOT / "assets/official/character-properties.json").read_text(encoding="utf-8"))
     prop_categories = {key: value for key, value in properties_data["categories"].items()}
     progression = {
@@ -311,6 +343,8 @@ def restore() -> dict:
         "prop_units": prop_units,
         "prop_categories": prop_categories,
         "item_icons": item_icons,
+        "profession_names": profession_names,
+        "profession_icons": profession_icons,
     }
     payloads = (
         ("character-progression.json", progression),
