@@ -241,8 +241,16 @@ namespace Zjcs.Offline.Progression
                     long count = Convert.ToInt64(cost.Value, CultureInfo.InvariantCulture);
                     player.Inventory.First(item => item.ItemId == itemId).Count -= count;
                 }
+                int previousRank = player.Rank;
                 player.SubRank++;
                 player.Rank = RankOf(player.SubRank);
+                if (player.Rank > previousRank)
+                {
+                    OfflineRankUnlockTime unlock = player.RankUnlockTimes.FirstOrDefault(value => value.Rank == player.Rank);
+                    if (unlock == null)
+                        player.RankUnlockTimes.Add(unlock = new OfflineRankUnlockTime { Rank = player.Rank });
+                    unlock.UnixSeconds = DateTimeOffset.Now.ToUnixTimeSeconds();
+                }
                 RefreshDerivedProgress(player);
             }, eventId);
         }
@@ -285,6 +293,25 @@ namespace Zjcs.Offline.Progression
                     throw new InvalidOperationException("This equipment cannot be worn by the current character.");
                 SynchronizeEquipmentSkins(player, equipment);
             }, eventId);
+        }
+
+        public ProgressionResult UpgradeEquipment(int position, string eventId)
+        {
+            if (EquipmentCatalog == null || position <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid equipment position and event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                bool upgraded = OfflineEquipmentOperations.Upgrade(player, EquipmentCatalog, position,
+                    player.SeasonRank, Experience().BlessLevel, player.Level, player.MaxProfessionRank);
+                if (!upgraded) throw new InvalidOperationException("Equipment upgrade conditions are not met.");
+            }, eventId);
+        }
+
+        public EquipmentUpgradeQuote QuoteEquipmentUpgrade(int position)
+        {
+            if (EquipmentCatalog == null || position <= 0) return null;
+            return OfflineEquipmentOperations.QuoteUpgrade(Player, EquipmentCatalog, position,
+                Player.SeasonRank, Experience().BlessLevel, Player.Level, Player.MaxProfessionRank);
         }
 
         public ProgressionResult TakeOffEquipment(OfficialEquipmentCatalog equipment, int position, string eventId)
