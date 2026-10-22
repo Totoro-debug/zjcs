@@ -71,6 +71,7 @@ namespace Zjcs.Offline.Progression
         public bool CanOverlap { get; internal set; }
         public bool? CanUseRedDot { get; internal set; }
         public int RedDotType { get; internal set; }
+        public int MergeRequiredCount { get; internal set; }
         public OfflineInventoryDetailKind DetailKind { get; internal set; }
     }
 
@@ -118,6 +119,7 @@ namespace Zjcs.Offline.Progression
                     CanOverlap = Bool(item, "CanOverlap"),
                     CanUseRedDot = CanUseRedDot(catalog, item, stack.Count, randomTreasurePieceRequirements),
                     RedDotType = Int(item, "RedDotType"),
+                    MergeRequiredCount = MergeRequiredCount(catalog, item, itemType, randomTreasurePieceRequirements),
                     DetailKind = DetailKind(catalog, item, itemType)
                 });
             }
@@ -276,10 +278,9 @@ namespace Zjcs.Offline.Progression
                 case 326: mergeTable = "equip_piece_merge"; break;
                 case 334: mergeTable = "item_piece_merge"; break;
                 case 340:
-                    int itemId = Int(item, "ClassId");
-                    return randomTreasurePieceRequirements != null
-                        && randomTreasurePieceRequirements.TryGetValue(itemId, out int requireCount)
-                        ? count >= requireCount : (bool?)null;
+                    int treasurePieceRequireCount = MergeRequiredCount(catalog, item, itemType,
+                        randomTreasurePieceRequirements);
+                    return treasurePieceRequireCount > 0 ? count >= treasurePieceRequireCount : (bool?)null;
                 case 322:
                 case 336:
                 case 402: return null;
@@ -288,6 +289,20 @@ namespace Zjcs.Offline.Progression
 
             Dictionary<string, object> merge = catalog.Find(mergeTable, Int(item, "ClassId"), "Id");
             return merge != null && count >= Int(merge, "PieceMergeCount");
+        }
+
+        private static int MergeRequiredCount(OfficialEquipmentCatalog catalog, Dictionary<string, object> item,
+            int itemType, IReadOnlyDictionary<int, int> randomTreasurePieceRequirements)
+        {
+            if (itemType == 340)
+                return randomTreasurePieceRequirements != null
+                    && randomTreasurePieceRequirements.TryGetValue(Int(item, "ClassId"), out int requireCount)
+                    ? requireCount : 0;
+            string table = itemType == 326 ? "equip_piece_merge"
+                : itemType == 334 ? "item_piece_merge" : null;
+            if (table == null) return 0;
+            Dictionary<string, object> merge = catalog.Find(table, Int(item, "ClassId"), "Id");
+            return merge == null ? 0 : Int(merge, "PieceMergeCount");
         }
 
         private static bool Bool(Dictionary<string, object> value, string key) =>
