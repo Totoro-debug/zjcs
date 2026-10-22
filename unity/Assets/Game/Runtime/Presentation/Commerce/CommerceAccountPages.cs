@@ -256,7 +256,7 @@ namespace Zjcs.Presentation.Commerce
                         runtime.Offers.ExchangeMax()));
             ConfigureExchangeSlider(dialog.transform);
             SetExchangeAmount(exchangeAmount);
-            OfficialCommercePrefabRenderer.RebuildLayout(dialog);
+            OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
         }
 
         private void PopulateExchangeItems(Transform dialog)
@@ -377,7 +377,7 @@ namespace Zjcs.Presentation.Commerce
             for (int i = 0; i < (rule.rows?.Length ?? 0); i++)
                 AddWrappedText(content, (i + 1) + ". " + rule.rows[i], 24, Color.white);
             AddWrappedText(content, "按 Esc 关闭", 20, new Color(0.72f, 0.72f, 0.72f, 1f));
-            OfficialCommercePrefabRenderer.RebuildLayout(dialog);
+            OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
         }
 
         private void AddWrappedText(Transform parent, string value, float size, Color color)
@@ -397,6 +397,105 @@ namespace Zjcs.Presentation.Commerce
             text.text = value;
             var element = go.AddComponent<LayoutElement>();
             element.preferredWidth = 600;
+        }
+
+        private void OpenItemDetail(int itemId, long count)
+        {
+            CloseDialogKind(DialogKind.ItemDetail);
+            CommerceItem item = runtime.Catalog.Data.items.FirstOrDefault(value => value.id == itemId);
+            string name = item == null ? "物品 " + itemId : item.name;
+            int quality = item == null ? 1 : item.quality;
+            OfficialCommercePrefabRenderer renderer = runtime.CreatePrefabRenderer();
+            GameObject dialog = null;
+            dialog = renderer.Create("commerce_item_detail", canvasRoot, (path, node) =>
+            {
+                Button button = node.GetComponent<Button>();
+                if (button == null) return;
+                if (path.EndsWith("/CommonBtn_11", StringComparison.Ordinal))
+                {
+                    button.onClick.AddListener(PlayClick);
+                    button.onClick.AddListener(() => CloseDialog(dialog, DialogKind.ItemDetail));
+                }
+            });
+            dialog.name = "CommerceItemDetail";
+            RegisterDialog(dialog, DialogKind.ItemDetail);
+            SetText(dialog.transform, "BgDialog1/BgImg/BgTitle/TitleText", name);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/NameGo", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/TypeText", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/QualityText", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/CountGo", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/CountGo/CountContent/MaxCountText", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/NameGo/CommonBtn_OutputAdditionDetail", false);
+            SetActive(dialog.transform, "BgDialog1/Content/TopGo/ItemRemainTimeContent", false);
+            SetActive(dialog.transform, "BgDialog1/Content/MiddleGo/ItemDetailDialogUseResult", false);
+            SetActive(dialog.transform, "BgDialog1/Content/MiddleGo/ItemDetailDialogGridLayout", false);
+            SetActive(dialog.transform, "BgDialog1/Content/MiddleGo/ButtonsGo", true);
+            SetActive(dialog.transform, "BgDialog1/Content/MiddleGo/ButtonsGo/DecomposeBtn", false);
+            SetActive(dialog.transform, "BgDialog1/ItemDetailGmTool", false);
+            SetText(dialog.transform, "BgDialog1/Content/MiddleGo/ButtonsGo/CommonBtn_11/Content/Text", "关闭");
+            SetText(dialog.transform, "BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/DetailText",
+                "品质：" + QualityName(quality) + "\n数量：" + count.ToString("N0", CultureInfo.InvariantCulture)
+                + "\n\n商城礼包奖励，可在背包中查看。");
+            SetText(dialog.transform, "BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/DetailContent/FuncDetailText", "");
+            Image icon = Find(dialog.transform, "BgDialog1/Content/TopGo/IconSlot/Icon")?.GetComponent<Image>();
+            if (icon != null) icon.sprite = runtime.FindItemSprite(itemId);
+            Image qualityBg = Find(dialog.transform, "BgDialog1/Content/TopGo/QualityBg")?.GetComponent<Image>();
+            if (qualityBg != null) qualityBg.sprite = runtime.FindSprite(QualitySprite(quality));
+            RectTransform background = Find(dialog.transform, "BgDialog1") as RectTransform;
+            if (background != null)
+            {
+                background.sizeDelta = new Vector2(842f, 900f);
+                background.anchoredPosition = Vector2.zero;
+                VerticalLayoutGroup backgroundLayout = background.GetComponent<VerticalLayoutGroup>();
+                if (backgroundLayout != null) backgroundLayout.enabled = false;
+            }
+            RectTransform content = Find(dialog.transform, "BgDialog1/Content") as RectTransform;
+            if (content != null)
+            {
+                content.anchorMin = Vector2.zero;
+                content.anchorMax = Vector2.one;
+                content.offsetMin = new Vector2(16f, 24f);
+                content.offsetMax = new Vector2(-16f, -96f);
+                VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
+                if (contentLayout != null) contentLayout.enabled = false;
+            }
+            RectTransform top = Find(dialog.transform, "BgDialog1/Content/TopGo") as RectTransform;
+            if (top != null)
+            {
+                top.anchorMin = top.anchorMax = new Vector2(0.5f, 1f);
+                top.pivot = new Vector2(0.5f, 1f);
+                top.anchoredPosition = new Vector2(0f, -22f);
+                top.sizeDelta = new Vector2(810f, 300f);
+                VerticalLayoutGroup topLayout = top.GetComponent<VerticalLayoutGroup>();
+                if (topLayout != null) topLayout.enabled = false;
+            }
+            RectTransform middle = Find(dialog.transform, "BgDialog1/Content/MiddleGo") as RectTransform;
+            if (middle != null)
+            {
+                middle.anchorMin = middle.anchorMax = new Vector2(0.5f, 0f);
+                middle.pivot = new Vector2(0.5f, 0f);
+                middle.anchoredPosition = new Vector2(0f, 24f);
+                middle.sizeDelta = new Vector2(810f, 540f);
+                VerticalLayoutGroup middleLayout = middle.GetComponent<VerticalLayoutGroup>();
+                if (middleLayout != null) middleLayout.enabled = false;
+            }
+            SetActive(dialog.transform, "BgDialog1/Horn", false);
+            foreach (Transform child in dialog.GetComponentsInChildren<Transform>(true))
+                if (child.name.IndexOf("Horn", StringComparison.Ordinal) >= 0) child.gameObject.SetActive(false);
+            SetActive(dialog.transform, "BgDialog1/BgImg/Image", false);
+            OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
+        }
+
+        private static string QualityName(int quality)
+        {
+            switch (quality)
+            {
+                case 3: return "稀有";
+                case 4: return "史诗";
+                case 5: return "传说";
+                case 6: return "神话";
+                default: return "普通";
+            }
         }
 
         private void OpenPriceTable()
@@ -439,7 +538,7 @@ namespace Zjcs.Presentation.Commerce
                 AddPriceRow(content, left, right, 20, Color.white);
             }
             AddWrappedText(content, "按 Esc 关闭", 20, new Color(0.72f, 0.72f, 0.72f, 1f));
-            OfficialCommercePrefabRenderer.RebuildLayout(dialog);
+            OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
         }
 
         private void AddPriceRow(Transform content, string left, string right, float size, Color color)
@@ -505,7 +604,7 @@ namespace Zjcs.Presentation.Commerce
                 ClearChildren(awards);
                 AddWrappedText(awards, message, 24, Color.white);
             }
-            OfficialCommercePrefabRenderer.RebuildLayout(dialog);
+            OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
         }
 
         private GameObject CreateTextButton(Transform parent, string label, Vector2 size)
@@ -541,6 +640,7 @@ namespace Zjcs.Presentation.Commerce
         }
     }
 }
+
 
 
 

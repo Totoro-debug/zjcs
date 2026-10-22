@@ -33,6 +33,10 @@ namespace Zjcs.Presentation.Commerce
             Sprite qualitySprite = runtime.FindSprite(quality) ?? runtime.FindSprite("ImgQuality_Blue");
             AddImage(root.transform, "Quality", qualitySprite, new Vector2(size, size), false);
             AddImage(root.transform, "Icon", runtime.FindItemSprite(itemId), new Vector2(size * 0.86f, size * 0.86f), true);
+            Button detailButton = root.AddComponent<Button>();
+            detailButton.transition = Selectable.Transition.None;
+            detailButton.targetGraphic = root.GetComponentInChildren<Image>();
+            detailButton.onClick.AddListener(() => OpenItemDetail(itemId, count));
 
             Transform countRoot = AddImage(root.transform, "CountBg", runtime.FindSprite("ImgItemIcon_NumBg"),
                 new Vector2(size * 0.62f, size * 0.3f), false).transform;

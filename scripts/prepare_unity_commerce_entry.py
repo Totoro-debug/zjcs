@@ -98,6 +98,9 @@ def build():
     activity_entry = ui.get("activity_entry", {}).get("root")
     if activity_entry is None or activity_entry.get("name") != "ActivityCommonEntry":
         raise ValueError("The pinned official ActivityCommonEntry prefab is unavailable.")
+    item_detail = ui.get("item_detail", {}).get("root")
+    if item_detail is None or item_detail.get("name") != "ItemDetailDialog":
+        raise ValueError("The pinned official ItemDetailDialog prefab is unavailable.")
 
     commerce = json.loads(COMMERCE_UI.read_text(encoding="utf-8"))
     prefabs = commerce.setdefault("prefabs", {})
@@ -122,6 +125,9 @@ def build():
         "ui_json_sha256": ui_hash,
     }
     prefabs["commerce_activity_entry"] = {"root": activity_entry, "source": activity_source}
+    detail_source = dict(ui.get("item_detail", {}).get("source") or {})
+    detail_source.update({"origin": "apk_zip", "manifest": MANIFEST, "ui_json_sha256": ui_hash})
+    prefabs["commerce_item_detail"] = {"root": item_detail, "source": detail_source}
     main_root = commerce.get("prefabs", {}).get("commerce_main", {}).get("root")
     first_entry = find_node(main_root, "AccumulatedPayEntryGo") if main_root else None
     if first_entry is None:
@@ -131,12 +137,14 @@ def build():
     collected = {}
     collect_texts(functions, collected)
     collect_texts(activity_entry, collected)
+    collect_texts(item_detail, collected)
     for key, value in collected.items():
         texts.setdefault(key, value)
 
     sprite_uris = set()
     collect_sprites(functions, sprite_uris)
     collect_sprites(activity_entry, sprite_uris)
+    collect_sprites(item_detail, sprite_uris)
     official = json.loads(OFFICIAL_SOURCES.read_text(encoding="utf-8"))
     records = official["resources"]
     copied = {}
