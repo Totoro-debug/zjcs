@@ -67,7 +67,8 @@ namespace Zjcs.Presentation.Inventory
             for (int i = content.childCount - 1; i >= 0; i--) Destroy(content.GetChild(i).gameObject);
             displayedItems.Clear();
             IReadOnlyList<OfflineInventoryItemView> items = OfflineInventoryCatalog.Query(save, rules,
-                currentTab.ItemTypes, sort, reverse, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                currentTab.ItemTypes, sort, reverse, DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                assets.FindRandomTreasurePieceRequirements());
             Dictionary<string, object> rowTemplate = assets.LoadRowTemplate("bag", ScrollPath);
             if (rowTemplate == null) throw new FormatException("Original inventory row template is missing.");
             Dictionary<string, object> rowRoot = Object(rowTemplate, "root");

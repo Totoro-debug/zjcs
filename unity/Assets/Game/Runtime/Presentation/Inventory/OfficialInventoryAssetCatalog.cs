@@ -79,6 +79,24 @@ namespace Zjcs.Presentation.Inventory
                 ? FindSprite(QualityBackgroundFiles[quality]) : null;
         }
 
+        public IReadOnlyDictionary<int, int> FindRandomTreasurePieceRequirements()
+        {
+            Dictionary<string, object> tables = Object(Parsed()["tables"]);
+            var requirements = new Dictionary<int, int>();
+            if (!tables.TryGetValue("random_treasure_exchange", out object rawRows)
+                || !(rawRows is List<object> rows))
+                throw new FormatException("Official random treasure exchange requirements are missing.");
+            foreach (object rawRow in rows)
+            {
+                Dictionary<string, object> row = Object(rawRow);
+                int itemId = Convert.ToInt32(row["ItemId"], System.Globalization.CultureInfo.InvariantCulture);
+                int requireCount = Convert.ToInt32(row["RequireCount"], System.Globalization.CultureInfo.InvariantCulture);
+                if (itemId <= 0 || requireCount <= 0 || !requirements.TryAdd(itemId, requireCount))
+                    throw new FormatException("Official random treasure exchange requirements are invalid.");
+            }
+            return requirements;
+        }
+
         public string FindText(string key)
         {
             if (string.IsNullOrEmpty(key)) return string.Empty;
