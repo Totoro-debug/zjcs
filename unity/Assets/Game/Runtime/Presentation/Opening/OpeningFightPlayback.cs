@@ -41,6 +41,7 @@ namespace Zjcs.Presentation.Opening
         private RectTransform damageLayer;
         private TMPro.TMP_FontAsset damageFont;
         private bool damageFontLoaded;
+        private OpeningSkillEffectPlayer skillEffects;
         private bool skipRequested;
         private bool skipButtonPending;
         private float skipButtonAvailableAt;
@@ -66,6 +67,8 @@ namespace Zjcs.Presentation.Opening
         public int PreparedUnits { get; private set; }
         public int TimelineItems => timelineItems.Count;
         public int DamageNumbers { get; private set; }
+        public int SkillEffectsSpawned => skillEffects != null ? skillEffects.SpawnedEffects : 0;
+        public int SkillParticleSystems => skillEffects != null ? skillEffects.SpawnedSystems : 0;
         public int ActionAnimations { get; private set; }
         public int DieActions { get; private set; }
         public int DeathHolds { get; private set; }
@@ -85,6 +88,8 @@ namespace Zjcs.Presentation.Opening
         {
             OpeningRecord record = assets.Record;
             MountHud();
+            try { skillEffects = OpeningSkillEffectPlayer.LoadDefault(log); }
+            catch (Exception error) { log("开场技能特效载荷不可用: " + error.Message); }
             foreach (OpeningRecordEntity entity in record.Entities)
             {
                 entityState[entity.EntityId] = entity;
@@ -266,13 +271,26 @@ namespace Zjcs.Presentation.Opening
             OpeningRecordEntity entity = OpeningRecordEntity.Parse(raw);
             entityState[entity.EntityId] = entity;
             TryCreateUnit(entity);
+            if (skillEffects != null && battlefield != null && entity.ClassId == 11150)
+                skillEffects.Play("cast", 11150, battlefield.CellToWorld(entity.GridX, entity.GridY), battlefield.Root.transform);
             if (raw.TryGetValue("ComponentList", out object components) && components is List<object> list)
             {
                 foreach (object item in list)
                 {
                     if (!(item is Dictionary<string, object> component)) continue;
                     string type = OpeningJson.String(component, "$type");
-                    if (type.Contains("FightDamageComponent")) ShowDamage(component);
+                    if (type.Contains("FightDamageComponent"))
+                    {
+                        ShowDamage(component);
+                        if (skillEffects != null && battlefield != null)
+                        {
+                            Dictionary<string, object> result = OpeningJson.Object(component["DamageResult"], "damage result");
+                            Dictionary<string, object> position = OpeningJson.Object(result["Pos"], "damage position");
+                            skillEffects.Play("damage", entity.ClassId,
+                                battlefield.CellToWorld(OpeningJson.Int(position, "X"), OpeningJson.Int(position, "Y")),
+                                battlefield.Root.transform);
+                        }
+                    }
                     else if (type.Contains("ActionComponent")) PlayAction(component);
                 }
             }
