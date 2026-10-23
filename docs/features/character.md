@@ -161,7 +161,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 原提示文案、物品数／职业／穿戴状态变化时的自动刷新（当前进入衣柜、穿脱后刷新）仍待补。
 - [x] 恢复 `TryGetConflictTip` 语义：`OfflineWardrobeRules.PreviewWear` 对穿戴前后的有效皮肤集合各解析一次，返回会被遮挡的部件或互斥环类型；衣柜列表穿戴时先提示再继续原穿戴请求。部件名称取原 `ui_append_appearance_type_*` 本地化，原冲突提示模板 `ui_append_appearance_conflict_tip` 未在固定目录中提取，当前以部件名拼接提示。
 - [x] 人物页称号已接 `HonorTitleItemProvider/Slot` 与 `HonorTitleTimeLimitContent`：显示已佩戴称号图标、剩余天／小时／分钟／秒并在到期时隐藏，`TitlePropContent` 读取 `AppendAppearanceInfo.EffectProp`（当前固定目录中称号 `EffectProp` 均为空，故属性行暂不显示）。
-- [ ] 同步称号双列实际渲染、限时倒计时及到期后拥有／穿戴状态。
+- [x] 称号列表按双列渲染，卡片与人物页称号图标均显示剩余时间；`SynchronizeExpiredItems` 到期移除限时物品、清空已穿称号并刷新拥有/穿戴状态。
 - [x] 称号详情已接：点击称号卡打开详情层（品质、剩余有效期、称号属性）并可穿戴；原 `HonorTitleItemDetailDialog` 预制体未提取，详情复用衣柜属性弹窗框架。
 - [ ] 补齐物品详情、首次收藏经验、原试穿窗口（`PreviewAppearanceDialog`）及任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
 - [x] 潮流等级升级已按原规则实现：`RefreshWardrobeProgress` 只在经验对应等级低于已存等级时回落（`SyncAppearanceLevelFromExp`），`UpgradeBtn` 使用 `CanUpgradeAppearanceLevel → UpgradeAppearanceLevel` 跨级提升，满级／经验不足给出状态提示；头部显示当前等级、本级经验／所需经验与滑条填充，满级显示上限状态。
