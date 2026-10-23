@@ -256,6 +256,8 @@ class SpriteCache:
         self.images = {}
         self.failures = {}
         self.sources = {}
+        self.texture_paths = {}
+        self.texture_outputs = {}
 
     def record_source(self, obj, kind, object_path=""):
         key = obj.assets_file.name + ":" + str(obj.path_id)
@@ -323,6 +325,42 @@ class SpriteCache:
         }
         self.images[key] = result
         return result
+
+    def texture_file(self, pointer, assets_file, target_dir, object_path):
+        if not pointer.path_id:
+            return None
+        texture = self.lookup(assets_file, pointer.file_id, pointer.path_id)
+        if texture is None or texture.type.name != "Texture2D":
+            self.failures[str((pointer.file_id, pointer.path_id))] = "material texture is unavailable"
+            return None
+        key = texture.assets_file.name + ":" + str(texture.path_id)
+        if key in self.texture_paths:
+            return self.texture_paths[key]
+
+        self.record_source(texture, "Texture2D", object_path)
+        from PIL import Image
+
+        texture_data = texture.read()
+        settings = texture_data.m_TextureSettings
+        image = texture_data.image.convert("RGBA")
+        safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", texture_data.m_Name).strip("._") or "texture"
+        filename = safe_name + "-" + hashlib.sha256(key.encode("utf-8")).hexdigest()[:12] + ".png"
+        relative = "textures/" + filename
+        target = target_dir / filename
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG", optimize=False)
+        output = write_with_meta(target, buffer.getvalue())
+        texture_record = {
+            "file": relative,
+            "filter_mode": int(settings.m_FilterMode),
+            "aniso_level": int(settings.m_Aniso),
+            "wrap_u": int(settings.m_WrapU),
+            "wrap_v": int(settings.m_WrapV),
+            "wrap_w": int(settings.m_WrapW),
+        }
+        self.texture_paths[key] = texture_record
+        self.texture_outputs[relative] = output
+        return texture_record
 
     def lookup(self, assets_file, file_id, path_id):
         from UnityPy.classes.PPtr import PPtr
@@ -422,18 +460,22 @@ def decode_text(raw, name):
 
 def prefab_walk(go):
     rect = None
+    transform = None
     for component in go.m_Component:
-        if component.component.type.name == "RectTransform":
-            rect = component.component.read()
+        kind = component.component.type.name
+        if kind in ("RectTransform", "Transform"):
+            transform = component.component.read()
+            if kind == "RectTransform":
+                rect = transform
     yield go, rect
-    if rect is None:
+    if transform is None:
         return
-    for child in rect.m_Children:
+    for child in transform.m_Children:
         for entry in prefab_walk(child.read().m_GameObject.read()):
             yield entry
 
 
-def convert_prefab(apk, sprites, schemas, path, bundle):
+def convert_prefab(apk, sprites, schemas, path, bundle, target_dir):
     pointer = next((ptr for entry, val in apk.container(bundle) if entry == path
                     for ptr in [val]), None)
     if pointer is None:
@@ -441,6 +483,44 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
     sprites.record_source(pointer.deref(), "GameObjectPrefab", path)
     root_go = pointer.read()
     assets_file = pointer.assetsfile
+
+    def animation_tree(go, parent_path=""):
+        node_path = parent_path + "/" + go.m_Name
+        transform = next((component.component.read() for component in go.m_Component
+                          if component.component.type.name in ("RectTransform", "Transform")), None)
+        return {
+            "name": go.m_Name,
+            "path": node_path,
+            "children": [] if transform is None else [
+                animation_tree(child.read().m_GameObject.read(), node_path)
+                for child in transform.m_Children
+            ],
+        }
+
+    clip_tree = animation_tree(root_go)
+    material_float_names = set()
+    material_vector_names = set()
+    for candidate, _ in prefab_walk(root_go):
+        for component in candidate.m_Component:
+            if component.component.type.name != "MonoBehaviour":
+                continue
+            reader = component.component.deref()
+            basic = reader.read(check_read=False)
+            script = basic.m_Script.read()
+            if script.m_ClassName != "UIMesh":
+                continue
+            fields = schemas.read(reader)
+            material_pointer = fields["m_Material"]
+            material_object = sprites.lookup(assets_file, material_pointer["m_FileID"],
+                                             material_pointer["m_PathID"])
+            if material_object is None or material_object.type.name != "Material":
+                continue
+            saved = material_object.read().m_SavedProperties
+            material_float_names.update(name for name, _ in saved.m_Floats)
+            material_vector_names.update(name for name, _ in saved.m_Colors)
+
+    from official_animation import mecanim_tracks
+
     def build(go, parent_path):
         node_path = parent_path + "/" + go.m_Name
         node = {
@@ -452,13 +532,77 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
             "mask": False,
             "has_image": False,
             "has_text": False,
+            "has_mesh": False,
+            "ui_particle": False,
+            "is_rect_transform": False,
             "alpha": 1.0,
         }
         rect = None
+        transform = None
         for component in go.m_Component:
             kind = component.component.type.name
-            if kind == "RectTransform":
-                rect = component.component.read()
+            if kind in ("RectTransform", "Transform"):
+                transform = component.component.read()
+                if kind == "RectTransform":
+                    rect = transform
+                continue
+            if kind == "ParticleSystem":
+                particle = component.component.deref()
+                node["particle_system"] = particle.read_typetree()
+                sprites.record_source(particle, "ParticleSystem", node_path)
+                continue
+            if kind == "ParticleSystemRenderer":
+                renderer = component.component.deref()
+                renderer_data = renderer.read_typetree()
+                node["particle_renderer"] = {
+                    key: renderer_data[key] for key in (
+                        "m_Enabled", "m_RenderMode", "m_SortingLayerID", "m_SortingOrder",
+                        "m_SortMode", "m_Materials", "m_MinParticleSize", "m_MaxParticleSize",
+                        "m_LengthScale", "m_NormalDirection", "m_Pivot", "m_Flip",
+                        "m_MaskInteraction",
+                    ) if key in renderer_data
+                }
+                sprites.record_source(renderer, "ParticleSystemRenderer", node_path)
+                material_pointers = renderer_data.get("m_Materials") or []
+                for material_pointer in material_pointers:
+                    if not material_pointer.get("m_PathID"):
+                        continue
+                    material_object = sprites.lookup(
+                        renderer.assets_file, material_pointer.get("m_FileID", 0),
+                        material_pointer["m_PathID"])
+                    if material_object is None or material_object.type.name != "Material":
+                        raise ValueError("official particle renderer has no source Material")
+                    sprites.record_source(material_object, "Material", node_path)
+                    material = material_object.read()
+                    saved = material.m_SavedProperties
+                    textures = {}
+                    for property_name, environment in saved.m_TexEnvs:
+                        texture_file = sprites.texture_file(
+                            environment.m_Texture, material_object.assets_file,
+                            target_dir / "textures", node_path)
+                        if texture_file is not None:
+                            textures[property_name] = {
+                                **texture_file,
+                                "scale": [float(environment.m_Scale.x), float(environment.m_Scale.y)],
+                                "offset": [float(environment.m_Offset.x), float(environment.m_Offset.y)],
+                            }
+                    node["particle_material"] = {
+                        "name": material.m_Name,
+                        "shader_path_id": str(material.m_Shader.path_id),
+                        "render_queue": int(material.m_CustomRenderQueue),
+                        "floats": {key: float(value) for key, value in saved.m_Floats},
+                        "vectors": {key: [float(value.r), float(value.g), float(value.b), float(value.a)]
+                                    for key, value in saved.m_Colors},
+                        "textures": textures,
+                    }
+                continue
+            if kind == "CanvasGroup":
+                group = component.component.read()
+                node["canvas_group"] = True
+                node["alpha"] = float(group.m_Alpha)
+                node["canvas_group_interactable"] = bool(group.m_Interactable)
+                node["canvas_group_blocks_raycasts"] = bool(group.m_BlocksRaycasts)
+                node["canvas_group_ignore_parent_groups"] = bool(group.m_IgnoreParentGroups)
                 continue
             if kind != "MonoBehaviour":
                 continue
@@ -502,17 +646,109 @@ def convert_prefab(apk, sprites, schemas, path, bundle):
                     node["mask"] = True
                 elif cls == "CanvasGroup":
                     node["canvas_group"] = True
+                elif cls == "PopupWindow":
+                    fields = schemas.read(reader)
+                    window = {"show_clip": "", "hide_clip": "", "loop_clip": "", "clips": {}}
+                    for field, target in (("mShowClip", "show_clip"), ("mHideClip", "hide_clip"),
+                                          ("mLoopClip", "loop_clip")):
+                        reference = fields.get(field) or {}
+                        path_id = int(reference.get("m_PathID", 0))
+                        if not path_id:
+                            continue
+                        animation = sprites.lookup(assets_file, int(reference.get("m_FileID", 0)), path_id)
+                        if animation is None or animation.type.name != "AnimationClip":
+                            node.setdefault("errors", []).append(cls + ": " + field + " is not an AnimationClip")
+                            continue
+                        clip = animation.read()
+                        tracks, duration, loop, unknown = mecanim_tracks(
+                            animation, clip_tree, material_float_names, material_vector_names)
+                        sprites.record_source(animation, "AnimationClip", node_path)
+                        name = clip.m_Name
+                        window[target] = name
+                        window["clips"][name] = {
+                            "duration": float(duration),
+                            "loop": bool(loop),
+                            "tracks": tracks,
+                            "unconverted_bindings": unknown,
+                        }
+                    node["window"] = window
+                elif cls == "UIMesh":
+                    from UnityPy.helpers.MeshHelper import MeshHandler
+
+                    payload = schemas.read(reader)
+                    mesh_pointer = payload["Mesh"]
+                    mesh_object = sprites.lookup(assets_file, mesh_pointer["m_FileID"], mesh_pointer["m_PathID"])
+                    if mesh_object is None or mesh_object.type.name != "Mesh":
+                        raise ValueError("official UIMesh has no source Mesh")
+                    sprites.record_source(mesh_object, "Mesh", node_path)
+                    mesh = MeshHandler(mesh_object.read())
+                    mesh.process()
+                    triangles = [int(index) for submesh in mesh.get_triangles()
+                                 for triangle in submesh for index in triangle]
+                    colors = getattr(mesh, "m_Colors", None) or []
+                    node["has_mesh"] = True
+                    node["mesh"] = {
+                        "vertices": [[float(value) for value in vertex[:3]] for vertex in mesh.m_Vertices],
+                        "uv": [[float(value) for value in uv[:2]] for uv in (mesh.m_UV0 or [])],
+                        "colors": [[float(value) for value in color[:4]] for color in colors],
+                        "triangles": triangles,
+                    }
+                    node["mesh_color"] = [float(payload["m_Color"][channel])
+                                           for channel in ("r", "g", "b", "a")]
+                    node["mesh_raycast_target"] = bool(payload.get("m_RaycastTarget", 0))
+                    node["mesh_maskable"] = bool(payload.get("m_Maskable", 1))
+                    material_pointer = payload["m_Material"]
+                    material_object = sprites.lookup(assets_file, material_pointer["m_FileID"],
+                                                     material_pointer["m_PathID"])
+                    if material_object is None or material_object.type.name != "Material":
+                        raise ValueError("official UIMesh has no source Material")
+                    sprites.record_source(material_object, "Material", node_path)
+                    material = material_object.read()
+                    saved = material.m_SavedProperties
+                    textures = {}
+                    for property_name, environment in saved.m_TexEnvs:
+                        pointer = environment.m_Texture
+                        texture_file = sprites.texture_file(
+                            pointer, material_object.assets_file, target_dir / "textures", node_path)
+                        if texture_file is not None:
+                            textures[property_name] = {
+                                **texture_file,
+                                "scale": [float(environment.m_Scale.x), float(environment.m_Scale.y)],
+                                "offset": [float(environment.m_Offset.x), float(environment.m_Offset.y)],
+                            }
+                    node["mesh_material"] = {
+                        "name": material.m_Name,
+                        "shader_path_id": str(material.m_Shader.path_id),
+                        "render_queue": int(material.m_CustomRenderQueue),
+                        "floats": {key: float(value) for key, value in saved.m_Floats},
+                        "vectors": {key: [float(value.r), float(value.g), float(value.b), float(value.a)]
+                                    for key, value in saved.m_Colors},
+                        "textures": textures,
+                    }
+                elif cls == "UIParticle":
+                    node["ui_particle"] = True
+                    sprites.record_source(reader, "UIParticle", node_path)
             except Exception as error:
-                node.setdefault("errors", []).append(cls + ": " + type(error).__name__)
+                node.setdefault("errors", []).append(cls + ": " + type(error).__name__ + ": " + str(error))
+        if transform is not None:
+            position = transform.m_LocalPosition
+            rotation = transform.m_LocalRotation
+            scale = transform.m_LocalScale
+            node["local_position"] = [float(position.x), float(position.y), float(position.z)]
+            node["local_rotation"] = [float(rotation.x), float(rotation.y), float(rotation.z), float(rotation.w)]
+            node["local_scale"] = [float(scale.x), float(scale.y), float(scale.z)]
         if rect is not None:
+            node["is_rect_transform"] = True
             node["anchor_min"] = [float(rect.m_AnchorMin.x), float(rect.m_AnchorMin.y)]
             node["anchor_max"] = [float(rect.m_AnchorMax.x), float(rect.m_AnchorMax.y)]
             node["anchored_position"] = [float(rect.m_AnchoredPosition.x), float(rect.m_AnchoredPosition.y)]
             node["size_delta"] = [float(rect.m_SizeDelta.x), float(rect.m_SizeDelta.y)]
             node["pivot"] = [float(rect.m_Pivot.x), float(rect.m_Pivot.y)]
             node["scale"] = [float(rect.m_LocalScale.x), float(rect.m_LocalScale.y)]
-            node["rotation"] = float(rect.m_LocalRotation is not None and 0.0 or 0.0)
             for child in rect.m_Children:
+                node["children"].append(build(child.read().m_GameObject.read(), node_path))
+        elif transform is not None:
+            for child in transform.m_Children:
                 node["children"].append(build(child.read().m_GameObject.read(), node_path))
         return node
 
@@ -547,7 +783,7 @@ def set_prefab_image_sprite(root, node_name, sprite_key):
     matches[0]["sprite"] = sprite_key
 
 
-def portrait_prefabs(apk, sprites, schemas, story, prefabs):
+def portrait_prefabs(apk, sprites, schemas, story, prefabs, target_dir):
     faces_by_role = {}
     for line in story["dialogues"]:
         if line["role_id"] and line["role_face"]:
@@ -587,7 +823,7 @@ def portrait_prefabs(apk, sprites, schemas, story, prefabs):
                              + role_id + " " + str(sorted(requested_faces - class_faces.keys())))
 
         key = "portrait_" + str(class_id)
-        portrait_root = convert_prefab(apk, sprites, schemas, prefab_path, bundle)
+        portrait_root = convert_prefab(apk, sprites, schemas, prefab_path, bundle, target_dir)
         main_name = "npc_portrait_" + str(class_id)
         main_sprite = find_sprite(apk, sprites, class_id, main_name)
         set_prefab_image_sprite(portrait_root, "Main", main_sprite["key"])
@@ -688,20 +924,21 @@ def ui_payload(apk, target_dir, story):
     sprites = SpriteCache(apk)
     prefabs = []
     for key, (path, bundle) in UI_PANELS.items():
-        prefabs.append({"key": key, "root": convert_prefab(apk, sprites, schemas, path, bundle)})
-    portrait_sources = portrait_prefabs(apk, sprites, schemas, story, prefabs)
+        prefabs.append({"key": key, "root": convert_prefab(apk, sprites, schemas, path, bundle, target_dir)})
+    portrait_sources = portrait_prefabs(apk, sprites, schemas, story, prefabs, target_dir)
     try:
         hud_path = next(entry for entry, _ in apk.container(FIGHT_HUD_BUNDLE)
                         if entry.endswith("/" + FIGHT_HUD_PREFAB + ".prefab"))
         prefabs.append({"key": "record_fight_hud",
-                        "root": convert_prefab(apk, sprites, schemas, hud_path, FIGHT_HUD_BUNDLE)})
+                        "root": convert_prefab(apk, sprites, schemas, hud_path, FIGHT_HUD_BUNDLE, target_dir)})
     except StopIteration:
         pass
     entries, atlases, count = pack_atlas(sprites, target_dir / "atlas.png")
     payload = {"manifest": VERSION, "atlas": atlases[0], "atlases": atlases,
                "sprites": entries, "prefabs": prefabs}
     atlas_paths = [target_dir / entry["file"] for entry in atlases]
-    return payload, atlas_paths, sprites.failures, count, portrait_sources, sprites.sources
+    texture_outputs = list(sprites.texture_outputs.values())
+    return payload, atlas_paths, texture_outputs, sprites.failures, count, portrait_sources, sprites.sources
 
 
 def main():
@@ -719,7 +956,7 @@ def main():
     outputs.append(write_with_meta(PAYLOAD / "opening-stage.json", json_bytes(stage)))
     outputs.append(write_with_meta(PAYLOAD / "opening-record.bytes", record["bytes"]))
 
-    ui, atlas_paths, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
+    ui, atlas_paths, texture_outputs, failures, atlas_sprites, portrait_sources, ui_sources = ui_payload(
         apk, PAYLOAD / "ui", story)
     outputs.append(write_with_meta(OFFICIAL_DATA / "opening-story.json", json_bytes(story)))
     outputs.append(write_with_meta(PAYLOAD / "opening-story.json", json_bytes(story)))
@@ -727,6 +964,7 @@ def main():
     for atlas_path in atlas_paths:
         outputs.append({"path": atlas_path.relative_to(ROOT).as_posix(), "bytes": atlas_path.stat().st_size,
                         "sha256": sha256(atlas_path.read_bytes())})
+    outputs.extend(texture_outputs)
 
     manifest = {
         "manifest": VERSION,

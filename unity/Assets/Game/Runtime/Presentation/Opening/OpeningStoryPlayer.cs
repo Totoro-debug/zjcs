@@ -33,6 +33,7 @@ namespace Zjcs.Presentation.Opening
         private GameObject blackMask;
         private GameObject invisibleMask;
         private readonly List<GameObject> windows = new List<GameObject>();
+        private readonly Dictionary<GameObject, string> windowKeys = new Dictionary<GameObject, string>();
         private bool uiHidden;
         private bool skipMode;
         private bool confirmClicked;
@@ -79,7 +80,7 @@ namespace Zjcs.Presentation.Opening
             CloseDialogs();
             HideBlackMask();
             HideInvisibleMask();
-            CloseAllWindows();
+            yield return CloseAllWindows();
             SetUiHidden(false);
         }
 
@@ -88,7 +89,7 @@ namespace Zjcs.Presentation.Opening
             CloseDialogs();
             HideBlackMask();
             HideInvisibleMask();
-            CloseAllWindows();
+            CloseAllWindowsImmediately();
             SetUiHidden(false);
         }
 
@@ -129,11 +130,10 @@ namespace Zjcs.Presentation.Opening
                     break;
                 case "OpenShowPanelNode":
                     ShowInvisibleMask();
-                    yield return ShowWindow(PanelKey(node.WindowPath));
+                    yield return ShowWindow(PanelKey(node.WindowPath), node.Instant);
                     break;
                 case "CloseWindowNode":
-                    CloseAllWindows();
-                    yield return null;
+                    yield return CloseAllWindows(node.Instant);
                     break;
                 case "LeaveStoryFightNode":
                     onLeaveFight?.Invoke();
@@ -199,8 +199,15 @@ namespace Zjcs.Presentation.Opening
                 yield break;
             }
 
-            if (dialogPanel == null) dialogPanel = ui.Create("talk_dialog");
-            dialogPanel.SetActive(true);
+            if (dialogPanel == null)
+            {
+                dialogPanel = ui.Create("talk_dialog");
+                dialogPanel.SetActive(true);
+                if (assets.Ui.Prefabs.TryGetValue("talk_dialog", out OpeningUiNode dialogPrefab)
+                    && dialogPrefab.Window != null)
+                    yield return ui.PlayAnimation(dialogPanel, "talk_dialog", dialogPrefab.Window.ShowClip);
+            }
+            else dialogPanel.SetActive(true);
             Button next = FindButton(dialogPanel, "NextBtn");
             foreach (OpeningDialogLine line in lines)
             {
@@ -439,7 +446,7 @@ namespace Zjcs.Presentation.Opening
             return string.Empty;
         }
 
-        private IEnumerator ShowWindow(string panelKey)
+        private IEnumerator ShowWindow(string panelKey, bool instant = false)
         {
             if (string.IsNullOrEmpty(panelKey) || !assets.Ui.Prefabs.ContainsKey(panelKey))
             {
@@ -449,17 +456,32 @@ namespace Zjcs.Presentation.Opening
             }
             GameObject created = ui.Create(panelKey);
             windows.Add(created);
+            windowKeys[created] = panelKey;
             created.SetActive(true);
-            // The official prefab plays its show animation; the offline copy carries the
-            // original layout but no clips, so the wait is one frame plus the popup guard.
-            yield return null;
-            yield return new WaitForSecondsRealtime(0.2f);
+            if (assets.Ui.Prefabs.TryGetValue(panelKey, out OpeningUiNode prefab) && prefab.Window != null)
+                yield return ui.PlayAnimation(created, panelKey, prefab.Window.ShowClip, instant);
         }
 
-        private void CloseAllWindows()
+        private IEnumerator CloseAllWindows(bool instant = false)
+        {
+            foreach (GameObject window in windows)
+            {
+                if (window == null) continue;
+                if (windowKeys.TryGetValue(window, out string panelKey)
+                    && assets.Ui.Prefabs.TryGetValue(panelKey, out OpeningUiNode prefab)
+                    && prefab.Window != null && !instant && !string.IsNullOrEmpty(prefab.Window.HideClip))
+                    yield return ui.PlayAnimation(window, panelKey, prefab.Window.HideClip);
+                UnityEngine.Object.Destroy(window);
+            }
+            windows.Clear();
+            windowKeys.Clear();
+        }
+
+        private void CloseAllWindowsImmediately()
         {
             foreach (GameObject window in windows) if (window != null) UnityEngine.Object.Destroy(window);
             windows.Clear();
+            windowKeys.Clear();
         }
 
         private void CloseDialogs()
