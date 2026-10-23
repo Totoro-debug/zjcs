@@ -4,6 +4,8 @@
 
 状态：未完成
 
+已接入素材已复核当前云端 `871_156598`：16 个独立粒子材质补齐真实 shader、关键字与纹理采样参数，两个遗留材质属性更新为当前值；恢复官方 Image 的射线开关和透明 `NoDrawingRayCast` 命中区域。来源分别见 `assets/reference/official-map/current-ui-particle-materials-source-manifest.json`、`current-ui-graphics-source-manifest.json`。Unity Play Mode 已通过 EventSystem 坐标／射线模拟选择职业、常驻单抽、关闭结果、进入兑换与返回祈愿；没有控制 Windows 鼠标。该次结果音频未被观测到，不能视为音频播放验证通过。画面复核发现的 prefab 外语占位文字由 `refresh_current_ui_text_bindings.py` 根据当前中文 rawfile 的实际本地化键转换，转换前字节保留在来源记录中；这不代表整套祈愿功能已验收完成。
+
 ## 功能简介
 
 女神像或技能页进入常驻／高阶祈愿，范围包含职业选择与自选、技能池、概率与保底、积分、馈赠、兑换、材料购买、详情、历史，以及对应 UI、动画、特效和音频。幻兽及古遗物奖池分别见[幻兽召唤](pet-gacha.md)和[古遗物寻宝](treasure-gacha.md)。

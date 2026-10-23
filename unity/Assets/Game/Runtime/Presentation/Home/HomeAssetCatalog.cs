@@ -275,6 +275,9 @@ namespace Zjcs.Presentation.Home
         public string localization_key;
         public bool mask;
         public bool mask_component_flags, mask_enabled, mask_show_graphic;
+        public bool has_tab_group, tab_group_allow_switch_off;
+        public bool no_drawing_raycast, raycast_target;
+        public float[] raycast_padding;
         public bool rectmask2d;
         public HomeUiLayout layout;
         public HomeUiGrid grid;
@@ -360,6 +363,9 @@ namespace Zjcs.Presentation.Home
         public string localization_key;
         public bool mask;
         public bool mask_component_flags, mask_enabled, mask_show_graphic;
+        public bool has_tab_group, tab_group_allow_switch_off;
+        public bool no_drawing_raycast, raycast_target;
+        public float[] raycast_padding;
         public bool rectmask2d;
         public HomeUiLayout layout;
         public HomeUiGrid grid;
@@ -389,6 +395,11 @@ namespace Zjcs.Presentation.Home
             localization_key = localization_key,
             mask = mask,
             mask_component_flags = mask_component_flags,
+            has_tab_group = has_tab_group,
+            no_drawing_raycast = no_drawing_raycast,
+            raycast_target = raycast_target,
+            raycast_padding = raycast_padding,
+            tab_group_allow_switch_off = tab_group_allow_switch_off,
             mask_enabled = mask_enabled,
             mask_show_graphic = mask_show_graphic,
             rectmask2d = rectmask2d,

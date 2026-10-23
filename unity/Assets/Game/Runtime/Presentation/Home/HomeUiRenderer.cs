@@ -311,6 +311,14 @@ namespace Zjcs.Presentation.Home
             foreach (HomeUiAnimation animation in source.animations ?? Array.Empty<HomeUiAnimation>())
                 if (animation != null && !string.IsNullOrEmpty(animation.name)) animations[animation.name] = animation;
 
+            if (source.no_drawing_raycast)
+            {
+                var hit = gameObject.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
+                hit.raycastTarget = source.raycast_target;
+                if (source.raycast_padding != null && source.raycast_padding.Length == 4)
+                    hit.raycastPadding = new Vector4(source.raycast_padding[0], source.raycast_padding[1],
+                        source.raycast_padding[2], source.raycast_padding[3]);
+            }
             Image image = null;
             if (HasImage(source.image))
             {
@@ -379,6 +387,11 @@ namespace Zjcs.Presentation.Home
             {
                 CanvasGroup group = gameObject.AddComponent<CanvasGroup>();
                 group.alpha = Mathf.Clamp01(source.alpha);
+            }
+            if (source.has_tab_group)
+            {
+                ToggleGroup tabs = gameObject.AddComponent<ToggleGroup>();
+                tabs.allowSwitchOff = source.tab_group_allow_switch_off;
             }
             bool toggle = Array.IndexOf(source.scripts ?? Array.Empty<string>(), "Toggle") >= 0;
             bool tabItem = Array.IndexOf(source.scripts ?? Array.Empty<string>(), "TabItem") >= 0;
