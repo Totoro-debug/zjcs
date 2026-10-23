@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.Character
         public OfficialCharacterPanelData character;
         public OfficialCharacterPanelData character_props;
         public OfficialCharacterPanelData rank_upgrade;
+        public OfficialCharacterPanelData appearance_preview;
     }
 
     [Serializable]

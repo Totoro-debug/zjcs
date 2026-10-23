@@ -183,6 +183,7 @@ namespace Zjcs.Presentation.Character
 
         private static CharacterModelPackage sharedPackage;
         private OfflineCharacterProgressionService progression;
+        private WardrobeResolution previewAppearance;
         private RectTransform modelRect;
         private Vector2 renderedSize;
         private float modelScale;
@@ -191,8 +192,15 @@ namespace Zjcs.Presentation.Character
 
         public void Initialize(OfflineCharacterProgressionService characterProgression)
         {
+            Initialize(characterProgression, null);
+        }
+
+        public void Initialize(OfflineCharacterProgressionService characterProgression,
+            WardrobeResolution appearanceOverride)
+        {
             progression = characterProgression != null ? characterProgression
                 : throw new ArgumentNullException(nameof(characterProgression));
+            previewAppearance = appearanceOverride;
             modelRect = transform as RectTransform;
             if (modelRect == null) throw new InvalidOperationException("The character preview must be mounted to a RectTransform.");
             if (sharedPackage == null) sharedPackage = CharacterModelPackage.OpenDefault();
@@ -224,7 +232,7 @@ namespace Zjcs.Presentation.Character
             Dictionary<string, object> poseParts = CharacterModelPackage.AsObject(poseData["parts"], "character pose parts");
             Dictionary<string, object> partIndex = CharacterModelPackage.AsObject(
                 CharacterModelPackage.AsObject(catalog["parts"], "character parts")[sex], sex + " parts");
-            WardrobeResolution appearance = progression.ResolveAppearance();
+            WardrobeResolution appearance = previewAppearance ?? progression.ResolveAppearance();
 
             var meshUris = new SortedDictionary<string, string>(StringComparer.Ordinal);
             foreach (KeyValuePair<int, int> skin in appearance.SkinByType.OrderBy(pair => pair.Key))
@@ -283,6 +291,12 @@ namespace Zjcs.Presentation.Character
                 graphics.Add(graphic);
             }
             renderedSize = modelRect.rect.size;
+        }
+
+        public void SetPreviewAppearance(WardrobeResolution appearance)
+        {
+            previewAppearance = appearance;
+            if (progression != null) Refresh();
         }
 
         private void LateUpdate()
