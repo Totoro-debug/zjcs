@@ -230,6 +230,8 @@ namespace Zjcs.Combat.Official
             };
 
             AddSourceMoves(skill, result.SourceMoves);
+            Dictionary<string, object> extSkill = Component(components, "FightSkillExtSkillComponent");
+            if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
             var pending = new Queue<int>();
             var visited = new HashSet<int>();
             var references = new Dictionary<int, FightBattleHitReference>();
@@ -764,6 +766,31 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> row = Object(item, "hp trigger status");
                 int statusId = Int(row, "StatusId");
                 if (statusId > 0) output.Add(statusId);
+            }
+        }
+
+        /// <summary>
+        /// Reads <c>FightSkillExtSkillComponent.ExtSkill</c> entries that carry a fixed skill id.
+        /// Rate-based providers are honoured; other provider types are ignored.
+        /// </summary>
+        private static void AddExtraSkills(Dictionary<string, object> component,
+            List<FightBattleSkillExtra> output)
+        {
+            object raw;
+            if (!component.TryGetValue("ExtSkill", out raw) || raw == null) return;
+            foreach (object item in Array(raw, "ExtSkill"))
+            {
+                Dictionary<string, object> row = Object(item, "ext skill");
+                if (!row.TryGetValue("ExtSkillIdProvider", out object providerValue)
+                    || !(providerValue is Dictionary<string, object> provider)
+                    || !provider.ContainsKey("FixedExtSkillId")) continue;
+                int skillId = Int(provider, "FixedExtSkillId");
+                if (skillId <= 0) continue;
+                output.Add(new FightBattleSkillExtra
+                {
+                    SkillId = skillId,
+                    Rate = Float(row, "Rate", 1f)
+                });
             }
         }
 
