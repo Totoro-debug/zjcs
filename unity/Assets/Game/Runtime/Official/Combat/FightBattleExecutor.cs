@@ -300,6 +300,7 @@ namespace Zjcs.Combat.Official
                     if (triggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, triggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
+                    ApplyChildSkill(target, hit, casts, damageEvents, movements, ref lastDelay);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -405,6 +406,59 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        private int childDepth;
+
+        /// <summary>
+        /// Official <c>FightDamageComponent.ChildSkillCfg</c>: after a hit lands, the damaged target may
+        /// release the configured child skill (rate and remaining-HP condition). Child skills run one
+        /// level deep and keep their casts in the current step.
+        /// </summary>
+        private void ApplyChildSkill(FightBattleUnitState target, FightBattleHitDefinition hit,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay)
+        {
+            if (statusCatalog == null || hit == null || hit.ChildSkillId <= 0 || childDepth > 0) return;
+            if (target == null || target.Hp <= 0) return;
+            if (hit.ChildSkillRate < 1f && random.Next() > hit.ChildSkillRate) return;
+            if (hit.ChildSkillLessThanHpPer >= 0f
+                && target.Hp / (double)Math.Max(1L, target.MaxHp) > hit.ChildSkillLessThanHpPer) return;
+            int level = Math.Max(1, target.Level);
+            int subRank = Math.Max(1, target.SubRank);
+            FightBattleSkillDefinition skill;
+            try
+            {
+                skill = statusCatalog.CreateSkill(hit.ChildSkillId, -1, 0, 1, level, subRank,
+                    ToPropertyList(statusCatalog.CalculateSkillProps(hit.ChildSkillId, 1, level, subRank)));
+            }
+            catch (InvalidOperationException)
+            {
+                return;
+            }
+            List<FightBattleUnitState> targets = FightBattleTargeting.Select(target, units,
+                skill.TargetType, 0, false, false, skill);
+            if (targets.Count == 0 && !FightBattleTargeting.HasCasterAreaTargets(target, units, skill)) return;
+            checkpoint.Statistics.RecordCast(target.Id, skill.EntityId, skill.ItemId);
+            var cast = new FightBattleSkillCastEvent
+            {
+                ActorId = target.Id,
+                Slot = -1,
+                SkillEntityId = skill.EntityId,
+                SkillItemId = skill.ItemId
+            };
+            foreach (FightBattleUnitState unit in targets) cast.TargetIds.Add(unit.Id);
+            casts.Add(cast);
+            childDepth++;
+            try
+            {
+                ExecuteSkill(target, skill, targets, casts, damageEvents, movements, out float delay);
+                if (delay > lastDelay) lastDelay = delay;
+            }
+            finally
+            {
+                childDepth--;
+            }
         }
 
         private int replayDepth;

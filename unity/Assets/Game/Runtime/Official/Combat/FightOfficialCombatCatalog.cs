@@ -670,6 +670,22 @@ namespace Zjcs.Combat.Official
         }
 
         /// <summary>Reads <c>FightDamageComponent.DisperseStatus</c> (dispel on hit).</summary>
+        /// <summary>Reads <c>FightDamageComponent.ChildSkillCfg</c> (child skill on damaged target).</summary>
+        private void AddChildSkill(int damageId, FightBattleHitEntity output)
+        {
+            if (damageId <= 0 || output == null
+                || !entities.TryGetValue(damageId, out Dictionary<string, object> components)
+                || !components.TryGetValue("FightDamageComponent", out object raw)
+                || !(raw is Dictionary<string, object> damage)
+                || !damage.TryGetValue("ChildSkillCfg", out object rawChild)
+                || !(rawChild is Dictionary<string, object> child)) return;
+            int skillId = Int(child, "SkillId");
+            if (skillId <= 0) return;
+            output.ChildSkillId = skillId;
+            output.ChildSkillRate = Float(child, "Rate", 1f);
+            output.ChildSkillLessThanHpPer = Float(child, "LessThanHpPer", -1f);
+        }
+
         private void AddDisperseStatus(int damageId, FightBattleHitEntity output)
         {
             if (damageId <= 0 || output == null
@@ -889,6 +905,7 @@ namespace Zjcs.Combat.Official
                 result.DamageId = Int(damage, "DamageId");
                 AddStatusApplications(result.DamageId, result);
                 AddDisperseStatus(result.DamageId, result);
+                AddChildSkill(result.DamageId, result);
                 AddHitMove(result.DamageId, result);
                 result.DamageType = Int(damage, "DamageType");
                 result.BasicProperty = Int(damage, "DamageBasicProp", 1);
