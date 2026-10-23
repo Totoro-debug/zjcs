@@ -72,12 +72,23 @@ namespace Zjcs.Offline.Progression
 
         public void ValidateBindings()
         {
-            if (characterOverview == null || characterProperties == null || progressionRules == null
-                || timedAppearanceItems == null || wardrobeItems == null || characterPanels == null
-                || wardrobeRules == null || wardrobeUi == null || sourceManifest == null || skillRules == null
-                || skillRecommendations == null)
-                throw new InvalidOperationException("Official character TextAssets are not bound.");
-            if (sprites == null || sprites.Length == 0 || System.Array.Exists(sprites, value => value == null || value.sprite == null))
+            var missing = new List<string>();
+            if (characterOverview == null) missing.Add(nameof(characterOverview));
+            if (characterProperties == null) missing.Add(nameof(characterProperties));
+            if (progressionRules == null) missing.Add(nameof(progressionRules));
+            if (timedAppearanceItems == null) missing.Add(nameof(timedAppearanceItems));
+            if (wardrobeItems == null) missing.Add(nameof(wardrobeItems));
+            if (wardrobeRules == null) missing.Add(nameof(wardrobeRules));
+            if (wardrobeUi == null) missing.Add(nameof(wardrobeUi));
+            if (characterPanels == null) missing.Add(nameof(characterPanels));
+            if (sourceManifest == null) missing.Add(nameof(sourceManifest));
+            if (skillRules == null) missing.Add(nameof(skillRules));
+            if (skillRecommendations == null) missing.Add(nameof(skillRecommendations));
+            if (missing.Count > 0)
+                throw new InvalidOperationException("Official character TextAssets are not bound: "
+                    + string.Join(", ", missing));
+            if (sprites == null || sprites.Length == 0
+                || System.Array.Exists(sprites, value => value == null || value.sprite == null))
                 throw new InvalidOperationException("Official character sprite bindings are incomplete.");
         }
 
