@@ -104,7 +104,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 职业切换与晋升结果的皮肤同步待职业模块；不兼容装备提示仍缺。
 - [x] 人物模型已按官方 `CharacterCreationMeshFrameDye` 着色器与 `masks` 遮罩接入染色：按 `character_skin_dye`／`character_skin_color`／`Wardrobe.Dyes` 计算各皮肤类型的通道 HSV 偏移。
 - [x] 从衣柜/外观编辑返回时会重刷模型、属性摘要、五槽、称号与职业显示（`CloseWardrobe`）。
-- [x] 原 `PreviewAppearanceDialog` 已从固定包恢复并加入人物面板资源；衣柜卡片“试穿”按钮用临时 `WardrobeResolution` 打开官方预览框架与人物模型，关闭/Esc 只销毁预览，不写存档。
+- [x] 原 `PreviewAppearanceDialog` 已从固定包恢复并加入人物面板资源；衣柜卡片“试穿”按钮用临时 `WardrobeResolution` 打开官方预览框架与人物模型，batchmode Play Mode 已验证打开/关闭不写存档。
 - [ ] 窗口态核验试穿模型、原动画/音频及取消/确认的真实鼠标交互；`PreviewAppearanceDialog` 的骨骼动画与礼包奖励绑定仍不完整。
 
 ### 属性、战力、等级与位阶
@@ -200,7 +200,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 
-验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（27,998 个 GUID）。Unity `2022.3.57f1c2` Editor `BindOfficialCatalogs` 成功（1563 wardrobe entries、1723 appearance skins、1764 official sprites、pinned 854_156383），`CharacterProgressionValidation.Run` 通过（经验、基础属性、衣柜互斥、限时外观扩展、属性管线）。Roslyn 单独编译 `Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过；Play Mode batchmode 逻辑验收通过，覆盖技能合成/换位、装备碎片合成/精炼、衣柜已读、方案与称号写盘后重载。批处理未生成装备槽图标节点（83 个 Image），不能据此确认窗口态槽位渲染；隔离副本窗口态运行时 Text.font 赋值抛空引用后虽容错继续，并产生两张 PNG，但两张哈希完全相同，未证明人物界面有可见变化，故不视为画面验证通过。真实鼠标/拖拽命中、动画/音频与完整画面仍未验证。
+验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（27,998 个 GUID）。Unity `2022.3.57f1c2` Editor `BindOfficialCatalogs` 成功（1563 wardrobe entries、1723 appearance skins、1764 official sprites、pinned 854_156383），`CharacterProgressionValidation.Run` 通过（经验、基础属性、衣柜互斥、限时外观扩展、属性管线）。Roslyn 单独编译 `Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过；Play Mode batchmode 逻辑验收通过，覆盖技能合成/换位、装备碎片合成/精炼、衣柜已读、试穿预览不变更存档、方案与称号写盘后重载。批处理未生成装备槽图标节点（83 个 Image），不能据此确认窗口态槽位渲染；隔离副本窗口态运行时 Text.font 赋值抛空引用后虽容错继续，并产生两张 PNG，但两张哈希完全相同，未证明人物界面有可见变化，故不视为画面验证通过。真实鼠标/拖拽命中、动画/音频与完整画面仍未验证。
 
 ### 待迁移的规则与表现
 
