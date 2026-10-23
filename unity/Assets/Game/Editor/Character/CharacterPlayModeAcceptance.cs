@@ -248,6 +248,7 @@ namespace Zjcs.Editor.Character
                 Debug.LogWarning("[Character acceptance] Equipped slot icons were not created in batchmode; "
                     + "visual icon checks need a windowed run.");
 
+            yield return Capture("character-01-panel");
             Button skillButton = FindButton("CharacterPanelSkillBtn");
             skillButton.onClick.Invoke();
             yield return WaitFrames(3);
@@ -325,6 +326,7 @@ namespace Zjcs.Editor.Character
                 "The official appearance preview dialog did not open.");
             Require(progression.Player.Wardrobe.WornItems.Count == wornBeforePreview,
                 "Appearance preview changed the saved wardrobe state.");
+            yield return Capture("character-04-appearance-preview");
             Button closePreview = FindButton("ClickRaycast");
             Require(closePreview != null, "The official preview close target is missing.");
             closePreview.onClick.Invoke();
