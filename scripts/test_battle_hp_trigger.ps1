@@ -22,6 +22,9 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
 $official = $catalog.CreateStatus(60680, 1, 1)
 Assert-Trigger ([Math]::Abs($official.HpTriggerPer - 0.15) -lt 0.0001) 'Official HP trigger ratio mismatch'
 Assert-Trigger ($official.HpTriggerStatuses.Count -ge 1 -and $official.HpTriggerStatuses[0] -eq 60681) 'Official HP trigger status list mismatch'
+$officialSkillStatus = $catalog.CreateStatus(25070, 1, 1)
+Assert-Trigger ([Math]::Abs($officialSkillStatus.HpTriggerPer - 0.15) -lt 0.0001) 'Official HP trigger skill ratio mismatch'
+Assert-Trigger ($officialSkillStatus.HpTriggerSkills.Count -eq 1 -and $officialSkillStatus.HpTriggerSkills[0] -eq 50010) 'Official HP trigger skill list mismatch'
 
 function New-Unit($hp, $maxHp) {
     $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -74,5 +77,18 @@ $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wa
 $formula = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
 [void][Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
 Assert-Trigger (($start.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 1) 'Executor did not run the HP trigger opening pass'
+
+# Official status 60680 applies 60681 and requests skill 70140 when the owner drops below 15%.
+$officialUnit = New-Unit 100 1000
+$officialStatus = $catalog.CreateStatus(60680, 1, 1)
+$officialUnit.Statuses.Add($officialStatus)
+$officialApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($officialUnit, $catalog, $false)
+Assert-Trigger ($officialApplied -eq 1) 'Official HP trigger did not fire'
+Assert-Trigger (($officialUnit.Statuses | Where-Object { $_.ClassId -eq 60681 }).Count -eq 1) 'Official HP trigger did not apply 60681'
+$skillUnit = New-Unit 100 1000
+$skillUnit.Statuses.Add($officialSkillStatus)
+$triggerSkills = [System.Collections.Generic.List[int]]::new()
+$skillApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($skillUnit, $catalog, $false, $triggerSkills)
+Assert-Trigger ($skillApplied -eq 1 -and $triggerSkills.Count -eq 1 -and $triggerSkills[0] -eq 50010) 'Official HP trigger did not request skill 50010'
 
 Write-Output 'Battle HP trigger checks passed: official mapping, threshold, trigger status application, MaxCount and executor opening pass.'
