@@ -21,9 +21,11 @@ def build(activate=False):
         'current-table-source-manifest.json', 'current-combat-source-manifest.json',
         'current-material-source-manifest.json', 'current-home-layers-source-manifest.json',
         'current-language-source-manifest.json', 'current-sprites-source-manifest.json',
-        'current-animators-source-manifest.json', 'current-shared-table-bindings-source-manifest.json')]
+        'current-animators-source-manifest.json', 'current-shared-table-bindings-source-manifest.json',
+        'current-ui-masks-source-manifest.json')]
     source_paths += [ROOT / 'assets/reference/character-creation' / name for name in (
-        'current-mesh-source-manifest.json', 'current-native-prefabs-source-manifest.json')]
+        'current-mesh-source-manifest.json', 'current-native-prefabs-source-manifest.json',
+        'current-native-concurrent-bindings-source-manifest.json')]
     edges = {}
     sizes = {}
     evidence = []
@@ -44,6 +46,12 @@ def build(activate=False):
             if before in edges and edges[before] != after:
                 raise ValueError('Ambiguous conversion of shared bytes: ' + before)
             edges[before] = after
+            for intermediate in record.get('intermediate_outputs', []):
+                digest = intermediate['sha256']
+                if digest in edges and edges[digest] != after:
+                    raise ValueError('Ambiguous intermediate conversion: ' + digest)
+                if digest != after:
+                    edges[digest] = after
             payload = ROOT / record['path']
             if 'bytes' in record:
                 sizes[after] = record['bytes']

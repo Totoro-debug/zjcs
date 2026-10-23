@@ -21,6 +21,8 @@
 
 角色已接入素材的新版转换使用 `convert_official_skeletons.py`、`refresh_current_character_meshes.py` 和 `refresh_current_native_prefabs.py`：独立读取官方骨骼及拆分动画，先核对骨骼、约束、影响采样顶点的动画通道和附件几何，再更新创角／人物网格包及 92 个男体原生 prefab 的三角形索引。未变化的采样顶点与两条实际原生动画保留；这不代表新增动作已经接入。原始二进制、独立解码结果、旧网格包和旧 prefab 均保存在 `.tools/source-packages/`，转换输入输出哈希见 `assets/reference/character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json`。男女模型重新导出保留原 `.meta` 与 GUID。
 
+`verify_current_native_prefab_bindings.py` 另外核对原生 prefab 的网格名称、顶点布局、三角形与逐通道数值；92 个男体变体共 654 个网格通过核对，其中 51 个仅有不超过 `1e-6` 的浮点舍入差异。再次生成导致文件编号变化时，保留前次凭据及已核验的中间输出哈希，由 `current_conversion_state.py` 和 `sync_current_output_inventories.py` 沿转换链核验实际绑定；不将其他生成工具的动画输出归入本转换器。
+
 该角色资源替换已通过 Editor 导入／编译和创角 Play Mode 流程；实际查看了男女体型及染色界面截图。交互使用 Unity EventSystem 按坐标命中进行模拟，覆盖外观组、染色、命名、草稿恢复、存档及初始武器，不占用系统鼠标。此结果仅覆盖已接入的角色资源和上述流程，其他模块的新版替换与验证分别记录。
 
 女体骨骼和全部 451 个动画经独立解码后与原版完全一致，男体发生变化的三角形索引按当前输入重建；等价性凭据包含两版原始对象及解码结果哈希。`verify_current_audio_sources.py` 完整解析新版万圣节 PCK、HIRC 和 EventBankMapping：9 段媒体及 117 个既有控制对象不变，新增 8 个对象和 2 条事件路由，既有 8,737 条路由不变；已接入的 6 份音频输出逐一核验后保留，详见 `assets/reference/official-map/current-audio-source-manifest.json`。
