@@ -21,6 +21,7 @@ namespace Zjcs.Presentation.Combat
     [Serializable] public sealed class BattleHudNode
     {
         public string name, path, localization_key;
+        public string[] scripts;
         public bool active, button, mask, rectmask2d;
         public bool has_image, has_text, has_scroll;
         public string text_value;
