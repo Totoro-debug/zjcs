@@ -275,7 +275,10 @@ namespace Zjcs.Editor.CharacterCreation
                     Require(session.Playback.Finished, "full record playback did not finish");
                     Require(session.Playback.DieActions > 0, "record death actions were not observed");
                     Require(session.Playback.DeathHolds > 0, "defeated units were not held for their death animation");
+                    Require(session.Playback.StackedDamages > 0,
+                        "stacked damage numbers were not offset by the official spacing");
                     Debug.Log("[Opening visual] full playback: die actions=" + session.Playback.DieActions
+                              + " stacked damage=" + session.Playback.StackedDamages
                               + " death holds=" + session.Playback.DeathHolds
                               + " actions=" + session.Playback.ActionAnimations
                               + " damage=" + session.Playback.DamageNumbers);

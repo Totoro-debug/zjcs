@@ -24,6 +24,7 @@ namespace Zjcs.Presentation.Opening
             new Dictionary<string, Dictionary<string, Color>>(StringComparer.Ordinal);
         private Color damageCureColor = Color.white;
         private Color damageDefaultColor = Color.white;
+        private Vector3 damageSpacing;
         private readonly Vector3 gridOrigin;
 
         private OpeningBattlefield(GameObject root, Camera camera, Transform unitRoot, Vector3 rootOffset,
@@ -153,7 +154,11 @@ namespace Zjcs.Presentation.Opening
             }
             damageCureColor = ReadColor(OpeningJson.Array(data["cure"], "cure color"));
             damageDefaultColor = ReadColor(OpeningJson.Array(data["default"], "default color"));
+            damageSpacing = ReadVector(OpeningJson.Array(data["spacing"], "damage spacing"));
         }
+
+        /// <summary>Official DamageUISpacing applied per stacked number on one target.</summary>
+        public Vector3 DamageSpacing => damageSpacing;
 
         /// <summary>Official damage text colour for an element and result variant.</summary>
         public Color ResolveDamageColor(string elementName, string variant, string resultType)

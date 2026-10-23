@@ -69,6 +69,8 @@ namespace Zjcs.Presentation.Opening
         public int ActionAnimations { get; private set; }
         public int DieActions { get; private set; }
         public int DeathHolds { get; private set; }
+        public int StackedDamages { get; private set; }
+        private readonly Dictionary<int, List<float>> recentDamage = new Dictionary<int, List<float>>();
 
         public void RequestFastForward()
         {
@@ -354,8 +356,15 @@ namespace Zjcs.Presentation.Opening
                 if (OpeningJson.Bool(flags, "IsDodge")) return;
             }
             if (!result.TryGetValue("Pos", out object posValue) || !(posValue is Dictionary<string, object> position)) return;
+            int targetId = 0;
+            if (component.TryGetValue("TargetId", out object targetValue)
+                && targetValue is Dictionary<string, object> targetRef)
+                targetId = OpeningJson.Int(targetRef, "EntityId");
+            int stackIndex = NextDamageStack(targetId);
+            if (stackIndex > 0) StackedDamages++;
             Vector3 world = battlefield.GridToWorld(OpeningJson.Int(position, "X"),
-                OpeningJson.Int(position, "Y")) + new Vector3(0f, 0.7f, 0f);
+                OpeningJson.Int(position, "Y")) + new Vector3(0f, 0.7f, 0f)
+                + battlefield.DamageSpacing * stackIndex;
             Vector3 screen = battlefield.StageCamera.WorldToScreenPoint(world);
             if (screen.z < 0f) return;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(damageLayer, screen, null,
@@ -373,6 +382,22 @@ namespace Zjcs.Presentation.Opening
             Color color = battlefield.ResolveDamageColor(element, variant, type);
             labelObject.AddComponent<OpeningDamageFloat>().Initialize(label, local, color);
             DamageNumbers++;
+        }
+
+        /// <summary>Official DamageUISpacing stacking: a second hit on the same unit shifts down.</summary>
+        private int NextDamageStack(int targetId)
+        {
+            if (targetId <= 0) return 0;
+            if (!recentDamage.TryGetValue(targetId, out List<float> times))
+            {
+                times = new List<float>();
+                recentDamage[targetId] = times;
+            }
+            float now = Time.time;
+            times.RemoveAll(value => now - value > 0.6f);
+            int index = times.Count;
+            times.Add(now);
+            return index;
         }
 
         private TMPro.TMP_FontAsset ResolveDamageFont()
