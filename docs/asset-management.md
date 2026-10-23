@@ -178,7 +178,7 @@ python -B scripts/check_unity_project.py
 
 ## Unity 素材快照
 
-当前转换的 19 份来源凭据已经按路径及实际转换链复核；其中 UI 额外恢复官方 Mask、Image 射线参数、透明命中区域与页签组。`refresh_current_ui_text_bindings.py` 根据当前中文 rawfile 的实际键修正 12 份载荷中的 1,181 处 prefab 外语／旧文本，原始文字与转换前载荷保留。Unity Editor 的 `ProjectTools.Validate` 已通过工程、战斗烟测和地图 10 绑定检查；创角模拟输入和家园蒙版 GPU 检查已通过，抽卡模拟流程的音频播放未被观测到。完整家园与更新中文后的画面复验范围在所属功能页维护，以上不代表 Windows Player 或整游戏验收。
+当前转换来源凭据按路径及实际转换链复核；其中 UI 额外恢复官方 Mask、Image 射线参数、透明命中区域与页签组。`refresh_current_ui_text_bindings.py` 根据当前中文 rawfile 的实际键修正 13 份载荷中的 1,183 处 prefab 外语／旧文本，原始文字与转换前载荷保留。`sync_current_home_ui_bindings.py` 验证重生成的家园数据只缺少已核实的官方参数及中文绑定，再恢复既有转换字节；教程输入也保留这些参数，已实际重生成并核对语义一致。Unity Editor 的 `ProjectTools.Validate` 已通过工程、战斗烟测和地图 10 绑定检查；创角模拟输入、家园蒙版 GPU 检查和本次家园验收流程均已通过。更新中文后的抽卡画面已在同步当前代码／同一载荷的独立副本中复验，音频播放未被观测到。详细范围在所属功能页维护，以上不代表 Windows Player 或整游戏验收。
 
 当前 APK／热更新迁移使用 `asset-pack/layout.json` 与 `asset-pack/lock.json` 记录完整素材快照，覆盖 `assets/official/`、`assets/characters/`、`assets/reference/`、`unity/Assets/Official/`、`unity/Assets/StreamingAssets/` 和 `unity/Assets/Game/Resources/`。转换工具、Unity 场景、shader 及 C# 绑定另记代码哈希；Library 与其他编辑器缓存不打包。原始 APK、CDN／设备缓存及替换前按哈希保留的载荷继续存放在 `.tools/source-packages/`。
 

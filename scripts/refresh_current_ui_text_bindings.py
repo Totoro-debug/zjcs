@@ -12,13 +12,14 @@ from current_conversion_state import activated_receipt
 from official_apk import ROOT
 from official_source import OfficialSource
 from refresh_current_localization import language, sha
+from refresh_current_character_meshes import preserve
 
 
 def build(activate_outputs=False):
     version = OfficialSource().version
     receipt = ROOT / 'assets/reference/official-map/current-ui-text-bindings-source-manifest.json'
     prior = activated_receipt(receipt, version)
-    if prior is not None:
+    if prior is not None and prior.get('includes_home_tutorial_inputs'):
         return prior
     texts, inputs = language(ROOT / '.tools/source-packages/WwiseBnk')
     stage = ROOT / '.tools/source-packages/current' / version / 'ui-text-bindings'
@@ -29,6 +30,8 @@ def build(activate_outputs=False):
         source = ROOT / 'assets/reference/official-map' / name
         document = json.loads(source.read_bytes())
         paths.update(ROOT / row['path'] for row in document['outputs'])
+    paths.update(ROOT / name for name in ('assets/official/home-tutorial/talk.json',
+                                         'assets/official/home-wish-tutorial.json'))
     for path in sorted(paths):
         if 'manifest' in path.name:
             continue
@@ -70,8 +73,14 @@ def build(activate_outputs=False):
                         'staged': target.relative_to(ROOT).as_posix(), 'changes': changes})
         print(path.relative_to(ROOT), len(changes), flush=True)
     result = {'manifest': version, 'operation': __doc__, 'inputs': inputs,
-              'outputs': outputs, 'generator_sha256': sha(Path(__file__).read_bytes())}
+              'outputs': outputs, 'includes_home_tutorial_inputs': True,
+              'generator_sha256': sha(Path(__file__).read_bytes())}
+    if prior is not None:
+        result['prior_outputs'] = prior.get('prior_outputs', []) + prior['outputs']
+        result['previous_receipt'] = preserve(receipt)
     source = stage / 'source-manifest.json'
+    if source.exists():
+        preserve(source)
     source.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')
     return activate(source, Path(__file__), receipt) if activate_outputs else result
 
