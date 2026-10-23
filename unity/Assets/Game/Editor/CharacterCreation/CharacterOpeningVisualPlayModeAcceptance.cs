@@ -254,6 +254,11 @@ namespace Zjcs.Editor.CharacterCreation
                     yield return null;
                 Require(session.Playback.DamageNumbers > 0, "record damage numbers were not rendered");
                 Debug.Log("[Opening visual] damage numbers=" + session.Playback.DamageNumbers);
+                float actionDeadline = Time.realtimeSinceStartup + 30f;
+                while (session.Playback.ActionAnimations == 0 && Time.realtimeSinceStartup < actionDeadline)
+                    yield return null;
+                Require(session.Playback.ActionAnimations > 0, "record action animations were not driven");
+                Debug.Log("[Opening visual] action animations=" + session.Playback.ActionAnimations);
                 yield return Capture("visual-damage");
                 session.Playback.RequestFastForward();
                 float playDeadline = Time.realtimeSinceStartup + 60f;
