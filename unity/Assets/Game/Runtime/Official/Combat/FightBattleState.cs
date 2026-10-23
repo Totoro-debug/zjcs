@@ -161,6 +161,14 @@ namespace Zjcs.Combat.Official
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         // Official FightSkillExtSkillComponent: extra skills released when the action ends.
         public List<FightBattleSkillExtra> ExtraSkills = new List<FightBattleSkillExtra>();
+        // Official FightSkillReplayComponent: replay the skill when the owner holds a configured
+        // status stack count (optionally consuming it).
+        public bool HasReplay;
+        public int ReplayStatusId;
+        public int ReplayStackCount;
+        public int ReplayRelation;
+        public bool ReplayConsumeStack;
+        public int ReplayConsumeCount;
     }
 
     [Serializable]
