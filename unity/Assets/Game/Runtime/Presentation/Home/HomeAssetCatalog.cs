@@ -648,7 +648,8 @@ namespace Zjcs.Presentation.Home
         public Sprite FindSprite(HomeSpriteRef reference)
         {
             if (reference == null || string.IsNullOrEmpty(reference.file)) return null;
-            if (sprites.TryGetValue(reference.file, out Sprite sprite)) return sprite;
+            string key = "ref:" + JsonUtility.ToJson(reference);
+            if (sprites.TryGetValue(key, out Sprite sprite)) return sprite;
             Texture2D texture = FindTexture(reference.file);
             if (texture == null) return null;
             Vector2 pivot = reference.pivot != null && reference.pivot.Length >= 2
@@ -663,7 +664,7 @@ namespace Zjcs.Presentation.Home
             sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot,
                 pixelsPerUnit, 0, (SpriteMeshType)Mathf.Clamp(reference.mesh_type, 0, 1), border);
             sprite.name = reference.file;
-            sprites[reference.file] = sprite;
+            sprites[key] = sprite;
             return sprite;
         }
 
@@ -708,10 +709,17 @@ namespace Zjcs.Presentation.Home
 
         public void Release()
         {
-            foreach (Sprite sprite in sprites.Values) if (sprite != null) UnityEngine.Object.Destroy(sprite);
-            foreach (Texture2D texture in textures.Values) if (texture != null) UnityEngine.Object.Destroy(texture);
+            foreach (Sprite sprite in sprites.Values) DestroyLoaded(sprite);
+            foreach (Texture2D texture in textures.Values) DestroyLoaded(texture);
             sprites.Clear();
             textures.Clear();
+        }
+
+        private static void DestroyLoaded(UnityEngine.Object value)
+        {
+            if (value == null) return;
+            if (Application.isPlaying) UnityEngine.Object.Destroy(value);
+            else UnityEngine.Object.DestroyImmediate(value);
         }
     }
 }

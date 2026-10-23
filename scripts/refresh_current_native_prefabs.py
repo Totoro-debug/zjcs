@@ -28,8 +28,22 @@ def build():
     if receipt_path.exists():
         prior = json.loads(receipt_path.read_bytes())
         if prior['manifest'] == version:
+            binding_path = receipt_path.with_name('current-native-concurrent-bindings-source-manifest.json')
+            bindings = {}
+            if binding_path.exists():
+                binding = json.loads(binding_path.read_bytes())
+                if (binding['manifest'] != version
+                        or binding['basis']['sha256'] != sha(receipt_path.read_bytes())):
+                    raise ValueError('Concurrent native mesh proof has a different conversion basis')
+                bindings = {row['path']: row for row in binding['outputs']}
             for record in prior['outputs']:
-                if sha((ROOT / record['path']).read_bytes()) != record['sha256']:
+                expected = record['sha256']
+                if record['path'] in bindings:
+                    verified = bindings[record['path']]
+                    if verified['previous_sha256'] != expected:
+                        raise ValueError('Concurrent native mesh proof has a different previous output')
+                    expected = verified['sha256']
+                if sha((ROOT / record['path']).read_bytes()) != expected:
                     raise ValueError('Converted native prefab changed: ' + record['path'])
             return prior
     old, old_source = load_skeleton('854_156383')
