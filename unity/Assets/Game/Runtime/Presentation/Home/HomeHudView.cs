@@ -939,21 +939,84 @@ namespace Zjcs.Presentation.Home
         {
             OpenDialog("fast_idle", (renderer, panel) =>
             {
-                HomeFastHangUpRecord fast = host.Rules.FastHangUp(1);
-                int hours = fast?.freeHours ?? 2;
-                renderer.SetTextByName("SpeedTxt", hours + "小时");
+                HomeHangUpRecord hang = host.Rules.HangUp(hangUpId);
+                HomeFastHangUpRecord fast = host.Rules.FastHangUp(hang == null ? 1 : hang.fastHangUpId);
+                HomeFastHangUpItem item = fast?.items?.FirstOrDefault(value => value != null && value.itemId > 0);
+                int max = item == null ? 0 : Mathf.Min(100, Mathf.Min(fast.maxUseItemCount, (int)Math.Min(int.MaxValue, host.ItemCount(item.itemId))));
+                int selected = max > 0 ? 1 : 0;
+                renderer.SetTextByName("SpeedTxt", item == null ? "" : "每个时光结晶 +" + item.hours + "小时");
                 renderer.SetTextByName("TitleText", "快速挂机");
-                Button speed = FirstButton(renderer, "SpeedBtn");
-                if (speed != null)
-                    speed.onClick.AddListener(() =>
+
+                Transform itemSlot = Find(panel.transform, "ItemSlot");
+                HomeUiRenderer row = null;
+                Slider slider = null;
+                if (item != null && itemSlot != null && catalog.HasPanel("fast_item_row"))
+                {
+                    row = Renderer();
+                    row.Create("fast_item_row", itemSlot, null);
+                    foreach (GameObject node in row.AllNodes)
+                    {
+                        if (node.name == "Slider") slider = node.GetComponent<Slider>();
+                    }
+                    if (slider != null)
+                    {
+                        slider.minValue = max > 0 ? 1 : 0;
+                        slider.maxValue = Mathf.Max(1, max);
+                        slider.wholeNumbers = true;
+                        slider.value = selected;
+                        slider.onValueChanged.AddListener(value =>
+                        {
+                            selected = Mathf.RoundToInt(value);
+                            row.SetTextByName("SelectedCountTxt", "×" + selected);
+                        });
+                    }
+                    row.SetTextByName("SelectedNameTxt", "时光结晶");
+                    row.SetTextByName("SelectedCountTxt", max > 0 ? "×1" : "×0");
+                    Transform iconSlot = Find(itemSlot, "IconSlot");
+                    Sprite icon = host.ItemIcon(item.itemId);
+                    if (iconSlot != null && icon != null)
+                    {
+                        var iconGo = new GameObject("TimeCrystalIcon", typeof(RectTransform), typeof(Image));
+                        iconGo.transform.SetParent(iconSlot, false);
+                        RectTransform iconRect = (RectTransform)iconGo.transform;
+                        iconRect.sizeDelta = new Vector2(64, 64);
+                        Image image = iconGo.GetComponent<Image>();
+                        image.sprite = icon;
+                        image.preserveAspect = true;
+                        image.raycastTarget = false;
+                    }
+                    Button reduce = FirstButton(row, "CommonBtn_Reduce");
+                    if (reduce != null && slider != null)
+                        reduce.onClick.AddListener(() => slider.value = Mathf.Max(slider.minValue, slider.value - 1));
+                    Button add = FirstButton(row, "CommonBtn_Add");
+                    if (add != null && slider != null)
+                        add.onClick.AddListener(() => slider.value = Mathf.Min(slider.maxValue, slider.value + 1));
+                    Button maxButton = FirstButton(row, "MaxBtn");
+                    if (maxButton != null && slider != null) maxButton.onClick.AddListener(() => slider.value = slider.maxValue);
+                }
+
+                Button itemSpeed = FirstButton(renderer, "SpeedBtn");
+                if (itemSpeed != null)
+                {
+                    itemSpeed.interactable = max > 0;
+                    itemSpeed.onClick.AddListener(() =>
+                    {
+                        int count = slider == null ? selected : Mathf.RoundToInt(slider.value);
+                        long total = host.TryFastForwardItems(fast == null ? 1 : fast.fastHangUpId, count);
+                        Notify(total > 0 ? "道具加速获得 " + Format(total) : "时光结晶不足或没有可加速产出");
+                        CloseDialog();
+                    });
+                }
+                Button free = FirstButton(renderer, "CommonBtn_12");
+                if (free != null)
+                    free.onClick.AddListener(() =>
                     {
                         long total = host.TryFastForward(hangUpId);
-                        Notify(total > 0 ? "加速获得 " + Format(total) : "免费加速次数已用完");
+                        Notify(total > 0 ? "免费加速获得 " + Format(total) : "免费加速次数已用完");
                         CloseDialog();
                     });
             });
         }
-
         private static Image FindImage(HomeUiRenderer renderer, string name)
         {
             foreach (GameObject node in renderer.AllNodes)

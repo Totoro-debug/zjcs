@@ -514,6 +514,25 @@ namespace Zjcs.Offline.Home
             return Commit(next) ? count : 0;
         }
 
+        public long ApplyFastForwardBatch(IReadOnlyList<int> hangUpIds, double hours, string receipt)
+        {
+            if (hangUpIds == null || hangUpIds.Count == 0 || !IsFinite(hours) || hours <= 0
+                || string.IsNullOrWhiteSpace(receipt) || Save.AppliedReceipts.Contains(receipt)) return 0;
+            OfflineHomeSave next = Clone(Save);
+            long total = 0;
+            foreach (int hangUpId in hangUpIds.Distinct())
+            {
+                OfflineHomeIncomeDefinition definition = definitions.FirstOrDefault(value => value.HangUpId == hangUpId);
+                if (definition == null || !definition.Unlocked) continue;
+                long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * hours);
+                if (count <= 0 || !GrantOutput(next, definition, count)) continue;
+                total = AddSaturated(total, count);
+            }
+            if (total <= 0) return 0;
+            AddReceipt(next, receipt);
+            return Commit(next) ? total : 0;
+        }
+
         private bool Commit(OfflineHomeSave next)
         {
             if (!IsValid(next)) return false;

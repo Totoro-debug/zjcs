@@ -57,6 +57,8 @@ namespace Zjcs.Editor.Home
                 player.Rank = 1;
                 player.MaxProfessionRank = 1;
                 player.Wardrobe.Profession = 1;
+                if (player.Inventory == null) player.Inventory = new System.Collections.Generic.List<OfflineItemStack>();
+                player.Inventory.Add(new OfflineItemStack { ItemId = 120, Count = 5 });
                 if (player.UnlockedMapClassIds != null && !player.UnlockedMapClassIds.Contains(11))
                     player.UnlockedMapClassIds.Add(11);
             }, "acceptance:character:" + slotId);
