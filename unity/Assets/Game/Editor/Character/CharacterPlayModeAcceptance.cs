@@ -320,8 +320,9 @@ namespace Zjcs.Editor.Character
                 "The merged equipment instance was not persisted to the profile save.");
 
             Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
-                + "skill merged from pieces, skill slots swapped, plan and title persisted. Equip icon "
-                + "rendering and pointer input need a windowed run.");
+                + "skill merged from pieces, skill slots swapped, equipment merged and purified, wardrobe "
+                + "seen marks, plan and title persisted. Equip icon rendering and pointer input need a "
+                + "windowed run.");
             Finish(true, null);
         }
 
