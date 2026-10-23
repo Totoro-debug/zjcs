@@ -75,7 +75,7 @@ namespace Zjcs.Offline.Progression
             if (characterOverview == null || characterProperties == null || progressionRules == null
                 || timedAppearanceItems == null || wardrobeItems == null || characterPanels == null
                 || wardrobeRules == null || wardrobeUi == null || sourceManifest == null || skillRules == null
-                || skillRecommendations == null || uiFont == null)
+                || skillRecommendations == null)
                 throw new InvalidOperationException("Official character TextAssets are not bound.");
             if (sprites == null || sprites.Length == 0 || System.Array.Exists(sprites, value => value == null || value.sprite == null))
                 throw new InvalidOperationException("Official character sprite bindings are incomplete.");
