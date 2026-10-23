@@ -100,7 +100,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 按各职业基础服装、六类武器及主副挂点恢复模型组合；与官方父层变换、尺寸、原比例和位置逐项核验，检查男女及各职业链、空武器、副武器和互斥后外观。
 - [ ] 将真实 `Equipment.Equipped` 实例、职业切换和晋升结果同步到 `Wardrobe.WornSkins`／原 `EquipSkinDict` 语义，完成幻装覆盖、卸下后装备／基础皮肤回退与不兼容装备处理。
 - [x] 人物模型已按官方 `CharacterCreationMeshFrameDye` 着色器与 `masks` 遮罩接入染色：按 `character_skin_dye`／`character_skin_color`／`Wardrobe.Dyes` 计算各皮肤类型的通道 HSV 偏移。
-- [ ] 从外观编辑／试穿返回后刷新实际形象、临时预览与正式穿戴的提交行为仍缺。
+- [x] 从衣柜/外观编辑返回时会重刷模型、属性摘要、五槽、称号与职业显示（`CloseWardrobe`）。
+- [ ] 原 `PreviewAppearanceDialog` 试穿窗口与临时预览的提交/取消行为仍未接。
 
 ### 属性、战力、等级与位阶
 
