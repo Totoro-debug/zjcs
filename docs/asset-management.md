@@ -15,7 +15,9 @@
 
 ## 官方来源与转换
 
-官方内容的查找顺序为固定 APK、匹配清单的原版本 CDN 补充分包、适用的新版官方同名包。保留真实版本、URL、bundle / 对象名及输入输出哈希；原版本 CDN 按 `854_156383` 的清单校验，新版同名包按独立记录核验，不可伪装成原版本补包。
+当前默认输入由根目录 `official-source.json` 选择：官网当前 APK 仍为 `854_156383`，完整热更新为 `871_156598`（资源目录 `202610211330871`）。按所选清单优先读取 APK 内同哈希文件，再读该版本已校验的 CDN 缓存；保留真实版本、URL、bundle / 对象名及输入输出哈希。原版重建显式选择 `--manifest 854_156383`，适用的 `864_156496` 同名包仍按独立记录核验，不可伪装成原版本补包。
+
+`activate_official_source.py` 校验后更新原始提取视图，旧提取视图及旧索引保留在 `.tools/source-packages/history/854_156383/`，所有版本原始缓存均保留。该步骤不修改 Unity 已转换素材；模块只有完成重新转换、加载绑定与实际运行验证，才更新为新版已接入。来源及现状以 [SOURCES.md](../assets/reference/SOURCES.md) 和各模块来源清单为准。
 
 按需提取时复用 `scripts/official_apk.py` 的 `Apk` 读取器及 CAB 依赖解析。提取命令先读 APK，再读已校验且有来源凭据的缓存；音频使用 `WwiseBnk` 分包流程。完整操作见 [`assets/reference/SOURCES.md`](../assets/reference/SOURCES.md)。
 
