@@ -92,7 +92,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] `profession/skills/pet` 跳转事件仍无接收方，需随对应模块接入。
 - [x] 人物页职业按钮已绑定 `profession_name_{enum}` 本地化名称与 `ProfessionBase.Icon2` 图标（31 个职业有名称、31 个有图标），称号与有效期、各槽位状态已分别接入。
 - [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新。
-- [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 字体／材质／描边、状态切换动画、原动画／音效和本地化字段，以及物品图标、材料行和空状态。
+- [x] 人物 UI 绑定工程内官方中文字体 `Assets/Official/Commerce/Art/fonts/FZY4K.ttf`（目录 `uiFont` 字段），不再依赖已失效的内置字体；字体应用失败时记录一次警告并跳过文本，避免整页崩溃。
+- [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 文本组件、材质、字体图集、状态动画与多语言排版，并逐项对照原预制体。
 - [x] 生命周期已补：`OnDestroy` 停止经验协程、关闭弹窗与子页、销毁衣柜覆盖层；`CharacterFeatureRuntime` 订阅 `Application.lowMemory` 调用原 `OnLowMemory` 回收未显示子页；弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗。待实际画面回归确认。
 
 ### 人物模型、外观同步与染色
