@@ -8,7 +8,11 @@
 
 `python -B scripts/activate_official_source.py` 完整验证 APK 与云端文件后，更新五包提取视图及资源索引；当前共 20,999 项，云端 18,559 项无缺项。旧提取视图与旧索引保存在 `.tools/source-packages/history/854_156383/`，原 APK、旧 CDN 缓存及新版原始缓存均保留。`fetch_official_assets.py`、`official_manifest.py`、`prepare_unity_bundle_inputs.py` 默认选择当前版本，历史重建显式传入 `--manifest 854_156383`。读取 API 用 `Apk.current()` 或 `Apk(manifest=None)` 选择当前输入；既有 `Apk()` 暂保留历史版本，避免尚未迁移的转换器错误标注新旧来源。
 
-原始输入切换已经完成。Unity 已接入素材的重新转换、绑定更新及实际运行验证仍在进行；现有模块来源清单保留其真实转换版本，不能因原包已切换而声明已全部更新。当前来源凭据见 [热更新原始来源](official-map/runtime-cloud-source-manifest.json)。
+原始输入切换与本次既有 Unity 素材的重新转换、绑定复核已经完成；未变化的输出逐字节保留，发生变化的输出及替换前字节分别记录。现有模块来源清单保留其真实转换版本，原版布局依据不会统一改名成新版。当前来源凭据见 [热更新原始来源](official-map/runtime-cloud-source-manifest.json)。实际运行范围见素材管理及所属功能页，不能据此声明整游戏完成。
+
+### 当前转换载荷
+
+当前 `871_156598` 的表格、战斗组件、材质、家园层级、中文和变化 Sprite 已转换到现有载荷；原版来源不会统一改名成新版。角色模型重导出保留 GUID，创角／人物网格包及男体原生 prefab 已核对新版索引；女体 451 个动画独立解码后与旧版一致。具体输入、旧文件备份、转换方式与输出哈希分别见 `character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json` 和 `official-map/current-*-source-manifest.json`。万圣节已接入媒体及既有事件路由逐字节一致，保留已有音频输出；新增路由及控制对象保留在完整原始缓存内。新版资源替换的运行验证范围见[素材管理](../../docs/asset-management.md#官方来源与转换)，功能完成状态仍以所属页为准。
 
 ### 特殊物品原窗口与替换配置
 
