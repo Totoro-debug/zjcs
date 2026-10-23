@@ -109,6 +109,27 @@ namespace Zjcs.Editor.Character
             if (loaded.CumulativeLevelExperience.Count < 2 || loaded.LevelLimits.Count == 0
                 || loaded.BlessLevels.Count == 0 || loaded.Appearances.Count == 0 || loaded.Skins.Count == 0)
                 throw new InvalidOperationException("Official character catalog failed structural validation.");
+            int limit0 = OfflineCharacterExperience.BaseLevelLimit(0, loaded.LevelLimits);
+            Require(limit0 > 0 && limit0 < loaded.CumulativeLevelExperience.Count,
+                "Read the first sub-rank level limit");
+            long capExperience = loaded.CumulativeLevelExperience[limit0];
+            CharacterExperienceSnapshot atCap = OfflineCharacterExperience.Calculate(
+                capExperience, 0, 0, 1, limit0, false, true, false, 0,
+                loaded.CumulativeLevelExperience, loaded.LevelLimits, loaded.BlessLevels);
+            Require(atCap.Level == limit0 && atCap.IsStoredExperience && !atCap.IsBlessing,
+                "Cross-subrank experience is capped and shown as stored at the rank limit");
+            List<CharacterBlessLevelRecord> blessRows = loaded.BlessLevels
+                .Where(value => value.Rank == 1).OrderBy(value => value.Exp).ToList();
+            if (blessRows.Count > 1 && blessRows[1].BlessLevel > 0)
+            {
+                CharacterBlessLevelRecord row = blessRows[1];
+                CharacterExperienceSnapshot blessed = OfflineCharacterExperience.Calculate(
+                    capExperience, row.Exp + 1, 0, 1, limit0, true, false, false, row.BlessLevel + 1,
+                    loaded.CumulativeLevelExperience, loaded.LevelLimits, loaded.BlessLevels);
+                Require(blessed.IsBlessing && !blessed.IsStoredExperience
+                    && blessed.BlessLevel == row.BlessLevel && blessed.Level == limit0 + row.BlessLevel,
+                    "Season blessing level and actual level follow the official bless table");
+            }
             IReadOnlyDictionary<int, long> baseProps = loaded.CalcCharacterBaseBattleProperties(1, 1);
             Require(baseProps.TryGetValue(loaded.PropertyIds["BaseMaxHp"], out long hp) && hp == 300
                 && baseProps.TryGetValue(loaded.PropertyIds["BaseAttack"], out long attack) && attack == 60
