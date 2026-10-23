@@ -316,8 +316,7 @@ namespace Zjcs.Presentation.Home
             {
                 image = gameObject.AddComponent<Image>();
                 Sprite sprite = source.image.sprite == null ? null
-                    : source.image.component_flags ? catalog.FindSprite(source.image.sprite)
-                    : catalog.FindSprite(source.image.sprite.file);
+                    : catalog.FindSprite(source.image.sprite);
                 image.sprite = sprite;
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, (int)Image.Type.Filled);
                 image.preserveAspect = source.image.preserve_aspect;
@@ -385,14 +384,14 @@ namespace Zjcs.Presentation.Home
             if (source.button || toggle || tabItem)
             {
                 Graphic target = image != null ? (Graphic)image : gameObject.GetComponent<Graphic>();
-                if (target == null && source.button)
+                if (target == null)
                 {
                     Image hitTarget = gameObject.AddComponent<Image>();
                     hitTarget.color = new Color(0f, 0f, 0f, 0f);
                     target = hitTarget;
                 }
                 if (target != null) target.raycastTarget = true;
-                if (toggle)
+                if (toggle || tabItem)
                 {
                     Toggle control = gameObject.AddComponent<Toggle>();
                     control.targetGraphic = target;
