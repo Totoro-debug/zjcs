@@ -158,7 +158,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 - [x] 衣柜卡片已显示品质名称与颜色、选中／已穿、不可穿（性别／职业／副武器条件不满足）与剩余时间；“卸下”首项与按品质／ID 排序保留。
 - [x] 新获得标记已接：`Wardrobe.SeenItems` 记录已查看物品，未查看的外观／称号卡片显示“新”，点击卡片（穿戴或卸下）后清除并持久化；旧档 `Normalize` 补空。
-- [x] 衣柜每 0.5 秒检查物品数量与职业签名，变化时自动重建列表并刷新模型；穿脱与到期仍即时刷新。
+- [x] 衣柜每秒检查物品数量与职业签名，变化时自动重建列表并刷新模型；穿脱与到期仍即时刷新。
 - [ ] 原提示文案与原红点仍待补。
 - [x] 恢复 `TryGetConflictTip` 语义：`OfflineWardrobeRules.PreviewWear` 对穿戴前后的有效皮肤集合各解析一次，返回会被遮挡的部件或互斥环类型；衣柜列表穿戴时先提示再继续原穿戴请求。部件名称取原 `ui_append_appearance_type_*` 本地化，原冲突提示模板 `ui_append_appearance_conflict_tip` 未在固定目录中提取，当前以部件名拼接提示。
 - [x] 人物页称号已接 `HonorTitleItemProvider/Slot` 与 `HonorTitleTimeLimitContent`：显示已佩戴称号图标、剩余天／小时／分钟／秒并在到期时隐藏，`TitlePropContent` 读取 `AppendAppearanceInfo.EffectProp`（当前固定目录中称号 `EffectProp` 均为空，故属性行暂不显示）。
