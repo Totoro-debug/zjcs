@@ -64,6 +64,7 @@ namespace Zjcs.Editor.Character
             });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 1, Count = 100000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 39600, Count = 1 });
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 32504, Count = 1 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 120 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 41300, Count = 5000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 5001, Count = 3 });
@@ -310,6 +311,27 @@ namespace Zjcs.Editor.Character
             yield return WaitFrames(2);
             yield return Capture("character-03-title");
 
+            Button wardrobeButton = FindButton("AppearanceBtn");
+            Require(wardrobeButton != null, "The wardrobe entry button is missing.");
+            wardrobeButton.onClick.Invoke();
+            yield return WaitFrames(3);
+            Button tryOn = FindButton("WardrobePreviewButton");
+            Require(tryOn != null, "The appearance try-on button is missing.");
+            int wornBeforePreview = progression.Player.Wardrobe.WornItems.Count;
+            tryOn.onClick.Invoke();
+            yield return WaitFrames(3);
+            Require(UnityEngine.Object.FindObjectsOfType<RectTransform>(true)
+                    .Any(rect => rect.name == "PreviewAppearanceDialog"),
+                "The official appearance preview dialog did not open.");
+            Require(progression.Player.Wardrobe.WornItems.Count == wornBeforePreview,
+                "Appearance preview changed the saved wardrobe state.");
+            Button closePreview = FindButton("ClickRaycast");
+            Require(closePreview != null, "The official preview close target is missing.");
+            closePreview.onClick.Invoke();
+            yield return WaitFrames(2);
+            Require(progression.Player.Wardrobe.WornItems.Count == wornBeforePreview,
+                "Closing appearance preview changed the saved wardrobe state.");
+
             int switchedPlan = progression.Player.Skills.SelectedPlan;
             OfflineMainlineProgressSession reloaded = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             Require(reloaded.Save.Player.Wardrobe.WornTitleId == 39600,
@@ -325,7 +347,8 @@ namespace Zjcs.Editor.Character
 
             Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
                 + "skill merged from pieces, skill slots swapped, equipment merged and purified, wardrobe "
-                + "seen marks, plan and title persisted. Equip icon rendering and pointer input need a "
+                + "seen marks, temporary appearance preview without save mutation, plan and title persisted. "
+                + "Equip icon rendering and pointer input need a "
                 + "windowed run.");
             Finish(true, null);
         }
