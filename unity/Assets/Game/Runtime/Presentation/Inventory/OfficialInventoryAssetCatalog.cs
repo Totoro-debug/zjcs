@@ -38,9 +38,12 @@ namespace Zjcs.Presentation.Inventory
 
         [SerializeField] private TextAsset uiData;
         [SerializeField] private TextAsset sourceManifest;
+        [SerializeField] private TextAsset itemSourceUiData;
+        [SerializeField] private TextAsset itemSourceManifest;
         [SerializeField] private InventorySpriteBinding[] sprites = Array.Empty<InventorySpriteBinding>();
 
         private Dictionary<string, object> parsed;
+        private Dictionary<string, object> parsedItemSources;
         private Dictionary<string, Sprite> spriteByName;
         private bool bindingsValidated;
 
@@ -103,6 +106,23 @@ namespace Zjcs.Presentation.Inventory
             Dictionary<string, object> texts = Object(Parsed()["texts"]);
             return texts.TryGetValue(key, out object value)
                 ? Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
+        }
+
+        public string FindItemSourceText(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return string.Empty;
+            Dictionary<string, object> texts = Object(ItemSourcesParsed()["texts"]);
+            if (texts.TryGetValue(key, out object value))
+                return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+            if (key == "ItemSourceType.PreciousChestGacha") return "国度扭蛋获取";
+            if (key == "ItemSourceType.ElementChestGacha") return "元素扭蛋获取";
+            return FindText(key);
+        }
+
+        public Dictionary<string, object> LoadItemSourceTemplate()
+        {
+            ValidateBindings();
+            return Object(Object(ItemSourcesParsed()["template"])["root"]);
         }
 
         public string FindItemTypeText(int itemType)
@@ -192,12 +212,17 @@ namespace Zjcs.Presentation.Inventory
         public void ValidateBindings()
         {
             if (bindingsValidated) return;
-            if (uiData == null || sourceManifest == null || sprites == null || sprites.Length < 1500)
+            if (uiData == null || sourceManifest == null || itemSourceUiData == null
+                || itemSourceManifest == null || sprites == null || sprites.Length < 1500)
                 throw new InvalidOperationException("Official inventory data and sprite bindings are incomplete.");
             Dictionary<string, object> root = Parsed();
+            Dictionary<string, object> itemSourceManifestData = Object(OfficialEquipmentJson.Parse(itemSourceManifest.text));
+            Dictionary<string, object> itemSourceTemplate = Object(Object(ItemSourcesParsed()["template"])["root"]);
             if (Text(root, "version") != "854_156383"
                 || Object(root["templates"]).Count < 20
-                || Object(root["row_templates"]).Count < 20)
+                || Object(root["row_templates"]).Count < 20
+                || Text(itemSourceManifestData, "version") != "854_156383"
+                || Text(itemSourceTemplate, "name") != "ItemSourceItem")
                 throw new FormatException("Official inventory UI metadata is incomplete or from an unsupported manifest.");
             foreach (InventorySpriteBinding binding in sprites)
                 if (binding == null || string.IsNullOrEmpty(binding.sourcePath) || binding.sprite == null)
@@ -222,6 +247,7 @@ namespace Zjcs.Presentation.Inventory
                     throw new FormatException("Official inventory attachment template is missing: " + templateName);
                 ValidateTreeSprites(Object(attachmentRoot));
             }
+            ValidateTreeSprites(itemSourceTemplate);
             Dictionary<string, object> icons = Object(root["icons"]);
             foreach (object rawIcon in icons.Values)
             {
@@ -236,6 +262,13 @@ namespace Zjcs.Presentation.Inventory
         {
             if (parsed == null) parsed = Object(OfficialEquipmentJson.Parse(uiData.text));
             return parsed;
+        }
+
+        private Dictionary<string, object> ItemSourcesParsed()
+        {
+            if (parsedItemSources == null)
+                parsedItemSources = Object(OfficialEquipmentJson.Parse(itemSourceUiData.text));
+            return parsedItemSources;
         }
 
         private static Dictionary<string, object> Object(object value) =>
