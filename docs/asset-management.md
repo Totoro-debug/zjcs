@@ -190,6 +190,8 @@ ZIP 清单登记逐文件 SHA256 和 Unity 版本。恢复前先验证并暂存�
 
 功能验收直接使用 Unity 工程、本地转换素材和已有导入缓存。独立素材 ZIP 用于备份与恢复，Windows 成品用于发布，两者都不是每项功能验收的前置步骤。
 
+耗时资源准备与玩法验收分开处理。人物验收使用 `CharacterAcceptancePreparation.EnsureModels`，在 `unity/Library/AcceptancePreparation/` 保存角色、幻兽各自的内容凭据：输入、转换代码、导入元数据、生成输出及 Unity 版本／目标平台均匹配，并且当前绑定检查通过，才复用原生模型。首次、缓存丢失或内容变化仍调用原转换工具；失败不记录成功凭据。此缓存不保存 Play Mode 测试结果，后续逻辑、输入、画面和存档断言照常执行。需要排查转换时，启动验收进程设置 `ZJCS_CHARACTER_FORCE_REBAKE=1` 或传入 `-forceAcceptanceRebuild`，强制重建仍遵守原工具的来源和输出保护检查；不要日常删除 Library 或全量重导入。
+
 | 改动范围 | 必做验证 | 按需执行 |
 | --- | --- | --- |
 | 文档与约定 | 文档检查及差异检查 | 无需导入、素材打包或导出 |

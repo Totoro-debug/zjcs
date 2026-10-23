@@ -31,6 +31,7 @@ namespace Zjcs.Editor.Character
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running character acceptance.");
+            CharacterAcceptancePreparation.EnsureModels();
             try
             {
                 Type equipmentValidation = Type.GetType(
