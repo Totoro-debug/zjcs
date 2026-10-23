@@ -75,6 +75,46 @@ namespace Zjcs.Presentation.Character
             }
         }
 
+        public Texture2D LoadMask(string textureName)
+        {
+            if (!catalog.TryGetValue("masks", out object raw)
+                || !(raw is Dictionary<string, object> masks)
+                || !masks.TryGetValue(textureName, out object uri)) return null;
+            return LoadTextureFile("mask_" + textureName, Convert.ToString(uri, CultureInfo.InvariantCulture));
+        }
+
+        public bool TrySkinDyeInfo(string textureName, out int skinType, out bool hasDye)
+        {
+            skinType = -1;
+            hasDye = false;
+            if (!catalog.TryGetValue("skins", out object raw)
+                || !(raw is Dictionary<string, object> skins)) return false;
+            foreach (KeyValuePair<string, object> entry in skins)
+            {
+                if (!(entry.Value is Dictionary<string, object> skin)) continue;
+                if (Convert.ToString(skin["SkinName"], CultureInfo.InvariantCulture) != textureName) continue;
+                skinType = Convert.ToInt32(skin["SkinType"], CultureInfo.InvariantCulture);
+                hasDye = skin.TryGetValue("HasDye", out object value) && Convert.ToBoolean(value);
+                return true;
+            }
+            return false;
+        }
+
+        private Texture2D LoadTextureFile(string name, string uri)
+        {
+            if (textures.TryGetValue(name, out Texture2D cached)) return cached;
+            byte[] bytes = ReadBytes(uri);
+            Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false, false)
+            {
+                name = name,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            texture.LoadImage(bytes, false);
+            textures[name] = texture;
+            return texture;
+        }
+
         public Texture2D LoadTexture(string name)
         {
             if (textures.TryGetValue(name, out Texture2D texture)) return texture;
@@ -133,6 +173,7 @@ namespace Zjcs.Presentation.Character
         private sealed class ModelMeshPart
         {
             public Texture2D Texture;
+            public string TextureName;
             public Vector2[] Uv;
             public int[] Triangles;
             public Color Color;
@@ -233,6 +274,12 @@ namespace Zjcs.Presentation.Character
                     modelScale, modelCenter, poseData.TryGetValue("fps", out object fps)
                         ? Convert.ToSingle(fps, CultureInfo.InvariantCulture) : 24f);
                 graphic.raycastTarget = false;
+                if (package.TrySkinDyeInfo(part.TextureName, out int skinType, out bool hasDye) && hasDye)
+                {
+                    Texture2D mask = package.LoadMask(part.TextureName);
+                    Dictionary<int, Vector4> channels = DyeChannels(skinType);
+                    if (mask != null && channels.Count > 0) graphic.ConfigureDye(mask, channels);
+                }
                 graphics.Add(graphic);
             }
             renderedSize = modelRect.rect.size;
@@ -242,6 +289,62 @@ namespace Zjcs.Presentation.Character
         {
             if (progression != null && modelRect != null && modelRect.rect.size != renderedSize)
                 Refresh();
+        }
+
+        /// <summary>Official dye HSV offsets for one skin type, keyed by shader channel.</summary>
+        private Dictionary<int, Vector4> DyeChannels(int skinType)
+        {
+            var result = new Dictionary<int, Vector4>();
+            if (progression == null) return result;
+            IReadOnlyList<Dictionary<string, object>> configs = progression.Catalog.Rows("character_skin_dye");
+            IReadOnlyList<Dictionary<string, object>> colors = progression.Catalog.Rows("character_skin_color");
+            foreach (OfflineAppearanceDye dye in progression.Player.Wardrobe.Dyes)
+            {
+                Dictionary<string, object> config = configs.FirstOrDefault(value =>
+                    Convert.ToInt32(value["DyeType"], CultureInfo.InvariantCulture) == dye.Type);
+                if (config == null
+                    || !(config.TryGetValue("DyeSkinTypeInfoList", out object raw)
+                        && raw is List<object> infos)) continue;
+                Dictionary<string, object> info = infos.OfType<Dictionary<string, object>>()
+                    .FirstOrDefault(value => Convert.ToInt32(value["SkinType"], CultureInfo.InvariantCulture) == skinType);
+                if (info == null) continue;
+                int h = dye.Hue, sat = dye.Saturation, v = dye.Value;
+                if (dye.ColorId > 0)
+                {
+                    Dictionary<string, object> color = colors.FirstOrDefault(value =>
+                        Convert.ToInt32(value["Id"], CultureInfo.InvariantCulture) == dye.ColorId);
+                    if (color != null)
+                    {
+                        h = Convert.ToInt32(color["H"], CultureInfo.InvariantCulture);
+                        sat = Convert.ToInt32(color["S"], CultureInfo.InvariantCulture);
+                        v = Convert.ToInt32(color["V"], CultureInfo.InvariantCulture);
+                    }
+                }
+                int offset = Convert.ToInt32(info.TryGetValue("VOffset", out object rawOffset)
+                    ? rawOffset : 0, CultureInfo.InvariantCulture);
+                int channel = Convert.ToInt32(info["Channel"], CultureInfo.InvariantCulture);
+                result[channel] = DyeVector(config, h, sat, v + offset);
+            }
+            return result;
+        }
+
+        private static Vector4 DyeVector(Dictionary<string, object> config, int h, int s, int v)
+        {
+            Color baseColor = HsvToLinear(
+                Convert.ToInt32(config["BaseH"], CultureInfo.InvariantCulture),
+                Convert.ToInt32(config["BaseS"], CultureInfo.InvariantCulture),
+                Convert.ToInt32(config["BaseV"], CultureInfo.InvariantCulture));
+            Color target = HsvToLinear(h, s, v);
+            Color.RGBToHSV(baseColor, out float baseH, out float baseS, out float baseV);
+            Color.RGBToHSV(target, out float hh, out float ss, out float vv);
+            return new Vector4(hh - baseH, baseS <= 0f ? 0f : (ss - baseS) / baseS,
+                baseV <= 0f ? 0f : (vv - baseV) / baseV, 0f);
+        }
+
+        private static Color HsvToLinear(int h, int s, int v)
+        {
+            return Color.HSVToRGB(Mathf.Clamp01(h / 360f), Mathf.Clamp01(s / 100f),
+                Mathf.Clamp01(v / 100f)).linear;
         }
 
         private ModelMeshPart ParsePart(CharacterModelPackage package, Dictionary<string, object> data)
@@ -271,6 +374,7 @@ namespace Zjcs.Presentation.Character
             return new ModelMeshPart
             {
                 Texture = package.LoadTexture(textureName),
+                TextureName = textureName,
                 Uv = uv,
                 Triangles = triangles,
                 Color = color,
@@ -321,6 +425,18 @@ namespace Zjcs.Presentation.Character
         private float framesPerSecond = 24f;
 
         public override Texture mainTexture => texture != null ? texture : s_WhiteTexture;
+
+        public void ConfigureDye(Texture2D mask, IReadOnlyDictionary<int, Vector4> channels)
+        {
+            Shader shader = Shader.Find("Zjcs/CharacterCreation/OfficialMeshFrameDye");
+            if (shader == null || mask == null || channels == null || channels.Count == 0) return;
+            var dye = new Material(shader) { hideFlags = HideFlags.DontSave };
+            dye.mainTexture = texture;
+            dye.SetTexture("_DyeTex", mask);
+            foreach (KeyValuePair<int, Vector4> channel in channels)
+                dye.SetVector("_DyeHsv" + channel.Key.ToString(CultureInfo.InvariantCulture), channel.Value);
+            material = dye;
+        }
 
         public void Initialize(Texture source, Vector2[] meshUv, int[] meshTriangles, Color color,
             Vector2[][] animationFrames, float sourceScale, Vector2 sourceCenter, float fps)
