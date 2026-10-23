@@ -63,6 +63,8 @@ namespace Zjcs.Editor.Character
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 120 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 41300, Count = 5000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 5001, Count = 3 });
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 41302, Count = 5000 });
+            save.Player.Inventory.Add(new OfflineItemStack { ItemId = 701, Count = 100 });
             try
             {
                 OfficialEquipmentCatalog equipment = OfficialEquipmentAssetCatalog.LoadDefault().Load();
@@ -269,6 +271,34 @@ namespace Zjcs.Editor.Character
                 "The skill slot swap failed: " + swapped.Message);
             Require(progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills[1] == 10000,
                 "The skill slot swap did not move the installed skill.");
+            int instanceCount = progression.Player.Equipment.Instances.Count;
+            long piece701 = progression.Player.Inventory.Where(value => value.ItemId == 701)
+                .Sum(value => value.Count);
+            ProgressionResult pieceMerge = progression.MergeEquipmentPiece(701, 20027);
+            Require(pieceMerge.IsApplied
+                && progression.Player.Equipment.Instances.Count == instanceCount + 1
+                && progression.Player.Inventory.Where(value => value.ItemId == 701)
+                    .Sum(value => value.Count) < piece701,
+                "The equipment piece merge did not create an instance: " + pieceMerge.Message);
+
+            OfflineEquipmentInstance equippedItem = progression.Player.Equipment.Instances
+                .FirstOrDefault(value => value.ItemId == 20000);
+            if (equippedItem != null && equippedItem.Terms != null && equippedItem.Terms.Count > 0)
+            {
+                long costBefore = progression.Player.Inventory.Where(value => value.ItemId == 41302)
+                    .Sum(value => value.Count);
+                ProgressionResult purified = progression.PurifyEquipment(equippedItem.InstanceId,
+                    Array.Empty<int>(), "character-acceptance-purify");
+                Require(purified.IsApplied, "The equipment purify failed: " + purified.Message);
+                Require(progression.Player.Inventory.Where(value => value.ItemId == 41302)
+                    .Sum(value => value.Count) < costBefore, "The equipment purify did not consume materials.");
+            }
+
+            bool wardrobeNew = progression.IsWardrobeItemNew(39600);
+            ProgressionResult seen = progression.MarkWardrobeItemSeen(39600);
+            Require(seen.IsApplied && wardrobeNew && !progression.IsWardrobeItemNew(39600),
+                "The wardrobe new-item mark did not clear.");
+
             ProgressionResult title = progression.WearTitle(39600, "character-acceptance-title");
             Require(title.IsApplied && progression.Player.Wardrobe.WornTitleId == 39600,
                 "The title could not be worn through the character service.");
@@ -284,6 +314,10 @@ namespace Zjcs.Editor.Character
                 "The switched skill plan was not persisted to the profile save.");
             Require(reloaded.Save.Player.Skills.Skills.Any(skill => skill.ClassId == 10000),
                 "The merged skill was not persisted to the profile save.");
+            Require(reloaded.Save.Player.Wardrobe.SeenItems.Contains(39600),
+                "The wardrobe seen mark was not persisted to the profile save.");
+            Require(reloaded.Save.Player.Equipment.Instances.Count == progression.Player.Equipment.Instances.Count,
+                "The merged equipment instance was not persisted to the profile save.");
 
             Debug.Log("[Character acceptance] Play Mode logic passed: panel built, skill panel opened, "
                 + "skill merged from pieces, skill slots swapped, plan and title persisted. Equip icon "
