@@ -35,9 +35,19 @@ $hit.EntityId = 902; $hit.DamageId = 903; $hit.DamageType = 8
 $hit.HasCustomDamage = $true; $hit.CustomDamage = 25; $hit.TargetMode = 0; $hit.Delay = 0.4
 $skill.Hits.Add($hit)
 $player.Skills.Add($skill)
+$skill.ElementType = 101
+$hit.StatusListRandomOne = $true
+$hit.AppliedStatuses.Add([Zjcs.Combat.Official.FightBattleStatusApplication]@{ StatusId = 24078; TargetType = 2; Chance = 0.5; LessThanHpPer = 0.5 })
+$hit.DisperseChance = 0.25; $hit.DisperseCount = 1; $hit.DisperseRandom = $true
+$hit.DisperseStatusTypes.Add(2)
+$hit.HitMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
+$hit.HitMove.Distance = 1; $hit.HitMove.Direction = 1; $hit.HitMove.TowardsTargetPos = $true
+$hit.HemophagiaProperty = 213
 $status = [Zjcs.Combat.Official.FightBattleStatusState]::new()
 $status.InstanceId = 1; $status.ClassId = 24078; $status.DurationRound = 2; $status.StackCount = 2
 $status.RootSkillIds = [int[]]@(900, 901)
+$status.HpTriggerPer = 0.25; $status.HpTriggerMaxCount = 2; $status.HpTriggerAtStart = $true
+$status.HpTriggerStatuses.Add(24078); $status.HpTriggerSkills.Add(50010)
 $player.Statuses.Add($status)
 $enemy = New-Unit 2 2 1 0 500 50
 $checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
@@ -50,6 +60,11 @@ $checkpoint.Grid.BlockedPositions.Add([Zjcs.Combat.Official.FightGridPoint]::new
 $checkpoint.Units.Add($player); $checkpoint.Units.Add($enemy)
 $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new()
 $wave.Index = 0; $wave.UnitIds.Add(2); $checkpoint.Waves.Add($wave)
+$checkpoint.StageStatus = [Zjcs.Combat.Official.FightBattleStageStatusConfig]::new()
+$checkpoint.StageStatus.ClassId = 1
+$checkpoint.StageStatus.Status.Add(26004)
+$checkpoint.StageStatus.GlobalRoundStatus.Add(26005)
+$checkpoint.StageStatus.GlobalRoundStatusDelay = 3
 $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $checkpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $result = $executor.Step(0, 1)
@@ -70,6 +85,15 @@ Assert-Persist ($loaded.Grid.Cells.Count -eq 1 -and $loaded.Grid.Cells[0].Height
 Assert-Persist ($loaded.Timeline.Entries.Count -eq $checkpoint.Timeline.Entries.Count -and $loaded.Timeline.Round -eq $checkpoint.Timeline.Round) 'Checkpoint timeline did not survive the round trip'
 Assert-Persist ($loaded.Statistics.Units.Count -eq $checkpoint.Statistics.Units.Count -and $loaded.Statistics.Skill(1, 900, 901).Damage -eq 25) 'Checkpoint statistics did not survive the round trip'
 Assert-Persist ($loaded.Receipts[0].Event.DamageEvents.Count -eq 1 -and $loaded.Receipts[0].Event.DamageEvents[0].TargetId -eq 2) 'Checkpoint receipt damage events did not survive the round trip'
+Assert-Persist ($loaded.Receipts[0].Event.DamageEvents[0].ElementType -eq 101) 'Checkpoint damage element did not survive the round trip'
+Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerPer -eq 0.25 -and $loaded.Units[0].Statuses[0].HpTriggerMaxCount -eq 2 -and $loaded.Units[0].Statuses[0].HpTriggerAtStart) 'Checkpoint HP trigger fields did not survive the round trip'
+Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerStatuses[0] -eq 24078 -and $loaded.Units[0].Statuses[0].HpTriggerSkills[0] -eq 50010) 'Checkpoint HP trigger lists did not survive the round trip'
+$loadedHit = $loaded.Units[0].Skills[0].Hits[0]
+Assert-Persist ($loadedHit.StatusListRandomOne -and $loadedHit.AppliedStatuses.Count -eq 1 -and $loadedHit.AppliedStatuses[0].Chance -eq 0.5) 'Checkpoint hit status list did not survive the round trip'
+Assert-Persist ($loadedHit.DisperseStatusTypes[0] -eq 2 -and $loadedHit.DisperseCount -eq 1 -and $loadedHit.DisperseRandom -and $loadedHit.DisperseChance -eq 0.25) 'Checkpoint hit dispel did not survive the round trip'
+Assert-Persist ($null -ne $loadedHit.HitMove -and $loadedHit.HitMove.Distance -eq 1 -and $loadedHit.HitMove.TowardsTargetPos) 'Checkpoint hit move did not survive the round trip'
+Assert-Persist ($loadedHit.HemophagiaProperty -eq 213) 'Checkpoint hit lifesteal property did not survive the round trip'
+Assert-Persist ($null -ne $loaded.StageStatus -and $loaded.StageStatus.ClassId -eq 1 -and $loaded.StageStatus.Status[0] -eq 26004 -and $loaded.StageStatus.GlobalRoundStatus[0] -eq 26005 -and [Math]::Abs($loaded.StageStatus.GlobalRoundStatusDelay - 3) -lt 0.0001) 'Checkpoint stage status did not survive the round trip'
 
 $resaved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($loaded)
 Assert-Persist ($resaved -eq $json) 'Checkpoint serialization was not stable across a round trip'
