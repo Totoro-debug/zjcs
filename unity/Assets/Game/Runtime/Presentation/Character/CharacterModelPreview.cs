@@ -36,9 +36,10 @@ namespace Zjcs.Presentation.Character
             Dictionary<string, object> manifest = AsObject(OfficialEquipmentJson.Parse(
                 Encoding.UTF8.GetString(ReadUnverifiedBytes("character-model-manifest.json"))), "character model manifest");
             if (!manifest.TryGetValue("manifest", out object manifestVersion)
-                || Convert.ToString(manifestVersion, CultureInfo.InvariantCulture) != "854_156383"
+                || (Convert.ToString(manifestVersion, CultureInfo.InvariantCulture) != "854_156383"
+                    && Convert.ToString(manifestVersion, CultureInfo.InvariantCulture) != "871_156598")
                 || !manifest.TryGetValue("files", out object rawFiles))
-                throw new FormatException("Character model package is not pinned to 854_156383.");
+                throw new FormatException("Character model package has an unregistered source manifest.");
             fileHashes = AsObject(rawFiles, "character model package hashes");
             string catalogText = ReadText(UriPrefix + "wardrobe/catalog.json");
             catalog = AsObject(OfficialEquipmentJson.Parse(catalogText), "character model catalog");

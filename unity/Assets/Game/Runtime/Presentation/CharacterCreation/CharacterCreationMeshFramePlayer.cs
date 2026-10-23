@@ -52,7 +52,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 Manifest manifest;
                 using (var reader = new StreamReader(archive.GetEntry("manifest.json").Open()))
                     manifest = JsonUtility.FromJson<Manifest>(reader.ReadToEnd());
-                if (manifest.manifest != "854_156383" || manifest.entries == null)
+                if ((manifest.manifest != "854_156383" && manifest.manifest != "871_156598") || manifest.entries == null)
                     throw new InvalidDataException("Character creation mesh package is not pinned.");
                 var hashes = manifest.entries.ToDictionary(entry => entry.name, entry => entry.sha256, StringComparer.Ordinal);
                 byte[] ReadBytes(string name)
