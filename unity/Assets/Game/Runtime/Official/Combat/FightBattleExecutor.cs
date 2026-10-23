@@ -192,6 +192,9 @@ namespace Zjcs.Combat.Official
             }
             if (checkpoint.StageStatus != null && statusCatalog != null)
                 FightStageStatusRuntime.ApplyStart(checkpoint.StageStatus, statusCatalog, units, 0);
+            if (statusCatalog != null)
+                foreach (FightBattleUnitState unit in units)
+                    FightStatusTriggerRuntime.Apply(unit, statusCatalog, true);
             lastGlobalRound = turns.GlobalRound();
 
             if (checkpoint.Waves.Count > 0)
@@ -289,6 +292,7 @@ namespace Zjcs.Combat.Official
                     ApplyHitDisperse(target, hit, random);
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
+                    FightStatusTriggerRuntime.Apply(target, statusCatalog, false);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);

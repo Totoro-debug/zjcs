@@ -94,6 +94,13 @@ namespace Zjcs.Combat.Official
         public double Rate = 1.0;
         public int Scope;
         public List<FightBattleFalloffCounter> Counts = new List<FightBattleFalloffCounter>();
+        // Official FightStatusHpDecreaseUnitComponent: trigger statuses when the owner HP ratio
+        // stays at or below UnitHpPer, up to MaxCount times.
+        public float HpTriggerPer = -1f;
+        public int HpTriggerMaxCount = -1;
+        public int HpTriggeredCount;
+        public bool HpTriggerAtStart;
+        public List<int> HpTriggerStatuses = new List<int>();
     }
 
     [Serializable]
