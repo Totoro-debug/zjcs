@@ -53,11 +53,11 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 [CharacterSkillPanel](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterSkillPanel.cs) 绑定原 `CharacterPanelSkillContent`：三套方案前后切换与改名（`OfflineSkillProgression.SelectPlan/RenamePlan`）、四个战技槽与四个秘法槽、槽位等级、`CharacterPanelSkillListPanelActiveSkillTabGroupItem`／`PassiveSkillTabGroupItem`／`SkillPieceTabGroupItem` 页签、`ShowAll` 开关、技能列表与原 `SkillScrollList` 滚动区。列表排除当前方案已安装技能，按品质／ID 排序，已拥有技能可点击安装到选中槽（占用时替换），再次点击已选槽卸下；未拥有技能在 `ShowAll` 下以职业不符颜色显示且安装被原规则拒绝。
 
-[CharacterEquipSlots](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterEquipSlots.cs) 绑定原五槽 `CharacterPanelEquipItem`：主武器 10、副武器 14、头盔 11、衣服 12、靴子 13，显示已穿装备图标（品质底图、`item_icons` 或原缺失图标文本）、等级与副武器职业解锁（`profession_base.Rank > 1`）；空槽点击打开原 `CharacterPanelEquipListPanel`，候选按装备评分（原 `EquipItemComparer` 的 Score→Quality→ClassId 降序）列出本部位且职业可穿实例，点击经 `OfflineEquipmentOperations.Wear` 穿戴并同步 `Wardrobe.WornSkins` 的 body／pWeapon／sWeapon 皮肤。已穿槽的原详情／比较面板仍待接线。
+[CharacterEquipSlots](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterEquipSlots.cs) 绑定原五槽 `CharacterPanelEquipItem`：主武器 10、副武器 14、头盔 11、衣服 12、靴子 13，显示已穿装备图标（品质底图、`item_icons` 或原缺失图标文本）、等级与副武器职业解锁（`profession_base.Rank > 1`）；空槽点击打开原 `CharacterPanelEquipListPanel`，候选按装备评分（原 `EquipItemComparer` 的 Score→Quality→ClassId 降序）列出本部位且职业可穿实例，点击经 `OfflineEquipmentOperations.Wear` 穿戴并同步 `Wardrobe.WornSkins` 的 body／pWeapon／sWeapon 皮肤。已穿槽的详情／比较／强化等操作已有接线，原控件与完整表现缺口见下文。
 
 [OfflineEquipmentPropSource](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineEquipmentPropSource.cs) 实现原 `EquipPropChunk`：按 `equip`／`equip_type` 的 `Main`／`Sec`／`Other` 属性类、强化等级（`SlotProgress.BaseLevel`）、祝福等级、位阶差与 `equip_suit` 套装阈值合并装备分块，并以逐件装备属性计算装备分块战力；装备目录缺失时 `CharacterFeatureRuntime` 记录警告并继续运行。装备属性使用 `equipment-runtime-rules.json` 的 `props` 等级表与 `equip_attributes*` 数据。
 
-[CharacterRankPanel](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterRankPanel.cs) 绑定原 `CharacterUpgradePanel`：当前／下一位阶名称（`rank name`＋`sub`）、位阶星级（按 `player_subrank` 的同一大位阶分组，`GetState` 的已亮／下一枚／未亮）、当前等级与基础等级上限、下一位阶等级上限、`PropCatalog.Base` 基础属性前后值、`player_subrank.Items` 材料（原 `MapId`、持有／需求、品质底图与 `item_icons` 图标）、`LimitState` 的无限制／等级不足／满位阶状态和 `UseItemBtn` 突破。突破成功后刷新面板并保持同一实例；原 `UpgradeNotifyDialog` 与 10 级教学仍未接线。
+[CharacterRankPanel](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterRankPanel.cs) 绑定原 `CharacterUpgradePanel`：当前／下一位阶名称（`rank name`＋`sub`）、位阶星级（按 `player_subrank` 的同一大位阶分组，`GetState` 的已亮／下一枚／未亮）、当前等级与基础等级上限、下一位阶等级上限、`PropCatalog.Base` 基础属性前后值、`player_subrank.Items` 材料（原 `MapId`、持有／需求、品质底图与 `item_icons` 图标）、`LimitState` 的无限制／等级不足／满位阶状态和 `UseItemBtn` 突破。突破成功后刷新面板并保持同一实例；成功通知与 10 级教学已有复用属性弹窗框架的实现，原预制体和原触发条件仍未完整恢复。
 
 [CharacterPropPanels](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPropPanels.cs) 绑定人物页概要属性行与综合／细分属性弹窗：概要行读取原 `CharacterPanelPropPanel` 绑定（`PropCatalog=9`、`SlotPropItems` 与原 `row`／`row_fields` 模板），弹窗使用 `character_props` 原层级和 `PropCatalogCfgList`（主要属性 `Main`、附加属性 `Addition`），细分按原 `PropDialogDetailedPropItem` 分组、`mPropCatalogList=[Main,Addition]` 过滤，并支持逐组折叠／展开。[CharacterPanelNodeFactory](../../unity/Assets/Game/Runtime/Presentation/Character/CharacterPanelNodeFactory.cs) 统一还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask 与按钮；人物页和弹窗使用独立节点索引，关闭弹窗只销毁弹窗本身。
 
@@ -73,7 +73,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
-人物页与衣柜中的角色显示沿用[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)；当前 profile idle 已接通免费原生帧网格路线，衣柜换装从人物状态刷新模型。HSV 染色数据仍保存在进度服务，但材质/遮罩着色和实际页面验证未接通。
+人物页与衣柜中的角色显示沿用[Spine 角色动画迁移决策](../asset-management.md#spine-角色动画迁移决策)；当前 profile idle 已接通免费原生帧网格路线，衣柜换装从人物状态刷新模型。HSV 数据、遮罩与材质已有接线，实际染色效果仍未完成画面验证。
 
 用户补证普通经验在当季基础上限后继续提升显示等级，超出部分为当季赐福，赛末回到当季基础上限。服务端经验路由未取得，本地按此处理并保留赛季记录。
 
@@ -82,14 +82,14 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 ## 尚未实现
 
 - 储存经验说明已接原 `player_exp_max_title/desc1/desc2` 文本并在人物页规则按钮打开说明层；仍缺经验领取成功后的奖励演出与升级延时衔接、位阶教学触发/恢复和返回家园条件，失败与保存结果也只在状态文本体现。
-- 已接入装备主／副／额外与套装属性及人物页、位阶、五槽、技能、衣柜的界面；装备共鸣已按 `equip_resonance` 接入（按穿戴件数/等级取最高连续等级效果）；仍缺星石属性、特殊词条（`equip_attributes_passive_skill` 的被动技能等价属性）与技能分块、幻兽、古遗物、料理、额外、公会、NPC、星命属性来源。Map10 战斗与家园仍各自拼装基础＋衣柜属性，尚未改为读取 `EvaluateProps` 快照。
-- 将人物/衣柜换装后的遮罩与 HSV 染色接入帧网格渲染，并核对原染色入口、互斥提示和称号在人物页的显示；原衣柜底部技能幻彩/家园装潢子页仍需接到所属功能入口。
-- 在 Unity Play Mode 中验证人物与衣柜完整流程、不同性别/职业模型、穿脱和读档恢复；全工程编辑器验证还需先修复 `OfficialMap10TerrainView` 与共享战斗网格检查阻塞。
+- 已接入装备主／副／额外与套装属性及人物页、位阶、五槽、技能、衣柜的界面；装备共鸣已按 `equip_resonance` 接入（按穿戴件数/等级取最高连续等级效果），但合入装备分块而非原独立共鸣分块，分块评分尚未完整恢复；仍缺星石属性、特殊词条（`equip_attributes_passive_skill` 的被动技能等价属性）与技能分块、幻兽、古遗物、料理、额外、公会、NPC、星命属性来源。Map10 `BuildBattleCheckpoint` 已读取 `EvaluateProps` 并另行应用秘法；家园 `PlayerProperties` 仍拼装基础＋衣柜属性，各入口属性及战力尚未完全统一。
+- 核对已接入的帧网格遮罩／HSV 材质、原染色入口、互斥提示及称号挂点的实际表现；原衣柜底部技能幻彩／家园装潢子页仍需接到所属功能入口。
+- 在 Unity Play Mode 中验证人物与衣柜完整流程、不同性别／职业模型、穿脱和读档恢复；本次 Editor 已完成脚本编译和人物规则校验，不再把既往编译错误列为当前已确认阻塞。
 
 ### 人物入口、窗口与共享表现
 
 - [x] 创角后“人物”入口（`CharacterCreationFlowController`）与主城头像入口（`HomeHudView`）均以当前存档槽打开 `CharacterFeatureRuntime.OpenProfile`；主城使用自身 `SavesRoot` 重载。
-- [ ] `profession/skills/pet` 跳转事件仍无接收方，需随对应模块接入。
+- [ ] `profession/pet` 跳转事件仍无接收方，需随对应模块接入；技能按钮已由 `OpenSkillPanel` 直接打开技能页，不受其附带 `skills` 通知无接收方影响。
 - [x] 人物页职业按钮已绑定 `profession_name_{enum}` 本地化名称与 `ProfessionBase.Icon2` 图标（31 个职业有名称、31 个有图标），称号与有效期、各槽位状态已分别接入。
 - [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新。
 - [x] 人物 UI 绑定工程内官方中文字体 `Assets/Official/Commerce/Art/fonts/FZY4K.ttf`（目录 `uiFont` 字段），不再依赖已失效的内置字体；字体应用失败时记录一次警告并跳过文本，避免整页崩溃。
@@ -127,7 +127,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 部位星石影响、强化成功演出与原套装／职业检查提示仍缺。
 - [x] 人物详情已接强化、锁定／解锁、分解（二次确认）与卸下，操作经统一存档事务并刷新槽位与背包；均复用同一实例 ID 与 `OfflineEquipmentOperations`。
 - [x] 星石已接入详情“星石”层：列出已镶嵌孔位并可卸下，列出背包中可镶嵌宝石并可镶嵌；`InlayGem` 的 `function_limit`／`equip_inlay_site` 条件由 `LevelCondition`、`EquipLevelCondition` 与 `CompositeAndCondition` 求值（未知条件按未开放处理）。
-- [x] 已接“同赛季完整继承”：详情“继承”列出同类型装备，确认后由 `Inherit` 模式 0 把来源词条/宝石完整转移到目标并消耗来源，目标保持穿戴；目标随后为锁定态。跨赛季自选词条继承（模式 1、`InheritCost`）仍缺选择界面。
+- [x] 已接“同赛季完整继承”：详情“继承”列出同类型装备，确认后由 `Inherit` 模式 0 把来源词条/宝石完整转移到目标并消耗来源，目标保持穿戴；目标随后为锁定态。跨赛季自选词条继承的现有接线见本小节对应条目。
 - [x] 词条精炼已接：详情“精炼”层可勾选要保留的词条，按保留数量读取 `equip_purify_cost` 扣除材料，其余词条经 `OfficialEquipmentGenerator.GenerateReplacement` 重掷并保存。
 - [x] 跨赛季自选词条继承已接：继承层每个来源提供“完整／选词条”两种入口，选词条时按勾选数量读取 `equip_inherit_cost` 扣料，仅复制勾选词条、其余用 `GenerateReplacement` 重掷。
 - [x] 装备碎片合成已接：详情“碎片合成”列出持有量足够的碎片，选择目标装备后按 `equip_piece_merge.PieceMergeCount` 扣碎片并经 `OfficialEquipmentGenerator` 生成实例加入装备列表。
@@ -137,7 +137,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 - [x] `OfflineSkillProfile` 已并入统一人物存档（`OfflinePlayerProgress.Skills`），技能规则由人物目录绑定 `Assets/Official/Skills/skill-runtime-rules.json`；人物技能按钮打开原技能面板，安装／替换／卸下／方案切换与改名经 `ApplyCharacterMutation` 写入同一存档。
 - [x] 恢复三套方案切换、方案改名、四战技／四秘法槽、目标槽高亮、列表安装替换与再次点击卸下、页签与 `ShowAll`；方案切换同步出战幻兽仍待幻兽模块。
-- [x] 同类技能槽拖拽换位已接：`SkillSlotDrag` 拖起槽位、放到另一同类槽后经 `SwapSkillSlots` 交换并保存，交换后刷新方案。
+- [ ] 技能槽换位服务与 `SkillSlotDrag` 回调已接，但不能标记鼠标拖拽完成：组件仅实现 `IBeginDragHandler/IDropHandler`，缺 `IDragHandler`，而当前 `StandaloneInputModule` 按 `GetEventHandler<IDragHandler>` 选择拖拽对象；槽位不会被识别为拖拽源。还需恢复拖影／占位、结束清理与同类目标校验；已有直接调用 `SwapSkillSlots` 的断言不覆盖此输入链。
 - [x] 安装遮罩按 Esc 会取消安装态并清除高亮，而不是关闭面板。
 - [ ] 方案切换动画、占位恢复与其余操作中的返回限制仍缺；安装遮罩已接：列表点技能后进入安装态（半透明遮罩＋“选择技能槽”提示＋八个槽高亮），点击目标槽安装并退出安装态，空槽也可直接安装。
 - [x] 技能列表已排除当前方案已装项、按品质／ID 排序，并对不满足职业链的技能显示灰色与“（职业不符）”；`IsAvailableFor` 与安装校验共用同一可用性规则。
@@ -181,7 +181,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 - [ ] 动态模型、动作、称号、字体／材质、图标、预览视频、家园预览、特效与音频均从随游戏交付的本地清单加载；按[素材管理](../asset-management.md)补齐官方来源、必要转换、依赖、哈希及显式绑定。
 - [ ] 让穿脱、技能方案、幻兽方案、潮流升级、经验／位阶、职业变化和奖励使用统一事务；覆盖重复操作、取消、失败回滚、到期同步、旧状态校验、角色槽隔离及重新启动恢复。
-- [ ] 修复进入 Play Mode 所需的实际编译阻塞并执行相关 Editor 校验；从 `Bootstrap.unity` 的玩家可见入口验证上述页面与返回链，在450×800及其他竖屏尺寸实际检查点击、滚轮／拖拽、遮挡、字体／布局、连续动画、原音效和读档恢复。
+- [ ] Editor 编译与人物规则校验已通过；仍需从 `Bootstrap.unity` 的玩家可见入口验证上述页面与返回链，在450×800及其他竖屏尺寸实际检查点击、滚轮／拖拽、遮挡、字体／布局、连续动画、原音效和读档恢复。
 - [ ] 验证结果分别写明静态检查、Editor 导入／编译、Play Mode 逻辑、真实输入、画面／动画／音频及存档范围；本页全部流程和相关共享调用方实际验证完成后，才将人物界面标记为完成。
 
 ### 人物界面与官方调用关系的差异
@@ -190,17 +190,17 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 | 范围 | 官方调用关系 | 当前实现与缺口 |
 | --- | --- | --- |
-| 人物模型 | `CharacterPanel.RefreshAppearance`、`SwitchAnimCallBack`、`AppendAppearanceContent.PlayAnim/GetSwitchAnimData/GetLoopAnimData` | `CharacterModelPreview` 已接衣柜解析和网格播放；运行包仅含男女 `100/idle_01`、`200/idle_01` 四份姿态。目录中职业 0–30 的 profile 记录不能代表职业切换流程或全部动作已接通；衣柜分类 `show_*` 切换和 `appearance` 循环、HSV 材质/遮罩、人物页称号及实际装备驱动的外观同步仍缺失。模型还采用按包围盒缩放居中，尚未完成与官方画面的比例、位置核验。 |
-| 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext` 合并分块并更新战力 | 已接 `CharacterPropCalculator` 分块、`CharacterPropPanels` 概要行与综合／细分弹窗（含页签、来源顺序、相对属性、折叠展开）。剩余：装备／技能／幻兽等分块来源、属性行点击说明浮层、`ScoreLevelGroupId` 等级系数；Map10 战斗尚未改为读取同一 `CharacterPropSnapshot`。 |
-| 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 空槽候选或已穿详情 | 五槽已绑定实例、正式装备图标、等级与副武器解锁；候选按原评分排序，已穿槽替换先经双栏比较确认，穿脱同步身体／武器皮肤。已穿槽完整详情、强化与星石显示尚未接线。 |
-| 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案 | 技能档案已进入人物主存档，人物按钮直接打开原技能面板；三方案切换／改名、八槽显示、列表安装替换／卸下已接线，战斗读取 `EquippedActiveSkills/PassiveSkills`。剩余：切换动画、安装遮罩与拖拽、详情／推荐／培养与成就页。 |
-| 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入/退出出战方案 | 此处官方“装备幻兽”指随行/出战幻兽的选择、更换、卸下和模型展示。Unity 未接 `PetSelectContent`、幻兽选择操作、模型或对应存档；人物 `pet` 按钮同样只有无接收方的跳转事件。 |
-| 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | `OfficialWardrobePanelView` 已有类别、已拥有列表、可穿筛选、穿脱、称号和到期事务；原分类动作、互斥反馈、人物称号显示仍不完整。底栏 `skill-appearance/decoration-appearance` 回调未传入；属性弹窗把属性 ID 和数值拼为文本，规则弹窗追加固定字号 Arial 文本，未绑定原属性行/规则行模板及完整说明内容。 |
+| 人物模型 | `CharacterPanel.RefreshAppearance`、`SwitchAnimCallBack`、`AppendAppearanceContent.PlayAnim/GetSwitchAnimData/GetLoopAnimData` | **部分迁移。** `CharacterModelPreview` 已接衣柜／装备皮肤解析、24 fps 网格播放、HSV／遮罩材质和临时试穿；运行包实际仅包含男女 `100/idle_01`、`200/idle_01` 四份姿态。目录中的其他动作名称及男女各 31 条职业 profile 不能代表实际动作载荷或转职流程已接通。缺衣柜分类 `show_*` 过渡、`appearance` 循环、mix／退出复位；模型按包围盒乘 `0.96` 缩放居中，尚未核验原比例、位置与各职业组合。创角／地图原生 Animator 已接入不代表人物页使用该播放器。 |
+| 人物属性与战力 | `CharacterPanelPropPanel.RefreshProp/OnShowDetailPropBtnClick` → `BattlePropsOutFight`、`CharacterDetailPropsDialog.Init`；`PlayerPropContext`／`PropChunckFactory` 合并分块并评分 | **部分迁移。** 已有基础、职业特征、衣柜与装备属性，概要／综合／细分、折叠及说明浮层已接线。`AttachSkillRules` 只创建技能操作服务，未注册技能属性源；运行时唯一外部 `IOfflineCharacterPropSource` 实现为装备，缺星石、幻兽、遗物等来源。共鸣合入装备属性但未恢复独立分块评分，`ScoreLevelGroupId` 系数被省略。Map10 已读 `EvaluateProps` 后另行应用秘法，家园仍只合并基础＋衣柜，数值与战力尚不能认定完整一致。 |
+| 人物装备 | `CharacterPanelPropPanel.RefreshEquip/UpdateProfessioon` → 五个 `CharacterPanelEquipItem.Refresh/OnBtnClick` → 候选、详情、比较、强化 | **部分迁移。** 五槽、副武器解锁、候选、详情／比较、穿脱、强化、锁定、分解、继承、精炼、星石镶卸和碎片合成均已有界面与事务调用；穿脱同步身体／武器皮肤。仍缺星石实际属性及比较影响、被动技能类特殊词条、原星石小图／红点与完整词条控件，若干操作窗口以代码生成按钮／文本实现，原演出／音效及实际输入／画面未完成核验。这些操作的接线不代表原界面与数值已完整还原。 |
+| 技能安装 | `CharacterPanel.OnCharacterPanelPropPanelSkillBtnClickEvent` → `CharacterPanelSkillPanel/CharacterPanelSkillContent`；`CharacterPanelSkillPlan` 管理方案，`SetPlan` 联动幻兽 | **部分迁移。** 主存档中的三方案、四战技／四秘法槽、切换／改名、指定槽安装／替换／卸下、收藏、合成、推荐、培养均已接线。安装态遮罩已有代码，但放在首个 sibling 且 `raycastTarget=false`，没有恢复原点击遮罩取消和限制其他控件的行为（已有 Escape 取消）；`SkillSlotDrag` 缺 `IDragHandler`，服务换位通过不能证明鼠标拖拽可用。剩余包括方案动画／占位、原详情描述与结果表现、成就／伤害测试、技能属性来源及幻兽方案联动。 |
+| 幻兽装配 | `CharacterPanel.RefrshPet` → `PlayerWithPetContent` → `PetPlanContent.OnSelectPetClick` → `PetSelectPanel`；`PetEditPlanDefaultOperation.EquipPet` 加入／退出方案 | **人物页尚未接通。** 此处按官方调用关系指随行／出战幻兽的选择、更换、卸下与模型展示。Unity 人物页未连接原选择列表（战力排序及“无幻兽”）、幼年模型、三方案幻兽关系及装卸存档事务；`pet` 按钮只转发无接收方事件。已有 `PetGacha` 收藏／抽取存档和抽取演出模型不能替代这条装配链。 |
+| 衣柜 | `AppearancePanel`、`AppendAppearanceContent/GridContent/GridItem`、称号及等级内容 | **部分迁移。** 已有分类／筛选、穿脱、互斥计算与提示、新获得、称号详情／到期、人物页称号、潮流等级、属性／规则原行模板及临时试穿。缺分类模型动画、任务称号领取并立即穿戴、原提示／红点及完整称号／升级表现。底栏 `skill-appearance/decoration-appearance` 回调未传入，技能幻彩及家园装潢页面不可用，原拥有类别／开放条件也未完整控制底栏；动态循环列表、定位和真实画面尚未验收。 |
 | 职业与成长说明 | `CharacterPanelPropPanel.OnProfessionBtnClick`、原经验/位阶组件 | 职业按钮已显示官方职业名称与图标，点击仍只有未被消费的 `profession` 事件；位阶页已接主要字段、突破、成功通知与教学，材料说明与首个缺料定位仍缺；储存经验说明已由规则按钮打开。 |
 
-界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
+界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；`OnLowMemory` 已接未显示子页回收。原 TMP 字体／材质／描边、状态动画与按钮音效仍未完整恢复。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取。
 
-验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（28,115 个 GUID）。Unity `2022.3.57f1c2` Editor `BindOfficialCatalogs` 成功（1563 wardrobe entries、1723 appearance skins、1764 official sprites、pinned 854_156383），`CharacterProgressionValidation.Run` 通过（经验、基础属性、衣柜互斥、限时外观扩展、属性管线）。Roslyn 单独编译 `Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过；Play Mode batchmode 逻辑验收通过，覆盖技能合成/换位、装备碎片合成/精炼、衣柜已读、试穿预览不变更存档、方案与称号写盘后重载。批处理未生成装备槽图标节点（83 个 Image），不能据此确认窗口态槽位渲染；隔离副本窗口态运行时 Text.font 赋值抛空引用后虽容错继续，并产生四张 3840×2160 PNG，但四张 SHA-256 完全相同（`db4abced0685` 前缀），未证明人物界面有可见变化，故不视为画面验证通过。真实鼠标/拖拽命中、动画/音频与完整画面仍未验证。
+验证边界：本次 `python -B scripts/check_unity_project.py` 静态元数据检查通过（28,117 个 GUID）。源码核对已实际执行 Unity `2022.3.57f1c2` Editor 脚本编译与 `CharacterProgressionValidation.Run`，通过经验、基础属性、衣柜互斥、限时外观和属性管线断言；人物模型 ZIP 与来源清单哈希、包内 7,566 个载荷哈希均通过，并按实际 ZIP 条目确认只有四份待机姿态。既有 Play Mode 记录覆盖技能合成／服务换位、装备合成／精炼、衣柜已读、试穿不写存档、方案／称号重载，不能覆盖完整玩法或真实输入。本次未重跑 Play Mode、鼠标／拖拽、画面／动画／音频、存档恢复或 Windows Player；本节结论为源码与载荷完整性核对，不是完整运行验收通过。
 
 ### 待迁移的规则与表现
 
