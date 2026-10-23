@@ -17,7 +17,9 @@ namespace Zjcs.Editor.Inventory
         {
             TextAsset data = AssetDatabase.LoadAssetAtPath<TextAsset>(Payload + "bag-items.json");
             TextAsset manifest = AssetDatabase.LoadAssetAtPath<TextAsset>(Payload + "source-manifest.json");
-            if (data == null || manifest == null)
+            TextAsset itemSourceData = AssetDatabase.LoadAssetAtPath<TextAsset>(Payload + "item-source-catalog.json");
+            TextAsset itemSourceManifest = AssetDatabase.LoadAssetAtPath<TextAsset>(Payload + "item-source-manifest.json");
+            if (data == null || manifest == null || itemSourceData == null || itemSourceManifest == null)
                 throw new BuildFailedException("Run scripts/prepare_unity_inventory_assets.py and import the official inventory payload first.");
 
             string spritesRoot = Payload + "Art/sprites";
@@ -37,6 +39,8 @@ namespace Zjcs.Editor.Inventory
             var serialized = new SerializedObject(catalog);
             serialized.FindProperty("uiData").objectReferenceValue = data;
             serialized.FindProperty("sourceManifest").objectReferenceValue = manifest;
+            serialized.FindProperty("itemSourceUiData").objectReferenceValue = itemSourceData;
+            serialized.FindProperty("itemSourceManifest").objectReferenceValue = itemSourceManifest;
             SerializedProperty sprites = serialized.FindProperty("sprites");
             sprites.arraySize = guids.Length;
             for (int i = 0; i < guids.Length; i++)
@@ -54,9 +58,12 @@ namespace Zjcs.Editor.Inventory
             catalog.ValidateBindings();
             if (catalog.LoadTemplate("bag") == null
                 || catalog.LoadRowTemplate("bag_scroll_row_0") == null
-                || catalog.LoadRowTemplate("bag", "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ") == null)
+                || catalog.LoadRowTemplate("bag", "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ") == null
+                || catalog.LoadItemSourceTemplate() == null
+                || catalog.FindItemSourceText("ItemSourceType.PreciousChestGacha") != "国度扭蛋获取"
+                || catalog.FindItemSourceText("ItemSourceType.ElementChestGacha") != "元素扭蛋获取")
                 throw new BuildFailedException("Official inventory panel or scroll row metadata is missing.");
-            Debug.Log("Official inventory UI, row templates and sprite bindings imported and validated.");
+            Debug.Log("Official inventory UI, source rows, row templates and sprite bindings imported and validated.");
         }
 
         private static void ConfigureSpriteImporters(string spritesRoot)

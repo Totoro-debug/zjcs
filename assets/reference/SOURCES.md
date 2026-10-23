@@ -1340,7 +1340,7 @@ read_official_native.py 沿固定 v31 metadata 的 image／type／method token �
 
 ### 祈愿材料的原快捷购买来源行
 
-`prepare_gacha_item_sources.py` 从固定854_156383 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图，语言取原 `ItemSourceType.QuickBuy`。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言及输出哈希见 [gacha-item-sources/source-manifest.json](gacha-item-sources/source-manifest.json)。
+`prepare_gacha_item_sources.py` 从固定854_156383 `ItemDetailDialog` 的 `ItemSourceGo.ItemSourcePrefab` 转换实际引用的 `ItemSourceItem`，保留原布局、可用／不可用状态、箭头与背景贴图；来源枚举文案由同版本简中语言包提供，包括国度扭蛋获取与元素扭蛋获取。资源位于 `assets/official/gacha-item-sources/`，原组件、调用脚本、语言包哈希及输出哈希见 [gacha-item-sources/source-manifest.json](gacha-item-sources/source-manifest.json)。Unity 库存导入工具通过 `prepare_unity_inventory_assets.py` 校验并接入该来源行目录与三张图。
 
 ### 宾果与刮卡原布局、网格材质及音频
 

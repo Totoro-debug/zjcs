@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ namespace Zjcs.Presentation.Inventory
     {
         private const string PanelPath = "/PlayerBagPanel";
         private const string ScrollPath = "/PlayerBagPanel/BgPanel1/Content/MiddleGo/ScrollRect ";
+        private const string ItemSourcePath = "/ItemDetailDialog/BgDialog1/Content/MiddleGo/ScrollRect/Viewport/Content/ItemDetailDialogGridLayout/ItemSourceGo";
         private static readonly string[] CountSuffixes = { "", "万", "亿", "兆", "京" };
         private static readonly Color ProgressEnoughColor = new Color(0.79607844f, 0.81176472f, 0.38039216f, 1f);
         private static readonly Color ProgressLackColor = new Color(0.96862745f, 0.32156864f, 0.21568628f, 1f);
@@ -29,8 +31,10 @@ namespace Zjcs.Presentation.Inventory
         private OfflineInventorySort sort = OfflineInventorySort.Type;
         private bool reverse;
         private GameObject detailWindow;
+        private Func<OfflineInventoryItemView, IReadOnlyList<int>> itemSourceTypes;
 
         public event Action<OfflineInventoryItemView> ItemSelected;
+        public event Action<OfflineInventoryItemView, int> TreasureGachaSourceSelected;
         public event Action Closed;
 
         public void Initialize(OfficialInventoryAssetCatalog assetCatalog,
@@ -94,6 +98,25 @@ namespace Zjcs.Presentation.Inventory
                 button.onClick.AddListener(() => OpenItem(item));
                 displayedItems.Add(item);
             }
+        }
+
+        public void Refresh(OfflineMainlineSave playerSave)
+        {
+            save = playerSave ?? throw new ArgumentNullException(nameof(playerSave));
+            Refresh();
+        }
+
+        public void SetTreasureGachaSourceProvider(Func<OfflineInventoryItemView, IReadOnlyList<int>> provider)
+        {
+            itemSourceTypes = provider;
+        }
+
+        public bool ReopenItemDetail(int itemId)
+        {
+            OfflineInventoryItemView item = displayedItems.FirstOrDefault(value => value.ItemId == itemId);
+            if (item == null) return false;
+            ShowDetail(item);
+            return true;
         }
 
         public void Close()
@@ -406,6 +429,44 @@ namespace Zjcs.Presentation.Inventory
                 Destroy(detailWindow);
                 detailWindow = null;
             });
+
+            if (detailNodes.TryGetValue(ItemSourcePath, out RectTransform sourceContainer))
+                BuildTreasureGachaSourceRows(item, sourceContainer);
+        }
+
+        private void BuildTreasureGachaSourceRows(OfflineInventoryItemView item, RectTransform sourceContainer)
+        {
+            IReadOnlyList<int> sourceTypes = itemSourceTypes?.Invoke(item);
+            if (sourceTypes == null || sourceTypes.Count == 0) return;
+            Dictionary<string, object> sourceTemplate = assets.LoadItemSourceTemplate();
+            foreach (int sourceType in sourceTypes)
+            {
+                var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                RectTransform row = BuildNode(sourceTemplate, sourceContainer, rowNodes);
+                string key = sourceType == 0
+                    ? "ItemSourceType.PreciousChestGacha" : "ItemSourceType.ElementChestGacha";
+                if (rowNodes.TryGetValue("/ItemSourceItem/Text", out RectTransform textNode))
+                {
+                    TMP_Text text = textNode.GetComponent<TMP_Text>();
+                    if (text != null) text.text = assets.FindItemSourceText(key);
+                }
+
+                bool bound = false;
+                foreach (RectTransform node in rowNodes.Values)
+                {
+                    if (node.name != "On" && node.name != "Off") continue;
+                    Button button = node.GetComponent<Button>();
+                    if (button == null) continue;
+                    int selectedSourceType = sourceType;
+                    button.onClick.AddListener(() => TreasureGachaSourceSelected?.Invoke(item, selectedSourceType));
+                    bound = true;
+                }
+                if (!bound)
+                {
+                    Destroy(row.gameObject);
+                    throw new FormatException("Official item-source row buttons are missing.");
+                }
+            }
         }
 
         private static void SetDetailText(Dictionary<string, RectTransform> detailNodes, string path, string value)
@@ -451,18 +512,38 @@ namespace Zjcs.Presentation.Inventory
             }
             if (data.TryGetValue("text", out object rawText) && rawText is Dictionary<string, object> textData)
             {
-                Text text = instance.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                text.text = Text(textData, "value");
-                text.color = ColorValue(textData, Color.black);
-                text.fontSize = Mathf.Max(1, Mathf.RoundToInt(Number(textData, "font_size", 16f)));
-                text.alignment = TextAlignment(Integer(textData, "horizontal", 1), Integer(textData, "vertical", 512));
-                text.horizontalOverflow = Boolean(textData, "word_wrap", true)
-                    ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
-                text.verticalOverflow = Integer(textData, "overflow", 0) == 1
-                    ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
-                text.supportRichText = true;
-                text.raycastTarget = false;
+                if (HasScript(data, "TextMeshProUGUI"))
+                {
+                    TextMeshProUGUI text = instance.AddComponent<TextMeshProUGUI>();
+                    text.font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic") ?? TMP_Settings.defaultFontAsset;
+                    text.text = Text(textData, "value");
+                    text.color = ColorValue(textData, Color.black);
+                    text.fontSize = Mathf.Max(1f, Number(textData, "font_size", 16f));
+                    text.alignment = (TextAlignmentOptions)(Integer(textData, "horizontal", 1)
+                        | Integer(textData, "vertical", 512));
+                    text.enableWordWrapping = Boolean(textData, "word_wrap", true);
+                    text.overflowMode = (TextOverflowModes)Mathf.Clamp(Integer(textData, "overflow", 0), 0, 6);
+                    List<object> margin = Array(textData, "margin");
+                    if (margin.Count >= 4)
+                        text.margin = new Vector4(Number(margin, 0, 0f), Number(margin, 1, 0f),
+                            Number(margin, 2, 0f), Number(margin, 3, 0f));
+                    text.raycastTarget = false;
+                }
+                else
+                {
+                    Text text = instance.AddComponent<Text>();
+                    text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                    text.text = Text(textData, "value");
+                    text.color = ColorValue(textData, Color.black);
+                    text.fontSize = Mathf.Max(1, Mathf.RoundToInt(Number(textData, "font_size", 16f)));
+                    text.alignment = TextAlignment(Integer(textData, "horizontal", 1), Integer(textData, "vertical", 512));
+                    text.horizontalOverflow = Boolean(textData, "word_wrap", true)
+                        ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
+                    text.verticalOverflow = Integer(textData, "overflow", 0) == 1
+                        ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
+                    text.supportRichText = true;
+                    text.raycastTarget = false;
+                }
             }
 
             foreach (object rawChild in Array(data, "children"))
@@ -488,7 +569,13 @@ namespace Zjcs.Presentation.Inventory
             if (HasScript(data, "Button") || Boolean(data, "button", false))
             {
                 Graphic graphic = instance.GetComponent<Graphic>();
-                if (graphic == null) graphic = instance.AddComponent<Image>();
+                if (graphic == null)
+                {
+                    Image hitTarget = instance.AddComponent<Image>();
+                    hitTarget.color = Color.clear;
+                    hitTarget.raycastTarget = true;
+                    graphic = hitTarget;
+                }
                 Button button = instance.AddComponent<Button>();
                 button.targetGraphic = graphic;
             }
@@ -501,9 +588,56 @@ namespace Zjcs.Presentation.Inventory
                 fitter.horizontalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(Integer(fitterData, 0), 0, 2);
                 fitter.verticalFit = (ContentSizeFitter.FitMode)Mathf.Clamp(Integer(fitterData, 1), 0, 2);
             }
+            ApplyLayoutElement(instance, data);
+            ApplyLayoutGroup(instance, data);
             if (data.TryGetValue("scroll", out object rawScroll) && rawScroll is Dictionary<string, object> scrollData)
                 ApplyScroll(instance, rect, path, targetNodes, scrollData);
             return rect;
+        }
+
+        private static void ApplyLayoutElement(GameObject instance, Dictionary<string, object> data)
+        {
+            if (!(data.TryGetValue("layout_element", out object rawElement)
+                && rawElement is Dictionary<string, object> elementData)) return;
+            LayoutElement element = instance.AddComponent<LayoutElement>();
+            element.ignoreLayout = Boolean(elementData, "ignore", false);
+            List<object> min = Array(elementData, "min");
+            List<object> preferred = Array(elementData, "preferred");
+            List<object> flexible = Array(elementData, "flexible");
+            element.minWidth = Number(min, 0, -1f);
+            element.minHeight = Number(min, 1, -1f);
+            element.preferredWidth = Number(preferred, 0, -1f);
+            element.preferredHeight = Number(preferred, 1, -1f);
+            element.flexibleWidth = Number(flexible, 0, -1f);
+            element.flexibleHeight = Number(flexible, 1, -1f);
+        }
+
+        private static void ApplyLayoutGroup(GameObject instance, Dictionary<string, object> data)
+        {
+            if (!(data.TryGetValue("layout", out object rawLayout)
+                && rawLayout is Dictionary<string, object> layoutData)
+                || !Array(data, "scripts").Any(value =>
+                    Convert.ToString(value, CultureInfo.InvariantCulture).IndexOf("LayoutGroup", StringComparison.Ordinal) >= 0))
+                return;
+            bool horizontal = Integer(layoutData, "axis", 1) == 0;
+            HorizontalOrVerticalLayoutGroup group = horizontal
+                ? (HorizontalOrVerticalLayoutGroup)instance.AddComponent<HorizontalLayoutGroup>()
+                : instance.AddComponent<VerticalLayoutGroup>();
+            List<object> padding = Array(layoutData, "padding");
+            List<object> control = Array(layoutData, "control");
+            List<object> expand = Array(layoutData, "expand");
+            List<object> childScale = Array(layoutData, "child_scale");
+            group.padding = new RectOffset(Integer(padding, 0), Integer(padding, 1),
+                Integer(padding, 2), Integer(padding, 3));
+            group.spacing = Number(layoutData, "spacing", 0f);
+            group.childAlignment = (TextAnchor)Mathf.Clamp(Integer(layoutData, "alignment", 0), 0, 8);
+            group.childControlWidth = Boolean(control, 0, true);
+            group.childControlHeight = Boolean(control, 1, true);
+            group.childForceExpandWidth = Boolean(expand, 0, true);
+            group.childForceExpandHeight = Boolean(expand, 1, true);
+            group.childScaleWidth = Boolean(childScale, 0, false);
+            group.childScaleHeight = Boolean(childScale, 1, false);
+            group.reverseArrangement = Boolean(layoutData, "reverse", false);
         }
 
         private static void ApplyGrid(GameObject instance, Dictionary<string, object> data)
@@ -580,8 +714,16 @@ namespace Zjcs.Presentation.Inventory
         private static int Integer(List<object> values, int index) =>
             values != null && index < values.Count ? Convert.ToInt32(values[index], CultureInfo.InvariantCulture) : 0;
 
+        private static bool Boolean(List<object> values, int index, bool fallback) =>
+            values != null && index < values.Count
+                ? Convert.ToBoolean(values[index], CultureInfo.InvariantCulture) : fallback;
+
         private static float Number(Dictionary<string, object> data, string key, float fallback) =>
             data.TryGetValue(key, out object value) && value != null ? Convert.ToSingle(value, CultureInfo.InvariantCulture) : fallback;
+
+        private static float Number(List<object> values, int index, float fallback) =>
+            values != null && index < values.Count
+                ? Convert.ToSingle(values[index], CultureInfo.InvariantCulture) : fallback;
 
         private static float Float(object value) => Convert.ToSingle(value, CultureInfo.InvariantCulture);
 
