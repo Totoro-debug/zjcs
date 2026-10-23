@@ -119,6 +119,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (installMask != null)
+            {
+                ClearPendingInstall();
+                return true;
+            }
             if (recommendDialog != null)
             {
                 CloseRecommendations();
