@@ -66,7 +66,9 @@
 
 捏脸保存修复了 `OfflineMainlineProgressSession.UniqueAppearanceTypes` 误拒绝官方 `PlayerSkinType.Eye = 0` 的问题；旧逻辑会使已创建角色回读失败。`LocalJsonSaveFile` 对 Windows 短暂占用导致的原子替换错误作有限重试，保留原有原子替换与有效存档。创角启动时移除商城控制器自动创建的额外存档选择遮罩，避免拦截创角输入。
 
-本次按用户指定只验收捏脸与保存：验收脚本隔离创角前开场与创角后 `FirstStory`，不据此证明剧情到初始武器的完整衔接；“幻装试穿”另做。捏脸控件通过 EventSystem 射线命中与软件指针事件验证，文本通过 TMP 输入值验证，尚未以实体鼠标与键盘操作验收；槽位、弹窗及武器按钮部分直接派发按钮事件。未构建或发布 Windows 成品。
+`CharacterCreationPlayModeAcceptance.PrepareAndRun` 已在当前工程复核通过，创角资产绑定与来源检查同时通过。该用例跳过创角前开场，但保留创角后 `FirstStory`，断言两段薇兰对白、剧情结束后进入初始武器选择，以及两槽角色和染色的磁盘回读；720×1280 与 450×800 的捏脸运行截图已实际查看。`CharacterOpeningPlayModeAcceptance.Run` 另行通过战前对白、录像解析与单位生成、直接请求快进、战后剧情和创角面板交接；这两套分段用例不等于从 `Bootstrap` 经完整录像到捏脸的连续真实输入验收，也不证明整段战斗表现完整还原。“幻装试穿”按用户确认另做。
+
+捏脸控件通过 EventSystem 射线命中与软件指针事件验证，文本通过 TMP 输入值验证，尚未以实体鼠标与键盘操作验收；槽位、弹窗及武器按钮部分直接派发按钮事件。正式存档验证为同一 Play Mode 内重新打开服务读取磁盘，未覆盖退出 Play Mode 或重启游戏后的完整恢复流程。静态入口 `scripts/check_unity_project.py` 与 Unity 编译已通过；未构建或发布 Windows 成品。
 
 ## 自定义实现
 
@@ -100,6 +102,8 @@
 4. **状态动作与状态图标。** 回合文本、行动时间轴、伤害飘字、四类明确动作（Skill／AirCombo／Move／Die）与死亡延迟销毁已接；完整回放实测时间轴 18 项、飘字 165 条、动作 21 次、死亡保持 15 次。仍缺：官方飘字 AnimationClip、`Status`／`Blinding`／`SuperArmor`／`Drag`／`None` 的动作语义未确认、`FightStatusComponent` 无状态 ID 因而状态图标无法绑定。
 
 ### 剧情表现资源
+
+`FirstStory` 的对白到初始武器选择逻辑已接通，但 [OpeningStoryPlayer](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningStoryPlayer.cs) 对 `HomePlayerPlayActionNode` 仍因未提供家园环境而直接返回 `SafeEnd`。运行日志确认 `StoryStun` 走此分支并使后续展示节点进入跳过模式，不能将该用例通过解释为完整创角后演出已恢复。
 
 ### 仍需验证的部分
 
