@@ -121,7 +121,8 @@ def trim_node(node):
     keep = (
         "name", "path", "active", "anchor_min", "anchor_max", "anchored_position",
         "size_delta", "pivot", "scale", "rotation", "scripts", "image", "text",
-        "localization_key", "mask", "rectmask2d", "layout", "grid", "size_fitter",
+        "localization_key", "mask", "mask_component_flags", "mask_enabled", "mask_show_graphic",
+        "rectmask2d", "layout", "grid", "size_fitter",
         "layout_element", "aspect_fitter", "alpha", "button", "scroll", "children",
         "toggle",
     )

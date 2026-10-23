@@ -88,7 +88,7 @@ namespace Zjcs.Presentation.Commerce
                     || data.weeklyGroups == null || data.weeklyGroups.Length != 85
                     || data.weeklyGifts == null || data.weeklyGifts.Length != 595
                     || data.vouchers == null || data.vouchers.Length != 6
-                    || data.items == null || data.items.Length != 169
+                    || data.items == null || data.items.Length != 172
                     || data.audio == null || data.audio.Length != 10
                     || data.texts == null || data.texts.Length < 700
                     || data.prefabs == null || data.prefabs.Length < 26

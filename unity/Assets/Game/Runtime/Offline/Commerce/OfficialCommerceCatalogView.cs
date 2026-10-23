@@ -67,6 +67,7 @@ namespace Zjcs.Offline.Commerce
         public bool button;
         public CommerceUiScroll scroll;
         public bool mask, rectmask2d;
+        public bool mask_component_flags, mask_enabled, mask_show_graphic;
         public CommerceLayoutGroup layout;
         public CommerceGridLayout grid;
         public int[] size_fitter;

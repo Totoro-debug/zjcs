@@ -35,9 +35,11 @@ namespace Zjcs.Editor.Home
                 canvas.worldCamera = camera;
                 var renderer = new HomeUiRenderer(catalog);
                 HomeUiNode source = Find(catalog.Panel("bed").root, "/FurnitureBedDialog/BgDialog3/BgImg");
-                source.children = Array.Empty<HomeUiNode>();
                 GameObject node = renderer.CreateNode(source, canvasObject.transform);
-                node.layer = 31;
+                foreach (Transform child in node.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
+                Mask[] masks = node.GetComponentsInChildren<Mask>(true);
+                if (masks.Length != 1 || masks[0].showMaskGraphic)
+                    throw new InvalidOperationException("The bed panel draws its official invisible stencil mask.");
                 RectTransform rect = (RectTransform)node.transform;
                 rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
                 rect.anchoredPosition = Vector2.zero;
