@@ -17,6 +17,8 @@ namespace Zjcs.Presentation.Home
     {
         private readonly HomeAssetCatalog catalog;
         private readonly Dictionary<string, GameObject> nodes = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+        private readonly Dictionary<string, HomeUiAnimation> animations = new Dictionary<string, HomeUiAnimation>(StringComparer.Ordinal);
+        private readonly Dictionary<Image, Color> deferredImageTints = new Dictionary<Image, Color>();
 
         public HomeUiRenderer(HomeAssetCatalog catalog)
         {
@@ -31,6 +33,8 @@ namespace Zjcs.Presentation.Home
             if (panel == null || panel.root == null)
                 throw new KeyNotFoundException("Official home panel is missing: " + panelKey);
             nodes.Clear();
+            animations.Clear();
+            deferredImageTints.Clear();
             GameObject root = CreateNode(panel.root, parent, bind);
             RootName = root.name;
             return root;
@@ -43,6 +47,18 @@ namespace Zjcs.Presentation.Home
         }
 
         public GameObject Find(string path) => nodes.TryGetValue(path, out GameObject value) ? value : null;
+
+        public bool PlayAnimation(string name, Action completed = null, bool? loop = null)
+        {
+            if (string.IsNullOrEmpty(name) || !animations.TryGetValue(name, out HomeUiAnimation animation))
+                return false;
+            GameObject root = Find("/" + RootName);
+            if (root == null) return false;
+            HomeUiAnimationPlayer player = root.GetComponent<HomeUiAnimationPlayer>();
+            if (player == null) player = root.AddComponent<HomeUiAnimationPlayer>();
+            player.Initialize(nodes);
+            return player.Play(animation, completed, loop);
+        }
 
         public T Find<T>(string path) where T : Component
         {
@@ -62,8 +78,7 @@ namespace Zjcs.Presentation.Home
         {
             Image image = Find<Image>(path);
             if (image == null) return false;
-            image.sprite = sprite;
-            image.enabled = sprite != null;
+            ApplySprite(image, sprite);
             return true;
         }
 
@@ -75,8 +90,7 @@ namespace Zjcs.Presentation.Home
                 if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
                 Image image = pair.Value.GetComponent<Image>();
                 if (image == null) continue;
-                image.sprite = sprite;
-                image.enabled = sprite != null;
+                ApplySprite(image, sprite);
                 return true;
             }
             return false;
@@ -89,8 +103,7 @@ namespace Zjcs.Presentation.Home
                 if (!pair.Key.EndsWith("/" + name, StringComparison.Ordinal)) continue;
                 Image image = pair.Value.GetComponent<Image>();
                 if (image == null) continue;
-                image.sprite = sprite;
-                image.enabled = sprite != null;
+                ApplySprite(image, sprite);
                 return true;
             }
             return false;
@@ -263,23 +276,42 @@ namespace Zjcs.Presentation.Home
                 : scale != null && scale.Length >= 2 ? new Vector3(scale[0], scale[1], 1) : Vector3.one;
             rect.localEulerAngles = new Vector3(0, 0, source.rotation);
             gameObject.SetActive(source.active);
+            if (HasScript(source, "SafeArea")) ApplyDesktopSafeArea(rect);
             string path = string.IsNullOrEmpty(source.path) ? source.name : source.path;
             nodes[path] = gameObject;
+            foreach (HomeUiAnimation animation in source.animations ?? Array.Empty<HomeUiAnimation>())
+                if (animation != null && !string.IsNullOrEmpty(animation.name)) animations[animation.name] = animation;
 
             Image image = null;
             if (HasImage(source.image))
             {
                 image = gameObject.AddComponent<Image>();
-                Sprite sprite = source.image.sprite == null ? null : catalog.FindSprite(source.image.sprite.file);
+                Sprite sprite = source.image.sprite == null ? null
+                    : source.image.component_flags ? catalog.FindSprite(source.image.sprite)
+                    : catalog.FindSprite(source.image.sprite.file);
                 image.sprite = sprite;
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, (int)Image.Type.Filled);
                 image.preserveAspect = source.image.preserve_aspect;
                 Color tint = ColorValue(source.image.color, Color.white);
-                // A missing official sprite must not render as an opaque white block.
-                if (sprite == null) tint.a = 0f;
+                if (sprite == null && tint.a > 0f)
+                {
+                    deferredImageTints[image] = tint;
+                    tint.a = 0f;
+                }
                 image.color = tint;
-                image.enabled = true;
-                image.raycastTarget = false;
+                image.enabled = (!source.image.component_flags || source.image.enabled) && sprite != null;
+                if (source.image.component_flags)
+                {
+                    image.raycastTarget = source.image.raycast_target;
+                    image.maskable = source.image.maskable;
+                    image.fillCenter = source.image.fill_center;
+                    image.fillMethod = (Image.FillMethod)Mathf.Clamp(source.image.fill_method, 0,
+                        (int)Image.FillMethod.Radial360);
+                    image.fillAmount = Mathf.Clamp01(source.image.fill_amount);
+                    image.fillClockwise = source.image.fill_clockwise;
+                    image.fillOrigin = Mathf.Clamp(source.image.fill_origin, 0, 3);
+                    image.useSpriteMesh = source.image.use_sprite_mesh;
+                }
             }
             if (HasText(source)) CreateText(source, gameObject);
             if (source.mask && image != null)
@@ -324,6 +356,12 @@ namespace Zjcs.Presentation.Home
             if (source.button || toggle || tabItem)
             {
                 Graphic target = image != null ? (Graphic)image : gameObject.GetComponent<Graphic>();
+                if (target == null && source.button)
+                {
+                    Image hitTarget = gameObject.AddComponent<Image>();
+                    hitTarget.color = new Color(0f, 0f, 0f, 0f);
+                    target = hitTarget;
+                }
                 if (target != null) target.raycastTarget = true;
                 if (toggle)
                 {
@@ -348,6 +386,27 @@ namespace Zjcs.Presentation.Home
 
         private static bool HasImage(HomeUiImage image)
             => image != null && (image.sprite != null || image.color != null);
+
+        private void ApplySprite(Image image, Sprite sprite)
+        {
+            image.sprite = sprite;
+            image.enabled = sprite != null;
+            if (sprite == null || !deferredImageTints.TryGetValue(image, out Color tint)) return;
+            image.color = tint;
+            deferredImageTints.Remove(image);
+        }
+
+        private static bool HasScript(HomeUiNode node, string script) =>
+            Array.IndexOf(node.scripts ?? Array.Empty<string>(), script) >= 0;
+
+        private static void ApplyDesktopSafeArea(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = Vector2.zero;
+            rect.sizeDelta = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+        }
 
         private static bool HasLayout(HomeUiLayout layout)
             => layout != null && (layout.padding != null || layout.expand != null

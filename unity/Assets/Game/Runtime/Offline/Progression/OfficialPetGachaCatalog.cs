@@ -13,7 +13,9 @@ namespace Zjcs.Offline.Progression
         public PetGachaChest Chest;
         public PetGachaRewardRule[] RewardRules;
         public PetGachaRandomReward[] RandomRewards;
+        public PetGachaPetProfile[] PetProfiles;
         public PetGachaItem[] Items;
+        public PetGachaEntryDetail[] Entries;
         public PetGachaQualityBackground[] QualityBackgrounds;
         public PetGachaAchievement[] Achievements;
         public PetGachaPityProbability[] PityProbabilities;
@@ -23,17 +25,20 @@ namespace Zjcs.Offline.Progression
 
         private Dictionary<int, PetGachaRewardRule> rulesById;
         private Dictionary<int, PetGachaRandomReward> rewardsById;
+        private Dictionary<int, PetGachaPetProfile> petProfilesById;
         private Dictionary<int, PetGachaItem> itemsById;
+        private Dictionary<int, PetGachaEntryDetail> entriesById;
         private Dictionary<int, PetGachaGoods> goodsById;
 
         public static PetGachaRuntimeCatalog Parse(string json)
         {
             PetGachaRuntimeCatalog catalog = JsonUtility.FromJson<PetGachaRuntimeCatalog>(json ?? string.Empty);
             if (catalog == null) throw new FormatException("The official pet gacha catalog is empty.");
-            if (catalog.Shop == null) catalog.Shop = catalog.PetShop;
+            if (catalog.Shop == null || catalog.Shop.Goods == null) catalog.Shop = catalog.PetShop;
             if (catalog == null || catalog.Manifest != "854_156383" || catalog.Gacha == null
                 || catalog.Chest == null || catalog.RewardRules == null || catalog.RandomRewards == null
-                || catalog.Items == null || catalog.QualityBackgrounds == null
+                || catalog.PetProfiles == null || catalog.Items == null || catalog.Entries == null
+                || catalog.QualityBackgrounds == null
                 || catalog.Achievements == null || catalog.PityProbabilities == null
                 || catalog.Shop == null || catalog.Settings == null)
                 throw new FormatException("The official pet gacha catalog is incomplete or from an unsupported manifest.");
@@ -44,7 +49,13 @@ namespace Zjcs.Offline.Progression
 
         public PetGachaRewardRule Rule(int id) { EnsureIndex(); return rulesById.TryGetValue(id, out var value) ? value : null; }
         public PetGachaRandomReward RandomReward(int id) { EnsureIndex(); return rewardsById.TryGetValue(id, out var value) ? value : null; }
+        public PetGachaPetProfile PetProfile(int id) { EnsureIndex(); return petProfilesById.TryGetValue(id, out var value) ? value : null; }
         public PetGachaItem Item(int id) { EnsureIndex(); return itemsById.TryGetValue(id, out var value) ? value : null; }
+        public PetGachaEntryDetail EntryDetail(int id)
+        {
+            EnsureIndex();
+            return entriesById.TryGetValue(id, out var value) ? value : null;
+        }
         public PetGachaGoods Goods(int id) { EnsureIndex(); return goodsById.TryGetValue(id, out var value) ? value : null; }
         public string QualityBackground(int quality) => QualityBackgrounds
             .FirstOrDefault(value => value.Quality == quality)?.File ?? string.Empty;
@@ -56,9 +67,13 @@ namespace Zjcs.Offline.Progression
 
         private void BuildIndex()
         {
+            if (Shop == null || Shop.Goods == null)
+                throw new FormatException("The official pet exchange goods table is missing.");
             rulesById = RewardRules.ToDictionary(value => value.Id);
             rewardsById = RandomRewards.ToDictionary(value => value.Id);
+            petProfilesById = PetProfiles.ToDictionary(value => value.ClassId);
             itemsById = Items.ToDictionary(value => value.ClassId);
+            entriesById = Entries.ToDictionary(value => value.Id);
             goodsById = Shop.Goods.ToDictionary(value => value.Id);
         }
 
@@ -98,6 +113,20 @@ namespace Zjcs.Offline.Progression
                     || reward.Weights.Any(value => value <= 0) || reward.Weights.Sum() <= 0
                     || reward.MinCount <= 0 || reward.MaxCount < reward.MinCount)
                     throw new FormatException("The pet gacha candidate package contains an invalid item or weight.");
+            int[] expectedPetIds = { 1600, 1601, 1602, 1603, 1604, 1605, 1607, 1608 };
+            int[] expectedPetModels = { 9201, 9202, 9203, 9204, 9205, 9206, 9208, 9209 };
+            if (PetProfiles.Any(value => value == null)
+                || !PetProfiles.Select(value => value.ClassId).OrderBy(value => value).SequenceEqual(expectedPetIds)
+                || !PetProfiles.OrderBy(value => value.ClassId).Select(value => value.UIModel).SequenceEqual(expectedPetModels)
+                || PetProfiles.Any(value => value.SupportSkillIds == null
+                    || value.SupportSkillIds.Length == 0 || string.IsNullOrWhiteSpace(value.TypeIconFile)
+                    || value.ModelScale <= 0f
+                    || Item(value.ClassId)?.ItemType != 400
+                    || value.SupportSkillIds.Any(skill => Item(skill) == null
+                        || string.IsNullOrWhiteSpace(Item(skill).FuncDesc)
+                        || Item(skill).HyperlinkEntryIds == null
+                        || Item(skill).HyperlinkEntryIds.Any(id => EntryDetail(id) == null))))
+                throw new FormatException("The official gacha pet models or childhood support skills are incomplete.");
             foreach (int id in new[] { 1600, 1601, 1602, 1603, 1604, 1605, 1607, 1608 })
                 if (Item(id) == null || Item(id).ItemType != 400 || Item(id).Quality < 3
                     || Item(id).AgioItemId <= 0 || Item(id).AgioAmount != (Item(id).Quality == 3 ? 30 : 60))
@@ -142,11 +171,24 @@ namespace Zjcs.Offline.Progression
         public int[] ItemIds, Weights;
         public float WeightScaleFactor;
     }
+    [Serializable] public sealed class PetGachaPetProfile
+    {
+        public int ClassId, Type, UIModel;
+        public float ModelScale, ModelOffsetY;
+        public string TypeIconFile;
+        public int[] SupportSkillIds;
+    }
     [Serializable] public sealed class PetGachaItem
     {
         public int ClassId, ItemType, Quality, AgioItemId, AgioAmount;
-        public string Name, RawIcon, IconFile;
+        public string Name, RawIcon, IconFile, FuncDesc;
+        public int[] HyperlinkEntryIds;
         public bool CanRepeat;
+    }
+    [Serializable] public sealed class PetGachaEntryDetail
+    {
+        public int Id;
+        public string Name, Description, IconFile, BackgroundFile;
     }
     [Serializable] public sealed class PetGachaQualityBackground { public int Quality; public string File; }
     [Serializable] public sealed class PetGachaAchievement
@@ -202,6 +244,42 @@ namespace Zjcs.Offline.Progression
             TextAsset data = Resources.Load<TextAsset>(DefaultResourcePath);
             if (data == null) throw new InvalidOperationException("Official pet gacha rules are not installed.");
             return PetGachaRuntimeCatalog.Parse(data.text);
+        }
+    }
+
+    [Serializable] public sealed class PetGachaNativeModel
+    {
+        public int PetClassId, UIModel;
+        public GameObject Prefab;
+    }
+
+    public sealed class OfficialPetGachaAssetCatalog : ScriptableObject
+    {
+        public const string DefaultResourcePath = "PetGacha/official-pet-gacha-assets";
+        public string Manifest;
+        public PetGachaNativeModel[] NativeModels;
+
+        public static OfficialPetGachaAssetCatalog LoadDefault()
+        {
+            OfficialPetGachaAssetCatalog catalog = Resources.Load<OfficialPetGachaAssetCatalog>(DefaultResourcePath);
+            if (catalog == null) throw new InvalidOperationException("Official pet gacha native models are not installed.");
+            return catalog;
+        }
+
+        public GameObject NativeModel(int petClassId, int uiModel)
+        {
+            PetGachaNativeModel entry = (NativeModels ?? Array.Empty<PetGachaNativeModel>())
+                .FirstOrDefault(value => value != null && value.PetClassId == petClassId && value.UIModel == uiModel);
+            return entry == null ? null : entry.Prefab;
+        }
+
+        public void Validate(PetGachaRuntimeCatalog rules)
+        {
+            if (Manifest != "854_156383" || rules == null || NativeModels == null)
+                throw new FormatException("The official pet gacha native model catalog is missing or unsupported.");
+            foreach (PetGachaPetProfile profile in rules.PetProfiles)
+                if (NativeModel(profile.ClassId, profile.UIModel) == null)
+                    throw new FormatException("The official native pet model is not installed: " + profile.ClassId);
         }
     }
 }
