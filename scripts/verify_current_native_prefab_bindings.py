@@ -107,7 +107,18 @@ def verify():
               'generator_sha256': sha(Path(__file__).read_bytes()), 'outputs': records}
     receipt = ROOT / 'assets/reference/character-creation/current-native-concurrent-bindings-source-manifest.json'
     if receipt.exists():
-        preserve(receipt)
+        previous = json.loads(receipt.read_bytes())
+        result['previous_receipt'] = preserve(receipt)
+        if previous.get('basis') != result['basis']:
+            raise ValueError('Previous native verification has a different conversion basis')
+        prior = {row['path']: row for row in previous['outputs']}
+        for row in records:
+            old = prior.get(row['path'])
+            if old and old['sha256'] != row['sha256']:
+                row['intermediate_outputs'] = old.get('intermediate_outputs', []) + [
+                    {'sha256': old['sha256'], 'verified_receipt': result['previous_receipt']}]
+            elif old and old.get('intermediate_outputs'):
+                row['intermediate_outputs'] = old['intermediate_outputs']
     receipt.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', 'utf8')
     return result
 
