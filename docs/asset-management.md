@@ -192,6 +192,8 @@ python -B scripts/current_asset_snapshot.py restore --archive .tools/asset-packs
 
 多会话仅推进代码、素材仍相同时，可保留已完成压缩且尚未激活的候选 ZIP，待压缩进程退出后运行 `python -B scripts/finalize_current_asset_snapshot.py --archive .tools/asset-packs/current-871-candidate.zip`。该入口重新核对完整文件集合、ZIP 每项 CRC／SHA256 与本地每项 SHA256，全部一致才登记快照；文件集合或素材字节不符仍停止。代码指纹在核验完成时重新捕获，原始代码字节另存 `.tools/source-packages/history/converted/` 并由锁文件的 `preserved_code_sources` 记录，不能把压缩开始时的旧指纹冒充当前代码。候选含清单时须与本次逐项核验结果完全一致，不能覆盖已登记的正式快照。
 
+若期间仅重新生成了来源清单，可加 `--refresh-source-inventories`：先核验全部当前转换凭据，再把实际有效的 `*source-manifest.json` 替换到候选归档；其余素材不自动替换。随后仍对归档和本地全部文件执行完整 CRC／SHA256 检查，登记的哈希来自实际归档字节，不修改官方包或转换载荷的预期哈希来跳过失败。
+
 使用 [`unity_asset_pack.py`](../scripts/unity_asset_pack.py) 创建、校验和恢复 Unity 官方载荷快照：
 
 ```powershell

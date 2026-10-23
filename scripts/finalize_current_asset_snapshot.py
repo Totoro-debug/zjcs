@@ -11,13 +11,51 @@ import zipfile
 import asset_pack
 
 
-def finalize(root, candidate):
+def refresh_source_inventories(root, candidate, paths):
+    """Update source receipts in an unregistered candidate, then verify all bytes."""
+    from current_conversion_state import activated_receipt
+    from official_source import OfficialSource
+
+    version = OfficialSource().version
+    for path in (root / 'assets/reference').rglob('current-*-source-manifest.json'):
+        if json.loads(path.read_bytes()).get('manifest') == version:
+            activated_receipt(path, version)
+    updates = {}
+    with zipfile.ZipFile(candidate) as archive:
+        for info in archive.infolist():
+            name = info.filename
+            if name in paths and name.endswith('source-manifest.json'):
+                raw = paths[name].read_bytes()
+                if archive.read(info) != raw:
+                    updates[name] = raw
+    if updates:
+        with zipfile.ZipFile(candidate, 'a') as archive:
+            # Replace the central-directory entries, so extraction sees one
+            # entry per path. Original compressed data stays available as bytes.
+            replaced = set(updates) | {asset_pack.INVENTORY}
+            archive.filelist = [info for info in archive.filelist if info.filename not in replaced]
+            archive.NameToInfo = {info.filename: info for info in archive.filelist}
+            for name, raw in updates.items():
+                info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info._compresslevel = 1
+                archive.writestr(info, raw)
+    return sorted(updates)
+
+
+def finalize(root, candidate, refresh_sources=False):
     candidate = candidate.resolve()
     output_dir = (root / '.tools/asset-packs').resolve()
     if candidate.parent != output_dir:
         raise ValueError('The unactivated candidate must be in the local asset pack directory')
+    registered = root / 'asset-pack/lock.json'
+    if registered.exists():
+        active = output_dir / json.loads(registered.read_bytes())['archive_file']
+        if active.exists() and candidate.samefile(active):
+            raise ValueError('A registered snapshot cannot be modified as a candidate')
     layout = asset_pack.layout_at(root)
     paths = asset_pack.payload_files(root, layout)
+    refreshed = refresh_source_inventories(root, candidate, paths) if refresh_sources else []
     before = {name: (path.stat().st_size, path.stat().st_mtime_ns) for name, path in paths.items()}
     records = {}
     previous_manifest = None
@@ -113,12 +151,15 @@ def finalize(root, candidate):
     candidate.replace(destination)
     asset_pack.atomic_write(output_dir / (filename + '.manifest.json'), manifest)
     asset_pack.atomic_write(root / 'asset-pack/lock.json', asset_pack.encode(lock))
-    return {'archive': str(destination), 'archive_payloads_verified': len(records),
+    return {'archive': str(destination), 'refreshed_source_inventories': refreshed,
+            'archive_payloads_verified': len(records),
             'local_payloads_verified': len(records), **lock}
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--archive', type=Path, required=True)
+    parser.add_argument('--refresh-source-inventories', action='store_true')
     args = parser.parse_args()
-    print(json.dumps(finalize(Path(__file__).resolve().parents[1], args.archive), ensure_ascii=False, indent=2))
+    print(json.dumps(finalize(Path(__file__).resolve().parents[1], args.archive,
+                              args.refresh_source_inventories), ensure_ascii=False, indent=2))
