@@ -58,6 +58,10 @@ namespace Zjcs.Editor.Character
             save.Player.SubRank = 1;
             save.Player.SeasonRank = 1;
             save.Player.Wardrobe.Profession = 1;
+            save.Player.Wardrobe.Dyes.Add(new OfflineAppearanceDye
+            {
+                Type = 1, ColorId = 1, Hue = 0, Saturation = 0, Value = 0
+            });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 1, Count = 100000 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 39600, Count = 1 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 120 });
