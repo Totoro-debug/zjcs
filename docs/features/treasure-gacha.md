@@ -6,57 +6,59 @@
 
 ## 功能简介
 
-目标入口为家园时光扭蛋机、古遗物收藏跳转及女神牌快捷购买，覆盖四类宝箱、五元素奖池、扭蛋积分、馈赠、详情／概率、历史记录、图鉴、商店以及抽取演出。
+入口为家园时光扭蛋机（家具类型 `9`）、收藏图鉴跳转及女神牌快捷购买，覆盖四类宝箱、五元素奖池、扭蛋积分、馈赠、详情／概率、历史记录、空商店及抽取演出。
 
-**当前尚未完整迁移还原。** Unity 家园已识别扭蛋机，但 `HomeFeatureRuntime.OpenFurniture` 仅为床、小推车、邮箱打开业务页，扭蛋机类型 `9` 进入 `HomeHudView.ShowFurniturePlaceholder`。未接通本功能的抽取服务、页面控制器及演出播放器。
+`HomeFeatureRuntime.OpenFurniture` 已打开扭蛋主面板，加载固定版目录和离线服务；`HomeHudView.TreasureGacha.cs` 已接入页面与本地操作。物品来源路由分别处理遗物／碎片和元素来源，元素值按官方元素奖池配置映射到抽取类型，关闭后调用返回来源回调。当前家园尚无背包来源按钮调用这些路由，且模块仍需真实输入验收。
 
-原机台18级且地图11开放时出现损坏模型／30级提示，30级免费修复家具4007，维修通知、0.2秒换模型和1秒结束效果仍属于待还原目标。家园家具状态的部分接入不代表机内功能已经实现。
+家具损坏状态及免费修理属于家园家具流程；本页记录扭蛋入口，不把未验证的家具修理演出算作扭蛋验收。
 
 ## 完整还原部分
 
-尚无本功能在 Unity 完整接入并运行验收的结论。原代码、配置、已转换素材和旧引擎测试仅是迁移依据，不作为本功能已还原的证据。
+已接入目录、离线规则服务、官方层级 UI、动态图片、机台网格演出和本地存档。当前不标记为完整完成，剩余项目见“尚未实现”。
 
 ### 已取得的官方依据及当前接入边界
 
 - 固定版 `854_156383` APK 中的 `gacha/chest/treasure_gacha/reward_rule/random_reward/gacha_pity_probability/achievement/game_settings/item/conditions` 已用原 Luban 构造器重新解码，10张表均与 [rules.json](../../assets/official/rules.json) 一致。
 - 已实际读取原 `ChestGachaPanel`、`ChestGachaResultPanel`、`ChestGachaAchievementPanel`、`ChestGachaDetailDialog`、`ChestMapSwitchPanel` 及共享 `GachaDetailDialog/GachaHistoryContent/GachaHistoryItem/ScoreRewardDialog` prefab。元素选择由主页面内的 `ElementChestSelectDialog` 组件控制，不能因未找到同名独立 prefab 就判为源资源缺失。
 - 原扭蛋 UI 包 `defaultpackage_assets_prefabs_ui_chestgacha.bundle`、共享详情包 `defaultpackage_assets_prefabs_ui_gachapanel.bundle` 及配置包 `defaultpackage_assets_scriptableconfig_modules_treasure.bundle` 经 `prepare_unity_bundle_inputs.py` 核对：包头 `2022.3.57f1`、目标 Android，361个递归 bundle／CAB 来源完整。这只证明转换输入可用，未证明 Windows 原生脚本、shader 或运行表现。
-- [relic_draw.json](../../assets/official/relic_draw.json)、[relic_navigation.json](../../assets/official/relic_navigation.json)、[relic-performance/performance.json](../../assets/official/relic-performance/performance.json) 及 `meshes.json` 是既有转换载荷；演出194个资源文件存在且与所属来源清单的 SHA-256 一致，导航和演出数据输出哈希也一致。`res://` 引用与旧引擎适配不等于 Unity 的加载绑定，当前未找到它们在 Unity 业务代码中的消费者。
-- `OfflineMainlineProgressSession.cs` 的 `OfflinePlayerProgress` 有库存和库存随机状态，`OfflineWorldProgress` 有通用开箱次数，但未接入扭蛋选择／确认、共享保底记录、每日计数、积分／馈赠领奖进度和分类历史的完整持久化事务。通用库存与开箱计数不能代替这些状态。
+- 官方 `ItemSourceChestGachaAgent.GenerateSourceData` 从可抽取系列生成整件／碎片来源，并从 `CountAchievementType == OpenElementChestCount` 的元素奖池奖励展开生成元素来源；`ClientItemSourceElementChestGachaHandler` 传递奖励物品的 `ElementType`。Unity 来源解析按此配置验证元素奖励并映射元素奖池，无需额外的 `ItemSourceInfo` 表。
+- [relic_draw.json](../../assets/official/relic_draw.json)、[relic_navigation.json](../../assets/official/relic_navigation.json)、[relic-performance/performance.json](../../assets/official/relic-performance/performance.json) 与 `meshes.json` 提供系列、UI 绑定和机台／结果演出数据；生成器把显式选择的资源写入 `StreamingAssets/TreasureGacha`，Unity 以 `HomeAssetCatalog` 和 `TreasureGachaPerformancePlayer` 加载。资源包输入仍按 Android→Windows 迁移流程核验，不把 Bundle 直接作为 Windows 运行时资产。
+- `OfflineTreasureGachaProgress` 随玩家存档保存系列选择、保底、每日计数、积分／馈赠领取、百抽提示、随机状态及历史；`OfflineTreasureGachaService.Draw` 将材料、奖励、计数和历史放入同一库存事务。
 
 ### 实际验证范围
 
-已执行官方表解码比对、原 prefab／序列化字段读取、递归 CAB 来源检查、既有载荷哈希核验及 `python -B scripts/check_unity_project.py`；静态元数据检查通过。未执行本功能的 Editor 导入／编译验收、Play Mode 逻辑、真实输入、画面／动画／音频、存档恢复或 Windows Player 验证；现有占位入口与缺失业务不能记为这些流程通过。本次仅检查并更新文档，没有新增或修复游戏功能。
+`python -B scripts/check_unity_project.py` 通过（27,998 GUID；仅静态元数据）。Unity Editor 脚本编译成功；隔离 Editor 验收以退出码0结束，覆盖阶位开放边界、首次抽取、三档保底冲突顺序及命中清零、四品质重复兑换、180日与分类上限、宝箱／元素来源解析、官方机台及结果目录。Play Mode 实际打开主面板并捕获720×1280画面；确认官方四档卡图、机台网格、底栏和九切片图片已渲染，并调用宝箱／元素来源入口、检查选中状态、关闭返回回调。当前 Windows 会话锁定，真实鼠标／滚动尚未验证；音频、长列表操作、存档重开和 Windows Player 也未验证。
 
 ## 自定义实现
 
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
+以下为离线实现所采用的处理规则。客户端没有权威服务端抽奖决策代码的部分只按用户确认的规则执行，不声称复现服务端随机序列。
 
 缺少服务端免费自动修复回调时，已拥有家具，或满足原30级／地图11免费修复资格即可访问收藏跳转、购买和扭蛋子页；只读判断，不伪写所有权。
 
-本地按原可见奖池、权重、范围和保底结算，随机、材料、积分、历史共同提交，不声称取得完整服务端随机序列。尚未确认的规则边界另列于下文，不据此增加商品、改变解锁条件或推定服务端公式。
+本地按固定版奖池、权重、数量范围、条件过滤及首次规则结算；材料、随机状态、奖励、积分、保底、日计数与历史共同提交。
 
-原 `Common.Player.TreasureGacha`、`ElementTreasureGacha` 在可取得共享代码中只检查箱子配置、调用 `RecordOpenChest` 并返回空奖励列表。客户端 `PreciousGachaChestNotGoodsStrategy.OpenChest`、`ElementGachaChest.SendGacha` 请求 `OperPlayerGacha`，结果由奖励消息消费；直接移入上述空奖励函数不能完成离线抽取。已确认的本地结算方向不自动确定多条保底同时触发时的优先级、命中后各计数重置关系等未取得的服务端裁决细节；实现这些分支前须继续核对依据，仍无依据时明确请求规则决定，不从综合概率反推公式。
+用户已确认：多个品质的保底都在同一抽次到期时，将冲突按到期抽次之前的连续抽次依次兑现（两个冲突移到第9、10抽，三个移到第8、9、10抽）；某品质命中后，该品质未命中数归零。阶位天数按本地阶位解锁时间正常计算。每日界为 Windows 本地午夜；保存最大已观察日期，系统时钟回拨不再次重置。
+
+可取得的 `Common.Player.TreasureGacha`、`ElementTreasureGacha` 只检查箱子配置、记录开箱并返回空奖励列表；客户端 `PreciousGachaChestNotGoodsStrategy.OpenChest`、`ElementGachaChest.SendGacha` 请求服务端操作，奖励结果从消息消费。它们不足以支持离线抽取，因此本地服务根据官方配置结算，并对服务端没有公开的行为保留独立决策记录。
 
 ## 尚未实现
 
-以下均为从官方代码和配置核对的目标，尚未在 Unity 接通。
+下表区分已经接入和仍需验证／确认的内容；官方规则详情见后续各表。
 
-| 功能 | 官方规则／调用关系 | 当前缺项 |
+| 功能 | 已接入 | 尚需完成 |
 | --- | --- | --- |
-| 宝箱扭蛋 | `PreciousChestPanel/PreciousChests/PreciousGachaChest`：蓝紫橙金 `GachaType=4～7`，箱子 `6201～6204`，女神牌 `301～304` 每抽10张；系列来自 `TreasureGachaInfoParser.ForeachSortedInfos`，固定版17组，按条件与排序选择；切换刷新背景、收藏进度、图鉴、保底与顶栏 | 页面、系列选择／确认保存、箱子推荐／切换、费用与真实奖励未接入 |
-| 元素扭蛋 | `ElementChestPanel/ElementChestSelectDialog/ElementGachaChest`：火水风光暗 `GachaType=8～12`、箱子 `6300～6304`，均消耗 `311×10`；选择后确认生效，取消只播放收起动画；奖池按元素、品质与开放条件过滤 | 五元素页面、选择／取消、条件过滤、抽取与奖励未接入 |
-| 抽取次数与限制 | `ChestGachaDrawButton/GachaChestBase`：单抽固定1，多抽按材料动态为2～10，百抽仅可抽满100次时出现；每抽10张，1000张显示百抽、999张不显示；箱子允许 `1～10/100`；共用古遗物每日上限10000与百抽确认 | 动态按钮、限额提示、百抽确认、材料不足处理与再次抽取未接入；不能只实现固定十抽 |
-| 扭蛋积分 | `PreciousChestPanel.Awake/GetScoreRuleText`、`ScoreRewardUI/ScoreRewardDialog`：积分物品250，蓝紫橙金每抽分别给1／2／3／5；成就类型13读取 `PreciousChestScoreCount` 黑板累计，配置组12有60条原始模板，含循环段；按上一领奖阈值计算本段进度并防重复领取 | 累计、分段进度、循环模板、奖励列表、领取与保存未接入；元素 `RewardScoreId=0` 且无箱子固定奖励，不增加宝箱积分 |
-| 馈赠 | 原 `ChestGachaAchievementPanel` 的 `AchievementPanelWithTypes/AchievementToggleType` 两个有效标签为类型88／8；前者累计四类宝箱开箱数，后者读取 `OpenElementChestCount` 黑板；两类各10条原始模板，均含循环段，与积分奖励分开 | 宝箱／元素馈赠切页、累计进度、循环奖励、领取状态与重复领取保护未接入 |
-| 详情与概率 | `ChestGachaInfoBoard.OnRuleBtnClick → GachaDetailDialog.Init`，带入抽取类型和系列ID；概率／历史双标签，说明与每日上限随类别刷新；`GachaProbabilityContent` 展开奖励包、过滤后归一化、合并同物品同数量，再按品质／类型排序；`GachaProbabilityItem` 分开显示基础与综合概率并服从地区隐藏配置 | 弹窗、规则文字、分组列表、物品详情、概率与保底提示未接入 |
-| 历史记录 | `GachaDetailDialog/GachaHistoryContent/Item`：四类宝箱分别查询，五元素调用 `InitElementGacha` 合并为 `ElementTreasure` 类别；原 prefab 每页10条，配置记录期180天、分类缓存1000条；显示名称、类型、品质颜色及本地时间 | 写入、分类／分页、时间／颜色、查询取消、空态、重进恢复与保存未接入；不能拆成五份互不相通的元素历史 |
-| UI与辅助入口 | 原 `ChestGachaPanel` 四底栏为宝箱／元素／馈赠／商店；另有系列选择、图鉴跳转、积分详情、女神牌快捷购买和结果页 | 官方层级、锚点、尺寸、遮挡、滚动、红点、返回与入口路由未完整恢复；商城或背包有物品不等于扭蛋已实现 |
-| 动画／音效 | `GachaponMachineView/TreasureGachaPlayable/ChestGachaAwardPanel` 及 `ChestGachaAwardShowOneHandler/LessTenHandler/GreaterTenHandler`：机台双骨骼层、十胶囊摇动／飞出、五品质与六种元素外观、开蛋闪光、卡片、新获得／重复转碎片；单抽、2～10抽及百抽采用不同结果编排，百抽按可见行开蛋与自动滚动，跳过受阶段限制 | Unity 原生动画、网格／材质／特效、原音效、结果按钮、关闭与中断清理未接入，旧载荷存在不代表已播放 |
+| 宝箱扭蛋 | `HomeHudView.TreasureGacha.cs` 接入蓝紫橙金类型、官方17系列条件与顺序、系列选择／确认、推荐、NEW、收藏进度、图鉴、费用、抽取和结果。 | 真实输入下复验系列列表、关闭确认和不同玩家解锁状态。 |
+| 元素扭蛋 | 火水风光暗类型、311卡消耗、选择／确认／取消、元素奖池条件过滤、皮肤／背景和结果已接入。 | 真实点击复验选择弹层的遮挡、取消与切换后的状态。 |
+| 次数与限制 | 单抽、按库存计算的2～10抽、百抽、10000日限、每日百抽确认、301晨星补差快捷购买和费用刷新已接入。 | 验证999／1000卡边界、材料不足、百抽提示记忆和本地午夜回拨。 |
+| 积分与馈赠 | 积分组12、宝箱馈赠组11、元素馈赠组13及循环模板、分页显示、领奖校验与防重复事务已接入。 | 真实操作复验循环段滚动、领奖反馈和关闭重开。 |
+| 详情与概率 | 原类别规则文字、基础／综合概率、条件过滤后的分组概率、物品详情及每日上限说明已接入。 | 真实操作复验长列表滚动、地区字段开关和遮挡。 |
+| 历史记录 | 四宝箱独立历史、五元素合并历史、分页／本地时间／品质色已接入；每条记录同时按180日和每类1000条裁剪，按时间删除最旧记录。Editor 用例覆盖四箱分类、合并元素分类、到期清理和最旧删除。 | 真实滚动、翻页及关闭重开恢复仍需鼠标验收。 |
+| 页面与辅助入口 | 家具类型9打开主面板；四底栏、图鉴、女神牌301补差购买、空商店、红点、结果页继续抽取／关闭已接入。`OpenTreasureGachaFromItemSource` 处理宝箱来源；`OpenTreasureGachaFromElementItemSource` 按官方元素来源映射处理元素入口；关闭后保留来源 ID 并调用返回回调。 | 当前家园没有物品详情／来源分发 UI 调用方；需接入背包来源按钮。家具损坏／免费修理由家园流程负责，尚未随本次扭蛋 Play Mode 流程验证。 |
+| 演出与音频 | 官方机台双网格和十胶囊品质／元素动画使用显式加载的官方图集与动画帧；结果数量排版和奖励兜底已接入。机台初始化与图集已在 Play Mode 画面检查。 | 真实点击后的结果开蛋阶段、动画跳过、音频和长结果演出仍待实机验收。 |
 
 ### 原始官方入口、页面及选择行为
 
-以下记录固定版客户端实际分支；全部属于 Unity 待接入范围。
+以下记录固定版客户端的实际分支，作为 Unity 流程的逐项对照；接入现状见上方覆盖表。
 
 | 场景 | 原始官方功能与代码定位 |
 | --- | --- |
@@ -160,19 +162,21 @@
 
 ### 原始官方历史记录与结果展示
 
-`GachaHistoryContent` 宝箱以具体 `GachaType` 查询，元素以 `PlayerQueryElementGachaHistoryRequest` 汇总查询；保留原分页参数与每页10条，不能对每一个系列或元素各建一份互不相通的历史。收到响应更新总页数、重建当前行；切页／关闭时取消旧页更新令牌，响应后检查令牌以防旧页覆盖新页，底层查询并未传入该取消令牌。`GachaHistoryItem` 从实际物品取本地化名称／类型，名称、类型和时间三列都按品质着色，`DateTime.ToLocalTime()` 后格式化。配置180天和1000条是记录期与分类缓存边界，分页排序、过期清理和裁剪须核对数据消费者并用于本地历史；原客户端查询接口不能直接证明服务端排序／裁剪算法已取得。
+`GachaHistoryContent` 宝箱以具体 `GachaType` 查询，元素以 `PlayerQueryElementGachaHistoryRequest` 汇总查询；原分页参数为每页10条，不能对每一个系列或元素各建一份互不相通的历史。服务端响应到来时更新总页数并重建当前行；切页／关闭时取消旧页更新令牌，响应后检查令牌以防旧页覆盖新页。`GachaHistoryItem` 从实际物品取本地化名称／类型，名称、类型和时间三列都按品质着色，`DateTime.ToLocalTime()` 后格式化。离线规则由用户确认：180日保留期和每类1000条上限同时应用；四种宝箱各自计类，五种元素合并计类，超限删除时间最早的记录。`VerifyHistoryRetention` 用实际抽取事务覆盖过期记录、最旧记录和分类边界。
 
-`ChestGachaPanel` 接收 `OnGacha` 的逐抽数据与奖励消息后，先运行机台演出再打开结果。宝箱／元素来源奖励与相关购卡奖励有专用缓存；馈赠成就奖励在不处于馈赠页时走通用弹窗。主面板停用仍有待展示奖励时使用通用奖励弹窗兜底，不能因为中断动画丢掉奖励，亦不能在演出完成时再次发放。
+`ChestGachaPanel` 接收 `OnGacha` 的逐抽数据与奖励消息后，先运行机台演出再打开结果。宝箱／元素奖励与相关购卡奖励使用专用缓存；馈赠奖励在不处于馈赠页时走通用弹窗。离线 UI 直接使用已事务发放的奖励记录，关闭面板也有展示兜底，展示流程不再次发奖。
 
-`ChestGachaAwardPanel.Play` 使用 `FormatAwardList(needMergeItem:false)`；按格式化后的奖励项数为1、2～10、超过10选择 `ChestGachaAwardShowOneHandler/LessTenHandler/GreaterTenHandler`。恢复单项、新获得标记、重复转换、数量与品质显示，转换依据 `AwardData.IsAwardDataAgiotage`，不能只看当前库存是否存在。百抽结果使用行虚拟列表、可见项判定、分阶段开蛋／显示／转碎片与自动滚动；2～9项各有对应排版，10项有专用排版。
+`ChestGachaAwardPanel.Play` 使用 `FormatAwardList(needMergeItem:false)`；按格式化后的奖励项数为1、2～10、超过10选择单项／少量／大量结果处理器。Unity 按奖励数量使用官方结果面板布局，显示名称、数量、品质和折算字段。用户确认不可重复的重复整件转对应碎片；离线结算按官方 `ItemInfo.CanRepeat/AgioItemId/AgioAmount` 发放蓝／紫／橙／金20／30／40／60片，`VerifyDuplicateRelicConversion` 实际抽取并核对库存与结果字段。百抽行虚拟列表、分阶段开蛋／显示／转碎片与自动滚动属于待验证的动画表现。
 
 结果开始时隐藏再次抽取按钮，跳过按钮下一帧才可交互；流程完成后隐藏跳过、显示原按钮并播放按钮出现动画，库存增加后刷新费用和次数。继续抽取的奖励消息到来时隐藏按钮并关闭当前结果，让主面板接续新流程；关闭按钮调用 mediator 的抽取结束刷新。主页／结果页 `OnBack` 为空实现，不能自行用 Escape 在结算中直接退页。关闭、停用和替换结果须取消等待、释放单项／多项／百抽 handler、归还对象池并注销最高优先级奖励处理器。
 
 额外奖励通过 `GachaAddtionalAwardHandler` 缓存 `SourceOperate.GachaAddition` 并在结果完成后 `Popup()`；固定版 `gacha_additional_awards=[]`，应保留此消息分流边界，不添加未配置的古遗物额外掉落。官方结果结束后另有商店评分调用，它属于联网周边，离线版本不得接回网络。
 
-### 原始官方 UI、动画与音频恢复清单
+### 原始官方 UI、动画与音频映射
 
-| 资源／脚本 | 原始表现与待接入内容 |
+原层级和序列化数据已作为 UI 载荷加载；下表保留每类节点和演出的复原依据。机台动画已由原网格／UV／帧数据驱动，完整表现仍须按下方验证范围核验。
+
+| 资源／脚本 | 原始表现与 Unity 还原依据 |
 | --- | --- |
 | `ChestGachaPanel`、`ChestGachaPanelPreciousChestTabGroupItem_11`、`ChestGachaPanelElementChestTabGroupItem_11` | 主页面、四底栏、顶栏、机台、系列／元素切换、积分、抽取按钮、预告、红点及各状态层级；按原 RectTransform、图集、字体、颜色、遮罩、缩放与射线阻挡绑定。 |
 | `ChestMapSwitchPanel/Item`、四品质 `ChestMapSwitchQuality*Badge`、`NewUnLockMark` | 系列滚动、选中与锁定／预告／开放状态、品质收藏百分比、NEW 与倒计时；背景由 `ChestGachaConfig` 加载，不能只覆盖系列11。 |
@@ -186,46 +190,25 @@
 | `ChestGachaTenRewardGo/GachaTenRewardGo`、`ItemAwardIconChestGacha` | 物品详情、品质底图、数量、NEW／重复转碎片、图标与详情出现特效、转换粒子和音效，延迟转换取消及池复用清理。 |
 | 原地图前后景、`TreasureGachaSetting/ChestGachaConfig`、演出音频 | 恢复每个动态选择的背景、机台皮肤、卡牌顶栏映射、元素与类型映射及18个音频事件的本地播放绑定；纳入显式资源清单，核验 CAB、材质、shader、纹理、网格、动画和音频依赖。18是已转换载荷的事件数，不表示只有18个游戏状态。 |
 
-### 本地状态、未确定规则与逐项待实现清单
+### 当前持久化状态、确认规则与验证缺项
 
-必须持久化的状态包括：各箱累计开箱次数与首次状态、共享每日计数、四种独立与五元素共享的未命中奖励记录、积分和两类馈赠累计／循环领奖索引、系列选择与已确认 NEW 集合、百抽当日免提示、分类历史、真实库存和随机状态。元素当前选择至少须维护原页面实例生命周期；是否扩展为跨会话记忆没有取得官方依据。存档版本迁移不能把旧的通用开箱次数直接误认成全部古遗物状态。
+`OfflineTreasureGachaProgress` 保存各类型累计次数、四箱独立与元素共享保底、品质未命中数、每日次数、系列选择与已确认 NEW、积分／馈赠循环领取、百抽免提示、随机状态及分页历史。抽取与领奖均通过 `ApplyInventoryTransaction` 写入库存和扭蛋进度；历史元素查询合并五个元素类型。元素选择仅按官方页面实例生命周期保存，不扩展为跨会话选择。
 
-| 尚未确定／尚需落实 | 已知证据与实现边界 |
+阶位日数按对应本地阶位解锁时间的日历天计算。每日日期取 Windows 本地时间；`LastObservedLocalDayKey` 只前进不后退，时钟回拨不会再次刷新每日次数。以上规则由用户明确确认。
+
+| 待确认／待验证项 | 证据与当前状态 |
 | --- | --- |
-| 服务端保底裁决 | 已有基础权重、`IndexMininum`、共享ID、未命中分数消费与首次规则；未取得多条同时触发的优先级、命中后的跨档重置关系及完整服务端随机过程。实现前继续查共享记录更新与调用方；仍不能确定时须请求具体规则决定，不能从综合概率表反算。 |
-| 阶位开放时间的离线来源 | 原系列使用服务器阶位开放日期与指定天数，并非仅地图开放。本文已记录全部原条件；未确认以哪个本地日期替代该服务器基准，不能默认全部开放、删除等待或改为角色转职起算。此项需要在落地这些系列时核对所属功能既定决策，仍无依据再请求规则决定。 |
-| 日界与时间异常 | 原每日限额、百抽免提示、预告与历史使用相应时间判断；离线须明确所用日界／时区及回拨处理，不把别的离线收益约定自动扩用到本功能。本文不代定缺失规则。 |
-| 历史与奖励决策 | 记录期／缓存配置和客户端分页已取得；服务端历史裁剪顺序、重复整件实际转换规则须继续核对共享实现与物品数据。客户端播放转换或查询请求不代替本地结算依据。 |
-
-以下复选项均未完成 Unity 全流程验收；上方“已取得依据”不勾选为功能完成。每项实现后须同步正文真实状态与验证范围。
-
-- [ ] 打通家具修复／业务入口、收藏与物品来源导航、访问资格、战斗／地图限制及窗口上下文。
-- [ ] 恢复主面板四底栏、顶栏、页面切换、官方层级与 Windows 竖屏比例／真实输入。
-- [ ] 接通四类宝箱、17个系列及全部原条件、预告、NEW、确认／关闭保存分支、收藏进度与图鉴跳转。
-- [ ] 接通五元素初态、选择／确认／取消、类型与皮肤联动、当前实例记忆和元素开放范围。
-- [ ] 接通单抽、动态2～10抽、百抽、材料不足／原快捷购买、当日免提示及共享10000次限制。
-- [ ] 实现本地逐抽随机、首次规则、整件／碎片选择器、条件过滤、去重／空池回退及真实奖励转换。
-- [ ] 核定并实现保底更新／触发／重置、四宝箱独立与五元素共享记录、保底剩余次数显示。
-- [ ] 将随机状态、扣材、固定积分、保底、每日计数、馈赠、库存、历史作为一次结算提交，覆盖失败回滚、重复提交和中途退出恢复。
-- [ ] 实现积分组12及循环展开、当前阶段进度、详情列表、奖励领取与持久化防重。
-- [ ] 实现宝箱／元素馈赠组11／13、两标签、循环阶段、领奖显示与防重。
-- [ ] 恢复详情双标签、原规则文本、分组物品、基础／综合概率、地区隐藏字段及物品详情。
-- [ ] 实现四类宝箱及合并元素历史、分页／取消、品质色／本地时间、空态、保留／裁剪和存档恢复。
-- [ ] 恢复图鉴、积分说明、女神牌补差购买、原空商店及奖励消息分流；不添加未配置商品或额外掉落。
-- [ ] 接通入口／标签／抽取／系列NEW／领奖红点，补齐订阅、刷新与释放。
-- [ ] 恢复原机台、双骨骼、十胶囊、五品质／六元素皮肤、比例曲线、Open／Switch／Reset 与光效。
-- [ ] 恢复单项、2～9、10与百抽结果编排、虚拟行／自动滚动、NEW／转换、音效与阶段跳过。
-- [ ] 恢复结果页继续抽取／关闭、奖励兜底、同帧连续操作、异步取消与对象池清理，确保不漏发／重发奖励。
-- [ ] 完成原资源 Android→Windows 原生恢复及显式动态加载绑定，按来源记录哈希和实际替换状态。
-- [ ] 完成 Editor 导入／编译、Play Mode 逻辑与真实鼠标／滚动／遮挡／画面／动画／音频、独立存档恢复验证；按构建影响决定是否验证 Windows Player。
+| 已确认的离线补充 | 同次到期保底按连续抽次提前兑现，命中后品质未命中数归零；阶位天数按本地解锁时间；日界为 Windows 本地午夜且回拨不重复重置；历史双重裁剪和重复整件兑换采用本页所述规则。代码及 Editor 用例已覆盖规则服务和抽取事务。 |
+| 物品来源实际调用方 | `HomeFeatureRuntime.OpenTreasureGachaFromItemSource` 与 `HomeFeatureRuntimeTreasureGachaSource.OpenTreasureGachaFromElementItemSource` 提供宝箱、碎片和元素来源入口；后者校验官方元素奖池奖励并按 `ElementType` 映射抽取类型。当前背包详情禁用了来源按钮，背包运行时也未连接家园，因此尚无真实玩家界面调用方。 |
+| 机台及输入全流程 | 官方十个胶囊按原创建顺序播放，主界面、卡图、切图与九切片已在 Play Mode 画面核验；来源入口与关闭返回回调通过实际 Play Mode 探针。需在可交互桌面上验证标签／抽取／弹窗、系列和元素切换、滚动、跳过、动画与音频及独立存档恢复。当前 Windows 会话锁定，真实鼠标操作未验证。 |
 
 ### 材料购买、资源恢复与运行验收
 
 稀有女神牌301原快捷价晨星8／张，无次数限制，只补实际差额；302～304与311无无限快捷购买记录，不把物品估值当售价。商店6原表无商品，显示原空状态。此处沿用既有材料方案，不因离线迁移添加原表未配置的购买或积分。
 
-后续须恢复官方 Unity 脚本、原 prefab 层级、原生动画／shader 和动态资源清单，将随机、扣材、积分、保底、每日计数、真实奖励及历史放入同一本地事务，完成重复领取保护与失败回滚。演出按原序列化时序与阶段实现，跳过不能跳掉结算或留下失效回调；角色／机台 Spine 数据转换遵循[既定免费迁移路线](../asset-management.md#spine-角色动画迁移决策)。
+官方层级、动态资源清单及本地抽取事务已接入；当前演出复用官方机台网格与图集。剩余表现验证须核对初始化位置、切换、抽取动画和跳过清理，不让 UI 表现参与或重复结算。Spine 网格／动画迁移遵循[既定免费迁移路线](../asset-management.md#spine-角色动画迁移决策)。
 
-完成后按[实际运行验证方法与要求](../asset-management.md#实际运行验证方法与要求)从玩家入口验证：四档宝箱和五元素、2～10抽与100抽、999／1000张边界、首次／常规／保底、系列与元素切换、积分／馈赠循环领奖、详情／历史翻页、跳过与返回、奖励到账及保存恢复。需使用真实鼠标／滚动操作并查看运行画面和动画；静态检查及旧引擎测试不能代替这些结果。
+剩余验收按[实际运行验证方法与要求](../asset-management.md#实际运行验证方法与要求)从玩家入口验证：四档宝箱和五元素、2～10抽与100抽、999／1000张边界、首次／常规／保底、系列与元素切换、积分／馈赠循环领奖、详情／历史翻页、跳过与返回、奖励到账及保存恢复。需使用真实鼠标／滚动操作并查看运行画面和动画；静态检查及旧引擎测试不能代替这些结果。
 
 ### 依据与代码定位
 
@@ -233,6 +216,6 @@
 
 关键原文件：[入口导航](../../.tools/source-packages/official-code/client-source/ChestGachaPanelNavigateHandler.cs)、[主面板](../../.tools/source-packages/official-code/client-source/ChestGachaPanel.cs)、[宝箱面板](../../.tools/source-packages/official-code/client-source/PreciousChestPanel.cs)、[系列选择及关闭确认](../../.tools/source-packages/official-code/client-source/ChestMapSwitchPanel.cs)、[元素选择](../../.tools/source-packages/official-code/client-source/ElementChestSelectDialog.cs)、[积分进度及领取](../../.tools/source-packages/official-code/client-source/ScoreRewardUI.cs)、[成就循环展开](../../.tools/source-packages/official-code/common-source/Common/AchievementRawInfoParser.cs)、[概率内容](../../.tools/source-packages/official-code/client-source/GachaProbabilityContent.cs)、[历史分页](../../.tools/source-packages/official-code/client-source/GachaHistoryContent.cs)、[结果面板](../../.tools/source-packages/official-code/client-source/ChestGachaAwardPanel.cs)、[机台演出](../../.tools/source-packages/official-code/client-source/TreasureGachaPlayable.cs)、[系列阶位时间条件](../../.tools/source-packages/official-code/common-source/Common/ServerRankUnlockDaysCondition.cs)。`.tools` 为本机官方源码缓存，重建按 [SOURCES.md](../../assets/reference/SOURCES.md) 的入口执行，不随游戏交付。
 
-当前 Unity 入口与状态定位：[HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeHudView.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.cs)、[OfflineMainlineProgressSession.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)。
+当前 Unity 实现：[HomeFeatureRuntime.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs)、[HomeFeatureRuntime.TreasureGachaSource.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.TreasureGachaSource.cs)、[HomeHudView.TreasureGacha.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.TreasureGacha.cs)、[HomeAssetCatalog.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeAssetCatalog.cs)、[TreasureGachaPerformancePlayer.cs](../../unity/Assets/Game/Runtime/Presentation/Home/TreasureGachaPerformancePlayer.cs)、[OfficialTreasureGachaCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialTreasureGachaCatalog.cs)、[OfflineTreasureGachaService.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureGachaService.cs)、[OfflineTreasureGachaProgress.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineTreasureGachaProgress.cs)、[OfficialTreasureGachaCatalogAcceptance.cs](../../unity/Assets/Game/Editor/TreasureGacha/OfficialTreasureGachaCatalogAcceptance.cs)。素材生成入口为 [prepare_treasure_gacha.py](../../scripts/prepare_treasure_gacha.py)。
 
 来源及转换依据：[扭蛋页面与机台](../../assets/reference/relic-draw/source-manifest.json)、[系列选择](../../assets/reference/relic-navigation/source-manifest.json)、[演出与音效](../../assets/reference/relic-performance/source-manifest.json)、[百抽字段](../../assets/reference/hundred-draws/source-audit.json)、[快捷购买](../../assets/reference/gacha-purchase/source-manifest.json)。现存导航转换工具为 [prepare_relic_navigation.py](../../scripts/prepare_relic_navigation.py)，原始包与 CAB 核验使用 [prepare_unity_bundle_inputs.py](../../scripts/prepare_unity_bundle_inputs.py)；这些工具不证明玩法已恢复。

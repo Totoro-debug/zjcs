@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.Home
         private HomeConditionContext context;
         private Action onClose;
         private string slotId;
+        private string savesRoot;
         private Transform uiParent;
         private float advanceTimer;
         private long lastAdvanceUnix;
@@ -71,11 +72,39 @@ namespace Zjcs.Presentation.Home
         public int BlessingLevel { get; private set; } = 1;
         public HomeEnvironmentView Environment => environment;
         public HomeSceneView Scene => scene;
+        public string SavesRoot => savesRoot;
         public HomeRewardView Rewards => rewards;
 
         public void RefreshRewards() => rewards?.Refresh();
 
         public void RefreshCounts() => hud?.RefreshCounts();
+
+        public TreasureGachaSourceNavigation OpenTreasureGachaFromItemSource(int sourceItemId,
+            int elementGachaType = 0, Action<int> returnToSource = null)
+        {
+            if (treasureGacha == null || hud == null || elementGachaType != 0
+                && (elementGachaType < 8 || elementGachaType > 12)) return null;
+            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            TreasureGachaSourceNavigation navigation = treasureGacha.ResolveItemSource(sourceItemId, now);
+            if (navigation == null) return null;
+            if (navigation.SelectedSeriesId > 0
+                && treasureGacha.State.SelectedSeriesId != navigation.SelectedSeriesId)
+            {
+                TreasureGachaResult selected = treasureGacha.SelectSourceSeries(navigation.SelectedSeriesId,
+                    now, "treasure-gacha:source:" + Guid.NewGuid().ToString("N"));
+                if (!selected.IsApplied && selected.Code != TreasureGachaResultCode.Unchanged) return null;
+            }
+            if (elementGachaType >= 8)
+            {
+                TreasureGachaResult selected = treasureGacha.SelectElementType(elementGachaType,
+                    "treasure-gacha:source-element:" + Guid.NewGuid().ToString("N"));
+                if (!selected.IsApplied && selected.Code != TreasureGachaResultCode.Unchanged) return null;
+            }
+            hud.ShowTreasureGachaFromItemSource(sourceItemId, navigation.SelectedSeriesId,
+                elementGachaType, returnToSource);
+            return navigation;
+        }
+
         public string CharacterName => profile?.Save.Player.CharacterName ?? string.Empty;
         public int Level => profile?.Save.Player.Level ?? 1;
         public int SubRank => profile?.Save.Player.SubRank ?? 1;
@@ -97,6 +126,7 @@ namespace Zjcs.Presentation.Home
         private void Open(string selected, string root, Transform uiParent, Action close)
         {
             slotId = selected;
+            savesRoot = root;
             this.uiParent = uiParent;
             onClose = close;
             slots = new ProfileSlotCatalog(root);
@@ -111,8 +141,15 @@ namespace Zjcs.Presentation.Home
                 "PetGacha", "ui.json"));
             catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
                 "PetGacha", "performance-ui.json"));
-            treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
-            treasureGacha = new OfflineTreasureGachaService(profile, treasureGachaCatalog);
+            try
+            {
+                treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
+                treasureGacha = new OfflineTreasureGachaService(profile, treasureGachaCatalog);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Home treasure gacha unavailable: " + error.Message);
+            }
             try
             {
                 petGachaCatalog = OfficialPetGachaAssets.LoadDefault();

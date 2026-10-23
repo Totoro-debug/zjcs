@@ -53,6 +53,8 @@ namespace Zjcs.Presentation.Home
         private bool petHundredSuppressChoice;
 
         private readonly string[] tabNames = { "Character", "TravelNote", "Home", "Legion", "Mainland" };
+        private GameObject characterRoot;
+        private Zjcs.Presentation.Character.CharacterFeatureRuntime characterRuntime;
 
         public HomeHudView(HomeFeatureRuntime host, Transform parent)
         {
@@ -298,20 +300,65 @@ namespace Zjcs.Presentation.Home
         public void SelectTab(int index, bool notify)
         {
             selectedTab = Mathf.Clamp(index, 0, tabNames.Length - 1);
-            for (int i = 0; i < tabNames.Length; i++)
+            ApplyTabVisuals();
+            if (selectedTab == 0)
             {
-                if (bottomRenderer == null) break;
-                bool selected = i == selectedTab;
-                bottomRenderer.SetActiveByName(tabNames[i] + "/UnlockObj/Anim/SelectedBgImg", selected);
+                OpenCharacterPage();
+                return;
             }
+            if (characterRoot != null) characterRoot.SetActive(false);
             if (notify && selectedTab != 2)
             {
-                Notify(selectedTab == 0 ? "人物页由人物模块提供" :
-                    selectedTab == 1 ? "游记页由游记模块提供" :
+                Notify(selectedTab == 1 ? "游记页由游记模块提供" :
                     selectedTab == 3 ? "公会页由单人公会模块提供" : "大陆页由世界地图模块提供");
             }
         }
 
+        private void ApplyTabVisuals()
+        {
+            for (int i = 0; i < tabNames.Length; i++)
+            {
+                if (bottomRenderer == null) break;
+                bottomRenderer.SetActiveByName(tabNames[i] + "/UnlockObj/Anim/SelectedBgImg", i == selectedTab);
+            }
+        }
+
+        public bool CharacterPageOpen => characterRoot != null && characterRoot.activeSelf;
+
+        private void CloseCharacterPage()
+        {
+            if (characterRoot != null) characterRoot.SetActive(false);
+            selectedTab = 2;
+            ApplyTabVisuals();
+        }
+
+        private void OpenCharacterPage()
+        {
+            if (characterRoot == null)
+            {
+                characterRoot = new GameObject("HomeCharacterPage", typeof(RectTransform));
+                characterRoot.transform.SetParent(canvas.transform, false);
+                RectTransform rect = (RectTransform)characterRoot.transform;
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.offsetMin = Vector2.zero;
+                rect.offsetMax = Vector2.zero;
+                var view = characterRoot.AddComponent<Zjcs.Presentation.Character.OfficialCharacterPanelView>();
+                characterRuntime = characterRoot.AddComponent<Zjcs.Presentation.Character.CharacterFeatureRuntime>();
+                view.CloseRequested += CloseCharacterPage;
+            }
+            characterRoot.SetActive(true);
+            try
+            {
+                characterRuntime.OpenProfile(host.ActiveProfileSlotId, host.SavesRoot);
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("Home character page unavailable: " + error.Message);
+                Notify("人物页打开失败：" + error.Message);
+                characterRoot.SetActive(false);
+            }
+        }
         public bool IsClosedByNetworkPolicy(int type)
         {
             if (type == 13)
@@ -543,6 +590,7 @@ namespace Zjcs.Presentation.Home
         public void Tick()
         {
             TickPetIntroduction();
+            TickTreasureGachaPreview();
             if (noticeDeadline > 0f && Time.unscaledTime >= noticeDeadline)
             {
                 noticeDeadline = 0f;
@@ -679,7 +727,14 @@ namespace Zjcs.Presentation.Home
             renderer.ReplaceExactText("{0}", host.BlessingLevel.ToString());
             string expName = host.Rules.ItemName(50);
             if (!string.IsNullOrEmpty(expName)) renderer.SetTextByName("NameTxt", expName);
-            Button collect = FirstButton(renderer, "CollectBtn");
+            Image ring = renderer.Find<Image>("/FurnitureBedDialog/BgDialog3/Content/HangUpInfo/Display/FillImg");
+            if (ring != null)
+            {
+                ring.type = Image.Type.Filled;
+                ring.fillMethod = Image.FillMethod.Horizontal;
+                ring.fillAmount = capacity > 0 ? Mathf.Clamp01((float)count / capacity) : 0f;
+            }
+            AddFurnitureIcon(renderer, "/FurnitureBedDialog/BgDialog3/Icon/IconImgSlot", "furniture_icon_0");            Button collect = FirstButton(renderer, "CollectBtn");
             if (collect != null)
             {
                 collect.onClick.RemoveAllListeners();
@@ -810,15 +865,26 @@ namespace Zjcs.Presentation.Home
                 {
                     HomeUiRenderer rowRenderer = Renderer();
                     GameObject row = rowRenderer.Create("mail_row", content, null);
-                    rowRenderer.SetTextByName("Title", mail.Subject);
-                    rowRenderer.SetTextByName("Sender", mail.Sender);
-                    rowRenderer.SetTextByName("Time", string.Empty);
+                    rowRenderer.SetTextByName("Mail_Title", mail.Subject);
+                    rowRenderer.SetTextByName("DateText", string.Empty);
+                    rowRenderer.SetActiveByName("MailUnReadImage", mail.Status == 0);
+                    rowRenderer.SetActiveByName("MailReadImage", mail.Status != 0);
+                    rowRenderer.SetActiveByName("RewardContent", mail.Attachments.Count > 0);
                     long id = mail.Id;
                     Button button = row.GetComponent<Button>();
                     if (button != null) button.onClick.AddListener(() => ShowMailContent(id));
                 }
                 if (inbox.Count == 0) Notify("邮箱暂无邮件");
-                Button collectAll = FirstButton(renderer, "PickupAllBtn");
+                Button deleteRead = FirstButton(renderer, "AllDelBtn");
+                if (deleteRead != null)
+                    deleteRead.onClick.AddListener(() =>
+                    {
+                        int removed = host.Session.DeleteReadMail() ? 1 : 0;
+                        Notify(removed > 0 ? "已删除已读邮件" : "没有可删除的已读邮件");
+                        CloseDialog();
+                        ShowMail();
+                    });
+                Button collectAll = FirstButton(renderer, "PickUpBtn");
                 if (collectAll != null)
                     collectAll.onClick.AddListener(() =>
                     {
@@ -829,7 +895,7 @@ namespace Zjcs.Presentation.Home
                         Notify(count > 0 ? "领取 " + count + " 封邮件附件" : "暂无可领取附件");
                         CloseDialog();
                     });
-                Button readAll = FirstButton(renderer, "ReadAllBtn");
+                Button readAll = FirstButton(renderer, "AllReadBtn");
                 if (readAll != null)
                     readAll.onClick.AddListener(() =>
                     {
@@ -846,41 +912,27 @@ namespace Zjcs.Presentation.Home
                 .FirstOrDefault(value => value.Id == mailId);
             if (mail == null) return;
             host.Session.MarkMailRead(mailId);
-            var panel = new GameObject("MailContent", typeof(RectTransform), typeof(Image));
-            panel.transform.SetParent(canvas.transform, false);
-            RectTransform rect = (RectTransform)panel.transform;
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = new Vector2(820, 900);
-            panel.GetComponent<Image>().color = new Color(0.12f, 0.11f, 0.1f, 0.98f);
-            TextMeshProUGUI title = CreateLabel(panel.transform, "Title", 34, new Vector2(32, -28),
-                TextAlignmentOptions.TopLeft);
-            title.text = mail.Subject;
-            TextMeshProUGUI body = CreateLabel(panel.transform, "Body", 24, new Vector2(32, -110),
-                TextAlignmentOptions.TopLeft);
-            body.text = mail.Body;
-            RectTransform bodyRect = (RectTransform)body.transform;
-            bodyRect.sizeDelta = new Vector2(756, 640);
-            body.enableWordWrapping = true;
-            var close = new GameObject("Close", typeof(RectTransform), typeof(Image), typeof(Button));
-            close.transform.SetParent(panel.transform, false);
-            RectTransform closeRect = (RectTransform)close.transform;
-            closeRect.anchorMin = new Vector2(0.5f, 0);
-            closeRect.anchorMax = new Vector2(0.5f, 0);
-            closeRect.pivot = new Vector2(0.5f, 0);
-            closeRect.anchoredPosition = new Vector2(0, 24);
-            closeRect.sizeDelta = new Vector2(240, 72);
-            close.GetComponent<Image>().color = new Color(0.36f, 0.3f, 0.2f, 1f);
-            TextMeshProUGUI closeText = CreateLabel(close.transform, "Text", 26, Vector2.zero,
-                TextAlignmentOptions.Center);
-            closeText.text = "关闭";
-            RectTransform closeTextRect = (RectTransform)closeText.transform;
-            closeTextRect.anchorMin = Vector2.zero;
-            closeTextRect.anchorMax = Vector2.one;
-            closeTextRect.offsetMin = Vector2.zero;
-            closeTextRect.offsetMax = Vector2.zero;
-            close.GetComponent<Button>().onClick.AddListener(() => UnityEngine.Object.Destroy(panel));
-            panel.transform.SetAsLastSibling();
+            OpenDialog("mail_content", (renderer, panel) =>
+            {
+                renderer.SetTextByName("TitleText", mail.Subject);
+                renderer.SetTextByName("TextFrom", mail.Sender);
+                renderer.SetTextByName("TextTime", string.Empty);
+                renderer.SetTextByName("TextArticleTitle", string.Empty);
+                renderer.SetTextByName("TextArticle", mail.Body);
+                Button confirm = FirstButton(renderer, "ComfirmBtn");
+                if (confirm == null) return;
+                confirm.onClick.AddListener(() =>
+                {
+                    if (mail.Attachments.Count > 0)
+                        host.Session.CollectMailAttachments(mail.Id,
+                            "home:mail:" + mail.Id + ":" + Guid.NewGuid().ToString("N"));
+                    host.DrainHomeInventory();
+                    CloseDialog();
+                    ShowMail();
+                });
+            });
+            return;
+
         }
 
         public void ShowFastForward(int hangUpId)
@@ -902,6 +954,27 @@ namespace Zjcs.Presentation.Home
             });
         }
 
+        private static Image FindImage(HomeUiRenderer renderer, string name)
+        {
+            foreach (GameObject node in renderer.AllNodes)
+                if (node.name == name) return node.GetComponent<Image>();
+            return null;
+        }
+
+        private void AddFurnitureIcon(HomeUiRenderer renderer, string slotPath, string panelKey)
+        {
+            GameObject slot = renderer.Find(slotPath);
+            if (slot == null || !catalog.HasPanel(panelKey)) return;
+            if (slot.transform.Find("OfficialIcon") != null) return;
+            HomeUiRenderer icon = Renderer();
+            GameObject built = icon.Create(panelKey, slot.transform, null);
+            built.name = "OfficialIcon";
+            RectTransform rect = (RectTransform)built.transform;
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.localScale = Vector3.one;
+        }
         private static Button FirstButton(HomeUiRenderer renderer, string name)
         {
             foreach (GameObject node in renderer.AllNodes)

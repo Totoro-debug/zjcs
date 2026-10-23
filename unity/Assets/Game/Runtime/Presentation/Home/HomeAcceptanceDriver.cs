@@ -18,9 +18,11 @@ namespace Zjcs.Presentation.Home
     /// </summary>
     public sealed class HomeAcceptanceDriver : MonoBehaviour
     {
-        private static string Root => Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
+        private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
+            ?? Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
         private static string ProjectRoot => Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
-        private static string Output => Path.Combine(ProjectRoot, "output", "home-acceptance");
+        private static string Output => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT")
+            ?? Path.Combine(ProjectRoot, "output", "home-acceptance");
 
         private readonly List<string> log = new List<string>();
         private readonly Dictionary<string, object> report = new Dictionary<string, object>();
@@ -163,6 +165,13 @@ namespace Zjcs.Presentation.Home
                 Assert(back.x <= right.x, "clamped drag");
                 runtime.Scene.ResetCamera();
                 return "bed/cart quads ok, clamp x " + right.x.ToString("0.00") + " -> " + back.x.ToString("0.00");
+            });            ok &= Check("tabs", () =>
+            {
+                runtime.Hud.SelectTab(0, false);
+                Assert(runtime.Hud.CharacterPageOpen, "character page opened");
+                runtime.Hud.SelectTab(2, false);
+                Assert(!runtime.Hud.CharacterPageOpen, "character page closed");
+                return "character tab opens and home returns";
             });            yield return CheckUi(runtime, value => ok &= value);
             ok &= Check("persistence", () =>
             {

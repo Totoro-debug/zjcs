@@ -15,12 +15,18 @@ namespace Zjcs.Editor.Home
     /// </summary>
     public static class HomeAcceptanceLauncher
     {
-        private static string Root => Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
+        private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
+            ?? Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
 
         public static void Run()
         {
             try
             {
+                string runId = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-" + Guid.NewGuid().ToString("N");
+                Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT",
+                    Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance-" + runId));
+                Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT",
+                    Path.Combine(Directory.GetCurrentDirectory(), "output", "home-acceptance-" + runId));
                 PrepareProfile();
                 Debug.Log("[HomeAcceptance] entering play mode with " + Root);
                 EditorApplication.isPlaying = true;
@@ -34,7 +40,8 @@ namespace Zjcs.Editor.Home
 
         private static void PrepareProfile()
         {
-            if (Directory.Exists(Root)) Directory.Delete(Root, true);
+            if (Directory.Exists(Root) && Directory.GetFileSystemEntries(Root).Length > 0)
+                throw new IOException("The acceptance profile folder must be empty: " + Root);
             Directory.CreateDirectory(Root);
             var slots = new ProfileSlotCatalog(Root);
             string slotId = slots.CreateSlot();

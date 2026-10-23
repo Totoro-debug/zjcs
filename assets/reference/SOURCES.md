@@ -279,6 +279,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 积分 / 规则 / 历史 / 结果弹窗以当前原始扭蛋页为底层，底层不接收指针。馈赠复用原始 `ChestGachaAchievementPanel` 成就条目并绑定滚轮 / 拖动。修正 Unity 无 Graphic 的零高 Mask 容器适配，避免元素图标被误裁空。
 
+2026-10-23：`prepare_treasure_gacha.py` 按固定版16个原 prefab 读取 `Image` 组件并核对层级路径，登记245个原 Sprite 引用，解码60张原 UI Sprite；运行时恢复图片类型、色调、PPU、pivot、九切片边框及射线标记。`ImgCostMoneyBtn_Bg` 保留原边框 `[20,19,20,20]`。输入对象、输出 SHA256 与绑定数据见 [treasure-gacha/source-manifest.json](treasure-gacha/source-manifest.json)。
+
 ## 家园商店图标与原始显示逻辑补齐
 
 2026-10-13：`prepare_shop_assets.py` 按商店 1 / 2 的固定商品与全部商品组、家园特卖表限定提取范围，补齐 24 个图标，其中包括胡椒、糖、盐、木果粉、乐园牛奶、奶油、黄玉奶酪七项食材。所有补充资源来自已校验的同版本 `854_156383` 官方 CDN 缓存，家园三类货架的 48 种物品均有原始图标。此前“七项食材未打包”的历史记录对应基础 APK 状态，此次补充来源、实际 URL、bundle 哈希和输出 SHA256 见 [shop-ui/source-manifest.json](shop-ui/source-manifest.json)。
@@ -626,6 +628,12 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 地图 10 单独重建固定版本 `854_156383` 的 `MapGround_10.prefab`；来源仍为原 APK / 已校验原 CDN。`scripts/prepare_map10_materials.py` 仅输出地图 10 的地形、独立蝴蝶数据与水面 10 条目，不改共享 `regions/skeletons.json`，不生成新版替代或自绘图。详细原对象、输入 / 输出 SHA、旧输出与纠正依据见 `official-map/materials-10-source-manifest.json`；原 `regions` / `water` 来源历史保留。
 Map10 Windows 原生地形和怪物帧资源由 `scripts/prepare_unity_map10_rendering.py` 生成，逐项来源、路径和 SHA256 见 `unity/Assets/Official/World/Map/10/rendering-source-manifest.json`。地形来自固定版 `assets/official/regions/10.geom`（SHA256 `cdd26c364ce85d62bd5225bd23fda7b1f7b5ec7d7dd446fba5f3bec6f08618ff`），恢复 1,404 个地形网格批次和 166 张原始纹理；11 个地图战斗怪物按 `map10.json` 官方 `Stages` 值关联原始模型及骨骼 idle 帧，共 309 帧。`scripts/prepare_unity_map10_battle_data.py` 按固定 APK 的官方 `TbStageInfo`、`TbStageMonsterArrayInfo`、`TbSkillInfo`、`MonsterGroupInfo`、等级属性及已核验战场数据生成 21 个阶段、13 个阵形、逐只怪物的战斗属性/技能/站位及对应战场网格；`battle-rules.json`、`skill-rules.json`、`rules.json` 和公式源码均校验固定版本及来源哈希，详细输入输出见 `assets/reference/official-map/map10-battles-source-manifest.json`。模型、骨骼及 atlas 的原始来源继续由 `models-source-manifest.json`、`spine-pages-source-manifest.json` 和 rendering manifest 交叉记录。Unity 侧由 `OfficialMap10TerrainView`、`OfficialMap10MonsterView` 生成运行时网格；地形水效、实体场景接入和游戏运行尚未完成。
 
+Map10 的 `FeiLe_appear`、`FeiLe_disappear`、`npc_disappear` 由 `scripts/prepare_unity_map10_playables.py` 按原始 playable 与 `map-particles.json` 转为 Unity Resources 粒子载荷，并校验材质、贴图、网格及输出 SHA256；详细输入/输出见 `assets/reference/official-map/map10-playables-source-manifest.json`。固定版缺失材质 `2db68f5a7be450142e43` 的原 CDN 包 MD5 为 `959e064e1a060a6ed93bad71ca11a8f0`，已按独立记录使用官方 `864_156496` 同名包 `758d1b10bbe6ee211e8de79dbb727ec1.bundle`；未将其标为固定版来源。其他材质来源均逐项注明 `854_156383` APK 或原版本 CDN。原 APK 的 GLES 编译 shader 无 Windows HLSL，`OfficialMap10PlayableView.shader` 是经用户确认、按官方材质参数和贴图重建的 Windows shader，不宣称逐像素等同。
+
+Map10 `MapBgmId=10` 的固定版 `bgm_event_key` 记录为 `Map_10_Play/Stop/Pause/Resume`；`Map_10_Play` 复用已核验 MapAudio OGG，离线运行以循环音轨适配官方 BGM Play/Stop 生命周期。剧情和 MapTalk 共 39 个 `VoiceEventKey` 由 `scripts/prepare_unity_map10_audio.py` 接入 `unity/Assets/StreamingAssets/Map10Audio/`：25 个 OGG 复用已核验的 `assets/official/map-audio.json` 与 `audio-source-manifest.json`，14 个缺失项从固定 APK `zh_cn_voice_chapter_01_pck.rawfile` 按官方 Event→Action→Sound→WEM 解码为 PCM WAV。三个 `FeiLe_appear`、`FeiLe_disappear`、`npc_disappear` playable 声音事件也按原轨道加入本地映射；声音媒体分别位于固定 `map_sfx_01` PCK 中记录的 bank/offset/size，提取器校验包 MD5、银行范围和 WEM SHA256。对话/演出时间、原来源、输出哈希与映射见 `assets/reference/official-map/map10-audio-source-manifest.json` 和 `Map10Audio/map10-audio.json`；运行播放由 `OfficialMap10AudioPlayer` 绑定。
+
+8402 初始岛故事 NPC 的 `npc_8402/appear_01`、`npc_8402/disappear_01` 由 `prepare_unity_map10_rendering.py` 从固定版 `story-actors-source-manifest.json` 验证并生成 Unity 原生帧载荷；帧数、贴图与输出 SHA256 记在 `unity/Assets/Official/World/Map/10/rendering-source-manifest.json` 的 `storyActors` 条目中。两个载荷复用官方 `npc_8402` atlas，不含自绘资源。
+
 26 个 `Sprites/Submersion` 分层保留 Rock01/Rock03/Rock04 的原 `_HeightMap`、atlas UV、renderer 高度偏移和 0.5 水位；官方 `General_Manual_mask_atlas` 解码为原贴图。水下层在水面后绘制，上水层在水面前绘制。4 个原 `Sprite-Lit-CustomWater2` 水面仅在地图 10 使用原 GLES 的红色高度、深浅色、岸线噪声、法线、焦散和泡沫参数。原 `Sprites/WaterMask` 的 `clamp(texture.a*renderer.a+renderer.r-renderer.g)` / `BlendOp Max` 按 430 次原遮罩绘制离线合成为 `assets/official/map-water-masks/10.png`；world rect 为 `[-24,-29,50,53]`，64 像素 / 世界单位，3200×3392。这是官方数据派生转换，使用固定采样密度，不声称与 Unity 的逐帧屏幕像素完全相同。
 
 历史 `missing_skeleton_data: Effect_Butterfly` 是转换器只接受 `.skel`、漏识别原 `.json` 导致的误判，不是官方素材缺失。原包实际含 JSON Spine 4.1.17、atlas、Texture2D 和动画。新增 `assets/official/regions/10-butterflies.json` 保存 15 个原激活实例、原分配的 `loop1` / `loop2`、12 fps 网格帧与原精确循环时长；同时接入 `Eff_Scene_Butterfly01` 原飞行 / 旋转曲线（3.983333349 秒循环）。15 个静态序列化网格实际剔除，原 `Effect/Noise_Mask_Pro` 的 `USE_MAINTEX`、绿色 `_MainColor` 和 `_ColorIntensity=4` 应用到动态网格。旧缺失记录保留并在新清单中明确纠正。转换后地形为 1404 批、17856 顶点，15 个独立原骨骼实例，不再绘制原静态蝴蝶替身。
@@ -913,6 +921,8 @@ prepare_home_ui.py 同时补充原 HomeViewController／Slider 控件、HomeSkin
 
 
 prepare_battle_spine.py 从固定 854_156383 已核验 APK／原版 CDN 的骨骼、atlas 和 SplitBinarySO 输入，重新组装原格式二进制供官方运行库直接读取；使用官方 @esotericsoftware/spine-core 4.2.110 解码定位字节边界，已开放皮肤及其链接依赖、骨骼／约束／槽／绘制顺序／事件轨道保持原字节，不烘焙姿态；未开放皮肤只保留原表索引并删除相关附件及变形／sequence 轨。图集只改页路径，贴图复用已有原转换或按需解码原 Texture2D，未绘制替代。739 份原骨骼及男女 227／237 动画在 assets/official/battle-spine/，显式目录由  读取；完整输入输出哈希及复用来源凭据见 battle-spine/source-manifest.json。
+
+开场创角录像所需的 9 张 Spine 页另由 `prepare_battle_spine_pages.py` 从固定 APK 按 `models-source-manifest.json` 的 Texture2D path ID 与 SHA256 解出，不使用 Atlas 彩图替代；monster 3803／3281／3282／3283／3481 和 NPC 8401／8402 的输入、atlas 页尺寸及输出哈希见 `battle-spine/pages-source-manifest.json`。
 
 prepare_battle_animation.py 读取原 SkeletonRenderer／SkeletonMecanim／SkeletonAnimation 的完整序列化字段，按实际模型路径登记独立 prefab 绑定。客户端控制参照 PlayerAnimatorAppearance、AppearanceAddressUtils、AppearanceUtils、AppearanceSkeletonPart／MultiSidesPart、AppearancePartSideSwitcher、BaseSkeletonFollower 和原职业配置；来源与源文件 SHA256 分别登记于 battle-animation/source-manifest.json 及 battle-spine/source-manifest.json；这是引擎适配，未将 Unity 原生 Animator 内部实现冒称为已取得的游戏脚本。原过渡全部为 InterruptionSource=None，其混合中仅 AnyState 可中断的语义另核对 [Unity 官方过渡文档](https://docs.unity3d.com/2022.3/Documentation/Manual/class-Transition.html)，此引擎依据与 APK 游戏代码分别登记。
 
@@ -1426,6 +1436,8 @@ Compatibility Canvas 不自动解码 sRGB 采样，`prepare_battle_linear_textur
 
 DIY 外观选项缩略图使用固定 APK `854_156383` 的 `defaultpackage_assets_image_ui_playerskin.bundle`（APK entry `assets/yoo/DefaultPackage/d9e385395fb855fe84340d2e1c152e18.bundle`）。`scripts/prepare_character_creation_skin_icons.py` 按原 Sprite 名提取 155 张 PNG，校验 bundle MD5、APK SHA256 与男女六类 141 个选项图标；Unity 载荷及输入／输出哈希见 [player skin icon source manifest](character-creation/player-skin-icons-source-manifest.json)。`CharacterCreationAssetTools.Validate` 将其作为 Sprite 绑定到创角目录并在选项控件显示，Editor 校验与创角 Play Mode 选项显示、选择状态验证已通过。没有绘制或替代图标。
 
+创角“幻装试穿”组图从固定 APK `854_156383` 的五个 no-atlas 图标 bundle 提取 12 个 `item_<id>` Sprite；组 ID、男女、解锁条件、`append_appearance` 组件皮肤来自固定表 `append_appearance_group`／`append_appearance` 与现有角色皮肤目录。官方组名使用 APK entry `assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile`，原文件 MD5 `9a0b6ab8c5136050fd005ead8f567863`、SHA256 `738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8`、5,291,479 字节；`prepare_character_creation_group_icons.py` 按官方 `LocalizationBinaryFileReader` 的 12 字节索引和 `XXHash64` 键读取 `append_appearance_group_<id>`。图标与标签输入、输出及逐项 SHA256 见 [appearance-group-icons-source-manifest.json](character-creation/appearance-group-icons-source-manifest.json)。12 个 Sprite 已导入并绑定到目录资产，组选择与离线试穿表现仍见[新建存档与角色创建](../../docs/features/character-creation.md)的未实现项。
+
 ## NPC邀请、探索首领与节庆首领
 
 `prepare_npc_assistance_ui.py` 从固定 `854_156383` APK／校验 CDN 转换 `ExploreBossTeamDialog`、`ActivityFestivalBossPanel`、`ActivityFestivalBossAssistDialog`、助战说明条目、邀请面板及邀请条目；运行布局为 `assets/official/npc-assistance-ui.json`，原 prefab、Sprite、调用代码、状态说明文本及 SHA256 见 [npc-assistance/source-manifest.json](npc-assistance/source-manifest.json)。道路属性门槛复用原 `RoadblockTeamPropStageDialog` 与地图 UI；未绘制替代图片。
@@ -1485,8 +1497,6 @@ DIY 外观选项缩略图使用固定 APK `854_156383` 的 `defaultpackage_asset
 创角原生 UI 与字体：`prepare_character_creation_runtime_ui.py` 核对原 `creation-performance.json` 与 `assets/official/ui.json` 来源哈希，恢复 CreatePlayerPanel、DIYContent 与 ConfirmDialog 的真实字段、47 张原 Sprite、布局、遮罩及 TMP 样式；官方 StepTitles 由原 CreatePlayerPanel MonoBehaviour（pathID -3964310077427183409）读取，并沿固定版语言包取标题。`CharacterCreationUiTools` 生成 Unity 原生 prefab，输入输出与生成工具哈希见 `character-creation/runtime-ui-source-manifest.json`、`native-ui-source-manifest.json`。原 `FZY4K` TextAsset TTF 与 `unity/Assets/Official/Commerce/Art/fonts/FZY4K.ttf` 字节一致，SHA256 `90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386`，使用已有 FZY4K-Dynamic TMP 资产；没有替代字体或自绘图片。
 
 创角原生预览：`prepare_character_creation_meshes.py` 复用已有固定来源 24 fps 官方网格帧缓存，逐项沿 appearance、gender、sign-preview 等来源清单核验输入及别名，打包男女 idle／run 与原图集、遮罩为 `unity/Assets/StreamingAssets/CharacterCreation/creation-meshes.zip`；`character-creation/native-mesh-source-manifest.json` 保存输入、别名、包与逐条目哈希。C# `CharacterCreationMeshFramePlayer` 独立使用 Unity MeshRenderer 播放，加载时逐条核对 SHA256；`CharacterCreationMeshFrameDye.shader` 适配官方 HSV 遮罩公式，不依赖 Spine runtime。已完成捏脸、染色、草稿和双槽位 JSON 回读及画面验证，具体范围见功能页；新增载荷尚未纳入完整素材 ZIP 快照，不声称已备份。
-
-2026-10-23 技能图标：`python scripts/prepare_unity_combat_skill_icons.py` 从固定版本 `854_156383` 的 `assets/official/icons.json` 读取技能道具到 `skill_<id>-hash.png` 的映射，复用 `Assets/Official/Wish/Art/sprites` 下按原尺寸导入的官方 PNG（均为纹理导入），读取 PNG 尺寸与 icons 元数据生成 `Assets/Game/Resources/Combat/OfficialCombatSkillIconCatalog.asset`（376 项，纹理引用、归一化 pivot 与 ppu），运行时用纹理创建 Sprite。输入／输出哈希记录于本地 `assets/reference/combat/skill-icons-source.json`（该目录按 `.gitignore` 不随仓库提交），可用同脚本 `--verify` 重建校验。\n\n
 
 ## 2026-10-23 商城 HUD 入口、完整目录与运行界面
 

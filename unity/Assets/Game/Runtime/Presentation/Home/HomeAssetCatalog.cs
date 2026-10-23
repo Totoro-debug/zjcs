@@ -323,6 +323,84 @@ namespace Zjcs.Presentation.Home
     }
 
     [Serializable]
+    public sealed class HomeUiPanelExtensionData
+    {
+        public string version;
+        public HomeUiFlatPanel[] panels;
+        public HomeDynamicSprite[] dynamic_sprites;
+        public HomeTextPair[] texts;
+    }
+
+    [Serializable]
+    public sealed class HomeUiFlatPanel
+    {
+        public string key;
+        public HomeUiFlatNode root;
+        public HomeUiFlatNode[] nodes;
+    }
+
+    [Serializable]
+    public sealed class HomeUiFlatNode
+    {
+        public string parent_path;
+        public string name;
+        public string path;
+        public bool active;
+        public float[] anchor_min;
+        public float[] anchor_max;
+        public float[] anchored_position;
+        public float[] size_delta;
+        public float[] pivot;
+        public float[] scale;
+        public float rotation;
+        public string[] scripts;
+        public HomeUiImage image;
+        public HomeUiTextStyle text;
+        public string localization_key;
+        public bool mask;
+        public bool rectmask2d;
+        public HomeUiLayout layout;
+        public HomeUiGrid grid;
+        public int[] size_fitter;
+        public HomeUiLayoutElement layout_element;
+        public HomeUiAspect aspect_fitter;
+        public float alpha;
+        public bool button;
+        public HomeUiScroll scroll;
+        public HomeUiAnimation[] animations;
+
+        public HomeUiNode ToNode() => new HomeUiNode
+        {
+            name = name,
+            path = path,
+            active = active,
+            anchor_min = anchor_min,
+            anchor_max = anchor_max,
+            anchored_position = anchored_position,
+            size_delta = size_delta,
+            pivot = pivot,
+            scale = scale,
+            rotation = rotation,
+            scripts = scripts,
+            image = image,
+            text = text,
+            localization_key = localization_key,
+            mask = mask,
+            rectmask2d = rectmask2d,
+            layout = layout,
+            grid = grid,
+            size_fitter = size_fitter,
+            layout_element = layout_element,
+            aspect_fitter = aspect_fitter,
+            alpha = alpha,
+            button = button,
+            scroll = scroll,
+            animations = animations,
+            children = Array.Empty<HomeUiNode>(),
+        };
+    }
+
+    [Serializable]
     public sealed class HomeDynamicSprite
     {
         public string key;
@@ -339,6 +417,64 @@ namespace Zjcs.Presentation.Home
         public HomeTextPair[] furniture_names;
         public HomeTextPair[] furniture_type_names;
         public HomeTextPair[] strings;
+    }
+
+    [Serializable]
+    public sealed class HomeStateGameObjectConfig
+    {
+        public int state;
+        public string[] game_objects;
+    }
+
+    [Serializable]
+    public sealed class HomeStateSpriteConfig
+    {
+        public int state;
+        public string sprite_file;
+    }
+
+    [Serializable]
+    public sealed class HomeStateImageConfig
+    {
+        public string path;
+        public HomeStateSpriteConfig[] states;
+    }
+
+    [Serializable]
+    public sealed class HomeTreasureGachaMachineConfig
+    {
+        public string manifest;
+        public HomeStateGameObjectConfig[] map_game_object_states;
+        public HomeStateImageConfig[] map_sprite_states;
+        public HomeStateImageConfig[] element_sprite_states;
+        public HomeStateGameObjectConfig[] machine_show_game_object_states;
+        public HomeGachaScaleFitterConfig aspect_ratio_scale_fitter;
+    }
+
+    [Serializable]
+    public sealed class HomeGachaScaleFitterConfig
+    {
+        public string owner_path;
+        public string target_path;
+        public HomeScaleCurveConfig first_curve;
+        public HomeScaleCurveConfig second_curve;
+    }
+
+    [Serializable]
+    public sealed class HomeScaleCurveConfig
+    {
+        public int pre_wrap_mode;
+        public int post_wrap_mode;
+        public HomeScaleCurveKey[] keys;
+    }
+
+    [Serializable]
+    public sealed class HomeScaleCurveKey
+    {
+        public float time;
+        public float value;
+        public float in_slope;
+        public float out_slope;
     }
 
     /// <summary>
@@ -358,10 +494,12 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<string, string> furnitureTypeNames = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly List<string> additionalSpriteFolders = new List<string>();
         private TMP_FontAsset font;
+        private HomeTreasureGachaMachineConfig treasureGachaMachine;
 
         public string Folder { get; }
         public HomeSceneData Scene { get; }
         public HomeUiData Ui { get; }
+        public HomeTreasureGachaMachineConfig TreasureGachaMachine => treasureGachaMachine;
 
         private HomeAssetCatalog(string folder, HomeSceneData scene, HomeUiData ui)
         {
@@ -404,22 +542,83 @@ namespace Zjcs.Presentation.Home
 
         public void LoadPanelExtension(string path)
         {
-            HomeUiData extension = Read<HomeUiData>(path);
+            HomeUiPanelExtensionData extension = Read<HomeUiPanelExtensionData>(path);
             if (extension == null || extension.panels == null || extension.panels.Length == 0)
                 throw new InvalidDataException("The official home panel extension is missing or empty.");
-            foreach (HomeUiPanel panel in extension.panels)
+            foreach (HomeUiFlatPanel flatPanel in extension.panels)
             {
-                if (panel == null || string.IsNullOrEmpty(panel.key) || panel.root == null)
+                if (flatPanel == null || string.IsNullOrEmpty(flatPanel.key) || flatPanel.root == null)
                     throw new InvalidDataException("The official home panel extension contains an invalid panel.");
+                HomeUiPanel panel = RestoreFlatPanelNodes(flatPanel);
                 panels[panel.key] = panel;
             }
             string moduleFolder = Path.GetDirectoryName(path);
+            if (string.Equals(Path.GetFileName(moduleFolder), "TreasureGacha", StringComparison.Ordinal))
+            {
+                LoadTreasureGachaMachine(Path.Combine(moduleFolder, "machine-states.json"));
+            }
             if (!string.IsNullOrEmpty(moduleFolder)) additionalSpriteFolders.Add(Path.Combine(moduleFolder, "sprites"));
             foreach (HomeDynamicSprite sprite in extension.dynamic_sprites ?? Array.Empty<HomeDynamicSprite>())
                 if (sprite != null && !string.IsNullOrEmpty(sprite.key)) dynamicSprites[sprite.key] = sprite.file;
             foreach (HomeTextPair text in extension.texts ?? Array.Empty<HomeTextPair>())
                 if (text != null && !string.IsNullOrEmpty(text.key)) texts[text.key] = text.value ?? string.Empty;
         }
+
+        public void LoadTreasureGachaMachine(string path)
+        {
+            HomeTreasureGachaMachineConfig machine = Read<HomeTreasureGachaMachineConfig>(path);
+            if (machine == null || machine.manifest != "854_156383"
+                || machine.map_game_object_states == null || machine.map_game_object_states.Length == 0
+                || machine.map_sprite_states == null || machine.map_sprite_states.Length == 0
+                || machine.element_sprite_states == null || machine.element_sprite_states.Length == 0
+                || machine.machine_show_game_object_states == null
+                || machine.machine_show_game_object_states.Length == 0
+                || machine.aspect_ratio_scale_fitter == null
+                || string.IsNullOrEmpty(machine.aspect_ratio_scale_fitter.owner_path)
+                || string.IsNullOrEmpty(machine.aspect_ratio_scale_fitter.target_path)
+                || !ValidScaleCurve(machine.aspect_ratio_scale_fitter.first_curve)
+                || !ValidScaleCurve(machine.aspect_ratio_scale_fitter.second_curve))
+                throw new InvalidDataException("The official treasure gacha machine state payload is missing or invalid.");
+            treasureGachaMachine = machine;
+        }
+
+        private static HomeUiPanel RestoreFlatPanelNodes(HomeUiFlatPanel flatPanel)
+        {
+            HomeUiNode root = flatPanel.root.ToNode();
+            if (string.IsNullOrEmpty(root.path))
+                throw new InvalidDataException("The official home panel root path is missing: " + flatPanel.key);
+            var nodes = new Dictionary<string, HomeUiNode>(StringComparer.Ordinal)
+            {
+                [root.path] = root,
+            };
+            var children = new Dictionary<HomeUiNode, List<HomeUiNode>>();
+            children.Add(root, new List<HomeUiNode>());
+            foreach (HomeUiFlatNode record in flatPanel.nodes ?? Array.Empty<HomeUiFlatNode>())
+            {
+                if (record == null || string.IsNullOrEmpty(record.parent_path) || string.IsNullOrEmpty(record.path))
+                    throw new InvalidDataException("The official home panel contains an invalid flattened node: " + flatPanel.key);
+                if (nodes.ContainsKey(record.path))
+                    throw new InvalidDataException("The official home panel contains a duplicate node path: " + record.path);
+                HomeUiNode node = record.ToNode();
+                nodes.Add(node.path, node);
+                children.Add(node, new List<HomeUiNode>());
+            }
+
+            foreach (HomeUiFlatNode record in flatPanel.nodes ?? Array.Empty<HomeUiFlatNode>())
+            {
+                if (!nodes.TryGetValue(record.parent_path, out HomeUiNode parent))
+                    throw new InvalidDataException("The official home panel node has a missing parent: " + record.parent_path);
+                children[parent].Add(nodes[record.path]);
+            }
+            foreach (KeyValuePair<HomeUiNode, List<HomeUiNode>> entry in children)
+            {
+                entry.Key.children = entry.Value.ToArray();
+            }
+            return new HomeUiPanel { key = flatPanel.key, root = root };
+        }
+
+        private static bool ValidScaleCurve(HomeScaleCurveConfig curve) =>
+            curve != null && curve.keys != null && curve.keys.Length >= 2;
 
         public string LocalizedText(string key, string fallback = null)
         {
