@@ -630,6 +630,8 @@ Map10 Windows 原生地形和怪物帧资源由 `scripts/prepare_unity_map10_ren
 
 历史 `missing_skeleton_data: Effect_Butterfly` 是转换器只接受 `.skel`、漏识别原 `.json` 导致的误判，不是官方素材缺失。原包实际含 JSON Spine 4.1.17、atlas、Texture2D 和动画。新增 `assets/official/regions/10-butterflies.json` 保存 15 个原激活实例、原分配的 `loop1` / `loop2`、12 fps 网格帧与原精确循环时长；同时接入 `Eff_Scene_Butterfly01` 原飞行 / 旋转曲线（3.983333349 秒循环）。15 个静态序列化网格实际剔除，原 `Effect/Noise_Mask_Pro` 的 `USE_MAINTEX`、绿色 `_MainColor` 和 `_ColorIntensity=4` 应用到动态网格。旧缺失记录保留并在新清单中明确纠正。转换后地形为 1404 批、17856 顶点，15 个独立原骨骼实例，不再绘制原静态蝴蝶替身。
 
+Unity 资源转换器现将 Map10 的 4 个原水面网格、15 个蝴蝶骨骼实例、两段蝴蝶动画和 5 张官方贴图复制到 `Assets/Official/World/Map/10/Resources/Map10/Environment/`。`map10-water.json` 是固定版 `map-water.json` 的 Map10 条目，`10-butterflies.json` 保持原始字节；对应的 `map10-water-runtime.json`、`map10-butterflies-runtime.json` 和两个循环帧载荷供 `OfficialMap10EnvironmentView` 运行时实例化。`rendering-source-manifest.json.environment` 记录固定版输入哈希、输出哈希、纹理 URI 到 `Resources.Load` 路径、材质参数与蝴蝶动画帧数。水法线按 NormalMap/线性导入，派生水遮罩按线性导入；`Map10Water.shader` 和 `Map10Butterfly.shader` 是经用户确认按官方参数、关键字与贴图重建的 Windows shader，保留来源值但不保证与 GLES 逐像素相同。Unity `Zjcs.Editor.ProjectTools.Validate` 已通过水面/蝴蝶载荷、贴图绑定、shader 导入及 19 个运行时渲染器检查；完整地图 Play Mode 流程仍未验收。
+
 CAB 读取器通过原清单中唯一相同 MD5 解析旧缓存的 `_materials.bundle` 别名；真实名称为 `defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle`。原 APK、缓存、预期 MD5 / SHA 和来源版本均未修改。新资源须在协调会话最终共享注册与素材包锁生成时一并纳入。
 
 ### 2026-10-15 地图 10 祈愿教学与共享注册

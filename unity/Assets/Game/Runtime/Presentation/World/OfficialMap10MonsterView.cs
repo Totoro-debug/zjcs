@@ -73,9 +73,26 @@ namespace Zjcs.Presentation.World
             SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
             ValidatePayload(loaded, id);
 
+            InitializeSequence(loaded, id, null, Color.white, 0, 1f, 0f, -1000000f);
+        }
+
+        public void InitializeAnimation(TextAsset source, Shader shader, Color tint, int sortingOrderOffset = 0,
+            float colorIntensity = 4f, float alphaIntensity = 0f, float clipHeight = -1000000f)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
+            ValidatePayload(loaded, 0);
+            if (shader == null) throw new ArgumentNullException(nameof(shader));
+
+            InitializeSequence(loaded, 0, shader, tint, sortingOrderOffset, colorIntensity, alphaIntensity, clipHeight);
+        }
+
+        private void InitializeSequence(SequencePayload loaded, int id, Shader shader, Color tint, int orderOffset,
+            float colorIntensity, float alphaIntensity, float clipHeight)
+        {
             Texture2D atlas = Resources.Load<Texture2D>(loaded.textureResource);
             if (atlas == null) throw new InvalidOperationException("Official Map10 monster atlas is missing: " + loaded.textureResource);
-            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null) shader = Shader.Find("Sprites/Default");
             if (shader == null) throw new InvalidOperationException("Unity's Sprites/Default shader is unavailable.");
 
             if (generatedMesh != null) Destroy(generatedMesh);
@@ -90,9 +107,15 @@ namespace Zjcs.Presentation.World
             generatedMaterial = new Material(shader) { name = "Map10 monster " + id + " material" };
             generatedMaterial.mainTexture = atlas;
             generatedMaterial.renderQueue = (int)RenderQueue.Transparent;
+            if (generatedMaterial.HasProperty("_MainColor")) generatedMaterial.SetColor("_MainColor", tint);
+            if (generatedMaterial.HasProperty("_ColorIntensity")) generatedMaterial.SetFloat("_ColorIntensity", colorIntensity);
+            if (generatedMaterial.HasProperty("_IntensityAffectAlpha"))
+                generatedMaterial.SetFloat("_IntensityAffectAlpha", alphaIntensity);
+            if (generatedMaterial.HasProperty("_WorldClipHeight")) generatedMaterial.SetFloat("_WorldClipHeight", clipHeight);
+            if (shader.name == "Zjcs/World/Map10ButterflyNoiseMask") generatedMaterial.EnableKeyword("USE_MAINTEX");
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.sharedMaterial = generatedMaterial;
-            meshRenderer.sortingOrder = sequence.sortingOrder + sortingOrderOffset;
+            meshRenderer.sortingOrder = sequence.sortingLayer * 1000 + sequence.sortingOrder + orderOffset;
             meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
             meshRenderer.receiveShadows = false;
             GetComponent<MeshFilter>().sharedMesh = generatedMesh;
@@ -117,7 +140,7 @@ namespace Zjcs.Presentation.World
             if (atlas == null)
                 throw new InvalidOperationException("Official Map10 story actor atlas is missing: " + loaded.textureResource);
             generatedMaterial.mainTexture = atlas;
-            meshRenderer.sortingOrder = loaded.sortingOrder + sortingOrderOffset;
+            meshRenderer.sortingOrder = loaded.sortingLayer * 1000 + loaded.sortingOrder + sortingOrderOffset;
             SetSequence(loaded, loop, restoreIdleOnComplete);
         }
 
@@ -144,7 +167,8 @@ namespace Zjcs.Presentation.World
 
         private static void ValidatePayload(SequencePayload value, int expectedMonsterId)
         {
-            if (value == null || value.format != 1 || value.mapClassId != 10 || value.monsterId != expectedMonsterId
+            if (value == null || value.format != 1 || value.mapClassId != 10
+                || (expectedMonsterId > 0 && value.monsterId != expectedMonsterId) || value.monsterId < 0
                 || value.fps <= 0 || value.frames == null || value.frames.Length == 0
                 || string.IsNullOrEmpty(value.textureResource))
                 throw new InvalidOperationException("Official Map10 monster animation payload is invalid: " + expectedMonsterId);
