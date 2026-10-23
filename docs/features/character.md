@@ -104,7 +104,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [ ] 职业切换与晋升结果的皮肤同步待职业模块；不兼容装备提示仍缺。
 - [x] 人物模型已按官方 `CharacterCreationMeshFrameDye` 着色器与 `masks` 遮罩接入染色：按 `character_skin_dye`／`character_skin_color`／`Wardrobe.Dyes` 计算各皮肤类型的通道 HSV 偏移。
 - [x] 从衣柜/外观编辑返回时会重刷模型、属性摘要、五槽、称号与职业显示（`CloseWardrobe`）。
-- [ ] 原 `PreviewAppearanceDialog` 试穿窗口与临时预览的提交/取消行为仍未接。
+- [x] 原 `PreviewAppearanceDialog` 已从固定包恢复并加入人物面板资源；衣柜卡片“试穿”按钮用临时 `WardrobeResolution` 打开官方预览框架与人物模型，关闭/Esc 只销毁预览，不写存档。
+- [ ] 窗口态核验试穿模型、原动画/音频及取消/确认的真实鼠标交互；`PreviewAppearanceDialog` 的骨骼动画与礼包奖励绑定仍不完整。
 
 ### 属性、战力、等级与位阶
 
@@ -169,7 +170,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 - [x] 称号列表按双列渲染，卡片与人物页称号图标均显示剩余时间；`SynchronizeExpiredItems` 到期移除限时物品、清空已穿称号并刷新拥有/穿戴状态。
 - [x] 称号详情已接：点击称号卡打开详情层（品质、剩余有效期、称号属性）并可穿戴；原 `HonorTitleItemDetailDialog` 预制体未提取，详情复用衣柜属性弹窗框架。
 - [x] 首次收藏经验已接：外观/称号按官方品质经验累加；限时称号首次获得写入 `LimitedTitleCollection`，到期后仍计入收藏经验。
-- [ ] 补齐物品详情、原试穿窗口（`PreviewAppearanceDialog`）及任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
+- [ ] 补齐物品详情及任务称号“领取并立即穿戴”选择与奖励事务，任务规则引用[成就](achievements.md)及[任务](tasks.md)。
 - [x] 潮流等级升级已按原规则实现：`RefreshWardrobeProgress` 只在经验对应等级低于已存等级时回落（`SyncAppearanceLevelFromExp`），`UpgradeBtn` 使用 `CanUpgradeAppearanceLevel → UpgradeAppearanceLevel` 跨级提升，满级／经验不足给出状态提示；头部显示当前等级、本级经验／所需经验与滑条填充，满级显示上限状态。
 - [x] 属性与规则弹窗改用 `wardrobe-ui.json` 的原 `wardrobe_props`／`wardrobe_prop_row`／`wardrobe_rules`／`wardrobe_rule_row`／`wardrobe_rule_value` 模板：属性按 `appearance_prop` 逐级列出至当前级 +20，显示等级、属性名称与数值、已激活状态；规则按 4 组 `fashion_exp_group` 逐组列出品质与收藏经验；跨级升级后弹出新增属性行。原 `AperaanceUpgradePropDialog` 预制体未提取，跨级弹窗复用属性弹窗模板。
 - [ ] 原潮流等级「属性」弹窗使用 `AppearancePropDialog` 的循环列表与 `AppearancePropLevelItem`（内含 `PlayerPropItem`），当前以同一模板的静态行与文本实现；待实际画面核对行高、滚动定位（原 `GetCenterIndex`）和已激活渐变。

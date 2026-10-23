@@ -28,6 +28,8 @@ namespace Zjcs.Presentation.Character
         private readonly List<GameObject> pooledCards = new List<GameObject>();
         private Dictionary<string, object> templates;
         private Dictionary<string, object> texts;
+        private Dictionary<string, object> previewTemplate;
+        private GameObject previewDialog;
         private OfficialCharacterAssetCatalog assets;
         private OfflineCharacterProgressionService progression;
         private CharacterModelPreview model;
@@ -67,6 +69,11 @@ namespace Zjcs.Presentation.Character
                 OfficialEquipmentJson.Parse(assets.WardrobeUi.text), "original wardrobe UI");
             templates = CharacterModelPackage.AsObject(root["templates"], "original wardrobe templates");
             texts = CharacterModelPackage.AsObject(root["texts"], "original wardrobe text");
+            Dictionary<string, object> characterPanels = CharacterModelPackage.AsObject(
+                OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "character panels");
+            Dictionary<string, object> screens = CharacterModelPackage.AsObject(characterPanels["screens"],
+                "character panel screens");
+            previewTemplate = CharacterModelPackage.AsObject(screens["appearance_preview"], "appearance preview");
 
             Canvas canvas = GetComponent<Canvas>();
             if (canvas == null) canvas = gameObject.AddComponent<Canvas>();
@@ -123,6 +130,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (previewDialog != null)
+            {
+                ClosePreview();
+                return true;
+            }
             if (activeDialog == null) return false;
             Destroy(activeDialog);
             activeDialog = null;
@@ -598,8 +610,80 @@ namespace Zjcs.Presentation.Character
             SetText(newBadge, isNew ? "\u65b0" : string.Empty);
             if (newBadge != null) newBadge.color = new Color(1f, 0.85f, 0.3f);
 
+            if (!title && entry.ItemId > 0) EnsurePreviewButton(card.transform, entry.ItemId);
             Text expiry = EnsureExpiryText(card.transform, title);
             expiry.text = entry.ItemId == 0 ? string.Empty : Remaining(entry.ItemId, title);
+        }
+
+        private void EnsurePreviewButton(Transform card, int itemId)
+        {
+            if (card.Find("WardrobePreviewButton") != null) return;
+            var buttonObject = new GameObject("WardrobePreviewButton", typeof(RectTransform), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(card, false);
+            RectTransform rect = (RectTransform)buttonObject.transform;
+            rect.anchorMin = new Vector2(1f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(1f, 1f);
+            rect.sizeDelta = new Vector2(72f, 36f);
+            rect.anchoredPosition = new Vector2(-6f, -26f);
+            Image image = buttonObject.GetComponent<Image>();
+            image.color = new Color(0.42f, 0.64f, 0.76f, 0.95f);
+            Button button = buttonObject.GetComponent<Button>();
+            button.targetGraphic = image;
+            if (CharacterPanelNodeFactory.UiFont != null)
+            {
+                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+                labelObject.transform.SetParent(buttonObject.transform, false);
+                RectTransform labelRect = (RectTransform)labelObject.transform;
+                labelRect.anchorMin = Vector2.zero;
+                labelRect.anchorMax = Vector2.one;
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+                Text label = labelObject.GetComponent<Text>();
+                label.font = CharacterPanelNodeFactory.UiFont;
+                label.fontSize = 16;
+                label.alignment = TextAnchor.MiddleCenter;
+                label.color = Color.white;
+                label.text = "\u8bd5\u7a7f";
+                label.raycastTarget = false;
+            }
+            button.onClick.AddListener(() => OpenPreview(itemId));
+        }
+
+        private void OpenPreview(int itemId)
+        {
+            ClosePreview();
+            if (previewTemplate == null) return;
+            WardrobeResolution resolution = progression.PreviewAppearance(itemId,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            previewDialog = new GameObject("PreviewAppearanceDialog", typeof(RectTransform));
+            previewDialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)previewDialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var previewButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            var previewFactory = new CharacterPanelNodeFactory(assets);
+            previewFactory.Build(CharacterPanelNodeFactory.ReadRoot(previewTemplate), root, nodes, previewButtons);
+            RectTransform modelMount = nodes.Values.FirstOrDefault(value => value.name == "PlayerModel_UI");
+            if (modelMount != null)
+            {
+                CharacterModelPreview preview = modelMount.GetComponent<CharacterModelPreview>();
+                if (preview == null) preview = modelMount.gameObject.AddComponent<CharacterModelPreview>();
+                try { preview.Initialize(progression, resolution); }
+                catch (Exception error) { Debug.LogWarning("Appearance preview model is unavailable: " + error.Message); }
+            }
+            RectTransform closeRaycast = nodes.Values.FirstOrDefault(value => value.name == "ClickRaycast");
+            Button closeButton = closeRaycast == null ? null : closeRaycast.GetComponent<Button>();
+            if (closeButton != null) closeButton.onClick.AddListener(ClosePreview);
+        }
+
+        private void ClosePreview()
+        {
+            if (previewDialog != null) Destroy(previewDialog);
+            previewDialog = null;
         }
 
         private void MarkSeen(int itemId)

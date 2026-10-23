@@ -977,6 +977,19 @@ namespace Zjcs.Offline.Progression
             }, eventId);
         }
 
+        /// <summary>Resolves an owned wardrobe item for visual preview without mutating the profile.</summary>
+        public WardrobeResolution PreviewAppearance(int itemId, long nowUnixSeconds)
+        {
+            WardrobeAppearanceState state = ReadAppearance(Player.Wardrobe);
+            if (itemId > 0)
+            {
+                var owned = Player.Inventory.ToDictionary(item => item.ItemId, item => item.Count);
+                OfflineWardrobeRules.TryWear(state, itemId, owned, catalog.Appearances,
+                    catalog.Skins, catalog.AllowedSkins, nowUnixSeconds);
+            }
+            return OfflineWardrobeRules.Resolve(state, catalog.Appearances, catalog.Skins, catalog.AllowedSkins);
+        }
+
         public WardrobeResolution ResolveAppearance()
         {
             return OfflineWardrobeRules.Resolve(ReadAppearance(Player.Wardrobe),

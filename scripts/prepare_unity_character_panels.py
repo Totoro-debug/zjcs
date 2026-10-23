@@ -33,10 +33,19 @@ def build():
         ("CharacterDetailPropDialogDetailPropItem",),
         screens["rank_upgrade"]["source"],
         ("CharacterUpgradePanel", "CharacterUpgradePanelStarItem"))
+    preview_path = ROOT / "assets/official/appearance-chest-preview.json"
+    preview_data = json.loads(preview_path.read_text(encoding="utf-8"))
+    preview = preview_data.get("templates", {}).get("appearance_chest_preview")
+    if not preview or preview.get("root", {}).get("name") != "PreviewAppearanceDialog":
+        raise ValueError("The original PreviewAppearanceDialog template is missing or not pinned.")
+    packaged_screens = {name: screens[name] for name in names}
+    packaged_screens["appearance_preview"] = {"root": preview["root"]}
+    packaged_screen_names = list(names) + ["appearance_preview"]
     payload = {
         "manifest": "854_156383",
         "ui_sha256": expected,
-        "screens": {name: screens[name] for name in names},
+        "appearance_preview_sha256": sha256(preview_path),
+        "screens": packaged_screens,
         "bindings": bindings,
     }
     encoded = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
@@ -63,12 +72,14 @@ def build():
         "manifest": "854_156383",
         "input": "assets/official/ui.json",
         "input_sha256": expected,
-        "screens": list(names),
+        "screens": packaged_screen_names,
+        "appearance_preview_input": "assets/official/appearance-chest-preview.json",
+        "appearance_preview_input_sha256": sha256(preview_path),
         "output": "unity/Assets/Official/Character/character-panels.json",
         "output_sha256": sha256(OUTPUT),
     }
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("Packaged original character panel layouts:", ", ".join(names))
+    print("Packaged original character panel layouts:", ", ".join(packaged_screen_names))
 
 
 if __name__ == "__main__":
