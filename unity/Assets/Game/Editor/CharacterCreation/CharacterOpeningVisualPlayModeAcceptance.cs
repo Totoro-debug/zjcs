@@ -148,6 +148,10 @@ namespace Zjcs.Editor.CharacterCreation
 
             private IEnumerator Body(Session session)
             {
+                Require(OpeningFightPlayback.FormatBattleNumber(7276) == "7276", "battle number formatting changed (7276)");
+                Require(OpeningFightPlayback.FormatBattleNumber(1000000) == "100万", "battle number formatting changed (1e6)");
+                Require(OpeningFightPlayback.FormatBattleNumber(428029000) == "42802万", "battle number formatting changed (4.28e8)");
+                Require(OpeningFightPlayback.FormatBattleNumber(123456789012) == "1234亿", "battle number formatting changed (1.23e11)");
                 Log("step: loading opening assets");
                 OpeningAssets assets = OpeningAssets.LoadDefault();
                 Log("step: opening assets loaded");
