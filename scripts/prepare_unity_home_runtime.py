@@ -40,6 +40,9 @@ HUD_PANELS = [
     "cart_row", "cart_detail", "cart_output_row", "cart_material",
     "fast_item_row", "award_row", "awards", "awards_list", "awards_list_item",
     "repair", "repair_notify", "repair_prop", "upgrade_switch", "decor_wearing",
+    "furniture_icon_0", "furniture_icon_1", "furniture_icon_2", "furniture_icon_3",
+    "furniture_icon_5", "furniture_icon_7", "furniture_icon_8", "furniture_icon_9",
+    "furniture_icon_10", "furniture_icon_12", "furniture_icon_13",
 ]
 
 RULE_TABLES = [
