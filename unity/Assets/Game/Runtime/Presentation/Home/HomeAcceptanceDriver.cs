@@ -105,7 +105,14 @@ namespace Zjcs.Presentation.Home
                     "level up attempt: " + result.Error);
                 return "hang-up " + hangUpId + " level " + runtime.Session.HangUpLevel(hangUpId);
             });
-            ok &= Check("mail", () =>
+            ok &= Check("fast-items", () =>
+            {
+                long before = runtime.ItemCount(120);
+                long gained = runtime.TryFastForwardItems(1, 1);
+                Assert(gained > 0, "time crystal acceleration gain");
+                Assert(runtime.ItemCount(120) == before - 1, "one crystal consumed once");
+                return "item acceleration gained " + gained + ", crystals " + before + " -> " + runtime.ItemCount(120);
+            });            ok &= Check("mail", () =>
             {
                 long before = runtime.ItemCount(1);
                 bool added = runtime.Session.AddLocalMail(new OfflineHomeMail

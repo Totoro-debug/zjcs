@@ -657,6 +657,29 @@ namespace Zjcs.Presentation.Home
             return total;
         }
 
+        public long TryFastForwardItems(int fastHangUpId, int itemCount)
+        {
+            HomeFastHangUpRecord fast = rules.FastHangUp(fastHangUpId);
+            HomeFastHangUpItem item = fast?.items?.FirstOrDefault(value => value != null && value.itemId > 0);
+            if (fast == null || item == null || itemCount <= 0
+                || itemCount > Math.Min(100, fast.maxUseItemCount)
+                || profile.InventoryCount(item.itemId) < itemCount) return 0;
+            int[] unlocked = (fast.hangUpIdList ?? Array.Empty<int>())
+                .Where(id => session.Definitions.Any(definition => definition.HangUpId == id && definition.Unlocked))
+                .Distinct().ToArray();
+            if (unlocked.Length == 0) return 0;
+            string receipt = "home:fast-item:" + slotId + ":" + Guid.NewGuid().ToString("N");
+            if (!ConsumeItems(item.itemId, itemCount, receipt + ":cost")) return 0;
+            long total = session.ApplyFastForwardBatch(unlocked, itemCount * item.hours, receipt + ":income");
+            if (total > 0)
+            {
+                DrainHomeInventory();
+                hud.RefreshAll();
+            }
+            return total;
+        }
+
+
         public void TryOpenMail() => hud.ShowMail();
 
         public bool TryUnlockHangUp(int hangUpId)
