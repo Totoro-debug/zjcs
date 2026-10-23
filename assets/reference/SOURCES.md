@@ -48,6 +48,16 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 使用 `python scripts/official_manifest.py --verify-packaged` 重建完整资源索引并验证 APK 内文件；`python scripts/fetch_official_cloud_assets.py` 补齐 / 复核缺失文件。缓存位于 `.tools/source-packages/cloud/854_156383/`，`receipts.jsonl` 逐项保存 URL、大小、MD5、SHA256，`download-report.json` 保存失败文件及所有请求结果。提取命令优先读取 APK ZIP，再读取已校验且有来源凭据的云端缓存；`official_apk.py` 也支持离线读取该缓存及 CAB 引用。
 
+### ADB 客户端热更新与全量云端缓存
+
+通过 ADB 在 Android 11 Google APIs 模拟器中运行固定 APK，沿用 ARMv7 翻译与安装目录内的原 ARM `libnesec.so` 库名适配；安装后的 `base.apk` SHA256 仍为本页固定值。模拟器使用宿主 GPU 与 `-feature GLESDynamicVersion`，实际显示官方启动画面并下载首批更新。客户端选中的 `ResVersion` 为 `202610211330871`，五包清单均为 `871_156598`；ADB 读取的五份已激活 V3 清单 SHA256 与电脑缓存逐包一致。客户端首批更新约 122.59 MB，随后在“下载内容”选择完整资源 2,362.60 MB；实际下载完成后，原 `PlayAsYouDownloadClientData.Downloaded` 为 `true`，日志确认 `Init yooasset[Full] process finish!`。模拟器缓存的全部 18,559 个所需云端文件，大小与 SHA256 均逐项匹配电脑原始缓存，缺项、大小不符和 SHA256 不符均为 0。期间官方主 CDN 存在请求超时，客户端重试及备用域名最终完成下载。
+
+`python -B scripts/fetch_official_runtime_assets.py --expected-resource-version 202610211330871` 按实际服务器配置获取 Boot、Launch、HybridCLR、DefaultPackage、WwiseBnk 的 `.version`、`.v3.hash` 和 `.v3.bytes`，校验清单 MD5 后遍历完整 BundleTable。共 20,999 个条目，2,440 个 APK 内条目逐项通过大小与 MD5 校验，另 18,559 个云端文件共 2,605,908,370 字节，已全部按大小、MD5 与凭据 SHA256 校验，失败数为 0；包含完整音频及边玩边下资源。本次从官方 CDN 新下载 648 个文件（221,975,904 字节），另 17,911 个同哈希文件（2,383,932,466 字节）复用核验通过的原版本缓存，以硬链接或复制保存。已有缓存使用 `python -B scripts/fetch_official_runtime_assets.py --verify-cache 202610211330871` 离线复核，逐包核对保存清单的版本、大小、MD5 与 SHA256，并完整检查 APK 内条目及所有云端文件，无须再次访问 CDN。
+
+新版原始缓存独立位于 `.tools/source-packages/cloud/runtime/202610211330871/`，包含五包原清单、`inventory.json`、`receipts.jsonl` 与下载结果。复用文件保留真实旧版来源 URL、原下载时间及 `source_manifest`，新下载文件保存当前官方 URL；完整输入、清单哈希与 ADB 观察依据见 [客户端热更新来源清单](official-map/runtime-cloud-source-manifest.json)。这些记录说明原始资源已取得；固定 `854_156383` 的 185 个旧哈希缺项、既有提取入口及 Unity 运行资源版本保持各自来源状态，新版的转换、兼容性与加载绑定仍须按素材流程逐项处理。原始缓存不在转换素材 ZIP 快照内。
+
+按用户要求长期保留原始下载缓存，供后续解压、转换与来源核对：固定 APK、`cloud/854_156383/`、`cloud/runtime/202610211330871/`、历史新版同名包、五包原清单及逐文件来源凭据均保存在 `.tools/source-packages/`；模拟器完整下载数据保存在 `.tools/official-android-probe/avd/zjcs-official-probe.avd/` 的持久磁盘中，原始清单调查缓存也保留。日常临时产物清理不得删除这些原始输入。尚未建立仓库外备份或原始缓存快照，不将本地保留表述为已备份。
+
 本页索引：[官方来源与缺失补充](#官方素材来源与缺失补充) · [提取约定](#提取与整理) · [男性角色重建](#已完成男性角色原始资源) · [场景与界面重建](#场景与界面的完整重建) · [旧素材替换](#现存旧素材的-apk-替换清单) · [历史整理](#已完成的整理记录)
 
 2026-10-12 全界面自查：检查 78 个界面状态，以及 APK 全部 434 个 UI bundle；其中 72 个实际打包，含 1,802 个 prefab。新增接回初始职业选择、料理使用详情和古遗物详情，UI 目录现有 83 个 prefab、1,482 项显式素材资源。运行时 1,510 张图片全部来自 APK，包含另行登记的 30 张角色贴图 / 遮罩；没有在用的自绘或截图衍生图片。清理 28 个旧布局函数、3 个无产品导航调用的旧菜单及 9 个无用文件。
