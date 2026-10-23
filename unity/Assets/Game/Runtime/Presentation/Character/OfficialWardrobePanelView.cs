@@ -48,6 +48,7 @@ namespace Zjcs.Presentation.Character
         private bool poolHonorMode;
         private bool poolInitialized;
         private long lastTimeRefreshUnixSeconds = -1;
+        private int lastInventorySignature;
         private Text statusText;
         private GameObject activeDialog;
 
@@ -99,6 +100,15 @@ namespace Zjcs.Presentation.Character
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (now == lastTimeRefreshUnixSeconds) return;
             lastTimeRefreshUnixSeconds = now;
+            int signature = progression.Player.Inventory.Count * 397 ^ progression.Player.Wardrobe.Profession;
+            if (lastInventorySignature != 0 && signature != lastInventorySignature)
+            {
+                lastInventorySignature = signature;
+                RefreshWardrobe();
+                if (model != null) model.Refresh();
+                return;
+            }
+            lastInventorySignature = signature;
             if (progression.Player.Wardrobe.Expiries.Count == 0) return;
             if (progression.Player.Wardrobe.Expiries.Any(value => now > value.ExpiresAtUnixSeconds))
             {
