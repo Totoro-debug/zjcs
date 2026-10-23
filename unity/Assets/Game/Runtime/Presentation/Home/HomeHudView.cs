@@ -168,6 +168,45 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        public Action BuildWishCurrencyBar(Transform slot)
+        {
+            if (slot == null) throw new ArgumentNullException(nameof(slot));
+            HomeUiRenderer barRenderer = Renderer();
+            GameObject bar = barRenderer.Create("top_bar", slot, null);
+            RectTransform rect = (RectTransform)bar.transform;
+            rect.anchorMin = new Vector2(1, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(1, 1);
+            rect.anchoredPosition = new Vector2(-16, -12);
+            Transform list = Find(bar.transform, "ResourceList") ?? bar.transform;
+            var currencies = new List<(HomeUiRenderer Renderer, int ItemId)>();
+            for (int index = 0; index < CurrencyItems.Length; index++)
+            {
+                int itemId = CurrencyItems[index];
+                HomeUiRenderer money = Renderer();
+                GameObject entry = money.Create("money", list, null);
+                string icon = host.Rules.ItemIcon(itemId);
+                money.SetSpriteByPrefix("IconImg", string.IsNullOrEmpty(icon) ? CurrencyIcons[index] : icon);
+                entry.name = "Money_" + itemId;
+                currencies.Add((money, itemId));
+            }
+
+            void Refresh()
+            {
+                foreach ((HomeUiRenderer renderer, int itemId) in currencies)
+                {
+                    long count = host.Profile.InventoryCount(itemId);
+                    string value = count >= 100000 && count < 100000000
+                        ? (count / 10000f).ToString("0.#", CultureInfo.InvariantCulture) + "万"
+                        : count.ToString(CultureInfo.InvariantCulture);
+                    renderer.SetTextByName("CountTxt", value);
+                }
+            }
+
+            Refresh();
+            return Refresh;
+        }
+
         private void BuildBottomBar()
         {
             bottomRenderer = Renderer();

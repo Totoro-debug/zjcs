@@ -8,7 +8,7 @@
 
 女神像或技能页进入常驻／高阶祈愿，范围包含职业选择与自选、技能池、概率与保底、积分、馈赠、兑换、材料购买、详情、历史，以及对应 UI、动画、特效和音频。幻兽及古遗物奖池分别见[幻兽召唤](pet-gacha.md)和[古遗物寻宝](treasure-gacha.md)。
 
-本页同时记录固定 manifest `854_156383` 的原始官方功能和 Unity / C# 待迁移内容。下列官方行为是还原依据，不代表当前游戏已经实现；祈愿仍未形成可运行的 Unity 完整流程。友情祈愿属于原官方总页，保留其功能记录，但离线开放范围另见“自定义实现”。
+本页同时记录固定 manifest `854_156383` 的官方依据与 Unity / C# 还原结果；对应离线实现见“完整还原部分”，当前运行验收范围见“尚未实现”。友情祈愿保留消费入口，离线获取限制见“自定义实现”。
 
 客户端源码根目录为 `.tools/source-packages/official-code/client-source/`，共享源码根目录为 `.tools/source-packages/official-code/common-source/Common/`；下文类名均相对此入口。表数据见[原规则配置](../../assets/official/rules.json)，页面布局见[原 UI 转换数据](../../assets/official/ui.json)。
 
@@ -33,7 +33,7 @@
 
 常驻规则 `20000`、高阶规则 `21000` 均依次指向 `50302/50301/50300/50252`，权重 `100/700/2200/7000`，对应传说整技、史诗整技、稀有整技、普通技能碎片；基础类别概率为 `1%/7%/22%/70%`，碎片包每次 `3` 片。具体技能继续按随机包权重及职业筛选，不能据类别概率推断池内每个技能都等概率。
 
-两条规则分别配置 `IndexMininum=[70,30,10,0]`、`RecordSharedId=20000/21000`。默认 `EnsureHightRankConfig` 对品质 `4/3/2` 均为 `3`，`EnsureHighRankPieceCount=3`；职业阶级 `1～4` 的覆盖配置为 `3/7/7`、碎片 `7`，其他阶级走原配置选择函数。常驻详情的职业阶级保底文案对配置次数加 `1`，面板品质剩余次数则沿 `IndexMininum - GetKeepMissScore`；二者不能混用。高阶不使用常驻的职业自选及其自定义规则提供器。
+两条规则分别配置 `IndexMininum=[70,30,10,0]`、`RecordSharedId=20000/21000`。默认 `EnsureHightRankConfig` 对品质 `4/3/2` 均为 `3`，`EnsureHighRankPieceCount=3`；职业阶级 `1～4` 的覆盖配置为 `3/7/7`、碎片 `7`，其他阶级走原配置选择函数。常驻详情的职业阶级保底文案对配置次数加 `1`，面板品质剩余次数则沿 `IndexMininum - GetKeepMissScore`；二者不能混用。高阶不使用常驻的职业自选及其自定义规则提供器。离线抽取遵用户确认：技能碎片固定发 `3`，即使该职业配置覆盖为 `7`。
 
 `gacha_pity_probability` 对两个技能池配置 `241/790/2400/6569`，`Formula.Long2Double` 除以 `10000`，对应保底综合展示概率 `2.41%/7.90%/24%/65.69%`。`GachaProbabilityItem.SetPityProbability` 遵循 prefab 的地区隐藏字段；是否显示须恢复实际序列化配置。这组展示值不等于逐抽权重，也不能据此拟合未知动态概率。
 
@@ -99,7 +99,7 @@
 
 官方友情币配置包含每周上限 `1000`，助战、组队、队长奖励各 `1`，助战日上限 `3`，互动分享奖励 `5`，周未领取邮件 `1300`。这些只记录原始功能，不能据此在单机新增真人好友、模拟玩家或联网领币。
 
-`W27` 女神像维修／自动维修资格、首次进入、首次抽取及教程路由需连同原家园条件和技能获得引导恢复。配置包含 `SkillGachaGuideFixedRewardId=8`、`SkillGachaNewbieTimes=20`、`SkillGachaOnceSupportTimes=[1,10]`；教程输入与来源见[家园祈愿引导](../../assets/reference/home-wish-tutorial/source-manifest.json)。这些字段不足以独立确定完整新人服务端奖励顺序，不能擅自宣布“前二十抽固定奖励”或自造新人保底。
+`W27` 女神像维修／自动维修资格、首次进入、首次抽取及教程路由需连同原家园条件和技能获得引导恢复。配置包含 `SkillGachaGuideFixedRewardId=8`、`SkillGachaNewbieTimes=20`、`SkillGachaOnceSupportTimes=[1,10]`；教程输入与来源见[家园祈愿引导](../../assets/reference/home-wish-tutorial/source-manifest.json)。配置 ID 8 对应单独发放的 `110×5` 祈愿券；按用户确认，常规奖池首抽不替换为固定技能，也不推定前二十抽存在额外固定序列。
 
 ### 原始官方 UI、资源与加载绑定
 
@@ -107,71 +107,53 @@
 
 | 资源组 | 原始内容与定位 | 当前边界 |
 | --- | --- | --- |
-| 祈愿主体 | `defaultpackage_assets_prefabs_ui_gachapanel.bundle`：`GachaPanel`、`SkillGachaPanel`、`SkilSeniorlGachaPanel`（原拼写）、`GachaDetailDialog`、`GachaHistoryContent`、`ScoreRewardDialog`、`GachaResultPanel` 等原 prefab；友情页、自选及列表项继续沿原引用绑定 | 七个关键 prefab 已直接读取核实；不是官方内容缺失，也未接成 Unity 祈愿流程 |
+| 祈愿主体 | `defaultpackage_assets_prefabs_ui_gachapanel.bundle`：`GachaPanel`、`SkillGachaPanel`、`SkilSeniorlGachaPanel`（原拼写）、`GachaDetailDialog`、`GachaHistoryContent`、`ScoreRewardDialog`、`GachaResultPanel` 等原 prefab；友情页、自选及列表项继续沿原引用绑定 | 官方 prefab 已接入祈愿控制器和显式加载目录；输入与画面验收状态见“尚未实现” |
 | 结果演出 | [结果演出来源](../../assets/reference/wish-performance/source-manifest.json)、[转换数据](../../assets/official/wish-performance/performance.json)：单抽、十抽、百抽行、奖励图标、AnimationClip／事件、粒子、品质效果、Wwise 事件到媒体映射 | 旧转换为迁移输入，需恢复 Unity 原生播放、材质与目标平台效果 |
 | 视觉与后处理 | [视觉来源](../../assets/reference/wish-visuals/source-manifest.json)、[转换数据](../../assets/official/wish_visuals.json)、[后处理参数](../../assets/official/battle-post/data.json)、原 [Bloom.cs](../../.tools/source-packages/official-code/urp-reference/Bloom.cs) | 来源明确含旧 Godot 粒子投影、Noise／Bloom 近似；不能把旧 `unconverted_modules=[]` 视为 Unity 迁移完成 |
 | 兑换／购买共用组件 | [商店组件来源](../../assets/reference/shop-components/source-manifest.json)、[价格按钮来源](../../assets/reference/wish-button-costs/source-audit.json)、[材料来源入口](../../assets/reference/gacha-item-sources/source-manifest.json)、[快捷购买来源](../../assets/reference/gacha-purchase/source-manifest.json) | 沿原列表、详情、确认、批量设置、价格组件、顶部货币及奖励弹窗绑定；共享模块恢复不等于祈愿调用方已接入 |
 
 ## 完整还原部分
 
-尚无本功能在 Unity 完整接入并运行验收的部分。已取得的官方代码、配置、旧引擎转换素材与测试只作为迁移输入。
+### 本地流程、规则与存档
 
-### 当前实际入口、状态与资源
+- `unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs` 将家具类型 `5` 接到 `OpenWishes`；家园女神像仍按官方家具 `4004` 的解锁／维修流程显示，维修后进入 `WishScreenController.Open`。关闭祈愿会销毁页面并刷新家园顶部货币。
+- `unity/Assets/Game/Runtime/Offline/Progression/OfficialWishRules.cs` 读取固定 APK 解码的祈愿、随机包、职业、技能、物品、成就、商店和设置表；`OfflineWishService.cs` 按递归随机包与职业过滤计算本地奖励，使用本地原子事务结算消耗、技能／碎片、积分、保底、成就、历史及商店状态，并以 receipt 防止重放重复扣款或发奖。
+- `OfflineWishProgress.cs` 将各奖池次数、品质及职业保底、撞期排程、引导奖励领取状态、分类历史、成就领取索引、商店每日状态和逐格货架存入角色档案。抽取结果在事务提交后才展示；重开读取已提交的相同结果，不重新随机。
+- 常驻、高阶与友情祈愿分别使用官方奖池和消费配置；常驻、高阶支持单／十／百抽及职业选池，常驻职业自选按前置职业技能并集筛选。友情入口保留，但只消费存档中已有友情币，不发放友情币，也不模拟好友、组队、助战或分享。
+- 品质保底、整技职业阶级保底及碎片保底分开记录；已确认的多个保底撞期时，按目标抽次向前排程（两项分到第 N-1、N 抽，三项分到第 N-2、N-1、N 抽）。命中只清零该品质的未中次数。技能碎片结果固定为 3 片，即使职业阶级覆盖表另写 7。
+- 首次进入由 `SkillGachaGuideFixedRewardId=8` 对应的 fixed reward 单独发 `110×5` 祈愿券并显示教程奖励；首抽仍走常规池。已有技能按 `CanRepeat/AgioItemId/AgioAmount` 转化；满阶后新增碎片按物品 `RecycleReward/RecycleGroupCount` 配置回收。
+- `WishScreenController` 接通祈愿、兑换、馈赠／积分领奖、概率／历史、职业自选、过滤、购买确认、快捷购买和缺额提示。固定商店按官方 `2500～2875` 商品数据生成；日常商店按官方权重生成九个独立货格，并按本地日切换库存、刷新次数及倒计时。
 
-- `unity/Assets/Game/Runtime/Presentation/Home/HomeSceneView.cs` 将 `StatueOfGod` 映射为家具类型 `5`；`HomeFeatureRuntime.OpenFurniture` 尚未将女神像接入祈愿内部页，而是进入 `HomeHudView.ShowFurniturePlaceholder`。家具模型、贴图及可点击不能代替祈愿玩法接入。
-- 当前 `unity/Assets/Game/Runtime/` 未发现接通上述常驻／高阶、积分／馈赠、职业自选、概率／历史及抽取演出的祈愿控制器和服务。`Presentation/Skills/OfficialSkillAssetCatalog.cs` 是技能素材与养成目录，没有祈愿路由。
-- `OfflineMainlineSave/OfflinePlayerProgress` 有库存及技能养成数据，尚无完整祈愿保底、自选、领奖、分类历史和抽取随机状态事务。其他模块的库存随机数或开箱计数不能代替该状态。
-- `assets/official/ui.json`、`rules.json`、演出及视觉数据未通过祈愿专用原生 prefab、动画／材质和加载目录接通 Unity 玩法。`Assets/Official/Character/Art/wish/` 的特效贴图及家园女神像贴图不构成结果演出接入。
+### 官方界面与资源接入
 
-### 已核实的来源与验证范围
+- `unity/Assets/Game/Runtime/Presentation/Wishes/WishScreenController.cs` 从 `OfficialWishAssetCatalog` 装载并实例化官方祈愿 prefab，保留原层级和按钮／图标位置；按本地服务状态绑定祈愿、详情、历史、成就、商店及弹窗。官方规则、历史、积分奖励 prefab 均没有关闭节点时，按各自对话框尺寸在底部复用职业选择 prefab 的 `CancelBtn`；奖励反馈使用该官方对话框壳并显示物品图标／数量，隐藏未用的职业选择控件。价格按钮按已确认差异隐藏黑底并使用深色价格字。
+- 单抽、十抽、百抽逐项执行已结算奖励的对应动画；十抽消费原星光事件和品质音效，百抽按原列表曲线滚动，跳过只结束演出、不重抽。技能重复转化和碎片回收直接展示服务返回的转换奖励。
+- 官方资源由 `OfficialWishAssetTools` 导入 Unity 原生可用的祈愿 prefab、图标、动画数据和音频；本次导入 588 个官方祈愿 sprite 和 17 段音频；`OfficialWishAssetCatalog.asset` 及 `Resources/Wishes/wishes-runtime.json` 作为显式本地加载目录。`commerce_ui_conversion.flatten_ui_node` 按节点组件生成 `has_image/has_text` 等运行时标记；固定版主页 739 个节点包含 330 个图像和 161 个文本组件，加载器校验图文组件存在。原始来源与转换依据继续见本页上方清单、`assets/reference/wish-performance/`、`wish-visuals/` 及 `assets/reference/SOURCES.md`。
 
-`Zjcs.Presentation.Wishes.asmdef` 显式引用 `Zjcs.Offline.Commerce`，供 `OfficialWishAssetCatalog` 复用 `CommercePrefab`；仅引用 Commerce 表现程序集不会传递这项编译依赖。`Zjcs.Editor.asmdef` 直接引用祈愿表现程序集，供 `OfficialWishAssetTools` 导入目录。`WishScreenController.ShowResult` 从 `Transform.gameObject` 获取结果容器，结果与馈赠奖励行统一调用已有的 `AddAwardLine`。祈愿表现及其编辑器工具已在主工程通过 C# 编译；全工程编译仍被家园未实现的 `ShowTreasureGacha/ShowPetGacha` 调用阻塞，尚未验证开场校验入口和祈愿的 Play Mode 流程。这些接线修正不代表祈愿完整流程已经验收。
+### 来源与验证
 
-固定 APK 经现有 `Apk` 读取器核验；原 Luban 构造器重新解码 `gacha/chest/reward_rule/random_reward/profession_base/skill/item/achievement/game_settings/gacha_pity_probability`，十张表与 `assets/official/rules.json` 一致。上述七个关键 prefab 已直接读取；`wish-performance` 的 `90` 个资源及 `17` 份客户端代码、`wish-visuals` 的 `29` 个资源及 `4` 份行为代码、两份主输出的哈希与现有清单一致。此核对不等于逐项复核全部输入对象或 Unity 运行通过。兑换与购买另按其原表、调用方和既有来源清单核对，未混入新版或自绘替代。
+固定 APK 由现有 `Apk` 读取器核验；`gacha/chest/reward_rule/random_reward/profession_base/skill/item/achievement/game_settings/gacha_pity_probability` 解码结果与 `assets/official/rules.json` 一致。祈愿原 prefab、演出及视觉来源沿本页上方记录恢复，没有把新版同名包或自绘内容冒充固定版本资源。
 
-本页记录源码、配置、资源与接线核查范围。祈愿未完成 Editor 导入／编译验收，未进行接通流程的 Play Mode 逻辑、真实输入、画面、连续动画、音频、存档恢复及 Windows Player 验证，不能标为通过。文档补全只检查文档结构、引用与差异，不以工程其他模块的检查或旧引擎测试代替祈愿验收。
+`Zjcs.Editor.Wishes.OfficialWishAcceptance.Run` 使用隔离临时档案覆盖配置引导奖励、常规抽取、receipt 幂等、品质计数、友情币不足、九格商店、本地日切、双项撞期 `9/10`、三项撞期 `8/9/10`、职业覆盖为 `7` 时仍固定发三片、重复技能转化、满阶碎片回收及存档重开；Unity Batchmode 规则验收已通过。`python -B scripts/check_unity_project.py` 静态 GUID 检查已通过（27,935 个 GUID）。Unity 2022.3.57f1c2 独立图形 Editor 已重导入并运行祈愿 UI；在 `450×800` Game View 实际渲染了祈愿主体、引导奖励标题、`110×5` 奖励行和单一关闭按钮，主页 739 节点的目录校验及图文组件断言通过。真实输入首次尝试中女神像点击落到 Explorer（PID `10152`），未打开维修窗；验收器现校验前台与命中窗口 PID，之后因 Editor 未获前台而安全超时、未发送点击。单／十／百抽连续演出、音频和关闭重开存档的可见流程仍未通过真实鼠标验收。
 
 ## 自定义实现
 
-以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
+以下仅为用户已确认且服务端源码不可见时的离线决策；其余可确定的数值、公式、条件和顺序沿用官方配置与客户端表现。
 
-- 用户明确按原配置权重与已知保底离线裁决，不猜测额外动态概率；服务器随机序列未取得，材料、积分、保底、历史、货架和随机状态采用本地原子事务。
-- 隐藏抽取／结果／刷新价格黑底，改用深色价格字；原 `CommonBtn_CostItem` 确有黑底，这是已确认的 UI 差异。仍需保留数量、货币图标及可用／不足状态和正确输入命中。
-- 服务端免费修复回调缺失时，已有女神像或满足原免费自动维修条件即可只读通过购买资格，不伪写家具所有权。同批重复商品按用户补证允许，各格库存独立，不能擅自按商品 ID 合并库存。
-- 友情祈愿的真人好友、真人组队及分享等来源受[离线开放范围](offline-access.md)限制，不提供虚构玩家替代。仅记录原页与规则不构成其单机开放决定；是否保留既有友情币的消费入口，实施前须确认，不能自行补送友情币或开放联网。
+- 按官方已知权重、配置保底和客户端筛选逻辑本地裁决，不拟合展示用综合概率；无服务器随机序列的单机状态通过本地原子事务持久化。
+- 首次进入只领取固定奖励表 ID 8 的五张祈愿券，教程不改变首抽奖池。碎片产出固定为三片，保底冲突按用户确认的临近抽次排程。
+- 友情祈愿消费入口保留，仅使用现存友情币；不提供离线范围之外的真人好友、组队、助战或分享获取流程。
+- 价格按钮保留数量、货币图标和可用／不足状态，按用户确认隐藏原黑底并改用深色价格字。
 
-### 服务器边界与仍须查证的规则
+### 服务器边界
 
-`SkillGachaPanel.GachaSend` 调用 `OperPlayerGacha`，结果由奖励消息返回；APK 共享代码 `Common.Player.SkillGacha` 只校验配置、记录次数并返回空奖励列表，未包含完整服务端抽取裁决。因此已知配置、客户端显示、服务器返回结构与完整决策逻辑必须分别记录。
+`SkillGachaPanel.GachaSend` 调用 `OperPlayerGacha`，结果由奖励消息返回；APK 共享代码 `Common.Player.SkillGacha` 未包含完整服务端随机裁决。已按客户端实际使用的奖池、权重和条件，以及用户对缺失服务端分支的明确答复落实离线逻辑；不把消息结构误当作服务端算法。
 
-尚不能由现有片段独立确定的内容包括：新人固定奖励及其与常规池的完整切换顺序、未知动态概率、满阶／溢出转化的服务端全部分支，以及多个保底同时触发时未被现有规则明确覆盖的优先级。前述“原权重＋已知保底”只适用于已确认部分；实施遇到这些具体分支时继续核对共享实现、配置和调用方，仍无依据则请求规则决定，不能以展示概率、空返回或猜测填补。友情币消费入口的单机范围也不视为已经确认。
+首登发奖、首抽流程、重复技能转换、满阶回收、碎片数量、保底命中清零范围及同时触发排程均已按用户确认补齐；不得将这些先前的待确认文字当作当前缺项。
 
 ## 尚未实现
 
-以下均为当前 Unity 待完成项，编号对应上文原始官方功能；未勾选即未达到完整接入与运行验收条件。
+- [ ] Windows 输入桌面可用，但 Unity Editor 未获前台焦点。重新运行隔离 Editor 后先确认其为前台，再以真实 OS 鼠标从家园维修并点击女神像，关闭教程奖励，执行常驻抽取并打开结果／历史／兑换页；确认真实扣款、历史写入、弹窗输入及重开存档。前一次点击命中 Explorer（PID `10152`），不能记作通过。
+- [ ] 可见验收完成后，复核 `W01～W28` 相关动态加载、输入遮挡、竖屏缩放和单／十／百抽演出范围；按[Android → Windows 资源流程](../asset-management.md#android-资源迁移到-windows)核对依赖。Windows Player 仅在涉及导出链或成品行为时构建验证。
 
-### 入口、抽取与本地状态
-
-- [ ] `W01～W05`：女神像／技能页实际路由、总页三类底部功能、已确认开放的祈愿标签、顶部货币和红点；常驻／高阶单抽、十抽、百抽按钮与材料刷新；每日共享限额、非当前职业及百抽确认、今日免提示、重复点击与窗口保护。
-- [ ] `W06～W07`：两种不同职业列表、默认项、切换／关闭恢复与皮肤；自选入口、候选列表、四个槽位、选满／未满提示、提交／取消／失败及按分支保存；所选职业真实抽取池与预览同步。
-- [ ] `W08～W09`：递归随机包、过滤与归一化，基础概率、已知保底、整技／碎片职业阶级记录、逐抽计数、提示更新；抽取随机状态与规则版本一同保存，切页、重开、读档不得重新抽取已提交奖励。
-- [ ] `W14/W17`：抽取材料、技能／碎片／回收奖励、积分、馈赠累计、保底、每日次数和历史一次提交；失败无部分扣款／发奖，重复事件不重复入账；与技能／背包共用已确定的转换规则，补查上文未确定服务端分支后再实施相应裁决。
-
-### 奖励、兑换、购买与查询
-
-- [ ] `W10～W11`：积分条、首档提示、全部原始及循环模板、积分详情、馈赠分类页、奖励图标／详情、领取状态、红点、领奖防重与原奖励窗口；进度和已领取索引跨重开保存。
-- [ ] `W12～W13`：原详情概率／历史标签、职业规则及地区显隐、筛选后类别概率、友情逐物品概率（若获准开放）；分类历史写入、时间／品质显示、分页及任务取消、记录期／缓存语义、重进恢复，不能只放静态概率表。
-- [ ] `W19～W23`：兑换商店 `4/5` 子页、固定商品全表、职业与元素／品质／类型筛选、分组列表及碎片详情；合成／升阶提示、数量滑条、原价和库存／限购；九格随机货架、独立库存、重复商品、日自动刷新、十次递增价格手动刷新、确认／不足／售罄与倒计时；货架、刷新次数及购买状态持久化。
-- [ ] `W24～W25`：材料不足差额、原快捷购买条件及价格档、数量选择／最大值、确认／取消、货币不足、来源入口和顶部加号；原女神像购买资格及只读免费维修兼容；没有原快捷购买配置的材料继续走原不足／来源流程。
-- [ ] `W26`：友情祈愿、积分／馈赠、详情／历史和周币提示尚无 Unity 接入；先确认单机消费入口范围，再接获准部分；真人好友／组队／分享来源按既定离线政策处理。
-- [ ] `W27`：女神像维修与首次进入、原教程及技能获得引导的入口／完成状态；补查新人奖励切换的真实依据，避免引导重复发奖或覆盖正常存档。
-
-### UI、演出与实际运行验证
-
-- [ ] `W14～W18/W28`：恢复主体、职业／自选、详情／历史、积分／馈赠、兑换／购买及结果页全部原组件和动态绑定；按原层级、坐标、锚点、布局、字体与本地化恢复竖屏和比例缩放，并落实获准的价格黑底／文字差异。
-- [ ] `W15～W18`：单／十／百抽整技与碎片、新技能与重复转化、回收代币、品质星光、槽位入场、渐显、百抽滚动、跳过、继续抽取、延迟／额外奖励处理及清理；原动画曲线／事件、UIParticle、shader／材质、后处理、音效及语音按真实绑定迁移为 Windows 可用原生资源，不能以静态结果页或旧近似效果代替。
-- [ ] 规则验证覆盖职业过滤、基础权重与明确保底边界、逐抽记录、循环领奖、重复转化、材料购买、库存／价格档、日切刷新、原子事务、防重和存档恢复；未知裁决先确定依据，不把测试期望当成官方规则。
-- [ ] 按影响运行静态检查及 Editor 导入／编译，再在有画面的 Unity Play Mode 从真实入口用鼠标／键盘／拖拽操作；检查页签、滑条、翻页、物品图标、遮罩与弹窗输入、缩放、连续演出／音频、跳过／再次抽取、材料不足／取消、关闭重进与重新加载存档。只调用回调不构成输入验证，截图不构成连续动画验证。
-- [ ] 按 [Android → Windows 资源流程](../asset-management.md#android-资源迁移到-windows) 核对原包、递归 CAB 依赖和显式加载目录；按[实际运行验证要求](../asset-management.md#实际运行验证方法与要求)记录真实范围。仅在涉及导出链或验证成品行为时进行 Windows Player 验证；完整接通并验证前保持本页“未完成”。
-
-原表及总页来源另见[祈愿原始来源](../../assets/reference/official-city/wish-source-audit.json)和[素材来源总表](../../assets/reference/SOURCES.md)。此清单维护于本功能页，不另建审计或验收报告。
+原表及总页来源另见[祈愿原始来源](../../assets/reference/official-city/wish-source-audit.json)和[素材来源总表](../../assets/reference/SOURCES.md)。验证结果持续维护于本功能页，不另建验收报告。
