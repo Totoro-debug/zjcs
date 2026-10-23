@@ -68,6 +68,8 @@ namespace Zjcs.Offline.Commerce
         public CommerceUiScroll scroll;
         public bool mask, rectmask2d;
         public bool mask_component_flags, mask_enabled, mask_show_graphic;
+        public bool no_drawing_raycast, raycast_target;
+        public float[] raycast_padding;
         public CommerceLayoutGroup layout;
         public CommerceGridLayout grid;
         public int[] size_fitter;
@@ -80,6 +82,7 @@ namespace Zjcs.Offline.Commerce
         public float[] color;
         public int type;
         public bool preserve_aspect;
+        public bool graphic_flags, raycast_target, maskable = true;
     }
     [Serializable] public sealed class CommerceUiSprite
     {

@@ -22,7 +22,8 @@ def build(activate=False):
         'current-material-source-manifest.json', 'current-home-layers-source-manifest.json',
         'current-language-source-manifest.json', 'current-sprites-source-manifest.json',
         'current-animators-source-manifest.json', 'current-shared-table-bindings-source-manifest.json',
-        'current-ui-masks-source-manifest.json')]
+        'current-ui-masks-source-manifest.json', 'current-ui-particle-materials-source-manifest.json',
+        'current-ui-graphics-source-manifest.json', 'current-ui-text-bindings-source-manifest.json')]
     source_paths += [ROOT / 'assets/reference/character-creation' / name for name in (
         'current-mesh-source-manifest.json', 'current-native-prefabs-source-manifest.json',
         'current-native-concurrent-bindings-source-manifest.json')]
@@ -37,7 +38,8 @@ def build(activate=False):
         if source.get('manifest') != version:
             raise ValueError('Unexpected conversion profile: ' + str(path))
         evidence.append({'path': path.relative_to(ROOT).as_posix(), 'sha256': sha(raw)})
-        records = source.get('outputs', source.get('packages', source.get('conversions', {}).get('outputs', [])))
+        from current_conversion_state import records as conversion_records
+        records = list(conversion_records(source)) + source.get('packages', [])
         for record in records:
             before = record.get('previous_sha256', record.get('previous', {}).get('sha256'))
             after = record.get('sha256')

@@ -100,6 +100,14 @@ namespace Zjcs.Presentation.Commerce
                 gameObject.AddComponent<CommerceSafeArea>();
 
             Image image = source.has_image ? CreateImage(source.image, gameObject) : null;
+            if (source.no_drawing_raycast)
+            {
+                var hit = gameObject.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
+                hit.raycastTarget = source.raycast_target;
+                if (source.raycast_padding != null && source.raycast_padding.Length == 4)
+                    hit.raycastPadding = new Vector4(source.raycast_padding[0], source.raycast_padding[1],
+                        source.raycast_padding[2], source.raycast_padding[3]);
+            }
             if (source.has_text && source.text != null) CreateText(source.text, source.localization_key, gameObject);
             if (source.mask && image != null)
             {
@@ -153,6 +161,8 @@ namespace Zjcs.Presentation.Commerce
             image.color = ColorValue(source.color, Color.white);
             image.type = (Image.Type)Mathf.Clamp(source.type, 0, (int)Image.Type.Filled);
             image.preserveAspect = source.preserve_aspect;
+            image.raycastTarget = !source.graphic_flags || source.raycast_target;
+            image.maskable = !source.graphic_flags || source.maskable;
             if (image.sprite != null && image.type == Image.Type.Sliced && image.sprite.border == Vector4.zero)
                 image.type = Image.Type.Simple;
             return image;

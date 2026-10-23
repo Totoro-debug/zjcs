@@ -54,6 +54,7 @@ def commerce_node(node, sprite_bindings):
         "has_size_fitter", "size_fitter", "has_layout_element", "layout_element",
         "has_aspect_fitter", "aspect_fitter", "mesh_color", "mesh_raycast_target",
         "mesh_maskable", "mask_component_flags", "mask_enabled", "mask_show_graphic",
+        "has_tab_group", "tab_group_allow_switch_off", "no_drawing_raycast", "raycast_target", "raycast_padding",
     ):
         if key in node:
             value[key] = node[key]
