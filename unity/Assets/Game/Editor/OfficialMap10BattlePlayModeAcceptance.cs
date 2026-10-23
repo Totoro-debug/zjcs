@@ -27,10 +27,16 @@ namespace Zjcs.Editor
         private const string SlotKey = "Zjcs.Map10.Battle.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Map10.Battle.Acceptance.Result";
         private const string DeadlineKey = "Zjcs.Map10.Battle.Acceptance.Deadline";
+        private const string PortraitOnlyKey = "Zjcs.Map10.Battle.Acceptance.PortraitOnly";
         private static bool started;
 
         [MenuItem("Zjcs/Validate/Map10 Battle Play Mode")]
-        public static void Run()
+        public static void Run() => Start(false);
+
+        [MenuItem("Zjcs/Validate/Map10 Battle Portrait Play Mode")]
+        public static void RunPortraitOnly() => Start(true);
+
+        private static void Start(bool portraitOnly)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running the battle acceptance.");
@@ -58,6 +64,7 @@ namespace Zjcs.Editor
                 SessionState.SetString(SlotKey, slot);
                 SessionState.SetInt(ResultKey, 2);
                 SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 240f);
+                SessionState.SetBool(PortraitOnlyKey, portraitOnly);
                 SessionState.SetBool(ActiveKey, true);
                 started = false;
                 HookEditorEvents();
@@ -98,6 +105,7 @@ namespace Zjcs.Editor
             bool passed = SessionState.GetInt(ResultKey, 1) == 0;
             if (Directory.Exists(root)) Directory.Delete(root, true);
             SessionState.SetBool(ActiveKey, false);
+            SessionState.SetBool(PortraitOnlyKey, false);
             if (Application.isBatchMode) EditorApplication.Exit(passed ? 0 : 1);
         }
 
@@ -180,6 +188,14 @@ namespace Zjcs.Editor
                 return field == null ? 0L : Convert.ToInt64(field.GetValue(value));
             };
 
+            if (SessionState.GetBool(PortraitOnlyKey, false))
+            {
+                VerifyTimelinePortraits(checkpoint());
+                Debug.Log("Map10 battle portrait Play Mode acceptance passed.");
+                Finish(true, null);
+                yield break;
+            }
+
             float deadline = Time.realtimeSinceStartup + 60f;
             while (Time.realtimeSinceStartup < deadline)
             {
@@ -205,6 +221,25 @@ namespace Zjcs.Editor
 
             int timelineCards = all.Count(value => value.name.StartsWith("GameRoundCharacterItem_", StringComparison.Ordinal));
             Require(timelineCards >= 1, "Battle timeline did not create any fighter card.");
+            object checkpointState = checkpointProperty.GetValue(controller);
+            System.Collections.IEnumerable unitRows = checkpointState.GetType().GetField("Units").GetValue(checkpointState)
+                as System.Collections.IEnumerable;
+            bool checkedMonsterPortrait = false;
+            foreach (object unit in unitRows)
+            {
+                int monsterId = Convert.ToInt32(unit.GetType().GetField("MonsterId").GetValue(unit));
+                if (monsterId <= 0) continue;
+                int unitId = Convert.ToInt32(unit.GetType().GetField("Id").GetValue(unit));
+                Transform card = all.FirstOrDefault(value => value.name == "GameRoundCharacterItem_" + unitId);
+                Transform portrait = card == null ? null : card.Find("IconGo/MonsterIconImg");
+                Image portraitImage = portrait == null ? null : portrait.GetComponent<Image>();
+                Require(portraitImage != null && portraitImage.sprite != null
+                    && portraitImage.sprite.name == "G_" + monsterId,
+                    "Monster timeline portrait was not resolved for IconId " + monsterId);
+                checkedMonsterPortrait = true;
+                break;
+            }
+            Require(checkedMonsterPortrait, "Battle acceptance found no monster portrait to verify.");
             TMP_Text roundText = all.Where(value => value.name == "RoundText")
                 .Select(value => value.GetComponent<TMP_Text>()).FirstOrDefault(value => value != null);
             Require(roundText != null && roundText.text.Contains("/"), "Battle round text is empty.");
@@ -221,6 +256,43 @@ namespace Zjcs.Editor
                 + ", damage events=" + checkpointField("DamageEventSerial")
                 + ", skill icons and timeline bound, round text and speed controls work.");
             Finish(true, null);
+        }
+
+        private static void VerifyTimelinePortraits(object checkpoint)
+        {
+            Require(checkpoint != null, "Map10 battle checkpoint is missing before its first step.");
+            FieldInfo unitsField = checkpoint.GetType().GetField("Units");
+            IEnumerable units = unitsField == null ? null : unitsField.GetValue(checkpoint) as IEnumerable;
+            Require(units != null, "Map10 battle units are missing before the first step.");
+
+            Transform[] nodes = UnityEngine.Object.FindObjectsOfType<Transform>(true);
+            bool playerChecked = false;
+            bool monsterChecked = false;
+            foreach (object unit in units)
+            {
+                int unitId = Convert.ToInt32(unit.GetType().GetField("Id").GetValue(unit));
+                int monsterId = Convert.ToInt32(unit.GetType().GetField("MonsterId").GetValue(unit));
+                Transform card = nodes.FirstOrDefault(value => value.name == "GameRoundCharacterItem_" + unitId);
+                if (monsterId > 0)
+                {
+                    Transform icon = card == null ? null : card.Find("IconGo/MonsterIconImg");
+                    Image image = icon == null ? null : icon.GetComponent<Image>();
+                    Require(image != null && image.sprite != null && image.sprite.name == "G_" + monsterId,
+                        "Map10 monster timeline portrait did not bind G_" + monsterId + ".");
+                    monsterChecked = true;
+                }
+                else
+                {
+                    Transform icon = card == null ? null : card.Find("IconGo/PlayerHeadETC2Go/HeadImg");
+                    RawImage image = icon == null ? null : icon.GetComponent<RawImage>();
+                    Require(image != null && image.texture != null,
+                        "Map10 player timeline RawImage did not bind its fallback portrait.");
+                    playerChecked = true;
+                }
+                if (playerChecked && monsterChecked) break;
+            }
+            Require(playerChecked, "Map10 battle timeline has no bound player portrait.");
+            Require(monsterChecked, "Map10 battle timeline has no bound monster portrait.");
         }
 
         private static Canvas CreateCanvas()

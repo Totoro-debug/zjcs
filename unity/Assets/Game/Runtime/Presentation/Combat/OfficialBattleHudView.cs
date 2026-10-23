@@ -451,8 +451,14 @@ namespace Zjcs.Presentation.Combat
                 : "IconGo/PlayerHeadETC2Go/HeadImg";
             Transform icon = card.transform.Find(iconPath);
             Image image = icon == null ? null : icon.GetComponent<Image>();
-            if (image == null) throw new InvalidOperationException("Official battle timeline portrait node is missing: " + iconPath);
-            if (portrait != null) image.sprite = portrait;
+            RawImage rawImage = icon == null ? null : icon.GetComponent<RawImage>();
+            if (icon == null || (image == null && rawImage == null))
+                throw new InvalidOperationException("Official battle timeline portrait graphic is missing: " + iconPath);
+            if (portrait != null)
+            {
+                if (image != null) image.sprite = portrait;
+                else BindRawImage(rawImage, portrait);
+            }
             Transform monsterIcon = card.transform.Find("IconGo/MonsterIconImg");
             Transform playerIcon = card.transform.Find("IconGo/PlayerHeadETC2Go");
             if (monsterIcon != null) monsterIcon.gameObject.SetActive(monster);
@@ -468,6 +474,17 @@ namespace Zjcs.Presentation.Combat
                 factionImage.sprite = sprite;
                 faction.gameObject.SetActive(sprite != null);
             }
+        }
+
+        private static void BindRawImage(RawImage target, Sprite sprite)
+        {
+            Texture2D texture = sprite.texture;
+            Rect rect;
+            try { rect = sprite.textureRect; }
+            catch (UnityException) { rect = sprite.rect; }
+            target.texture = texture;
+            target.uvRect = new Rect(rect.x / texture.width, rect.y / texture.height,
+                rect.width / texture.width, rect.height / texture.height);
         }
 
         private void SetTimelinePositions(float percent)

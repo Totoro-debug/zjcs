@@ -92,6 +92,12 @@ namespace Zjcs.Presentation.Combat
                 if (source.image_type == (int)Image.Type.Sliced && source.image_sprite_border != null)
                     image.type = Image.Type.Sliced;
             }
+            else if (HasScript(source, "RawImage") || HasScript(source, "GridSpriteRawImage"))
+            {
+                RawImage image = gameObject.AddComponent<RawImage>();
+                image.color = Color.white;
+                image.raycastTarget = false;
+            }
             if (source.has_text)
             {
                 TMP_FontAsset font = catalog.Font;
@@ -206,6 +212,14 @@ namespace Zjcs.Presentation.Combat
                 if (nested != null) return nested;
             }
             return null;
+        }
+
+        private static bool HasScript(BattleHudNode source, string name)
+        {
+            if (source.scripts == null) return false;
+            foreach (string script in source.scripts)
+                if (script == name) return true;
+            return false;
         }
 
         private static Vector2 Vector(float[] v, Vector2 fallback) => v != null && v.Length >= 2 ? new Vector2(v[0], v[1]) : fallback;

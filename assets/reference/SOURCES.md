@@ -922,7 +922,7 @@ prepare_home_ui.py 同时补充原 HomeViewController／Slider 控件、HomeSkin
 
 prepare_battle_spine.py 从固定 854_156383 已核验 APK／原版 CDN 的骨骼、atlas 和 SplitBinarySO 输入，重新组装原格式二进制供官方运行库直接读取；使用官方 @esotericsoftware/spine-core 4.2.110 解码定位字节边界，已开放皮肤及其链接依赖、骨骼／约束／槽／绘制顺序／事件轨道保持原字节，不烘焙姿态；未开放皮肤只保留原表索引并删除相关附件及变形／sequence 轨。图集只改页路径，贴图复用已有原转换或按需解码原 Texture2D，未绘制替代。739 份原骨骼及男女 227／237 动画在 assets/official/battle-spine/，显式目录由  读取；完整输入输出哈希及复用来源凭据见 battle-spine/source-manifest.json。
 
-开场创角录像所需的 9 张 Spine 页另由 `prepare_battle_spine_pages.py` 从固定 APK 按 `models-source-manifest.json` 的 Texture2D path ID 与 SHA256 解出，不使用 Atlas 彩图替代；monster 3803／3281／3282／3283／3481 和 NPC 8401／8402 的输入、atlas 页尺寸及输出哈希见 `battle-spine/pages-source-manifest.json`。
+`prepare_battle_spine_pages.py` 从固定 APK 按已核验 Texture2D 对象恢复 Spine atlas 页并绑定生成材质；除开场创角录像所需的 monster 3803／3281／3282／3283／3481 与 NPC 8401／8402 外，本次为 Map10 已映射的 monster 3204／3206／3207／3254／3255／3281／3282／3283／3401／3411 提取并核验纹理，合计16页，路径、页尺寸、APK bundle/path ID 与输入／输出哈希见 `battle-spine/pages-source-manifest.json`。Map10 的 monster 3603 不在当前模型 identity 表中，因此未列入 Spine 贴图恢复；其时间轴头像仍由独立 portrait catalog 提供。
 
 prepare_battle_animation.py 读取原 SkeletonRenderer／SkeletonMecanim／SkeletonAnimation 的完整序列化字段，按实际模型路径登记独立 prefab 绑定。客户端控制参照 PlayerAnimatorAppearance、AppearanceAddressUtils、AppearanceUtils、AppearanceSkeletonPart／MultiSidesPart、AppearancePartSideSwitcher、BaseSkeletonFollower 和原职业配置；来源与源文件 SHA256 分别登记于 battle-animation/source-manifest.json 及 battle-spine/source-manifest.json；这是引擎适配，未将 Unity 原生 Animator 内部实现冒称为已取得的游戏脚本。原过渡全部为 InterruptionSource=None，其混合中仅 AnyState 可中断的语义另核对 [Unity 官方过渡文档](https://docs.unity3d.com/2022.3/Documentation/Manual/class-Transition.html)，此引擎依据与 APK 游戏代码分别登记。
 
