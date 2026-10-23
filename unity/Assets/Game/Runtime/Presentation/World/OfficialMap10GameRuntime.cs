@@ -1365,6 +1365,7 @@ namespace Zjcs.Presentation.World
             Sprite fallbackPortrait = uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
+            OfficialBattleMonsterPortraitCatalog monsterPortraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
             Func<int, Sprite> skillIconResolver = itemId =>
             {
                 Sprite icon = skillIcons == null ? null : skillIcons.Find(itemId);
@@ -1372,7 +1373,9 @@ namespace Zjcs.Presentation.World
             };
             battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
                 skillIconResolver,
-                unit => unit.MonsterId > 0 ? null : fallbackPortrait,
+                unit => unit.MonsterId > 0
+                    ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))
+                    : fallbackPortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
                 (_, __) => "idle_01",
                 (root, unit) =>
