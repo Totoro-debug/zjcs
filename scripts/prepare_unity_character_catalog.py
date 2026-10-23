@@ -300,6 +300,7 @@ def restore() -> dict:
         wardrobe_items.update(int(item_id) for item_id in (rank.get("Items") or {}))
     filtered_rules = {name: rules[name] for name in RULE_TABLES if name != "item"}
     filtered_rules["item"] = [row for row in rules["item"] if row["ClassId"] in wardrobe_items]
+    filtered_rules["equip_piece_merge"] = rules.get("equip_piece_merge", [])
     icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
     item_icons = {str(row["ClassId"]): icons[str(row["ClassId"])]["file"]
                   for row in filtered_rules["item"]
@@ -350,8 +351,7 @@ def restore() -> dict:
     progression = {
         "manifest": "854_156383",
         "rules": filtered_rules,
-        "tables": dict({name: fidelity[name] for name in FIDELITY_TABLES},
-                       equip_piece_merge=rules.get("equip_piece_merge", [])),
+        "tables": {name: fidelity[name] for name in FIDELITY_TABLES},
         "role_prop_group": [dict(row) for row in role_groups],
         "level_prop": level_props,
         "property_ids": property_ids,
