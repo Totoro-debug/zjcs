@@ -2,6 +2,14 @@
 
 [返回文档索引](../../docs/README.md)
 
+## 当前官方输入与历史重建
+
+当前默认输入由根目录 `official-source.json` 固定：原生 APK 为 `854_156383`，当前热更新五包为 `871_156598`，资源目录版本为 `202610211330871`。官网接口仍指向同一个 `zjcs_M509085.apk`；服务端大小、MD5 与包尾均匹配本地 APK，不能把热更新版本记成新安装包。原始云端文件全部保存在 `.tools/source-packages/cloud/runtime/202610211330871/`，ADB 模拟器原始缓存继续保留。
+
+`python -B scripts/activate_official_source.py` 完整验证 APK 与云端文件后，更新五包提取视图及资源索引；当前共 20,999 项，云端 18,559 项无缺项。旧提取视图与旧索引保存在 `.tools/source-packages/history/854_156383/`，原 APK、旧 CDN 缓存及新版原始缓存均保留。`fetch_official_assets.py`、`official_manifest.py`、`prepare_unity_bundle_inputs.py` 默认选择当前版本，历史重建显式传入 `--manifest 854_156383`。读取 API 用 `Apk.current()` 或 `Apk(manifest=None)` 选择当前输入；既有 `Apk()` 暂保留历史版本，避免尚未迁移的转换器错误标注新旧来源。
+
+原始输入切换已经完成。Unity 已接入素材的重新转换、绑定更新及实际运行验证仍在进行；现有模块来源清单保留其真实转换版本，不能因原包已切换而声明已全部更新。当前来源凭据见 [热更新原始来源](official-map/runtime-cloud-source-manifest.json)。
+
 ### 特殊物品原窗口与替换配置
 
 `scripts/prepare_special_items.py` 从固定 `854_156383` APK／匹配 CDN 的 `prefabs_ui_equip` 读取远古砥石的装备页、词条行、候选、确认和结果 prefab，并从 `config_luban_equipattribute` 解码 `equip_attribute_replace_range.g.bytes` 的20条记录。运行数据为 `assets/official/special-items.json`，原精灵复用或无损转换，不绘制替代窗口。逐对象、原客户端／共用逻辑、配置与输出哈希登记在 `assets/reference/special-items-source-manifest.json`；服务端请求的本地替代及用户确认边界见行囊功能文档。

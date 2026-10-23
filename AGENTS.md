@@ -38,6 +38,8 @@
 
 来源按以下顺序核实；版本、URL 和哈希的完整记录以来源清单为准：
 
+当前默认资源输入为根目录 `official-source.json` 中的 `871_156598` 热更新（资源目录 `202610211330871`），原生 APK 仍为 `854_156383`，已经核对与官网当前下载一致。当前云端原始缓存为 `.tools/source-packages/cloud/runtime/202610211330871/`，原版提取视图与索引保存在 `.tools/source-packages/history/854_156383/`。默认提取、清单及 CAB 输入准备命令读取当前版本，历史重建须传 `--manifest 854_156383`；新转换用 `Apk.current()`，现有 `Apk()` 暂保留历史版本以防错标。Unity 模块仍按各自来源清单确认迁移状态，不因原包切换而视为已重新转换。
+
 | 来源 | 路径与核对入口 |
 | --- | --- |
 | 固定 APK，manifest `854_156383` | `.tools/source-packages/zjcs_M509085.apk`；凭据见 `assets/reference/male-remodel/source-manifest.json` |
@@ -45,7 +47,7 @@
 | 适用的新版官方同名包，manifest `864_156496` | `.tools/source-packages/cloud-research/missing-counterparts/`；按 `assets/reference/official-map/missing-resource-classification.json` 的 `counterpart_md5` 定位，独立核验版本、内容与依赖 |
 
 1. 查完整五包清单 `.tools/source-packages/cloud-research/bundle-inventory.json` 或主资源索引 `.tools/source-packages/extracted/bundle-index.json`；名称存在不代表文件已取得。需要重建索引并校验 APK 时运行 `python scripts/official_manifest.py --verify-packaged`。
-2. 按需运行 `python scripts/fetch_official_assets.py --extract '<bundle 名称正则>'`，先读 APK，再读已校验原版本 CDN 缓存；来源保存在 `bundle-sources.json`。音频加 `--package WwiseBnk`。原版本补取／复核用 `python scripts/fetch_official_cloud_assets.py --extract '<名称正则>'`，复用有效缓存。
+2. 按需运行 `python scripts/fetch_official_assets.py --extract '<bundle 名称正则>'`，按所选版本先读 APK，再读该版本已校验 CDN 缓存；来源保存在 `bundle-sources.json`。音频加 `--package WwiseBnk`。原版本补取／复核用 `python scripts/fetch_official_cloud_assets.py --extract '<名称正则>'`，复用有效缓存。
 3. 原版本缺项须继续核对新版同名包记录；上述提取命令和 `scripts/official_apk.py` 不会自动混入新版包，使用新版须按独立记录用 UnityPy 解析并核对兼容性。提取使用 `.tools/character-art-python` 中的 `UnityPy==1.25.4`，复用 `Apk` 读取器与 CAB 解析，不必全量解包。
 4. 按 [Android → Windows 流程](docs/asset-management.md#android-资源迁移到-windows)恢复 Unity 原生资产、官方脚本和依赖，完成加载绑定及目标平台验证。Android bundle／编译 shader 不默认可用于 Windows；准备输入、下载完成或复制文件都不等于接入运行时。
 
