@@ -274,6 +274,7 @@ namespace Zjcs.Presentation.Home
         public HomeUiTextStyle text;
         public string localization_key;
         public bool mask;
+        public bool mask_component_flags, mask_enabled, mask_show_graphic;
         public bool rectmask2d;
         public HomeUiLayout layout;
         public HomeUiGrid grid;
@@ -358,6 +359,7 @@ namespace Zjcs.Presentation.Home
         public HomeUiTextStyle text;
         public string localization_key;
         public bool mask;
+        public bool mask_component_flags, mask_enabled, mask_show_graphic;
         public bool rectmask2d;
         public HomeUiLayout layout;
         public HomeUiGrid grid;
@@ -386,6 +388,9 @@ namespace Zjcs.Presentation.Home
             text = text,
             localization_key = localization_key,
             mask = mask,
+            mask_component_flags = mask_component_flags,
+            mask_enabled = mask_enabled,
+            mask_show_graphic = mask_show_graphic,
             rectmask2d = rectmask2d,
             layout = layout,
             grid = grid,

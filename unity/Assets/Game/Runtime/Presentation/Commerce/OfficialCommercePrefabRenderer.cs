@@ -104,7 +104,8 @@ namespace Zjcs.Presentation.Commerce
             if (source.mask && image != null)
             {
                 Mask mask = gameObject.AddComponent<Mask>();
-                mask.showMaskGraphic = true;
+                mask.showMaskGraphic = !source.mask_component_flags || source.mask_show_graphic;
+                mask.enabled = !source.mask_component_flags || source.mask_enabled;
             }
             if (source.rectmask2d) gameObject.AddComponent<RectMask2D>();
             if (source.has_layout && source.layout != null) CreateLayout(source.layout, gameObject);

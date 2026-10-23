@@ -172,6 +172,8 @@ python -B scripts/check_unity_project.py
 | 缺脚本、反序列化失败、事件不触发 | 类／程序集名、插件版本、字段布局、反编译与 schema 的区别 | 恢复实际组件和业务调用，按既定单机方案适配，不用空壳占位 |
 | Editor 可用而重启／Windows 构建后失效 | 未持久化的 Bundle 对象、GUID/fileID、动态绑定、平台插件和本地分包 | 原生资产落盘并重绑，从 Windows 原生资产重建交付内容，在干净加载状态复验 |
 
+官方 UI 遮罩恢复由 `refresh_current_ui_masks.py` 完整读取当前包中的 5,359 个 `UnityEngine.UI.Mask` 对象，按原始 `m_Enabled` 和 `m_ShowMaskGraphic` 补齐 20 份已有 UI 载荷。家园 22 个及祈愿 1 个遮罩均找到对应来源；`HomeUiRenderer` 与共享商城渲染器按这两个标记恢复启用及隐藏遮罩图形的行为。完整床铺背景子树已通过独立图形设备检查，验证包含官方九宫格边框、pivot、遮罩和实际截图；来源及替换前后哈希见 `current-ui-masks-source-manifest.json`。商城物品目录已按当前配置新增三个物品后精确要求 172 条。
+
 ## Unity 素材快照
 
 使用 [`unity_asset_pack.py`](../scripts/unity_asset_pack.py) 创建、校验和恢复 Unity 官方载荷快照：
