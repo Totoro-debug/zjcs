@@ -23,7 +23,8 @@ def build(activate=False):
         'current-language-source-manifest.json', 'current-sprites-source-manifest.json',
         'current-animators-source-manifest.json', 'current-shared-table-bindings-source-manifest.json',
         'current-ui-masks-source-manifest.json', 'current-ui-particle-materials-source-manifest.json',
-        'current-ui-graphics-source-manifest.json', 'current-ui-text-bindings-source-manifest.json')]
+        'current-ui-graphics-source-manifest.json', 'current-ui-text-bindings-source-manifest.json',
+        'current-home-ui-regeneration-source-manifest.json')]
     source_paths += [ROOT / 'assets/reference/character-creation' / name for name in (
         'current-mesh-source-manifest.json', 'current-native-prefabs-source-manifest.json',
         'current-native-concurrent-bindings-source-manifest.json')]
@@ -119,6 +120,7 @@ def build(activate=False):
             temporary = path.with_name(path.name + '.current.tmp')
             temporary.write_bytes(payload)
             temporary.replace(path)
+            preserve(path)
         result = {'manifest': version, 'operation': __doc__, 'sources': evidence,
                   'outputs': updates, 'generator_sha256': sha(Path(__file__).read_bytes())}
         destination = ROOT / 'assets/reference/official-map/current-output-inventories-source-manifest.json'
