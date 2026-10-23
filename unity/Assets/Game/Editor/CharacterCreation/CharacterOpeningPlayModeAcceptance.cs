@@ -149,6 +149,7 @@ namespace Zjcs.Editor.CharacterCreation
             Require(assets.Story.Manifest == "854_156383", "Unexpected opening story manifest.");
             Require(assets.Story.Graphs.Count == 3, "The three official opening graphs were not loaded.");
             Require(assets.Story.Dialogues.Count == 6, "The official opening dialogues are incomplete.");
+            VerifyOfficialVoiceFiles(assets);
             Require(assets.Record.StageId == 20 && assets.Record.Entities.Count == 19
                 && assets.Record.Rounds.Count == 14 && assets.Record.StepCount == 1168,
                 "The official record did not parse to its pinned shape.");
@@ -162,7 +163,15 @@ namespace Zjcs.Editor.CharacterCreation
             yield return WaitUntil(() => FindText("又到最后的时刻了，我们上吧！") != null,
                 "The BeforeFight official dialog text was not presented.");
             Require(FindText("薇兰") != null, "The official dialog role name was not presented.");
+            OpeningStoryPlayer voicePlayer = (OpeningStoryPlayer)Field(flow, "story").GetValue(flow);
+            var voiceClips = (System.Collections.Generic.Dictionary<string, AudioClip>)
+                Field(voicePlayer, "voiceClips").GetValue(voicePlayer);
+            AudioSource voiceAudio = (AudioSource)Field(flow, "voiceAudio").GetValue(flow);
+            Require(voiceClips.TryGetValue("prologue_main_1_01", out AudioClip firstVoice)
+                && firstVoice != null && firstVoice.samples > 0 && voiceAudio.clip == firstVoice,
+                "The first BeforeFight line did not load its official local voice event.");
             yield return Capture("opening-before-fight");
+            yield return VerifyOfficialWindowAnimations(controller, assets);
 
             yield return WaitUntil(() =>
             {
@@ -224,6 +233,92 @@ namespace Zjcs.Editor.CharacterCreation
                 + "record parse (19 entities, 14 rounds, 1168 steps), unit spawn, fast-forward, creation hand-off, "
                 + "and single play per slot per process.");
             Finish(true, null);
+        }
+
+        private static IEnumerator VerifyOfficialWindowAnimations(CharacterCreationFlowController controller,
+            OpeningAssets assets)
+        {
+            OpeningUiNode dialog = assets.Ui.Prefabs["talk_dialog"];
+            OpeningUiNode exit = assets.Ui.Prefabs["exit_fight_transition"];
+            OpeningUiNode enter = assets.Ui.Prefabs["enter_game_transition"];
+            OpeningUiNode firstStory = assets.Ui.Prefabs["first_story"];
+            Require(dialog.Window.ShowClip == "TalkDialog_Show"
+                && Mathf.Abs(dialog.Window.Clips[dialog.Window.ShowClip].Duration - 1f / 3f) < 0.002f,
+                "The official dialogue show clip was not restored.");
+            Require(dialog.Window.LoopClip == "TalkDialog_Loop"
+                && dialog.Window.Clips[dialog.Window.LoopClip].Tracks.Count == 0,
+                "The official dialogue loop clip binding differs from the APK.");
+            Require(exit.Window.ShowClip == "ExitFightTransitionPanel_Show"
+                && Mathf.Abs(exit.Window.Clips[exit.Window.ShowClip].Duration - 1f) < 0.002f,
+                "The official post-fight panel show clip was not restored.");
+            Require(enter.Window.ShowClip == "StoryTransitionPanel_Show"
+                && Mathf.Abs(enter.Window.Clips[enter.Window.ShowClip].Duration - 2f) < 0.002f,
+                "The official enter-game panel show clip was not restored.");
+            Require(firstStory.Window.ShowClip == "StoryPanel_Show"
+                && Mathf.Abs(firstStory.Window.Clips[firstStory.Window.ShowClip].Duration - 13.216666f) < 0.01f
+                && firstStory.Window.Clips[firstStory.Window.ShowClip].Tracks.Count == 124,
+                "The official first-story clip curves are incomplete.");
+
+            var view = new OpeningUiView(assets.Ui, null, null, 1000);
+            Coroutine animation = null;
+            try
+            {
+                GameObject exitPanel = view.Create("exit_fight_transition");
+                exitPanel.SetActive(true);
+                Image image = exitPanel.GetComponentInChildren<Image>(true);
+                Require(image != null, "The post-fight transition image was not restored.");
+                float start = Time.realtimeSinceStartup;
+                animation = controller.StartCoroutine(view.PlayAnimation(exitPanel, "exit_fight_transition",
+                    exit.Window.ShowClip));
+                yield return new WaitForSecondsRealtime(0.45f);
+                Require(image.color.a > 0.2f && image.color.a < 0.8f,
+                    "The post-fight panel did not evaluate its official curve mid-transition.");
+                yield return animation;
+                animation = null;
+                Require(image.color.a > 0.99f,
+                    "The post-fight panel did not reach its official final alpha.");
+                Require(Time.realtimeSinceStartup - start >= 0.95f,
+                    "The post-fight panel show did not wait for its official clip duration.");
+                UnityEngine.Object.Destroy(exitPanel);
+
+                GameObject storyPanel = view.Create("first_story");
+                storyPanel.SetActive(true);
+                OpeningUiMeshGraphic mesh = null;
+                foreach (OpeningUiMeshGraphic candidate in storyPanel.GetComponentsInChildren<OpeningUiMeshGraphic>(true))
+                    if (candidate.gameObject.name == "Mesh") { mesh = candidate; break; }
+                Require(mesh != null, "The first-story UI mesh was not restored.");
+                Material originalMaterial = mesh.material;
+                animation = controller.StartCoroutine(view.PlayAnimation(storyPanel, "first_story",
+                    firstStory.Window.ShowClip));
+                Require(mesh.material != originalMaterial,
+                    "The official first-story material animation was not applied.");
+                yield return new WaitForSecondsRealtime(0.2f);
+                controller.StopCoroutine(animation);
+                animation = null;
+            }
+            finally
+            {
+                if (animation != null) controller.StopCoroutine(animation);
+                view.Dispose();
+            }
+        }
+
+        private static void VerifyOfficialVoiceFiles(OpeningAssets assets)
+        {
+            Require(assets.VoiceFiles.Count == 6, "The six official opening voice events were not mapped.");
+            MethodInfo decoder = typeof(OpeningStoryPlayer).GetMethod("ReadPcmWave",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Require(decoder != null, "The official PCM voice decoder is unavailable.");
+            foreach (System.Collections.Generic.KeyValuePair<string, string> entry in assets.VoiceFiles)
+            {
+                string path = Path.Combine(OpeningAssets.Directory,
+                    entry.Value.Replace('/', Path.DirectorySeparatorChar));
+                Require(File.Exists(path), "An official opening voice file is missing: " + entry.Value);
+                AudioClip clip = (AudioClip)decoder.Invoke(null, new object[] { path, entry.Key });
+                Require(clip != null && clip.samples > 0 && clip.channels > 0 && clip.frequency > 0,
+                    "An official opening voice file did not decode: " + entry.Key);
+                UnityEngine.Object.Destroy(clip);
+            }
         }
 
         private static void ClickOfficialAny(CharacterCreationFlowController controller, params string[] nodeNames)
