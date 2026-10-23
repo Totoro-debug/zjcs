@@ -319,6 +319,8 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> components = RequiredEntity(classId);
             Dictionary<string, object> status = Component(components, "FightStatusComponent");
             Dictionary<string, object> falloff = Component(components, "FightStatusDamageFalloffComponent");
+            Dictionary<string, object> hpDecrease =
+                Component(components, "FightStatusHpDecreaseUnitComponent");
             if (status == null) throw new InvalidOperationException("Official entity is not a status: " + classId);
 
             int durationRound = Int(status, "DurationRound");
@@ -344,6 +346,9 @@ namespace Zjcs.Combat.Official
                 FollowRoundUpdateTimingOnGlobalRound = Bool(status,
                     "FollowRoundUpdateTimingOnGlobalRound"),
                 IsFixedProp = Bool(status, "IsFixedProp"),
+                HpTriggerPer = hpDecrease == null ? -1f : Float(hpDecrease, "UnitHpPer", -1f),
+                HpTriggerMaxCount = hpDecrease == null ? -1 : Int(hpDecrease, "MaxCount", -1),
+                HpTriggerAtStart = hpDecrease != null && Bool(hpDecrease, "TryAtStart"),
                 StackCount = Int(status, "InitStackCount", 1),
                 AddStackedCount = Int(status, "AddStackedCount", 1),
                 AddStackedRandomMinCount = Int(status, "AddStackedRandomMinCount", 1),
@@ -358,6 +363,8 @@ namespace Zjcs.Combat.Official
                 NumOfStart = 1,
                 MaxFalloffCount = -1
             };
+            if (hpDecrease != null)
+                AddHpTriggerStatuses(hpDecrease, result.HpTriggerStatuses);
             if (falloff != null)
             {
                 result.FalloffTarget = Int(falloff, "FalloffTarget");
@@ -729,6 +736,19 @@ namespace Zjcs.Combat.Official
                 CancelDiagonally = Bool(row, "CancelDiagonally"),
                 HasConditions = conditions
             };
+        }
+
+        private static void AddHpTriggerStatuses(Dictionary<string, object> component,
+            List<int> output)
+        {
+            object raw;
+            if (!component.TryGetValue("StatusList", out raw) || raw == null) return;
+            foreach (object item in Array(raw, "StatusList"))
+            {
+                Dictionary<string, object> row = Object(item, "hp trigger status");
+                int statusId = Int(row, "StatusId");
+                if (statusId > 0) output.Add(statusId);
+            }
         }
 
         private static void AddSourceMoves(Dictionary<string, object> skill,
