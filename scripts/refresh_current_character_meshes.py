@@ -36,8 +36,8 @@ def preserve(path):
             'preserved': backup.relative_to(ROOT).as_posix()}
 
 
-def load_skeleton(version):
-    root = ROOT / '.tools/source-packages/current' / version / 'skeletons/male'
+def load_skeleton(version, sex='male'):
+    root = ROOT / '.tools/source-packages/current' / version / 'skeletons' / sex
     raw = (root / 'skeleton.json').read_bytes()
     receipt = json.loads((root / 'source-manifest.json').read_text('utf8'))
     if receipt['manifest'] != version or receipt['output_sha256'] != sha(raw):
@@ -52,12 +52,24 @@ def load_skeleton(version):
 def build():
     current = OfficialSource().version
     reference = ROOT / 'assets/reference/character-creation/current-mesh-source-manifest.json'
+    old_female, old_female_source = load_skeleton('854_156383', 'female')
+    new_female, new_female_source = load_skeleton(current, 'female')
+    if old_female != new_female:
+        raise ValueError('Female geometry or animation changed and requires conversion')
+    female_proof = {'operation': 'Independently decode and compare all female skeleton and split animation data.',
+                    'sources': [old_female_source, new_female_source],
+                    'identical': True, 'animations': len(new_female['animations'])}
     if reference.exists():
         previous = json.loads(reference.read_text('utf8'))
         if previous['manifest'] == current:
             for record in previous['packages']:
                 if sha((ROOT / record['path']).read_bytes()) != record['sha256']:
                     raise ValueError('Current native mesh archive changed: ' + record['path'])
+            if previous.get('unchanged_female') != female_proof:
+                preserve(reference)
+                previous['unchanged_female'] = female_proof
+                previous['verification_generator_sha256'] = sha(Path(__file__).read_bytes())
+                reference.write_text(json.dumps(previous, ensure_ascii=False, indent=2) + '\n', 'utf8')
             return previous
     old, old_receipt = load_skeleton('854_156383')
     new, new_receipt = load_skeleton(current)
@@ -228,6 +240,7 @@ def build():
         receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
         receipts.append(record)
     result = {'manifest': current, 'base_manifest': '854_156383', 'skeleton_sources': [old_receipt, new_receipt],
+              'unchanged_female': female_proof,
               'operation': 'Convert native cached mesh topology after verifying unchanged pose evaluation inputs.',
               'counts': dict(counts), 'verified_skin_animations': sorted([list(pair) for pair in proved]),
               'packages': receipts, 'generator_sha256': sha(Path(__file__).read_bytes())}

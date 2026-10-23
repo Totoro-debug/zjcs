@@ -22,7 +22,9 @@ namespace Zjcs.Editor.CharacterCreation
         private const string SourcePayloadPath = "Assets/Official/CharacterCreation/creation-performance.json";
         private const string SourceManifestRelativePath = "assets/reference/character-creation/creation-performance-source-manifest.json";
         private const string UiManifestRelativePath = "assets/reference/character-creation/create-player-ui-source-manifest.json";
-        private const string ShaderBundlePath = ".tools/source-packages/extracted/defaultpackage_unityshaders.bundle";
+        // This performance export retains its original source profile; the active
+        // extraction directory follows the current cloud profile independently.
+        private const string ShaderBundlePath = ".tools/source-packages/history/854_156383/extracted/defaultpackage_unityshaders.bundle";
         private const string ShaderBundleMd5 = "cac97355bb4799c415e3cb1ef38b6dc5";
         private const string ShaderBundleSha256 = "f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe";
         private const string ShaderProgramSha256 = "3ed165d5dace4e415cf23aaa1119f5e99935354348f1ad7f706d54f3a4fba559";
