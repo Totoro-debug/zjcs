@@ -88,7 +88,8 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 ### 人物入口、窗口与共享表现
 
-- [ ] 将现有创角后“人物”入口与正式头像／底栏人物入口统一到当前存档槽，接通 `profession/skills/pet` 跳转的实际接收方，返回时恢复原顶栏、底栏、公共人物资料和主页状态。
+- [x] 创角后“人物”入口（`CharacterCreationFlowController`）与主城头像入口（`HomeHudView`）均以当前存档槽打开 `CharacterFeatureRuntime.OpenProfile`；主城使用自身 `SavesRoot` 重载。
+- [ ] `profession/skills/pet` 跳转事件仍无接收方，需随对应模块接入。
 - [x] 人物页职业按钮已绑定 `profession_name_{enum}` 本地化名称与 `ProfessionBase.Icon2` 图标（31 个职业有名称、31 个有图标），称号与有效期、各槽位状态已分别接入。
 - [ ] 按原 Function 与所属单机开放规则控制入口可见、可点、提示和动态刷新。
 - [ ] 在已恢复的布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D` 和属性行动态生成基础上，补齐 TMP 字体／材质／描边、状态切换动画、原动画／音效和本地化字段，以及物品图标、材料行和空状态。
