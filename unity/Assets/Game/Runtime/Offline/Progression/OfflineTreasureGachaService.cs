@@ -88,6 +88,8 @@ namespace Zjcs.Offline.Progression
     /// <summary>Applies the pinned treasure gacha rules to the local character save.</summary>
     public sealed class OfflineTreasureGachaService
     {
+        private const int ElementChestCountAchievementType = 8;
+        private const int LightElementId = 103;
         private const int PremiumCurrencyItemId = 2;
         private const int QuickBuyItemId = 301;
         private const int QuickBuyCurrencyPerItem = 8;
@@ -342,22 +344,77 @@ namespace Zjcs.Offline.Progression
         public TreasureGachaSourceNavigation ResolveElementItemSource(int sourceItemId, int sourceElementType,
             long nowUnixSeconds)
         {
-            if (sourceItemId <= 0 || sourceElementType <= 0 || nowUnixSeconds < 0) return null;
+            if (sourceItemId <= 0 || sourceElementType < 0 || nowUnixSeconds < 0) return null;
             TreasureItemConfig item = catalog.Item(sourceItemId);
             if (item == null || item.ElementType != sourceElementType) return null;
+            if (!IsElementSourceItem(sourceItemId)) return null;
+            int elementId = sourceElementType == 0 ? LightElementId : sourceElementType;
             TreasureElementGachaMapping mapping = catalog.Settings.ElementGachaMappings.FirstOrDefault(value =>
-                value != null && value.ElementId == sourceElementType && value.GachaType >= 8
+                value != null && value.ElementId == elementId && value.GachaType >= 8
                 && value.GachaType <= 12);
             TreasureGachaConfig gacha = mapping == null ? null : catalog.Gacha(mapping.GachaType);
-            if (gacha == null || gacha.CountAchievementType != 8
-                || !ProbabilityItems(gacha.GachaType, 0, nowUnixSeconds).Any(value => value.ItemId == sourceItemId))
-                return null;
+            if (gacha == null || gacha.CountAchievementType != ElementChestCountAchievementType) return null;
             return new TreasureGachaSourceNavigation
             {
                 SourceItemId = sourceItemId,
                 ResolvedTreasureItemId = sourceItemId,
                 SelectedElementGachaType = gacha.GachaType
             };
+        }
+
+        private bool IsElementSourceItem(int sourceItemId)
+        {
+            foreach (TreasureGachaConfig gacha in catalog.Gachas.Where(value =>
+                         value.CountAchievementType == ElementChestCountAchievementType))
+            {
+                TreasureChestConfig chest = catalog.Chest(gacha.ChestId);
+                TreasureRewardRule rule = chest == null || chest.RewardRules == null || chest.RewardRules.Length == 0
+                    ? null : catalog.Rule(chest.RewardRules[0]);
+                if (rule == null) continue;
+                int[] rewardIds = rule.IdList ?? Array.Empty<int>();
+                int[] weights = rule.WeightList ?? Array.Empty<int>();
+                for (int index = 0; index < rewardIds.Length && index < weights.Length; index++)
+                {
+                    if (weights[index] <= 0) continue;
+                    TreasureRandomReward reward = catalog.RandomReward(rewardIds[index]);
+                    if (reward == null)
+                    {
+                        if (rewardIds[index] == sourceItemId) return true;
+                        continue;
+                    }
+                    if (reward.IdList != null && reward.IdList.Length > 0)
+                    {
+                        for (int candidateIndex = 0; candidateIndex < reward.IdList.Length; candidateIndex++)
+                        {
+                            TreasureItemConfig candidate = catalog.Item(reward.IdList[candidateIndex]);
+                            int candidateWeight = reward.WeightOfIdList != null
+                                && reward.WeightOfIdList.Length > candidateIndex
+                                ? reward.WeightOfIdList[candidateIndex] : 100;
+                            if (candidateWeight > 0 && candidate != null
+                                && candidate.ClassId == sourceItemId
+                                && (reward.Quality <= 0 || candidate.Quality == reward.Quality)
+                                && (reward.ElementTypes == null || reward.ElementTypes.Length == 0
+                                    || reward.ElementTypes.Contains(candidate.ElementType))) return true;
+                        }
+                        continue;
+                    }
+
+                    var candidates = new Dictionary<int, TreasureItemConfig>();
+                    IEnumerable<TreasureGachaSeries> seriesRows = catalog.SortedSeries();
+                    if (reward.MapClassId != -1)
+                        seriesRows = seriesRows.Where(value => value.MapClassId == reward.MapClassId);
+                    foreach (TreasureGachaSeries series in seriesRows)
+                        AddSeriesCandidates(series, reward, candidates);
+                    if (candidates.Count == 0)
+                        foreach (int fallbackId in reward.DefaultGachaIds ?? Array.Empty<int>())
+                        {
+                            TreasureGachaSeries fallback = catalog.SeriesInfo(fallbackId);
+                            if (fallback != null) AddSeriesCandidates(fallback, reward, candidates);
+                        }
+                    if (candidates.ContainsKey(sourceItemId)) return true;
+                }
+            }
+            return false;
         }
 
         public TreasureGachaResult ConfirmOpenSeries(int selectedSeriesId, long nowUnixSeconds,
