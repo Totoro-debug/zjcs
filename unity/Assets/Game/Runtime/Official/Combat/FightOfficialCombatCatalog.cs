@@ -390,6 +390,29 @@ namespace Zjcs.Combat.Official
         }
 
         private Dictionary<int, string> monsterNames;
+        private Dictionary<int, int> monsterIconIds;
+
+        /// <summary>Official monster table IconId used by portrait resources named G_&lt;IconId&gt;.</summary>
+        public int MonsterIconId(int monsterId)
+        {
+            if (monsterId <= 0) return 0;
+            if (monsterIconIds == null)
+            {
+                monsterIconIds = new Dictionary<int, int>();
+                object raw;
+                if (battleTables.TryGetValue("monster", out raw) && raw is List<object> rows)
+                    foreach (object item in rows)
+                    {
+                        Dictionary<string, object> row = item as Dictionary<string, object>;
+                        if (row == null) continue;
+                        int id = Int(row, "Id");
+                        int mappedIconId = Int(row, "IconId");
+                        if (id > 0 && mappedIconId > 0 && !monsterIconIds.ContainsKey(id))
+                            monsterIconIds.Add(id, mappedIconId);
+                    }
+            }
+            return monsterIconIds.TryGetValue(monsterId, out int iconId) ? iconId : 0;
+        }
 
         /// <summary>
         /// Official monster display name from the pinned monster table: CustomTypeName when the
