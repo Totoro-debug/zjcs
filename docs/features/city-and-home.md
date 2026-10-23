@@ -82,7 +82,7 @@
 
 人物页底栏已通过 `CharacterFeatureRuntime.OpenProfile(slotId, savesRoot)` 打开并可返回家园；人物、行囊、商城仍由各自所属页维护内部功能范围。家园当前实际接入床铺、小推车、邮箱、扭蛋机、果树、女神牌／祈愿及人物页；桌面、餐桌、炼丹炉、储物箱、售货机、星命、飞艇等入口仍须逐项核对所属模块并完成返回／显隐接线。
 
-验证边界：`python -B scripts/check_unity_project.py` 通过（28101 GUID；新增家园无元数据错误）。Unity 2022.3.57f1c2 冻结副本 Editor 编译 `Tundra build success`，Play Mode 隔离存档验收 13 项全部通过：384 场景层/57面板/12694物品、家具维修、床铺3小时150经验领取、小推车解锁、邮件投递/领取、昼夜阶段、15槽随机奖励生成/领取、家具点击区/镜头夹取、人物页进入/返回、窗口构建和存档持久化。验收截图/报告仅保留在本地 `output/home-acceptance-*`。真实鼠标拖拽/模态遮挡、主工程当下并行编辑版本的 Editor 编译和 Windows Player 未验收。
+验证边界：`python -B scripts/check_unity_project.py` 通过（28101 GUID；新增家园无元数据错误）。Unity 2022.3.57f1c2 冻结副本 Editor 编译 `Tundra build success`，Play Mode 隔离存档验收 13 项全部通过：384 场景层/68面板/12694物品、家具维修、床铺3小时150经验领取、小推车解锁、邮件投递/领取、昼夜阶段、15槽随机奖励生成/领取、家具点击区/镜头夹取、人物页进入/返回、窗口构建和存档持久化。验收截图/报告仅保留在本地 `output/home-acceptance-*`。真实鼠标拖拽/模态遮挡、主工程当下并行编辑版本的 Editor 编译和 Windows Player 未验收。
 
 本模块已完成资源暂存、场景/HUD/收益/邮件/随机奖励/角色入口/果树与扭蛋接线及上述隔离副本验收。验收未覆盖：真实鼠标拖动与窗口遮挡、环境动画/粒子、教学图执行器、所有设施子页面与 Windows Player。
 
