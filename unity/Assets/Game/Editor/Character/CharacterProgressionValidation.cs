@@ -109,12 +109,13 @@ namespace Zjcs.Editor.Character
             if (loaded.CumulativeLevelExperience.Count < 2 || loaded.LevelLimits.Count == 0
                 || loaded.BlessLevels.Count == 0 || loaded.Appearances.Count == 0 || loaded.Skins.Count == 0)
                 throw new InvalidOperationException("Official character catalog failed structural validation.");
-            int limit0 = OfflineCharacterExperience.BaseLevelLimit(0, loaded.LevelLimits);
+            int firstSubRank = loaded.LevelLimits.Min(value => value.SubRank);
+            int limit0 = OfflineCharacterExperience.BaseLevelLimit(firstSubRank, loaded.LevelLimits);
             Require(limit0 > 0 && limit0 < loaded.CumulativeLevelExperience.Count,
                 "Read the first sub-rank level limit");
             long capExperience = loaded.CumulativeLevelExperience[limit0];
             CharacterExperienceSnapshot atCap = OfflineCharacterExperience.Calculate(
-                capExperience, 0, 0, 1, limit0, false, true, false, 0,
+                capExperience, 0, firstSubRank, 1, limit0, false, true, false, 0,
                 loaded.CumulativeLevelExperience, loaded.LevelLimits, loaded.BlessLevels);
             Require(atCap.Level == limit0 && atCap.IsStoredExperience && !atCap.IsBlessing,
                 "Cross-subrank experience is capped and shown as stored at the rank limit");
@@ -124,7 +125,7 @@ namespace Zjcs.Editor.Character
             {
                 CharacterBlessLevelRecord row = blessRows[1];
                 CharacterExperienceSnapshot blessed = OfflineCharacterExperience.Calculate(
-                    capExperience, row.Exp + 1, 0, 1, limit0, true, false, false, row.BlessLevel + 1,
+                    capExperience, row.Exp + 1, firstSubRank, 1, limit0, true, false, false, row.BlessLevel + 1,
                     loaded.CumulativeLevelExperience, loaded.LevelLimits, loaded.BlessLevels);
                 Require(blessed.IsBlessing && !blessed.IsStoredExperience
                     && blessed.BlessLevel == row.BlessLevel && blessed.Level == limit0 + row.BlessLevel,
