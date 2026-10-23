@@ -19,6 +19,10 @@
 
 `activate_official_source.py` 校验后更新原始提取视图，旧提取视图及旧索引保留在 `.tools/source-packages/history/854_156383/`，所有版本原始缓存均保留。该步骤不修改 Unity 已转换素材；模块只有完成重新转换、加载绑定与实际运行验证，才更新为新版已接入。来源及现状以 [SOURCES.md](../assets/reference/SOURCES.md) 和各模块来源清单为准。
 
+角色已接入素材的新版转换使用 `convert_official_skeletons.py`、`refresh_current_character_meshes.py` 和 `refresh_current_native_prefabs.py`：独立读取官方骨骼及拆分动画，先核对骨骼、约束、影响采样顶点的动画通道和附件几何，再更新创角／人物网格包及 92 个男体原生 prefab 的三角形索引。未变化的采样顶点与两条实际原生动画保留；这不代表新增动作已经接入。原始二进制、独立解码结果、旧网格包和旧 prefab 均保存在 `.tools/source-packages/`，转换输入输出哈希见 `assets/reference/character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json`。男女模型重新导出保留原 `.meta` 与 GUID。
+
+该角色资源替换已通过 Editor 导入／编译和创角 Play Mode 流程；实际查看了男女体型及染色界面截图。交互使用 Unity EventSystem 按坐标命中进行模拟，覆盖外观组、染色、命名、草稿恢复、存档及初始武器，不占用系统鼠标。此结果仅覆盖已接入的角色资源和上述流程，其他模块的新版替换与验证分别记录。
+
 按需提取时复用 `scripts/official_apk.py` 的 `Apk` 读取器及 CAB 依赖解析。提取命令先读 APK，再读已校验且有来源凭据的缓存；音频使用 `WwiseBnk` 分包流程。完整操作见 [`assets/reference/SOURCES.md`](../assets/reference/SOURCES.md)。
 
 Unity 优先恢复官方 prefab、场景层级、骨骼、动画、材质和引用。只有在确有需要时才转换格式或适配 Windows。新增载荷时，同步更新模块来源清单、实际输入输出哈希、Unity `.meta` 和显式加载绑定；下载或复制原始 bundle 不代表完成迁移。
