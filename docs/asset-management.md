@@ -27,6 +27,8 @@
 
 新版表格先按当前客户端构造器完整解码 450 张表，再通过 `prepare_current_table_payloads.py`／`activate_current_table_payloads.py` 更新 23 份已有载荷；投影保留现有本地字段。`prepare_current_combat_payloads.py` 使用两版生成的 formatter 对比并更新 6 份已接入战斗配置；`refresh_current_material_payloads.py` 更新 743 份载荷内实际绑定的材质属性，其中 Unity 直接使用 2 份。家园原生资产重新导出，保留 `.meta` 和 GUID；29 份层级／布局数据、15 份中文载荷、11 张 Sprite 及 3 份相关元数据分别转换并保留原文件。地图 10 当前表重建结果与现有接入数据完全一致，来源凭据在 `assets/reference/official-map/current-*-source-manifest.json`。这组来源转换不表示各功能的未实现部分已经完成。
 
+当前运行入口中的 `Commerce/commerce-runtime.json`、`Home/rules.json` 与 `Home/scene.json` 同步保存本轮官方配置、文案及命运星象网格更新；共享文件仅纳入本轮来源转换差异，保留其他模块已有字段。
+
 转换工具复跑会核对同一路径的后续转换哈希链，已激活的结果不会再次按旧基线覆盖；无法对应的工作区变化会停止写入。其他会话新增的官方表先核对当前完整表内容，保留其实际载荷并登记来源。`sync_current_output_inventories.py` 只同步输出位置的哈希，历史输入仍保留真实版本；处理时实际使用的旧工具版本也按 SHA256 保存在 `.tools/source-packages/history/converted/`。
 
 按需提取时复用 `scripts/official_apk.py` 的 `Apk` 读取器及 CAB 依赖解析。提取命令先读 APK，再读已校验且有来源凭据的缓存；音频使用 `WwiseBnk` 分包流程。完整操作见 [`assets/reference/SOURCES.md`](../assets/reference/SOURCES.md)。
