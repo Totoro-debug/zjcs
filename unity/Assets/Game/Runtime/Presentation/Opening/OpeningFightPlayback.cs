@@ -66,6 +66,7 @@ namespace Zjcs.Presentation.Opening
         public int PreparedUnits { get; private set; }
         public int TimelineItems => timelineItems.Count;
         public int DamageNumbers { get; private set; }
+        public int ActionAnimations { get; private set; }
 
         public void RequestFastForward()
         {
@@ -262,10 +263,51 @@ namespace Zjcs.Presentation.Opening
             entityState[entity.EntityId] = entity;
             TryCreateUnit(entity);
             if (raw.TryGetValue("ComponentList", out object components) && components is List<object> list)
+            {
                 foreach (object item in list)
-                    if (item is Dictionary<string, object> component
-                        && OpeningJson.String(component, "$type").Contains("FightDamageComponent"))
-                        ShowDamage(component);
+                {
+                    if (!(item is Dictionary<string, object> component)) continue;
+                    string type = OpeningJson.String(component, "$type");
+                    if (type.Contains("FightDamageComponent")) ShowDamage(component);
+                    else if (type.Contains("ActionComponent")) PlayAction(component);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The record carries the official action type for each acting unit. Only the
+        /// unambiguous ones map onto the converted Spine animation names.
+        /// </summary>
+        private void PlayAction(Dictionary<string, object> component)
+        {
+            string actionType = OpeningJson.String(component, "ActionType");
+            string alias;
+            switch (actionType)
+            {
+                case "Skill": alias = "skill_01"; break;
+                case "AirCombo": alias = "attack_01"; break;
+                case "Move": alias = "run_01"; break;
+                case "Die": alias = "die_01"; break;
+                default: return;
+            }
+            if (!component.TryGetValue("ApplyId", out object applied) || !(applied is Dictionary<string, object> id)) return;
+            int unitId = OpeningJson.Int(id, "EntityId");
+            if (!units.TryGetValue(unitId, out SkeletonAnimation unit) || unit == null) return;
+            if (!bindings.TryGetValue(unitId, out OfficialBattleModelBinding binding)) return;
+            string clip = ResolveAlias(binding, alias);
+            if (clip == null) return;
+            unit.AnimationState.SetAnimation(0, clip, false);
+            string idle = ResolveAlias(binding, "idle_01");
+            if (idle != null) unit.AnimationState.AddAnimation(0, idle, true, 0f);
+            ActionAnimations++;
+        }
+
+        private string ResolveAlias(OfficialBattleModelBinding binding, string alias)
+        {
+            foreach (OfficialBattleAnimationAlias animation in binding.animations)
+                if (animation.name == alias) return animation.spineName;
+            return binding.skeleton != null && binding.skeleton.GetSkeletonData(true).FindAnimation(alias) != null
+                ? alias : null;
         }
 
         private void ShowDamage(Dictionary<string, object> component)
