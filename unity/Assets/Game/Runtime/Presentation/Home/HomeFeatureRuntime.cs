@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
@@ -34,6 +36,10 @@ namespace Zjcs.Presentation.Home
         private HomeHudView hud;
         private TreasureGachaRuntimeCatalog treasureGachaCatalog;
         private OfflineTreasureGachaService treasureGacha;
+        private PetGachaRuntimeCatalog petGachaCatalog;
+        private OfflinePetGachaService petGacha;
+        private OfficialPetGachaAssetCatalog petGachaAssets;
+        private OfflineFruitTreeService fruitTree;
         private WishScreenController wishes;
         private HomeConditionContext context;
         private Action onClose;
@@ -41,6 +47,13 @@ namespace Zjcs.Presentation.Home
         private Transform uiParent;
         private float advanceTimer;
         private long lastAdvanceUnix;
+        private bool fruitClockRollbackWarned;
+        private string pendingFruitClockRollbackMessage;
+        private int pendingFruitTreeRepairTutorialType = -1;
+        private bool pendingFruitTreeCollectionTutorial;
+        private AudioSource fruitTreeTutorialVoiceSource;
+        private AudioClip currentFruitTreeTutorialVoice;
+        private int fruitTreeTutorialVoiceRequestVersion;
 
         public string ActiveProfileSlotId => slotId;
         public OfflineHomeIncomeSession Session => session;
@@ -52,6 +65,9 @@ namespace Zjcs.Presentation.Home
         public HomeConditionContext Context => context;
         public OfflineTreasureGachaService TreasureGacha => treasureGacha;
         public TreasureGachaRuntimeCatalog TreasureGachaCatalog => treasureGachaCatalog;
+        public OfflinePetGachaService PetGacha => petGacha;
+        public PetGachaRuntimeCatalog PetGachaCatalog => petGachaCatalog;
+        public OfficialPetGachaAssetCatalog PetGachaAssets => petGachaAssets;
         public int BlessingLevel { get; private set; } = 1;
         public HomeEnvironmentView Environment => environment;
         public HomeSceneView Scene => scene;
@@ -59,6 +75,7 @@ namespace Zjcs.Presentation.Home
 
         public void RefreshRewards() => rewards?.Refresh();
 
+        public void RefreshCounts() => hud?.RefreshCounts();
         public string CharacterName => profile?.Save.Player.CharacterName ?? string.Empty;
         public int Level => profile?.Save.Player.Level ?? 1;
         public int SubRank => profile?.Save.Player.SubRank ?? 1;
@@ -86,17 +103,41 @@ namespace Zjcs.Presentation.Home
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
             profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             profile.Reload();
+            fruitTree = new OfflineFruitTreeService(profile);
             catalog = HomeAssetCatalog.LoadDefault();
             catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
                 "TreasureGacha", "ui.json"));
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "PetGacha", "ui.json"));
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "PetGacha", "performance-ui.json"));
             treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
             treasureGacha = new OfflineTreasureGachaService(profile, treasureGachaCatalog);
+            try
+            {
+                petGachaCatalog = OfficialPetGachaAssets.LoadDefault();
+                petGachaAssets = Resources.Load<OfficialPetGachaAssetCatalog>(
+                    "PetGacha/official-pet-gacha-assets");
+                if (petGachaAssets == null)
+                    throw new InvalidOperationException("Official pet gacha native models are not installed.");
+                petGachaAssets.Validate(petGachaCatalog);
+                petGacha = new OfflinePetGachaService(profile, petGachaCatalog);
+            }
+            catch (Exception error)
+            {
+                petGacha = null;
+                Debug.LogWarning("Home pet gacha unavailable: " + error.Message);
+            }
             rules = OfficialHomeRules.LoadDefault();
             homeProgression = new OfflineHomeProgression(rules);
             BlessingLevel = 1;
             ReloadContext();
+            long openedAt = Now();
+            fruitTree.TryAutoRepairProduction(profile.Save.Player.Level, context.AnyGoddessActive,
+                openedAt, "home:fruit-tree:auto-repair:" + slotId);
+            AdvanceFruitTree(openedAt);
             session = OpenSession();
-            lastAdvanceUnix = Now();
+            lastAdvanceUnix = openedAt;
             scene = new HomeSceneView(catalog, transform);
             environment = new HomeEnvironmentView(scene, Now());
             rewards = new HomeRewardView(this, catalog, transform);
@@ -107,6 +148,15 @@ namespace Zjcs.Presentation.Home
             input.SetRewardHit(OnRewardHit);
             hud = new HomeHudView(this, uiParent);
             hud.Build();
+            fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();
+            fruitTreeTutorialVoiceSource.playOnAwake = false;
+            fruitTreeTutorialVoiceSource.loop = false;
+            fruitTreeTutorialVoiceSource.spatialBlend = 0f;
+            if (!string.IsNullOrEmpty(pendingFruitClockRollbackMessage))
+            {
+                hud.ShowNotice(pendingFruitClockRollbackMessage);
+                pendingFruitClockRollbackMessage = null;
+            }
             ApplyFurnitureStates();
             RefreshIncomeCatalog();
             DrainHomeInventory();
@@ -114,6 +164,64 @@ namespace Zjcs.Presentation.Home
         }
 
         private static long Now() => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        public void PlayFruitTreeTutorialVoice(string eventKey)
+        {
+            StopFruitTreeTutorialVoice();
+            string relativePath = HomeFruitTreeTutorialCatalog.VoiceFile(eventKey);
+            StartCoroutine(LoadFruitTreeTutorialVoice(relativePath, eventKey,
+                fruitTreeTutorialVoiceRequestVersion));
+        }
+
+        public void StopFruitTreeTutorialVoice()
+        {
+            fruitTreeTutorialVoiceRequestVersion++;
+            if (fruitTreeTutorialVoiceSource != null)
+            {
+                fruitTreeTutorialVoiceSource.Stop();
+                fruitTreeTutorialVoiceSource.clip = null;
+            }
+            if (currentFruitTreeTutorialVoice != null) Destroy(currentFruitTreeTutorialVoice);
+            currentFruitTreeTutorialVoice = null;
+        }
+
+        private IEnumerator LoadFruitTreeTutorialVoice(string relativePath, string eventKey, int version)
+        {
+            string path = Path.Combine(Application.streamingAssetsPath,
+                relativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(path) || !Uri.TryCreate(path, UriKind.Absolute, out Uri uriValue))
+            {
+                Debug.LogWarning("Official fruit tree tutorial voice path is unavailable: " + eventKey);
+                yield break;
+            }
+
+            using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(uriValue.AbsoluteUri,
+                AudioType.OGGVORBIS))
+            {
+                yield return request.SendWebRequest();
+                if (version != fruitTreeTutorialVoiceRequestVersion) yield break;
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogWarning("Official fruit tree tutorial voice could not be loaded for "
+                        + eventKey + ": " + request.error);
+                    yield break;
+                }
+
+                currentFruitTreeTutorialVoice = DownloadHandlerAudioClip.GetContent(request);
+                if (currentFruitTreeTutorialVoice == null)
+                {
+                    Debug.LogWarning("Official fruit tree tutorial voice decoded to an empty clip: " + eventKey);
+                    yield break;
+                }
+                fruitTreeTutorialVoiceSource.clip = currentFruitTreeTutorialVoice;
+                fruitTreeTutorialVoiceSource.Play();
+            }
+
+            while (version == fruitTreeTutorialVoiceRequestVersion
+                && fruitTreeTutorialVoiceSource != null && fruitTreeTutorialVoiceSource.isPlaying)
+                yield return null;
+            if (version == fruitTreeTutorialVoiceRequestVersion) StopFruitTreeTutorialVoice();
+        }
 
         private void ReloadContext()
         {
@@ -130,6 +238,8 @@ namespace Zjcs.Presentation.Home
                 StoryCount = _ => 0,
                 StoryPlayed = _ => false,
                 HasItemOfType = _ => false,
+                AnyGoddessActive = profile.Save.World.ActivatedGoddessRegions != null
+                    && profile.Save.World.ActivatedGoddessRegions.Count > 0,
                 UnlockedMapClassIds = new HashSet<int>(player.UnlockedMapClassIds ?? new List<int>())
             };
             rules.CurrentContext = context;
@@ -192,9 +302,40 @@ namespace Zjcs.Presentation.Home
         {
             foreach (HomeFurnitureRecord record in rules.Furniture)
             {
-                HomeFurnitureState state = homeProgression.FurnitureState(session, record.type, context);
+                HomeFurnitureState state = FurnitureState(record.type);
                 scene.SetFurnitureState(record.type, state);
             }
+            scene.SetFruitTreeState(FurnitureState(OfflineFruitTreeService.ProductionFurnitureType),
+                FurnitureState(OfflineFruitTreeService.PetFurnitureType),
+                profile.Save.Player.FruitTree.StoredCount);
+        }
+
+        private HomeFurnitureState FurnitureState(int type)
+        {
+            if (type == OfflineFruitTreeService.ProductionFurnitureType
+                && profile.Save.Player.FruitTree.ProductionRepaired) return HomeFurnitureState.Functional;
+            if (type == OfflineFruitTreeService.PetFurnitureType
+                && profile.Save.Player.FruitTree.PetFacilityRepaired) return HomeFurnitureState.Functional;
+            if (type != OfflineFruitTreeService.ProductionFurnitureType
+                && type != OfflineFruitTreeService.PetFurnitureType)
+                return homeProgression.FurnitureState(session, type, context);
+            HomeFurnitureRecord record = rules.FurnitureOf(type);
+            if (record == null) return HomeFurnitureState.Locked;
+            HomeFurnitureState state = rules.IsMet(record.unlock, context)
+                ? HomeFurnitureState.CanRepair
+                : !rules.IsMet(record.repairNotice, context)
+                    ? HomeFurnitureState.Locked : HomeFurnitureState.RepairNotice;
+            if (type == OfflineFruitTreeService.ProductionFurnitureType)
+            {
+                HomeFurnitureRecord pet = rules.FurnitureOf(OfflineFruitTreeService.PetFurnitureType);
+                HomeFurnitureState petState = pet == null || !rules.IsMet(pet.repairNotice, context)
+                    ? HomeFurnitureState.Locked
+                    : rules.IsMet(pet.unlock, context)
+                        ? HomeFurnitureState.CanRepair : HomeFurnitureState.RepairNotice;
+                if (petState == HomeFurnitureState.CanRepair || petState == HomeFurnitureState.RepairNotice)
+                    return HomeFurnitureState.Locked;
+            }
+            return state;
         }
 
         private int OnRewardHit(Vector2 world) => rewards == null ? -1 : rewards.HitTest(world);
@@ -219,19 +360,53 @@ namespace Zjcs.Presentation.Home
         {
             HomeFurnitureRecord record = rules.FurnitureOf(type);
             if (record == null) return;
-            HomeFurnitureState state = homeProgression.FurnitureState(session, type, context);
+            HomeFurnitureState state = FurnitureState(type);
             switch (state)
             {
                 case HomeFurnitureState.Functional:
-                    if (!hud.IsClosedByNetworkPolicy(type)) OpenFurniture(type);
+                    if (type == OfflineFruitTreeService.ProductionFurnitureType
+                        || type == OfflineFruitTreeService.PetFurnitureType)
+                        OnFruitTreeClicked();
+                    else if (!hud.IsClosedByNetworkPolicy(type)) OpenFurniture(type);
                     break;
                 case HomeFurnitureState.CanRepair:
-                    hud.ShowRepair(type);
+                {
+                    if (pendingFruitTreeRepairTutorialType == type)
+                    {
+                        pendingFruitTreeRepairTutorialType = -1;
+                        hud.HideFruitTreeTutorialMask();
+                        hud.ShowRepair(type);
+                        hud.ShowFruitTreeRepairButtonMask();
+                        break;
+                    }
+                    OfflineFruitTreeProgress tutorialState = profile.Save.Player.FruitTree;
+                    if (type == OfflineFruitTreeService.ProductionFurnitureType
+                        && !tutorialState.ProductionRepairStorySeen)
+                        hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 0, () =>
+                        {
+                            pendingFruitTreeRepairTutorialType = type;
+                            hud.ShowFruitTreeFurnitureMask(type);
+                        });
+                    else if (type == OfflineFruitTreeService.PetFurnitureType
+                        && !tutorialState.PetRepairStorySeen)
+                        hud.ShowFruitTreeTutorial("FruitTreeUnlock2", 0, () =>
+                        {
+                            pendingFruitTreeRepairTutorialType = type;
+                            hud.ShowFruitTreeFurnitureMask(type);
+                        });
+                    else hud.ShowRepair(type);
                     break;
+                }
                 case HomeFurnitureState.RepairNotice:
                     hud.ShowNotice(rules.IsMet(record.repairNotice, context)
                         ? HomeNoticeText(type)
                         : "尚未满足解锁条件");
+                    break;
+                case HomeFurnitureState.Locked:
+                    OfflineFruitTreeProgress fruitState = profile.Save.Player.FruitTree;
+                    if (type == OfflineFruitTreeService.ProductionFurnitureType
+                        && !fruitState.ProductionRepaired && !fruitState.PetFacilityRepaired)
+                        hud.ShowNotice(catalog.LocalizedText("HomeFruitTree.InitialStateTip", "该果树设施尚未开放"));
                     break;
             }
         }
@@ -249,6 +424,7 @@ namespace Zjcs.Presentation.Home
             else if (type == 10) hud.ShowCart();
             else if (type == 6) hud.ShowMail();
             else if (type == 9) hud.ShowTreasureGacha();
+            else if (type == OfflineFruitTreeService.PetFurnitureType) hud.ShowPetGacha();
             else if (type == 5) OpenWishes();
             else hud.ShowFurniturePlaceholder(type);
         }
@@ -267,11 +443,118 @@ namespace Zjcs.Presentation.Home
                 });
         }
 
+        private void OnFruitTreeClicked()
+        {
+            if (!AdvanceFruitTree(Now()))
+            {
+                hud.HideFruitTreeTutorialMask();
+                return;
+            }
+            OfflineFruitTreeProgress state = profile.Save.Player.FruitTree;
+            if (state.ProductionRepaired && !state.ProductionRepairStorySeen)
+            {
+                hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 1, CompleteProductionRepairTutorial);
+                return;
+            }
+            FruitTreeResult collected = fruitTree.Collect("home:fruit-tree:collect:" + slotId + ":"
+                + Guid.NewGuid().ToString("N"));
+            if (collected.IsApplied)
+            {
+                ReloadContext();
+                hud.RefreshAll();
+                ApplyFurnitureStates();
+                Action showReward = () => hud.ShowNotice("收取 " + collected.CollectedCount + " 个果实，获得 "
+                    + rules.ItemName(OfflineFruitTreeService.RewardItemId) + " × " + collected.CollectedCount);
+                bool showCollectionTutorial = pendingFruitTreeCollectionTutorial
+                    || !profile.Save.Player.FruitTree.CollectionTutorialSeen;
+                pendingFruitTreeCollectionTutorial = false;
+                hud.HideFruitTreeTutorialMask();
+                if (showCollectionTutorial)
+                    hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 2, () =>
+                    {
+                        fruitTree.MarkCollectionTutorialSeen();
+                        showReward();
+                    });
+                else showReward();
+                return;
+            }
+
+            if (profile.Save.Player.FruitTree.PetFacilityRepaired)
+            {
+                OpenFurniture(OfflineFruitTreeService.PetFurnitureType);
+                return;
+            }
+            long seconds = fruitTree.SecondsUntilNextFruit();
+            hud.ShowNotice(seconds == long.MaxValue ? "果树暂时没有成熟果实"
+                : "下一颗果实将在 " + FormatFruitDuration(seconds) + " 后成熟");
+        }
+
+        private static string FormatFruitDuration(long seconds)
+        {
+            if (seconds < 60) return seconds + " 秒";
+            if (seconds < 3600) return (seconds / 60) + " 分钟";
+            return (seconds / 3600) + " 小时 " + (seconds % 3600 / 60) + " 分钟";
+        }
+
+        private bool AdvanceFruitTree(long now)
+        {
+            if (fruitTree == null) return true;
+            FruitTreeResult result = fruitTree.AdvanceTo(now);
+            if (result.Code == FruitTreeResultCode.ClockRollback)
+            {
+                if (!fruitClockRollbackWarned)
+                {
+                    if (hud == null) pendingFruitClockRollbackMessage = result.Message;
+                    else hud.ShowNotice(result.Message);
+                }
+                fruitClockRollbackWarned = true;
+                if (scene != null)
+                    scene.SetFruitTreeState(FurnitureState(OfflineFruitTreeService.ProductionFurnitureType),
+                        FurnitureState(OfflineFruitTreeService.PetFurnitureType),
+                        profile.Save.Player.FruitTree.StoredCount);
+                return false;
+            }
+            else if (profile.Save.Player.FruitTree.LastUpdateUnixSeconds <= now)
+            {
+                fruitClockRollbackWarned = false;
+                pendingFruitClockRollbackMessage = null;
+            }
+            if (scene != null)
+                scene.SetFruitTreeState(FurnitureState(OfflineFruitTreeService.ProductionFurnitureType),
+                    FurnitureState(OfflineFruitTreeService.PetFurnitureType),
+                    profile.Save.Player.FruitTree.StoredCount);
+            return true;
+        }
+
         public bool TryRepair(int type)
         {
             string receipt = "home:repair:" + slotId + ":" + type;
-            bool repaired = homeProgression.RepairFurniture(session, type, context, profile.InventoryCount,
-                (item, count) => ConsumeItems(item, count, receipt + ":cost"), receipt);
+            bool repaired;
+            if (type == OfflineFruitTreeService.ProductionFurnitureType
+                || type == OfflineFruitTreeService.PetFurnitureType)
+            {
+                long now = Now();
+                profile.Reload();
+                ReloadContext();
+                if (!AdvanceFruitTree(now)) return false;
+                profile.Reload();
+                ReloadContext();
+                FruitTreeResult result = fruitTree.TryRepair(type, profile.Save.Player.Level,
+                    context.AnyGoddessActive, now, receipt);
+                repaired = result.IsApplied;
+                if (!repaired) hud?.ShowNotice(result.Code == FruitTreeResultCode.ConditionNotMet
+                    ? "尚未满足维修条件" : result.Message);
+                if (repaired)
+                {
+                    ReloadContext();
+                    scene?.PlayFruitTreeRepairEffect(type);
+                }
+            }
+            else
+            {
+                repaired = homeProgression.RepairFurniture(session, type, context, profile.InventoryCount,
+                    (item, count) => ConsumeItems(item, count, receipt + ":cost"), receipt);
+            }
             if (repaired)
             {
                 ApplyFurnitureStates();
@@ -280,6 +563,29 @@ namespace Zjcs.Presentation.Home
                 hud.RefreshAll();
             }
             return repaired;
+        }
+
+        public void OnFruitTreeRepairDialogClosed(int type)
+        {
+            OfflineFruitTreeProgress state = profile.Save.Player.FruitTree;
+            if (type == OfflineFruitTreeService.ProductionFurnitureType && !state.ProductionRepairStorySeen)
+                hud.ShowFruitTreeTutorial("FruitTreeUnlock1", 1,
+                    CompleteProductionRepairTutorial);
+            else if (type == OfflineFruitTreeService.PetFurnitureType && !state.PetRepairStorySeen)
+                hud.ShowFruitTreeTutorial("FruitTreeUnlock2", 1,
+                    () => fruitTree.MarkRepairStorySeen(type));
+        }
+
+        private void CompleteProductionRepairTutorial()
+        {
+            FruitTreeResult result = fruitTree.MarkRepairStorySeen(OfflineFruitTreeService.ProductionFurnitureType);
+            if (result.Code != FruitTreeResultCode.Applied && result.Code != FruitTreeResultCode.Unchanged)
+            {
+                hud.ShowNotice("果树教学状态未能保存");
+                return;
+            }
+            pendingFruitTreeCollectionTutorial = true;
+            hud.ShowFruitTreeCollectionMask();
         }
 
         public long TryCollect(int hangUpId)
@@ -440,6 +746,7 @@ namespace Zjcs.Presentation.Home
         {
             input?.Update();
             environment?.Tick(Time.unscaledDeltaTime);
+            scene?.Tick(Time.unscaledDeltaTime);
             hud?.Tick();
             wishes?.Tick();
             advanceTimer += Time.unscaledDeltaTime;
@@ -450,10 +757,11 @@ namespace Zjcs.Presentation.Home
             lastAdvanceUnix = now;
             try
             {
+                if (!AdvanceFruitTree(now)) return;
                 session.AdvanceTo(now);
                 rewards?.Refresh();
                 DrainHomeInventory();
-                hud?.RefreshCounts();
+                hud?.RefreshAll();
             }
             catch (Exception error)
             {
@@ -464,6 +772,7 @@ namespace Zjcs.Presentation.Home
         private void OnDestroy()
         {
             if (input != null) input.FurnitureClicked -= OnFurnitureClicked;
+            StopFruitTreeTutorialVoice();
         }
     }
 }

@@ -45,6 +45,10 @@ namespace Zjcs.Presentation.Home
         private HomeUiRenderer petGachaRenderer;
         private GameObject petGachaPanel;
         private GameObject petResultLayer;
+        private GameObject petConfirmLayer;
+        private GameObject petDetailLayer;
+        private GameObject petScoreLayer;
+        private HomeUiRenderer petDetailRenderer;
         private int petHistoryPage;
         private bool petHundredSuppressChoice;
 
@@ -360,10 +364,19 @@ namespace Zjcs.Presentation.Home
             renderer.SetActive("/PetGachaPanel/BgPanel1/Content/MiddleGo/ShopContent/TopGo/RefreshGo/RefreshInfoGo/RefreshBtn", false);
         }
 
-        private static void Bind(HomeUiRenderer renderer, string path, Action action)
+        private void Bind(HomeUiRenderer renderer, string path, Action action)
         {
             Button button = renderer.Find<Button>(path);
-            if (button != null) button.onClick.AddListener(() => action?.Invoke());
+            if (button != null)
+            {
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() => action?.Invoke());
+                return;
+            }
+            Toggle toggle = renderer.Find<Toggle>(path);
+            if (toggle == null) return;
+            toggle.onValueChanged.RemoveAllListeners();
+            toggle.onValueChanged.AddListener(value => { if (value) action?.Invoke(); });
         }
 
         private void ShowPetTab(string tab)
@@ -387,13 +400,23 @@ namespace Zjcs.Presentation.Home
                 + host.PetGachaCatalog.Settings.DailyLimit.ToString(CultureInfo.InvariantCulture) + " 次");
             petGachaRenderer.SetText(prefix + "ScoreRewardUI/ScoreInfoBtn/TextScore",
                 "<color=#CBCF61>" + host.PetGacha.State.Score.ToString(CultureInfo.InvariantCulture) + "</color>");
-            PetGachaRewardRule rule = host.PetGachaCatalog.Rule(host.PetGacha.State.TotalDrawCount < 10 ? 20401 : 20400);
-            PetGachaRandomReward orange = rule == null ? null : host.PetGachaCatalog.RandomReward(53102);
             int left = Math.Max(1, 80 - host.PetGacha.PityMissCount(53102));
             petGachaRenderer.SetText(prefix + "PityBgImage/Txt1/TextTip",
                 "再结缘 " + left.ToString(CultureInfo.InvariantCulture) + " 次内必得传说幻兽");
-            if (orange != null && orange.ItemIds.Length > 0)
-                petGachaRenderer.SetActive(prefix + "GachaBtnContent/GachaHundredTimesBtn", true);
+            bool hasHundredPool = host.PetGachaCatalog.Chest?.OpenCounts.Contains(100) == true;
+            petGachaRenderer.SetActive(prefix + "GachaBtnContent/GachaHundredTimesBtn",
+                hasHundredPool && CanPetGachaDraw(100));
+        }
+
+        private bool CanPetGachaDraw(int count)
+        {
+            long owned = host.Profile.InventoryCount(host.PetGachaCatalog.Gacha.CostItemId);
+            if (owned >= count) return true;
+            if (host.Level < 41) return false;
+            long missing = count - owned;
+            long price = host.PetGachaCatalog.Settings.QuickBuyPrice;
+            long currency = host.Profile.InventoryCount(host.PetGachaCatalog.Settings.QuickBuyCurrencyItemId);
+            return missing <= long.MaxValue / price && currency >= missing * price;
         }
 
         private void RequestPetDraw(int count, bool confirmedHundred = false,
@@ -446,29 +469,34 @@ namespace Zjcs.Presentation.Home
 
         private void ShowPetGachaResult(IReadOnlyList<OfflinePetGachaAward> awards, int count)
         {
+            PlayPetGachaResultPerformance(awards, count);
+        }
+
+        private void ShowPetGachaResultPage(IReadOnlyList<OfflinePetGachaAward> awards, int count)
+        {
+            QueueNewPetIntroductions(awards);
             ClosePetLayer(ref petResultLayer);
-            HomeUiRenderer renderer = CreatePetLayer("pet_gacha_result", out petResultLayer);
+            HomeUiRenderer renderer = CreatePetLayer("pet_gacha_result", out petResultLayer,
+                ClosePetResult);
             OfflinePetGachaAward first = awards == null ? null : awards.FirstOrDefault();
             PetGachaItem firstItem = first == null ? null : host.PetGachaCatalog.Item(first.ItemId);
             renderer.SetTextByName("NameText", firstItem?.Name ?? "结缘结果");
             renderer.SetTextByName("TypeText", first == null ? string.Empty : QualityText(first.Quality));
             renderer.SetTextByName("DescText", PetAwardSummary(awards));
-            if (firstItem != null)
-            {
-                renderer.SetSpriteByName("ItemImg", catalog.FindSprite(firstItem.IconFile));
-                renderer.SetSpriteByName("ItemIcon", catalog.FindSprite(firstItem.IconFile));
-            }
+            PopulatePetGachaResult(renderer, awards, count);
             renderer.SetTextByName("FreeCount", "今日已结缘 " + host.PetGacha.DailyCount(DateTime.Now)
                 + "/" + host.PetGachaCatalog.Settings.DailyLimit);
-            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/CloseBtn", () => ClosePetLayer(ref petResultLayer));
-            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/SkipBtn", () => ClosePetLayer(ref petResultLayer));
+            renderer.SetActive("/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaHundredTimesBtn",
+                CanPetGachaDraw(100));
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/CloseBtn", ClosePetResult);
+            Bind(renderer, "/GachaResultPanel/BgPanel1/Content/SkipBtn", ClosePetResult);
             Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaOneTimesBtn/CommonBtn_CostItem",
                 () => RequestPetDraw(1));
             Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaTenTimesBtn/CommonBtn_CostItem",
                 () => RequestPetDraw(10));
             Bind(renderer, "/GachaResultPanel/BgPanel1/Content/MiddleGo/GachaBtnContent/GachaHundredTimesBtn/CommonBtn_CostItem",
                 () => RequestPetDraw(100));
-            if (count == 1) renderer.SetActive("/GachaResultPanel/BgPanel1/Content/MiddleGo/OneGrid", true);
+            ShowNextPetIntroduction();
         }
 
         private string PetAwardSummary(IReadOnlyList<OfflinePetGachaAward> awards)
@@ -514,6 +542,7 @@ namespace Zjcs.Presentation.Home
 
         public void Tick()
         {
+            TickPetIntroduction();
             if (noticeDeadline > 0f && Time.unscaledTime >= noticeDeadline)
             {
                 noticeDeadline = 0f;
@@ -561,11 +590,6 @@ namespace Zjcs.Presentation.Home
             button.onClick.AddListener(CloseDialog);
             HomeUiRenderer renderer = Renderer();
             GameObject panel = renderer.Create(panelKey, root.transform, null);
-            RectTransform panelRect = (RectTransform)panel.transform;
-            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.pivot = new Vector2(0.5f, 0.5f);
-            panelRect.anchoredPosition = Vector2.zero;
             build(renderer, panel);
             activeDialog = root;
             activeDialogRenderer = renderer;
@@ -574,15 +598,29 @@ namespace Zjcs.Presentation.Home
 
         public void CloseDialog()
         {
+            bool wasOpen = activeDialog != null;
             OnDialogClosing();
+            ClearPetVirtualList();
             if (activeDialog != null) UnityEngine.Object.Destroy(activeDialog);
             activeDialog = null;
             activeDialogRenderer = null;
             cartOpen = false;
             bedOpen = false;
+            petGachaRenderer = null;
+            petGachaPanel = null;
+            petDetailRenderer = null;
+            petHistoryPage = 0;
+            petHundredSuppressChoice = false;
+            petScoreRenderer = null;
+            petConfirmLayer = null;
+            petDetailLayer = null;
+            petScoreLayer = null;
+            petResultLayer = null;
+            if (wasOpen) OnDialogClosed();
         }
 
         partial void OnDialogClosing();
+        partial void OnDialogClosed();
 
         public void ShowRepair(int type)
         {
@@ -597,7 +635,12 @@ namespace Zjcs.Presentation.Home
                 if (repair == null) repair = FirstButton(renderer, "RepaireBtn");
                 if (repair != null) repair.onClick.AddListener(() =>
                 {
-                    if (host.TryRepair(type)) { CloseDialog(); Notify("维修完成"); }
+                    if (host.TryRepair(type))
+                    {
+                        CloseDialog();
+                        Notify("维修完成");
+                        host.OnFruitTreeRepairDialogClosed(type);
+                    }
                     else Notify("维修条件未满足");
                 });
             });

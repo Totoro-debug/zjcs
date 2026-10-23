@@ -966,6 +966,10 @@ prepare_pet_gacha_performance.py 从固定 854_156383 的 APK／匹配清单 CDN
 
 `prepare_pet_gacha_performance.py` 从 APK 清单解析外壳真实 bundle，保留默认 Animation 片段及扩展粒子材质。`Fx_XingKon_0002` 没有显式 `_MainTex`，使用已解析的原 shader 默认白纹理，以常量资源表达官方默认行为；不是替代图片。10 个官方 NoiseModule 的参数和曲线直接进入运行模块；Unity 引擎原生采样算法和 quality 实现未在当前官方客户端源码中取得，因此不声明逐轴或逐帧一致；原 `UIBloomManager.SetActive` 仅在 Bloom 全局开关开启且需求计数大于零时激活，需求计数由 `UIBloomRequirer.OnEnable/OnDisable` 管理；结缘使用的 prefab 共登记 6 个 `UIBloomGroup`、`UIBloomPlayerElement`、`UIBloomGraphicElement`，没有 Requirer。结缘页不自行注册需求或强制启用 Bloom；结缘页隐藏／离树时， 按 `PetGachaResultPerformer.OnDisable` 清空队列与计时、释放工作中的奖励与特效、停止音效并关闭操作遮罩，恢复显示时应用官方默认动画；`OnWindowClosing` 的停止计时行为一并迁移。结缘场景、结果与新幻兽介绍由原 UI 层级、RectTransform、动画和调用时序迁移，运行入口为该控制器及其 reward／effect／popup 脚本。价格黑底隐藏沿用用户明确确认的界面调整，不标为原版表现。校验命令为 `python scripts/prepare_pet_gacha_performance.py --check`；素材包和 Windows 发布状态见对应功能／地图验收文档。
 
+### 结缘新幻兽技能说明与词条
+
+`prepare_pet_gacha.py` 从固定版 `rules.json` 读取幼年支援技能的 `HyperLinkTypes`／`HyperLinkDatas`，将官方 EntryId 与技能说明一起写入结缘运行目录。词条名称、说明、图标及 `EntryDetailDialog`／`EntryDetailItem` 原始层级来自 [codex-links载荷](../official/codex-links/links.json)；该输入的来源对象及输出图标哈希见 [codex-links来源清单](codex-links/source-manifest.json)。脚本把实际需要的六个词条及原图标复制进 `PetGacha` 动态资源目录，并在 `pet-gacha/source-manifest.json` 登记输入、输出和SHA256。客户端行为依据固定版 `PetGetNewPanel`、`SkillHyperLinkDataProvider` 与 `HyperLinkClickHandlerEntry`；没有自绘技能说明或词条图片。
+
 
 2026-10-18：prepare_home_decoration.py 从固定 854_156383 的 131 个实际家具／主题／天气 prefab 原 Transform 追加 local_trs（原 m_LocalPosition、m_LocalRotation、m_LocalScale）。--transforms-only 核对既有实体 name 和完整源对象凭据，独立重读原对象，更新 assets/reference/home-decor/source-manifest.json 的输入与实体 SHA256；既有 AnimationClip 原曲线、插槽及创建偏移不变。运行时  迁移原父子局部矩阵，未添加自绘素材或自定关键帧。
 

@@ -27,8 +27,25 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<int, GameObject> unrepaired = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, List<HomeQuad>> clickRegions = new Dictionary<int, List<HomeQuad>>();
         private readonly Dictionary<string, Material> materials = new Dictionary<string, Material>(StringComparer.Ordinal);
+        private readonly List<Mesh> createdMeshes = new List<Mesh>();
         private readonly List<HomeSceneLayer> furnitureLayers = new List<HomeSceneLayer>();
         private readonly List<KeyValuePair<string, GameObject>> layerObjects = new List<KeyValuePair<string, GameObject>>();
+        private readonly Dictionary<string, GameObject> fruitTreeLayers = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+        private readonly Dictionary<string, GameObject> fruitTreeNativeObjects = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+        private readonly Dictionary<ParticleSystem, FruitTreeParticleState> fruitTreeParticles =
+            new Dictionary<ParticleSystem, FruitTreeParticleState>();
+        private readonly List<GameObject> fruitObjects = new List<GameObject>();
+        private readonly List<TreeMeshView> treeMeshViews = new List<TreeMeshView>();
+        private readonly HashSet<string> transientFruitTreeEffects = new HashSet<string>(StringComparer.Ordinal);
+        private readonly HashSet<string> activeFruitTreePaths = new HashSet<string>(StringComparer.Ordinal);
+        private HomeTreeAnimation treeAnimation;
+        private HomeFruitTreeStateAnimation[] treeStateAnimations;
+        private GameObject treeRoot;
+        private GameObject fruitTreeParticleRoot;
+        private GameObject fruitTreeNightLight;
+        private int treeFrameIndex;
+        private float treeFrameTimer;
+        private HomeFruitTreeScene fruitTreeData;
 
         public GameObject Root { get; }
         public Camera Camera { get; private set; }
@@ -45,6 +62,7 @@ namespace Zjcs.Presentation.Home
             BuildCamera();
             BuildBackground();
             BuildFurniture();
+            BuildFruitTree();
             BuildClickRegions();
         }
 
@@ -111,22 +129,26 @@ namespace Zjcs.Presentation.Home
                 if (region == null || region.vertices == null || region.vertices.Length < 8) continue;
                 string group = RootGroup(region.path);
                 if (!FurnitureRoots.TryGetValue(group, out int type)) continue;
+                if (group == "FruitTree" && (region.path ?? string.Empty).Contains("/HomeFruitTreePet/"))
+                    type = 11;
                 if (!clickRegions.TryGetValue(type, out List<HomeQuad> list))
                     clickRegions[type] = list = new List<HomeQuad>();
                 list.Add(region);
             }
         }
 
-        private void CreateQuad(HomeSceneLayer layer, int order, Transform parent)
+        private GameObject CreateQuad(HomeSceneLayer layer, int order, Transform parent,
+            Vector3? position = null, bool trackLayer = true)
         {
             Texture2D texture = catalog.FindTexture(layer.sprite?.file);
-            if (texture == null) return;
+            if (texture == null) return null;
             var go = new GameObject(layer.sprite.name);
             go.transform.SetParent(parent, false);
-            go.transform.position = Vector3.zero;
+            go.transform.position = position ?? Vector3.zero;
             var filter = go.AddComponent<MeshFilter>();
             var renderer = go.AddComponent<MeshRenderer>();
             var mesh = new Mesh { name = layer.path };
+            createdMeshes.Add(mesh);
             var vertices = new Vector3[4];
             for (int index = 0; index < 4; index++)
                 vertices[index] = new Vector3(layer.vertices[index * 2], layer.vertices[index * 2 + 1], 0);
@@ -153,11 +175,332 @@ namespace Zjcs.Presentation.Home
             mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
             mesh.RecalculateBounds();
             filter.mesh = mesh;
-            layerObjects.Add(new KeyValuePair<string, GameObject>(layer.path ?? string.Empty, go));
+            if (trackLayer) layerObjects.Add(new KeyValuePair<string, GameObject>(layer.path ?? string.Empty, go));
             renderer.sharedMaterial = Material(texture);
             renderer.sortingOrder = order;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
+            return go;
+        }
+
+        private void BuildFruitTree()
+        {
+            fruitTreeData = catalog.Scene.fruit_tree;
+            if (fruitTreeData == null) return;
+            treeStateAnimations = fruitTreeData.state_animations ?? Array.Empty<HomeFruitTreeStateAnimation>();
+
+            foreach (HomeSceneLayer layer in fruitTreeData.layers ?? Array.Empty<HomeSceneLayer>())
+            {
+                if (layer == null || string.IsNullOrEmpty(layer.path)) continue;
+                bool subFurniture = layer.path.Contains("/SubFurnitures/");
+                bool rope = layer.path == "/FruitTree/FruitTree_Rope";
+                bool nightLight = layer.path.EndsWith("/Light_Glow", StringComparison.Ordinal);
+                if (!subFurniture && !rope && !nightLight) continue;
+                GameObject go = CreateQuad(layer, 900 + layer.sorting_order, Root.transform, trackLayer: false);
+                if (go == null) continue;
+                go.name = layer.path;
+                if (subFurniture)
+                {
+                    fruitTreeLayers[layer.path] = go;
+                    go.SetActive(false);
+                }
+                else if (nightLight)
+                {
+                    fruitTreeNightLight = go;
+                    go.SetActive(false);
+                }
+            }
+
+            BuildFruitTreeParticles();
+
+            HomeSceneLayer fruitEffect = fruitTreeData.fruit_effect;
+            foreach (HomeFruitTreeSlot slot in fruitTreeData.fruit_slots ?? Array.Empty<HomeFruitTreeSlot>())
+            {
+                if (slot?.position == null || slot.position.Length < 2) continue;
+                Vector3 position = new Vector3(slot.position[0], slot.position[1],
+                    slot.position.Length > 2 ? slot.position[2] : 0f);
+                GameObject fruit = CreateQuad(fruitEffect, 1600, Root.transform, position, trackLayer: false);
+                if (fruit == null) continue;
+                float[] scale = slot.scale ?? Array.Empty<float>();
+                fruit.transform.localScale = new Vector3(scale.Length > 0 ? scale[0] : 1f,
+                    scale.Length > 1 ? scale[1] : 1f, 1f);
+                fruit.name = slot.path;
+                fruit.SetActive(false);
+                fruitObjects.Add(fruit);
+            }
+
+            treeRoot = new GameObject("FruitTreeSkeleton");
+            treeRoot.transform.SetParent(Root.transform, false);
+            float[] treePosition = fruitTreeData.tree_position ?? Array.Empty<float>();
+            treeRoot.transform.localPosition = new Vector3(treePosition.Length > 0 ? treePosition[0] : 0f,
+                treePosition.Length > 1 ? treePosition[1] : 0f,
+                treePosition.Length > 2 ? treePosition[2] : 0f);
+            treeRoot.transform.localScale = Vector3.one * (fruitTreeData.tree_scale <= 0f ? 1f : fruitTreeData.tree_scale);
+            HomeTreeAnimation initial = FindTreeAnimation("loop_3")
+                ?? (fruitTreeData.animations ?? Array.Empty<HomeTreeAnimation>()).FirstOrDefault();
+            SetTreeAnimation(initial);
+        }
+
+        private HomeTreeAnimation FindTreeAnimation(string name)
+        {
+            return (fruitTreeData?.animations ?? Array.Empty<HomeTreeAnimation>())
+                .FirstOrDefault(value => value != null && value.name == name);
+        }
+
+        private void SetTreeAnimation(HomeTreeAnimation value)
+        {
+            if (value == null || treeAnimation == value) return;
+            treeAnimation = value;
+            treeFrameIndex = 0;
+            treeFrameTimer = 0f;
+            ApplyTreeFrame(0);
+        }
+
+        public void SetFruitTreeState(HomeFurnitureState production, HomeFurnitureState pet, long matureCount)
+        {
+            if (fruitTreeData == null) return;
+            int rootState = 0;
+            HomeFurnitureState[] states = { production, pet };
+            int[] types = { 4, 11 };
+            var activePaths = new HashSet<string>(StringComparer.Ordinal);
+            for (int index = 0; index < states.Length; index++)
+            {
+                int state = (int)states[index];
+                if (state != (int)HomeFurnitureState.Locked)
+                {
+                    rootState = index * 2 + 1;
+                    if (states[index] == HomeFurnitureState.Functional) rootState++;
+                }
+                AddStatePaths(activePaths, types[index] + ":" + state);
+            }
+            AddStatePaths(activePaths, "root:" + rootState);
+
+            foreach (KeyValuePair<string, GameObject> pair in fruitTreeLayers)
+                pair.Value.SetActive(activePaths.Any(path => IsPathOrParent(path, pair.Key)));
+
+            activeFruitTreePaths.Clear();
+            activeFruitTreePaths.UnionWith(activePaths);
+            ApplyFruitTreeParticleState();
+
+            if (treeRoot != null) treeRoot.SetActive(activePaths.Contains("/FruitTree/Tree"));
+            int visibleFruits = activePaths.Contains("/FruitTree/Fruits")
+                ? Mathf.Clamp((int)Math.Min(matureCount, fruitObjects.Count), 0, fruitObjects.Count) : 0;
+            for (int index = 0; index < fruitObjects.Count; index++)
+                fruitObjects[index].SetActive(index < visibleFruits);
+
+            string animationName = treeStateAnimations.FirstOrDefault(value => value != null
+                && value.state == rootState)?.name;
+            SetTreeAnimation(FindTreeAnimation(animationName));
+        }
+
+        private void AddStatePaths(HashSet<string> activePaths, string stateKey)
+        {
+            HomeFruitTreeState state = (fruitTreeData.states ?? Array.Empty<HomeFruitTreeState>())
+                .FirstOrDefault(value => value != null && value.key == stateKey);
+            foreach (string path in state?.paths ?? Array.Empty<string>())
+                if (!string.IsNullOrEmpty(path)) activePaths.Add(path);
+        }
+
+        private void BuildFruitTreeParticles()
+        {
+            GameObject prefab = Resources.Load<GameObject>("FruitTree/FruitTreeParticles");
+            if (prefab == null)
+                throw new InvalidOperationException("Official fruit tree particle prefab is unavailable.");
+            fruitTreeParticleRoot = UnityEngine.Object.Instantiate(prefab, Root.transform, false);
+            fruitTreeParticleRoot.name = "FruitTree";
+            float[] position = fruitTreeData.tree_position ?? Array.Empty<float>();
+            fruitTreeParticleRoot.transform.localPosition = new Vector3(position.Length > 0 ? position[0] : 0f,
+                position.Length > 1 ? position[1] : 0f, position.Length > 2 ? position[2] : 0f);
+            float scale = fruitTreeData.tree_scale <= 0f ? 1f : fruitTreeData.tree_scale;
+            fruitTreeParticleRoot.transform.localScale = Vector3.one * scale;
+            IndexFruitTreeNativeObjects(fruitTreeParticleRoot.transform, "/FruitTree");
+            foreach (ParticleSystem system in fruitTreeParticleRoot.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                Transform current = system.transform;
+                string path = NativePath(current);
+                fruitTreeParticles.Add(system, new FruitTreeParticleState { Path = path });
+            }
+        }
+
+        private void IndexFruitTreeNativeObjects(Transform current, string path)
+        {
+            fruitTreeNativeObjects[path] = current.gameObject;
+            for (int index = 0; index < current.childCount; index++)
+            {
+                Transform child = current.GetChild(index);
+                IndexFruitTreeNativeObjects(child, path + "/" + child.name);
+            }
+        }
+
+        private string NativePath(Transform target)
+        {
+            var names = new Stack<string>();
+            Transform current = target;
+            while (current != null && current != fruitTreeParticleRoot.transform)
+            {
+                names.Push(current.name);
+                current = current.parent;
+            }
+            return "/FruitTree/" + string.Join("/", names.ToArray());
+        }
+
+        private void ApplyFruitTreeParticleState()
+        {
+            foreach (KeyValuePair<ParticleSystem, FruitTreeParticleState> pair in fruitTreeParticles)
+            {
+                bool shouldPlay = activeFruitTreePaths.Any(path => IsPathOrParent(path, pair.Value.Path))
+                    || transientFruitTreeEffects.Any(path => IsPathOrParent(path, pair.Value.Path));
+                if (pair.Value.ShouldPlay == shouldPlay) continue;
+                pair.Value.ShouldPlay = shouldPlay;
+                if (shouldPlay)
+                {
+                    pair.Key.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    pair.Key.Play(true);
+                }
+                else
+                {
+                    pair.Key.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
+            }
+        }
+
+        public void PlayFruitTreeRepairEffect(int furnitureType)
+        {
+            string facility = furnitureType == 11 ? "HomeFruitTreePet" : "HomeFruitTreeProduceFruit";
+            string path = "/FruitTree/SubFurnitures/" + facility
+                + "/Other/Eff_Ui_Home_Appear_Quad";
+            if (!fruitTreeParticles.Keys.Any(system => IsPathOrParent(path, NativePath(system.transform)))) return;
+            transientFruitTreeEffects.Add(path);
+            foreach (KeyValuePair<ParticleSystem, FruitTreeParticleState> pair in fruitTreeParticles)
+            {
+                if (!IsPathOrParent(path, pair.Value.Path)) continue;
+                pair.Value.ShouldPlay = true;
+                pair.Key.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                pair.Key.Play(true);
+            }
+        }
+
+        private static bool IsPathOrParent(string parent, string path)
+        {
+            return string.Equals(parent, path, StringComparison.Ordinal)
+                || path.StartsWith(parent.TrimEnd('/') + "/", StringComparison.Ordinal);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            RefreshTransientFruitTreeEffects();
+            if (treeRoot == null || !treeRoot.activeSelf || treeAnimation?.frames == null
+                || treeAnimation.frames.Length < 2 || deltaTime <= 0f) return;
+            float frameDuration = 1f / Mathf.Max(1f, treeAnimation.fps);
+            treeFrameTimer += deltaTime;
+            while (treeFrameTimer >= frameDuration)
+            {
+                treeFrameTimer -= frameDuration;
+                treeFrameIndex = (treeFrameIndex + 1) % treeAnimation.frames.Length;
+                ApplyTreeFrame(treeFrameIndex);
+            }
+        }
+
+        private void RefreshTransientFruitTreeEffects()
+        {
+            foreach (string path in transientFruitTreeEffects.ToArray())
+            {
+                bool alive = fruitTreeParticles.Any(pair => IsPathOrParent(path, pair.Value.Path)
+                    && pair.Key != null && pair.Key.IsAlive(true));
+                if (alive) continue;
+                transientFruitTreeEffects.Remove(path);
+                ApplyFruitTreeParticleState();
+            }
+        }
+
+        private void ApplyTreeFrame(int frameIndex)
+        {
+            HomeTreeFrame frame = treeAnimation?.frames != null && frameIndex >= 0
+                && frameIndex < treeAnimation.frames.Length ? treeAnimation.frames[frameIndex] : null;
+            HomeTreeMesh[] meshes = frame?.meshes ?? Array.Empty<HomeTreeMesh>();
+            while (treeMeshViews.Count < meshes.Length)
+            {
+                var go = new GameObject("FruitTreeMesh_" + treeMeshViews.Count, typeof(MeshFilter), typeof(MeshRenderer));
+                go.transform.SetParent(treeRoot.transform, false);
+                var view = new TreeMeshView
+                {
+                    Object = go,
+                    Mesh = new Mesh { name = go.name },
+                    Filter = go.GetComponent<MeshFilter>(),
+                    Renderer = go.GetComponent<MeshRenderer>()
+                };
+                createdMeshes.Add(view.Mesh);
+                view.Filter.sharedMesh = view.Mesh;
+                view.Renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                view.Renderer.receiveShadows = false;
+                treeMeshViews.Add(view);
+            }
+
+            for (int index = 0; index < treeMeshViews.Count; index++)
+            {
+                TreeMeshView view = treeMeshViews[index];
+                if (index >= meshes.Length)
+                {
+                    view.Object.SetActive(false);
+                    continue;
+                }
+                HomeTreeMesh source = meshes[index];
+                Texture2D texture = catalog.FindTexture(source.page);
+                if (texture == null) throw new InvalidOperationException("Official fruit tree texture is missing: " + source.page);
+                view.Object.SetActive(true);
+                view.Mesh.Clear();
+                view.Mesh.vertices = TreeVertices(source.vertices, treeAnimation.scale);
+                view.Mesh.uv = Vector2Values(source.uv);
+                view.Mesh.triangles = source.triangles ?? Array.Empty<int>();
+                Color color = Color.white;
+                if (source.color != null && source.color.Length >= 4)
+                    color = new Color(source.color[0], source.color[1], source.color[2], source.color[3]);
+                Vector3[] vertices = view.Mesh.vertices;
+                var colors = new Color[vertices.Length];
+                for (int vertex = 0; vertex < colors.Length; vertex++) colors[vertex] = color;
+                view.Mesh.colors = colors;
+                view.Mesh.RecalculateBounds();
+                view.Renderer.sharedMaterial = TreeMaterial(texture, source.blend);
+                view.Renderer.sortingOrder = 900 + source.order;
+            }
+        }
+
+        private static Vector3[] TreeVertices(float[] values, float scale)
+        {
+            if (values == null || values.Length < 6) return Array.Empty<Vector3>();
+            var result = new Vector3[values.Length / 2];
+            for (int index = 0; index < result.Length; index++)
+                result[index] = new Vector3(values[index * 2] * scale, values[index * 2 + 1] * scale, 0f);
+            return result;
+        }
+
+        private static Vector2[] Vector2Values(float[] values)
+        {
+            if (values == null || values.Length < 4) return Array.Empty<Vector2>();
+            var result = new Vector2[values.Length / 2];
+            for (int index = 0; index < result.Length; index++)
+                result[index] = new Vector2(values[index * 2], values[index * 2 + 1]);
+            return result;
+        }
+
+        private Material TreeMaterial(Texture2D texture, int blend)
+        {
+            if (blend == 0) return Material(texture);
+            string key = texture.name + "#additive";
+            if (materials.TryGetValue(key, out Material cached) && cached != null) return cached;
+            Shader shader = Shader.Find("Particles/Additive") ?? Shader.Find("Sprites/Default");
+            var material = new Material(shader) { name = "FruitTree_Additive_" + texture.name, mainTexture = texture };
+            materials[key] = material;
+            return material;
+        }
+
+        private sealed class TreeMeshView
+        {
+            public GameObject Object;
+            public Mesh Mesh;
+            public MeshFilter Filter;
+            public MeshRenderer Renderer;
         }
 
         private Material Material(Texture2D texture)
@@ -195,11 +538,14 @@ namespace Zjcs.Presentation.Home
         public void SetNightVisuals(bool night)
         {
             SetLayerGroupVisible("/Background/Back_Ground/FX_Star", night);
+            if (fruitTreeNightLight != null) fruitTreeNightLight.SetActive(night);
         }
 
         /// <summary>Walks the official click quadrilaterals in world space.</summary>
         public int HitTest(Vector2 world)
         {
+            int hitType = -1;
+            float hitArea = float.MaxValue;
             foreach (KeyValuePair<int, List<HomeQuad>> pair in clickRegions)
                 foreach (HomeQuad region in pair.Value)
                 {
@@ -214,9 +560,41 @@ namespace Zjcs.Presentation.Home
                         minY = Mathf.Min(minY, region.vertices[index + 1]);
                         maxY = Mathf.Max(maxY, region.vertices[index + 1]);
                     }
-                    if (world.x >= minX && world.x <= maxX && world.y >= minY && world.y <= maxY) return pair.Key;
+                    float area = (maxX - minX) * (maxY - minY);
+                    if (area < hitArea && world.x >= minX && world.x <= maxX
+                        && world.y >= minY && world.y <= maxY)
+                    {
+                        hitArea = area;
+                        hitType = pair.Key;
+                    }
                 }
-            return -1;
+            return hitType;
+        }
+
+        public bool TryGetFurnitureClickBounds(int type, out Rect bounds)
+        {
+            bounds = default;
+            if (!clickRegions.TryGetValue(type, out List<HomeQuad> regions)) return false;
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+            bool found = false;
+            foreach (HomeQuad region in regions)
+            {
+                if (region?.vertices == null || region.vertices.Length < 8) continue;
+                for (int index = 0; index + 1 < region.vertices.Length; index += 2)
+                {
+                    minX = Mathf.Min(minX, region.vertices[index]);
+                    maxX = Mathf.Max(maxX, region.vertices[index]);
+                    minY = Mathf.Min(minY, region.vertices[index + 1]);
+                    maxY = Mathf.Max(maxY, region.vertices[index + 1]);
+                }
+                found = true;
+            }
+            if (!found) return false;
+            bounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
+            return bounds.width > 0f && bounds.height > 0f;
         }
 
         public Vector3 Clamp(Vector3 position)
@@ -274,7 +652,19 @@ namespace Zjcs.Presentation.Home
         {
             foreach (Material material in materials.Values) if (material != null) UnityEngine.Object.Destroy(material);
             materials.Clear();
+            foreach (Mesh mesh in createdMeshes) if (mesh != null) UnityEngine.Object.Destroy(mesh);
+            createdMeshes.Clear();
+            fruitTreeParticles.Clear();
+            fruitTreeNativeObjects.Clear();
+            transientFruitTreeEffects.Clear();
+            activeFruitTreePaths.Clear();
             if (Root != null) UnityEngine.Object.Destroy(Root);
+        }
+
+        private sealed class FruitTreeParticleState
+        {
+            public string Path;
+            public bool ShouldPlay;
         }
     }
 

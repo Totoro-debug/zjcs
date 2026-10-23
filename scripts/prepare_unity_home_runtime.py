@@ -153,9 +153,88 @@ def collect_sprites(node, files):
             collect_sprites(value, files)
 
 
+def load_fruit_tree():
+    source = read(OFFICIAL / "fruit-tree.json")
+    instance = (source.get("skeleton_instances") or [])[0]
+    matrix = instance["matrix"]
+    skeletons = source.get("skeletons") or {}
+    animations = []
+    for name in ("loop_1", "loop_2", "loop_3"):
+        skeleton = skeletons.get("fruit-tree:" + name)
+        if not skeleton:
+            raise ValueError("Official fruit tree animation is missing: " + name)
+        textures = skeleton.get("textures") or {}
+        frames = []
+        for source_frame in skeleton.get("frames") or []:
+            meshes = []
+            for layer in source_frame:
+                page = layer.get("page", "")
+                page_source = textures.get(page, "")
+                if page_source:
+                    SPRITE_SOURCES.add(page_source)
+                meshes.append({
+                    "page": page_source.rsplit("/", 1)[-1],
+                    "order": layer.get("order", 0),
+                    "vertices": layer.get("vertices") or [],
+                    "uv": layer.get("uv") or [],
+                    "triangles": layer.get("triangles") or [],
+                    "color": layer.get("color") or [1, 1, 1, 1],
+                    "blend": layer.get("blend", 0),
+                })
+            frames.append({"meshes": meshes})
+        animations.append({
+            "name": name,
+            "duration": skeleton.get("duration", 0),
+            "fps": skeleton.get("fps", 12),
+            "scale": skeleton.get("scale", 0.01),
+            "frames": frames,
+        })
+
+    matrices = source.get("object_matrices") or {}
+    fruit_slots = []
+    for index in range(1, 11):
+        key = "/FruitTree/Fruits/Fruit" + ("" if index == 1 else " (" + str(index) + ")")
+        slot_matrix = matrices.get(key)
+        if slot_matrix is None:
+            raise ValueError("Official fruit tree slot is missing: " + key)
+        fruit_slots.append({
+            "path": key,
+            "position": [slot_matrix[0][3], slot_matrix[1][3], slot_matrix[2][3]],
+            "scale": [slot_matrix[0][0], slot_matrix[1][1]],
+        })
+
+    states = []
+    raw_states = source.get("states") or {}
+    root = raw_states.get("root", {}).get("states", {})
+    for state, paths in root.items():
+        states.append({"key": "root:" + str(state), "paths": paths})
+    for furniture_type in (4, 11):
+        data = raw_states.get(str(furniture_type), {}).get("states", {})
+        for state, paths in data.items():
+            states.append({"key": str(furniture_type) + ":" + str(state), "paths": paths})
+
+    state_animations = [
+        {"state": int(state), "name": name}
+        for state, name in sorted((source.get("animations") or {}).items(), key=lambda value: int(value[0]))
+    ]
+
+    fruit_effect = source["fruit_effect"]["layers"][0]
+    return {
+        "tree_position": [matrix[0][3], matrix[1][3], matrix[2][3]],
+        "tree_scale": matrix[0][0],
+        "animations": animations,
+        "fruit_effect": trim_layer(fruit_effect),
+        "fruit_slots": fruit_slots,
+        "layers": [trim_layer(layer) for layer in source.get("layers", [])],
+        "states": states,
+        "state_animations": state_animations,
+    }
+
+
 def load_scene():
     home = read(OFFICIAL / "home.json")
     completion = read(OFFICIAL / "home-completion" / "scene.json")
+    fruit_tree = load_fruit_tree()
     background = [trim_layer(layer) for layer in home["layers"]]
     furniture = []
     for key in sorted(completion["furniture"], key=lambda value: int(value)):
@@ -170,13 +249,29 @@ def load_scene():
         {"id": int(key), "name": value.get("name", ""), "position": value.get("position")}
         for key, value in home.get("outdoor_slots", {}).items()
     ]
+    click_regions = [
+        {"path": region.get("path", ""),
+         "vertices": [value for point in (region.get("vertices") or []) for value in point]}
+        for region in home.get("click_regions", [])
+    ]
+    known_clicks = {value["path"] for value in click_regions}
+    for region in read(OFFICIAL / "fruit-tree.json").get("click_regions", []):
+        path = region.get("path", "")
+        if path == "/FruitTree/touch" or path in known_clicks:
+            continue
+        click_regions.append({
+            "path": path,
+            "vertices": [value for point in (region.get("vertices") or []) for value in point],
+        })
+        known_clicks.add(path)
     return {
         "version": home.get("version", "854_156383"),
         "camera": home["camera"],
         "background": background,
         "furniture": furniture,
-        "click_regions": [{"path": region.get("path", ""), "vertices": [value for point in (region.get("vertices") or []) for value in point]} for region in home.get("click_regions", [])],
+        "click_regions": click_regions,
         "outdoor_slots": outdoor,
+        "fruit_tree": fruit_tree,
         "strings": [
             {"key": key, "value": value}
             for key, value in (completion.get("strings") or {}).items()
@@ -748,6 +843,8 @@ def build():
             "background_layers": len(scene["background"]),
             "furniture": len(scene["furniture"]),
             "click_regions": len(scene["click_regions"]),
+            "fruit_tree_animations": len(scene["fruit_tree"]["animations"]),
+            "fruit_tree_frames": sum(len(value["frames"]) for value in scene["fruit_tree"]["animations"]),
             "panels": len(ui["panels"]),
             "texts": len(ui["texts"]),
             "items": len(rules["items"]),

@@ -16,6 +16,8 @@ namespace Zjcs.Presentation.Home
         public int height;
         public float[] pivot;
         public float ppu;
+        public float[] border;
+        public int mesh_type;
         public float[] rect_size;
         public float[] trim_offset;
         public float[] trim_size;
@@ -104,7 +106,71 @@ namespace Zjcs.Presentation.Home
         public HomeFurnitureScene[] furniture;
         public HomeQuad[] click_regions;
         public HomeOutdoorSlot[] outdoor_slots;
+        public HomeFruitTreeScene fruit_tree;
         public HomeTextPair[] strings;
+    }
+
+    [Serializable]
+    public sealed class HomeFruitTreeScene
+    {
+        public float[] tree_position;
+        public float tree_scale;
+        public HomeTreeAnimation[] animations;
+        public HomeSceneLayer fruit_effect;
+        public HomeFruitTreeSlot[] fruit_slots;
+        public HomeSceneLayer[] layers;
+        public HomeFruitTreeState[] states;
+        public HomeFruitTreeStateAnimation[] state_animations;
+    }
+
+    [Serializable]
+    public sealed class HomeFruitTreeSlot
+    {
+        public string path;
+        public float[] position;
+        public float[] scale;
+    }
+
+    [Serializable]
+    public sealed class HomeFruitTreeState
+    {
+        public string key;
+        public string[] paths;
+    }
+
+    [Serializable]
+    public sealed class HomeFruitTreeStateAnimation
+    {
+        public int state;
+        public string name;
+    }
+
+    [Serializable]
+    public sealed class HomeTreeAnimation
+    {
+        public string name;
+        public float duration;
+        public float fps;
+        public float scale;
+        public HomeTreeFrame[] frames;
+    }
+
+    [Serializable]
+    public sealed class HomeTreeFrame
+    {
+        public HomeTreeMesh[] meshes;
+    }
+
+    [Serializable]
+    public sealed class HomeTreeMesh
+    {
+        public string page;
+        public int order;
+        public float[] vertices;
+        public float[] uv;
+        public int[] triangles;
+        public float[] color;
+        public int blend;
     }
 
     [Serializable]
@@ -114,6 +180,16 @@ namespace Zjcs.Presentation.Home
         public float[] color;
         public int type;
         public bool preserve_aspect;
+        public bool component_flags;
+        public bool enabled = true;
+        public bool raycast_target;
+        public bool maskable = true;
+        public bool fill_center = true;
+        public int fill_method;
+        public float fill_amount = 1f;
+        public bool fill_clockwise = true;
+        public int fill_origin;
+        public bool use_sprite_mesh;
     }
 
     [Serializable]
@@ -207,7 +283,36 @@ namespace Zjcs.Presentation.Home
         public float alpha;
         public bool button;
         public HomeUiScroll scroll;
+        public HomeUiAnimation[] animations;
         public HomeUiNode[] children;
+    }
+
+    [Serializable]
+    public sealed class HomeUiAnimation
+    {
+        public string name;
+        public float duration;
+        public bool loop;
+        public HomeUiAnimationTrack[] tracks;
+    }
+
+    [Serializable]
+    public sealed class HomeUiAnimationTrack
+    {
+        public string path;
+        public string property;
+        public HomeUiAnimationKey[] keys;
+    }
+
+    [Serializable]
+    public sealed class HomeUiAnimationKey
+    {
+        public float time;
+        public float value;
+        public float in_slope;
+        public float out_slope;
+        public bool in_step;
+        public bool out_step;
     }
 
     [Serializable]
@@ -338,6 +443,28 @@ namespace Zjcs.Presentation.Home
                 new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             sprite.name = file;
             sprites[file] = sprite;
+            return sprite;
+        }
+
+        public Sprite FindSprite(HomeSpriteRef reference)
+        {
+            if (reference == null || string.IsNullOrEmpty(reference.file)) return null;
+            if (sprites.TryGetValue(reference.file, out Sprite sprite)) return sprite;
+            Texture2D texture = FindTexture(reference.file);
+            if (texture == null) return null;
+            Vector2 pivot = reference.pivot != null && reference.pivot.Length >= 2
+                ? new Vector2(reference.pivot[0], reference.pivot[1])
+                : new Vector2(0.5f, 0.5f);
+            if (pivot.x > 1f || pivot.y > 1f)
+                pivot = new Vector2(pivot.x / texture.width, pivot.y / texture.height);
+            Vector4 border = reference.border != null && reference.border.Length >= 4
+                ? new Vector4(reference.border[0], reference.border[1], reference.border[2], reference.border[3])
+                : Vector4.zero;
+            float pixelsPerUnit = reference.ppu > 0f ? reference.ppu : 100f;
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot,
+                pixelsPerUnit, 0, (SpriteMeshType)Mathf.Clamp(reference.mesh_type, 0, 1), border);
+            sprite.name = reference.file;
+            sprites[reference.file] = sprite;
             return sprite;
         }
 
