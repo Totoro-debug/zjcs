@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
+using Zjcs.Presentation.Wishes;
 
 namespace Zjcs.Presentation.Home
 {
@@ -33,9 +34,11 @@ namespace Zjcs.Presentation.Home
         private HomeHudView hud;
         private TreasureGachaRuntimeCatalog treasureGachaCatalog;
         private OfflineTreasureGachaService treasureGacha;
+        private WishScreenController wishes;
         private HomeConditionContext context;
         private Action onClose;
         private string slotId;
+        private Transform uiParent;
         private float advanceTimer;
         private long lastAdvanceUnix;
 
@@ -77,6 +80,7 @@ namespace Zjcs.Presentation.Home
         private void Open(string selected, string root, Transform uiParent, Action close)
         {
             slotId = selected;
+            this.uiParent = uiParent;
             onClose = close;
             slots = new ProfileSlotCatalog(root);
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
@@ -96,7 +100,8 @@ namespace Zjcs.Presentation.Home
             scene = new HomeSceneView(catalog, transform);
             environment = new HomeEnvironmentView(scene, Now());
             rewards = new HomeRewardView(this, catalog, transform);
-            input = new HomeInputController(scene, () => hud != null && hud.AnyModalOpen);
+            input = new HomeInputController(scene, () => hud != null && hud.AnyModalOpen
+                || wishes != null && wishes.IsOpen);
             input.FurnitureClicked += OnFurnitureClicked;
             input.RewardClicked += OnRewardClicked;
             input.SetRewardHit(OnRewardHit);
@@ -244,7 +249,22 @@ namespace Zjcs.Presentation.Home
             else if (type == 10) hud.ShowCart();
             else if (type == 6) hud.ShowMail();
             else if (type == 9) hud.ShowTreasureGacha();
+            else if (type == 5) OpenWishes();
             else hud.ShowFurniturePlaceholder(type);
+        }
+
+        private void OpenWishes()
+        {
+            if (wishes != null && wishes.IsOpen) return;
+            Action refreshWishCurrency = null;
+            wishes = WishScreenController.Open(profile, slotId, uiParent,
+                slot => refreshWishCurrency = hud.BuildWishCurrencyBar(slot),
+                () => refreshWishCurrency?.Invoke(),
+                () =>
+                {
+                    wishes = null;
+                    refreshWishCurrency = null;
+                });
         }
 
         public bool TryRepair(int type)
@@ -402,6 +422,9 @@ namespace Zjcs.Presentation.Home
 
         public void Close()
         {
+            WishScreenController activeWishes = wishes;
+            wishes = null;
+            if (activeWishes != null) activeWishes.Close();
             if (rewards != null) rewards.Dispose();
             if (scene != null) scene.Dispose();
             scene = null;
@@ -418,6 +441,7 @@ namespace Zjcs.Presentation.Home
             input?.Update();
             environment?.Tick(Time.unscaledDeltaTime);
             hud?.Tick();
+            wishes?.Tick();
             advanceTimer += Time.unscaledDeltaTime;
             if (advanceTimer < 5f) return;
             advanceTimer = 0;
