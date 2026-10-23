@@ -339,9 +339,9 @@ namespace Zjcs.Presentation.Character
                 }
                 else
                 {
-                    string amount = experience.CurrentExperience.ToString("N0");
-                    if (experience.IsStoredExperience) amount = "<color=#e37d38>" + amount + "</color>";
-                    experienceText.text = amount + "/" + experience.RequiredExperience.ToString("N0");
+                    string amount = OfficialPropFormat.Compact(experience.CurrentExperience);
+                    if (experience.IsStoredExperience) amount = "<color=#e17126>" + amount + "</color>";
+                    experienceText.text = amount + "/" + OfficialPropFormat.Compact(experience.RequiredExperience);
                 }
             }
             if (experienceSlider != null) experienceSlider.value = experience.Fill;
