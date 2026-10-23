@@ -182,6 +182,8 @@ python -B scripts/check_unity_project.py
 
 当前 APK／热更新迁移使用 `asset-pack/layout.json` 与 `asset-pack/lock.json` 记录完整素材快照，覆盖 `assets/official/`、`assets/characters/`、`assets/reference/`、`unity/Assets/Official/`、`unity/Assets/StreamingAssets/` 和 `unity/Assets/Game/Resources/`。转换工具、Unity 场景、shader 及 C# 绑定另记代码哈希；Library 与其他编辑器缓存不打包。原始 APK、CDN／设备缓存及替换前按哈希保留的载荷继续存放在 `.tools/source-packages/`。
 
+当前完整快照为 `.tools/asset-packs/zjcs-assets-871_156598-9e78e198ee78b575.zip`，包含 263,240 个文件，压缩后 18,435,548,934 字节，原始载荷 52,542,375,449 字节。全部归档条目已读取并通过 CRC／SHA256 与本地文件 SHA256 核对；锁文件登记整个 ZIP 和清单的 SHA256，并指向 345 份匹配代码的原始字节。旧版 854 快照继续保留；原始 APK／CDN 缓存按前述独立目录保存。
+
 ```powershell
 python -B scripts/current_asset_snapshot.py create
 python -B scripts/current_asset_snapshot.py verify --archive .tools/asset-packs/<lock.json中的archive_file>
@@ -193,6 +195,10 @@ python -B scripts/current_asset_snapshot.py restore --archive .tools/asset-packs
 多会话仅推进代码、素材仍相同时，可保留已完成压缩且尚未激活的候选 ZIP，待压缩进程退出后运行 `python -B scripts/finalize_current_asset_snapshot.py --archive .tools/asset-packs/current-871-candidate.zip`。该入口重新核对完整文件集合、ZIP 每项 CRC／SHA256 与本地每项 SHA256，全部一致才登记快照；文件集合或素材字节不符仍停止。代码指纹在核验完成时重新捕获，原始代码字节另存 `.tools/source-packages/history/converted/` 并由锁文件的 `preserved_code_sources` 记录，不能把压缩开始时的旧指纹冒充当前代码。候选含清单时须与本次逐项核验结果完全一致，不能覆盖已登记的正式快照。
 
 若期间仅重新生成了来源清单，可加 `--refresh-source-inventories`：先核验全部当前转换凭据，再把实际有效的 `*source-manifest.json` 替换到候选归档；其余素材不自动替换。随后仍对归档和本地全部文件执行完整 CRC／SHA256 检查，登记的哈希来自实际归档字节，不修改官方包或转换载荷的预期哈希来跳过失败。
+
+并行开发新增了素材时，先核对新增文件的实际来源，再加 `--include-new-files` 将完整素材目录中新出现的路径纳入候选。该选项仅追加不存在的路径，不替换既有归档载荷；新增项同样逐项读取 ZIP 校验 CRC／SHA256，并核对本地 SHA256。核验期间继续出现的新路径也执行相同检查；删除既有路径、修改既有素材字节或目录持续变化仍停止登记。
+
+既有文件被其他已核实转换更新时，可加 `--refresh-activated-payloads`：按该路径从归档原 SHA256 沿当前版本转换凭据查到待写入字节的 SHA256，成功才替换候选中的对应项，再读取替换后的 ZIP 内容核对 CRC、SHA256 和本地字节；没有完整转换链则停止。来源清单在全量核验后再复核，期间变化的有效来源清单执行相同归档重读。家园重生成另检查既有面板逐字段不变，新增面板／字段与当前官方输入及实际生成器完全一致，保留新增内容并记录来源链，不能恢复旧整份 UI 覆盖其他会话新增面板。
 
 使用 [`unity_asset_pack.py`](../scripts/unity_asset_pack.py) 创建、校验和恢复 Unity 官方载荷快照：
 
