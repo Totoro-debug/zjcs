@@ -304,6 +304,7 @@ namespace Zjcs.Combat.Official
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
             FightDamageFalloff.EndCast(units, skill);
+            ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
         }
 
         /// <summary>
@@ -403,6 +404,63 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        private int extraDepth;
+
+        /// <summary>
+        /// Official <c>FightSkillExtSkillComponent</c>: when the skill action ends, roll each entry's
+        /// rate and release the extra skill as the same actor. Extra skills run one level deep and
+        /// keep their casts/damage in the current step.
+        /// </summary>
+        private void ApplyExtraSkills(FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay)
+        {
+            if (statusCatalog == null || skill == null || skill.ExtraSkills == null
+                || skill.ExtraSkills.Count == 0 || extraDepth > 0) return;
+            extraDepth++;
+            try
+            {
+                int level = Math.Max(1, actor.Level);
+                int subRank = Math.Max(1, actor.SubRank);
+                foreach (FightBattleSkillExtra extra in skill.ExtraSkills)
+                {
+                    if (extra == null || extra.SkillId <= 0) continue;
+                    if (extra.Rate < 1f && random.Next() > extra.Rate) continue;
+                    FightBattleSkillDefinition extraSkill;
+                    try
+                    {
+                        extraSkill = statusCatalog.CreateSkill(extra.SkillId, -1, 0, 1, level, subRank,
+                            ToPropertyList(statusCatalog.CalculateSkillProps(extra.SkillId, 1, level, subRank)));
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        continue;
+                    }
+                    List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
+                        extraSkill.TargetType, 0, false, false, extraSkill);
+                    if (targets.Count == 0
+                        && !FightBattleTargeting.HasCasterAreaTargets(actor, units, extraSkill)) continue;
+                    checkpoint.Statistics.RecordCast(actor.Id, extraSkill.EntityId, extraSkill.ItemId);
+                    var cast = new FightBattleSkillCastEvent
+                    {
+                        ActorId = actor.Id,
+                        Slot = -1,
+                        SkillEntityId = extraSkill.EntityId,
+                        SkillItemId = extraSkill.ItemId
+                    };
+                    foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                    casts.Add(cast);
+                    ExecuteSkill(actor, extraSkill, targets, casts, damageEvents, movements,
+                        out float delay);
+                    if (delay > lastDelay) lastDelay = delay;
+                }
+            }
+            finally
+            {
+                extraDepth--;
+            }
         }
 
         private int triggerDepth;

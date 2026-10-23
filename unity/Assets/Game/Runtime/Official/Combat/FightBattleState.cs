@@ -159,6 +159,15 @@ namespace Zjcs.Combat.Official
         // Official FightSKillMoveCfg entries from FightSkillComponent.SourceMoveList (sorted by
         // Delay). DoMoveConditions entries cannot be evaluated locally and are flagged.
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
+        // Official FightSkillExtSkillComponent: extra skills released when the action ends.
+        public List<FightBattleSkillExtra> ExtraSkills = new List<FightBattleSkillExtra>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleSkillExtra
+    {
+        public int SkillId;
+        public float Rate = 1f;
     }
 
     [Serializable]
