@@ -42,27 +42,34 @@ def edges(version):
     return result
 
 
+def verify_transition(path, expected, actual, version=None, links=None):
+    """Verify a captured output hash, without rereading mutable payload bytes."""
+    if expected == actual:
+        return
+    links = edges(version or OfficialSource().version) if links is None else links
+    pending = [expected]
+    visited = set()
+    while pending:
+        value = pending.pop()
+        if value in visited:
+            continue
+        visited.add(value)
+        pending.extend(links[path][value] - visited)
+    if actual not in visited:
+        raise ValueError('Activated payload has no recorded conversion to its current bytes: '
+                         + path + ' expected=' + expected + ' actual=' + actual)
+
+
 def verify_outputs(rows, version=None):
     version = version or OfficialSource().version
     links = None
     for row in rows:
         actual = sha((ROOT / row['path']).read_bytes())
         expected = row['sha256']
-        if expected == actual:
-            continue
-        if links is None:
-            links = edges(version)
-        pending = [expected]
-        visited = set()
-        while pending:
-            value = pending.pop()
-            if value in visited:
-                continue
-            visited.add(value)
-            pending.extend(links[row['path']][value] - visited)
-        if actual not in visited:
-            raise ValueError('Activated payload has no recorded conversion to its current bytes: '
-                             + row['path'] + ' expected=' + expected + ' actual=' + actual)
+        if expected != actual:
+            if links is None:
+                links = edges(version)
+            verify_transition(row['path'], expected, actual, version, links)
 
 
 def activated_receipt(path, version=None):

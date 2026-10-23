@@ -56,14 +56,31 @@ def build():
     expected = json.loads(expected_raw)
     actual_raw = home.read_bytes()
     actual = json.loads(actual_raw)
-    identical_json = actual == expected
+    original = json.loads(actual_raw)
+    actual_panels = {panel['key']: panel for panel in actual['panels']}
+    expected_panels = {panel['key']: panel for panel in expected['panels']}
+    if len(actual_panels) != len(actual['panels']) or not expected_panels.keys() <= actual_panels.keys():
+        raise ValueError('Home regeneration removed or duplicated a verified panel')
+    added_panels = sorted(actual_panels.keys() - expected_panels.keys())
+    if not expected.keys() <= actual.keys():
+        raise ValueError('Home regeneration removed a verified UI field')
+    added_fields = sorted(actual.keys() - expected.keys())
+    comparison = {key: actual[key] for key in expected if key != 'panels'}
+    comparison['panels'] = [actual_panels[key] for key in expected_panels]
     texts, language_inputs = language(ROOT / '.tools/source-packages/WwiseBnk')
-    restore_missing(actual, expected, texts)
-    if actual != expected:
+    restore_missing(comparison, expected, texts)
+    if comparison != expected:
         raise ValueError('Home regeneration changed more than the verified missing flag fields')
+    if added_panels or added_fields:
+        from prepare_unity_home_runtime import load_ui
+        if load_ui() != original:
+            raise ValueError('Additional Home panels differ from current official generator inputs')
+    identical_json = actual == original
     # Once the generator retains all fields, keep its stable serialization.
-    # Full JSON equality above establishes the conversion, including every value.
-    home_payload = actual_raw if identical_json else expected_raw
+    # All retained panels match in full; additions also match the source generator.
+    home_payload = (actual_raw if identical_json else
+                    json.dumps(actual, ensure_ascii=False, separators=(',', ':')).encode('utf8')
+                    if added_panels or added_fields else expected_raw)
 
     inventory = ROOT / 'unity/Assets/StreamingAssets/Home/source-manifest.json'
     inventory_raw = inventory.read_bytes()
@@ -80,6 +97,9 @@ def build():
                 'previous_sha256': old_inventory['sha256'], 'sha256': sha(inventory_raw),
                 'operation': 'Verify every regenerated output before rebinding its inventory; inventory bytes are unchanged.',
                 'observed_regenerated_source': preserve(inventory)}]
+    outputs[0]['intermediate_outputs'] = [
+        {'sha256': row['sha256']} for row in (prior or {}).get('outputs', [])
+        if row['path'] == inventory.relative_to(ROOT).as_posix()]
     talk = ROOT / 'assets/official/home-tutorial/talk.json'
     talk_raw = talk.read_bytes()
     data = json.loads(talk_raw)
@@ -129,12 +149,20 @@ def build():
                         'sha256': sha(new), 'bytes': len(new), 'previous': saved,
                         'preserved_output': preserved_output})
         if path == home and identical_json:
-            outputs[-1]['previous_sha256'] = record['sha256']
+            preceding = next((row for row in (prior or {}).get('outputs', [])
+                              if row['path'] == path.relative_to(ROOT).as_posix()), record)
+            outputs[-1]['previous_sha256'] = preceding['sha256']
+            outputs[-1]['intermediate_outputs'] = [{'sha256': record['sha256']}]
             outputs[-1]['observed_regenerated_sha256'] = sha(old)
-            outputs[-1]['operation'] = 'Verify full JSON equality and retain the generator serialization.'
+            outputs[-1]['operation'] = 'Verify all retained panels, source-generated additions and generator serialization.'
     result = {'manifest': version, 'operation': __doc__, 'outputs': outputs,
               'tutorial_flag_bindings': count,
               'includes_wish_flag_inputs': True,
+              'verified_added_panels': added_panels,
+              'verified_added_fields': added_fields,
+              'verified_ui_source_inputs': [{'path': path.relative_to(ROOT).as_posix(), 'sha256': sha(path.read_bytes())}
+                                           for path in (ROOT / 'assets/official/ui.json',
+                                                        ROOT / 'assets/official/home-completion/ui.json')],
               'inputs': [{'path': text_receipt.relative_to(ROOT).as_posix(), 'sha256': sha(text_receipt.read_bytes())}] + language_inputs,
               'generator_sha256': sha(Path(__file__).read_bytes()),
               'home_generator_sha256': sha((ROOT / source['generator']).read_bytes())}
