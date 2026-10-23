@@ -125,7 +125,8 @@ namespace Zjcs.Combat.Official
                     continue;
                 }
 
-                ExecuteSkill(actor, skill, targets, damageEvents, movements, out float castLastDelay);
+                ExecuteSkill(actor, skill, targets, casts, damageEvents, movements,
+                    out float castLastDelay);
                 skillState.RunSkill(skill.Slot);
                 checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
                 stepDuration = Math.Max(stepDuration, ResolveDuration(skill, castLastDelay));
@@ -136,6 +137,7 @@ namespace Zjcs.Combat.Official
                 performedTargets.AddRange(targets);
                 var cast = new FightBattleSkillCastEvent
                 {
+                    ActorId = actor.Id,
                     Slot = skill.Slot,
                     SkillEntityId = skill.EntityId,
                     SkillItemId = skill.ItemId
@@ -229,8 +231,9 @@ namespace Zjcs.Combat.Official
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
-            List<FightBattleUnitState> targets, List<FightBattleDamageEvent> damageEvents,
-            List<FightBattleMovementEvent> movements, out float lastDelay)
+            List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
+            List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
+            out float lastDelay)
         {
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
@@ -295,7 +298,8 @@ namespace Zjcs.Combat.Official
                     var triggerSkills = new List<int>();
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, triggerSkills);
                     if (triggerSkills.Count > 0)
-                        ExecuteTriggerSkills(target, triggerSkills, damageEvents, movements, ref lastDelay);
+                        ExecuteTriggerSkills(target, triggerSkills, casts, damageEvents, movements,
+                            ref lastDelay);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -409,8 +413,8 @@ namespace Zjcs.Combat.Official
         /// and movement events in the current step, and do not consume the owner's skill slots.
         /// </summary>
         private void ExecuteTriggerSkills(FightBattleUnitState owner, List<int> skillIds,
-            List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
-            ref float lastDelay)
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay)
         {
             if (statusCatalog == null || skillIds == null || skillIds.Count == 0 || triggerDepth > 0) return;
             triggerDepth++;
@@ -435,7 +439,17 @@ namespace Zjcs.Combat.Official
                         skill.TargetType, 0, false, false, skill);
                     if (targets.Count == 0
                         && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
-                    ExecuteSkill(owner, skill, targets, damageEvents, movements, out float delay);
+                    checkpoint.Statistics.RecordCast(owner.Id, skill.EntityId, skill.ItemId);
+                    var cast = new FightBattleSkillCastEvent
+                    {
+                        ActorId = owner.Id,
+                        Slot = -1,
+                        SkillEntityId = skill.EntityId,
+                        SkillItemId = skill.ItemId
+                    };
+                    foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+                    casts.Add(cast);
+                    ExecuteSkill(owner, skill, targets, casts, damageEvents, movements, out float delay);
                     if (delay > lastDelay) lastDelay = delay;
                 }
             }

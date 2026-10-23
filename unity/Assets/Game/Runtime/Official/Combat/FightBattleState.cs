@@ -387,6 +387,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleSkillCastEvent
     {
+        public int ActorId;
         public int Slot;
         public int SkillEntityId;
         public int SkillItemId;

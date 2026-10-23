@@ -91,4 +91,42 @@ $triggerSkills = [System.Collections.Generic.List[int]]::new()
 $skillApplied = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::Apply($skillUnit, $catalog, $false, $triggerSkills)
 Assert-Trigger ($skillApplied -eq 1 -and $triggerSkills.Count -eq 1 -and $triggerSkills[0] -eq 50010) 'Official HP trigger did not request skill 50010'
 
+# Executor: an enemy hit drops the player below the threshold and the trigger skill is cast.
+$triggerPlayer = New-Unit 100 1000
+$triggerPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$triggerStatus = New-TriggerStatus 0.5 26004 -1 $false
+$triggerStatus.HpTriggerStatuses.Clear()
+$triggerStatus.HpTriggerSkills.Add(10640)
+$triggerPlayer.Statuses.Add($triggerStatus)
+$attacker = New-Unit 1000 1000
+$attacker.Id = 2; $attacker.Side = 2; $attacker.X = 1; $attacker.Y = 0
+$attacker.Turn.Id = 2; $attacker.Turn.Hp = 1000; $attacker.Turn.Speed = 1
+$attacker.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$attacker.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$attackSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$attackSkill.Slot = 0; $attackSkill.EntityId = 910; $attackSkill.ItemId = 911; $attackSkill.TargetType = 1
+$attackSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(-1, 0))
+$attackHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$attackHit.EntityId = 912; $attackHit.DamageId = 913; $attackHit.DamageType = 8
+$attackHit.HasCustomDamage = $true; $attackHit.CustomDamage = 50; $attackHit.TargetMode = 0
+$attackSkill.Hits.Add($attackHit)
+$attacker.Skills.Add($attackSkill)
+$triggerCp = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$triggerCp.StageId = 1; $triggerCp.MaxRound = 10; $triggerCp.RandomSeed = 11
+$triggerCp.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new(); $triggerCp.Grid.Width = 8; $triggerCp.Grid.Height = 8; $triggerCp.Grid.DefaultGroundType = 2
+$triggerCp.Units.Add($triggerPlayer); $triggerCp.Units.Add($attacker)
+$triggerWave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $triggerWave.Index = 0; $triggerWave.UnitIds.Add(2); $triggerCp.Waves.Add($triggerWave)
+$triggerExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin($triggerCp, $formula,
+    [Zjcs.Combat.Official.FightDamageSettlement]::new(), $catalog)
+$triggerStep = $null
+for ($index = 1; $index -le 40; $index++) {
+    $step = $triggerExecutor.Step(0, $index)
+    if ($triggerPlayer.Hp -ne 100) { $triggerStep = $step; break }
+}
+Assert-Trigger ($null -ne $triggerStep) 'Trigger test enemy never damaged the player'
+Assert-Trigger ($triggerPlayer.Hp -eq 50) "Trigger test player HP is $($triggerPlayer.Hp) instead of 50"
+$triggerCast = @($triggerStep.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 10640 -and $_.Slot -eq -1 -and $_.ActorId -eq 1 })
+Assert-Trigger ($triggerCast.Count -eq 1) 'Executor did not record the trigger skill cast'
+Assert-Trigger ($triggerStatus.HpTriggeredCount -eq 1) 'Executor did not count the HP trigger'
+
 Write-Output 'Battle HP trigger checks passed: official mapping, threshold, trigger status application, MaxCount and executor opening pass.'
