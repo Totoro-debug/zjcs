@@ -67,6 +67,8 @@ namespace Zjcs.Presentation.Opening
         public int TimelineItems => timelineItems.Count;
         public int DamageNumbers { get; private set; }
         public int ActionAnimations { get; private set; }
+        public int DieActions { get; private set; }
+        public int DeathHolds { get; private set; }
 
         public void RequestFastForward()
         {
@@ -287,7 +289,7 @@ namespace Zjcs.Presentation.Opening
                 case "Skill": alias = "skill_01"; break;
                 case "AirCombo": alias = "attack_01"; break;
                 case "Move": alias = "run_01"; break;
-                case "Die": alias = "die_01"; break;
+                case "Die": alias = "die_01"; DieActions++; break;
                 default: return;
             }
             if (!component.TryGetValue("ApplyId", out object applied) || !(applied is Dictionary<string, object> id)) return;
@@ -372,6 +374,24 @@ namespace Zjcs.Presentation.Opening
         {
             entityState.Remove(entityId);
             nextActionTime.Remove(entityId);
+            if (units.TryGetValue(entityId, out SkeletonAnimation defeated) && defeated != null)
+            {
+                // Official plays a death animation before the unit disappears; keep the
+                // model for a short while instead of destroying it on the remove message.
+                if (bindings.TryGetValue(entityId, out OfficialBattleModelBinding deathBinding))
+                {
+                    string die = ResolveAlias(deathBinding, "die_01");
+                    if (die != null)
+                    {
+                        defeated.AnimationState.SetAnimation(0, die, false);
+                        defeated.gameObject.AddComponent<OpeningDelayedDestroy>();
+                        DeathHolds++;
+                    }
+                }
+                units.Remove(entityId);
+                bindings.Remove(entityId);
+                return;
+            }
             if (timelineById.TryGetValue(entityId, out GameObject timelineItem))
             {
                 if (timelineItem != null) UnityEngine.Object.Destroy(timelineItem);

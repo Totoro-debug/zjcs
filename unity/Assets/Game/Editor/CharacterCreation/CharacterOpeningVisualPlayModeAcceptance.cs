@@ -260,7 +260,26 @@ namespace Zjcs.Editor.CharacterCreation
                 Require(session.Playback.ActionAnimations > 0, "record action animations were not driven");
                 Debug.Log("[Opening visual] action animations=" + session.Playback.ActionAnimations);
                 yield return Capture("visual-damage");
-                session.Playback.RequestFastForward();
+                if (Environment.GetEnvironmentVariable("ZJCS_OPENING_FULL_PLAYBACK") == "1")
+                {
+                    float fullDeadline = Time.realtimeSinceStartup + 300f;
+                    while (!session.Playback.Finished && Time.realtimeSinceStartup < fullDeadline)
+                    {
+                        AdvanceDialog();
+                        yield return null;
+                    }
+                    Require(session.Playback.Finished, "full record playback did not finish");
+                    Require(session.Playback.DieActions > 0, "record death actions were not observed");
+                    Require(session.Playback.DeathHolds > 0, "defeated units were not held for their death animation");
+                    Debug.Log("[Opening visual] full playback: die actions=" + session.Playback.DieActions
+                              + " death holds=" + session.Playback.DeathHolds
+                              + " actions=" + session.Playback.ActionAnimations
+                              + " damage=" + session.Playback.DamageNumbers);
+                }
+                else
+                {
+                    session.Playback.RequestFastForward();
+                }
                 float playDeadline = Time.realtimeSinceStartup + 60f;
                 while (!session.Playback.Finished && Time.realtimeSinceStartup < playDeadline) yield return null;
                 Require(session.Playback.Finished, "fast-forward did not finish the record");
