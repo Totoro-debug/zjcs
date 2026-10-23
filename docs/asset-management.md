@@ -23,6 +23,8 @@
 
 该角色资源替换已通过 Editor 导入／编译和创角 Play Mode 流程；实际查看了男女体型及染色界面截图。交互使用 Unity EventSystem 按坐标命中进行模拟，覆盖外观组、染色、命名、草稿恢复、存档及初始武器，不占用系统鼠标。此结果仅覆盖已接入的角色资源和上述流程，其他模块的新版替换与验证分别记录。
 
+女体骨骼和全部 451 个动画经独立解码后与原版完全一致，男体发生变化的三角形索引按当前输入重建；等价性凭据包含两版原始对象及解码结果哈希。`verify_current_audio_sources.py` 完整解析新版万圣节 PCK、HIRC 和 EventBankMapping：9 段媒体及 117 个既有控制对象不变，新增 8 个对象和 2 条事件路由，既有 8,737 条路由不变；已接入的 6 份音频输出逐一核验后保留，详见 `assets/reference/official-map/current-audio-source-manifest.json`。
+
 按需提取时复用 `scripts/official_apk.py` 的 `Apk` 读取器及 CAB 依赖解析。提取命令先读 APK，再读已校验且有来源凭据的缓存；音频使用 `WwiseBnk` 分包流程。完整操作见 [`assets/reference/SOURCES.md`](../assets/reference/SOURCES.md)。
 
 Unity 优先恢复官方 prefab、场景层级、骨骼、动画、材质和引用。只有在确有需要时才转换格式或适配 Windows。新增载荷时，同步更新模块来源清单、实际输入输出哈希、Unity `.meta` 和显式加载绑定；下载或复制原始 bundle 不代表完成迁移。
