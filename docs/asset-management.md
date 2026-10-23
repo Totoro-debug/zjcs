@@ -188,7 +188,7 @@ python -B scripts/current_asset_snapshot.py verify --archive .tools/asset-packs/
 python -B scripts/current_asset_snapshot.py restore --archive .tools/asset-packs/<lock.json中的archive_file>
 ```
 
-创建时检查打包前后的完整文件集合、时间戳及代码哈希；转换仍在写入时停止激活快照并保留旧 ZIP。验证同时核对整个 ZIP、清单、归档中每个文件及本地载荷的 SHA256；恢复前完整验证暂存，冲突默认停止，确认需替换时使用 `--replace`。实际生成并验证后，`lock.json` 才能作为当前素材已备份的依据。
+创建时检查打包前后的完整文件集合、时间戳及代码哈希；时间戳变化的文件重新计算 SHA256，只有实际字节与 ZIP 中保存的内容一致才接受重复生成，内容或代码变化则停止激活并保留旧 ZIP。验证同时核对整个 ZIP、清单、归档中每个文件及本地载荷的 SHA256；恢复前完整验证暂存，冲突默认停止，确认需替换时使用 `--replace`。实际生成并验证后，`lock.json` 才能作为当前素材已备份的依据。
 
 使用 [`unity_asset_pack.py`](../scripts/unity_asset_pack.py) 创建、校验和恢复 Unity 官方载荷快照：
 
