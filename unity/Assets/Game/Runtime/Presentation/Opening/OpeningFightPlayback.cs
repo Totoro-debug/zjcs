@@ -312,6 +312,29 @@ namespace Zjcs.Presentation.Opening
                 ? alias : null;
         }
 
+        private static readonly string[] BattleNumberSymbols = { "", "万", "亿", "兆", "京" };
+
+        /// <summary>Official zh_CN battle number formatting (NumberFormatHelper.FormatBattleByFourWidth).</summary>
+        public static string FormatBattleNumber(long value)
+        {
+            double unitBase = 10000.0;
+            for (int index = 0; index < BattleNumberSymbols.Length; index++)
+            {
+                double threshold = Math.Pow(unitBase, index + 1) * 100.0;
+                if (Math.Abs((double)value) >= threshold) continue;
+                double unit = Math.Pow(unitBase, index);
+                double scaled = value / unit;
+                if (Math.Floor(scaled) >= unitBase * 100.0)
+                    return ((int)(scaled / unitBase)).ToString() + BattleNumberSymbols[index + 1];
+                if (scaled < 10.0)
+                    return ((float)(int)(100.0 * scaled) / 100f).ToString("0.##") + BattleNumberSymbols[index];
+                if (scaled < 100.0)
+                    return ((float)(int)(10.0 * scaled) / 10f).ToString("0.#") + BattleNumberSymbols[index];
+                return ((int)scaled).ToString() + BattleNumberSymbols[index];
+            }
+            return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
         private void ShowDamage(Dictionary<string, object> component)
         {
             if (damageLayer == null || battlefield == null || battlefield.StageCamera == null) return;
@@ -344,9 +367,8 @@ namespace Zjcs.Presentation.Opening
             label.fontSize = 36f;
             label.alignment = TMPro.TextAlignmentOptions.Center;
             label.raycastTarget = false;
-            bool cure = string.Equals(type, "Cure", StringComparison.Ordinal);
-            long shown = Math.Abs(value);
-            label.text = cure ? "+" + shown : shown.ToString();
+            // BattleUIUtils.GetBattleNumberString(abs) -> Formula.BattleNumberToString.
+            label.text = FormatBattleNumber(Math.Abs(value));
             string variant = immunity ? "immunity" : crit ? "crit" : block ? "block" : "normal";
             Color color = battlefield.ResolveDamageColor(element, variant, type);
             labelObject.AddComponent<OpeningDamageFloat>().Initialize(label, local, color);
