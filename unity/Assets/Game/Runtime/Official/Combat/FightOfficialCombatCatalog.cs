@@ -232,6 +232,8 @@ namespace Zjcs.Combat.Official
             AddSourceMoves(skill, result.SourceMoves);
             Dictionary<string, object> extSkill = Component(components, "FightSkillExtSkillComponent");
             if (extSkill != null) AddExtraSkills(extSkill, result.ExtraSkills);
+            Dictionary<string, object> replay = Component(components, "FightSkillReplayComponent");
+            if (replay != null) AddSkillReplay(replay, result);
             var pending = new Queue<int>();
             var visited = new HashSet<int>();
             var references = new Dictionary<int, FightBattleHitReference>();
@@ -773,6 +775,40 @@ namespace Zjcs.Combat.Official
         /// Reads <c>FightSkillExtSkillComponent.ExtSkill</c> entries that carry a fixed skill id.
         /// Rate-based providers are honoured; other provider types are ignored.
         /// </summary>
+        /// <summary>
+        /// Reads the status-stack replay condition. Only <c>StatusStackCountFilter</c> with an optional
+        /// <c>ConsumeStackStatusHanldeCfg</c> is modelled; other filter/handle types are ignored.
+        /// </summary>
+        private static void AddSkillReplay(Dictionary<string, object> replay,
+            FightBattleSkillDefinition output)
+        {
+            object raw;
+            if (!replay.TryGetValue("FilterCondition", out raw) || !(raw is Dictionary<string, object> filter)
+                || StringField(filter, "_type") != "StatusStackCountFilter") return;
+            output.HasReplay = true;
+            output.ReplayStatusId = Int(filter, "StatusId");
+            output.ReplayStackCount = Int(filter, "StackCount");
+            output.ReplayRelation = Int(filter, "Relation");
+            if (!replay.TryGetValue("HandleCfgs", out object handleValue)
+                || !(handleValue is List<object> handles)) return;
+            foreach (object item in handles)
+            {
+                if (!(item is Dictionary<string, object> handle)
+                    || StringField(handle, "_type") != "ConsumeStackStatusHanldeCfg") continue;
+                output.ReplayConsumeStack = true;
+                output.ReplayConsumeCount = Int(handle, "StackCount");
+                if (output.ReplayStatusId <= 0) output.ReplayStatusId = Int(handle, "StatusId");
+                break;
+            }
+        }
+
+        private static string StringField(Dictionary<string, object> value, string key)
+        {
+            object raw;
+            return value.TryGetValue(key, out raw) && raw != null
+                ? Convert.ToString(raw, CultureInfo.InvariantCulture) : null;
+        }
+
         private static void AddExtraSkills(Dictionary<string, object> component,
             List<FightBattleSkillExtra> output)
         {

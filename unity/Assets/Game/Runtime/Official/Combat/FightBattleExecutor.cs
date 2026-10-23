@@ -305,6 +305,7 @@ namespace Zjcs.Combat.Official
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
             FightDamageFalloff.EndCast(units, skill);
             ApplyExtraSkills(actor, skill, casts, damageEvents, movements, ref lastDelay);
+            ApplySkillReplay(actor, skill, casts, damageEvents, movements, ref lastDelay);
         }
 
         /// <summary>
@@ -404,6 +405,57 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        private int replayDepth;
+
+        /// <summary>
+        /// Official <c>FightSkillReplayComponent</c>: after the skill action, replay the same skill once
+        /// when the actor's configured status stack condition holds. The status stack count is consumed
+        /// when configured. Relation 1 is treated as "at least" (the only value used by the pinned
+        /// data) and any other relation as equality.
+        /// </summary>
+        private void ApplySkillReplay(FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            List<FightBattleSkillCastEvent> casts, List<FightBattleDamageEvent> damageEvents,
+            List<FightBattleMovementEvent> movements, ref float lastDelay)
+        {
+            if (!skill.HasReplay || skill.ReplayStatusId <= 0 || replayDepth > 0) return;
+            FightBattleStatusState status = null;
+            foreach (FightBattleStatusState candidate in actor.Statuses)
+                if (candidate != null && candidate.ClassId == skill.ReplayStatusId) { status = candidate; break; }
+            if (status == null) return;
+            bool matched = skill.ReplayRelation == 1
+                ? status.StackCount >= skill.ReplayStackCount
+                : status.StackCount == skill.ReplayStackCount;
+            if (!matched) return;
+            if (skill.ReplayConsumeStack && skill.ReplayConsumeCount > 0)
+            {
+                status.StackCount -= skill.ReplayConsumeCount;
+                if (status.StackCount <= 0) actor.Statuses.Remove(status);
+            }
+            List<FightBattleUnitState> targets = FightBattleTargeting.Select(actor, units,
+                skill.TargetType, 0, false, false, skill);
+            if (targets.Count == 0 && !FightBattleTargeting.HasCasterAreaTargets(actor, units, skill)) return;
+            checkpoint.Statistics.RecordCast(actor.Id, skill.EntityId, skill.ItemId);
+            var cast = new FightBattleSkillCastEvent
+            {
+                ActorId = actor.Id,
+                Slot = skill.Slot,
+                SkillEntityId = skill.EntityId,
+                SkillItemId = skill.ItemId
+            };
+            foreach (FightBattleUnitState target in targets) cast.TargetIds.Add(target.Id);
+            casts.Add(cast);
+            replayDepth++;
+            try
+            {
+                ExecuteSkill(actor, skill, targets, casts, damageEvents, movements, out float delay);
+                if (delay > lastDelay) lastDelay = delay;
+            }
+            finally
+            {
+                replayDepth--;
+            }
         }
 
         private int extraDepth;
