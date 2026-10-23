@@ -364,7 +364,10 @@ namespace Zjcs.Combat.Official
                 MaxFalloffCount = -1
             };
             if (hpDecrease != null)
+            {
                 AddHpTriggerStatuses(hpDecrease, result.HpTriggerStatuses);
+                AddHpTriggerSkills(hpDecrease, result.HpTriggerSkills);
+            }
             if (falloff != null)
             {
                 result.FalloffTarget = Int(falloff, "FalloffTarget");
@@ -736,6 +739,19 @@ namespace Zjcs.Combat.Official
                 CancelDiagonally = Bool(row, "CancelDiagonally"),
                 HasConditions = conditions
             };
+        }
+
+        private static void AddHpTriggerSkills(Dictionary<string, object> component,
+            List<int> output)
+        {
+            object raw;
+            if (!component.TryGetValue("Skills", out raw) || raw == null) return;
+            foreach (object item in Array(raw, "Skills"))
+            {
+                Dictionary<string, object> row = Object(item, "hp trigger skill");
+                int skillId = Int(row, "SkillId");
+                if (skillId > 0) output.Add(skillId);
+            }
         }
 
         private static void AddHpTriggerStatuses(Dictionary<string, object> component,

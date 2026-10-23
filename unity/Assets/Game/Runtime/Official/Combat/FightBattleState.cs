@@ -101,6 +101,7 @@ namespace Zjcs.Combat.Official
         public int HpTriggeredCount;
         public bool HpTriggerAtStart;
         public List<int> HpTriggerStatuses = new List<int>();
+        public List<int> HpTriggerSkills = new List<int>();
     }
 
     [Serializable]

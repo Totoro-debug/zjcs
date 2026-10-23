@@ -292,7 +292,10 @@ namespace Zjcs.Combat.Official
                     ApplyHitDisperse(target, hit, random);
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
-                    FightStatusTriggerRuntime.Apply(target, statusCatalog, false);
+                    var triggerSkills = new List<int>();
+                    FightStatusTriggerRuntime.Apply(target, statusCatalog, false, triggerSkills);
+                    if (triggerSkills.Count > 0)
+                        ExecuteTriggerSkills(target, triggerSkills, damageEvents, movements, ref lastDelay);
                 }
             }
             ApplySourceMoves(actor, skill, targets, movements, ref lastDelay);
@@ -396,6 +399,59 @@ namespace Zjcs.Combat.Official
             }
             movements.Add(movement);
             return true;
+        }
+
+        private int triggerDepth;
+
+        /// <summary>
+        /// Executes the skill list of an HP-triggered status as the status owner. Trigger casts run at
+        /// most one level deep (a trigger skill cannot start another trigger chain), keep their damage
+        /// and movement events in the current step, and do not consume the owner's skill slots.
+        /// </summary>
+        private void ExecuteTriggerSkills(FightBattleUnitState owner, List<int> skillIds,
+            List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
+            ref float lastDelay)
+        {
+            if (statusCatalog == null || skillIds == null || skillIds.Count == 0 || triggerDepth > 0) return;
+            triggerDepth++;
+            try
+            {
+                int level = Math.Max(1, owner.Level);
+                int subRank = Math.Max(1, owner.SubRank);
+                foreach (int skillId in skillIds)
+                {
+                    if (skillId <= 0) continue;
+                    FightBattleSkillDefinition skill;
+                    try
+                    {
+                        skill = statusCatalog.CreateSkill(skillId, -1, 0, 1, level, subRank,
+                            ToPropertyList(statusCatalog.CalculateSkillProps(skillId, 1, level, subRank)));
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        continue;
+                    }
+                    List<FightBattleUnitState> targets = FightBattleTargeting.Select(owner, units,
+                        skill.TargetType, 0, false, false, skill);
+                    if (targets.Count == 0
+                        && !FightBattleTargeting.HasCasterAreaTargets(owner, units, skill)) continue;
+                    ExecuteSkill(owner, skill, targets, damageEvents, movements, out float delay);
+                    if (delay > lastDelay) lastDelay = delay;
+                }
+            }
+            finally
+            {
+                triggerDepth--;
+            }
+        }
+
+        private static List<FightPropertyValue> ToPropertyList(IReadOnlyDictionary<int, long> values)
+        {
+            var result = new List<FightPropertyValue>();
+            if (values == null) return result;
+            foreach (KeyValuePair<int, long> entry in values)
+                result.Add(new FightPropertyValue { Id = entry.Key, Value = entry.Value });
+            return result;
         }
 
         /// <summary>
