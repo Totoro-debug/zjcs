@@ -52,6 +52,8 @@ namespace Zjcs.Editor
         {
             EnsureMap10Prefabs();
             BindMap10Catalog();
+            if (OfficialWorldMapAssetCatalog.LoadDefault() == null)
+                throw new InvalidOperationException("Official Map10 Resources catalog could not be loaded.");
 
             var ground = AssetDatabase.LoadAssetAtPath<GameObject>(GroundAsset);
             var miniMap = AssetDatabase.LoadAssetAtPath<GameObject>(MiniMapAsset);

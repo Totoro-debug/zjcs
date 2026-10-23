@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Zjcs.Offline.Equipment;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -62,6 +63,7 @@ namespace Zjcs.Presentation.World
         private GameObject avatar;
         private Camera worldCamera;
         private OfficialMap10EntityView entityView;
+        private OfficialMap10EnvironmentView environmentView;
         private OfficialMap10UiCatalog uiCatalog;
         private OfficialMap10UiRenderer ui;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
@@ -376,6 +378,7 @@ namespace Zjcs.Presentation.World
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map10.");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
             progression = new OfflineCharacterProgressionService(progressionSave, characterAssets.Load());
+            progression.AttachEquipmentCatalog(OfficialEquipmentAssetCatalog.LoadDefault().Load());
             session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 10);
             if (session.Definition.MaxRegionProgress == null || session.Definition.MaxRegionProgress.Length == 0)
                 throw new InvalidDataException("Official Map10 region progress definitions are missing.");
@@ -394,6 +397,11 @@ namespace Zjcs.Presentation.World
             WorldMapAssets assets = session.Assets;
             GameObject terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
             terrain.name = "Map10Terrain";
+
+            var environmentObject = new GameObject("Map10Environment");
+            environmentObject.transform.SetParent(mapRoot, false);
+            environmentView = environmentObject.AddComponent<OfficialMap10EnvironmentView>();
+            environmentView.Initialize();
 
             CreateWorldCamera();
 
