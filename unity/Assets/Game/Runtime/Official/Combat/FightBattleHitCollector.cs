@@ -83,6 +83,9 @@ namespace Zjcs.Combat.Official
                         : new List<FightBattleStatusApplication>(entity.AppliedStatuses),
                     StatusListRandomOne = entity.StatusListRandomOne,
                     HemophagiaProperty = entity.HemophagiaProperty,
+                    ChildSkillId = entity.ChildSkillId,
+                    ChildSkillRate = entity.ChildSkillRate,
+                    ChildSkillLessThanHpPer = entity.ChildSkillLessThanHpPer,
                     DisperseChance = entity.DisperseChance,
                     DisperseStatusTypes = entity.DisperseStatusTypes == null
                         ? new List<int>() : new List<int>(entity.DisperseStatusTypes),

@@ -222,6 +222,10 @@ namespace Zjcs.Combat.Official
         public bool StatusListRandomOne;
         // Official FightHitExtHemophagiaComponent.HemophagiaPropType (0 = none).
         public int HemophagiaProperty;
+        // Official FightDamageComponent.ChildSkillCfg: child skill triggered on the damaged target.
+        public int ChildSkillId;
+        public float ChildSkillRate = 1f;
+        public float ChildSkillLessThanHpPer = -1f;
         // Official FightDamageComponent.DisperseStatus (status types, count, chance, random pick).
         public float DisperseChance;
         public List<int> DisperseStatusTypes = new List<int>();
@@ -263,6 +267,9 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
         public bool StatusListRandomOne;
         public int HemophagiaProperty;
+        public int ChildSkillId;
+        public float ChildSkillRate = 1f;
+        public float ChildSkillLessThanHpPer = -1f;
         public float DisperseChance;
         public List<int> DisperseStatusTypes = new List<int>();
         public int DisperseCount;
