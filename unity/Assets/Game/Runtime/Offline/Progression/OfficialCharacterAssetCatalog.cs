@@ -30,6 +30,7 @@ namespace Zjcs.Offline.Progression
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private TextAsset skillRules;
         [SerializeField] private TextAsset skillRecommendations;
+        [SerializeField] private Font uiFont;
         [SerializeField] private OfficialCharacterSpriteBinding[] sprites = System.Array.Empty<OfficialCharacterSpriteBinding>();
 
         public TextAsset CharacterOverview => characterOverview;
@@ -43,6 +44,7 @@ namespace Zjcs.Offline.Progression
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset SkillRules => skillRules;
         public TextAsset SkillRecommendations => skillRecommendations;
+        public Font UiFont => uiFont;
 
         public Sprite FindSprite(string sourceUri)
         {
@@ -73,7 +75,7 @@ namespace Zjcs.Offline.Progression
             if (characterOverview == null || characterProperties == null || progressionRules == null
                 || timedAppearanceItems == null || wardrobeItems == null || characterPanels == null
                 || wardrobeRules == null || wardrobeUi == null || sourceManifest == null || skillRules == null
-                || skillRecommendations == null)
+                || skillRecommendations == null || uiFont == null)
                 throw new InvalidOperationException("Official character TextAssets are not bound.");
             if (sprites == null || sprites.Length == 0 || System.Array.Exists(sprites, value => value == null || value.sprite == null))
                 throw new InvalidOperationException("Official character sprite bindings are incomplete.");

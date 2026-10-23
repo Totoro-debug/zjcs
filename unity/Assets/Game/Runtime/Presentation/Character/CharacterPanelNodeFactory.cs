@@ -20,6 +20,11 @@ namespace Zjcs.Presentation.Character
         private static Font uiFont;
         private static bool fontLogged;
 
+        public static void SetUiFont(Font font)
+        {
+            if (font != null) uiFont = font;
+        }
+
         /// <summary>
         /// UGUI fallback font: the built-in LegacyRuntime font has no CJK glyphs, so prefer an OS CJK
         /// family and fall back to the built-in resource when no system font can be created.
@@ -28,12 +33,11 @@ namespace Zjcs.Presentation.Character
         {
             get
             {
-                if (uiFont != null) return uiFont;
                 if (Application.isBatchMode) return null;
+                if (uiFont != null) return uiFont;
                 try
                 {
-                    uiFont = Font.CreateDynamicFontFromOSFont(
-                        new[] { "Microsoft YaHei", "Microsoft YaHei UI", "SimHei", "Arial" }, 24);
+                    uiFont = Resources.Load<Font>("Character/UiFont");
                 }
                 catch (Exception) { uiFont = null; }
                 if (uiFont == null)
@@ -86,17 +90,30 @@ namespace Zjcs.Presentation.Character
             }
             if (source.text != null && CharacterPanelNodeFactory.UiFont != null)
             {
-                Text text = instance.AddComponent<Text>();
-                text.font = CharacterPanelNodeFactory.UiFont;
-                text.text = source.text.value ?? string.Empty;
-                text.color = ColorValue(source.text.color, Color.black);
-                text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));
-                text.alignment = TextAlignment(source.text.horizontal, source.text.vertical);
-                text.horizontalOverflow = source.text.word_wrap ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
-                text.verticalOverflow = source.text.overflow == 1 || source.text.overflow == 5 || source.text.overflow == 6
-                    ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
-                text.supportRichText = true;
-                text.raycastTarget = false;
+                Text text = null;
+                try
+                {
+                    text = instance.AddComponent<Text>();
+                    text.font = CharacterPanelNodeFactory.UiFont;
+                    text.text = source.text.value ?? string.Empty;
+                    text.color = ColorValue(source.text.color, Color.black);
+                    text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));
+                    text.alignment = TextAlignment(source.text.horizontal, source.text.vertical);
+                    text.horizontalOverflow = source.text.word_wrap ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
+                    text.verticalOverflow = source.text.overflow == 1 || source.text.overflow == 5 || source.text.overflow == 6
+                        ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
+                    text.supportRichText = true;
+                    text.raycastTarget = false;
+                }
+                catch (Exception error)
+                {
+                    if (!fontLogged)
+                    {
+                        fontLogged = true;
+                        UnityEngine.Debug.LogWarning("[Character] UI font could not be applied: " + error.Message);
+                    }
+                    if (text != null) UnityEngine.Object.Destroy(text);
+                }
             }
             if (HasScript(source, "Button") || source.button || HasScript(source, "TabItem"))
             {

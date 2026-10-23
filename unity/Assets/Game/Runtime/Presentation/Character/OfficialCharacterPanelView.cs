@@ -211,6 +211,7 @@ namespace Zjcs.Presentation.Character
             progression = characterProgression != null ? characterProgression
                 : throw new ArgumentNullException(nameof(characterProgression));
             assets.ValidateBindings();
+            CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
             factory = new CharacterPanelNodeFactory(assets);
 
             OfficialCharacterPanelsData panelData = JsonUtility.FromJson<OfficialCharacterPanelsData>(assets.CharacterPanels.text);

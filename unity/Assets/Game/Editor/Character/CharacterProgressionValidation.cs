@@ -78,6 +78,12 @@ namespace Zjcs.Editor.Character
                 if (field == null) throw new InvalidOperationException("Character catalog field is missing: " + CatalogFields[i]);
                 field.objectReferenceValue = assets[i];
             }
+            Font uiFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Official/Commerce/Art/fonts/FZY4K.ttf");
+            if (uiFont == null)
+                throw new InvalidOperationException("The official character UI font was not imported.");
+            SerializedProperty fontField = serialized.FindProperty("uiFont");
+            if (fontField == null) throw new InvalidOperationException("Character catalog font field is missing.");
+            fontField.objectReferenceValue = uiFont;
             string[] spriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { "Assets/Official/Character/Art" });
             var spritePaths = spriteGuids.Select(AssetDatabase.GUIDToAssetPath)
                 .Where(path => path.StartsWith(SpriteRoot, StringComparison.Ordinal))
@@ -321,6 +327,7 @@ namespace Zjcs.Editor.Character
                 "Load the official profession name and icon");
             Require(loaded.SkillMergePiece(10000) == 10 && loaded.SkillMergePiece(10001) > 0,
                 "Load the official skill merge piece counts");
+            Require(assetCatalog.UiFont != null, "Load the official character UI font");
             Require(loaded.Rows("system_level_limit").Any(row => Convert.ToInt32(row["SubRank"],
                     System.Globalization.CultureInfo.InvariantCulture) == 1
                     && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
