@@ -37,6 +37,11 @@ namespace Zjcs.Presentation.Home
             deferredImageTints.Clear();
             GameObject root = CreateNode(panel.root, parent, bind);
             RootName = root.name;
+            if (panelKey == "treasure_gacha_main")
+            {
+                Canvas.ForceUpdateCanvases();
+                ApplyTreasureGachaMachineScale(false);
+            }
             return root;
         }
 
@@ -259,6 +264,30 @@ namespace Zjcs.Presentation.Home
         }
 
         public IEnumerable<GameObject> AllNodes => nodes.Values;
+
+        public void ApplyTreasureGachaMachineScale(bool duringDraw)
+        {
+            HomeGachaScaleFitterConfig fitter = catalog.TreasureGachaMachine?.aspect_ratio_scale_fitter;
+            RectTransform owner = Find(fitter?.owner_path)?.transform as RectTransform;
+            RectTransform target = Find(fitter?.target_path)?.transform as RectTransform;
+            if (fitter == null || owner == null || target == null || owner.rect.width <= 0f)
+                throw new InvalidOperationException("The official treasure gacha scale fitter binding is incomplete.");
+
+            HomeScaleCurveConfig source = duringDraw ? fitter.second_curve : fitter.first_curve;
+            var keys = new Keyframe[source.keys.Length];
+            for (int index = 0; index < keys.Length; index++)
+            {
+                HomeScaleCurveKey key = source.keys[index];
+                keys[index] = new Keyframe(key.time, key.value, key.in_slope, key.out_slope);
+            }
+            var curve = new AnimationCurve(keys)
+            {
+                preWrapMode = (WrapMode)source.pre_wrap_mode,
+                postWrapMode = (WrapMode)source.post_wrap_mode,
+            };
+            float scale = curve.Evaluate(owner.rect.height / owner.rect.width);
+            target.localScale = new Vector3(scale, scale, 1f);
+        }
 
         private GameObject Build(HomeUiNode source, Transform parent, Action<string, GameObject> bind)
         {
