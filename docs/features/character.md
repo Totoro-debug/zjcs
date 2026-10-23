@@ -199,7 +199,7 @@ Unity 已接入固定版本 `854_156383` 人物成长目录、人物概览与属
 
 界面构建已改由 `CharacterPanelNodeFactory` 还原原布局组、`ContentSizeFitter`、`ScrollRect`、`RectMask2D`、Mask、按钮与文本样式，人物页与弹窗使用独立节点索引，`CloseDialog` 只销毁弹窗；原 TMP 字体／材质／描边、状态切换动画、按钮音效与 `OnLowMemory` 子页回收仍未接入。属性弹窗的 `PropCatalogCfgList`、细分分组和行模板由 `prepare_character_prop_bindings.py` 从固定 APK 预制体读取，未再凭节点名推断。
 
-验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（27,132 个 GUID）；属性模块以 Roslyn 单独编译 `Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过，并用同步的 Mono 校验程序对属性目录与 `Evaluate` 管线运行断言通过（基础 300/60/60/48、职业 FeatureProps、装备分块、战力、人物基础细分、数字格式）。Unity `2022.3.57f1c2` 的 `BindOfficialCatalogs`／`Run` 与 Play Mode 逻辑／真实输入／画面／存档恢复尚未执行：验证期间另一会话持续占用工程实例，batchmode 无法打开同一项目。
+验证边界：`python -B scripts/check_unity_project.py` 静态元数据检查通过（27,998 个 GUID）。Unity `2022.3.57f1c2` Editor `BindOfficialCatalogs` 成功（1563 wardrobe entries、1723 appearance skins、1764 official sprites、pinned 854_156383），`CharacterProgressionValidation.Run` 通过（经验、基础属性、衣柜互斥、限时外观扩展、属性管线）。Roslyn 单独编译 `Zjcs.Offline.Skills`、`Zjcs.Offline.Progression`、`Zjcs.Presentation.Character`、`Zjcs.Editor.Character` 通过；Play Mode batchmode 逻辑验收通过，覆盖技能合成/换位、装备碎片合成/精炼、衣柜已读、方案与称号写盘后重载。批处理未生成装备槽图标节点（83 个 Image），不能据此确认窗口态槽位渲染；隔离副本窗口态运行时 Text.font 赋值抛空引用，未取得截图。真实鼠标/拖拽命中、动画/音频与完整画面仍未验证。
 
 ### 待迁移的规则与表现
 
