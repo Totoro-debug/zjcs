@@ -21,6 +21,8 @@ namespace Zjcs.Combat.Official
         private Dictionary<string, object> skillPropertyNames;
         private Dictionary<string, object> battleTables;
         private Dictionary<string, object> battleProperties;
+        private readonly Dictionary<int, List<int>> actionBlockersByProposedType =
+            new Dictionary<int, List<int>>();
         private readonly Dictionary<int, List<MonsterHpPliesLevel>> monsterHpPlies =
             new Dictionary<int, List<MonsterHpPliesLevel>>();
 
@@ -70,6 +72,7 @@ namespace Zjcs.Combat.Official
             catalog.skillPropertyNames = Object(Required(skillCatalog, "prop_names"), "prop_names");
             catalog.battleTables = Object(Required(battleCatalog, "tables"), "battle tables");
             catalog.battleProperties = Object(Required(battleCatalog, "props"), "battle props");
+            catalog.ParseStateMutex();
             catalog.ParseSkillPropertyTables(skillCatalog);
             if (hasHpPliesPayload) catalog.ParseMonsterHpPlies(monsterHpPliesJson);
             return catalog;
@@ -525,6 +528,10 @@ namespace Zjcs.Combat.Official
                 SubRank = subRank,
                 SkillType = Int(skill, "SkillType"),
                 ActionType = Int(skill, "ActionType"),
+                HitTargetActionType = Int(skill, "HitTargetActionType"),
+                BlockingSourceActionTypes = BlockingStatusActionTypes(Int(skill, "ActionType")),
+                BlockingTargetActionTypes = BlockingStatusActionTypes(
+                    Int(skill, "HitTargetActionType")),
                 SkillTargetType = Int(skill, "SkillTargetType"),
                 ElementType = Int(skill, "ElementType"),
                 NeedConditionStatusMeetToRelease = Bool(skill,
@@ -1089,6 +1096,41 @@ namespace Zjcs.Combat.Official
             new Dictionary<int, Dictionary<int, int>>();
         private int cooldownPropertyId;
 
+
+        private const long ActionBehaviourDiscard = 2;
+
+        private void ParseStateMutex()
+        {
+            if (!battleTables.TryGetValue("state_mutex", out object rawRows)) return;
+            var matrix = new Dictionary<int, Dictionary<int, long>>();
+            foreach (object value in Array(rawRows, "state_mutex"))
+            {
+                Dictionary<string, object> row = Object(value, "state_mutex row");
+                int fromType = Int(row, "From");
+                if (!matrix.TryGetValue(fromType, out Dictionary<int, long> behaviours))
+                    matrix[fromType] = behaviours = new Dictionary<int, long>();
+                foreach (KeyValuePair<int, long> behaviour in ReadLongMap(row, "Behaviours"))
+                    behaviours[behaviour.Key] = behaviour.Value;
+            }
+
+            foreach (KeyValuePair<int, Dictionary<int, long>> row in matrix)
+                foreach (KeyValuePair<int, long> behaviour in row.Value)
+                {
+                    if (behaviour.Value != ActionBehaviourDiscard) continue;
+                    if (!actionBlockersByProposedType.TryGetValue(behaviour.Key,
+                        out List<int> blockers))
+                        actionBlockersByProposedType[behaviour.Key] = blockers = new List<int>();
+                    blockers.Add(row.Key);
+                }
+        }
+
+        private List<int> BlockingStatusActionTypes(int proposedActionType)
+        {
+            return proposedActionType > 0
+                && actionBlockersByProposedType.TryGetValue(proposedActionType,
+                    out List<int> blockers)
+                ? new List<int>(blockers) : new List<int>();
+        }
         private void ParseSkillPropertyTables(Dictionary<string, object> skillCatalog)
         {
             Dictionary<string, object> props = Object(Required(skillCatalog, "props"), "skill props");
