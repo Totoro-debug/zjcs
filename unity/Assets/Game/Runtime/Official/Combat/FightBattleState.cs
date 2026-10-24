@@ -296,6 +296,9 @@ namespace Zjcs.Combat.Official
         public FightSkillProfessionAvailability ProfessionAvailability;
         public int SkillType;
         public int ActionType;
+        public int HitTargetActionType;
+        public List<int> BlockingSourceActionTypes = new List<int>();
+        public List<int> BlockingTargetActionTypes = new List<int>();
         public int SkillTargetType;
         public int ElementType;
         public bool NeedConditionStatusMeetToRelease;

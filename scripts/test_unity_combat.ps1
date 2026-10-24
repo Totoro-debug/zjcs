@@ -645,6 +645,49 @@ $confusionScope = [Zjcs.Combat.Official.FightBattleTargeting]::SelectScopeTarget
     $controlActor, $confusedUnits, $controlSkill, $confusionTargets[0], $confusionHit)
 Assert-Combat ($confusionScope.Count -eq 2 -and @($confusionScope.Id) -contains $confusedEnemy.Id) 'Confusion did not remove faction filtering from the hit scope'
 
+$mutexActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$mutexActor.Id = 75; $mutexActor.Side = 1; $mutexActor.Hp = 100; $mutexActor.MaxHp = 100
+$mutexActor.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$mutexSlot = [Zjcs.Combat.Official.FightSkillSlotState]::new()
+$mutexSlot.Slot = 0; $mutexSlot.LimitedTimes = -1
+$mutexActor.SkillState.Slots.Add($mutexSlot)
+$mutexActionSkill = $officialCatalog.CreateSkill(12410, 0, 12410, 1, 1, 0, $null)
+$mutexActor.Skills.Add($mutexActionSkill)
+$mutexEnemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$mutexEnemy.Id = 76; $mutexEnemy.Side = 2; $mutexEnemy.Hp = 100; $mutexEnemy.MaxHp = 100
+$mutexUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($mutexActor, $mutexEnemy)
+Assert-Combat ($mutexActionSkill.ActionType -eq 2 -and $mutexActionSkill.BlockingSourceActionTypes.Contains(57)) 'Official state mutex blockers were not compiled onto the skill'
+Assert-Combat ($null -ne [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($mutexActor, $mutexUnits, 1)) 'An unblocked official skill was not ready'
+$frozen = $officialCatalog.CreateStatus(24215, 2, 1, 1)
+$mutexActor.Statuses.Add($frozen)
+Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($mutexActor, $mutexUnits, 1)) 'Frozen state did not block a skill through the official state mutex'
+
+$hitActionSkill = $officialCatalog.CreateSkill(12030, 0, 12030, 1, 1, 0, $null)
+$safeAttackerTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$safeAttackerTarget.Id = 77; $safeAttackerTarget.Side = 2; $safeAttackerTarget.X = 1
+$safeAttackerTarget.Hp = 100; $safeAttackerTarget.MaxHp = 100
+$safeAttackerTarget.Statuses.Add($officialCatalog.CreateStatus(24306, 2, 2, 1))
+$invincibleTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$invincibleTarget.Id = 78; $invincibleTarget.Side = 2; $invincibleTarget.X = 2
+$invincibleTarget.Hp = 100; $invincibleTarget.MaxHp = 100
+$invincibleStatus = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$invincibleStatus.ActionType = 55
+$invincibleTarget.Statuses.Add($invincibleStatus)
+$actionTargetUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@(
+    $mutexActor, $safeAttackerTarget, $invincibleTarget)
+Assert-Combat ($hitActionSkill.HitTargetActionType -eq 4 -and $hitActionSkill.BlockingTargetActionTypes.Contains(72) -and -not $hitActionSkill.BlockingTargetActionTypes.Contains(55)) 'Hit target action legality did not match the official damage mutex'
+Assert-Combat ([Zjcs.Combat.Official.FightBattleTargeting]::IsActionBlockedByStatus($safeAttackerTarget, $hitActionSkill.BlockingTargetActionTypes)) 'Explicit target action legality helper missed a blocked target'
+$actionTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select(
+    $mutexActor, $actionTargetUnits, 1, 0, $false, $false, $hitActionSkill)
+Assert-Combat ($actionTargets.Count -eq 1 -and $actionTargets[0].Id -eq $invincibleTarget.Id) 'HitTargetActionType did not filter a target whose state discards damage'
+$actionHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$actionHit.TargetMode = 1
+$actionHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]@{ X = -1; Y = 0 })
+$actionHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]@{ X = 0; Y = 0 })
+$actionScope = [Zjcs.Combat.Official.FightBattleTargeting]::SelectScopeTargets(
+    $mutexActor, $actionTargetUnits, $hitActionSkill, $invincibleTarget, $actionHit)
+Assert-Combat ($actionScope.Count -eq 1 -and $actionScope[0].Id -eq $invincibleTarget.Id) 'HitTargetActionType was not applied to area hit candidates'
+
 $ally.Hp = 100
 Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($actor, $units, 1)) 'Full health team accepted an unnecessary heal'
 $ally.Hp = 70

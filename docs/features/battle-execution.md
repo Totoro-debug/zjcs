@@ -35,7 +35,7 @@
 | F10 | 可调整区域与本队／NPC 控制 | `ChangeBattlePosHandler` 按 `TeamChangePosRange`、阵营 `EntryPosList`、队伍偏移或副本中心确定范围，偶数尺寸有半格中心修正；仅准备且允许时显示范围。可控自己、所属 NPC、匹配 NPC 或辅助机器人等分支影响占位交换；普通队友不自动获得控制权。原请求区分队伍站位与本场偏移。 |
 | F11 | 特殊中途加入站位 | `ChangePosHandler` 按 `Stage.JoinInMiddle` 选择普通或灵魂站位工具；`PrepareBattlePlayerSoulDrag` 在允许观战加入时预览、选择合法位置并提交偏移。此为模式功能，不能直接启用为单机通用拖拽。 |
 | F12 | 寻路、移动与位移 | 官方 `AStarUtils`、`MyFightGridMover`、`MyFightActionSkillMove` 消费 MoveDist、通行掩码、占位、逐段路径、持续时间、朝向和移动 Playable；`FightSkillComponentInfo.SourceMoveList` 按 Delay 排序，还包含技能自身位移。传送、保持距离、固定方向等受技能 AI 配置控制。 |
-| F13 | 自动选择目标与施法范围 | `FightSkillComponentInfo.Range` 明确从近到远排列，近战范围包含四向；`HitTargetType` 包含自己、敌人、友方、非自身友方、所有、无目标、主人、自身召唤物、其他真人友方、玩家与 NPC 友方。`SkillTargetType` 区分点、实体、可站立点、技能方向可站立点、跟随实体与锁定实体；`HitTargetActionType` 还限制可起效行为。 |
+| F13 | 自动选择目标与施法范围 | `FightSkillComponentInfo.Range` 明确从近到远排列，近战范围包含四向；`HitTargetType` 包含自己、敌人、友方、非自身友方、所有、无目标、主人、自身召唤物、其他真人友方、玩家与 NPC 友方。`SkillTargetType` 区分点、实体、可站立点、技能方向可站立点、跟随实体与锁定实体；`HitTargetActionType` 与 `state_mutex` 现共同过滤技能施放者和命中候选，包括状态触发的显式目标，只有矩阵标记 `Discard` 的现有行动状态会阻止该动作。 |
 | F14 | AI 优先级、嘲讽与混乱 | 固定 `rules.skill.AiPriorityId/LastAiPriorityId` 关联 `rules.ai_priority` 的有序策略组；技能实体另配属性最值、角色类别、角色类型分组、忽略状态及 `ReleaseWhileRidicule/ReleaseWhileConfusion`，状态 `ActionComponent.ActionType` 标记控制类型，`MonsterInfo` 提供单位 `CharacterType/AiType`。客户端 `MyFightAI` 为空组件包装、共享 `FightAIComponent` 仅保存 `AiType`，未取得服务端策略评分器；确定性筛选、已解释比较与用户确认的控制状态模拟已在本地接入，剩余策略、评分公式和权重列为未实现。 |
 | F15 | 点击单位查看详情 | `FightRoleClickInput` 及玩家／NPC／怪物／宠物等派生类先校验命中和查询条件，再打开对应信息或定制回调。它与自动选敌不同；没有把点击模型或常规技能图标解释为通用手动指定攻击目标。 |
 
@@ -238,7 +238,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 - [ ] 从实际角色存档装配装备技能、槽序、等级／品阶、技能属性、被动、职业与其他来源状态，并在准备阶段变更后刷新快照。当前已会从技能档案读取方案主动技能、初始武器技能、阶位与槽位等级，并消费主动技能属性、被动属性、冷却及已装备被动的 `PassiveStatusIdList`；Map10 玩家与怪物的被动状态由同一官方绑定入口在战斗开始前装配。装备提供的技能、职业限制与其他加成仍待接入。
 - [x] 无技能回合按用户确认的本地规则向远离敌人的合法格网位置移动（若无合法路径则留在原位），并推进个人回合、冷却、状态与胜负检查；核心回归覆盖了退避、无虚构攻击与冷却推进。官方客户端／共享代码没有提供该 AI 决策的服务器目的地规则。
-- [ ] 处理技能消耗与开场条件：`CostType=1` 已按正数 `SkillCost` 扣除 HP，缺值按0正常释放；`CostType=2` 已消耗全部持续护盾并按用户确认的等比例结算，HP 消耗也显示官方技能消耗飘字且不计作命中。`Map10RuntimeSkill` 仍未携带每技能 CD，`MustHaveValidCost`、开场 CD 更新时点、次数限制、换波重置、CD 增减／停止／永久调整，以及职业、禁止动作、条件状态限制仍待接入。
+- [ ] 处理技能消耗与开场条件：`CostType=1` 已按正数 `SkillCost` 扣除 HP，缺值按0正常释放；`CostType=2` 已消耗全部持续护盾并按用户确认的等比例结算，HP 消耗也显示官方技能消耗飘字且不计作命中。`Map10RuntimeSkill` 仍未携带每技能 CD，`MustHaveValidCost`、开场 CD 更新时点、次数限制、换波重置、CD 增减／停止／永久调整、职业限制与条件状态限制仍待接入；来源和目标动作合法性已按固定 `state_mutex` 矩阵接入。
 - [ ] 完整消费被动技能的状态部分：固定版 `PassiveStatusIdList` 已转换为开战状态绑定并覆盖 Map10 玩家与怪物；属性变换与护盾按通用状态执行器结算，控制、破韧／恢复、生命层及其他未实现事件仍按相应组件缺口处理。
 - [ ] 每槽主动施放、额外施放、状态阈值触发与状态层数重播已接入并生成独立施放事件；子技能、Replay 的其他条件与处理类型、白名单、触发上限和结束清理仍未贯通；不把所有负持续时间强制改为固定值。
 - [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。命中延迟、`ActOnSouce` 锚点、`Scope` 范围命中、按距离计算的延迟、固定／治疗命中节点、命中驱散与命中位移已接入；仍缺命中特效锚点／跟随、Scope 的 `NotSameTarget` 等标志与区域过滤、按 Delay 分帧结算与覆盖延时。

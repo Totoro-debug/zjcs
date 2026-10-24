@@ -1046,6 +1046,12 @@ namespace Zjcs.Offline.Progression
             player.Rank = RankOf(player.SubRank);
             CharacterExperienceSnapshot snapshot = Snapshot(player);
             player.Level = snapshot.Level;
+            int seasonId = CurrentSeasonId(player);
+            player.SeasonRank = seasonId;
+            if (player.CharacterProperties == null)
+                player.CharacterProperties = new OfflineCharacterPropertyProgress();
+            OfflineCharacterPropertyProgress.Normalize(player.CharacterProperties);
+            player.CharacterProperties.SeasonId = seasonId;
             player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
             RefreshWardrobeProgress(player);
         }
@@ -1171,6 +1177,12 @@ namespace Zjcs.Offline.Progression
             return values.TryGetValue(key, out object value) && value is bool result && result;
         }
 
+        private int CurrentSeasonId(OfflinePlayerProgress player)
+        {
+            IReadOnlyList<Dictionary<string, object>> seasons = catalog.Rows("astrological_season_config");
+            Dictionary<string, object> season = seasons.FirstOrDefault(row => Integer(row, "Rank") == player.Rank);
+            return season == null ? 0 : Integer(season, "Season");
+        }
         private static ProgressionResult Invalid(string message)
         {
             return new ProgressionResult { Status = ProgressionResultStatus.InvalidState, Message = message };

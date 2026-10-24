@@ -36,7 +36,9 @@ namespace Zjcs.Combat.Official
                 ridiculeTargetId = RidiculeSourceId(actor);
             foreach (FightBattleUnitState unit in units)
             {
-                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)) continue;
+                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)
+                    || IsActionBlockedByStatus(unit, skill == null ? null
+                        : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && ridiculeTargetId > 0
                     && unit.Id == ridiculeTargetId;
                 if (isRidiculeSource || MatchesTargetType(actor, unit, targetType, confusionAllowed))
@@ -330,7 +332,9 @@ namespace Zjcs.Combat.Official
             var result = new List<FightBattleUnitState>();
             foreach (FightBattleUnitState unit in units)
             {
-                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)) continue;
+                if (!IsSelectable(unit) || HasIgnoredStatus(unit, skill)
+                    || IsActionBlockedByStatus(unit, skill == null ? null
+                        : skill.BlockingTargetActionTypes)) continue;
                 bool isRidiculeSource = targetType == 1 && skill != null
                     && skill.ReleaseWhileRidicule && unit.Id == RidiculeSourceId(actor);
                 if (isRidiculeSource || MatchesTargetType(actor, unit, targetType,
@@ -367,6 +371,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition skill)
         {
             if (actor == null || skill == null || actor.Statuses == null) return true;
+            if (IsActionBlockedByStatus(actor, skill.BlockingSourceActionTypes)) return false;
             foreach (FightBattleStatusState status in actor.Statuses)
             {
                 if (status == null) continue;
@@ -376,6 +381,16 @@ namespace Zjcs.Combat.Official
                     return false;
             }
             return true;
+        }
+
+        public static bool IsActionBlockedByStatus(FightBattleUnitState unit,
+            List<int> blockingActionTypes)
+        {
+            if (unit == null || unit.Statuses == null || blockingActionTypes == null
+                || blockingActionTypes.Count == 0) return false;
+            foreach (FightBattleStatusState status in unit.Statuses)
+                if (status != null && blockingActionTypes.Contains(status.ActionType)) return true;
+            return false;
         }
 
         private static bool HasActionStatus(FightBattleUnitState unit, int actionType)
