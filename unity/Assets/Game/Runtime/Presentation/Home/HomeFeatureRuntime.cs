@@ -732,7 +732,7 @@ namespace Zjcs.Presentation.Home
             else if (type == 12)
             {
                 OfflineAstrologicalService service = Astrological;
-                int rank = profile.Save.Player.CharacterProperties.TreasurePlaneRank;
+                int rank = profile.Save.Player.Rank;
                 if (service.SeasonForRank(rank) < service.MinimumSeason)
                     hud.ShowNotice("当前位阶尚未开放命运星象");
                 else hud.ShowAstrologicalDestiny();

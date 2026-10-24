@@ -13,7 +13,7 @@
 ## 完整还原部分
 
 - [`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py) 将官方 `AstrologicalDestinyEntryPanel`、契约、属性、规则及 S1～S6 窗口纳入主城 UI 载荷，并按官方 `ContractTagSetting` 恢复 13 种属性标签的图标和底色；贴图与 `.meta` 一并显式生成。载荷中的面板结构由 [`HomeUiRenderer`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeUiRenderer.cs) 按原父子路径还原。
-- [`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 为家具 4019 接入入口。[`OfflineAstrologicalService`](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineAstrologicalService.cs) 从固定版配置读取位阶到赛季映射、开放下限、费用和加速阶段；角色阶位使用 `TreasurePlaneRank`，按原 `AstrologicalSeasonConfigParser` 规则检查开放条件。
+- [`HomeFeatureRuntime`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeFeatureRuntime.cs) 为家具 4019 接入入口。[`OfflineAstrologicalService`](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineAstrologicalService.cs) 从固定版配置读取人物 `Rank` 到赛季映射、开放下限、费用和加速阶段；`TreasurePlaneRank` 只表示世界内容分档，不用于季别查询。
 - 固定版 `astrological_level` 表的 520 个连续等级和累计门槛由服务校验，费用总量为 221080 个物品 ID 61（原初之星）。契约列表按官方倒序显示等级、属性、费用、已达进度、锁级预览及材料图标；列表采用虚拟行，避免同时创建 520 个完整 UI 树，并按官方限制只开放当前本地投入之后最多 10 个未解锁等级供滚动查看。
 - 按住灌注按官方 0.05 秒间隔、1.5 秒平滑启动及配置加速阶段步进；松开或关闭面板时，以本地库存事务消费四舍五入后的材料数并增加 `CharacterProperties.AstrologicalCost`。达到材料或总等级上限时保留当前预览量，释放后提交。
 - 属性详情从同一累计费用计算全部已解锁属性，使用官方属性行、名称、数值格式及 13 种标签样式；角色属性汇总读取同一 `AstrologicalCost`。规则弹窗使用官方窗口资源。

@@ -34,7 +34,7 @@ namespace Zjcs.Presentation.Home
         public void ShowAstrologicalDestiny()
         {
             OfflineAstrologicalService service = host.Astrological;
-            int rank = host.Profile.Save.Player.CharacterProperties.TreasurePlaneRank;
+            int rank = host.Profile.Save.Player.Rank;
             if (service.SeasonForRank(rank) < service.MinimumSeason)
             {
                 ShowNotice("当前位阶尚未开放命运星象");
