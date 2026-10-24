@@ -84,8 +84,14 @@ namespace Zjcs.Combat.Official
         public static int ResolveTargetUnitId(FightBattleStatusState status,
             IReadOnlyList<FightBattleUnitState> units)
         {
+            return status == null ? 0 : ResolveTargetUnitId(status, status.RoundTarget, units);
+        }
+
+        public static int ResolveTargetUnitId(FightBattleStatusState status, int targetType,
+            IReadOnlyList<FightBattleUnitState> units)
+        {
             if (status == null) return 0;
-            switch (status.RoundTarget)
+            switch (targetType)
             {
                 case TargetCreator:
                     return status.CreatorId;
@@ -139,6 +145,7 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
+                ActionType = template.ActionType,
                 DurationRound = template.DurationRound,
                 CurDurationRound = template.DurationRound,
                 StartRound = round,
@@ -165,6 +172,87 @@ namespace Zjcs.Combat.Official
                 CreatorId = template.CreatorId,
                 RootSkillId = template.RootSkillId,
                 ApplyingSkillItemId = template.ApplyingSkillItemId,
+                SourceSkillRank = template.SourceSkillRank,
+                SourceSkillLevel = template.SourceSkillLevel,
+                SourceSubRank = template.SourceSubRank,
+                PropertyDefinitionResolved = template.PropertyDefinitionResolved,
+                HasPropertyComponent = template.HasPropertyComponent,
+                SourceProperties = Copy(template.SourceProperties),
+                PropertyTransitions = CopyTransitions(template.PropertyTransitions),
+                ResolvedProperties = Copy(template.ResolvedProperties),
+                HpTriggerPer = template.HpTriggerPer,
+                HpTriggerMaxCount = template.HpTriggerMaxCount,
+                HpTriggeredCount = template.HpTriggeredCount,
+                HpTriggerAtStart = template.HpTriggerAtStart,
+                HpTriggerStatuses = Copy(template.HpTriggerStatuses),
+                HpTriggerSkills = Copy(template.HpTriggerSkills),
+                HasRoundStartTrigger = template.HasRoundStartTrigger,
+                RoundStartRulesSupported = template.RoundStartRulesSupported,
+                RoundStartListenTarget = template.RoundStartListenTarget,
+                RoundStartDelayRound = template.RoundStartDelayRound,
+                RoundStartRate = template.RoundStartRate,
+                RoundStartMaxCount = template.RoundStartMaxCount,
+                RoundStartMeetCount = template.RoundStartMeetCount,
+                RoundStartTriggeredCount = template.RoundStartTriggeredCount,
+                RoundStartTryAtStart = template.RoundStartTryAtStart,
+                RoundStartSkills = CopyTriggers(template.RoundStartSkills),
+                HasRoundEndTrigger = template.HasRoundEndTrigger,
+                RoundEndRulesSupported = template.RoundEndRulesSupported,
+                RoundEndListenTarget = template.RoundEndListenTarget,
+                RoundEndMaxCount = template.RoundEndMaxCount,
+                RoundEndTriggeredCount = template.RoundEndTriggeredCount,
+                RoundEndAutoRemove = template.RoundEndAutoRemove,
+                RoundEndSkills = CopyTriggers(template.RoundEndSkills),
+                HasSkillStartTrigger = template.HasSkillStartTrigger,
+                SkillStartRulesSupported = template.SkillStartRulesSupported,
+                SkillStartSource = template.SkillStartSource,
+                SkillStartMaxCount = template.SkillStartMaxCount,
+                SkillStartTriggeredCount = template.SkillStartTriggeredCount,
+                SkillStartActionTypes = Copy(template.SkillStartActionTypes),
+                SkillStartSkills = CopyTriggers(template.SkillStartSkills),
+                HasSkillEndTrigger = template.HasSkillEndTrigger,
+                SkillEndRulesSupported = template.SkillEndRulesSupported,
+                SkillEndMetCount = template.SkillEndMetCount,
+                SkillEndMetCountProgress = template.SkillEndMetCountProgress,
+                SkillEndTriggeredCount = template.SkillEndTriggeredCount,
+                SkillEndFilteredActionTypes = Copy(template.SkillEndFilteredActionTypes),
+                SkillEndStatuses = CopyTriggers(template.SkillEndStatuses),
+                HasHpAccDecrease = template.HasHpAccDecrease,
+                HpAccUnitHp = template.HpAccUnitHp,
+                HpAccUnitHpPercentage = template.HpAccUnitHpPercentage,
+                HpAccResetAtRoundEnd = template.HpAccResetAtRoundEnd,
+                HpAccMaxCount = template.HpAccMaxCount,
+                HpAccUpdateHpPerOnCure = template.HpAccUpdateHpPerOnCure,
+                HpAccDamageAccumulated = template.HpAccDamageAccumulated,
+                HpAccTriggeredCount = template.HpAccTriggeredCount,
+                HpAccTriggerStatuses = CopyTriggers(template.HpAccTriggerStatuses),
+                HpAccTriggerSkills = CopyTriggers(template.HpAccTriggerSkills),
+                SkillConditionRulesSupported = template.SkillConditionRulesSupported,
+                SkillConditionRules = Copy(template.SkillConditionRules),
+                SummonConditionPools = Copy(template.SummonConditionPools),
+                ConditionalSkills = Copy(template.ConditionalSkills),
+                HasDamageCustomProps = template.HasDamageCustomProps,
+                DamageCustomPropsRate = template.DamageCustomPropsRate,
+                DamageCustomPropsDmgGreaterMaxHpPer = template.DamageCustomPropsDmgGreaterMaxHpPer,
+                DamageCustomPropsMaxCount = template.DamageCustomPropsMaxCount,
+                DamageCustomPropsAutoRemove = template.DamageCustomPropsAutoRemove,
+                DamageCustomPropsCheckSkillTrigger = template.DamageCustomPropsCheckSkillTrigger,
+                DamageCustomPropsPropertyId = template.DamageCustomPropsPropertyId,
+                DamageCustomPropsPhase = template.DamageCustomPropsPhase,
+                DamageCustomPropsTriggeredCount = template.DamageCustomPropsTriggeredCount,
+                ShieldKind = template.ShieldKind,
+                ShieldRate = template.ShieldRate,
+                ShieldDamageGreaterMaxHpPer = template.ShieldDamageGreaterMaxHpPer,
+                ShieldDestroyedSkillId = template.ShieldDestroyedSkillId,
+                ShieldInitialCount = template.ShieldInitialCount,
+                ShieldRemainCount = template.ShieldRemainCount,
+                ShieldKeepRemainValue = template.ShieldKeepRemainValue,
+                ShieldIgnoreValue = template.ShieldIgnoreValue,
+                ShieldUsesCustomValue = template.ShieldUsesCustomValue,
+                CustomShieldValue = template.CustomShieldValue,
+                ShieldValue = template.ShieldValue,
+                ShieldRemainValue = template.ShieldRemainValue,
+                ShieldInitialized = template.ShieldInitialized,
                 FalloffTarget = template.FalloffTarget,
                 DamageId = template.DamageId,
                 RootSkillIds = template.RootSkillIds == null ? Array.Empty<int>() : (int[])template.RootSkillIds.Clone(),
@@ -189,6 +277,10 @@ namespace Zjcs.Combat.Official
             int round, int timing)
         {
             if (actor == null || actor.Statuses == null) return 0;
+            if (timing == TimingEnd)
+                foreach (FightBattleStatusState status in actor.Statuses)
+                    if (status != null && status.HasHpAccDecrease && status.HpAccResetAtRoundEnd)
+                        status.HpAccDamageAccumulated = 0;
             int removed = 0;
             for (int i = actor.Statuses.Count - 1; i >= 0; i--)
             {
@@ -202,6 +294,111 @@ namespace Zjcs.Combat.Official
                 removed++;
             }
             return removed;
+        }
+
+        private static List<int> Copy(List<int> values)
+        {
+            return values == null ? new List<int>() : new List<int>(values);
+        }
+
+        private static List<FightBattleStatusStateTrigger> CopyTriggers(
+            List<FightBattleStatusStateTrigger> values)
+        {
+            var result = new List<FightBattleStatusStateTrigger>();
+            if (values != null)
+                foreach (FightBattleStatusStateTrigger value in values)
+                    if (value != null)
+                        result.Add(new FightBattleStatusStateTrigger
+                        {
+                            EntityId = value.EntityId,
+                            BasePercent = value.BasePercent,
+                            AffectedByProp = value.AffectedByProp,
+                            Source = value.Source,
+                            Target = value.Target,
+                            UseAI = value.UseAI,
+                            TargetPos = value.TargetPos,
+                            StackedCountToDamageFactor = value.StackedCountToDamageFactor
+                        });
+            return result;
+        }
+
+        private static List<FightPropertyValue> Copy(List<FightPropertyValue> values)
+        {
+            var result = new List<FightPropertyValue>();
+            if (values != null)
+                foreach (FightPropertyValue value in values)
+                    if (value != null) result.Add(new FightPropertyValue { Id = value.Id, Value = value.Value });
+            return result;
+        }
+
+        private static List<FightBattleSummonPool> Copy(List<FightBattleSummonPool> values)
+        {
+            var result = new List<FightBattleSummonPool>();
+            if (values != null)
+                foreach (FightBattleSummonPool value in values)
+                    if (value != null)
+                        result.Add(new FightBattleSummonPool
+                        {
+                            MonsterId = value.MonsterId,
+                            MaxSummonCount = value.MaxSummonCount,
+                            StatusIds = Copy(value.StatusIds)
+                        });
+            return result;
+        }
+
+        private static List<FightBattleStatusSkillCondition> Copy(
+            List<FightBattleStatusSkillCondition> values)
+        {
+            var result = new List<FightBattleStatusSkillCondition>();
+            if (values != null)
+                foreach (FightBattleStatusSkillCondition value in values)
+                    if (value != null)
+                        result.Add(new FightBattleStatusSkillCondition
+                        {
+                            SkillEntityId = value.SkillEntityId,
+                            IsActive = value.IsActive,
+                            IsNoMeetSetNegation = value.IsNoMeetSetNegation
+                        });
+            return result;
+        }
+
+        private static List<FightBattleSkillConditionRule> Copy(
+            List<FightBattleSkillConditionRule> values)
+        {
+            var result = new List<FightBattleSkillConditionRule>();
+            if (values != null)
+                foreach (FightBattleSkillConditionRule value in values)
+                    if (value != null)
+                        result.Add(new FightBattleSkillConditionRule
+                        {
+                            ConditionType = value.ConditionType,
+                            HpPerValue = value.HpPerValue,
+                            Round = value.Round,
+                            ContrastiveRelation = value.ContrastiveRelation,
+                            RoundTargetType = value.RoundTargetType,
+                            SummonId = value.SummonId,
+                            Count = value.Count,
+                            GlobalRound = value.GlobalRound,
+                            DurationRound = value.DurationRound
+                        });
+            return result;
+        }
+
+        private static List<FightBattleStatusPropertyTransition> CopyTransitions(
+            List<FightBattleStatusPropertyTransition> values)
+        {
+            var result = new List<FightBattleStatusPropertyTransition>();
+            if (values != null)
+                foreach (FightBattleStatusPropertyTransition value in values)
+                    if (value != null) result.Add(new FightBattleStatusPropertyTransition
+                    {
+                        PropertyId = value.PropertyId,
+                        TargetType = value.TargetType,
+                        TargetPropertyId = value.TargetPropertyId,
+                        AdditionPropertyId = value.AdditionPropertyId,
+                        FixedAdditionPropertyId = value.FixedAdditionPropertyId
+                    });
+            return result;
         }
 
         /// <summary>

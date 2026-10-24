@@ -52,14 +52,41 @@ $skillSource = Get-Content (Join-Path $root 'assets/reference/skill-rules/source
 $battleSource = Get-Content (Join-Path $root 'assets/reference/battle-rules/source-manifest.json') -Raw | ConvertFrom-Json
 $skillJson = Get-Content (Join-Path $root 'assets/official/skill-rules.json') -Raw
 $battleJson = Get-Content (Join-Path $root 'assets/official/battle-rules.json') -Raw
+$hpPliesJson = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/monster-hp-plies.json') -Raw
 $rulesJson = Get-Content (Join-Path $root 'assets/official/rules.json') -Raw
 $citySource = Get-Content (Join-Path $root 'assets/reference/official-city/source-manifest.json') -Raw | ConvertFrom-Json
+$hpPliesSource = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/monster-hp-plies-source-manifest.json') -Raw | ConvertFrom-Json
 $officialCatalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     $skillJson, $skillSource.output_sha256, $skillSource.manifest,
-    $battleJson, $battleSource.output_sha256, $battleSource.manifest)
+    $battleJson, $battleSource.output_sha256, $battleSource.manifest,
+    $hpPliesJson, $hpPliesSource.output_sha256, $hpPliesSource.manifest)
+Assert-Combat ($officialCatalog.MonsterHpPliesFor(3601, 2, 9) -eq 50 -and $officialCatalog.MonsterHpPliesFor(3601, 2, 10) -eq 60 -and $officialCatalog.MonsterHpPliesFor(999999, 0, 10) -eq 1) 'Official monster HP plies group and level lookup mismatch'
+$moveProperties = [System.Collections.Generic.Dictionary[int,long]]::new()
+$moveProperties[$officialCatalog.PropertyType('MoveDist')] = 4
+$moveProperties[$officialCatalog.PropertyType('MoveDistPercent')] = 2500
+Assert-Combat ($officialCatalog.CalculateMoveDist($moveProperties) -eq 5) 'Official MoveDist percentage calculation mismatch'
 $officialSkill = $officialCatalog.CreateSkill(16100, 0, 16100, 1, 1, 0, $null)
 $officialStatus = $officialCatalog.CreateStatus(16104, 2, 1, 1, 16100, 16100)
+$ridiculeStatus = $officialCatalog.CreateStatus(24216, 2, 2, 1)
+$confusionStatus = $officialCatalog.CreateStatus(24217, 2, 2, 1)
+Assert-Combat ($ridiculeStatus.ActionType -eq 58 -and $confusionStatus.ActionType -eq 54) 'Official status action types for ridicule or confusion did not map from ActionComponent'
+$ridiculeOwner = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$ridiculeOwner.Id = 2
+$appliedRidiculeStatus = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply(
+    $ridiculeOwner, $ridiculeStatus, 0, 1)
+Assert-Combat ($appliedRidiculeStatus.ActionType -eq 58) 'Status application dropped the official action type'
+$releaseDuringControlSkill = $officialCatalog.CreateSkill(12410, 0, 0, 1, 1, 0, $null)
+Assert-Combat ($releaseDuringControlSkill.ReleaseWhileRidicule -and $releaseDuringControlSkill.ReleaseWhileConfusion) 'Official skill AI release-under-control flags were not assembled'
 Assert-Combat ($officialCatalog.EntityCount -gt 1000) 'Official combat catalog did not merge the pinned entity tables'
+$hpAccEntities = @($battleRules.entities.PSObject.Properties | Where-Object {
+    $null -ne $_.Value -and $_.Value.PSObject.Properties.Name -contains 'FightStatusHpAccDecreaseComponent'
+})
+Assert-Combat ($hpAccEntities.Count -eq 22) 'Pinned HP accumulated damage status catalog count changed'
+$hpAccStatus = $officialCatalog.CreateStatus(25185, 2, 2, 1)
+Assert-Combat ($hpAccStatus.HasHpAccDecrease -and [Math]::Abs($hpAccStatus.HpAccUnitHpPercentage - 0.15) -lt 0.0001 -and $hpAccStatus.HpAccUnitHp -eq -1 -and $hpAccStatus.HpAccMaxCount -eq -1 -and -not $hpAccStatus.HpAccResetAtRoundEnd -and $hpAccStatus.HpAccTriggerSkills.Count -eq 1 -and $hpAccStatus.HpAccTriggerSkills[0].EntityId -eq 58170 -and $hpAccStatus.HpAccTriggerSkills[0].Source -eq 2 -and $hpAccStatus.HpAccTriggerSkills[0].Target -eq 2 -and $hpAccStatus.HpAccTriggerSkills[0].TargetPos -eq 1) 'Official HP accumulated damage skill status was not assembled'
+$hpAccLimitedStatus = $officialCatalog.CreateStatus(24252, 2, 2, 2)
+$hpAccResetStatus = $officialCatalog.CreateStatus(25043, 2, 2, 3)
+Assert-Combat ($hpAccLimitedStatus.HpAccMaxCount -eq 99 -and $hpAccResetStatus.HpAccResetAtRoundEnd -and $hpAccResetStatus.HpAccTriggerStatuses.Count -eq 1 -and $hpAccResetStatus.HpAccTriggerStatuses[0].EntityId -eq 24240 -and $hpAccResetStatus.HpAccTriggerStatuses[0].Target -eq 2) 'HP accumulated damage limit, round reset or status trigger config mismatch'
 Assert-Combat ($officialSkill.HitGraphRootEntityId -eq 0 -and $officialSkill.HitGraphRootEntityIds.Count -eq 1 -and $officialSkill.HitGraphRootEntityIds[0] -eq 16101 -and $officialSkill.TargetType -eq 1 -and $officialSkill.SkillTargetType -eq 0 -and $officialSkill.Range.Count -eq 1 -and $officialSkill.HitGraphEntities.Count -gt 0) 'Official skill definition, target kinds, range, or ordered hit graph root mapping mismatch'
 Assert-Combat ($officialSkill.HitGraphRoots.Count -eq 1 -and [Math]::Abs($officialSkill.HitGraphRoots[0].Delay - 0.7) -lt 0.001 -and $officialSkill.HitGraphRoots[0].Anchor -eq 0) 'Official skill root hit delay or anchor mismatch'
 Assert-Combat ([Math]::Abs($officialSkill.ActionDuration - 2.6) -lt 0.001 -and [Math]::Abs($officialSkill.Duration - 3.2) -lt 0.001 -and $officialSkill.AllRelevantEndedActionDuration -lt 0 -and $officialSkill.AllRelevantEndedDuration -lt 0) 'Official skill action/lifetime duration mapping mismatch'
@@ -73,6 +100,9 @@ $swordStarter = $skillItems.Required(10012)
 $wandStarter = $skillItems.Required(10028)
 Assert-Combat ($skillItems.Count -eq 1874 -and $swordStarter.EntityId -eq 10640 -and $wandStarter.EntityId -eq 10800) 'Official skill item to EC entity mapping mismatch'
 Assert-Combat ($skillItems.InitialActiveSkill(200) -eq 10012 -and $skillItems.InitialActiveSkill(201) -eq 10028 -and $skillItems.InitialActiveSkill(0) -eq 10012) 'Official initial weapon skill settings mismatch'
+$prioritySkillItem = $skillItems.Required(10009)
+Assert-Combat ($prioritySkillItem.AiPriorityId -eq 10 -and $prioritySkillItem.LastAiPriorityId -eq 11 -and ($skillItems.PriorityTypes(10) -join ',') -eq '11,10,7,1,0,2,9,6' -and ($skillItems.PriorityTypes(11) -join ',') -eq '11,10,7,1,3,2,9,6') 'Official AI priority id, last-priority id or ordered priority table mapping mismatch'
+Assert-Combat ($officialCatalog.MonsterCharacterType(3201) -eq 2 -and $officialCatalog.MonsterAiType(3201) -eq 1) 'Official MonsterInfo character type or AI type lookup mismatch'
 $missingSkillItem = $null
 Assert-Combat (-not $skillItems.TryGet(1, [ref]$missingSkillItem) -and $null -eq $missingSkillItem) 'Official skill item catalog resolved an absent item'
 $badSkillItemCatalogRejected = $false
@@ -301,6 +331,131 @@ Assert-Combat ($falloffApplied.Formula.Damage -eq -4899 -and $falloffTarget.Hp -
 [Zjcs.Combat.Official.FightDamageFalloff]::EndCast([Zjcs.Combat.Official.FightBattleUnitState[]]@($cureActor, $falloffTarget), $falloffSkill)
 Assert-Combat ($falloffTarget.FalloffCounts.Count -eq 0 -and $falloffSkill.FalloffCastId -eq 0) 'Completed action retained transient falloff counters'
 
+$damageCustomStatus = $officialCatalog.CreateStatus(24181, 72, 71, 1)
+Assert-Combat ($schema.Id('StatusDmgReducePer') -eq 232 -and $damageCustomStatus.HasDamageCustomProps -and $damageCustomStatus.DamageCustomPropsPhase -eq 1 -and $damageCustomStatus.DamageCustomPropsPropertyId -eq 232 -and [Math]::Abs($damageCustomStatus.DamageCustomPropsDmgGreaterMaxHpPer - 0.04) -lt 0.00001 -and $damageCustomStatus.DamageCustomPropsMaxCount -eq 1 -and $damageCustomStatus.DamageCustomPropsAutoRemove -and -not $damageCustomStatus.DamageCustomPropsCheckSkillTrigger) 'Official status damage custom property configuration mismatch'
+$reductionActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$reductionActor.Id = 71; $reductionActor.Hp = 10000; $reductionActor.MaxHp = 10000; $reductionActor.CharacterType = 2
+$reductionActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('Attack'); Value = 1000 })
+$reductionTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$reductionTarget.Id = 72; $reductionTarget.Hp = 10000; $reductionTarget.MaxHp = 10000; $reductionTarget.CharacterType = 2
+$reductionTarget.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('StatusDmgReducePer'); Value = 5000 })
+$appliedReduction = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($reductionTarget, $damageCustomStatus, 0, 1)
+$reductionHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$reductionHit.DamageType = 1; $reductionHit.HasCustomDamage = $true; $reductionHit.CustomDamage = 1200
+$reductionResult = $hitExecutor.Apply([Zjcs.Combat.Official.FightRandomStream]::new(1), 803,
+    $reductionActor, $reductionTarget, $null, $reductionHit, 0, $false)
+Assert-Combat ($reductionResult.Settlement.RealDamageValue -eq -533 -and $reductionTarget.Statuses.Count -eq 0 -and $appliedReduction.DamageCustomPropsTriggeredCount -eq 1) 'Status 24181 did not reduce one eligible damage segment and consume its configured trigger'
+$belowThreshold = $officialCatalog.CreateStatus(24181, 74, 73, 1)
+$belowThresholdActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$belowThresholdActor.Id = 73; $belowThresholdActor.Hp = 10000; $belowThresholdActor.MaxHp = 10000; $belowThresholdActor.CharacterType = 2
+$belowThresholdActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('Attack'); Value = 1000 })
+$belowThresholdTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$belowThresholdTarget.Id = 74; $belowThresholdTarget.Hp = 10000; $belowThresholdTarget.MaxHp = 10000; $belowThresholdTarget.CharacterType = 2
+$belowThresholdTarget.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $schema.Id('StatusDmgReducePer'); Value = 5000 })
+$null = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($belowThresholdTarget, $belowThreshold, 0, 1)
+$smallReductionHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$smallReductionHit.DamageType = 1; $smallReductionHit.HasCustomDamage = $true; $smallReductionHit.CustomDamage = 300
+$smallReductionResult = $hitExecutor.Apply([Zjcs.Combat.Official.FightRandomStream]::new(1), 804,
+    $belowThresholdActor, $belowThresholdTarget, $null, $smallReductionHit, 0, $false)
+Assert-Combat ($smallReductionResult.Settlement.RealDamageValue -eq -200 -and $belowThresholdTarget.Statuses.Count -eq 1 -and $belowThresholdTarget.Statuses[0].DamageCustomPropsTriggeredCount -eq 0) 'Status 24181 triggered below its strict 4% max HP damage threshold'
+
+$shieldActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$shieldActor.Id = 81; $shieldActor.Hp = 1000; $shieldActor.MaxHp = 1000; $shieldActor.CharacterType = 2
+$shieldTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$shieldTarget.Id = 82; $shieldTarget.Hp = 1000; $shieldTarget.MaxHp = 1000; $shieldTarget.CharacterType = 2
+$persistentShield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$persistentShield.InstanceId = 1; $persistentShield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Persistent
+$persistentShield.ShieldValue = 60; $persistentShield.ShieldRemainValue = 60; $persistentShield.ShieldInitialized = $true
+$persistentShield.ShieldDestroyedSkillId = 9001
+$shieldTarget.Statuses.Add($persistentShield)
+$shieldHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$shieldHit.DamageType = 8; $shieldHit.HasCustomDamage = $true; $shieldHit.CustomDamage = 100
+$shieldResult = $hitExecutor.Apply($null, 805, $shieldActor, $shieldTarget, $null, $shieldHit, 0, $false)
+Assert-Combat ($shieldTarget.Hp -eq 960 -and $shieldResult.Formula.Damage -eq -40 -and $shieldTarget.Statuses.Count -eq 0 -and $shieldResult.TriggeredStatusSkills -contains 9001) 'Persistent shield did not absorb damage, expire and emit its destroyed skill'
+$countedShield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$countedShield.InstanceId = 1; $countedShield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Counted
+$countedShield.ShieldValue = 40; $countedShield.ShieldRemainValue = 40; $countedShield.ShieldRemainCount = 1
+$countedShield.ShieldInitialized = $true
+$shieldTarget.Hp = 1000; $shieldTarget.Statuses.Add($countedShield)
+$countedResult = $hitExecutor.Apply($null, 806, $shieldActor, $shieldTarget, $null, $shieldHit, 0, $false)
+Assert-Combat ($shieldTarget.Hp -eq 940 -and $countedResult.Formula.Damage -eq -60 -and $shieldTarget.Statuses.Count -eq 0) 'Counted shield did not absorb its configured value and spend one use'
+$invincibleShield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$invincibleShield.InstanceId = 1; $invincibleShield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Invincible
+$invincibleShield.ShieldRemainCount = 1; $invincibleShield.ShieldInitialized = $true
+$shieldTarget.Hp = 1000; $shieldTarget.Statuses.Add($invincibleShield)
+$invincibleResult = $hitExecutor.Apply($null, 807, $shieldActor, $shieldTarget, $null, $shieldHit, 0, $false)
+Assert-Combat ($shieldTarget.Hp -eq 1000 -and $invincibleResult.Formula.Damage -eq 0 -and $shieldTarget.Statuses.Count -eq 0) 'Invincible shield did not cancel one eligible hit'
+
+$customShieldUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$customShieldUnit.Id = 91; $customShieldUnit.Hp = 1000; $customShieldUnit.MaxHp = 1000
+$customShieldBindings = [System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialStatusBinding]]::new()
+$customShieldBindings.Add([Zjcs.Combat.Official.FightOfficialStatusBinding]@{
+    ClassId = 24174; InstanceId = 1; CreatorId = 91; CustomShieldValue = 320
+})
+$officialCatalog.AssembleUnit($customShieldUnit, $null, $customShieldBindings)
+[Zjcs.Combat.Official.FightStatusPropertyRuntime]::Rebuild($customShieldUnit,
+    [Zjcs.Combat.Official.FightBattleUnitState[]]@($customShieldUnit), $officialCatalog, $formula)
+Assert-Combat ($customShieldUnit.Statuses[0].ShieldUsesCustomValue -and $customShieldUnit.Statuses[0].ShieldRemainValue -eq 320 -and [Zjcs.Combat.Official.FightBattleShieldRuntime]::PersistentShieldTotal($customShieldUnit) -eq 320) 'External custom shield value was not applied to the configured status'
+
+$costPlayer = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$costPlayer.Id = 1; $costPlayer.Side = 1; $costPlayer.CharacterType = 1; $costPlayer.Hp = 1000; $costPlayer.MaxHp = 1000; $costPlayer.Level = 1
+$costPlayer.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$costShield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$costShield.InstanceId = 1; $costShield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Persistent
+$costShield.ShieldValue = 70; $costShield.ShieldRemainValue = 70; $costShield.ShieldInitialized = $true
+$costPlayer.Statuses.Add($costShield)
+$costSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$costSkill.Slot = 0; $costSkill.EntityId = 910; $costSkill.ItemId = 911; $costSkill.CostType = 2
+$costSkill.TargetType = 1; $costSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$costSkill.Hits.Add([Zjcs.Combat.Official.FightBattleHitDefinition]@{
+    EntityId = 912; DamageId = 913; DamageType = 6; BasicProperty = $schema.Id('Attack');
+    DamageProperty = $schema.Id('DmgAddPercent')
+})
+$costPlayer.Skills.Add($costSkill)
+$costEnemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$costEnemy.Id = 2; $costEnemy.Side = 2; $costEnemy.CharacterType = 2; $costEnemy.Hp = 500; $costEnemy.MaxHp = 500; $costEnemy.X = 1; $costEnemy.Level = 1
+$costPlayer.Turn.Id = $costPlayer.Id; $costPlayer.Turn.Hp = $costPlayer.Hp
+$costEnemy.Turn.Id = $costEnemy.Id; $costEnemy.Turn.Hp = $costEnemy.Hp
+$costCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$costCheckpoint.StageId = 22002; $costCheckpoint.RandomSeed = 1
+$costCheckpoint.Units.Add($costPlayer); $costCheckpoint.Units.Add($costEnemy)
+$costCheckpoint.Waves.Add([Zjcs.Combat.Official.FightBattleWaveState]@{ Index = 0; Spawned = $true })
+$costCheckpoint.Waves[0].UnitIds.Add(1); $costCheckpoint.Waves[0].UnitIds.Add(2)
+$costRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $costCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
+$costStep = $costRunner.Step(0, 1)
+Assert-Combat ($costSkill.SkillCost -eq 70 -and $costShield.ShieldRemainValue -eq 0 -and $costEnemy.Hp -eq 430) 'AllPersistentShield cost was not consumed and converted to 1:1 damage'
+
+$hpCostPlayer = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$hpCostPlayer.Id = 1; $hpCostPlayer.Side = 1; $hpCostPlayer.CharacterType = 1; $hpCostPlayer.Hp = 1000; $hpCostPlayer.MaxHp = 1000; $hpCostPlayer.Level = 1
+$hpCostPlayer.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$hpCostSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$hpCostSkill.Slot = 0; $hpCostSkill.EntityId = 920; $hpCostSkill.ItemId = 921; $hpCostSkill.CostType = 1; $hpCostSkill.SkillCost = 50
+$hpCostSkill.TargetType = 1; $hpCostSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$hpCostSkill.Hits.Add([Zjcs.Combat.Official.FightBattleHitDefinition]@{
+    EntityId = 922; DamageId = 923; DamageType = 6; BasicProperty = $schema.Id('Attack');
+    DamageProperty = $schema.Id('DmgAddPercent')
+})
+$hpCostPlayer.Skills.Add($hpCostSkill)
+$hpCostEnemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$hpCostEnemy.Id = 2; $hpCostEnemy.Side = 2; $hpCostEnemy.CharacterType = 2; $hpCostEnemy.Hp = 500; $hpCostEnemy.MaxHp = 500; $hpCostEnemy.X = 1; $hpCostEnemy.Level = 1
+$hpCostPlayer.Turn.Id = $hpCostPlayer.Id; $hpCostPlayer.Turn.Hp = $hpCostPlayer.Hp
+$hpCostEnemy.Turn.Id = $hpCostEnemy.Id; $hpCostEnemy.Turn.Hp = $hpCostEnemy.Hp
+$hpCostCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$hpCostCheckpoint.StageId = 22003; $hpCostCheckpoint.RandomSeed = 1
+$hpCostCheckpoint.Units.Add($hpCostPlayer); $hpCostCheckpoint.Units.Add($hpCostEnemy)
+$hpCostCheckpoint.Waves.Add([Zjcs.Combat.Official.FightBattleWaveState]@{ Index = 0; Spawned = $true })
+$hpCostCheckpoint.Waves[0].UnitIds.Add(1); $hpCostCheckpoint.Waves[0].UnitIds.Add(2)
+$hpCostRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $hpCostCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
+$hpCostStep = $hpCostRunner.Step(0, 1)
+$hpCostEvent = $hpCostStep.Event.DamageEvents | Where-Object { $_.IsSkillCost } | Select-Object -First 1
+Assert-Combat ($null -ne $hpCostEvent -and $hpCostEvent.SourceId -eq 1 -and $hpCostEvent.TargetId -eq 1 -and $hpCostEvent.Damage -eq -50 -and $hpCostEvent.BeforeHp -eq 1000 -and $hpCostEvent.AfterHp -eq 950 -and $hpCostCheckpoint.Statistics.Unit(1).Hits -eq 1 -and $hpCostCheckpoint.Statistics.Unit(1).DamageTaken -eq 0) 'HP skill cost did not emit a self-targeted visual event without inflating hit statistics'
+$hpCostRoundTrip = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($hpCostStep.Checkpoint))
+$savedHpCost = $hpCostRoundTrip.Receipts[0].Event.DamageEvents | Where-Object { $_.IsSkillCost } | Select-Object -First 1
+Assert-Combat ($null -ne $savedHpCost -and $savedHpCost.Damage -eq -50 -and $savedHpCost.TargetId -eq 1) 'HP skill cost presentation event did not survive checkpoint replay persistence'
+
 $random = [Zjcs.Combat.Official.FightRandomStream]::new(1)
 $firstRandom = $random.Next()
 Assert-Combat ($random.Seed -eq 48271 -and [Math]::Abs($firstRandom - (48271.0 / 2147483647.0)) -lt 1e-15) 'Park-Miller stream mismatch'
@@ -396,6 +551,100 @@ $ally.Id = 3; $ally.Side = 1; $ally.Hp = 40; $ally.MaxHp = 100
 $units = [Zjcs.Combat.Official.FightBattleUnitState[]]@($actor, $enemy, $ally)
 $selected = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 2, 0, $false, $false, $heal)
 Assert-Combat ($selected.Count -eq 1 -and $selected[0].Id -eq 3) 'Lowest health ally target selection mismatch'
+$aiActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$aiActor.Id = 10; $aiActor.Side = 1; $aiActor.Hp = 100; $aiActor.MaxHp = 100
+$aiPreferred = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$aiPreferred.Id = 11; $aiPreferred.Side = 2; $aiPreferred.CharacterType = 2; $aiPreferred.Hp = 80; $aiPreferred.MaxHp = 100
+$aiLowHp = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$aiLowHp.Id = 12; $aiLowHp.Side = 2; $aiLowHp.CharacterType = 4; $aiLowHp.Hp = 20; $aiLowHp.MaxHp = 100
+$aiUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($aiActor, $aiPreferred, $aiLowHp)
+$aiSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$aiSkill.TargetType = 1; $aiSkill.PriorityCharacterType = 2; $aiSkill.AiPriorityTypes.Add(11)
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Configured priority character type did not precede lower-health fallback'
+$aiSkill.AiPriorityTypes.Clear(); $aiSkill.AiPriorityTypes.Add(2)
+$aiSkill.PriorityCharacterType = -1; $aiSkill.HpLowerCharacterTypeFilter.Add(4)
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Low-HP character-type filter did not exclude its configured type when another target was eligible'
+$ignored = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$ignored.ClassId = 70001; $aiLowHp.Statuses.Add($ignored)
+$aiSkill.AiPriorityTypes.Clear(); $aiSkill.IgnoreStatusIds.Add(70001)
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Configured ignored status did not remove the target from AI selection'
+$aiSkill.IgnoreStatusIds.Clear(); $aiSkill.AiPriorityTypes.Clear(); $aiSkill.AiPriorityTypes.Add(18)
+$aiSkill.HpLowerCharacterTypeFilter.Clear()
+$aiSkill.PriorityCharacterTypeGroups.Add([System.Collections.Generic.List[int]]::new())
+$aiSkill.PriorityCharacterTypeGroups[0].Add(2)
+$aiSkill.PriorityCharacterTypeGroups.Add([System.Collections.Generic.List[int]]::new())
+$aiSkill.PriorityCharacterTypeGroups[1].Add(4)
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Configured character-type group ordering was not applied'
+$aiSkill.UseLastAiPriority = $true; $aiSkill.LastAiPriorityTypes.Add(2)
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 12) 'Last-skill AI priority list was not selected when configured'
+$aiActor.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$aiActorSkillSlot = [Zjcs.Combat.Official.FightSkillSlotState]::new()
+$aiActorSkillSlot.Slot = 0; $aiActorSkillSlot.LimitedTimes = -1
+$aiActor.SkillState.Slots.Add($aiActorSkillSlot)
+$aiSkill.Slot = 0; $aiSkill.PriorityCharacterType = 2
+$aiActor.Skills.Add($aiSkill)
+$aiSkill.AiPriorityTypes.Clear(); $aiSkill.AiPriorityTypes.Add(11)
+$aiSkill.UseLastAiPriority = $true
+$readyAiSkill = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($aiActor, $aiUnits, 1)
+Assert-Combat ($null -ne $readyAiSkill -and -not $aiSkill.UseLastAiPriority) 'A previous turn last-skill priority leaked into the next turn'
+$aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
+Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Normal skill priority did not resume after last-skill selection'
+
+$controlActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$controlActor.Id = 70; $controlActor.Side = 1; $controlActor.Hp = 100; $controlActor.MaxHp = 100
+$controlActor.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$controlSlot = [Zjcs.Combat.Official.FightSkillSlotState]::new()
+$controlSlot.Slot = 0; $controlSlot.LimitedTimes = -1
+$controlActor.SkillState.Slots.Add($controlSlot)
+$controlSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$controlSkill.Slot = 0; $controlSkill.TargetType = 1
+$controlActor.Skills.Add($controlSkill)
+$normalTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$normalTarget.Id = 71; $normalTarget.Side = 2; $normalTarget.Hp = 20; $normalTarget.MaxHp = 100
+$tauntSource = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$tauntSource.Id = 72; $tauntSource.Side = 2; $tauntSource.Hp = 80; $tauntSource.MaxHp = 100
+$taunt = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$taunt.ActionType = 58; $taunt.CreatorId = $tauntSource.Id; $taunt.InstanceId = 1
+$controlActor.Statuses.Add($taunt)
+$controlUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($controlActor, $normalTarget, $tauntSource)
+Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($controlActor, $controlUnits, 1)) 'A skill without ReleaseWhileRidicule released during ridicule'
+$controlSkill.ReleaseWhileRidicule = $true
+$tauntTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select($controlActor, $controlUnits, 1, 0, $false, $false, $controlSkill)
+Assert-Combat ($tauntTargets.Count -eq 1 -and $tauntTargets[0].Id -eq $tauntSource.Id) 'Allowed ridicule skill did not prioritize its status source'
+Assert-Combat ($null -ne [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($controlActor, $controlUnits, 1)) 'Allowed ridicule skill was incorrectly blocked'
+
+$controlActor.Statuses.Clear()
+$confusion = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$confusion.ActionType = 54; $confusion.InstanceId = 2
+$controlActor.Statuses.Add($confusion)
+$confusedAlly = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$confusedAlly.Id = 73; $confusedAlly.Side = 1; $confusedAlly.X = 2
+$confusedAlly.Hp = 30; $confusedAlly.MaxHp = 100
+$confusedEnemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$confusedEnemy.Id = 74; $confusedEnemy.Side = 2; $confusedEnemy.X = 3
+$confusedEnemy.Hp = 50; $confusedEnemy.MaxHp = 100
+$controlActor.X = 0; $normalTarget.Hp = 100; $tauntSource.Hp = 100
+$confusedUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@(
+    $controlActor, $confusedAlly, $confusedEnemy)
+$controlSkill.ReleaseWhileRidicule = $false
+Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($controlActor, $confusedUnits, 1)) 'A skill without ReleaseWhileConfusion released during confusion'
+$controlSkill.ReleaseWhileConfusion = $true
+$confusionTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select(
+    $controlActor, $confusedUnits, 1, 0, $false, $false, $controlSkill)
+Assert-Combat ($confusionTargets.Count -eq 1 -and $confusionTargets[0].Id -eq $confusedAlly.Id) 'Allowed confusion skill still filtered targets by faction'
+$confusionHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$confusionHit.TargetMode = 1
+$confusionHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]@{ X = 0; Y = 0 })
+$confusionHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]@{ X = 1; Y = 0 })
+$confusionScope = [Zjcs.Combat.Official.FightBattleTargeting]::SelectScopeTargets(
+    $controlActor, $confusedUnits, $controlSkill, $confusionTargets[0], $confusionHit)
+Assert-Combat ($confusionScope.Count -eq 2 -and @($confusionScope.Id) -contains $confusedEnemy.Id) 'Confusion did not remove faction filtering from the hit scope'
+
 $ally.Hp = 100
 Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($actor, $units, 1)) 'Full health team accepted an unnecessary heal'
 $ally.Hp = 70
@@ -531,6 +780,25 @@ function New-WaveUnit($id, $side, $x, $y, $hp) {
     return $unit
 }
 
+$priorityBindingPlayer = New-WaveUnit 1 1 0 0 1000
+$priorityBindingPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$priorityBindingSkill = $officialCatalog.CreateSkill(10610, 0, 10009, 1, 1, 0, $null)
+$priorityBindingPlayer.Skills.Add($priorityBindingSkill)
+$priorityBindingPlayer.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($priorityBindingSkill, 0))
+$priorityBindingEnemy = New-WaveUnit 2 2 2 0 1000
+$priorityBindingEnemy.MonsterId = 3201; $priorityBindingEnemy.CharacterType = 99
+$priorityBindingCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$priorityBindingCheckpoint.StageId = 22001; $priorityBindingCheckpoint.RandomSeed = 1
+$priorityBindingCheckpoint.Units.Add($priorityBindingPlayer); $priorityBindingCheckpoint.Units.Add($priorityBindingEnemy)
+$priorityBindingWave = [Zjcs.Combat.Official.FightBattleWaveState]::new()
+$priorityBindingWave.Index = 0; $priorityBindingWave.UnitIds.Add(2)
+$priorityBindingCheckpoint.Waves.Add($priorityBindingWave)
+$priorityBindingRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $priorityBindingCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+Assert-Combat ($priorityBindingSkill.AiPriorityId -eq 10 -and $priorityBindingSkill.LastAiPriorityId -eq 11 -and ($priorityBindingSkill.AiPriorityTypes -join ',') -eq '11,10,7,1,0,2,9,6' -and ($priorityBindingSkill.LastAiPriorityTypes -join ',') -eq '11,10,7,1,3,2,9,6') 'Battle executor did not bind the skill item AI priority groups'
+Assert-Combat ($priorityBindingEnemy.CharacterType -eq 2 -and $priorityBindingEnemy.AiType -eq 1) 'Battle executor did not bind MonsterInfo to unit AI state'
+
 # Cross-wave regression: later-wave units are not selectable, hittable or occupied before spawn.
 $wavePlayer = New-WaveUnit 1 1 0 0 1000
 $waveEnemy = New-WaveUnit 2 2 -2 0 100
@@ -601,4 +869,182 @@ Assert-Combat ($spawnEnemy.Hp -eq 0 -and $spawnCheckpoint.WaveIndex -eq 1 -and -
 Assert-Combat ([Zjcs.Combat.Official.FightBattleTargeting]::Select($spawnPlayer, [Zjcs.Combat.Official.FightBattleUnitState[]]@($spawnPlayer, $spawnEnemy, $spawnFuture), 1)[0].Id -eq 3) 'Spawned next-wave unit was still excluded from targeting'
 [Zjcs.Combat.Official.FightBattleCheckpointRules]::Validate($spawnCheckpoint)
 
-Write-Output "Unity combat core checks passed: $($reference.cases.Count) pinned formula vectors, official catalog loading and digest validation, skill/status assembly, official chained hit graph, status falloff, battle victory, checkpoint replay, random stream, timeline, targeting, multi-target falloff, and cross-wave spawn selection."
+# Pinned summon skill execution: spawn pool units, attach their official statuses and register turns.
+$idleActor = New-WaveUnit 1 1 1 1 1000
+$idleActor.MoveMask = 4
+$idleActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{
+    Id = $formula.PropertyId('MoveDist'); Value = 1
+})
+$coolingSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
+$idleActor.Skills.Add($coolingSkill)
+$idleActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($coolingSkill, 3))
+$idleEnemy = New-WaveUnit 2 2 4 1 1000
+$idleCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$idleCheckpoint.StageId = 22001; $idleCheckpoint.RandomSeed = 19
+$idleCheckpoint.Units.Add($idleActor); $idleCheckpoint.Units.Add($idleEnemy)
+$idleCheckpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+$idleCheckpoint.Grid.Width = 8; $idleCheckpoint.Grid.Height = 5
+$idleRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $idleCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+$cooldownBeforeIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
+$idleStep = $idleRunner.Step(0, 1)
+$cooldownAfterIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
+Assert-Combat ($idleStep.Event.SkillCasts.Count -eq 0 -and $idleStep.Event.DamageEvents.Count -eq 0 -and $idleStep.Event.Movements.Count -eq 1 -and ([Math]::Abs($idleActor.X - $idleEnemy.X) + [Math]::Abs($idleActor.Y - $idleEnemy.Y)) -gt 3 -and $idleEnemy.Hp -eq 1000 -and $idleActor.SkillState.Round -eq 1 -and $idleCheckpoint.Counter -eq 1 -and $cooldownAfterIdle -lt $cooldownBeforeIdle) 'No-release turn did not flee, advance its round/cooldown and avoid inventing an attack'
+
+$passiveSkill = $skillItems.Required(10128)
+Assert-Combat ($passiveSkill.PassiveStatusIds.Count -eq 1 -and $passiveSkill.PassiveStatusIds[0] -eq 25160) 'Pinned passive skill status mapping mismatch'
+$passiveOwner = New-WaveUnit 1 1 0 0 1000
+$passiveBindings = [System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialPassiveSkillBinding]]::new()
+$passiveBindings.Add([Zjcs.Combat.Official.FightOfficialPassiveSkillBinding]@{
+    ItemId = 10128; Rank = 2; Level = 3; SubRank = 1
+})
+$passiveStatuses = $officialCatalog.CreatePassiveStatusBindings($passiveOwner, $skillItems,
+    $passiveBindings)
+Assert-Combat ($passiveStatuses.Count -eq 1 -and $passiveStatuses[0].ClassId -eq 25160 -and $passiveStatuses[0].CreatorId -eq 1 -and $passiveStatuses[0].ApplyingSkillItemId -eq 10128 -and $passiveStatuses[0].SkillRank -eq 2 -and $passiveStatuses[0].SkillLevel -eq 3) 'Passive skill did not produce an attributed initial status binding'
+$officialCatalog.AssembleUnit($passiveOwner, $null, $passiveStatuses)
+$passiveEnemy = New-WaveUnit 2 2 1 0 1000
+$passiveCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$passiveCheckpoint.StageId = 22001; $passiveCheckpoint.RandomSeed = 18
+$passiveCheckpoint.Units.Add($passiveOwner); $passiveCheckpoint.Units.Add($passiveEnemy)
+$passiveRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $passiveCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+Assert-Combat ($passiveOwner.Statuses.Count -eq 1 -and $passiveOwner.Statuses[0].ClassId -eq 25160 -and $passiveOwner.Statuses[0].StartRound -eq 0) 'Equipped passive status was not initialized at battle start'
+
+# HP accumulated damage passives retain real damage across healing and release their configured skill.
+$accumulatingOwner = New-WaveUnit 9 2 0 0 1000
+$accumulatingStatus = $officialCatalog.CreateStatus(25185, 9, 9, 1)
+$accumulatingOwner.Statuses.Add($accumulatingStatus)
+$accumulatingOwner.Hp = 900
+$accumulatedSkills = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleStatusStateTrigger]]::new()
+$accumulationRandom = [Zjcs.Combat.Official.FightRandomStream]::new(29)
+$firstAccumulation = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyAccumulatedDamage(
+    $accumulatingOwner, 100, $officialCatalog, $accumulationRandom, $accumulatedSkills)
+$accumulatingOwner.Hp = 1000
+$secondAccumulation = [Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyAccumulatedDamage(
+    $accumulatingOwner, 50, $officialCatalog, $accumulationRandom, $accumulatedSkills)
+Assert-Combat ($firstAccumulation -eq 0 -and $secondAccumulation -eq 1 -and $accumulatingStatus.HpAccTriggeredCount -eq 1 -and $accumulatingStatus.HpAccDamageAccumulated -eq 0 -and $accumulatedSkills.Count -eq 1 -and $accumulatedSkills[0].EntityId -eq 58170 -and $accumulatedSkills[0].TargetPos -eq 1) "HP accumulated damage trigger mismatch (first=$firstAccumulation second=$secondAccumulation count=$($accumulatingStatus.HpAccTriggeredCount) accumulated=$($accumulatingStatus.HpAccDamageAccumulated) skills=$($accumulatedSkills.Count))"
+$accumulatingStatus.HpAccMaxCount = 1
+[Zjcs.Combat.Official.FightStatusTriggerRuntime]::ApplyAccumulatedDamage(
+    $accumulatingOwner, 500, $officialCatalog, $accumulationRandom, $accumulatedSkills) | Out-Null
+Assert-Combat ($accumulatingStatus.HpAccTriggeredCount -eq 1 -and $accumulatedSkills.Count -eq 1) 'HP accumulated damage trigger exceeded its configured count'
+
+$accumulationPlayer = New-WaveUnit 1 1 0 0 1000000
+$accumulationPlayer.Turn.Speed = 1000
+$accumulationSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$accumulationSkill.Slot = 0; $accumulationSkill.EntityId = 980; $accumulationSkill.ItemId = 981
+$accumulationSkill.TargetType = 1; $accumulationSkill.RangeVerified = $true
+$accumulationSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(2, 0))
+$accumulationSkill.Hits.Add([Zjcs.Combat.Official.FightBattleHitDefinition]@{
+    EntityId = 982; DamageId = 983; DamageType = 8; HasCustomDamage = $true; CustomDamage = 400
+})
+$accumulationPlayer.Skills.Add($accumulationSkill)
+$accumulationPlayer.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$accumulationBoss = New-WaveUnit 2 2 2 0 1000
+$accumulationBoss.Turn.Speed = 100
+$accumulationBoss.Level = 1; $accumulationBoss.SubRank = 1
+$battleAccumulationStatus = $officialCatalog.CreateStatus(25185, 2, 2, 1)
+$accumulationBoss.Statuses.Add($battleAccumulationStatus)
+$accumulationCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$accumulationCheckpoint.StageId = 22001; $accumulationCheckpoint.RandomSeed = 31
+$accumulationCheckpoint.Units.Add($accumulationPlayer); $accumulationCheckpoint.Units.Add($accumulationBoss)
+$accumulationBattle = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $accumulationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+$accumulationStep = $accumulationBattle.Step(0, 1)
+$accumulationCasts = @($accumulationStep.Event.SkillCasts | Where-Object { $_.SkillEntityId -eq 58170 })
+$accumulationCastSummary = @($accumulationCasts | ForEach-Object { '{0}:{1}' -f $_.SkillEntityId, $_.ActorId }) -join ','
+Assert-Combat ($accumulationStep.Event.ActorId -eq 1 -and $accumulationCasts.Count -eq 2 -and @($accumulationCasts | Where-Object { $_.ActorId -ne 2 }).Count -eq 0 -and $battleAccumulationStatus.HpAccTriggeredCount -eq 2 -and $battleAccumulationStatus.HpAccDamageAccumulated -eq 100) "HP accumulated damage did not execute both official trigger skills (actor=$($accumulationStep.Event.ActorId) casts=$accumulationCastSummary bossHp=$($accumulationBoss.Hp) triggered=$($battleAccumulationStatus.HpAccTriggeredCount) accumulated=$($battleAccumulationStatus.HpAccDamageAccumulated))"
+
+$summonSkill = $officialCatalog.CreateSkill(58140, 0, 14722, 1, 1, 0, $null)
+$summonHit = $summonSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 58141 } | Select-Object -First 1
+Assert-Combat ($summonSkill.SummonCountLimit -eq 6 -and $null -ne $summonHit -and $summonHit.IsSummon -and $summonHit.SummonPositions.Count -eq 2 -and $summonHit.SummonPools.Count -eq 2) 'Official hatch summon configuration was not assembled'
+Assert-Combat ($officialCatalog.MonsterTemplateId(3907) -eq 3285 -and $officialCatalog.MonsterTemplateId(3908) -eq 3286) 'Official summon monster templates did not resolve'
+$alternateSummonSkill = $officialCatalog.CreateSkill(70120, 0, 18012, 1, 1, 0, $null)
+$alternateSummonHit = $alternateSummonSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 70121 } | Select-Object -First 1
+Assert-Combat ($alternateSummonSkill.SummonCountLimit -eq 6 -and $null -ne $alternateSummonHit -and $alternateSummonHit.SummonPools.Count -eq 2 -and @($alternateSummonHit.SummonPools | Where-Object { $_.MonsterId -notin @(3907,3908) -or $_.MaxSummonCount -ne 3 }).Count -eq 0) 'Alternate hatch summon pools differ from the fixed three-per-type configuration'
+$summonPlayer = New-WaveUnit 1 1 0 0 1000
+$summonPlayer.Turn.Speed = 100
+$summonActor = New-WaveUnit 2 2 10 10 10000
+$summonActor.MonsterGroupNo = 0; $summonActor.Level = 1; $summonActor.SubRank = 1; $summonActor.Turn.Speed = 1000
+$summonActor.Skills.Add($summonSkill)
+$summonActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($summonSkill, 0))
+$summonCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$summonCheckpoint.StageId = 22001; $summonCheckpoint.RandomSeed = 17
+$summonCheckpoint.Units.Add($summonPlayer); $summonCheckpoint.Units.Add($summonActor)
+$summonCheckpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+$summonCheckpoint.Grid.Width = 20; $summonCheckpoint.Grid.Height = 20
+$summonRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $summonCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+$summonStep = $summonRunner.Step(0, 1)
+$summonedUnits = @($summonCheckpoint.Units | Where-Object { $_.MasterId -eq 2 -and $_.MonsterId -in @(3907,3908) })
+Assert-Combat ($summonStep.Event.SkillCasts.Count -eq 1 -and $summonStep.Event.SpawnedUnitIds.Count -eq 2 -and $summonedUnits.Count -eq 2) 'Official summon skill did not add both configured summons to the checkpoint'
+Assert-Combat (@($summonedUnits | Where-Object { $_.MonsterTemplateId -notin @(3285,3286) }).Count -eq 0) 'Summoned units did not retain their official model template ids'
+Assert-Combat (@($summonedUnits | Where-Object { $_.Statuses.ClassId -notcontains 24001 }).Count -eq 0) 'Summoned units did not receive their configured owner-death status'
+$turnIds = @($summonCheckpoint.Timeline.Entries | ForEach-Object { $_.Id })
+Assert-Combat (@($summonedUnits | Where-Object { $turnIds -notcontains $_.Id }).Count -eq 0) 'Summoned units were not registered in the turn queue'
+[Zjcs.Combat.Official.FightBattleCheckpointRules]::Validate($summonCheckpoint, $true)
+
+$repairActor = New-WaveUnit 20 2 10 10 1000
+$repairSkill = $officialCatalog.CreateSkill(18480, 0, 14267, 1, 1, 1, $null)
+$repairActor.Skills.Add($repairSkill)
+$repairActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($repairSkill, 0))
+$repairStatus = $officialCatalog.CreateStatus(24314, $repairActor.Id, $repairActor.Id, 1,
+    14267, 14267, 1, 1, 1, $repairActor.Properties)
+Assert-Combat ($repairStatus.SkillConditionRulesSupported -and $repairStatus.SummonConditionPools.Count -eq 3 -and $repairStatus.ConditionalSkills.Count -gt 0) 'Official tentacle repair summon condition was not assembled'
+$repairActor.Statuses.Add($repairStatus)
+$repairUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$repairUnits.Add($repairActor)
+$repairUnits.Add((New-WaveUnit 21 1 0 0 1000))
+$repairSummonIds = @(3265, 3266, 3267)
+for ($index = 0; $index -lt $repairSummonIds.Count; $index++) {
+    $tentacle = New-WaveUnit (30 + $index) 2 (3 + $index) 7 100
+    $tentacle.MasterId = $repairActor.Id; $tentacle.MonsterId = $repairSummonIds[$index]
+    $repairUnits.Add($tentacle)
+}
+$repairReady = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill(
+    $repairActor, $repairUnits, 1)
+Assert-Combat ($null -ne $repairReady -and $repairReady.EntityId -eq 18480) 'Tentacle repair skill did not release below four living configured summons'
+$fourthTentacle = New-WaveUnit 33 2 6 7 100
+$fourthTentacle.MasterId = $repairActor.Id; $fourthTentacle.MonsterId = 3265
+$repairUnits.Add($fourthTentacle)
+$repairBlocked = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill(
+    $repairActor, $repairUnits, 1)
+Assert-Combat ($null -eq $repairBlocked) 'Tentacle repair skill remained available at four living configured summons'
+
+$cappedActor = New-WaveUnit 2 2 10 10 10000
+$cappedActor.Skills.Add($summonSkill)
+$cappedActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($summonSkill, 0))
+$cappedUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$cappedUnits.Add($cappedActor)
+for ($index = 0; $index -lt 3; $index++) {
+    $ownedSummon = New-WaveUnit (10 + $index) 2 (2 + $index) 2 10
+    $ownedSummon.MasterId = 2; $ownedSummon.MonsterId = 3907
+    $cappedUnits.Add($ownedSummon)
+}
+for ($index = 0; $index -lt 3; $index++) {
+    $ownedSummon = New-WaveUnit (20 + $index) 2 (5 + $index) 2 10
+    $ownedSummon.MasterId = 2; $ownedSummon.MonsterId = 3908
+    $cappedUnits.Add($ownedSummon)
+}
+$blockedSummonSkill = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill(
+    $cappedActor, $cappedUnits, 1)
+Assert-Combat ($null -eq $blockedSummonSkill) 'Conditional summon skill remained available at its six-summon cap'
+
+$otherSummonActor = New-WaveUnit 40 2 10 10 10000
+$otherSummonActor.Skills.Add($summonSkill)
+$otherSummonActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($summonSkill, 0))
+$otherSummonUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$otherSummonUnits.Add($otherSummonActor)
+for ($index = 0; $index -lt 6; $index++) {
+    $unrelatedSummon = New-WaveUnit (50 + $index) 2 (2 + $index) 3 10
+    $unrelatedSummon.MasterId = $otherSummonActor.Id; $unrelatedSummon.MonsterId = 3265
+    $otherSummonUnits.Add($unrelatedSummon)
+}
+$unrelatedPoolReady = [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill(
+    $otherSummonActor, $otherSummonUnits, 1)
+Assert-Combat ($null -ne $unrelatedPoolReady -and $unrelatedPoolReady.EntityId -eq 58140) 'Unrelated summon types incorrectly consumed the hatch skill pools'
+
+Write-Output "Unity combat core checks passed: $($reference.cases.Count) pinned formula vectors, official catalog loading and digest validation, AI priority groups and filters, skill/status assembly, HP accumulated damage triggers, no-release turn progression, passive status initialization, status damage reduction, shield and skill cost execution, official chained hit graph, status falloff, battle victory, checkpoint replay, random stream, timeline, targeting, multi-target falloff, cross-wave spawn selection, official summon execution/caps and pool-specific release, and conditional tentacle repair."

@@ -20,6 +20,15 @@ namespace Zjcs.Combat.Official
             new Dictionary<int, Dictionary<string, object>>();
         private Dictionary<string, object> skillPropertyNames;
         private Dictionary<string, object> battleTables;
+        private Dictionary<string, object> battleProperties;
+        private readonly Dictionary<int, List<MonsterHpPliesLevel>> monsterHpPlies =
+            new Dictionary<int, List<MonsterHpPliesLevel>>();
+
+        private sealed class MonsterHpPliesLevel
+        {
+            public int LowLevel;
+            public int Plies;
+        }
 
         private FightOfficialCombatCatalog() { }
 
@@ -36,8 +45,23 @@ namespace Zjcs.Combat.Official
         public static FightOfficialCombatCatalog Load(string skillRulesJson, string skillRulesSha256,
             string skillManifest, string battleRulesJson, string battleRulesSha256, string battleManifest)
         {
+            return Load(skillRulesJson, skillRulesSha256, skillManifest, battleRulesJson,
+                battleRulesSha256, battleManifest, null, null, null);
+        }
+
+        public static FightOfficialCombatCatalog Load(string skillRulesJson, string skillRulesSha256,
+            string skillManifest, string battleRulesJson, string battleRulesSha256, string battleManifest,
+            string monsterHpPliesJson, string monsterHpPliesSha256, string monsterHpPliesManifest)
+        {
             VerifyPayload("skill-rules.json", skillRulesJson, skillRulesSha256, skillManifest);
             VerifyPayload("battle-rules.json", battleRulesJson, battleRulesSha256, battleManifest);
+            bool hasHpPliesPayload = !string.IsNullOrEmpty(monsterHpPliesJson);
+            if (hasHpPliesPayload)
+                VerifyPayload("monster-hp-plies.json", monsterHpPliesJson,
+                    monsterHpPliesSha256, monsterHpPliesManifest);
+            else if (!string.IsNullOrEmpty(monsterHpPliesSha256)
+                || !string.IsNullOrEmpty(monsterHpPliesManifest))
+                throw new ArgumentException("Monster HP plies payload metadata is incomplete.");
             var catalog = new FightOfficialCombatCatalog();
             Dictionary<string, object> skillCatalog = Object(OfficialJson.Parse(skillRulesJson), "skill-rules.json");
             Dictionary<string, object> battleCatalog = Object(OfficialJson.Parse(battleRulesJson), "battle-rules.json");
@@ -45,7 +69,9 @@ namespace Zjcs.Combat.Official
             catalog.AddEntities(battleCatalog);
             catalog.skillPropertyNames = Object(Required(skillCatalog, "prop_names"), "prop_names");
             catalog.battleTables = Object(Required(battleCatalog, "tables"), "battle tables");
+            catalog.battleProperties = Object(Required(battleCatalog, "props"), "battle props");
             catalog.ParseSkillPropertyTables(skillCatalog);
+            if (hasHpPliesPayload) catalog.ParseMonsterHpPlies(monsterHpPliesJson);
             return catalog;
         }
 
@@ -87,6 +113,297 @@ namespace Zjcs.Combat.Official
         }
 
         public int CooldownPropertyId => cooldownPropertyId;
+        public bool ContainsEntity(int entityId) => entities.ContainsKey(entityId);
+
+        public IReadOnlyDictionary<int, long> CalculateMonsterProps(int monsterId, int groupNo,
+            int level, int subRank)
+        {
+            Dictionary<string, object> monsterGroup = FindMonsterGroup(monsterId, groupNo);
+            if (monsterGroup == null)
+                throw new InvalidOperationException("Official monster group is missing: "
+                    + monsterId + "/" + groupNo);
+            Dictionary<string, object> propConfig = Object(Required(monsterGroup, "PropCfg"),
+                "monster PropCfg");
+            int propGroupId = Int(propConfig, "PropGroupId");
+            Dictionary<string, object> roleGroup = FindRolePropGroup(propGroupId, subRank);
+            if (roleGroup == null)
+                throw new InvalidOperationException("Official monster role prop group is missing: "
+                    + propGroupId + "/" + subRank);
+
+            var properties = ReadMonsterLevelProps(Int(roleGroup, "LevelPropID"), level);
+            int extraLevelPropId = Int(roleGroup, "ExtraLevelPropID");
+            if (extraLevelPropId > 0)
+                AddProperties(properties, ReadMonsterLevelProps(extraLevelPropId, level));
+
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+                Increment(properties, "Base" + name, "Base" + name + "Rate");
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int percentId = PropertyId("Base" + name + "Percent");
+                long rate = Value(properties, percentId);
+                if (percentId > 0 && rate != 0)
+                {
+                    Increment(properties, name, "Base" + name + "Percent",
+                        Value(properties, PropertyId("Base" + name)));
+                    properties.Remove(percentId);
+                }
+            }
+            foreach (string name in new[] { "ElementMaster", "ElementResistance", "KongFuMaster",
+                "KongFuResistance", "EffectRate", "EffectDodge" })
+                Increment(properties, name, name + "Percent");
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int baseId = PropertyId("Base" + name);
+                long baseValue = Value(properties, baseId);
+                if (baseValue == 0) continue;
+                properties.Remove(baseId);
+                AddProperty(properties, PropertyId(name), baseValue);
+            }
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed", "EffectDodge" })
+            {
+                int scaleId = PropertyId(name + "Scale");
+                long scale = Value(properties, scaleId);
+                if (scaleId <= 0 || scale == 0) continue;
+                long baseValue = Value(properties, PropertyId("Base" + name));
+                long current = Value(properties, PropertyId(name));
+                properties[PropertyId(name)] = Math.Max(1L,
+                    current + (long)((current + baseValue) * (scale / 10000.0)));
+                properties.Remove(scaleId);
+            }
+
+            Dictionary<string, object> factors = Object(Required(propConfig, "PropFactors"),
+                "monster PropFactors");
+            foreach (int propertyId in new List<int>(properties.Keys))
+            {
+                if (!factors.TryGetValue(propertyId.ToString(CultureInfo.InvariantCulture),
+                    out object rawFactor))
+                {
+                    properties.Remove(propertyId);
+                    continue;
+                }
+                properties[propertyId] = (long)(properties[propertyId]
+                    * (Convert.ToDouble(rawFactor, CultureInfo.InvariantCulture) / 10000.0));
+            }
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int id = PropertyId(name);
+                if (id > 0 && properties.TryGetValue(id, out long propertyValue))
+                    properties[id] = Math.Max(1L, propertyValue);
+            }
+            foreach (KeyValuePair<int, long> extra in ReadLongMap(monsterGroup, "ExtraProps"))
+                AddProperty(properties, extra.Key, extra.Value);
+            return properties;
+        }
+
+        public IReadOnlyDictionary<int, long> CalculateNpcProps(int propGroupId,
+            IReadOnlyDictionary<int, long> propFactors, IReadOnlyDictionary<int, long> extraProps,
+            int level, int subRank)
+        {
+            if (propGroupId <= 0 || level <= 0 || propFactors == null)
+                throw new ArgumentOutOfRangeException(nameof(propGroupId), "Official NPC property inputs are invalid.");
+            Dictionary<string, object> roleGroup = FindRolePropGroup(propGroupId, subRank);
+            if (roleGroup == null)
+                throw new InvalidOperationException("Official NPC role prop group is missing: "
+                    + propGroupId + "/" + subRank);
+
+            var properties = ReadMonsterLevelProps(Int(roleGroup, "LevelPropID"), level);
+            int extraLevelPropId = Int(roleGroup, "ExtraLevelPropID");
+            if (extraLevelPropId > 0)
+                AddProperties(properties, ReadMonsterLevelProps(extraLevelPropId, level));
+
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+                Increment(properties, "Base" + name, "Base" + name + "Rate");
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int percentId = PropertyId("Base" + name + "Percent");
+                long rate = Value(properties, percentId);
+                if (percentId > 0 && rate != 0)
+                {
+                    Increment(properties, name, "Base" + name + "Percent",
+                        Value(properties, PropertyId("Base" + name)));
+                    properties.Remove(percentId);
+                }
+            }
+            foreach (string name in new[] { "ElementMaster", "ElementResistance", "KongFuMaster",
+                "KongFuResistance", "EffectRate", "EffectDodge" })
+                Increment(properties, name, name + "Percent");
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int baseId = PropertyId("Base" + name);
+                long baseValue = Value(properties, baseId);
+                if (baseValue == 0) continue;
+                properties.Remove(baseId);
+                AddProperty(properties, PropertyId(name), baseValue);
+            }
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed", "EffectDodge" })
+            {
+                int scaleId = PropertyId(name + "Scale");
+                long scale = Value(properties, scaleId);
+                if (scaleId <= 0 || scale == 0) continue;
+                long baseValue = Value(properties, PropertyId("Base" + name));
+                long current = Value(properties, PropertyId(name));
+                properties[PropertyId(name)] = Math.Max(1L,
+                    current + (long)((current + baseValue) * (scale / 10000.0)));
+                properties.Remove(scaleId);
+            }
+
+            foreach (int propertyId in new List<int>(properties.Keys))
+            {
+                if (!propFactors.TryGetValue(propertyId, out long factor))
+                {
+                    properties.Remove(propertyId);
+                    continue;
+                }
+                properties[propertyId] = (long)(properties[propertyId] * (factor / 10000.0));
+            }
+            foreach (string name in new[] { "MaxHp", "Attack", "Defence", "Speed" })
+            {
+                int id = PropertyId(name);
+                if (id > 0 && properties.TryGetValue(id, out long propertyValue))
+                    properties[id] = Math.Max(1L, propertyValue);
+            }
+            AddProperties(properties, extraProps);
+            return properties;
+        }
+
+        public int MonsterType(int monsterId)
+        {
+            if (!battleTables.TryGetValue("monster", out object rawRows)
+                || !(rawRows is List<object> rows)) return 0;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "monster row");
+                if (Int(row, "Id") == monsterId) return Int(row, "MonsterType");
+            }
+            return 0;
+        }
+
+        public int MonsterHpPliesFor(int monsterId, int groupNo, int level)
+        {
+            Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
+            return group == null ? 1 : MonsterHpPliesForId(Int(group, "HpPliesId"), level);
+        }
+
+        public int MonsterHpPliesForId(int hpPliesId, int level)
+        {
+            if (hpPliesId <= 0 || !monsterHpPlies.TryGetValue(hpPliesId,
+                    out List<MonsterHpPliesLevel> levels)) return 1;
+            MonsterHpPliesLevel selected = null;
+            foreach (MonsterHpPliesLevel row in levels)
+                if (row.LowLevel <= level && (selected == null || row.LowLevel > selected.LowLevel))
+                    selected = row;
+            return selected == null ? 1 : selected.Plies;
+        }
+
+        public int MonsterTemplateId(int monsterId)
+        {
+            Dictionary<string, object> row = FindMonster(monsterId);
+            return row == null ? 0 : Int(row, "TempEntityId");
+        }
+
+        public int PropertyType(string name) => PropertyId(name);
+
+        public int CalculateMoveDist(IReadOnlyDictionary<int, long> properties)
+        {
+            double distance = Value(properties, PropertyId("MoveDist"));
+            double percent = Value(properties, PropertyId("MoveDistPercent")) / 10000.0;
+            return (int)((1.0 + percent) * distance);
+        }
+
+        public int MonsterCooldownChangeAtStart(int monsterId)
+        {
+            Dictionary<string, object> row = FindMonster(monsterId);
+            return row == null ? 0 : Int(row, "CDChangeAtStart");
+        }
+
+        public int MonsterCharacterType(int monsterId)
+        {
+            if (!battleTables.TryGetValue("monster", out object rawRows)
+                || !(rawRows is List<object> rows)) return 0;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "monster row");
+                if (Int(row, "Id") == monsterId) return Int(row, "CharacterType");
+            }
+            return 0;
+        }
+
+        public int MonsterAiType(int monsterId)
+        {
+            Dictionary<string, object> row = FindMonster(monsterId);
+            return row == null ? -1 : Int(row, "AiType", -1);
+        }
+
+        public List<int> MonsterActiveSkillItems(int monsterId, int groupNo)
+        {
+            Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
+            return group == null ? new List<int>()
+                : new List<int>(IntArray(group, "ActiveSkills"));
+        }
+
+        public List<int> MonsterPassiveSkillItems(int monsterId, int groupNo)
+        {
+            Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
+            return group == null ? new List<int>()
+                : new List<int>(IntArray(group, "PassiveSkills"));
+        }
+
+        public List<int> MonsterDeactivePassiveSkillItems(int monsterId, int groupNo)
+        {
+            Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
+            return group == null ? new List<int>()
+                : new List<int>(IntArray(group, "DeactivePassiveSkills"));
+        }
+
+        public List<int> MonsterInitialStatusIds(int monsterId)
+        {
+            var result = new List<int>();
+            Dictionary<string, object> row = FindMonster(monsterId);
+            int templateId = row == null ? 0 : Int(row, "TempEntityId");
+            if (templateId <= 0 || !entities.TryGetValue(templateId,
+                    out Dictionary<string, object> components)) return result;
+            Dictionary<string, object> status = Component(components, "FightStatusAgentComponent");
+            if (status != null) result.AddRange(IntArray(status, "InitStatusEntityClassIds"));
+            return result;
+        }
+
+        public List<FightGridPoint> MonsterBodyOffsets(int monsterId)
+        {
+            var result = new List<FightGridPoint>();
+            if (!battleTables.TryGetValue("monster", out object rawRows)
+                || !(rawRows is List<object> rows)) return result;
+            int templateId = 0;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "monster row");
+                if (Int(row, "Id") == monsterId) { templateId = Int(row, "TempEntityId"); break; }
+            }
+            if (templateId <= 0 || !entities.TryGetValue(templateId,
+                    out Dictionary<string, object> components)) return result;
+            Dictionary<string, object> grid = Component(components, "GridTransformComponent");
+            if (grid == null || !grid.TryGetValue("BodyRangeInfos", out object rawBody)
+                || rawBody == null) return result;
+            foreach (object raw in Array(rawBody, "GridTransformComponent.BodyRangeInfos"))
+            {
+                Dictionary<string, object> body = Object(raw, "body range info");
+                Dictionary<string, object> position = Component(body, "Pos");
+                if (position != null)
+                    result.Add(new FightGridPoint(Int(position, "X"), Int(position, "Y")));
+            }
+            return result;
+        }
+
+        private Dictionary<string, object> FindMonster(int monsterId)
+        {
+            if (!battleTables.TryGetValue("monster", out object rawRows)
+                || !(rawRows is List<object> rows)) return null;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "monster row");
+                if (Int(row, "Id") == monsterId) return row;
+            }
+            return null;
+        }
 
         /// <summary>
         /// Official battle speed table, populated together with the damage formula from
@@ -207,18 +524,33 @@ namespace Zjcs.Combat.Official
                 Level = level,
                 SubRank = subRank,
                 SkillType = Int(skill, "SkillType"),
+                ActionType = Int(skill, "ActionType"),
                 SkillTargetType = Int(skill, "SkillTargetType"),
                 ElementType = Int(skill, "ElementType"),
+                NeedConditionStatusMeetToRelease = Bool(skill,
+                    "NeedConditionStatusMeetToRelease"),
                 LimitedTimes = Int(skill, "LimitedTimes", -1),
                 ResetCooldownAtStart = Bool(skill, "ResetCDAtStart"),
+                CostType = Int(skill, "CostType"),
+                MustHaveValidCost = Bool(skill, "MustHaveValidCost"),
                 TargetType = Int(skill, "TargetType", 1),
                 Range = range,
                 CanTriggerChild = Bool(skill, "CanTriggerChild", true),
+                CanTriggerStatusEntityIds = new List<int>(IntArray(skill, "CanTriggerStatusEntityIds")),
                 ResetReleasedTimeOnNextWave = Bool(skill, "ResetReleasedTimeOnNextWave"),
                 HasCustomDamage = false,
                 RangeVerified = true,
                 PriorityProperty = ai == null ? 0 : Int(ai, "AiPriorityPropType"),
                 PriorityFindMax = ai == null || Bool(ai, "AiPriorityFindMax", true),
+                PriorityCharacterType = ai == null ? -1 : Int(ai, "AIPriroityCharacterType", -1),
+                ReleaseWhileRidicule = ai != null && Bool(ai, "ReleaseWhileRidicule"),
+                ReleaseWhileConfusion = ai != null && Bool(ai, "ReleaseWhileConfusion"),
+                IgnoreStatusIds = ai == null ? new List<int>()
+                    : new List<int>(IntArray(ai, "IgnoreStatusArray")),
+                HpLowerCharacterTypeFilter = ai == null ? new List<int>()
+                    : new List<int>(IntArray(ai, "AIPriorityHpLowerCharacterTypeFilter")),
+                PriorityCharacterTypeGroups = ai == null ? new List<List<int>>()
+                    : IntGroups(ai, "AIPriorityCharacterTypeGroups"),
                 Properties = CopyProperties(properties),
                 ActionDuration = Float(skill, "ActionDuration", -1f),
                 AllEndedActionDuration = Float(skill, "AllEndedActionDuration", -1f),
@@ -245,6 +577,20 @@ namespace Zjcs.Combat.Official
                 Dictionary<string, object> hitComponents = RequiredEntity(hitId);
                 FightBattleHitEntity hit = CreateHitEntity(hitId, hitComponents, pending, references);
                 result.HitGraphEntities.Add(hit);
+            }
+            if (result.NeedConditionStatusMeetToRelease)
+            {
+                int summonLimit = 0;
+                foreach (FightBattleHitEntity hit in result.HitGraphEntities)
+                {
+                    if (!hit.IsSummon) continue;
+                    foreach (FightBattleSummonPool pool in hit.SummonPools)
+                    {
+                        if (pool == null || pool.MonsterId <= 0) continue;
+                        summonLimit = checked(summonLimit + Math.Max(0, pool.MaxSummonCount));
+                    }
+                }
+                if (summonLimit > 0) result.SummonCountLimit = summonLimit;
             }
             if (result.HitGraphEntities.Count == 0)
                 throw new InvalidOperationException("Official skill has no resolved hit graph: " + entityId);
@@ -290,6 +636,8 @@ namespace Zjcs.Combat.Official
                         throw new InvalidOperationException("Official combat unit has duplicate skill slot " + binding.Slot);
                     FightBattleSkillDefinition skill = CreateSkill(binding.EntityId, binding.Slot,
                         binding.ItemId, binding.Rank, binding.Level, binding.SubRank, binding.Properties);
+                    skill.SkillCost = binding.SkillCost;
+                    skill.ProfessionAvailability = binding.ProfessionAvailability;
                     assembledSkills.Add(skill);
                     assembledSlots.Add(CreateSkillSlot(skill, binding.Cooldown,
                         binding.LastRound, binding.ReleasedTimes));
@@ -309,7 +657,9 @@ namespace Zjcs.Combat.Official
                     if (!statusIds.Add(binding.InstanceId))
                         throw new InvalidOperationException("Official combat unit has duplicate status instance " + binding.InstanceId);
                     assembledStatuses.Add(CreateStatus(binding.ClassId, unit.Id, binding.CreatorId,
-                        binding.InstanceId, binding.RootSkillId, binding.ApplyingSkillItemId));
+                        binding.InstanceId, binding.RootSkillId, binding.ApplyingSkillItemId,
+                        binding.SkillRank, binding.SkillLevel, binding.SourceSubRank,
+                        binding.SourceProperties, binding.CustomShieldValue));
                 }
             }
             unit.Skills.AddRange(assembledSkills);
@@ -317,14 +667,91 @@ namespace Zjcs.Combat.Official
             unit.Statuses.AddRange(assembledStatuses);
         }
 
+        public List<FightOfficialStatusBinding> CreatePassiveStatusBindings(
+            FightBattleUnitState unit, FightOfficialSkillItemCatalog skillItems,
+            IList<FightOfficialPassiveSkillBinding> passiveSkills)
+        {
+            if (unit == null || unit.Id <= 0)
+                throw new ArgumentException("Official passive status owner is invalid.", nameof(unit));
+            if (skillItems == null) throw new ArgumentNullException(nameof(skillItems));
+
+            int nextInstanceId = 1;
+            foreach (FightBattleStatusState status in unit.Statuses ?? new List<FightBattleStatusState>())
+                if (status != null && status.InstanceId >= nextInstanceId)
+                {
+                    if (status.InstanceId == Int32.MaxValue)
+                        throw new InvalidOperationException("Official status instance id space is exhausted.");
+                    nextInstanceId = status.InstanceId + 1;
+                }
+
+            var result = new List<FightOfficialStatusBinding>();
+            if (passiveSkills == null) return result;
+            foreach (FightOfficialPassiveSkillBinding binding in passiveSkills)
+            {
+                if (binding == null || binding.ItemId <= 0 || binding.Rank <= 0 || binding.Level <= 0
+                    || binding.SubRank < 0)
+                    throw new ArgumentException("Official passive skill binding is invalid.",
+                        nameof(passiveSkills));
+                FightOfficialSkillItem item = skillItems.Required(binding.ItemId);
+                foreach (int statusId in item.PassiveStatusIds ?? System.Array.Empty<int>())
+                {
+                    if (statusId <= 0) continue;
+                    if (nextInstanceId == Int32.MaxValue)
+                        throw new InvalidOperationException("Official status instance id space is exhausted.");
+                    result.Add(new FightOfficialStatusBinding
+                    {
+                        ClassId = statusId,
+                        InstanceId = nextInstanceId++,
+                        CreatorId = unit.Id,
+                        RootSkillId = item.EntityId,
+                        ApplyingSkillItemId = item.ItemId,
+                        SkillRank = binding.Rank,
+                        SkillLevel = binding.Level,
+                        SourceSubRank = binding.SubRank,
+                        SourceProperties = unit.Properties
+                    });
+                }
+            }
+            return result;
+        }
+
         public FightBattleStatusState CreateStatus(int classId, int ownerId, int creatorId,
-            int instanceId = 0, int rootSkillId = 0, int applyingSkillItemId = 0)
+            int instanceId = 0, int rootSkillId = 0, int applyingSkillItemId = 0,
+            int sourceSkillRank = 1, int sourceSkillLevel = 1, int sourceSubRank = 0,
+            IList<FightPropertyValue> sourceProperties = null, long customShieldValue = 0)
         {
             Dictionary<string, object> components = RequiredEntity(classId);
             Dictionary<string, object> status = Component(components, "FightStatusComponent");
+            Dictionary<string, object> action = Component(components, "ActionComponent");
+            Dictionary<string, object> statusProps = Component(components, "FightStatusPropComponent")
+                ?? Component(components, "FightStatusPropBySkillComponent")
+                ?? Component(components, "FightStatusPropByStatusComponent");
             Dictionary<string, object> falloff = Component(components, "FightStatusDamageFalloffComponent");
             Dictionary<string, object> hpDecrease =
                 Component(components, "FightStatusHpDecreaseUnitComponent");
+            Dictionary<string, object> roundStart =
+                Component(components, "FightStatusRoundStartComponent");
+            Dictionary<string, object> roundEnd =
+                Component(components, "FightStatusRoundEndComponent");
+            Dictionary<string, object> skillStart =
+                Component(components, "FightStatusSkillStartComponent");
+            Dictionary<string, object> skillEnd =
+                Component(components, "FightStatusSkillEndComponent");
+            Dictionary<string, object> hpAccDecrease =
+                Component(components, "FightStatusHpAccDecreaseComponent");
+            Dictionary<string, object> skillCondition =
+                Component(components, "FightStatusSkillConditionComponent");
+            Dictionary<string, object> damageCustomProps =
+                Component(components, "FightStatusBattleFormulaDamageCustomPropsComponent");
+            Dictionary<string, object> shieldPersistent =
+                Component(components, "FightStatusShieldPersistentComponent");
+            Dictionary<string, object> shieldDisposable =
+                Component(components, "FightStatusShieldDisposableComponent");
+            Dictionary<string, object> shieldInvincible =
+                Component(components, "FightStatusShieldInvincibleComponent");
+            Dictionary<string, object> shieldCounted = Component(components, "FightStatusShieldComponent");
+            Dictionary<string, object> shield = shieldPersistent ?? shieldDisposable
+                ?? shieldInvincible ?? shieldCounted;
             if (status == null) throw new InvalidOperationException("Official entity is not a status: " + classId);
 
             int durationRound = Int(status, "DurationRound");
@@ -333,6 +760,7 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = classId,
                 StatusType = Int(status, "StatusType"),
+                ActionType = action == null ? 0 : Int(action, "ActionType"),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
                 StartRound = -1,
@@ -353,6 +781,82 @@ namespace Zjcs.Combat.Official
                 HpTriggerPer = hpDecrease == null ? -1f : Float(hpDecrease, "UnitHpPer", -1f),
                 HpTriggerMaxCount = hpDecrease == null ? -1 : Int(hpDecrease, "MaxCount", -1),
                 HpTriggerAtStart = hpDecrease != null && Bool(hpDecrease, "TryAtStart"),
+                HasRoundStartTrigger = roundStart != null,
+                RoundStartRulesSupported = roundStart != null
+                    && SupportsRoundStart(roundStart),
+                RoundStartListenTarget = roundStart == null ? 0
+                    : Int(roundStart, "ListenTargetType"),
+                RoundStartDelayRound = roundStart == null ? 0
+                    : Int(roundStart, "DelayRound"),
+                RoundStartRate = roundStart == null ? 1f
+                    : Float(roundStart, "Rate", 1f),
+                RoundStartMaxCount = roundStart == null ? -1
+                    : Int(roundStart, "MaxCount", -1),
+                RoundStartMeetCount = roundStart == null ? 1
+                    : Int(roundStart, "MeetCount", 1),
+                RoundStartTryAtStart = roundStart != null
+                    && Bool(roundStart, "TryAtStart"),
+                HasRoundEndTrigger = roundEnd != null,
+                RoundEndRulesSupported = roundEnd != null && SupportsRoundEnd(roundEnd),
+                RoundEndListenTarget = roundEnd == null ? 0
+                    : Int(roundEnd, "ListenTargetType"),
+                RoundEndMaxCount = roundEnd == null ? -1 : Int(roundEnd, "MaxCount", -1),
+                RoundEndAutoRemove = roundEnd != null && Bool(roundEnd, "AutoRemove"),
+                HasSkillStartTrigger = skillStart != null,
+                SkillStartRulesSupported = skillStart != null
+                    && SupportsSkillStart(skillStart),
+                SkillStartSource = skillStart == null ? 0
+                    : Int(skillStart, "SkillStartSource"),
+                SkillStartMaxCount = skillStart == null ? -1
+                    : Int(skillStart, "MaxCount", -1),
+                HasSkillEndTrigger = skillEnd != null,
+                SkillEndRulesSupported = skillEnd != null && SupportsSkillEnd(skillEnd),
+                SkillEndMetCount = skillEnd == null ? 1 : Int(skillEnd, "MetCount", 1),
+                HasHpAccDecrease = hpAccDecrease != null,
+                HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
+                HpAccUnitHpPercentage = hpAccDecrease == null ? -1f
+                    : Float(hpAccDecrease, "UnitHpPercentage", -1f),
+                HpAccResetAtRoundEnd = hpAccDecrease != null
+                    && Bool(hpAccDecrease, "ResetAtRoundEnd"),
+                HpAccMaxCount = hpAccDecrease == null ? -1 : Int(hpAccDecrease, "MaxCount", -1),
+                HpAccUpdateHpPerOnCure = hpAccDecrease == null
+                    || Bool(hpAccDecrease, "UpdateHpPerOnCure", true),
+                HasDamageCustomProps = damageCustomProps != null,
+                DamageCustomPropsRate = damageCustomProps == null ? 1f
+                    : Float(damageCustomProps, "Rate", 1f),
+                DamageCustomPropsDmgGreaterMaxHpPer = damageCustomProps == null ? -1f
+                    : Float(damageCustomProps, "DmgGreaterMaxHpPer", -1f),
+                DamageCustomPropsMaxCount = damageCustomProps == null ? -1
+                    : Int(damageCustomProps, "Count", -1),
+                DamageCustomPropsAutoRemove = damageCustomProps != null
+                    && Bool(damageCustomProps, "AutoRemove", true),
+                DamageCustomPropsCheckSkillTrigger = damageCustomProps != null
+                    && Bool(damageCustomProps, "IsCheckSkillTrigger", true),
+                DamageCustomPropsPropertyId = damageCustomProps == null ? 0
+                    : Int(damageCustomProps, "DmgReducePer"),
+                DamageCustomPropsPhase = damageCustomProps == null ? 0
+                    : Int(damageCustomProps, "Phase"),
+                ShieldKind = shieldPersistent != null ? FightBattleShieldKind.Persistent
+                    : shieldDisposable != null ? FightBattleShieldKind.Disposable
+                    : shieldInvincible != null ? FightBattleShieldKind.Invincible
+                    : shieldCounted != null ? FightBattleShieldKind.Counted
+                    : FightBattleShieldKind.None,
+                ShieldRate = shield == null ? 1f : Float(shield, "Rate", 1f),
+                ShieldDamageGreaterMaxHpPer = shield == null ? -1f
+                    : Float(shield, "DmgGreaterMaxHpPer", -1f),
+                ShieldDestroyedSkillId = shield == null ? 0 : Int(shield, "DestroyedSkillId"),
+                ShieldInitialCount = shieldDisposable != null ? Int(shieldDisposable, "Count", -1)
+                    : shieldInvincible != null ? Int(shieldInvincible, "Count", -1)
+                    : shieldCounted != null ? Int(shieldCounted, "Count", -1) : -1,
+                ShieldRemainCount = shieldDisposable != null ? Int(shieldDisposable, "Count", -1)
+                    : shieldInvincible != null ? Int(shieldInvincible, "Count", -1)
+                    : shieldCounted != null ? Int(shieldCounted, "Count", -1) : -1,
+                ShieldKeepRemainValue = shieldCounted != null && Bool(shieldCounted, "KeepRemainValue"),
+                ShieldIgnoreValue = shieldCounted != null && Bool(shieldCounted, "IgnoreShieldValue"),
+                ShieldUsesCustomValue = shieldPersistent != null
+                    ? Bool(shieldPersistent, "CustomShield")
+                    : shieldDisposable != null ? Bool(shieldDisposable, "CustomShield")
+                    : shieldCounted != null && Bool(shieldCounted, "CustomShield"),
                 StackCount = Int(status, "InitStackCount", 1),
                 AddStackedCount = Int(status, "AddStackedCount", 1),
                 AddStackedRandomMinCount = Int(status, "AddStackedRandomMinCount", 1),
@@ -363,6 +867,15 @@ namespace Zjcs.Combat.Official
                 CreatorId = creatorId,
                 RootSkillId = rootSkillId,
                 ApplyingSkillItemId = applyingSkillItemId,
+                SourceSkillRank = Math.Max(1, sourceSkillRank),
+                SourceSkillLevel = Math.Max(1, sourceSkillLevel),
+                SourceSubRank = Math.Max(0, sourceSubRank),
+                SourceProperties = CopyProperties(sourceProperties),
+                HasPropertyComponent = statusProps != null,
+                PropertyDefinitionResolved = true,
+                CustomShieldValue = Math.Max(0L, customShieldValue),
+                ShieldValue = Math.Max(0L, customShieldValue),
+                ShieldRemainValue = Math.Max(0L, customShieldValue),
                 Rate = 1.0,
                 NumOfStart = 1,
                 MaxFalloffCount = -1
@@ -371,6 +884,110 @@ namespace Zjcs.Combat.Official
             {
                 AddHpTriggerStatuses(hpDecrease, result.HpTriggerStatuses);
                 AddHpTriggerSkills(hpDecrease, result.HpTriggerSkills);
+            }
+            if (roundStart != null)
+                AddHpAccTriggerEntries(roundStart, "StatusTriggerSkillCfgs", "SkillId",
+                    result.RoundStartSkills, true);
+            if (roundEnd != null)
+                AddHpAccTriggerEntries(roundEnd, "TriggerSkillCfgs", "SkillId",
+                    result.RoundEndSkills, true);
+            if (skillStart != null)
+            {
+                AddHpAccTriggerEntries(skillStart, "Skills", "SkillId",
+                    result.SkillStartSkills, true);
+                object rawSettings;
+                if (skillStart.TryGetValue("Settings", out rawSettings) && rawSettings != null)
+                    foreach (object raw in Array(rawSettings, "FightStatusSkillStartComponent.Settings"))
+                    {
+                        Dictionary<string, object> setting = Object(raw,
+                            "Fight status skill start setting");
+                        result.SkillStartActionTypes.AddRange(IntArray(setting, "ActionTypes"));
+                    }
+            }
+            if (skillEnd != null)
+            {
+                result.SkillEndFilteredActionTypes.AddRange(IntArray(skillEnd, "FilterTypes"));
+                AddHpAccTriggerEntries(skillEnd, "StatusCfgs", "StatusId",
+                    result.SkillEndStatuses, false);
+            }
+            if (hpAccDecrease != null)
+            {
+                AddHpAccTriggerEntries(hpAccDecrease, "StatusList", "StatusId",
+                    result.HpAccTriggerStatuses, false);
+                AddHpAccTriggerEntries(hpAccDecrease, "Skills", "SkillId",
+                    result.HpAccTriggerSkills, true);
+            }
+            if (skillCondition != null)
+            {
+                if (skillCondition.TryGetValue("Settings", out object rawSettings)
+                    && rawSettings != null)
+                foreach (object raw in Array(rawSettings,
+                    "FightStatusSkillConditionComponent.Settings"))
+                {
+                    Dictionary<string, object> setting = Object(raw,
+                        "Fight status skill condition setting");
+                    var rule = new FightBattleSkillConditionRule
+                    {
+                        ConditionType = Int(setting, "ConditionType"),
+                        HpPerValue = Float(setting, "HpPerValue", -1f),
+                        Round = Int(setting, "Round", -1),
+                        ContrastiveRelation = Int(setting, "ContrastiveRelation"),
+                        RoundTargetType = Int(setting, "RoundTargetType"),
+                        SummonId = Int(setting, "SummonId"),
+                        Count = Int(setting, "Count", -1),
+                        GlobalRound = Int(setting, "GlobalRound", -1),
+                        DurationRound = Bool(setting, "DurationRound", true)
+                    };
+                    if (rule.ConditionType == 4 && setting.TryGetValue("SummonPools",
+                            out object rawPools) && rawPools != null)
+                    {
+                        foreach (object poolRaw in Array(rawPools,
+                            "StatusSkillConditionSummonPoolSetting.SummonPools"))
+                        {
+                            Dictionary<string, object> pool = Object(poolRaw,
+                                "status skill summon pool");
+                            result.SummonConditionPools.Add(new FightBattleSummonPool
+                            {
+                                MonsterId = Int(pool, "SummonId"),
+                                MaxSummonCount = Int(pool, "MaxSummonCount")
+                            });
+                        }
+                    }
+                    if (rule.ConditionType > 4) result.SkillConditionRulesSupported = false;
+                    result.SkillConditionRules.Add(rule);
+                }
+                if (skillCondition.TryGetValue("SkillInfos", out object rawSkillInfos)
+                    && rawSkillInfos != null)
+                foreach (object raw in Array(rawSkillInfos,
+                    "FightStatusSkillConditionComponent.SkillInfos"))
+                {
+                    Dictionary<string, object> info = Object(raw,
+                        "Fight status conditional skill");
+                    result.ConditionalSkills.Add(new FightBattleStatusSkillCondition
+                    {
+                        SkillEntityId = Int(info, "SkillEntityId"),
+                        IsActive = Bool(info, "IsActive", true),
+                        IsNoMeetSetNegation = Bool(info, "IsNoMeetSetNegation")
+                    });
+                }
+            }
+            if (statusProps != null)
+            {
+                if (statusProps.TryGetValue("TransitionPropCfgs", out object rawTransitions)
+                    && rawTransitions != null)
+                foreach (object raw in Array(rawTransitions, "FightStatusPropComponent.TransitionPropCfgs"))
+                {
+                    Dictionary<string, object> transition = Object(raw,
+                        "FightStatusPropComponent.TransitionPropCfg");
+                    result.PropertyTransitions.Add(new FightBattleStatusPropertyTransition
+                    {
+                        PropertyId = Int(transition, "Prop"),
+                        TargetType = Int(transition, "Target"),
+                        TargetPropertyId = Int(transition, "TargetProp"),
+                        AdditionPropertyId = Int(transition, "AdditionProp"),
+                        FixedAdditionPropertyId = Int(transition, "FixedAdditionProp")
+                    });
+                }
             }
             if (falloff != null)
             {
@@ -553,6 +1170,138 @@ namespace Zjcs.Combat.Official
                 ? fallback : EmptyProps;
         }
 
+        private Dictionary<string, object> FindMonsterGroup(int monsterId, int groupNo)
+        {
+            if (!battleTables.TryGetValue("monster_group", out object rawRows)
+                || !(rawRows is List<object> rows)) return null;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "monster_group row");
+                if (Int(row, "MonsterId") == monsterId && Int(row, "GroupNo") == groupNo)
+                    return row;
+            }
+            return null;
+        }
+
+        private void ParseMonsterHpPlies(string json)
+        {
+            Dictionary<string, object> root = Object(OfficialJson.Parse(json), "monster HP plies");
+            string sourceManifest = Convert.ToString(Required(root, "manifest"),
+                CultureInfo.InvariantCulture);
+            if (!string.Equals(sourceManifest, ExpectedManifest, StringComparison.Ordinal))
+                throw new InvalidOperationException("Monster HP plies table is not from the pinned original version.");
+            foreach (object rawRow in Array(Required(root, "rows"), "monster HP plies rows"))
+            {
+                Dictionary<string, object> row = Object(rawRow, "monster HP plies row");
+                int id = Int(row, "Id");
+                int lowLevel = Int(row, "LowLevel");
+                int plies = Int(row, "Plies");
+                if (id <= 0 || lowLevel <= 0 || plies <= 0)
+                    throw new FormatException("Official monster HP plies row has an invalid value.");
+                if (!monsterHpPlies.TryGetValue(id, out List<MonsterHpPliesLevel> levels))
+                {
+                    levels = new List<MonsterHpPliesLevel>();
+                    monsterHpPlies.Add(id, levels);
+                }
+                levels.Add(new MonsterHpPliesLevel { LowLevel = lowLevel, Plies = plies });
+            }
+        }
+
+        private Dictionary<string, object> FindRolePropGroup(int propGroupId, int subRank)
+        {
+            if (!battleTables.TryGetValue("role_prop_group", out object rawRows)
+                || !(rawRows is List<object> rows)) return null;
+            Dictionary<string, object> fallback = null;
+            foreach (object item in rows)
+            {
+                Dictionary<string, object> row = Object(item, "role_prop_group row");
+                if (Int(row, "ID") != propGroupId) continue;
+                int rowSubRank = Int(row, "SubRank");
+                if (rowSubRank == subRank) return row;
+                if (rowSubRank <= subRank && (fallback == null || rowSubRank > Int(fallback, "SubRank")))
+                    fallback = row;
+            }
+            return fallback;
+        }
+
+        private Dictionary<int, long> ReadMonsterLevelProps(int classId, int level)
+        {
+            if (classId <= 0 || !battleProperties.TryGetValue(classId.ToString(CultureInfo.InvariantCulture),
+                    out object rawTable)) return new Dictionary<int, long>();
+            Dictionary<string, object> table = Object(rawTable, "monster prop class " + classId);
+            Dictionary<string, object> rows = Object(Required(table, "rows"), "monster prop rows");
+            if (rows.Count == 0) return new Dictionary<int, long>();
+            string selectedLevel = null;
+            int selected = int.MinValue;
+            foreach (string key in rows.Keys)
+            {
+                int candidate = IntKey(key, "monster prop level");
+                if (candidate <= level && candidate > selected)
+                {
+                    selected = candidate;
+                    selectedLevel = key;
+                }
+            }
+            if (selectedLevel == null)
+            {
+                foreach (string key in rows.Keys)
+                {
+                    int candidate = IntKey(key, "monster prop level");
+                    if (candidate < selected)
+                    {
+                        selected = candidate;
+                        selectedLevel = key;
+                    }
+                }
+            }
+            return ReadLongMap(rows, selectedLevel);
+        }
+
+        private static void AddProperties(Dictionary<int, long> target, IReadOnlyDictionary<int, long> source)
+        {
+            if (source == null) return;
+            foreach (KeyValuePair<int, long> property in source)
+                AddProperty(target, property.Key, property.Value);
+        }
+
+        private int PropertyId(string name)
+        {
+            foreach (KeyValuePair<string, object> property in skillPropertyNames)
+                if (string.Equals(Convert.ToString(property.Value, CultureInfo.InvariantCulture), name,
+                    StringComparison.Ordinal))
+                    return IntKey(property.Key, "property ID");
+            return 0;
+        }
+
+        private static long Value(IReadOnlyDictionary<int, long> properties, int propertyId)
+        {
+            return propertyId > 0 && properties != null
+                && properties.TryGetValue(propertyId, out long value) ? value : 0L;
+        }
+
+        private static void AddProperty(Dictionary<int, long> properties, int propertyId, long value)
+        {
+            if (propertyId <= 0 || value == 0) return;
+            properties[propertyId] = checked(Value(properties, propertyId) + value);
+        }
+
+        private void Increment(Dictionary<int, long> properties, string propertyName,
+            string ratePropertyName)
+        {
+            int propertyId = PropertyId(propertyName);
+            Increment(properties, propertyName, ratePropertyName, Value(properties, propertyId));
+        }
+
+        private void Increment(Dictionary<int, long> properties, string propertyName,
+            string ratePropertyName, long basis)
+        {
+            int propertyId = PropertyId(propertyName);
+            int ratePropertyId = PropertyId(ratePropertyName);
+            long rate = Value(properties, ratePropertyId);
+            if (propertyId <= 0 || rate == 0 || basis == 0) return;
+            AddProperty(properties, propertyId, (long)(basis * (rate / 10000.0)));
+        }
+
         private static Dictionary<int, long> ScaleProps(IReadOnlyDictionary<int, long> props,
             IReadOnlyDictionary<int, long> scaleProps, bool removeUnscaled)
         {
@@ -574,6 +1323,12 @@ namespace Zjcs.Combat.Official
             string manifest)
         {
             VerifyPayload(name, json, expectedSha256, manifest);
+        }
+
+        internal static void VerifyPayloadForDerived(string name, string json, string expectedSha256,
+            string manifest, string expectedManifest)
+        {
+            VerifyPayload(name, json, expectedSha256, manifest, expectedManifest);
         }
 
         internal static Dictionary<string, object> ParseObject(string json, string path)
@@ -810,6 +1565,208 @@ namespace Zjcs.Combat.Official
             }
         }
 
+        private static void AddHpAccTriggerEntries(Dictionary<string, object> component,
+            string fieldName, string idField, List<FightBattleStatusStateTrigger> output,
+            bool skill)
+        {
+            object raw;
+            if (!component.TryGetValue(fieldName, out raw) || raw == null) return;
+            foreach (object item in Array(raw, fieldName))
+            {
+                Dictionary<string, object> row = Object(item, "HP accumulated trigger");
+                int entityId = Int(row, idField);
+                if (entityId <= 0) continue;
+                output.Add(new FightBattleStatusStateTrigger
+                {
+                    EntityId = entityId,
+                    BasePercent = Float(row, "BasePercent", 1f),
+                    AffectedByProp = Bool(row, "AffectedByProp"),
+                    Source = skill ? Int(row, "Source") : 0,
+                    Target = skill ? Int(row, "Target") : Int(row, "ApplyTarget"),
+                    UseAI = skill && Bool(row, "UseAI"),
+                    TargetPos = skill ? Int(row, "TargetPos") : 0,
+                    StackedCountToDamageFactor = skill
+                        && Bool(row, "StackedCountToDamageFactor")
+                });
+            }
+        }
+
+        private static bool SupportsRoundStart(Dictionary<string, object> component)
+        {
+            return Int(component, "ListenCharacterType") == 0
+                && Int(component, "DelayRound") == 0
+                && Int(component, "DelayRoundType") == 0
+                && Int(component, "MeetCount", 1) == 1
+                && Int(component, "RoundStartPhase") == 0
+                && Float(component, "TargetHpPer", -1f) < 0f
+                && !Bool(component, "TryAtStart")
+                && !Bool(component, "TryAtNotForbidden")
+                && !Bool(component, "StatusRandomOneTrigger")
+                && !Bool(component, "RemoveOldStatusOnInvoke")
+                && !Bool(component, "RemoveOldStatusOnEnd")
+                && ArrayCount(component, "TargetActions") == 0
+                && ArrayCount(component, "TriggerTargetNotStatus") == 0
+                && ArrayCount(component, "StatusTriggerStatusCfgs") == 0
+                && ArrayCount(component, "RoundStartHandles") == 0
+                && ArrayCount(component, "StatusReplacePropertyValues") == 0
+                && !HasNonNull(component, "FilterCondition")
+                && SupportsRoundStartSkills(component);
+        }
+
+        private static bool SupportsRoundStartSkills(Dictionary<string, object> component)
+        {
+            if (!component.TryGetValue("StatusTriggerSkillCfgs", out object raw) || raw == null)
+                return true;
+            foreach (object item in Array(raw, "StatusTriggerSkillCfgs"))
+            {
+                Dictionary<string, object> trigger = Object(item, "round start trigger skill");
+                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
+                    || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
+                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || (Int(trigger, "TargetPos") != 0 && Int(trigger, "TargetPos") != 1)
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0) return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsRoundEnd(Dictionary<string, object> component)
+        {
+            int listener = Int(component, "ListenTargetType");
+            Dictionary<string, object> entityCount = Component(component, "EntityCount");
+            if (listener < 1 || listener > 4
+                || Int(component, "MaxCount", -1) < -1
+                || Bool(component, "AutoRemove")
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || ArrayCount(component, "TriggerStatusCfgs") > 0
+                || HasNonNull(component, "FilterCondition")
+                || entityCount != null && (ArrayCount(entityCount, "Range") > 0
+                    || Int(entityCount, "EntityClassId") != 0
+                    || Int(entityCount, "MaxCount") != 0
+                    || Int(entityCount, "ResultOffset") != 0)) return false;
+            object raw;
+            if (!component.TryGetValue("TriggerSkillCfgs", out raw) || raw == null) return false;
+            foreach (object item in Array(raw, "TriggerSkillCfgs"))
+            {
+                Dictionary<string, object> trigger = Object(item, "round end trigger skill");
+                Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
+                Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
+                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 2
+                    || Int(trigger, "Target") != 5 || Bool(trigger, "UseAI")
+                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || Int(trigger, "TargetPos") != 1
+                    || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0
+                    || propTarget != null && (Bool(propTarget, "IsEnemy")
+                        || ArrayCount(propTarget, "RoleType") > 0
+                        || Bool(propTarget, "IncludeApplicator")
+                        || Int(propTarget, "PropType") != 0
+                        || Bool(propTarget, "Heighest")
+                        || Bool(propTarget, "SupportCustomFilter"))
+                    || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0 || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsSkillStart(Dictionary<string, object> component)
+        {
+            if (Int(component, "SkillStartSource") != 2
+                || Int(component, "CD") != 0 || Bool(component, "ResetCDAtStart")
+                || Int(component, "MaxCount", -1) < -1
+                || Bool(component, "RemoveWhenNotEnoughTimes")
+                || ArrayCount(component, "Settings") != 1
+                || ArrayCount(component, "Cfgs") > 0
+                || ArrayCount(component, "Status") > 0
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0) return false;
+
+            Dictionary<string, object> setting = Object(
+                Array(component["Settings"], "FightStatusSkillStartComponent.Settings")[0],
+                "Fight status skill start setting");
+            if (!string.Equals(StringField(setting, "_type"),
+                    "StatusSkillConditionActionTypeSetting", StringComparison.Ordinal)
+                || Int(setting, "ConditionType") != 7 || Int(setting, "TargetType") != 2)
+                return false;
+            int[] actionTypes = IntArray(setting, "ActionTypes");
+            if (actionTypes.Length == 0) return false;
+            foreach (int actionType in actionTypes)
+                if (actionType != 2 && actionType != 6) return false;
+
+            if (ArrayCount(component, "Skills") == 0) return false;
+            foreach (object item in Array(component["Skills"], "Skills"))
+            {
+                Dictionary<string, object> trigger = Object(item, "skill start trigger skill");
+                Dictionary<string, object> custom = Component(trigger, "CustomDamageInfo");
+                Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
+                if (Bool(trigger, "AffectedByProp") || Int(trigger, "Source") != 3
+                    || Int(trigger, "Target") != 2 || Bool(trigger, "UseAI")
+                    || Bool(trigger, "StackedCountToDamageFactor")
+                    || Int(trigger, "TargetPos") != 1
+                    || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || ArrayCount(trigger, "TargetWithoutStatusIds") > 0
+                    || propTarget != null && (Bool(propTarget, "IsEnemy")
+                        || ArrayCount(propTarget, "RoleType") > 0
+                        || Bool(propTarget, "IncludeApplicator")
+                        || Int(propTarget, "PropType") != 0
+                        || Bool(propTarget, "Heighest")
+                        || Bool(propTarget, "SupportCustomFilter"))
+                    || custom != null && (Int(custom, "TargetType") != 0
+                        || Int(custom, "BaseProp") != 0 || Bool(custom, "BaseCurrentHp")
+                        || Int(custom, "DamageProp") != 0
+                        || Int(custom, "UpperLimitTarget") != 0
+                        || Int(custom, "UpperLimitPropType") != 0
+                        || Int(custom, "UpperLimitPercent") != 0)) return false;
+            }
+            return true;
+        }
+
+        private static bool SupportsSkillEnd(Dictionary<string, object> component)
+        {
+            if (Int(component, "MetCount", 1) <= 0
+                || Int(component, "StatusEntClassId") != 0
+                || Bool(component, "IsCheckSkillCondition")
+                || ArrayCount(component, "ElementFilter") > 0
+                || ArrayCount(component, "FilterSkillClassIds") > 0
+                || ArrayCount(component, "StatusReplacePropertyValues") > 0
+                || ArrayCount(component, "StatusCfgs") == 0) return false;
+            foreach (object item in Array(component["StatusCfgs"], "StatusCfgs"))
+            {
+                Dictionary<string, object> trigger = Object(item, "skill end trigger status");
+                Dictionary<string, object> propTarget = Component(trigger, "PropTarget");
+                if (Bool(trigger, "AffectedByProp")
+                    || (Int(trigger, "ApplyTarget") != 2 && Int(trigger, "ApplyTarget") != 3)
+                    || Float(trigger, "BasePercent", 1f) < 0f
+                    || Float(trigger, "BasePercent", 1f) > 1f
+                    || ArrayCount(trigger, "StatusReplacePropertyValues") > 0
+                    || propTarget != null && (Bool(propTarget, "IsEnemy")
+                        || ArrayCount(propTarget, "RoleType") > 0
+                        || Bool(propTarget, "IncludeApplicator")
+                        || Int(propTarget, "PropType") != 0
+                        || Bool(propTarget, "Heighest")
+                        || Bool(propTarget, "SupportCustomFilter"))) return false;
+            }
+            return true;
+        }
+
+        private static int ArrayCount(Dictionary<string, object> source, string field)
+        {
+            return source.TryGetValue(field, out object value) && value != null
+                ? Array(value, field).Count : 0;
+        }
+
+        private static bool HasNonNull(Dictionary<string, object> source, string field)
+        {
+            return source.TryGetValue(field, out object value) && value != null;
+        }
+
         /// <summary>
         /// Reads <c>FightSkillExtSkillComponent.ExtSkill</c> entries that carry a fixed skill id.
         /// Rate-based providers are honoured; other provider types are ignored.
@@ -896,6 +1853,7 @@ namespace Zjcs.Combat.Official
         private FightBattleHitEntity CreateHitEntity(int id, Dictionary<string, object> components,
             Queue<int> pending, Dictionary<int, FightBattleHitReference> references)
         {
+            Dictionary<string, object> summon = Component(components, "FightHitSummonComponent");
             Dictionary<string, object> damage = null;
             foreach (string name in new[] { "FightHitSummonComponent", "FightHitChainedComponent",
                 "FightHitCustomTargetComponent", "FightHitRandomTargetComponent",
@@ -922,7 +1880,8 @@ namespace Zjcs.Combat.Official
             }
             if (damage != null)
             {
-                result.HasFixedDamage = true;
+                result.HasFixedDamage = Int(damage, "DamageId") > 0
+                    || Int(damage, "DamageType") != 0;
                 result.DelayDistFactor = Float(damage, "DelayDistFactor", 0f);
                 result.ActionType = Int(damage, "DamageActionType", 4);
                 result.DamageId = Int(damage, "DamageId");
@@ -935,7 +1894,11 @@ namespace Zjcs.Combat.Official
                 result.DamageProperty = Int(damage, "DamageProp");
                 result.FixedDamageProperty = Int(damage, "FixedDamageProp");
                 result.DamageParam = Long(damage, "DamageParam");
+                result.IgnoreShield = Bool(damage, "DamageIgnoreShield");
+                result.TrueDamage = Bool(damage, "IsTrueDamage");
+                result.BreakResilience = Bool(damage, "IsBreakResilience");
             }
+            if (summon != null) AddSummonConfig(summon, result);
             foreach (Dictionary<string, object> holder in new[] { chained, custom, random, damage })
             {
                 if (holder == null || !holder.ContainsKey("Scope")) continue;
@@ -958,6 +1921,69 @@ namespace Zjcs.Combat.Official
                 result.MiniHitTargetCount = Int(random, "MiniHitTargetCount", 1);
             }
             return result;
+        }
+
+        private static void AddSummonConfig(Dictionary<string, object> component,
+            FightBattleHitEntity output)
+        {
+            if (component == null || output == null) return;
+            output.IsSummon = true;
+            if (!component.TryGetValue("SummonCfg", out object rawConfig) || rawConfig == null)
+                return;
+            Dictionary<string, object> config = Object(rawConfig, "FightHitSummonComponent.SummonCfg");
+            output.SummonImmediateRound = Bool(config, "SummonImmediateRound");
+            output.SummonInheritProps = Bool(config, "InheritProp");
+            output.SummonReferenceType = Int(config, "ReferenceType");
+            output.SummonLevelType = Int(config, "LevelType");
+            output.SummonLifespanStatusId = Int(config, "LifespanStatusId");
+            if (config.TryGetValue("SummonStatus", out object rawStatusIds) && rawStatusIds != null)
+                output.SummonStatusIds.AddRange(IntArray(config, "SummonStatus"));
+            if (config.TryGetValue("SummonPoolSetting", out object rawSetting) && rawSetting != null)
+            {
+                Dictionary<string, object> setting = Object(rawSetting, "SummonPoolSetting");
+                output.SummonIsRandom = Bool(setting, "IsRandom");
+                if (setting.TryGetValue("SummonPools", out object rawPools) && rawPools != null)
+                    foreach (object rawPool in Array(rawPools, "SummonPoolSetting.SummonPools"))
+                    {
+                        Dictionary<string, object> pool = Object(rawPool, "SummonPoolStatusCfg");
+                        Dictionary<string, object> poolConfig = Component(pool, "SummonPoolCfg");
+                        if (poolConfig == null) poolConfig = pool;
+                        var definition = new FightBattleSummonPool
+                        {
+                            MonsterId = Int(poolConfig, "SummonId"),
+                            MaxSummonCount = Int(poolConfig, "MaxSummonCount")
+                        };
+                        if (pool.TryGetValue("SummonStatus", out object rawPoolStatuses)
+                            && rawPoolStatuses != null)
+                            definition.StatusIds.AddRange(IntArray(pool, "SummonStatus"));
+                        output.SummonPools.Add(definition);
+                    }
+            }
+            int directId = Int(config, "SummonId");
+            if (output.SummonPools.Count == 0 && directId > 0)
+            {
+                var pool = new FightBattleSummonPool
+                {
+                    MonsterId = directId,
+                    MaxSummonCount = int.MaxValue
+                };
+                pool.StatusIds.AddRange(output.SummonStatusIds);
+                output.SummonPools.Add(pool);
+            }
+            if (component.TryGetValue("SummonScope", out object rawScopes) && rawScopes != null)
+                foreach (object rawScope in Array(rawScopes,
+                    "FightHitSummonComponent.SummonScope"))
+                {
+                    Dictionary<string, object> scope = Object(rawScope, "summon scope");
+                    Dictionary<string, object> baseScope = Component(scope, "Base");
+                    Dictionary<string, object> position = baseScope == null
+                        ? null : Component(baseScope, "Pos");
+                    if (position == null) continue;
+                    Dictionary<string, object> offset = Component(scope, "SummonOffset");
+                    output.SummonPositions.Add(new FightGridPoint(
+                        Int(position, "X") + (offset == null ? 0 : Int(offset, "X")),
+                        Int(position, "Y") + (offset == null ? 0 : Int(offset, "Y"))));
+                }
         }
 
         private static void AddHitChildren(Dictionary<string, object> skill, Queue<int> pending,
@@ -1052,8 +2078,14 @@ namespace Zjcs.Combat.Official
 
         private static void VerifyPayload(string name, string json, string expectedSha256, string manifest)
         {
+            VerifyPayload(name, json, expectedSha256, manifest, ExpectedManifest);
+        }
+
+        private static void VerifyPayload(string name, string json, string expectedSha256,
+            string manifest, string expectedManifest)
+        {
             if (string.IsNullOrEmpty(json)) throw new ArgumentException(name + " payload is empty.", nameof(json));
-            if (!string.Equals(manifest, ExpectedManifest, StringComparison.Ordinal))
+            if (!string.Equals(manifest, expectedManifest, StringComparison.Ordinal))
                 throw new InvalidOperationException(name + " source manifest is not the pinned original version.");
             string actual;
             using (SHA256 sha = SHA256.Create())
@@ -1069,6 +2101,16 @@ namespace Zjcs.Combat.Official
         {
             object raw;
             return value.TryGetValue(key, out raw) && raw != null ? Object(raw, key) : null;
+        }
+
+        private static List<FightPropertyValue> CopyProperties(IEnumerable<FightPropertyValue> properties)
+        {
+            if (properties == null) return null;
+            var result = new List<FightPropertyValue>();
+            foreach (FightPropertyValue property in properties)
+                if (property != null) result.Add(new FightPropertyValue
+                    { Id = property.Id, Value = property.Value });
+            return result;
         }
 
         private static object Required(Dictionary<string, object> value, string key)
@@ -1164,6 +2206,19 @@ namespace Zjcs.Combat.Official
             for (int i = 0; i < result.Length; i++) result[i] = Convert.ToInt32(items[i], CultureInfo.InvariantCulture);
             return result;
         }
+
+        private static List<List<int>> IntGroups(Dictionary<string, object> value, string key)
+        {
+            object raw;
+            var result = new List<List<int>>();
+            if (!value.TryGetValue(key, out raw) || raw == null) return result;
+            foreach (object item in Array(raw, key))
+            {
+                Dictionary<string, object> group = Object(item, key + " entry");
+                result.Add(new List<int>(IntArray(group, "CharacterTypes")));
+            }
+            return result;
+        }
     }
 
     public sealed class FightOfficialSkillBinding
@@ -1174,9 +2229,11 @@ namespace Zjcs.Combat.Official
         public int Rank;
         public int Level;
         public int SubRank;
+        public FightSkillProfessionAvailability ProfessionAvailability;
         public long Cooldown;
         public int LastRound;
         public int ReleasedTimes;
+        public long SkillCost;
         public IList<FightPropertyValue> Properties;
     }
 
@@ -1187,6 +2244,19 @@ namespace Zjcs.Combat.Official
         public int CreatorId;
         public int RootSkillId;
         public int ApplyingSkillItemId;
+        public int SkillRank = 1;
+        public int SkillLevel = 1;
+        public int SourceSubRank;
+        public IList<FightPropertyValue> SourceProperties;
+        public long CustomShieldValue;
+    }
+
+    public sealed class FightOfficialPassiveSkillBinding
+    {
+        public int ItemId;
+        public int Rank = 1;
+        public int Level = 1;
+        public int SubRank;
     }
 
     internal sealed class OfficialJson

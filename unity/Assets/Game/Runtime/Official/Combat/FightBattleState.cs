@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
+    public enum FightBattleShieldKind
+    {
+        None,
+        Persistent,
+        Disposable,
+        Invincible,
+        Counted
+    }
+
     [Serializable]
     public sealed class FightBattleUnitState
     {
@@ -11,7 +20,12 @@ namespace Zjcs.Combat.Official
         public int Side;
         public int CharacterType;
         public int MonsterId;
+        public int NpcClassId;
+        public int MonsterTemplateId;
+        public int MonsterGroupNo;
+        public int AiType = -1;
         public int MonsterType;
+        public int MaxHpPlies = 1;
         public int Level;
         public int SubRank;
         public int Profession;
@@ -26,6 +40,7 @@ namespace Zjcs.Combat.Official
         public long Hp;
         public long MaxHp;
         public long LastMaxHp;
+        public List<FightPropertyValue> BaseProperties;
         public long Resilience;
         public long MaxResilience;
         public int BrokenRound = -1;
@@ -50,11 +65,34 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleStatusStateTrigger
+    {
+        public int EntityId;
+        public float BasePercent = 1f;
+        public bool AffectedByProp;
+        public int Source;
+        public int Target;
+        public bool UseAI;
+        public int TargetPos;
+        public bool StackedCountToDamageFactor;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusSkillInvocation
+    {
+        public FightBattleStatusStateTrigger Trigger;
+        public int SourceUnitId;
+        public int TargetUnitId;
+        public int TargetPositionUnitId;
+    }
+
+    [Serializable]
     public sealed class FightBattleStatusState
     {
         public int InstanceId;
         public int ClassId;
         public int StatusType;
+        public int ActionType;
         // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
         public int DurationRound;
         public int CurDurationRound;
@@ -88,6 +126,10 @@ namespace Zjcs.Combat.Official
         public int SkillEntityClassId;
         public bool IsCheckSkillTrigger;
         public bool RemoveOnSourceSkillStart;
+        public List<FightBattleSummonPool> SummonConditionPools =
+            new List<FightBattleSummonPool>();
+        public List<FightBattleStatusSkillCondition> ConditionalSkills =
+            new List<FightBattleStatusSkillCondition>();
         public int NumOfStart = 1;
         public int MaxFalloffCount = -1;
         public int FalloffPercent;
@@ -102,6 +144,129 @@ namespace Zjcs.Combat.Official
         public bool HpTriggerAtStart;
         public List<int> HpTriggerStatuses = new List<int>();
         public List<int> HpTriggerSkills = new List<int>();
+        public bool HasRoundStartTrigger;
+        public bool RoundStartRulesSupported;
+        public int RoundStartListenTarget;
+        public int RoundStartDelayRound;
+        public float RoundStartRate = 1f;
+        public int RoundStartMaxCount = -1;
+        public int RoundStartMeetCount = 1;
+        public int RoundStartTriggeredCount;
+        public bool RoundStartTryAtStart;
+        public List<FightBattleStatusStateTrigger> RoundStartSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public bool HasRoundEndTrigger;
+        public bool RoundEndRulesSupported;
+        public int RoundEndListenTarget;
+        public int RoundEndMaxCount = -1;
+        public int RoundEndTriggeredCount;
+        public bool RoundEndAutoRemove;
+        public List<FightBattleStatusStateTrigger> RoundEndSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public bool HasSkillStartTrigger;
+        public bool SkillStartRulesSupported;
+        public int SkillStartSource;
+        public int SkillStartMaxCount = -1;
+        public int SkillStartTriggeredCount;
+        public List<int> SkillStartActionTypes = new List<int>();
+        public List<FightBattleStatusStateTrigger> SkillStartSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public bool HasSkillEndTrigger;
+        public bool SkillEndRulesSupported;
+        public int SkillEndMetCount = 1;
+        public int SkillEndMetCountProgress;
+        public int SkillEndTriggeredCount;
+        public List<int> SkillEndFilteredActionTypes = new List<int>();
+        public List<FightBattleStatusStateTrigger> SkillEndStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
+        // per the confirmed offline rule; the configured threshold is consumed on each trigger.
+        public bool HasHpAccDecrease;
+        public long HpAccUnitHp = -1;
+        public float HpAccUnitHpPercentage = -1f;
+        public bool HpAccResetAtRoundEnd;
+        public int HpAccMaxCount = -1;
+        public bool HpAccUpdateHpPerOnCure = true;
+        public long HpAccDamageAccumulated;
+        public int HpAccTriggeredCount;
+        public List<FightBattleStatusStateTrigger> HpAccTriggerStatuses =
+            new List<FightBattleStatusStateTrigger>();
+        public List<FightBattleStatusStateTrigger> HpAccTriggerSkills =
+            new List<FightBattleStatusStateTrigger>();
+        public bool SkillConditionRulesSupported = true;
+        public List<FightBattleSkillConditionRule> SkillConditionRules =
+            new List<FightBattleSkillConditionRule>();
+        public int SourceSkillRank = 1;
+        public int SourceSkillLevel = 1;
+        public int SourceSubRank;
+        public bool PropertyDefinitionResolved;
+        public bool HasPropertyComponent;
+        public List<FightPropertyValue> SourceProperties;
+        public List<FightBattleStatusPropertyTransition> PropertyTransitions =
+            new List<FightBattleStatusPropertyTransition>();
+        public List<FightPropertyValue> ResolvedProperties;
+        public bool HasDamageCustomProps;
+        public float DamageCustomPropsRate = 1f;
+        public float DamageCustomPropsDmgGreaterMaxHpPer = -1f;
+        public int DamageCustomPropsMaxCount = -1;
+        public bool DamageCustomPropsAutoRemove = true;
+        public bool DamageCustomPropsCheckSkillTrigger = true;
+        public int DamageCustomPropsPropertyId;
+        public int DamageCustomPropsPhase;
+        public int DamageCustomPropsTriggeredCount;
+        public FightBattleShieldKind ShieldKind;
+        public float ShieldRate = 1f;
+        public float ShieldDamageGreaterMaxHpPer = -1f;
+        public int ShieldDestroyedSkillId;
+        public int ShieldInitialCount = -1;
+        public int ShieldRemainCount = -1;
+        public bool ShieldKeepRemainValue;
+        public bool ShieldIgnoreValue;
+        public bool ShieldUsesCustomValue;
+        public long CustomShieldValue;
+        public long ShieldValue;
+        public long ShieldRemainValue;
+        public bool ShieldInitialized;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusPropertyTransition
+    {
+        public int PropertyId;
+        public int TargetType;
+        public int TargetPropertyId;
+        public int AdditionPropertyId;
+        public int FixedAdditionPropertyId;
+    }
+
+    [Serializable]
+    public sealed class FightBattleSummonPool
+    {
+        public int MonsterId;
+        public int MaxSummonCount;
+        public List<int> StatusIds = new List<int>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusSkillCondition
+    {
+        public int SkillEntityId;
+        public bool IsActive;
+        public bool IsNoMeetSetNegation;
+    }
+
+    [Serializable]
+    public sealed class FightBattleSkillConditionRule
+    {
+        public int ConditionType;
+        public float HpPerValue = -1f;
+        public int Round = -1;
+        public int ContrastiveRelation;
+        public int RoundTargetType;
+        public int SummonId;
+        public int Count = -1;
+        public int GlobalRound = -1;
+        public bool DurationRound = true;
     }
 
     [Serializable]
@@ -110,6 +275,13 @@ namespace Zjcs.Combat.Official
         public int CastId;
         public int StatusClassId;
         public int Count;
+    }
+
+    public enum FightSkillProfessionAvailability
+    {
+        Unknown,
+        Available,
+        Mismatch
     }
 
     [Serializable]
@@ -121,13 +293,22 @@ namespace Zjcs.Combat.Official
         public int Rank;
         public int Level;
         public int SubRank;
+        public FightSkillProfessionAvailability ProfessionAvailability;
         public int SkillType;
+        public int ActionType;
         public int SkillTargetType;
         public int ElementType;
+        public bool NeedConditionStatusMeetToRelease;
+        public int SummonCountLimit = -1;
+        public List<int> SummonCountMonsterIds = new List<int>();
         public int RootEntityId;
         public int LimitedTimes = -1;
         public bool ResetCooldownAtStart;
+        public int CostType;
+        public long SkillCost;
+        public bool MustHaveValidCost;
         public bool CanTriggerChild = true;
+        public List<int> CanTriggerStatusEntityIds = new List<int>();
         public bool ResetReleasedTimeOnNextWave;
         public int FalloffCastId;
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
@@ -148,12 +329,22 @@ namespace Zjcs.Combat.Official
         public int TargetType = 1;
         public List<FightGridPoint> Range = new List<FightGridPoint>();
         public bool IsAI;
+        public int AiPriorityId = -1;
+        public int LastAiPriorityId = -1;
+        public List<int> AiPriorityTypes = new List<int>();
+        public List<int> LastAiPriorityTypes = new List<int>();
+        public bool UseLastAiPriority;
         public int PriorityProperty;
         public bool PriorityFindMax = true;
+        public int PriorityCharacterType = -1;
+        public bool ReleaseWhileRidicule;
+        public bool ReleaseWhileConfusion;
+        public List<int> IgnoreStatusIds = new List<int>();
+        public List<int> HpLowerCharacterTypeFilter = new List<int>();
+        public List<List<int>> PriorityCharacterTypeGroups = new List<List<int>>();
         public bool RangeVerified = true;
         public bool HasCustomCure;
         public long CustomCure;
-        public long SkillCost;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();
         // Official FightSKillMoveCfg entries from FightSkillComponent.SourceMoveList (sorted by
@@ -213,6 +404,8 @@ namespace Zjcs.Combat.Official
         public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
+        public bool TrueDamage;
+        public bool BreakResilience;
         // Official HitScopCfg.Pos offsets: the damage area around the hit anchor. Empty means the
         // hit only applies to the selected target(s).
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
@@ -237,6 +430,18 @@ namespace Zjcs.Combat.Official
         public long CustomDamage;
         public double DamageRate = 1.0;
         public bool UseDamageRate;
+        public bool IgnoreShield;
+        public bool HasFixedDamage;
+        public bool IsSummon;
+        public bool SummonIsRandom;
+        public bool SummonImmediateRound;
+        public bool SummonInheritProps;
+        public int SummonReferenceType;
+        public int SummonLevelType;
+        public int SummonLifespanStatusId;
+        public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();
+        public List<int> SummonStatusIds = new List<int>();
+        public List<FightGridPoint> SummonPositions = new List<FightGridPoint>();
     }
 
     [Serializable]
@@ -261,9 +466,22 @@ namespace Zjcs.Combat.Official
         public float DelayDistFactor;
         public int Anchor;
         public bool IgnoreAICount;
+        public bool TrueDamage;
+        public bool BreakResilience;
         public int ActionType = 4;
         public List<FightGridPoint> Scope = new List<FightGridPoint>();
         public bool AllowEmptyScope;
+        public bool IgnoreShield;
+        public bool IsSummon;
+        public bool SummonIsRandom;
+        public bool SummonImmediateRound;
+        public bool SummonInheritProps;
+        public int SummonReferenceType;
+        public int SummonLevelType;
+        public int SummonLifespanStatusId;
+        public List<FightBattleSummonPool> SummonPools = new List<FightBattleSummonPool>();
+        public List<int> SummonStatusIds = new List<int>();
+        public List<FightGridPoint> SummonPositions = new List<FightGridPoint>();
         public List<FightBattleStatusApplication> AppliedStatuses = new List<FightBattleStatusApplication>();
         public bool StatusListRandomOne;
         public int HemophagiaProperty;
@@ -285,6 +503,7 @@ namespace Zjcs.Combat.Official
         public int TargetType = 2;
         public float Chance = 1f;
         public float LessThanHpPer = -1f;
+        public long CustomShieldValue;
     }
 
     [Serializable]
@@ -349,6 +568,8 @@ namespace Zjcs.Combat.Official
 
         public int Schema = CurrentSchema;
         public int StageId;
+        public int StageType;
+        public bool IsPvp;
         public int Mode;
         public int MaxRound = 25;
         // Official StageInfo player-round limit (IsPlayerRoundLimit/PlayerRoundLimit). Zero or a
@@ -360,6 +581,8 @@ namespace Zjcs.Combat.Official
         public int RandomSeed;
         public int DamageEventSerial;
         public int FalloffSerial;
+        public int StatusInstanceSerial;
+        public int SummonSerial;
         public int WaveIndex;
         public bool Finished;
         public List<FightBattleUnitState> Units = new List<FightBattleUnitState>();
@@ -399,6 +622,7 @@ namespace Zjcs.Combat.Official
         public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
+        public List<int> SpawnedUnitIds = new List<int>();
     }
 
     [Serializable]
@@ -415,6 +639,7 @@ namespace Zjcs.Combat.Official
         public int Slot;
         public int SkillEntityId;
         public int SkillItemId;
+        public bool IsReplay;
         public List<int> TargetIds = new List<int>();
     }
 
@@ -437,6 +662,7 @@ namespace Zjcs.Combat.Official
             if (checkpoint.StageId <= 0 || checkpoint.MaxRound <= 0 || checkpoint.Sequence < 0
                 || checkpoint.Counter < 0 || checkpoint.DamageEventSerial < 0 || checkpoint.RandomSeed < 1
                 || checkpoint.RandomSeed >= FightRandomStream.Modulus || checkpoint.FalloffSerial < 0
+                || checkpoint.StatusInstanceSerial < 0 || checkpoint.SummonSerial < 0
                 || checkpoint.PlayerRoundLimit < 0
                 || checkpoint.WaveIndex < 0 || checkpoint.WaveIndex >= Math.Max(1, checkpoint.Waves?.Count ?? 0))
                 throw new ArgumentException("Fight checkpoint header is invalid.", nameof(checkpoint));
@@ -484,7 +710,7 @@ namespace Zjcs.Combat.Official
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
                 if (unit == null || unit.Id <= 0 || !ids.Add(unit.Id) || unit.Hp < 0
-                    || unit.MaxHp < 0 || unit.Hp > unit.MaxHp || unit.MaxResilience < 0
+                    || unit.MaxHp < 0 || unit.Hp > unit.MaxHp || unit.MaxHpPlies < 0 || unit.MaxResilience < 0
                     || unit.Resilience < 0 || unit.Resilience > unit.MaxResilience
                     || unit.Properties == null || unit.Skills == null || unit.SkillState == null || unit.Turn == null
                     || unit.Statuses == null || unit.FalloffCounts == null)
