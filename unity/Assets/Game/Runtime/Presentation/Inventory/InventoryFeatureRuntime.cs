@@ -4,7 +4,6 @@ using UnityEngine;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
-using Zjcs.Presentation.Home;
 
 namespace Zjcs.Presentation.Inventory
 {
@@ -60,31 +59,26 @@ namespace Zjcs.Presentation.Inventory
 
         private IReadOnlyList<int> ResolveTreasureGachaSourceTypes(OfflineInventoryItemView item)
         {
-            HomeFeatureRuntime home = FindObjectOfType<HomeFeatureRuntime>();
-            if (item == null || home == null || home.TreasureGacha == null) return Array.Empty<int>();
-            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
-            var sourceTypes = new List<int>(2);
-            if (home.TreasureGacha.ResolveItemSource(item.ItemId, now) != null)
-                sourceTypes.Add(0);
-            TreasureItemConfig sourceItem = home.TreasureGacha.Catalog.Item(item.ItemId);
-            if (sourceItem == null) return sourceTypes;
-            TreasureGachaSourceNavigation elementSource = home.TreasureGacha.ResolveElementItemSource(
-                item.ItemId, sourceItem.ElementType, now);
-            if (elementSource != null) sourceTypes.Add(elementSource.SelectedElementGachaType);
-            return sourceTypes;
+            IInventoryHomeNavigationContext home = FindHomeNavigationContext();
+            return item == null || home == null
+                ? Array.Empty<int>()
+                : home.TreasureGachaSourceTypes(item.ItemId);
         }
 
         private void OpenTreasureGachaSource(OfflineInventoryItemView item, int gachaType)
         {
-            HomeFeatureRuntime home = FindObjectOfType<HomeFeatureRuntime>();
+            IInventoryHomeNavigationContext home = FindHomeNavigationContext();
             if (item == null || home == null) return;
-            TreasureItemConfig sourceItem = home.TreasureGacha?.Catalog.Item(item.ItemId);
-            if (gachaType >= 8 && sourceItem == null) return;
             Action<int> returnToSource = ReopenSourceItem;
-            TreasureGachaSourceNavigation navigation = gachaType >= 8
-                ? home.OpenTreasureGachaFromElementItemSource(item.ItemId, sourceItem.ElementType, returnToSource)
-                : home.OpenTreasureGachaFromItemSource(item.ItemId, 0, returnToSource);
-            if (navigation == null) home.Hud?.ShowNotice("该扭蛋来源暂时无法打开");
+            if (!home.OpenTreasureGachaSource(item.ItemId, gachaType, returnToSource))
+                home.ShowInventoryNotice("该扭蛋来源暂时无法打开");
+        }
+
+        private static IInventoryHomeNavigationContext FindHomeNavigationContext()
+        {
+            foreach (MonoBehaviour component in FindObjectsOfType<MonoBehaviour>())
+                if (component is IInventoryHomeNavigationContext context) return context;
+            return null;
         }
 
         private void ReopenSourceItem(int itemId)

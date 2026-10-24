@@ -1230,6 +1230,8 @@ namespace Zjcs.Presentation.Home
                 sourceItem.ElementType, returnToSource) != null;
         }
 
+        public void ShowInventoryNotice(string message) => hud?.ShowNotice(message);
+
         public bool EnterMainland()
         {
             if (onOpenMainland == null)
