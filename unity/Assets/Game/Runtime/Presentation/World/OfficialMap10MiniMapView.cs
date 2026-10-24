@@ -10,7 +10,8 @@ namespace Zjcs.Presentation.World
     [DisallowMultipleComponent]
     public sealed class OfficialMap10MiniMapView : MonoBehaviour
     {
-        private const string CatalogResource = "Map10/MiniMap/catalog";
+        [SerializeField] private int mapClassId = 10;
+        [SerializeField] private string catalogResource = "Map10/MiniMap/catalog";
         private readonly List<Mesh> generatedMeshes = new List<Mesh>();
         private readonly List<Material> generatedMaterials = new List<Material>();
         private Transform generatedRoot;
@@ -29,19 +30,34 @@ namespace Zjcs.Presentation.World
 
         public void Initialize()
         {
-            TextAsset catalog = Resources.Load<TextAsset>(CatalogResource);
-            if (catalog == null) throw new InvalidOperationException("Official Map10 minimap catalog is missing: " + CatalogResource);
-            Initialize(catalog);
+            Initialize(mapClassId, catalogResource);
+        }
+
+        public void Initialize(int classId, string resourcePath)
+        {
+            if (classId <= 0 || string.IsNullOrWhiteSpace(resourcePath))
+                throw new ArgumentException("Map id and minimap catalog resource path are required.");
+            TextAsset catalog = Resources.Load<TextAsset>(resourcePath);
+            if (catalog == null) throw new InvalidOperationException("Official minimap catalog is missing: " + resourcePath);
+            mapClassId = classId;
+            catalogResource = resourcePath;
+            Initialize(catalog, classId);
         }
 
         public void Initialize(TextAsset catalogSource)
         {
+            Initialize(catalogSource, mapClassId);
+        }
+
+        private void Initialize(TextAsset catalogSource, int expectedMapClassId)
+        {
             if (catalogSource == null) throw new ArgumentNullException(nameof(catalogSource));
             ClearGenerated();
             MiniMapCatalog catalog = JsonUtility.FromJson<MiniMapCatalog>(catalogSource.text);
-            if (catalog == null || catalog.format != 1 || catalog.mapClassId != 10 || catalog.geometryVersion != 9
-                || catalog.geometryBatchCount != 9 || string.IsNullOrEmpty(catalog.geometryResource) || catalog.textures == null)
-                throw new InvalidDataException("Official Map10 minimap catalog is malformed.");
+            if (catalog == null || catalog.format != 1 || catalog.mapClassId != expectedMapClassId
+                || catalog.geometryVersion <= 0 || catalog.geometryBatchCount <= 0
+                || string.IsNullOrEmpty(catalog.geometryResource) || catalog.textures == null)
+                throw new InvalidDataException("Official minimap catalog is malformed for map " + expectedMapClassId + ".");
             TextAsset geometry = Resources.Load<TextAsset>(catalog.geometryResource);
             if (geometry == null) throw new InvalidDataException("Official Map10 minimap geometry is missing: " + catalog.geometryResource);
             generatedRoot = new GameObject("Official Map10 minimap geometry").transform;

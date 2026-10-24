@@ -1,10 +1,11 @@
-"""Build pinned Map10 stage, monster formation, and arena data for Unity."""
+"""Build pinned map stage, monster formation, and arena data for Unity."""
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
 import re
+import struct
 from pathlib import Path
 
 from official_apk import Apk, ROOT
@@ -14,7 +15,7 @@ from official_tables import Constructors
 
 VERSION = "854_156383"
 OUTPUT = ROOT / "unity/Assets/Official/World/Map/10"
-PLACEMENTS_SOURCE = ("config_mapinfowrap", "Assets/Config/MapInfoWrap/mapinfowrap_10.g.bytes")
+PLACEMENTS_SOURCE = ("config_mapinfowrap", "Assets/Config/MapInfoWrap/mapinfowrap_{map_id}.g.bytes")
 MAP_STAGE_TABLE = ("config_luban", "Assets/Config/Luban/map_stage.g.bytes", "TbMapToStageInfo")
 STAGE_TABLE = ("config_luban", "Assets/Config/Luban/stage.g.bytes", "TbStageInfo")
 ARRAY_TABLE = ("config_luban", "Assets/Config/Luban/stage_monster_array.g.bytes", "TbStageMonsterArrayInfo")
@@ -50,29 +51,33 @@ def source_record(apk: Apk, obj, path: str, payload: bytes) -> dict:
                 payload_size=len(payload), payload_sha256=sha256(payload))
 
 
-def map10_stage_ids(placements: dict, map_stage_rows: list[dict], expected_entity_count: int = 82) -> set[int]:
-    if placements.get("id") != 10 or not isinstance(placements.get("entities"), list):
-        raise ValueError("Placement source does not identify Map10")
+def map_stage_ids(map_id: int, placements: dict, map_stage_rows: list[dict], expected_entity_count: int) -> set[int]:
+    if placements.get("id") != map_id or not isinstance(placements.get("entities"), list):
+        raise ValueError(f"Placement source does not identify Map{map_id}")
     if len(placements["entities"]) != expected_entity_count:
-        raise ValueError("Map10 placement count differs from the pinned source")
+        raise ValueError(f"Map{map_id} placement count differs from the pinned source")
     stage_ids = set()
     for row in map_stage_rows:
-        if int(row["MapClassId"]) != 10:
+        if int(row["MapClassId"]) != map_id:
             continue
         stage_ids.add(int(row["StageId"]))
 
     for entity in placements["entities"]:
         for value in entity.get("stages", {}).values():
             if not isinstance(value, list) or not value or not isinstance(value[0], list):
-                raise ValueError("Map10 entity stage state does not match the official stage schema")
+                raise ValueError(f"Map{map_id} entity stage state does not match the official stage schema")
             for stage_id in value[0]:
                 if not isinstance(stage_id, int) or stage_id <= 0:
-                    raise ValueError("Map10 entity stage id is invalid")
+                    raise ValueError(f"Map{map_id} entity stage id is invalid")
                 stage_ids.add(stage_id)
 
     if not stage_ids:
-        raise ValueError("Map10 does not reference any official stages")
+        raise ValueError(f"Map{map_id} does not reference any official stages")
     return stage_ids
+
+
+def map10_stage_ids(placements: dict, map_stage_rows: list[dict], expected_entity_count: int = 82) -> set[int]:
+    return map_stage_ids(10, placements, map_stage_rows, expected_entity_count)
 
 
 def collect_battle_data(stage_rows: list[dict], arrays: dict[int, dict], scenes: dict[str, dict]) -> tuple[dict, dict]:
@@ -85,22 +90,26 @@ def collect_battle_data(stage_rows: list[dict], arrays: dict[int, dict], scenes:
         wave_monsters = stage.get("WaveMonsterIds") or []
         catalogs = stage.get("WaveArrayCatalogs")
         if catalogs is not None:
-            raise ValueError("Map10 stage uses randomized WaveArrayCatalogs; preserve its official selection data first")
+            raise ValueError("Map stage uses randomized WaveArrayCatalogs; preserve its official selection data first")
         if len(wave_ids) != len(wave_monsters):
             if wave_ids or wave_monsters:
-                raise ValueError("Map10 stage wave array ids and monster ids differ in length")
-        for array_id, monster_ids in zip(wave_ids, wave_monsters):
+                raise ValueError("Map stage wave array ids and monster ids differ in length")
+        for wave_index, (array_id, monster_ids) in enumerate(zip(wave_ids, wave_monsters)):
             array_id = int(array_id)
             if array_id not in arrays:
-                raise ValueError("Official Map10 stage references a missing monster array: " + str(array_id))
+                raise ValueError("Official map stage references a missing monster array: " + str(array_id))
             groups = {int(monster["GroupId"]) for monster in arrays[array_id]["Monsters"]}
-            if len(groups) != len(monster_ids):
-                raise ValueError("Monster array group count differs from the official stage roster: " + str(array_id))
+            if catalogs is not None and len(groups) != len(monster_ids):
+                raise ValueError("Monster array group count differs from the official stage roster: stage "
+                                 + str(stage["Id"]) + ", wave " + str(wave_index) + ", array "
+                                 + str(array_id) + ", groups " + str(sorted(groups)) + ", monsters "
+                                 + str(monster_ids))
             referenced_arrays.add(array_id)
 
     missing_games = referenced_games - {int(key) for key in scenes}
     if missing_games:
-        raise ValueError("Map10 stage has no official battle scene: " + ", ".join(map(str, sorted(missing_games))))
+        raise ValueError("Official map stage has no official battle scene: "
+                         + ", ".join(map(str, sorted(missing_games))))
 
     for stage in stage_rows:
         wave_ids = stage.get("WaveArrayIds") or []
@@ -110,7 +119,8 @@ def collect_battle_data(stage_rows: list[dict], arrays: dict[int, dict], scenes:
         normal = scene.get("FightRoleMonsterNormalComponent")
         origins = [] if normal is None else normal.get("WaveOriPos") or []
         if len(origins) < len(wave_ids):
-            raise ValueError("Official Map10 battle scene has too few wave origins for stage " + str(stage["Id"]))
+            raise ValueError("Official battle scene group count has too few wave origins for stage "
+                             + str(stage["Id"]))
 
     selected_scenes = {str(game_id): scenes[str(game_id)] for game_id in sorted(referenced_games)}
     selected_arrays = {}
@@ -155,9 +165,7 @@ def _read_property_ids() -> tuple[dict[str, int], str]:
 
 def calculate_monster_properties(group: dict, level: float, sub_rank: int,
                                  combat_rules: dict, property_ids: dict[str, int]) -> dict[int, int]:
-    """Port CalcMonsterBattleProps for the fixed Map10 stage levels."""
-    if abs(level - round(level)) >= 1e-5:
-        raise ValueError("Map10 monster level requires the official fractional-level interpolation path")
+    """Port CalcMonsterBattleProps and LevelPropParser.GetPropsByFloat."""
     role_prop_id = int(group["PropCfg"]["PropGroupId"])
     role_group = next((row for row in combat_rules["tables"]["role_prop_group"]
                        if int(row["ID"]) == role_prop_id and int(row["SubRank"]) == sub_rank), None)
@@ -166,18 +174,43 @@ def calculate_monster_properties(group: dict, level: float, sub_rank: int,
 
     props_by_class = combat_rules["props"]
     prop_class_id = int(role_group["LevelPropID"])
-    row = props_by_class.get(str(prop_class_id), {}).get("rows", {}).get(str(int(round(level))))
-    if row is None:
-        raise ValueError("Official monster level property row is missing")
-    props = {int(key): int(value) for key, value in row.items()}
+    def level_props(class_id: int) -> dict[int, int]:
+        rows = props_by_class.get(str(class_id), {}).get("rows", {})
+        source_level = struct.unpack("<f", struct.pack("<f", level))[0]
+        low = int(source_level // 1)
+        high = low if abs(source_level - low) < 1e-5 else low + 1
+        low_row = rows.get(str(low))
+        high_row = rows.get(str(high))
+        available_levels = sorted(int(key) for key in rows)
+        if not available_levels:
+            return {}
+        if high == low:
+            if low_row is not None:
+                return {int(key): int(value) for key, value in low_row.items()}
+            if low < available_levels[-1]:
+                return {}
+            return {int(key): int(value) for key, value in rows[str(available_levels[-1])].items()}
+        if low_row is None and high_row is None:
+            return {int(key): int(value) for key, value in rows[str(available_levels[-1])].items()}
+        if low_row is None:
+            return {int(key): int(value) for key, value in high_row.items()}
+        if high_row is None or low == high:
+            return {int(key): int(value) for key, value in low_row.items()}
+        t = struct.unpack("<f", struct.pack("<f", source_level - low))[0]
+        result = {}
+        for key in set(low_row) | set(high_row):
+            left = struct.unpack("<f", struct.pack("<f", int(low_row.get(key, 0))))[0]
+            right = struct.unpack("<f", struct.pack("<f", int(high_row.get(key, 0))))[0]
+            delta = struct.unpack("<f", struct.pack("<f", right - left))[0]
+            result[int(key)] = int(struct.unpack("<f", struct.pack("<f", left + delta * t))[0])
+        return result
+
+    props = level_props(prop_class_id)
     extra_class_id = int(role_group.get("ExtraLevelPropID") or 0)
     if extra_class_id:
-        extra = props_by_class.get(str(extra_class_id), {}).get("rows", {}).get(str(int(round(level))))
-        if extra is None:
-            raise ValueError("Official extra monster level property row is missing")
-        for key, value in extra.items():
-            prop_id = int(key)
-            props[prop_id] = props.get(prop_id, 0) + int(value)
+        extra = level_props(extra_class_id)
+        for prop_id, value in extra.items():
+            props[prop_id] = props.get(prop_id, 0) + value
 
     def id_of(name: str) -> int:
         return int(property_ids.get(name, 0))
@@ -235,7 +268,8 @@ def calculate_monster_properties(group: dict, level: float, sub_rank: int,
 
 def collect_monster_rosters(stage_rows: list[dict], arrays: dict[int, dict], scenes: dict[str, dict],
                             combat_rules: dict, general_rules: dict, skill_rows: list[dict],
-                            skill_entities: dict, property_ids: dict[str, int]) -> list[dict]:
+                            skill_entities: dict, property_ids: dict[str, int],
+                            allow_unused_monster_ids: bool = False) -> list[dict]:
     skill_info = {int(row["ClassId"]): row for row in skill_rows}
     items = {int(row["ClassId"]): row for row in general_rules["item"]}
     monster_groups = {(int(row["MonsterId"]), int(row["GroupNo"])): row
@@ -264,8 +298,10 @@ def collect_monster_rosters(stage_rows: list[dict], arrays: dict[int, dict], sce
                 if monster_group is None:
                     raise ValueError("Official monster group configuration is missing: "
                                      + str(monster_id) + "/" + str(group_no))
-                level = (float(stage["Level"]) + int(stage.get("MonsterLevelAdd") or 0)
-                         + float(position.get("LevelAdd") or 0))
+                use_player_level = bool(stage.get("AwardUsePlayerLevelAndSubRank"))
+                level_offset = int(stage.get("MonsterLevelAdd") or 0) + float(position.get("LevelAdd") or 0)
+                level = (1.0 if use_player_level else float(stage["Level"])) + level_offset
+                sub_rank = 0 if use_player_level else int(stage["SubRank"])
                 skills = []
                 for slot, item_id_value in enumerate(monster_group.get("ActiveSkills") or []):
                     item_id = int(item_id_value)
@@ -293,17 +329,19 @@ def collect_monster_rosters(stage_rows: list[dict], arrays: dict[int, dict], sce
                     "FlipX": bool(position["FlipX"]),
                     "ViewGroup": int(position["ViewGroup"]),
                     "WaveIndex": wave_index,
-                    "Properties": [{"Id": prop_id, "Value": value}
-                                   for prop_id, value in sorted(calculate_monster_properties(
-                                       monster_group, level, int(stage["SubRank"]), combat_rules,
-                                       property_ids).items())],
+                    "Properties": ([] if use_player_level else [
+                        {"Id": prop_id, "Value": value}
+                        for prop_id, value in sorted(calculate_monster_properties(
+                            monster_group, level, sub_rank, combat_rules, property_ids).items())]),
+                    "LevelOffset": level_offset,
                     "ActiveSkills": skills,
                     "PassiveSkills": list(monster_group.get("PassiveSkills") or []),
                     "DeactivePassiveSkills": list(monster_group.get("DeactivePassiveSkills") or []),
                     "HpPliesId": int(monster_group.get("HpPliesId") or 0),
                     "ResilienceInfo": monster_group.get("ResilienceInfo"),
                 })
-            if group_index + 1 != len(group_monster_ids):
+            if (group_index + 1 > len(group_monster_ids)
+                    or (not allow_unused_monster_ids and group_index + 1 != len(group_monster_ids))):
                 raise ValueError("Official formation group count differs from the stage monster list")
             waves.append({"Index": wave_index, "ArrayId": array_id, "Origin": origin, "Units": units})
         rosters.append({"StageId": int(stage["Id"]), "GameId": int(stage["GameId"]),
@@ -330,44 +368,49 @@ def write_generated(path: Path, content: bytes, expected_existing_hash: str | No
         if existing == content:
             return
         if expected_existing_hash is None or sha256(existing) != expected_existing_hash:
-            raise ValueError("Refusing to overwrite changed Map10 battle data: " + str(path))
+            raise ValueError("Refusing to overwrite changed official map battle data: " + str(path))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
 
 
-def existing_output_hashes(payload_path: Path, manifest_path: Path) -> tuple[str | None, str | None]:
+def existing_output_hashes(payload_path: Path, manifest_path: Path, map_id: int = 10) -> tuple[str | None, str | None]:
     if not payload_path.exists() and not manifest_path.exists():
         return None, None
     if not payload_path.is_file() or not manifest_path.is_file():
-        raise ValueError("Refusing to replace incomplete Map10 battle output")
+        raise ValueError("Refusing to replace incomplete official map battle output")
     payload = payload_path.read_bytes()
     manifest_bytes = manifest_path.read_bytes()
     try:
         manifest = json.loads(manifest_bytes.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ValueError("Existing Map10 battle manifest is not valid JSON") from exc
+        raise ValueError("Existing map battle manifest is not valid JSON") from exc
     output = manifest.get("output", {})
     if (manifest.get("format") != 1 or manifest.get("manifest") != VERSION
-            or manifest.get("mapClassId") != 10
-            or output.get("path") != "Assets/Official/World/Map/10/map10-battles.json"
+            or manifest.get("mapClassId") != map_id
+            or output.get("path") != f"Assets/Official/World/Map/{map_id}/map{map_id}-battles.json"
             or output.get("sha256") != sha256(payload)):
-        raise ValueError("Existing Map10 battle output does not match its source manifest")
+        raise ValueError("Existing map battle output does not match its source manifest")
     return sha256(payload), sha256(manifest_bytes)
 
 
-def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
+def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) -> dict:
+    if map_id not in (10, 11):
+        raise ValueError("Only Maps 10 and 11 have pinned battle placement sources")
     apk = apk or Apk()
+    output = Path(output or (ROOT / "unity/Assets/Official/World/Map" / str(map_id))).resolve()
     constructors = Constructors()
 
-    placements_obj = apk.asset(PLACEMENTS_SOURCE[0], PLACEMENTS_SOURCE[1])
+    placement_path = PLACEMENTS_SOURCE[1].format(map_id=map_id)
+    placements_obj = apk.asset(PLACEMENTS_SOURCE[0], placement_path)
     placements_bytes = text_asset_bytes(placements_obj)
     placements = decode_entities(placements_bytes)
-    placements_source = source_record(apk, placements_obj, PLACEMENTS_SOURCE[1], placements_bytes)
+    placements_source = source_record(apk, placements_obj, placement_path, placements_bytes)
 
     map_stage_obj = apk.asset(MAP_STAGE_TABLE[0], MAP_STAGE_TABLE[1])
     map_stage_bytes = text_asset_bytes(map_stage_obj)
     map_stage_rows = constructors.table(map_stage_bytes, MAP_STAGE_TABLE[2])
-    stage_ids = map10_stage_ids(placements, map_stage_rows)
+    stage_count = {10: 82, 11: 1803}[map_id]
+    stage_ids = map_stage_ids(map_id, placements, map_stage_rows, stage_count)
     map_stage_source = source_record(apk, map_stage_obj, MAP_STAGE_TABLE[1], map_stage_bytes)
 
     stage_obj = apk.asset(STAGE_TABLE[0], STAGE_TABLE[1])
@@ -375,7 +418,7 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
     source_stages = constructors.table(stage_bytes, STAGE_TABLE[2])
     stage_rows = [row for row in source_stages if row["Id"] in stage_ids]
     if stage_ids != {int(row["Id"]) for row in stage_rows}:
-        raise ValueError("Map10 references a stage absent from the pinned APK")
+        raise ValueError(f"Map{map_id} references a stage absent from the pinned APK")
     stage_source = source_record(apk, stage_obj, STAGE_TABLE[1], stage_bytes)
 
     array_obj = apk.asset(ARRAY_TABLE[0], ARRAY_TABLE[1])
@@ -408,7 +451,8 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
     all_scenes = json.loads(scene_payload.decode("utf-8"))["stages"]
     arrays, scenes = collect_battle_data(stage_rows, all_arrays, all_scenes)
     rosters = collect_monster_rosters(stage_rows, all_arrays, scenes, combat_rules, general_rules,
-                                      skill_rows, skill_rules["entities"], property_ids)
+                                      skill_rows, skill_rules["entities"], property_ids,
+                                      allow_unused_monster_ids=map_id == 11)
 
     parser_hash = sha256(PARSER_SOURCE_PATH.read_bytes())
     scene_manifest_hash = sha256(BATTLE_SCENES_MANIFEST_PATH.read_bytes())
@@ -424,7 +468,7 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
     }
     payload = {
         "manifest": VERSION,
-        "mapClassId": 10,
+        "mapClassId": map_id,
         "stages": sorted(stage_rows, key=lambda row: int(row["Id"])),
         "monsterArrays": arrays,
         "battleScenes": scenes,
@@ -436,7 +480,7 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
     manifest = {
         "format": 1,
         "manifest": VERSION,
-        "mapClassId": 10,
+        "mapClassId": map_id,
         "operation": "Read original Luban stage, formation and skill tables; preserve battle grids; expand official GroupId formations and calculate monster properties using CalcMonsterBattleProps.",
         "inputs": {
             "stage_table": stage_source,
@@ -446,8 +490,8 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
                 "path": PARSER_SOURCE_PATH.relative_to(ROOT).as_posix(),
                 "sha256": parser_hash,
             },
-            "map10_placements": placements_source,
-            "map10_stage_index": map_stage_source,
+            f"map{map_id}_placements": placements_source,
+            f"map{map_id}_stage_index": map_stage_source,
             "battle_scenes": {
                 "path": BATTLE_SCENES_PATH.relative_to(ROOT).as_posix(),
                 "sha256": sha256(scene_payload),
@@ -460,7 +504,7 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
             "official_formula_sources": formula_sources,
         },
         "output": {
-            "path": "Assets/Official/World/Map/10/map10-battles.json",
+            "path": f"Assets/Official/World/Map/{map_id}/map{map_id}-battles.json",
             "size": len(payload_bytes),
             "sha256": sha256(payload_bytes),
         },
@@ -469,31 +513,35 @@ def build(apk: Apk | None = None, output: Path = OUTPUT) -> dict:
 
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    payload_path = output / "map10-battles.json"
+    payload_path = output / f"map{map_id}-battles.json"
     manifest_path = output / "battle-source-manifest.json"
-    payload_hash, manifest_hash = existing_output_hashes(payload_path, manifest_path)
+    payload_hash, manifest_hash = existing_output_hashes(payload_path, manifest_path, map_id)
     reference_hash = None
-    if output.resolve() == OUTPUT.resolve() and REFERENCE_MANIFEST_PATH.exists():
-        if not manifest_path.exists() or REFERENCE_MANIFEST_PATH.read_bytes() != manifest_path.read_bytes():
-            raise ValueError("Reference and Unity Map10 battle manifests differ")
-        reference_hash = sha256(REFERENCE_MANIFEST_PATH.read_bytes())
+    reference_manifest_path = ROOT / f"assets/reference/official-map/map{map_id}-battles-source-manifest.json"
+    if output.resolve() == (ROOT / "unity/Assets/Official/World/Map" / str(map_id)).resolve() and reference_manifest_path.exists():
+        if not manifest_path.exists() or reference_manifest_path.read_bytes() != manifest_path.read_bytes():
+            raise ValueError(f"Reference and Unity Map{map_id} battle manifests differ")
+        reference_hash = sha256(reference_manifest_path.read_bytes())
     write_generated(payload_path, payload_bytes, payload_hash)
     write_generated(manifest_path, manifest_bytes, manifest_hash)
     if output.resolve().is_relative_to((ROOT / "unity").resolve()):
         write_meta(payload_path, "TextScriptImporter")
         write_meta(manifest_path, "TextScriptImporter")
-    if output.resolve() == OUTPUT.resolve():
-        write_generated(REFERENCE_MANIFEST_PATH, manifest_bytes, reference_hash)
+    if output.resolve() == (ROOT / "unity/Assets/Official/World/Map" / str(map_id)).resolve():
+        write_generated(reference_manifest_path, manifest_bytes, reference_hash)
     return manifest
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=OUTPUT)
+    parser.add_argument("--map-id", type=int, choices=(10, 11), default=10)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    manifest = build(output=args.output)
-    print("Map10 official battle stages:", len(json.loads((args.output / "map10-battles.json").read_text(encoding="utf-8"))["stages"]))
-    print("Map10 monster arrays:", len(json.loads((args.output / "map10-battles.json").read_text(encoding="utf-8"))["monsterArrays"]))
+    output = args.output or ROOT / "unity/Assets/Official/World/Map" / str(args.map_id)
+    manifest = build(output=output, map_id=args.map_id)
+    data = json.loads((output / f"map{args.map_id}-battles.json").read_text(encoding="utf-8"))
+    print(f"Map{args.map_id} official battle stages:", len(data["stages"]))
+    print(f"Map{args.map_id} monster arrays:", len(data["monsterArrays"]))
     print("Battle data SHA256:", manifest["output"]["sha256"])
 
 

@@ -79,13 +79,13 @@ def write_meta(path: Path, importer: str) -> None:
         target.write_text(content, encoding="utf-8", newline="\n")
 
 
-def verified_previous_outputs(output: Path, inputs: dict) -> dict[Path, str]:
+def verified_previous_outputs(output: Path, inputs: dict, map_id: int = 10) -> dict[Path, str]:
     manifest_path = output / OUTPUT_MANIFEST
     if not manifest_path.is_file():
         return {}
     previous = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if previous.get("format") != 1 or previous.get("manifest") != VERSION or previous.get("mapClassId") != 10:
-        raise ValueError("Existing Map10 minimap manifest has an unexpected identity")
+    if previous.get("format") != 1 or previous.get("manifest") != VERSION or previous.get("mapClassId") != map_id:
+        raise ValueError("Existing minimap manifest has an unexpected identity")
     if previous.get("inputs") != inputs:
         raise ValueError("Existing Map10 minimap source inputs differ from their manifest")
     verified = {}
@@ -98,22 +98,25 @@ def verified_previous_outputs(output: Path, inputs: dict) -> dict[Path, str]:
     return verified
 
 
-def build(output: Path = UNITY_OUTPUT) -> dict:
+def build(output: Path = UNITY_OUTPUT, map_id: int = 10) -> dict:
     output = Path(output).resolve()
+    if map_id <= 0:
+        raise ValueError("Map class id must be positive")
     source_manifest = json.loads(SOURCE_MANIFEST.read_text(encoding="utf-8"))
     minimap_catalog = json.loads(MINIMAP_CATALOG.read_text(encoding="utf-8"))
     if source_manifest.get("manifest") != VERSION:
         raise ValueError("Map10 minimap source manifest is not pinned to " + VERSION)
     if sha256(MINIMAP_CATALOG.read_bytes()) != source_manifest.get("outputs", {}).get("catalog.json"):
         raise ValueError("Official minimap catalog differs from its source manifest")
-    source_entry = minimap_catalog.get("10")
-    if not isinstance(source_entry, dict) or source_entry.get("file") != "res://assets/official/map-minimaps/" + GEOMETRY_NAME:
-        raise ValueError("Official Map10 minimap geometry binding is missing")
+    source_entry = minimap_catalog.get(str(map_id))
+    if not isinstance(source_entry, dict):
+        raise ValueError("Official minimap geometry binding is missing for map " + str(map_id))
+    geometry_name = Path(source_entry["file"]).name
 
-    geometry_path = MINIMAP_ROOT / GEOMETRY_NAME
+    geometry_path = MINIMAP_ROOT / geometry_name
     geometry_bytes = geometry_path.read_bytes()
-    if sha256(geometry_bytes) != source_manifest.get("outputs", {}).get(GEOMETRY_NAME):
-        raise ValueError("Official Map10 minimap geometry differs from its source manifest")
+    if sha256(geometry_bytes) != source_manifest.get("outputs", {}).get(geometry_name):
+        raise ValueError("Official minimap geometry differs from its source manifest")
     batches = decode(geometry_bytes, geometry_version(geometry_bytes))
     if len(batches) != source_entry.get("geometry", {}).get("batches"):
         raise ValueError("Official Map10 minimap batch count differs from its catalog")
@@ -126,7 +129,12 @@ def build(output: Path = UNITY_OUTPUT) -> dict:
         "sourceManifest": {"path": SOURCE_MANIFEST.relative_to(ROOT).as_posix(),
                            "sha256": sha256(SOURCE_MANIFEST.read_bytes())},
     }
-    for uri, record in source_manifest.get("resources", {}).items():
+    texture_uris = set(source_manifest.get("resources", {})) if map_id == 10 \
+        else {batch["metadata"]["texture"] for batch in batches}
+    for uri in sorted(texture_uris):
+        record = source_manifest.get("resources", {}).get(uri)
+        if record is None:
+            raise ValueError("Official minimap geometry texture is missing from the source manifest: " + uri)
         if record.get("manifest") != VERSION:
             raise ValueError("Map10 minimap resource is not pinned to the official APK: " + uri)
         source_path = ROOT / uri.removeprefix("res://")
@@ -137,7 +145,7 @@ def build(output: Path = UNITY_OUTPUT) -> dict:
             "path": source_path.relative_to(ROOT).as_posix(), "sha256": sha256(texture_bytes)
         }
         minimap_textures[uri] = {
-            "resource": "Map10/MiniMapTextures/" + source_path.stem,
+            "resource": f"Map{map_id}/MiniMapTextures/" + source_path.stem,
             "sha256": sha256(texture_bytes),
         }
     for batch in batches:
@@ -145,27 +153,30 @@ def build(output: Path = UNITY_OUTPUT) -> dict:
         if uri not in minimap_textures:
             raise ValueError("Map10 minimap geometry texture is missing from the source manifest: " + uri)
 
-    previous = verified_previous_outputs(output, input_records)
-    for directory in (output / "Resources/Map10/MiniMap", output / "Resources/Map10/MiniMapTextures"):
+    previous = verified_previous_outputs(output, input_records, map_id)
+    geometry_resource = f"Resources/Map{map_id}/MiniMap/geometry.geom.bytes"
+    catalog_resource = f"Resources/Map{map_id}/MiniMap/catalog.json"
+    texture_resource_dir = f"Resources/Map{map_id}/MiniMapTextures"
+    for directory in (output / f"Resources/Map{map_id}/MiniMap", output / texture_resource_dir):
         directory.mkdir(parents=True, exist_ok=True)
         write_meta(directory, "DefaultImporter")
     texture_outputs = []
     for uri, record in sorted(minimap_textures.items()):
         source_path = ROOT / uri.removeprefix("res://")
-        target = output / TEXTURE_RESOURCE_DIR / source_path.name
+        target = output / texture_resource_dir / source_path.name
         payload = source_path.read_bytes()
         write_generated(target, payload, previous)
         write_meta(target, "TextureImporter")
         texture_outputs.append({"path": target.relative_to(output).as_posix(), "sha256": sha256(payload)})
 
-    geometry_target = output / GEOMETRY_RESOURCE
+    geometry_target = output / geometry_resource
     write_generated(geometry_target, geometry_bytes, previous)
     write_meta(geometry_target, "TextScriptImporter")
     catalog_payload = {
         "format": 1,
         "manifest": VERSION,
-        "mapClassId": 10,
-        "geometryResource": "Map10/MiniMap/geometry.geom",
+        "mapClassId": map_id,
+        "geometryResource": f"Map{map_id}/MiniMap/geometry.geom",
         "geometryVersion": geometry_version(geometry_bytes),
         "geometryBatchCount": len(batches),
         "textures": [
@@ -173,19 +184,19 @@ def build(output: Path = UNITY_OUTPUT) -> dict:
         ],
     }
     catalog_bytes = json_bytes(catalog_payload)
-    catalog_target = output / CATALOG_RESOURCE
+    catalog_target = output / catalog_resource
     write_generated(catalog_target, catalog_bytes, previous)
     write_meta(catalog_target, "TextScriptImporter")
 
     outputs = [
-        {"path": GEOMETRY_RESOURCE, "sha256": sha256(geometry_bytes)},
-        {"path": CATALOG_RESOURCE, "sha256": sha256(catalog_bytes)},
+        {"path": geometry_resource, "sha256": sha256(geometry_bytes)},
+        {"path": catalog_resource, "sha256": sha256(catalog_bytes)},
         *texture_outputs,
     ]
     manifest = {
         "format": 1,
         "manifest": VERSION,
-        "mapClassId": 10,
+        "mapClassId": map_id,
         "sourceGeometry": source_entry["file"],
         "geometryVersion": geometry_version(geometry_bytes),
         "geometryBatchCount": len(batches),
@@ -202,9 +213,10 @@ def build(output: Path = UNITY_OUTPUT) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=UNITY_OUTPUT)
+    parser.add_argument("--map-id", type=int, default=10)
     args = parser.parse_args()
-    manifest = build(args.output)
-    print("Map10 official minimap prepared:", manifest["geometryBatchCount"], "geometry batches,",
+    manifest = build(args.output, args.map_id)
+    print("Map", args.map_id, "official minimap prepared:", manifest["geometryBatchCount"], "geometry batches,",
           len(manifest["outputs"]) - 2, "official textures")
     return 0
 

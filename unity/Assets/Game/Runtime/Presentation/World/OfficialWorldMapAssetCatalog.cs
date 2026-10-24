@@ -13,6 +13,7 @@ namespace Zjcs.Presentation.World
             public int ClassId;
             public GameObject GroundPrefab;
             public GameObject MiniMapPrefab;
+            public GameObject EntityPrefab;
             public TextAsset DefinitionJson;
             public TextAsset SourceManifestJson;
         }
@@ -51,7 +52,7 @@ namespace Zjcs.Presentation.World
             if (definition == null || definition.ClassId != classId)
                 throw new InvalidOperationException("Map definition identity differs from requested ClassId " + classId);
             OfficialWorldMapAssetProvider.VerifySource(definition, entry);
-            return new WorldMapAssets(definition, entry.GroundPrefab, entry.MiniMapPrefab);
+            return new WorldMapAssets(definition, entry.GroundPrefab, entry.MiniMapPrefab, entry.EntityPrefab);
         }
     }
 }

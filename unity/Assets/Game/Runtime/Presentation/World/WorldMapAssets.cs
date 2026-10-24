@@ -14,12 +14,15 @@ namespace Zjcs.Presentation.World
         public OfficialMapDefinition Definition { get; }
         public GameObject GroundPrefab { get; }
         public GameObject MiniMapPrefab { get; }
+        public GameObject EntityPrefab { get; }
 
-        public WorldMapAssets(OfficialMapDefinition definition, GameObject groundPrefab, GameObject miniMapPrefab)
+        public WorldMapAssets(OfficialMapDefinition definition, GameObject groundPrefab, GameObject miniMapPrefab,
+            GameObject entityPrefab = null)
         {
             Definition = definition ?? throw new ArgumentNullException(nameof(definition));
             GroundPrefab = groundPrefab ?? throw new ArgumentNullException(nameof(groundPrefab));
             MiniMapPrefab = miniMapPrefab ?? throw new ArgumentNullException(nameof(miniMapPrefab));
+            EntityPrefab = entityPrefab;
         }
     }
 }

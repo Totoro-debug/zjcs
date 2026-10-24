@@ -12,18 +12,21 @@ namespace Zjcs.Presentation.World
     {
         private const int GeometryVersion = 5;
         private const string ResourceTexturePrefix = "Map10/Textures/";
+        private const int Map10BatchCount = 1404;
         private readonly List<Mesh> generatedMeshes = new List<Mesh>();
         private readonly List<Material> generatedMaterials = new List<Material>();
         private Transform generatedRoot;
 
         [SerializeField] private TextAsset geometry;
         [SerializeField] private Material terrainMaterial;
+        [SerializeField] private string resourceTexturePrefix = ResourceTexturePrefix;
+        [SerializeField] private int expectedBatchCount = Map10BatchCount;
 
         public int BatchCount { get; private set; }
 
         private void Awake()
         {
-            if (geometry != null) Initialize(geometry, terrainMaterial);
+            if (geometry != null) Initialize(geometry, terrainMaterial, resourceTexturePrefix, expectedBatchCount);
         }
 
         private void OnDestroy()
@@ -33,7 +36,14 @@ namespace Zjcs.Presentation.World
 
         public void Initialize(TextAsset source, Material materialTemplate = null)
         {
+            Initialize(source, materialTemplate, ResourceTexturePrefix, Map10BatchCount);
+        }
+
+        public void Initialize(TextAsset source, Material materialTemplate, string texturePrefix, int batchCount)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrWhiteSpace(texturePrefix) || texturePrefix.StartsWith("/") || batchCount <= 0)
+                throw new ArgumentException("Terrain texture prefix and batch count are invalid.");
             ClearGenerated();
 
             Material template = materialTemplate != null ? materialTemplate : terrainMaterial;
@@ -46,7 +56,7 @@ namespace Zjcs.Presentation.World
             }
 
             byte[] data = source.bytes;
-            ValidateHeader(data);
+            ValidateHeader(data, batchCount);
             int offset = 16;
             int batchIndex = 0;
             uint firstMetadataLength = (uint)(data[12] | data[13] << 8 | data[14] << 16)
@@ -87,7 +97,7 @@ namespace Zjcs.Presentation.World
                     indices[i] = (int)index;
                 }
 
-                Texture2D texture = LoadTexture(metadata.texture);
+                Texture2D texture = LoadTexture(metadata.texture, texturePrefix);
                 CreateBatch(batchIndex, metadata, positions, uvs, colors, indices, texture, template);
                 batchIndex++;
 
@@ -97,8 +107,10 @@ namespace Zjcs.Presentation.World
                 if (data[offset] != (byte)'{') throw new InvalidDataException("Map10 batch separator is invalid.");
             }
 
-            if (batchIndex != 1404) throw new InvalidDataException("Map10 terrain batch count differs from its pinned source.");
+            if (batchIndex != batchCount) throw new InvalidDataException("Terrain batch count differs from its pinned source.");
             BatchCount = batchIndex;
+            resourceTexturePrefix = texturePrefix;
+            expectedBatchCount = batchCount;
         }
 
         private void CreateBatch(int index, BatchMetadata metadata, Vector3[] positions, Vector2[] uvs,
@@ -128,12 +140,12 @@ namespace Zjcs.Presentation.World
             generatedMaterials.Add(material);
         }
 
-        private static Texture2D LoadTexture(string uri)
+        private static Texture2D LoadTexture(string uri, string resourceTexturePrefix)
         {
             const string uriPrefix = "res://assets/official/sprites/";
             if (!uri.StartsWith(uriPrefix, StringComparison.Ordinal))
                 throw new InvalidDataException("Map10 batch references a texture outside its official sprite payload.");
-            string resource = ResourceTexturePrefix + Path.GetFileNameWithoutExtension(uri);
+            string resource = resourceTexturePrefix + Path.GetFileNameWithoutExtension(uri);
             Texture2D texture = Resources.Load<Texture2D>(resource);
             if (texture == null) throw new InvalidDataException("Official Map10 texture is not bound in Resources: " + resource);
             return texture;
@@ -170,13 +182,24 @@ namespace Zjcs.Presentation.World
             throw new InvalidDataException("Map10 batch metadata is truncated.");
         }
 
-        private static void ValidateHeader(byte[] data)
+        private static void ValidateHeader(byte[] data, int expectedBatchCount)
         {
-            if (data == null || data.Length < 16 || Encoding.ASCII.GetString(data, 0, 9) != "ZJMAP001|")
+            if (data == null || data.Length < 16 || Encoding.ASCII.GetString(data, 0, 8) != "ZJMAP001")
                 throw new InvalidDataException("Map10 terrain header is invalid.");
-            int version = data[9] | data[10] << 8 | data[11] << 16;
-            if (version != GeometryVersion) throw new InvalidDataException("Map10 terrain geometry version is unsupported.");
+            if (data[8] == (byte)'|')
+            {
+                int version = data[9] | data[10] << 8 | data[11] << 16;
+                if (version != GeometryVersion)
+                    throw new InvalidDataException("Terrain geometry version is unsupported.");
+                return;
+            }
+
+            if (data[8] == (byte)'[' && ReadHeaderCount(data) == expectedBatchCount) return;
+            throw new InvalidDataException("Terrain geometry header does not match its expected format or batch count.");
         }
+
+        private static int ReadHeaderCount(byte[] data) =>
+            data[8] | data[9] << 8 | data[10] << 16 | data[11] << 24;
 
         private static int ReadCount(byte[] data, ref int offset, string label)
         {

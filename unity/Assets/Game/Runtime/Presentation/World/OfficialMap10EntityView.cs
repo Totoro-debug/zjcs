@@ -11,6 +11,8 @@ namespace Zjcs.Presentation.World
     public sealed class OfficialMap10EntityView : MonoBehaviour
     {
         private const string CatalogResource = "Map10/Entities/catalog";
+        [SerializeField] private int mapClassId = 10;
+        [SerializeField] private string catalogResource = CatalogResource;
         private readonly Dictionary<string, GeneratedModel> models = new Dictionary<string, GeneratedModel>();
         private readonly Dictionary<Collider2D, OfficialMap10EntityInfo> hitTargets =
             new Dictionary<Collider2D, OfficialMap10EntityInfo>();
@@ -61,25 +63,45 @@ namespace Zjcs.Presentation.World
 
         public void Initialize(Transform mapRoot, Vector2 mapOrigin, Camera camera = null)
         {
-            TextAsset source = Resources.Load<TextAsset>(CatalogResource);
-            if (source == null) throw new InvalidOperationException("Official Map10 entity catalog is missing: " + CatalogResource);
-            Initialize(source, mapRoot, mapOrigin, camera);
+            Initialize(mapRoot, mapOrigin, camera, mapClassId, catalogResource);
+        }
+
+        public void Initialize(Transform mapRoot, Vector2 mapOrigin, Camera camera, int expectedMapClassId,
+            string resourcePath)
+        {
+            if (expectedMapClassId <= 0 || string.IsNullOrWhiteSpace(resourcePath))
+                throw new ArgumentException("Map id and entity catalog resource path are required.");
+            TextAsset source = Resources.Load<TextAsset>(resourcePath);
+            if (source == null) throw new InvalidOperationException("Official map entity catalog is missing: " + resourcePath);
+            mapClassId = expectedMapClassId;
+            catalogResource = resourcePath;
+            Initialize(source, mapRoot, mapOrigin, camera, expectedMapClassId);
         }
 
         public void Initialize(TextAsset source, Transform mapRoot, Vector2 mapOrigin, Camera camera = null)
         {
+            Initialize(source, mapRoot, mapOrigin, camera, mapClassId);
+        }
+
+        public void Initialize(TextAsset source, Transform mapRoot, Vector2 mapOrigin, Camera camera,
+            int expectedMapClassId)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (mapRoot == null) throw new ArgumentNullException(nameof(mapRoot));
+            if (expectedMapClassId <= 0) throw new ArgumentOutOfRangeException(nameof(expectedMapClassId));
             ClearGenerated();
+            mapClassId = expectedMapClassId;
             inputCamera = camera != null ? camera : Camera.main;
             this.mapOrigin = mapOrigin;
 
             EntityCatalogPayload catalog = JsonUtility.FromJson<EntityCatalogPayload>(source.text);
-            if (catalog == null || catalog.mapClassId != 10 || catalog.entities == null || catalog.entities.Length != 82
+            if (catalog == null || catalog.mapClassId != expectedMapClassId || catalog.entities == null
+                || (expectedMapClassId == 10 && catalog.entities.Length != 82)
+                || (expectedMapClassId == 11 && catalog.entities.Length != 1803)
                 || catalog.models == null || catalog.models.Length == 0)
-                throw new InvalidDataException("Official Map10 entity catalog is malformed.");
+                throw new InvalidDataException("Official map entity catalog is malformed for map " + expectedMapClassId + ".");
 
-            generatedRoot = new GameObject("Official Map10 entities").transform;
+            generatedRoot = new GameObject("Official Map " + expectedMapClassId + " entities").transform;
             generatedRoot.SetParent(mapRoot, false);
             try
             {
@@ -141,11 +163,19 @@ namespace Zjcs.Presentation.World
         public static int ValidateCatalog(TextAsset source, out int modelCount, out int geometryBatchCount,
             out int spineCount, out int textureCount)
         {
+            return ValidateCatalog(source, 10, out modelCount, out geometryBatchCount, out spineCount, out textureCount);
+        }
+
+        public static int ValidateCatalog(TextAsset source, int expectedMapClassId, out int modelCount,
+            out int geometryBatchCount, out int spineCount, out int textureCount)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
             EntityCatalogPayload catalog = JsonUtility.FromJson<EntityCatalogPayload>(source.text);
-            if (catalog == null || catalog.mapClassId != 10 || catalog.entities == null || catalog.entities.Length != 82
+            if (catalog == null || catalog.mapClassId != expectedMapClassId || catalog.entities == null
+                || (expectedMapClassId == 10 && catalog.entities.Length != 82)
+                || (expectedMapClassId == 11 && catalog.entities.Length != 1803)
                 || catalog.models == null || catalog.models.Length == 0 || catalog.textureUris == null)
-                throw new InvalidDataException("Official Map10 entity catalog is malformed.");
+                throw new InvalidDataException("Official map entity catalog is malformed for map " + expectedMapClassId + ".");
             foreach (EntityRecord entity in catalog.entities)
                 if (entity == null || entity.placementId <= 0 || entity.grid == null || entity.grid.Length != 2)
                     throw new InvalidDataException("Official Map10 entity placement is malformed.");
@@ -320,12 +350,12 @@ namespace Zjcs.Presentation.World
             return new Material(shader);
         }
 
-        private static string TextureResource(string uri)
+        private string TextureResource(string uri)
         {
             const string prefix = "res://assets/official/sprites/";
             if (!uri.StartsWith(prefix, StringComparison.Ordinal))
                 throw new InvalidDataException("Map10 entity texture URI is outside the official sprite package.");
-            return "Map10/Textures/" + Path.GetFileNameWithoutExtension(uri);
+            return "Map" + mapClassId + "/Textures/" + Path.GetFileNameWithoutExtension(uri);
         }
 
         private static string ReadMetadata(byte[] data, ref int offset)
@@ -437,6 +467,8 @@ namespace Zjcs.Presentation.World
             public bool active;
             public int lockType;
             public int[] lockedByEntityGroups;
+            public int[] lockConditionEntityIds;
+            public string lockParamsJson;
             public bool conditionEntityNeverDestroy;
             public bool conditionEntityInactiveInUnlock;
             public Map10RuntimeAwardItem[] awardItems;
@@ -499,6 +531,8 @@ namespace Zjcs.Presentation.World
         public bool Active { get; }
         public int LockType { get; }
         public int[] LockedByEntityGroups { get; }
+        public int[] LockConditionEntityIds { get; }
+        public string LockParamsJson { get; }
         public bool ConditionEntityNeverDestroy { get; }
         public bool ConditionEntityInactiveInUnlock { get; }
         public Map10RuntimeAwardItem[] AwardItems { get; }
@@ -520,6 +554,8 @@ namespace Zjcs.Presentation.World
             Active = record.active;
             LockType = record.lockType;
             LockedByEntityGroups = record.lockedByEntityGroups ?? Array.Empty<int>();
+            LockConditionEntityIds = record.lockConditionEntityIds ?? Array.Empty<int>();
+            LockParamsJson = record.lockParamsJson ?? "{}";
             ConditionEntityNeverDestroy = record.conditionEntityNeverDestroy;
             ConditionEntityInactiveInUnlock = record.conditionEntityInactiveInUnlock;
             AwardItems = record.awardItems ?? Array.Empty<Map10RuntimeAwardItem>();
