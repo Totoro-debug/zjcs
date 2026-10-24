@@ -63,6 +63,8 @@ namespace Zjcs.Presentation.Home
         private PetGachaRuntimeCatalog petGachaCatalog;
         private OfflinePetGachaService petGacha;
         private OfficialPetGachaAssetCatalog petGachaAssets;
+        private OfficialMaterialGatheringCatalog materialGatheringCatalog;
+        private OfflineMaterialGatheringService materialGathering;
         private OfflineFruitTreeService fruitTree;
         private WishScreenController wishes;
         private CookingFeatureRuntime cookingRuntime;
@@ -163,6 +165,93 @@ namespace Zjcs.Presentation.Home
         public void RefreshRewards() => rewards?.Refresh();
 
         public void RefreshCounts() => hud?.RefreshCounts();
+
+        public int MaterialGatheringUnlockedLevel(int dungeonType)
+        {
+            EnsureMaterialGathering();
+            if (!materialGatheringCatalog.TryGetDungeon(dungeonType, out MaterialGatheringDungeon dungeon)) return 0;
+            int highest = 0;
+            for (int index = 0; index < dungeon.UnlockStages.Length; index++)
+                if (MaterialGatheringStageCleared(dungeon.UnlockStages[index])) highest = index + 1;
+            return highest;
+        }
+
+        public MaterialGatheringDungeon MaterialGatheringDungeon(int dungeonType)
+        {
+            EnsureMaterialGathering();
+            return materialGatheringCatalog.TryGetDungeon(dungeonType, out MaterialGatheringDungeon dungeon)
+                ? dungeon : null;
+        }
+
+        public OfflineMaterialGatheringDungeonState MaterialGatheringState(int dungeonType)
+        {
+            EnsureMaterialGathering();
+            return materialGathering.State.Dungeons.FirstOrDefault(value => value.DungeonType == dungeonType);
+        }
+
+        public MaterialGatheringMaterial MaterialGatheringMaterial(int materialId)
+        {
+            EnsureMaterialGathering();
+            return materialGatheringCatalog.TryGetMaterial(materialId, out MaterialGatheringMaterial material)
+                ? material : null;
+        }
+
+        public bool MaterialGatheringQuickUnlocked(int dungeonType)
+        {
+            MaterialGatheringDungeon dungeon = MaterialGatheringDungeon(dungeonType);
+            return dungeon != null && !rules.IsFunctionLimited(84, dungeon.Id);
+        }
+
+        public bool MaterialGatheringQuickEnabled
+        {
+            get { EnsureMaterialGathering(); return profile.Save.Player.MaterialGathering.QuickEnabled; }
+        }
+
+        public bool SetMaterialGatheringQuickEnabled(bool enabled)
+        {
+            EnsureMaterialGathering();
+            if (profile.Save.Player.MaterialGathering.QuickEnabled == enabled) return true;
+            ProgressionResult result = profile.ApplyInventoryTransaction(
+                "mopup:quick-setting:" + slotId + ":" + Guid.NewGuid().ToString("N"),
+                save => save.Player.MaterialGathering.QuickEnabled = enabled);
+            return result.Status == ProgressionResultStatus.Applied
+                || result.Status == ProgressionResultStatus.Unchanged;
+        }
+
+        public MaterialGatheringActionResult GatherMaterial(int dungeonType, bool quick)
+        {
+            EnsureMaterialGathering();
+            EnsureProgression();
+            CharacterPropSnapshot snapshot = progression.PropertyCalculator.Evaluate(
+                profile.Save.Player, profile.Save.World, Now());
+            MaterialGatheringActionResult result = materialGathering.Gather(dungeonType,
+                quick ? materialGatheringCatalog.MaximumActionCount : 1,
+                quick, MaterialGatheringQuickUnlocked(dungeonType), profile.Save.Player.SubRank,
+                snapshot.NonBattleProps,
+                "mopup:gather:" + slotId + ":" + Guid.NewGuid().ToString("N"));
+            if (result.IsApplied)
+            {
+                ReloadContext();
+                hud?.RefreshAll();
+            }
+            return result;
+        }
+
+        private bool MaterialGatheringStageCleared(int stageId)
+        {
+            return profile != null && profile.StageWinCount(stageId) > 0;
+        }
+
+        private void EnsureMaterialGathering()
+        {
+            materialGatheringCatalog ??= OfficialMaterialGatheringCatalog.LoadDefault();
+            if (materialGathering == null)
+            {
+                EnsureProgression();
+                materialGathering = new OfflineMaterialGatheringService(profile, materialGatheringCatalog,
+                    progression.PropertyCalculator.Props);
+            }
+        }
 
         public float CookingMaxHp()
         {

@@ -64,6 +64,7 @@ namespace Zjcs.Offline.Progression
         public OfflineTreasureGachaProgress TreasureGacha = new OfflineTreasureGachaProgress();
         public OfflinePetGachaProgress PetGacha = new OfflinePetGachaProgress();
         public OfflineFruitTreeProgress FruitTree = new OfflineFruitTreeProgress();
+        public OfflineMaterialGatheringProgress MaterialGathering = new OfflineMaterialGatheringProgress();
         public List<string> AppliedInventoryEventIds = new List<string>();
         public long InventoryRandomState;
         public List<int> UnlockedMapClassIds = new List<int>();
@@ -144,6 +145,7 @@ namespace Zjcs.Offline.Progression
     {
         public List<OfflineMapProgress> Maps = new List<OfflineMapProgress>();
         public List<OfflineMapBattleCount> BattleCounts = new List<OfflineMapBattleCount>();
+        public List<OfflineStageWinCount> StageWinCounts = new List<OfflineStageWinCount>();
         public List<string> CompletedEntityTags = new List<string>();
         public List<OfflineMapRegionKey> ActivatedGoddessRegions = new List<OfflineMapRegionKey>();
         public List<OfflineChestCount> OpenChestCounts = new List<OfflineChestCount>();
@@ -170,6 +172,13 @@ namespace Zjcs.Offline.Progression
         public int MapClassId;
         public int Region;
         public int Result;
+        public int Count;
+    }
+
+    [Serializable]
+    public sealed class OfflineStageWinCount
+    {
+        public int StageId;
         public int Count;
     }
 
@@ -309,6 +318,12 @@ namespace Zjcs.Offline.Progression
             entry.Count++;
             next.World.AppliedEventIds.Add(eventId);
             return Commit(next, Result(ProgressionResultStatus.Applied));
+        }
+
+        public int StageWinCount(int stageId)
+        {
+            if (stageId <= 0 || Save.World.StageWinCounts == null) return 0;
+            return Save.World.StageWinCounts.FirstOrDefault(value => value.StageId == stageId)?.Count ?? 0;
         }
 
         public ProgressionResult SetMapRegionProgress(int mapClassId, int region, int fixedProgress)
@@ -654,6 +669,8 @@ namespace Zjcs.Offline.Progression
                 || save.Player.TreasureGacha == null || !OfflineTreasureGachaProgress.IsValid(save.Player.TreasureGacha)
                 || save.Player.PetGacha == null || !OfflinePetGachaProgress.IsValid(save.Player.PetGacha)
                 || save.Player.FruitTree == null || !OfflineFruitTreeProgress.IsValid(save.Player.FruitTree)
+                || save.Player.MaterialGathering == null
+                || !OfflineMaterialGatheringProgress.IsValid(save.Player.MaterialGathering)
                 || (save.Player.InitialWeaponType != 0 && save.Player.InitialWeaponType != 200
                     && save.Player.InitialWeaponType != 201)
                 || save.Player.Wardrobe == null || save.Player.Equipment == null
@@ -665,6 +682,7 @@ namespace Zjcs.Offline.Progression
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
                 || save.Player.RankUnlockTimes == null || save.Player.RankUnlockTimes.Count > 100
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
+                || save.World.StageWinCounts.Count > 100000
                 || save.World.CompletedEntityTags.Count > 100000 || save.World.ActivatedGoddessRegions.Count > 100000
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
                 || save.Tasks.ClaimedMainlineTaskIds.Count > 10000)
@@ -697,6 +715,9 @@ namespace Zjcs.Offline.Progression
             foreach (OfflineMapBattleCount battle in save.World.BattleCounts)
                 if (battle == null || battle.MapClassId <= 0 || battle.Region < 0 || battle.Result < 0
                     || battle.Count < 0 || !HasMapRegion(save, battle.MapClassId, battle.Region)) return false;
+            var stageIds = new HashSet<int>();
+            foreach (OfflineStageWinCount stage in save.World.StageWinCounts)
+                if (stage == null || stage.StageId <= 0 || stage.Count < 0 || !stageIds.Add(stage.StageId)) return false;
             if (!UniqueStrings(save.World.CompletedEntityTags) || !UniqueStrings(save.World.AppliedEventIds)) return false;
             foreach (OfflineMapRegionKey region in save.World.ActivatedGoddessRegions)
                 if (region == null || !HasMapRegion(save, region.MapClassId, region.Region)) return false;
@@ -721,6 +742,8 @@ namespace Zjcs.Offline.Progression
             OfflinePetGachaProgress.Normalize(save.Player.PetGacha);
             if (save.Player.FruitTree == null) save.Player.FruitTree = new OfflineFruitTreeProgress();
             OfflineFruitTreeProgress.Normalize(save.Player.FruitTree);
+            if (save.Player.MaterialGathering == null) save.Player.MaterialGathering = new OfflineMaterialGatheringProgress();
+            OfflineMaterialGatheringProgress.Normalize(save.Player.MaterialGathering);
             foreach (OfflineItemStack stack in save.Player.Inventory)
                 if (stack != null && stack.UnitRecords == null) stack.UnitRecords = new List<OfflineItemUnitRecord>();
             if (save.Player.UnlockedMapClassIds == null) save.Player.UnlockedMapClassIds = new List<int>();
@@ -753,6 +776,7 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Wardrobe.SeenItems == null) save.Player.Wardrobe.SeenItems = new List<int>();
             if (save.World.Maps == null) save.World.Maps = new List<OfflineMapProgress>();
             if (save.World.BattleCounts == null) save.World.BattleCounts = new List<OfflineMapBattleCount>();
+            if (save.World.StageWinCounts == null) save.World.StageWinCounts = new List<OfflineStageWinCount>();
             if (save.World.CompletedEntityTags == null) save.World.CompletedEntityTags = new List<string>();
             if (save.World.ActivatedGoddessRegions == null) save.World.ActivatedGoddessRegions = new List<OfflineMapRegionKey>();
             if (save.World.OpenChestCounts == null) save.World.OpenChestCounts = new List<OfflineChestCount>();

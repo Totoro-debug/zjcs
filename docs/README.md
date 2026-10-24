@@ -43,7 +43,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [主城售货机与馈赠](features/home-shop.md) | 未完成 | 杂货随机与地图解锁固定货品、12 格宝库和本地馈赠流程已接入；待 Play Mode 验证。服务端初始货架和随机种子不随客户端发布，边界见功能页 |
 | [行囊、物品与宝箱](features/inventory.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
-| [素材秘境与快速采集](features/material-gathering.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
+| [素材秘境与快速采集](features/material-gathering.md) | 未完成 | 官方规则、角色存档、离线事务及游记入口/官方面板按钮已接入；目标动画、受击/消失特效、音效及 Unity Play Mode 实际输入/画面验证未完成；首次开放和击破推进 Type 18 关卡为已确认离线规则 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 | 两类周期卡与15组75档星眷的官方目标、配置和缺项已记录；月卡业务未接，星眷仅有部分目录／累计领奖代码，界面、属性与运行未验收 |
 | [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 | 日常副本及每日挑战已接线；85个官方战斗角色包已提取，原生转换依赖缺失的 `prepare_map_regions.py`；其余玩法入口及Play Mode验证待完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 | 开放条件适配器；调用方尚未完整接线 |
