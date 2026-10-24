@@ -1,0 +1,36 @@
+{
+  "manifest": "854_156383",
+  "inputs": [
+    {
+      "path": "assets/official/dungeons.json",
+      "bytes": 1981351,
+      "sha256": "ac63fe9560baf33cc99c262fb9c45e5f40687eaad3b4cad5cbb1f9f608085e76"
+    },
+    {
+      "path": "assets/official/rules.json",
+      "bytes": 38093838,
+      "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256"
+    },
+    {
+      "path": "assets/official/battle-stages.json",
+      "bytes": 5775413,
+      "sha256": "457b48bdc5928abeb15a60e3310ff2503abdba5be8a664a51035241427775389"
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Dungeons/dungeons-runtime.json",
+    "bytes": 2870649,
+    "sha256": "1a9ffdecdae2d36ef9560d4238c70ff83a3927d7cb52be5dc01a3ba74f68dd3f"
+  },
+  "rows": {
+    "dungeons": 76,
+    "maps": 136,
+    "rooms": 1804,
+    "conditions": 406,
+    "stages": 1667,
+    "battleScenes": 113,
+    "formations": 105,
+    "rewardRules": 982,
+    "randomEquipmentPools": 220
+  }
+}
