@@ -71,6 +71,7 @@ namespace Zjcs.Offline.Progression
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
+        public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
         public List<string> AppliedCharacterEventIds = new List<string>();
     }
 
@@ -657,6 +658,7 @@ namespace Zjcs.Offline.Progression
                     && save.Player.InitialWeaponType != 201)
                 || save.Player.Wardrobe == null || save.Player.Equipment == null
                 || save.Player.Skills == null || !OfflineSkillProgression.IsValid(save.Player.Skills)
+                || save.Player.NpcTravel == null || !OfflineNpcTravelProgress.IsValid(save.Player.NpcTravel)
                 || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
@@ -735,6 +737,8 @@ namespace Zjcs.Offline.Progression
             if (save.Player.Equipment == null) save.Player.Equipment = new OfflineEquipmentProfile();
             if (save.Player.Skills == null) save.Player.Skills = new OfflineSkillProfile();
             OfflineSkillProgression.Normalize(save.Player.Skills);
+            if (save.Player.NpcTravel == null) save.Player.NpcTravel = new OfflineNpcTravelProgress();
+            OfflineNpcTravelProgress.Normalize(save.Player.NpcTravel);
             if (save.Player.Equipment.Instances == null) save.Player.Equipment.Instances = new List<OfflineEquipmentInstance>();
             if (save.Player.Equipment.Equipped == null) save.Player.Equipment.Equipped = new List<OfflineEquippedSlot>();
             if (save.Player.Equipment.SlotProgress == null) save.Player.Equipment.SlotProgress = new List<OfflineEquipmentSlotProgress>();

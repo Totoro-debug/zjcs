@@ -407,6 +407,11 @@ namespace Zjcs.Presentation.Home
                 if (!host.EnterMainland())
                 {
                     selectedTab = 2;
+            if (selectedTab == 1)
+            {
+                OpenTravelNotes();
+                return;
+            }
                     ApplyTabVisuals();
                 }
                 return;
@@ -744,6 +749,7 @@ namespace Zjcs.Presentation.Home
         }
 
         public bool TryHandleBack()
+            TickNpcTravel();
         {
             if (astrologicalOverlayRoot != null) { CloseAstrologicalOverlay(); return true; }
             if (activeDialog != null) { CloseDialog(); return true; }
@@ -752,6 +758,11 @@ namespace Zjcs.Presentation.Home
             if (inventoryRoot != null && inventoryRoot.activeSelf)
             {
                 inventoryRuntime?.Close();
+                return true;
+            }
+            if (NpcTravelModalOpen)
+            {
+                CloseNpcTravelPages();
                 return true;
             }
             if (characterRoot != null && characterRoot.activeSelf) { CloseCharacterPage(); return true; }

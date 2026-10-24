@@ -33,6 +33,9 @@ namespace Zjcs.Presentation.Home
         private const string HomeTutorialFixedRewardReceipt = "home:tutorial:fixed-reward:7";
         private ProfileSlotCatalog slots;
         private OfflineMainlineProgressSession profile;
+        private OfflineNpcTravelService npcTravel;
+        private OfficialNpcTravelCatalog npcTravelCatalog;
+        private OfflineNpcTravelPropertyCalculator npcTravelProperties;
         private OfflineCharacterProgressionService progression;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
@@ -98,6 +101,22 @@ namespace Zjcs.Presentation.Home
         public HomeTutorialCatalog Tutorials => tutorials;
         public HomeSettingsProfile HomeSettings => homeSettings;
         public OfflineMainlineProgressSession Profile => profile;
+        public OfflineNpcTravelService NpcTravel => npcTravel;
+        public OfficialNpcTravelCatalog NpcTravelCatalog => npcTravelCatalog;
+        public IReadOnlyDictionary<int, long> NpcTravelNpcProperties(int npcClassId)
+        {
+            EnsureProgression();
+            npcTravelProperties ??= new OfflineNpcTravelPropertyCalculator(
+                progression.Catalog, npcTravelCatalog);
+            return npcTravelProperties.Calculate(profile.Save.Player, npcClassId);
+        }
+        public IReadOnlyList<int> NpcTravelQuickSelect(int travelId, IEnumerable<int> eligibleNpcIds)
+        {
+            EnsureProgression();
+            npcTravelProperties ??= new OfflineNpcTravelPropertyCalculator(
+                progression.Catalog, npcTravelCatalog);
+            return npcTravelProperties.QuickSelect(profile.Save.Player, travelId, eligibleNpcIds);
+        }
         public OfflineAstrologicalService Astrological
         {
             get
@@ -210,6 +229,8 @@ namespace Zjcs.Presentation.Home
             homeSettings.Load();
             profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             profile.Reload();
+            npcTravelCatalog = OfficialNpcTravelCatalog.LoadDefault();
+            npcTravel = new OfflineNpcTravelService(profile, npcTravelCatalog);
             fruitTree = new OfflineFruitTreeService(profile);
             catalog = HomeAssetCatalog.LoadDefault();
             catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
@@ -220,6 +241,8 @@ namespace Zjcs.Presentation.Home
                 "PetGacha", "performance-ui.json"));
             catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
                 "Home", "Settings", "settings-ui.json"));
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "Home", "Travel", "ui.json"));
             try
             {
                 treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
