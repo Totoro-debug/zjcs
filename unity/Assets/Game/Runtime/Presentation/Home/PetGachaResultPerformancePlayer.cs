@@ -138,6 +138,7 @@ namespace Zjcs.Presentation.Home
             actionSource = gameObject.AddComponent<AudioSource>();
             actionSource.playOnAwake = false;
             actionSource.spatialBlend = 0f;
+            HomeAudioSettings.Register(actionSource, HomeAudioChannel.Sound);
             StartCoroutine(PrepareAndPlay(drawCount));
         }
 
@@ -490,6 +491,7 @@ namespace Zjcs.Presentation.Home
                 source.playOnAwake = false;
                 source.spatialBlend = 0f;
                 soundSources[eventName] = source;
+                HomeAudioSettings.Register(source, HomeAudioChannel.Sound);
             }
             source.PlayOneShot(clip);
         }
@@ -558,6 +560,9 @@ namespace Zjcs.Presentation.Home
 
         private void OnDestroy()
         {
+            HomeAudioSettings.Unregister(actionSource);
+            foreach (AudioSource source in soundSources.Values)
+                HomeAudioSettings.Unregister(source);
             foreach (AudioClip clip in clips.Values)
                 if (clip != null) Destroy(clip);
             clips.Clear();

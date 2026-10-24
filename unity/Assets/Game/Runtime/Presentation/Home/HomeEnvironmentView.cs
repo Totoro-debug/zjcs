@@ -82,18 +82,65 @@ namespace Zjcs.Presentation.Home
     {
         public string version;
         public HomeEnvironmentConfig config;
+        public HomeMeteorRuntimePayload meteorRuntime;
         public HomeMoonVariant[] moonVariants;
+    }
+
+    [Serializable]
+    public sealed class HomeMoonVisualData
+    {
+        public string sourceManifest;
+        public string sourceMoonJsonSha256;
+        public string rootPath;
+        public float[] rootPosition;
+        public float[] scalePosition;
+        public float[] scaleBasePosition;
+        public float duration;
+        public bool loop;
+        public HomeMoonLayerData[] layers;
+        public HomeMoonAnimationTrack[] tracks;
+    }
+
+    [Serializable]
+    public sealed class HomeMoonLayerData
+    {
+        public int phase;
+        public string kind;
+        public string name;
+        public string file;
+        public float[] vertices;
+        public float[] color;
+        public float[] scale;
+        public int sortingLayer;
+        public int sortingOrder;
+    }
+
+    [Serializable]
+    public sealed class HomeMoonAnimationTrack
+    {
+        public string path;
+        public string property;
+        public bool stepped;
+        public HomeMoonAnimationKey[] keys;
+    }
+
+    [Serializable]
+    public sealed class HomeMoonAnimationKey
+    {
+        public float time;
+        public float value;
+        public float inTangent;
+        public float outTangent;
     }
 
     /// <summary>
     /// Port of ``HomeEnvironmentManage``/``HomeClock`` for the offline home:
     /// the day advances at ``HomeTimeScale``, the day stage and the light groups
     /// follow ``HomeLightTimeConfigs``, and night effects switch at
-    /// ``EffectLightOnTime``/``EffectLightOffTime``.  Sky colour curves live in
-    /// the official ``HomeEnvironmentConfig`` animation clips which are not part
-    /// of the extracted payload yet, so no colour curve is invented here.
+    /// ``EffectLightOnTime``/``EffectLightOffTime``.  The official Moon renderer
+    /// and ``Night_Common`` curve drive the phase and night visibility.
     /// </summary>
-    public sealed class HomeEnvironmentView
+    public sealed class HomeEnvironmentView : IDisposable
     {
         private static readonly Dictionary<string, string> LightPaths = new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -102,18 +149,25 @@ namespace Zjcs.Presentation.Home
             { "BedRoomLight", "/House/HouseLight/Bedroom_Light" },
             { "StudyLight", "/House/HouseLight/Study_Light" },
             { "DeskLight", "/Desk/Desk_Light" },
+            { "DanluLight", "/Danlu/danlu_repaired/Danlu_Light" },
             { "DiningTableLight", "/DiningTable/HomeDiningTable_Light" }
         };
 
         private readonly HomeSceneView scene;
         private readonly HomeEnvironmentConfig config;
+        private readonly HomeMeteorRuntimePayload meteorRuntime;
         private readonly HomeMoonVariant[] moonVariants;
+        private readonly HomeMoonVisualData moonVisuals;
+        private readonly HomeSkyTimelineView daySky;
         private double daySeconds;
         private int appliedStage = -1;
+        private int appliedLightTimeIndex = -1;
         private bool appliedNight;
         private int appliedMoon;
-        private double meteorTimer;
-        private int dayIndex;
+        private double nextMeteorHomeSeconds;
+        private bool meteorActive;
+        private bool hasMeteorSchedule;
+        private long dayIndex;
 
         public int Stage { get; private set; }
         public int Hour => (int)(daySeconds / 3600) % 24;
@@ -121,8 +175,9 @@ namespace Zjcs.Presentation.Home
         public bool IsNight => NightAt(daySeconds);
         public int MoonPhase { get; private set; }
         public HomeEnvironmentConfig Config => config;
+        public HomeMeteorRuntimePayload MeteorRuntime => meteorRuntime;
 
-        public HomeEnvironmentView(HomeSceneView scene, long nowUnixSeconds)
+        public HomeEnvironmentView(HomeSceneView scene, long nowUnixSeconds, long homeStartUnixSeconds = 0)
         {
             this.scene = scene ?? throw new ArgumentNullException(nameof(scene));
             string path = Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName, "environment.json");
@@ -131,25 +186,45 @@ namespace Zjcs.Presentation.Home
             if (data == null || data.config == null || data.config.stages == null || data.config.stages.Length == 0)
                 throw new InvalidDataException("The official home environment config is incomplete.");
             config = data.config;
+            meteorRuntime = data.meteorRuntime;
+            if (config.meteor != null && config.meteor.interval > 0
+                && (meteorRuntime == null || meteorRuntime.templates == null || meteorRuntime.templates.Length == 0))
+                throw new InvalidDataException("Official Home meteor runtime templates are missing.");
             moonVariants = data.moonVariants ?? Array.Empty<HomeMoonVariant>();
-            DateTime local = DateTimeOffset.FromUnixTimeSeconds(Math.Max(0, nowUnixSeconds)).LocalDateTime;
-            daySeconds = local.Hour * 3600 + local.Minute * 60 + local.Second;
-            dayIndex = local.DayOfYear;
+            long now = Math.Max(0, nowUnixSeconds);
+            long start = homeStartUnixSeconds > 0 ? homeStartUnixSeconds : now;
+            double elapsedHomeSeconds = Math.Max(0.0, (double)now - start)
+                * Math.Max(1.0, config.timeScale);
+            dayIndex = (long)Math.Floor(elapsedHomeSeconds / SecondsPerDay);
+            daySeconds = elapsedHomeSeconds - dayIndex * SecondsPerDay;
+            string moonPath = Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName,
+                "environment-visuals", "moon-visuals.json");
+            if (!File.Exists(moonPath)) throw new FileNotFoundException("Official home moon visual payload is missing.", moonPath);
+            moonVisuals = JsonUtility.FromJson<HomeMoonVisualData>(File.ReadAllText(moonPath));
+            if (moonVisuals == null || moonVisuals.layers == null || moonVisuals.tracks == null)
+                throw new InvalidDataException("The official home moon visual payload is incomplete.");
+            daySky = HomeSkyTimelineView.CreateIfSupported(this.scene);
             Apply(true);
+            UpdateMeteor();
         }
 
         public void Tick(float unscaledDeltaSeconds)
         {
             if (unscaledDeltaSeconds <= 0) return;
-            daySeconds += unscaledDeltaSeconds * Math.Max(1.0, config.timeScale);
-            while (daySeconds >= 86400)
+            double elapsedHomeSeconds = daySeconds + unscaledDeltaSeconds * Math.Max(1.0, config.timeScale);
+            if (elapsedHomeSeconds >= SecondsPerDay)
             {
-                daySeconds -= 86400;
-                dayIndex++;
+                long daysPassed = (long)Math.Floor(elapsedHomeSeconds / SecondsPerDay);
+                dayIndex += daysPassed;
+                elapsedHomeSeconds -= daysPassed * SecondsPerDay;
             }
+            daySeconds = elapsedHomeSeconds;
             Apply(false);
-            UpdateMeteor(unscaledDeltaSeconds);
+            UpdateMeteor();
         }
+
+        private double SecondsPerDay => (double)Math.Max(1, config.secondsPerMinute)
+            * Math.Max(1, config.minutesPerHour) * Math.Max(1, config.hoursPerDay);
 
         private void Apply(bool force)
         {
@@ -158,13 +233,19 @@ namespace Zjcs.Presentation.Home
             {
                 appliedStage = stage;
                 Stage = stage;
-                ApplyLightDefaults();
+                scene.SetSkyStage(stage);
+            }
+            int lightTimeIndex = LightTimeIndexAt(daySeconds);
+            if (force || lightTimeIndex != appliedLightTimeIndex)
+            {
+                appliedLightTimeIndex = lightTimeIndex;
+                ApplyLightDefaults(lightTimeIndex);
             }
             bool night = NightAt(daySeconds);
             if (force || night != appliedNight)
             {
                 appliedNight = night;
-                ApplyNightEffects(night, force);
+                ApplyNightEffects(night);
             }
             int moon = MoonPhaseAt();
             if (force || moon != appliedMoon)
@@ -172,18 +253,41 @@ namespace Zjcs.Presentation.Home
                 appliedMoon = moon;
                 MoonPhase = moon;
             }
+            scene.SetMoonVisual(moonVisuals, MoonPhase,
+                (float)(daySeconds / SecondsPerDay * moonVisuals.duration));
+            daySky?.Apply((float)(daySeconds / SecondsPerDay));
         }
 
-        private void ApplyLightDefaults()
+        public void Dispose()
         {
-            HomeLightTime active = null;
-            foreach (HomeLightTime group in config.lightTimes ?? Array.Empty<HomeLightTime>())
+            daySky?.Dispose();
+        }
+
+        private int LightTimeIndexAt(double seconds)
+        {
+            int activeIndex = -1;
+            double activeSeconds = double.NegativeInfinity;
+            HomeLightTime[] lightTimes = config.lightTimes ?? Array.Empty<HomeLightTime>();
+            for (int index = 0; index < lightTimes.Length; index++)
             {
-                if (group?.begin == null || group.begin.Seconds > daySeconds) continue;
-                if (active == null || group.begin.Seconds >= active.begin.Seconds) active = group;
+                HomeLightTime group = lightTimes[index];
+                if (group?.begin == null || group.begin.Seconds > seconds) continue;
+                if (group.begin.Seconds >= activeSeconds)
+                {
+                    activeSeconds = group.begin.Seconds;
+                    activeIndex = index;
+                }
             }
-            if (active?.lights == null) return;
-            foreach (HomeLightState light in active.lights)
+            return activeIndex;
+        }
+
+        private void ApplyLightDefaults(int activeIndex)
+        {
+            HomeLightTime[] lightTimes = config.lightTimes ?? Array.Empty<HomeLightTime>();
+            if (activeIndex < 0 || activeIndex >= lightTimes.Length) return;
+            HomeLightState[] lights = lightTimes[activeIndex]?.lights;
+            if (lights == null || lights.Length == 0) return;
+            foreach (HomeLightState light in lights)
             {
                 if (light == null || string.IsNullOrEmpty(light.name)) continue;
                 if (!LightPaths.TryGetValue(light.name, out string path)) continue;
@@ -191,11 +295,9 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private void ApplyNightEffects(bool night, bool force)
+        private void ApplyNightEffects(bool night)
         {
-            // The official night pass is driven by HomeEnvironmentConfig animation
-            // clips (sky/moon/star colours) that are not part of the extracted
-            // payload.  Only the light groups and the stage clock are applied here.
+            scene.SetNightVisuals(night);
         }
 
         private int StageAt(double seconds)
@@ -229,30 +331,49 @@ namespace Zjcs.Presentation.Home
             int duration = config.moon?.DayDuration ?? 2;
             int cycle = config.moon?.DayCycle ?? 30;
             if (moonVariants.Length == 0 || duration <= 0 || cycle <= 0) return 0;
-            int phase = dayIndex / duration % cycle;
-            HomeMoonVariant variant = moonVariants[phase % moonVariants.Length];
-            return variant.index;
+            int elapsedDays = (int)(((dayIndex % cycle) + cycle) % cycle);
+            int index = elapsedDays / duration + 1;
+            return moonVariants.Any(variant => variant != null && variant.index == index) ? index : 0;
         }
 
-        private void UpdateMeteor(float unscaledDeltaSeconds)
+        private double AbsoluteHomeSeconds => dayIndex * SecondsPerDay + daySeconds;
+
+        private void UpdateMeteor()
         {
             HomeMeteorConfig meteor = config.meteor;
             if (meteor == null || meteor.interval <= 0) return;
             double begin = meteor.begin?.Seconds ?? 20 * 3600;
             double end = meteor.end?.Seconds ?? 6 * 3600;
-            bool window = begin <= end ? daySeconds >= begin && daySeconds < end : daySeconds >= begin || daySeconds < end;
+            bool window = begin < end ? daySeconds >= begin && daySeconds < end : daySeconds >= begin || daySeconds < end;
             if (!window)
             {
-                meteorTimer = 0;
+                meteorActive = false;
+                hasMeteorSchedule = false;
                 return;
             }
-            meteorTimer += unscaledDeltaSeconds * Math.Max(1.0, config.timeScale);
-            if (meteorTimer < meteor.interval) return;
-            meteorTimer = 0;
-            if (UnityEngine.Random.value > meteor.probability) return;
-            MeteorTriggered?.Invoke();
+
+            double now = AbsoluteHomeSeconds;
+            if (!meteorActive)
+            {
+                meteorActive = true;
+                hasMeteorSchedule = true;
+                nextMeteorHomeSeconds = now + meteor.interval;
+                return;
+            }
+            if (!hasMeteorSchedule)
+            {
+                hasMeteorSchedule = true;
+                nextMeteorHomeSeconds = now + meteor.interval;
+                return;
+            }
+            if (now < nextMeteorHomeSeconds) return;
+            if (UnityEngine.Random.Range(0, 100) / 100f > meteor.probability) return;
+            int templateCount = meteorRuntime.templates.Length;
+            int templateIndex = UnityEngine.Random.Range(0, templateCount);
+            MeteorTriggered?.Invoke(templateIndex);
+            nextMeteorHomeSeconds = now + meteor.interval;
         }
 
-        public event Action MeteorTriggered;
+        public event Action<int> MeteorTriggered;
     }
 }

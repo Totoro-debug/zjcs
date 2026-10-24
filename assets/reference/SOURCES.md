@@ -44,7 +44,7 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 当前资源总数以生成的全局清单和本次核查为准；旧阶段统计不能相加。官方原包、有效缓存、转换依赖与历史来源保留；已完成的临时提交／导出快照和过期日志可清理。
 
-2026-10-13 设置功能补齐：`prepare_settings_assets.py` 从固定 `854_156383` 的 `SettingsDialog.prefab` 重建五个分页、原始控件和选中标记，并读取固定版本中文语言分包替换俄文 / 数字预览文本。分辨率、帧率和长数字选项按原组件的序列化枚举绑定核对。点击音效取自 APK 内 `Minimum.pck`：由原 `UIClickSound` 引用定位 `Main_Tag` 事件（680474747），经 HIRC 解析到 media 69663821，再用 vgmstream 解码为 `assets/official/settings/click.wav`。无自绘或合成音频；图片复用官方 Sprite，独立 UI 数据位于 `assets/official/settings/ui.json`。输入来源、bundle / 对象 ID、语言文件哈希及输出哈希见 [设置来源清单](settings/source-manifest.json)。运行边界见 [设置功能](../../docs/features/settings-and-save.md)；泛光、反射和录像尚未移植，不能因官方资源已取得而声明完成。
+2026-10-13 设置功能补齐：`prepare_settings_assets.py` 从固定 `854_156383` 的 `SettingsDialog.prefab` 重建五个分页、原始控件和选中标记，并读取固定版本中文语言分包替换俄文 / 数字预览文本。分辨率、帧率和长数字选项按原组件的序列化枚举绑定核对。点击音效取自 APK 内 `Minimum.pck`：由原 `UIClickSound` 引用定位 `Main_Tag` 事件（680474747），经 HIRC 解析到 media 69663821，再用 vgmstream 解码为 `assets/official/settings/click.wav`。无自绘或合成音频；图片复用官方 Sprite，独立 UI 数据位于 `assets/official/settings/ui.json`。输入来源、bundle / 对象 ID、语言文件哈希及输出哈希见 [设置来源清单](settings/source-manifest.json)。主城运行载荷由 `scripts/prepare_unity_home_settings.py` 从该官方树生成，复制30张原 Sprite 与点击音效并将输出哈希登记在同一清单。运行边界见 [设置功能](../../docs/features/settings-and-save.md)；URP画质、反射和录像尚未移植，不能因官方资源已取得而声明完成。
 
 2026-10-12 大陆总览移植：新增 `prepare_official_maps.py`，直接从固定 APK 转换 `WorldMapIsland`、`WorldMapSky`、`WorldMapSpace` 的 RectTransform、原图、九个地点 ID、背景自适应和缩放参数。登记 33 个原始 Sprite 与 3 张星球 Spine 图集，其中实际新增 29 张 PNG；其余图像复用既有文件。原始数据、输出哈希、bundle / 对象 ID、完整消费的三张地图配置表和效果缺口见 [地图来源清单](official-map/source-manifest.json)。
 
@@ -215,7 +215,7 @@ python scripts/prepare_dungeon_assets.py
 
 逐资源身份和输出 SHA256 见 [official-city/source-manifest.json](official-city/source-manifest.json)，配置证据见 [rules-manifest.json](official-city/rules-manifest.json)，程序集证据见 [code-manifest.json](official-city/code-manifest.json)，音乐见 [audio-manifest.json](official-city/audio-manifest.json)，基础包可用性见 [bundle-availability.json](official-city/bundle-availability.json)。
 
-2026-10-23：家园运行层从既有 `assets/official/home.json`、`home-completion/{scene,ui}.json`、`rules.json`、`home-random-rewards/catalog.json`、`home-mail/ui.json`、`home-tutorial/talk.json` 等已登记输出整理出 `unity/Assets/StreamingAssets/Home/{scene,ui,rules,rewards,mail,actors,environment,tips}.json` 并复制 647 个被引用贴图；合并规则、数量、输入来源与每个输出的 SHA256 记录在 [source-manifest.json](../../unity/Assets/StreamingAssets/Home/source-manifest.json)，生成器为 [`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py)。该步骤不重新解析 APK、不新增或替换美术，运行时按显式清单加载这些本地文件。
+2026-10-23：家园运行层从既有 `assets/official/home.json`、`home-completion/{scene,ui}.json`、`rules.json`、`home-random-rewards/catalog.json`、`home-mail/ui.json`、`home-tutorial/talk.json` 等已登记输出整理出 `unity/Assets/StreamingAssets/Home/{scene,ui,rules,rewards,mail,actors,environment,tips}.json` 并复制被引用贴图。主城 FirstMergeItem 固定奖励 ID 7 的物品图标同时取自已按 SHA256 登记的固定奖励表，奖励 ID、物品 ID、输入哈希及每个输出哈希记录在 Home `source-manifest.json`。生成器为 [`prepare_unity_home_runtime.py`](../../scripts/prepare_unity_home_runtime.py)；该步骤不重新解析 APK、不新增或替换美术，运行时按显式清单加载这些本地文件。
 
 `.tools/` 保留官方缓存和提取依赖，游戏运行不加载 DLL，不使用 Python / Node / vgmstream。
 
@@ -670,6 +670,8 @@ CAB 读取器通过原清单中唯一相同 MD5 解析旧缓存的 `_materials.b
 
 教学在原家园设施碰撞入口执行修复、成功通知、奖励与实际祈愿点击检查点，使用原家具 4004 条件 / 修复费用、fixed_reward 8 奖励及原祈愿 / 快捷购买价格；本地事务与持久化承担离线执行。其他家园教学图的完整调度、场景 NPC IdleTreeRight / PortalLeave 演出和原家具动态分类不在这次适配范围。
 
+另一张 `FirstMergeItem` 教学图请求固定奖励 ID 7。固定版 `fixed_reward.g.bytes` 由原 `TbFixedRewardInfo` 构造器完整解码，ID 7 是罗拉 350、水 10、青禾 5，`CanGetTimes=1`；`prepare_unity_wish_catalog.py` 将 ID 7 与祈愿教学奖励 ID 8 一起写入 Unity 运行目录，输入和输出哈希记录在 `assets/reference/wishes/source-manifest.json`。
+
 临时来源 `assets/reference/official-map/wish-tutorial-source-manifest.json` 已迁至独立模块；原来源 SHA `d59a5aefd96ee96229452f35357c73f85bebd4a401b027679e255489d85d6186` 与旧 catalog SHA `4da99eb146fe351591fdb6af7ae25abcbb387f851c4c9e024d64084b3f6f2261` 继续保留于迁移记录，没有改写成新的来源历史。
 
 最终共享登记使用 `python scripts/register_map_assets.py --map10`，仅合并 `official-map/materials-10-source-manifest.json` 与独立教学模块，核对实际文件 SHA，保留同字节复用资源的原共享凭据。地图 10 的四份运行数据、两张转换图及教学 catalog 共七条运行路径全部有数据 / 资源哈希和显式加载绑定；新原生 shader / UID 位于 Git 代码目录。`--map10 --check` 可只读检查重复登记结果。范围外 NPC 旅行 / 果树新增资产由各自会话维护，本次没有登记它们；独立素材包与锁由主协调会话随后按批准增量生成。
@@ -935,7 +937,7 @@ prepare_pet_progress_ui.py 从固定 854_156383 的 prefabs_ui_tips、prefabs_ui
 
 ### 原装潢皮肤、天气替换与场景槽位
 
-prepare_home_decoration.py 从固定 854_156383 的 64 行 furniture_skin、19 行 home_theme_skin 和 48 行 home_skin_weather_override_prefab，按原 LanguageUtils 路径定位 131 个实际 prefab 变体；原 HomeEntityManagerMono／HomeSlotEntityData 提供主题及家具槽位，原 HomeEntityCreateData 提供位置偏移。保留全部状态分支、CustomRenderer 云层、原果树果实附件及昼夜动画，骨骼沿既有 Spine 转换工具生成原网格。输入对象、APK／CDN 凭据、916 个资源和输出 SHA256 见 home-decor/source-manifest.json，实际资源在 assets/official/home-decor/。材质属性动画的哈希字段按原材质字段及 AssetRipper CustomCurveResolver 的 Unity 格式解析，没有自拟游戏规则或美术。
+prepare_home_decoration.py 从固定 854_156383 的 64 行 furniture_skin、19 行 home_theme_skin 和 48 行 home_skin_weather_override_prefab，按原 LanguageUtils 路径定位 131 个实际 prefab 变体；原 HomeEntityManagerMono／HomeSlotEntityData 提供主题及家具槽位，原 HomeEntityCreateData 提供位置偏移。保留全部状态分支、CustomRenderer 云层、原果树果实附件及昼夜动画，骨骼沿既有 Spine 转换工具生成原网格。输入对象、APK／CDN 凭据、916 个资源和输出 SHA256 见 home-decor/source-manifest.json，实际资源在 assets/official/home-decor/。材质属性动画的哈希字段按原材质字段及 AssetRipper CustomCurveResolver 的 Unity 格式解析，没有自拟游戏规则或美术。`prepare_unity_home_skins.py` 从这些转换结果生成固定版运行目录 `unity/Assets/StreamingAssets/Home/home-skins.json`，并按实际引用复制 628 张官方贴图；运行输出和逐张贴图 SHA256 写入家园 `source-manifest.json`。
 
 prepare_home_ui.py 同时补充原 HomeViewController／Slider 控件、HomeSkinItem／ItemIconHomeSkin 字段，沿 ItemIconAttachmentConfig 的 WearingHomeSkin=31 GUID 提取原已装备附件，从原 image_itemicon_home 提取对应皮肤图标；来源继续登记于 home-completion/source-manifest.json。来源登记与尚未迁移的灯光／材质表现范围分别记录，不能将已提取视为已完整还原。
 
@@ -1043,6 +1045,11 @@ prepare_kitchen_completion.py --story-only 从固定 manifest 854_156383 的 pre
 ### 家园原场景月相（854_156383）
 
 `home-environment/source-manifest.json` 登记主场景 HomeEnvironmentManagerMono.HomeMoon 的三个 SpriteRenderer、HomePlayable 的 Night 绑定及 Night_Common 中9条月亮曲线。原 `image_home_dynamic_moon` 分包解码配置会选择的1至15与17号月亮／描边／光晕，共48张PNG；连同 moon.json 共49项输出逐项登记SHA256，保留原Sprite尺寸、裁切、轴心、PPU、世界层级及排序。规则来源为 HomeMoon、HomeEnvironmentManage、HomeTimeDriver、HomePlayable/TimelinePlayable 和原 HomeEnvironmentConfig／HomeSkinConfig：自然日30天一轮、每相2天、08:00刷新、天气4902选择17号；阶段显示小时不改变自然日。转换命令 `python scripts/prepare_home_environment.py`，导入使用 `python scripts/import_official_subset.py assets/reference/home-environment/source-manifest.json`。原3个材质均为 Sprite-Unlit-Default；场景照明、云网格和积雪材质的实际迁移见后续相应来源段落。
+
+
+### 家园原昼间太阳和光照时间轴（854_156383）
+
+`home-environment/solar-timeline-source-manifest.json` 登记固定 APK 主场景 `HomeTimeline`（Timeline path ID 188）及 Day 绑定的 `Day_Common`（AnimationClip path ID 181）。`python scripts/extract_home_sky_timeline.py` 按原 Mecanim 绑定解出20条曲线、21个节点、9个SpriteRenderer、5个Light2D和两种原材质，恢复 Sprite 裁切偏移与逻辑尺寸，所有输入／输出记录 SHA256；`python scripts/prepare_unity_home_environment.py` 校验后复制 JSON 与 PNG 至 Unity `StreamingAssets/Home/environment-visuals/`。曲线包括太阳位置／缩放／显隐、Sprite透明度、Light2D颜色／强度／阴影强度，保留原 Hermite 切线。原材质 shader 为 URP `Sprite-Lit-ColorShift` 和 `Sprite-Lit-Default`。当前项目使用 Built-in 管线且未安装／启用 URP 2D，因此 [`HomeSkyTimelineView`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSkyTimelineView.cs) 会安全禁用该图层并报告依赖；恢复 URP 2D Renderer 后仍须执行 Editor 导入、编译及 Play Mode 画面验证。
 
 
 ### 家园天空原ColorBlend编译逻辑

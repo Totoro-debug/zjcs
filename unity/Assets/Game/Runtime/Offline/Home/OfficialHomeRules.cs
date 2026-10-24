@@ -270,7 +270,7 @@ namespace Zjcs.Offline.Home
         public ISet<int> UnlockedMapClassIds = new HashSet<int>();
         public Func<int, long> ItemCount = _ => 0;
         public Func<string, int> StoryCount = _ => 0;
-        public Func<string, bool> StoryPlayed = _ => false;
+        public Func<string, int> StoryStatus = _ => 0;
         public Func<int, bool> HasItemOfType = _ => false;
         public bool AnyGoddessActive;
         public bool HasManualMeetNpc;
@@ -522,7 +522,7 @@ namespace Zjcs.Offline.Home
                 case "StoryCountCondition":
                     return Compare(node.Op, context.StoryCount(node.StoryKey), node.Count);
                 case "StoryStatusCondition":
-                    return context.StoryPlayed(node.StoryKey);
+                    return context.StoryStatus(node.StoryKey) == node.Status;
                 case "MapUnlockCondition":
                     return context.UnlockedMapClassIds.Contains(node.MapClassId);
                 case "InitialWeaponCondition":

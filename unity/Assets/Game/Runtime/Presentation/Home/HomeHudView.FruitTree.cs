@@ -314,6 +314,17 @@ namespace Zjcs.Presentation.Home
             if (gameObject.activeSelf) gameObject.SetActive(false);
         }
 
+        public void ShowFull()
+        {
+            targetMin = Vector2.zero;
+            targetMax = Vector2.zero;
+            targetVisible = true;
+            raycastTarget = true;
+            color = MaskColor;
+            if (!gameObject.activeSelf) gameObject.SetActive(true);
+            SetVerticesDirty();
+        }
+
         public bool IsRaycastLocationValid(Vector2 screenPoint, Camera eventCamera)
         {
             if (!targetVisible || !RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform,

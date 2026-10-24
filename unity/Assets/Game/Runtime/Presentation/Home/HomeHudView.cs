@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
+using Zjcs.Presentation.Inventory;
 
 namespace Zjcs.Presentation.Home
 {
@@ -40,6 +41,7 @@ namespace Zjcs.Presentation.Home
         private int selectedTab;
         private GameObject activeDialog;
         private HomeUiRenderer activeDialogRenderer;
+        private string activePanelKey;
         private bool cartOpen;
         private bool bedOpen;
         private HomeUiRenderer petGachaRenderer;
@@ -55,6 +57,8 @@ namespace Zjcs.Presentation.Home
         private readonly string[] tabNames = { "Character", "TravelNote", "Home", "Legion", "Mainland" };
         private GameObject characterRoot;
         private Zjcs.Presentation.Character.CharacterFeatureRuntime characterRuntime;
+        private GameObject inventoryRoot;
+        private InventoryFeatureRuntime inventoryRuntime;
 
         public HomeHudView(HomeFeatureRuntime host, Transform parent)
         {
@@ -63,7 +67,10 @@ namespace Zjcs.Presentation.Home
             canvasParent = parent;
         }
 
-        public bool AnyModalOpen => activeDialog != null || (functionsPanel != null && functionsPanel.activeSelf);
+        public Transform CanvasTransform => canvas == null ? null : canvas.transform;
+
+        public bool AnyModalOpen => activeDialog != null || inventoryRoot != null || host.FeatureModalOpen
+            || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
         public void Build()
         {
@@ -109,7 +116,8 @@ namespace Zjcs.Presentation.Home
         private void BuildHomePanel()
         {
             homeRenderer = Renderer();
-            homePanel = homeRenderer.Create("home", canvas.transform, OnHomeButton);
+            homePanel = homeRenderer.Create("home", canvas.transform,
+                (path, node) => BindHudButton(path, node, OnHomeButton));
             RectTransform rect = (RectTransform)homePanel.transform;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
@@ -126,7 +134,8 @@ namespace Zjcs.Presentation.Home
             Transform slot = Find(homePanel.transform, "NewPublicTopBarParent");
             if (slot == null) return;
             HomeUiRenderer avatar = Renderer();
-            avatar.Create("player_icon", slot, null);
+            avatar.Create("player_icon", slot,
+                (path, node) => BindHudButton(path, node, OnAvatarButton));
             nameLabel = CreateLabel(slot, "HomeName", 26, new Vector2(96, -8), TextAlignmentOptions.Left);
             levelLabel = CreateLabel(slot, "HomeLevel", 20, new Vector2(96, -42), TextAlignmentOptions.Left);
         }
@@ -166,10 +175,12 @@ namespace Zjcs.Presentation.Home
             for (int index = 0; index < CurrencyItems.Length; index++)
             {
                 HomeUiRenderer money = Renderer();
-                GameObject entry = money.Create("money", list, null);
-                string icon = host.Rules.ItemIcon(CurrencyItems[index]);
+                int itemId = CurrencyItems[index];
+                GameObject entry = money.Create("money", list, (path, node) =>
+                    BindHudButton(path, node, (clickedPath, clickedNode) => OnCurrencyButton(itemId, clickedPath)));
+                string icon = host.Rules.ItemIcon(itemId);
                 money.SetSpriteByPrefix("IconImg", string.IsNullOrEmpty(icon) ? CurrencyIcons[index] : icon);
-                entry.name = "Money_" + CurrencyItems[index];
+                entry.name = "Money_" + itemId;
                 entry.AddComponent<TopBarCurrency>().Renderer = money;
             }
         }
@@ -190,7 +201,8 @@ namespace Zjcs.Presentation.Home
             {
                 int itemId = CurrencyItems[index];
                 HomeUiRenderer money = Renderer();
-                GameObject entry = money.Create("money", list, null);
+                GameObject entry = money.Create("money", list, (path, node) =>
+                    BindHudButton(path, node, (clickedPath, clickedNode) => OnCurrencyButton(itemId, clickedPath)));
                 string icon = host.Rules.ItemIcon(itemId);
                 money.SetSpriteByPrefix("IconImg", string.IsNullOrEmpty(icon) ? CurrencyIcons[index] : icon);
                 entry.name = "Money_" + itemId;
@@ -216,7 +228,8 @@ namespace Zjcs.Presentation.Home
         private void BuildBottomBar()
         {
             bottomRenderer = Renderer();
-            GameObject bar = bottomRenderer.Create("bottom_bar", canvas.transform, OnBottomButton);
+            GameObject bar = bottomRenderer.Create("bottom_bar", canvas.transform,
+                (path, node) => BindHudButton(path, node, OnBottomButton));
             RectTransform rect = (RectTransform)bar.transform;
             rect.anchorMin = new Vector2(0.5f, 0);
             rect.anchorMax = new Vector2(0.5f, 0);
@@ -227,7 +240,8 @@ namespace Zjcs.Presentation.Home
         private void BuildFunctions()
         {
             functionsRenderer = Renderer();
-            functionsPanel = functionsRenderer.Create("functions", canvas.transform, OnFunctionButton);
+            functionsPanel = functionsRenderer.Create("functions", canvas.transform,
+                (path, node) => BindHudButton(path, node, OnFunctionButton));
             RectTransform rect = (RectTransform)functionsPanel.transform;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
@@ -273,21 +287,102 @@ namespace Zjcs.Presentation.Home
 
         private void OnHomeButton(string path, GameObject node)
         {
-            if (path.EndsWith("FunctionEntryGroup", StringComparison.Ordinal)
-                || path.Contains("FunctionEntryGroup")) ToggleFunctions();
+            if (path.Contains("/FunctionEntryFunc/")) { ToggleFunctions(); return; }
+            if (path.Contains("/FunctionEntryChatQuick/")) { Notify("离线模式不开放聊天"); return; }
+            if (path.Contains("TeamMiniPanel") || path.Contains("ButtonTeam"))
+            {
+                Notify("组队入口按离线范围关闭");
+                return;
+            }
+            if (path.Contains("GameMatch")) { Notify("多人匹配按离线范围关闭"); return; }
+            if (path.Contains("PlayAsYouDownloadEntry")) { Notify("预下载入口在离线模式不可用"); return; }
+            if (path.Contains("BattleEndNotify")) { Notify("战斗结算详情由战斗页面提供"); return; }
+            Notify("该入口当前不可用");
         }
 
         private void OnBottomButton(string path, GameObject node)
         {
-            for (int index = 0; index < tabNames.Length; index++)
-                if (path.Contains("/" + tabNames[index] + "/")) SelectTab(index, true);
+            if (path.EndsWith("/UnlockObj", StringComparison.Ordinal))
+            {
+                for (int index = 0; index < tabNames.Length; index++)
+                    if (path.Contains("/" + tabNames[index] + "/")) { SelectTab(index, true); return; }
+            }
+            if (path.EndsWith("/LockBtn", StringComparison.Ordinal)) { Notify("该入口尚未解锁"); return; }
+            if (path.EndsWith("/Upgrade", StringComparison.Ordinal)) { SelectTab(0, true); return; }
+            if (path.EndsWith("/Battling", StringComparison.Ordinal)) { Notify("当前没有进行中的战斗"); return; }
+            Notify("该入口当前不可用");
+        }
+
+        private void OnAvatarButton(string path, GameObject node)
+        {
+            SelectTab(0, true);
+        }
+
+        private void OnCurrencyButton(int itemId, string path)
+        {
+            if (path.EndsWith("/DescBtn", StringComparison.Ordinal))
+            {
+                Notify(host.Rules.ItemName(itemId) + " x" + Format(host.ItemCount(itemId)));
+                return;
+            }
+            if (path.EndsWith("/AddBtn", StringComparison.Ordinal))
+                Notify("离线模式不开放充值或交易入口");
+        }
+
+        private static void BindHudButton(string path, GameObject node, Action<string, GameObject> handler)
+        {
+            if (node == null || handler == null) return;
+            Button button = node.GetComponent<Button>();
+            if (button != null) button.onClick.AddListener(() => handler(path, node));
+            Toggle toggle = node.GetComponent<Toggle>();
+            if (toggle != null) toggle.onValueChanged.AddListener(isOn =>
+            {
+                if (isOn) handler(path, node);
+            });
         }
 
         private void OnFunctionButton(string path, GameObject node)
         {
             if (path.EndsWith("CloseBtn", StringComparison.Ordinal)) { ToggleFunctions(false); return; }
-            if (path.Contains("HomeSkinBtn")) { Notify("装潢页面由家园装潢子模块提供"); return; }
-            if (path.Contains("SettingsBtn")) { Notify("设置入口见设置与存档页面"); return; }
+            if (path.Contains("FunctionEntryTaskItem"))
+            {
+                ToggleFunctions(false);
+                OpenTaskPanel(host.Profile, NavigateMainlineTask);
+                return;
+            }
+            if (path.Contains("FunctionEntryHomeSkinItem"))
+            {
+                ToggleFunctions(false);
+                ShowHomeSkins();
+                return;
+            }
+            if (path.Contains("FunctionEntrySettingsItem")) { OpenSettings(); return; }
+            if (path.Contains("FunctionEntryFriendItem") || path.Contains("FunctionEntrySocialItem")
+                || path.Contains("FunctionEntryUserItem") || path.Contains("FunctionEntryTopListItem"))
+            {
+                Notify("社交与排行榜入口按离线范围关闭");
+                return;
+            }
+            if (path.Contains("FunctionEntryShopItem"))
+            {
+                Notify("商城活动依赖联网服务，离线模式不开放");
+                return;
+            }
+            if (path.Contains("FunctionEntryAnnounceItem"))
+            {
+                Notify("公告依赖联网服务，离线模式不开放");
+                return;
+            }
+            if (path.Contains("FunctionEntryPlanesMergeItem"))
+            {
+                Notify("跨服合并依赖联网服务，离线模式不开放");
+                return;
+            }
+            if (path.Contains("FunctionEntryPredownload"))
+            {
+                Notify("预下载依赖联网服务，离线模式不开放");
+                return;
+            }
             Notify("该入口的页面由对应功能模块提供");
         }
 
@@ -307,6 +402,15 @@ namespace Zjcs.Presentation.Home
                 return;
             }
             if (characterRoot != null) characterRoot.SetActive(false);
+            if (selectedTab == 4)
+            {
+                if (!host.EnterMainland())
+                {
+                    selectedTab = 2;
+                    ApplyTabVisuals();
+                }
+                return;
+            }
             if (notify && selectedTab != 2)
             {
                 Notify(selectedTab == 1 ? "游记页由游记模块提供" :
@@ -375,6 +479,46 @@ namespace Zjcs.Presentation.Home
         {
             string name = catalog.FurnitureName(type);
             Notify(name + " 的内部页面由所属功能模块提供");
+        }
+
+        public void ShowStorage()
+        {
+            if (inventoryRoot != null)
+            {
+                inventoryRoot.SetActive(true);
+                inventoryRuntime?.Refresh();
+                return;
+            }
+
+            GameObject root = new GameObject("HomeStorageInventory", typeof(RectTransform), typeof(Canvas),
+                typeof(CanvasScaler), typeof(GraphicRaycaster));
+            inventoryRoot = root;
+            Canvas overlay = root.GetComponent<Canvas>();
+            overlay.renderMode = RenderMode.ScreenSpaceOverlay;
+            overlay.sortingOrder = 80;
+            InventoryFeatureRuntime runtime = root.AddComponent<InventoryFeatureRuntime>();
+            inventoryRuntime = runtime;
+            runtime.Closed += () =>
+            {
+                if (inventoryRoot == root)
+                {
+                    inventoryRoot = null;
+                    inventoryRuntime = null;
+                }
+                UnityEngine.Object.Destroy(root);
+            };
+            try
+            {
+                runtime.OpenProfile(host.ActiveProfileSlotId, host.SavesRoot);
+            }
+            catch (System.Exception error)
+            {
+                Debug.LogWarning("Home storage inventory unavailable: " + error.Message);
+                inventoryRoot = null;
+                inventoryRuntime = null;
+                UnityEngine.Object.Destroy(root);
+                Notify("背包打开失败：" + error.Message);
+            }
         }
 
         public void ShowPetGacha()
@@ -596,16 +740,28 @@ namespace Zjcs.Presentation.Home
                 noticeDeadline = 0f;
                 if (noticeRoot != null) noticeRoot.SetActive(false);
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape)) TryHandleBack();
+        }
+
+        public bool TryHandleBack()
+        {
+            if (astrologicalOverlayRoot != null) { CloseAstrologicalOverlay(); return true; }
+            if (activeDialog != null) { CloseDialog(); return true; }
+            if (homeSkin != null && homeSkin.IsOpen) { homeSkin.Close(); return true; }
+            if (functionsPanel != null && functionsPanel.activeSelf) { ToggleFunctions(false); return true; }
+            if (inventoryRoot != null && inventoryRoot.activeSelf)
             {
-                if (activeDialog != null) CloseDialog();
-                else if (functionsPanel != null && functionsPanel.activeSelf) ToggleFunctions(false);
+                inventoryRuntime?.Close();
+                return true;
             }
+            if (characterRoot != null && characterRoot.activeSelf) { CloseCharacterPage(); return true; }
+            return false;
         }
 
         public void RefreshAll()
         {
             RefreshCounts();
+            RefreshTasks();
             if (nameLabel != null) nameLabel.text = host.CharacterName;
             if (levelLabel != null) levelLabel.text = "Lv." + host.Level + "  " + host.GuildName;
             if (bedOpen) RefreshBed();
@@ -641,17 +797,24 @@ namespace Zjcs.Presentation.Home
             build(renderer, panel);
             activeDialog = root;
             activeDialogRenderer = renderer;
+            activePanelKey = panelKey;
             return panel;
         }
 
         public void CloseDialog()
         {
             bool wasOpen = activeDialog != null;
+            if (activePanelKey == "astrological_entry")
+            {
+                host.EndAstrologicalCharge();
+                ClearAstrologicalRows();
+            }
             OnDialogClosing();
             ClearPetVirtualList();
             if (activeDialog != null) UnityEngine.Object.Destroy(activeDialog);
             activeDialog = null;
             activeDialogRenderer = null;
+            activePanelKey = null;
             cartOpen = false;
             bedOpen = false;
             petGachaRenderer = null;
@@ -696,8 +859,8 @@ namespace Zjcs.Presentation.Home
 
         public void ShowBed()
         {
-            bedOpen = true;
             OpenDialog("bed", (renderer, panel) => { RefreshBed(renderer); });
+            bedOpen = activeDialog != null;
         }
 
         private void RefreshBed() => RefreshBed(activeDialogRenderer);
@@ -763,7 +926,6 @@ namespace Zjcs.Presentation.Home
 
         public void ShowCart()
         {
-            cartOpen = true;
             OpenDialog("cart", (renderer, panel) =>
             {
                 renderer.SetTextByName("TitleTxt", host.Rules.FurnitureNameForType(10));
@@ -783,6 +945,7 @@ namespace Zjcs.Presentation.Home
                     });
                 }
             });
+            cartOpen = activeDialog != null;
         }
 
         private void RefreshCart()
@@ -903,6 +1066,63 @@ namespace Zjcs.Presentation.Home
                         Notify("已全部标记为已读");
                         CloseDialog();
                     });
+            });
+        }
+
+        internal void ShowTutorialFixedReward(IReadOnlyList<WishAmount> rewards)
+        {
+            if (rewards == null || rewards.Count == 0) return;
+            OpenDialog("awards", (renderer, panel) =>
+            {
+                renderer.SetTextByName("TitleTxt", "获得奖励");
+                Button close = FirstButton(renderer, "CloseObj");
+                if (close != null) close.onClick.AddListener(CloseDialog);
+
+                Transform grid = Find(panel.transform, "Grid");
+                if (grid == null || !catalog.HasPanel("award_row"))
+                    throw new InvalidOperationException("The official award panel item list is missing.");
+                WishAmount[] visible = rewards.Where(value => value != null && value.ItemId > 0 && value.Count > 0).ToArray();
+                for (int index = 0; index < visible.Length; index++)
+                {
+                    WishAmount reward = visible[index];
+                    HomeUiRenderer itemRenderer = Renderer();
+                    GameObject item = itemRenderer.Create("award_row", grid, null);
+                    item.name = "TutorialReward_" + reward.ItemId;
+                    RectTransform itemRect = item.transform as RectTransform;
+                    itemRect.anchorMin = itemRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    itemRect.pivot = new Vector2(0.5f, 0.5f);
+                    itemRect.anchoredPosition = new Vector2((index - (visible.Length - 1) * 0.5f) * 188f, 0);
+
+                    var iconObject = new GameObject("ItemIcon", typeof(RectTransform), typeof(Image));
+                    iconObject.transform.SetParent(item.transform, false);
+                    RectTransform iconRect = (RectTransform)iconObject.transform;
+                    iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    iconRect.pivot = new Vector2(0.5f, 0.5f);
+                    iconRect.anchoredPosition = new Vector2(0, 4);
+                    iconRect.sizeDelta = new Vector2(76, 76);
+                    Image icon = iconObject.GetComponent<Image>();
+                    icon.sprite = host.ItemIcon(reward.ItemId);
+                    icon.preserveAspect = true;
+                    icon.raycastTarget = false;
+
+                    TextMeshProUGUI name = CreateLabel(item.transform, "ItemName", 18,
+                        new Vector2(0, 62), TextAlignmentOptions.Center);
+                    RectTransform nameRect = name.rectTransform;
+                    nameRect.anchorMin = nameRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    nameRect.pivot = new Vector2(0.5f, 0.5f);
+                    nameRect.anchoredPosition = new Vector2(0, 62);
+                    nameRect.sizeDelta = new Vector2(150, 26);
+                    name.text = host.ItemName(reward.ItemId);
+
+                    TextMeshProUGUI count = CreateLabel(item.transform, "ItemCount", 20,
+                        new Vector2(0, -57), TextAlignmentOptions.Center);
+                    RectTransform countRect = count.rectTransform;
+                    countRect.anchorMin = countRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    countRect.pivot = new Vector2(0.5f, 0.5f);
+                    countRect.anchoredPosition = new Vector2(0, -57);
+                    countRect.sizeDelta = new Vector2(150, 28);
+                    count.text = "×" + reward.Count.ToString(CultureInfo.InvariantCulture);
+                }
             });
         }
 
@@ -1060,6 +1280,13 @@ namespace Zjcs.Presentation.Home
 
         public void Dispose()
         {
+            host.EndAstrologicalCharge();
+            ClearAstrologicalRows();
+            homeSkin?.Close();
+            homeSkin = null;
+            if (inventoryRoot != null) UnityEngine.Object.Destroy(inventoryRoot);
+            inventoryRoot = null;
+            inventoryRuntime = null;
             owned.Clear();
             if (canvas != null) UnityEngine.Object.Destroy(canvas.gameObject);
             canvas = null;
@@ -1081,9 +1308,7 @@ namespace Zjcs.Presentation.Home
         {
             if (Renderer == null) return;
             long count = host.ItemCount(itemId);
-            Renderer.SetTextByName("CountTxt", count >= 100000 && count < 100000000
-                ? (count / 10000f).ToString("0.#") + "万"
-                : count.ToString());
+            Renderer.SetTextByName("CountTxt", host.FormatTopBarCurrency(count));
         }
     }
 }

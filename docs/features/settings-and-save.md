@@ -6,13 +6,13 @@
 
 ## 功能简介
 
-启动进入本地存档选择页，可以新建角色、继续已有旅程或恢复未完成的创角；游戏中从功能菜单的设置页切换存档。选中存档读取失败时进入该档的本地恢复页。功能菜单同时保留原设置和主城拍照。
+启动进入本地存档选择页，可以新建角色、继续已有旅程或恢复未完成的创角；主城功能菜单已接官方设置窗口。角色切换、损坏存档恢复、离线收益和拍照仍属未完成范围。
 
 以上为 Unity / C# 的目标范围，尚未完整接入和验收。
 
 ## 完整还原部分
 
-已有 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 的槽位发现／创建和 [LocalJsonSaveFile](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs) 的临时写入、备份、损坏原字节保留与恢复代码。启动界面、完整角色格式、设置、角色切换及离线收益尚未接通，不能据此认定存档系统已完成。
+已有 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 的槽位发现／创建和 [LocalJsonSaveFile](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs) 的临时写入、备份、损坏原字节保留与恢复代码。主城设置入口使用官方 `SettingsDialog` 控件树、30 张固定版 Sprite 和点击音效；[HomeSettingsProfile](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs) 按角色槽保存音量、帧率和数值显示，写入失败时维持旧设置。设置页目前接通 30／60 帧、总／音乐／音效／语音滑杆和完整／简略显示；消息推送及单机不适用控件隐藏，游戏页语言控件固定为当前中文。
 
 ## 自定义实现
 
@@ -34,32 +34,27 @@ Windows 采用竖屏等比缩放、中文和多个独立本地角色存档，移
 
 ## 尚未实现
 
-- 启动存档选择、新建和角色切换、设置、完整角色数据保存／恢复、实际进入时离线收益及主城拍照。
-- 恢复官方 Unity 代码、配置、prefab、资源与调用关系，完成本地事务、实际入口和界面接线。
+- 启动存档选择、新建和角色切换、完整角色数据保存／恢复、实际进入时离线收益及主城拍照。
+- 设置页的 URP 分辨率缩放、Bloom、其他画质组和主城背景音乐尚未接入；当前 Unity 包清单没有 URP，现有设置页隐藏这些未接线选项。
+- 恢复启动存档与拍照使用的官方 Unity 代码、配置、prefab、资源和调用关系，完成对应本地流程与界面接线。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
 
 ### 待迁移的规则与表现
 
-以下要求均须在 Unity 中重新接入和验证；它们描述迁移目标，不构成当前实现结论。
+以下项目仍须继续接入和验证；已接入设置的实际运行范围另行标明。
 
-原设置四页、图片、中文、选中状态和点击声须接入。总／音乐／音效／语音按0～100%分别控制，后三项默认静音；音量组合实际作用于BGM、界面声与剧情配音。
+已接官方游戏、画质、声音、其他四页、中文资源、选中态和 `click.wav`。音量值按官方 `SoundSettingsUI` 的 0～1 语义保存；默认总音量100%、音乐／音效／语音0%采用已确认的单机设置。主控作用于 `AudioListener`，音效与语音控制主城设置点击、扭蛋演出音效及果树教学配音；主城背景音乐源尚未接入，音乐滑杆目前只保存独立配置。
 
-原分辨率低／中／高／极致对应540／720／1080／窗口原生宽，受实际窗口限制并即时更新视口；30／60帧默认60，原隐藏90帧／动态项仍隐藏。长位数完整／简略使用万／亿并截断，不高估余额。
+30／60帧默认60已按官方 `EFrameRateMode` 接到 `Application.targetFrameRate`；官方90帧／动态项隐藏。完整／简略按确认的万／亿截断规则影响主城顶栏货币。分辨率低／中／高／极致的540／720／1080／窗口原生宽须复原 `RenderQualitySetter` 使用的 URP `renderScale` 后再开放；当前工程未引用 URP。
 
-Bloom 强度须恢复原 0／25／50／100 四档及原服务调用；原设备默认值尚未从服务初始化代码确定，不能将旧本地默认100标为官方默认。
+Bloom 的0／25／50／100四档、反射及其他质量效果须恢复原 URP Volume／设备调用后再开放；官方 Bloom 默认由设备档位和旧存档决定，不能用固定100代替。
 
-设置立即保存且不推进玩法随机，失败恢复值和实际渲染／播放。关闭、空白与Esc沿原模态处理。
+设置使用角色槽 `settings.json` 立即原子保存，不推进玩法随机；失败时保留并重新应用旧值。模态可点空白关闭或按 Esc 返回。四页真实输入、画面、重启恢复、保存失败和音频表现尚待 Play Mode 验收。
 
 原可保留的玩法操作都经费用、奖励、随机、库存和回执共同提交，关闭保存失败不立即退出。
 
 ### 依据与代码定位
 
-以下为官方来源、既有规则与回归参考；
+[SettingsDialog.cs](../../.tools/source-packages/official-code/client-source/SettingsDialog.cs)、[SoundSettingsUI.cs](../../.tools/source-packages/official-code/launch-source/SoundSettingsUI.cs)、[FrameRateSettingsItem.cs](../../.tools/source-packages/official-code/client-source/FrameRateSettingsItem.cs)、[NumberDisplayRuleSettings.cs](../../.tools/source-packages/official-code/client-source/NumberDisplayRuleSettings.cs)、[RenderQualitySetter.cs](../../.tools/source-packages/official-code/launch-source/RenderQualitySetter.cs)、[BloomIntensityService.cs](../../.tools/source-packages/official-code/launch-source/BloomIntensityService.cs)
 
-、
-
-[source-manifest.json](../../assets/reference/settings/source-manifest.json)、[UIBloomManager.cs](../../.tools/source-packages/official-code/client-source/UIBloomManager.cs)、[BloomIntensitySettingsItem.cs](../../.tools/source-packages/official-code/client-source/BloomIntensitySettingsItem.cs)、[LoginServerSetterUI](../../.tools/source-packages/official-code/client-source/LoginServerSetterUI.cs)
-
-[PlanesListPanel](../../.tools/source-packages/official-code/client-source/PlanesListPanel.cs)、
-
-、[ProfileSlotCatalog.cs](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs)、[LocalJsonSaveFile.cs](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs)
+[settings source manifest](../../assets/reference/settings/source-manifest.json)、[settings runtime generator](../../scripts/prepare_unity_home_settings.py)、[HomeHudView.Settings.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Settings.cs)、[HomeSettingsProfile.cs](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs)、[ProfileSlotCatalog.cs](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs)、[LocalJsonSaveFile.cs](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs)。载荷与规则测试：`python -B scripts/test_prepare_unity_home_settings.py`。

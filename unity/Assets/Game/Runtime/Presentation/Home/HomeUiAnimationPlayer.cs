@@ -19,6 +19,10 @@ namespace Zjcs.Presentation.Home
         private Dictionary<string, GameObject> nodes;
         private Coroutine playback;
 
+        public bool IsPlaying => playback != null;
+        public float PlaybackTime { get; private set; }
+        public float PlaybackDeltaTime { get; private set; }
+
         public void Initialize(Dictionary<string, GameObject> nodeMap)
         {
             nodes = nodeMap;
@@ -63,10 +67,12 @@ namespace Zjcs.Presentation.Home
             float elapsed = 0f;
             do
             {
+                PlaybackTime = elapsed;
+                PlaybackDeltaTime = Time.unscaledDeltaTime;
                 float time = loop ? elapsed % duration : Mathf.Min(elapsed, duration);
                 foreach (BoundTrack track in tracks) Apply(track, track.Curve.Evaluate(time));
                 if (!loop && elapsed >= duration) break;
-                elapsed += Time.deltaTime;
+                elapsed += PlaybackDeltaTime;
                 yield return null;
             }
             while (true);

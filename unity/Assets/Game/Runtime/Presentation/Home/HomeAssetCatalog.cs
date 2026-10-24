@@ -56,6 +56,24 @@ namespace Zjcs.Presentation.Home
     }
 
     [Serializable]
+    public sealed class HomeSkinRuntimeData
+    {
+        public string version;
+        public HomeSkinEntity[] entities;
+    }
+
+    [Serializable]
+    public sealed class HomeSkinEntity
+    {
+        public int skin_item_id;
+        public int environment_skin_id;
+        public string name;
+        public int type;
+        public float[] slot;
+        public HomeSceneLayer[] layers;
+    }
+
+    [Serializable]
     public sealed class HomeFurnitureScene
     {
         public int type;
@@ -427,12 +445,21 @@ namespace Zjcs.Presentation.Home
     public sealed class HomeUiData
     {
         public string version;
-        public HomeUiPanel[] panels;
+        public HomeUiFlatPanel[] panels;
         public HomeTextPair[] texts;
         public HomeDynamicSprite[] dynamic_sprites;
         public HomeTextPair[] furniture_names;
         public HomeTextPair[] furniture_type_names;
         public HomeTextPair[] strings;
+        public HomeAstrologicalTagArt[] astrological_tag_art;
+    }
+
+    [Serializable]
+    public sealed class HomeAstrologicalTagArt
+    {
+        public int property_type;
+        public HomeSpriteRef icon;
+        public float[] color;
     }
 
     [Serializable]
@@ -508,6 +535,8 @@ namespace Zjcs.Presentation.Home
         private readonly Dictionary<string, HomeUiPanel> panels = new Dictionary<string, HomeUiPanel>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> furnitureNames = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> furnitureTypeNames = new Dictionary<string, string>(StringComparer.Ordinal);
+        private readonly Dictionary<int, HomeAstrologicalTagArt> astrologicalTagArt =
+            new Dictionary<int, HomeAstrologicalTagArt>();
         private readonly List<string> additionalSpriteFolders = new List<string>();
         private TMP_FontAsset font;
         private HomeTreasureGachaMachineConfig treasureGachaMachine;
@@ -515,15 +544,19 @@ namespace Zjcs.Presentation.Home
         public string Folder { get; }
         public HomeSceneData Scene { get; }
         public HomeUiData Ui { get; }
+        public HomeSkinRuntimeData HomeSkins { get; }
         public HomeTreasureGachaMachineConfig TreasureGachaMachine => treasureGachaMachine;
 
-        private HomeAssetCatalog(string folder, HomeSceneData scene, HomeUiData ui)
+        private HomeAssetCatalog(string folder, HomeSceneData scene, HomeUiData ui,
+            HomeSkinRuntimeData homeSkins)
         {
             Folder = folder;
             Scene = scene;
             Ui = ui;
-            foreach (HomeUiPanel panel in ui.panels ?? Array.Empty<HomeUiPanel>())
-                if (panel != null && !string.IsNullOrEmpty(panel.key)) panels[panel.key] = panel;
+            HomeSkins = homeSkins;
+            foreach (HomeUiFlatPanel panel in ui.panels ?? Array.Empty<HomeUiFlatPanel>())
+                if (panel != null && !string.IsNullOrEmpty(panel.key))
+                    panels[panel.key] = RestoreFlatPanelNodes(panel);
             foreach (HomeTextPair text in ui.texts ?? Array.Empty<HomeTextPair>())
                 if (text != null && !string.IsNullOrEmpty(text.key)) texts[text.key] = text.value ?? string.Empty;
             foreach (HomeDynamicSprite sprite in ui.dynamic_sprites ?? Array.Empty<HomeDynamicSprite>())
@@ -532,6 +565,8 @@ namespace Zjcs.Presentation.Home
                 if (name != null) furnitureNames[name.key] = name.value ?? string.Empty;
             foreach (HomeTextPair name in ui.furniture_type_names ?? Array.Empty<HomeTextPair>())
                 if (name != null) furnitureTypeNames[name.key] = name.value ?? string.Empty;
+            foreach (HomeAstrologicalTagArt setting in ui.astrological_tag_art ?? Array.Empty<HomeAstrologicalTagArt>())
+                if (setting != null) astrologicalTagArt[setting.property_type] = setting;
         }
 
         public static HomeAssetCatalog LoadDefault()
@@ -539,11 +574,15 @@ namespace Zjcs.Presentation.Home
             string folder = Path.Combine(Application.streamingAssetsPath, FolderName);
             HomeSceneData scene = Read<HomeSceneData>(Path.Combine(folder, "scene.json"));
             HomeUiData ui = Read<HomeUiData>(Path.Combine(folder, "ui.json"));
+            HomeSkinRuntimeData homeSkins = Read<HomeSkinRuntimeData>(Path.Combine(folder, "home-skins.json"));
             if (scene == null || scene.camera == null || scene.background == null || scene.background.Length == 0)
                 throw new InvalidDataException("The official home scene payload is missing.");
             if (ui == null || ui.panels == null || ui.panels.Length == 0)
                 throw new InvalidDataException("The official home UI payload is missing.");
-            return new HomeAssetCatalog(folder, scene, ui);
+            if (homeSkins == null || homeSkins.version != "854_156383"
+                || homeSkins.entities == null || homeSkins.entities.Length == 0)
+                throw new InvalidDataException("The official home skin payload is missing or invalid.");
+            return new HomeAssetCatalog(folder, scene, ui, homeSkins);
         }
 
         private static T Read<T>(string path) where T : class
@@ -555,6 +594,9 @@ namespace Zjcs.Presentation.Home
         public bool HasPanel(string key) => key != null && panels.ContainsKey(key);
 
         public HomeUiPanel Panel(string key) => panels.TryGetValue(key, out HomeUiPanel panel) ? panel : null;
+
+        public HomeAstrologicalTagArt AstrologicalTagArt(int propertyType) =>
+            astrologicalTagArt.TryGetValue(propertyType, out HomeAstrologicalTagArt setting) ? setting : null;
 
         public void LoadPanelExtension(string path)
         {
@@ -600,6 +642,8 @@ namespace Zjcs.Presentation.Home
 
         private static HomeUiPanel RestoreFlatPanelNodes(HomeUiFlatPanel flatPanel)
         {
+            if (flatPanel == null || flatPanel.root == null)
+                throw new InvalidDataException("The official home panel has no flattened root.");
             HomeUiNode root = flatPanel.root.ToNode();
             if (string.IsNullOrEmpty(root.path))
                 throw new InvalidDataException("The official home panel root path is missing: " + flatPanel.key);

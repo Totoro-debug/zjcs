@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Zjcs.Offline.State;
 
 namespace Zjcs.Offline.Home
 {
@@ -16,6 +17,7 @@ namespace Zjcs.Offline.Home
     public sealed class HomeLevelUpResult
     {
         public bool Success;
+        public bool CanApply;
         public int Level;
         public List<HomeCostEntry> Costs = new List<HomeCostEntry>();
         public string Error = string.Empty;
@@ -52,7 +54,8 @@ namespace Zjcs.Offline.Home
 
         /// <summary>FurnitureBase.DoRepair → FurnitureRepairDialog confirmation.</summary>
         public bool RepairFurniture(OfflineHomeIncomeSession session, int type, HomeConditionContext context,
-            Func<int, long> itemCount, Action<int, long> consume, string receipt)
+            Func<int, long> itemCount, Func<IReadOnlyList<HomeCostEntry>, bool> consume,
+            Action<IReadOnlyList<HomeCostEntry>> refund, string receipt)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (FurnitureState(session, type, context) != HomeFurnitureState.CanRepair) return false;
@@ -62,6 +65,7 @@ namespace Zjcs.Offline.Home
                 .Where(cost => cost != null && cost.itemId > 0 && cost.count > 0).ToArray();
             foreach (HomeCostEntry cost in costs)
                 if (itemCount != null && itemCount(cost.itemId) < cost.count) return false;
+            if (costs.Length > 0 && (consume == null || refund == null || !consume(costs))) return false;
             if (!session.Mutate(receipt, save =>
                 {
                     OfflineHomeFurnitureEntry entry = save.Furniture.FirstOrDefault(value => value.Type == type);
@@ -78,9 +82,11 @@ namespace Zjcs.Offline.Home
                             if (required == null || !required.Owned)
                                 throw new InvalidOperationException("A prerequisite furniture is not repaired.");
                         }
-                })) return false;
-            foreach (HomeCostEntry cost in costs)
-                consume?.Invoke(cost.itemId, cost.count);
+                }))
+            {
+                if (costs.Length > 0) refund?.Invoke(costs);
+                return false;
+            }
             return true;
         }
 
@@ -111,7 +117,36 @@ namespace Zjcs.Offline.Home
 
         public HomeLevelUpResult LevelUp(OfflineHomeIncomeSession session, int hangUpId,
             HomeConditionContext context, int blessingLevel, Func<int, long> itemCount,
-            Action<int, long> consume, string receipt)
+            Func<IReadOnlyList<HomeCostEntry>, bool> consume, Action<IReadOnlyList<HomeCostEntry>> refund,
+            string receipt)
+        {
+            HomeLevelUpResult result = CheckLevelUp(session, hangUpId, context, blessingLevel, itemCount);
+            if (!result.CanApply) return result;
+            int level = result.Level - 1;
+            if (result.Costs.Count > 0 && (consume == null || refund == null || !consume(result.Costs)))
+            {
+                result.CanApply = false;
+                result.Error = "items";
+                return result;
+            }
+            if (!session.Mutate(receipt, save =>
+                {
+                    OfflineHomeHangUpEntry entry = save.HangUps.FirstOrDefault(value => value.HangUpId == hangUpId);
+                    if (entry == null) throw new InvalidOperationException("The hang-up is not unlocked.");
+                    entry.Level = level + 1;
+                }))
+            {
+                if (result.Costs.Count > 0) refund?.Invoke(result.Costs);
+                result.Success = false;
+                result.Error = "save";
+                return result;
+            }
+            result.Success = true;
+            return result;
+        }
+
+        public HomeLevelUpResult CheckLevelUp(OfflineHomeIncomeSession session, int hangUpId,
+            HomeConditionContext context, int blessingLevel, Func<int, long> itemCount)
         {
             var result = new HomeLevelUpResult();
             HomeHangUpRecord record = rules.HangUp(hangUpId);
@@ -130,14 +165,7 @@ namespace Zjcs.Offline.Home
             result.Costs = costs;
             foreach (HomeCostEntry cost in costs)
                 if (itemCount == null || itemCount(cost.itemId) < cost.count) { result.Error = "items"; return result; }
-            if (!session.Mutate(receipt, save =>
-                {
-                    OfflineHomeHangUpEntry entry = save.HangUps.FirstOrDefault(value => value.HangUpId == hangUpId);
-                    if (entry == null) throw new InvalidOperationException("The hang-up is not unlocked.");
-                    entry.Level = level + 1;
-                })) { result.Error = "save"; return result; }
-            foreach (HomeCostEntry cost in costs) consume?.Invoke(cost.itemId, cost.count);
-            result.Success = true;
+            result.CanApply = true;
             result.Level = level + 1;
             return result;
         }
@@ -238,26 +266,111 @@ namespace Zjcs.Offline.Home
             return result.ToArray();
         }
 
-        public bool EquipSkin(OfflineHomeIncomeSession session, int category, int skinItemId, string receipt)
+        public bool EquipSkin(OfflineHomeIncomeSession session, int category, int type, int skinItemId,
+            Func<int, long> itemCount, string receipt)
         {
-            bool valid = category switch
+            bool valid;
+            bool isDefault;
+            switch (category)
             {
-                0 => rules.Data.furnitureSkins.Any(value => value.skinItemId == skinItemId),
-                1 => rules.Data.themeSkins.Any(value => value.skinItemId == skinItemId),
-                2 => rules.Data.environmentSkins.Any(value => value.skinItemId == skinItemId),
-                _ => false
-            };
-            if (!valid) return false;
+                case 0:
+                    HomeFurnitureSkinRecord furniture = rules.Data.furnitureSkins.FirstOrDefault(value =>
+                        value.skinItemId == skinItemId && value.furnitureType == type);
+                    valid = furniture != null;
+                    isDefault = furniture != null && furniture.isDefault;
+                    break;
+                case 1:
+                    HomeThemeSkinRecord theme = rules.Data.themeSkins.FirstOrDefault(value =>
+                        value.skinItemId == skinItemId && value.themeType == type);
+                    valid = theme != null;
+                    isDefault = theme != null && theme.isDefault;
+                    break;
+                case 2:
+                    HomeEnvironmentSkinRecord environment = rules.Data.environmentSkins.FirstOrDefault(value =>
+                        value.skinItemId == skinItemId && value.environmentType == type);
+                    valid = environment != null;
+                    isDefault = environment != null && environment.isDefault;
+                    break;
+                default:
+                    return false;
+            }
+            if (!valid || (!isDefault && (itemCount == null || itemCount(skinItemId) <= 0))) return false;
             return session.Mutate(receipt, save =>
             {
-                OfflineHomeSkinSelection entry = save.Skins.FirstOrDefault(value => value.Category == category);
+                OfflineHomeSkinSelection entry = save.Skins.FirstOrDefault(value =>
+                    value.Category == category && value.Type == type);
                 if (entry == null)
                 {
-                    entry = new OfflineHomeSkinSelection { Category = category };
+                    entry = new OfflineHomeSkinSelection { Category = category, Type = type };
                     save.Skins.Add(entry);
                 }
                 entry.SkinItemId = skinItemId;
             });
+        }
+
+        public int CurrentSkin(ProfileSlotCatalog slots, string slotId, int category, int type)
+        {
+            OfflineHomeSkinSelection selection = OfflineHomeIncomeSession.ReadSkinSelections(slots, slotId)
+                .FirstOrDefault(value => value.Category == category && (value.Type == type
+                    || (value.Type < 0 && SkinType(category, value.SkinItemId) == type)));
+            if (selection != null) return selection.SkinItemId;
+            return DefaultSkin(category, type);
+        }
+
+        public bool EquipSkin(ProfileSlotCatalog slots, string slotId, int category, int type,
+            int skinItemId, Func<int, long> itemCount, string receipt)
+        {
+            if (string.IsNullOrWhiteSpace(receipt) || type < 0 || type > 32 || skinItemId <= 0) return false;
+            bool valid;
+            bool isDefault;
+            switch (category)
+            {
+                case 0:
+                    HomeFurnitureSkinRecord furniture = rules.Data.furnitureSkins
+                        .FirstOrDefault(value => value.skinItemId == skinItemId && value.furnitureType == type);
+                    valid = furniture != null;
+                    isDefault = furniture != null && furniture.isDefault;
+                    break;
+                case 1:
+                    HomeThemeSkinRecord theme = rules.Data.themeSkins
+                        .FirstOrDefault(value => value.skinItemId == skinItemId && value.themeType == type);
+                    valid = theme != null;
+                    isDefault = theme != null && theme.isDefault;
+                    break;
+                case 2:
+                    HomeEnvironmentSkinRecord environment = rules.Data.environmentSkins
+                        .FirstOrDefault(value => value.skinItemId == skinItemId && value.environmentType == type);
+                    valid = environment != null;
+                    isDefault = environment != null && environment.isDefault;
+                    break;
+                default:
+                    return false;
+            }
+            if (!valid || (!isDefault && (itemCount == null || itemCount(skinItemId) <= 0))) return false;
+            return OfflineHomeIncomeSession.SaveSkinSelection(slots, slotId, category, type,
+                skinItemId, receipt);
+        }
+
+        private int SkinType(int category, int skinItemId)
+        {
+            return category switch
+            {
+                0 => rules.Data.furnitureSkins.FirstOrDefault(value => value.skinItemId == skinItemId)?.furnitureType ?? -1,
+                1 => rules.Data.themeSkins.FirstOrDefault(value => value.skinItemId == skinItemId)?.themeType ?? -1,
+                2 => rules.Data.environmentSkins.FirstOrDefault(value => value.skinItemId == skinItemId)?.environmentType ?? -1,
+                _ => -1
+            };
+        }
+
+        private int DefaultSkin(int category, int type)
+        {
+            return category switch
+            {
+                0 => rules.Data.furnitureSkins.FirstOrDefault(value => value.isDefault && value.furnitureType == type)?.skinItemId ?? 0,
+                1 => rules.Data.themeSkins.FirstOrDefault(value => value.isDefault && value.themeType == type)?.skinItemId ?? 0,
+                2 => rules.Data.environmentSkins.FirstOrDefault(value => value.isDefault && value.environmentType == type)?.skinItemId ?? 0,
+                _ => 0
+            };
         }
     }
 }

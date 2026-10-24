@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
@@ -26,6 +28,7 @@ namespace Zjcs.Presentation.Home
 
         private readonly List<string> log = new List<string>();
         private readonly Dictionary<string, object> report = new Dictionary<string, object>();
+        private bool mainlandRequested;
 
         private IEnumerator Start()
         {
@@ -39,7 +42,8 @@ namespace Zjcs.Presentation.Home
             {
                 if (string.IsNullOrEmpty(slotId))
                     throw new InvalidOperationException("The acceptance profile was not created by the launcher.");
-                runtime = HomeFeatureRuntime.Begin(slotId, Root, null, null);
+                runtime = HomeFeatureRuntime.Begin(slotId, Root, null, null, () => mainlandRequested = true);
+                runtime.TutorialAutoStartEnabled = false;
             }
             catch (Exception error)
             {
@@ -58,6 +62,13 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
 
+            if (Environment.GetCommandLineArgs().Contains("-homeAcceptanceRealInput"))
+            {
+                bool inputPassed = false;
+                yield return VerifyRealInput(runtime, value => inputPassed = value);
+                ok &= inputPassed;
+            }
+
             HideForeignCanvases();
             DumpFullscreen();
             ok &= Check("catalog", () =>
@@ -67,8 +78,12 @@ namespace Zjcs.Presentation.Home
                 Assert(runtime.Catalog.Scene.click_regions.Length >= 16, "click region count");
                 Assert(runtime.Catalog.Ui.panels.Length >= 40, "ui panel count");
                 Assert(runtime.Rules.Data.items.Length == 12694, "item table size");
+                Assert(runtime.Tutorials.Guides.Count == 6, "official tutorial guide count");
+                Assert(runtime.Tutorials.TotalNodeCount == 190, "official tutorial node count");
+                Assert(runtime.Tutorials.Dialogues("RepaireFurniture2", 0).Count > 0, "official tutorial dialogues");
                 return runtime.Catalog.Scene.background.Length + " layers, " +
-                       runtime.Catalog.Ui.panels.Length + " panels, " + runtime.Rules.Data.items.Length + " items";
+                       runtime.Catalog.Ui.panels.Length + " panels, " + runtime.Rules.Data.items.Length + " items, "
+                       + runtime.Tutorials.Guides.Count + " tutorials / " + runtime.Tutorials.TotalNodeCount + " nodes";
             });
             ok &= Check("scene", () => runtime.transform.childCount + " runtime roots");
             ok &= Check("repair", () =>
@@ -140,6 +155,41 @@ namespace Zjcs.Presentation.Home
                 Assert(runtime.Environment != null, "environment view");
                 Assert(runtime.Environment.Config.stages.Length >= 4, "day stages");
                 Assert(runtime.Environment.Config.lightTimes.Length >= 2, "light times");
+                FieldInfo clock = typeof(HomeEnvironmentView).GetField("daySeconds",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(clock != null, "environment clock field");
+                FieldInfo homeDay = typeof(HomeEnvironmentView).GetField("dayIndex",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(homeDay != null, "environment game-day field");
+                long createdAt = runtime.Profile.Save.CreatedAtUnixSeconds;
+                Assert(createdAt > 0, "profile creation time");
+                double secondsPerDay = (double)runtime.Environment.Config.secondsPerMinute
+                    * runtime.Environment.Config.minutesPerHour * runtime.Environment.Config.hoursPerDay;
+                long expectedDays = (long)Math.Floor(Math.Max(0L,
+                    DateTimeOffset.UtcNow.ToUnixTimeSeconds() - createdAt)
+                    * Math.Max(1.0, runtime.Environment.Config.timeScale) / secondsPerDay);
+                long actualDays = (long)homeDay.GetValue(runtime.Environment);
+                Assert(actualDays == expectedDays || actualDays + 1 == expectedDays,
+                    "moon cycle must use elapsed home days from profile creation");
+                double originalTime = (double)clock.GetValue(runtime.Environment);
+                try
+                {
+                    clock.SetValue(runtime.Environment, 5 * 3600d + 59 * 60d + 59d);
+                    runtime.Environment.Tick(0.1f);
+                    Assert(runtime.Environment.Hour == 6, "clock crossed the 06:00 light boundary");
+                    Assert(!IsLayerGroupVisible(runtime.Scene, "/HouseOutside/HouseOutSideLight/Door_Light"),
+                        "official 06:00 door light state is off");
+                    clock.SetValue(runtime.Environment, 17 * 3600d + 59 * 60d + 59d);
+                    runtime.Environment.Tick(0.1f);
+                    Assert(runtime.Environment.Hour == 18, "clock crossed the 18:00 light boundary");
+                    Assert(IsLayerGroupVisible(runtime.Scene, "/HouseOutside/HouseOutSideLight/Door_Light"),
+                        "official 18:00 door light state is on");
+                }
+                finally
+                {
+                    clock.SetValue(runtime.Environment, originalTime);
+                    runtime.Environment.Tick(0.1f);
+                }
                 return "stage " + runtime.Environment.Stage + " time " + runtime.Environment.Hour + ":" +
                        runtime.Environment.Minute + " moon " + runtime.Environment.MoonPhase;
             });
@@ -172,14 +222,166 @@ namespace Zjcs.Presentation.Home
                 Assert(back.x <= right.x, "clamped drag");
                 runtime.Scene.ResetCamera();
                 return "bed/cart quads ok, clamp x " + right.x.ToString("0.00") + " -> " + back.x.ToString("0.00");
-            });            ok &= Check("tabs", () =>
+            });            ok &= Check("hud-button-events", () =>
             {
-                runtime.Hud.SelectTab(0, false);
-                Assert(runtime.Hud.CharacterPageOpen, "character page opened");
-                runtime.Hud.SelectTab(2, false);
-                Assert(!runtime.Hud.CharacterPageOpen, "character page closed");
-                return "character tab opens and home returns";
+                HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
+                HomeUiRenderer bottom = PrivateField<HomeUiRenderer>(runtime.Hud, "bottomRenderer");
+                HomeUiRenderer functions = PrivateField<HomeUiRenderer>(runtime.Hud, "functionsRenderer");
+                GameObject functionsPanel = PrivateField<GameObject>(runtime.Hud, "functionsPanel");
+                GameObject noticeRoot = PrivateField<GameObject>(runtime.Hud, "noticeRoot");
+                TMP_Text toast = PrivateField<TMP_Text>(runtime.Hud, "toast");
+
+                Assert(!runtime.Hud.CharacterPageOpen, "HUD construction must not open the character page");
+                Assert(PrivateField<GameObject>(runtime.Hud, "characterRoot") == null,
+                    "HUD construction must not instantiate the character page");
+                Assert(!functionsPanel.activeSelf && !runtime.Hud.AnyModalOpen,
+                    "HUD construction must not open a menu or modal");
+
+                HomeUiRenderer avatarRenderer = PrivateField<List<HomeUiRenderer>>(runtime.Hud, "owned")
+                    .FirstOrDefault(value => value.Find<Button>("/PublicPlayerIconHome") != null);
+                Assert(avatarRenderer != null, "official player icon button exists");
+                Button avatar = avatarRenderer.Find<Button>("/PublicPlayerIconHome");
+                avatar.onClick.Invoke();
+                Assert(runtime.Hud.CharacterPageOpen, "player icon onClick opens the character page");
+                Assert(runtime.Hud.TryHandleBack() && !runtime.Hud.CharacterPageOpen,
+                    "Escape back closes the character page");
+
+                Selectable[] tabs = new[] { "Character", "TravelNote", "Home", "Legion", "Mainland" }
+                    .Select(name => bottom.Find<Selectable>("/PublicBottomBar/Content/Group/" + name + "/UnlockObj"))
+                    .ToArray();
+                Assert(tabs.All(value => value != null), "all five official bottom tabs have input controls");
+                for (int index = 0; index < tabs.Length; index++)
+                {
+                    ActivateTab(tabs[index]);
+                    Assert(PrivateField<int>(runtime.Hud, "selectedTab") == index,
+                        "bottom tab input selects index=" + index);
+                    if (index == 4) Assert(mainlandRequested, "mainland tab requests host navigation");
+                }
+                ActivateTab(tabs[0]);
+                Assert(runtime.Hud.CharacterPageOpen, "character tab input opens the character page");
+                ActivateTab(tabs[2]);
+                Assert(!runtime.Hud.CharacterPageOpen, "home tab returns from the character page");
+
+                Button menuEntry = home.Find<Button>(
+                    "/HomeUI/Content/FunctionEntryGroup/FunctionEntryFunc/Content/Entry/EntryBtnFolded");
+                Assert(menuEntry != null, "official function menu entry exists");
+                menuEntry.onClick.Invoke();
+                Assert(functionsPanel.activeSelf, "function entry onClick opens the menu");
+                Button menuClose = functions.Find<Button>("/FunctionEntryDialog/CloseBtn");
+                Assert(menuClose != null, "official function menu close button exists");
+                menuClose.onClick.Invoke();
+                Assert(!functionsPanel.activeSelf, "function menu close onClick closes the menu");
+
+                menuEntry.onClick.Invoke();
+                int menuButtonCount = 0;
+                foreach (GameObject node in functions.AllNodes)
+                {
+                    Button button = node.GetComponent<Button>();
+                    if (button == null) continue;
+                    if (node.name == "CloseBtn")
+                    {
+                        button.onClick.Invoke();
+                        Assert(!functionsPanel.activeSelf, "each menu close event folds the menu");
+                    }
+                    else
+                    {
+                        runtime.Hud.ShowNotice("menu-event-sentinel");
+                        button.onClick.Invoke();
+                        string menuPath = PathOf(node.transform);
+                        if (menuPath.Contains("FunctionEntryTaskItem"))
+                        {
+                            Assert(PrivateField<string>(runtime.Hud, "activePanelKey") == "quests",
+                                "task menu opens the official task panel");
+                            HomeUiRenderer tasks = PrivateField<HomeUiRenderer>(runtime.Hud, "taskPanelRenderer");
+                            string[] taskTabs = { "Task", "Delegate", "Daily", "Weekly", "AchievementTitle" };
+                            for (int tabIndex = 0; tabIndex < taskTabs.Length; tabIndex++)
+                            {
+                                Toggle taskTab = tasks.Find<Toggle>("/TaskPanel/BgPanel/Content/BottomGo/TabGroup_11/TabGroup/TaskPanelTabGroupItem_11_" + taskTabs[tabIndex]);
+                                Assert(taskTab != null, "official task tab remains a Toggle");
+                                ActivateTab(taskTab);
+                                Assert(PrivateField<int>(runtime.Hud, "selectedTaskTab") == tabIndex,
+                                    "task Toggle input selects index=" + tabIndex);
+                            }
+                            Assert(runtime.Hud.TryHandleBack(), "back closes the task panel");
+                        }
+                        else if (menuPath.Contains("FunctionEntrySettingsItem"))
+                        {
+                            Assert(PrivateField<string>(runtime.Hud, "activePanelKey") == "settings",
+                                "settings menu opens its official dialog");
+                            HomeUiRenderer settings = PrivateField<HomeUiRenderer>(runtime.Hud, "activeDialogRenderer");
+                            foreach (string tabName in new[] { "GameGeneralTab", "QualityTab", "SoundTab", "OtherTab" })
+                            {
+                                Toggle tab = settings.Find<Toggle>("/SettingsDialog/BgDialog1/Content/TopTabGo/TopTabGroupGO/TabGroup/" + tabName);
+                                Assert(tab != null, "official settings Toggle exists: " + tabName);
+                                ActivateTab(tab);
+                                Assert(tab.isOn, "settings Toggle input selects: " + tabName);
+                            }
+                            Assert(runtime.Hud.TryHandleBack(), "back closes settings");
+                        }
+                        else if (menuPath.Contains("FunctionEntryHomeSkinItem"))
+                        {
+                            HomeSkinScreenController skins = PrivateField<HomeSkinScreenController>(runtime.Hud, "homeSkin");
+                            Assert(skins != null && skins.IsOpen, "home skin menu opens its official page");
+                            Assert(runtime.Hud.TryHandleBack() && !skins.IsOpen, "back closes the home skin page");
+                        }
+                        else
+                            Assert(toast.text != "menu-event-sentinel", "menu onClick dispatches " + menuPath);
+                    }
+                    menuButtonCount++;
+                }
+                Assert(menuButtonCount >= 17, "all official function menu buttons were checked");
+                menuEntry.onClick.Invoke();
+                Assert(runtime.Hud.TryHandleBack() && !functionsPanel.activeSelf,
+                    "Escape back closes the function menu");
+
+                TopBarCurrency[] currencies = GameObject.Find("Home Canvas")
+                    .GetComponentsInChildren<TopBarCurrency>(true);
+                Assert(currencies.Length == 3, "three official top bar currencies exist");
+                foreach (TopBarCurrency currency in currencies)
+                {
+                    Button details = currency.Renderer.Find<Button>("/MoneyUI/DescBtn");
+                    Button add = currency.Renderer.Find<Button>("/MoneyUI/AddBtn");
+                    Assert(details != null && add != null, "currency details and add buttons exist");
+                    details.onClick.Invoke();
+                    Assert(noticeRoot.activeSelf && toast.text.Contains("x"),
+                        "currency details onClick displays its local balance");
+                    add.onClick.Invoke();
+                    Assert(toast.text.Contains("离线模式"), "currency add onClick reports offline policy");
+                }
+
+                runtime.Hud.ShowBed();
+                GameObject dialog = PrivateField<GameObject>(runtime.Hud, "activeDialog");
+                Button overlay = dialog == null ? null : dialog.GetComponent<Button>();
+                Assert(overlay != null, "modal backdrop close button exists");
+                overlay.onClick.Invoke();
+                Assert(!runtime.Hud.AnyModalOpen, "modal backdrop onClick closes the active window");
+                return "avatar, three currency controls, five tabs, menu open/close and modal backdrop use Unity events";
             });            yield return CheckUi(runtime, value => ok &= value);
+            ok &= Check("storage-input-events", () =>
+            {
+                Assert(runtime.Scene.TryGetFurnitureClickBounds(7, out Rect bounds), "type 7 scene hit bounds");
+                HomeInputController input = PrivateField<HomeInputController>(runtime, "input");
+                Vector3 screen = runtime.Scene.Camera.WorldToScreenPoint(
+                    new Vector3(bounds.center.x, bounds.center.y, 0f));
+                input.PointerDown(screen, false);
+                input.PointerUp(screen, false);
+                GameObject inventoryRoot = PrivateField<GameObject>(runtime.Hud, "inventoryRoot");
+                Assert(inventoryRoot != null && inventoryRoot.activeSelf && runtime.Hud.AnyModalOpen,
+                    "type 7 input opens the real inventory panel");
+                Button close = inventoryRoot.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value != null
+                        && value.name.IndexOf("Close", StringComparison.OrdinalIgnoreCase) >= 0);
+                Assert(close != null && close.isActiveAndEnabled, "official inventory close button exists");
+                var pointer = new PointerEventData(EventSystem.current)
+                {
+                    button = PointerEventData.InputButton.Left
+                };
+                ExecuteEvents.Execute(close.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+                Assert(!runtime.Hud.AnyModalOpen
+                    && PrivateField<GameObject>(runtime.Hud, "inventoryRoot") == null,
+                    "inventory pointer-click event closes the real panel");
+                return "type 7 scene pointer route opens the official bag and its UI click closes it";
+            });
             ok &= Check("persistence", () =>
             {
                 string homePath = slots.GetHomePath(slotId);
@@ -190,7 +392,198 @@ namespace Zjcs.Presentation.Home
                 Assert(saved.Income.Count > 0, "income checkpoint written");
                 return "save bytes " + new FileInfo(homePath).Length;
             });
+            ok &= Check("tutorial-fixed-reward", () =>
+            {
+                int[] itemIds = { 1, 8050, 8101 };
+                Dictionary<int, long> before = itemIds.ToDictionary(itemId => itemId,
+                    itemId => runtime.ItemCount(itemId));
+                bool available = runtime.TutorialCanGetFixedReward(7);
+                Assert(runtime.TryClaimTutorialFixedReward(7, "acceptance:home-fixed-reward", out string reason),
+                    "fixed reward claim: " + reason);
+                Dictionary<int, long> after = itemIds.ToDictionary(itemId => itemId,
+                    itemId => runtime.ItemCount(itemId));
+                Assert(runtime.TryClaimTutorialFixedReward(7, "acceptance:home-fixed-reward-retry", out reason),
+                    "fixed reward retry: " + reason);
+                Assert(itemIds.All(itemId => runtime.ItemCount(itemId) == after[itemId]),
+                    "fixed reward retry must be idempotent");
+                Assert(!runtime.TutorialCanGetFixedReward(7), "fixed reward claim count is one");
+                if (available)
+                {
+                    Assert(after[1] == before[1] + 350, "official item 1 grant count");
+                    Assert(after[8050] == before[8050] + 10, "official item 8050 grant count");
+                    Assert(after[8101] == before[8101] + 5, "official item 8101 grant count");
+                }
+                else Assert(itemIds.All(itemId => after[itemId] == before[itemId]),
+                    "an already claimed reward must not grant again");
+                return "reward 7 available=" + available + ", inventory claim is durable and idempotent";
+            });
+            ok &= Check("tutorial-runner", () => RunTutorialRunnerAcceptance(runtime));
             Finish(ok);
+        }
+
+        private static string RunTutorialRunnerAcceptance(HomeFeatureRuntime runtime)
+        {
+            HomeTutorialCatalog catalog = runtime.Tutorials;
+            string root = Path.Combine(Path.GetTempPath(), "zjcs-home-tutorial-acceptance-"
+                + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
+            try
+            {
+                string graphPath = Path.Combine(root, "graph.json");
+                var graphHost = new TutorialAcceptanceHost();
+                var graphRunner = new HomeTutorialRunner(catalog, graphHost, graphPath);
+                Assert(graphRunner.QueueGuide("RepaireBaGuaLu"), "queue repair tutorial graph");
+                for (int tick = 0; tick < 512 && !graphRunner.IsGuideCompleted("RepaireBaGuaLu"); tick++)
+                    graphRunner.Tick(1f);
+                Assert(graphRunner.IsGuideCompleted("RepaireBaGuaLu") && !graphRunner.IsBlocked,
+                    "node/port graph reaches its official finish");
+
+                string resumePath = Path.Combine(root, "resume.json");
+                var initialHost = new TutorialAcceptanceHost { PendingStartDialogue = true };
+                var initialRunner = new HomeTutorialRunner(catalog, initialHost, resumePath);
+                Assert(initialRunner.QueueGuide("RepaireBaGuaLu"), "queue resume tutorial graph");
+                initialRunner.Tick(1f);
+                Assert(initialRunner.IsPending && File.Exists(resumePath), "pending dialogue was saved");
+                var resumedHost = new TutorialAcceptanceHost();
+                var resumedRunner = new HomeTutorialRunner(catalog, resumedHost, resumePath);
+                for (int tick = 0; tick < 512 && !resumedRunner.IsGuideCompleted("RepaireBaGuaLu"); tick++)
+                    resumedRunner.Tick(1f);
+                Assert(resumedHost.SawResume, "restart resumes the saved active node through the host");
+                Assert(resumedRunner.IsGuideCompleted("RepaireBaGuaLu") && !resumedRunner.IsBlocked,
+                    "restarted graph reaches its official finish");
+
+                HomeTutorialGuide optionGuide = catalog.Guide("RepaireFurniture2");
+                HomeTutorialNode optionNode = optionGuide.nodes.First(value => value.id == 123);
+                HomeTutorialStoryOption officialOption = catalog.StoryOption(optionGuide.name, 980);
+                HomeTutorialConnection selectedPort = catalog.FirstConnection(optionNode, "Options 0");
+                Assert(officialOption != null && officialOption.text == "我要拯救世界……"
+                    && selectedPort != null && selectedPort.node == 125,
+                    "official option row and Options 0 target are available");
+
+                string optionPath = Path.Combine(root, "option-resume.json");
+                var optionHost = new TutorialAcceptanceHost
+                {
+                    PendingNodeId = optionNode.id,
+                    OwnsCartItem = false
+                };
+                var optionRunner = new HomeTutorialRunner(catalog, optionHost, optionPath);
+                Assert(optionRunner.QueueGuide(optionGuide.name), "queue official option tutorial graph");
+                for (int tick = 0; tick < 512 && !optionRunner.IsBlocked
+                    && (!optionRunner.IsPending || optionRunner.ActiveNodeId != optionNode.id); tick++)
+                    optionRunner.Tick(1f);
+                Assert(optionRunner.IsPending && optionRunner.ActiveNodeId == optionNode.id
+                    && optionHost.ObservedNodeIds.Contains(optionNode.id),
+                    "a character without item 4011 reaches the official option node; active="
+                    + optionRunner.ActiveNodeId + " pending=" + optionRunner.IsPending
+                    + " blocked=" + optionRunner.IsBlocked + " error=" + optionRunner.LastError
+                    + " visited=" + string.Join(",", optionHost.ObservedNodeIds));
+
+                IReadOnlyList<HomeTutorialDialogue> optionDialogues = catalog.Dialogues(optionGuide.name, 0);
+                Assert(runtime.Hud != null, "Home HUD is available for the option input test");
+                runtime.Hud.ShowOfficialTutorialOptionDialog(optionDialogues,
+                    new[] { officialOption }, index => optionRunner.RecordOptionSelection(optionGuide,
+                        optionNode, "home-tutorial:" + optionGuide.name + ":" + optionNode.id, index));
+                HomeUiRenderer optionRenderer = PrivateField<HomeUiRenderer>(runtime.Hud, "tutorialDialogueRenderer");
+                for (int line = 0; line < optionDialogues.Count; line++)
+                {
+                    Button next = optionRenderer.Find<Button>("/OptionTalkDialog/NextBtn");
+                    var nextPointer = new PointerEventData(EventSystem.current)
+                    {
+                        button = PointerEventData.InputButton.Left
+                    };
+                    ExecuteEvents.Execute(next.gameObject, nextPointer, ExecuteEvents.pointerClickHandler);
+                }
+                Transform optionContent = optionRenderer.Find("/OptionTalkDialog/OptionSlots/Content").transform;
+                Button optionButton = optionContent.GetChild(0).GetComponent<Button>();
+                TMP_Text optionText = optionButton.transform.Find("Content/OptionText/Text").GetComponent<TMP_Text>();
+                Assert(optionText.text == officialOption.text, "official option label is presented");
+                var optionPointer = new PointerEventData(EventSystem.current)
+                {
+                    button = PointerEventData.InputButton.Left
+                };
+                ExecuteEvents.Execute(optionButton.gameObject, optionPointer, ExecuteEvents.pointerClickHandler);
+                Assert(!runtime.Hud.HasTutorialDialogue && optionRunner.IsPending
+                    && File.ReadAllText(optionPath).Contains("\"OptionSelectionIndex\": 0"),
+                    "option pointer input durably stores its selected output index");
+
+                var optionResumedHost = new TutorialAcceptanceHost { PendingNodeId = selectedPort.node };
+                var optionResumedRunner = new HomeTutorialRunner(catalog, optionResumedHost, optionPath);
+                optionResumedRunner.Tick(1f);
+                Assert(optionResumedRunner.ActiveNodeId == selectedPort.node
+                    && optionResumedRunner.IsPending && optionResumedHost.ObservedNodeIds.Contains(selectedPort.node),
+                    "restart follows the selected Options 0 port to its official node");
+
+                var blockedHost = new TutorialAcceptanceHost { UnsupportedNodeType = "GetFixAwardNode" };
+                var blockedRunner = new HomeTutorialRunner(catalog, blockedHost,
+                    Path.Combine(root, "unsupported.json"));
+                Assert(blockedRunner.QueueGuide("FirstMergeItem"), "queue fixed-reward graph");
+                for (int tick = 0; tick < 512 && !blockedRunner.IsBlocked; tick++) blockedRunner.Tick(1f);
+                Assert(blockedRunner.IsBlocked && blockedRunner.ActiveNodeId > 0
+                    && blockedRunner.LastError.Contains("unsupported"),
+                    "unsupported server-only award action stays blocked at its node");
+                return "graph progression, restart resume, official option input/branch recovery, and unsupported action blocking passed";
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
+
+        private sealed class TutorialAcceptanceHost : IHomeTutorialHost
+        {
+            public bool PendingStartDialogue;
+            public string UnsupportedNodeType;
+            public int PendingNodeId = -1;
+            public bool OwnsCartItem = true;
+            public bool SawResume;
+            public readonly List<int> ObservedNodeIds = new List<int>();
+            private bool pendingIssued;
+
+            public bool IsReady => true;
+
+            public bool TryEvaluateCondition(HomeTutorialGuide guide, HomeTutorialNode node,
+                out bool result, out string reason)
+            {
+                result = guide?.name != "RepaireFurniture2" || node?.id != 121 || OwnsCartItem;
+                reason = null;
+                return true;
+            }
+
+            public HomeTutorialHostResult BeginOrResumeNode(HomeTutorialGuide guide, HomeTutorialNode node,
+                IReadOnlyList<HomeTutorialDialogue> dialogues, string receipt, bool isResume, out string reason)
+            {
+                if (isResume) SawResume = true;
+                ObservedNodeIds.Add(node.id);
+                if (PendingStartDialogue && !pendingIssued && node.type == "StartStoryNode" && !isResume)
+                {
+                    pendingIssued = true;
+                    reason = null;
+                    return HomeTutorialHostResult.Pending;
+                }
+                if (node.type == UnsupportedNodeType)
+                {
+                    reason = "unsupported server-only action in acceptance host";
+                    return HomeTutorialHostResult.Unsupported;
+                }
+                if (node.id == PendingNodeId)
+                {
+                    reason = null;
+                    return HomeTutorialHostResult.Pending;
+                }
+                reason = null;
+                return HomeTutorialHostResult.Succeeded;
+            }
+
+            public HomeTutorialHostResult PollNode(HomeTutorialGuide guide, HomeTutorialNode node,
+                string receipt, out string reason)
+            {
+                reason = null;
+                if (node.id == PendingNodeId) return HomeTutorialHostResult.Pending;
+                return node.type == UnsupportedNodeType
+                    ? HomeTutorialHostResult.Unsupported : HomeTutorialHostResult.Succeeded;
+            }
+
+            public void EndGuide(HomeTutorialGuide guide, bool completed) { }
         }
 
         private static void HideForeignCanvases()
@@ -245,7 +638,7 @@ namespace Zjcs.Presentation.Home
             ok &= Ui(() => runtime.Hud.ShowBed(), "open bed");
             yield return null;
             yield return null;
-            Capture("home-bed.png");
+            yield return Capture("home-bed.png");
             ok &= Ui(() =>
             {
                 Assert(runtime.Hud.AnyModalOpen, "bed modal");
@@ -254,7 +647,7 @@ namespace Zjcs.Presentation.Home
             }, "open cart");
             yield return null;
             yield return null;
-            Capture("home-cart.png");
+            yield return Capture("home-cart.png");
             ok &= Ui(() =>
             {
                 runtime.Hud.CloseDialog();
@@ -262,20 +655,129 @@ namespace Zjcs.Presentation.Home
             }, "open mail");
             yield return null;
             yield return null;
-            Capture("home-mail.png");
+            yield return Capture("home-mail.png");
             ok &= Ui(() =>
             {
                 runtime.Hud.CloseDialog();
                 runtime.Hud.ToggleFunctions(true);
             }, "open functions");
             yield return null;
-            Capture("home-functions.png");
+            yield return Capture("home-functions.png");
             ok &= Ui(() =>
             {
                 runtime.Hud.ToggleFunctions(false);
             }, "close functions");
             yield return null;
-            Capture("home-scene.png");
+            yield return Capture("home-scene.png");
+            HomeShopScreenController shop = null;
+            Zjcs.Offline.Progression.OfflineHomeShopService shopService = null;
+            ok &= Ui(() =>
+            {
+                MethodInfo openShop = typeof(HomeFeatureRuntime).GetMethod("OpenHomeShop",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                Assert(openShop != null, "home shop route exists");
+                openShop.Invoke(runtime, null);
+                shop = UnityEngine.Object.FindObjectOfType<HomeShopScreenController>();
+                Assert(shop != null && shop.IsOpen && shop.CurrentPageIndex == 0,
+                    "type 8 route opens the grocery page");
+
+                string rulePath = Path.Combine(Application.streamingAssetsPath, "HomeShop", "rules.json");
+                var catalog = Zjcs.Offline.Progression.OfficialHomeShopCatalog.Load(rulePath);
+                shopService = new Zjcs.Offline.Progression.OfflineHomeShopService(runtime.Profile, catalog);
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> grocery =
+                    shopService.GetGroceryShelf();
+                Assert(runtime.Profile.Save.Player.SubRank == 3
+                    && grocery.Count == 13 && grocery.Count(value => value.IsRandom) == 8
+                    && grocery.Count(value => !value.IsRandom) == 5,
+                    "SubRank 3/map 17 grocery has eight eligible random and five fixed goods; group 10601 unlocks at SubRank 5");
+
+                GameObject grid = GameObject.Find("HomeShopPanel/BgPanel1/Content/MiddleGo/ShopContent/ShopContent/ShopContentGroup/GoodsGrid");
+                GameObject gridContent = GameObject.Find("HomeShopPanel/BgPanel1/Content/MiddleGo/ShopContent/ShopContent/ShopContentGroup/GoodsGrid/ViewPort/Content");
+                RectTransform viewportRect = grid == null ? null : grid.transform.Find("ViewPort") as RectTransform;
+                GridLayoutGroup gridLayout = gridContent == null ? null : gridContent.GetComponent<GridLayoutGroup>();
+                Assert(grid != null && gridContent != null && viewportRect != null && gridLayout != null,
+                    "official grocery scroll grid and layout are instantiated");
+                Canvas.ForceUpdateCanvases();
+                Rect viewportBounds = RectTransformUtility.PixelAdjustRect(viewportRect, viewportRect.GetComponentInParent<Canvas>());
+                int renderedRows = 0;
+                var cardBounds = new List<Rect>();
+                foreach (Transform candidate in gridContent.transform)
+                {
+                    RectTransform rowRect = candidate as RectTransform;
+                    if (rowRect == null || !candidate.name.StartsWith("ShopGoodsItem_", StringComparison.Ordinal)) continue;
+                    Canvas.ForceUpdateCanvases();
+                    Vector3[] corners = new Vector3[4];
+                    rowRect.GetWorldCorners(corners);
+                    Rect worldBounds = Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
+                    Image[] images = candidate.GetComponentsInChildren<Image>(true);
+                    int visibleImages = images.Count(image => image.isActiveAndEnabled && image.color.a > 0.05f);
+                    bool intersectsViewport = RectTransformUtility.RectangleContainsScreenPoint(viewportRect,
+                        RectTransformUtility.WorldToScreenPoint(null, worldBounds.center));
+                    if (candidate.gameObject.activeInHierarchy && intersectsViewport && visibleImages > 0)
+                    {
+                        Assert(cardBounds.All(bounds => Mathf.Abs(bounds.center.y - worldBounds.center.y) > 1f
+                            || !bounds.Overlaps(worldBounds)), "visible grocery cards in one row do not overlap");
+                        cardBounds.Add(worldBounds);
+                        renderedRows++;
+                    }
+                    log.Add("SHOPROW " + candidate.name + " active=" + candidate.gameObject.activeInHierarchy
+                        + " rect=" + rowRect.rect + " world=" + worldBounds + " images=" + visibleImages
+                        + "/" + images.Length + " texts=" + candidate.GetComponentsInChildren<TMP_Text>(true).Length
+                        + " intersect=" + intersectsViewport);
+                }
+                log.Add("SHOPGRID viewport=" + viewportRect.rect + " adjusted=" + viewportBounds
+                    + " content=" + ((RectTransform)gridContent.transform).rect + " cell=" + gridLayout.cellSize
+                    + " spacing=" + gridLayout.spacing + " columns=" + gridLayout.constraintCount
+                    + " rendered=" + renderedRows + "/" + grocery.Count);
+                Assert(gridLayout.spacing.x >= 0f, "the reconstructed three-column grocery grid uses fitted spacing");
+                Assert(renderedRows > 0, "at least one grocery item card is visible inside the official grid viewport");
+
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem offer =
+                    grocery.First(value => value.IsRandom && value.RemainingInventory > 0);
+                Transform row = GameObject.Find("ShopGoodsItem_" + offer.Goods.goods_id)?.transform;
+                Button buy = row == null ? null : row.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.gameObject.name == "BuyBtn");
+                Assert(buy != null && buy.interactable, "random grocery purchase button is enabled");
+                long before = runtime.ItemCount(offer.Goods.item_id);
+                buy.onClick.Invoke();
+                Assert(runtime.ItemCount(offer.Goods.item_id) >= before + offer.Goods.item_count,
+                    "grocery purchase adds the configured item count");
+                runtime.Profile.Reload();
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem saved = shopService.GetGroceryShelf()
+                    .First(value => value.SlotIndex == offer.SlotIndex);
+                Assert(saved.Goods.goods_id == offer.Goods.goods_id && saved.BoughtCount == 1,
+                    "grocery purchase and random shelf survive profile reload");
+                log.Add("PASS grocery: 14 grocery goods, one purchase and reloaded shelf state");
+            }, "open and buy grocery");
+            yield return null;
+            yield return null;
+            yield return Capture("home-shop-grocery.png");
+            ok &= Ui(() =>
+            {
+                long matureCreatedAt = System.DateTimeOffset.UtcNow.AddDays(-4).ToUnixTimeSeconds();
+                var ageResult = runtime.Profile.ApplyInventoryTransaction(
+                    "acceptance:treasury-registered-days",
+                    save => save.CreatedAtUnixSeconds = matureCreatedAt);
+                Assert(ageResult.Status == Zjcs.Offline.Progression.ProgressionResultStatus.Applied,
+                    "matured local account state persisted: " + ageResult.Status);
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> matureTreasury =
+                    shopService.GetTreasuryShelf();
+                Assert(matureTreasury.Count == 12
+                    && matureTreasury.Select(value => value.SlotIndex).Distinct().Count() == 12,
+                    "registered-day conditions fill all twelve official treasury slots; count="
+                    + matureTreasury.Count);
+                log.Add("PASS treasury-rules: registered-day progression exposes all 12 official slots");
+            }, "treasury registered-day progression");
+            ok &= Ui(() => Assert(shop != null && shop.SelectPage(1) && shop.CurrentPageIndex == 1,
+                "the second official shop tab opens the treasury"), "open treasury");
+            yield return null;
+            yield return Capture("home-shop-treasury.png");
+            ok &= Ui(() => Assert(shop != null && shop.SelectPage(2) && shop.CurrentPageIndex == 2,
+                "the gift tab opens local rewards"), "open gifts");
+            yield return null;
+            yield return Capture("home-shop-gifts.png");
+            shop?.CloseScreen();
+            yield return null;
             if (ok) log.Add("PASS ui: bed/cart/mail/functions screenshots");
             result(ok);
         }
@@ -293,6 +795,71 @@ namespace Zjcs.Presentation.Home
                 return false;
             }
         }
+
+        private IEnumerator VerifyRealInput(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
+            Button avatar = home.Find<Button>("/PublicPlayerIconHome");
+            if (avatar == null)
+            {
+                log.Add("FAIL real-input: official player icon button is missing");
+                completed(false);
+                yield break;
+            }
+
+            Vector2 target = RectTransformUtility.WorldToScreenPoint(null, avatar.transform.position);
+            Vector2 topLeftTarget = new Vector2(target.x, Screen.height - target.y);
+            string marker = Path.Combine(Output, "real-input-waiting.txt");
+            File.WriteAllText(marker, "Click the top-left player icon at Game View pixel "
+                + topLeftTarget + " (top-left origin), then press Escape.");
+            Debug.Log("[HomeAcceptance] waiting for real mouse click at Game View pixel " + topLeftTarget);
+            float deadline = Time.realtimeSinceStartup + 60f;
+            while (!runtime.Hud.CharacterPageOpen && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            bool clicked = runtime.Hud.CharacterPageOpen;
+            if (!clicked)
+            {
+                log.Add("FAIL real-input: mouse click did not open the character page");
+                completed(false);
+                yield break;
+            }
+
+            yield return null;
+            yield return new WaitForEndOfFrame();
+            string screenshot = Path.Combine(Output, "home-avatar-input.png");
+            ScreenCapture.CaptureScreenshot(screenshot);
+            for (int attempt = 0; attempt < 120 && !File.Exists(screenshot); attempt++)
+                yield return null;
+            if (!File.Exists(screenshot))
+            {
+                log.Add("FAIL real-input: character page screenshot was not written");
+                completed(false);
+                yield break;
+            }
+            File.WriteAllText(marker, "Press Escape in the focused Game View.");
+            Debug.Log("[HomeAcceptance] waiting for real Escape input");
+            deadline = Time.realtimeSinceStartup + 60f;
+            while (runtime.Hud.CharacterPageOpen && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            bool escaped = !runtime.Hud.CharacterPageOpen;
+            log.Add(escaped
+                ? "PASS real-input: mouse opened the avatar page and Escape closed it"
+                : "FAIL real-input: Escape did not close the avatar page");
+            completed(escaped);
+        }
+
+        private static void ActivateTab(Selectable tab)
+        {
+            if (tab is Toggle toggle)
+            {
+                toggle.isOn = false;
+                toggle.isOn = true;
+                return;
+            }
+            Button button = tab as Button;
+            if (button == null) throw new InvalidOperationException("Bottom tab has no supported input control.");
+            button.onClick.Invoke();
+        }
         private bool Check(string name, Func<object> body)
         {
             try
@@ -304,6 +871,7 @@ namespace Zjcs.Presentation.Home
             catch (Exception error)
             {
                 log.Add("FAIL " + name + ": " + error.Message);
+                Debug.LogException(error);
                 return false;
             }
         }
@@ -313,68 +881,78 @@ namespace Zjcs.Presentation.Home
             if (!condition) throw new InvalidOperationException(message);
         }
 
-        private static void Capture(string file)
+        private static T PrivateField<T>(object target, string name)
         {
-            string path = Path.Combine(Output, file);
-            RenderTexture target = null;
-            Camera capture = null;
-            var changed = new List<Canvas>();
-            try
-            {
-                Camera source = FindSceneCamera();
-                if (source == null) throw new InvalidOperationException("no scene camera");
-                target = new RenderTexture(1080, 1920, 24, RenderTextureFormat.ARGB32);
-                var go = new GameObject("AcceptanceCaptureCamera");
-                capture = go.AddComponent<Camera>();
-                capture.CopyFrom(source);
-                capture.targetTexture = target;
-                capture.depth = source.depth + 10;
-                capture.clearFlags = CameraClearFlags.SolidColor;
-                capture.backgroundColor = source.backgroundColor;
-                foreach (Canvas canvas in Resources.FindObjectsOfTypeAll<Canvas>())
-                {
-                    if (canvas == null || canvas.renderMode != RenderMode.ScreenSpaceOverlay) continue;
-                    changed.Add(canvas);
-                    canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                    canvas.worldCamera = capture;
-                    canvas.planeDistance = 1f;
-                }
-                capture.Render();
-                RenderTexture.active = target;
-                var texture = new Texture2D(1080, 1920, TextureFormat.RGBA32, false);
-                texture.ReadPixels(new Rect(0, 0, 1080, 1920), 0, 0);
-                texture.Apply();
-                File.WriteAllBytes(path, texture.EncodeToPNG());
-                UnityEngine.Object.Destroy(texture);
-            }
-            catch (Exception error)
-            {
-                Debug.LogWarning("[HomeAcceptance] screenshot failed: " + error.Message);
-            }
-            finally
-            {
-                foreach (Canvas canvas in changed)
-                {
-                    if (canvas == null) continue;
-                    canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                    canvas.worldCamera = null;
-                }
-                RenderTexture.active = null;
-                if (capture != null)
-                {
-                    capture.targetTexture = null;
-                    UnityEngine.Object.Destroy(capture.gameObject);
-                }
-                if (target != null) UnityEngine.Object.Destroy(target);
-            }
-            Debug.Log("[HomeAcceptance] screenshot " + path + " exists=" + File.Exists(path));
+            FieldInfo field = target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (field == null) throw new MissingFieldException(target.GetType().FullName, name);
+            return (T)field.GetValue(target);
         }
 
-        private static Camera FindSceneCamera()
+        private static bool IsLayerGroupVisible(HomeSceneView scene, string pathFragment)
         {
-            foreach (Camera camera in Resources.FindObjectsOfTypeAll<Camera>())
-                if (camera != null && camera.name == "Home Camera") return camera;
-            return Camera.main;
+            List<KeyValuePair<string, GameObject>> layers = PrivateField<List<KeyValuePair<string, GameObject>>>(
+                scene, "layerObjects");
+            return layers.Any(pair => pair.Value != null
+                && pair.Key.IndexOf(pathFragment, StringComparison.Ordinal) >= 0
+                && pair.Value.activeInHierarchy);
+        }
+
+        private IEnumerator Capture(string file)
+        {
+            string path = Path.Combine(Output, file);
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForEndOfFrame();
+            if (file.StartsWith("home-shop-", StringComparison.Ordinal)) DumpShopRenderState();
+            ScreenCapture.CaptureScreenshot(path);
+            for (int attempt = 0; attempt < 120 && !File.Exists(path); attempt++)
+                yield return null;
+            if (!File.Exists(path))
+            {
+                log.Add("FAIL screenshot: Game View did not write " + file);
+                yield break;
+            }
+            log.Add("PASS screenshot: " + file + " at " + Screen.width + "x" + Screen.height);
+        }
+
+        private void DumpShopRenderState()
+        {
+            GameObject panel = GameObject.Find("HomeShopPanel");
+            Transform grid = panel == null ? null : panel.transform.Find(
+                "BgPanel1/Content/MiddleGo/ShopContent/ShopContent/ShopContentGroup/GoodsGrid");
+            Transform content = grid == null ? null : grid.Find("ViewPort/Content");
+            Canvas canvas = panel == null ? null : panel.GetComponentInParent<Canvas>();
+            log.Add("SHOPVIEW screen=" + Screen.width + "x" + Screen.height + " canvas="
+                + (canvas == null ? "missing" : canvas.renderMode + " scale=" + canvas.scaleFactor));
+            if (content == null) return;
+            RectTransform viewport = grid.Find("ViewPort") as RectTransform;
+            log.Add("SHOPVIEWPORT rect=" + (viewport == null ? "missing" : viewport.rect.ToString())
+                + " active=" + grid.gameObject.activeInHierarchy + " children=" + content.childCount);
+            Transform row = content.Cast<Transform>().FirstOrDefault(value =>
+                value.name.StartsWith("ShopGoodsItem_", StringComparison.Ordinal));
+            if (row == null) return;
+            HomeUiAnimationPlayer animation = row.GetComponent<HomeUiAnimationPlayer>();
+            log.Add("SHOPANIM playing=" + (animation != null && animation.IsPlaying)
+                + " elapsed=" + (animation == null ? -1f : animation.PlaybackTime)
+                + " unscaledDelta=" + (animation == null ? -1f : animation.PlaybackDeltaTime)
+                + " timeScale=" + Time.timeScale);
+            foreach (CanvasGroup group in row.GetComponentsInParent<CanvasGroup>(true))
+                log.Add("SHOPGROUP " + PathOf(group.transform) + " alpha=" + group.alpha
+                    + " interactable=" + group.interactable);
+            foreach (Image image in row.GetComponentsInChildren<Image>(true))
+            {
+                log.Add("SHOPIMAGE " + PathOf(image.transform) + " enabled=" + image.isActiveAndEnabled
+                    + " sprite=" + (image.sprite == null ? "null" : image.sprite.name)
+                    + " alpha=" + image.color.a + " renderer=" + image.canvasRenderer.GetAlpha()
+                    + " culled=" + image.canvasRenderer.cull
+                    + " rect=" + image.rectTransform.rect);
+            }
+            foreach (TMP_Text text in row.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (!text.gameObject.activeInHierarchy || string.IsNullOrEmpty(text.text)) continue;
+                log.Add("SHOPTEXT " + PathOf(text.transform) + " value=" + text.text
+                    + " alpha=" + text.color.a + " renderer=" + text.canvasRenderer.GetAlpha()
+                    + " rect=" + text.rectTransform.rect);
+            }
         }
         private static void Quit(int code)
         {

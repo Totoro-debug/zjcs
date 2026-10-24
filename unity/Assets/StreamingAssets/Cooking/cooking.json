@@ -1,0 +1,6728 @@
+{
+  "manifest": "854_156383",
+  "sourceHashes": {
+    "cookingTable": "99cfe4b96d2b46897f0ceb3125029732e14b16a5d97b0c164540616f8e64275f",
+    "itemTable": "a317a104405d25b63d1ec8c6f63397001f8cc6f2329a04034c2a49be4a18934d",
+    "settingsTable": "8832aa02061ada1c2dad9cc190fbe6fe54a25be1e30596513b9f8c1a1ef22b27"
+  },
+  "maxCookingCountAtATime": 9999,
+  "cookingRecoveryCountThreshold": 10,
+  "recipes": [
+    {
+      "id": 7500,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 2
+        },
+        {
+          "itemId": 8101,
+          "count": 4
+        }
+      ],
+      "conditionType": "NoneCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 1000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7501,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8051,
+          "count": 2
+        },
+        {
+          "itemId": 8102,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 12,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 5000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7502,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8052,
+          "count": 2
+        },
+        {
+          "itemId": 8101,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 13,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 15000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7503,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8053,
+          "count": 2
+        },
+        {
+          "itemId": 8104,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 14,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 45000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7504,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8054,
+          "count": 2
+        },
+        {
+          "itemId": 8105,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 17,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 135000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7505,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8055,
+          "count": 2
+        },
+        {
+          "itemId": 8106,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 19,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 400000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7506,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8107,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 21,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 1200000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7507,
+      "count": 50,
+      "type": 0,
+      "materials": [
+        {
+          "itemId": 8057,
+          "count": 2
+        },
+        {
+          "itemId": 8108,
+          "count": 4
+        }
+      ],
+      "conditionType": "MapUnlockCondition",
+      "mapClassId": 23,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 0,
+          "kind": "CookingExtraInfoRecovery",
+          "curePercent": 0.07999999821186066,
+          "cureValue": 3600000.0,
+          "statusEffectId": 0,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/Buff_Recovery",
+      "effectIconColor": "#69E483"
+    },
+    {
+      "id": 7520,
+      "count": 1,
+      "type": 1,
+      "materials": [],
+      "conditionType": "AlwaysCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7520,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7520,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7521,
+      "count": 1,
+      "type": 1,
+      "materials": [],
+      "conditionType": "AlwaysCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7521,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7521,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7522,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8010,
+          "count": 10
+        },
+        {
+          "itemId": 8050,
+          "count": 2
+        },
+        {
+          "itemId": 8101,
+          "count": 2
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7022,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7522,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7522,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7523,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8011,
+          "count": 10
+        },
+        {
+          "itemId": 8050,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7023,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7523,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7523,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgReduce",
+      "effectIconColor": "#9081FD"
+    },
+    {
+      "id": 7524,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8126,
+          "count": 10
+        },
+        {
+          "itemId": 43001,
+          "count": 2
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7024,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7524,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7524,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7525,
+      "count": 1,
+      "type": 1,
+      "materials": [],
+      "conditionType": "AlwaysCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7525,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7525,
+          "propTypes": [
+            55,
+            56,
+            54,
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7526,
+      "count": 1,
+      "type": 1,
+      "materials": [],
+      "conditionType": "AlwaysCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7526,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7526,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7527,
+      "count": 1,
+      "type": 1,
+      "materials": [],
+      "conditionType": "AlwaysCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7527,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7527,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7550,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 1
+        },
+        {
+          "itemId": 8120,
+          "count": 10
+        }
+      ],
+      "conditionType": "NoneCondition",
+      "mapClassId": 0,
+      "formulaItemId": 0,
+      "useSourceOperate": 0,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7550,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7551,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8124,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7051,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7551,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7552,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8124,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7052,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7552,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7553,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8120,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7053,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7553,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7554,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8121,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7054,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7554,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7554,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7555,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8125,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7055,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7555,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7555,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7556,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8126,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7056,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7556,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7556,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7557,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 2
+        },
+        {
+          "itemId": 8126,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7057,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7557,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7557,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7558,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8122,
+          "count": 7
+        },
+        {
+          "itemId": 8128,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7058,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7558,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7558,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7559,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8127,
+          "count": 3
+        },
+        {
+          "itemId": 8128,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7059,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7559,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7559,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7560,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8003,
+          "count": 1
+        },
+        {
+          "itemId": 8129,
+          "count": 4
+        },
+        {
+          "itemId": 8130,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7060,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7560,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7560,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7561,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8003,
+          "count": 1
+        },
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8123,
+          "count": 4
+        },
+        {
+          "itemId": 8130,
+          "count": 16
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7061,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7561,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7561,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7600,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8102,
+          "count": 2
+        },
+        {
+          "itemId": 8124,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7100,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7600,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7601,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 1
+        },
+        {
+          "itemId": 8102,
+          "count": 2
+        },
+        {
+          "itemId": 8145,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7101,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7601,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7602,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 1
+        },
+        {
+          "itemId": 8145,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7102,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7602,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7603,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8051,
+          "count": 1
+        },
+        {
+          "itemId": 8145,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7103,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7603,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7604,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8143,
+          "count": 5
+        },
+        {
+          "itemId": 8146,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7104,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7604,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7604,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritPower",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7605,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8125,
+          "count": 5
+        },
+        {
+          "itemId": 8143,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7105,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7605,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7605,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgReduce",
+      "effectIconColor": "#9081FD"
+    },
+    {
+      "id": 7606,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8051,
+          "count": 2
+        },
+        {
+          "itemId": 8147,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7106,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7606,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7606,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7607,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8140,
+          "count": 5
+        },
+        {
+          "itemId": 8147,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7107,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7607,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7607,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7608,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8141,
+          "count": 4
+        },
+        {
+          "itemId": 8148,
+          "count": 3
+        },
+        {
+          "itemId": 8149,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7108,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7608,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7608,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7609,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8144,
+          "count": 4
+        },
+        {
+          "itemId": 8148,
+          "count": 3
+        },
+        {
+          "itemId": 8149,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7109,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7609,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7609,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7610,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8123,
+          "count": 2
+        },
+        {
+          "itemId": 8150,
+          "count": 2
+        },
+        {
+          "itemId": 8151,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7110,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7610,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7610,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7611,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8102,
+          "count": 2
+        },
+        {
+          "itemId": 8129,
+          "count": 2
+        },
+        {
+          "itemId": 8142,
+          "count": 2
+        },
+        {
+          "itemId": 8151,
+          "count": 16
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7111,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7611,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7611,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7650,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 1
+        },
+        {
+          "itemId": 8162,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7150,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7650,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7651,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8101,
+          "count": 2
+        },
+        {
+          "itemId": 8162,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7151,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7651,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7652,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8162,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7152,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7652,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7654,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8160,
+          "count": 5
+        },
+        {
+          "itemId": 8164,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7154,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7654,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7654,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7655,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8160,
+          "count": 2
+        },
+        {
+          "itemId": 8163,
+          "count": 5
+        },
+        {
+          "itemId": 8164,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7155,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7655,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7655,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7656,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8146,
+          "count": 5
+        },
+        {
+          "itemId": 8163,
+          "count": 2
+        },
+        {
+          "itemId": 8164,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7156,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7656,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7656,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7658,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8127,
+          "count": 2
+        },
+        {
+          "itemId": 8161,
+          "count": 3
+        },
+        {
+          "itemId": 8166,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7158,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7658,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7658,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7659,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8161,
+          "count": 2
+        },
+        {
+          "itemId": 8165,
+          "count": 5
+        },
+        {
+          "itemId": 8166,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7159,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7659,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7659,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7660,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 4
+        },
+        {
+          "itemId": 8167,
+          "count": 2
+        },
+        {
+          "itemId": 8168,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7160,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7660,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7660,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7661,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8052,
+          "count": 4
+        },
+        {
+          "itemId": 8142,
+          "count": 2
+        },
+        {
+          "itemId": 8150,
+          "count": 2
+        },
+        {
+          "itemId": 8168,
+          "count": 16
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7161,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7661,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7661,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7700,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8053,
+          "count": 1
+        },
+        {
+          "itemId": 8182,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7200,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7700,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7701,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8182,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7201,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7701,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7702,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8053,
+          "count": 1
+        },
+        {
+          "itemId": 8182,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7202,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7702,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7703,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8053,
+          "count": 1
+        },
+        {
+          "itemId": 8120,
+          "count": 5
+        },
+        {
+          "itemId": 8162,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7203,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7703,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7704,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8121,
+          "count": 5
+        },
+        {
+          "itemId": 8183,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7204,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7704,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7704,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7705,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8052,
+          "count": 2
+        },
+        {
+          "itemId": 8183,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7205,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7705,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7705,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7706,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8184,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7206,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7706,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7706,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7707,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8180,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7207,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7707,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7707,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7708,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8181,
+          "count": 5
+        },
+        {
+          "itemId": 8186,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7208,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7708,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7708,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7709,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8185,
+          "count": 5
+        },
+        {
+          "itemId": 8186,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7209,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7709,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7709,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7710,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8003,
+          "count": 1
+        },
+        {
+          "itemId": 8187,
+          "count": 4
+        },
+        {
+          "itemId": 8188,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7210,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7710,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7710,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgReduce",
+      "effectIconColor": "#9081FD"
+    },
+    {
+      "id": 7711,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8003,
+          "count": 1
+        },
+        {
+          "itemId": 8104,
+          "count": 2
+        },
+        {
+          "itemId": 8167,
+          "count": 4
+        },
+        {
+          "itemId": 8188,
+          "count": 16
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7211,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7711,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7711,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7750,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8105,
+          "count": 2
+        },
+        {
+          "itemId": 8162,
+          "count": 3
+        },
+        {
+          "itemId": 8202,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7250,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7750,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7751,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8104,
+          "count": 2
+        },
+        {
+          "itemId": 8120,
+          "count": 2
+        },
+        {
+          "itemId": 8202,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7251,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7751,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritPower",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7752,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8145,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7252,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7752,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7753,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8182,
+          "count": 3
+        },
+        {
+          "itemId": 8202,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7253,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7753,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7754,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8184,
+          "count": 2
+        },
+        {
+          "itemId": 8204,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7254,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7754,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7754,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7755,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8200,
+          "count": 5
+        },
+        {
+          "itemId": 8203,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7255,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7755,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7755,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7756,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8180,
+          "count": 2
+        },
+        {
+          "itemId": 8200,
+          "count": 4
+        },
+        {
+          "itemId": 8204,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7256,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7756,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7756,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgReduce",
+      "effectIconColor": "#9081FD"
+    },
+    {
+      "id": 7757,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8126,
+          "count": 1
+        },
+        {
+          "itemId": 8140,
+          "count": 2
+        },
+        {
+          "itemId": 8203,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7257,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7757,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7757,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7758,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8201,
+          "count": 2
+        },
+        {
+          "itemId": 8205,
+          "count": 6
+        },
+        {
+          "itemId": 8206,
+          "count": 2
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7258,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7758,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7758,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7759,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8122,
+          "count": 1
+        },
+        {
+          "itemId": 8201,
+          "count": 2
+        },
+        {
+          "itemId": 8206,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7259,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7759,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7759,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7760,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8151,
+          "count": 1
+        },
+        {
+          "itemId": 8207,
+          "count": 3
+        },
+        {
+          "itemId": 8208,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7260,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7760,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7760,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7761,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8120,
+          "count": 4
+        },
+        {
+          "itemId": 8129,
+          "count": 4
+        },
+        {
+          "itemId": 8207,
+          "count": 4
+        },
+        {
+          "itemId": 8208,
+          "count": 12
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7261,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7761,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7761,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7800,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8052,
+          "count": 2
+        },
+        {
+          "itemId": 8162,
+          "count": 4
+        },
+        {
+          "itemId": 8202,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7300,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7800,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7801,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8182,
+          "count": 2
+        },
+        {
+          "itemId": 8222,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7301,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7801,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7802,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8055,
+          "count": 2
+        },
+        {
+          "itemId": 8222,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7302,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7802,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7803,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8052,
+          "count": 2
+        },
+        {
+          "itemId": 8105,
+          "count": 2
+        },
+        {
+          "itemId": 8145,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7303,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7803,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7804,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8203,
+          "count": 2
+        },
+        {
+          "itemId": 8220,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7304,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7804,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7804,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7805,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8050,
+          "count": 2
+        },
+        {
+          "itemId": 8052,
+          "count": 2
+        },
+        {
+          "itemId": 8224,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7305,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7805,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7805,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7806,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8105,
+          "count": 2
+        },
+        {
+          "itemId": 8121,
+          "count": 2
+        },
+        {
+          "itemId": 8223,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7306,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7806,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7806,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7807,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8140,
+          "count": 2
+        },
+        {
+          "itemId": 8220,
+          "count": 2
+        },
+        {
+          "itemId": 8224,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7307,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7807,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7807,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CureAdd",
+      "effectIconColor": "#2AC197"
+    },
+    {
+      "id": 7808,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8141,
+          "count": 2
+        },
+        {
+          "itemId": 8221,
+          "count": 4
+        },
+        {
+          "itemId": 8226,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7308,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7808,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7808,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7809,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8205,
+          "count": 2
+        },
+        {
+          "itemId": 8225,
+          "count": 4
+        },
+        {
+          "itemId": 8226,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7309,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7809,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7809,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7810,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8207,
+          "count": 2
+        },
+        {
+          "itemId": 8227,
+          "count": 4
+        },
+        {
+          "itemId": 8228,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7310,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7810,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7810,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7811,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8055,
+          "count": 4
+        },
+        {
+          "itemId": 8130,
+          "count": 4
+        },
+        {
+          "itemId": 8227,
+          "count": 4
+        },
+        {
+          "itemId": 8228,
+          "count": 12
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7311,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7811,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7811,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7850,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8145,
+          "count": 4
+        },
+        {
+          "itemId": 8242,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7350,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7850,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7851,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8107,
+          "count": 4
+        },
+        {
+          "itemId": 8242,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7351,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7851,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7852,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8107,
+          "count": 4
+        },
+        {
+          "itemId": 8202,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7352,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7852,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7853,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8124,
+          "count": 4
+        },
+        {
+          "itemId": 8242,
+          "count": 6
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7353,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7853,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7854,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8240,
+          "count": 2
+        },
+        {
+          "itemId": 8244,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7354,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7854,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7854,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7855,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8180,
+          "count": 5
+        },
+        {
+          "itemId": 8240,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7355,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7855,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7855,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7856,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8140,
+          "count": 3
+        },
+        {
+          "itemId": 8244,
+          "count": 7
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7356,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7856,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7856,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7857,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8243,
+          "count": 7
+        },
+        {
+          "itemId": 8244,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7357,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7857,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7857,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgAdd",
+      "effectIconColor": "#FFC73F"
+    },
+    {
+      "id": 7858,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8106,
+          "count": 4
+        },
+        {
+          "itemId": 8241,
+          "count": 5
+        },
+        {
+          "itemId": 8245,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7358,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7858,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7858,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7859,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 2
+        },
+        {
+          "itemId": 8120,
+          "count": 2
+        },
+        {
+          "itemId": 8246,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7359,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7859,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7859,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    },
+    {
+      "id": 7860,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8151,
+          "count": 2
+        },
+        {
+          "itemId": 8247,
+          "count": 4
+        },
+        {
+          "itemId": 8248,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7360,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7860,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7860,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_DmgReduce",
+      "effectIconColor": "#9081FD"
+    },
+    {
+      "id": 7861,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8150,
+          "count": 2
+        },
+        {
+          "itemId": 8208,
+          "count": 2
+        },
+        {
+          "itemId": 8247,
+          "count": 6
+        },
+        {
+          "itemId": 8248,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7361,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7861,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7861,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7900,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8056,
+          "count": 1
+        },
+        {
+          "itemId": 8108,
+          "count": 2
+        },
+        {
+          "itemId": 8242,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7400,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7900,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7901,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8107,
+          "count": 2
+        },
+        {
+          "itemId": 8108,
+          "count": 2
+        },
+        {
+          "itemId": 8262,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7401,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7901,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7902,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8000,
+          "count": 3
+        },
+        {
+          "itemId": 8108,
+          "count": 2
+        },
+        {
+          "itemId": 8262,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7402,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7902,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7903,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8057,
+          "count": 1
+        },
+        {
+          "itemId": 8262,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7403,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7903,
+          "propId": 0,
+          "propTypes": []
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7904,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8057,
+          "count": 2
+        },
+        {
+          "itemId": 8260,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7404,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7904,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7904,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7905,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8108,
+          "count": 2
+        },
+        {
+          "itemId": 8260,
+          "count": 2
+        },
+        {
+          "itemId": 8264,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7405,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7905,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7905,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7906,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8001,
+          "count": 2
+        },
+        {
+          "itemId": 8263,
+          "count": 10
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7406,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7906,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7906,
+          "propTypes": [
+            55
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Attack",
+      "effectIconColor": "#FF5252"
+    },
+    {
+      "id": 7907,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8057,
+          "count": 2
+        },
+        {
+          "itemId": 8204,
+          "count": 7
+        },
+        {
+          "itemId": 8260,
+          "count": 3
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7407,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7907,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7907,
+          "propTypes": [
+            54
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_BlockRate",
+      "effectIconColor": "#7495FF"
+    },
+    {
+      "id": 7908,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8002,
+          "count": 2
+        },
+        {
+          "itemId": 8261,
+          "count": 5
+        },
+        {
+          "itemId": 8266,
+          "count": 5
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7408,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7908,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7908,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_MaxHp",
+      "effectIconColor": "#C4E46F"
+    },
+    {
+      "id": 7909,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8261,
+          "count": 1
+        },
+        {
+          "itemId": 8265,
+          "count": 7
+        },
+        {
+          "itemId": 8266,
+          "count": 2
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7409,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7909,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7909,
+          "propTypes": [
+            57
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Speed",
+      "effectIconColor": "#E082FF"
+    },
+    {
+      "id": 7910,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8228,
+          "count": 2
+        },
+        {
+          "itemId": 8267,
+          "count": 4
+        },
+        {
+          "itemId": 8268,
+          "count": 4
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7410,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7910,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7910,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_CritRate",
+      "effectIconColor": "#FF9656"
+    },
+    {
+      "id": 7911,
+      "count": 1,
+      "type": 1,
+      "materials": [
+        {
+          "itemId": 8207,
+          "count": 2
+        },
+        {
+          "itemId": 8248,
+          "count": 2
+        },
+        {
+          "itemId": 8267,
+          "count": 8
+        },
+        {
+          "itemId": 8268,
+          "count": 8
+        }
+      ],
+      "conditionType": "UsedItemCondition",
+      "mapClassId": 0,
+      "formulaItemId": 7411,
+      "useSourceOperate": 89,
+      "effects": [
+        {
+          "type": 1,
+          "kind": "CookingExtraInfoBuff",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 7911,
+          "propId": 0,
+          "propTypes": []
+        },
+        {
+          "type": 2,
+          "kind": "CookingExtraInfoProp",
+          "curePercent": 0.0,
+          "cureValue": 0.0,
+          "statusEffectId": 0,
+          "propId": 7911,
+          "propTypes": [
+            56
+          ]
+        }
+      ],
+      "effectIcon": "ItemIcon/Props/P_Defence",
+      "effectIconColor": "#FFDA47"
+    }
+  ],
+  "items": [
+    {
+      "id": 7022,
+      "name": "百味串串食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7023,
+      "name": "百味锅食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7024,
+      "name": "千霄果冻食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7051,
+      "name": "愉悦沙拉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7052,
+      "name": "土豆烩肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7053,
+      "name": "时蔬炖肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7054,
+      "name": "蜜汁烤肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7055,
+      "name": "坎斯汀汉堡食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7056,
+      "name": "酸甜嘟嘟肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7057,
+      "name": "嘟嘟果酿食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7058,
+      "name": "黄金散蛋食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7059,
+      "name": "树莓蛋糕食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7060,
+      "name": "皇冠肉片披萨食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7061,
+      "name": "松露甜饼食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7100,
+      "name": "菇肉串烧食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7101,
+      "name": "蘑菇浓汤食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7102,
+      "name": "刺刺鲜汁食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7103,
+      "name": "煎肉排食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7104,
+      "name": "鲜果烧肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7105,
+      "name": "塔吉锅炖肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7106,
+      "name": "滚栗子烤肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7107,
+      "name": "焦甜壳栗食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7108,
+      "name": "太阳光晕食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7109,
+      "name": "咖喱大乱炖食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7110,
+      "name": "飞升之舞食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7111,
+      "name": "月圆之夜食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7150,
+      "name": "爽口海菜食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7151,
+      "name": "青米寿司食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7152,
+      "name": "御田烧食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7154,
+      "name": "源式拉面食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7155,
+      "name": "海之味食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7156,
+      "name": "花鱼天妇罗食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7158,
+      "name": "源式章鱼烧食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7159,
+      "name": "解厄刺身食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7160,
+      "name": "海珍本味刺身食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7161,
+      "name": "黄油焗龙虾食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7200,
+      "name": "绝味火烧食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7201,
+      "name": "豆子焖肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7202,
+      "name": "盐卤豆腐食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7203,
+      "name": "青玉汤面食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7204,
+      "name": "蜜汁豆饼食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7205,
+      "name": "酱香卤肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7206,
+      "name": "竹笋焖肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7207,
+      "name": "红烧狮子头食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7208,
+      "name": "将军破阵食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7209,
+      "name": "身披金甲食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7210,
+      "name": "山珍海味锅食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7211,
+      "name": "黄金仙饺食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7250,
+      "name": "星夜沙拉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7251,
+      "name": "幻云小炒食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7252,
+      "name": "鲜果浓汤食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7253,
+      "name": "天穹卷食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7254,
+      "name": "军团烧肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7255,
+      "name": "芳香裹肉卷食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7256,
+      "name": "符文烧螺片食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7257,
+      "name": "云端果塔食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7258,
+      "name": "阳光炖菜食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7259,
+      "name": "圣辉拔丝食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7260,
+      "name": "璀璨冰点食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7261,
+      "name": "幻巧方糕食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7300,
+      "name": "海洋甜冻食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7301,
+      "name": "甜蜜夹心饼食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7302,
+      "name": "黄金南瓜派食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7303,
+      "name": "玩偶布丁食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7304,
+      "name": "流心巧克力食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7305,
+      "name": "跳跳汽水食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7306,
+      "name": "南瓜蜜冻食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7307,
+      "name": "醇香雪顶食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7308,
+      "name": "水晶奶昔食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7309,
+      "name": "凤梨热狗食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7310,
+      "name": "流星特调食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7311,
+      "name": "星空慕斯食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7350,
+      "name": "火龙果沙拉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7351,
+      "name": "火龙奶油浓汤食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7352,
+      "name": "香草雪糕食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7353,
+      "name": "炽热果糊食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7354,
+      "name": "热辣大虾食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7355,
+      "name": "爆辣肉汤食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7356,
+      "name": "黄金虾球食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7357,
+      "name": "火龙酱烤虾食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7358,
+      "name": "极地虾荟食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7359,
+      "name": "晶果蛋糕卷食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7360,
+      "name": "冰与火之舞食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7361,
+      "name": "冰火的交融食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7400,
+      "name": "苹果挞食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7401,
+      "name": "宝石果盘食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7402,
+      "name": "果碎抓饭食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7403,
+      "name": "青晶团子食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 2
+    },
+    {
+      "id": 7404,
+      "name": "琥珀酱饼食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7405,
+      "name": "海参琥珀汤食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7406,
+      "name": "蓝色晶点食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7407,
+      "name": "琥珀奶酪煲食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 3
+    },
+    {
+      "id": 7408,
+      "name": "粉钻焖肉食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7409,
+      "name": "粉钻烧海参食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 4
+    },
+    {
+      "id": 7410,
+      "name": "众星捧月食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7411,
+      "name": "宝石荟萃食谱",
+      "icon": "ItemIcon/Food/item_7000",
+      "itemType": 322,
+      "quality": 5
+    },
+    {
+      "id": 7500,
+      "name": "青草团子",
+      "icon": "ItemIcon/Food/item_7500",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7501,
+      "name": "炭烤蘑菇",
+      "icon": "ItemIcon/Food/item_7501",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7502,
+      "name": "青露",
+      "icon": "ItemIcon/Food/item_7502",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7503,
+      "name": "荠菜煎饼",
+      "icon": "ItemIcon/Food/item_7503",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7504,
+      "name": "星辉面包",
+      "icon": "ItemIcon/Food/item_7504",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7505,
+      "name": "奶香爆米花",
+      "icon": "ItemIcon/Food/item_7505",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7506,
+      "name": "香草奶油包",
+      "icon": "ItemIcon/Food/item_7506",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7507,
+      "name": "果片飞饼",
+      "icon": "ItemIcon/Food/item_7507",
+      "itemType": 323,
+      "quality": 1
+    },
+    {
+      "id": 7520,
+      "name": "炒卷心菜",
+      "icon": "ItemIcon/Food/item_7520",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7521,
+      "name": "冒险者特制套餐",
+      "icon": "ItemIcon/Food/item_7521",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7522,
+      "name": "百味串串",
+      "icon": "ItemIcon/Food/item_7522",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7523,
+      "name": "百味锅",
+      "icon": "ItemIcon/Food/item_7523",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7524,
+      "name": "千霄果冻",
+      "icon": "ItemIcon/Food/item_7524",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7525,
+      "name": "梦幻一周年",
+      "icon": "ItemIcon/Food/item_7525",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7526,
+      "name": "御品青棕",
+      "icon": "ItemIcon/Food/item_7526",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7527,
+      "name": "月华鎏金饼",
+      "icon": "ItemIcon/Food/item_7527",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7550,
+      "name": "糖豆小人",
+      "icon": "ItemIcon/Food/item_7550",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7551,
+      "name": "愉悦沙拉",
+      "icon": "ItemIcon/Food/item_7551",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7552,
+      "name": "土豆烩肉",
+      "icon": "ItemIcon/Food/item_7552",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7553,
+      "name": "时蔬炖肉",
+      "icon": "ItemIcon/Food/item_7553",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7554,
+      "name": "蜜汁烤肉",
+      "icon": "ItemIcon/Food/item_7554",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7555,
+      "name": "坎斯汀汉堡",
+      "icon": "ItemIcon/Food/item_7555",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7556,
+      "name": "酸甜嘟嘟肉",
+      "icon": "ItemIcon/Food/item_7556",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7557,
+      "name": "嘟嘟果酿",
+      "icon": "ItemIcon/Food/item_7557",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7558,
+      "name": "黄金散蛋",
+      "icon": "ItemIcon/Food/item_7558",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7559,
+      "name": "树莓蛋糕",
+      "icon": "ItemIcon/Food/item_7559",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7560,
+      "name": "皇冠肉片披萨",
+      "icon": "ItemIcon/Food/item_7560",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7561,
+      "name": "松露甜饼",
+      "icon": "ItemIcon/Food/item_7561",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7600,
+      "name": "菇肉串烧",
+      "icon": "ItemIcon/Food/item_7600",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7601,
+      "name": "蘑菇浓汤",
+      "icon": "ItemIcon/Food/item_7601",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7602,
+      "name": "刺刺鲜汁",
+      "icon": "ItemIcon/Food/item_7602",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7603,
+      "name": "煎肉排",
+      "icon": "ItemIcon/Food/item_7603",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7604,
+      "name": "鲜果烧肉",
+      "icon": "ItemIcon/Food/item_7604",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7605,
+      "name": "塔吉锅炖肉",
+      "icon": "ItemIcon/Food/item_7605",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7606,
+      "name": "滚栗子烤肉",
+      "icon": "ItemIcon/Food/item_7606",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7607,
+      "name": "焦甜壳栗",
+      "icon": "ItemIcon/Food/item_7607",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7608,
+      "name": "太阳光晕",
+      "icon": "ItemIcon/Food/item_7608",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7609,
+      "name": "咖喱大乱炖",
+      "icon": "ItemIcon/Food/item_7609",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7610,
+      "name": "飞升之舞",
+      "icon": "ItemIcon/Food/item_7610",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7611,
+      "name": "月圆之夜",
+      "icon": "ItemIcon/Food/item_7611",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7650,
+      "name": "爽口海菜",
+      "icon": "ItemIcon/Food/item_7650",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7651,
+      "name": "青米寿司",
+      "icon": "ItemIcon/Food/item_7651",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7652,
+      "name": "御田烧",
+      "icon": "ItemIcon/Food/item_7652",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7654,
+      "name": "源式拉面",
+      "icon": "ItemIcon/Food/item_7654",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7655,
+      "name": "海之味",
+      "icon": "ItemIcon/Food/item_7655",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7656,
+      "name": "花鱼天妇罗",
+      "icon": "ItemIcon/Food/item_7656",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7658,
+      "name": "源式章鱼烧",
+      "icon": "ItemIcon/Food/item_7658",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7659,
+      "name": "解厄刺身",
+      "icon": "ItemIcon/Food/item_7659",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7660,
+      "name": "海珍本味刺身",
+      "icon": "ItemIcon/Food/item_7660",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7661,
+      "name": "黄油焗龙虾",
+      "icon": "ItemIcon/Food/item_7661",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7700,
+      "name": "绝味火烧",
+      "icon": "ItemIcon/Food/item_7700",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7701,
+      "name": "豆子焖肉",
+      "icon": "ItemIcon/Food/item_7701",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7702,
+      "name": "盐卤豆腐",
+      "icon": "ItemIcon/Food/item_7702",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7703,
+      "name": "青玉汤面",
+      "icon": "ItemIcon/Food/item_7703",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7704,
+      "name": "蜜汁豆饼",
+      "icon": "ItemIcon/Food/item_7704",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7705,
+      "name": "酱香卤肉",
+      "icon": "ItemIcon/Food/item_7705",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7706,
+      "name": "竹笋焖肉",
+      "icon": "ItemIcon/Food/item_7706",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7707,
+      "name": "红烧狮子头",
+      "icon": "ItemIcon/Food/item_7707",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7708,
+      "name": "将军破阵",
+      "icon": "ItemIcon/Food/item_7708",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7709,
+      "name": "身披金甲",
+      "icon": "ItemIcon/Food/item_7709",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7710,
+      "name": "山珍海味锅",
+      "icon": "ItemIcon/Food/item_7710",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7711,
+      "name": "黄金仙饺",
+      "icon": "ItemIcon/Food/item_7711",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7750,
+      "name": "星夜沙拉",
+      "icon": "ItemIcon/Food/item_7750",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7751,
+      "name": "幻云小炒",
+      "icon": "ItemIcon/Food/item_7751",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7752,
+      "name": "鲜果浓汤",
+      "icon": "ItemIcon/Food/item_7752",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7753,
+      "name": "天穹卷",
+      "icon": "ItemIcon/Food/item_7753",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7754,
+      "name": "军团烧肉",
+      "icon": "ItemIcon/Food/item_7754",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7755,
+      "name": "芳香裹肉卷",
+      "icon": "ItemIcon/Food/item_7755",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7756,
+      "name": "符文烧螺片",
+      "icon": "ItemIcon/Food/item_7756",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7757,
+      "name": "云端果塔",
+      "icon": "ItemIcon/Food/item_7757",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7758,
+      "name": "阳光炖菜",
+      "icon": "ItemIcon/Food/item_7758",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7759,
+      "name": "圣辉拔丝",
+      "icon": "ItemIcon/Food/item_7759",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7760,
+      "name": "璀璨冰点",
+      "icon": "ItemIcon/Food/item_7760",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7761,
+      "name": "幻巧方糕",
+      "icon": "ItemIcon/Food/item_7761",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7800,
+      "name": "海洋甜冻",
+      "icon": "ItemIcon/Food/item_7800",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7801,
+      "name": "甜蜜夹心饼",
+      "icon": "ItemIcon/Food/item_7801",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7802,
+      "name": "黄金南瓜派",
+      "icon": "ItemIcon/Food/item_7802",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7803,
+      "name": "玩偶布丁",
+      "icon": "ItemIcon/Food/item_7803",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7804,
+      "name": "流心巧克力",
+      "icon": "ItemIcon/Food/item_7804",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7805,
+      "name": "跳跳汽水",
+      "icon": "ItemIcon/Food/item_7805",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7806,
+      "name": "南瓜蜜冻",
+      "icon": "ItemIcon/Food/item_7806",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7807,
+      "name": "醇香雪顶",
+      "icon": "ItemIcon/Food/item_7807",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7808,
+      "name": "水晶奶昔",
+      "icon": "ItemIcon/Food/item_7808",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7809,
+      "name": "凤梨热狗",
+      "icon": "ItemIcon/Food/item_7809",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7810,
+      "name": "流星特调",
+      "icon": "ItemIcon/Food/item_7810",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7811,
+      "name": "星空慕斯",
+      "icon": "ItemIcon/Food/item_7811",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7850,
+      "name": "火龙果沙拉",
+      "icon": "ItemIcon/Food/item_7850",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7851,
+      "name": "火龙奶油浓汤",
+      "icon": "ItemIcon/Food/item_7851",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7852,
+      "name": "香草雪糕",
+      "icon": "ItemIcon/Food/item_7852",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7853,
+      "name": "炽热果糊",
+      "icon": "ItemIcon/Food/item_7853",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7854,
+      "name": "热辣大虾",
+      "icon": "ItemIcon/Food/item_7854",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7855,
+      "name": "爆辣肉汤",
+      "icon": "ItemIcon/Food/item_7855",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7856,
+      "name": "黄金虾球",
+      "icon": "ItemIcon/Food/item_7856",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7857,
+      "name": "火龙酱烤虾",
+      "icon": "ItemIcon/Food/item_7857",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7858,
+      "name": "极地虾荟",
+      "icon": "ItemIcon/Food/item_7858",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7859,
+      "name": "晶果蛋糕卷",
+      "icon": "ItemIcon/Food/item_7859",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7860,
+      "name": "冰与火之舞",
+      "icon": "ItemIcon/Food/item_7860",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7861,
+      "name": "冰火的交融",
+      "icon": "ItemIcon/Food/item_7861",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7900,
+      "name": "苹果挞",
+      "icon": "ItemIcon/Food/item_7900",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7901,
+      "name": "宝石果盘",
+      "icon": "ItemIcon/Food/item_7901",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7902,
+      "name": "果碎抓饭",
+      "icon": "ItemIcon/Food/item_7902",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7903,
+      "name": "青晶团子",
+      "icon": "ItemIcon/Food/item_7903",
+      "itemType": 323,
+      "quality": 2
+    },
+    {
+      "id": 7904,
+      "name": "琥珀酱饼",
+      "icon": "ItemIcon/Food/item_7904",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7905,
+      "name": "海参琥珀汤",
+      "icon": "ItemIcon/Food/item_7905",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7906,
+      "name": "蓝色晶点",
+      "icon": "ItemIcon/Food/item_7906",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7907,
+      "name": "琥珀奶酪煲",
+      "icon": "ItemIcon/Food/item_7907",
+      "itemType": 323,
+      "quality": 3
+    },
+    {
+      "id": 7908,
+      "name": "粉钻焖肉",
+      "icon": "ItemIcon/Food/item_7908",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7909,
+      "name": "粉钻烧海参",
+      "icon": "ItemIcon/Food/item_7909",
+      "itemType": 323,
+      "quality": 4
+    },
+    {
+      "id": 7910,
+      "name": "众星捧月",
+      "icon": "ItemIcon/Food/item_7910",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 7911,
+      "name": "宝石荟萃",
+      "icon": "ItemIcon/Food/item_7911",
+      "itemType": 323,
+      "quality": 5
+    },
+    {
+      "id": 8000,
+      "name": "生肉",
+      "icon": "ItemIcon/Materials/item_8000",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8001,
+      "name": "嫩肉",
+      "icon": "ItemIcon/Materials/item_8000",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8002,
+      "name": "精肉",
+      "icon": "ItemIcon/Materials/item_8002",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8003,
+      "name": "绝品肉",
+      "icon": "ItemIcon/Materials/item_8002",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8010,
+      "name": "百味底料",
+      "icon": "ItemIcon/Materials/item_8010",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8011,
+      "name": "千味底料",
+      "icon": "ItemIcon/Materials/item_8010",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8050,
+      "name": "水",
+      "icon": "ItemIcon/Materials/item_8050",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8051,
+      "name": "胡椒",
+      "icon": "ItemIcon/Materials/item_8051",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8052,
+      "name": "糖",
+      "icon": "ItemIcon/Materials/item_8052",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8053,
+      "name": "盐",
+      "icon": "ItemIcon/Materials/item_8053",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8054,
+      "name": "木果粉",
+      "icon": "ItemIcon/Materials/item_8054",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8055,
+      "name": "乐园牛奶",
+      "icon": "ItemIcon/Materials/item_8055",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8056,
+      "name": "奶油",
+      "icon": "ItemIcon/Materials/item_8056",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8057,
+      "name": "黄玉奶酪",
+      "icon": "ItemIcon/Materials/item_8057",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8101,
+      "name": "青禾",
+      "icon": "ItemIcon/Materials/item_8101",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8102,
+      "name": "蘑菇",
+      "icon": "ItemIcon/Materials/item_8102",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8104,
+      "name": "芥菜",
+      "icon": "ItemIcon/Materials/item_8104",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8105,
+      "name": "琥珀凝胶",
+      "icon": "ItemIcon/Materials/item_8105",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8106,
+      "name": "玉米",
+      "icon": "ItemIcon/Materials/item_8106",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8107,
+      "name": "微光香草",
+      "icon": "ItemIcon/Materials/item_8107",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8108,
+      "name": "琉璃苹果",
+      "icon": "ItemIcon/Materials/item_8108",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8120,
+      "name": "面粉",
+      "icon": "ItemIcon/Materials/item_8120",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8121,
+      "name": "蜂蜜",
+      "icon": "ItemIcon/Materials/item_8121",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8122,
+      "name": "百花蜜",
+      "icon": "ItemIcon/Materials/item_8121",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8123,
+      "name": "蜂王浆",
+      "icon": "ItemIcon/Materials/item_8121",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8124,
+      "name": "土豆",
+      "icon": "ItemIcon/Materials/item_8124",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8125,
+      "name": "甜土豆",
+      "icon": "ItemIcon/Materials/item_8124",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8126,
+      "name": "嘟嘟莓",
+      "icon": "ItemIcon/Materials/item_8126",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8127,
+      "name": "多汁嘟嘟莓",
+      "icon": "ItemIcon/Materials/item_8126",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8128,
+      "name": "蓝鸟蛋",
+      "icon": "ItemIcon/Materials/item_8128",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8129,
+      "name": "钴蓝鸟蛋",
+      "icon": "ItemIcon/Materials/item_8128",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8130,
+      "name": "洁白松露",
+      "icon": "ItemIcon/Materials/item_8130",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8140,
+      "name": "黄油",
+      "icon": "ItemIcon/Materials/item_8140",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8141,
+      "name": "咸黄油",
+      "icon": "ItemIcon/Materials/item_8140",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8142,
+      "name": "脱脂黄油",
+      "icon": "ItemIcon/Materials/item_8140",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8143,
+      "name": "咖喱",
+      "icon": "ItemIcon/Materials/item_8143",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8144,
+      "name": "浓香咖喱",
+      "icon": "ItemIcon/Materials/item_8143",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8145,
+      "name": "刺刺果",
+      "icon": "ItemIcon/Materials/item_8145",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8146,
+      "name": "尖刺刺果",
+      "icon": "ItemIcon/Materials/item_8145",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8147,
+      "name": "甲壳栗",
+      "icon": "ItemIcon/Materials/item_8147",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8148,
+      "name": "铁甲壳栗",
+      "icon": "ItemIcon/Materials/item_8147",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8149,
+      "name": "绿洲之星",
+      "icon": "ItemIcon/Materials/item_8149",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8150,
+      "name": "绿洲新星",
+      "icon": "ItemIcon/Materials/item_8149",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8151,
+      "name": "宝藏驼奶",
+      "icon": "ItemIcon/Materials/item_8151",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8160,
+      "name": "味噌",
+      "icon": "ItemIcon/Materials/item_8160",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8161,
+      "name": "辛味噌",
+      "icon": "ItemIcon/Materials/item_8160",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8162,
+      "name": "水舞叶",
+      "icon": "ItemIcon/Materials/item_8162",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8163,
+      "name": "天舞青叶",
+      "icon": "ItemIcon/Materials/item_8162",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8164,
+      "name": "花瓣鱼",
+      "icon": "ItemIcon/Materials/item_8164",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8165,
+      "name": "鲜花瓣鱼",
+      "icon": "ItemIcon/Materials/item_8164",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8166,
+      "name": "八爪鱼",
+      "icon": "ItemIcon/Materials/item_8166",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8167,
+      "name": "潮汐八爪鱼",
+      "icon": "ItemIcon/Materials/item_8166",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8168,
+      "name": "绀青龙虾",
+      "icon": "ItemIcon/Materials/item_8168",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8180,
+      "name": "辣椒",
+      "icon": "ItemIcon/Materials/item_8180",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8181,
+      "name": "妖魔辣椒",
+      "icon": "ItemIcon/Materials/item_8180",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8182,
+      "name": "豆子",
+      "icon": "ItemIcon/Materials/item_8182",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8183,
+      "name": "干脆豆子",
+      "icon": "ItemIcon/Materials/item_8182",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8184,
+      "name": "竹笋",
+      "icon": "ItemIcon/Materials/item_8184",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8185,
+      "name": "山珍竹笋",
+      "icon": "ItemIcon/Materials/item_8184",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8186,
+      "name": "大螯蟹",
+      "icon": "ItemIcon/Materials/item_8186",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8187,
+      "name": "大鳌蟹王",
+      "icon": "ItemIcon/Materials/item_8186",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8188,
+      "name": "金盏灵芝",
+      "icon": "ItemIcon/Materials/item_8188",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8200,
+      "name": "雷电香油",
+      "icon": "ItemIcon/Materials/item_8200",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8201,
+      "name": "纯净雷电香油",
+      "icon": "ItemIcon/Materials/item_8200",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8202,
+      "name": "兰香茸",
+      "icon": "ItemIcon/Materials/item_8202",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8203,
+      "name": "星夜兰香茸",
+      "icon": "ItemIcon/Materials/item_8202",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8204,
+      "name": "云海螺肉",
+      "icon": "ItemIcon/Materials/item_8204",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8205,
+      "name": "风飘云海螺肉",
+      "icon": "ItemIcon/Materials/item_8204",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8206,
+      "name": "阳光果",
+      "icon": "ItemIcon/Materials/item_8206",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8207,
+      "name": "黄金阳光果",
+      "icon": "ItemIcon/Materials/item_8206",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8208,
+      "name": "女神之泪",
+      "icon": "ItemIcon/Materials/item_8208",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8220,
+      "name": "醇香可可脂",
+      "icon": "ItemIcon/Materials/item_8220",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8221,
+      "name": "浓香可可脂",
+      "icon": "ItemIcon/Materials/item_8220",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8222,
+      "name": "南瓜",
+      "icon": "ItemIcon/Materials/item_8222",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8223,
+      "name": "巨型南瓜",
+      "icon": "ItemIcon/Materials/item_8222",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8224,
+      "name": "跳跳果",
+      "icon": "ItemIcon/Materials/item_8224",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8225,
+      "name": "活力跳跳果",
+      "icon": "ItemIcon/Materials/item_8224",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8226,
+      "name": "水晶凤梨",
+      "icon": "ItemIcon/Materials/item_8226",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8227,
+      "name": "阳光水晶凤梨",
+      "icon": "ItemIcon/Materials/item_8226",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8228,
+      "name": "星流果",
+      "icon": "ItemIcon/Materials/item_8228",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8240,
+      "name": "热辣果浆",
+      "icon": "ItemIcon/Materials/item_8240",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8241,
+      "name": "超热辣果浆",
+      "icon": "ItemIcon/Materials/item_8240",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8242,
+      "name": "火龙果",
+      "icon": "ItemIcon/Materials/item_8242",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8243,
+      "name": "多汁火龙果",
+      "icon": "ItemIcon/Materials/item_8242",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8244,
+      "name": "冰冻海虾",
+      "icon": "ItemIcon/Materials/item_8244",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8245,
+      "name": "急冻海虾",
+      "icon": "ItemIcon/Materials/item_8244",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8246,
+      "name": "冰晶果",
+      "icon": "ItemIcon/Materials/item_8246",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8247,
+      "name": "蔚蓝冰晶果",
+      "icon": "ItemIcon/Materials/item_8246",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8248,
+      "name": "冰炎果",
+      "icon": "ItemIcon/Materials/item_8248",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8260,
+      "name": "琥珀酱",
+      "icon": "ItemIcon/Materials/item_8260",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8261,
+      "name": "百香琥珀酱",
+      "icon": "ItemIcon/Materials/item_8260",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8262,
+      "name": "青晶蓝莓",
+      "icon": "ItemIcon/Materials/item_8262",
+      "itemType": 324,
+      "quality": 1
+    },
+    {
+      "id": 8263,
+      "name": "香甜青晶蓝莓",
+      "icon": "ItemIcon/Materials/item_8262",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8264,
+      "name": "黑曜海参",
+      "icon": "ItemIcon/Materials/item_8264",
+      "itemType": 324,
+      "quality": 2
+    },
+    {
+      "id": 8265,
+      "name": "珍宝黑曜海参",
+      "icon": "ItemIcon/Materials/item_8264",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8266,
+      "name": "粉钻果",
+      "icon": "ItemIcon/Materials/item_8266",
+      "itemType": 324,
+      "quality": 3
+    },
+    {
+      "id": 8267,
+      "name": "璀璨粉钻果",
+      "icon": "ItemIcon/Materials/item_8266",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 8268,
+      "name": "月石果",
+      "icon": "ItemIcon/Materials/item_8268",
+      "itemType": 324,
+      "quality": 4
+    },
+    {
+      "id": 43001,
+      "name": "莱姆胶",
+      "icon": "ItemIcon/Materials/item_43001",
+      "itemType": 108,
+      "quality": 2
+    }
+  ]
+}

@@ -77,6 +77,10 @@ namespace Zjcs.Presentation.Home
 
         partial void OnDialogClosing()
         {
+            astrologicalClosing = true;
+            host.EndAstrologicalCharge();
+            ClearAstrologicalRows();
+            astrologicalClosing = false;
             ClearPetIntroduction();
             ClearFruitTreeTutorial();
             CloseTreasureGachaOverlay();

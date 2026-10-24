@@ -10,13 +10,29 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import os
 import shutil
+import tempfile
 from pathlib import Path
+
+from home_ui_animation import normalize_home_ui_animations
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFICIAL = ROOT / "assets" / "official"
 OUTPUT = ROOT / "unity" / "Assets" / "StreamingAssets" / "Home"
 SPRITE_DIR = OUTPUT / "sprites"
+FIXED_REWARD_TABLE = ROOT / ".tools" / "source-packages" / "official-data" / "tables.json"
+WISH_SOURCE_MANIFEST = ROOT / "assets" / "reference" / "wishes" / "source-manifest.json"
+HOME_PLAYER_SOURCE_MANIFEST = ROOT / "assets" / "reference" / "home-player" / "source-manifest.json"
+HOME_TUTORIAL_FIXED_REWARD_ID = 7
+# The pinned ParticleSystem type tree has these modules enabled; the actor payload omits the flags.
+HOME_METEOR_ENABLED_MODULES = {
+    "SizeModule": True,
+    "VelocityModule": True,
+    "ClampVelocityModule": True,
+    "ColorModule": True,
+}
 
 # Layers of ``assets/official/home.json`` that belong to a furniture prefab and
 # are therefore rebuilt from the richer per-state trees in
@@ -43,6 +59,10 @@ HUD_PANELS = [
     "furniture_icon_0", "furniture_icon_1", "furniture_icon_2", "furniture_icon_3",
     "furniture_icon_5", "furniture_icon_7", "furniture_icon_8", "furniture_icon_9",
     "furniture_icon_10", "furniture_icon_12", "furniture_icon_13",
+    "astrological_entry", "astrological", "astrological_props", "astrological_rank",
+    "astrological_contract_tag", "astrological_rule", "astrological_season_1",
+    "astrological_season_2", "astrological_season_3", "astrological_season_4",
+    "astrological_season_5", "astrological_season_6", "character_prop_row",
 ]
 
 RULE_TABLES = [
@@ -124,10 +144,12 @@ def trim_node(node):
         "localization_key", "mask", "mask_component_flags", "mask_enabled", "mask_show_graphic",
         "has_tab_group", "tab_group_allow_switch_off", "no_drawing_raycast", "raycast_target", "raycast_padding",
         "rectmask2d", "layout", "grid", "size_fitter",
-        "layout_element", "aspect_fitter", "alpha", "button", "scroll", "children",
+        "layout_element", "aspect_fitter", "alpha", "button", "scroll", "animations", "children",
         "toggle",
     )
     result = {key: node[key] for key in keep if key in node}
+    if "animations" in result:
+        result["animations"] = normalize_home_ui_animations(result["animations"])
     if isinstance(result.get("image"), dict):
         image = result["image"]
         trim_sprite(image.get("sprite"))
@@ -141,9 +163,33 @@ def trim_prefab(panel):
     if not isinstance(panel, dict):
         return panel
     result = {key: value for key, value in panel.items() if key != "root"}
-    if isinstance(panel.get("root"), dict):
-        result["root"] = trim_node(panel["root"])
+    root = panel.get("root")
+    if not isinstance(root, dict) and isinstance(panel.get("path"), str):
+        # The wish tutorial payload stores each prefab root directly, unlike
+        # the wrapped panels in the home, mail, and talk payloads.
+        root = panel
+    if isinstance(root, dict):
+        result["root"] = trim_node(root)
     return result
+
+
+def flatten_panel(panel):
+    root = panel.get("root")
+    if not isinstance(root, dict):
+        raise ValueError("Home UI panel is missing its root node: " + str(panel.get("key")))
+
+    root_record = {key: value for key, value in root.items() if key != "children"}
+    nodes = []
+
+    def append_children(parent_path, parent):
+        for child in parent.get("children") or []:
+            record = {key: value for key, value in child.items() if key != "children"}
+            record["parent_path"] = parent_path
+            nodes.append(record)
+            append_children(child.get("path", ""), child)
+
+    append_children(root.get("path", ""), root)
+    return {"key": panel.get("key", ""), "root": root_record, "nodes": nodes}
 
 
 def collect_sprites(node, files):
@@ -342,9 +388,25 @@ def load_ui():
         if key.startswith(("mail_", "talk_", "wish_")):
             selected[key] = panel
     completion = read(OFFICIAL / "home-completion" / "ui.json")
+    fidelity = read(OFFICIAL / "fidelity-rules.json")
+    astrological_art = fidelity.get("astrological_art", {}).get("ContractTagSetting", {})
+    astrological_tag_art = []
+    for prop_type, setting in astrological_art.items():
+        icon = setting.get("mIconImgSpriteProxy")
+        color = setting.get("mBgColor") or {}
+        if not isinstance(icon, dict) or not icon.get("file"):
+            raise ValueError(f"Official astrological tag icon is missing for property {prop_type}.")
+        astrological_tag_art.append({
+            "property_type": int(prop_type),
+            "icon": trim_sprite(dict(icon)),
+            "color": [color.get(channel, 1.0) for channel in ("r", "g", "b", "a")],
+        })
     return {
         "version": "854_156383",
-        "panels": [{"key": key, "root": panel.get("root")} for key, panel in selected.items()],
+        "panels": [
+            flatten_panel({"key": key, "root": panel.get("root")})
+            for key, panel in selected.items()
+        ],
         "texts": flatten_texts(texts),
         "dynamic_sprites": [
             {"key": key, "file": value.get("file")}
@@ -362,6 +424,7 @@ def load_ui():
             {"key": key, "value": value}
             for key, value in (wish.get("strings") or {}).items()
         ],
+        "astrological_tag_art": sorted(astrological_tag_art, key=lambda value: value["property_type"]),
     }
 
 
@@ -524,7 +587,7 @@ def load_rules():
     }
 
 
-def icon_item_ids(rules):
+def icon_item_ids(rules, additional_item_ids=()):
     """Item ids whose icons the home dialogs can display."""
     rule_ids = set(REWARD_RULE_IDS)
     rule_ids.update(reward.get("rewardRuleId") for reward in rules["hangUpRewards"])
@@ -546,7 +609,22 @@ def icon_item_ids(rules):
     for entry in rules["fastHangUps"]:
         item_ids.update(item["itemId"] for item in entry.get("items") or [])
     item_ids.update((6013, 6015, 6017, 50))
+    item_ids.update(additional_item_ids)
     return {int(value) for value in item_ids if value is not None and int(value) > 0}
+
+
+def home_tutorial_fixed_reward_item_ids():
+    """Read reward 7 from the pinned table and verify its existing source record."""
+    actual_hash = digest(FIXED_REWARD_TABLE.read_bytes())
+    source_manifest = read(WISH_SOURCE_MANIFEST)
+    expected_hash = (source_manifest.get("inputHashes") or {}).get("fixed-reward-table.json")
+    if actual_hash != expected_hash:
+        raise ValueError("The official fixed-reward table does not match the pinned wish source manifest.")
+    rows = read(FIXED_REWARD_TABLE).get("fixed_reward") or []
+    reward = next((row for row in rows if int(row.get("Id", 0)) == HOME_TUTORIAL_FIXED_REWARD_ID), None)
+    if reward is None or not isinstance(reward.get("Reward"), dict) or not reward["Reward"]:
+        raise ValueError("Official home tutorial fixed reward 7 is missing or empty.")
+    return {int(item_id) for item_id in reward["Reward"] if int(item_id) > 0}
 
 
 def item_of_type(furniture_type):
@@ -562,6 +640,33 @@ def load_actors():
     npc = read(OFFICIAL / "home-npc" / "npc.json")
     performance = read(OFFICIAL / "home-fast" / "performance.json")
     talk = read(OFFICIAL / "home-tutorial" / "talk.json")
+    matrix = player.get("transform")
+    preset = (player.get("presets") or {}).get("player_init")
+    if not matrix or len(matrix) != 4 or preset is None:
+        raise ValueError("Official home player transform or player_init preset is missing.")
+    pose = "home/idle_01"
+    for skeleton in (player.get("players", {}).get("skeletons", {}) or {}).values():
+        if pose not in (skeleton.get("animations") or {}):
+            raise ValueError(f"Official home player animation is missing: {pose}")
+    layer_name = preset.get("SortingLayerName")
+    sorting_layers = npc.get("sorting_layers") or {}
+    if layer_name not in sorting_layers:
+        raise ValueError(f"Official home player sorting layer is missing: {layer_name}")
+    basis_x = matrix[0][:3]
+    basis_y = matrix[1][:3]
+    basis_z = matrix[2][:3]
+    runtime = {
+        "position": [matrix[0][3], matrix[1][3], matrix[2][3]],
+        "scale": [math.sqrt(sum(value * value for value in basis_x)),
+                  math.sqrt(sum(value * value for value in basis_y)),
+                  math.sqrt(sum(value * value for value in basis_z))],
+        "rotation_z": math.degrees(math.atan2(matrix[1][0], matrix[0][0])),
+        "sorting_layer_name": layer_name,
+        "sorting_layer": int(sorting_layers[layer_name]),
+        "sorting_order": int(preset.get("SortingOrder", 0)),
+        "animation": pose,
+    }
+    player["runtime"] = runtime
     return {
         "player": player,
         "npc": npc,
@@ -576,6 +681,208 @@ def load_environment():
     moon = read(OFFICIAL / "home-environment" / "moon.json")
     player = read(OFFICIAL / "home-player" / "player.json")
     meteor = (player.get("meteor") or {}).get("config") or config.get("MeteorConfig") or {}
+    meteor_templates = (player.get("meteor") or {}).get("templates") or []
+    configured_templates = meteor.get("Templates") or []
+    if len(meteor_templates) != len(configured_templates):
+        raise ValueError("Home meteor particle payload does not match the official template list.")
+
+    def curve(value):
+        value = value or {}
+
+        def keys(raw):
+            return [
+                {
+                    "time": key[0],
+                    "value": key[1],
+                    "inSlope": key[3] if len(key) > 3 and key[3] is not None else 0.0,
+                    "outSlope": key[2] if len(key) > 2 and key[2] is not None else 0.0,
+                }
+                for key in raw or []
+            ]
+
+        return {
+            "mode": value.get("mode", 0),
+            "min": value.get("min", 0.0),
+            "max": value.get("max", 0.0),
+            "low": keys(value.get("low")),
+            "high": keys(value.get("high")),
+        }
+
+    def color_value(value):
+        value = value or [1.0, 1.0, 1.0, 1.0]
+        return {key: value[index] for index, key in enumerate(("r", "g", "b", "a"))}
+
+    def gradient(value):
+        value = value or {}
+        return {
+            "rgb": [
+                {"time": key[0], "r": key[1], "g": key[2], "b": key[3]}
+                for key in value.get("rgb") or []
+            ],
+            "alpha": [
+                {"time": key[0], "alpha": key[1]}
+                for key in value.get("alpha") or []
+            ],
+        }
+
+    def color(value):
+        value = value or {}
+        return {
+            "mode": value.get("mode", 0),
+            "min": color_value(value.get("min")),
+            "max": color_value(value.get("max")),
+            "low": gradient(value.get("low")),
+            "high": gradient(value.get("high")),
+        }
+
+    def material(value):
+        if not value:
+            return None
+        return {
+            "name": value.get("name", ""),
+            "textures": [
+                {
+                    "property": name,
+                    "file": texture.get("file", ""),
+                    "scale": texture.get("scale") or [1.0, 1.0],
+                    "offset": texture.get("offset") or [0.0, 0.0],
+                }
+                for name, texture in sorted((value.get("textures") or {}).items())
+            ],
+            "floats": [
+                {"name": name, "value": item}
+                for name, item in sorted((value.get("floats") or {}).items())
+            ],
+            "colors": [
+                {"name": name, "value": color_value(item)}
+                for name, item in sorted((value.get("colors") or {}).items())
+            ],
+        }
+
+    def particle_system(value):
+        matrix = value.get("matrix") or []
+        if len(matrix) != 4 or any(len(row) != 4 for row in matrix):
+            raise ValueError("Home meteor particle has an invalid official transform matrix.")
+        modules = value.get("modules") or {}
+        trail = modules.get("TrailModule") or {}
+        if value.get("unconverted_modules"):
+            raise ValueError("Home meteor has unsupported particle modules: "
+                             + ", ".join(value["unconverted_modules"]))
+        return {
+            "path": value.get("path", ""),
+            "matrix": [entry for row in matrix for entry in row],
+            "duration": value.get("duration", 0.0),
+            "loop": bool(value.get("loop")),
+            "prewarm": bool(value.get("prewarm")),
+            "speed": value.get("speed", 1.0),
+            "max_particles": value.get("max_particles", 1),
+            "emission_enabled": True,
+            "stop_action": 0,
+            "culling_mode": 0,
+            "ring_buffer_mode": 0,
+            "emitter_velocity_mode": 1,
+            "scaling_mode": 0,
+            "use_unscaled_time": False,
+            "delay": curve(value.get("delay")),
+            "life": curve(value.get("life")),
+            "velocity": curve(value.get("velocity")),
+            "size": curve(value.get("size")),
+            "size_y": curve(value.get("size_y")),
+            "size3d": bool(value.get("size3d")),
+            "rotation": curve(value.get("rotation")),
+            "rotation3d": bool(value.get("rotation3d")),
+            "rotation_x": curve(value.get("rotation_x")),
+            "rotation_y": curve(value.get("rotation_y")),
+            "color": color(value.get("color")),
+            "shape": {
+                "enabled": bool((value.get("shape") or {}).get("enabled")),
+                "type": (value.get("shape") or {}).get("type", 0),
+                "angle": (value.get("shape") or {}).get("angle", 0.0),
+                "length": (value.get("shape") or {}).get("length", 0.0),
+                "radiusThickness": (value.get("shape") or {}).get("radiusThickness", 0.0),
+                "donutRadius": (value.get("shape") or {}).get("donutRadius", 0.0),
+                "radius": ((value.get("shape") or {}).get("radius") or {}).get("value", 0.0),
+                "arc": ((value.get("shape") or {}).get("arc") or {}).get("value", 360.0),
+                "boxThickness": (value.get("shape") or {}).get("boxThickness") or {"x": 0, "y": 0, "z": 0},
+                "m_Position": (value.get("shape") or {}).get("m_Position") or {"x": 0, "y": 0, "z": 0},
+                "m_Rotation": (value.get("shape") or {}).get("m_Rotation") or {"x": 0, "y": 0, "z": 0},
+                "m_Scale": (value.get("shape") or {}).get("m_Scale") or {"x": 1, "y": 1, "z": 1},
+            },
+            "rate": curve(value.get("rate")),
+            "bursts": [
+                {
+                    "time": burst.get("time", 0.0),
+                    "count": curve(burst.get("count")),
+                    "cycles": burst.get("cycles", 1),
+                    "interval": burst.get("interval", 0.0),
+                    "probability": burst.get("probability", 1.0),
+                }
+                for burst in value.get("bursts") or []
+            ],
+            "render_mode": value.get("render_mode", 0),
+            "alignment": value.get("alignment", 0),
+            "sorting_layer": value.get("sorting_layer", 0),
+            "sorting_order": value.get("sorting_order", 0),
+            "simulation_space": value.get("simulation_space", 0),
+            "stretch": value.get("stretch") or {},
+            "material": material(value.get("material")),
+            "modules": {
+                "SizeModule": {
+                    "enabled": HOME_METEOR_ENABLED_MODULES["SizeModule"],
+                    "curve": curve((modules.get("SizeModule") or {}).get("curve")),
+                    "x": curve((modules.get("SizeModule") or {}).get("x")),
+                    "y": curve((modules.get("SizeModule") or {}).get("y")),
+                    "z": curve((modules.get("SizeModule") or {}).get("z")),
+                    "separateAxes": bool((modules.get("SizeModule") or {}).get("separateAxes")),
+                },
+                "VelocityModule": {
+                    "enabled": HOME_METEOR_ENABLED_MODULES["VelocityModule"],
+                    "inWorldSpace": False,
+                    **{
+                        key: curve((modules.get("VelocityModule") or {}).get(key))
+                        for key in ("x", "y", "z", "orbitalZ", "radial", "speedModifier")
+                    },
+                },
+                "ClampVelocityModule": {
+                    "enabled": HOME_METEOR_ENABLED_MODULES["ClampVelocityModule"],
+                    "inWorldSpace": False,
+                    "separateAxes": False,
+                    "multiplyDragByParticleSize": True,
+                    "multiplyDragByParticleVelocity": True,
+                    "magnitude": curve((modules.get("ClampVelocityModule") or {}).get("magnitude")),
+                    "drag": curve({"mode": 0, "min": 0.0, "max": 0.0}),
+                    "dampen": (modules.get("ClampVelocityModule") or {}).get("dampen", 0.0),
+                },
+                "ColorModule": {
+                    "enabled": HOME_METEOR_ENABLED_MODULES["ColorModule"],
+                    **color((modules.get("ColorModule") or {}).get("gradient", modules.get("ColorModule"))),
+                },
+                "TrailModule": {
+                    key: item
+                    for key, item in trail.items()
+                    if key not in {"lifetime", "widthOverTrail", "colorOverLifetime", "colorOverTrail", "material"}
+                } | {
+                    "lifetime": curve(trail.get("lifetime")),
+                    "widthOverTrail": curve(trail.get("widthOverTrail")),
+                    "colorOverLifetime": color(trail.get("colorOverLifetime")),
+                    "colorOverTrail": color(trail.get("colorOverTrail")),
+                    "material": material(trail.get("material")),
+                },
+            },
+        }
+
+    source_manifest = read(HOME_PLAYER_SOURCE_MANIFEST)
+    meteor_runtime = {
+        "format": 1,
+        "sourceManifest": source_manifest.get("manifest", "854_156383"),
+        "templates": [
+            {
+                "assetGuid": (configured_templates[index].get("mProxyRes") or {}).get("mAssetGuid", ""),
+                "systems": [particle_system(system) for system in group],
+            }
+            for index, group in enumerate(meteor_templates)
+        ],
+    }
 
     def moment(value):
         value = value or {}
@@ -611,6 +918,7 @@ def load_environment():
                 "interval": meteor.get("Interval", 0),
             },
         },
+        "meteorRuntime": meteor_runtime,
         "moonVariants": [
             {"index": int(key), "sprite": value.get("moon", {}).get("sprite", {}).get("file", "")
              .rsplit("/", 1)[-1]}
@@ -730,6 +1038,69 @@ def load_tips():
     return read(OFFICIAL / "home-tips" / "graphs.json")
 
 
+def load_tutorials():
+    adventure = read(OFFICIAL / "adventure.json")
+    guide_names = [
+        "RepaireFurniture2", "GoHomeUnlockHeap", "RepaireBed",
+        "BedSpeedUp", "RepaireBaGuaLu", "FirstMergeItem",
+    ]
+    story_info = {row.get("StoryName"): row for row in adventure["tables"]["story"]}
+    guides = []
+    for name in guide_names:
+        graph = adventure["stories"].get(name)
+        if not isinstance(graph, dict) or not isinstance(graph.get("nodes"), dict):
+            raise ValueError(f"Official home tutorial graph is missing: {name}")
+        nodes = []
+        for key, node in sorted(graph["nodes"].items(), key=lambda pair: int(pair[0])):
+            ports_source = node.get("ports") or node.get("Ports") or {}
+            ports = []
+            for port_name, port in ports_source.items():
+                connections = []
+                for connection in port.get("connections") or []:
+                    target = connection.get("node", connection.get("NodeId"))
+                    if target is None or target == "":
+                        continue
+                    connections.append({
+                        "node": int(target),
+                        "port": connection.get("port", connection.get("fieldName", "")),
+                    })
+                ports.append({"name": str(port_name), "connections": connections})
+            payload = {field: value for field, value in node.items()
+                       if field not in ("ports", "Ports", "Entry", "Exit", "_type")}
+            nodes.append({
+                "id": int(key),
+                "type": node.get("_type", ""),
+                "name": node.get("m_Name", node.get("name", "")),
+                "payload": json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+                "ports": ports,
+            })
+        dialogue_nodes = []
+        for key, lines in (adventure["dialogues"].get(name) or {}).items():
+            for line in lines or []:
+                dialogue_nodes.append({
+                    "nodeId": int(key),
+                    "order": int(line.get("Order", 0)),
+                    "text": line.get("Text", ""),
+                    "roleId": int(line.get("RoleId", 0)),
+                    "face": line.get("RoleFaceType", ""),
+                    "type": line.get("DialogType", ""),
+                    "voiceEvent": line.get("VoiceEventKey", ""),
+                })
+        info = story_info.get(name, {})
+        guides.append({
+            "name": name,
+            "order": int(info.get("Order", 0)),
+            "resPath": info.get("ResPath", ""),
+            "nodes": nodes,
+            "dialogues": dialogue_nodes,
+            "graphPropertiesJson": json.dumps(graph.get("properties") or {}, ensure_ascii=False, separators=(",", ":")),
+        })
+    return {
+        "version": "854_156383",
+        "guides": guides,
+        "sourceSha256": digest((OFFICIAL / "adventure.json").read_bytes()),
+    }
+
 def stage_sprites(payloads):
     SPRITE_DIR.mkdir(parents=True, exist_ok=True)
     files = set(SPRITE_SOURCES)
@@ -773,19 +1144,24 @@ def stage_reward_pages(reward_visuals):
                 copies[name] = digest(source.read_bytes())
     return copies, prepared
 
-def stage_icons(rules):
+def stage_icons(rules, additional_item_ids=()):
     """Copy the item icons referenced by home rewards, costs and tokens."""
     SPRITE_DIR.mkdir(parents=True, exist_ok=True)
     by_id = {item["id"]: item for item in rules["items"]}
     copies = {}
     prepared = 0
-    for item_id in sorted(icon_item_ids(rules)):
+    required_ids = {int(value) for value in additional_item_ids}
+    for item_id in sorted(icon_item_ids(rules, required_ids)):
         item = by_id.get(item_id)
         if not item or not item.get("icon"):
+            if item_id in required_ids:
+                raise ValueError(f"Official tutorial reward item {item_id} has no configured icon.")
             continue
         name = item["icon"]
         source = OFFICIAL / "sprites" / name
         if not source.is_file():
+            if item_id in required_ids:
+                raise FileNotFoundError(f"Official tutorial reward icon is missing: {source}")
             continue
         target = SPRITE_DIR / name
         if not target.is_file() or target.stat().st_size != source.stat().st_size:
@@ -795,11 +1171,40 @@ def stage_icons(rules):
     return copies, prepared
 
 
+def ensure_runtime_sprite_meta(name):
+    target = SPRITE_DIR / name
+    meta = target.with_name(target.name + ".meta")
+    if meta.exists():
+        return
+    guid = hashlib.sha256(("Zjcs.HomeSprite/" + name).encode("utf-8")).hexdigest()[:32]
+    meta.write_text(
+        "fileFormatVersion: 2\n"
+        f"guid: {guid}\n"
+        "DefaultImporter:\n"
+        "  externalObjects: {}\n"
+        "  userData: \n"
+        "  assetBundleName: \n"
+        "  assetBundleVariant: \n",
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
 def write(name, payload):
     path = OUTPUT / name
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-    path.write_text(text, encoding="utf-8")
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", newline="", dir=path.parent,
+                prefix=".home-runtime-", suffix=".tmp", delete=False) as temporary:
+            temporary_path = Path(temporary.name)
+            temporary.write(text)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
     return path
 
 
@@ -814,14 +1219,19 @@ def build():
     mail = load_mail()
     reward_visuals = load_reward_visuals()
     tips = load_tips()
+    tutorials = load_tutorials()
+    tutorial_reward_item_ids = home_tutorial_fixed_reward_item_ids()
+    home_player_source_manifest = read(HOME_PLAYER_SOURCE_MANIFEST)
 
-    sprites, prepared = stage_sprites([scene, ui, actors, environment, rewards, mail, tips, reward_visuals])
+    sprites, prepared = stage_sprites([scene, ui, actors, environment, rewards, mail, tips, reward_visuals, tutorials])
     pages, prepared_pages = stage_reward_pages(reward_visuals)
     sprites.update(pages)
     prepared += prepared_pages
-    icons, prepared_icons = stage_icons(rules)
+    icons, prepared_icons = stage_icons(rules, tutorial_reward_item_ids)
     sprites.update(icons)
     prepared += prepared_icons
+    for name in sprites:
+        ensure_runtime_sprite_meta(name)
 
     outputs = {}
     for name, payload in (
@@ -829,10 +1239,12 @@ def build():
         ("ui.json", ui),
         ("rules.json", rules),
         ("actors.json", actors),
+        ("player-runtime.json", actors["player"]["runtime"]),
         ("environment.json", environment),
         ("rewards.json", rewards),
         ("mail.json", mail),
         ("reward-visuals.json", reward_visuals),
+        ("tutorials.json", tutorials),
         ("tips.json", tips),
     ):
         path = write(name, payload)
@@ -844,6 +1256,40 @@ def build():
         "operation": "Merge the extracted official Home scene, UI, rules and actor "
                      "payloads into the runtime StreamingAssets set and copy every "
                      "referenced sprite.",
+        "inputs": {
+            "homePlayerRuntime": {
+                "transformSource": "assets/official/home-player/player.json",
+                "transformSourceSha256": digest((OFFICIAL / "home-player" / "player.json").read_bytes()),
+                "sortingLayerSource": "assets/official/home-npc/npc.json",
+                "sortingLayerSourceSha256": digest((OFFICIAL / "home-npc" / "npc.json").read_bytes()),
+                "preset": "player_init",
+                "pose": actors["player"]["runtime"]["animation"],
+            },
+            "homeMeteorRuntime": {
+                "source": "assets/official/home-player/player.json",
+                "sourceSha256": digest((OFFICIAL / "home-player" / "player.json").read_bytes()),
+                "assetManifest": "assets/reference/home-player/source-manifest.json",
+                "assetManifestSha256": digest(HOME_PLAYER_SOURCE_MANIFEST.read_bytes()),
+                "particleSystems": [
+                    {"bundle": source["bundle"], "pathId": source["path_id"], "sha256": source["sha256"]}
+                    for source in home_player_source_manifest.get("inputs", {}).values()
+                    if source.get("type") == "ParticleSystem"
+                    and source.get("bundle") == "defaultpackage_assets_prefabs_home_dynamic_nature.bundle"
+                ],
+                "counterpartDependencies": home_player_source_manifest.get("counterpart_dependencies", {}),
+            },
+            "tutorialFixedReward": {
+                "id": HOME_TUTORIAL_FIXED_REWARD_ID,
+                "table": ".tools/source-packages/official-data/tables.json",
+                "sha256": digest(FIXED_REWARD_TABLE.read_bytes()),
+                "itemIds": sorted(tutorial_reward_item_ids),
+            },
+            "astrologicalTagArt": {
+                "source": "assets/official/fidelity-rules.json",
+                "sha256": digest((OFFICIAL / "fidelity-rules.json").read_bytes()),
+                "properties": [value["property_type"] for value in ui["astrological_tag_art"]],
+            },
+        },
         "counts": {
             "background_layers": len(scene["background"]),
             "furniture": len(scene["furniture"]),
@@ -853,6 +1299,11 @@ def build():
             "panels": len(ui["panels"]),
             "texts": len(ui["texts"]),
             "items": len(rules["items"]),
+            "tutorial_guides": len(tutorials["guides"]),
+            "tutorial_nodes": sum(len(guide["nodes"]) for guide in tutorials["guides"]),
+            "meteor_templates": len(environment["meteorRuntime"]["templates"]),
+            "meteor_particle_systems": sum(len(row["systems"])
+                                            for row in environment["meteorRuntime"]["templates"]),
             "sprites": len(sprites),
         },
         "outputs": outputs,

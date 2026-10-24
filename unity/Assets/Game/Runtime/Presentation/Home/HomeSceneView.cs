@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,9 @@ namespace Zjcs.Presentation.Home
     /// </summary>
     public sealed class HomeSceneView
     {
+        private const int SortingLayerStride = 1100;
+        private const int SortingOrderStride = 40;
+
         private static readonly Dictionary<string, int> FurnitureRoots = new Dictionary<string, int>(StringComparer.Ordinal)
         {
             { "Bed", 0 }, { "Desk", 1 }, { "DiningTable", 2 }, { "Danlu", 3 }, { "FruitTree", 4 },
@@ -21,15 +25,34 @@ namespace Zjcs.Presentation.Home
             { "GachaChest", 9 }, { "Cart", 10 }, { "AstrologicalDestiny", 12 }, { "Airship", 13 }
         };
 
+        private static readonly Dictionary<string, int> ThemeRoots = new Dictionary<string, int>(StringComparer.Ordinal)
+        {
+            { "Ground", 4 }, { "House", 1 }, { "HouseOutside", 3 }, { "Background", 2 }
+        };
+
         private readonly HomeAssetCatalog catalog;
         private readonly HomeCameraData camera;
         private readonly Dictionary<int, GameObject> repaired = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> unrepaired = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, List<GameObject>> furnitureBaseObjects = new Dictionary<int, List<GameObject>>();
+        private readonly Dictionary<int, List<GameObject>> themeBaseObjects = new Dictionary<int, List<GameObject>>();
+        private readonly Dictionary<int, List<GameObject>> furnitureSkinObjects = new Dictionary<int, List<GameObject>>();
+        private readonly Dictionary<int, List<GameObject>> themeSkinObjects = new Dictionary<int, List<GameObject>>();
+        private readonly Dictionary<string, List<GameObject>> fruitTreeSkinLayerObjects =
+            new Dictionary<string, List<GameObject>>(StringComparer.Ordinal);
+        private readonly Dictionary<string, string> fruitTreeSceneSpriteByPath = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly Dictionary<int, List<HomeQuad>> clickRegions = new Dictionary<int, List<HomeQuad>>();
         private readonly Dictionary<string, Material> materials = new Dictionary<string, Material>(StringComparer.Ordinal);
+        private readonly Dictionary<string, Texture2D> moonTextures = new Dictionary<string, Texture2D>(StringComparer.Ordinal);
+        private readonly Dictionary<string, MoonLayerView> moonLayers = new Dictionary<string, MoonLayerView>(StringComparer.Ordinal);
+        private readonly Dictionary<string, AnimationCurve> moonCurves = new Dictionary<string, AnimationCurve>(StringComparer.Ordinal);
+        private readonly Dictionary<string, HomeMoonAnimationTrack> moonSteppedTracks =
+            new Dictionary<string, HomeMoonAnimationTrack>(StringComparer.Ordinal);
         private readonly List<Mesh> createdMeshes = new List<Mesh>();
+        private readonly List<Texture2D> createdTextures = new List<Texture2D>();
         private readonly List<HomeSceneLayer> furnitureLayers = new List<HomeSceneLayer>();
         private readonly List<KeyValuePair<string, GameObject>> layerObjects = new List<KeyValuePair<string, GameObject>>();
+        private readonly Dictionary<long, int> sortingTieBreaks = new Dictionary<long, int>();
         private readonly Dictionary<string, GameObject> fruitTreeLayers = new Dictionary<string, GameObject>(StringComparer.Ordinal);
         private readonly Dictionary<string, GameObject> fruitTreeNativeObjects = new Dictionary<string, GameObject>(StringComparer.Ordinal);
         private readonly Dictionary<ParticleSystem, FruitTreeParticleState> fruitTreeParticles =
@@ -46,6 +69,10 @@ namespace Zjcs.Presentation.Home
         private int treeFrameIndex;
         private float treeFrameTimer;
         private HomeFruitTreeScene fruitTreeData;
+        private HomeMoonVisualData moonData;
+        private GameObject moonRoot;
+        private Transform moonScale;
+        private int moonPhase = -1;
 
         public GameObject Root { get; }
         public Camera Camera { get; private set; }
@@ -86,13 +113,19 @@ namespace Zjcs.Presentation.Home
 
         private void BuildBackground()
         {
-            int order = 0;
             foreach (HomeSceneLayer layer in catalog.Scene.background ?? Array.Empty<HomeSceneLayer>())
             {
                 if (layer == null || layer.vertices == null || layer.vertices.Length < 8) continue;
                 string group = RootGroup(layer.path);
                 if (FurnitureRoots.ContainsKey(group) && group != "FruitTree") continue;
-                CreateQuad(layer, order++, Root.transform);
+                GameObject go = CreateQuad(layer, Root.transform);
+                if (ThemeRoots.TryGetValue(group, out int themeType))
+                    AddObject(themeBaseObjects, themeType, go);
+                else if (group == "FruitTree")
+                {
+                    AddObject(furnitureBaseObjects, 4, go);
+                    fruitTreeSceneSpriteByPath[NormalizeFruitTreePath(layer.path)] = layer.sprite?.file;
+                }
             }
         }
 
@@ -107,15 +140,13 @@ namespace Zjcs.Presentation.Home
                 unrepairedRoot.transform.SetParent(Root.transform, false);
                 repairedRoot.SetActive(false);
                 unrepairedRoot.SetActive(false);
-                int repairedOrder = 0;
-                int unrepairedOrder = 0;
                 foreach (HomeSceneLayer layer in furniture.layers ?? Array.Empty<HomeSceneLayer>())
                 {
                     if (layer == null || layer.vertices == null || layer.vertices.Length < 8) continue;
                     furnitureLayers.Add(layer);
                     bool isRepaired = IsRepairedLayer(layer.path);
-                    CreateQuad(layer, isRepaired ? repairedOrder++ : unrepairedOrder++,
-                        isRepaired ? repairedRoot.transform : unrepairedRoot.transform);
+                    GameObject go = CreateQuad(layer, isRepaired ? repairedRoot.transform : unrepairedRoot.transform);
+                    AddObject(furnitureBaseObjects, furniture.type, go);
                 }
                 repaired[furniture.type] = repairedRoot;
                 unrepaired[furniture.type] = unrepairedRoot;
@@ -137,8 +168,8 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private GameObject CreateQuad(HomeSceneLayer layer, int order, Transform parent,
-            Vector3? position = null, bool trackLayer = true)
+        private GameObject CreateQuad(HomeSceneLayer layer, Transform parent, Vector3? position = null,
+            bool trackLayer = true)
         {
             Texture2D texture = catalog.FindTexture(layer.sprite?.file);
             if (texture == null) return null;
@@ -177,7 +208,7 @@ namespace Zjcs.Presentation.Home
             filter.mesh = mesh;
             if (trackLayer) layerObjects.Add(new KeyValuePair<string, GameObject>(layer.path ?? string.Empty, go));
             renderer.sharedMaterial = Material(texture);
-            renderer.sortingOrder = order;
+            renderer.sortingOrder = NextSortingOrder(layer.sorting_layer, layer.sorting_order);
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
             return go;
@@ -196,9 +227,10 @@ namespace Zjcs.Presentation.Home
                 bool rope = layer.path == "/FruitTree/FruitTree_Rope";
                 bool nightLight = layer.path.EndsWith("/Light_Glow", StringComparison.Ordinal);
                 if (!subFurniture && !rope && !nightLight) continue;
-                GameObject go = CreateQuad(layer, 900 + layer.sorting_order, Root.transform, trackLayer: false);
+                GameObject go = CreateQuad(layer, Root.transform, trackLayer: false);
                 if (go == null) continue;
                 go.name = layer.path;
+                fruitTreeSceneSpriteByPath[NormalizeFruitTreePath(layer.path)] = layer.sprite?.file;
                 if (subFurniture)
                 {
                     fruitTreeLayers[layer.path] = go;
@@ -219,7 +251,7 @@ namespace Zjcs.Presentation.Home
                 if (slot?.position == null || slot.position.Length < 2) continue;
                 Vector3 position = new Vector3(slot.position[0], slot.position[1],
                     slot.position.Length > 2 ? slot.position[2] : 0f);
-                GameObject fruit = CreateQuad(fruitEffect, 1600, Root.transform, position, trackLayer: false);
+                GameObject fruit = CreateQuad(fruitEffect, Root.transform, position, trackLayer: false);
                 if (fruit == null) continue;
                 float[] scale = slot.scale ?? Array.Empty<float>();
                 fruit.transform.localScale = new Vector3(scale.Length > 0 ? scale[0] : 1f,
@@ -277,6 +309,10 @@ namespace Zjcs.Presentation.Home
 
             foreach (KeyValuePair<string, GameObject> pair in fruitTreeLayers)
                 pair.Value.SetActive(activePaths.Any(path => IsPathOrParent(path, pair.Key)));
+
+            foreach (KeyValuePair<string, List<GameObject>> pair in fruitTreeSkinLayerObjects)
+                foreach (GameObject value in pair.Value)
+                    if (value != null) value.SetActive(FruitTreeLayerIsActive(pair.Key, activePaths));
 
             activeFruitTreePaths.Clear();
             activeFruitTreePaths.UnionWith(activePaths);
@@ -522,6 +558,214 @@ namespace Zjcs.Presentation.Home
             if (unrepaired.TryGetValue(type, out GameObject off)) off.SetActive(!functional);
         }
 
+        public void ApplyHomeSkins(HomeSkinRuntimeData data, IReadOnlyList<OfflineHomeSkinSelection> selections,
+            OfficialHomeRules rules)
+        {
+            if (data == null || rules == null) throw new ArgumentNullException(data == null ? nameof(data) : nameof(rules));
+            ClearSkinObjects(furnitureSkinObjects);
+            ClearSkinObjects(themeSkinObjects);
+
+            int environmentId = SelectedSkin(selections, 2, 1,
+                rules.Data.environmentSkins.First(value => value.environmentType == 1 && value.isDefault).skinItemId);
+            int environmentVariant = rules.Data.environmentSkins.Any(value => value.environmentType == 1
+                && value.skinItemId == environmentId && !value.isDefault) ? environmentId : 0;
+
+            foreach (IGrouping<int, HomeFurnitureSkinRecord> group in rules.Data.furnitureSkins.GroupBy(value => value.furnitureType))
+            {
+                HomeFurnitureSkinRecord defaultSkin = group.FirstOrDefault(value => value.isDefault);
+                if (defaultSkin == null) continue;
+                int skinId = SelectedSkin(selections, 0, group.Key, defaultSkin.skinItemId);
+                HomeSkinEntity entity = FindSkinEntity(data, skinId, environmentVariant)
+                    ?? FindSkinEntity(data, skinId, 0);
+                bool replaceBase = entity != null && (skinId != defaultSkin.skinItemId || environmentVariant != 0);
+                if (group.Key != 4) SetObjectsActive(furnitureBaseObjects, group.Key, !replaceBase);
+                if (replaceBase) CreateFurnitureSkin(entity, group.Key);
+            }
+
+            foreach (IGrouping<int, HomeThemeSkinRecord> group in rules.Data.themeSkins.GroupBy(value => value.themeType))
+            {
+                HomeThemeSkinRecord defaultSkin = group.FirstOrDefault(value => value.isDefault);
+                if (defaultSkin == null) continue;
+                int skinId = SelectedSkin(selections, 1, group.Key, defaultSkin.skinItemId);
+                HomeSkinEntity entity = FindSkinEntity(data, skinId, environmentVariant)
+                    ?? FindSkinEntity(data, skinId, 0);
+                bool replaceBase = entity != null && (skinId != defaultSkin.skinItemId || environmentVariant != 0);
+                SetObjectsActive(themeBaseObjects, group.Key, !replaceBase);
+                if (replaceBase) CreateThemeSkin(entity, group.Key);
+            }
+        }
+
+        private void CreateFurnitureSkin(HomeSkinEntity entity, int furnitureType)
+        {
+            if (furnitureType == 4)
+            {
+                CreateFruitTreeSkin(entity);
+                return;
+            }
+            HomeFurnitureScene furniture = (catalog.Scene.furniture ?? Array.Empty<HomeFurnitureScene>())
+                .FirstOrDefault(value => value.type == furnitureType);
+            if (furniture == null) throw new InvalidOperationException("Official furniture skin has no scene slot: " + furnitureType);
+            if (!repaired.TryGetValue(furnitureType, out GameObject repairedRoot)
+                || !unrepaired.TryGetValue(furnitureType, out GameObject unrepairedRoot))
+                throw new InvalidOperationException("Official furniture skin has no scene roots: " + furnitureType);
+            Vector3 offset = SlotPosition(furniture.slot) + SlotPosition(entity.slot);
+            foreach (HomeSceneLayer layer in entity.layers ?? Array.Empty<HomeSceneLayer>())
+            {
+                if (layer?.vertices == null || layer.vertices.Length < 8) continue;
+                Transform parent = IsRepairedLayer(layer.path) ? repairedRoot.transform : unrepairedRoot.transform;
+                AddObject(furnitureSkinObjects, furnitureType, CreateQuad(layer, parent, offset, trackLayer: false));
+            }
+        }
+
+        private void CreateFruitTreeSkin(HomeSkinEntity entity)
+        {
+            RestoreFruitTreeBaseLayers();
+
+            foreach (HomeSceneLayer layer in entity.layers ?? Array.Empty<HomeSceneLayer>())
+            {
+                if (layer?.sprite == null || string.IsNullOrEmpty(layer.path)) continue;
+                string normalizedPath = NormalizeFruitTreePath(layer.path);
+                bool treeOverlay = normalizedPath.Contains("/Tree/");
+                bool stateFurniture = normalizedPath.Contains("/SubFurnitures/");
+                bool rope = normalizedPath.EndsWith("/FruitTree_Rope", StringComparison.Ordinal);
+                bool nightLight = normalizedPath.EndsWith("/Light_Glow", StringComparison.Ordinal);
+                if (!treeOverlay && !stateFurniture && !rope && !nightLight) continue;
+
+                bool hasBase = fruitTreeSceneSpriteByPath.TryGetValue(normalizedPath, out string baseSprite);
+                if (hasBase && string.Equals(baseSprite, layer.sprite.file, StringComparison.Ordinal)) continue;
+                if (hasBase)
+                {
+                    foreach (KeyValuePair<string, GameObject> pair in fruitTreeLayers)
+                        if (NormalizeFruitTreePath(pair.Key) == normalizedPath) pair.Value.SetActive(false);
+                    foreach (KeyValuePair<string, GameObject> pair in layerObjects)
+                        if (NormalizeFruitTreePath(pair.Key) == normalizedPath && pair.Value != null)
+                            pair.Value.SetActive(false);
+                }
+
+                GameObject instance = CreateQuad(layer, Root.transform, SlotPosition(entity.slot), trackLayer: false);
+                if (instance == null) continue;
+                instance.name = normalizedPath;
+                if (!fruitTreeSkinLayerObjects.TryGetValue(normalizedPath, out List<GameObject> layers))
+                    fruitTreeSkinLayerObjects[normalizedPath] = layers = new List<GameObject>();
+                layers.Add(instance);
+            }
+            foreach (KeyValuePair<string, List<GameObject>> pair in fruitTreeSkinLayerObjects)
+                foreach (GameObject value in pair.Value)
+                    if (value != null) value.SetActive(FruitTreeLayerIsActive(pair.Key, activeFruitTreePaths));
+        }
+
+        private void RestoreFruitTreeBaseLayers()
+        {
+            foreach (KeyValuePair<string, GameObject> pair in fruitTreeLayers)
+                if (pair.Value != null)
+                    pair.Value.SetActive(FruitTreeLayerIsActive(NormalizeFruitTreePath(pair.Key), activeFruitTreePaths));
+
+            foreach (KeyValuePair<string, GameObject> pair in layerObjects)
+            {
+                string path = NormalizeFruitTreePath(pair.Key);
+                if (pair.Value == null || !fruitTreeSceneSpriteByPath.ContainsKey(path)) continue;
+                pair.Value.SetActive(FruitTreeLayerIsActive(path, activeFruitTreePaths));
+            }
+        }
+
+        private void ClearFruitTreeSkinLayers()
+        {
+            foreach (List<GameObject> layers in fruitTreeSkinLayerObjects.Values)
+            foreach (GameObject value in layers)
+            {
+                if (value == null) continue;
+                value.SetActive(false);
+                MeshFilter filter = value.GetComponent<MeshFilter>();
+                Mesh mesh = filter == null ? null : filter.sharedMesh;
+                if (mesh != null)
+                {
+                    createdMeshes.Remove(mesh);
+                    UnityEngine.Object.Destroy(mesh);
+                }
+                UnityEngine.Object.Destroy(value);
+            }
+            fruitTreeSkinLayerObjects.Clear();
+            RestoreFruitTreeBaseLayers();
+        }
+
+        private static bool FruitTreeLayerIsActive(string layerPath, ISet<string> activePaths)
+        {
+            if (layerPath.EndsWith("/FruitTree_Rope", StringComparison.Ordinal)) return true;
+            return activePaths.Any(path => IsPathOrParent(path, layerPath));
+        }
+
+        private static string NormalizeFruitTreePath(string path)
+        {
+            string value = path ?? string.Empty;
+            int rootEnd = value.IndexOf('/', 1);
+            if (rootEnd < 0) return value;
+            string rootName = value.Substring(1, rootEnd - 1);
+            return rootName.StartsWith("FruitTree", StringComparison.Ordinal)
+                ? "/FruitTree" + value.Substring(rootEnd) : value;
+        }
+
+        private void CreateThemeSkin(HomeSkinEntity entity, int themeType)
+        {
+            Vector3 offset = SlotPosition(entity.slot);
+            foreach (HomeSceneLayer layer in entity.layers ?? Array.Empty<HomeSceneLayer>())
+                if (layer?.vertices != null && layer.vertices.Length >= 8)
+                    AddObject(themeSkinObjects, themeType, CreateQuad(layer, Root.transform, offset, trackLayer: false));
+        }
+
+        private static int SelectedSkin(IReadOnlyList<OfflineHomeSkinSelection> selections,
+            int category, int type, int fallback)
+        {
+            OfflineHomeSkinSelection selection = selections?.FirstOrDefault(value =>
+                value.Category == category && value.Type == type);
+            return selection == null ? fallback : selection.SkinItemId;
+        }
+
+        private static HomeSkinEntity FindSkinEntity(HomeSkinRuntimeData data, int skinItemId, int environmentId)
+        {
+            return (data.entities ?? Array.Empty<HomeSkinEntity>()).FirstOrDefault(value =>
+                value.skin_item_id == skinItemId && value.environment_skin_id == environmentId);
+        }
+
+        private static Vector3 SlotPosition(float[] slot) => new Vector3(
+            slot != null && slot.Length > 0 ? slot[0] : 0f,
+            slot != null && slot.Length > 1 ? slot[1] : 0f,
+            slot != null && slot.Length > 2 ? slot[2] : 0f);
+
+        private static void AddObject(Dictionary<int, List<GameObject>> target, int key, GameObject value)
+        {
+            if (value == null) return;
+            if (!target.TryGetValue(key, out List<GameObject> objects))
+                target[key] = objects = new List<GameObject>();
+            objects.Add(value);
+        }
+
+        private static void SetObjectsActive(Dictionary<int, List<GameObject>> source, int key, bool active)
+        {
+            if (!source.TryGetValue(key, out List<GameObject> objects)) return;
+            foreach (GameObject value in objects)
+                if (value != null) value.SetActive(active);
+        }
+
+        private void ClearSkinObjects(Dictionary<int, List<GameObject>> objectsByType)
+        {
+            foreach (List<GameObject> objects in objectsByType.Values)
+            foreach (GameObject value in objects)
+            {
+                if (value == null) continue;
+                MeshFilter filter = value.GetComponent<MeshFilter>();
+                Mesh mesh = filter == null ? null : filter.sharedMesh;
+                if (mesh != null)
+                {
+                    createdMeshes.Remove(mesh);
+                    UnityEngine.Object.Destroy(mesh);
+                }
+                UnityEngine.Object.Destroy(value);
+            }
+            objectsByType.Clear();
+            if (objectsByType == furnitureSkinObjects)
+                ClearFruitTreeSkinLayers();
+        }
+
         public void SetAllFurnitureVisible(bool visible) { Root.SetActive(visible); }
 
         /// <summary>Toggles the official light groups by their serialized node path.</summary>
@@ -535,9 +779,223 @@ namespace Zjcs.Presentation.Home
             }
         }
 
+        public void SetSkyStage(int stage)
+        {
+            SetLayerGroupVisible("/Background/Back_Cloud/FarCloud/Back_Morning_Cloud", stage == 1);
+            SetLayerGroupVisible("/Background/Back_Cloud/FarCloud/Back_Noon_Cloud", stage == 2);
+            SetLayerGroupVisible("/Background/Back_Cloud/FarCloud/Back_Evening_Cloud", stage == 3);
+            SetLayerGroupVisible("/Background/Back_Cloud/FarCloud/Back_Night_Cloud", stage == 4);
+        }
+
+        public void SetMoonVisual(HomeMoonVisualData data, int phase, float clipTime)
+        {
+            if (data == null || data.layers == null || data.tracks == null)
+                throw new ArgumentException("The official moon visual data is incomplete.", nameof(data));
+            if (moonData != data)
+            {
+                moonData = data;
+                moonCurves.Clear();
+                moonSteppedTracks.Clear();
+                foreach (HomeMoonAnimationTrack track in data.tracks)
+                {
+                    if (track == null || string.IsNullOrEmpty(track.path) || string.IsNullOrEmpty(track.property)
+                        || track.keys == null || track.keys.Length == 0) continue;
+                    string key = MoonTrackKey(track.path, track.property);
+                    if (track.stepped)
+                    {
+                        moonSteppedTracks[key] = track;
+                        continue;
+                    }
+                    Keyframe[] keys = track.keys.Select(item =>
+                        new Keyframe(item.time, item.value, item.inTangent, item.outTangent)).ToArray();
+                    moonCurves[key] = new AnimationCurve(keys)
+                    {
+                        preWrapMode = data.loop ? WrapMode.Loop : WrapMode.ClampForever,
+                        postWrapMode = data.loop ? WrapMode.Loop : WrapMode.ClampForever
+                    };
+                }
+                BuildMoonHierarchy(data);
+                moonPhase = -1;
+            }
+            if (moonPhase != phase) BuildMoonPhase(data, phase);
+            ApplyMoonAnimation(data, clipTime);
+        }
+
+        private void BuildMoonHierarchy(HomeMoonVisualData data)
+        {
+            if (moonRoot == null)
+            {
+                moonRoot = new GameObject("HomeMoon");
+                moonRoot.transform.SetParent(Root.transform, false);
+                moonRoot.transform.localPosition = Vector3Values(data.rootPosition, Vector3.zero);
+                var scaleRoot = new GameObject("Scale");
+                scaleRoot.transform.SetParent(moonRoot.transform, false);
+                moonScale = scaleRoot.transform;
+                moonScale.localPosition = Vector3Values(data.scalePosition, Vector3.zero);
+            }
+        }
+
+        private void BuildMoonPhase(HomeMoonVisualData data, int phase)
+        {
+            HomeMoonLayerData[] phaseLayers = data.layers.Where(layer => layer != null && layer.phase == phase).ToArray();
+            if (phaseLayers.Length != 3)
+                throw new InvalidDataException("Official moon phase " + phase + " must contain moon, outline, and glow layers.");
+            foreach (HomeMoonLayerData layer in phaseLayers)
+            {
+                if (string.IsNullOrEmpty(layer.kind) || layer.vertices == null || layer.vertices.Length < 8)
+                    throw new InvalidDataException("Official moon layer geometry is incomplete for phase " + phase + ".");
+                if (!moonLayers.TryGetValue(layer.kind, out MoonLayerView view))
+                {
+                    var go = new GameObject(layer.name);
+                    go.transform.SetParent(moonScale, false);
+                    var filter = go.AddComponent<MeshFilter>();
+                    var renderer = go.AddComponent<MeshRenderer>();
+                    var mesh = new Mesh { name = "HomeMoon_" + layer.kind };
+                    createdMeshes.Add(mesh);
+                    filter.sharedMesh = mesh;
+                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    renderer.receiveShadows = false;
+                    view = new MoonLayerView { Object = go, Mesh = mesh, Renderer = renderer, Block = new MaterialPropertyBlock() };
+                    moonLayers.Add(layer.kind, view);
+                }
+                view.Object.name = layer.name;
+                view.Object.transform.localScale = Vector3Values(layer.scale, Vector3.one);
+                UpdateMoonLayer(data, layer, view);
+            }
+            moonPhase = phase;
+        }
+
+        private void UpdateMoonLayer(HomeMoonVisualData data, HomeMoonLayerData layer, MoonLayerView view)
+        {
+            Texture2D texture = LoadMoonTexture(layer.file);
+            if (texture == null) throw new FileNotFoundException("Official home moon sprite is missing: " + layer.file);
+            float rootX = ArrayValue(data.rootPosition, 0, 0f) + ArrayValue(data.scaleBasePosition, 0, 0f);
+            float rootY = ArrayValue(data.rootPosition, 1, 0f) + ArrayValue(data.scaleBasePosition, 1, 0f);
+            float scaleX = Mathf.Abs(ArrayValue(layer.scale, 0, 1f)) < 0.0001f ? 1f : layer.scale[0];
+            float scaleY = Mathf.Abs(ArrayValue(layer.scale, 1, 1f)) < 0.0001f ? 1f : layer.scale[1];
+            var vertices = new Vector3[4];
+            for (int index = 0; index < 4; index++)
+                vertices[index] = new Vector3((layer.vertices[index * 2] - rootX) / scaleX,
+                    (layer.vertices[index * 2 + 1] - rootY) / scaleY, 0f);
+            view.Mesh.vertices = vertices;
+            view.Mesh.uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+            view.Mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+            view.Mesh.RecalculateBounds();
+            view.Renderer.sharedMaterial = Material(texture);
+            view.Renderer.sortingOrder = ComposeSortingOrder(layer.sortingLayer, layer.sortingOrder, 0);
+        }
+
+        private void ApplyMoonAnimation(HomeMoonVisualData data, float clipTime)
+        {
+            if (moonScale == null) return;
+            float time = Mathf.Clamp(clipTime, 0f, Mathf.Max(0f, data.duration));
+            string scalePath = data.rootPath + "/Scale";
+            Vector3 position = Vector3Values(data.scalePosition, Vector3.zero);
+            position.x = MoonTrackValue(scalePath, "position.x", time, position.x);
+            position.y = MoonTrackValue(scalePath, "position.y", time, position.y);
+            position.z = MoonTrackValue(scalePath, "position.z", time, position.z);
+            moonScale.localPosition = position;
+            Vector3 scale = Vector3.one;
+            scale.x = MoonTrackValue(scalePath, "scale.x", time, scale.x);
+            scale.y = MoonTrackValue(scalePath, "scale.y", time, scale.y);
+            scale.z = MoonTrackValue(scalePath, "scale.z", time, scale.z);
+            moonScale.localScale = scale;
+            bool active = MoonTrackValue(scalePath, "m_IsActive", time, 1f) >= 0.5f;
+            if (moonScale.gameObject.activeSelf != active) moonScale.gameObject.SetActive(active);
+
+            foreach (HomeMoonLayerData layer in data.layers.Where(item => item != null && item.phase == moonPhase))
+            {
+                if (!moonLayers.TryGetValue(layer.kind, out MoonLayerView view)) continue;
+                float alpha = ArrayValue(layer.color, 3, 1f);
+                if (layer.kind == "moon")
+                    alpha = MoonTrackValue(data.rootPath + "/Scale/Moon", "m_Color.a", time, alpha);
+                else if (layer.kind == "glow")
+                    alpha = MoonTrackValue(data.rootPath + "/Scale/Moon_Glow", "m_Color.a", time, alpha);
+                Color color = new Color(ArrayValue(layer.color, 0, 1f), ArrayValue(layer.color, 1, 1f),
+                    ArrayValue(layer.color, 2, 1f), alpha);
+                view.Block.Clear();
+                view.Block.SetColor("_Color", color);
+                view.Renderer.SetPropertyBlock(view.Block);
+            }
+        }
+
+        private float MoonTrackValue(string path, string property, float time, float fallback)
+        {
+            string key = MoonTrackKey(path, property);
+            if (moonCurves.TryGetValue(key, out AnimationCurve curve)) return curve.Evaluate(time);
+            if (moonSteppedTracks.TryGetValue(key, out HomeMoonAnimationTrack stepped))
+            {
+                float value = stepped.keys[0].value;
+                foreach (HomeMoonAnimationKey item in stepped.keys)
+                {
+                    if (item.time > time) break;
+                    value = item.value;
+                }
+                return value;
+            }
+            return fallback;
+        }
+
+        private Texture2D LoadMoonTexture(string filename)
+        {
+            if (string.IsNullOrEmpty(filename)) return null;
+            if (moonTextures.TryGetValue(filename, out Texture2D cached) && cached != null) return cached;
+            string path = Path.Combine(Application.streamingAssetsPath, HomeAssetCatalog.FolderName,
+                "environment-visuals", "sprites", filename);
+            if (!File.Exists(path)) return null;
+            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false, false) { name = Path.GetFileNameWithoutExtension(filename) };
+            if (!texture.LoadImage(File.ReadAllBytes(path)))
+            {
+                UnityEngine.Object.Destroy(texture);
+                throw new InvalidDataException("Could not decode official home moon sprite: " + path);
+            }
+            texture.filterMode = FilterMode.Bilinear;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            moonTextures.Add(filename, texture);
+            createdTextures.Add(texture);
+            return texture;
+        }
+
+        private static string MoonTrackKey(string path, string property) => path + "|" + property;
+
+        private static float ArrayValue(float[] values, int index, float fallback) =>
+            values != null && index >= 0 && index < values.Length ? values[index] : fallback;
+
+        private static Vector3 Vector3Values(float[] values, Vector3 fallback) => new Vector3(
+            ArrayValue(values, 0, fallback.x), ArrayValue(values, 1, fallback.y), ArrayValue(values, 2, fallback.z));
+
+        private int NextSortingOrder(int sortingLayer, int sortingOrder)
+        {
+            long key = ((long)sortingLayer << 32) | (uint)sortingOrder;
+            sortingTieBreaks.TryGetValue(key, out int tie);
+            sortingTieBreaks[key] = tie + 1;
+            return ComposeSortingOrder(sortingLayer, sortingOrder, tie);
+        }
+
+        public int GetNextSortingOrder(int sortingLayer, int sortingOrder)
+        {
+            return NextSortingOrder(sortingLayer, sortingOrder);
+        }
+
+        private static int ComposeSortingOrder(int sortingLayer, int sortingOrder, int tieBreak)
+        {
+            int value = sortingLayer * SortingLayerStride + sortingOrder * SortingOrderStride + tieBreak;
+            return Mathf.Clamp(value, short.MinValue, short.MaxValue);
+        }
+
+        private sealed class MoonLayerView
+        {
+            public GameObject Object;
+            public Mesh Mesh;
+            public MeshRenderer Renderer;
+            public MaterialPropertyBlock Block;
+        }
+
         public void SetNightVisuals(bool night)
         {
-            SetLayerGroupVisible("/Background/Back_Ground/FX_Star", night);
+            SetLayerGroupVisible("/Background/Back_Mountain/Mountain_Light/Motuntain_Night_Glow", night);
+            SetLayerGroupVisible("/VendingMachine/repaired/HomeVending_Light/HomeVending_Day", !night);
+            SetLayerGroupVisible("/VendingMachine/repaired/HomeVending_Light/HomeVending_Night", night);
             if (fruitTreeNightLight != null) fruitTreeNightLight.SetActive(night);
         }
 
@@ -654,6 +1112,12 @@ namespace Zjcs.Presentation.Home
             materials.Clear();
             foreach (Mesh mesh in createdMeshes) if (mesh != null) UnityEngine.Object.Destroy(mesh);
             createdMeshes.Clear();
+            foreach (Texture2D texture in createdTextures) if (texture != null) UnityEngine.Object.Destroy(texture);
+            createdTextures.Clear();
+            moonTextures.Clear();
+            moonLayers.Clear();
+            moonCurves.Clear();
+            moonSteppedTracks.Clear();
             fruitTreeParticles.Clear();
             fruitTreeNativeObjects.Clear();
             transientFruitTreeEffects.Clear();
@@ -680,6 +1144,7 @@ namespace Zjcs.Presentation.Home
         private Vector2 lastPosition;
         private bool dragging;
         private bool pressed;
+        public bool CameraDragEnabled { get; set; } = true;
 
         public void SetRewardHit(Func<Vector2, int> hit) => rewardHit = hit;
 
@@ -697,35 +1162,46 @@ namespace Zjcs.Presentation.Home
             if (scene?.Camera == null) return;
             bool overUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
             if (Input.GetMouseButtonDown(0) && !overUi)
-            {
-                pressed = true;
-                dragging = false;
-                pressPosition = Input.mousePosition;
-                lastPosition = pressPosition;
-            }
+                PointerDown(Input.mousePosition, overUi);
             if (pressed && Input.GetMouseButton(0))
-            {
-                Vector2 current = Input.mousePosition;
-                if (!dragging && (current - pressPosition).sqrMagnitude >= DragThresholdSquared) dragging = true;
-                if (dragging) scene.MoveCamera(current - lastPosition);
-                lastPosition = current;
-            }
+                PointerMove(Input.mousePosition);
             if (pressed && Input.GetMouseButtonUp(0))
+                PointerUp(Input.mousePosition, overUi);
+        }
+
+        internal void PointerDown(Vector2 position, bool overUi)
+        {
+            if (overUi) return;
+            pressed = true;
+            dragging = false;
+            pressPosition = position;
+            lastPosition = position;
+        }
+
+        internal void PointerMove(Vector2 position)
+        {
+            if (!pressed) return;
+            if (!dragging && (position - pressPosition).sqrMagnitude >= DragThresholdSquared) dragging = true;
+            if (dragging && CameraDragEnabled) scene.MoveCamera(position - lastPosition);
+            lastPosition = position;
+        }
+
+        internal void PointerUp(Vector2 position, bool overUi)
+        {
+            if (!pressed) return;
+            pressed = false;
+            if (!dragging && !overUi && (blocked == null || !blocked()))
             {
-                pressed = false;
-                if (!dragging && !overUi && (blocked == null || !blocked()))
+                Vector2 world = scene.ScreenToWorld(position);
+                int type = scene.HitTest(world);
+                if (type >= 0) FurnitureClicked?.Invoke(type);
+                else
                 {
-                    Vector2 world = scene.ScreenToWorld(Input.mousePosition);
-                    int type = scene.HitTest(world);
-                    if (type >= 0) FurnitureClicked?.Invoke(type);
-                    else
-                    {
-                        int reward = rewardHit?.Invoke(world) ?? -1;
-                        if (reward >= 0) RewardClicked?.Invoke(reward);
-                    }
+                    int reward = rewardHit?.Invoke(world) ?? -1;
+                    if (reward >= 0) RewardClicked?.Invoke(reward);
                 }
-                dragging = false;
             }
+            dragging = false;
         }
     }
 }

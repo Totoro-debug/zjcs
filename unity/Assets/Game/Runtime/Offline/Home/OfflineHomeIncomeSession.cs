@@ -45,6 +45,7 @@ namespace Zjcs.Offline.Home
     public sealed class OfflineHomeSkinSelection
     {
         public int Category;
+        public int Type = -1;
         public int SkinItemId;
     }
 
@@ -210,6 +211,67 @@ namespace Zjcs.Offline.Home
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile slot does not exist.");
             return Open(slots.GetHomePath(slotId), definitions, properties, floatPropertyIds,
                 randomRewards, nowUnixSeconds);
+        }
+
+        public static IReadOnlyList<OfflineHomeSkinSelection> ReadSkinSelections(ProfileSlotCatalog slots,
+            string slotId)
+        {
+            OfflineHomeSave save = ReadSkinSave(slots, slotId);
+            return save.Skins.OrderBy(value => value.Category)
+                .ThenBy(value => value.Type)
+                .Select(value => new OfflineHomeSkinSelection
+                {
+                    Category = value.Category,
+                    Type = value.Type,
+                    SkinItemId = value.SkinItemId
+                }).ToArray();
+        }
+
+        public static bool SaveSkinSelection(ProfileSlotCatalog slots, string slotId, int category,
+            int type, int skinItemId, string receipt)
+        {
+            if (category < 0 || category > 2 || type < 0 || type > 32 || skinItemId <= 0
+                || string.IsNullOrWhiteSpace(receipt))
+                return false;
+            OfflineHomeSave current = ReadSkinSave(slots, slotId);
+            if (current.AppliedReceipts.Contains(receipt)) return true;
+            OfflineHomeSave next = Clone(current);
+            OfflineHomeSkinSelection selection = next.Skins.FirstOrDefault(value =>
+                value.Category == category && value.Type == type);
+            if (selection != null && selection.SkinItemId == skinItemId) return true;
+            if (selection == null)
+            {
+                selection = new OfflineHomeSkinSelection { Category = category, Type = type };
+                next.Skins.Add(selection);
+            }
+            selection.SkinItemId = skinItemId;
+            next.Skins.Sort((left, right) =>
+            {
+                int categoryCompare = left.Category.CompareTo(right.Category);
+                return categoryCompare != 0 ? categoryCompare : left.Type.CompareTo(right.Type);
+            });
+            AddReceipt(next, receipt);
+            if (!IsValid(next)) return false;
+            LocalJsonSaveFile.Write(slots.GetHomePath(slotId), JsonUtility.ToJson(next), IsValidJson);
+            return true;
+        }
+
+        private static OfflineHomeSave ReadSkinSave(ProfileSlotCatalog slots, string slotId)
+        {
+            if (slots == null) throw new ArgumentNullException(nameof(slots));
+            if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile slot does not exist.");
+            string path = slots.GetHomePath(slotId);
+            SaveReadResult result = LocalJsonSaveFile.Read(path, IsValidJson);
+            if (result.Status == SaveReadStatus.Corrupt)
+                throw new InvalidDataException("The selected home save is corrupt.");
+            OfflineHomeSave save = result.Json == null
+                ? new OfflineHomeSave()
+                : JsonUtility.FromJson<OfflineHomeSave>(result.Json);
+            UpgradeSave(save);
+            if (result.Json == null)
+                save.LastLocalUnixSeconds = Math.Max(0, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            if (!IsValid(save)) throw new InvalidDataException("The selected home save is invalid.");
+            return save;
         }
 
         public HangUpIncomePreview Preview(int hangUpId)
@@ -419,9 +481,9 @@ namespace Zjcs.Offline.Home
             return entry != null && entry.Unlocked;
         }
 
-        public OfflineHomeSkinSelection SkinOf(int category)
+        public OfflineHomeSkinSelection SkinOf(int category, int type)
         {
-            return Save.Skins.FirstOrDefault(value => value.Category == category);
+            return Save.Skins.FirstOrDefault(value => value.Category == category && value.Type == type);
         }
 
         /// <summary>Removes a drained ledger stack once the player inventory holds it.</summary>
@@ -470,29 +532,48 @@ namespace Zjcs.Offline.Home
 
         public long ApplyFastForward(int hangUpId, double hours, string receipt)
         {
-            if (!IsFinite(hours) || hours <= 0 || string.IsNullOrWhiteSpace(receipt)
-                || Save.AppliedReceipts.Contains(receipt)) return 0;
             OfflineHomeIncomeDefinition definition = FindDefinition(hangUpId);
-            if (!definition.Unlocked || definition.FastHangUpId <= 0
-                || definition.FreeFastForwardLimit <= 0 || hours != definition.FreeFastForwardHours) return 0;
+            if (definition == null) return 0;
+            return ApplyFreeFastForwardGroup(definition.FastHangUpId, new[] { hangUpId }, hours, receipt);
+        }
+
+        public long ApplyFreeFastForwardGroup(int fastHangUpId, IReadOnlyList<int> hangUpIds,
+            double hours, string receipt)
+        {
+            if (fastHangUpId <= 0 || hangUpIds == null || hangUpIds.Count == 0
+                || !IsFinite(hours) || hours <= 0 || string.IsNullOrWhiteSpace(receipt)
+                || Save.AppliedReceipts.Contains(receipt)) return 0;
+            OfflineHomeIncomeDefinition[] group = hangUpIds.Distinct()
+                .Select(id => definitions.FirstOrDefault(value => value.HangUpId == id))
+                .Where(value => value != null && value.FastHangUpId == fastHangUpId
+                    && value.FreeFastForwardLimit > 0 && value.FreeFastForwardHours == hours)
+                .ToArray();
+            if (group.Length == 0) return 0;
+            int freeLimit = group.Max(value => value.FreeFastForwardLimit);
             string localDate = LocalDate(Save.LastLocalUnixSeconds);
-            OfflineHomeFastForwardUsage usage = Save.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == definition.FastHangUpId);
+            OfflineHomeFastForwardUsage usage = Save.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == fastHangUpId);
             int used = usage != null && usage.LocalDate == localDate ? usage.FreeUses : 0;
-            if (used >= definition.FreeFastForwardLimit) return 0;
-            long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * hours);
-            if (count <= 0) return 0;
+            if (used >= freeLimit) return 0;
             OfflineHomeSave next = Clone(Save);
-            OfflineHomeFastForwardUsage storedUsage = next.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == definition.FastHangUpId);
+            long total = 0;
+            foreach (OfflineHomeIncomeDefinition definition in group)
+            {
+                if (!definition.Unlocked) continue;
+                long count = WholeCount(OfflineHangUpIncome.HourlyRate(definition.Rule, properties, floatPropertyIds) * hours);
+                if (count <= 0 || !GrantOutput(next, definition, count)) continue;
+                total = AddSaturated(total, count);
+            }
+            if (total <= 0) return 0;
+            OfflineHomeFastForwardUsage storedUsage = next.FastForwardUsage.FirstOrDefault(value => value.FastHangUpId == fastHangUpId);
             if (storedUsage == null)
             {
-                storedUsage = new OfflineHomeFastForwardUsage { FastHangUpId = definition.FastHangUpId };
+                storedUsage = new OfflineHomeFastForwardUsage { FastHangUpId = fastHangUpId };
                 next.FastForwardUsage.Add(storedUsage);
             }
             storedUsage.LocalDate = localDate;
             storedUsage.FreeUses = used + 1;
-            if (!GrantOutput(next, definition, count)) return 0;
             AddReceipt(next, receipt);
-            return Commit(next) ? count : 0;
+            return Commit(next) ? total : 0;
         }
 
         public long ApplyFastForwardItems(int hangUpId, int timeCrystalItemId, int itemCount,
@@ -807,10 +888,11 @@ namespace Zjcs.Offline.Home
             foreach (OfflineHomeHangUpEntry entry in save.HangUps)
                 if (entry == null || entry.HangUpId <= 0 || !ownedHangUps.Add(entry.HangUpId)
                     || entry.Level < 1 || entry.Level > 100000) return false;
-            var skinCategories = new HashSet<int>();
+            var skinTypes = new HashSet<string>(StringComparer.Ordinal);
             foreach (OfflineHomeSkinSelection entry in save.Skins)
                 if (entry == null || entry.Category < 0 || entry.Category > 2
-                    || !skinCategories.Add(entry.Category) || entry.SkinItemId <= 0) return false;
+                    || entry.Type < -1 || entry.Type > 32
+                    || !skinTypes.Add(entry.Category + ":" + entry.Type) || entry.SkinItemId <= 0) return false;
             var rewardSlots = new HashSet<int>();
             foreach (OfflineHomeRandomRewardSlot entry in save.RandomRewards)
                 if (entry == null || entry.Slot < 0 || !rewardSlots.Add(entry.Slot) || entry.ItemId < 0
