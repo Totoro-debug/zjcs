@@ -63,6 +63,7 @@ namespace Zjcs.Presentation.Character
         {
             assets = assetCatalog ?? throw new ArgumentNullException(nameof(assetCatalog));
             progression = characterProgression ?? throw new ArgumentNullException(nameof(characterProgression));
+            CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
             factory = new CharacterPanelNodeFactory(assets);
             Dictionary<string, object> panels = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "panels");

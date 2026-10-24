@@ -42,7 +42,16 @@ namespace Zjcs.Presentation.Character
                 catch (Exception) { uiFont = null; }
                 if (uiFont == null)
                 {
-                    try { uiFont = CharacterPanelNodeFactory.UiFont; }
+                    try
+                    {
+                        uiFont = Font.CreateDynamicFontFromOSFont(
+                            new[] { "Microsoft YaHei UI", "Microsoft YaHei", "Arial" }, 20);
+                    }
+                    catch (Exception) { uiFont = null; }
+                }
+                if (uiFont == null)
+                {
+                    try { uiFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"); }
                     catch (Exception) { uiFont = null; }
                 }
                 if (!fontLogged)
