@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Spine.Unity;
@@ -73,6 +74,7 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private OfficialBattleModelBinding[] bindings = Array.Empty<OfficialBattleModelBinding>();
         private Dictionary<string, OfficialBattleModelBinding> byKey;
         private Dictionary<int, string> monsterKeys;
+        private Dictionary<int, string> npcKeys;
 
         public static OfficialBattleModelCatalog LoadDefault()
         {
@@ -93,13 +95,28 @@ namespace Zjcs.Presentation.Combat
 
         public int Count => bindings == null ? 0 : bindings.Length;
 
+        public bool HasNpcBattleAnimations(int npcClassId)
+        {
+            string key = ResolveModelKey(new FightBattleUnitState { NpcClassId = npcClassId });
+            OfficialBattleModelBinding binding = Find(key);
+            return binding != null && binding.animations.Any(value => value.name == "idle_01")
+                && binding.animations.Any(value => value.name == "run_01");
+        }
+
         public string ResolveModelKey(FightBattleUnitState unit)
         {
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             if (unit.MonsterId > 0)
             {
                 if (monsterKeys == null) BuildMonsterIndex();
-                return monsterKeys.TryGetValue(unit.MonsterId, out string key) ? key : null;
+                if (monsterKeys.TryGetValue(unit.MonsterId, out string key)) return key;
+                if (unit.MonsterTemplateId > 0
+                    && monsterKeys.TryGetValue(unit.MonsterTemplateId, out key)) return key;
+            }
+            if (unit.NpcClassId > 0)
+            {
+                if (npcKeys == null) BuildIndex();
+                if (npcKeys.TryGetValue(unit.NpcClassId, out string key)) return key;
             }
             return null;
         }
@@ -119,6 +136,14 @@ namespace Zjcs.Presentation.Combat
                     if (animation == null || string.IsNullOrEmpty(animation.name) || string.IsNullOrEmpty(animation.spineName))
                         throw new InvalidOperationException("Official battle animation binding is invalid: " + binding.key);
                 byKey.Add(binding.key, binding);
+            }
+            npcKeys = new Dictionary<int, string>();
+            foreach (OfficialBattleModelBinding binding in bindings)
+            {
+                int marker = binding.key.LastIndexOf("body_", StringComparison.Ordinal);
+                if (marker < 0 || !int.TryParse(binding.key.Substring(marker + 5), out int npcClassId)
+                    || npcClassId <= 0) continue;
+                npcKeys.Add(npcClassId, binding.key);
             }
             BuildMonsterIndex();
         }
