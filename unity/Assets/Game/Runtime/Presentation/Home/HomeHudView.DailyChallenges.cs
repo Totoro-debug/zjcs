@@ -18,8 +18,9 @@ namespace Zjcs.Presentation.Home
         private GameObject dailyChallengeSelectionRoot;
         private GameObject dailyChallengeResultRoot;
         private GameObject dailyChallengeAssistRoot;
-        private int dailyChallengeAssistActivityId;
-        private OfficialDailyChallengeCatalog dailyChallengeAssistCatalog;
+        private int dailyAssistPlayType;
+        private string dailyAssistEntryId;
+        private Action<bool> dailyAssistConfirmed;
         private readonly System.Collections.Generic.Dictionary<int, int> dailyChallengeDifficulties =
             new System.Collections.Generic.Dictionary<int, int>();
 
@@ -198,63 +199,53 @@ namespace Zjcs.Presentation.Home
                 StartDailyChallenge(activityId, challengeCatalog);
                 return;
             }
-            dailyChallengeAssistActivityId = activityId;
-            dailyChallengeAssistCatalog = challengeCatalog;
+            dailyAssistPlayType = 10;
+            dailyAssistEntryId = "daily-challenge:" + activityId;
+            dailyAssistConfirmed = _ => StartDailyChallenge(activityId, challengeCatalog);
+            BuildDailyAssistPicker();
+        }
+
+        private void OpenDailyDungeonAssist(int roomId)
+        {
+            dailyAssistPlayType = 10;
+            dailyAssistEntryId = "daily-dungeon:" + roomId;
+            dailyAssistConfirmed = _ => StartDailyDungeonBattle(roomId);
+            BuildDailyAssistPicker();
+        }
+
+        private void BuildDailyAssistPicker()
+        {
             if (dailyChallengeAssistRoot != null) UnityEngine.Object.Destroy(dailyChallengeAssistRoot);
-            dailyChallengeAssistRoot = new GameObject("DailyChallengeAssistSelection", typeof(RectTransform),
-                typeof(Image), typeof(Button));
-            dailyChallengeAssistRoot.transform.SetParent(canvas.transform, false);
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/TeamInvitePanel");
+            GameObject rowPrefab = Resources.Load<GameObject>("Dungeons/UI/TeamInvitePanelRobotItem");
+            if (prefab == null || rowPrefab == null)
+                throw new InvalidOperationException("Official team invitation prefabs are missing.");
+            dailyChallengeAssistRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
+            dailyChallengeAssistRoot.name = "DailyChallengeAssistSelection";
             dailyChallengeAssistRoot.transform.SetAsLastSibling();
-            RectTransform rootRect = (RectTransform)dailyChallengeAssistRoot.transform;
-            rootRect.anchorMin = Vector2.zero;
-            rootRect.anchorMax = Vector2.one;
-            rootRect.offsetMin = rootRect.offsetMax = Vector2.zero;
-            Image backdrop = dailyChallengeAssistRoot.GetComponent<Image>();
-            backdrop.color = new Color(0f, 0f, 0f, 0.76f);
-            backdrop.raycastTarget = true;
-            Button backdropButton = dailyChallengeAssistRoot.GetComponent<Button>();
-            backdropButton.targetGraphic = backdrop;
-            backdropButton.onClick.AddListener(CloseDailyChallengeAssist);
+            string middlePath = "BgPanel1/Content/MiddleGo/";
+            foreach (string page in new[] { "ChallengeGo", "FriendOnlineGo", "CompanionGo", "RoomOnlineGo" })
+                SetPrefabActive(dailyChallengeAssistRoot, middlePath + page, false);
+            SetPrefabActive(dailyChallengeAssistRoot, middlePath + "FriendRobotGo", true);
+            SetPrefabActive(dailyChallengeAssistRoot, "BgPanel1/Content/BottomGo/TabGroup_11", false);
+            SetNamedText(dailyChallengeAssistRoot.transform, "TitleTxt", "选择助战伙伴");
+            BindPrefabButton(dailyChallengeAssistRoot, "CloseBtn_dark", CloseDailyChallengeAssist);
 
-            GameObject panel = new GameObject("AssistPanel", typeof(RectTransform), typeof(Image));
-            panel.transform.SetParent(dailyChallengeAssistRoot.transform, false);
-            RectTransform panelRect = (RectTransform)panel.transform;
-            panelRect.anchorMin = panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.sizeDelta = new Vector2(720f, 760f);
-            panel.GetComponent<Image>().color = new Color(0.12f, 0.16f, 0.19f, 0.98f);
-
-            TextMeshProUGUI title = CreateAssistLabel(panel.transform, "Title", 30f,
-                new Vector2(0f, 330f), new Vector2(660f, 54f), TextAlignmentOptions.Center);
-            title.text = "选择助战伙伴";
-            TextMeshProUGUI count = CreateAssistLabel(panel.transform, "SelectedCount", 18f,
-                new Vector2(0f, 290f), new Vector2(660f, 34f), TextAlignmentOptions.Center);
-
-            GameObject viewportObject = new GameObject("Viewport", typeof(RectTransform), typeof(Image),
-                typeof(Mask), typeof(ScrollRect));
-            viewportObject.transform.SetParent(panel.transform, false);
-            RectTransform viewportRect = (RectTransform)viewportObject.transform;
-            viewportRect.anchorMin = viewportRect.anchorMax = new Vector2(0.5f, 0.5f);
-            viewportRect.anchoredPosition = new Vector2(0f, 10f);
-            viewportRect.sizeDelta = new Vector2(650f, 560f);
-            Image viewportImage = viewportObject.GetComponent<Image>();
-            viewportImage.color = new Color(0.04f, 0.06f, 0.07f, 0.68f);
-            viewportImage.raycastTarget = true;
-            viewportObject.GetComponent<Mask>().showMaskGraphic = false;
-            GameObject contentObject = new GameObject("Content", typeof(RectTransform));
-            contentObject.transform.SetParent(viewportObject.transform, false);
-            RectTransform contentRect = (RectTransform)contentObject.transform;
-            contentRect.anchorMin = new Vector2(0f, 1f);
-            contentRect.anchorMax = Vector2.one;
-            contentRect.pivot = new Vector2(0.5f, 1f);
-            contentRect.anchoredPosition = Vector2.zero;
-            contentRect.sizeDelta = new Vector2(0f, 0f);
-            ScrollRect scroll = viewportObject.GetComponent<ScrollRect>();
-            scroll.viewport = viewportRect;
-            scroll.content = contentRect;
+            Transform list = Find(dailyChallengeAssistRoot.transform,
+                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect/LoopScrollRect/ViewParent/Viewport/Content");
+            Transform viewport = Find(dailyChallengeAssistRoot.transform,
+                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect/LoopScrollRect/ViewParent/Viewport");
+            ScrollRect scroll = Find(dailyChallengeAssistRoot.transform,
+                middlePath + "FriendRobotGo/TopGo/Dropdown3/ScrollRect")?.GetComponent<ScrollRect>();
+            if (list == null || viewport == null || scroll == null)
+                throw new InvalidOperationException("Official team invite robot list is incomplete.");
+            scroll.viewport = viewport as RectTransform;
+            scroll.content = list as RectTransform;
             scroll.horizontal = false;
             scroll.vertical = true;
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scroll.scrollSensitivity = 35f;
+            foreach (Transform child in list) UnityEngine.Object.Destroy(child.gameObject);
 
             IReadOnlyList<int> candidates = host.NpcAssistanceCatalog.FightAssistNpcClassIds();
             var friendships = (host.Profile.Save.Player.CharacterProperties.NpcFriendships
@@ -265,8 +256,8 @@ namespace Zjcs.Presentation.Home
             OfficialBattleModelCatalog battleModels = OfficialBattleModelCatalog.LoadDefault();
             NpcAssistRefreshCycle cycle = (NpcAssistRefreshCycle)invite.RefreshCycle;
             long now = DateTimeOffset.Now.ToUnixTimeSeconds();
-            int maxPlayer = Math.Min(3, invite.MaxPlayer);
-            int[] existing = host.NpcAssistanceProgress.Selected(10, "daily-challenge:" + activityId).ToArray();
+            int maxPlayer = Math.Max(0, Math.Min(3, invite.MaxPlayer));
+            int[] existing = host.NpcAssistanceProgress.Selected(dailyAssistPlayType, dailyAssistEntryId).ToArray();
             var validSelection = new List<int>();
             int selectedCount = 0;
             for (int index = 0; index < candidates.Count; index++)
@@ -279,7 +270,7 @@ namespace Zjcs.Presentation.Home
                 bool available = modelAvailable
                     && host.NpcAssistanceCatalog.CanInviteNpc(npcId, encountered, met)
                     && (invite.OneNpcMaxInviteCount <= 0
-                        || host.NpcAssistanceProgress.AssistCount(10, npcId, cycle, now)
+                        || host.NpcAssistanceProgress.AssistCount(dailyAssistPlayType, npcId, cycle, now)
                             < invite.OneNpcMaxInviteCount);
                 bool selected = existing.Contains(npcId) && available && selectedCount < maxPlayer;
                 if (selected)
@@ -287,138 +278,128 @@ namespace Zjcs.Presentation.Home
                     selectedCount++;
                     validSelection.Add(npcId);
                 }
-                CreateDailyChallengeAssistRow(contentRect, npcId, index, available, selected,
+                CreateDailyChallengeAssistRow(rowPrefab, list, npcId, available, selected,
                     encountered, met, modelAvailable, maxPlayer);
             }
             if (!existing.SequenceEqual(validSelection))
-                host.NpcAssistanceProgress.SetSelection(10, "daily-challenge:" + activityId,
+                host.NpcAssistanceProgress.SetSelection(dailyAssistPlayType, dailyAssistEntryId,
                     validSelection, maxPlayer);
-            contentRect.sizeDelta = new Vector2(0f, candidates.Count * 82f);
+            list.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, candidates.Count * 126f);
 
-            Button start = CreateAssistButton(panel.transform, "Start", "开始挑战", new Vector2(-115f, 42f));
+            Transform actions = Find(dailyChallengeAssistRoot.transform, middlePath + "FriendRobotGo/BottomGo");
+            if (actions == null)
+                throw new InvalidOperationException("Official team invite action row is missing.");
+            Transform startNode = Find(actions, "CommonBtn_12");
+            Button start = startNode == null ? null : (startNode.GetComponent<Button>()
+                ?? startNode.GetComponentInChildren<Button>(true));
+            if (start == null)
+                throw new InvalidOperationException("Official team invite confirmation button is missing.");
+            start.onClick.RemoveAllListeners();
             start.onClick.AddListener(() => StartDailyChallengeWithAssist(false));
-            Button solo = CreateAssistButton(panel.transform, "Solo", "单人挑战", new Vector2(115f, 42f));
-            solo.onClick.AddListener(() => StartDailyChallengeWithAssist(true));
-            Button close = CreateAssistButton(panel.transform, "Close", "返回", new Vector2(0f, 88f));
-            close.onClick.AddListener(CloseDailyChallengeAssist);
-            RefreshDailyChallengeAssistCount(count, maxPlayer);
+            SetFirstAssistButtonText(start.transform, "开始挑战");
+            GameObject soloObject = UnityEngine.Object.Instantiate(start.gameObject, actions, false);
+            soloObject.name = "SoloChallengeButton";
+            RectTransform startRect = start.transform as RectTransform;
+            RectTransform soloRect = soloObject.transform as RectTransform;
+            if (startRect != null && soloRect != null)
+            {
+                startRect.anchoredPosition += new Vector2(-100f, 0f);
+                soloRect.anchoredPosition += new Vector2(100f, 0f);
+            }
+            Button solo = soloObject.GetComponent<Button>() ?? soloObject.GetComponentInChildren<Button>(true);
+            if (solo != null)
+            {
+                solo.onClick.RemoveAllListeners();
+                solo.onClick.AddListener(() => StartDailyChallengeWithAssist(true));
+            }
+            SetFirstAssistButtonText(soloObject.transform, "单人挑战");
+            RefreshDailyChallengeAssistCount(maxPlayer);
         }
 
-        private void CreateDailyChallengeAssistRow(RectTransform content, int npcId, int index,
+        private void CreateDailyChallengeAssistRow(GameObject rowPrefab, Transform content, int npcId,
             bool available, bool selected, bool encountered, bool conditionMet,
             bool modelAvailable, int maxPlayer)
         {
-            GameObject row = new GameObject("Npc_" + npcId, typeof(RectTransform), typeof(Image), typeof(Button));
-            row.transform.SetParent(content, false);
-            RectTransform rect = (RectTransform)row.transform;
-            rect.anchorMin = new Vector2(0f, 1f);
-            rect.anchorMax = new Vector2(1f, 1f);
-            rect.pivot = new Vector2(0.5f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -index * 82f);
-            rect.sizeDelta = new Vector2(-8f, 76f);
-            Image image = row.GetComponent<Image>();
-            image.color = selected ? new Color(0.22f, 0.34f, 0.31f, 0.98f)
-                : new Color(0.13f, 0.19f, 0.22f, 0.96f);
-            Button button = row.GetComponent<Button>();
-            button.targetGraphic = image;
-            button.interactable = available || selected;
-
-            GameObject portrait = new GameObject("Portrait", typeof(RectTransform), typeof(Image));
-            portrait.transform.SetParent(row.transform, false);
-            RectTransform portraitRect = (RectTransform)portrait.transform;
-            portraitRect.anchorMin = new Vector2(0f, 0.5f);
-            portraitRect.anchorMax = new Vector2(0f, 0.5f);
-            portraitRect.pivot = new Vector2(0f, 0.5f);
-            portraitRect.anchoredPosition = new Vector2(12f, 0f);
-            portraitRect.sizeDelta = new Vector2(58f, 58f);
+            GameObject row = UnityEngine.Object.Instantiate(rowPrefab, content, false);
+            row.name = "Npc_" + npcId;
             NpcTravelNpc npc = host.NpcTravelCatalog.Npc(npcId);
-            Image portraitImage = portrait.GetComponent<Image>();
-            portraitImage.sprite = catalog.FindDynamicSprite(NpcTravelIconKey(npc));
-            portraitImage.preserveAspect = true;
-            portraitImage.raycastTarget = false;
-
-            TextMeshProUGUI name = CreateAssistLabel(row.transform, "Name", 19f,
-                new Vector2(92f, 14f), new Vector2(390f, 28f), TextAlignmentOptions.Left);
-            name.text = host.Catalog.LocalizedText(host.NpcAssistanceCatalog.NpcNameKey(npcId),
-                "伙伴 " + npcId);
-            TextMeshProUGUI state = CreateAssistLabel(row.transform, "State", 15f,
-                new Vector2(92f, -16f), new Vector2(440f, 26f), TextAlignmentOptions.Left);
-            state.text = !modelAvailable ? "本地战斗动画未安装"
-                : !encountered && host.NpcAssistanceCatalog.RequiresEncounter(npcId)
-                ? "尚未相识" : !conditionMet ? "未满足助战条件"
-                : !available ? "今日助战次数已用完" : selected ? "已选中" : "可助战";
-            if (!available) state.color = new Color(0.68f, 0.70f, 0.71f, 1f);
-            button.onClick.AddListener(() =>
+            Image portraitImage = Find(row.transform, "HeadImg")?.GetComponent<Image>();
+            if (portraitImage != null)
             {
-                int[] current = host.NpcAssistanceProgress.Selected(10,
-                    "daily-challenge:" + dailyChallengeAssistActivityId).ToArray();
+                portraitImage.sprite = catalog.FindDynamicSprite(NpcTravelIconKey(npc));
+                portraitImage.preserveAspect = true;
+                portraitImage.raycastTarget = false;
+            }
+            TextMeshProUGUI name = Find(row.transform, "NameTxt")?.GetComponent<TextMeshProUGUI>();
+            if (name != null) name.text = host.Catalog.LocalizedText(host.NpcAssistanceCatalog.NpcNameKey(npcId),
+                "伙伴 " + npcId);
+            SetPrefabActive(row, "LimitedGo", !available);
+            SetPrefabActive(row, "ImgSelected", selected);
+            bool friendshipBlocked = !encountered && host.NpcAssistanceCatalog.RequiresEncounter(npcId);
+            SetPrefabActive(row, "FriendshipLockGo", friendshipBlocked);
+            SetNamedText(row.transform, "TipText", !modelAvailable ? "本地战斗动画未安装"
+                : friendshipBlocked ? "尚未相识" : !conditionMet ? "未满足助战条件"
+                : !available ? "今日助战次数已用完" : string.Empty);
+            Toggle toggle = row.GetComponent<Toggle>() ?? row.GetComponentInChildren<Toggle>(true);
+            if (toggle == null) toggle = row.AddComponent<Toggle>();
+            if (toggle.targetGraphic == null)
+                toggle.targetGraphic = Find(row.transform, "ImgBg")?.GetComponent<Graphic>()
+                    ?? Find(row.transform, "ImgSelected")?.GetComponent<Graphic>();
+            if (toggle.targetGraphic == null)
+                throw new InvalidOperationException("Official NPC invite row has no target graphic.");
+            toggle.transition = Selectable.Transition.None;
+            toggle.onValueChanged.RemoveAllListeners();
+            toggle.SetIsOnWithoutNotify(selected);
+            toggle.interactable = available || selected;
+            toggle.onValueChanged.AddListener(isOn =>
+            {
+                int[] current = host.NpcAssistanceProgress.Selected(dailyAssistPlayType,
+                    dailyAssistEntryId).ToArray();
                 var next = current.ToList();
-                if (next.Contains(npcId)) next.Remove(npcId);
-                else if (available && next.Count < maxPlayer) next.Add(npcId);
-                else if (next.Count >= maxPlayer) Notify("最多选择 " + maxPlayer + " 名助战伙伴");
-                else return;
-                host.NpcAssistanceProgress.SetSelection(10,
-                    "daily-challenge:" + dailyChallengeAssistActivityId, next, maxPlayer);
+                if (isOn)
+                {
+                    if (next.Contains(npcId)) return;
+                    if (!available) return;
+                    if (next.Count >= maxPlayer)
+                    {
+                        Notify("最多选择 " + maxPlayer + " 名助战伙伴");
+                        toggle.SetIsOnWithoutNotify(false);
+                        return;
+                    }
+                    next.Add(npcId);
+                }
+                else next.Remove(npcId);
+                host.NpcAssistanceProgress.SetSelection(dailyAssistPlayType,
+                    dailyAssistEntryId, next, maxPlayer);
                 RebuildDailyChallengeAssistSelection();
             });
         }
 
         private void RebuildDailyChallengeAssistSelection()
         {
-            int activityId = dailyChallengeAssistActivityId;
-            OfficialDailyChallengeCatalog challengeCatalog = dailyChallengeAssistCatalog;
-            OpenDailyChallengeAssist(activityId, challengeCatalog);
+            BuildDailyAssistPicker();
         }
 
-        private void RefreshDailyChallengeAssistCount(TextMeshProUGUI label, int maxPlayer)
+        private void RefreshDailyChallengeAssistCount(int maxPlayer)
         {
-            int count = host.NpcAssistanceProgress.Selected(10,
-                "daily-challenge:" + dailyChallengeAssistActivityId).Count;
-            label.text = "助战伙伴 " + count + " / " + maxPlayer;
+            int count = host.NpcAssistanceProgress.Selected(dailyAssistPlayType, dailyAssistEntryId).Count;
+            SetNamedText(dailyChallengeAssistRoot.transform, "AssistCountTxt",
+                "助战伙伴 " + count + " / " + maxPlayer);
         }
 
-        private TextMeshProUGUI CreateAssistLabel(Transform parent, string name, float size,
-            Vector2 position, Vector2 dimensions, TextAlignmentOptions alignment)
+        private static void SetFirstAssistButtonText(Transform root, string value)
         {
-            TextMeshProUGUI label = CreateLabel(parent, name, size, Vector2.zero, alignment);
-            RectTransform rect = label.rectTransform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = position;
-            rect.sizeDelta = dimensions;
-            label.raycastTarget = false;
-            return label;
-        }
-
-        private Button CreateAssistButton(Transform parent, string name, string text, Vector2 position)
-        {
-            GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
-            buttonObject.transform.SetParent(parent, false);
-            RectTransform rect = (RectTransform)buttonObject.transform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
-            rect.pivot = new Vector2(0.5f, 0f);
-            rect.anchoredPosition = position;
-            rect.sizeDelta = new Vector2(190f, 42f);
-            Image image = buttonObject.GetComponent<Image>();
-            image.color = new Color(0.40f, 0.61f, 0.50f, 1f);
-            Button button = buttonObject.GetComponent<Button>();
-            button.targetGraphic = image;
-            TextMeshProUGUI label = CreateAssistLabel(buttonObject.transform, "Text", 18f,
-                Vector2.zero, new Vector2(180f, 38f), TextAlignmentOptions.Center);
-            label.text = text;
-            label.color = Color.white;
-            return button;
+            TextMeshProUGUI label = root == null ? null : root.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (label != null) label.text = value;
         }
 
         private void StartDailyChallengeWithAssist(bool solo)
         {
-            if (solo)
-                host.NpcAssistanceProgress.SetSelection(10,
-                    "daily-challenge:" + dailyChallengeAssistActivityId, Array.Empty<int>(), 3);
-            int activityId = dailyChallengeAssistActivityId;
-            OfficialDailyChallengeCatalog challengeCatalog = dailyChallengeAssistCatalog;
+            if (solo) host.NpcAssistanceProgress.SetSelection(dailyAssistPlayType,
+                dailyAssistEntryId, Array.Empty<int>(), 3);
+            Action<bool> confirmed = dailyAssistConfirmed;
             CloseDailyChallengeAssist();
-            StartDailyChallenge(activityId, challengeCatalog);
+            confirmed?.Invoke(solo);
         }
 
         private void CloseDailyChallengeAssist()

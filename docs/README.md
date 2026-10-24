@@ -45,7 +45,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [世界阶段手动推进](features/manual-world-stage.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [素材秘境与快速采集](features/material-gathering.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [月卡与星眷累计奖励](features/monthly-card.md) | 未完成 | 两类周期卡与15组75档星眷的官方目标、配置和缺项已记录；月卡业务未接，星眷仅有部分目录／累计领奖代码，界面、属性与运行未验收 |
-| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
+| [NPC邀请、站位与战前准备](features/npc-assistance.md) | 未完成 | 日常副本及每日挑战已接线；85个官方战斗角色包已提取，原生转换依赖缺失的 `prepare_map_regions.py`；其余玩法入口及Play Mode验证待完成 |
 | [离线开放条件与单机范围](features/offline-access.md) | 未完成 | 开放条件适配器；调用方尚未完整接线 |
 | [伙伴旅行、品质与保底](features/partner-travel.md) | 未完成 | 主线位置映射已按确认规则接通；11015–11022 配置头像渲染、官方旅行动画运行时及 Play Mode 尚未完成 |
 | [NPC伙伴、好感与餐桌通话](features/partners.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |

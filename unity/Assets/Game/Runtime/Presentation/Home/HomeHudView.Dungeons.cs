@@ -31,6 +31,7 @@ namespace Zjcs.Presentation.Home
 
         private bool DungeonModalOpen => travelNotesRoot != null || dailyDungeonRoot != null
             || arenaRoot != null || dailyChallengeRoot != null || dailyChallengeSelectionRoot != null
+            || dailyChallengeAssistRoot != null
             || dailyChallengeResultRoot != null
             || fantasyTowerRoot != null || NpcTravelModalOpen || MaterialGatheringModalOpen;
         private bool IsDailyDungeonBattleActive => activeDungeonBattle != null || activeArenaBattle != null;
