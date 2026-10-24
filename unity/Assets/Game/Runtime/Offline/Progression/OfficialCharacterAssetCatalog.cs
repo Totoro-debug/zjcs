@@ -257,6 +257,15 @@ namespace Zjcs.Offline.Progression
             return rankBySubRank.TryGetValue(subRank, out int rank) ? rank : 0;
         }
 
+        public int GemLevelLimit(int subRank)
+        {
+            Dictionary<string, object> row = Rows("player_subrank")
+                .FirstOrDefault(value => Integer(value, "SubRank") == subRank);
+            if (row == null || Integer(row, "GemLevelLimit") <= 0)
+                throw new FormatException("Official gem level limit is missing for subrank " + subRank + ".");
+            return Integer(row, "GemLevelLimit");
+        }
+
         /// <summary>
         /// Evaluates one official condition id (rules.json <c>conditions</c>) against the local
         /// character state. Condition types that need data this save does not own stay false

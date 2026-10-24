@@ -33,6 +33,10 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> detailTemplate;
         private Dictionary<string, object> propRowTemplate;
         private Dictionary<string, object> promoteTemplate;
+        private Dictionary<string, object> gemForgeTemplate;
+        private Dictionary<string, object> gemForgeNormalTemplate;
+        private Dictionary<string, object> gemForgeConfirmTemplate;
+        private Dictionary<string, object> gemForgeResultTemplate;
         private GameObject listDialog;
         private GameObject compareDialog;
         private GameObject detailDialog;
@@ -87,6 +91,17 @@ namespace Zjcs.Presentation.Character
             detailTemplate = CharacterModelPackage.AsObject(screens["equip_detail"], "equip_detail");
             propRowTemplate = CharacterModelPackage.AsObject(screens["character_prop_row"], "character_prop_row");
             promoteTemplate = CharacterModelPackage.AsObject(screens["equip_promote"], "equip_promote");
+            TextAsset gemForgeUi = Resources.Load<TextAsset>("Equipment/gem-forge-ui");
+            if (gemForgeUi != null)
+            {
+                Dictionary<string, object> forgeRoot = CharacterModelPackage.AsObject(
+                    OfficialEquipmentJson.Parse(gemForgeUi.text), "gem forge UI");
+                Dictionary<string, object> forgePanels = CharacterModelPackage.AsObject(forgeRoot["panels"], "gem forge panels");
+                gemForgeTemplate = CharacterModelPackage.AsObject(forgePanels["mechanical"], "mechanical furnace");
+                gemForgeNormalTemplate = CharacterModelPackage.AsObject(forgePanels["normal"], "normal gem merge panel");
+                gemForgeConfirmTemplate = CharacterModelPackage.AsObject(forgePanels["gem_confirm"], "gem merge confirmation");
+                gemForgeResultTemplate = CharacterModelPackage.AsObject(forgePanels["gem_result"], "gem merge result");
+            }
             var statusObject = new GameObject("EquipSlotsStatus", typeof(RectTransform), typeof(Text));
             statusObject.transform.SetParent(transform, false);
             RectTransform statusRect = (RectTransform)statusObject.transform;
@@ -672,13 +687,431 @@ namespace Zjcs.Presentation.Character
                 AddGemRow(content, ItemName(captured) + "（" + owned + "）",
                     "镶嵌", ref top, () => InlayGem(instance, captured));
             }
+            if (progression.GemForge != null && top > 0.22f)
+            {
+                Button forge = CreateCompareButton(content, "宝石合成", new Vector2(0f, 40f),
+                    new Color(0.78f, 0.56f, 0.24f, 0.98f));
+                RectTransform forgeRect = (RectTransform)forge.transform;
+                forgeRect.anchorMin = new Vector2(0.5f, 0f);
+                forgeRect.anchorMax = new Vector2(0.5f, 0f);
+                forgeRect.anchoredPosition = new Vector2(0f, 91f);
+                forge.onClick.AddListener(() => OpenGemForge());
+            }
             if (top > 0.8f) AddGemRow(content, "无可用星石。", null, ref top, null);
             Button close = CreateCompareButton(content, "关闭", new Vector2(0f, 40f),
                 new Color(0.45f, 0.45f, 0.45f, 0.95f));
             close.onClick.AddListener(CloseGems);
         }
 
-        private void AddGemRow(RectTransform parent, string label, string action, ref float top, Action onClick)
+        private void OpenGemForge()
+        {
+            foreach (Transform child in gemDialog.transform.Cast<Transform>().ToArray())
+                if (child.name != "GemBlocker") Destroy(child.gameObject);
+            if (gemForgeTemplate == null)
+            {
+                SetStatus("机械熔炉官方界面资源缺失。");
+                return;
+            }
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(gemForgeTemplate), gemDialog.transform, nodes, buttons);
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "GridGo");
+            if (content == null)
+            {
+                SetStatus("机械熔炉材料列表节点缺失。");
+                return;
+            }
+            Button closeButton = buttons.FirstOrDefault(value => value.Key.EndsWith("/CloseBtn", StringComparison.Ordinal)).Value;
+            if (closeButton != null) closeButton.onClick.AddListener(CloseGems);
+            Button inlayButton = buttons.FirstOrDefault(value => value.Key.EndsWith("/NoDrawButton", StringComparison.Ordinal)).Value;
+            if (inlayButton != null) inlayButton.onClick.AddListener(() =>
+            {
+                OfflineEquipmentInstance selected = progression.Player.Equipment.Instances
+                    .FirstOrDefault(value => value.InstanceId == gemInstanceId);
+                if (selected != null) OpenGems(selected);
+            });
+            var equippedInstanceIds = new HashSet<long>(progression.Player.Equipment.Equipped
+                .Where(value => value != null).Select(value => value.InstanceId));
+            int gemLevelLimit = progression.Catalog.GemLevelLimit(progression.Player.SubRank);
+            var candidates = progression.Player.Inventory.Where(value => value != null && value.Count > 0
+                    && progression.EquipmentCatalog.Find("gem", value.ItemId) != null)
+                .Select(value => (ItemId: value.ItemId, Inlaid: false, EquipmentId: 0L, Slot: -1))
+                .Concat(progression.Player.Equipment.Instances.Where(value => value.Gems != null)
+                    .Where(instance => equippedInstanceIds.Contains(instance.InstanceId))
+                    .SelectMany(instance => instance.Gems.Where(gem => gem != null && gem.ItemId > 0)
+                        .Select(gem => (ItemId: gem.ItemId, Inlaid: true,
+                            EquipmentId: instance.InstanceId, Slot: gem.Slot))))
+                .Select(value =>
+                {
+                    OfflineGemMergeQuote candidateQuote = progression.GemForge.Quote(value.ItemId,
+                        value.Inlaid, gemLevelLimit, value.EquipmentId, value.Slot);
+                    Dictionary<string, object> gem = progression.EquipmentCatalog.Find("gem", value.ItemId);
+                    return (Candidate: value, Quote: candidateQuote,
+                        CanMerge: candidateQuote != null && !candidateQuote.IsHighRank && candidateQuote.IsReady,
+                        Rank: Integer(progression.EquipmentCatalog.Find("item", value.ItemId), "Rank"),
+                        GemType: Integer(gem, "GemType"));
+                })
+                .OrderByDescending(value => value.CanMerge)
+                .ThenByDescending(value => value.Candidate.Inlaid)
+                .ThenByDescending(value => value.Rank)
+                .ThenBy(value => value.GemType).ToArray();
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = new Vector2(0f, candidates.Length * 76f);
+            float top = 0.95f;
+            int rowIndex = 0;
+            foreach (var entry in candidates)
+            {
+                var candidate = entry.Candidate;
+                int selected = candidate.ItemId;
+                OfflineGemMergeQuote quote = entry.Quote;
+                long owned = candidate.Inlaid ? 1 : progression.Player.Inventory
+                    .Where(value => value.ItemId == selected).Sum(value => value.Count);
+                int currentRank = Integer(progression.EquipmentCatalog.Find("item", selected), "Rank");
+                string description = ItemName(selected) + (candidate.Inlaid ? "（已镶嵌）" : " ×" + owned)
+                    + (currentRank >= gemLevelLimit ? "（已达等级上限）" : quote == null ? "（无可用配方）"
+                    : "  材料 " + ItemName(quote.MaterialItemId) + " ×" + quote.MaterialCount
+                        + (quote.CostMoney > 0 ? "  金币 " + quote.CostMoney : "")
+                        + (quote.IsHighRank ? "  成功率 " + quote.SuccessRate.ToString("0.##") + "%  炉能 "
+                            + (quote.Energy * 100).ToString("0.#") + "%" : ""));
+                bool canOpen = quote != null;
+                AddGemRow(content, description, canOpen ? "选择" : currentRank >= gemLevelLimit ? "已达上限" : "无配方",
+                ref top, canOpen ? () => OpenGemMaterials(selected, candidate.Inlaid,
+                        candidate.EquipmentId, candidate.Slot, quote.IsHighRank) : null, selected);
+                RectTransform row = (RectTransform)content.GetChild(content.childCount - 1);
+                row.anchorMin = new Vector2(0.06f, 1f);
+                row.anchorMax = new Vector2(0.94f, 1f);
+                row.pivot = new Vector2(0.5f, 1f);
+                row.sizeDelta = new Vector2(0f, 70f);
+                row.anchoredPosition = new Vector2(0f, -rowIndex++ * 76f);
+            }
+            if (candidates.Length == 0)
+            {
+                SetStatus("没有可用于合成的星石。");
+                AddGemRow(content, "没有可用于合成的星石。", null, ref top, null);
+            }
+        }
+
+        private void OpenGemMaterials(int mainItemId, bool inlaid, long equipmentId, int gemSlot,
+            bool highRank = false)
+        {
+            Dictionary<string, object> template = highRank ? gemForgeTemplate : gemForgeNormalTemplate;
+            if (template == null)
+            {
+                SetStatus(highRank ? "机械熔炉官方界面资源缺失。" : "普通宝石合成官方界面资源缺失。");
+                return;
+            }
+            OfflineGemMergeQuote quote = progression.GemForge.Quote(mainItemId, inlaid,
+                progression.Catalog.GemLevelLimit(progression.Player.SubRank), equipmentId, gemSlot);
+            if (quote == null || quote.IsHighRank != highRank)
+            {
+                SetStatus(highRank ? "该宝石没有高阶合成配方。" : "该宝石没有普通合成配方。");
+                return;
+            }
+            foreach (Transform child in gemDialog.transform.Cast<Transform>().ToArray())
+                if (child.name != "GemBlocker") Destroy(child.gameObject);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(template), gemDialog.transform,
+                nodes, buttons);
+            Button closeButton = CreateCompareButton((RectTransform)gemDialog.transform, "关闭", Vector2.zero,
+                new Color(0.45f, 0.45f, 0.45f, 0.98f));
+            RectTransform closeRect = (RectTransform)closeButton.transform;
+            closeRect.anchorMin = new Vector2(1f, 1f);
+            closeRect.anchorMax = new Vector2(1f, 1f);
+            closeRect.pivot = new Vector2(1f, 1f);
+            closeRect.anchoredPosition = new Vector2(-72f, -48f);
+            closeRect.sizeDelta = new Vector2(112f, 44f);
+            closeButton.onClick.AddListener(CloseGems);
+            Button inlayButton = buttons.FirstOrDefault(value => value.Key.EndsWith("/NoDrawButton", StringComparison.Ordinal)).Value;
+            if (inlayButton != null) inlayButton.onClick.AddListener(() =>
+            {
+                OfflineEquipmentInstance selected = progression.Player.Equipment.Instances
+                    .FirstOrDefault(value => value.InstanceId == gemInstanceId);
+                if (selected != null) OpenGems(selected);
+            });
+            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "GridGo");
+            if (content == null)
+            {
+                SetStatus(highRank ? "机械熔炉材料列表节点缺失。" : "普通合成材料列表节点缺失。");
+                return;
+            }
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = new Vector2(0f, 520f);
+            int owned = (int)progression.Player.Inventory.Where(value => value.ItemId == quote.MaterialItemId)
+                .Sum(value => value.Count);
+            if (!inlaid && mainItemId == quote.MaterialItemId) owned = Math.Max(0, owned - 1);
+            var selectedMaterials = new List<OfflineGemMergeMaterialSource>();
+            var equippedInstanceIds = new HashSet<long>(progression.Player.Equipment.Equipped
+                .Where(value => value != null).Select(value => value.InstanceId));
+            var inlaidMaterials = progression.Player.Equipment.Instances.Where(value => value != null
+                    && value.Gems != null && equippedInstanceIds.Contains(value.InstanceId))
+                .SelectMany(instance => instance.Gems.Where(gem => gem != null
+                    && gem.ItemId == quote.MaterialItemId
+                    && !(inlaid && instance.InstanceId == equipmentId && gem.Slot == gemSlot))
+                    .Select(gem => new OfflineGemMergeMaterialSource
+                    {
+                        ItemId = gem.ItemId,
+                        EquipmentInstanceId = instance.InstanceId,
+                        GemSlot = gem.Slot
+                    }))
+                .OrderBy(value => value.EquipmentInstanceId).ThenBy(value => value.GemSlot).ToArray();
+            void RebuildRows()
+            {
+                foreach (Transform row in content.Cast<Transform>().ToArray()) Destroy(row.gameObject);
+                float top = 0.94f;
+                int index = 0;
+                int selectedCount = selectedMaterials.Sum(value => value.Count);
+                AddGemRow(content, "主石：" + ItemName(mainItemId)
+                    + (inlaid ? "（已镶嵌）" : ""), null, ref top, null, mainItemId);
+                PositionLastGemRow(content, index++);
+                AddGemRow(content, "目标：" + ItemName(quote.ResultItemId)
+                    + "　配方材料：" + ItemName(quote.MaterialItemId) + " ×" + quote.MaterialCount,
+                    null, ref top, null);
+                PositionLastGemRow(content, index++);
+                AddGemRow(content, "已选择材料 " + selectedCount + "/" + quote.MaterialCount
+                    + "　背包持有 " + owned, null, ref top, null);
+                PositionLastGemRow(content, index++);
+                int bagSelected = selectedMaterials.Where(value => !value.IsInlaid)
+                    .Sum(value => value.Count);
+                bool canSelectBag = selectedCount < quote.MaterialCount && bagSelected < owned;
+                AddGemRow(content, "背包材料 " + ItemName(quote.MaterialItemId) + " ×" + owned,
+                    bagSelected > 0 ? "撤回" : canSelectBag ? "选择" : null, ref top,
+                    bagSelected > 0 ? () =>
+                    {
+                        OfflineGemMergeMaterialSource stack = selectedMaterials.First(value => !value.IsInlaid);
+                        if (--stack.Count == 0) selectedMaterials.Remove(stack);
+                        RebuildRows();
+                    } : canSelectBag ? () =>
+                    {
+                        OfflineGemMergeMaterialSource stack = selectedMaterials.FirstOrDefault(value => !value.IsInlaid);
+                        if (stack == null) selectedMaterials.Add(new OfflineGemMergeMaterialSource
+                            { ItemId = quote.MaterialItemId });
+                        else stack.Count++;
+                        RebuildRows();
+                    } : null, quote.MaterialItemId, !canSelectBag && bagSelected == 0);
+                PositionLastGemRow(content, index++);
+                foreach (OfflineGemMergeMaterialSource source in inlaidMaterials)
+                {
+                    OfflineGemMergeMaterialSource captured = source;
+                    bool selected = selectedMaterials.Any(value => value.IsInlaid
+                        && value.EquipmentInstanceId == captured.EquipmentInstanceId
+                        && value.GemSlot == captured.GemSlot);
+                    bool canSelect = !selected && selectedCount < quote.MaterialCount;
+                    AddGemRow(content, "装备孔 " + captured.GemSlot + "　" + ItemName(captured.ItemId)
+                        + (selected ? "　已选择" : ""), selected ? "撤回" : canSelect ? "选择" : null,
+                        ref top, selected ? () =>
+                        {
+                            selectedMaterials.RemoveAll(value => value.IsInlaid
+                                && value.EquipmentInstanceId == captured.EquipmentInstanceId
+                                && value.GemSlot == captured.GemSlot);
+                            RebuildRows();
+                        } : canSelect ? () => { selectedMaterials.Add(captured); RebuildRows(); } : null,
+                        captured.ItemId, !selected && !canSelect);
+                    PositionLastGemRow(content, index++);
+                }
+                AddGemRow(content, "返回主石列表", "返回", ref top, OpenGemForge);
+                PositionLastGemRow(content, index++);
+                bool canMerge = quote.IsReady && selectedCount == quote.MaterialCount;
+                AddGemRow(content, "消耗金币 " + quote.CostMoney,
+                    canMerge ? "合成" : "材料不足",
+                    ref top, canMerge ? () => ConfirmGemMerge(mainItemId, quote, inlaid,
+                        equipmentId, gemSlot, selectedMaterials.ToArray()) : null);
+                PositionLastGemRow(content, index);
+                content.sizeDelta = new Vector2(0f, Math.Max(520f, (index + 1) * 62f));
+                RefreshOfficialGemCenter(nodes, mainItemId, inlaid, quote, selectedMaterials);
+            }
+            RebuildRows();
+        }
+
+        private static void PositionLastGemRow(RectTransform content, int index)
+        {
+            RectTransform row = (RectTransform)content.GetChild(content.childCount - 1);
+            row.anchorMin = new Vector2(0.06f, 1f);
+            row.anchorMax = new Vector2(0.94f, 1f);
+            row.pivot = new Vector2(0.5f, 1f);
+            row.sizeDelta = new Vector2(0f, 56f);
+            row.anchoredPosition = new Vector2(0f, -index * 62f);
+        }
+
+        private void RefreshOfficialGemCenter(
+            IReadOnlyDictionary<string, RectTransform> nodes, int mainItemId, bool mainInlaid,
+            OfflineGemMergeQuote quote, IReadOnlyList<OfflineGemMergeMaterialSource> selectedMaterials)
+        {
+            bool highRank = quote.IsHighRank;
+            RectTransform target = nodes.Values.FirstOrDefault(value => value.name == "TargetItemIcon");
+            SetOfficialGemIcon(target, quote.ResultItemId, true, false, false);
+            var selected = new List<(int ItemId, bool Inlaid)>();
+            if (!highRank) selected.Add((mainItemId, mainInlaid));
+            foreach (OfflineGemMergeMaterialSource source in selectedMaterials)
+                for (int i = 0; i < source.Count; i++) selected.Add((source.ItemId, source.IsInlaid));
+            RectTransform[] sourceSlots = highRank
+                ? new[]
+                {
+                    nodes.Values.FirstOrDefault(value => value.name == "GemMaterialItemIcon"),
+                    nodes.Values.FirstOrDefault(value => value.name == "GemMaterialItemIcon (1)")
+                }
+                : new[]
+                {
+                    nodes.Values.FirstOrDefault(value => value.name == "MaterialItemIcon"),
+                    nodes.Values.FirstOrDefault(value => value.name == "MaterialItemIcon (1)"),
+                    nodes.Values.FirstOrDefault(value => value.name == "MaterialItemBigIcon")
+                };
+            int sourceLimit = Math.Min(sourceSlots.Length, highRank ? quote.MaterialCount : quote.MaterialCount + 1);
+            for (int i = 0; i < sourceSlots.Length; i++)
+            {
+                bool active = i < sourceLimit;
+                (int ItemId, bool Inlaid) item = i < selected.Count ? selected[i] : (quote.MaterialItemId, false);
+                SetOfficialGemIcon(sourceSlots[i], item.ItemId, active, item.Inlaid, false);
+            }
+        }
+
+        private void SetOfficialGemIcon(RectTransform slot, int itemId, bool active, bool inlaid, bool dim)
+        {
+            if (slot == null) return;
+            slot.gameObject.SetActive(active);
+            Transform iconNode = FindDeep(slot, "icon");
+            Image icon = iconNode == null ? null : iconNode.GetComponent<Image>();
+            string uri = progression.Catalog.ItemIconUri(itemId);
+            Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+            if (sprite == null && !string.IsNullOrEmpty(uri))
+                sprite = Resources.Load<Sprite>("Equipment/GemForgeSprites/"
+                    + System.IO.Path.GetFileNameWithoutExtension(uri));
+            if (icon != null)
+            {
+                icon.sprite = sprite;
+                icon.color = dim ? new Color(0.5f, 0.5f, 0.5f, 0.7f) : Color.white;
+            }
+            Transform inlaidNode = FindDeep(slot, "ItemIconInlayed");
+            if (inlaidNode != null) inlaidNode.gameObject.SetActive(inlaid);
+        }
+
+        private void ConfirmGemMerge(int itemId, OfflineGemMergeQuote quote, bool inlaid = false,
+            long equipmentId = 0, int gemSlot = -1,
+            IReadOnlyList<OfflineGemMergeMaterialSource> selectedMaterials = null)
+        {
+            if (gemForgeConfirmTemplate == null)
+            {
+                SetStatus("宝石合成确认界面资源缺失。");
+                return;
+            }
+            var overlay = new GameObject("GemMergeConfirm", typeof(RectTransform));
+            overlay.transform.SetParent(gemDialog.transform, false);
+            RectTransform root = (RectTransform)overlay.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            var blocker = new GameObject("ConfirmBlocker", typeof(RectTransform), typeof(Image));
+            blocker.transform.SetParent(root, false);
+            RectTransform blockerRect = (RectTransform)blocker.transform;
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.72f);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(gemForgeConfirmTemplate), root, nodes, buttons);
+            Text description = nodes.Values.Where(value => value.name == "ContentTxt")
+                .Select(value => value.GetComponent<Text>()).FirstOrDefault(value => value != null);
+            if (description != null)
+                description.text = "主石 " + ItemName(itemId) + " → " + ItemName(quote.ResultItemId)
+                    + "\n材料 " + ItemName(quote.MaterialItemId) + " ×" + quote.MaterialCount
+                    + (quote.CostMoney > 0 ? "　金币 " + quote.CostMoney : string.Empty)
+                    + "\n成功率 " + quote.SuccessRate.ToString("0.##") + "%　炉能 "
+                    + (quote.Energy * 100).ToString("0.#") + "%";
+            Button accept = buttons.FirstOrDefault(value => value.Key.EndsWith("/ConfirmBtn", StringComparison.Ordinal)).Value;
+            Button cancel = buttons.FirstOrDefault(value => value.Key.EndsWith("/CancelBtn", StringComparison.Ordinal)).Value;
+            if (accept != null) accept.onClick.AddListener(() =>
+            {
+                Destroy(overlay);
+                MergeGem(itemId, inlaid, equipmentId, gemSlot, selectedMaterials);
+            });
+            if (cancel != null) cancel.onClick.AddListener(() => Destroy(overlay));
+        }
+
+        private void MergeGem(int itemId, bool inlaid = false, long equipmentId = 0, int gemSlot = -1,
+            IReadOnlyList<OfflineGemMergeMaterialSource> selectedMaterials = null)
+        {
+            OfflineGemMergeReceipt receipt = progression.GemForge.Merge(
+                Guid.NewGuid().ToString("N"), itemId, inlaid,
+                progression.Catalog.GemLevelLimit(progression.Player.SubRank),
+                null, equipmentId, gemSlot, selectedMaterials);
+            if (receipt == null)
+            {
+                SetStatus("星石、材料或金币不足，合成未执行。");
+                return;
+            }
+            SetStatus(receipt.Result == OfflineGemMergeResultType.Success
+                ? "合成成功：" + ItemName(receipt.ResultItemId)
+                : "合成失败：主石保留" + (receipt.RefundedMaterials > 0
+                    ? "，返还本次材料 " + receipt.RefundedMaterials : ""));
+            Changed?.Invoke();
+            if (gemForgeResultTemplate != null) ShowGemForgeResult(receipt);
+            else OpenGemForge();
+            if (slotRoot != null) Refresh(slotRoot);
+        }
+
+        private void ShowGemForgeResult(OfflineGemMergeReceipt receipt)
+        {
+            foreach (Transform child in gemDialog.transform.Cast<Transform>().ToArray())
+                if (child.name != "GemBlocker") Destroy(child.gameObject);
+            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(gemForgeResultTemplate), gemDialog.transform,
+                nodes, buttons);
+            RectTransform success = nodes.Values.FirstOrDefault(value => value.name == "SuccessImg");
+            RectTransform failed = nodes.Values.FirstOrDefault(value => value.name == "FailBgImg");
+            bool isSuccess = receipt.Result == OfflineGemMergeResultType.Success;
+            if (success != null) success.gameObject.SetActive(isSuccess);
+            if (failed != null) failed.gameObject.SetActive(!isSuccess);
+            foreach (RectTransform rect in nodes.Values.Where(value => value.name == "TipsTxt"))
+            {
+                Text text = rect.GetComponent<Text>();
+                if (text != null) text.text = receipt.RefundedMaterials > 0
+                    ? "熔炉保底补偿返还材料 " + receipt.RefundedMaterials
+                    : isSuccess ? "合成成功：" + ItemName(receipt.ResultItemId)
+                        : "本次合成失败，炉能 " + receipt.MissCount;
+            }
+            foreach (RectTransform rect in nodes.Values.Where(value => value.name == "ItemIconGem"))
+            {
+                if (rect.name == "ItemIconGem")
+                {
+                    Transform icon = FindDeep(rect, "icon");
+                    if (icon != null)
+                    {
+                        string uri = progression.Catalog.ItemIconUri(receipt.ResultItemId);
+                        Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+                        if (sprite == null && !string.IsNullOrEmpty(uri))
+                            sprite = Resources.Load<Sprite>("Equipment/GemForgeSprites/"
+                                + System.IO.Path.GetFileNameWithoutExtension(uri));
+                        Image image = icon.GetComponent<Image>();
+                        if (image != null) image.sprite = sprite;
+                    }
+                }
+            }
+            RectTransform mask = nodes.Values.FirstOrDefault(value => value.name == "ClickMask");
+            if (mask != null)
+            {
+                Image image = mask.GetComponent<Image>();
+                if (image == null) image = mask.gameObject.AddComponent<Image>();
+                image.color = new Color(1f, 1f, 1f, 0.001f);
+                image.raycastTarget = true;
+                Button button = mask.GetComponent<Button>();
+                if (button == null) button = mask.gameObject.AddComponent<Button>();
+                button.targetGraphic = image;
+                button.onClick.AddListener(OpenGemForge);
+            }
+        }
+
+        private void AddGemRow(RectTransform parent, string label, string action, ref float top, Action onClick,
+            int iconItemId = 0, bool dimIcon = false)
         {
             var rowObject = new GameObject("GemRow", typeof(RectTransform));
             rowObject.transform.SetParent(parent, false);
@@ -689,7 +1122,7 @@ namespace Zjcs.Presentation.Character
             var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
             textObject.transform.SetParent(row, false);
             RectTransform textRect = (RectTransform)textObject.transform;
-            textRect.anchorMin = new Vector2(0f, 0f);
+            textRect.anchorMin = new Vector2(iconItemId > 0 ? 0.14f : 0f, 0f);
             textRect.anchorMax = new Vector2(0.68f, 1f);
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
@@ -699,6 +1132,27 @@ namespace Zjcs.Presentation.Character
             text.alignment = TextAnchor.MiddleLeft;
             text.color = Color.white;
             text.text = label;
+            if (iconItemId > 0)
+            {
+                string uri = progression.Catalog.ItemIconUri(iconItemId);
+                Sprite sprite = string.IsNullOrEmpty(uri) ? null : assets.FindSprite(uri);
+                if (sprite == null && !string.IsNullOrEmpty(uri))
+                    sprite = Resources.Load<Sprite>("Equipment/GemForgeSprites/"
+                        + System.IO.Path.GetFileNameWithoutExtension(uri));
+                var iconObject = new GameObject("GemIcon", typeof(RectTransform), typeof(Image));
+                iconObject.transform.SetParent(row, false);
+                RectTransform iconRect = (RectTransform)iconObject.transform;
+                iconRect.anchorMin = new Vector2(0f, 0.5f);
+                iconRect.anchorMax = new Vector2(0f, 0.5f);
+                iconRect.pivot = new Vector2(0f, 0.5f);
+                iconRect.sizeDelta = new Vector2(40f, 40f);
+                iconRect.anchoredPosition = new Vector2(2f, 0f);
+                Image icon = iconObject.GetComponent<Image>();
+                icon.sprite = sprite;
+                icon.color = dimIcon ? new Color(0.5f, 0.5f, 0.5f, 0.7f) : Color.white;
+                icon.preserveAspect = true;
+                icon.raycastTarget = false;
+            }
             if (action != null && onClick != null)
             {
                 Button button = CreateCompareButton(row, action, new Vector2(0f, 0f),
