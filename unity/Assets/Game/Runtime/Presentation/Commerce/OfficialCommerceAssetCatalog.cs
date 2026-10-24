@@ -32,6 +32,7 @@ namespace Zjcs.Presentation.Commerce
         [SerializeField] private CommerceAudioBinding[] audio = Array.Empty<CommerceAudioBinding>();
         [SerializeField] private Font chineseFont;
         [SerializeField] private TMP_FontAsset chineseTmpFont;
+        [SerializeField] private AnimationClip accumulatedPayPanelShow;
         private OfficialCommerceCatalogData data;
 
         public static OfficialCommerceAssetCatalog LoadDefault()
@@ -50,6 +51,8 @@ namespace Zjcs.Presentation.Commerce
                     || binding.sourcePath.StartsWith(name + "-", StringComparison.Ordinal))) return binding.sprite;
             return null;
         }
+
+        public AnimationClip AccumulatedPayPanelShow => accumulatedPayPanelShow;
 
         public Sprite FindItemSprite(int itemId)
         {

@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。月卡业务尚未接入；星眷已有公共数据和部分离线累计／领奖代码，真实入口、完整界面、表现和 Unity 游玩未验收。
+状态：未完成。月卡、累计星值交易与领奖、官方品质框／锁图、周期卡倒计时格式及累计页开场动画已接入代码和资源目录；Unity Editor 当前未导入这些变更，编译及 Play Mode 鼠标输入、画面、音效和存档重开均尚未验收。
 
 ## 功能简介
 
@@ -28,45 +28,40 @@
 
 ## 完整还原部分
 
-尚无本功能完整接入并在 Unity 运行验收的结论。月卡的原 UI 子树虽然包含在 `commerce_main`，但 [`CommerceScreenController`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs) 未实现其购买、续期和领奖业务。
+`scripts/prepare_unity_commerce_catalog.py` 从固定 manifest `854_156383` 的 `rules.json`、官方商城 UI 及 SHA-256 已核对的简中本地化 rawfile 生成 [commerce-runtime.json](../../unity/Assets/Game/Resources/Commerce/commerce-runtime.json)，保留周期属性名称、累计档位描述／进度格式、主副奖励和多主奖励原动画事件。
 
-累计奖励已进入商城公共 [commerce-runtime.json](../../unity/Assets/Game/Resources/Commerce/commerce-runtime.json)：75 档配置和 `commerce_accumulated/commerce_accumulated_item/commerce_core/commerce_core_multi/commerce_price_table/commerce_price_row` 等 UI 树。当前 `CommerceAccumulatedAward` 将主副奖励合为 `rewards`，保留 `isBig`，仍需恢复原主副奖励分区和模板选择。
+[`CommerceScreenController`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs) 在官方周期卡树上绑定即时／每日奖励、官方属性说明、有效期倒计时、临期提醒、领取红点、新标记和购买／领取／续期状态。`OfflineCommerceOffers` 以档案事务保存周期卡时长和每日领取；`OfflineCommerceSession.ActivePeriodicProperties()` 将有效 `ExtraProps` 投影到角色属性，主页挂机收益读取 6004（挂机领取经验）和 1034（小推车产出）加成。离开商城后主页运行时尚无明确的属性重载通知，实时刷新待补。
 
-[`OfflineCommerceOffers.CurrentAccumulatedGroup/CurrentAccumulatedAwards/CanClaimAccumulated/ClaimAccumulated`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceSession.cs) 已写有当前组、门槛、领取次数和奖励处理；[`OfflineCommerceTransaction`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceTransaction.cs) 提供累计值、奖励和保存委托失败时不提交状态的底层。`CommerceScreenController.PopulateAccumulatedItems()` 已写有部分列表、领取按钮和遮罩刷新；原生资源目录资产缺失、真实入口未接以及共享库存覆盖缺陷仍见商城页。
+星眷页面由 `CommerceAccountPages.PopulateAccumulatedItems()` 创建官方档位与 `commerce_core`／`commerce_core_multi` 奖励模板，按配置分开展示主副奖励、大档辉光、详情点击、领取遮罩、左右交错及官方进度线。`prepare_unity_commerce_catalog.py` 从固定累计奖励图集提取品质 3–7 的大／小框与末组锁图；`AccumulatedPayAwardShowConfig` 序列化映射为 3 紫、4 橙、5 金、6 红、7 彩虹，并按档位大小选择对应框。多主奖励播放固定 bundle 中的 `AccumulatedPayCoreMulltiAwardGo_Loop` 并按原 `SwitchItem` 事件轮播。档位描述、进度及未达成文案从官方简中本地化读取。打开页面时，Editor 从固定 prefab bundle 导入 `AccumulatedPayPanel_Show` 原生压缩曲线、转为 Legacy clip 并播放；资源 bundle、对象 ID 与输出路径记录在 Commerce 来源清单。当前组、末组锁定项和首个未连续领取档的定位已按官方 `AccumulatedPayPanel` 流程实现，尚无逐档运行验收。
 
-商城公共静态元数据／素材哈希检查及交易核心内存检查的实际范围见[商城已执行检查](commerce.md#已执行检查与边界)。这些检查未验证月卡激活、属性产出、星眷 UI、75 档逐档领奖或实际磁盘恢复，不作为本功能运行通过依据。商城程序集缓存存在不能代替本功能当前 Editor 导入与编译校验；本功能 Play Mode 逻辑、真实输入、画面／动画／音效、存档重开和 Windows Player 均未验收。
+奖励详情卡片的品质边框使用固定 `ItemQuality` 图集；`CommerceItemIcons.QualitySprite()` 按官方 `Common.Quality` 1–7 选择白、蓝、紫、橙、金、红、彩虹边框。
+
+[`OfflineCommerceOffers.CurrentAccumulatedGroup/CanClaimAccumulated/ClaimAccumulated`](../../unity/Assets/Game/Runtime/Offline/Commerce/OfflineCommerceSession.cs) 按官方门槛／分组处理档位；`OfflineCommerceTransaction` 在库存、奖励和 profile 存档事务成功后提交本地累计值及回执。累计来源采用用户确认的“所有已确认的本地付费订单”，覆盖首购、直购、代金券消费、每日特惠与周期卡；不计代金券购入，不补旧免费订单历史，不模拟退款。资源加载及库存并发保存缺陷见[商城页](commerce.md)。
+
+周期卡剩余时间现在按官方重置点倒计时，并以 `ShowRemainTimeInfo` 的 Brief 分支格式显示；本地化格式和 `PeriodicCardRemindRemainDay=3` 已进入生成目录。月卡变更后主页已存在收益会话的属性重载通知仍待接通。
+
+Play Mode 逻辑、真实鼠标／键盘输入、渲染画面、动画／音效、存档退出重开和 Windows Player 尚未验证。全工程静态元数据检查通过（38,252 个 GUID）；Commerce 的 207 项素材清单逐项通过文件、字节数和 SHA-256 核对，17 个新增或复用品质框／锁图绑定均通过校验，生成目录包含 75 档累计奖励和 2 类周期卡。静态检查不覆盖 Editor 导入、编译和运行。Home 验收 Editor 仍停留在 Safe Mode；本轮新增资源没有被该进程导入，最新 Editor 编译和 Play Mode 状态尚未复核。
 
 ## 自定义实现
 
-以下沿用所属页已有的单机处理要求，不代表当前 Unity 已实现或验收。
+以下为已确认的离线差异。
 
 激活／续期沿商城已确认的本地支付替代，不接真实支付、退款和跨账号服务；有效期按本地时钟推进，回拨不重新领奖。续期保留当天已领状态，最多 179 天；到期不能领，未领日奖励不补发。月度奖励的经验和小推车各 5% 加成须进入实际产出与属性，失效时移除；七日祈愿不增加配置没有的属性。月卡“未领不补发”不能套用到首购，首购仍须按[官方补领规则](commerce.md#官方原始功能与调用依据)实现。
 
-原版服务器累计记录由本地实际确认的购买记录替代，旧免费购买历史不补算；不模拟退款和真实货币流水。所有保留购买类型怎样贡献累计星值须对照官方记录消费与已确认离线方案，不能将未知的服务端归集决策写成已恢复。费用、有效期、属性、购买记录、累计值和领取回执应与主库存同事务保存。
+原版服务器累计记录由用户确认的本地实际付费订单替代，旧免费购买历史不补算；不模拟退款和跨账号服务。费用、有效期、属性、购买记录、累计值和领取回执与主库存同事务保存。
 
-字体、材质、模板、动画与效果仍需恢复官方组件及参数；本地化处理不授权永久使用自绘、静态图或简化轮播代替原表现。
+周期卡及累计模板沿用官方商城 prefab，品质框、锁图、累计页开场及多奖励轮播使用固定 manifest 的官方资源。官方差异仅限已确认的离线交易与本地存档规则。
 
 ## 尚未实现
 
 ### 月卡与七日祈愿
 
-- 将 `periodic_card_pay` 原字段、价格引用和设置接入 Unity 专用目录／加载绑定；当前商城运行目录没有周期卡业务配置和存档模型。恢复两个模板、立即／每日奖励、倍率、折扣、特权和详情。
-- 实现激活、续期、当日领奖、已领后的续期、到期重购、179 天上限及失败恢复；保存到期检查点、当日领取回执及相关购买记录，保持当天已领状态，不因续期或时间回拨重复发奖。
-- 按原 `NotValid/CanGetPeriodicAward/Renewal` 恢复按钮、价格与代金券方式、剩余天数、临期颜色、倒计时、新标记和可领奖红点，响应购买、领奖、跨日、过期及关闭重开。
-- 将月度奖励的两项 5% 加成接入实际经验／小推车产出与人物属性，测试激活后生效、续期不叠加、到期移除、存档恢复；七日祈愿无额外属性。
-- 接通商城底栏和资源／奖励详情等真实调用方；规则、支付确认、取消、返回、连续操作与失败提示按官方窗口恢复。
+- 补齐周期卡离开后主页收入会话的属性重载通知，并在 Play Mode 验证激活、续期不叠加、到期移除及存档恢复。
 
 ### 星眷累计奖励
 
-- 接通直购顶部 `AccumulatedPayAwardEntry`、可领奖红点和规则／价格表，不以临时六分类导航代替。恢复指定档定位、连续领取后的默认定位、当前组推进及末组锁定项。
-- 恢复 `CoreAward/SubAwards/IsBigLevel` 的结构与单／多主奖励模板；当前目录合并后的奖励 map 和手建图标无法还原主副奖励的分区、尺寸、图标详情和轮播顺序，应补齐官方数据与显式资源绑定。
-- 恢复每档门槛、累计值／需求文字、进度线、左右排列、锁定／未激活／可领／已领状态、主副奖励与大档表现。当前 `PopulateAccumulatedItems()` 更新 `LevelTxt/ScoreTxt`，原树包含 `ProgressTxt` 等不同绑定，不能视为完整进度显示已完成。
-- 接入多主奖励动画事件、轮播、隐藏重开复位、`AccumulatedPayPanel_Show` 及原排序和字体效果；不以静态格子代替原连续表现。
-- 验证 15 组 75 档逐档门槛、同档防重、组末转换、最高组、未领取奖励的可达性、累计更新和重新进入后的显示；当前单纯按达到门槛推组的代码需要与原 UI 可达性及已确认单机方案共同验证。
-- 核对各保留购买类型对累计记录的贡献及持久化，排除旧免费历史补算、重复确认、支付代金券来源重复累计等异常；需先查官方记录与消费者，缺少服务端决策时明确提出规则问题，不自行猜测。
+- 通过 Play Mode 验证 15 组 75 档逐档门槛、同档防重、组末转换、累计增加后的入口红点／页面刷新及连续领取定位。
 
 ### 共享资源、存档与验证
 
-- 完成商城公共原生资产、字体／shader、`TMPEffect/TMProWarp`、物品图标、动画、音效、动态模板加载和目录资产安装；跟随[商城待实现清单](commerce.md#尚未实现)修复公共窗口与主库存旧快照覆盖。
-- 以隔离存档验证月卡和星眷操作与其他玩法共享库存，覆盖保存失败、损坏数据、旧档兼容、跨角色隔离、退出重开、时间前进／回拨，确保货币、奖励、有效期、加成和回执一致。
-- 按[实际运行验证要求](../asset-management.md#实际运行验证方法与要求)完成 Editor 导入／编译、真实商城入口的 Play Mode 逻辑和输入、实际画面、连续动画／音效及存档恢复；不以方法调用、静态通过或旧引擎参考结果代替。只有需要检查导出行为时再验证 Windows Player，不覆盖正式成品。
+- 在 Editor 成功导入／编译后按[实际运行验证要求](../asset-management.md#实际运行验证方法与要求)完成真实入口 Play Mode 输入、画面、倒计时／动画／音效及隔离档案重开；当前编译与运行验收未完成。

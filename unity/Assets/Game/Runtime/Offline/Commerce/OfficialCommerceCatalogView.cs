@@ -15,6 +15,7 @@ namespace Zjcs.Offline.Commerce
         public CommercePrefab[] prefabs;
         public CommerceMoneyCost[] moneyCosts;
         public CommerceDirectPay[] directPay;
+        public CommercePeriodicCard[] periodicCards;
         public CommerceDailyGroup[] dailyGroups;
         public CommerceGift[] dailyGifts;
         public CommerceWeeklyGroup[] weeklyGroups;
@@ -22,6 +23,8 @@ namespace Zjcs.Offline.Commerce
         public CommerceVoucher[] vouchers;
         public CommerceFirstAward[] firstAwards;
         public CommerceAccumulatedAward[] accumulatedAwards;
+        public CommerceQualityFrame[] accumulatedQualityFrames;
+        public string accumulatedLockedSprite;
         public CommerceRule[] rules;
         public CommerceAudio[] audio;
     }
@@ -35,11 +38,12 @@ namespace Zjcs.Offline.Commerce
     [Serializable] public sealed class CommerceSourceHashes
     {
         public string rulesJson, commerceUiJson, officialUiJson, settingsJson, itemIconsJson;
+        public string accumulatedDescriptionsRawfile, accumulatedQualityBundle, itemQualityBundle;
     }
     [Serializable] public sealed class CommerceSettings
     {
         public int voucherItemId, flareStarItemId, diamondItemId, exchangeMin, exchangeMax, exchangeScale;
-        public int firstPurchaseMoneyCostId;
+        public int firstPurchaseMoneyCostId, periodicCardRemindRemainDay;
         public CommerceReward[] dailyFreeRewards;
     }
     [Serializable] public sealed class CommerceItem { public int id; public int quality; public string name, icon; }
@@ -75,6 +79,29 @@ namespace Zjcs.Offline.Commerce
         public int[] size_fitter;
         public CommerceLayoutElement layout_element;
         public CommerceAspectRatioFitter aspect_fitter;
+        public CommerceUiAnimation[] animations;
+    }
+    [Serializable] public sealed class CommerceUiAnimation
+    {
+        public string name, owner;
+        public float duration;
+        public bool loop;
+        public CommerceUiAnimationTrack[] tracks;
+        public CommerceUiAnimationEvent[] events;
+    }
+    [Serializable] public sealed class CommerceUiAnimationTrack
+    {
+        public string path, property;
+        public CommerceUiAnimationKey[] keys;
+    }
+    [Serializable] public sealed class CommerceUiAnimationKey
+    {
+        public float time, value, inTangent, outTangent;
+    }
+    [Serializable] public sealed class CommerceUiAnimationEvent
+    {
+        public float time;
+        public string functionName;
     }
     [Serializable] public sealed class CommerceUiImage
     {
@@ -132,13 +159,27 @@ namespace Zjcs.Offline.Commerce
         public float[] cell, spacing;
     }
     [Serializable] public sealed class CommerceReward { public int itemId; public long count; }
-    [Serializable] public sealed class CommerceMoneyCost { public int id, voucherCost; public float startValue; public string productId; }
+    [Serializable] public sealed class CommerceMoneyCost
+    {
+        public int id, voucherCost;
+        public float currencyCost, startValue;
+        public bool isShow;
+        public string productId;
+    }
     [Serializable] public sealed class CommerceDirectPay
     {
         public int id, moneyCostId, repeatExtraPercent;
         public string icon, titleKey;
         public CommerceReward[] fixedAward, firstExtraAward, repeatExtraAward;
     }
+    [Serializable] public sealed class CommercePeriodicCard
+    {
+        public int id, moneyCostId, durationDays, awardMultiple, periodicDuration, discount;
+        public string titleKey;
+        public CommerceReward[] fixedAward, periodicAward;
+        public CommerceExtraProp[] extraProps;
+    }
+    [Serializable] public sealed class CommerceExtraProp { public int propId; public string name; public long value; }
     [Serializable] public sealed class CommerceDailyGroup { public int groupId, bundleMoneyCostId, greatValue; }
     [Serializable] public sealed class CommerceWeeklyGroup { public int groupId, seasonId, seasonStartDay; }
     [Serializable] public sealed class CommerceGift
@@ -165,12 +206,31 @@ namespace Zjcs.Offline.Commerce
         public int level, group;
         public float threshold;
         public bool isBig;
+        public string description;
+        public string progressActiveFormat, progressFormat, progressLockedFormat;
+        public string requireFormat, requireLocked;
         public CommerceReward[] rewards;
+        public CommerceReward[] coreRewards, subRewards;
+    }
+    [Serializable] public sealed class CommerceQualityFrame
+    {
+        public int quality;
+        public string big, small;
     }
 
     public sealed class OfficialCommerceCatalogView
     {
         public OfficialCommerceCatalogData Data { get; }
+
+        public static OfficialCommerceCatalogView LoadDefault()
+        {
+            TextAsset asset = Resources.Load<TextAsset>("Commerce/commerce-runtime");
+            if (asset == null) throw new InvalidOperationException("Official commerce runtime data is missing.");
+            OfficialCommerceCatalogData data = JsonUtility.FromJson<OfficialCommerceCatalogData>(asset.text);
+            if (data == null || data.manifest != "854_156383" || data.periodicCards == null)
+                throw new FormatException("Official commerce runtime data is invalid.");
+            return new OfficialCommerceCatalogView(data);
+        }
 
         public OfficialCommerceCatalogView(OfficialCommerceCatalogData data)
         {

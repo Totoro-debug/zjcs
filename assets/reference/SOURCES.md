@@ -14,6 +14,8 @@
 
 当前 `871_156598` 的表格、战斗组件、材质、家园层级、中文和变化 Sprite 已转换到现有载荷；原版来源不会统一改名成新版。角色模型重导出保留 GUID，创角／人物网格包及男体原生 prefab 已核对新版索引；女体 451 个动画独立解码后与旧版一致。具体输入、旧文件备份、转换方式与输出哈希分别见 `character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json` 和 `official-map/current-*-source-manifest.json`。万圣节已接入媒体及既有事件路由逐字节一致，保留已有音频输出；新增路由及控制对象保留在完整原始缓存内。新版资源替换的运行验证范围见[素材管理](../../docs/asset-management.md#官方来源与转换)，功能完成状态仍以所属页为准。
 
+战斗 Boss HP 层数表单独从固定 APK `854_156383` 的 `defaultpackage_assets_config_luban.bundle` 对象 `Assets/Config/Luban/monster_hp_plies.g.bytes` 解码，164 行输入 SHA256 为 `66b6496732f115b7370bc4fa3114d76c66f552de1fa73f70c06fa59b485e342e`。`python -B scripts/prepare_unity_combat_hp_plies.py` 通过固定版 `TbMonsterHpPliesInfo` 构造器生成 `unity/Assets/Official/Combat/monster-hp-plies.json`；输出、APK 对象、bundle 和转换版本记录在 [Boss HP 层数来源清单](official-map/monster-hp-plies-source-manifest.json)。
+
 ### 特殊物品原窗口与替换配置
 
 `scripts/prepare_special_items.py` 从固定 `854_156383` APK／匹配 CDN 的 `prefabs_ui_equip` 读取远古砥石的装备页、词条行、候选、确认和结果 prefab，并从 `config_luban_equipattribute` 解码 `equip_attribute_replace_range.g.bytes` 的20条记录。运行数据为 `assets/official/special-items.json`，原精灵复用或无损转换，不绘制替代窗口。逐对象、原客户端／共用逻辑、配置与输出哈希登记在 `assets/reference/special-items-source-manifest.json`；服务端请求的本地替代及用户确认边界见行囊功能文档。
@@ -239,7 +241,7 @@ python scripts/prepare_dungeon_assets.py
 
 ## 竞技场守卫配置与匹配规则
 
-`scripts/prepare_battle_arena.py --runtime --verify-apk` 按固定 APK `854_156383` 校验并完整解码 `arena_guard_template`、`arena_rank_template`、`arena_match_rule`、`arena_match_strategy`、`arena_score_ratio`、`arena_daily_award`、`arena_season_award` 与 `item_count_limit` 八张原表。运行配置为 `assets/official/arena-rules.json`；各表源 bundle、对象路径、Luban 构造器、输入字节哈希及输出哈希见 [arena-source-manifest.json](arena-source-manifest.json)。竞技面板继续使用已转换的原 `ArenaPanel` prefab；未从静态守卫模板推断真人占位或赛季服务端记录。
+`scripts/prepare_battle_arena.py --runtime --verify-apk` 按固定 APK `854_156383` 校验并完整解码 `arena_guard_template`、`arena_rank_template`、`arena_match_rule`、`arena_match_strategy`、`arena_score_ratio`、`arena_daily_award`、`arena_season_award` 与 `item_count_limit` 八张原表。运行配置为 `assets/official/arena-rules.json`；守卫记录包含原始 `AppendAppearances` 的性别分组及皮肤类型／ID。各表源 bundle、对象路径、Luban 构造器、输入字节哈希及当前输出哈希见 [arena-source-manifest.json](arena-source-manifest.json)。竞技面板继续使用已转换的原 `ArenaPanel` prefab；未从静态守卫模板推断真人占位或赛季服务端记录。
 
 ## 人物、技能及装备界面修复
 
@@ -545,7 +547,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 `prepare_fidelity_skill_rules.py` 新增原人物等级、位阶、战斗角色组和非战斗属性类，总计 108 类。、 按原属性处理与分块评分接入；
 
-`prepare_fidelity_skill_ui.py` 从固定 854_156383 的 promotepanel、skill、itemdetail、item、character、commonnotify、public 包转换 17 个原 prefab／模板，严格读取原序列化对象字段，含技能碎片详情、合成确认、数量进度、普通技能详情及批量升阶通知模板；两张原技能槽位费用表共 1,270 行，原 SkillItemRangeInfos.g.bytes 严格按 MessagePack 索引读取 1,365 份作用范围。输入版本、CAB／对象、原始数据、源码和输出哈希见 [skill-cultivation/source-manifest.json](skill-cultivation/source-manifest.json)。槽位升级音效沿原 CharacterPanelSkillItem.LevelUpSound 的 WwiseObjectReference、Event、Play、Sound 与媒体链转换至 skill-audio，输入输出哈希同存于上述来源清单。原 GlobalColors 品质及进度颜色配置另存于运行数据；炫彩渐变的边界在技能功能文档维护；ArrowLoop 的两条空绑定已核对原 prefab 全部 Transform，原层级本就没有对应目标，没有新增自绘素材。
+`prepare_fidelity_skill_ui.py` 从固定 854_156383 的 promotepanel、skill、itemdetail、item、character、commonnotify、public 包转换 17 个原 prefab／模板，严格读取原序列化对象字段，含技能碎片详情、合成确认、数量进度、普通技能详情及批量升阶通知模板；两张原技能槽位费用表共 1,270 行，原 SkillItemRangeInfos.g.bytes 严格按 MessagePack 索引读取 1,365 份作用范围。输入版本、CAB／对象、原始数据、源码和输出哈希见 [skill-cultivation/source-manifest.json](skill-cultivation/source-manifest.json)。固定 `item` 表漏掉的 18 个碎片 ID 由 `Formula.GetPieceIdBySkillId` 反推对应技能；同一配置中其余 190 条技能碎片行的名称后缀、RawIcon、ItemType、Rank、Quality 及所有展示相关字段取值一致，运行时只对这类技能 ID 使用该一致映射生成缺失元数据，不将其记录为原始缺失行或服务器返回值。槽位升级音效沿原 CharacterPanelSkillItem.LevelUpSound 的 WwiseObjectReference、Event、Play、Sound 与媒体链转换，输出 `assets/official/skill-audio/473101969.ogg` SHA256 `421c23910fd77aaf8a184f3e2fc439b80df147e195eb3ec41c798d36b658773e`；Unity 播放载荷为 `unity/Assets/Official/Skills/Audio/Skill_Upgrade.ogg`，引用于角色资源目录。原 GlobalColors 品质及进度颜色配置另存于运行数据；炫彩渐变的边界在技能功能文档维护；ArrowLoop 的两条空绑定已核对原 prefab 全部 Transform，原层级本就没有对应目标，没有新增自绘素材。
 
 ## 2026-10-14 非主线战斗公式与实体配置
 
@@ -684,6 +686,8 @@ CAB 读取器通过原清单中唯一相同 MD5 解析旧缓存的 `_materials.b
 
 旅行功能冻结版补入原 `ui_common_confirm_dialog_no_tip` 一词，现为 3,494 条中文，最终 `panels.json` SHA 为 `7ce474936a2b863bf3ed816f9c7f33b8efcc68f613762f0a7ee13270ebf602c9`。77 张 PNG 逐项对照前版来源、实际文件及中央绑定，全部同字节；本次没有新增 PNG。完整冻结版来源和前版 JSON 哈希保存在 `npc-travel-ui/registration-history/source-v3.json`、`registered-v3.json`。
 
+Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固定版 `assets/official/ui.json`、旅行 prefab 树及官方 NPC 头像生成，写入 `unity/Assets/StreamingAssets/Home/Travel/`；当前含50个面板树（含36张地图）、140张面板贴图和89张伙伴头像。派生输入／输出与稳定 `.meta` GUID 哈希记录在运行目录的 `source-manifest.json`，由 `HomeFeatureRuntime` 显式加载。NPC 11015–11022 的原 `npc.Icon` 在固定版及当前热更新同名 `Map_9` bundle 中未取得，固定来源与无新版对应记录见该回执的 `missing_npc_icons`。
+
 旅行状态演出依据固定 `854_156383`：`inspect_npc_travel_ui_followup.py` 提取原出发／领奖／伙伴详情／条件提示 prefab、动画剪辑和事件；`prepare_npc_travel_followup.py` 与 `prepare_npc_travel_brief_extension.py` 转换四条状态时间线和原羁绊规则窗。`NpcAdventureModelItem.cs`、`NpcAdventureTravelStartStatusDialog.cs`、`NpcAdventureTravelEndStatusDialog.cs`、`NpcAdventureTravelEndStatusAnimController.cs`、`INpcAdventureTravelStatusShow.cs` 与 `AppearanceSystem.Runtime/AppearanceAnimUtils.cs` 的调用及 SHA 随模块清单登记。`prepare_npc_travel_model_extension.py` 按原 `NpcAdventureSettings`／伙伴配置，为76位可派遣伙伴转换 `FigureModelUI` 与 `FigureModelWithWeaponUI` 共152个原 prefab；NPC 11011 的两个原模型缺少 `100/idle_01` 与 `100/run_03`；固定客户端 `AppearanceAnimUtils.PlayAnimation` 在查找失败时不改当前轨道，运行时沿用该回退，四条具体绑定列在模块清单。装配、来源哈希、运行资源和显式加载由 `assemble_npc_travel_extension.py`、`publish_npc_travel_assets.py` 校验并登记；正式资源为 `assets/official/npc-travel-ui/travel-models.json`，完整原始对象与输出凭据位于 `npc-travel-ui/source-manifest.json`。出发剪辑的 `CanvasGroup.m_Alpha` 路径哈希 `588897702` 在固定弹窗和官方动态插入的152个模型层级中均无对应目标，来源清单保留 `target_absent`；运行时不将该无目标曲线套用到其他对象。
 
 ### 2026-10-15 季节原 UI 增量共享登记
@@ -787,6 +791,8 @@ CAB 读取器通过原清单中唯一相同 MD5 解析旧缓存的 `_materials.b
 2026-10-16：`prepare_battle_stages.py` 从固定 manifest `854_156383` 的 FightStage EC 与原 `stage_monster_array`／`ai_priority` 表转换256个战场、474个阵型及40组AI优先级；原始表字节与APK内TextAsset逐字节核对。输入对象、APK／校验CDN来源、构造器及输出哈希见 [战场配置来源](official-map/battle-stages-source-manifest.json)。
 
 `prepare_battle_scenes.py` 按 `FightComponent.SceneName` 解析229个原预制体，跟随 `FightEnvironmentLoader` 的昼夜GUID和父变换，转换基础层、Sprite／Tilemap／Mesh、Spine及ParticleSystem到本地二维资源。677份场景层包含1354个JSON／几何文件，统一目录为 `assets/official/battle-scenes/`；入口为 `battle-scenes.json`。原BG02副本的atlas键不匹配时，唯一同名且Rect／Pivot／Border／PPU完全相同的原atlas Sprite用于解析，原副本、atlas与实际对象分别登记，没有另绘位图。完整对象、处理及输入输出SHA256见 [战场环境来源](official-map/battle-scenes-source-manifest.json)。
+
+`scripts/prepare_unity_battle_scenes.py` 校验上述固定版目录和256个阶段绑定，恢复229个唯一基础场景、非空昼夜网格及6,376张贴图，共6,656项资源；Unity 输出及每项SHA256记录在 `unity/Assets/Official/Combat/Scenes/scene-assets-source-manifest.json`。运行目录 `BattleScenes/catalog.json` 将GameId绑定到 `Resources.Load` 路径；[`OfficialBattleEnvironmentView`](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEnvironmentView.cs) 以官方网格顶点、UV、颜色、排序层和贴图建立场景，并按调用方覆盖值或原prefab默认昼夜加载环境几何。昼夜运行时规则见固定版 `FightTimeTypeSwitcher`：消费 `StageInfo.TimeType`，`MapActivedAuto` 再检查地图区域激活；当前Map10入口尚未传入运行时昼夜值。Unity端目前用 `Sprites/Default` 建立材质；原材质／shader、环境粒子与Spine，以及真实Editor／Play Mode画面仍未验证。
 
 19个原版本缺失CAB依赖按既有独立校验机制读取新版官方同CAB包，真实 `864_156496` 版本、URL、MD5／SHA256和所用对象登记在上述收据的 `counterparts` 字段；其余场景主体保持854版本。没有修改原APK／CDN缓存或原版本185个缺项。场景入口保留原预制体根Transform，逻辑格经地面原点和根矩阵映射到原世界坐标；已转换几何保持同一世界坐标。转换资源加入显式加载清单及Windows导出过滤，运行时无需原Unity包、Python或网络。
 
@@ -1413,13 +1419,15 @@ read_official_native.py 沿固定 v31 metadata 的 image／type／method token �
 
 ## 人物技能彩虹品质文字
 
-`prepare_skill_quality_text.py` 从固定 `854_156383` 的 APK／匹配 CDN 读取 `GlobalColors.asset.QualityColorConfig` 的 Normal 调色板，以及 `SkillPromotePanel`、`SkillRankUpNotifyDialog`、`SkillPanelSkillDetailDialog`、`SkillDetailDialog` 中六个品质文字的 `TMPColorGradient`。原四个 RGB 关键点、两个独立 alpha 关键点、Blend 模式和各组件 0°／45° 角度导出对应的原始字段；没有使用 `GreenRainbow` 四角预设或绘制图片。原 bundle、对象、CDN URL、输入字节、调用源码及生成绑定 SHA256 见 [skill-quality-text/source-manifest.json](skill-quality-text/source-manifest.json)。
+`prepare_skill_quality_text.py` 从固定 `854_156383` 的 APK／匹配 CDN 读取 `GlobalColors.asset.QualityColorConfig` 的 Normal 调色板，以及 `SkillPromotePanel`、`SkillRankUpNotifyDialog`、`SkillPanelSkillDetailDialog`、`SkillDetailDialog` 中六个品质文字的 `TMPColorGradient`。原四个 RGB 关键点、两个独立 alpha 关键点、Blend 模式和各组件 0°／45° 角度导出到 `unity/Assets/Official/Skills/skill-quality-gradient.json`（SHA256 `bc42085e3ee9d8bcf4edcf8283d083516cced5c04c3eadbc6ff4abf6d1fba4e0`）；没有使用 `GreenRainbow` 四角预设或绘制图片。`OfficialSkillQualityTextGradient` 将官方关键点应用到技能详情、培养和升阶结果的 UGUI 文本网格。原 bundle、对象、CDN URL、输入字节、调用源码及生成绑定 SHA256 见 [skill-quality-text/source-manifest.json](skill-quality-text/source-manifest.json)。
 
 渲染迁移依据恢复后的同 APK `TMPColorGradient.OnPreRenderText`（`0x1121dd44`）、`SetGradientColor` 和 `UpdateMesh`，保留每行未旋转范围与绕原 RectTransform 原点旋转后的顶点归一化、顶点颜色替换和 Color32 的 ties-to-even 舍入。`generate_skill_quality_reference.py` 直接执行原顶点计算块、原 `Matrix4x4.MultiplyPoint3x4` 及固定 `libunity.so` 的 `Gradient.Evaluate`，夹具保存在 `scripts/fixtures/skill_quality_native.json`；原生镜像、metadata、Unity 引擎和方法字节哈希同存来源清单。
 
 ## 角色装备皮肤与衣柜
 
 `prepare_character_appearance.py` 从固定 APK／匹配原 CDN（854_156383）迁移1723条 spine_skin、1567条 append_appearance、男女职业集合、品质经验、衣柜属性及原 UI；运行数据位于 `assets/characters/wardrobe/`。`source-manifest.json`、`rules-source-manifest.json`、`ui-source-manifest.json`、`effects-source-manifest.json` 分别保存部件／图集、配置／代码、原控件及原粒子的真实输入输出哈希，均位于 `assets/reference/character-appearance/`。`ui-source-manifest.json` 另记录 `HonorTitleItem_39602` 的 `huoyan (3)` 原生 MeshRenderer 未绑定 Mesh；
+
+`prepare_character_skill_appearance_ui.py` 按固定 APK manifest `854_156383` 转换技能幻彩页使用的 `AppearanceSkillContent.prefab`、`SkillSkinGridItem.prefab`、`ItemIconSkill.prefab` 及其原 Sprite，来源分别为 `defaultpackage_assets_prefabs_ui_appendappearance.bundle`、`defaultpackage_assets_prefabs_ui_skill.bundle`、`defaultpackage_assets_prefabs_ui_item.bundle`。附件配置 `ItemIconAttachmentConfig` 的 Type 12／4 原挂件一并解析。导出 36 条技能幻彩选项和 30 张原图至 `unity/Assets/Game/Resources/Character/skill-appearance-ui.json`；原对象、配置、输入输出哈希见 [skill-appearance-ui.json](character-appearance/skill-appearance-ui.json)，Unity 运行时由 `OfficialSkillAppearancePanelView` 显式读取。
 
 原男女骨骼按24 fps转换男13种／女14种 UI／地图姿态及独立压缩部件，完整分辨率 atlas、colormap、绑定皮肤、主副武器／背饰 follower 和正背面切换来自原包。32种独立装扮特效使用原 PlayerEffect/UI 与 Renderer prefab、UIParticle 缩放、ParticleSystem 参数及骨骼／插槽／附件跟随；4种有 HasEffect 标记的主武器在集成 prefab 内使用 Spine，检查无独立 ParticleSystem。没有绘制替代素材。
 
@@ -1533,8 +1541,34 @@ DIY 外观选项缩略图使用固定 APK `854_156383` 的 `defaultpackage_asset
 
 `scripts/prepare_unity_commerce_entry.py` 从固定 manifest `854_156383` 已提取的 `assets/official/ui.json` 合并官方 `FunctionEntryDialog`、`FunctionEntryShopItem`、`ActivityCommonEntry`、`ItemDetailDialog` 及商城直购顶部 `AccumulatedPayEntryGo` 子树到 `unity/Assets/Official/Commerce/commerce-ui.json`；所需 32 张图片逐项按 `assets/reference/official-city/source-manifest.json` 的原 bundle／对象／SHA256 复制到 Commerce 载荷，生成缺失的 `.meta` 但未改原图或生成替代图。`scripts/prepare_unity_commerce_catalog.py` 继续从 `commerce-ui.json`、`rules.json`、`settings.json` 与 `item` 表生成 `commerce-runtime.json`，新版本把每棵 prefab 树展平为 `nodes` 并记录 `has_image/has_text/...`，避免 Unity `JsonUtility` 对深层可选成员的默认实例化；同时补齐 `ImgBg_Recharge-993940c86f`、`ImgBg_First-995290a9ab`、`ImgBg_Additional-b0eb862c9a`、`ImgIcon_PeriodicGiftIcon_5-ccd318ec1a` 等原 prefab 实际引用的官方 Sprite。来源仍为固定 APK／匹配原版本 CDN，未使用新版同名包，未自绘图片。
 
-运行时 `OfficialCommerceAssetCatalog.asset` 由 `Zjcs.Editor.Commerce.OfficialCommerceAssetTools.Validate` 生成，绑定 335 张官方图片、169 个奖励物品、10 个官方音频事件与 27 个 prefab（含官方 `ItemDetailDialog`）。HUD 首购入口和活动菜单项为官方 `AccumulatedPayEntryGo`／`ActivityCommonEntry` 结构及既有官方图片的重新组合，原 `FirstPayIconEntry` prefab 未在当前 UI 载荷中，因此不声称首购 HUD 图标为原 prefab 一比一复刻；入口位置、标题和红点状态为本地适配。详细实现、验证范围与剩余表现差异只记录在 [商城功能页](../../docs/features/commerce.md)。
+运行时 `OfficialCommerceAssetCatalog.asset` 由 `Zjcs.Editor.Commerce.OfficialCommerceAssetTools.Validate` 生成，现绑定 350 张官方图片、169 个奖励物品、10 个官方音频事件与 27 个 prefab（含官方 `ItemDetailDialog`）。月卡补入的累计奖励品质框／锁图来自 `defaultpackage_assets_image_ui_pay_accumulated.bundle`（固定 manifest `854_156383`，MD5 `e1ed8b9eb1cda15317920de572ee33fb`）；物品详情品质框来自 `defaultpackage_assets_image_ui_itemquality.bundle`（MD5 `74e6afc6b39b88d0e8977d8f12267b52`）；`AccumulatedPayPanel_Show` 原生压缩曲线来自 `defaultpackage_assets_prefabs_ui_pay_accumulatedpay.bundle`（MD5 `0b11bb5781ce56f124f55e08687be9d7`，pathID `-4611456846825482089`），由 Editor 校验并转换为 Legacy AnimationClip。具体 Sprite 哈希及映射记录于 [commerce-ui/source-manifest.json](commerce-ui/source-manifest.json)；HUD 首购入口和活动菜单项为官方 `AccumulatedPayEntryGo`／`ActivityCommonEntry` 结构及既有官方图片的重新组合，原 `FirstPayIconEntry` prefab 未在当前 UI 载荷中，因此不声称首购 HUD 图标为原 prefab 一比一复刻；入口位置、标题和红点状态为本地适配。详细实现、验证范围与剩余表现差异只记录在 [商城功能页](../../docs/features/commerce.md)。
 
 ## 2026-10-23 Map10 战斗怪物头像
 
 `scripts/prepare_unity_battle_monster_portraits.py` 从固定 APK manifest `854_156383` 的无图集包提取 Map10 所需11种 Monster.IconId (`G_<id>`)。来源包：`defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle`，MD5 `0479892d6d89bf17fd2e592af3f03a49`，SHA256 `b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e`；`defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle`，MD5 `2683984d4e613c8eb9411bc16ea483cb`，SHA256 `7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2`。输出 PNG／Sprite meta 哈希见本地 `assets/reference/battle-hud/monster-portraits-source-manifest.json`，资源位于 Git 忽略的 `unity/Assets/Official/Combat/MonsterPortraits/`，可由脚本重建；新工作区运行脚本后再导入 Resources 目录中的 catalog。
+
+## 2026-10-24 宝石合成规则
+
+`scripts/prepare_unity_gem_forge_rules.py` 从固定 manifest `854_156383` 的 `assets/official/rules.json` 读取 `gem`、`gem_merge` 和 `GemMergeStorySetting.StoryList`，写入 `unity/Assets/Game/Resources/Equipment/gem-forge-rules.json`。输入由 `assets/reference/official-city/source-manifest.json` 校验；Unity 载荷与输出 SHA256 记录在同目录 `gem-forge-source-manifest.json`，运行时由 `OfflineGemForgeService.LoadDefault` 校验。当前提取 360 条宝石类型和 14 条合成规则。规则原值不改写；高阶炉的随机结算状态随本地角色装备存档保存。
+
+## 2026-10-24 素材秘境规则
+
+`scripts/prepare_material_gathering.py` 从当前热更新 `871_156598` 的解码 Luban 表生成 `unity/Assets/Game/Resources/Official/Progression/material-gathering.json`，包括四条秘境、17条目标、34条攻击/击破/目标生成奖励规则、所需阶位数值以及 `GameSettings.MopUp` 的伤害浮动和单次上限。目标生成规则13000–13003由 `MopUpDungeonInfo.GenerateMaterialRuleId` 引用；本地服务在五个 `NewbieRewardMaterials` 初始目标后按该规则的 `IdList/WeightList` 抽取后续目标。输出来源及 SHA256 记录在 `material-gathering-source-manifest.json`，运行时由 `OfficialMaterialGatheringCatalog.LoadDefault` 校验。服务器业务程序集不在当前官方代码包中；攻击/击破奖励按用户确认的离线规则，从 `IdList` 按 `WeightList` 抽取一项并使用官方数量算法，不能据此宣称取得服务端实现。
+
+同一配置还包含官方 `stage_map_location` 中可用的秘境解锁关卡位置。客户端按 `Player.GetStageCount` 检查逐关通关，但离线档案尚无逐关记录；53个解锁关卡中仅23个有非空区域映射，另30个为无表行或空 `RegionInfos`。Home 当前区域满进度判断是临时代理，需依功能页待确认项处理。
+
+## 2026-10-24 素材秘境 UI 图像
+
+`scripts/prepare_material_gathering_ui_assets.py` 从当前版本 `871_156598` 的 `defaultpackage_assets_image_ui_notes_mopup.bundle` 提取68个原始 UI Sprite，输入来自 APK ZIP 中与 `854_156383` 一致的官方同名包，bundle SHA256 为 `12080a2c5a32c5e2741b792a6cd20c1b469a765a1c4afd83175f349bfa6cf7ae`。Unity 图像载荷在 `unity/Assets/Official/Gathering/UI/`，对象路径、逐图 SHA256 和来源 URL 记于 `assets/reference/dungeon-ui/gathering-ui-source-manifest.json`。
+
+`scripts/prepare_material_gathering_assets.py` 从当前 `871_156598` 已核验的399包 CAB 闭包导出并迁移官方 `MopUpEntryPanel`、`MopUpPanel` 及19项非脚本依赖；完整闭包的184项外部序列化引用全部解析。Prefab 与 Unity Resources 运行映射、三项 AssetRipper GUID 重定向、92个导出 MonoScript GUID 及当前工程内仍未解析的19个 MonoScript GUID、所有输出 SHA256 记于 `assets/reference/dungeon-ui/material-gathering-prefab-source-manifest.json`。入口与采集按钮由 `HomeHudView.MaterialGathering.cs` 接入本地服务；剩余脚本驱动状态/动作尚未迁移，也未完成 Unity Play Mode 检验。
+
+## 2026-10-24 圣兽试炼与双影幻境
+
+`scripts/prepare_unity_daily_challenges.py` 从当前热更新 `871_156598` 提取圣兽活动／难度／属性修正、双影活动、08:00 活动时间、阶段奖励、宝箱及奖励规则表；输入 bundle 与构造器哈希、完整消费行数和输出哈希见 `daily-challenges/source-manifest.json`。`scripts/prepare_unity_daily_challenge_assistance.py` 从已核验当前 Luban 表缓存导出 `conditions`、`npc`、`npc_level_detail`、`npc_profession_detail`、`player_robot_invite` 与 `skill`，运行载荷及输入来源见 `daily-challenges/npc-assistance-source-manifest.json`。`scripts/prepare_unity_daily_challenges_assets.py` 使用 AssetRipper 1.3.14 对已核验 CAB 闭包转换官方活动页、挑战页、战斗 HUD、结果 prefab 和依赖；清单登记 15 个 prefab、82 项官方转换输出、6 个 Resources prefab 映射（共 88 项输出）、33 项载荷目录 GUID、193 个省略的官方 MonoBehaviour 脚本及 836 项 CAB 依赖。`unity/Assets/Official/DailyChallenges/` 为官方转换载荷，运行时资源映射列于该清单。
+
+`OfficialDailyChallengeCatalog` 与 `OfflineDailyChallengeBattleCatalog` 读取当前规则及固定 APK 关卡数据；`OfflineDailyChallengeService` 保存首次进入时间、335 小时期次与最高期次、08:00 逻辑日高水位、参与回执、挑战检查点、档位领奖和双影进度／宝箱事务。`DailyDungeonBattleRunner` 将圣兽／双影 stage 接入共用战斗，按本地 HP 结算及护盾吸收记录双影成绩，领奖写入角色物品事务；宝箱使用用户确认的逐次本地随机种子并先存抽取结果以支持崩溃恢复。`prepare_unity_daily_challenges_assets.py --runtime-only` 校验来源 prefab SHA256 并映射圣兽／双影结果页至 `Resources`；胜负、伤害及已提交的胜利奖励明细接入结果页。当前版 NPC 候选规则表及来源被单独加载，实际挑选、站位和助战战斗提交待确认站位策略后接入。官方客户端 C# 行为由本地 C# 适配实现，未复制被省略脚本。Editor／Play Mode 验证状态见[圣兽与双影功能页](../../docs/features/daily-challenges.md)。
+
+## 2026-10-24 幻想阶梯塔层战斗配置
+
+`scripts/prepare_tower_push.py` 从固定 APK manifest `854_156383` 解码 `stage_demon_battlefield.g.bytes`、`stage.g.bytes`、`stage_monster_array.g.bytes`、`skill.g.bytes`，并复用已校验的官方战斗场景与战斗/技能/通用规则，生成四入口共585层的官方战斗数据。编队按 `StageMonsterArrayInfoParser.GenerateMonsters` 的连续 GroupId 顺序展开；小数等级按 `LevelPropParser.GetPropsByFloat` 与 `BattleFormulaHandler.LerpProps` 插值。`scripts/prepare_tower_push_ui.py` 转换 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 中的入口、入口行、逐层页与四种塔层行 prefab，并导出原面板 Sprite、动态入口图及逐项输入／输出哈希；`scripts/prepare_tower_push_audio.py` 按固定 Wwise 来源校验并打包 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 两条 OGG。来源、代码、输入及输出 SHA256 记录于 `tower-push/tower-battle-source-manifest.json`、`tower-push/ui-source-manifest.json` 和 `battle-audio/source-manifest.json`；运行载荷位于 `unity/Assets/Game/Resources/TowerPush/` 与 `unity/Assets/StreamingAssets/TowerPush/`，角色动作载荷另见 `character-creation/native-mesh-source-manifest.json`。玩法及奖励已接入本地运行时；塔行状态动画和粒子仍待从官方动画依赖恢复，Unity Play Mode 尚未验收，详见[幻想阶梯](../../docs/features/fantasy-tower.md)。

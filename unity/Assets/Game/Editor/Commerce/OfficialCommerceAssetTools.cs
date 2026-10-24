@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.PackageManager;
@@ -19,6 +20,18 @@ namespace Zjcs.Editor.Commerce
         private const string CatalogPath = ResourcesRoot + "/OfficialCommerceAssetCatalog.asset";
         private const string RuntimePath = "Assets/Game/Resources/Commerce/commerce-runtime.json";
         private const string TmpFontPath = ResourcesRoot + "/FZY4K-Dynamic.asset";
+        private const string AccumulatedPanelAnimationPath = Payload + "Art/animations/AccumulatedPayPanel_Show.anim";
+        private const string AccumulatedPanelBundleMd5 = "0b11bb5781ce56f124f55e08687be9d7";
+
+        [InitializeOnLoadMethod]
+        private static void ImportAccumulatedPanelAnimationOnLoad()
+        {
+            EditorApplication.delayCall += () =>
+            {
+                try { EnsureAccumulatedPanelAnimation(); }
+                catch (Exception error) { Debug.LogError("Failed to import the official accumulated-pay animation: " + error); }
+            };
+        }
 
         [MenuItem("Zjcs/Commerce/Import and Validate Catalog")]
         public static void Validate()
@@ -27,6 +40,7 @@ namespace Zjcs.Editor.Commerce
             TextAsset sourceManifest = AssetDatabase.LoadAssetAtPath<TextAsset>(Payload + "source-manifest.json");
             if (runtime == null || sourceManifest == null)
                 throw new BuildFailedException("Run scripts/prepare_unity_commerce_catalog.py and import the official commerce payload first.");
+            AnimationClip accumulatedPanelAnimation = EnsureAccumulatedPanelAnimation();
             var data = JsonUtility.FromJson<OfficialCommerceCatalogData>(runtime.text);
             if (data == null || data.manifest != "854_156383"
                 || data.prefabs == null || data.prefabs.Length < 26
@@ -103,6 +117,7 @@ namespace Zjcs.Editor.Commerce
             var serialized = new SerializedObject(catalog);
             serialized.FindProperty("runtimeCatalog").objectReferenceValue = runtime;
             serialized.FindProperty("sourceManifest").objectReferenceValue = sourceManifest;
+            serialized.FindProperty("accumulatedPayPanelShow").objectReferenceValue = accumulatedPanelAnimation;
             serialized.FindProperty("chineseFont").objectReferenceValue = chineseFont;
             serialized.FindProperty("chineseTmpFont").objectReferenceValue = tmpFont;
             SerializedProperty spriteArray = serialized.FindProperty("sprites");
@@ -155,6 +170,64 @@ namespace Zjcs.Editor.Commerce
         {
             if (!AssetDatabase.IsValidFolder("Assets/Game/Resources")) AssetDatabase.CreateFolder("Assets/Game", "Resources");
             if (!AssetDatabase.IsValidFolder(ResourcesRoot)) AssetDatabase.CreateFolder("Assets/Game/Resources", "Commerce");
+        }
+
+        private static AnimationClip EnsureAccumulatedPanelAnimation()
+        {
+            AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(AccumulatedPanelAnimationPath);
+            if (clip == null)
+            {
+                string bundlePath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..",
+                    ".tools/source-packages/cloud/854_156383/DefaultPackage/0b11bb5781ce56f124f55e08687be9d7.bundle"));
+                if (!File.Exists(bundlePath)) throw new FileNotFoundException("Pinned accumulated-pay prefab bundle is missing.", bundlePath);
+                using (MD5 md5 = MD5.Create())
+                using (FileStream stream = File.OpenRead(bundlePath))
+                {
+                    string hash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
+                    if (hash != AccumulatedPanelBundleMd5)
+                        throw new InvalidDataException("Pinned accumulated-pay prefab bundle checksum mismatch.");
+                }
+
+                AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+                if (bundle == null) throw new InvalidDataException("Unity could not load the pinned accumulated-pay prefab bundle.");
+                try
+                {
+                    AnimationClip source = null;
+                    foreach (AnimationClip candidate in bundle.LoadAllAssets<AnimationClip>())
+                        if (candidate != null && candidate.name == "AccumulatedPayPanel_Show")
+                        {
+                            source = candidate;
+                            break;
+                        }
+                    if (source == null) throw new InvalidDataException("The official AccumulatedPayPanel_Show clip is missing.");
+                    Directory.CreateDirectory(Path.Combine(Application.dataPath,
+                        "Official/Commerce/Art/animations"));
+                    AssetDatabase.Refresh();
+                    AnimationClip copy = UnityEngine.Object.Instantiate(source);
+                    copy.name = "AccumulatedPayPanel_Show";
+                    copy.legacy = true;
+                    AssetDatabase.CreateAsset(copy, AccumulatedPanelAnimationPath);
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.ImportAsset(AccumulatedPanelAnimationPath, ImportAssetOptions.ForceSynchronousImport);
+                    clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(AccumulatedPanelAnimationPath);
+                }
+                finally { bundle.Unload(false); }
+            }
+
+            OfficialCommerceAssetCatalog catalog = AssetDatabase.LoadAssetAtPath<OfficialCommerceAssetCatalog>(CatalogPath);
+            if (catalog != null)
+            {
+                SerializedObject serialized = new SerializedObject(catalog);
+                SerializedProperty property = serialized.FindProperty("accumulatedPayPanelShow");
+                if (property != null && property.objectReferenceValue != clip)
+                {
+                    property.objectReferenceValue = clip;
+                    serialized.ApplyModifiedPropertiesWithoutUndo();
+                    EditorUtility.SetDirty(catalog);
+                    AssetDatabase.SaveAssets();
+                }
+            }
+            return clip;
         }
     }
 }

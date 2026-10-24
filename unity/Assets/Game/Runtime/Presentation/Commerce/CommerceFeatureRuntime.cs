@@ -91,6 +91,15 @@ namespace Zjcs.Presentation.Commerce
             return assetCatalog.FindSprite(sourcePath);
         }
 
+        public AnimationClip AccumulatedPayPanelShow
+        {
+            get
+            {
+                EnsureCatalog();
+                return assetCatalog.AccumulatedPayPanelShow;
+            }
+        }
+
         public Sprite FindItemSprite(int itemId)
         {
             EnsureCatalog();

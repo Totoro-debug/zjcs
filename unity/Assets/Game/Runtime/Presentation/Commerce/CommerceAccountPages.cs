@@ -166,38 +166,66 @@ namespace Zjcs.Presentation.Commerce
                 runtime.Catalog.Text("ui_accumulated_pay_title"));
             PopulateAccumulatedItems(dialog.transform);
             OfficialCommercePrefabRenderer.RebuildLayout(dialog);
+            AnimationClip show = runtime.AccumulatedPayPanelShow;
+            if (show != null)
+            {
+                Animation animation = dialog.GetComponent<Animation>() ?? dialog.AddComponent<Animation>();
+                animation.AddClip(show, show.name);
+                animation.Play(show.name, PlayMode.StopAll);
+            }
         }
 
         private void PopulateAccumulatedItems(Transform dialog)
         {
             Transform content = Find(dialog, "BgPanel/Content/AwardScroll/Viewport/Content");
-            if (content == null) return;
-            ClearChildren(content);
-            RectTransform contentRect = content as RectTransform;
-            if (contentRect != null) contentRect.sizeDelta = new Vector2(1000f, 0f);
-            VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
-            if (contentLayout != null)
+            if (content == null)
             {
-                contentLayout.spacing = 8f;
-                contentLayout.padding = new RectOffset(12, 12, 12, 40);
-                contentLayout.childControlWidth = false;
-                contentLayout.childControlHeight = false;
-                contentLayout.childForceExpandWidth = false;
-                contentLayout.childForceExpandHeight = false;
+                Transform viewport = Find(dialog, "BgPanel/Content/AwardScroll/Viewport");
+                if (viewport == null) return;
+                GameObject contentObject = new GameObject("Content", typeof(RectTransform),
+                    typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+                RectTransform contentRect = contentObject.GetComponent<RectTransform>();
+                contentRect.SetParent(viewport, false);
+                contentRect.anchorMin = new Vector2(0f, 1f);
+                contentRect.anchorMax = Vector2.one;
+                contentRect.pivot = new Vector2(0.5f, 1f);
+                contentRect.sizeDelta = new Vector2(0f, 0f);
+                VerticalLayoutGroup layout = contentObject.GetComponent<VerticalLayoutGroup>();
+                layout.childAlignment = TextAnchor.UpperCenter;
+                layout.spacing = 0f;
+                layout.childControlWidth = false;
+                layout.childControlHeight = false;
+                layout.childForceExpandWidth = false;
+                layout.childForceExpandHeight = false;
+                ContentSizeFitter fitter = contentObject.GetComponent<ContentSizeFitter>();
+                fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+                fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                content = contentObject.transform;
+                ScrollRect scrollRect = Find(dialog, "BgPanel/Content/AwardScroll")?.GetComponent<ScrollRect>();
+                if (scrollRect != null) scrollRect.content = contentRect;
             }
-            int group = -1;
-            foreach (CommerceAccumulatedAward award in runtime.Catalog.Data.accumulatedAwards
-                         .OrderBy(value => value.group).ThenBy(value => value.level))
+            ClearChildren(content);
+            int group = runtime.Offers.CurrentAccumulatedGroup();
+            if (group <= 0) return;
+            CommerceAccumulatedAward[] awards = runtime.Catalog.Data.accumulatedAwards
+                .Where(value => value.group == group).OrderBy(value => value.level).ToArray();
+            foreach (CommerceAccumulatedAward award in awards)
             {
-                if (award.group != group)
-                {
-                    group = award.group;
-                    CreateAccumulatedGroupHeader(content, group);
-                }
                 GameObject row = CreateAccumulatedRow(content, award);
                 row.name = "Accumulated_" + award.level;
             }
+            CommerceAccumulatedAward last = runtime.Catalog.Data.accumulatedAwards
+                .OrderBy(value => value.level).LastOrDefault();
+            if (last != null && group == last.group)
+                CreateAccumulatedLockedEntry(content, last.level + 1, last.threshold);
             OfficialCommercePrefabRenderer.RebuildLayout(content.gameObject);
+            ScrollRect scroll = Find(dialog, "BgPanel/Content/AwardScroll")?.GetComponent<ScrollRect>();
+            if (scroll != null && awards.Length > 1)
+            {
+                int target = Mathf.Clamp(runtime.Offers.FirstUnclaimedAccumulatedLevel() - awards[0].level,
+                    0, awards.Length - 1);
+                scroll.verticalNormalizedPosition = 1f - target / (float)(awards.Length - 1);
+            }
         }
 
         private void CreateAccumulatedGroupHeader(Transform content, int group)
@@ -221,45 +249,155 @@ namespace Zjcs.Presentation.Commerce
 
         private GameObject CreateAccumulatedRow(Transform content, CommerceAccumulatedAward award)
         {
-            var row = new GameObject("AccumulatedRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-            RectTransform rect = row.GetComponent<RectTransform>();
-            rect.SetParent(content, false);
-            rect.sizeDelta = new Vector2(940, 130);
-            var layout = row.GetComponent<HorizontalLayoutGroup>();
-            layout.childAlignment = TextAnchor.MiddleLeft;
-            layout.spacing = 12;
-            layout.childControlWidth = false;
-            layout.childControlHeight = false;
-            layout.childForceExpandHeight = false;
-            layout.padding = new RectOffset(10, 10, 6, 6);
-
-            var labelObject = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
-            RectTransform labelRect = labelObject.GetComponent<RectTransform>();
-            labelRect.SetParent(row.transform, false);
-            labelRect.sizeDelta = new Vector2(150, 110);
-            TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
-            label.font = runtime.ChineseTmpFont;
-            label.fontSize = 22;
-            label.color = Color.white;
-            label.alignment = TextAlignmentOptions.Left;
-            label.enableWordWrapping = true;
-            label.raycastTarget = false;
-            label.text = "Lv." + award.level + "\n星值 " + award.threshold.ToString("0");
-
-            var rewards = award.rewards ?? Array.Empty<CommerceReward>();
-            for (int i = 0; i < Math.Min(4, rewards.Length); i++)
-                CreateItemIcon(row.transform, rewards[i].itemId, rewards[i].count, false, i == 0 ? 100f : 72f);
-
+            OfficialCommercePrefabRenderer renderer = runtime.CreatePrefabRenderer();
+            GameObject row = renderer.Create(AccumulatedItemPrefab, content);
             bool claimed = runtime.Offers.HasClaimedAccumulated(award.level);
             bool canClaim = runtime.Offers.CanClaimAccumulated(award.level);
-            GameObject buttonObject = CreateTextButton(row.transform, claimed ? "已领取" : canClaim ? "领取" : "未达成",
-                new Vector2(112, 56));
-            Button button = buttonObject.GetComponent<Button>();
-            button.interactable = canClaim;
-            button.onClick.AddListener(PlayClick);
-            int level = award.level;
-            button.onClick.AddListener(() => ApplyResult(runtime.ClaimAccumulated(level)));
+            bool active = runtime.Session.State.AccumulatedValue >= award.threshold;
+            long current = (long)Math.Min(runtime.Session.State.AccumulatedValue, award.threshold);
+            string progressFormat = active && !claimed ? award.progressActiveFormat : award.progressFormat;
+            SetText(row.transform, "AwardContent/Content/StateGo/ProgressGo/ProgressTxt",
+                FormatAccumulatedText(progressFormat, current, (long)award.threshold));
+            SetText(row.transform, "AwardContent/Content/StateGo/StateGo/ReceiveTxt",
+                claimed ? "已领取" : canClaim ? "可领取" : "未达成");
+            long remaining = (long)Math.Max(0d,
+                award.threshold - runtime.Session.State.AccumulatedValue);
+            SetText(row.transform, "AwardContent/Content/StateGo/StateGo/LevelRequireTxt",
+                active ? string.Empty : FormatAccumulatedText(award.requireFormat, remaining));
+            SetText(row.transform, "AwardContent/Content/Txt", award.description);
+            SetActive(row.transform, "AwardContent/Content/StateGo/StateGo/AwardAvailableImg", canClaim);
+            SetActive(row.transform, "AwardContent/Content/StateGo/StateGo", !canClaim);
+            SetActive(row.transform, "AwardContent/TakenAwardMask", claimed);
+            SetActive(row.transform, "AwardContent/Content/TakeAwardBtn", canClaim);
+            CanvasGroup canvasGroup = row.GetComponent<CanvasGroup>() ?? row.AddComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = claimed ? 0.6f : 1f;
+                canvasGroup.interactable = !claimed;
+                canvasGroup.blocksRaycasts = !claimed;
+            }
+            ConfigureAccumulatedLines(row.transform, award);
+            ConfigureAccumulatedCoreAward(row.transform, award, canClaim);
+            Transform subAwards = Find(row.transform, "AwardContent/Content/OtherAwards");
+            if (subAwards != null)
+                foreach (CommerceReward reward in award.subRewards ?? Array.Empty<CommerceReward>())
+                    CreateItemIcon(subAwards, reward.itemId, reward.count, false, 96f);
+            Button button = Find(row.transform, "AwardContent/Content/TakeAwardBtn/Image")?.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(PlayClick);
+                int level = award.level;
+                button.onClick.AddListener(() => ApplyResult(runtime.ClaimAccumulated(level)));
+            }
             return row;
+        }
+
+        private void ConfigureAccumulatedLines(Transform row, CommerceAccumulatedAward award)
+        {
+            if (award.level <= 1) return;
+            bool lineRight = (award.level & 1) == 0;
+            CommerceAccumulatedAward previous = runtime.Catalog.Data.accumulatedAwards
+                .FirstOrDefault(value => value.level == award.level - 1);
+            float previousThreshold = previous == null ? 0f : previous.threshold;
+            float progress = award.threshold <= previousThreshold ? 1f : Mathf.Clamp01(
+                (runtime.Session.State.AccumulatedValue - previousThreshold) / (award.threshold - previousThreshold));
+            string activePath = lineRight ? "AwardContent/DownRightLineGo/ActiveDownRighttLineImg"
+                : "AwardContent/DownLeftLineGo/ActiveDownLeftLineImg";
+            string inactivePath = lineRight ? "AwardContent/DownRightLineGo/InactiveDownRighttLineImg"
+                : "AwardContent/DownLeftLineGo/InactiveDownLeftLineImg";
+            SetActive(row, activePath, progress > 0f);
+            SetActive(row, inactivePath, progress < 1f);
+            Transform lineRoot = Find(row, lineRight
+                ? "AwardContent/DownRightLineGo" : "AwardContent/DownLeftLineGo");
+            RectTransform active = Find(row, activePath) as RectTransform;
+            RectTransform inactive = Find(row, inactivePath) as RectTransform;
+            if (lineRoot is RectTransform parent && active != null && inactive != null)
+            {
+                float width = parent.rect.width;
+                active.sizeDelta = new Vector2(progress * width, active.sizeDelta.y);
+                inactive.sizeDelta = new Vector2((1f - progress) * width, inactive.sizeDelta.y);
+            }
+        }
+
+        private static string FormatAccumulatedText(string format, params long[] values)
+        {
+            return string.IsNullOrEmpty(format) ? string.Join("/", values)
+                : string.Format(CultureInfo.InvariantCulture, format, values.Cast<object>().ToArray());
+        }
+
+        private void ConfigureAccumulatedCoreAward(Transform row, CommerceAccumulatedAward award, bool canClaim)
+        {
+            Transform slot = Find(row, "AwardContent/Content/CoreAwardGo/CoreAwardSlot");
+            CommerceReward[] rewards = award.coreRewards ?? award.rewards ?? Array.Empty<CommerceReward>();
+            if (slot == null || rewards.Length == 0) return;
+            string prefab = rewards.Length > 1 ? "commerce_core_multi" : "commerce_core";
+            GameObject core = runtime.CreatePrefabRenderer().Create(prefab, slot);
+            int qualityLevel = rewards.Select(reward => runtime.Catalog.Data.items
+                    .FirstOrDefault(value => value.id == reward.itemId)?.quality ?? 1)
+                .DefaultIfEmpty(1).Max();
+            CommerceQualityFrame qualityFrame = runtime.Catalog.Data.accumulatedQualityFrames?
+                .FirstOrDefault(value => value.quality == qualityLevel);
+            Image quality = Find(core.transform, "QualityImg")?.GetComponent<Image>();
+            string qualitySprite = qualityFrame == null ? QualitySprite(qualityLevel)
+                : award.isBig ? qualityFrame.big : qualityFrame.small;
+            if (quality != null) quality.sprite = runtime.FindSprite(qualitySprite);
+            SetActive(core.transform, "GlowBig", award.isBig);
+            SetActive(core.transform, "GlowSmall", !award.isBig);
+            Transform imageSlot = Find(core.transform, "ItemImg");
+            Action<int> showReward = index =>
+            {
+                if (imageSlot == null) return;
+                ClearChildren(imageSlot);
+                CommerceReward reward = rewards[index % rewards.Length];
+                CreateItemIcon(imageSlot, reward.itemId, reward.count, false, rewards.Length > 1 ? 92f : 148f);
+            };
+            showReward(0);
+            if (rewards.Length > 1)
+            {
+                CommerceUiAnimationEventReceiver receiver = core.GetComponent<CommerceUiAnimationEventReceiver>();
+                if (receiver != null)
+                {
+                    int current = 0;
+                    receiver.OnEvent = eventName =>
+                    {
+                        if (eventName != "SwitchItem") return;
+                        current = (current + 1) % rewards.Length;
+                        showReward(current);
+                    };
+                }
+                Animation animation = core.GetComponent<Animation>();
+                if (animation != null && animation.GetClip("AccumulatedPayCoreMulltiAwardGo_Loop") != null)
+                    animation.Play("AccumulatedPayCoreMulltiAwardGo_Loop", PlayMode.StopAll);
+            }
+            SetActive(core.transform, "QualityImg/Receive", canClaim);
+            SetActive(row, "AwardContent/Content/CoreAwardGo/RedDot1", canClaim);
+            SetActive(row, "AwardContent/Content/CoreAwardGo/LockedGo", false);
+        }
+
+        private void CreateAccumulatedLockedEntry(Transform content, int level, float threshold)
+        {
+            CommerceAccumulatedAward last = runtime.Catalog.Data.accumulatedAwards
+                .FirstOrDefault(value => value.level == level - 1);
+            if (last == null) return;
+            GameObject go = runtime.CreatePrefabRenderer().Create(AccumulatedItemPrefab, content);
+            go.name = "AccumulatedLocked_" + level;
+            SetActive(go.transform, "AwardContent/Content/StateGo", true);
+            SetActive(go.transform, "AwardContent/Content/StateGo/ProgressGo", true);
+            SetActive(go.transform, "AwardContent/Content/StateGo/StateGo", false);
+            SetActive(go.transform, "AwardContent/Content/TakeAwardBtn", false);
+            SetActive(go.transform, "AwardContent/Content/CoreAwardGo/LockedGo", true);
+            Transform locked = Find(go.transform, "AwardContent/Content/CoreAwardGo/LockedGo");
+            Image lockedImage = locked == null ? null
+                : locked.GetComponent<Image>() ?? locked.GetComponentInChildren<Image>(true);
+            if (lockedImage != null)
+                lockedImage.sprite = runtime.FindSprite(runtime.Catalog.Data.accumulatedLockedSprite);
+            SetActive(go.transform, "AwardContent/Content/CoreAwardGo/RedDot1", false);
+            SetActive(go.transform, "AwardContent/Content/CoreAwardGo/CoreAwardSlot", false);
+            SetActive(go.transform, "AwardContent/TakenAwardMask", false);
+            SetActive(go.transform, "AwardContent/Content/Txt", false);
+            SetText(go.transform, "AwardContent/Content/StateGo/ProgressGo/ProgressTxt",
+                FormatAccumulatedText(last.progressLockedFormat, (long)runtime.Session.State.AccumulatedValue));
         }
 
         // ---------- exchange ----------
@@ -562,54 +700,37 @@ namespace Zjcs.Presentation.Commerce
             layout.childForceExpandHeight = false;
             var fitter = content.GetComponent<ContentSizeFitter>() ?? content.gameObject.AddComponent<ContentSizeFitter>();
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            AddPriceRow(content, "代金券", ruleKey == "AccumulatedPayRule" ? "累计星值" : "价格", 26,
-                new Color(0.98f, 0.9f, 0.62f, 1f));
-            foreach (CommerceMoneyCost cost in runtime.Catalog.Data.moneyCosts.OrderBy(value => value.startValue)
-                .ThenBy(value => value.id))
+            bool accumulatedTable = ruleKey == "AccumulatedPayRule";
+            string firstColumn = Localized(accumulatedTable
+                ? "ui_accumulated_pay_table_column1" : "ui_voucher_table_column1", "充值金额");
+            string secondColumn = Localized(accumulatedTable
+                ? "ui_accumulated_pay_table_column2" : "ui_voucher_table_column2", "星眷值");
+            AddPriceRow(content, firstColumn, secondColumn);
+            CommerceMoneyCost[] priceOrder = runtime.Catalog.Data.moneyCosts
+                .Where(value => value.isShow)
+                .GroupBy(value => value.currencyCost)
+                .Select(group => group.OrderBy(value => value.id).First())
+                .OrderBy(value => value.id)
+                .ToArray();
+            foreach (CommerceMoneyCost cost in priceOrder)
             {
-                string left = ruleKey == "AccumulatedPayRule"
+                string left = accumulatedTable
+                    ? "¥" + cost.currencyCost.ToString("0.##", CultureInfo.InvariantCulture)
+                    : cost.voucherCost.ToString("N0", CultureInfo.InvariantCulture);
+                string right = accumulatedTable
                     ? cost.startValue.ToString("0.##", CultureInfo.InvariantCulture)
-                    : cost.voucherCost.ToString("N0");
-                string right = ruleKey == "AccumulatedPayRule"
-                    ? cost.startValue.ToString("0.##", CultureInfo.InvariantCulture)
-                    : "¥" + cost.startValue.ToString("0.##", CultureInfo.InvariantCulture);
-                AddPriceRow(content, left, right, 20, Color.white);
+                    : "¥" + cost.currencyCost.ToString("0.##", CultureInfo.InvariantCulture);
+                AddPriceRow(content, left, right);
             }
             AddWrappedText(content, "按 Esc 关闭", 20, new Color(0.72f, 0.72f, 0.72f, 1f));
             OfficialCommercePrefabRenderer.RebuildLayout(dialog.gameObject);
         }
 
-        private void AddPriceRow(Transform content, string left, string right, float size, Color color)
+        private void AddPriceRow(Transform content, string left, string right)
         {
-            var go = new GameObject("PriceRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-            RectTransform rect = go.GetComponent<RectTransform>();
-            rect.SetParent(content, false);
-            rect.sizeDelta = new Vector2(600, 52);
-            var layout = go.GetComponent<HorizontalLayoutGroup>();
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = true;
-            layout.spacing = 8;
-            AddRowText(go.transform, left, size, color);
-            AddRowText(go.transform, right, size, color);
-            var element = go.AddComponent<LayoutElement>();
-            element.preferredHeight = 52;
-        }
-
-        private void AddRowText(Transform parent, string value, float size, Color color)
-        {
-            var go = new GameObject("Value", typeof(RectTransform), typeof(TextMeshProUGUI));
-            RectTransform rect = go.GetComponent<RectTransform>();
-            rect.SetParent(parent, false);
-            rect.sizeDelta = new Vector2(280, 48);
-            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
-            text.font = runtime.ChineseTmpFont;
-            text.fontSize = size;
-            text.color = color;
-            text.alignment = TextAlignmentOptions.Center;
-            text.raycastTarget = false;
-            text.text = value;
+            GameObject row = runtime.CreatePrefabRenderer().Create(PriceRowPrefab, content);
+            SetText(row.transform, "VoucherText", left);
+            SetText(row.transform, "PriceText", right);
         }
 
         // ---------- generic confirmation ----------

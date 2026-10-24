@@ -113,10 +113,12 @@ namespace Zjcs.Presentation.Commerce
         {
             switch (quality)
             {
-                case 3: return "ImgQuality_Blue";
-                case 4: return "ImgQuality_Purple";
-                case 5: return "ImgQuality_Orange";
+                case 2: return "ImgQuality_Blue";
+                case 3: return "ImgQuality_Purple";
+                case 4: return "ImgQuality_Orange";
+                case 5: return "ImgQuality_Gold";
                 case 6: return "ImgQuality_Red";
+                case 7: return "ImgQuality_Multicolour";
                 default: return "ImgQuality_White";
             }
         }

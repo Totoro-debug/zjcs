@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.Commerce
     [DisallowMultipleComponent]
     public sealed partial class CommerceScreenController : MonoBehaviour
     {
-        internal enum MainTab { Activity = 0, DirectPay = 2 }
+        internal enum MainTab { Activity = 0, Periodic = 1, DirectPay = 2 }
         internal enum DialogKind { None, Daily, Weekly, FirstPay, Accumulated, Exchange, Confirm, Rule, PriceTable, ItemDetail }
 
         internal const string MainWindowPrefab = "commerce_main";
@@ -61,10 +61,11 @@ namespace Zjcs.Presentation.Commerce
         private GameObject currentDialogObject;
         private CommerceOffer pendingOffer;
         private CommercePaymentMethod pendingMethod;
-        private bool pendingFirstPay;
+        private bool periodicPageVisited;
         private long exchangeAmount;
         private float toastTimer;
         private float tickTimer;
+        private float periodicTimerElapsed;
 
         public bool IsOpen => runtime != null && runtime.IsOpen && mainWindow != null;
         public CommerceFeatureRuntime Feature => runtime;
@@ -136,6 +137,10 @@ namespace Zjcs.Presentation.Commerce
 
         private void OnDestroy()
         {
+            if (periodicPageVisited)
+            {
+                try { runtime?.Offers?.RecordPeriodicCardsSeen(); } catch { }
+            }
             try { runtime?.CloseProfile(); } catch { }
             Action callback = closedCallback;
             closedCallback = null;
@@ -153,6 +158,16 @@ namespace Zjcs.Presentation.Commerce
                     toast = null;
                 }
             }
+            if (periodicPage != null && periodicPage.gameObject.activeInHierarchy)
+            {
+                periodicTimerElapsed += Time.unscaledDeltaTime;
+                if (periodicTimerElapsed >= 1f)
+                {
+                    periodicTimerElapsed = 0f;
+                    RefreshPeriodicTimers();
+                }
+            }
+            else periodicTimerElapsed = 0f;
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (dialogStack.Count > 0) CloseTopDialog();
@@ -187,11 +202,6 @@ namespace Zjcs.Presentation.Commerce
             periodicPage = Find(middle, "PeriodicCard");
             directPage = Find(middle, "DirectPay");
             if (periodicPage != null) periodicPage.gameObject.SetActive(false);
-            // The monthly card business is owned by docs/features/monthly-card.md and is not
-            // available yet, so its official tab is hidden like a locked function tab.
-            Transform periodicTab = Find(mainWindow,
-                "BgPanel1/Content/BottomGo/TabGroup_11/ActivityEntryTypeTabGroup/PeriodicCardTabItem");
-            if (periodicTab != null) periodicTab.gameObject.SetActive(false);
             directContent = Find(directPage, "DirectPayScrollRect/Content");
             activityContent = Find(activityPage, "Content/LoopVerticalScrollRect/Viewprot/Content");
             mainTitle = Find(mainWindow, "BgPanel1/Content/TopGo/PanelTitle1/TitleGo/TitleTxt")?.GetComponent<TMP_Text>();
@@ -252,13 +262,14 @@ namespace Zjcs.Presentation.Commerce
             mainTab = tab;
             if (activityPage != null) activityPage.gameObject.SetActive(tab == MainTab.Activity);
             if (directPage != null) directPage.gameObject.SetActive(tab == MainTab.DirectPay);
-            if (periodicPage != null) periodicPage.gameObject.SetActive(false);
+            if (periodicPage != null) periodicPage.gameObject.SetActive(tab == MainTab.Periodic);
             foreach (string name in new[] { "ActivityEntryTabItem", "DirectPayTabItem", "PeriodicCardTabItem" })
             {
                 Transform item = Find(mainWindow,
                     "BgPanel1/Content/BottomGo/TabGroup_11/ActivityEntryTypeTabGroup/" + name);
                 if (item == null) continue;
-                bool selected = name == (tab == MainTab.Activity ? "ActivityEntryTabItem" : "DirectPayTabItem");
+                bool selected = name == (tab == MainTab.Activity ? "ActivityEntryTabItem"
+                    : tab == MainTab.Periodic ? "PeriodicCardTabItem" : "DirectPayTabItem");
                 Transform selectedNode = Find(item, "Selected");
                 if (selectedNode != null) selectedNode.gameObject.SetActive(selected);
                 Transform bg = Find(item, "Bg");
@@ -266,9 +277,15 @@ namespace Zjcs.Presentation.Commerce
             }
             if (mainTitle != null)
                 mainTitle.text = tab == MainTab.Activity ? Localized("UI_Pay_Title", "商城")
+                    : tab == MainTab.Periodic ? "月卡与七日祈愿"
                     : Localized(directPayTab ? "UI_Pay_DirectPay_Title" : "UI_Pay_Voucher_Title",
                         directPayTab ? "耀星直购" : "代金券");
             if (tab == MainTab.DirectPay) SwitchPayTab(directPayTab);
+            if (tab == MainTab.Periodic)
+            {
+                periodicPageVisited = true;
+                RefreshPeriodicCards();
+            }
             RefreshMainChrome();
         }
 
@@ -309,6 +326,8 @@ namespace Zjcs.Presentation.Commerce
             button.onClick.AddListener(PlayClick);
             if (path.EndsWith("/ActivityEntryTabItem", StringComparison.Ordinal))
                 button.onClick.AddListener(() => SetMainTab(MainTab.Activity));
+            else if (path.EndsWith("/PeriodicCardTabItem", StringComparison.Ordinal))
+                button.onClick.AddListener(() => SetMainTab(MainTab.Periodic));
             else if (path.EndsWith("/DirectPayTabItem", StringComparison.Ordinal))
                 button.onClick.AddListener(() => SetMainTab(MainTab.DirectPay));
             else if (path.EndsWith("/CloseBtn_dark", StringComparison.Ordinal))
@@ -321,6 +340,130 @@ namespace Zjcs.Presentation.Commerce
                 button.onClick.AddListener(OpenPriceTable);
             else if (path.EndsWith("/AccumulatedPayEntryGo/BgImg", StringComparison.Ordinal))
                 button.onClick.AddListener(OpenAccumulated);
+        }
+
+        private void RefreshPeriodicCards()
+        {
+            if (periodicPage == null || runtime?.Catalog?.Data.periodicCards == null) return;
+            foreach (CommercePeriodicCard card in runtime.Catalog.Data.periodicCards.OrderBy(value => value.id))
+            {
+                string nodeName = "PayPeriodicCardItem" + card.id;
+                Transform item = Find(periodicPage, "Content/" + nodeName);
+                if (item == null) continue;
+                CommerceOffer offer = runtime.Offers.Periodic(card.id);
+                bool canClaim = runtime.Offers.PeriodicCanClaim(card.id);
+                bool hasNewMark = runtime.Offers.PeriodicHasNewMark(card.id);
+                SetText(item, "PrivilegeTxt", runtime.Catalog.Text(card.titleKey));
+                SetText(item, "GameObject/AwardMultipleCountTxt", card.awardMultiple.ToString(CultureInfo.InvariantCulture));
+                SetText(item, "Discount/ValueXXXFormatGo/DiscountValTxt", card.discount.ToString(CultureInfo.InvariantCulture));
+                SetText(item, "Discount/XXXValueFormatGo/DiscountValTxt", card.discount.ToString(CultureInfo.InvariantCulture));
+                SetText(item, "Award/ImmediatelyTxt", "立即奖励");
+                SetText(item, "Award (1)/PeriodicTxt", "每日奖励");
+                RefreshPeriodicExtraProps(item, card);
+                SetText(item, "Operation/CommonPayBtn/AccumulatedValueDescGo/ValueTxt",
+                    offer == null ? "0" : offer.AccumulatedValue.ToString("0.##", CultureInfo.InvariantCulture));
+                SetText(item, "Operation/RenewalBtn/AccumulatedValueDescGo/ValueTxt",
+                    offer == null ? "0" : offer.AccumulatedValue.ToString("0.##", CultureInfo.InvariantCulture));
+                SetText(item, "Operation/CommonPayBtn/MoneyPayBtn/Content/Text", MoneyPrice(card.moneyCostId));
+                SetText(item, "Operation/RenewalBtn/MoneyPayBtn/Content/Text", "续期 " + MoneyPrice(card.moneyCostId));
+                Image fixedIcon = Find(item, "Award/ItemIconDefault/Content/mask/icon")?.GetComponent<Image>();
+                CommerceReward fixedReward = card.fixedAward?.FirstOrDefault();
+                if (fixedIcon != null && fixedReward != null) fixedIcon.sprite = runtime.FindItemSprite(fixedReward.itemId);
+                SetText(item, "Award/ItemIconDefault/Content/BgCountText/CountText", fixedReward?.count.ToString() ?? "");
+                Image dailyIcon = Find(item, "Award (1)/ItemIconDefault/Content/mask/icon")?.GetComponent<Image>();
+                CommerceReward dailyReward = card.periodicAward?.FirstOrDefault();
+                if (dailyIcon != null && dailyReward != null) dailyIcon.sprite = runtime.FindItemSprite(dailyReward.itemId);
+                SetText(item, "Award (1)/ItemIconDefault/Content/BgCountText/CountText", dailyReward?.count.ToString() ?? "");
+                int expiry = runtime.Offers.PeriodicExpiryDay(card.id);
+                bool active = expiry > runtime.Session.State.Day;
+                SetActive(item, "Operation/CommonPayBtn", !active);
+                SetActive(item, "Operation/GetAwardBtn", active && canClaim);
+                SetActive(item, "Operation/RenewalBtn", active && !canClaim);
+                SetActive(item, "Operation/GetAwardBtn/Content/RedDot", active && canClaim);
+                SetActive(item, "CommonTipDotLinker/TipDotContent/RedDotGroup", hasNewMark);
+                SetText(item, "DayBgImg/KeepDaysTipTxt", card.durationDays + "天有效期");
+                SetActive(item, "DayBgImg/KeepDaysTipTxt", !active);
+                Button buy = Find(item, "Operation/CommonPayBtn/MoneyPayBtn")?.GetComponent<Button>();
+                Button renew = Find(item, "Operation/RenewalBtn/MoneyPayBtn")?.GetComponent<Button>();
+                Button claim = Find(item, "Operation/GetAwardBtn")?.GetComponent<Button>();
+                if (buy != null) { buy.onClick.RemoveAllListeners(); buy.onClick.AddListener(PlayClick); buy.onClick.AddListener(() => OpenPurchase(runtime.Quote("periodic", card.id, 0))); }
+                if (renew != null) { renew.onClick.RemoveAllListeners(); renew.onClick.AddListener(PlayClick); renew.onClick.AddListener(() => OpenPurchase(runtime.Quote("periodic", card.id, 0))); }
+                if (claim != null) { claim.onClick.RemoveAllListeners(); claim.onClick.AddListener(PlayClick); claim.onClick.AddListener(() => { ApplyResult(runtime.Offers.ClaimPeriodic(card.id)); RefreshPeriodicCards(); }); }
+            }
+            RefreshPeriodicTimers();
+        }
+
+        private void RefreshPeriodicTimers()
+        {
+            if (periodicPage == null || runtime?.Catalog?.Data.periodicCards == null) return;
+            DateTime resetEpoch = new DateTime(2025, 12, 1, 8, 0, 0, DateTimeKind.Local);
+            foreach (CommercePeriodicCard card in runtime.Catalog.Data.periodicCards)
+            {
+                Transform item = Find(periodicPage, "Content/PayPeriodicCardItem" + card.id);
+                if (item == null) continue;
+                int expiry = runtime.Offers.PeriodicExpiryDay(card.id);
+                bool active = expiry > runtime.Session.State.Day;
+                TimeSpan remain = active ? resetEpoch.AddDays(expiry) - DateTime.Now : TimeSpan.Zero;
+                if (remain.TotalSeconds > 0)
+                    remain = TimeSpan.FromSeconds(Math.Floor(remain.TotalSeconds));
+                SetText(item, "DayBgImg/RemainTimeTxt", FormatBriefRemainTime(remain));
+                TMP_Text remainText = Find(item, "DayBgImg/RemainTimeTxt")?.GetComponent<TMP_Text>();
+                int remainDays = Math.Max(0, expiry - runtime.Session.State.Day);
+                if (remainText != null)
+                    remainText.color = remainDays <= runtime.Catalog.Data.settings.periodicCardRemindRemainDay
+                        ? new Color(1f, 0.42f, 0.42f, 1f) : Color.white;
+                SetActive(item, "DayBgImg/RemainTimeTxt", active);
+            }
+        }
+
+        private string FormatBriefRemainTime(TimeSpan value)
+        {
+            if (value.TotalDays >= 1d)
+                return value.TotalHours <= 0d
+                    ? string.Format(CultureInfo.InvariantCulture, runtime.Catalog.Text("DayCountdown"), (int)value.TotalDays)
+                    : string.Format(CultureInfo.InvariantCulture, runtime.Catalog.Text("DayCountdown2"),
+                        (int)value.TotalDays, value.Hours);
+            if (value.TotalHours >= 1d)
+                return string.Format(CultureInfo.InvariantCulture, runtime.Catalog.Text("time_hour"), (int)value.TotalHours);
+            if (value.TotalMinutes >= 1d)
+                return string.Format(CultureInfo.InvariantCulture, runtime.Catalog.Text("time_minute"), (int)value.TotalMinutes);
+            if (value.TotalSeconds > 0d)
+                return string.Format(CultureInfo.InvariantCulture, runtime.Catalog.Text("time_second"),
+                    (int)Math.Ceiling(value.TotalSeconds));
+            return runtime.Catalog.Text("time_end");
+        }
+
+        private void RefreshPeriodicExtraProps(Transform item, CommercePeriodicCard card)
+        {
+            Transform content = Find(item, "ExtraProps/PropsContent");
+            if (content == null) return;
+            ClearChildren(content);
+            CommerceExtraProp[] props = card.extraProps ?? Array.Empty<CommerceExtraProp>();
+            SetActive(item, "ExtraProps", props.Length > 0);
+            VerticalLayoutGroup layout = content.GetComponent<VerticalLayoutGroup>()
+                ?? content.gameObject.AddComponent<VerticalLayoutGroup>();
+            layout.childAlignment = TextAnchor.MiddleLeft;
+            layout.spacing = 4f;
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = false;
+            foreach (CommerceExtraProp prop in props)
+            {
+                var row = new GameObject("Prop_" + prop.propId, typeof(RectTransform), typeof(TextMeshProUGUI),
+                    typeof(LayoutElement));
+                row.transform.SetParent(content, false);
+                TMP_Text text = row.GetComponent<TMP_Text>();
+                text.font = runtime.ChineseTmpFont;
+                text.fontSize = 22f;
+                text.color = new Color(0.95f, 0.91f, 0.72f, 1f);
+                text.alignment = TextAlignmentOptions.Left;
+                text.enableWordWrapping = false;
+                text.raycastTarget = false;
+                text.text = (prop.name ?? string.Empty) + " +" + (prop.value / 10000f).ToString("P0", CultureInfo.InvariantCulture);
+                row.GetComponent<LayoutElement>().preferredHeight = 30f;
+            }
+            OfficialCommercePrefabRenderer.RebuildLayout(content.gameObject);
         }
 
         private void RefreshAccumulatedEntry()
@@ -556,7 +699,6 @@ namespace Zjcs.Presentation.Commerce
                 return;
             }
             pendingOffer = offer;
-            pendingFirstPay = false;
             OpenConfirmDialog(offer, null);
         }
 
@@ -936,7 +1078,7 @@ namespace Zjcs.Presentation.Commerce
         {
             CommerceMoneyCost cost = runtime.Catalog.MoneyCost(moneyCostId);
             if (cost == null) return "-";
-            return "¥" + cost.startValue.ToString(cost.startValue % 1 == 0 ? "0" : "0.##", CultureInfo.InvariantCulture);
+            return "¥" + cost.currencyCost.ToString(cost.currencyCost % 1 == 0 ? "0" : "0.##", CultureInfo.InvariantCulture);
         }
 
         internal string Localized(string key, string fallback)
