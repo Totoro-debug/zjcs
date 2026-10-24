@@ -7,6 +7,14 @@ import zipfile
 from prepare_character_model_runtime import ROOT, SOURCE_MANIFEST, RELATED_MANIFESTS, source_bytes, digest, meta
 
 GROUP_MANIFEST = ROOT / 'assets/reference/character-creation/appearance-group-icons-source-manifest.json'
+ACTION_MANIFESTS = {
+    'male': ROOT / 'assets/reference/official-map/player-actions-source-manifest.json',
+    'female': ROOT / 'assets/reference/character-genders/source-manifest.json',
+}
+ACTION_FILES = {
+    'male': ROOT / 'assets/official/map-player-actions.json',
+    'female': ROOT / 'assets/characters/female/map-actions.json',
+}
 
 
 def build():
@@ -31,6 +39,26 @@ def build():
     groups = json.loads(GROUP_MANIFEST.read_text('utf-8'))
     if groups.get('manifest') != '854_156383' or len(groups.get('groups', [])) != 12:
         raise ValueError('Appearance group source is not the pinned 12-group manifest')
+    player_actions = {}
+    action_skin_groups = {}
+    for sex, manifest_path in ACTION_MANIFESTS.items():
+        action_manifest = json.loads(manifest_path.read_text('utf-8'))
+        if action_manifest.get('manifest') != '854_156383':
+            raise ValueError(f'{sex} player action source is not pinned to 854_156383')
+        action_data_path = ACTION_FILES[sex]
+        action_bytes = action_data_path.read_bytes()
+        action_hashes = action_manifest.get('outputs', {})
+        expected = next((value for key, value in action_hashes.items()
+                         if Path(key.replace('\\\\', '/')).name == action_data_path.name), None)
+        if not expected or digest(action_bytes) != expected:
+            raise ValueError(f'{sex} player action output hash differs from its source manifest')
+        player_actions[sex] = json.loads(action_bytes)
+        action_skin_groups[sex] = {skin_name: group
+                                   for group, skin_name in action_manifest['parts'].items()}
+        receipts.append({'path': manifest_path.relative_to(ROOT).as_posix(),
+                         'sha256': digest(manifest_path.read_bytes())})
+        receipts.append({'path': action_data_path.relative_to(ROOT).as_posix(),
+                         'sha256': expected})
     textures = set()
     pose_skin_ids = {}
     for sex_index, sex in enumerate(('male', 'female')):
@@ -39,25 +67,61 @@ def build():
         ids.update(skin['skin_id'] for group in groups['groups'] if group['sex'] == sex
                    for skin in group['appearance_skins'])
         pose_skin_ids[sex] = {}
-        for pose in ('home/idle_01', 'map/run_01'):
-            pose_data = json.loads(read(catalog['poses'][sex][pose]))
-            pose_ids = ids | compatible_skin_ids(sex, pose_data, rules, catalog)
+        for pose in ('home/idle_01', 'map/run_01', 'map/portal_01'):
+            is_action = pose == 'map/portal_01'
+            pose_data = (player_actions[sex]['animations'][pose] if is_action
+                         else json.loads(read(catalog['poses'][sex][pose])))
+            action_groups = action_skin_groups[sex]
+            pose_ids = ({skin_id for skin_id in ids
+                         if rules['skins'][str(skin_id)]['SkinName'] in action_groups}
+                        if is_action else ids | compatible_skin_ids(sex, pose_data, rules, catalog))
             pose_skin_ids[sex][pose] = sorted(pose_ids)
             skin_entries = {}
             for skin_id in sorted(pose_ids):
                 skin = rules['skins'][str(skin_id)]
-                key = catalog['parts'][sex].get(str(skin_id), f'skin_{skin_id}')
-                uri = pose_data['parts'].get(key)
-                if uri is None:
-                    uri = pose_data['parts'].get(f'profession_weapon_{skin_id}')
-                if uri is None:
-                    raise ValueError(f'Missing creation skin {sex}/{pose}/{skin_id}')
-                parts = []
-                for part in json.loads(gzip.decompress(read(uri))):
-                    textures.add(part['texture'])
-                    parts.append(dict(part, skin=skin['SkinName'], skin_type=skin['SkinType'],
-                                      frames=part.get('idle', [{'vertices': part['vertices']}])) )
-                    parts[-1].pop('idle', None)
+                if is_action:
+                    action_group = action_groups[skin['SkinName']]
+                    action_parts = pose_data['parts'].get(action_group)
+                    if action_parts is None:
+                        raise ValueError(f'Missing official action skin {sex}/{skin["SkinName"]}')
+                    parts = []
+                    for slot, samples in action_parts.items():
+                        variants = {}
+                        for sample in samples:
+                            if not sample.get('vertices') or not sample.get('triangles'):
+                                continue
+                            topology = json.dumps((sample['texture'], sample['uv'], sample['triangles']),
+                                                  separators=(',', ':'))
+                            variants.setdefault(topology, sample)
+                        for topology, template in variants.items():
+                            template_key = json.dumps((template['texture'], template['uv'],
+                                                       template['triangles']), separators=(',', ':'))
+                            frames = []
+                            for sample in samples:
+                                sample_key = (json.dumps((sample['texture'], sample['uv'],
+                                                          sample['triangles']), separators=(',', ':'))
+                                              if sample.get('vertices') and sample.get('triangles') else None)
+                                frames.append({'vertices': sample.get('vertices', [])
+                                               if sample_key == template_key else [],
+                                               'order': sample.get('order', template['order']),
+                                               'has_order': True})
+                            part = dict(template, skin=skin['SkinName'],
+                                        skin_type=skin['SkinType'], frames=frames)
+                            parts.append(part)
+                            textures.add(part['texture'])
+                else:
+                    key = catalog['parts'][sex].get(str(skin_id), f'skin_{skin_id}')
+                    uri = pose_data['parts'].get(key)
+                    if uri is None:
+                        uri = pose_data['parts'].get(f'profession_weapon_{skin_id}')
+                    if uri is None:
+                        raise ValueError(f'Missing creation skin {sex}/{pose}/{skin_id}')
+                    parts = []
+                    for part in json.loads(gzip.decompress(read(uri))):
+                        textures.add(part['texture'])
+                        parts.append(dict(part, skin=skin['SkinName'], skin_type=skin['SkinType'],
+                                          frames=part.get('idle', [{'vertices': part['vertices']}])) )
+                        parts[-1].pop('idle', None)
                 entry = f'poses/{sex}/{pose.replace("/", "-")}/skin_{skin_id}.json'
                 entries[entry] = json.dumps(
                     {'fps': pose_data['fps'], 'duration': pose_data['duration'], 'parts': parts},

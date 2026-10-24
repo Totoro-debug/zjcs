@@ -20,7 +20,7 @@ namespace Zjcs.Presentation.CharacterCreation
             public int[] triangles;
             public Frame[] frames;
         }
-        [Serializable] private sealed class Frame { public float[] vertices; }
+        [Serializable] private sealed class Frame { public float[] vertices; public int order; public bool has_order; }
         [Serializable] private sealed class Textures { public TextureEntry[] textures; }
         [Serializable] private sealed class TextureEntry { public string name, texture, mask; }
         [Serializable] private sealed class PoseIndex { public float fps, duration; public SkinEntry[] skins; }
@@ -33,6 +33,8 @@ namespace Zjcs.Presentation.CharacterCreation
             public Mesh Mesh;
             public Vector3[][] Frames;
             public MeshRenderer Renderer;
+            public Frame[] SourceFrames;
+            public bool Frozen;
         }
         private readonly Dictionary<string, Dictionary<string, SkinEntry>> poses =
             new Dictionary<string, Dictionary<string, SkinEntry>>(StringComparer.Ordinal);
@@ -52,6 +54,8 @@ namespace Zjcs.Presentation.CharacterCreation
         private string currentPose;
         private float poseDuration;
         private float poseFps;
+        private string oneShotReturnPose;
+        private bool oneShot;
         public int CurrentFrame { get; private set; }
         public int VisiblePartCount => instances.Count(value => value.Node.activeSelf);
 
@@ -69,7 +73,7 @@ namespace Zjcs.Presentation.CharacterCreation
                     throw new InvalidDataException("Character creation mesh package is not pinned.");
                 hashes = manifest.entries.ToDictionary(entry => entry.name, entry => entry.sha256, StringComparer.Ordinal);
                 nativeShader = Zjcs.Offline.CharacterCreation.CharacterCreationAssetCatalog.LoadDefault().NativeCreationShader;
-                foreach (string name in new[] { "home/idle_01", "map/run_01" })
+                foreach (string name in new[] { "home/idle_01", "map/run_01", "map/portal_01" })
                 {
                     string indexName = sex + "-" + name.Replace('/', '-') + "-index.json";
                     PoseIndex index = JsonUtility.FromJson<PoseIndex>(Read(indexName));
@@ -94,12 +98,10 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (!poses.TryGetValue(name, out Dictionary<string, SkinEntry> skinEntries))
                 throw new InvalidOperationException("Missing official pose: " + name);
-            foreach (string skin in selected)
-                if (!skinEntries.ContainsKey(skin))
-                    throw new InvalidOperationException("Official character pose has no skin attachment: " + skin);
-
             foreach (Instance value in instances) { value.Node.SetActive(false); Destroy(value.Node); Destroy(value.Mesh); }
             instances.Clear();
+            oneShot = false;
+            oneShotReturnPose = null;
             currentPose = name;
             PoseIndex timing = poseTimings[name];
             poseFps = timing.fps;
@@ -109,7 +111,11 @@ namespace Zjcs.Presentation.CharacterCreation
             CurrentFrame = 0;
             foreach (string skin in selected.OrderBy(value => value, StringComparer.Ordinal))
             {
-                foreach (string entry in skinEntries[skin].entries)
+                bool freeze = !skinEntries.TryGetValue(skin, out SkinEntry skinEntry);
+                if (freeze && !poses["home/idle_01"].TryGetValue(skin, out skinEntry))
+                    throw new InvalidOperationException("Official character pose has no skin attachment: " + skin);
+                int firstInstance = instances.Count;
+                foreach (string entry in skinEntry.entries)
                 {
                     Pose skinPose = JsonUtility.FromJson<Pose>(Read(entry));
                     if (skinPose == null || skinPose.parts == null
@@ -118,8 +124,19 @@ namespace Zjcs.Presentation.CharacterCreation
                         throw new InvalidDataException("Character skin frame data is invalid: " + entry);
                     foreach (Part part in skinPose.parts) CreatePart(part);
                 }
+                if (freeze)
+                    for (int index = firstInstance; index < instances.Count; index++) instances[index].Frozen = true;
             }
             ApplyDye(dye);
+        }
+
+        public void PlayOnce(string name, string returnPose)
+        {
+            if (string.IsNullOrEmpty(returnPose) || !poses.ContainsKey(returnPose))
+                throw new InvalidOperationException("Official return pose is unavailable: " + returnPose);
+            Play(name);
+            oneShotReturnPose = returnPose;
+            oneShot = true;
         }
 
         private void CreatePart(Part part)
@@ -158,7 +175,8 @@ namespace Zjcs.Presentation.CharacterCreation
             renderer.enabled = frames.Length == 0 || frames[0].Length > 0;
             node.AddComponent<CharacterCreationDyeMapBinding>().Bind(part.skin_type,
                 masks.TryGetValue(part.texture, out Texture2D mask) ? mask : null);
-            instances.Add(new Instance { Node = node, Mesh = mesh, Frames = frames, Renderer = renderer });
+            instances.Add(new Instance { Node = node, Mesh = mesh, Frames = frames,
+                SourceFrames = part.frames, Renderer = renderer });
         }
 
         private Texture2D LoadTexture(string name)
@@ -233,14 +251,24 @@ namespace Zjcs.Presentation.CharacterCreation
         {
             if (currentPose == null) return;
             elapsed += Time.unscaledDeltaTime;
+            if (oneShot && elapsed >= poseDuration)
+            {
+                string returnPose = oneShotReturnPose;
+                oneShot = false;
+                Play(returnPose);
+                return;
+            }
             int frame = Mathf.FloorToInt((elapsed % Mathf.Max(.01f, poseDuration)) * poseFps);
             if (frame == CurrentFrame) return;
             CurrentFrame = frame;
             foreach (Instance value in instances)
             {
-                if (!value.Node.activeSelf || value.Frames.Length == 0) continue;
-                Vector3[] points = value.Frames[CurrentFrame % value.Frames.Length];
+                if (!value.Node.activeSelf || value.Frozen || value.Frames.Length == 0) continue;
+                int frameIndex = CurrentFrame % value.Frames.Length;
+                Vector3[] points = value.Frames[frameIndex];
                 value.Renderer.enabled = points.Length > 0;
+                if (frameIndex < value.SourceFrames.Length && value.SourceFrames[frameIndex].has_order)
+                    value.Renderer.sortingOrder = value.SourceFrames[frameIndex].order;
                 if (points.Length == 0) continue; // Official attachment visibility, including eye blinks.
                 value.Mesh.vertices = points;
                 value.Mesh.RecalculateBounds();

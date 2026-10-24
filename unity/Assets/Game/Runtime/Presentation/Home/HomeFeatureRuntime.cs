@@ -12,11 +12,13 @@ using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.World;
 using Zjcs.Offline.State;
 using Zjcs.Presentation.Inventory;
 using Zjcs.Presentation.Cooking;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.Wishes;
+using Zjcs.Presentation.World;
 
 namespace Zjcs.Presentation.Home
 {
@@ -32,6 +34,8 @@ namespace Zjcs.Presentation.Home
         private const int HomeTutorialFixedRewardId = 7;
         private const string HomeTutorialFixedRewardReceipt = "home:tutorial:fixed-reward:7";
         private ProfileSlotCatalog slots;
+        private OfficialFantasyTowerCatalog fantasyTowerCatalog;
+        private OfflineFantasyTowerSession fantasyTower;
         private OfflineMainlineProgressSession profile;
         private OfflineNpcTravelService npcTravel;
         private OfficialNpcTravelCatalog npcTravelCatalog;
@@ -100,6 +104,9 @@ namespace Zjcs.Presentation.Home
         public OfficialHomeRules Rules => rules;
         public HomeTutorialCatalog Tutorials => tutorials;
         public HomeSettingsProfile HomeSettings => homeSettings;
+        public OfflineFantasyTowerSession FantasyTower => fantasyTower;
+        internal OfficialFantasyTowerCatalog FantasyTowerCatalog =>
+            fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
         public OfflineMainlineProgressSession Profile => profile;
         public OfflineNpcTravelService NpcTravel => npcTravel;
         public OfficialNpcTravelCatalog NpcTravelCatalog => npcTravelCatalog;
@@ -227,6 +234,7 @@ namespace Zjcs.Presentation.Home
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
             homeSettings = new HomeSettingsProfile(Path.Combine(slots.GetSlotDirectory(slotId), "settings.json"));
             homeSettings.Load();
+            fantasyTower = OfflineFantasyTowerSession.Open(slots, slotId);
             profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             profile.Reload();
             npcTravelCatalog = OfficialNpcTravelCatalog.LoadDefault();
@@ -260,6 +268,8 @@ namespace Zjcs.Presentation.Home
                 if (petGachaAssets == null)
                     throw new InvalidOperationException("Official pet gacha native models are not installed.");
                 petGachaAssets.Validate(petGachaCatalog);
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "TowerPush", "ui.json"));
                 petGacha = new OfflinePetGachaService(profile, petGachaCatalog);
             }
             catch (Exception error)
@@ -290,6 +300,7 @@ namespace Zjcs.Presentation.Home
             input.RewardClicked += OnRewardClicked;
             input.SetRewardHit(OnRewardHit);
             hud = new HomeHudView(this, uiParent);
+            hud.ShowFantasyTowerPendingResult();
             hud.Build();
             fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();
             fruitTreeTutorialVoiceSource.playOnAwake = false;
@@ -1264,6 +1275,62 @@ namespace Zjcs.Presentation.Home
             }
             onOpenMainland();
             return true;
+        }
+        public List<FantasyTowerReward> RollFantasyTowerRewards(int stageId, string receipt)
+        {
+            if (string.IsNullOrWhiteSpace(receipt)) throw new ArgumentException("A stable reward receipt is required.", nameof(receipt));
+            ulong state = 14695981039346656037UL;
+            foreach (char value in receipt) state = unchecked((state ^ value) * 1099511628211UL);
+            if (state == 0) state = 0x9e3779b97f4a7c15UL;
+            return FantasyTowerCatalog.RollRewards(stageId, profile.Save.Player.Level,
+                profile.Save.Player.SubRank, ref state);
+        }
+
+        public FantasyTowerBattleRunner StartFantasyTower(int entryIndex)
+        {
+            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
+            if (GetComponent<FantasyTowerBattleRunner>() != null)
+                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
+            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
+            try { runner.Begin(this, entryIndex); }
+            catch { Destroy(runner); throw; }
+            return runner;
+        }
+
+        public void SetFantasyTowerBackgroundExecution(bool enabled)
+        {
+            FantasyTowerBattleRunner runner = GetComponent<FantasyTowerBattleRunner>();
+            if (runner != null && runner.IsAutoPushEnabled)
+                runner.SetBackgroundExecution(enabled);
+        }
+
+        public FantasyTowerBattleRunner StartFantasyTowerAfterCountdown(int entryIndex)
+        {
+            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
+            if (!IsFantasyTowerUnlocked())
+                throw new InvalidOperationException("Official Fantasy Tower progression unlock is not met.");
+            if (GetComponent<FantasyTowerBattleRunner>() != null)
+                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
+            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
+            try { runner.BeginAutoNext(this, entryIndex); }
+            catch { Destroy(runner); throw; }
+            return runner;
+        }
+
+        public bool IsFantasyTowerUnlocked() =>
+            Enumerable.Range(1, 4).Any(entry => fantasyTower.GetEntry(entry).clearedLayer >= 3);
+
+        public void RefreshAfterFantasyTowerReward()
+        {
+            ReloadContext();
+            hud?.RefreshAll();
+        }
+
+        public FantasyTowerResult ClaimFantasyTowerResult(string resultId)
+        {
+            FantasyTowerResult result = fantasyTower.ClaimResult(resultId, profile);
+            if (result == FantasyTowerResult.Applied) RefreshAfterFantasyTowerReward();
+            return result;
         }
 
         public void Close()

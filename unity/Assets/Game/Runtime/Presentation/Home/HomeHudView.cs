@@ -70,6 +70,7 @@ namespace Zjcs.Presentation.Home
         public Transform CanvasTransform => canvas == null ? null : canvas.transform;
 
         public bool AnyModalOpen => activeDialog != null || inventoryRoot != null || host.FeatureModalOpen
+            || DungeonModalOpen
             || (functionsPanel != null && functionsPanel.activeSelf) || homeSkin != null && homeSkin.IsOpen;
 
         public void Build()
@@ -296,7 +297,12 @@ namespace Zjcs.Presentation.Home
             }
             if (path.Contains("GameMatch")) { Notify("多人匹配按离线范围关闭"); return; }
             if (path.Contains("PlayAsYouDownloadEntry")) { Notify("预下载入口在离线模式不可用"); return; }
-            if (path.Contains("BattleEndNotify")) { Notify("战斗结算详情由战斗页面提供"); return; }
+            if (path.Contains("BattleEndNotify"))
+            {
+                if (host.FantasyTower.EarliestPendingResult() != null) ShowFantasyTowerPendingResult();
+                else Notify("当前没有待领取的幻想阶梯结算");
+                return;
+            }
             Notify("该入口当前不可用");
         }
 
@@ -740,6 +746,7 @@ namespace Zjcs.Presentation.Home
         {
             TickPetIntroduction();
             TickTreasureGachaPreview();
+            host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             if (noticeDeadline > 0f && Time.unscaledTime >= noticeDeadline)
             {
                 noticeDeadline = 0f;
