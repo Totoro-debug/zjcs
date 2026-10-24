@@ -308,7 +308,8 @@ namespace Zjcs.Offline.CharacterCreation
 
             int sex = draft.body_type == "female" ? 1 : 0;
             CharacterAppearanceDraft appearance = sex == 0 ? draft.bodies.male : draft.bodies.female;
-            if (!TryResolveAppearance(appearance, out List<OfflineAppearanceSkin> wornSkins, out error))
+            if (!TryResolveAppearance(appearance, out List<OfflineAppearanceSkin> wornSkins,
+                out List<OfflineAppearanceSkin> wornItems, out error))
                 return false;
 
             IReadOnlyDictionary<int, int> defaults = characterCatalog.DefaultSkins(sex, DefaultProfession);
@@ -335,6 +336,7 @@ namespace Zjcs.Offline.CharacterCreation
                 player.Wardrobe.BaseSkins = defaults.OrderBy(pair => pair.Key)
                     .Select(pair => new OfflineAppearanceSkin { Type = pair.Key, Id = pair.Value }).ToList();
                 player.Wardrobe.WornSkins = wornSkins;
+                player.Wardrobe.WornItems = wornItems;
                 player.Wardrobe.Dyes = dyes;
             }, "character-create:" + slotId);
 
@@ -436,7 +438,11 @@ namespace Zjcs.Offline.CharacterCreation
         private CharacterAppearanceDraft CreateDefaultAppearance(string body, int sex,
             IReadOnlyDictionary<int, OfflineAppearanceDye> defaultDyes)
         {
-            var appearance = new CharacterAppearanceDraft { body_type = body };
+            var appearance = new CharacterAppearanceDraft
+            {
+                body_type = body,
+                appearance_group_id = creationAssets.DefaultAppearanceGroupId(sex)
+            };
             foreach (string field in AppearanceFields)
             {
                 if (!creationAssets.TryGetDefaultAppearanceOption(body, sex, DefaultProfession, field,
@@ -451,10 +457,12 @@ namespace Zjcs.Offline.CharacterCreation
         }
 
         private bool TryResolveAppearance(CharacterAppearanceDraft appearance,
-            out List<OfflineAppearanceSkin> skins, out string error)
+            out List<OfflineAppearanceSkin> skins, out List<OfflineAppearanceSkin> appendedItems, out string error)
         {
             error = string.Empty;
             skins = new List<OfflineAppearanceSkin>(AppearanceFields.Length);
+            appendedItems = new List<OfflineAppearanceSkin>();
+            var byType = new Dictionary<int, int>();
             var types = new HashSet<int>();
             foreach (string field in AppearanceFields)
             {
@@ -462,8 +470,18 @@ namespace Zjcs.Offline.CharacterCreation
                     GetOption(appearance, field), out CharacterCreationOptionInfo option)
                     || !types.Add(option.SkinType))
                     return Fail("所选官方外观部件无效。", out error);
-                skins.Add(new OfflineAppearanceSkin { Type = option.SkinType, Id = option.SkinId });
+                byType[option.SkinType] = option.SkinId;
             }
+
+            int sex = appearance.body_type == "female" ? 1 : 0;
+            int groupId = appearance.appearance_group_id == 0
+                ? creationAssets.DefaultAppearanceGroupId(sex) : appearance.appearance_group_id;
+            if (!creationAssets.TryGetAppearanceGroup(sex, groupId, out CharacterCreationAppearanceGroupInfo group)
+                || group.condition_id != 0)
+                return Fail("所选官方试穿外观当前不可用。", out error);
+
+            foreach (KeyValuePair<int, int> skin in byType.OrderBy(pair => pair.Key))
+                skins.Add(new OfflineAppearanceSkin { Type = skin.Key, Id = skin.Value });
             return true;
         }
 

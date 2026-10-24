@@ -21,6 +21,7 @@ namespace Zjcs.Offline.CharacterCreation
         public string mouth_id;
         public string makeup_id;
         public string feature_id;
+        public int appearance_group_id;
     }
 
     [Serializable]
@@ -176,7 +177,10 @@ namespace Zjcs.Offline.CharacterCreation
 
         private static bool HasValidOptions(CharacterCreationAssetCatalog catalog, CharacterAppearanceDraft appearance)
         {
-            return catalog.HasAppearanceOption(appearance.body_type, "hairstyle_id", appearance.hairstyle_id)
+            int sex = appearance.body_type == "female" ? 1 : 0;
+            return (appearance.appearance_group_id == 0
+                    || catalog.IsSelectableAppearanceGroup(sex, appearance.appearance_group_id))
+                && catalog.HasAppearanceOption(appearance.body_type, "hairstyle_id", appearance.hairstyle_id)
                 && catalog.HasAppearanceOption(appearance.body_type, "eyebrow_id", appearance.eyebrow_id)
                 && catalog.HasAppearanceOption(appearance.body_type, "eye_id", appearance.eye_id)
                 && catalog.HasAppearanceOption(appearance.body_type, "mouth_id", appearance.mouth_id)
@@ -229,7 +233,7 @@ namespace Zjcs.Offline.CharacterCreation
         private static readonly HashSet<string> BodiesFields = Set("male", "female");
         private static readonly HashSet<string> AppearanceFields = Set(
             "body_type", "skin_color", "hairstyle_id", "hair_color", "eyebrow_id",
-            "eye_id", "eye_color", "mouth_id", "makeup_id", "feature_id");
+            "eye_id", "eye_color", "mouth_id", "makeup_id", "feature_id", "appearance_group_id");
 
         public static object Parse(string json)
         {

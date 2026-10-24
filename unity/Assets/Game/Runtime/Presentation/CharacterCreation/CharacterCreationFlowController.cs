@@ -5,11 +5,14 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Zjcs.Offline.CharacterCreation;
+using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Presentation.Character;
+using Zjcs.Presentation.Home;
 using Zjcs.Presentation.Opening;
 using Zjcs.Presentation.World;
 
@@ -18,6 +21,7 @@ namespace Zjcs.Presentation.CharacterCreation
     public sealed class CharacterCreationFlowController : MonoBehaviour
     {
         private const string SlotPrefix = "slot-";
+        private const int StoryHomePlayerSortingLayer = 11;
         private static readonly string[] Tabs = { "整体", "头发", "脸部", "特征" };
         private CharacterOpeningFlow opening;
         private CharacterCreationOfflineService service;
@@ -59,6 +63,10 @@ namespace Zjcs.Presentation.CharacterCreation
         private CharacterCreationNativeModelPreview femalePreview;
         private Transform maleModelNode;
         private Transform femaleModelNode;
+        private HomeAssetCatalog firstStoryHomeAssets;
+        private HomeSceneView firstStoryHomeScene;
+        private GameObject firstStoryHomeActor;
+        private CharacterCreationMeshFramePlayer firstStoryHomeActorAnimation;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void StartWithFirstScene()
@@ -103,6 +111,11 @@ namespace Zjcs.Presentation.CharacterCreation
             PersistDraft();
         }
 
+        private void OnDestroy()
+        {
+            DisposeFirstStoryHome();
+        }
+
         private void EnsureEventSystem()
         {
             if (FindObjectOfType<EventSystem>() != null) return;
@@ -137,6 +150,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private void ShowSlots(string message = null)
         {
             if (!PersistDraft()) return;
+            DisposeFirstStoryHome();
             ClearScreen();
             screen = CreateScreen("选择存档");
             status = AddText(screen.transform, message ?? string.Empty, 22, new Color32(244, 205, 135, 255),
@@ -399,6 +413,21 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void RenderAppearancePage()
         {
+            Transform appearanceContent = FindDeep(diyContent, "AppearanceContent");
+            Transform tryOnTitle = FindPath(appearanceContent, "AppearanceContent", "TitleGo");
+            SetLabel(FindText(tryOnTitle), "幻装试穿");
+            Transform sourceGo = FindDeep(diyContent, "SourceGo");
+            int sex = draft.body_type == "female" ? 1 : 0;
+            CharacterAppearanceDraft appearance = ActiveAppearance();
+            int selectedGroupId = appearance.appearance_group_id == 0
+                ? assets.DefaultAppearanceGroupId(sex) : appearance.appearance_group_id;
+            if (!assets.TryGetAppearanceGroup(sex, selectedGroupId, out CharacterCreationAppearanceGroupInfo selectedGroup)
+                || selectedGroup.condition_id != 0)
+                throw new InvalidOperationException("The selected official appearance group is unavailable.");
+            SetLabel(FindText(sourceGo), selectedGroup.localized_label);
+            RenderAppearanceGroups(FindPath(appearanceContent, "AppearanceContent", "IconGroup"), sex,
+                selectedGroupId);
+
             SetTabSelection(FindPath(diyContent, "BottomContent", "TabGroupGo", "TabGroup"),
                 Array.IndexOf(Tabs, draft.tab));
             string activeGroup = GroupForTab(draft.tab);
@@ -422,9 +451,91 @@ namespace Zjcs.Presentation.CharacterCreation
                 if (root == null) throw new InvalidOperationException("Official character creation option view is missing: " + name);
                 root.gameObject.SetActive(!colorField && name == OptionViewForField(draft.field));
             }
-            CharacterAppearanceDraft appearance = ActiveAppearance();
             if (colorField) RenderColorPicker(appearance, DyeType(draft.field), colorRoot);
             else RenderAppearanceOptions(appearance, draft.field, FindDeep(editRoot, OptionViewForField(draft.field)));
+        }
+
+        private void RenderAppearanceGroups(Transform groupRoot, int sex, int selectedGroupId)
+        {
+            if (groupRoot == null) throw new InvalidOperationException("Official appearance group container is missing.");
+            RectTransform rootRect = groupRoot as RectTransform;
+            if (rootRect == null) throw new InvalidOperationException("Official appearance group container has no RectTransform.");
+            rootRect.anchorMin = Vector2.zero;
+            rootRect.anchorMax = Vector2.one;
+            rootRect.offsetMin = new Vector2(8, 4);
+            rootRect.offsetMax = new Vector2(-8, -28);
+            ClearChildren(groupRoot);
+
+            IReadOnlyList<CharacterCreationAppearanceGroupInfo> groups = assets.GetAppearanceGroups(sex);
+            int visibleIndex = 0;
+            foreach (CharacterCreationAppearanceGroupInfo group in groups)
+            {
+                if (group.condition_id != 0) continue;
+                Sprite sprite = assets.FindAppearanceGroupIcon(group.group_id, sex);
+                if (sprite == null) throw new InvalidOperationException("Official appearance group icon is missing: " + group.group_id);
+
+                const int columns = 6;
+                const float cell = 52f;
+                const float gap = 8f;
+                int row = visibleIndex / columns;
+                int column = visibleIndex % columns;
+                var item = new GameObject("AppearanceGroup_" + group.group_id,
+                    typeof(RectTransform), typeof(Image), typeof(Button));
+                item.transform.SetParent(groupRoot, false);
+                RectTransform rect = item.GetComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0, 1);
+                rect.anchorMax = new Vector2(0, 1);
+                rect.pivot = new Vector2(0, 1);
+                rect.sizeDelta = new Vector2(cell, cell);
+                rect.anchoredPosition = new Vector2(column * (cell + gap), -row * (cell + gap));
+
+                Image image = item.GetComponent<Image>();
+                image.sprite = sprite;
+                image.preserveAspect = true;
+                image.raycastTarget = true;
+                Button button = item.GetComponent<Button>();
+                button.targetGraphic = image;
+                ColorBlock colors = button.colors;
+                colors.highlightedColor = Color.Lerp(Color.white, new Color32(241, 213, 153, 255), 0.42f);
+                colors.pressedColor = Color.Lerp(Color.white, new Color32(194, 146, 67, 255), 0.45f);
+                button.colors = colors;
+                button.interactable = group.group_id != selectedGroupId;
+                int groupId = group.group_id;
+                button.onClick.AddListener(() => SelectAppearanceGroup(sex, groupId));
+
+                var outline = new GameObject("Selected", typeof(RectTransform), typeof(Image));
+                outline.transform.SetParent(item.transform, false);
+                RectTransform outlineRect = outline.GetComponent<RectTransform>();
+                Place(outlineRect, Vector2.zero, Vector2.one);
+                outlineRect.offsetMin = new Vector2(-3, -3);
+                outlineRect.offsetMax = new Vector2(3, 3);
+                Image outlineImage = outline.GetComponent<Image>();
+                outlineImage.color = new Color32(235, 187, 93, 210);
+                outlineImage.raycastTarget = false;
+                var inset = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+                inset.transform.SetParent(outline.transform, false);
+                RectTransform insetRect = inset.GetComponent<RectTransform>();
+                Place(insetRect, Vector2.zero, Vector2.one);
+                insetRect.offsetMin = new Vector2(3, 3);
+                insetRect.offsetMax = new Vector2(-3, -3);
+                Image insetImage = inset.GetComponent<Image>();
+                insetImage.sprite = sprite;
+                insetImage.preserveAspect = true;
+                insetImage.raycastTarget = false;
+                outline.SetActive(group.group_id == selectedGroupId);
+                visibleIndex++;
+            }
+        }
+
+        private void SelectAppearanceGroup(int sex, int groupId)
+        {
+            if (!assets.TryGetAppearanceGroup(sex, groupId, out CharacterCreationAppearanceGroupInfo group)
+                || group.condition_id != 0) return;
+            CharacterAppearanceDraft appearance = sex == 0 ? draft.bodies.male : draft.bodies.female;
+            appearance.appearance_group_id = groupId;
+            RefreshNativePreviews();
+            QueueDraftSave();
+            RenderAppearancePage();
         }
 
         private void RenderNamePage()
@@ -1071,6 +1182,7 @@ namespace Zjcs.Presentation.CharacterCreation
             draft.field = FieldsForTab(tab)[0];
             customColorOpen = false;
             QueueDraftSave();
+            RefreshNativePreviews();
             RenderAppearancePage();
         }
 
@@ -1155,14 +1267,24 @@ namespace Zjcs.Presentation.CharacterCreation
                 return;
             }
             ClearScreen();
-            screen = CreateScreen("角色创建完成");
-            AddText(screen.transform, "正在进入世界…", 24, new Color32(244, 205, 135, 255),
-                new Vector2(0.1f, 0.42f), new Vector2(0.9f, 0.58f), TextAlignmentOptions.Center);
+            try
+            {
+                PrepareFirstStoryHome();
+            }
+            catch (Exception storyHomeError)
+            {
+                Debug.LogException(storyHomeError, this);
+                DisposeFirstStoryHome();
+                ShowStatus("主城演出资源不可用，继续剧情剩余节点。");
+            }
+            opening.FirstStoryHomeAction = PlayFirstStoryHomeAction;
             opening.PlayFirstStory(ShowInitialWeapon, message => ShowStatus(message));
         }
 
         private void ShowInitialWeapon()
         {
+            if (opening != null) opening.FirstStoryHomeAction = null;
+            DisposeFirstStoryHome();
             ClearScreen();
             screen = CreateScreen("选择初始职业");
             AddText(screen.transform, "选择使用剑或法杖", 24, new Color32(242, 218, 174, 255),
@@ -1223,7 +1345,7 @@ namespace Zjcs.Presentation.CharacterCreation
             try
             {
                 homeRuntime = Zjcs.Presentation.Home.HomeFeatureRuntime.Begin(slotId,
-                    Application.persistentDataPath, canvas.transform, OnHomeClosed);
+                    Application.persistentDataPath, canvas.transform, OnHomeClosed, OpenInitialIslandFromHome);
                 if (screen != null) screen.SetActive(false);
             }
             catch (Exception error)
@@ -1244,6 +1366,14 @@ namespace Zjcs.Presentation.CharacterCreation
             homeRuntime = null;
             if (screen != null) screen.SetActive(true);
             ShowComplete("已返回主菜单");
+        }
+
+        private void OpenInitialIslandFromHome()
+        {
+            Zjcs.Presentation.Home.HomeFeatureRuntime runtime = homeRuntime;
+            homeRuntime = null;
+            runtime?.CloseForNavigation();
+            EnterInitialIsland();
         }
 
         private void EnterInitialIsland()
@@ -1296,6 +1426,7 @@ namespace Zjcs.Presentation.CharacterCreation
 
             try
             {
+                canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080, 1920);
                 characterFeatureRoot.SetActive(true);
                 characterRuntime.OpenProfile(slotId);
                 if (screen != null) screen.SetActive(false);
@@ -1304,6 +1435,7 @@ namespace Zjcs.Presentation.CharacterCreation
             {
                 Debug.LogException(error, this);
                 characterFeatureRoot.SetActive(false);
+                canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(720, 1280);
                 if (screen != null) screen.SetActive(true);
                 ShowComplete("人物界面未能打开：" + error.Message);
             }
@@ -1312,6 +1444,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private void CloseCharacterProfile()
         {
             if (characterFeatureRoot != null) characterFeatureRoot.SetActive(false);
+            canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(720, 1280);
             if (screen != null) screen.SetActive(true);
         }
 
@@ -1420,29 +1553,107 @@ namespace Zjcs.Presentation.CharacterCreation
             femalePreview.SetVisible(isFemale);
 
             CharacterAppearanceDraft appearance = ActiveAppearance();
-            var selectedSkins = new Dictionary<int, CharacterCreationSkinInfo>();
             int sex = isFemale ? 1 : 0;
-            foreach (CharacterCreationSkinInfo info in assets.GetDefaultSkinInfos(sex,
-                CharacterCreationOfflineService.DefaultProfession))
-                selectedSkins[info.Type] = info;
-            foreach (string field in new[] { "hairstyle_id", "eyebrow_id", "eye_id", "mouth_id", "makeup_id", "feature_id" })
-            {
-                if (assets.TryGetAppearanceOption(draft.body_type, field, CurrentOption(appearance, field),
-                    out CharacterCreationOptionInfo option)
-                    && assets.TryGetSkinInfo(option.SkinId, out CharacterCreationSkinInfo info))
-                    selectedSkins[option.SkinType] = info;
-            }
-
+            Dictionary<int, CharacterCreationSkinInfo> selectedSkins = ResolveSelectedSkins(
+                appearance, draft.page == "appearance");
             var skinNames = selectedSkins.Values.Select(info => info.Name).Distinct(StringComparer.Ordinal).ToList();
-            var dyeChanges = new Dictionary<int, Vector4[]>();
-            foreach (KeyValuePair<int, CharacterCreationSkinInfo> selectedSkin in selectedSkins)
-                if (selectedSkin.Value.HasDye)
-                    dyeChanges.Add(selectedSkin.Key, service.GetDyeHsvChanges(appearance, selectedSkin.Key));
+            Dictionary<int, Vector4[]> dyeChanges = ResolveDyeChanges(appearance, selectedSkins);
 
             CharacterCreationNativeModelPreview active = isFemale ? femalePreview : malePreview;
             active.ApplySkins(skinNames);
             active.ApplyDyeChannels(dyeChanges);
             if (restartAnimation) active.Play("home/idle_01");
+        }
+
+        private Dictionary<int, CharacterCreationSkinInfo> ResolveSelectedSkins(
+            CharacterAppearanceDraft appearance, bool applyDiyMutex = false)
+        {
+            int sex = appearance.body_type == "female" ? 1 : 0;
+            var selected = new Dictionary<int, CharacterCreationSkinInfo>();
+            foreach (CharacterCreationSkinInfo info in assets.GetDefaultSkinInfos(sex,
+                CharacterCreationOfflineService.DefaultProfession))
+                selected[info.Type] = info;
+
+            foreach (string field in new[] { "hairstyle_id", "eyebrow_id", "eye_id", "mouth_id", "makeup_id", "feature_id" })
+                if (assets.TryGetAppearanceOption(appearance.body_type, field, CurrentOption(appearance, field),
+                    out CharacterCreationOptionInfo option)
+                    && assets.TryGetSkinInfo(option.SkinId, out CharacterCreationSkinInfo info))
+                    selected[option.SkinType] = info;
+
+            int groupId = appearance.appearance_group_id == 0
+                ? assets.DefaultAppearanceGroupId(sex) : appearance.appearance_group_id;
+            if (!assets.TryGetAppearanceGroup(sex, groupId, out CharacterCreationAppearanceGroupInfo group)
+                || group.condition_id != 0)
+                throw new InvalidOperationException("The selected official appearance group is unavailable.");
+
+            bool suppressHairAppendAppearance = applyDiyMutex
+                && (draft.tab == "头发" || draft.tab == "特征");
+            foreach (CharacterCreationAppearanceGroupSkin skin in group.appearance_skins)
+            {
+                if (suppressHairAppendAppearance && skin.skin_type == 3) continue;
+                if (!assets.TryGetSkinInfo(skin.skin_id, out CharacterCreationSkinInfo info))
+                    throw new InvalidOperationException("Official appearance group skin data is missing: " + skin.skin_id);
+                selected[skin.skin_type] = info;
+            }
+            return selected;
+        }
+
+        private Dictionary<int, Vector4[]> ResolveDyeChanges(CharacterAppearanceDraft appearance,
+            IReadOnlyDictionary<int, CharacterCreationSkinInfo> selectedSkins)
+        {
+            var changes = new Dictionary<int, Vector4[]>();
+            foreach (KeyValuePair<int, CharacterCreationSkinInfo> selected in selectedSkins)
+                if (selected.Value.HasDye)
+                    changes.Add(selected.Key, service.GetDyeHsvChanges(appearance, selected.Key));
+            return changes;
+        }
+
+        private void PrepareFirstStoryHome()
+        {
+            DisposeFirstStoryHome();
+            if (draft == null) draft = service.OpenDraft(slotId);
+            firstStoryHomeAssets ??= HomeAssetCatalog.LoadDefault();
+            firstStoryHomeScene = new HomeSceneView(firstStoryHomeAssets, transform);
+            foreach (HomeFurnitureScene furniture in firstStoryHomeAssets.Scene.furniture ?? Array.Empty<HomeFurnitureScene>())
+                firstStoryHomeScene.SetFurnitureState(furniture.type,
+                    furniture.type == 0 ? HomeFurnitureState.Functional : HomeFurnitureState.Locked);
+
+            firstStoryHomeActor = new GameObject("FirstStoryHomePlayer");
+            firstStoryHomeActor.transform.SetParent(firstStoryHomeScene.Root.transform, false);
+            firstStoryHomeActor.transform.localPosition = new Vector3(4.5f, -5.44f, 0f);
+            firstStoryHomeActor.transform.localScale = Vector3.one * 0.4f;
+            SortingGroup sorting = firstStoryHomeActor.AddComponent<SortingGroup>();
+            sorting.sortingLayerName = "Default";
+            sorting.sortingOrder = firstStoryHomeScene.GetNextSortingOrder(StoryHomePlayerSortingLayer, 10);
+
+            firstStoryHomeActorAnimation = firstStoryHomeActor.AddComponent<CharacterCreationMeshFramePlayer>();
+            firstStoryHomeActorAnimation.Initialize(draft.body_type);
+            CharacterAppearanceDraft appearance = ActiveAppearance();
+            Dictionary<int, CharacterCreationSkinInfo> skins = ResolveSelectedSkins(appearance);
+            firstStoryHomeActorAnimation.ApplySkins(skins.Values.Select(info => info.Name));
+            firstStoryHomeActorAnimation.ApplyDye(ResolveDyeChanges(appearance, skins));
+        }
+
+        private IEnumerator PlayFirstStoryHomeAction(string behaviour)
+        {
+            if (behaviour != "StoryStun" || firstStoryHomeActor == null
+                || firstStoryHomeActorAnimation == null) return null;
+            firstStoryHomeActorAnimation.Play("home/idle_01");
+            SortingGroup sorting = firstStoryHomeActor.GetComponent<SortingGroup>();
+            if (sorting != null)
+                sorting.sortingOrder = firstStoryHomeScene.GetNextSortingOrder(StoryHomePlayerSortingLayer, 11);
+            return null;
+        }
+
+        private void DisposeFirstStoryHome()
+        {
+            firstStoryHomeActorAnimation = null;
+            firstStoryHomeActor = null;
+            if (firstStoryHomeScene != null)
+            {
+                firstStoryHomeScene.Dispose();
+                firstStoryHomeScene = null;
+            }
         }
 
         private void ResetDIYContentTabGroup()

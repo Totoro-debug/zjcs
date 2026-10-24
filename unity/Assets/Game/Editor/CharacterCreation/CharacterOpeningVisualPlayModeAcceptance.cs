@@ -28,6 +28,7 @@ namespace Zjcs.Editor.CharacterCreation
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running the visual acceptance.");
+            CharacterOpeningPlayModeAcceptance.ConfigurePortraitGameView();
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 420f);
             SessionState.SetBool(ActiveKey, true);
@@ -155,6 +156,15 @@ namespace Zjcs.Editor.CharacterCreation
                 Log("step: loading opening assets");
                 OpeningAssets assets = OpeningAssets.LoadDefault();
                 Log("step: opening assets loaded");
+                OpeningSkillEffectPlayer effectPayload = OpeningSkillEffectPlayer.LoadDefault(Log);
+                Require(effectPayload != null, "The pinned opening particle payload was not loaded.");
+                using (effectPayload)
+                {
+                    int particleSystems = effectPayload.ValidateAllParticleResources();
+                    Require(particleSystems == 578,
+                        "The complete opening particle payload did not instantiate: " + particleSystems);
+                    Log("step: all " + particleSystems + " opening particle systems, material textures and mesh bindings validated");
+                }
                 TMP_FontAsset font = TMP_Settings.defaultFontAsset;
                 try
                 {
@@ -165,6 +175,8 @@ namespace Zjcs.Editor.CharacterCreation
                 {
                     Log("official HUD font unavailable, using TMP default: " + error.Message);
                 }
+                int hiddenCanvases = HideExistingCanvases();
+                Log("step: hidden pre-existing canvases=" + hiddenCanvases);
                 Log("step: creating opening UI (font=" + (font == null ? "null" : font.name) + ")");
                 session.Ui = new OpeningUiView(assets.Ui, font, null, 60);
                 Log("step: opening UI created");
@@ -247,6 +259,29 @@ namespace Zjcs.Editor.CharacterCreation
                     stage.orthographicSize = savedSize;
                 }
                 StartCoroutine(session.Playback.Play());
+                float effectDeadline = Time.realtimeSinceStartup + 15f;
+                while (session.Playback.SkillEffectsSpawned == 0 && Time.realtimeSinceStartup < effectDeadline)
+                    yield return null;
+                Require(session.Playback.SkillEffectsSpawned > 0, "official opening skill particles were not spawned");
+                while ((session.Playback.StatusVisualsSpawned == 0 || session.Playback.StatusAnimations == 0
+                        || session.Playback.SkillSoundEvents == 0 || session.Playback.SkillSoundsPlaying == 0)
+                       && Time.realtimeSinceStartup < effectDeadline)
+                    yield return null;
+                Require(session.Playback.StatusVisualsSpawned > 0,
+                    "official status particle effects were not attached to their target units");
+                Require(session.Playback.ActiveStatusEffects > 0,
+                    "official status particle effects did not remain active until status removal");
+                Require(session.Playback.SkillSoundEvents > 0 && session.Playback.SkillSoundsPlaying > 0,
+                    "official opening Wwise event did not load and play its verified local audio clip");
+                Require(session.Playback.StatusAnimations > 0,
+                    "official status Animator trigger did not resolve to a Spine animation");
+                Debug.Log("[Opening visual] status visuals=" + session.Playback.StatusVisualsSpawned
+                          + " active statuses=" + session.Playback.ActiveStatusEffects
+                          + " status animations=" + session.Playback.StatusAnimations
+                          + " sounds=" + session.Playback.SkillSoundEvents
+                          + " playing=" + session.Playback.SkillSoundsPlaying);
+                yield return Capture("visual-skill-effects");
+                yield return Capture("visual-status-effects");
                 float roundDeadline = Time.realtimeSinceStartup + 15f;
                 while (session.Playback.Round < 1 && Time.realtimeSinceStartup < roundDeadline) yield return null;
                 Require(session.Playback.TimelineItems > 0, "official action timeline was not populated");
@@ -277,11 +312,17 @@ namespace Zjcs.Editor.CharacterCreation
                     Require(session.Playback.DeathHolds > 0, "defeated units were not held for their death animation");
                     Require(session.Playback.StackedDamages > 0,
                         "stacked damage numbers were not offset by the official spacing");
+                    Require(session.Playback.SkillEffectsSpawned > 0,
+                        "official cast/damage effect particles were not spawned");
+                    Require(session.Playback.SkillParticleSystems > 0,
+                        "official skill effect particle systems were not instantiated");
                     Debug.Log("[Opening visual] full playback: die actions=" + session.Playback.DieActions
                               + " stacked damage=" + session.Playback.StackedDamages
                               + " death holds=" + session.Playback.DeathHolds
                               + " actions=" + session.Playback.ActionAnimations
-                              + " damage=" + session.Playback.DamageNumbers);
+                              + " damage=" + session.Playback.DamageNumbers
+                              + " effects=" + session.Playback.SkillEffectsSpawned
+                              + " effect systems=" + session.Playback.SkillParticleSystems);
                 }
                 else
                 {
@@ -329,6 +370,18 @@ namespace Zjcs.Editor.CharacterCreation
         private static void Require(bool condition, string message)
         {
             if (!condition) throw new InvalidOperationException(message);
+        }
+
+        private static int HideExistingCanvases()
+        {
+            int count = 0;
+            foreach (Canvas canvas in UnityEngine.Object.FindObjectsOfType<Canvas>(true))
+            {
+                if (!canvas.enabled) continue;
+                canvas.enabled = false;
+                count++;
+            }
+            return count;
         }
 
         private static void Log(string message) => Debug.Log("[Opening visual] " + message);

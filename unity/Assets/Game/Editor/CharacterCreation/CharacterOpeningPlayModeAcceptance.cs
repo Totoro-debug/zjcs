@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using Spine.Unity;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -187,18 +188,34 @@ namespace Zjcs.Editor.CharacterCreation
             Require(battlefield.StageCamera != null && battlefield.StageCamera.orthographic,
                 "The official opening battlefield camera was not restored.");
             MeshFilter[] stageMeshes = battlefield.Root.GetComponentsInChildren<MeshFilter>(false);
-            Require(stageMeshes.Length == 142, "The official stage mesh batches were not created: " + stageMeshes.Length);
+            int stageBatchCount = 0;
             foreach (MeshFilter stageMesh in stageMeshes)
             {
+                if (!stageMesh.gameObject.name.StartsWith("Batch ", StringComparison.Ordinal)) continue;
+                stageBatchCount++;
                 MeshRenderer renderer = stageMesh.GetComponent<MeshRenderer>();
                 Require(renderer != null && renderer.sharedMaterial != null
                     && renderer.sharedMaterial.mainTexture != null,
                     "An official game_902 mesh has no bound texture: " + stageMesh.name);
             }
+            Require(stageBatchCount == battlefield.BatchCount,
+                "The official stage mesh batches were not created: " + stageBatchCount);
             Require(running.SpawnedUnits > 0, "No official Spine battle unit was rendered.");
+            bool hasPlayingAnimation = false;
+            foreach (SkeletonAnimation unit in ((System.Collections.Generic.Dictionary<int, SkeletonAnimation>)
+                Field(running, "units").GetValue(running)).Values)
+            {
+                var track = unit == null || unit.AnimationState == null ? null : unit.AnimationState.GetCurrent(0);
+                if (track != null && track.Animation != null)
+                {
+                    hasPlayingAnimation = true;
+                    break;
+                }
+            }
+            Require(hasPlayingAnimation, "Rendered opening units did not start a Spine animation track.");
             Debug.Log("[Opening acceptance] playback resolved units=" + running.PreparedUnits
                 + " rendered=" + running.SpawnedUnits + " round=" + running.Round
-                + " stageMeshes=" + stageMeshes.Length + " stageParticles=" + battlefield.ParticleCount
+                + " stageMeshes=" + stageBatchCount + " stageParticles=" + battlefield.ParticleCount
                 + " stageCamera=" + battlefield.StageCamera.name);
             yield return Capture("opening-fight");
 
@@ -445,7 +462,7 @@ namespace Zjcs.Editor.CharacterCreation
             if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;
         }
 
-        private static void ConfigurePortraitGameView()
+        internal static void ConfigurePortraitGameView()
         {
             Assembly editor = typeof(UnityEditor.Editor).Assembly;
             Type sizesType = editor.GetType("UnityEditor.GameViewSizes");

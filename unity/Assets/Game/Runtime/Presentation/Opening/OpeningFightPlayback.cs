@@ -69,6 +69,11 @@ namespace Zjcs.Presentation.Opening
         public int DamageNumbers { get; private set; }
         public int SkillEffectsSpawned => skillEffects != null ? skillEffects.SpawnedEffects : 0;
         public int SkillParticleSystems => skillEffects != null ? skillEffects.SpawnedSystems : 0;
+        public int SkillSoundEvents => skillEffects != null ? skillEffects.SpawnedSounds : 0;
+        public int SkillSoundsPlaying => skillEffects != null ? skillEffects.PlayingSounds : 0;
+        public int ActiveStatusEffects => skillEffects != null ? skillEffects.SpawnedStatusEffects : 0;
+        public int StatusVisualsSpawned { get; private set; }
+        public int StatusAnimations { get; private set; }
         public int ActionAnimations { get; private set; }
         public int DieActions { get; private set; }
         public int DeathHolds { get; private set; }
@@ -145,6 +150,8 @@ namespace Zjcs.Presentation.Opening
 
         public void Dispose()
         {
+            skillEffects?.Dispose();
+            skillEffects = null;
             foreach (SkeletonAnimation unit in units.Values)
                 if (unit != null) UnityEngine.Object.Destroy(unit.gameObject);
             units.Clear();
@@ -271,8 +278,21 @@ namespace Zjcs.Presentation.Opening
             OpeningRecordEntity entity = OpeningRecordEntity.Parse(raw);
             entityState[entity.EntityId] = entity;
             TryCreateUnit(entity);
-            if (skillEffects != null && battlefield != null && entity.ClassId == 11150)
-                skillEffects.Play("cast", 11150, battlefield.CellToWorld(entity.GridX, entity.GridY), battlefield.Root.transform);
+            string effectType = entity.Components.Contains("FightSkillComponent") ? "cast"
+                : entity.Components.Contains("FightDamageComponent") ? "damage"
+                : entity.Components.Contains("FightStatusComponent") ? "status" : string.Empty;
+            if (skillEffects != null && battlefield != null && effectType == "cast")
+            {
+                SkeletonAnimation sourceUnit = FindUnit(entity.SourceEntityId);
+                SkeletonAnimation targetUnit = FindUnit(entity.TargetEntityId);
+                Vector3 skillPosition = battlefield.CellToWorld(entity.GridX, entity.GridY);
+                Vector3 sourcePosition = sourceUnit != null ? sourceUnit.transform.position : skillPosition;
+                Vector3 targetPosition = targetUnit != null ? targetUnit.transform.position
+                    : battlefield.CellToWorld(entity.TargetGridX, entity.TargetGridY);
+                skillEffects.Play("cast", entity.ClassId, skillPosition, battlefield.Root.transform,
+                    entity.EntityId, sourceUnit, targetUnit, battlefield.StageCamera,
+                    sourcePosition, targetPosition, entity.SkillRotation);
+            }
             if (raw.TryGetValue("ComponentList", out object components) && components is List<object> list)
             {
                 foreach (object item in list)
@@ -286,21 +306,42 @@ namespace Zjcs.Presentation.Opening
                         {
                             Dictionary<string, object> result = OpeningJson.Object(component["DamageResult"], "damage result");
                             Dictionary<string, object> position = OpeningJson.Object(result["Pos"], "damage position");
+                            int targetId = ReadEntityReference(component, "TargetId");
+                            int sourceId = ReadEntityReference(component, "SourceId");
+                            SkeletonAnimation targetUnit = FindUnit(targetId);
+                            SkeletonAnimation sourceUnit = FindUnit(sourceId);
+                            Vector3 targetPosition = battlefield.CellToWorld(OpeningJson.Int(position, "X"),
+                                OpeningJson.Int(position, "Y"));
+                            Vector3 sourcePosition = sourceUnit != null ? sourceUnit.transform.position : targetPosition;
                             skillEffects.Play("damage", entity.ClassId,
-                                battlefield.CellToWorld(OpeningJson.Int(position, "X"), OpeningJson.Int(position, "Y")),
-                                battlefield.Root.transform);
+                                targetPosition, battlefield.Root.transform, entity.EntityId, sourceUnit, targetUnit,
+                                battlefield.StageCamera, sourcePosition, targetPosition,
+                                sourceUnit != null ? Quaternion.Euler(0f, 0f, sourceUnit.transform.eulerAngles.z)
+                                    : Quaternion.identity);
                         }
                     }
-                    else if (type.Contains("ActionComponent")) PlayAction(component);
+                    else if (type.Contains("ActionComponent")) PlayAction(component, entity.ClassId, effectType, entity.EntityId);
                 }
+                if (effectType == "status") PlayStatusEntity(entity, list);
             }
+        }
+
+        private SkeletonAnimation FindUnit(int entityId)
+        {
+            return entityId > 0 && units.TryGetValue(entityId, out SkeletonAnimation unit) ? unit : null;
+        }
+
+        private static int ReadEntityReference(Dictionary<string, object> component, string key)
+        {
+            return component.TryGetValue(key, out object raw) && raw is Dictionary<string, object> reference
+                ? OpeningJson.Int(reference, "EntityId") : 0;
         }
 
         /// <summary>
         /// The record carries the official action type for each acting unit. Only the
         /// unambiguous ones map onto the converted Spine animation names.
         /// </summary>
-        private void PlayAction(Dictionary<string, object> component)
+        private void PlayAction(Dictionary<string, object> component, int classId, string effectType, int ownerEntityId)
         {
             string actionType = OpeningJson.String(component, "ActionType");
             string alias;
@@ -310,18 +351,108 @@ namespace Zjcs.Presentation.Opening
                 case "AirCombo": alias = "attack_01"; break;
                 case "Move": alias = "run_01"; break;
                 case "Die": alias = "die_01"; DieActions++; break;
-                default: return;
+                default: alias = null; break;
             }
             if (!component.TryGetValue("ApplyId", out object applied) || !(applied is Dictionary<string, object> id)) return;
             int unitId = OpeningJson.Int(id, "EntityId");
             if (!units.TryGetValue(unitId, out SkeletonAnimation unit) || unit == null) return;
             if (!bindings.TryGetValue(unitId, out OfficialBattleModelBinding binding)) return;
-            string clip = ResolveAlias(binding, alias);
-            if (clip == null) return;
-            unit.AnimationState.SetAnimation(0, clip, false);
+            string playableClip = null;
+            float playableDuration = 0f;
+            bool configured = !string.IsNullOrEmpty(effectType)
+                && TryResolvePlayableAnimation(effectType, classId, binding, out playableClip, out playableDuration);
+            if (!configured && !string.IsNullOrEmpty(effectType))
+                LogUnsupportedPlayableAnimation(effectType, classId);
+            string clip = configured ? playableClip
+                : string.IsNullOrEmpty(alias) ? null : ResolveAlias(binding, alias);
+            if (clip == null)
+            {
+                if (!string.IsNullOrEmpty(effectType) && skillEffects != null)
+                    LogUnsupportedPlayableAnimation(effectType, classId);
+                return;
+            }
+            unit.AnimationState.SetAnimation(0, clip, configured && playableDuration < 0f);
             string idle = ResolveAlias(binding, "idle_01");
-            if (idle != null) unit.AnimationState.AddAnimation(0, idle, true, 0f);
+            if (idle != null && (!configured || playableDuration >= 0f))
+                unit.AnimationState.AddAnimation(0, idle, true,
+                    configured && playableDuration > 0f ? playableDuration : 0f);
+            if (configured && effectType == "status") StatusAnimations++;
             ActionAnimations++;
+        }
+
+        private bool TryResolvePlayableAnimation(string effectType, int classId,
+            OfficialBattleModelBinding binding, out string clip, out float duration)
+        {
+            clip = null;
+            duration = 0f;
+            if (skillEffects == null) return false;
+            foreach (Dictionary<string, object> entry in skillEffects.GetEvents(effectType, classId))
+            {
+                if (!entry.TryGetValue("source_event", out object rawSource)
+                    || !(rawSource is Dictionary<string, object> source)) continue;
+                if (OpeningJson.String(entry, "kind") == "override")
+                {
+                    string animation = OpeningJson.String(source, "animation");
+                    int slash = animation.LastIndexOf('/');
+                    string name = slash >= 0 ? animation.Substring(slash + 1) : animation;
+                    clip = ResolveAlias(binding, name) ?? ResolveAlias(binding, animation);
+                    if (clip != null) return true;
+                }
+                if (OpeningJson.String(entry, "kind") != "animator"
+                    || !source.TryGetValue("fields", out object rawFields)
+                    || !(rawFields is Dictionary<string, object> fields)) continue;
+                string trigger = OpeningJson.String(fields, "myTriggerParam");
+                if (string.IsNullOrEmpty(trigger)) continue;
+                string suffixedTrigger = trigger + "_01";
+                clip = ResolveAlias(binding, trigger) ?? ResolveAlias(binding, suffixedTrigger);
+                if (clip == null && binding.skeleton != null)
+                {
+                    var skeletonData = binding.skeleton.GetSkeletonData(true);
+                    if (skeletonData != null)
+                    {
+                        if (skeletonData.FindAnimation(trigger) != null) clip = trigger;
+                        else if (skeletonData.FindAnimation(suffixedTrigger) != null) clip = suffixedTrigger;
+                    }
+                }
+                if (clip == null) continue;
+                duration = (float)OpeningJson.Number(fields, "myDuration");
+                return true;
+            }
+            return false;
+        }
+
+        private void LogUnsupportedPlayableAnimation(string effectType, int classId)
+        {
+            string key = effectType + ":" + classId;
+            if (!skippedModels.Add("playable:" + key)) return;
+            foreach (Dictionary<string, object> entry in skillEffects.GetEvents(effectType, classId))
+            {
+                if (OpeningJson.String(entry, "kind") != "animator"
+                    || !entry.TryGetValue("source_event", out object raw)
+                    || !(raw is Dictionary<string, object> source)
+                    || !source.TryGetValue("fields", out object fieldsValue)
+                    || !(fieldsValue is Dictionary<string, object> fields)) continue;
+                string trigger = OpeningJson.String(fields, "myTriggerParam");
+                if (!string.IsNullOrEmpty(trigger))
+                    log("官方开场 Animator 参数没有对应的 Spine 动画: " + key + "/" + trigger);
+            }
+        }
+
+        private void PlayStatusEntity(OpeningRecordEntity entity, List<object> components)
+        {
+            if (skillEffects == null) return;
+            int targetId = 0;
+            foreach (object item in components)
+            {
+                if (!(item is Dictionary<string, object> component)
+                    || !OpeningJson.String(component, "$type").Contains("ActionComponent")) continue;
+                if (component.TryGetValue("ApplyId", out object rawId)
+                    && rawId is Dictionary<string, object> id)
+                    targetId = OpeningJson.Int(id, "EntityId");
+                break;
+            }
+            if (targetId <= 0 || !units.TryGetValue(targetId, out SkeletonAnimation unit) || unit == null) return;
+            if (skillEffects.PlayStatus(entity.EntityId, entity.ClassId, unit)) StatusVisualsSpawned++;
         }
 
         private string ResolveAlias(OfficialBattleModelBinding binding, string alias)
@@ -437,6 +568,8 @@ namespace Zjcs.Presentation.Opening
 
         private void RemoveEntity(int entityId)
         {
+            skillEffects?.StopEntity(entityId);
+            skillEffects?.StopStatus(entityId);
             entityState.Remove(entityId);
             nextActionTime.Remove(entityId);
             if (units.TryGetValue(entityId, out SkeletonAnimation defeated) && defeated != null)

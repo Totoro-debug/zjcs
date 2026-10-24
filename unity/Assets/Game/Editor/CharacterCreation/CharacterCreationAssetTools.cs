@@ -71,6 +71,54 @@ namespace Zjcs.Editor.CharacterCreation
             public string sha256;
         }
 
+        [Serializable]
+        private sealed class AppearanceGroupIconSourceManifest
+        {
+            public string manifest;
+            public string apk_sha256;
+            public AppearanceGroupIconLocalizationSource source_localization;
+            public AppearanceGroupIconSourceBundle[] source_bundles;
+            public AppearanceGroupIconSourceOutput[] groups;
+        }
+
+        [Serializable]
+        private sealed class AppearanceGroupIconLocalizationSource
+        {
+            public string name;
+            public string origin;
+            public string apk_sha256;
+            public string apk_entry;
+            public string bundle_md5;
+            public string bundle_sha256;
+            public long bytes;
+        }
+
+        [Serializable]
+        private sealed class AppearanceGroupIconSourceBundle
+        {
+            public string name;
+            public string origin;
+            public string bundle_md5;
+            public string bundle_sha256;
+            public long bytes;
+            public string apk_sha256;
+            public string apk_entry;
+            public string manifest;
+            public string url;
+        }
+
+        [Serializable]
+        private sealed class AppearanceGroupIconSourceOutput
+        {
+            public int group_id;
+            public string sex;
+            public int item_id;
+            public string localized_label;
+            public string path;
+            public long bytes;
+            public string sha256;
+        }
+
         private const string PayloadRoot = "Assets/Official/CharacterCreation/";
         private const string RecoveredRoot = PayloadRoot + "Recovered/";
         private const string ResourcesRoot = "Assets/Game/Resources/CharacterCreation";
@@ -80,6 +128,7 @@ namespace Zjcs.Editor.CharacterCreation
         private const string UiManifestPath = PayloadRoot + "create-player-ui-source-manifest.json";
         private const string ConfirmDialogManifestPath = RecoveredRoot + "ConfirmDialog/source-manifest.json";
         private const string SkinIconManifestPath = RecoveredRoot + "PlayerSkinIcons/source-manifest.json";
+        private const string AppearanceGroupIconManifestPath = RecoveredRoot + "AppearanceGroupIcons/source-manifest.json";
         private const string PanelPrefabPath = CharacterCreationUiTools.Root + "/CreatePlayerPanel.prefab";
         private const string DiyPrefabPath = CharacterCreationUiTools.Root + "/CreatePlayerPanelDIYContent.prefab";
         private const string ConfirmDialogPrefabPath = CharacterCreationUiTools.Root + "/ConfirmDialog.prefab";
@@ -165,8 +214,9 @@ namespace Zjcs.Editor.CharacterCreation
             GameObject diyPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(DiyPrefabPath);
             GameObject confirmDialogPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ConfirmDialogPrefabPath);
             TextAsset skinIconManifest = AssetDatabase.LoadAssetAtPath<TextAsset>(SkinIconManifestPath);
+            TextAsset appearanceGroupIconManifest = AssetDatabase.LoadAssetAtPath<TextAsset>(AppearanceGroupIconManifestPath);
             if (uiManifest == null || confirmDialogManifest == null || panelPrefab == null || diyPrefab == null
-                || confirmDialogPrefab == null || skinIconManifest == null)
+                || confirmDialogPrefab == null || skinIconManifest == null || appearanceGroupIconManifest == null)
                 throw new BuildFailedException("Recovered official CreatePlayer prefab dependencies were not imported.");
             serialized.FindProperty("createPlayerPanelPrefab").objectReferenceValue = panelPrefab;
             serialized.FindProperty("createPlayerDiyContentPrefab").objectReferenceValue = diyPrefab;
@@ -206,6 +256,19 @@ namespace Zjcs.Editor.CharacterCreation
                 binding.FindPropertyRelative("skinName").stringValue = output.name;
                 binding.FindPropertyRelative("sprite").objectReferenceValue = sprite;
             }
+            AppearanceGroupIconSourceManifest groupIcons = ParseAppearanceGroupIconManifest(appearanceGroupIconManifest.text);
+            serialized.FindProperty("appearanceGroupIconSourceManifest").objectReferenceValue = appearanceGroupIconManifest;
+            SerializedProperty groupIconArray = serialized.FindProperty("appearanceGroupIcons");
+            if (groupIconArray == null) throw new BuildFailedException("Character appearance group icon bindings field is missing.");
+            groupIconArray.arraySize = groupIcons.groups.Length;
+            for (int i = 0; i < groupIcons.groups.Length; i++)
+            {
+                AppearanceGroupIconSourceOutput output = groupIcons.groups[i];
+                SerializedProperty binding = groupIconArray.GetArrayElementAtIndex(i);
+                binding.FindPropertyRelative("groupId").intValue = output.group_id;
+                binding.FindPropertyRelative("sex").intValue = output.sex == "male" ? 0 : 1;
+                binding.FindPropertyRelative("sprite").objectReferenceValue = LoadAppearanceGroupIcon(output.path);
+            }
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalog);
             AssetDatabase.SaveAssets();
@@ -214,8 +277,85 @@ namespace Zjcs.Editor.CharacterCreation
             ValidateRecoveredUiHashes(uiManifest.text);
             ValidateRecoveredUiHashes(confirmDialogManifest.text);
             ValidateSkinIconHashes(skinIconManifest.text);
+            ValidateAppearanceGroupIconHashes(appearanceGroupIconManifest.text);
             CharacterCreationPerformanceTools.BuildAndValidate(catalog.CreationPerformance);
-            Debug.Log("Official character creation catalogs, UI audio, skin icons, and source hashes validated.");
+            Debug.Log("Official character creation catalogs, UI audio, skin icons, appearance group icons, and source hashes validated.");
+        }
+
+        private static AppearanceGroupIconSourceManifest ParseAppearanceGroupIconManifest(string json)
+        {
+            AppearanceGroupIconSourceManifest manifest = JsonUtility.FromJson<AppearanceGroupIconSourceManifest>(json);
+            if (manifest == null || manifest.manifest != "854_156383" || manifest.apk_sha256 != PinnedApkSha256
+                || manifest.source_localization == null
+                || manifest.source_localization.name != "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"
+                || manifest.source_localization.origin != "apk_zip"
+                || manifest.source_localization.apk_sha256 != PinnedApkSha256
+                || manifest.source_localization.apk_entry != "assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile"
+                || manifest.source_localization.bundle_md5 != "9a0b6ab8c5136050fd005ead8f567863"
+                || manifest.source_localization.bundle_sha256 != "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8"
+                || manifest.source_localization.bytes != 5291479
+                || manifest.source_bundles == null || manifest.source_bundles.Length != 5
+                || manifest.groups == null || manifest.groups.Length != 12)
+                throw new BuildFailedException("Official appearance group icon source manifest is not pinned to the expected APK assets.");
+            foreach (AppearanceGroupIconSourceBundle bundle in manifest.source_bundles)
+            {
+                bool validApk = bundle != null && bundle.origin == "apk_zip" && bundle.apk_sha256 == PinnedApkSha256
+                    && !string.IsNullOrEmpty(bundle.apk_entry);
+                bool validCdn = bundle != null && bundle.origin == "official_cdn" && bundle.manifest == "854_156383"
+                    && !string.IsNullOrEmpty(bundle.url);
+                if (!validApk && !validCdn)
+                    throw new BuildFailedException("Appearance group icon bundle source is invalid or from another manifest.");
+            }
+            var groups = new System.Collections.Generic.HashSet<int>();
+            foreach (AppearanceGroupIconSourceOutput output in manifest.groups)
+                if (output == null || output.path == null || output.sha256 == null
+                    || string.IsNullOrEmpty(output.localized_label)
+                    || output.group_id <= 0 || (output.sex != "male" && output.sex != "female")
+                    || !groups.Add(output.group_id))
+                    throw new BuildFailedException("An official appearance group icon record is invalid or duplicated.");
+            return manifest;
+        }
+
+        private static Sprite LoadAppearanceGroupIcon(string path)
+        {
+            const string root = RecoveredRoot + "AppearanceGroupIcons/";
+            if (string.IsNullOrEmpty(path) || !path.StartsWith(root, StringComparison.Ordinal)
+                || Path.GetFileNameWithoutExtension(path) == string.Empty)
+                throw new BuildFailedException("Official appearance group icon path is invalid: " + path);
+            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) throw new BuildFailedException("Official appearance group icon was not imported as a texture: " + path);
+            if (importer.textureType != TextureImporterType.Sprite
+                || importer.spriteImportMode != SpriteImportMode.Single
+                || importer.mipmapEnabled || !importer.alphaIsTransparency)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.mipmapEnabled = false;
+                importer.alphaIsTransparency = true;
+                importer.SaveAndReimport();
+            }
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            if (sprite == null) throw new BuildFailedException("Official appearance group icon did not import as a Sprite: " + path);
+            return sprite;
+        }
+
+        private static void ValidateAppearanceGroupIconHashes(string json)
+        {
+            AppearanceGroupIconSourceManifest manifest = ParseAppearanceGroupIconManifest(json);
+            var itemIds = new System.Collections.Generic.HashSet<int>();
+            foreach (AppearanceGroupIconSourceOutput output in manifest.groups)
+            {
+                string name = "item_" + output.item_id;
+                if (!itemIds.Add(output.item_id) || Path.GetFileNameWithoutExtension(output.path) != name
+                    || !output.path.StartsWith(RecoveredRoot + "AppearanceGroupIcons/", StringComparison.Ordinal))
+                    throw new BuildFailedException("An official appearance group icon source record has an invalid item binding.");
+                string absolutePath = Path.GetFullPath(Path.Combine(Application.dataPath,
+                    output.path.Substring("Assets/".Length)));
+                if (!File.Exists(absolutePath) || new FileInfo(absolutePath).Length != output.bytes
+                    || !string.Equals(Hash(File.ReadAllBytes(absolutePath)), output.sha256,
+                    StringComparison.OrdinalIgnoreCase))
+                    throw new BuildFailedException("Official appearance group icon SHA-256 differs from its source manifest: " + output.path);
+            }
         }
 
         private static SkinIconSourceManifest ParseSkinIconManifest(string json)

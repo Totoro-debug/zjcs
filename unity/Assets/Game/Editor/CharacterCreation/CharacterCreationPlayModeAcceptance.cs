@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using TMPro;
 using UnityEditor;
@@ -13,6 +14,7 @@ using UnityEngine.EventSystems;
 using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Progression;
 using Zjcs.Presentation.CharacterCreation;
+using Process = System.Diagnostics.Process;
 
 namespace Zjcs.Editor.CharacterCreation
 {
@@ -188,7 +190,7 @@ namespace Zjcs.Editor.CharacterCreation
             played.Add("slot-2");
 
             Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipOpeningForAcceptance = true;
-            Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipFirstStoryForAcceptance = true;
+            Zjcs.Presentation.Opening.CharacterOpeningFlow.SkipFirstStoryForAcceptance = false;
             ClickByLabel(Screen(controller), "新建存档");
             yield return WaitForPage(controller, "body");
             Require(Panel(controller) != null, "Creation panel initialization failed: " + CurrentStatus(controller));
@@ -226,8 +228,117 @@ namespace Zjcs.Editor.CharacterCreation
             Transform mainTabs = Deep(Deep(diyRoot, "TabGroupGo"), "TabGroup");
             Transform[] tabItems = OfficialTabItems(mainTabs);
             Require(tabItems.Length == 4, "Official appearance tab group is incomplete.");
+
+            CharacterAppearanceDraft femaleAppearance = ActiveAppearance(controller);
+            string originalFemaleHair = femaleAppearance.hairstyle_id;
+            string originalFemaleEye = femaleAppearance.eye_id;
+            CharacterCreationAssetCatalog groupAssets = CharacterCreationAssetCatalog.LoadDefault();
+            int[][] conditionedGroupIds = { new[] { 5, 6 }, new[] { 15, 16 } };
+            for (int sex = 0; sex < conditionedGroupIds.Length; sex++)
+            {
+                foreach (int groupId in conditionedGroupIds[sex])
+                {
+                    Require(groupAssets.TryGetAppearanceGroup(sex, groupId,
+                            out CharacterCreationAppearanceGroupInfo conditionedGroup)
+                        && conditionedGroup.condition_id == 30110,
+                        "Official appearance group " + groupId + " no longer has LuoTianYi condition 30110.");
+                    if (sex == 1)
+                        Require(Deep(diyRoot, "AppearanceGroup_" + groupId) == null,
+                            "LuoTianYi-only female appearance group " + groupId + " was shown offline.");
+                }
+            }
+            Transform group14 = Deep(diyRoot, "AppearanceGroup_14");
+            Button group14Button = group14 == null ? null : group14.GetComponent<Button>();
+            Require(group14 != null && group14Button != null,
+                "The official female appearance group 14 is unavailable.");
+            if (Environment.GetEnvironmentVariable("ZJCS_CREATION_SIMULATED_INPUT") == "1")
+            {
+                ClickAt(group14.gameObject);
+                yield return null;
+                Debug.Log("Group 14 verified through simulated EventSystem pointer input.");
+            }
+            else
+            {
+                FocusGameView();
+                yield return null;
+                Require(IsEditorForeground(),
+                    "Windows is locked or another application owns input; unlock the desktop and focus the Unity Editor.");
+                RectTransform groupRect = group14.GetComponent<RectTransform>();
+                Vector2 groupScreenPoint = RectTransformUtility.WorldToScreenPoint(null,
+                    groupRect.TransformPoint(groupRect.rect.center));
+                Require(TryGetDesktopPoint(group14.gameObject, out Vector2 approximateDesktopPoint),
+                    "The group 14 button could not be mapped to the desktop.");
+                Require(MoveCursorWithOs(approximateDesktopPoint), "The OS cursor could not move to calibrate the GameView.");
+                yield return new WaitForSecondsRealtime(0.15f);
+                Vector2 firstInputPoint = Input.mousePosition;
+                Vector2 probeDesktopPoint = approximateDesktopPoint + new Vector2(48f, 48f);
+                Require(MoveCursorWithOs(probeDesktopPoint), "The OS cursor could not reach the GameView calibration point.");
+                yield return new WaitForSecondsRealtime(0.15f);
+                Vector2 probeInputPoint = Input.mousePosition;
+                Vector2 inputPerDesktopPixel = (probeInputPoint - firstInputPoint) / 48f;
+                Require(Mathf.Abs(inputPerDesktopPixel.x) > 0.1f && Mathf.Abs(inputPerDesktopPixel.y) > 0.1f,
+                    "The GameView mouse mapping could not be calibrated: " + firstInputPoint + " -> " + probeInputPoint);
+                Vector2 calibratedDesktopPoint = probeDesktopPoint + new Vector2(
+                    (groupScreenPoint.x - probeInputPoint.x) / inputPerDesktopPixel.x,
+                    (groupScreenPoint.y - probeInputPoint.y) / inputPerDesktopPixel.y);
+                Debug.Log("Calibrated OS click " + group14.name + " expected=" + groupScreenPoint + " first="
+                    + firstInputPoint + " probe=" + probeInputPoint + " gain=" + inputPerDesktopPixel
+                    + " desktop=" + calibratedDesktopPoint);
+                Require(MoveCursorWithOs(calibratedDesktopPoint),
+                    "The calibrated OS mouse could not reach the group 14 button.");
+                yield return new WaitForSecondsRealtime(0.15f);
+                Vector2 clickInputPoint = Input.mousePosition;
+                var targetPointer = new PointerEventData(EventSystem.current) { position = clickInputPoint };
+                var targetHits = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(targetPointer, targetHits);
+                GameObject targetReceiver = targetHits.Count == 0
+                    ? null : ExecuteEvents.GetEventHandler<IPointerClickHandler>(targetHits[0].gameObject);
+                Require(targetReceiver == group14.gameObject,
+                    "The OS mouse raycast did not reach group 14 before the click. Receiver="
+                    + (targetReceiver == null ? "<none>" : targetReceiver.name) + " actual=" + clickInputPoint
+                    + " expected=" + groupScreenPoint + " hits="
+                    + string.Join(",", targetHits.Select(hit => hit.gameObject.name).Take(5)) + ".");
+                Require(Vector2.Distance(groupScreenPoint, clickInputPoint) <= 4f,
+                    "The OS mouse did not land on the group 14 screen point. Expected " + groupScreenPoint
+                    + ", got " + clickInputPoint + ".");
+                mouse_event(MouseEventLeftDown, 0, 0, 0, UIntPtr.Zero);
+                yield return null;
+                bool mouseDownObserved = Input.GetMouseButtonDown(0) || Input.GetMouseButton(0);
+                yield return new WaitForSecondsRealtime(0.05f);
+                mouse_event(MouseEventLeftUp, 0, 0, 0, UIntPtr.Zero);
+                yield return null;
+                bool mouseUpObserved = Input.GetMouseButtonUp(0);
+                yield return new WaitForSecondsRealtime(0.15f);
+                CharacterAppearanceDraft osSelectedAppearance = ActiveAppearance(controller);
+                Debug.Log("Group 14 OS click down=" + mouseDownObserved + " up=" + mouseUpObserved
+                    + " selected=" + osSelectedAppearance.appearance_group_id);
+                Require(mouseDownObserved && mouseUpObserved,
+                    "The OS mouse did not deliver a complete click to group 14.");
+            }
+            CharacterAppearanceDraft selectedFemaleAppearance = ActiveAppearance(controller);
+            yield return Capture(controller, "female-group-14-click");
+            Require(selectedFemaleAppearance.appearance_group_id == 14
+                && selectedFemaleAppearance.hairstyle_id == originalFemaleHair
+                && selectedFemaleAppearance.eye_id == originalFemaleEye,
+                "Selecting an appearance group did not preserve the selection independently of DIY fields. "
+                + "Expected group 14, got " + selectedFemaleAppearance.appearance_group_id + "; hair "
+                + originalFemaleHair + " -> " + selectedFemaleAppearance.hairstyle_id + "; eyes "
+                + originalFemaleEye + " -> " + selectedFemaleAppearance.eye_id + ".");
+            Require(groupAssets.TryGetAppearanceGroup(1, 14, out CharacterCreationAppearanceGroupInfo femaleGroup14),
+                "Official female appearance group 14 data could not be loaded.");
+            CharacterCreationMeshFramePlayer femaleMesh = PreviewMeshPlayer(controller, "femalePreview");
+            HashSet<string> selectedSkins = (HashSet<string>)Field(femaleMesh, "selected").GetValue(femaleMesh);
+            foreach (CharacterCreationAppearanceGroupSkin groupSkin in femaleGroup14.appearance_skins)
+                Require(selectedSkins.Contains(groupSkin.skin_name),
+                    "A group 14 native mesh was not shown: " + groupSkin.skin_name);
+
             Click(tabItems[1]);
             yield return null;
+            selectedSkins = (HashSet<string>)Field(femaleMesh, "selected").GetValue(femaleMesh);
+            CharacterCreationAppearanceGroupSkin groupHair = femaleGroup14.appearance_skins
+                .Single(skin => skin.skin_type == 3);
+            Require(!selectedSkins.Contains(groupHair.skin_name),
+                "The official hair-tab mutex did not hide the appended group hair skin.");
             string initialHair = ActiveAppearance(controller).hairstyle_id;
             string selectedHair = SelectDifferentOption(controller, initialHair);
             Require(ActiveAppearance(controller).hairstyle_id == selectedHair, "Hair option did not update the draft.");
@@ -245,6 +356,9 @@ namespace Zjcs.Editor.CharacterCreation
 
             Click(tabItems[2]);
             yield return null;
+            selectedSkins = (HashSet<string>)Field(femaleMesh, "selected").GetValue(femaleMesh);
+            Require(selectedSkins.Contains(groupHair.skin_name),
+                "The group skin did not return after leaving its official mutex tab.");
             ClickField(controller, "FaceTabGroup", 0);
             yield return null;
             SelectDifferentOption(controller, ActiveAppearance(controller).eyebrow_id);
@@ -262,6 +376,9 @@ namespace Zjcs.Editor.CharacterCreation
             SelectDifferentOption(controller, ActiveAppearance(controller).makeup_id);
             Click(tabItems[3]);
             yield return null;
+            selectedSkins = (HashSet<string>)Field(femaleMesh, "selected").GetValue(femaleMesh);
+            Require(!selectedSkins.Contains(groupHair.skin_name),
+                "The official feature-tab mutex did not hide the appended group hair skin.");
             SelectDifferentOption(controller, ActiveAppearance(controller).feature_id);
             Click(tabItems[0]);
             yield return null;
@@ -300,6 +417,8 @@ namespace Zjcs.Editor.CharacterCreation
             Require(name.text == "测试法师", "Manual name did not survive reopening the draft.");
             Require(ActiveAppearance(controller).hairstyle_id == savedHair, "Selected hairstyle did not survive reopening the draft.");
             Require(ActiveAppearance(controller).hair_color == savedHairColor, "Custom hair color did not survive reopening the draft.");
+            Require(ActiveAppearance(controller).appearance_group_id == 14,
+                "Selected appearance group did not survive reopening the draft.");
             Require(Deep(Panel(controller).transform, "SetNameContent").gameObject.activeInHierarchy,
                 "Saved name page was not restored to its final UI state.");
 
@@ -338,10 +457,12 @@ namespace Zjcs.Editor.CharacterCreation
             string savePath = Path.Combine(testPath, "saves", slotId, "city-save.json");
             string json = File.ReadAllText(savePath, Encoding.UTF8);
             OfflineMainlineSave saved = JsonUtility.FromJson<OfflineMainlineSave>(json);
-            CharacterCreationAssetCatalog.LoadDefault().TryGetAppearanceOption("female", "hairstyle_id", savedHair,
-                out CharacterCreationOptionInfo hairOption);
+            CharacterCreationAssetCatalog catalog = CharacterCreationAssetCatalog.LoadDefault();
+            catalog.TryGetAppearanceOption("female", "hairstyle_id", savedHair, out CharacterCreationOptionInfo hairOption);
             Require(saved.Player.Wardrobe.WornSkins.Any(skin => skin.Type == hairOption.SkinType && skin.Id == hairOption.SkinId),
                 "The selected official hairstyle ID was not serialized into the character save.");
+            Require(saved.Player.Wardrobe.WornItems.Count == 0,
+                "The appearance group selected for try-on was persisted as worn items.");
             OfflineAppearanceDye savedDye = saved.Player.Wardrobe.Dyes.Single(dye => dye.Type == 2);
             Color actualHair = Color.HSVToRGB(savedDye.Hue / 360f, savedDye.Saturation / 100f, savedDye.Value / 100f);
             Color expectedHair = ParseHex(savedHairColor);
@@ -443,15 +564,47 @@ namespace Zjcs.Editor.CharacterCreation
 
         private static IEnumerator AdvanceToWeapon(CharacterCreationFlowController controller)
         {
-            // FirstStory is covered by CharacterOpeningPlayModeAcceptance. This suite
-            // isolates creation persistence and the already confirmed weapon choices.
-            yield return null;
-            var opening = (MonoBehaviour)Field(controller, "opening").GetValue(controller);
-            opening.StopAllCoroutines();
-            opening.GetType().GetMethod("Cleanup", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(opening, null);
-            opening.GetType().GetMethod("DestroyWorld", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(opening, null);
-            controller.GetType().GetMethod("ShowInitialWeapon", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(controller, null);
-            yield return null;
+            yield return WaitUntil(() => FindTextContaining("这个世界面临着深重的危机") != null,
+                "The official FirstStory first dialogue was not presented.");
+            Require(FindTextContaining("薇兰") != null, "The FirstStory role name was not presented.");
+            yield return Capture(controller, "first-story-dialogue-1");
+            ClickStoryNext();
+            yield return WaitUntil(() => FindTextContaining("请务必前来") != null,
+                "The official FirstStory second dialogue was not presented.");
+            Require(FindTextContaining("薇兰") != null, "The second FirstStory role name was not presented.");
+            yield return Capture(controller, "first-story-dialogue-2");
+            float actionStart = Time.realtimeSinceStartup;
+            ClickStoryNext();
+            yield return WaitUntil(() =>
+            {
+                GameObject actor = (GameObject)Field(controller, "firstStoryHomeActor").GetValue(controller);
+                return actor != null && Mathf.Abs(Mathf.DeltaAngle(0f, actor.transform.localEulerAngles.z)) > 30f;
+            }, "The official StoryStun home action did not animate the created character.");
+            yield return Capture(controller, "first-story-stun-approximation");
+            yield return WaitUntil(() => Screen(controller) != null
+                && Screen(controller).name == "Screen_选择初始职业",
+                "FirstStory did not hand off to initial weapon selection.");
+            Require(Time.realtimeSinceStartup - actionStart >= 2.9f,
+                "FirstStory advanced before the official three-second StoryStun action completed.");
+        }
+
+        private static TMP_Text FindTextContaining(string value)
+        {
+            foreach (TMP_Text text in UnityEngine.Object.FindObjectsOfType<TMP_Text>(true))
+                if (text.isActiveAndEnabled && text.text != null && text.text.Contains(value)) return text;
+            return null;
+        }
+
+        private static void ClickStoryNext()
+        {
+            foreach (Button button in UnityEngine.Object.FindObjectsOfType<Button>(true))
+            {
+                if (!button.gameObject.activeInHierarchy || !button.interactable
+                    || !button.name.EndsWith("NextBtn", StringComparison.Ordinal)) continue;
+                ClickAt(button.gameObject);
+                return;
+            }
+            throw new InvalidOperationException("The official story NextBtn was not available.");
         }
 
         private static Color ParseHex(string hex)
@@ -650,6 +803,105 @@ namespace Zjcs.Editor.CharacterCreation
                 + " instead of " + control.name + ": " + pointer.position);
             ExecuteEvents.Execute(receiver, pointer, ExecuteEvents.pointerClickHandler);
         }
+
+        private static bool TryGetDesktopPoint(GameObject control, out Vector2 desktopPoint)
+        {
+            desktopPoint = default;
+            Canvas.ForceUpdateCanvases();
+            RectTransform rect = control.GetComponent<RectTransform>();
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center));
+            Rect window = GameViewContent();
+            if (window.width <= 1f || window.height <= 1f) return false;
+            float scale = Mathf.Min(window.width / Mathf.Max(1, UnityEngine.Screen.width),
+                window.height / Mathf.Max(1, UnityEngine.Screen.height));
+            float viewportWidth = UnityEngine.Screen.width * scale;
+            float viewportHeight = UnityEngine.Screen.height * scale;
+            float viewportX = window.x + (window.width - viewportWidth) * 0.5f;
+            float viewportY = window.y + (window.height - viewportHeight) * 0.5f;
+            float x = viewportX + screenPoint.x * scale;
+            float y = viewportY + (UnityEngine.Screen.height - screenPoint.y) * scale;
+            if (x < 0 || y < 0 || x >= UnityEngine.Screen.currentResolution.width
+                || y >= UnityEngine.Screen.currentResolution.height)
+                return false;
+            desktopPoint = new Vector2(x, y);
+            return true;
+        }
+
+        private static bool MoveCursorWithOs(Vector2 desktopPoint)
+        {
+            if (desktopPoint.x < 0 || desktopPoint.y < 0
+                || desktopPoint.x >= UnityEngine.Screen.currentResolution.width
+                || desktopPoint.y >= UnityEngine.Screen.currentResolution.height) return false;
+            return SetCursorPos(Mathf.RoundToInt(desktopPoint.x), Mathf.RoundToInt(desktopPoint.y));
+        }
+
+        private static Rect GameViewContent()
+        {
+            Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView");
+            if (type == null) return new Rect(0, 0, 0, 0);
+            foreach (EditorWindow window in Resources.FindObjectsOfTypeAll(type))
+            {
+                Rect position = window.position;
+                const float toolbar = 21f;
+                return new Rect(position.x + 1f, position.y + toolbar, position.width - 2f,
+                    Mathf.Max(1f, position.height - toolbar - 1f));
+            }
+            return new Rect(0, 0, 0, 0);
+        }
+
+        private static void FocusGameView()
+        {
+            Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView");
+            if (type == null) return;
+            foreach (EditorWindow window in Resources.FindObjectsOfTypeAll(type))
+            {
+                window.Focus();
+                window.Repaint();
+                IntPtr editorWindow = Process.GetCurrentProcess().MainWindowHandle;
+                bool activated = editorWindow != IntPtr.Zero && SetForegroundWindow(editorWindow);
+                window.Focus();
+                uint foregroundProcess;
+                GetWindowThreadProcessId(GetForegroundWindow(), out foregroundProcess);
+                Debug.Log("Focus GameView nativeWindow=" + editorWindow + " activated=" + activated
+                    + " foregroundProcess=" + foregroundProcess + " editorProcess=" + Process.GetCurrentProcess().Id);
+                return;
+            }
+        }
+
+        private static bool IsEditorForeground()
+        {
+            GetWindowThreadProcessId(GetForegroundWindow(), out uint foregroundProcess);
+            return foregroundProcess == Process.GetCurrentProcess().Id;
+        }
+
+        private static CharacterCreationMeshFramePlayer PreviewMeshPlayer(
+            CharacterCreationFlowController controller, string previewField)
+        {
+            object preview = Field(controller, previewField).GetValue(controller);
+            GameObject modelRoot = (GameObject)Field(preview, "modelRoot").GetValue(preview);
+            CharacterCreationMeshFramePlayer player = modelRoot == null
+                ? null : modelRoot.GetComponent<CharacterCreationMeshFramePlayer>();
+            Require(player != null, "The native mesh player is unavailable: " + previewField);
+            return player;
+        }
+
+        private const int MouseEventLeftDown = 0x0002;
+        private const int MouseEventLeftUp = 0x0004;
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
+
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(int flags, int dx, int dy, int data, UIntPtr extraInfo);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr window);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
 
         private static void ClickByLabel(GameObject root, string label)
         {

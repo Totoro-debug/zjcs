@@ -42,6 +42,8 @@ namespace Zjcs.Presentation.Opening
         private bool leftFight;
         private bool hideRequested;
 
+        public Func<string, IEnumerator> FirstStoryHomeAction { get; set; }
+
         public static bool HasPlayed(string slotId) => PlayedSlots.Contains(slotId);
         public static void ResetProcessState() => PlayedSlots.Clear();
 
@@ -120,22 +122,23 @@ namespace Zjcs.Presentation.Opening
         private IEnumerator RunFirstStory(Action onFinished, Action<string> status)
         {
             bool failed = false;
-            yield return Prepare(status, error => failed = error);
+            yield return Prepare(status, error => failed = error, false);
             if (!failed) yield return story.Play("FirstStory");
             Cleanup();
             onFinished?.Invoke();
         }
 
-        private IEnumerator Prepare(Action<string> status, Action<bool> failed)
+        private IEnumerator Prepare(Action<string> status, Action<bool> failed, bool ensureCamera = true)
         {
             failed(false);
             try
             {
                 assets = OpeningAssets.LoadDefault();
-                EnsureCamera();
+                if (ensureCamera) EnsureCamera();
                 TMP_FontAsset font = LoadFont();
                 ui = new OpeningUiView(assets.Ui, font, null, 60);
-                story = new OpeningStoryPlayer(assets, ui, voiceAudio, Log, OnHideAllUi, OnLeaveFight, IsGameMaster);
+                story = new OpeningStoryPlayer(assets, ui, voiceAudio, Log, OnHideAllUi, OnLeaveFight,
+                    IsGameMaster, FirstStoryHomeAction);
             }
             catch (Exception error)
             {

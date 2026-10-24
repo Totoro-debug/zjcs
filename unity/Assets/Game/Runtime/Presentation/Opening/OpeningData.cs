@@ -403,6 +403,11 @@ namespace Zjcs.Presentation.Opening
         public float Level;
         public string Profession = string.Empty;
         public int NpcClassId;
+        public int SourceEntityId;
+        public int TargetEntityId;
+        public int TargetGridX;
+        public int TargetGridY;
+        public Quaternion SkillRotation = Quaternion.identity;
         public readonly HashSet<string> Components = new HashSet<string>(StringComparer.Ordinal);
 
         public static OpeningRecordEntity Parse(Dictionary<string, object> node)
@@ -440,6 +445,31 @@ namespace Zjcs.Presentation.Opening
                         entity.Hp = (long)OpeningJson.Number(component, "Hp");
                         entity.MaxHp = (long)OpeningJson.Number(component, "LastMaxHp");
                         entity.Faction = OpeningJson.Int(component, "Faction");
+                        break;
+                    case "FightSkillComponent":
+                        if (component.TryGetValue("SrcEntityId", out object sourceValue)
+                            && sourceValue is Dictionary<string, object> sourceId)
+                            entity.SourceEntityId = OpeningJson.Int(sourceId, "EntityId");
+                        if (component.TryGetValue("TargetId", out object targetValue)
+                            && targetValue is Dictionary<string, object> targetId)
+                            entity.TargetEntityId = OpeningJson.Int(targetId, "EntityId");
+                        if (component.TryGetValue("TargetPos", out object targetPosition)
+                            && targetPosition is Dictionary<string, object> targetGrid)
+                        {
+                            entity.TargetGridX = OpeningJson.Int(targetGrid, "X");
+                            entity.TargetGridY = OpeningJson.Int(targetGrid, "Y");
+                        }
+                        break;
+                    case "TransformComponent":
+                        if (component.TryGetValue("Rotation", out object rotationValue)
+                            && rotationValue is Dictionary<string, object> rotation)
+                        {
+                            var parsed = new Quaternion((float)OpeningJson.Number(rotation, "x"),
+                                (float)OpeningJson.Number(rotation, "y"), (float)OpeningJson.Number(rotation, "z"),
+                                (float)OpeningJson.Number(rotation, "w", 1f));
+                            entity.SkillRotation = Quaternion.Dot(parsed, parsed) > 0.0001f
+                                ? parsed.normalized : Quaternion.identity;
+                        }
                         break;
                     case "LevelComponent":
                         entity.Level = (float)OpeningJson.Number(component, "Level");

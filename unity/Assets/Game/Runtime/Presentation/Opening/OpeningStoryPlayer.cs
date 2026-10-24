@@ -20,6 +20,7 @@ namespace Zjcs.Presentation.Opening
         private readonly Action<bool> onHideAllUi;
         private readonly Action onLeaveFight;
         private readonly Func<bool> isGm;
+        private readonly Func<string, IEnumerator> onHomePlayerAction;
         private readonly AudioSource audio;
         private readonly Dictionary<string, AudioClip> voiceClips = new Dictionary<string, AudioClip>(StringComparer.Ordinal);
 
@@ -39,7 +40,8 @@ namespace Zjcs.Presentation.Opening
         private bool confirmClicked;
 
         public OpeningStoryPlayer(OpeningAssets assets, OpeningUiView ui, AudioSource audio,
-            Action<string> log, Action<bool> onHideAllUi, Action onLeaveFight, Func<bool> isGm)
+            Action<string> log, Action<bool> onHideAllUi, Action onLeaveFight, Func<bool> isGm,
+            Func<string, IEnumerator> onHomePlayerAction = null)
         {
             this.assets = assets ?? throw new ArgumentNullException(nameof(assets));
             this.ui = ui ?? throw new ArgumentNullException(nameof(ui));
@@ -48,6 +50,7 @@ namespace Zjcs.Presentation.Opening
             this.onHideAllUi = onHideAllUi;
             this.onLeaveFight = onLeaveFight;
             this.isGm = isGm ?? (() => false);
+            this.onHomePlayerAction = onHomePlayerAction;
         }
 
         public bool UiHidden => uiHidden;
@@ -155,11 +158,16 @@ namespace Zjcs.Presentation.Opening
                     HideBlackMask();
                     break;
                 case "HomePlayerPlayActionNode":
-                    // Offline has no home environment manager; the official node throws and
-                    // the graph switches to skip mode through RunNode.GetCodeForException.
-                    log("开场剧情家园动作缺少家园环境，按官方 SafeEnd 转入快进: " + node.Behaviour);
-                    result = StoryNodeResult.SafeEnd;
+                {
+                    IEnumerator homeAction = onHomePlayerAction?.Invoke(node.Behaviour);
+                    if (homeAction == null)
+                    {
+                        log("开场剧情家园动作缺少家园角色，按官方 SafeEnd 转入快进: " + node.Behaviour);
+                        result = StoryNodeResult.SafeEnd;
+                    }
+                    else yield return homeAction;
                     break;
+                }
                 case "FinishStoryNode":
                     break;
                 default:

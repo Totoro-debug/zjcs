@@ -15,6 +15,7 @@ import hashlib
 import io
 import json
 import math
+import struct
 import sys
 from pathlib import Path, PurePosixPath
 
@@ -548,6 +549,90 @@ def particle_data(data) -> dict:
     return info
 
 
+def read_animation_curve(data: bytes, offset: int) -> tuple[dict, int]:
+    count = struct.unpack_from("<i", data, offset)[0]
+    if count < 0 or count > 10000:
+        raise ValueError("Ground dissolve curve has an invalid key count")
+    offset += 4
+    keys = []
+    for _ in range(count):
+        time, value, in_slope, out_slope, in_weight, out_weight, weighted_mode = \
+            struct.unpack_from("<6fi", data, offset)
+        keys.append({"time": time, "value": value, "inSlope": in_slope, "outSlope": out_slope,
+                     "inWeight": in_weight, "outWeight": out_weight, "weightedMode": weighted_mode})
+        offset += struct.calcsize("<6fi")
+    pre_infinity, post_infinity, rotation_order = struct.unpack_from("<3i", data, offset)
+    offset += struct.calcsize("<3i")
+    return {"m_Curve": keys, "m_PreInfinity": pre_infinity, "m_PostInfinity": post_infinity,
+            "m_RotationOrder": rotation_order}, offset
+
+
+def read_ground_dissolve(scene: StageScene, host: StageScene) -> dict:
+    ground_object = next((obj for obj in host.asset.objects.values()
+                          if obj.type.name == "GameObject" and obj.read().m_Name == "GroundDissolve"), None)
+    if ground_object is None:
+        raise ValueError("Pinned fight-stage host has no GroundDissolve object")
+    ground_data = ground_object.read()
+    component = next((entry.component.deref() for entry in ground_data.m_Component
+                      if entry.component is not None and entry.component.type.name == "MonoBehaviour"), None)
+    if component is None:
+        raise ValueError("Pinned GroundDissolve object has no script component")
+    raw = component.get_raw_data()
+    if len(raw) < 48:
+        raise ValueError("Pinned GroundDissolve component is truncated")
+    dissolve = struct.unpack_from("<f", raw, 32)[0]
+    material_file_id, material_path_id = struct.unpack_from("<iq", raw, 36)
+    if material_file_id != 0:
+        raise ValueError("GroundDissolve material uses an unsupported external file index")
+    material_obj = host.asset.objects.get(material_path_id)
+    if material_obj is None or material_obj.type.name != "Material":
+        raise ValueError("Pinned GroundDissolve material pointer is unresolved")
+    material = material_obj.read()
+    shader = material.m_Shader.deref()
+    shader_name = shader.read().m_ParsedForm.m_Name
+    if shader_name != "Sprites/Ground-Dissolve":
+        raise ValueError("Pinned ground dissolve shader changed: " + shader_name)
+
+    saved = material.m_SavedProperties
+    floats = {name: float(value) for name, value in saved.m_Floats}
+    colors = {name: [float(value.r), float(value.g), float(value.b), float(value.a)]
+              for name, value in saved.m_Colors}
+    textures = {}
+    for name, environment in saved.m_TexEnvs:
+        if environment.m_Texture is None or not environment.m_Texture.path_id:
+            continue
+        texture = scene.texture(environment.m_Texture, "ground dissolve material")
+        textures[name] = {
+            "name": sanitize(texture["name"]),
+            "scale": [float(environment.m_Scale.x), float(environment.m_Scale.y)],
+            "offset": [float(environment.m_Offset.x), float(environment.m_Offset.y)],
+            "source": texture["source"],
+            "sha256": texture["sha256"],
+        }
+    if "_DissolveTex" not in textures:
+        raise ValueError("Pinned ground dissolve material has no dissolve texture")
+
+    progress_curve, offset = read_animation_curve(raw, 48)
+    alpha_curve, offset = read_animation_curve(raw, offset)
+    if offset != len(raw):
+        raise ValueError("Pinned GroundDissolve curve data has unexpected trailing bytes")
+    return {
+        "value": dissolve,
+        "progressCurve": progress_curve,
+        "alphaCurve": alpha_curve,
+        "material": {
+            "name": material.m_Name,
+            "shader": shader_name,
+            "floats": floats,
+            "colors": colors,
+            "textures": textures,
+            "source": scene.record(material_obj, "Material"),
+            "shaderSource": scene.record(shader, "Shader"),
+        },
+        "source": scene.record(component, "MonoBehaviour"),
+    }
+
+
 def load_npc_models() -> list[dict]:
     import gzip
     record_path = ROOT / "unity/Assets/StreamingAssets/Opening/opening-record.bytes"
@@ -637,6 +722,7 @@ def build() -> int:
         raise ValueError("Official fight stage produced no render batches")
     if not cameras:
         raise ValueError("Official fight stage has no camera")
+    ground_dissolve = read_ground_dissolve(scene, host)
 
     texture_list = []
     texture_index = {}
@@ -685,6 +771,7 @@ def build() -> int:
         "cameras": cameras,
         "grid": load_grid(),
         "textures": texture_list,
+        "ground_dissolve": ground_dissolve,
         "batches": payload_batches,
         "particles": particles,
         "npc_models": load_npc_models(),
@@ -697,12 +784,17 @@ def build() -> int:
     manifest = {
         "manifest": VERSION,
         "operation": "Pinned fight-stage prefab flattened into world-space quad batches; "
-                     "official sprite atlas and particle textures decoded from their pinned Texture2D objects",
+                     "official sprite atlas, particle textures and GroundDissolve material data decoded "
+                     "from their pinned objects",
         "inputs": {
             "bundle": {"name": BUNDLE, "md5": BUNDLE_MD5, "packaged_in_apk": True,
                        "visual_prefab": VISUAL_PATH, "host_prefab": HOST_PATH},
             "stage_table": {"path": SCENES_MANIFEST.relative_to(ROOT).as_posix(),
                             "sha256": sha256(SCENES.relative_to(ROOT).resolve().read_bytes())},
+            "ground_dissolve": ground_dissolve["source"],
+            "ground_dissolve_material": ground_dissolve["material"]["source"],
+            "ground_dissolve_shader": ground_dissolve["material"]["shaderSource"],
+            "ground_dissolve_texture": ground_dissolve["material"]["textures"]["_DissolveTex"],
         },
         "counts": {
             "batches": len(payload_batches),

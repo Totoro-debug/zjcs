@@ -40,6 +40,42 @@ namespace Zjcs.Offline.CharacterCreation
         public Sprite sprite;
     }
 
+    [Serializable]
+    public sealed class CharacterCreationAppearanceGroupIconBinding
+    {
+        public int groupId;
+        public int sex;
+        public Sprite sprite;
+    }
+
+    [Serializable]
+    public sealed class CharacterCreationAppearanceGroupSkin
+    {
+        public int appearance_id;
+        public int skin_id;
+        public int skin_type;
+        public string skin_name;
+    }
+
+    [Serializable]
+    public sealed class CharacterCreationAppearanceGroupInfo
+    {
+        public int group_id;
+        public string sex;
+        public int item_id;
+        public string localized_label;
+        public int condition_id;
+        public int[] appearance_ids;
+        public CharacterCreationAppearanceGroupSkin[] appearance_skins;
+    }
+
+    [Serializable]
+    internal sealed class CharacterCreationAppearanceGroupManifest
+    {
+        public string manifest;
+        public CharacterCreationAppearanceGroupInfo[] groups;
+    }
+
     [CreateAssetMenu(menuName = "Zjcs/Character Creation Asset Catalog")]
     public sealed class CharacterCreationAssetCatalog : ScriptableObject
     {
@@ -72,11 +108,14 @@ namespace Zjcs.Offline.CharacterCreation
         [SerializeField] private CharacterCreationAudioClipBinding[] audioBindings;
         [SerializeField] private TextAsset skinIconSourceManifest;
         [SerializeField] private CharacterCreationSkinIconBinding[] skinIcons;
+        [SerializeField] private TextAsset appearanceGroupIconSourceManifest;
+        [SerializeField] private CharacterCreationAppearanceGroupIconBinding[] appearanceGroupIcons;
 
         [NonSerialized] private CharacterAppearanceOptions parsedAppearanceOptions;
         [NonSerialized] private CharacterCreationAppearanceRules parsedAppearanceRules;
         [NonSerialized] private Dictionary<string, Dictionary<int, int>> defaultSkinsByProfession;
         [NonSerialized] private Dictionary<string, Sprite> skinIconsByName;
+        [NonSerialized] private Dictionary<int, List<CharacterCreationAppearanceGroupInfo>> appearanceGroupsBySex;
 
         public TextAsset CreationPerformance => creationPerformance;
         public TextAsset AppearanceUi => appearanceUi;
@@ -94,10 +133,55 @@ namespace Zjcs.Offline.CharacterCreation
         public GameObject MaleNativeModelPrefab => maleNativeModelPrefab;
         public GameObject FemaleNativeModelPrefab => femaleNativeModelPrefab;
         public UnityEngine.Object OfficialFont => officialFont;
+        public TextAsset AppearanceGroupIconSourceManifest => appearanceGroupIconSourceManifest;
 
         public Sprite FindSkinIcon(string skinName)
         {
             return GetSkinIconIndex().TryGetValue(skinName ?? string.Empty, out Sprite sprite) ? sprite : null;
+        }
+
+        public Sprite FindAppearanceGroupIcon(int groupId, int sex)
+        {
+            foreach (CharacterCreationAppearanceGroupIconBinding binding
+                in appearanceGroupIcons ?? Array.Empty<CharacterCreationAppearanceGroupIconBinding>())
+                if (binding != null && binding.groupId == groupId && binding.sex == sex)
+                    return binding.sprite;
+            return null;
+        }
+
+        public IReadOnlyList<CharacterCreationAppearanceGroupInfo> GetAppearanceGroups(int sex)
+        {
+            if (sex != 0 && sex != 1) throw new ArgumentOutOfRangeException(nameof(sex));
+            if (appearanceGroupsBySex == null)
+                appearanceGroupsBySex = ParseAppearanceGroups(appearanceGroupIconSourceManifest);
+            return appearanceGroupsBySex[sex];
+        }
+
+        public int DefaultAppearanceGroupId(int sex)
+        {
+            if (sex != 0 && sex != 1) throw new ArgumentOutOfRangeException(nameof(sex));
+            int expectedId = sex == 0 ? 1 : 11;
+            foreach (CharacterCreationAppearanceGroupInfo group in GetAppearanceGroups(sex))
+                if (group.group_id == expectedId && group.condition_id == 0) return group.group_id;
+            throw new InvalidOperationException("The official default appearance group is missing for sex " + sex + ".");
+        }
+
+        public bool TryGetAppearanceGroup(int sex, int groupId, out CharacterCreationAppearanceGroupInfo group)
+        {
+            foreach (CharacterCreationAppearanceGroupInfo candidate in GetAppearanceGroups(sex))
+                if (candidate.group_id == groupId)
+                {
+                    group = candidate;
+                    return true;
+                }
+            group = null;
+            return false;
+        }
+
+        public bool IsSelectableAppearanceGroup(int sex, int groupId)
+        {
+            return TryGetAppearanceGroup(sex, groupId, out CharacterCreationAppearanceGroupInfo group)
+                && group.condition_id == 0;
         }
 
         public AudioClip FindAudio(string eventName)
@@ -202,6 +286,7 @@ namespace Zjcs.Offline.CharacterCreation
         private void OnValidate()
         {
             skinIconsByName = null;
+            appearanceGroupsBySex = null;
         }
 
         public void ValidateBindings()
@@ -213,7 +298,9 @@ namespace Zjcs.Offline.CharacterCreation
                 || createPlayerDiyContentPrefab == null || confirmDialogPrefab == null
                 || officialFont == null
                 || audioBindings == null || audioBindings.Length != 4
-                || skinIconSourceManifest == null || skinIcons == null || skinIcons.Length == 0)
+                || skinIconSourceManifest == null || skinIcons == null || skinIcons.Length == 0
+                || appearanceGroupIconSourceManifest == null || appearanceGroupIcons == null
+                || appearanceGroupIcons.Length != 12)
                 throw new InvalidOperationException("Official character creation assets are not bound.");
             var audioEvents = new HashSet<string>(StringComparer.Ordinal);
             foreach (CharacterCreationAudioClipBinding binding in audioBindings)
@@ -226,11 +313,69 @@ namespace Zjcs.Offline.CharacterCreation
                 parsedAppearanceRules = CharacterCreationAppearanceRules.Parse(appearanceConfigRules);
 
             Dictionary<string, Sprite> icons = GetSkinIconIndex();
+            var groupIconKeys = new HashSet<int>();
+            foreach (CharacterCreationAppearanceGroupIconBinding binding in appearanceGroupIcons)
+            {
+                if (binding == null || binding.sprite == null
+                    || (binding.sex != 0 && binding.sex != 1)
+                    || !IsExpectedAppearanceGroup(binding.groupId, binding.sex)
+                    || !groupIconKeys.Add(binding.groupId))
+                    throw new InvalidOperationException("An official appearance group icon binding is invalid or duplicated.");
+            }
+            appearanceGroupsBySex = ParseAppearanceGroups(appearanceGroupIconSourceManifest);
+            foreach (KeyValuePair<int, List<CharacterCreationAppearanceGroupInfo>> entry in appearanceGroupsBySex)
+                foreach (CharacterCreationAppearanceGroupInfo group in entry.Value)
+                {
+                    if (FindAppearanceGroupIcon(group.group_id, entry.Key) == null
+                        || group.appearance_skins == null || group.appearance_skins.Length == 0
+                        || group.appearance_ids == null || group.appearance_ids.Length != group.appearance_skins.Length)
+                        throw new InvalidOperationException("An official appearance group is missing its icon or skin data: "
+                            + group.group_id);
+                    foreach (CharacterCreationAppearanceGroupSkin skin in group.appearance_skins)
+                        if (skin == null || skin.appearance_id <= 0 || skin.skin_id <= 0 || skin.skin_type < 0
+                            || string.IsNullOrEmpty(skin.skin_name)
+                            || !TryGetSkinInfo(skin.skin_id, out CharacterCreationSkinInfo skinInfo)
+                            || skinInfo.Name != skin.skin_name)
+                            throw new InvalidOperationException("Official appearance group skin data is invalid: " + group.group_id);
+                }
             foreach (string bodyType in new[] { "male", "female" })
                 foreach (string field in AppearanceFields)
                     foreach (CharacterCreationOptionInfo option in GetAppearanceOptions(bodyType, field))
                         if (!icons.ContainsKey(option.SkinName))
                             throw new InvalidOperationException("Official player skin icon is missing: " + option.SkinName);
+        }
+
+        private static bool IsExpectedAppearanceGroup(int groupId, int sex)
+        {
+            return groupId >= 1 && groupId <= 6 && sex == 0
+                || groupId >= 11 && groupId <= 16 && sex == 1;
+        }
+
+        private static Dictionary<int, List<CharacterCreationAppearanceGroupInfo>> ParseAppearanceGroups(TextAsset source)
+        {
+            if (source == null) throw new InvalidOperationException("Official appearance group data is not bound.");
+            CharacterCreationAppearanceGroupManifest data = JsonUtility.FromJson<CharacterCreationAppearanceGroupManifest>(source.text);
+            if (data == null || data.manifest != "854_156383" || data.groups == null || data.groups.Length != 12)
+                throw new FormatException("Official appearance group source data is invalid.");
+            var groupsBySex = new Dictionary<int, List<CharacterCreationAppearanceGroupInfo>>
+            {
+                { 0, new List<CharacterCreationAppearanceGroupInfo>(6) },
+                { 1, new List<CharacterCreationAppearanceGroupInfo>(6) }
+            };
+            var ids = new HashSet<int>();
+            foreach (CharacterCreationAppearanceGroupInfo group in data.groups)
+            {
+                int sex = group != null && group.sex == "male" ? 0
+                    : group != null && group.sex == "female" ? 1 : -1;
+                if (group == null || sex < 0 || !IsExpectedAppearanceGroup(group.group_id, sex)
+                    || group.item_id <= 0 || string.IsNullOrEmpty(group.localized_label)
+                    || group.condition_id < 0 || !ids.Add(group.group_id))
+                    throw new FormatException("Official appearance group source record is invalid or duplicated.");
+                groupsBySex[sex].Add(group);
+            }
+            foreach (List<CharacterCreationAppearanceGroupInfo> groups in groupsBySex.Values)
+                groups.Sort((left, right) => left.group_id.CompareTo(right.group_id));
+            return groupsBySex;
         }
 
         private Dictionary<string, Sprite> GetSkinIconIndex()
