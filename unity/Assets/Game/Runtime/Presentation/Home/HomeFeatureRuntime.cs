@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Zjcs.Offline.Commerce;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,13 +13,15 @@ using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.Progression;
-using Zjcs.Offline.World;
 using Zjcs.Offline.State;
+using Zjcs.Offline.World;
 using Zjcs.Presentation.Inventory;
 using Zjcs.Presentation.Cooking;
+using Zjcs.Presentation.World;
 using Zjcs.Presentation.CharacterCreation;
 using Zjcs.Presentation.Wishes;
-using Zjcs.Presentation.World;
+using Zjcs.Presentation.Combat;
+using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Home
 {
@@ -34,12 +37,17 @@ namespace Zjcs.Presentation.Home
         private const int HomeTutorialFixedRewardId = 7;
         private const string HomeTutorialFixedRewardReceipt = "home:tutorial:fixed-reward:7";
         private ProfileSlotCatalog slots;
-        private OfficialFantasyTowerCatalog fantasyTowerCatalog;
-        private OfflineFantasyTowerSession fantasyTower;
         private OfflineMainlineProgressSession profile;
+        private OfflineDailyChallengeService dailyChallenges;
         private OfflineNpcTravelService npcTravel;
         private OfficialNpcTravelCatalog npcTravelCatalog;
         private OfflineNpcTravelPropertyCalculator npcTravelProperties;
+        private OfflineDailyDungeonSession dailyDungeons;
+        private OfficialFantasyTowerCatalog fantasyTowerCatalog;
+        private OfflineFantasyTowerSession fantasyTower;
+        private OfflineNpcAssistanceProgress npcAssistanceProgress;
+        private FightOfficialNpcAssistanceCatalog npcAssistanceCatalog;
+        private OfflineArenaSession arena;
         private OfflineCharacterProgressionService progression;
         private OfflineAstrologicalService astrological;
         private float astrologicalChargeStartTime;
@@ -106,10 +114,8 @@ namespace Zjcs.Presentation.Home
         public OfficialHomeRules Rules => rules;
         public HomeTutorialCatalog Tutorials => tutorials;
         public HomeSettingsProfile HomeSettings => homeSettings;
-        public OfflineFantasyTowerSession FantasyTower => fantasyTower;
-        internal OfficialFantasyTowerCatalog FantasyTowerCatalog =>
-            fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
         public OfflineMainlineProgressSession Profile => profile;
+        public OfflineDailyChallengeService DailyChallenges => dailyChallenges;
         public OfflineNpcTravelService NpcTravel => npcTravel;
         public OfficialNpcTravelCatalog NpcTravelCatalog => npcTravelCatalog;
         public IReadOnlyDictionary<int, long> NpcTravelNpcProperties(int npcClassId)
@@ -126,6 +132,18 @@ namespace Zjcs.Presentation.Home
                 progression.Catalog, npcTravelCatalog);
             return npcTravelProperties.QuickSelect(profile.Save.Player, travelId, eligibleNpcIds);
         }
+        public OfflineDailyDungeonSession DailyDungeons => dailyDungeons;
+        public OfflineFantasyTowerSession FantasyTower => fantasyTower;
+        internal OfficialFantasyTowerCatalog FantasyTowerCatalog =>
+            fantasyTowerCatalog ?? (fantasyTowerCatalog = OfficialFantasyTowerCatalog.LoadDefault());
+        public OfflineNpcAssistanceProgress NpcAssistanceProgress => npcAssistanceProgress;
+        public FightOfficialNpcAssistanceCatalog NpcAssistanceCatalog => npcAssistanceCatalog;
+        public OfflineArenaSession Arena => arena;
+        public OfflineCharacterProgressionService DailyDungeonProgression
+        {
+            get { EnsureProgression(); return progression; }
+        }
+        public Transform HomePlayerTransform => homePlayer?.Transform;
         public OfflineAstrologicalService Astrological
         {
             get
@@ -165,6 +183,97 @@ namespace Zjcs.Presentation.Home
         public void RefreshRewards() => rewards?.Refresh();
 
         public void RefreshCounts() => hud?.RefreshCounts();
+
+        public float CookingMaxHp()
+        {
+            EnsureProgression();
+            if (!equipmentPropertiesLoaded)
+                throw new InvalidOperationException("Official equipment properties are required for cooking.");
+            CharacterPropCalculator calculator = progression.PropertyCalculator;
+            CharacterPropSnapshot snapshot = calculator.Evaluate(profile.Save.Player, Now());
+            if (!snapshot.OutOfFightBattleProps.TryGetValue(calculator.Props.Id("MaxHp"), out long maxHp)
+                || maxHp <= 0)
+                throw new InvalidOperationException("The official character MaxHp property is unavailable.");
+            return maxHp;
+        }
+
+        public long DailyDungeonCombatRating()
+        {
+            EnsureProgression();
+            return progression.PropertyCalculator.Evaluate(profile.Save.Player, profile.Save.World, Now()).CombatRating;
+        }
+
+        public int DailyDungeonRankForSubRank(int subRank)
+        {
+            EnsureProgression();
+            return progression.Catalog.RankOfSubRank(subRank);
+        }
+
+        public int DailyDungeonHighSubRank(int rank)
+        {
+            EnsureProgression();
+            return progression.Catalog.Rows("player_subrank")
+                .Where(row => Convert.ToInt32(row["Rank"], CultureInfo.InvariantCulture) == rank)
+                .Select(row => Convert.ToInt32(row["SubRank"], CultureInfo.InvariantCulture))
+                .DefaultIfEmpty(0).Max();
+        }
+
+        public bool DailyDungeonProfessionMatches(int profession, int ancestor)
+        {
+            EnsureProgression();
+            if (profession <= 0 || ancestor <= 0) return false;
+            int current = profession;
+            var visited = new HashSet<int>();
+            while (current > 0 && visited.Add(current))
+            {
+                if (current == ancestor) return true;
+                Dictionary<string, object> row = progression.Catalog.Rows("profession_base")
+                    .FirstOrDefault(value => Convert.ToInt32(value["Profession"], CultureInfo.InvariantCulture) == current);
+                current = row == null ? 0
+                    : Convert.ToInt32(row["PrePro"], CultureInfo.InvariantCulture);
+            }
+            return false;
+        }
+
+        public bool ConsumeDailyDungeonItem(string receipt, int itemId, long count)
+        {
+            if (!ConsumeItems(itemId, count, receipt)) return false;
+            hud?.RefreshCounts();
+            return true;
+        }
+
+        public bool ConsumeArenaCurrency(string receipt, int itemId, long count)
+        {
+            if (!ConsumeItems(itemId, count, receipt)) return false;
+            hud?.RefreshCounts();
+            return true;
+        }
+
+        public void GrantArenaReward(string receipt, int itemId, long count)
+        {
+            if (string.IsNullOrWhiteSpace(receipt) || itemId <= 0 || count <= 0)
+                throw new ArgumentException("A valid arena reward receipt and amount are required.");
+            ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
+            {
+                InventoryOperationResult granted = OfflineInventoryOperations.Grant(
+                    save.Player, itemId, count, Now());
+                if (!granted.IsApplied)
+                    throw new InvalidOperationException("Arena reward item could not be granted.");
+            });
+            if (result.Status != ProgressionResultStatus.Applied
+                && result.Status != ProgressionResultStatus.Unchanged
+                && result.Status != ProgressionResultStatus.Ready)
+                throw new InvalidOperationException("Arena reward settlement failed.");
+            ReloadContext();
+            hud?.RefreshAll();
+        }
+
+        public int MapRegionProgress(int mapClassId, int region)
+        {
+            OfflineMapProgress map = profile?.Save?.World?.Maps?.FirstOrDefault(value =>
+                value.MapClassId == mapClassId);
+            return map?.Regions?.FirstOrDefault(value => value.Region == region)?.Progress ?? 0;
+        }
 
         public int MaterialGatheringUnlockedLevel(int dungeonType)
         {
@@ -253,17 +362,245 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        public float CookingMaxHp()
+        public bool GrantDailyDungeonRewards(string receipt, Zjcs.Offline.World.DailyDungeonRunSave run,
+            int[] rewardRuleIds)
         {
+            if (string.IsNullOrWhiteSpace(receipt) || run == null || rewardRuleIds == null) return false;
             EnsureProgression();
-            if (!equipmentPropertiesLoaded)
-                throw new InvalidOperationException("Official equipment properties are required for cooking.");
-            CharacterPropCalculator calculator = progression.PropertyCalculator;
-            CharacterPropSnapshot snapshot = calculator.Evaluate(profile.Save.Player, Now());
-            if (!snapshot.OutOfFightBattleProps.TryGetValue(calculator.Props.Id("MaxHp"), out long maxHp)
-                || maxHp <= 0)
-                throw new InvalidOperationException("The official character MaxHp property is unavailable.");
-            return maxHp;
+            var random = new DailyDungeonRewardRandom(receipt);
+            var itemCounts = new Dictionary<int, long>();
+            int profession = profile.Save.Player.Wardrobe.Profession;
+            long combatRating = DailyDungeonCombatRating();
+            foreach (int ruleId in rewardRuleIds)
+            {
+                Zjcs.Offline.World.DailyDungeonRuntimeReward rule = dailyDungeons.Catalog.rewardRules
+                    .Where(value => value.Id == ruleId)
+                    .OrderBy(value => value.Order < 0 ? int.MaxValue : value.Order)
+                    .FirstOrDefault(value => DailyDungeonRewardConditionMet(value, profession, combatRating));
+                if (rule == null || rule.IdList == null || rule.WeightList == null || rule.CountList == null
+                    || rule.IdList.Length != rule.WeightList.Length || rule.IdList.Length != rule.CountList.Length)
+                    return false;
+                long weightTotal = rule.WeightList.Where(value => value > 0).Sum(value => (long)value);
+                if (weightTotal <= 0 || rule.Percent <= 0) continue;
+                for (int index = 0; index < rule.IdList.Length; index++)
+                {
+                    int itemId = rule.IdList[index];
+                    int weight = rule.WeightList[index];
+                    float count = rule.CountList[index];
+                    if (itemId <= 0 || weight <= 0 || count <= 0) continue;
+                    if (rule.LevelCountId > 0)
+                        count *= dailyDungeons.LevelNumber(rule.LevelCountId, profile.Save.Player.Level);
+                    if (rule.SubRankCountId != null && index < rule.SubRankCountId.Length
+                        && rule.SubRankCountId[index] > 0)
+                        count *= dailyDungeons.LevelNumber(rule.SubRankCountId[index], profile.Save.Player.SubRank);
+                    long amount = Math.Max(0L, (long)count);
+                    double probability = rule.Percent * weight / weightTotal;
+                    if (probability < 1d && !random.Roll(probability)) continue;
+                    if (probability <= 0d || amount <= 0) continue;
+                    itemCounts[itemId] = itemCounts.TryGetValue(itemId, out long current)
+                        ? checked(current + amount) : amount;
+                }
+            }
+            if (itemCounts.Count == 0) return true;
+            OfficialEquipmentCatalog equipment = progression.EquipmentCatalog;
+            var dropRange = dailyDungeons.FindMap(run.mapGroupId)?.equipmentDrops?
+                .FirstOrDefault(value => value.difficulty == run.difficulty);
+            long now = Now();
+            ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
+            {
+                foreach (KeyValuePair<int, long> reward in itemCounts.OrderBy(value => value.Key))
+                {
+                    int type = progression.Catalog.ItemType(reward.Key);
+                    bool randomEquipment = type == 110;
+                    bool isEquipment = equipment?.Find("equip", reward.Key) != null;
+                    Zjcs.Offline.World.DailyDungeonRuntimeEquipmentPool pool = randomEquipment
+                        ? dailyDungeons.Catalog.randomEquipmentPools?.FirstOrDefault(value => value.id == reward.Key)
+                        : null;
+                    if (randomEquipment && (pool?.equipIds == null || pool.weights == null
+                        || pool.equipIds.Length != pool.weights.Length || !pool.weights.Any(value => value > 0)))
+                        throw new InvalidOperationException("The official daily dungeon random equipment pool is unavailable: " + reward.Key);
+                    if (randomEquipment || isEquipment)
+                    {
+                        if (equipment == null || dropRange == null)
+                            throw new InvalidOperationException("Official daily dungeon equipment drop range is unavailable.");
+                        long weightTotal = randomEquipment ? pool.weights.Where(value => value > 0).Sum(value => (long)value) : 0;
+                        for (long index = 0; index < reward.Value; index++)
+                        {
+                            int equipId = reward.Key;
+                            if (randomEquipment)
+                            {
+                                long pick = (long)(random.NextDouble() * weightTotal);
+                                int selected = -1;
+                                for (int poolIndex = 0; poolIndex < pool.weights.Length; poolIndex++)
+                                {
+                                    if (pool.weights[poolIndex] <= 0) continue;
+                                    pick -= pool.weights[poolIndex];
+                                    if (pick < 0) { selected = poolIndex; break; }
+                                }
+                                if (selected < 0) throw new InvalidOperationException("Daily dungeon equipment selection failed.");
+                                equipId = pool.equipIds[selected];
+                            }
+                            long instanceId = save.Player.Equipment.NextInstanceId;
+                            OfflineEquipmentInstance item = OfficialEquipmentGenerator.Generate(equipment,
+                                equipId, instanceId, new EquipmentRollContext
+                                {
+                                    DropLevel = Math.Max(1, save.Player.Level),
+                                    PlayerLevel = save.Player.Level,
+                                    SubRank = save.Player.SubRank,
+                                    SourceOperate = 61,
+                                    Daily = true,
+                                    MinimumLevel = dropRange.minimumLevel,
+                                    MaximumLevel = dropRange.maximumLevel,
+                                    MinimumBlessLevel = dropRange.minimumBlessLevel,
+                                    MaximumBlessLevel = dropRange.maximumBlessLevel
+                                }, random.NextFloat);
+                            save.Player.Equipment.Instances.Add(item);
+                            save.Player.Equipment.NextInstanceId++;
+                        }
+                    }
+                    else
+                    {
+                        InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
+                            reward.Key, reward.Value, now);
+                        if (!granted.IsApplied)
+                            throw new InvalidOperationException("Unsupported daily dungeon reward item: " + reward.Key);
+                    }
+                }
+            });
+            bool applied = result.Status == ProgressionResultStatus.Applied
+                || result.Status == ProgressionResultStatus.Unchanged || result.Status == ProgressionResultStatus.Ready;
+            if (applied)
+            {
+                ReloadContext();
+                hud?.RefreshAll();
+            }
+            return applied;
+        }
+
+        public List<FantasyTowerReward> RollFantasyTowerRewards(int stageId, string receipt)
+        {
+            if (string.IsNullOrWhiteSpace(receipt)) throw new ArgumentException("A stable reward receipt is required.", nameof(receipt));
+            ulong state = 14695981039346656037UL;
+            foreach (char value in receipt) state = unchecked((state ^ value) * 1099511628211UL);
+            if (state == 0) state = 0x9e3779b97f4a7c15UL;
+            return FantasyTowerCatalog.RollRewards(stageId, profile.Save.Player.Level,
+                profile.Save.Player.SubRank, ref state);
+        }
+
+        public bool GrantFantasyTowerRewards(string receipt, IReadOnlyList<FantasyTowerReward> rewards)
+        {
+            if (string.IsNullOrWhiteSpace(receipt) || rewards == null) return false;
+            long now = Now();
+            ProgressionResult result = profile.ApplyInventoryTransaction(receipt, save =>
+            {
+                foreach (FantasyTowerReward reward in rewards)
+                {
+                    if (reward == null || reward.itemId <= 0 || reward.count < 0)
+                        throw new InvalidDataException("Official Fantasy Tower reward is invalid.");
+                    if (reward.count == 0) continue;
+                    InventoryOperationResult applied = OfflineInventoryOperations.Grant(
+                        save.Player, reward.itemId, reward.count, now);
+                    if (!applied.IsApplied)
+                        throw new InvalidOperationException("Fantasy Tower reward item could not be granted: "
+                            + reward.itemId + " " + applied.Status);
+                }
+            });
+            return result.Status == ProgressionResultStatus.Applied
+                || result.Status == ProgressionResultStatus.Unchanged || result.Status == ProgressionResultStatus.Ready;
+        }
+
+        public FantasyTowerBattleRunner StartFantasyTower(int entryIndex)
+        {
+            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
+            if (GetComponent<FantasyTowerBattleRunner>() != null)
+                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
+            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
+            try { runner.Begin(this, entryIndex); }
+            catch { Destroy(runner); throw; }
+            return runner;
+        }
+
+        public void SetFantasyTowerBackgroundExecution(bool enabled)
+        {
+            FantasyTowerBattleRunner runner = GetComponent<FantasyTowerBattleRunner>();
+            if (runner != null && runner.IsAutoPushEnabled)
+                runner.SetBackgroundExecution(enabled);
+        }
+
+        public FantasyTowerBattleRunner StartFantasyTowerAfterCountdown(int entryIndex)
+        {
+            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
+            if (!IsFantasyTowerUnlocked())
+                throw new InvalidOperationException("Official Fantasy Tower progression unlock is not met.");
+            if (GetComponent<FantasyTowerBattleRunner>() != null)
+                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
+            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
+            try { runner.BeginAutoNext(this, entryIndex); }
+            catch { Destroy(runner); throw; }
+            return runner;
+        }
+
+        public bool IsFantasyTowerUnlocked()
+        {
+            return Enumerable.Range(1, 4).Any(entry => fantasyTower.GetEntry(entry).clearedLayer >= 3);
+        }
+
+        public void RefreshAfterFantasyTowerReward()
+        {
+            ReloadContext();
+            hud?.RefreshAll();
+        }
+
+        public FantasyTowerResult ClaimFantasyTowerResult(string resultId)
+        {
+            FantasyTowerResult result = fantasyTower.ClaimResult(resultId, profile);
+            if (result == FantasyTowerResult.Applied) RefreshAfterFantasyTowerReward();
+            return result;
+        }
+
+        private bool DailyDungeonRewardConditionMet(Zjcs.Offline.World.DailyDungeonRuntimeReward reward,
+            int profession, long combatRating)
+        {
+            if (string.IsNullOrEmpty(reward.ConditionType)) return true;
+            if (reward.ConditionType == "PlayerProfessionCondition")
+                return profession > 0 && profession == reward.ConditionProfession;
+            if (reward.ConditionType == "PlayerProfessionFactionCondition")
+                return DailyDungeonProfessionMatches(profession, reward.ConditionProfession);
+            if (reward.ConditionType == "CompositeAndCondition" || reward.ConditionType == "CompositeOrCondition")
+            {
+                int[] ids = reward.ConditionIds ?? Array.Empty<int>();
+                if (ids.Length == 0) return false;
+                bool Match(int id) => dailyDungeons.IsConditionMet(id, profile.Save.Player.Level,
+                    combatRating, profile.Save.Player.SubRank, (_, __) => false,
+                    DailyDungeonHighSubRank, DailyDungeonRankForSubRank, profession,
+                    DailyDungeonProfessionMatches, profile.InventoryCount);
+                return reward.ConditionType == "CompositeAndCondition"
+                    ? ids.All(Match) : ids.Any(Match);
+            }
+            return false;
+        }
+
+        private sealed class DailyDungeonRewardRandom
+        {
+            private uint state;
+
+            public DailyDungeonRewardRandom(string seed)
+            {
+                state = 2166136261;
+                foreach (char value in seed) state = unchecked((state ^ value) * 16777619);
+                if (state == 0) state = 0x9e3779b9;
+            }
+
+            public double NextDouble()
+            {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                return (state & 0x00ffffff) / 16777216d;
+            }
+
+            public float NextFloat() => (float)NextDouble();
+            public bool Roll(double probability) => NextDouble() < Math.Min(1d, probability);
         }
 
         public TreasureGachaSourceNavigation OpenTreasureGachaFromItemSource(int sourceItemId,
@@ -297,6 +634,8 @@ namespace Zjcs.Presentation.Home
         public int SubRank => profile?.Save.Player.SubRank ?? 1;
         public int Rank => profile?.Save.Player.Rank ?? 1;
         public string GuildName => profile?.Save.Player.GuildName ?? string.Empty;
+        public int StoryCount(string name) => profile == null ? 0 : profile.StoryCount(name);
+        public int StoryStatus(string name) => profile == null ? 0 : profile.StoryStatus(name);
         public bool FeatureModalOpen => cookingRuntime != null && cookingRuntime.gameObject.activeInHierarchy
             || homeShop != null && homeShop.IsOpen;
 
@@ -323,9 +662,15 @@ namespace Zjcs.Presentation.Home
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
             homeSettings = new HomeSettingsProfile(Path.Combine(slots.GetSlotDirectory(slotId), "settings.json"));
             homeSettings.Load();
-            fantasyTower = OfflineFantasyTowerSession.Open(slots, slotId);
             profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             profile.Reload();
+            dailyChallenges = new OfflineDailyChallengeService(
+                Path.Combine(slots.GetSlotDirectory(slotId), "daily-challenges.json"));
+            dailyDungeons = OfflineDailyDungeonSession.Open(slots, slotId);
+            fantasyTower = OfflineFantasyTowerSession.Open(slots, slotId);
+            npcAssistanceProgress = OfflineNpcAssistanceProgress.Open(slots, slotId);
+            npcAssistanceCatalog = OfficialCombatAssetCatalog.LoadDefault().LoadNpcAssistance();
+            arena = OfflineArenaSession.Open(slots, slotId);
             npcTravelCatalog = OfficialNpcTravelCatalog.LoadDefault();
             npcTravel = new OfflineNpcTravelService(profile, npcTravelCatalog);
             fruitTree = new OfflineFruitTreeService(profile);
@@ -340,6 +685,8 @@ namespace Zjcs.Presentation.Home
                 "Home", "Settings", "settings-ui.json"));
             catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
                 "Home", "Travel", "ui.json"));
+            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
+                "TowerPush", "ui.json"));
             try
             {
                 treasureGachaCatalog = OfficialTreasureGachaAssets.LoadDefault();
@@ -357,8 +704,6 @@ namespace Zjcs.Presentation.Home
                 if (petGachaAssets == null)
                     throw new InvalidOperationException("Official pet gacha native models are not installed.");
                 petGachaAssets.Validate(petGachaCatalog);
-            catalog.LoadPanelExtension(Path.Combine(Application.streamingAssetsPath,
-                "TowerPush", "ui.json"));
                 petGacha = new OfflinePetGachaService(profile, petGachaCatalog);
             }
             catch (Exception error)
@@ -389,8 +734,8 @@ namespace Zjcs.Presentation.Home
             input.RewardClicked += OnRewardClicked;
             input.SetRewardHit(OnRewardHit);
             hud = new HomeHudView(this, uiParent);
-            hud.ShowFantasyTowerPendingResult();
             hud.Build();
+            hud.ShowFantasyTowerPendingResult();
             fruitTreeTutorialVoiceSource = gameObject.AddComponent<AudioSource>();
             fruitTreeTutorialVoiceSource.playOnAwake = false;
             fruitTreeTutorialVoiceSource.loop = false;
@@ -527,6 +872,8 @@ namespace Zjcs.Presentation.Home
         private void ReloadContext()
         {
             OfflinePlayerProgress player = profile.Save.Player;
+            EnsureProgression();
+            BlessingLevel = new OfflineGoddessPropSource(progression.Catalog).BlessingLevel(profile.Save.World);
             context = new HomeConditionContext
             {
                 Level = player.Level,
@@ -536,8 +883,8 @@ namespace Zjcs.Presentation.Home
                 InitialWeaponType = player.InitialWeaponType,
                 Profession = player.Wardrobe.Profession,
                 ItemCount = profile.InventoryCount,
-                StoryCount = profile.StoryCount,
-                StoryStatus = profile.StoryStatus,
+                StoryCount = name => StoryCount(name),
+                StoryStatus = name => StoryStatus(name),
                 HasItemOfType = itemType => player.Inventory.Any(stack => stack != null && stack.Count > 0
                     && rules.Item(stack.ItemId)?.type == itemType),
                 AnyGoddessActive = profile.Save.World.ActivatedGoddessRegions != null
@@ -552,11 +899,11 @@ namespace Zjcs.Presentation.Home
         {
             var properties = PlayerProperties();
             session = OfflineHomeIncomeSession.Open(slots, slotId, new[] { PlaceholderDefinition() },
-                properties, new HashSet<int>(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now());
+                properties, FloatPropertyIds(), Array.Empty<OfflineHomeRandomRewardDefinition>(), Now());
             OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(
                 session, context, BlessingLevel);
             OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(session, context);
-            session.Reconfigure(definitions, properties, new HashSet<int>(), rewards);
+            session.Reconfigure(definitions, properties, FloatPropertyIds(), rewards);
             return session;
         }
 
@@ -580,7 +927,21 @@ namespace Zjcs.Presentation.Home
                 profile.Save.Player, profile.Save.World, Now());
             foreach (KeyValuePair<int, long> pair in snapshot.OutOfFightBattleProps)
                 merged[pair.Key] = pair.Value;
+            if (!string.IsNullOrEmpty(profile.Save.Player.CommerceStateJson))
+            {
+                OfflineCommerceSave commerce = JsonUtility.FromJson<OfflineCommerceSave>(
+                    profile.Save.Player.CommerceStateJson);
+                foreach (KeyValuePair<int, long> pair in OfflineCommerceSession.ActivePeriodicProperties(
+                             OfficialCommerceCatalogView.LoadDefault(), commerce?.State))
+                    merged[pair.Key] = merged.TryGetValue(pair.Key, out long current)
+                        ? checked(current + pair.Value) : pair.Value;
+            }
             return merged;
+        }
+
+        private static ISet<int> FloatPropertyIds()
+        {
+            return new HashSet<int> { 6004, 1034 };
         }
 
         private void EnsureProgression()
@@ -616,7 +977,7 @@ namespace Zjcs.Presentation.Home
         {
             OfflineHomeIncomeDefinition[] definitions = homeProgression.BuildIncomeDefinitions(session, context, BlessingLevel);
             OfflineHomeRandomRewardDefinition[] rewards = homeProgression.BuildRandomRewardDefinitions(session, context);
-            session.Reconfigure(definitions, PlayerProperties(), new HashSet<int>(), rewards);
+            session.Reconfigure(definitions, PlayerProperties(), FloatPropertyIds(), rewards);
         }
 
         private void ApplyFurnitureStates()
@@ -1364,62 +1725,6 @@ namespace Zjcs.Presentation.Home
             }
             onOpenMainland();
             return true;
-        }
-        public List<FantasyTowerReward> RollFantasyTowerRewards(int stageId, string receipt)
-        {
-            if (string.IsNullOrWhiteSpace(receipt)) throw new ArgumentException("A stable reward receipt is required.", nameof(receipt));
-            ulong state = 14695981039346656037UL;
-            foreach (char value in receipt) state = unchecked((state ^ value) * 1099511628211UL);
-            if (state == 0) state = 0x9e3779b97f4a7c15UL;
-            return FantasyTowerCatalog.RollRewards(stageId, profile.Save.Player.Level,
-                profile.Save.Player.SubRank, ref state);
-        }
-
-        public FantasyTowerBattleRunner StartFantasyTower(int entryIndex)
-        {
-            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
-            if (GetComponent<FantasyTowerBattleRunner>() != null)
-                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
-            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
-            try { runner.Begin(this, entryIndex); }
-            catch { Destroy(runner); throw; }
-            return runner;
-        }
-
-        public void SetFantasyTowerBackgroundExecution(bool enabled)
-        {
-            FantasyTowerBattleRunner runner = GetComponent<FantasyTowerBattleRunner>();
-            if (runner != null && runner.IsAutoPushEnabled)
-                runner.SetBackgroundExecution(enabled);
-        }
-
-        public FantasyTowerBattleRunner StartFantasyTowerAfterCountdown(int entryIndex)
-        {
-            if (entryIndex < 1 || entryIndex > 4) throw new ArgumentOutOfRangeException(nameof(entryIndex));
-            if (!IsFantasyTowerUnlocked())
-                throw new InvalidOperationException("Official Fantasy Tower progression unlock is not met.");
-            if (GetComponent<FantasyTowerBattleRunner>() != null)
-                throw new InvalidOperationException("A Fantasy Tower battle is already active.");
-            FantasyTowerBattleRunner runner = gameObject.AddComponent<FantasyTowerBattleRunner>();
-            try { runner.BeginAutoNext(this, entryIndex); }
-            catch { Destroy(runner); throw; }
-            return runner;
-        }
-
-        public bool IsFantasyTowerUnlocked() =>
-            Enumerable.Range(1, 4).Any(entry => fantasyTower.GetEntry(entry).clearedLayer >= 3);
-
-        public void RefreshAfterFantasyTowerReward()
-        {
-            ReloadContext();
-            hud?.RefreshAll();
-        }
-
-        public FantasyTowerResult ClaimFantasyTowerResult(string resultId)
-        {
-            FantasyTowerResult result = fantasyTower.ClaimResult(resultId, profile);
-            if (result == FantasyTowerResult.Applied) RefreshAfterFantasyTowerReward();
-            return result;
         }
 
         public void Close()

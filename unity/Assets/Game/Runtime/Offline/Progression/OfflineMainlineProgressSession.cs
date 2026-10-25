@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Zjcs.Offline.Equipment;
@@ -56,6 +57,7 @@ namespace Zjcs.Offline.Progression
         public bool RankTutorialRewardClaimed;
         public string CharacterName = string.Empty;
         public bool CharacterCreated;
+        public bool HasManualMeetNpc;
         public int InitialWeaponType;
         public string GuildName = string.Empty;
         public List<OfflineItemStack> Inventory = new List<OfflineItemStack>();
@@ -72,8 +74,28 @@ namespace Zjcs.Offline.Progression
         public OfflineWardrobeProgress Wardrobe = new OfflineWardrobeProgress();
         public OfflineEquipmentProfile Equipment = new OfflineEquipmentProfile();
         public OfflineSkillProfile Skills = new OfflineSkillProfile();
+        public OfflinePetProgress Pets = new OfflinePetProgress();
+        public OfflineCharacterPropertyProgress CharacterProperties = new OfflineCharacterPropertyProgress();
         public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
+        public List<OfflineStoryProgress> Stories = new List<OfflineStoryProgress>();
+        public List<OfflineProfessionLevel> ProfessionLevels = new List<OfflineProfessionLevel>();
+        public OfflineHomeShopProgress HomeShop = new OfflineHomeShopProgress();
         public List<string> AppliedCharacterEventIds = new List<string>();
+    }
+
+    [Serializable]
+    public sealed class OfflineStoryProgress
+    {
+        public string Key;
+        public int Count;
+        public int Status;
+    }
+
+    [Serializable]
+    public sealed class OfflineProfessionLevel
+    {
+        public int Profession;
+        public int Level;
     }
 
     [Serializable]
@@ -84,6 +106,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineAppearanceSkin> BaseSkins = new List<OfflineAppearanceSkin>();
         public List<OfflineAppearanceSkin> WornSkins = new List<OfflineAppearanceSkin>();
         public List<OfflineAppearanceSkin> WornItems = new List<OfflineAppearanceSkin>();
+        public List<OfflineSkillAppearance> SkillSkins = new List<OfflineSkillAppearance>();
         public List<OfflineAppearanceWearTime> WearTimes = new List<OfflineAppearanceWearTime>();
         public List<OfflineAppearanceDye> Dyes = new List<OfflineAppearanceDye>();
         public List<OfflineTimedAppearance> Expiries = new List<OfflineTimedAppearance>();
@@ -99,6 +122,13 @@ namespace Zjcs.Offline.Progression
     {
         public int Type;
         public int Id;
+    }
+
+    [Serializable]
+    public sealed class OfflineSkillAppearance
+    {
+        public int SkillId;
+        public int SkillSkinId;
     }
 
     [Serializable]
@@ -204,6 +234,9 @@ namespace Zjcs.Offline.Progression
 
     public sealed class OfflineMainlineProgressSession
     {
+        private static readonly Lazy<OfficialMainlineTaskCatalog> DefaultFriendshipCatalog =
+            new Lazy<OfficialMainlineTaskCatalog>(OfficialMainlineTaskCatalog.LoadDefault);
+
         private readonly string savePath;
         private readonly OfficialMainlineTaskCatalog catalog;
 
@@ -218,6 +251,48 @@ namespace Zjcs.Offline.Progression
 
         public OfflineMainlineSave Save { get; private set; }
         public SaveReadStatus ReadStatus { get; }
+
+        public int StoryCount(string key)
+        {
+            OfflineStoryProgress story = FindStory(Save.Player, key);
+            return story == null ? 0 : story.Count;
+        }
+
+        public int StoryStatus(string key)
+        {
+            OfflineStoryProgress story = FindStory(Save.Player, key);
+            return story == null ? 0 : story.Status;
+        }
+
+        public ProgressionResult SetStoryProgress(string key, int count, int status, string eventId = null)
+        {
+            if (string.IsNullOrWhiteSpace(key) || key.Length > 256 || count < 0)
+                return Result(ProgressionResultStatus.InvalidState, message: "A valid story key and non-negative count are required.");
+            return ApplyCharacterMutationIfChanged(player =>
+            {
+                player.Stories ??= new List<OfflineStoryProgress>();
+                OfflineStoryProgress story = FindStory(player, key);
+                if (story == null)
+                {
+                    player.Stories.Add(new OfflineStoryProgress { Key = key, Count = count, Status = status });
+                    return true;
+                }
+                if (story.Count == count && story.Status == status) return false;
+                story.Count = count;
+                story.Status = status;
+                return true;
+            }, eventId);
+        }
+
+        public ProgressionResult RecordManualMeetNpc(string eventId = null)
+        {
+            return ApplyCharacterMutationIfChanged(player =>
+            {
+                if (player.HasManualMeetNpc) return false;
+                player.HasManualMeetNpc = true;
+                return true;
+            }, eventId);
+        }
 
         public static OfflineMainlineProgressSession Open(ProfileSlotCatalog slots, string slotId,
             OfficialMainlineTaskCatalog catalog)
@@ -260,6 +335,12 @@ namespace Zjcs.Offline.Progression
             if (result.Status == SaveReadStatus.Corrupt)
                 throw new InvalidDataException("The selected profile progress save is corrupt.");
             OfflineMainlineSave save = result.Json == null ? new OfflineMainlineSave() : ParseSave(result.Json);
+            long createdAt = slots.GetCreatedAtUnixSeconds(slotId);
+            if (save.CreatedAtUnixSeconds == 0 && createdAt > 0)
+            {
+                save.CreatedAtUnixSeconds = createdAt;
+                LocalJsonSaveFile.Write(path, JsonUtility.ToJson(save, true), IsValidSaveJson);
+            }
             return new OfflineMainlineProgressSession(path, null, save, result.Status);
         }
 
@@ -326,6 +407,26 @@ namespace Zjcs.Offline.Progression
             return Save.World.StageWinCounts.FirstOrDefault(value => value.StageId == stageId)?.Count ?? 0;
         }
 
+        public ProgressionResult RecordStageWin(int stageId, string eventId)
+        {
+            if (stageId <= 0 || string.IsNullOrWhiteSpace(eventId) || eventId.Length > 256)
+                return Result(ProgressionResultStatus.InvalidState, message: "A stage ID and unique victory receipt are required.");
+            if (Save.World.AppliedEventIds.Contains(eventId)) return Result(ProgressionResultStatus.Unchanged);
+
+            OfflineMainlineSave next = Clone(Save);
+            OfflineStageWinCount entry = next.World.StageWinCounts.FirstOrDefault(value => value.StageId == stageId);
+            if (entry == null)
+            {
+                entry = new OfflineStageWinCount { StageId = stageId };
+                next.World.StageWinCounts.Add(entry);
+            }
+            if (entry.Count == int.MaxValue)
+                return Result(ProgressionResultStatus.InvalidState, message: "Stage win count is exhausted.");
+            entry.Count++;
+            next.World.AppliedEventIds.Add(eventId);
+            return Commit(next, Result(ProgressionResultStatus.Applied));
+        }
+
         public ProgressionResult SetMapRegionProgress(int mapClassId, int region, int fixedProgress)
         {
             if (fixedProgress < 0 || fixedProgress > 10000 || !HasMapRegion(Save, mapClassId, region))
@@ -353,6 +454,9 @@ namespace Zjcs.Offline.Progression
         {
             if (!HasMapRegion(Save, mapClassId, region) || string.IsNullOrWhiteSpace(eventId))
                 return Result(ProgressionResultStatus.InvalidState, message: "A real activated map region and receipt are required.");
+            if (FindRegion(Save, mapClassId, region).Progress < 10000)
+                return Result(ProgressionResultStatus.InvalidState,
+                    message: "A goddess can only be activated after its map region reaches 100% exploration.");
             if (Save.World.AppliedEventIds.Contains(eventId)) return Result(ProgressionResultStatus.Unchanged);
             OfflineMainlineSave next = Clone(Save);
             if (!next.World.ActivatedGoddessRegions.Any(value => value.MapClassId == mapClassId && value.Region == region))
@@ -491,6 +595,74 @@ namespace Zjcs.Offline.Progression
             return Result(ProgressionResultStatus.NotReady, message: "No available official mainline task.");
         }
 
+        public ProgressionResult GetTaskProgress(OfficialTaskCondition condition, out long current, out long target)
+        {
+            current = 0;
+            target = 0;
+            if (condition == null)
+                return Result(ProgressionResultStatus.Unsupported, unsupportedCondition: "ConditionMissing");
+
+            switch (condition.type)
+            {
+                case "NoneCondition":
+                case "AlwaysCondition":
+                    current = target = 1;
+                    break;
+                case "TaskCompleteCondition":
+                    int[] taskIds = condition.taskClassIds ?? Array.Empty<int>();
+                    target = taskIds.Length;
+                    current = taskIds.Count(Save.Tasks.ClaimedMainlineTaskIds.Contains);
+                    break;
+                case "MapGameTotalCountCondition":
+                    target = Math.Max(0, condition.count);
+                    if (!HasMapRegion(Save, condition.mapClassId, condition.region))
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "MapGameTotalCountCondition:MapNotInitialized");
+                    OfflineMapBattleCount battle = Save.World.BattleCounts.FirstOrDefault(value =>
+                        value.MapClassId == condition.mapClassId && value.Region == condition.region
+                        && value.Result == condition.result);
+                    current = Math.Min(target, battle == null ? 0 : battle.Count);
+                    break;
+                case "WorldMapProgressCondition":
+                    target = Math.Max(0, condition.progress);
+                    if (condition.region < 0 || !HasMapRegion(Save, condition.mapClassId, condition.region))
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "WorldMapProgressCondition:MapOrRegionNotInitialized");
+                    current = Math.Min(target, FindRegion(Save, condition.mapClassId, condition.region).Progress);
+                    break;
+                case "MapLogicEntityEndByTagCondition":
+                    if (string.IsNullOrEmpty(condition.tag))
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "MapLogicEntityEndByTagCondition:TagMissing");
+                    target = 1;
+                    current = Save.World.CompletedEntityTags.Contains(condition.tag) ? 1 : 0;
+                    break;
+                case "MapRegionGoddessCondition":
+                    target = 1;
+                    current = Save.World.ActivatedGoddessRegions.Any(value =>
+                        value.MapClassId == condition.mapClassId && value.Region == condition.region) ? 1 : 0;
+                    break;
+                case "MaxProfessionRankCondition":
+                    if (Save.Player.MaxProfessionRank <= 0)
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "MaxProfessionRankCondition:ProfessionProgressNotInitialized");
+                    target = Math.Max(0, condition.rank);
+                    current = Math.Min(target, Save.Player.MaxProfessionRank);
+                    break;
+                case "TotalOpenChestCondition":
+                    target = Math.Max(0, condition.count);
+                    OfflineChestCount chest = Save.World.OpenChestCounts.FirstOrDefault(value =>
+                        value.ChestId == condition.chestId);
+                    current = Math.Min(target, chest == null ? 0 : chest.Count);
+                    break;
+                default:
+                    return Result(ProgressionResultStatus.Unsupported,
+                        unsupportedCondition: condition.type ?? "<missing-type>");
+            }
+
+            return Result(ProgressionResultStatus.Ready);
+        }
+
         public ProgressionResult ClaimTask(int classId)
         {
             if (catalog == null)
@@ -545,8 +717,47 @@ namespace Zjcs.Offline.Progression
                     return Result(ProgressionResultStatus.InvalidState, classId, message: "Reward inventory count is exhausted.");
                 stack.Count += reward.count;
             }
+            ProgressionResult friendshipResult = ApplyTaskNpcFriendshipRewards(next.Player, task);
+            if (friendshipResult != null)
+                return Result(friendshipResult.Status, classId, friendshipResult.UnsupportedCondition,
+                    friendshipResult.Message);
             next.Tasks.ClaimedMainlineTaskIds.Add(classId);
             return Commit(next, Result(ProgressionResultStatus.Applied, classId));
+        }
+
+        private ProgressionResult ApplyTaskNpcFriendshipRewards(OfflinePlayerProgress player,
+            OfficialMainlineTaskDefinition task)
+        {
+            if (task.npcFriendshipRewards == null || task.npcFriendshipRewards.Length == 0) return null;
+            if (player.CharacterProperties == null)
+                player.CharacterProperties = new OfflineCharacterPropertyProgress();
+            OfflineCharacterPropertyProgress properties = player.CharacterProperties;
+            OfflineCharacterPropertyProgress.Normalize(properties);
+            foreach (OfficialTaskNpcFriendshipReward reward in task.npcFriendshipRewards)
+            {
+                if (reward.amount == 0) continue;
+                OfflineNpcFriendship friendship = properties.NpcFriendships.FirstOrDefault(value =>
+                    value.NpcClassId == reward.npcClassId);
+                if (friendship == null)
+                {
+                    friendship = new OfflineNpcFriendship { NpcClassId = reward.npcClassId };
+                    properties.NpcFriendships.Add(friendship);
+                }
+
+                long currentExp = friendship.FriendshipExp;
+                if (currentExp == 0 && friendship.Level > 0)
+                {
+                    if (!catalog.TryGetFriendshipExperience(reward.npcClassId, friendship.Level, out currentExp))
+                        return Result(ProgressionResultStatus.InvalidState, task.classId,
+                            message: "NPC friendship level is missing from the pinned rules.");
+                }
+                if (currentExp < 0 || long.MaxValue - currentExp < reward.amount)
+                    return Result(ProgressionResultStatus.InvalidState, task.classId,
+                        message: "NPC friendship experience is exhausted.");
+                friendship.FriendshipExp = currentExp + reward.amount;
+                friendship.Level = catalog.FriendshipLevel(reward.npcClassId, friendship.FriendshipExp, player.SubRank);
+            }
+            return null;
         }
 
         public long InventoryCount(int itemId)
@@ -554,6 +765,23 @@ namespace Zjcs.Offline.Progression
             OfflineItemStack stack = Save.Player.Inventory.FirstOrDefault(value => value.ItemId == itemId);
             return stack == null ? 0 : stack.Count;
         }
+
+        public int FriendshipLevel(int npcClassId, long experience, int subRank)
+        {
+            return FriendshipCatalog.FriendshipLevel(npcClassId, experience, subRank);
+        }
+
+        public int MaximumFriendshipLevel(int npcClassId, int subRank)
+        {
+            return FriendshipCatalog.MaximumFriendshipLevel(npcClassId, subRank);
+        }
+
+        public bool TryGetFriendshipExperience(int npcClassId, int level, out long experience)
+        {
+            return FriendshipCatalog.TryGetFriendshipExperience(npcClassId, level, out experience);
+        }
+
+        private OfficialMainlineTaskCatalog FriendshipCatalog => catalog ?? DefaultFriendshipCatalog.Value;
 
         public ProgressionResult ApplyInventoryTransaction(string eventId, Action<OfflineMainlineSave> mutation)
         {
@@ -646,6 +874,12 @@ namespace Zjcs.Offline.Progression
             catch { return false; }
         }
 
+        private static OfflineStoryProgress FindStory(OfflinePlayerProgress player, string key)
+        {
+            if (player == null || string.IsNullOrEmpty(key) || player.Stories == null) return null;
+            return player.Stories.FirstOrDefault(value => value != null && value.Key == key);
+        }
+
         private static OfflineMainlineSave ParseSave(string json)
         {
             OfflineMainlineSave save = JsonUtility.FromJson<OfflineMainlineSave>(json);
@@ -675,7 +909,16 @@ namespace Zjcs.Offline.Progression
                     && save.Player.InitialWeaponType != 201)
                 || save.Player.Wardrobe == null || save.Player.Equipment == null
                 || save.Player.Skills == null || !OfflineSkillProgression.IsValid(save.Player.Skills)
+                || save.Player.Pets == null || !OfflinePetProgress.IsValid(save.Player.Pets, save.Player.Skills)
+                || save.Player.CharacterProperties == null
+                || !OfflineCharacterPropertyProgress.IsValid(save.Player.CharacterProperties)
                 || save.Player.NpcTravel == null || !OfflineNpcTravelProgress.IsValid(save.Player.NpcTravel)
+                || save.Player.ProfessionLevels == null || save.Player.ProfessionLevels.Count > 100
+                || save.Player.ProfessionLevels.Any(value => value == null || value.Profession < 0 || value.Level < 0)
+                || save.Player.ProfessionLevels.Select(value => value.Profession).Distinct().Count()
+                    != save.Player.ProfessionLevels.Count
+                || save.Player.HomeShop == null || !OfflineHomeShopProgress.IsValid(save.Player.HomeShop)
+                || save.Player.Stories == null || save.Player.Stories.Count > 100000
                 || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
@@ -702,6 +945,10 @@ namespace Zjcs.Offline.Progression
             foreach (OfflineRankUnlockTime unlock in save.Player.RankUnlockTimes)
                 if (unlock == null || unlock.Rank <= 0 || unlock.Rank > save.Player.Rank
                     || unlock.UnixSeconds < 0 || !rankUnlocks.Add(unlock.Rank)) return false;
+            var storyKeys = new HashSet<string>(StringComparer.Ordinal);
+            foreach (OfflineStoryProgress story in save.Player.Stories)
+                if (story == null || string.IsNullOrWhiteSpace(story.Key) || story.Key.Length > 256
+                    || story.Count < 0 || !storyKeys.Add(story.Key)) return false;
             var mapIds = new HashSet<int>();
             foreach (OfflineMapProgress map in save.World.Maps)
             {
@@ -742,7 +989,8 @@ namespace Zjcs.Offline.Progression
             OfflinePetGachaProgress.Normalize(save.Player.PetGacha);
             if (save.Player.FruitTree == null) save.Player.FruitTree = new OfflineFruitTreeProgress();
             OfflineFruitTreeProgress.Normalize(save.Player.FruitTree);
-            if (save.Player.MaterialGathering == null) save.Player.MaterialGathering = new OfflineMaterialGatheringProgress();
+            if (save.Player.MaterialGathering == null)
+                save.Player.MaterialGathering = new OfflineMaterialGatheringProgress();
             OfflineMaterialGatheringProgress.Normalize(save.Player.MaterialGathering);
             foreach (OfflineItemStack stack in save.Player.Inventory)
                 if (stack != null && stack.UnitRecords == null) stack.UnitRecords = new List<OfflineItemUnitRecord>();
@@ -756,12 +1004,24 @@ namespace Zjcs.Offline.Progression
                     save.Player.RankUnlockTimes.Add(new OfflineRankUnlockTime { Rank = rank, UnixSeconds = acquiredAt });
             }
             if (save.Player.AppliedCharacterEventIds == null) save.Player.AppliedCharacterEventIds = new List<string>();
+            if (save.Player.Stories == null) save.Player.Stories = new List<OfflineStoryProgress>();
             if (save.Player.Wardrobe == null) save.Player.Wardrobe = new OfflineWardrobeProgress();
+            if (save.Player.Wardrobe.SkillSkins == null)
+                save.Player.Wardrobe.SkillSkins = new List<OfflineSkillAppearance>();
             if (save.Player.Equipment == null) save.Player.Equipment = new OfflineEquipmentProfile();
             if (save.Player.Skills == null) save.Player.Skills = new OfflineSkillProfile();
             OfflineSkillProgression.Normalize(save.Player.Skills);
+            if (save.Player.Pets == null) save.Player.Pets = new OfflinePetProgress();
+            OfflinePetProgress.Normalize(save.Player.Pets, save.Player.PetGacha);
+            if (save.Player.CharacterProperties == null)
+                save.Player.CharacterProperties = new OfflineCharacterPropertyProgress();
+            OfflineCharacterPropertyProgress.Normalize(save.Player.CharacterProperties);
             if (save.Player.NpcTravel == null) save.Player.NpcTravel = new OfflineNpcTravelProgress();
             OfflineNpcTravelProgress.Normalize(save.Player.NpcTravel);
+            if (save.Player.ProfessionLevels == null)
+                save.Player.ProfessionLevels = new List<OfflineProfessionLevel>();
+            if (save.Player.HomeShop == null) save.Player.HomeShop = new OfflineHomeShopProgress();
+            OfflineHomeShopProgress.Normalize(save.Player.HomeShop);
             if (save.Player.Equipment.Instances == null) save.Player.Equipment.Instances = new List<OfflineEquipmentInstance>();
             if (save.Player.Equipment.Equipped == null) save.Player.Equipment.Equipped = new List<OfflineEquippedSlot>();
             if (save.Player.Equipment.SlotProgress == null) save.Player.Equipment.SlotProgress = new List<OfflineEquipmentSlotProgress>();
@@ -845,12 +1105,18 @@ namespace Zjcs.Offline.Progression
                 || wardrobe.FashionExperience < 0 || wardrobe.WornTitleId < 0
                 || wardrobe.AppearanceLevel < 0
                 || wardrobe.BaseSkins.Count > 64 || wardrobe.WornSkins.Count > 64
-                || wardrobe.WornItems.Count > 64 || wardrobe.WearTimes.Count > 64
+                || wardrobe.WornItems.Count > 64 || wardrobe.SkillSkins == null || wardrobe.SkillSkins.Count > 64
+                || wardrobe.WearTimes.Count > 64
                 || wardrobe.Dyes.Count > 64 || wardrobe.Expiries.Count > 20000
                 || wardrobe.LimitedTitleCollection.Count > 20000 || wardrobe.SeenItems.Count > 20000)
                 return false;
             if (!UniqueAppearanceTypes(wardrobe.BaseSkins) || !UniqueAppearanceTypes(wardrobe.WornSkins)
                 || !UniqueAppearanceTypes(wardrobe.WornItems)) return false;
+            var skillSkinIds = new HashSet<int>();
+            foreach (OfflineSkillAppearance value in wardrobe.SkillSkins)
+                if (value == null || value.SkillId <= 0 || value.SkillSkinId <= 0
+                    || !skillSkinIds.Add(value.SkillId)
+                    || inventory.All(item => item.ItemId != value.SkillSkinId || item.Count <= 0)) return false;
             var wearTypes = new HashSet<int>();
             foreach (OfflineAppearanceWearTime value in wardrobe.WearTimes)
                 if (value == null || value.Type <= 0 || value.UnixSeconds < 0 || !wearTypes.Add(value.Type)) return false;
