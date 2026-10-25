@@ -786,6 +786,10 @@
     {
       "path": "assets/reference/battle-hud/source-manifest.json",
       "sha256": "01962eb1dbfbebe32f4b161fdb57775827de9de6c3aa151b220052b79f42b485"
+    },
+    {
+      "path": "assets/reference/battle-hud/timeline-particles-source-manifest.json",
+      "sha256": "33264f50e62e2313d1ecb77d01563847ef268a2773e479e558e57d579de6fa1b"
     }
   ],
   "official_code": [
@@ -817,7 +821,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleTimelineAssets.cs",
-      "sha256": "e8e2ad57d75252870496b07f1c65ad8718888d30c141ef0152f5f1adb40407fe"
+      "sha256": "f8604194c03bbb0639c4443f30aa6c883e69f15b046996ea143ee008f3fb60b8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs",
@@ -842,6 +846,10 @@
       "sha256": "50942af2c7b84c893e26469eac22afe75ee139aa90a90bd21365e22182f3ea29"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineParticleMainTex.shader",
+      "sha256": "d6dcb272c2d34379a6be41983447c1d975e722c4aa9e200c42a309178eba0a78"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/Shaders/TimelineSprite.shader",
       "sha256": "4910eb8252c32184b7c8e88c2224baab320a65fc6106e36a7ffc38e86b7992a3"
     },
@@ -850,9 +858,9 @@
       "sha256": "907e105a0e53018a519308e51930a1f45843e58688452d9e38c1d58c9524faf7"
     }
   ],
-  "generator_sha256": "eba64906daf8fdead20d5b47d54e16d32c26d4ab363e508c85e28efa23f2dd88",
+  "generator_sha256": "3534e670e4038797bfd92971d650e28a4c6213b8bde74b83f44efa86743cee0c",
   "output": "unity/Assets/Official/Combat/Timeline/Resources/Combat/battle-timeline.json",
-  "output_sha256": "5029c118107ff24873e0aa3dbc4873003ecc61d28dafb6135789d03c60e82bb5",
+  "output_sha256": "49483c87105dfd3d25f2998b4bf4c4734eb9aeb00bb81d3e0e4c8708a380a744",
   "textures": [
     {
       "key": "CAB-1c39c726b931a96a738348bad4b8625f:-3845844586857962762:unpacked",
@@ -989,5 +997,5 @@
       "wrapV": 1
     }
   ],
-  "operation": "Preserve original scene timeline Transform hierarchy, Sprite texture/rect/PPU/border, material properties, compiled GLES programs and native Animator tracks/states/AnyState transitions. Particle bindings remain explicitly listed for subsequent restoration."
+  "operation": "Preserve original scene timeline Transform hierarchy, Sprite texture/rect/PPU/border, material properties, compiled GLES programs and native Animator tracks/states/AnyState transitions. Bind the separately recorded native death-particle prefab, preserving its original disabled parent."
 }

@@ -146,7 +146,7 @@ def build():
             if path not in by_path:continue
             node=by_path[path]
             if obj.type.name in ('ParticleSystem','ParticleSystemRenderer'):
-                record(obj);unsupported.append(dict(path=path,type=obj.type.name));continue
+                record(obj);continue
             if obj.type.name=='MonoBehaviour':
                 name=raw.m_Script.read().m_ClassName
                 if name=='GameRoundCharacterItemScene':
@@ -208,6 +208,7 @@ def build():
             node['hasRenderer']='renderer' in node
             node['hasCircle']='circle' in node
         prefabs.append(dict(key=key,nodes=[{k:v for k,v in n.items() if k!='children'} for n in nodes],
+                            particlePrefab='Assets/Official/Combat/Timeline/Source/Particles/Eff_UI_Icon_Death01.prefab' if key=='round_character_scene' else '',
                             hasController=controller is not None,controller=controller,unsupported=unsupported))
     scene_settings=next(c['fields'] for p in foundation['prefabs'] if p['key']=='round_scene' for c in p['components'] if c['type']=='GameRoundScene')
     card_settings=next(c['fields'] for p in foundation['prefabs'] if p['key']=='round_character_scene' for c in p['components'] if c['type']=='GameRoundCharacterItemScene')
@@ -232,7 +233,8 @@ def build():
     RECEIPT.write_text(json.dumps(dict(manifest=apk.version,inputs=list(inputs.values()),
         foundation_input=dict(path=source_path.relative_to(ROOT).as_posix(),sha256=sha(source_path.read_bytes())),
         auxiliary_inputs=file_hashes([ROOT/'unity/Assets/Game/Resources/Combat/battle-scene-bindings.json',
-                                     ROOT/'assets/reference/battle-hud/source-manifest.json']),
+                                     ROOT/'assets/reference/battle-hud/source-manifest.json',
+                                     ROOT/'assets/reference/battle-hud/timeline-particles-source-manifest.json']),
         official_code=file_hashes([official_code/(name+'.cs') for name in ('GameRoundUI','GameRoundScene',
             'GameRoundCharacterItemScene','GameRoundPortraitETC2SceneHandler','CircleSpriteRenderer')]),
         runtime=file_hashes([runtime/p for p in ('Official/WorldUI/WorldCircleSpriteRenderer.cs',
@@ -242,7 +244,7 @@ def build():
         shader_conversions=file_hashes(sorted((runtime/'Presentation/Combat/Shaders').glob('*.shader'))),
         generator_sha256=sha(Path(__file__).read_bytes()),output=OUTPUT.relative_to(ROOT).as_posix(),
         output_sha256=sha(OUTPUT.read_bytes()),textures=list(textures.values()),
-        operation='Preserve original scene timeline Transform hierarchy, Sprite texture/rect/PPU/border, material properties, compiled GLES programs and native Animator tracks/states/AnyState transitions. Particle bindings remain explicitly listed for subsequent restoration.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        operation='Preserve original scene timeline Transform hierarchy, Sprite texture/rect/PPU/border, material properties, compiled GLES programs and native Animator tracks/states/AnyState transitions. Bind the separately recorded native death-particle prefab, preserving its original disabled parent.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Official scene timeline:',len(sprites),'sprites,',len(materials),'materials,',len(shaders),'shaders')
 
 

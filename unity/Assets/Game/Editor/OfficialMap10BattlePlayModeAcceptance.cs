@@ -289,9 +289,9 @@ namespace Zjcs.Editor
                 return field == null ? 0L : Convert.ToInt64(field.GetValue(value));
             };
 
+            VerifyTimelinePortraits(checkpoint());
             if (SessionState.GetBool(PortraitOnlyKey, false))
             {
-                VerifyTimelinePortraits(checkpoint());
                 Debug.Log("Map10 battle portrait Play Mode acceptance passed.");
                 Finish(true, null);
                 yield break;
@@ -491,6 +491,13 @@ namespace Zjcs.Editor
                 int unitId = Convert.ToInt32(unit.GetType().GetField("Id").GetValue(unit));
                 int monsterId = Convert.ToInt32(unit.GetType().GetField("MonsterId").GetValue(unit));
                 Transform card = nodes.FirstOrDefault(value => value.name == "GameRoundCharacterItem_" + unitId);
+                if (card != null)
+                {
+                    Transform particleParent = card.Find("Eff_UI_Icon_Death01/UIParticle");
+                    Require(particleParent != null && !particleParent.gameObject.activeSelf
+                        && particleParent.GetComponentsInChildren<ParticleSystem>(true).Length == 2,
+                        "The scene timeline did not preserve its original disabled particle branch.");
+                }
                 if (monsterId > 0)
                 {
                     Transform icon = card == null ? null : card.Find("IconGo/MonsterIconImg");

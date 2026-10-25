@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -132,6 +133,16 @@ namespace Zjcs.Editor.Combat
                         animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                     }
                     for (int i = nodes.Length - 1; i >= 0; i--) nodes[i].SetActive(source.nodes[i].active);
+                    if (!string.IsNullOrEmpty(source.particlePrefab))
+                    {
+                        GameObject effect = AssetDatabase.LoadAssetAtPath<GameObject>(source.particlePrefab);
+                        if (effect == null) throw new InvalidDataException("Restore the official timeline particle prefab first.");
+                        Transform placeholder = nodes[0].transform.Find(effect.name);
+                        if (placeholder == null) throw new InvalidDataException("Original timeline particle parent changed.");
+                        Transform parent = placeholder.parent;
+                        UnityEngine.Object.DestroyImmediate(placeholder.gameObject);
+                        PrefabUtility.InstantiatePrefab(effect, parent);
+                    }
                     prefabs.Add(source.key, PrefabUtility.SaveAsPrefabAsset(nodes[0], Root + "/Native/" + source.key + ".prefab"));
                 }
                 finally { if (nodes[0] != null) UnityEngine.Object.DestroyImmediate(nodes[0]); }
@@ -153,7 +164,7 @@ namespace Zjcs.Editor.Combat
                 manifest = data.manifest, input_sha256 = Sha(File.ReadAllBytes(Source)),
                 importer_sha256 = Sha(File.ReadAllBytes("Assets/Game/Editor/Combat/OfficialBattleTimelineTools.cs")), outputs = outputs
             }, true) + "\n");
-            Debug.Log("Official scene timeline native assets restored: original prefabs, ten sprites, three materials and four Animator clips. Death particles remain pending.");
+            Debug.Log("Official scene timeline native assets restored: original prefabs, ten sprites, three card materials, four Animator clips and two particle systems (original disabled parent preserved).");
         }
 
         private static AnimatorController RestoreController(BattleTimelineController source)
@@ -257,6 +268,7 @@ namespace Zjcs.Editor.Combat
                     }
                 }
                 if (!source.hasController) continue;
+                if (!string.IsNullOrEmpty(source.particlePrefab)) ValidateParticles(prefab, source.particlePrefab);
                 var controller = prefab.GetComponent<Animator>().runtimeAnimatorController as AnimatorController;
                 AnimatorStateMachine machine = controller.layers[0].stateMachine;
                 if (machine.states.Length != source.controller.states.Length || machine.anyStateTransitions.Length != source.controller.anyTransitions.Length)
@@ -300,6 +312,31 @@ namespace Zjcs.Editor.Combat
         }
 
         private static bool SameTangent(float a, float b) => a == b || Mathf.Abs(a - b) < 1e-6f;
+        private static void ValidateParticles(GameObject card, string path)
+        {
+            GameObject source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Transform effect = card.transform.Find(source.name);
+            if (effect == null || effect.Find("UIParticle").gameObject.activeSelf)
+                throw new InvalidDataException("Original disabled scene particle branch changed.");
+            ParticleSystem[] originals = source.GetComponentsInChildren<ParticleSystem>(true);
+            if (originals.Length != 2 || effect.GetComponentsInChildren<ParticleSystem>(true).Length != 2)
+                throw new InvalidDataException("Original timeline particle coverage changed.");
+            foreach (ParticleSystem particle in originals)
+            {
+                string relative = AnimationUtility.CalculateTransformPath(particle.transform, source.transform);
+                Transform actual = effect.Find(relative);
+                foreach (Type type in new[] { typeof(ParticleSystem), typeof(ParticleSystemRenderer) })
+                {
+                    string Normalize(Component c) => Regex.Replace(EditorJsonUtility.ToJson(c), "\"instanceID\":-?[0-9]+", "\"instanceID\":0");
+                    if (actual == null || actual.GetComponent(type) == null || Normalize(particle.GetComponent(type)) != Normalize(actual.GetComponent(type)))
+                        throw new InvalidDataException("Original native particle serialization changed: " + relative + " / " + type.Name);
+                }
+                Renderer renderer = actual.GetComponent<ParticleSystemRenderer>();
+                if (renderer.sharedMaterial == null || ShaderUtil.ShaderHasError(renderer.sharedMaterial.shader)
+                    || renderer.sharedMaterial.shader.name != "Zjcs/Combat/TimelineParticleMainTex")
+                    throw new InvalidDataException("Original timeline particle shader is not restored: " + relative);
+            }
+        }
         private static void ValidateTransition(AnimatorStateTransition t, BattleFunctionEntryTransition s, BattleTimelineController controller)
         {
             if (t.destinationState.name != controller.states[s.destination].name || t.duration != s.duration || t.hasFixedDuration != s.fixedDuration

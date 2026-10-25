@@ -21,7 +21,7 @@ namespace Zjcs.Presentation.Combat
     [Serializable] public sealed class BattleTimelineSceneBindings { public string line, slot; }
     [Serializable] public sealed class BattleTimelinePrefab
     {
-        public string key;
+        public string key, particlePrefab;
         public bool hasController;
         public BattleTimelineNode[] nodes;
         public BattleTimelineController controller;
