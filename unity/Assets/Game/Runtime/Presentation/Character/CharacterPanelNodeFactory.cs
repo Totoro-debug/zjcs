@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,6 +86,7 @@ namespace Zjcs.Presentation.Character
             rect.localScale = new Vector3(Value(source.scale, 0, 1f), Value(source.scale, 1, 1f),
                 Value(source.scale, 2, 1f));
             rect.localRotation = Quaternion.Euler(0f, 0f, source.rotation);
+            ApplySafeAreaLayout(source, rect);
             instance.SetActive(source.active);
             nodes[source.path] = rect;
 
@@ -92,7 +94,11 @@ namespace Zjcs.Presentation.Character
             {
                 Image image = instance.AddComponent<Image>();
                 image.sprite = source.image.sprite == null ? null : assets.FindSprite(source.image.sprite.file);
-                image.color = ColorValue(source.image.color, Color.white);
+                if (image.sprite == null && source.image.sprite != null)
+                    image.sprite = assets.FindSkillAppearanceSprite(source.image.sprite.file);
+                if (image.sprite == null && source.image.sprite != null)
+                    image.sprite = Resources.Load<Sprite>(source.image.sprite.file);
+                image.color = ImageColor(source.image, ColorValue(source.image.color, Color.white));
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, 3);
                 image.preserveAspect = source.image.preserve_aspect;
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
@@ -126,12 +132,15 @@ namespace Zjcs.Presentation.Character
             }
             if (HasScript(source, "Button") || source.button || HasScript(source, "TabItem"))
             {
-                Graphic graphic = instance.GetComponent<Graphic>();
-                if (graphic == null) graphic = instance.AddComponent<Image>();
+                Graphic graphic = EnsureRaycastGraphic(source, instance);
                 graphic.raycastTarget = true;
                 Button button = instance.AddComponent<Button>();
                 button.targetGraphic = graphic;
                 buttons[source.path] = button;
+            }
+            else if (HasScript(source, "NoDrawingRayCast") && instance.GetComponent<Graphic>() == null)
+            {
+                instance.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
             }
             if (HasScript(source, "RectMask2D")) instance.AddComponent<RectMask2D>();
             if (source.mask)
@@ -310,6 +319,36 @@ namespace Zjcs.Presentation.Character
             return Array.IndexOf(node.scripts ?? Array.Empty<string>(), script) >= 0;
         }
 
+        internal static Graphic EnsureRaycastGraphic(OfficialCharacterPanelNode source, GameObject instance)
+        {
+            Graphic graphic = instance.GetComponent<Graphic>();
+            if (graphic != null) return graphic;
+            if (HasScript(source, "NoDrawingRayCast"))
+                return instance.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
+            Image hitTarget = instance.AddComponent<Image>();
+            hitTarget.color = Color.clear;
+            return hitTarget;
+        }
+
+        internal static void ApplySafeAreaLayout(OfficialCharacterPanelNode node, RectTransform rect)
+        {
+            if (!HasScript(node, "SafeArea")) return;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = Vector2.zero;
+            rect.sizeDelta = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+        }
+
+        internal static Color ImageColor(OfficialCharacterPanelImage image, Color color)
+        {
+            if (image?.sprite != null
+                && string.Equals(Path.GetFileNameWithoutExtension(image.sprite.file),
+                    "C_none-fa3e084e40", StringComparison.OrdinalIgnoreCase))
+                color.a = 0f;
+            return color;
+        }
+
         private static Vector2 Vector(float[] values, Vector2 fallback)
         {
             return values == null || values.Length < 2 ? fallback : new Vector2(values[0], values[1]);
@@ -330,7 +369,7 @@ namespace Zjcs.Presentation.Character
             return values != null && index < values.Length ? values[index] : fallback;
         }
 
-        private static Color ColorValue(float[] values, Color fallback)
+        internal static Color ColorValue(float[] values, Color fallback)
         {
             return values == null || values.Length < 4
                 ? fallback : new Color(values[0], values[1], values[2], values[3]);

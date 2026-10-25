@@ -9,9 +9,20 @@ namespace Zjcs.Offline.Progression
 {
     public sealed class OfflineCharacterProgressionService
     {
+        private static readonly int[] ConfiguredPropertyHandles =
+        {
+            CharacterPropHandleType.Treasure, CharacterPropHandleType.TreasureSuit,
+            CharacterPropHandleType.Cooking, CharacterPropHandleType.Extra,
+            CharacterPropHandleType.NpcFriendshipLevel, CharacterPropHandleType.NpcTalentTree,
+            CharacterPropHandleType.LostGoddess, CharacterPropHandleType.PeriodIcCar,
+            CharacterPropHandleType.Legion, CharacterPropHandleType.EquipCabinet,
+            CharacterPropHandleType.Astrological
+        };
+
         private readonly OfflineMainlineProgressSession session;
         private readonly OfficialCharacterCatalog catalog;
         private readonly CharacterPropCalculator propertyCalculator;
+        private readonly OfflinePetPropSource petPropertySource;
 
         public OfflineCharacterProgressionService(OfflineMainlineProgressSession session,
             OfficialCharacterCatalog catalog)
@@ -19,20 +30,116 @@ namespace Zjcs.Offline.Progression
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             propertyCalculator = new CharacterPropCalculator(catalog);
+            foreach (int handleType in ConfiguredPropertyHandles)
+                propertyCalculator.AddSource(new OfflineCharacterConfiguredPropSource(catalog, handleType));
             propertyCalculator.AddSource(new OfflineGoddessPropSource(catalog, () => session.Save.World));
+            petPropertySource = new OfflinePetPropSource(catalog);
+            propertyCalculator.AddSource(petPropertySource);
+            PetProgression = new OfflinePetProgressionService(session, CalculatePetCombatRating);
+            LegionBuildings = new OfflineLegionBuildingProgressionService(session, catalog);
             RefreshDerivedProgress(session.Save.Player);
         }
 
         public OfflinePlayerProgress Player => session.Save.Player;
         public OfficialCharacterCatalog Catalog => catalog;
+        public int FriendshipLevel(int npcClassId, long experience, int subRank)
+        {
+            return session.FriendshipLevel(npcClassId, experience, subRank);
+        }
+
+        public IReadOnlyList<int> MeetableNpcCandidates()
+        {
+            return catalog.Rows("npc").Select(row => Integer(row, "Id"))
+                .Where(npcId => npcId > 0 && CanMeetNpc(npcId))
+                .Distinct().OrderBy(npcId => npcId).ToArray();
+        }
+
+        public bool CanMeetNpc(int npcClassId)
+        {
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            if (npc == null || (Player.CharacterProperties?.NpcFriendships
+                ?? new List<OfflineNpcFriendship>()).Any(value => value != null
+                    && value.NpcClassId == npcClassId)) return false;
+            return TryNpcMeetRequirements(npc, Player, out _);
+        }
+
+        public IReadOnlyDictionary<int, long> NpcMeetItemRequirements(int npcClassId)
+        {
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            return npc != null && TryNpcMeetRequirements(npc, Player, out Dictionary<int, long> items,
+                requireConditionMet: false)
+                ? items : new Dictionary<int, long>();
+        }
+
+        public ProgressionResult MeetNpc(int npcClassId, string eventId)
+        {
+            if (npcClassId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid NPC and meet event ID are required.");
+            if (Player.AppliedCharacterEventIds.Contains(eventId))
+                return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            if (npc == null || !CanMeetNpc(npcClassId))
+                return Invalid("The NPC meet condition is not satisfied or the NPC was already met.");
+            Dictionary<int, long> requiredItems = NpcMeetItemRequirements(npcClassId)
+                .ToDictionary(value => value.Key, value => value.Value);
+            int defaultLevel = Integer(catalog.Rows("game_settings").FirstOrDefault(),
+                "NpcDefaultFriendshipLevel");
+            Dictionary<string, object> initialFriendship = catalog.Rows("npc_friendship_level")
+                .FirstOrDefault(value => Integer(value, "Id") == npcClassId
+                    && Integer(value, "Level") == defaultLevel);
+            long initialExperience = Long(initialFriendship, "FriendshipExp");
+            if (defaultLevel <= 0 || initialFriendship == null || initialExperience < 0)
+                return Invalid("The official initial NPC friendship state is unavailable.");
+
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineCharacterPropertyProgress properties = player.CharacterProperties
+                    ?? (player.CharacterProperties = new OfflineCharacterPropertyProgress());
+                OfflineCharacterPropertyProgress.Normalize(properties);
+                if (properties.NpcFriendships.Any(value => value.NpcClassId == npcClassId))
+                    throw new InvalidOperationException("This NPC has already been met.");
+                if (!TryNpcMeetRequirements(npc, player, out Dictionary<int, long> currentRequirements))
+                    throw new InvalidOperationException("The NPC meet condition changed before the transaction was saved.");
+                foreach (KeyValuePair<int, long> requirement in currentRequirements)
+                {
+                    OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == requirement.Key);
+                    if (stack == null || stack.Count < requirement.Value)
+                        throw new InvalidOperationException("NPC meet items changed before the transaction was saved.");
+                }
+                foreach (KeyValuePair<int, long> requirement in currentRequirements)
+                    player.Inventory.First(value => value.ItemId == requirement.Key).Count -= requirement.Value;
+                properties.NpcFriendships.Add(new OfflineNpcFriendship
+                {
+                    NpcClassId = npcClassId,
+                    Level = defaultLevel,
+                    FriendshipExp = initialExperience
+                });
+            }, eventId);
+        }
+
         public CharacterPropCalculator PropertyCalculator => propertyCalculator;
         public OfficialEquipmentCatalog EquipmentCatalog { get; private set; }
+        public OfflineGemForgeService GemForge { get; private set; }
+        public OfflinePetProgressionService PetProgression { get; }
+        public OfflineLegionBuildingProgressionService LegionBuildings { get; }
 
         public void AttachEquipmentCatalog(OfficialEquipmentCatalog equipment)
         {
             EquipmentCatalog = equipment;
+            GemForge = null;
             if (equipment != null)
-                propertyCalculator.AddSource(new OfflineEquipmentPropSource(equipment, catalog.RankOfSubRank));
+            {
+                var equipmentProperties = new OfflineEquipmentPropSource(equipment, catalog.RankOfSubRank);
+                propertyCalculator.AddSource(equipmentProperties);
+                propertyCalculator.AddSource(new OfflineEquipmentResonancePropSource(equipmentProperties));
+                propertyCalculator.AddSource(new OfflineGemPropSource(equipment));
+                int moneyItemId = 0;
+                if (equipment.GameSettings is IDictionary<string, object> settings
+                    && settings.TryGetValue("MoneyId", out object value))
+                    moneyItemId = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                GemForge = new OfflineGemForgeService(session, equipment,
+                    OfflineGemForgeService.LoadDefault(), moneyItemId);
+            }
         }
 
         public OfflineSkillRules SkillRules { get; private set; }
@@ -47,6 +154,7 @@ namespace Zjcs.Offline.Progression
             SkillProgression = rules == null ? null : new OfflineSkillProgression(rules);
             SkillRecommendations = recommendations == null
                 ? Array.Empty<OfficialSkillRecommendation>() : recommendations.ToArray();
+            if (rules != null) propertyCalculator.AddSource(new OfflineSkillPropSource(catalog, rules));
         }
 
         public IReadOnlyList<OfficialSkillRecommendation> RecommendationsForProfession(int profession)
@@ -168,6 +276,42 @@ namespace Zjcs.Offline.Progression
             if (SkillProgression == null) return Invalid("Official skill rules are unavailable.");
             return RunSkillMutation((profile, context) =>
                 SkillProgression.UpgradeAllSlots(profile, context), "skill-slot-upgrade-all");
+        }
+
+        public int PreviewUpgradeAllSkillSlots()
+        {
+            return PreviewUpgradeAllSkillSlotChanges().Count;
+        }
+
+        public IReadOnlyList<OfflineSkillSlotUpgradeChange> PreviewUpgradeAllSkillSlotChanges()
+        {
+            if (SkillProgression == null) return Array.Empty<OfflineSkillSlotUpgradeChange>();
+            OfflineSkillProfile profile = Player.Skills.Clone();
+            SyncSkillItems(profile, Player.Inventory);
+            OfflineSkillPlayerContext context = SkillContext();
+            var changes = new List<OfflineSkillSlotUpgradeChange>();
+            while (true)
+            {
+                int itemType = 100;
+                int slot = 0;
+                int minimum = SkillProgression.SlotLevel(profile, itemType, slot, context.CurrentSeasonId);
+                foreach (int kind in new[] { 100, 101 })
+                    for (int index = 0; index < 4; index++)
+                    {
+                        int level = SkillProgression.SlotLevel(profile, kind, index, context.CurrentSeasonId);
+                        if (level < minimum) { itemType = kind; slot = index; minimum = level; }
+                    }
+                OfflineSkillResult result = SkillProgression.UpgradeSlot(profile, context, itemType, slot);
+                if (result == null || !result.IsApplied) break;
+                changes.Add(new OfflineSkillSlotUpgradeChange
+                {
+                    ItemType = itemType,
+                    Slot = slot,
+                    FromLevel = minimum,
+                    ToLevel = SkillProgression.SlotLevel(profile, itemType, slot, context.CurrentSeasonId)
+                });
+            }
+            return changes;
         }
 
         public ProgressionResult PromoteSkill(int skillId)
@@ -339,16 +483,223 @@ namespace Zjcs.Offline.Progression
 
         public CharacterPropSnapshot EvaluateProps(long nowUnixSeconds)
         {
-            return propertyCalculator.Evaluate(Player, nowUnixSeconds);
+            return propertyCalculator.Evaluate(Player, session.Save.World, nowUnixSeconds);
         }
 
         public void AddPropertySource(IOfflineCharacterPropSource source)
         {
             propertyCalculator.AddSource(source);
         }
+
+        public bool CanActivateNpcTalentNode(int npcClassId, int nodeId)
+        {
+            return CanActivateNpcTalentNode(Player, npcClassId, nodeId);
+        }
+
+        public ProgressionResult ActivateNpcTalentNode(int npcClassId, int nodeId, string eventId)
+        {
+            if (npcClassId <= 0 || nodeId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid NPC talent node and event ID are required.");
+            if (!CanActivateNpcTalentNode(Player, npcClassId, nodeId))
+                return Invalid("The NPC talent node is locked or its talent points are insufficient.");
+
+            return session.ApplyCharacterMutation(player =>
+            {
+                Dictionary<string, object> node = FindNpcTalentNode(npcClassId, nodeId);
+                Dictionary<string, object> npcTalent = FindNpcTalentItem(npcClassId);
+                OfflineNpcTalentTree tree = GetOrCreateNpcTalentTree(player, npcClassId);
+                int talentItemId = npcTalent == null ? 0 : Integer(npcTalent, "TalentItemId");
+                long cost = node == null ? 0 : Long(node, "CostTalentPointCount");
+                OfflineItemStack points = player.Inventory.FirstOrDefault(value => value.ItemId == talentItemId);
+                if (!CanActivateNpcTalentNode(player, npcClassId, nodeId)
+                    || cost > 0 && (points == null || points.Count < cost))
+                    throw new InvalidOperationException("The NPC talent node changed before the operation was saved.");
+                if (cost > 0) points.Count -= cost;
+                tree.ActiveNodeIds.Add(nodeId);
+            }, eventId);
+        }
+
+        public ProgressionResult TransformNpcGiftsToTalentPoints(int npcClassId,
+            IReadOnlyDictionary<int, long> gifts, string eventId)
+        {
+            if (npcClassId <= 0 || gifts == null || gifts.Count == 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("Select NPC gifts and provide a valid event ID.");
+
+            Dictionary<string, object> npcTalent = FindNpcTalentItem(npcClassId);
+            Dictionary<string, object> gameSettings = catalog.Rows("game_settings").FirstOrDefault();
+            if (npcTalent == null || gameSettings == null
+                || !gameSettings.TryGetValue("NpcTalentTreeSetting", out object rawTalentSettings)
+                || !(rawTalentSettings is Dictionary<string, object> talentSettings)
+                || !talentSettings.TryGetValue("GiftQuality2TalentExp", out object rawGiftExp)
+                || !(rawGiftExp is Dictionary<string, object> giftExpByQuality))
+                return Invalid("Official NPC talent gift settings are unavailable.");
+
+            int ratio = Integer(talentSettings, "TalentExp2TalentPointRatio");
+            int talentItemId = Integer(npcTalent, "TalentItemId");
+            int transformConditionId = Integer(npcTalent, "TransformGiftUnlockConditionId");
+            if (ratio <= 0 || talentItemId <= 0
+                || transformConditionId > 0
+                    && !catalog.EvaluateCondition(transformConditionId, NpcTalentConditionContext(Player, npcClassId, 0)))
+                return Invalid("NPC talent gift conversion is not unlocked.");
+
+            var selected = new Dictionary<int, long>();
+            long addedExp = 0;
+            foreach (KeyValuePair<int, long> gift in gifts)
+            {
+                if (gift.Key <= 0 || gift.Value <= 0 || catalog.Find("npc_gift", gift.Key) == null)
+                    return Invalid("Only owned official NPC gifts can be converted.");
+                OfflineItemStack owned = Player.Inventory.FirstOrDefault(value => value.ItemId == gift.Key);
+                Dictionary<string, object> item = catalog.FindItem(gift.Key);
+                if (owned == null || owned.Count < gift.Value || item == null
+                    || !giftExpByQuality.TryGetValue(Integer(item, "Quality").ToString(CultureInfo.InvariantCulture),
+                        out object rawExp))
+                    return Invalid("An NPC gift is missing or has no official talent experience value.");
+                long expPerGift = Convert.ToInt64(rawExp, CultureInfo.InvariantCulture);
+                if (expPerGift < 0) return Invalid("An NPC gift has an invalid talent experience value.");
+                addedExp = checked(addedExp + checked(expPerGift * gift.Value));
+                selected.Add(gift.Key, gift.Value);
+            }
+            if (addedExp <= 0) return Invalid("The selected NPC gifts provide no talent experience.");
+
+            OfflineCharacterPropertyProgress properties = Player.CharacterProperties
+                ?? new OfflineCharacterPropertyProgress();
+            OfflineNpcTalentTree currentTree = (properties.NpcTalentTrees ?? new List<OfflineNpcTalentTree>())
+                .FirstOrDefault(value => value != null && value.NpcClassId == npcClassId);
+            long currentExp = currentTree == null ? 0 : currentTree.TalentExp;
+            long unspentPoints = InventoryCount(Player, talentItemId);
+            long remainingPoints = Math.Max(0L,
+                LockedNpcTalentPointCost(npcClassId, currentTree?.ActiveNodeIds) - unspentPoints);
+            if (remainingPoints <= 0) return Invalid("This NPC talent tree has reached its point limit.");
+
+            long totalExp = checked(currentExp + addedExp);
+            long gainedPoints = Math.Min(totalExp / ratio, remainingPoints);
+            long remainingExp = totalExp / ratio >= remainingPoints ? 0 : totalExp % ratio;
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineNpcTalentTree tree = GetOrCreateNpcTalentTree(player, npcClassId);
+                foreach (KeyValuePair<int, long> gift in selected)
+                {
+                    OfflineItemStack stack = player.Inventory.First(value => value.ItemId == gift.Key);
+                    if (stack.Count < gift.Value)
+                        throw new InvalidOperationException("NPC gifts changed before conversion was saved.");
+                    stack.Count -= gift.Value;
+                }
+                if (gainedPoints > 0)
+                {
+                    OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == talentItemId);
+                    if (stack == null)
+                        player.Inventory.Add(new OfflineItemStack { ItemId = talentItemId, Count = gainedPoints });
+                    else
+                        stack.Count = checked(stack.Count + gainedPoints);
+                }
+                tree.TalentExp = remainingExp;
+            }, eventId);
+        }
+
+        private bool CanActivateNpcTalentNode(OfflinePlayerProgress player, int npcClassId, int nodeId)
+        {
+            Dictionary<string, object> node = FindNpcTalentNode(npcClassId, nodeId);
+            Dictionary<string, object> npcTalent = FindNpcTalentItem(npcClassId);
+            if (node == null || npcTalent == null) return false;
+            int nodeType = Integer(node, "NodeType");
+            if (nodeType == 0 || nodeType == 3) return false;
+            OfflineNpcTalentTree tree = (player.CharacterProperties?.NpcTalentTrees
+                ?? new List<OfflineNpcTalentTree>()).FirstOrDefault(value => value != null
+                    && value.NpcClassId == npcClassId);
+            if (tree?.ActiveNodeIds?.Contains(nodeId) == true) return false;
+            int conditionId = Integer(node, "UnlockCondition");
+            if (conditionId > 0 && !catalog.EvaluateCondition(conditionId,
+                    NpcTalentConditionContext(player, npcClassId, nodeId))) return false;
+            int talentItemId = Integer(npcTalent, "TalentItemId");
+            long cost = Long(node, "CostTalentPointCount");
+            return talentItemId > 0 && cost >= 0 && InventoryCount(player, talentItemId) >= cost;
+        }
+
+        private OfficialConditionContext NpcTalentConditionContext(OfflinePlayerProgress player,
+            int npcClassId, int nodeId)
+        {
+            var context = new OfficialConditionContext
+            {
+                Level = player.Level,
+                CurrentTalentTreeNpcClassId = npcClassId,
+                CurrentTalentTreeNodeId = nodeId
+            };
+            OfflineCharacterPropertyProgress properties = player.CharacterProperties
+                ?? new OfflineCharacterPropertyProgress();
+            foreach (OfflineNpcFriendship friendship in properties.NpcFriendships ?? new List<OfflineNpcFriendship>())
+                if (friendship != null && friendship.NpcClassId > 0)
+                    context.NpcFriendshipLevels[friendship.NpcClassId] = friendship.Level;
+            foreach (OfflineNpcTalentTree tree in properties.NpcTalentTrees ?? new List<OfflineNpcTalentTree>())
+                if (tree != null && tree.NpcClassId > 0)
+                    context.NpcTalentTreeActiveNodeIds[tree.NpcClassId]
+                        = new HashSet<int>(tree.ActiveNodeIds ?? new List<int>());
+            if (!context.NpcTalentTreeActiveNodeIds.ContainsKey(npcClassId))
+                context.NpcTalentTreeActiveNodeIds[npcClassId] = new HashSet<int>();
+            return context;
+        }
+
+        private Dictionary<string, object> FindNpcTalentNode(int npcClassId, int nodeId)
+        {
+            return catalog.Rows("npc_talent_tree_map").FirstOrDefault(row =>
+                Integer(row, "NpcClassId") == npcClassId && Integer(row, "NodeId") == nodeId);
+        }
+
+        private Dictionary<string, object> FindNpcTalentItem(int npcClassId)
+        {
+            return catalog.Rows("npc_talent_item").FirstOrDefault(row =>
+                Integer(row, "NpcClassId") == npcClassId);
+        }
+
+        private static OfflineNpcTalentTree GetOrCreateNpcTalentTree(OfflinePlayerProgress player, int npcClassId)
+        {
+            if (player.CharacterProperties == null)
+                player.CharacterProperties = new OfflineCharacterPropertyProgress();
+            OfflineCharacterPropertyProgress.Normalize(player.CharacterProperties);
+            OfflineNpcTalentTree tree = player.CharacterProperties.NpcTalentTrees
+                .FirstOrDefault(value => value.NpcClassId == npcClassId);
+            if (tree != null) return tree;
+            tree = new OfflineNpcTalentTree { NpcClassId = npcClassId };
+            player.CharacterProperties.NpcTalentTrees.Add(tree);
+            return tree;
+        }
+
+        private long LockedNpcTalentPointCost(int npcClassId, IReadOnlyCollection<int> activeNodeIds)
+        {
+            var active = new HashSet<int>(activeNodeIds ?? Array.Empty<int>());
+            long total = 0;
+            foreach (Dictionary<string, object> node in catalog.Rows("npc_talent_tree_map"))
+            {
+                if (Integer(node, "NpcClassId") != npcClassId || active.Contains(Integer(node, "NodeId")))
+                    continue;
+                total = checked(total + Math.Max(0L, Long(node, "CostTalentPointCount")));
+            }
+            return total;
+        }
+
+        private static long InventoryCount(OfflinePlayerProgress player, int itemId)
+        {
+            OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == itemId);
+            return stack == null ? 0 : stack.Count;
+        }
+
         public IReadOnlyDictionary<int, long> BaseBattleProperties()
         {
             return catalog.CalcCharacterBaseBattleProperties(Player.Level, Player.SubRank);
+        }
+
+        private long CalculatePetCombatRating(OfflinePetInstance pet)
+        {
+            int level = Math.Max(1, Player.Level);
+            int subRank = Math.Max(1, Player.SubRank);
+            var context = new CharacterPropScoreContext
+            {
+                Level = level,
+                SubRank = subRank,
+                Props = propertyCalculator.Props,
+                BasicRef = CharacterPropBasicRef.Build(level, subRank, propertyCalculator.Props,
+                    propertyCalculator.LevelProps)
+            };
+            return petPropertySource.CalculatePetCombatRating(Player, pet, context);
         }
 
         public IReadOnlyDictionary<int, long> AppearanceProperties(long nowUnixSeconds)
@@ -503,7 +854,408 @@ namespace Zjcs.Offline.Progression
                         player.Wardrobe.Profession))
                     throw new InvalidOperationException("This equipment cannot be worn by the current character.");
                 SynchronizeEquipmentSkins(player, equipment);
+                RecordEquipCabinetScore(player);
             }, eventId);
+        }
+
+        public int CurrentEquipCabinetScore()
+        {
+            return CalculateEquipCabinetScore(Player);
+        }
+
+        public int LegionMapSkillLevel(int skillClassId)
+        {
+            return (Player.CharacterProperties?.LegionMapSkills ?? new List<OfflineLegionMapSkill>())
+                .FirstOrDefault(value => value != null && value.SkillClassId == skillClassId)?.Level ?? 0;
+        }
+
+        public int LegionLibraryLevel
+        {
+            get
+            {
+                int level = Player.CharacterProperties?.LegionLibraryLevel ?? 1;
+                return level > 0 ? level : 1;
+            }
+        }
+
+        public IReadOnlyDictionary<int, long> LegionMapSkillUpgradeCost(int skillClassId)
+        {
+            int nextLevel = LegionMapSkillLevel(skillClassId) + 1;
+            Dictionary<string, object> row = catalog.Rows("legion_map_skill_study_level").FirstOrDefault(value =>
+                Integer(value, "SkillClassId") == skillClassId && Integer(value, "Level") == nextLevel);
+            if (row == null || !row.TryGetValue("LevelUpCost", out object rawCost)
+                || !(rawCost is Dictionary<string, object> cost)) return new Dictionary<int, long>();
+            var result = new Dictionary<int, long>();
+            foreach (KeyValuePair<string, object> entry in cost)
+            {
+                int itemId = Convert.ToInt32(entry.Key, CultureInfo.InvariantCulture);
+                long count = Convert.ToInt64(entry.Value, CultureInfo.InvariantCulture);
+                if (itemId <= 0 || count <= 0) return new Dictionary<int, long>();
+                result[itemId] = count;
+            }
+            return result;
+        }
+
+        public ProgressionResult UpgradeLegionMapSkill(int skillClassId, string eventId)
+        {
+            if (skillClassId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid guild skill and event ID are required.");
+            Dictionary<string, object> definition = catalog.Find("legion_map_skill", skillClassId, "SkillClassId");
+            if (definition == null) return Invalid("The official guild skill is unavailable.");
+            int libraryLevel = LegionLibraryLevel;
+            int currentLevel = LegionMapSkillLevel(skillClassId);
+            IReadOnlyList<Dictionary<string, object>> studyLevels = catalog.Rows("legion_map_skill_study_level");
+            int maxLevel = studyLevels.Where(value => Integer(value, "SkillClassId") == skillClassId)
+                .Select(value => Integer(value, "Level")).DefaultIfEmpty(0).Max();
+            if (currentLevel >= maxLevel) return Invalid("The guild skill has reached its official maximum level.");
+            if (libraryLevel < Integer(definition, "UnlockLevel"))
+                return Invalid("The library level does not unlock this guild skill.");
+
+            if (definition.TryGetValue("TermSkillArr", out object rawRequirements)
+                && rawRequirements is IEnumerable<object> requirements)
+            {
+                foreach (object rawRequirement in requirements)
+                {
+                    int prerequisiteId = Convert.ToInt32(rawRequirement, CultureInfo.InvariantCulture);
+                    if (LegionMapSkillLevel(prerequisiteId) <= 0)
+                        return Invalid("An official prerequisite guild skill has not been learned.");
+                }
+            }
+
+            IReadOnlyDictionary<int, long> costs = LegionMapSkillUpgradeCost(skillClassId);
+            if (costs.Count == 0) return Invalid("The next official guild skill level has no valid cost row.");
+            Dictionary<int, long> required = costs.ToDictionary(value => value.Key, value => value.Value);
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineCharacterPropertyProgress properties = player.CharacterProperties
+                    ?? (player.CharacterProperties = new OfflineCharacterPropertyProgress());
+                OfflineCharacterPropertyProgress.Normalize(properties);
+                if (properties.LegionLibraryLevel < Integer(definition, "UnlockLevel"))
+                    throw new InvalidOperationException("The library level does not unlock this guild skill.");
+                OfflineLegionMapSkill skill = properties.LegionMapSkills.FirstOrDefault(value =>
+                    value.SkillClassId == skillClassId);
+                int savedLevel = skill?.Level ?? 0;
+                if (savedLevel != currentLevel)
+                    throw new InvalidOperationException("The guild skill changed before the upgrade was applied.");
+                if (libraryLevel < Integer(definition, "UnlockLevel"))
+                    throw new InvalidOperationException("The library level does not unlock this guild skill.");
+                foreach (KeyValuePair<int, long> cost in required)
+                {
+                    OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == cost.Key);
+                    if (stack == null || stack.Count < cost.Value)
+                        throw new InvalidOperationException("The required guild skill materials are insufficient.");
+                }
+                if (skill == null)
+                    properties.LegionMapSkills.Add(skill = new OfflineLegionMapSkill
+                    {
+                        SkillClassId = skillClassId
+                    });
+                skill.Level = currentLevel + 1;
+                foreach (KeyValuePair<int, long> cost in required)
+                {
+                    OfflineItemStack stack = player.Inventory.First(value => value.ItemId == cost.Key);
+                    stack.Count -= cost.Value;
+                }
+            }, eventId);
+        }
+
+        private bool TryNpcMeetRequirements(Dictionary<string, object> npc, OfflinePlayerProgress player,
+            out Dictionary<int, long> requiredItems, bool requireConditionMet = true)
+        {
+            requiredItems = new Dictionary<int, long>();
+            Dictionary<string, object> condition = Map(npc, "CanMeetCondition");
+            if (condition == null || player == null) return false;
+            var context = new OfficialConditionContext
+            {
+                Level = player.Level,
+                ItemCounts = (player.Inventory ?? new List<OfflineItemStack>())
+                    .Where(value => value != null && value.ItemId > 0)
+                    .GroupBy(value => value.ItemId)
+                    .ToDictionary(group => group.Key, group => group.Sum(value => value.Count))
+            };
+            if (requireConditionMet && !catalog.EvaluateCondition(condition, context)) return false;
+            return CollectNpcMeetItems(condition, context, requiredItems, new HashSet<int>());
+        }
+
+        private bool CollectNpcMeetItems(Dictionary<string, object> condition, OfficialConditionContext context,
+            Dictionary<int, long> requiredItems, HashSet<int> visiting)
+        {
+            if (condition == null || !condition.TryGetValue("_type", out object rawType)) return false;
+            string type = Convert.ToString(rawType, CultureInfo.InvariantCulture);
+            switch (type)
+            {
+                case "NoneCondition":
+                case "LevelCondition":
+                    return true;
+                case "HasItemCondition":
+                    int itemId = Integer(condition, "ClassId");
+                    int count = Integer(condition, "Count");
+                    if (itemId <= 0 || count <= 0) return false;
+                    requiredItems.TryGetValue(itemId, out long existing);
+                    requiredItems[itemId] = checked(existing + count);
+                    return true;
+                case "CompositeAndCondition":
+                    if (!condition.TryGetValue("Ids", out object rawAndIds)
+                        || !(rawAndIds is IEnumerable<object> andIds)) return false;
+                    foreach (object rawId in andIds)
+                    {
+                        int id = Convert.ToInt32(rawId, CultureInfo.InvariantCulture);
+                        if (!TryCollectNpcMeetConditionId(id, context, requiredItems, visiting)) return false;
+                    }
+                    return true;
+                case "CompositeOrCondition":
+                    if (!condition.TryGetValue("Ids", out object rawOrIds)
+                        || !(rawOrIds is IEnumerable<object> orIds)) return false;
+                    Dictionary<string, object> firstBranch = null;
+                    foreach (object rawId in orIds)
+                    {
+                        int id = Convert.ToInt32(rawId, CultureInfo.InvariantCulture);
+                        Dictionary<string, object> row = catalog.Find("conditions", id, "ClassId");
+                        Dictionary<string, object> child = Map(row, "Condition");
+                        if (firstBranch == null) firstBranch = child;
+                        if (!catalog.EvaluateCondition(child, context)) continue;
+                        var branchItems = new Dictionary<int, long>();
+                        if (!TryCollectNpcMeetConditionId(id, context, branchItems, visiting)) continue;
+                        foreach (KeyValuePair<int, long> item in branchItems)
+                        {
+                            requiredItems.TryGetValue(item.Key, out long prior);
+                            requiredItems[item.Key] = checked(prior + item.Value);
+                        }
+                        return true;
+                    }
+                    return firstBranch != null
+                        && CollectNpcMeetItems(firstBranch, context, requiredItems, visiting);
+                default:
+                    return catalog.EvaluateCondition(condition, context);
+            }
+        }
+
+        private bool TryCollectNpcMeetConditionId(int conditionId, OfficialConditionContext context,
+            Dictionary<int, long> requiredItems, HashSet<int> visiting)
+        {
+            if (conditionId <= 0 || !visiting.Add(conditionId)) return false;
+            try
+            {
+                Dictionary<string, object> row = catalog.Find("conditions", conditionId, "ClassId");
+                return CollectNpcMeetItems(Map(row, "Condition"), context, requiredItems, visiting);
+            }
+            finally
+            {
+                visiting.Remove(conditionId);
+            }
+        }
+
+        public IReadOnlyList<int> NpcGiftCandidates(int npcClassId)
+        {
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            if (npc == null) return Array.Empty<int>();
+            Dictionary<string, object> preferences = Map(npc, "GiftPreferenceDict");
+            bool starGod = Integer(npc, "NpcRoleType") == 2;
+            return catalog.Rows("npc_gift").Select(row => Integer(row, "ClassId"))
+                .Where(itemId => itemId > 0 && InventoryCount(Player, itemId) > 0
+                    && CanSendNpcGift(itemId)
+                    && (!starGod || preferences != null
+                        && preferences.ContainsKey(itemId.ToString(CultureInfo.InvariantCulture))))
+                .Distinct().OrderBy(itemId => itemId).ToArray();
+        }
+
+        public ProgressionResult GiveNpcGifts(int npcClassId, IReadOnlyDictionary<int, long> gifts,
+            string eventId)
+        {
+            if (npcClassId <= 0 || gifts == null || gifts.Count == 0
+                || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("Select NPC gifts and provide a valid event ID.");
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            if (npc == null || !TryNpcGiftFriendshipExperience(npc, gifts, out int addedExperience))
+                return Invalid("The selected NPC gifts are unavailable or cannot be sent.");
+
+            OfflineNpcFriendship current = (Player.CharacterProperties?.NpcFriendships
+                ?? new List<OfflineNpcFriendship>()).FirstOrDefault(value => value != null
+                    && value.NpcClassId == npcClassId);
+            if (current == null) return Invalid("This NPC has not been met.");
+            int friendshipLimit = session.MaximumFriendshipLevel(npcClassId, Player.SubRank);
+            if (friendshipLimit <= 0 || current.Level >= friendshipLimit)
+                return Invalid("This NPC friendship level is limited by the current sub-rank.");
+
+            long currentExperience = current.FriendshipExp;
+            if (currentExperience == 0 && current.Level > 0
+                && session.TryGetFriendshipExperience(npcClassId, current.Level, out long levelExperience))
+                currentExperience = levelExperience;
+            long nextExperience;
+            try
+            {
+                nextExperience = checked(currentExperience + addedExperience);
+            }
+            catch (OverflowException)
+            {
+                return Invalid("NPC friendship experience is exhausted.");
+            }
+            if (session.FriendshipLevel(npcClassId, nextExperience, Player.SubRank) >= friendshipLimit)
+                return Invalid("The selected gifts would reach the current sub-rank friendship limit.");
+
+            Dictionary<int, long> selected = gifts.ToDictionary(value => value.Key, value => value.Value);
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineCharacterPropertyProgress properties = player.CharacterProperties
+                    ?? (player.CharacterProperties = new OfflineCharacterPropertyProgress());
+                OfflineCharacterPropertyProgress.Normalize(properties);
+                OfflineNpcFriendship friendship = properties.NpcFriendships.FirstOrDefault(value =>
+                    value.NpcClassId == npcClassId);
+                if (friendship == null)
+                    throw new InvalidOperationException("This NPC has not been met.");
+                foreach (KeyValuePair<int, long> gift in selected)
+                {
+                    OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == gift.Key);
+                    if (stack == null || stack.Count < gift.Value)
+                        throw new InvalidOperationException("NPC gifts changed before the transaction was saved.");
+                    stack.Count -= gift.Value;
+                }
+                long experience = friendship.FriendshipExp;
+                if (experience == 0 && friendship.Level > 0
+                    && session.TryGetFriendshipExperience(npcClassId, friendship.Level, out long threshold))
+                    experience = threshold;
+                friendship.FriendshipExp = checked(experience + addedExperience);
+                friendship.Level = session.FriendshipLevel(npcClassId, friendship.FriendshipExp, player.SubRank);
+            }, eventId);
+        }
+
+        public int NpcGiftFriendshipExperience(int npcClassId, IReadOnlyDictionary<int, long> gifts)
+        {
+            Dictionary<string, object> npc = catalog.Find("npc", npcClassId, "Id");
+            return npc != null && TryNpcGiftFriendshipExperience(npc, gifts, out int experience)
+                ? experience : 0;
+        }
+
+        private bool TryNpcGiftFriendshipExperience(Dictionary<string, object> npc,
+            IReadOnlyDictionary<int, long> gifts, out int experience)
+        {
+            experience = 0;
+            if (npc == null || gifts == null || gifts.Count == 0) return false;
+            Dictionary<string, object> gameSettings = catalog.Rows("game_settings").FirstOrDefault();
+            double defaultFactor = gameSettings != null
+                && gameSettings.TryGetValue("NpcGiftDefaultPreferenceFactor", out object rawFactor)
+                ? Convert.ToDouble(rawFactor, CultureInfo.InvariantCulture) : 1.0;
+            Dictionary<string, object> preferences = Map(npc, "GiftPreferenceDict");
+            bool starGod = Integer(npc, "NpcRoleType") == 2;
+            long total = 0;
+            foreach (KeyValuePair<int, long> gift in gifts)
+            {
+                if (gift.Key <= 0 || gift.Value <= 0 || catalog.FindItem(gift.Key) == null) return false;
+                OfflineItemStack stack = Player.Inventory.FirstOrDefault(value => value.ItemId == gift.Key);
+                Dictionary<string, object> giftInfo = catalog.Find("npc_gift", gift.Key);
+                if (stack == null || stack.Count < gift.Value || giftInfo == null
+                    || !CanSendNpcGift(gift.Key)
+                    || starGod && (preferences == null
+                        || !preferences.ContainsKey(gift.Key.ToString(CultureInfo.InvariantCulture)))) return false;
+                long friendship = Long(giftInfo, "Friendship");
+                if (friendship < 0) return false;
+                double factor = preferences != null
+                    && preferences.TryGetValue(gift.Key.ToString(CultureInfo.InvariantCulture), out object rawPreference)
+                    ? Convert.ToDouble(rawPreference, CultureInfo.InvariantCulture) : defaultFactor;
+                if (friendship > 0 && gift.Value > long.MaxValue / friendship) return false;
+                double rounded = Math.Round((double)(friendship * gift.Value) * factor);
+                if (double.IsNaN(rounded) || double.IsInfinity(rounded)
+                    || rounded < 0 || rounded > int.MaxValue) return false;
+                total = checked(total + (long)rounded);
+                if (total > int.MaxValue) return false;
+            }
+            experience = (int)total;
+            return experience > 0;
+        }
+
+        private bool CanSendNpcGift(int itemId)
+        {
+            Dictionary<string, object> unlock = catalog.Find("npc_unlock_item", itemId);
+            return unlock == null || Boolean(unlock, "CanSendGift");
+        }
+
+        private void RecordEquipCabinetScore(OfflinePlayerProgress player)
+        {
+            OfflineCharacterPropertyProgress properties = player.CharacterProperties
+                ?? (player.CharacterProperties = new OfflineCharacterPropertyProgress());
+            OfflineCharacterPropertyProgress.Normalize(properties);
+            int seasonId = CurrentSeasonId(player);
+            if (seasonId <= 0) return;
+            properties.SeasonId = seasonId;
+            OfflineEquipCabinetSeasonScore current = properties.EquipCabinetScores.FirstOrDefault(value =>
+                value.SeasonId == seasonId);
+            if (current == null)
+                properties.EquipCabinetScores.Add(current = new OfflineEquipCabinetSeasonScore { SeasonId = seasonId });
+            current.Score = CalculateEquipCabinetScore(player);
+        }
+
+        private int CurrentSeasonId(OfflinePlayerProgress player)
+        {
+            IReadOnlyList<Dictionary<string, object>> seasons = catalog.Rows("astrological_season_config");
+            Dictionary<string, object> season = seasons.FirstOrDefault(row => Integer(row, "Rank") == player.Rank);
+            return season == null ? 0 : Integer(season, "Season");
+        }
+
+        private static bool SeasonConditionMet(Dictionary<string, object> season, int level)
+        {
+            Dictionary<string, object> condition = Map(season, "Condition");
+            if (condition == null || !condition.TryGetValue("_type", out object rawType)
+                || !string.Equals(Convert.ToString(rawType, CultureInfo.InvariantCulture),
+                    "LevelCondition", StringComparison.Ordinal)) return false;
+            int target = Integer(condition, "Level");
+            string operation = condition.TryGetValue("Op", out object rawOperation)
+                ? Convert.ToString(rawOperation, CultureInfo.InvariantCulture) : string.Empty;
+            switch (operation)
+            {
+                case ">=": return level >= target;
+                case ">": return level > target;
+                case "<=": return level <= target;
+                case "<": return level < target;
+                case "==": return level == target;
+                default: return false;
+            }
+        }
+
+        private int CalculateEquipCabinetScore(OfflinePlayerProgress player)
+        {
+            long score = 0;
+            if (player?.Equipment?.Equipped == null) return 0;
+            List<OfflineEquipmentInstance> instances = player.Equipment.Instances
+                ?? new List<OfflineEquipmentInstance>();
+            foreach (OfflineEquippedSlot equipped in player.Equipment.Equipped)
+            {
+                if (equipped == null) continue;
+                OfflineEquipmentInstance instance = instances.FirstOrDefault(value =>
+                    value.InstanceId == equipped.InstanceId);
+                if (instance == null) continue;
+                Dictionary<string, object> item = catalog.FindItem(instance.ItemId);
+                if (item == null) continue;
+                score = checked(score + EquipmentCabinetScore(item, instance.ItemLevel + instance.BlessLevel));
+                foreach (OfflineEquipmentGem gem in instance.Gems ?? new List<OfflineEquipmentGem>())
+                {
+                    if (gem == null || gem.ItemId <= 0) continue;
+                    Dictionary<string, object> gemItem = catalog.FindItem(gem.ItemId);
+                    if (gemItem != null)
+                        score = checked(score + GemCabinetScore(gemItem));
+                }
+            }
+            return checked((int)score);
+        }
+
+        private int EquipmentCabinetScore(Dictionary<string, object> item, int level)
+        {
+            List<Dictionary<string, object>> rows = catalog.Rows("equip_cabinet_score")
+                .Where(row => Integer(row, "RankLimit") == Integer(item, "LimitRank"))
+                .OrderBy(row => Integer(row, "Level")).ToList();
+            Dictionary<string, object> row = rows.FirstOrDefault(value => Integer(value, "Level") >= level)
+                ?? rows.LastOrDefault();
+            Dictionary<string, object> scores = Map(row, "Score");
+            return scores != null && scores.TryGetValue(Integer(item, "Quality")
+                .ToString(CultureInfo.InvariantCulture), out object rawScore)
+                ? Convert.ToInt32(rawScore, CultureInfo.InvariantCulture) : 0;
+        }
+
+        private int GemCabinetScore(Dictionary<string, object> item)
+        {
+            Dictionary<string, object> row = catalog.Rows("equip_cabinet_gem_score").FirstOrDefault(value =>
+                Integer(value, "RankLimit") == Integer(item, "LimitRank")
+                    && Integer(value, "Rank") == Integer(item, "Rank"));
+            return row == null ? 0 : Integer(row, "Score");
         }
 
         public ProgressionResult UpgradeEquipment(int position, string eventId)
@@ -821,6 +1573,7 @@ namespace Zjcs.Offline.Progression
                 if (!OfflineEquipmentOperations.TakeOff(player.Equipment, position))
                     throw new InvalidOperationException("There is no equipment in this slot.");
                 SynchronizeEquipmentSkins(player, equipment);
+                RecordEquipCabinetScore(player);
             }, eventId);
         }
 
@@ -888,6 +1641,50 @@ namespace Zjcs.Offline.Progression
                 if (!OfflineWardrobeRules.TakeOff(state, type))
                     throw new InvalidOperationException("There is no wardrobe item in this slot.");
                 WriteAppearance(player.Wardrobe, state);
+            }, eventId);
+        }
+
+        public int EquippedSkillSkinId(int skillId)
+        {
+            OfflineSkillAppearance equipped = Player.Wardrobe.SkillSkins
+                .FirstOrDefault(value => value != null && value.SkillId == skillId);
+            return equipped == null ? 0 : equipped.SkillSkinId;
+        }
+
+        public ProgressionResult WearSkillSkin(int itemId, string eventId)
+        {
+            if (string.IsNullOrWhiteSpace(eventId)) return Invalid("A skill skin event ID is required.");
+            Dictionary<string, object> skin = catalog.Find("skill_skin", itemId);
+            if (skin == null || ItemType(itemId) != 425 || Integer(skin, "SkinType") == 0)
+                return Invalid("The selected item is not an official skill appearance.");
+            int skillId = Integer(skin, "SkillId");
+            if (!IsOwned(Player, itemId) || OfflineSkillProgression.OwnedRank(Player.Skills, skillId) <= 0)
+                return Invalid("The skill appearance or its original skill is not owned.");
+
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineSkillAppearance equipped = player.Wardrobe.SkillSkins
+                    .FirstOrDefault(value => value.SkillId == skillId);
+                if (equipped == null)
+                {
+                    equipped = new OfflineSkillAppearance { SkillId = skillId };
+                    player.Wardrobe.SkillSkins.Add(equipped);
+                }
+                equipped.SkillSkinId = itemId;
+            }, eventId);
+        }
+
+        public ProgressionResult TakeOffSkillSkin(int skillId, string eventId)
+        {
+            if (skillId <= 0 || string.IsNullOrWhiteSpace(eventId))
+                return Invalid("A valid skill and skill skin event ID are required.");
+            return session.ApplyCharacterMutation(player =>
+            {
+                OfflineSkillAppearance equipped = player.Wardrobe.SkillSkins
+                    .FirstOrDefault(value => value.SkillId == skillId);
+                if (equipped == null)
+                    throw new InvalidOperationException("The selected skill has no equipped appearance.");
+                player.Wardrobe.SkillSkins.Remove(equipped);
             }, eventId);
         }
 
@@ -1047,13 +1844,13 @@ namespace Zjcs.Offline.Progression
             player.Rank = RankOf(player.SubRank);
             CharacterExperienceSnapshot snapshot = Snapshot(player);
             player.Level = snapshot.Level;
+            player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
             int seasonId = CurrentSeasonId(player);
             player.SeasonRank = seasonId;
             if (player.CharacterProperties == null)
                 player.CharacterProperties = new OfflineCharacterPropertyProgress();
             OfflineCharacterPropertyProgress.Normalize(player.CharacterProperties);
             player.CharacterProperties.SeasonId = seasonId;
-            player.SeasonBaseLevel = OfflineCharacterExperience.BaseLevelLimit(player.SubRank, catalog.LevelLimits);
             RefreshWardrobeProgress(player);
         }
 
@@ -1168,9 +1965,22 @@ namespace Zjcs.Offline.Progression
             return catalog.RankOfSubRank(subRank);
         }
 
+        private static Dictionary<string, object> Map(Dictionary<string, object> values, string key)
+        {
+            return values != null && values.TryGetValue(key, out object value)
+                && value is Dictionary<string, object> result ? result : null;
+        }
+
         private static int Integer(Dictionary<string, object> values, string key)
         {
-            return values.TryGetValue(key, out object value) ? Convert.ToInt32(value, CultureInfo.InvariantCulture) : 0;
+            return values != null && values.TryGetValue(key, out object value)
+                ? Convert.ToInt32(value, CultureInfo.InvariantCulture) : 0;
+        }
+
+        private static long Long(Dictionary<string, object> values, string key)
+        {
+            return values != null && values.TryGetValue(key, out object value)
+                ? Convert.ToInt64(value, CultureInfo.InvariantCulture) : 0L;
         }
 
         private static bool Boolean(Dictionary<string, object> values, string key)
@@ -1178,12 +1988,6 @@ namespace Zjcs.Offline.Progression
             return values.TryGetValue(key, out object value) && value is bool result && result;
         }
 
-        private int CurrentSeasonId(OfflinePlayerProgress player)
-        {
-            IReadOnlyList<Dictionary<string, object>> seasons = catalog.Rows("astrological_season_config");
-            Dictionary<string, object> season = seasons.FirstOrDefault(row => Integer(row, "Rank") == player.Rank);
-            return season == null ? 0 : Integer(season, "Season");
-        }
         private static ProgressionResult Invalid(string message)
         {
             return new ProgressionResult { Status = ProgressionResultStatus.InvalidState, Message = message };

@@ -34,6 +34,7 @@ namespace Zjcs.Offline.Skills
             {
                 OfflineSkillPlan plan = profile.Plans[i];
                 if (plan == null) continue;
+                if (plan.PetIndex == 0) plan.PetIndex = -1;
                 if (plan.ActiveSkills == null) plan.ActiveSkills = new int[SlotCount];
                 if (plan.PassiveSkills == null) plan.PassiveSkills = new int[SlotCount];
                 if (string.IsNullOrWhiteSpace(plan.Name)) plan.Name = "方案" + (i + 1);
@@ -67,6 +68,7 @@ namespace Zjcs.Offline.Skills
             foreach (OfflineSkillPlan plan in profile.Plans)
             {
                 if (plan == null || string.IsNullOrWhiteSpace(plan.Name) || plan.Name.Length > 16
+                    || plan.PetIndex < -1
                     || !ValidSlots(plan.ActiveSkills) || !ValidSlots(plan.PassiveSkills)) return false;
                 if (!UniqueNonzero(plan.ActiveSkills) || !UniqueNonzero(plan.PassiveSkills)) return false;
             }

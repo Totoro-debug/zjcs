@@ -6,10 +6,13 @@ namespace Zjcs.Presentation.Home
     public sealed partial class HomeHudView
     {
         private HomeSkinScreenController homeSkin;
+        private bool returnToCharacterAfterHomeSkin;
 
-        public void ShowHomeSkins()
+        public void ShowHomeSkins(bool returnToCharacter = false)
         {
             if (homeSkin != null && homeSkin.IsOpen) return;
+            returnToCharacterAfterHomeSkin = returnToCharacter;
+            if (returnToCharacter && characterRoot != null) characterRoot.SetActive(false);
             try
             {
                 homeSkin = new HomeSkinScreenController(host, this, CanvasTransform);
@@ -18,6 +21,8 @@ namespace Zjcs.Presentation.Home
             {
                 homeSkin = null;
                 SetStandardHomeHudVisible(true);
+                if (returnToCharacter && characterRoot != null) characterRoot.SetActive(true);
+                returnToCharacterAfterHomeSkin = false;
                 Debug.LogWarning("Home skin page unavailable: " + error.Message);
                 Notify("装潢页面打开失败：" + error.Message);
             }
@@ -35,6 +40,19 @@ namespace Zjcs.Presentation.Home
         {
             if (homeSkin == controller) homeSkin = null;
             SetStandardHomeHudVisible(true);
+            if (returnToCharacterAfterHomeSkin && characterRoot != null)
+            {
+                characterRoot.SetActive(true);
+                selectedTab = 0;
+                ApplyTabVisuals();
+            }
+            returnToCharacterAfterHomeSkin = false;
+        }
+
+        private void OnCharacterNavigationRequested(string module)
+        {
+            if (!string.Equals(module, "decoration-appearance", StringComparison.Ordinal)) return;
+            ShowHomeSkins(true);
         }
     }
 }

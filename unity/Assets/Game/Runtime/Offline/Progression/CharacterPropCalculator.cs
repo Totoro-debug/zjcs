@@ -58,6 +58,12 @@ namespace Zjcs.Offline.Progression
             CharacterPropScoreContext context);
     }
 
+    public interface IOfflineCharacterScoredPropSource : IOfflineCharacterPropSource
+    {
+        IReadOnlyDictionary<int, long> CalculateProps(OfflinePlayerProgress player,
+            CharacterPropScoreContext context);
+    }
+
     /// <summary>Inputs shared by chunk combat-rating calculations.</summary>
     public sealed class CharacterPropScoreContext
     {
@@ -70,6 +76,14 @@ namespace Zjcs.Offline.Progression
         {
             return CharacterPropFormula.CombatRatingCommon(Level, SubRank, props, Props, BasicRef, true);
         }
+
+        public long ByProps(IReadOnlyDictionary<int, long> props,
+            IReadOnlyDictionary<int, long> baseProps = null, IReadOnlyList<int> propTypes = null)
+        {
+            return CharacterPropFormula.CombatRatingByProps(Level, SubRank, props, Props, baseProps, propTypes);
+        }
+
+        public float LevelNumber(int id, int level) => Props.LevelNumber(id, level);
     }
 
     /// <summary>
@@ -356,9 +370,10 @@ namespace Zjcs.Offline.Progression
                     ? (long)(score * prop)
                     : (long)(score * prop * CombatRatingByProps(level, subRank, baseProps, catalog, null,
                         definition.ScoreBase, useCommonScore));
-                // ScoreLevelGroupId factors require the level_number table; the pinned character
-                // catalog only assigns it to element affinity properties, which are not part of
-                // any offline chunk yet, so the untracted factor stays at 1.
+                int levelNumberId = definition.ScoreLevelGroupId > 0
+                    ? catalog.ScoreLevelNumberId(definition.ScoreLevelGroupId, subRank) : 0;
+                if (levelNumberId > 0)
+                    value = (long)((float)value * catalog.LevelNumber(levelNumberId, level));
                 result += value;
             }
             return result;
@@ -457,6 +472,12 @@ namespace Zjcs.Offline.Progression
 
         public CharacterPropSnapshot Evaluate(OfflinePlayerProgress player, long nowUnixSeconds)
         {
+            return Evaluate(player, null, nowUnixSeconds);
+        }
+
+        public CharacterPropSnapshot Evaluate(OfflinePlayerProgress player, OfflineWorldProgress world,
+            long nowUnixSeconds)
+        {
             if (player == null) throw new ArgumentNullException(nameof(player));
             int level = Math.Max(1, player.Level);
             int subRank = Math.Max(1, player.SubRank);
@@ -464,14 +485,14 @@ namespace Zjcs.Offline.Progression
             Dictionary<int, long> characterBase = new Dictionary<int, long>(
                 catalog.CalcCharacterBaseBattleProperties(level, subRank));
             Dictionary<int, long> profession = ProfessionFeatureProps(player);
+            Dictionary<int, long> noBattleBasic = new Dictionary<int, long>(
+                catalog.CalcCharacterNoBattleProperties(level, subRank));
             var basic = new Dictionary<int, long>(characterBase);
             CharacterPropFormula.Merge(basic, profession);
             chunks[CharacterPropHandleType.BattleBasic] = basic;
+            chunks[CharacterPropHandleType.NoBattleBasic] = noBattleBasic;
             Dictionary<int, long> appearance = AppearanceProps(player, nowUnixSeconds);
             chunks[CharacterPropHandleType.Appearance] = appearance;
-            foreach (IOfflineCharacterPropSource source in sources)
-                chunks[source.HandleType] = source.CalculateProps(player) ?? new Dictionary<int, long>();
-
             var scoreContext = new CharacterPropScoreContext
             {
                 Level = level,
@@ -479,12 +500,22 @@ namespace Zjcs.Offline.Progression
                 Props = props,
                 BasicRef = CharacterPropBasicRef.Build(level, subRank, props, LevelProps)
             };
+            foreach (IOfflineCharacterPropSource source in sources)
+            {
+                IReadOnlyDictionary<int, long> values = source is IOfflineCharacterContextualPropSource contextual
+                    ? contextual.CalculateProps(player, world, nowUnixSeconds)
+                    : source is IOfflineCharacterScoredPropSource scored
+                        ? scored.CalculateProps(player, scoreContext) : source.CalculateProps(player);
+                chunks[source.HandleType] = values ?? new Dictionary<int, long>();
+            }
+
             long combatRating = 0L;
             var chunkRatings = new Dictionary<int, long>();
             foreach (KeyValuePair<int, IReadOnlyDictionary<int, long>> chunk in chunks)
             {
-                long rating = CharacterPropFormula.CombatRatingCommon(level, subRank, chunk.Value, props,
-                    scoreContext.BasicRef);
+                long rating = chunk.Key == CharacterPropHandleType.NoBattleBasic ? 0L
+                    : CharacterPropFormula.CombatRatingCommon(level, subRank, chunk.Value, props,
+                        scoreContext.BasicRef);
                 IOfflineCharacterPropSource source = sources.FirstOrDefault(value => value.HandleType == chunk.Key);
                 if (source != null)
                     rating = source.CalculateCombatRating(player, chunk.Value, scoreContext);
@@ -546,7 +577,7 @@ namespace Zjcs.Offline.Progression
 
         private Dictionary<int, long> ProfessionFeatureProps(OfflinePlayerProgress player)
         {
-            var result = new Dictionary<int, long>();
+            var result = new Dictionary<int, long>(catalog.CalcProfessionLevelProperties(player.ProfessionLevels));
             int profession = player.Wardrobe.Profession;
             if (profession <= 0) return result;
             List<Dictionary<string, object>> rows = catalog.Rows("profession_base")

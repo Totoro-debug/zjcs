@@ -244,6 +244,13 @@ namespace Zjcs.Offline.Progression
                 if (qualities == null || qualities.Length != 10 || qualities.Any(value => value < 1 || value > 5))
                     throw new FormatException("The official treasure gacha capsule quality distribution is invalid.");
             }
+            foreach (TreasureInfoConfig treasure in Treasures)
+            {
+                int initialHitCount = treasure != null && treasure.EffectTypeName == "Task" ? 0 : 1;
+                if (treasure == null || treasure.ClassId <= 0 || treasure.TreasurePieceId < 0
+                    || treasure.InitialHitCount != initialHitCount)
+                    throw new FormatException("The official treasure initial hit-count mapping is invalid.");
+            }
         }
     }
 
@@ -296,7 +303,11 @@ namespace Zjcs.Offline.Progression
         public bool CanRepeat, CanDrop, CanDropWhenExist, ShowInBag;
         public TreasureAmount[] RecycleReward;
     }
-    [Serializable] public sealed class TreasureInfoConfig { public int ClassId, TreasurePieceId; }
+    [Serializable] public sealed class TreasureInfoConfig
+    {
+        public int ClassId, TreasurePieceId, InitialHitCount;
+        public string EffectTypeName;
+    }
     [Serializable] public sealed class TreasureAchievementConfig
     {
         public int Id, Group, AchievementType, CycleCount, CompleteCount, CycleIncrementCount;

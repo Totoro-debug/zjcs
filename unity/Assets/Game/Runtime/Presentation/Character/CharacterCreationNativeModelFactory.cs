@@ -28,6 +28,58 @@ namespace Zjcs.Presentation.CharacterCreation
             return CreateModel(slotId, persistentDataPath, appearance, false, out _);
         }
 
+        public static GameObject CreateArenaGuardModel(int sex, int profession,
+            IReadOnlyDictionary<int, int> appendAppearances)
+        {
+            CharacterCreationAssetCatalog assets = CharacterCreationAssetCatalog.LoadDefault();
+            GameObject prefab = sex == 1 ? assets.FemaleNativeModelPrefab : assets.MaleNativeModelPrefab;
+            if (prefab == null) throw new InvalidOperationException("Official native character model is not installed.");
+
+            var skinByType = new Dictionary<int, int>();
+            foreach (CharacterCreationSkinInfo skin in assets.GetDefaultSkinInfos(sex, profession))
+                skinByType[skin.Type] = skin.Id;
+            foreach (KeyValuePair<int, int> appearance in appendAppearances ??
+                         new Dictionary<int, int>())
+            {
+                if (!assets.TryGetSkinInfo(appearance.Value, out CharacterCreationSkinInfo skin)
+                    || skin.Type != appearance.Key)
+                    throw new InvalidOperationException("Official arena guard appearance is invalid: "
+                        + appearance.Key + "/" + appearance.Value);
+                skinByType[appearance.Key] = appearance.Value;
+            }
+
+            GameObject model = UnityEngine.Object.Instantiate(prefab);
+            model.name = "ArenaGuardCharacter";
+            try
+            {
+                var activeSkins = new HashSet<string>(StringComparer.Ordinal);
+                foreach (int skinId in skinByType.Values)
+                {
+                    if (!assets.TryGetSkinInfo(skinId, out CharacterCreationSkinInfo skin))
+                        throw new InvalidOperationException("Official arena guard skin is missing: " + skinId);
+                    activeSkins.Add(skin.Name);
+                }
+
+                foreach (Transform child in model.GetComponentsInChildren<Transform>(true))
+                {
+                    if (!child.name.StartsWith(SkinVariantPrefix, StringComparison.Ordinal)) continue;
+                    child.gameObject.SetActive(activeSkins.Contains(child.name.Substring(SkinVariantPrefix.Length)));
+                }
+
+                Animator animator = model.GetComponent<Animator>();
+                if (animator == null || animator.runtimeAnimatorController == null)
+                    throw new InvalidOperationException("Official native character model has no Animator controller.");
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.applyRootMotion = false;
+                return model;
+            }
+            catch
+            {
+                UnityEngine.Object.Destroy(model);
+                throw;
+            }
+        }
+
         private static GameObject CreateModel(string slotId, string persistentDataPath,
             WardrobeResolution appearanceOverride, bool requireWorldEntry, out string characterName)
         {

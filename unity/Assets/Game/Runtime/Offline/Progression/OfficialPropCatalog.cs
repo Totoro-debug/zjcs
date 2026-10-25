@@ -78,6 +78,8 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, string> categories;
         private readonly Dictionary<string, int> propertyIds;
         private readonly Dictionary<int, Dictionary<int, int>> rolePropGroups;
+        private readonly Dictionary<int, Dictionary<int, int>> scoreLevelGroups;
+        private readonly Dictionary<int, List<float>> levelNumbers;
         private readonly int calcCombatPropGroupId;
 
         private OfficialPropCatalog(Dictionary<int, OfficialPropDefinition> definitions,
@@ -85,6 +87,7 @@ namespace Zjcs.Offline.Progression
             Dictionary<OfficialCombatRatingSort, IReadOnlyList<int>> byCombatRatingSort,
             Dictionary<int, int> relativeOwner, Dictionary<int, string> categories,
             Dictionary<string, int> propertyIds, Dictionary<int, Dictionary<int, int>> rolePropGroups,
+            Dictionary<int, Dictionary<int, int>> scoreLevelGroups, Dictionary<int, List<float>> levelNumbers,
             int calcCombatPropGroupId)
         {
             this.definitions = definitions;
@@ -94,6 +97,8 @@ namespace Zjcs.Offline.Progression
             this.categories = categories;
             this.propertyIds = propertyIds;
             this.rolePropGroups = rolePropGroups;
+            this.scoreLevelGroups = scoreLevelGroups;
+            this.levelNumbers = levelNumbers;
             this.calcCombatPropGroupId = calcCombatPropGroupId;
         }
 
@@ -107,6 +112,26 @@ namespace Zjcs.Offline.Progression
         {
             return rolePropGroups.TryGetValue(groupId, out Dictionary<int, int> rows)
                 && rows.TryGetValue(subRank, out int levelPropId) ? levelPropId : 0;
+        }
+
+        public int ScoreLevelNumberId(int groupId, int subRank)
+        {
+            return scoreLevelGroups.TryGetValue(groupId, out Dictionary<int, int> rows)
+                && rows.TryGetValue(subRank, out int levelNumberId) ? levelNumberId : 0;
+        }
+
+        public float LevelNumber(int id, int level)
+        {
+            if (!levelNumbers.TryGetValue(id, out List<float> values) || values.Count == 0) return 0f;
+            int index = level < 0 ? 0 : Math.Min(level, values.Count - 1);
+            return values[index];
+        }
+
+        public float LevelNumberLerp(int id, float level)
+        {
+            int lowerLevel = (int)level;
+            return LevelNumber(id, lowerLevel)
+                + (LevelNumber(id, lowerLevel + 1) - LevelNumber(id, lowerLevel)) * (level - lowerLevel);
         }
 
         public bool TryGet(int propType, out OfficialPropDefinition definition)
@@ -248,15 +273,39 @@ namespace Zjcs.Offline.Progression
                         roleGroups[id] = byRank = new Dictionary<int, int>();
                     byRank[Integer(row, "SubRank")] = Integer(row, "LevelPropID");
                 }
+            var scoreLevelGroups = new Dictionary<int, Dictionary<int, int>>();
+            if (rules.TryGetValue("score_level_group", out object scoreGroupRows)
+                && scoreGroupRows is List<object> scoreGroups)
+                foreach (object value in scoreGroups)
+                {
+                    Dictionary<string, object> row = Object(value, "score_level_group row");
+                    int id = Integer(row, "ID");
+                    if (!scoreLevelGroups.TryGetValue(id, out Dictionary<int, int> byRank))
+                        scoreLevelGroups[id] = byRank = new Dictionary<int, int>();
+                    byRank[Integer(row, "SubRank")] = Integer(row, "LevelNumberID");
+                }
+            var levelNumbers = new Dictionary<int, List<float>>();
+            if (rules.TryGetValue("level_number", out object levelNumberRows)
+                && levelNumberRows is List<object> numberRows)
+                foreach (object value in numberRows)
+                {
+                    Dictionary<string, object> row = Object(value, "level_number row");
+                    if (!(row.TryGetValue("Nums", out object rawNumbers) && rawNumbers is List<object> numbers))
+                        throw new FormatException("An official level_number row has no values.");
+                    int id = Integer(row, "Id");
+                    levelNumbers.Add(id, numbers.Select(number =>
+                        Convert.ToSingle(number, CultureInfo.InvariantCulture)).ToList());
+                }
             int calcGroupId = 0;
             if (rules.TryGetValue("game_settings", out object settingData)
                 && settingData is Dictionary<string, object> settings)
                 calcGroupId = Integer(settings, "CalcCombatPropGroupId");
             if (definitions.Count == 0 || byCatalog.Count == 0 || categories.Count == 0
-                || roleGroups.Count == 0 || calcGroupId == 0)
+                || roleGroups.Count == 0 || scoreLevelGroups.Count == 0 || levelNumbers.Count == 0
+                || calcGroupId == 0)
                 throw new FormatException("Official property configuration is incomplete.");
             return new OfficialPropCatalog(definitions, byCatalog, bySort, relativeOwner, categories,
-                propertyIds, roleGroups, calcGroupId);
+                propertyIds, roleGroups, scoreLevelGroups, levelNumbers, calcGroupId);
         }
 
         private static string ReverseName(Dictionary<string, int> propertyIds, int propType)

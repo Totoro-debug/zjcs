@@ -872,8 +872,13 @@ namespace Zjcs.Offline.Progression
                 Quality = drop.Quality,
                 IsPiece = drop.IsPiece
             };
-            if (!drop.IsPiece && !drop.Item.CanRepeat && InventoryCount(player, drop.Item.ClassId) > 0)
+            OfflineCharacterPropertyProgress properties = player.CharacterProperties;
+            bool hasTreasureProgress = properties?.Treasures?.Any(value =>
+                value != null && value.ClassId == drop.Item.ClassId) == true;
+            if (!drop.IsPiece && !drop.Item.CanRepeat
+                && (InventoryCount(player, drop.Item.ClassId) > 0 || hasTreasureProgress))
             {
+                EnsureTreasureProgress(player, drop.Item);
                 if (drop.Item.AgioItemId <= 0 || drop.Item.AgioAmount <= 0)
                     throw new InvalidOperationException("重复宝具缺少官方折算规则");
                 long amount = checked(drop.Count * drop.Item.AgioAmount);
@@ -883,7 +888,39 @@ namespace Zjcs.Offline.Progression
                 return award;
             }
             Grant(player, drop.Item.ClassId, drop.Count, now);
+            if (!drop.IsPiece) EnsureTreasureProgress(player, drop.Item);
             return award;
+        }
+
+        private void EnsureTreasureProgress(OfflinePlayerProgress player, TreasureItemConfig item)
+        {
+            if (player == null || item == null || catalog.Treasure(item.ClassId) == null) return;
+            TreasureInfoConfig config = catalog.Treasure(item.ClassId);
+            OfflineCharacterPropertyProgress properties = player.CharacterProperties;
+            if (properties == null) player.CharacterProperties = properties = new OfflineCharacterPropertyProgress();
+            if (properties.Treasures == null) properties.Treasures = new List<OfflineCharacterTreasure>();
+            if (!properties.Treasures.Any(value => value != null && value.ClassId == item.ClassId))
+                properties.Treasures.Add(new OfflineCharacterTreasure
+                {
+                    ClassId = item.ClassId,
+                    Active = true,
+                    Star = 0,
+                    HitCount = config.InitialHitCount,
+                    SlotIndex = -1,
+                    Level = 1,
+                    BaseLevel = 1
+                });
+            if (item.ElementType <= 0) return;
+            if (properties.TreasureElementLevels == null)
+                properties.TreasureElementLevels = new List<OfflineTreasureElementLevel>();
+            if (!properties.TreasureElementLevels.Any(value => value != null
+                    && value.ElementType == item.ElementType))
+                properties.TreasureElementLevels.Add(new OfflineTreasureElementLevel
+                {
+                    ElementType = item.ElementType,
+                    Level = 1,
+                    BaseLevel = 1
+                });
         }
 
         private void EnsureGuarantees(OfflineTreasureGachaProgress state, TreasureRewardRule rule)

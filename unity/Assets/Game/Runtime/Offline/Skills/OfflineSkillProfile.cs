@@ -82,6 +82,7 @@ namespace Zjcs.Offline.Skills
     public sealed class OfflineSkillPlan
     {
         public string Name;
+        public long PetIndex = -1;
         public int[] ActiveSkills = new int[4];
         public int[] PassiveSkills = new int[4];
 
@@ -90,6 +91,7 @@ namespace Zjcs.Offline.Skills
             return new OfflineSkillPlan
             {
                 Name = Name,
+                PetIndex = PetIndex,
                 ActiveSkills = ActiveSkills == null ? null : (int[])ActiveSkills.Clone(),
                 PassiveSkills = PassiveSkills == null ? null : (int[])PassiveSkills.Clone()
             };
@@ -218,5 +220,13 @@ namespace Zjcs.Offline.Skills
             ChangedCount = changedCount;
             Message = message ?? string.Empty;
         }
+    }
+
+    public sealed class OfflineSkillSlotUpgradeChange
+    {
+        public int ItemType;
+        public int Slot;
+        public int FromLevel;
+        public int ToLevel;
     }
 }

@@ -21,11 +21,21 @@ namespace Zjcs.Presentation.Character
             public bool IsTitle;
         }
 
+        private sealed class BottomTabEntry
+        {
+            public int Index;
+            public int[] ItemTypes;
+            public bool AlwaysActive;
+            public RectTransform Root;
+            public Button Button;
+        }
+
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private readonly Dictionary<string, bool> nodeActive = new Dictionary<string, bool>(StringComparer.Ordinal);
         private readonly List<OfficialCharacterPanelNode> sourceOrder = new List<OfficialCharacterPanelNode>();
         private readonly List<GameObject> pooledCards = new List<GameObject>();
+        private readonly List<BottomTabEntry> bottomTabs = new List<BottomTabEntry>();
         private Dictionary<string, object> templates;
         private Dictionary<string, object> texts;
         private Dictionary<string, object> previewTemplate;
@@ -33,8 +43,19 @@ namespace Zjcs.Presentation.Character
         private OfficialCharacterAssetCatalog assets;
         private OfflineCharacterProgressionService progression;
         private CharacterModelPreview model;
+        private string characterSlotId;
+        private string characterSavesRoot;
         private Action close;
         private Action<string> requestModule;
+        private RectTransform appearanceContentRoot;
+        private RectTransform skillContentParent;
+        private RectTransform skillVideoParent;
+        private RectTransform bottomTabContent;
+        private OfficialSkillAppearancePanelView skillAppearanceView;
+        private bool skillAppearanceOpen;
+        private int selectedBottomTabIndex;
+        private float animationExitTime;
+        private float animationMixDuration;
         private RectTransform itemScrollRoot;
         private RectTransform itemViewport;
         private RectTransform itemContent;
@@ -50,18 +71,22 @@ namespace Zjcs.Presentation.Character
         private bool poolHonorMode;
         private bool poolInitialized;
         private long lastTimeRefreshUnixSeconds = -1;
-        private int lastInventorySignature;
+        private int lastInventorySignature = int.MinValue;
         private Text statusText;
         private GameObject activeDialog;
 
         public void Initialize(OfficialCharacterAssetCatalog assetCatalog,
             OfflineCharacterProgressionService characterProgression, CharacterModelPreview characterModel,
-            Action closeCallback, Action<string> moduleCallback = null)
+            Action closeCallback, Action<string> moduleCallback = null, string selectedSlotId = null,
+            string profileSavesRoot = null)
         {
             assets = assetCatalog != null ? assetCatalog : throw new ArgumentNullException(nameof(assetCatalog));
             progression = characterProgression != null ? characterProgression
                 : throw new ArgumentNullException(nameof(characterProgression));
             model = characterModel;
+            characterSlotId = selectedSlotId;
+            characterSavesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
+                ? Application.persistentDataPath : profileSavesRoot;
             close = closeCallback;
             requestModule = moduleCallback;
             assets.ValidateBindings();
@@ -94,11 +119,28 @@ namespace Zjcs.Presentation.Character
             canvasRect.offsetMax = Vector2.zero;
             OfficialCharacterPanelNode wardrobeRoot = ReadNode(TemplateRoot("wardrobe"));
             BuildNode(wardrobeRoot, transform);
+            appearanceContentRoot = NodeEnding("/AppendAppearanceContent");
+            skillContentParent = NodeEnding("/Content/MiddleGo");
+            skillVideoParent = NodeEnding("/Content/TopGo");
+            if (appearanceContentRoot == null || skillContentParent == null || skillVideoParent == null)
+                throw new FormatException("The original wardrobe page is missing its content or preview mount.");
+            OfficialCharacterPanelNode animationSource = sourceNodes.Values.FirstOrDefault(value =>
+                HasScript(value, "AppendAppearanceContent"));
+            if (animationSource == null
+                || !TryBinding(animationSource, "AppendAppearanceContent", out Dictionary<string, object> animationBinding)
+                || !animationBinding.TryGetValue("mAnimExitTime", out object rawExitTime)
+                || !animationBinding.TryGetValue("mAnimMixDuration", out object rawMixDuration))
+                throw new FormatException("The original wardrobe animation timing fields are missing.");
+            animationExitTime = Convert.ToSingle(rawExitTime, CultureInfo.InvariantCulture);
+            animationMixDuration = Convert.ToSingle(rawMixDuration, CultureInfo.InvariantCulture);
+            if (animationExitTime < 0f || animationExitTime > 1f || animationMixDuration < 0f)
+                throw new FormatException("The original wardrobe animation timing fields are invalid.");
             BindControls(wardrobeRoot);
             InitializeGrid();
             string initialGroup = FindGroupPathForCategory(itemType);
             if (!string.IsNullOrEmpty(initialGroup)) SelectFirstTab(initialGroup);
             RefreshWardrobe();
+            lastInventorySignature = InventorySignature();
         }
 
         private void Update()
@@ -107,15 +149,15 @@ namespace Zjcs.Presentation.Character
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (now == lastTimeRefreshUnixSeconds) return;
             lastTimeRefreshUnixSeconds = now;
-            int signature = progression.Player.Inventory.Count * 397 ^ progression.Player.Wardrobe.Profession;
-            if (lastInventorySignature != 0 && signature != lastInventorySignature)
+            int signature = InventorySignature();
+            if (signature != lastInventorySignature)
             {
                 lastInventorySignature = signature;
                 RefreshWardrobe();
                 if (model != null) model.Refresh();
+                if (skillAppearanceView != null) skillAppearanceView.Refresh();
                 return;
             }
-            lastInventorySignature = signature;
             if (progression.Player.Wardrobe.Expiries.Count == 0) return;
             if (progression.Player.Wardrobe.Expiries.Any(value => now > value.ExpiresAtUnixSeconds))
             {
@@ -130,6 +172,11 @@ namespace Zjcs.Presentation.Character
 
         public bool HandleEscape()
         {
+            if (skillAppearanceOpen)
+            {
+                ShowWardrobeAppearancePage();
+                return true;
+            }
             if (previewDialog != null)
             {
                 ClosePreview();
@@ -161,7 +208,13 @@ namespace Zjcs.Presentation.Character
                     || !binding.TryGetValue("mItemType", out object typeRaw)
                     || !buttons.TryGetValue(node.path, out Button button)) continue;
                 int type = Convert.ToInt32(typeRaw, CultureInfo.InvariantCulture);
-                button.onClick.AddListener(() => SelectCategory(type));
+                string animType = binding.TryGetValue("mAnimTypeName", out object rawAnimType)
+                    ? Convert.ToString(rawAnimType, CultureInfo.InvariantCulture) : string.Empty;
+                string[] animInputs = binding.TryGetValue("mAnimInputList", out object rawAnimInputs)
+                    && rawAnimInputs is List<object> inputList
+                    ? inputList.Select(value => Convert.ToString(value, CultureInfo.InvariantCulture)).ToArray()
+                    : Array.Empty<string>();
+                button.onClick.AddListener(() => SelectCategory(type, animType, animInputs));
             }
 
             RectTransform toggleRect = NodeEnding("/ShowAll/Toggle");
@@ -180,19 +233,163 @@ namespace Zjcs.Presentation.Character
             Button upgradeButton = ButtonEnding("/UpgradeBtn");
             if (upgradeButton != null) upgradeButton.onClick.AddListener(OnUpgradeAppearanceLevel);
 
-            List<Button> bottomTabs = buttons.Where(pair => pair.Key.Contains("/Content/BottomGo/TabBottom/TabGroup/"))
-                .OrderBy(pair => pair.Key, StringComparer.Ordinal).Select(pair => pair.Value).ToList();
-            for (int i = 0; i < bottomTabs.Count; i++)
+            bottomTabContent = NodeEnding("/Content/BottomGo/TabBottom");
+            List<KeyValuePair<string, Button>> bottomTabButtons = buttons
+                .Where(pair => pair.Key.Contains("/Content/BottomGo/TabBottom/TabGroup/"))
+                .OrderBy(pair => pair.Key, StringComparer.Ordinal).ToList();
+            for (int i = 0; i < bottomTabButtons.Count; i++)
             {
-                int selected = i;
-                bottomTabs[i].onClick.AddListener(() =>
+                KeyValuePair<string, Button> pair = bottomTabButtons[i];
+                if (!sourceNodes.TryGetValue(pair.Key, out OfficialCharacterPanelNode source))
+                    throw new FormatException("The original wardrobe bottom tab source node is missing: " + pair.Key);
+                bool alwaysActive = (source.scripts ?? Array.Empty<string>()).Contains("AppendAppearanceBottomTab");
+                int[] itemTypes;
+                if (alwaysActive)
                 {
-                    if (selected == 0) return;
-                    requestModule?.Invoke(selected == 1 ? "skill-appearance" : "decoration-appearance");
+                    itemTypes = Array.Empty<int>();
+                }
+                else if (TryBinding(source, "AppearanceBottomTab", out Dictionary<string, object> binding)
+                    && binding.TryGetValue("mItemTypes", out object rawItemTypes)
+                    && rawItemTypes is List<object> typeList)
+                {
+                    itemTypes = typeList.Select(value => Convert.ToInt32(value, CultureInfo.InvariantCulture)).ToArray();
+                }
+                else
+                {
+                    throw new FormatException("The original wardrobe bottom tab item-type binding is missing: " + pair.Key);
+                }
+
+                int selected = i;
+                bottomTabs.Add(new BottomTabEntry
+                {
+                    Index = selected,
+                    ItemTypes = itemTypes,
+                    AlwaysActive = alwaysActive,
+                    Root = nodes[pair.Key],
+                    Button = pair.Value
                 });
+                pair.Value.onClick.AddListener(() => SelectBottomTab(selected));
             }
+            if (bottomTabs.Count != 3)
+                throw new FormatException("The original wardrobe no longer has its appearance, skill and home tabs.");
+            RefreshBottomTabs();
 
             statusText = CreateStatusText();
+        }
+
+        public void ShowSkillAppearancePage()
+        {
+            if (!IsBottomTabActive(1))
+            {
+                ShowStatus("尚未获得技能幻彩。");
+                return;
+            }
+            if (appearanceContentRoot == null || skillContentParent == null || skillVideoParent == null) return;
+            if (skillAppearanceView == null)
+            {
+                skillAppearanceView = gameObject.AddComponent<OfficialSkillAppearancePanelView>();
+                try
+                {
+                    skillAppearanceView.Initialize(assets, progression, skillContentParent, skillVideoParent);
+                }
+                catch
+                {
+                    Destroy(skillAppearanceView);
+                    skillAppearanceView = null;
+                    throw;
+                }
+            }
+            appearanceContentRoot.gameObject.SetActive(false);
+            skillAppearanceOpen = true;
+            selectedBottomTabIndex = 1;
+            RefreshBottomTabSelection();
+            skillAppearanceView.SetVisible(true);
+        }
+
+        public void ShowWardrobeAppearancePage()
+        {
+            skillAppearanceOpen = false;
+            if (skillAppearanceView != null) skillAppearanceView.SetVisible(false);
+            if (appearanceContentRoot != null) appearanceContentRoot.gameObject.SetActive(true);
+            selectedBottomTabIndex = 0;
+            RefreshBottomTabSelection();
+        }
+
+        private void SelectBottomTab(int index)
+        {
+            if (!IsBottomTabActive(index)) return;
+            selectedBottomTabIndex = index;
+            RefreshBottomTabSelection();
+            if (index == 0)
+            {
+                ShowWardrobeAppearancePage();
+                return;
+            }
+            if (index == 1)
+            {
+                ShowSkillAppearancePage();
+                return;
+            }
+            ShowWardrobeAppearancePage();
+            requestModule?.Invoke("decoration-appearance");
+        }
+
+        private bool IsBottomTabActive(int index)
+        {
+            BottomTabEntry entry = bottomTabs.FirstOrDefault(value => value.Index == index);
+            return entry != null && (entry.AlwaysActive || entry.ItemTypes.Any(HasOwnedItemType));
+        }
+
+        private bool HasOwnedItemType(int itemType)
+        {
+            return progression.Player.Inventory.Any(value => value != null && value.Count > 0
+                && progression.Catalog.ItemType(value.ItemId) == itemType);
+        }
+
+        private void RefreshBottomTabs()
+        {
+            if (bottomTabs.Count == 0) return;
+            int activeCount = 0;
+            bool selectedActive = false;
+            foreach (BottomTabEntry tab in bottomTabs)
+            {
+                bool active = tab.AlwaysActive || tab.ItemTypes.Any(HasOwnedItemType);
+                tab.Root.gameObject.SetActive(active);
+                tab.Button.interactable = active;
+                if (active) activeCount++;
+                if (active && tab.Index == selectedBottomTabIndex) selectedActive = true;
+            }
+            if (!selectedActive)
+            {
+                selectedBottomTabIndex = 0;
+                if (skillAppearanceOpen) ShowWardrobeAppearancePage();
+            }
+            if (bottomTabContent != null) bottomTabContent.gameObject.SetActive(activeCount > 1);
+            RefreshBottomTabSelection();
+        }
+
+        private void RefreshBottomTabSelection()
+        {
+            foreach (BottomTabEntry tab in bottomTabs)
+            {
+                Transform selected = tab.Root.Find("Selected");
+                if (selected != null) selected.gameObject.SetActive(tab.Index == selectedBottomTabIndex);
+            }
+        }
+
+        private int InventorySignature()
+        {
+            unchecked
+            {
+                int hash = progression.Player.Wardrobe.Profession;
+                foreach (OfflineItemStack stack in progression.Player.Inventory
+                             .Where(value => value != null).OrderBy(value => value.ItemId))
+                {
+                    hash = hash * 397 ^ stack.ItemId;
+                    hash = hash * 397 ^ stack.Count.GetHashCode();
+                }
+                return hash;
+            }
         }
 
         private void SelectFirstTab(string groupPath)
@@ -223,7 +420,14 @@ namespace Zjcs.Presentation.Character
                 int type = FindItemType(source.path);
                 if (type > 0)
                 {
-                    SelectCategory(type);
+                    TryBinding(source, "AppendAppearanceSecondTabItem", out Dictionary<string, object> binding);
+                    string animType = binding != null && binding.TryGetValue("mAnimTypeName", out object rawAnimType)
+                        ? Convert.ToString(rawAnimType, CultureInfo.InvariantCulture) : string.Empty;
+                    string[] animInputs = binding != null && binding.TryGetValue("mAnimInputList", out object rawInputs)
+                        && rawInputs is List<object> inputList
+                        ? inputList.Select(value => Convert.ToString(value, CultureInfo.InvariantCulture)).ToArray()
+                        : Array.Empty<string>();
+                    SelectCategory(type, animType, animInputs);
                     break;
                 }
             }
@@ -244,9 +448,11 @@ namespace Zjcs.Presentation.Character
 
         private readonly Dictionary<string, OfficialCharacterPanelNode> sourceNodes = new Dictionary<string, OfficialCharacterPanelNode>(StringComparer.Ordinal);
 
-        private void SelectCategory(int nextItemType)
+        private void SelectCategory(int nextItemType, string animType = null, IReadOnlyList<string> animInputs = null)
         {
             if (nextItemType <= 0) return;
+            if (model != null && !string.IsNullOrEmpty(animType))
+                model.PlayWardrobeCategory(animType, animInputs, animationExitTime, animationMixDuration);
             itemType = nextItemType;
             foreach (KeyValuePair<string, RectTransform> pair in nodes)
             {
@@ -412,6 +618,7 @@ namespace Zjcs.Presentation.Character
                 if (result.Status == ProgressionResultStatus.InvalidState)
                     ShowStatus(result.Message ?? "限时外观状态无法同步。");
             }
+            RefreshBottomTabs();
             RefreshFashionHeader();
             RefreshGrid();
         }
@@ -672,7 +879,7 @@ namespace Zjcs.Presentation.Character
             {
                 CharacterModelPreview preview = modelMount.GetComponent<CharacterModelPreview>();
                 if (preview == null) preview = modelMount.gameObject.AddComponent<CharacterModelPreview>();
-                try { preview.Initialize(progression, resolution); }
+                try { preview.Initialize(progression, resolution, characterSlotId, characterSavesRoot); }
                 catch (Exception error) { Debug.LogWarning("Appearance preview model is unavailable: " + error.Message); }
             }
             RectTransform closeRaycast = nodes.Values.FirstOrDefault(value => value.name == "ClickRaycast");
@@ -1100,6 +1307,7 @@ namespace Zjcs.Presentation.Character
             rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
             rect.localScale = new Vector3(Value(source.scale, 0, 1f), Value(source.scale, 1, 1f), Value(source.scale, 2, 1f));
             rect.localRotation = Quaternion.Euler(0f, 0f, source.rotation);
+            CharacterPanelNodeFactory.ApplySafeAreaLayout(source, rect);
             instance.SetActive(source.active);
             nodes[source.path] = rect;
             sourceNodes[source.path] = source;
@@ -1110,7 +1318,8 @@ namespace Zjcs.Presentation.Character
             {
                 Image image = instance.AddComponent<Image>();
                 image.sprite = source.image.sprite == null ? null : assets.FindSprite(source.image.sprite.file);
-                image.color = ColorValue(source.image.color, Color.white);
+                image.color = CharacterPanelNodeFactory.ImageColor(
+                    source.image, ColorValue(source.image.color, Color.white));
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, 3);
                 image.preserveAspect = source.image.preserve_aspect;
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
@@ -1134,8 +1343,7 @@ namespace Zjcs.Presentation.Character
 
             if (HasScript(source, "Button") || source.button || HasScript(source, "TabItem"))
             {
-                Graphic graphic = instance.GetComponent<Graphic>();
-                if (graphic == null) graphic = instance.AddComponent<Image>();
+                Graphic graphic = CharacterPanelNodeFactory.EnsureRaycastGraphic(source, instance);
                 graphic.raycastTarget = true;
                 Button button = instance.AddComponent<Button>();
                 button.targetGraphic = graphic;
@@ -1143,13 +1351,14 @@ namespace Zjcs.Presentation.Character
             }
             if (HasScript(source, "Toggle"))
             {
-                Graphic graphic = instance.GetComponent<Graphic>();
-                if (graphic == null) graphic = instance.AddComponent<Image>();
+                Graphic graphic = CharacterPanelNodeFactory.EnsureRaycastGraphic(source, instance);
                 Toggle toggle = instance.AddComponent<Toggle>();
                 toggle.targetGraphic = graphic;
                 Transform mark = FindDeep(instance.transform, "Checkmark");
                 if (mark != null) toggle.graphic = mark.GetComponent<Graphic>();
             }
+            if (HasScript(source, "NoDrawingRayCast") && instance.GetComponent<Graphic>() == null)
+                instance.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
             if (source.mask)
             {
                 Mask mask = instance.AddComponent<Mask>();

@@ -30,6 +30,12 @@ namespace Zjcs.Offline.Progression
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private TextAsset skillRules;
         [SerializeField] private TextAsset skillRecommendations;
+        [SerializeField] private TextAsset skillUiLayouts;
+        [SerializeField] private GameObject confirmDialogPrefab;
+        [SerializeField] private AnimationClip skillSlotLevelUpAnimation;
+        [SerializeField] private AudioClip skillSlotLevelUpSound;
+        [SerializeField] private GameObject petPlanSelectorPanel;
+        [SerializeField] private GameObject petPlanSelectorItem;
         [SerializeField] private Font uiFont;
         [SerializeField] private OfficialCharacterSpriteBinding[] sprites = System.Array.Empty<OfficialCharacterSpriteBinding>();
 
@@ -44,6 +50,12 @@ namespace Zjcs.Offline.Progression
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset SkillRules => skillRules;
         public TextAsset SkillRecommendations => skillRecommendations;
+        public TextAsset SkillUiLayouts => skillUiLayouts;
+        public GameObject ConfirmDialogPrefab => confirmDialogPrefab;
+        public AnimationClip SkillSlotLevelUpAnimation => skillSlotLevelUpAnimation;
+        public AudioClip SkillSlotLevelUpSound => skillSlotLevelUpSound;
+        public GameObject PetPlanSelectorPanel => petPlanSelectorPanel;
+        public GameObject PetPlanSelectorItem => petPlanSelectorItem;
         public Font UiFont => uiFont;
 
         public Sprite FindSprite(string sourceUri)
@@ -52,6 +64,46 @@ namespace Zjcs.Offline.Progression
             foreach (OfficialCharacterSpriteBinding binding in sprites ?? System.Array.Empty<OfficialCharacterSpriteBinding>())
                 if (binding != null && binding.sourcePath == path) return binding.sprite;
             return null;
+        }
+
+        public Sprite FindSkillSkinSprite(OfficialCharacterCatalog characterCatalog, int itemId)
+        {
+            Dictionary<string, object> item = characterCatalog == null ? null : characterCatalog.FindItem(itemId);
+            string iconPath = item != null && item.TryGetValue("RawIcon", out object rawIcon)
+                ? Convert.ToString(rawIcon, CultureInfo.InvariantCulture) : string.Empty;
+            string iconName = string.IsNullOrEmpty(iconPath) ? string.Empty
+                : iconPath.Substring(iconPath.LastIndexOf('/') + 1);
+            if (iconName.Length == 0) return null;
+
+            string prefix = "sprites/" + iconName + "-";
+            foreach (OfficialCharacterSpriteBinding binding in sprites ?? System.Array.Empty<OfficialCharacterSpriteBinding>())
+                if (binding != null && binding.sourcePath.StartsWith(prefix, StringComparison.Ordinal))
+                    return binding.sprite;
+            return Resources.Load<Sprite>("Character/SkillSkinIcons/" + iconName);
+        }
+
+        public Sprite FindQualityBackgroundSprite(int quality)
+        {
+            string[] files =
+            {
+                "ImgQuality_White-031a03cab0.png", "ImgQuality_White-031a03cab0.png",
+                "ImgQuality_Blue-42b8cb9630.png", "ImgQuality_Purple-0b40a53021.png",
+                "ImgQuality_Orange-78887320b0.png", "ImgQuality_Gold-5f018c42e0.png",
+                "ImgQuality_Red-caa09e6943.png", "ImgQuality_Multicolour-93374ebc65.png"
+            };
+            return FindSprite("res://assets/official/sprites/"
+                + files[Mathf.Clamp(quality, 0, files.Length - 1)]);
+        }
+
+        public Sprite FindSkillAppearanceSprite(string sourceUri)
+        {
+            const string prefix = "res://character-skill-appearance/sprites/";
+            if (string.IsNullOrEmpty(sourceUri) || !sourceUri.StartsWith(prefix, StringComparison.Ordinal))
+                return null;
+            string filename = sourceUri.Substring(prefix.Length);
+            int extension = filename.LastIndexOf('.');
+            if (extension >= 0) filename = filename.Substring(0, extension);
+            return Resources.Load<Sprite>("Character/SkillAppearanceSprites/" + filename);
         }
 
         public static string NormalizeSpritePath(string sourceUri)
@@ -84,6 +136,9 @@ namespace Zjcs.Offline.Progression
             if (sourceManifest == null) missing.Add(nameof(sourceManifest));
             if (skillRules == null) missing.Add(nameof(skillRules));
             if (skillRecommendations == null) missing.Add(nameof(skillRecommendations));
+            if (skillUiLayouts == null) missing.Add(nameof(skillUiLayouts));
+            if (petPlanSelectorPanel == null) missing.Add(nameof(petPlanSelectorPanel));
+            if (petPlanSelectorItem == null) missing.Add(nameof(petPlanSelectorItem));
             if (missing.Count > 0)
                 throw new InvalidOperationException("Official character TextAssets are not bound: "
                     + string.Join(", ", missing));
@@ -124,14 +179,22 @@ namespace Zjcs.Offline.Progression
     public sealed class OfficialConditionContext
     {
         public int Level;
+        public Dictionary<int, long> ItemCounts = new Dictionary<int, long>();
         public HashSet<int> UnlockedMapClassIds = new HashSet<int>();
         public HashSet<int> RegionCodes = new HashSet<int>();
+        public Dictionary<int, int> NpcFriendshipLevels = new Dictionary<int, int>();
+        public Dictionary<int, HashSet<int>> NpcTalentTreeActiveNodeIds
+            = new Dictionary<int, HashSet<int>>();
+        public int CurrentTalentTreeNpcClassId;
+        public int CurrentTalentTreeNodeId;
     }
 
     public sealed class OfficialCharacterCatalog
     {
         private readonly Dictionary<string, List<Dictionary<string, object>>> tables;
         private readonly Dictionary<int, Dictionary<string, object>> items;
+        private readonly Dictionary<int, Dictionary<string, object>> derivedSkillPieces
+            = new Dictionary<int, Dictionary<string, object>>();
         private readonly Dictionary<int, WardrobeSkinDefinition> skins;
         private readonly Dictionary<int, WardrobeItemDefinition> appearances;
         private readonly HashSet<string> allowed;
@@ -152,6 +215,7 @@ namespace Zjcs.Offline.Progression
         private readonly Dictionary<int, string> professionNames;
         private readonly Dictionary<int, string> professionIcons;
         private readonly Dictionary<int, int> skillMergePieces;
+        private readonly Dictionary<int, int> npcFriendshipMaxLevels;
 
         private OfficialCharacterCatalog(Dictionary<string, List<Dictionary<string, object>>> tables,
             Dictionary<int, Dictionary<string, object>> items, Dictionary<int, WardrobeSkinDefinition> skins,
@@ -193,6 +257,15 @@ namespace Zjcs.Offline.Progression
             this.professionNames = professionNames;
             this.professionIcons = professionIcons;
             this.skillMergePieces = skillMergePieces;
+            npcFriendshipMaxLevels = new Dictionary<int, int>();
+            foreach (Dictionary<string, object> row in Rows("npc_friendship_level", tables))
+            {
+                int npcClassId = Integer(row, "Id");
+                int level = Integer(row, "Level");
+                if (npcClassId > 0 && level > 0
+                    && (!npcFriendshipMaxLevels.TryGetValue(npcClassId, out int current) || level > current))
+                    npcFriendshipMaxLevels[npcClassId] = level;
+            }
         }
 
         public string ProfessionName(int profession)
@@ -215,7 +288,9 @@ namespace Zjcs.Offline.Progression
         /// <summary>Original <c>ItemInfo.RawIcon</c> sprite of an item when it is part of the pinned character catalog.</summary>
         public string ItemIconUri(int itemId)
         {
-            return itemIcons.TryGetValue(itemId, out string icon) ? icon : string.Empty;
+            if (itemIcons.TryGetValue(itemId, out string icon)) return icon;
+            int skillId = SkillPieceSkill(itemId);
+            return skillId > 0 && itemIcons.TryGetValue(skillId, out icon) ? icon : string.Empty;
         }
 
         public IReadOnlyList<CharacterLevelLimitRecord> LevelLimits => levelLimits;
@@ -252,6 +327,16 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
+        public IReadOnlyDictionary<int, long> CalcCharacterNoBattleProperties(int level, int subRank)
+        {
+            Dictionary<string, object> settings = Rows("game_settings").FirstOrDefault();
+            if (settings == null) throw new FormatException("Official character property settings are missing.");
+            var result = new Dictionary<int, long>();
+            Merge(result, GetLevelProps(Integer(settings, "PlayerLevelPropId"), level));
+            Merge(result, GetLevelProps(Integer(settings, "PlayerSubRankPropId"), subRank));
+            return result;
+        }
+
         public int RankOfSubRank(int subRank)
         {
             return rankBySubRank.TryGetValue(subRank, out int rank) ? rank : 0;
@@ -266,6 +351,40 @@ namespace Zjcs.Offline.Progression
             return Integer(row, "GemLevelLimit");
         }
 
+        public float LevelNumber(int id, int level)
+        {
+            Dictionary<string, object> row = Find("level_number", id, "Id");
+            if (row == null || !row.TryGetValue("Nums", out object raw) || !(raw is List<object> values)
+                || values.Count == 0) return 0f;
+            int index = level < 0 ? 0 : Math.Min(level, values.Count - 1);
+            return Convert.ToSingle(values[index], CultureInfo.InvariantCulture);
+        }
+
+        public float LevelNumberLerp(int id, float level)
+        {
+            int lowerLevel = (int)level;
+            return LevelNumber(id, lowerLevel)
+                + (LevelNumber(id, lowerLevel + 1) - LevelNumber(id, lowerLevel)) * (level - lowerLevel);
+        }
+
+        public IReadOnlyDictionary<int, long> CalcProfessionLevelProperties(
+            IEnumerable<OfflineProfessionLevel> professionLevels)
+        {
+            var result = new Dictionary<int, long>();
+            if (professionLevels == null) return result;
+            foreach (OfflineProfessionLevel professionLevel in professionLevels)
+            {
+                if (professionLevel == null || professionLevel.Profession <= 0 || professionLevel.Level <= 0)
+                    continue;
+                Dictionary<string, object> profession = Find("profession_base", professionLevel.Profession,
+                    "Profession");
+                if (profession == null) continue;
+                int levelPropId = Integer(profession, "LevelPropId");
+                Merge(result, GetLevelProps(levelPropId, professionLevel.Level));
+            }
+            return result;
+        }
+
         /// <summary>
         /// Evaluates one official condition id (rules.json <c>conditions</c>) against the local
         /// character state. Condition types that need data this save does not own stay false
@@ -275,6 +394,44 @@ namespace Zjcs.Offline.Progression
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             return EvaluateConditionNode(FindCondition(conditionId), context, new HashSet<int>());
+        }
+
+        public bool EvaluateCondition(Dictionary<string, object> condition, OfficialConditionContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            return EvaluateConditionValue(condition, context, new HashSet<int>());
+        }
+
+        public IReadOnlyList<int> NpcTalentTreeAdjacentNormalNodeIds(int npcClassId, int nodeId)
+        {
+            var nodes = Rows("npc_talent_tree_map").Where(row => Integer(row, "NpcClassId") == npcClassId)
+                .ToDictionary(row => Integer(row, "NodeId"));
+            if (!nodes.ContainsKey(nodeId)) return System.Array.Empty<int>();
+            var adjacency = nodes.Keys.ToDictionary(id => id, _ => new HashSet<int>());
+            foreach (KeyValuePair<int, Dictionary<string, object>> entry in nodes)
+                foreach (int nextId in Integers(entry.Value, "ConnectNodes"))
+                    if (adjacency.TryGetValue(nextId, out HashSet<int> neighbors))
+                    {
+                        neighbors.Add(entry.Key);
+                        adjacency[entry.Key].Add(nextId);
+                    }
+            var result = new List<int>();
+            var seen = new HashSet<int> { nodeId };
+            var queue = new Queue<int>();
+            queue.Enqueue(nodeId);
+            while (queue.Count > 0)
+            {
+                int currentId = queue.Dequeue();
+                foreach (int nextId in adjacency[currentId])
+                {
+                    if (!seen.Add(nextId) || !nodes.TryGetValue(nextId, out Dictionary<string, object> next))
+                        continue;
+                    int nodeType = Integer(next, "NodeType");
+                    if (nodeType == 0 || nodeType == 3) queue.Enqueue(nextId);
+                    else result.Add(nextId);
+                }
+            }
+            return result;
         }
 
         private Dictionary<string, object> FindCondition(int conditionId)
@@ -295,16 +452,28 @@ namespace Zjcs.Offline.Progression
         private bool EvaluateConditionNode(Dictionary<string, object> row,
             OfficialConditionContext context, HashSet<int> visiting)
         {
-            if (row == null) return false;
-            if (!row.TryGetValue("Condition", out object raw) || !(raw is Dictionary<string, object> condition))
-                return false;
+            return row != null && row.TryGetValue("Condition", out object raw)
+                && raw is Dictionary<string, object> condition
+                && EvaluateConditionValue(condition, context, visiting);
+        }
+
+        private bool EvaluateConditionValue(Dictionary<string, object> condition,
+            OfficialConditionContext context, HashSet<int> visiting)
+        {
+            if (condition == null) return false;
             string type = Text(condition, "_type");
             switch (type)
             {
                 case "NoneCondition":
                     return true;
+                case "AlwaysCondition":
+                    return false;
                 case "LevelCondition":
                     return Compare(context.Level, Integer(condition, "Level"), Text(condition, "Op"));
+                case "HasItemCondition":
+                    if (context.ItemCounts == null) return false;
+                    context.ItemCounts.TryGetValue(Integer(condition, "ClassId"), out long itemCount);
+                    return Compare(itemCount, Integer(condition, "Count"), Text(condition, "Op"));
                 case "CompositeAndCondition":
                     foreach (int id in Integers(condition, "Ids"))
                         if (!EvaluateConditionId(id, context, visiting)) return false;
@@ -320,6 +489,28 @@ namespace Zjcs.Offline.Progression
                     foreach (int code in Integers(condition, "RegionCodes"))
                         if (context.RegionCodes.Contains(code)) { contains = true; break; }
                     return Boolean(condition, "Not") ? !contains : contains;
+                case "NpcFriendshipLevelCondition":
+                    if (context.NpcFriendshipLevels == null) return false;
+                    context.NpcFriendshipLevels.TryGetValue(Integer(condition, "NpcClassId"), out int friendshipLevel);
+                    bool friendshipMet = friendshipLevel >= Integer(condition, "FriendshipLevel");
+                    return Boolean(condition, "IsReverse") ? !friendshipMet : friendshipMet;
+                case "NpcFriendshipMaxLevelCondition":
+                    int npcClassId = Integer(condition, "NpcClassId");
+                    if (context.NpcFriendshipLevels == null
+                        || !context.NpcFriendshipLevels.TryGetValue(npcClassId, out int currentFriendshipLevel)
+                        || !npcFriendshipMaxLevels.TryGetValue(npcClassId, out int maxFriendshipLevel))
+                        return false;
+                    bool atMaxFriendship = currentFriendshipLevel >= maxFriendshipLevel;
+                    return Boolean(condition, "IsReverse") ? !atMaxFriendship : atMaxFriendship;
+                case "NpcTalentTreeNodePreNodeActiveCountCondition":
+                    if (context.CurrentTalentTreeNpcClassId <= 0 || context.CurrentTalentTreeNodeId <= 0
+                        || context.NpcTalentTreeActiveNodeIds == null
+                        || !context.NpcTalentTreeActiveNodeIds.TryGetValue(context.CurrentTalentTreeNpcClassId,
+                            out HashSet<int> activeNodeIds)) return false;
+                    int activePrerequisites = NpcTalentTreeAdjacentNormalNodeIds(
+                        context.CurrentTalentTreeNpcClassId, context.CurrentTalentTreeNodeId)
+                        .Count(activeNodeIds.Contains);
+                    return activePrerequisites >= Integer(condition, "Count");
                 default:
                     return false;
             }
@@ -340,6 +531,11 @@ namespace Zjcs.Offline.Progression
         }
 
         private static bool Compare(int value, int expected, string op)
+        {
+            return Compare((long)value, expected, op);
+        }
+
+        private static bool Compare(long value, long expected, string op)
         {
             switch (op)
             {
@@ -441,7 +637,53 @@ namespace Zjcs.Offline.Progression
 
         public Dictionary<string, object> FindItem(int id)
         {
-            return items.TryGetValue(id, out Dictionary<string, object> item) ? item : null;
+            if (items.TryGetValue(id, out Dictionary<string, object> item)) return item;
+            if (derivedSkillPieces.TryGetValue(id, out item)) return item;
+            int skillId = SkillPieceSkill(id);
+            if (skillId <= 0 || !items.TryGetValue(skillId, out Dictionary<string, object> skill)) return null;
+
+            item = new Dictionary<string, object>(skill, StringComparer.Ordinal)
+            {
+                ["ClassId"] = id,
+                ["Name"] = Convert.ToString(skill["Name"], CultureInfo.InvariantCulture) + "碎片",
+                ["RawIcon"] = skill["RawIcon"],
+                ["ShowPieceIcon"] = true,
+                ["IconEffect"] = string.Empty,
+                ["ItemType"] = 111,
+                ["Rank"] = -1,
+                ["Quality"] = 1,
+                ["ElementType"] = 0,
+                ["Price"] = new Dictionary<string, object> { ["2"] = 15d },
+                ["CanRepeat"] = true,
+                ["AgioItemId"] = 0,
+                ["AgioAmount"] = 0,
+                ["AgioRuleIdList"] = null,
+                ["CanDrop"] = true,
+                ["CanDropWhenExist"] = true,
+                ["ShowInBag"] = false,
+                ["CanOverlap"] = true,
+                ["CanUse"] = false,
+                ["CanUseInBatches"] = false,
+                ["ItemUseEffectType"] = 0,
+                ["Effects"] = null,
+                ["ShowUseDetail"] = false,
+                ["ShowPlayerItemCount"] = true,
+                ["LimitRank"] = 1,
+                ["RedDotType"] = 0,
+                ["RecycleReward"] = new Dictionary<string, object> { ["20"] = 1L },
+                ["IsShowGained"] = false,
+                ["RecycleGroupCount"] = 1
+            };
+            derivedSkillPieces[id] = item;
+            return item;
+        }
+
+        private int SkillPieceSkill(int itemId)
+        {
+            int skillId = itemId - 2000;
+            return items.TryGetValue(skillId, out Dictionary<string, object> skill)
+                && (Integer(skill, "ItemType") == 100 || Integer(skill, "ItemType") == 101)
+                ? skillId : 0;
         }
 
         public Dictionary<string, object> FindTimedAppearance(int id)
@@ -573,7 +815,8 @@ namespace Zjcs.Offline.Progression
 
         public int ItemType(int itemId)
         {
-            return items.TryGetValue(itemId, out Dictionary<string, object> item) ? Integer(item, "ItemType") : 0;
+            Dictionary<string, object> item = FindItem(itemId);
+            return item == null ? 0 : Integer(item, "ItemType");
         }
 
         public int PlayerExperienceItemId

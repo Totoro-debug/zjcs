@@ -33,6 +33,9 @@ namespace Zjcs.Editor.Character
             "skillRules", "skillRecommendations"
         };
         private const string SpriteRoot = "Assets/Official/Character/Art/";
+        private const string SkillSlotLevelUpAnimationPath =
+            "Assets/Official/Dungeons/Prefabs/UI/Skill/SkillContentPanelSkillGroupItem_LevelUp.anim";
+        private const string SkillSlotLevelUpSoundPath = "Assets/Official/Skills/Audio/Skill_Upgrade.ogg";
 
         static CharacterProgressionValidation()
         {
@@ -84,6 +87,16 @@ namespace Zjcs.Editor.Character
             SerializedProperty fontField = serialized.FindProperty("uiFont");
             if (fontField == null) throw new InvalidOperationException("Character catalog font field is missing.");
             fontField.objectReferenceValue = uiFont;
+            AnimationClip slotLevelUpAnimation = AssetDatabase.LoadAssetAtPath<AnimationClip>(SkillSlotLevelUpAnimationPath);
+            AudioClip slotLevelUpSound = AssetDatabase.LoadAssetAtPath<AudioClip>(SkillSlotLevelUpSoundPath);
+            if (slotLevelUpAnimation == null || slotLevelUpSound == null)
+                throw new InvalidOperationException("Official skill slot level-up animation or sound was not imported.");
+            SerializedProperty slotAnimationField = serialized.FindProperty("skillSlotLevelUpAnimation");
+            SerializedProperty slotSoundField = serialized.FindProperty("skillSlotLevelUpSound");
+            if (slotAnimationField == null || slotSoundField == null)
+                throw new InvalidOperationException("Official skill slot effect bindings are missing from the character catalog.");
+            slotAnimationField.objectReferenceValue = slotLevelUpAnimation;
+            slotSoundField.objectReferenceValue = slotLevelUpSound;
             string[] spriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { "Assets/Official/Character/Art" });
             var spritePaths = spriteGuids.Select(AssetDatabase.GUIDToAssetPath)
                 .Where(path => path.StartsWith(SpriteRoot, StringComparison.Ordinal))
@@ -293,6 +306,8 @@ namespace Zjcs.Editor.Character
         {
             OfficialCharacterAssetCatalog assetCatalog = OfficialCharacterAssetCatalog.LoadDefault();
             OfficialCharacterCatalog loaded = assetCatalog.Load();
+            ValidateNpcTalentRules(loaded);
+            ValidateExpandedPropertySources(loaded);
             OfficialPropCatalog props = loaded.Props;
             Require(props.Count >= 300 && props.ByCatalog((int)OfficialPropCatalogType.Main).Count == 4
                 && props.ByCatalog((int)OfficialPropCatalogType.Addition).Count > 80,
@@ -317,6 +332,15 @@ namespace Zjcs.Editor.Character
                 "Run the official base-rate, percent and scale steps over the level, sub-rank and role-group properties");
             Require(snapshot.CombatRating > 0 && snapshot.BattleProps.ContainsKey(props.Id("BaseMaxHp")),
                 "Calculate a positive combat rating from the base property chunk");
+            IReadOnlyDictionary<int, long> noBattleExpected = loaded.CalcCharacterNoBattleProperties(1, 1);
+            Require(snapshot.Chunks.TryGetValue(CharacterPropHandleType.NoBattleBasic,
+                    out IReadOnlyDictionary<int, long> noBattleChunk)
+                && noBattleExpected.Count > 0 && noBattleChunk.Count == noBattleExpected.Count
+                && noBattleExpected.All(entry => noBattleChunk.TryGetValue(entry.Key, out long value)
+                    && value == entry.Value)
+                && noBattleExpected.All(entry => snapshot.NonBattleProps.TryGetValue(entry.Key, out long value)
+                    && value == entry.Value),
+                "Include official level and sub-rank non-battle properties without scoring them as combat rating");
             Require(snapshot.DetailProps.TryGetValue(CharacterPropDetailCategory.CharacterBase,
                     out IReadOnlyDictionary<int, long> baseDetail)
                 && CharacterPropFormula.Raw(baseDetail, props.Id("Attack")) == 60,
@@ -354,6 +378,145 @@ namespace Zjcs.Editor.Character
                     && Convert.ToInt32(row["PlayerLevel"], System.Globalization.CultureInfo.InvariantCulture) == 10)
                 && loaded.Rows("player_subrank").Count == 40,
                 "Read the official rank level limit and sub-rank divisions");
+        }
+
+        private static void ValidateExpandedPropertySources(OfficialCharacterCatalog catalog)
+        {
+            Require(catalog.Rows("legion_map_skill").Count == 166
+                && catalog.Rows("legion_map_skill_study_level").Count == 498
+                && catalog.Rows("equip_cabinet_score").Count == 1715
+                && catalog.Rows("equip_cabinet_gem_score").Count == 75
+                && catalog.Rows("equip_cabinet_evaluate").Count == 56,
+                "Load the pinned official guild study and equipment cabinet tables");
+
+            Dictionary<string, object> study = catalog.Rows("legion_map_skill_study_level")
+                .FirstOrDefault(row => Convert.ToInt32(row["Level"],
+                    System.Globalization.CultureInfo.InvariantCulture) == 1
+                    && row.TryGetValue("PlayerProps", out object rawProps)
+                    && rawProps is Dictionary<string, object> values && values.Count > 0);
+            Require(study != null, "Find an official first-level guild study property row");
+            int skillClassId = Convert.ToInt32(study["SkillClassId"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            var player = new OfflinePlayerProgress
+            {
+                CharacterProperties = new OfflineCharacterPropertyProgress()
+            };
+            player.CharacterProperties.LegionMapSkills.Add(new OfflineLegionMapSkill
+            {
+                SkillClassId = skillClassId,
+                Level = 1
+            });
+            IReadOnlyDictionary<int, long> legionActual = new OfflineCharacterConfiguredPropSource(
+                catalog, CharacterPropHandleType.Legion).CalculateProps(player);
+            var legionExpected = ReadIntegerLongMap(study["PlayerProps"]);
+            Require(legionExpected.Count > 0 && legionActual.Count == legionExpected.Count
+                && legionExpected.All(value => legionActual.TryGetValue(value.Key, out long actual)
+                    && actual == value.Value),
+                "Apply the official guild study level PlayerProps to the character source");
+
+            Dictionary<string, object> season = catalog.Rows("astrological_season_config")
+                .OrderBy(row => Convert.ToInt32(row["Season"],
+                    System.Globalization.CultureInfo.InvariantCulture)).FirstOrDefault();
+            int seasonId = season == null ? 0 : Convert.ToInt32(season["Season"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            int seasonRank = season == null ? 0 : Convert.ToInt32(season["Rank"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            Dictionary<string, object> cabinetThreshold = catalog.Rows("equip_cabinet_evaluate")
+                .Where(row => Convert.ToInt32(row["Rank"], System.Globalization.CultureInfo.InvariantCulture)
+                    == seasonRank)
+                .OrderBy(row => Convert.ToInt32(row["Score"], System.Globalization.CultureInfo.InvariantCulture))
+                .FirstOrDefault(row => row.TryGetValue("Attribuate", out object rawProps)
+                    && rawProps is Dictionary<string, object> values && values.Count > 0);
+            Require(seasonId > 0 && cabinetThreshold != null,
+                "Find a ranked official equipment cabinet threshold");
+            int cabinetScore = Convert.ToInt32(cabinetThreshold["Score"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            player.CharacterProperties.SeasonId = seasonId;
+            player.CharacterProperties.EquipCabinetScores.Add(new OfflineEquipCabinetSeasonScore
+            {
+                SeasonId = seasonId,
+                Score = cabinetScore
+            });
+            IReadOnlyDictionary<int, long> cabinetActual = new OfflineCharacterConfiguredPropSource(
+                catalog, CharacterPropHandleType.EquipCabinet).CalculateProps(player);
+            var cabinetExpected = new Dictionary<int, long>();
+            foreach (Dictionary<string, object> threshold in catalog.Rows("equip_cabinet_evaluate")
+                         .Where(row => Convert.ToInt32(row["Rank"],
+                             System.Globalization.CultureInfo.InvariantCulture) == seasonRank
+                             && Convert.ToInt32(row["Score"],
+                                 System.Globalization.CultureInfo.InvariantCulture) <= cabinetScore))
+                foreach (KeyValuePair<int, long> property in ReadIntegerLongMap(threshold["Attribuate"]))
+                    cabinetExpected[property.Key] = cabinetExpected.TryGetValue(property.Key, out long current)
+                        ? checked(current + property.Value) : property.Value;
+            Require(cabinetExpected.Count > 0 && cabinetActual.Count == cabinetExpected.Count
+                && cabinetExpected.All(value => cabinetActual.TryGetValue(value.Key, out long actual)
+                    && actual == value.Value),
+                "Accumulate the official equipment cabinet rank thresholds into character properties");
+        }
+
+        private static Dictionary<int, long> ReadIntegerLongMap(object raw)
+        {
+            var result = new Dictionary<int, long>();
+            if (!(raw is Dictionary<string, object> values)) return result;
+            foreach (KeyValuePair<string, object> value in values)
+                result.Add(Convert.ToInt32(value.Key, System.Globalization.CultureInfo.InvariantCulture),
+                    Convert.ToInt64(value.Value, System.Globalization.CultureInfo.InvariantCulture));
+            return result;
+        }
+
+        private static void ValidateNpcTalentRules(OfficialCharacterCatalog catalog)
+        {
+            Require(catalog.Rows("conditions").Count == 4493 && catalog.Rows("npc").Count == 148
+                && catalog.Rows("npc_friendship_level").Count == 10000 && catalog.Rows("npc_gift").Count == 115
+                && catalog.Rows("npc_talent_item").Count == 3 && catalog.Rows("npc_talent_tree_map").Count == 252
+                && catalog.Rows("npc_talent_tree_prop").Count == 252,
+                "Load the pinned NPC friendship and talent tree tables");
+
+            OfficialMainlineTaskCatalog taskCatalog = OfficialMainlineTaskCatalog.LoadDefault();
+            Dictionary<string, object> friendshipLevel = catalog.Rows("npc_friendship_level")
+                .First(row => Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) == 10608
+                    && Convert.ToInt32(row["Level"], System.Globalization.CultureInfo.InvariantCulture) == 2);
+            int friendshipRankLimit = Convert.ToInt32(friendshipLevel["SubRankLimit"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            long friendshipExp = Convert.ToInt64(friendshipLevel["FriendshipExp"],
+                System.Globalization.CultureInfo.InvariantCulture);
+            Require(taskCatalog.TryGetFriendshipExperience(10608, 2, out long taskFriendshipExp)
+                && taskFriendshipExp == friendshipExp
+                && taskCatalog.FriendshipLevel(10608, friendshipExp, friendshipRankLimit) == 2,
+                "Apply fixed NPC friendship rewards with the pinned experience and subrank threshold");
+
+            var context = new OfficialConditionContext();
+            context.NpcFriendshipLevels[10608] = 49;
+            Require(!catalog.EvaluateCondition(8100, context),
+                "Keep the NPC talent tree locked below its official friendship level");
+            context.NpcFriendshipLevels[10608] = 50;
+            Require(catalog.EvaluateCondition(8100, context),
+                "Unlock the NPC talent tree at the official friendship level");
+
+            int friendshipMaximum = catalog.Rows("npc_friendship_level")
+                .Where(row => Convert.ToInt32(row["Id"], System.Globalization.CultureInfo.InvariantCulture) == 10608)
+                .Max(row => Convert.ToInt32(row["Level"], System.Globalization.CultureInfo.InvariantCulture));
+            context.NpcFriendshipLevels[10608] = friendshipMaximum - 1;
+            Require(!catalog.EvaluateCondition(8200, context),
+                "Keep NPC talent gift conversion locked below maximum friendship");
+            context.NpcFriendshipLevels[10608] = friendshipMaximum;
+            Require(catalog.EvaluateCondition(8200, context),
+                "Unlock NPC talent gift conversion at maximum friendship");
+
+            Dictionary<string, object> node = catalog.Rows("npc_talent_tree_map")
+                .First(row => Convert.ToInt32(row["UnlockCondition"], System.Globalization.CultureInfo.InvariantCulture) == 8010);
+            int npcClassId = Convert.ToInt32(node["NpcClassId"], System.Globalization.CultureInfo.InvariantCulture);
+            int nodeId = Convert.ToInt32(node["NodeId"], System.Globalization.CultureInfo.InvariantCulture);
+            IReadOnlyList<int> adjacentNodes = catalog.NpcTalentTreeAdjacentNormalNodeIds(npcClassId, nodeId);
+            Require(adjacentNodes.Count > 0, "Resolve official adjacent NPC talent nodes through bridge points");
+            context.CurrentTalentTreeNpcClassId = npcClassId;
+            context.CurrentTalentTreeNodeId = nodeId;
+            context.NpcTalentTreeActiveNodeIds[npcClassId] = new HashSet<int>();
+            Require(!catalog.EvaluateCondition(8010, context),
+                "Keep an NPC talent node locked without an active prerequisite");
+            context.NpcTalentTreeActiveNodeIds[npcClassId].Add(adjacentNodes[0]);
+            Require(catalog.EvaluateCondition(8010, context),
+                "Unlock an NPC talent node from its active adjacent prerequisite");
         }
 
         private static void Require(bool condition, string step)

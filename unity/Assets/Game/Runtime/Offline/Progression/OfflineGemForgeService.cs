@@ -114,8 +114,7 @@ namespace Zjcs.Offline.Equipment
             if (rules.Any(value => value == null || value.Rank <= 1 || value.RequireCount < 0
                 || value.NeedMaterialRank <= 0 || value.CostMoney < 0 || value.PercentMininum < 0
                 || value.FailedResult < 0 || value.FailedResult > 3
-                || value.StepRate == null && value.IsHighRankMerge
-                || value.StepRate != null && value.StepRate.Length == 0))
+                || value.IsHighRankMerge && (value.StepRate == null || value.StepRate.Length == 0)))
                 throw new ArgumentException("Gem forge rules contain invalid fields.", nameof(sourceRules));
             this.moneyItemId = moneyItemId > 0 ? moneyItemId : MoneyItemIdFallback;
             if (session.Save.Player.Equipment.GemForge == null)

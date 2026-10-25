@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -113,6 +114,8 @@ namespace Zjcs.Presentation.Character
     public sealed class OfficialCharacterPanelView : MonoBehaviour
     {
         private const string CharacterScreenPath = "/CharacterPanel";
+        private const string CharacterPetModelRootPath = "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EquipPetContent/PetModelSpawnerForUI/PetModelRoot";
+        private const string CharacterPetModelSpawnerPath = "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EquipPetContent/PetModelSpawnerForUI";
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, bool> nodeActive = new Dictionary<string, bool>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -120,13 +123,15 @@ namespace Zjcs.Presentation.Character
         private readonly Dictionary<string, Button> dialogButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private OfficialCharacterAssetCatalog assets;
         private OfflineCharacterProgressionService progression;
+        private string characterSlotId;
+        private string characterSavesRoot;
         private CharacterPanelNodeFactory factory;
         private Slider experienceSlider;
-        private Text experienceText;
-        private Text levelText;
-        private Text levelLimitText;
-        private Text rankText;
-        private Text subRankText;
+        private Component experienceText;
+        private Component levelText;
+        private Component levelLimitText;
+        private Component rankText;
+        private Component subRankText;
         private Image rankImage;
         private GameObject activeDialog;
         private Text operationResultText;
@@ -139,12 +144,15 @@ namespace Zjcs.Presentation.Character
         private CharacterRankPanel rankPanel;
         private CharacterEquipSlots equipSlots;
         private CharacterSkillPanel skillPanel;
-        private Text honorTimeText;
+        private CharacterPetEquipmentView petEquipmentView;
+        private Component honorTimeText;
         private GameObject honorTimeContent;
-        private Text honorPropText;
+        private Component honorPropText;
         private GameObject honorPropContent;
         private long honorTitleExpiry;
         private float honorClock;
+        private int templateSpritesBound;
+        private int templateSpritesMissing;
 
         public event Action CloseRequested;
 
@@ -162,7 +170,11 @@ namespace Zjcs.Presentation.Character
             if (propPanels != null) propPanels.CloseDialog();
             if (rankPanel != null) rankPanel.Close();
             if (equipSlots != null) equipSlots.CloseList();
-            if (skillPanel != null) skillPanel.Close();
+            if (skillPanel != null)
+            {
+                skillPanel.Changed -= HandleSkillPanelChanged;
+                skillPanel.Close();
+            }
             if (wardrobeView != null) Destroy(wardrobeView.gameObject);
             wardrobeView = null;
         }
@@ -196,7 +208,8 @@ namespace Zjcs.Presentation.Character
         }
 
         public void Initialize(OfficialCharacterAssetCatalog assetCatalog,
-            OfflineCharacterProgressionService characterProgression)
+            OfflineCharacterProgressionService characterProgression, string selectedSlotId = null,
+            string profileSavesRoot = null)
         {
             if (activeDialog != null) Destroy(activeDialog);
             activeDialog = null;
@@ -211,13 +224,15 @@ namespace Zjcs.Presentation.Character
             assets = assetCatalog != null ? assetCatalog : throw new ArgumentNullException(nameof(assetCatalog));
             progression = characterProgression != null ? characterProgression
                 : throw new ArgumentNullException(nameof(characterProgression));
+            characterSlotId = selectedSlotId;
+            characterSavesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
+                ? Application.persistentDataPath : profileSavesRoot;
             assets.ValidateBindings();
             CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
             factory = new CharacterPanelNodeFactory(assets);
 
-            OfficialCharacterPanelsData panelData = JsonUtility.FromJson<OfficialCharacterPanelsData>(assets.CharacterPanels.text);
-            if (panelData == null || panelData.manifest != "854_156383" || panelData.screens == null
-                || panelData.screens.character == null || panelData.screens.character.root == null)
+            Dictionary<string, object> panelScreens = ReadPanelScreens();
+            if (!panelScreens.TryGetValue("character", out object characterData))
                 throw new FormatException("Pinned original character panel data are invalid.");
 
             Canvas canvas = GetComponent<Canvas>();
@@ -240,21 +255,129 @@ namespace Zjcs.Presentation.Character
             root.anchorMax = Vector2.one;
             root.offsetMin = Vector2.zero;
             root.offsetMax = Vector2.zero;
-            characterRoot = panelData.screens.character.root;
-            factory.Build(characterRoot, root, nodes, buttons);
-            RecordActive(characterRoot);
+            characterRoot = CharacterPanelNodeFactory.ReadRoot(
+                CharacterModelPackage.AsObject(characterData, "character panel"));
+            templateSpritesBound = 0;
+            templateSpritesMissing = 0;
+            BuildOfficialCharacterPanel(root);
+            ApplyTemplateVisuals(characterRoot);
+            Debug.Log("[Character] official prefab sprites bound=" + templateSpritesBound
+                + " missing=" + templateSpritesMissing);
             BindOfficialTargets();
             InitializeCharacterModel();
             InitializePropPanels();
             Refresh();
         }
 
-        private void RecordActive(OfficialCharacterPanelNode node)
+        private void BuildOfficialCharacterPanel(RectTransform parent)
+        {
+            GameObject prefab = Resources.Load<GameObject>("Character/CharacterPanel");
+            if (prefab == null)
+                throw new InvalidOperationException("The pinned official CharacterPanel prefab is not packaged.");
+
+            var staging = new GameObject("CharacterPanelPrefabStaging", typeof(RectTransform));
+            staging.transform.SetParent(parent, false);
+            staging.SetActive(false);
+            GameObject instance = Instantiate(prefab, staging.transform, false);
+            instance.name = "CharacterPanel";
+            ApplyPrefabSafeAreas(instance.transform);
+            ConfigureOfficialCanvases(instance.transform);
+            StripUnavailableOfficialBehaviours(instance.transform);
+            instance.transform.SetParent(parent, false);
+            RectTransform pageRoot = instance.transform as RectTransform;
+            pageRoot.anchorMin = Vector2.zero;
+            pageRoot.anchorMax = Vector2.one;
+            pageRoot.offsetMin = Vector2.zero;
+            pageRoot.offsetMax = Vector2.zero;
+            IndexPrefabNodes(instance.transform, string.Empty);
+            Destroy(staging);
+        }
+
+        private static void ConfigureOfficialCanvases(Transform root)
+        {
+            foreach (Canvas canvas in root.GetComponentsInChildren<Canvas>(true))
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.worldCamera = null;
+                if (canvas.GetComponent<GraphicRaycaster>() == null)
+                    canvas.gameObject.AddComponent<GraphicRaycaster>();
+            }
+        }
+
+        private void IndexPrefabNodes(Transform current, string parentPath)
+        {
+            string path = parentPath + "/" + current.name;
+            if (current is RectTransform rect)
+            {
+                nodes[path] = rect;
+                nodeActive[path] = current.gameObject.activeSelf;
+            }
+            Button button = current.GetComponent<Button>();
+            if (button != null) buttons[path] = button;
+            foreach (Transform child in current) IndexPrefabNodes(child, path);
+        }
+
+        private static void ApplyPrefabSafeAreas(Transform root)
+        {
+            foreach (MonoBehaviour behaviour in root.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (behaviour == null || behaviour.GetType().Name != "SafeArea") continue;
+                if (behaviour.transform is RectTransform rect)
+                {
+                    rect.anchorMin = Vector2.zero;
+                    rect.anchorMax = Vector2.one;
+                    rect.pivot = Vector2.zero;
+                    rect.sizeDelta = Vector2.zero;
+                    rect.anchoredPosition = Vector2.zero;
+                }
+            }
+        }
+
+        private static void StripUnavailableOfficialBehaviours(Transform root)
+        {
+            foreach (MonoBehaviour behaviour in root.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (behaviour == null) continue;
+                Type type = behaviour.GetType();
+                if (type.Assembly == typeof(Button).Assembly || type.Assembly == typeof(TMP_Text).Assembly)
+                    continue;
+                DestroyImmediate(behaviour);
+            }
+        }
+
+        private void ApplyTemplateVisuals(OfficialCharacterPanelNode node)
         {
             if (node == null) return;
-            nodeActive[node.path] = node.active;
+            if (nodes.TryGetValue(node.path, out RectTransform target))
+            {
+                if (Array.IndexOf(node.scripts ?? Array.Empty<string>(), "SafeArea") >= 0)
+                    CharacterPanelNodeFactory.ApplySafeAreaLayout(node, target);
+                if (node.image != null && target.GetComponent<Image>() is Image image)
+                {
+                    Sprite sprite = null;
+                    if (node.image.sprite != null)
+                    {
+                        string source = node.image.sprite.file;
+                        sprite = assets.FindSprite(source)
+                            ?? assets.FindSkillAppearanceSprite(source)
+                            ?? Resources.Load<Sprite>(source);
+                        if (sprite == null) templateSpritesMissing++;
+                        else
+                        {
+                            templateSpritesBound++;
+                            image.sprite = sprite;
+                        }
+                    }
+                    image.color = CharacterPanelNodeFactory.ImageColor(node.image,
+                        CharacterPanelNodeFactory.ColorValue(node.image.color, Color.white));
+                    image.type = (Image.Type)Mathf.Clamp(node.image.type, 0, 3);
+                    image.preserveAspect = node.image.preserve_aspect;
+                }
+                if (node.text != null && !string.IsNullOrEmpty(node.text.value))
+                    SetText(FindLabel(target), node.text.value);
+            }
             foreach (OfficialCharacterPanelNode child in node.children ?? Array.Empty<OfficialCharacterPanelNode>())
-                RecordActive(child);
+                ApplyTemplateVisuals(child);
         }
 
         public void Refresh()
@@ -263,6 +386,7 @@ namespace Zjcs.Presentation.Character
             Refresh(progression.Experience());
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
+            if (petEquipmentView != null) petEquipmentView.RefreshCurrent();
             if (characterModel != null) characterModel.Refresh();
             RefreshHonorTitle();
             RefreshProfession();
@@ -337,13 +461,13 @@ namespace Zjcs.Presentation.Character
             {
                 if (experience.IsMaxBlessing)
                 {
-                    experienceText.text = OfficialSeasonLimitText();
+                    SetText(experienceText, OfficialSeasonLimitText());
                 }
                 else
                 {
                     string amount = OfficialPropFormat.Compact(experience.CurrentExperience);
                     if (experience.IsStoredExperience) amount = "<color=#e17126>" + amount + "</color>";
-                    experienceText.text = amount + "/" + OfficialPropFormat.Compact(experience.RequiredExperience);
+                    SetText(experienceText, amount + "/" + OfficialPropFormat.Compact(experience.RequiredExperience));
                 }
             }
             if (experienceSlider != null) experienceSlider.value = experience.Fill;
@@ -393,7 +517,7 @@ namespace Zjcs.Presentation.Character
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelSkillBtn",
                 OpenSkillPanel);
             BindButton("/CharacterPanel/BgPanel1/Content/TopGo/CharacterPanelPropPanel/Content/Slot/SlotOther/CharacterPanelPetBtn",
-                () => OfficialModuleRequested?.Invoke("pet"));
+                () => OfficialModuleRequested?.Invoke("pets"));
             string closePath = buttons.Keys.FirstOrDefault(path => path.StartsWith(CharacterScreenPath, StringComparison.Ordinal)
                 && (path.EndsWith("/CloseBtn", StringComparison.Ordinal)
                     || path.EndsWith("/CloseBtn_dark", StringComparison.Ordinal)));
@@ -427,7 +551,70 @@ namespace Zjcs.Presentation.Character
             equipSlots.Changed += Refresh;
             skillPanel = holder.AddComponent<CharacterSkillPanel>();
             skillPanel.Initialize(assets, progression);
-            skillPanel.Changed += Refresh;
+            skillPanel.Changed += HandleSkillPanelChanged;
+
+            petEquipmentView = holder.AddComponent<CharacterPetEquipmentView>();
+            RectTransform petModelRoot = ResolvePetModelRoot();
+            petEquipmentView.Initialize(assets, progression,
+                Node("/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent"),
+                Node("/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EquipPetContent"),
+                Node("/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EmptyPetContent"),
+                petModelRoot,
+                Node("/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EmptyPetContent/Contet/Add"),
+                Node("/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PetSelectContent/EquipPetContent/RecommendBtn"),
+                transform);
+            petEquipmentView.Changed += Refresh;
+        }
+
+        private RectTransform ResolvePetModelRoot()
+        {
+            RectTransform modelRoot = Node(CharacterPetModelRootPath);
+            if (modelRoot != null) return modelRoot;
+
+            RectTransform spawner = Node(CharacterPetModelSpawnerPath);
+            if (spawner == null)
+                throw new InvalidOperationException("The official character pet model spawner is missing.");
+            Transform existing = spawner.Find("PetModelRoot");
+            if (existing is RectTransform existingRect)
+            {
+                nodes[CharacterPetModelRootPath] = existingRect;
+                return existingRect;
+            }
+
+            var root = new GameObject("PetModelRoot", typeof(RectTransform));
+            modelRoot = (RectTransform)root.transform;
+            modelRoot.SetParent(spawner, false);
+            modelRoot.anchorMin = new Vector2(0.5f, 0f);
+            modelRoot.anchorMax = new Vector2(0.5f, 0f);
+            modelRoot.anchoredPosition = Vector2.zero;
+            modelRoot.sizeDelta = new Vector2(100f, 100f);
+            modelRoot.pivot = new Vector2(0f, 0.5f);
+            modelRoot.localScale = new Vector3(-1f, 1f, 1f);
+            nodes[CharacterPetModelRootPath] = modelRoot;
+            return modelRoot;
+        }
+
+        private RectTransform Node(string path)
+        {
+            if (nodes.TryGetValue(path, out RectTransform value) && value != null) return value;
+            Transform found = transform.Find(path.TrimStart('/'));
+            if (found is RectTransform rect)
+            {
+                nodes[path] = rect;
+                return rect;
+            }
+            return null;
+        }
+
+        private void HandleSkillPanelChanged()
+        {
+            if (petEquipmentView != null)
+            {
+                if (skillPanel != null && skillPanel.IsOpen)
+                    petEquipmentView.ShowPlan(progression.Player.Skills.SelectedPlan);
+                else petEquipmentView.ShowFollowing();
+            }
+            Refresh();
         }
 
         private void OpenStoredExperienceHelp()
@@ -473,6 +660,8 @@ namespace Zjcs.Presentation.Character
                 return;
             }
             skillPanel.Open(transform);
+            if (petEquipmentView != null)
+                petEquipmentView.ShowPlan(progression.Player.Skills.SelectedPlan);
         }
 
         private void OpenRankPanel()
@@ -487,14 +676,12 @@ namespace Zjcs.Presentation.Character
             int profession = progression.Player.Wardrobe.Profession;
             RectTransform button = nodes.Values.FirstOrDefault(value => value.name == "CharacterPanelProfessionBtn");
             if (button == null) return;
-            Text text = button.GetComponentsInChildren<Text>(true)
-                .FirstOrDefault(value => value.name == "Text");
-            if (text != null)
-            {
-                string professionName = progression.Catalog.ProfessionName(profession);
-                text.text = string.IsNullOrEmpty(professionName)
-                    ? "\u804c\u4e1a " + profession : professionName;
-            }
+            Component text = button.GetComponentsInChildren<Component>(true)
+                .FirstOrDefault(value => value != null && value.name == "Text"
+                    && (value is TMP_Text || value is Text));
+            string professionName = progression.Catalog.ProfessionName(profession);
+            SetText(text, string.IsNullOrEmpty(professionName)
+                ? "\u804c\u4e1a " + profession : professionName);
             Image icon = button.GetComponentsInChildren<Image>(true)
                 .FirstOrDefault(value => value.name == "Item");
             if (icon != null)
@@ -554,7 +741,7 @@ namespace Zjcs.Presentation.Character
                     if (definition == null) continue;
                     parts.Add(definition.Name + " +" + OfficialPropFormat.Value(definition, prop.Value));
                 }
-                honorPropText.text = string.Join("\u3001", parts);
+                SetText(honorPropText, string.Join("\u3001", parts));
             }
             if (honorPropContent != null) honorPropContent.SetActive(props.Count > 0);
             if (honorTimeContent != null) honorTimeContent.SetActive(honorTitleExpiry > 0);
@@ -576,7 +763,7 @@ namespace Zjcs.Presentation.Character
             long remaining = honorTitleExpiry - DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (remaining <= 0)
             {
-                honorTimeText.text = string.Empty;
+                SetText(honorTimeText, string.Empty);
                 if (honorTimeContent != null) honorTimeContent.SetActive(false);
                 return;
             }
@@ -584,41 +771,33 @@ namespace Zjcs.Presentation.Character
             long hours = remaining % 86400 / 3600;
             long minutes = remaining % 3600 / 60;
             long seconds = remaining % 60;
-            honorTimeText.text = days > 0 ? days + "\u5929" + hours + "\u5c0f\u65f6"
+            SetText(honorTimeText, days > 0 ? days + "\u5929" + hours + "\u5c0f\u65f6"
                 : hours > 0 ? hours + "\u5c0f\u65f6" + minutes + "\u5206\u949f"
-                : minutes > 0 ? minutes + "\u5206\u949f" + seconds + "\u79d2" : seconds + "\u79d2";
+                : minutes > 0 ? minutes + "\u5206\u949f" + seconds + "\u79d2" : seconds + "\u79d2");
         }
 
-        private Text FindTextByPath(string suffix)
+        private Component FindTextByPath(string suffix)
         {
             return nodes.Where(pair => pair.Key.EndsWith(suffix, StringComparison.Ordinal))
-                .Select(pair => pair.Value.GetComponent<Text>()).FirstOrDefault(value => value != null);
+                .Select(pair => FindLabel(pair.Value)).FirstOrDefault(value => value != null);
         }
 
         private void InitializeCharacterModel()
         {
-            const string modelPath = "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PlayerModelRoot";
+            const string modelPath = "/CharacterPanel/BgPanel1/Content/TopGo/MyPlayerModelContent/PlayerModelLayout/PlayerModelRoot/MyPlayerModel_UI";
             if (!nodes.TryGetValue(modelPath, out RectTransform mount))
                 throw new FormatException("The official character page has no PlayerModelRoot mount.");
             characterModel = mount.GetComponent<CharacterModelPreview>();
             if (characterModel == null) characterModel = mount.gameObject.AddComponent<CharacterModelPreview>();
-            try
-            {
-                characterModel.Initialize(progression);
-            }
-            catch (Exception error)
-            {
-                Debug.LogWarning("Character model preview is unavailable: " + error.Message);
-                characterModel = null;
-            }
-            Text name = FindText("CharacterName") ?? FindText("PlayerName") ?? FindText("NameText");
+            characterModel.Initialize(progression, null, characterSlotId, characterSavesRoot);
+            Component name = FindText("CharacterName") ?? FindText("PlayerName") ?? FindText("NameText");
             SetText(name, progression.Player.CharacterName);
         }
 
-        private Text FindText(string nameFragment)
+        private Component FindText(string nameFragment)
         {
             return nodes.Where(pair => pair.Key.IndexOf(nameFragment, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Select(pair => pair.Value.GetComponent<Text>()).FirstOrDefault(value => value != null);
+                .Select(pair => FindLabel(pair.Value)).FirstOrDefault(value => value != null);
         }
 
         private void OpenWardrobe()
@@ -626,6 +805,7 @@ namespace Zjcs.Presentation.Character
             AppearanceRequested?.Invoke();
             if (wardrobeView != null) return;
             SetCharacterModelOnly(true);
+            characterModel?.EnterWardrobe();
             GameObject overlay = new GameObject("OfficialWardrobeOverlay", typeof(RectTransform));
             overlay.transform.SetParent(transform, false);
             RectTransform rect = (RectTransform)overlay.transform;
@@ -634,7 +814,18 @@ namespace Zjcs.Presentation.Character
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             wardrobeView = overlay.AddComponent<OfficialWardrobePanelView>();
-            wardrobeView.Initialize(assets, progression, characterModel, CloseWardrobe);
+            wardrobeView.Initialize(assets, progression, characterModel, CloseWardrobe, HandleWardrobeModule,
+                characterSlotId, characterSavesRoot);
+        }
+
+        private void HandleWardrobeModule(string module)
+        {
+            if (module == "skill-appearance")
+            {
+                wardrobeView?.ShowSkillAppearancePage();
+                return;
+            }
+            OfficialModuleRequested?.Invoke(module);
         }
 
         private void CloseWardrobe()
@@ -642,6 +833,7 @@ namespace Zjcs.Presentation.Character
             if (wardrobeView != null) Destroy(wardrobeView.gameObject);
             wardrobeView = null;
             SetCharacterModelOnly(false);
+            if (characterModel != null) characterModel.LeaveWardrobe();
             if (propPanels != null) propPanels.RefreshSummary(transform);
             if (equipSlots != null) equipSlots.Refresh(transform);
             if (characterModel != null) characterModel.Refresh();
@@ -664,9 +856,35 @@ namespace Zjcs.Presentation.Character
 
         private OfficialCharacterPanelSet ReadScreens()
         {
-            OfficialCharacterPanelsData data = JsonUtility.FromJson<OfficialCharacterPanelsData>(assets.CharacterPanels.text);
-            if (data == null || data.screens == null) throw new FormatException("Original character panel set is invalid.");
-            return data.screens;
+            Dictionary<string, object> screens = ReadPanelScreens();
+            return new OfficialCharacterPanelSet
+            {
+                character = ReadPanelData(screens, "character"),
+                character_props = ReadPanelData(screens, "character_props"),
+                rank_upgrade = ReadPanelData(screens, "rank_upgrade"),
+                appearance_preview = ReadPanelData(screens, "appearance_preview")
+            };
+        }
+
+        private Dictionary<string, object> ReadPanelScreens()
+        {
+            Dictionary<string, object> package = CharacterModelPackage.AsObject(
+                OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "character panel package");
+            if (CharacterModelPackage.String(package, "manifest") != "854_156383"
+                || !package.TryGetValue("screens", out object rawScreens))
+                throw new FormatException("Pinned original character panel data are invalid.");
+            return CharacterModelPackage.AsObject(rawScreens, "character panel screens");
+        }
+
+        private static OfficialCharacterPanelData ReadPanelData(
+            Dictionary<string, object> screens, string key)
+        {
+            if (!screens.TryGetValue(key, out object rawPanel)) return null;
+            return new OfficialCharacterPanelData
+            {
+                root = CharacterPanelNodeFactory.ReadRoot(
+                    CharacterModelPackage.AsObject(rawPanel, "character panel " + key))
+            };
         }
 
         private string OfficialRankName(int subRank)
@@ -736,14 +954,22 @@ namespace Zjcs.Presentation.Character
             return nodes.TryGetValue(path, out RectTransform rect) ? rect.GetComponent<T>() : null;
         }
 
-        private Text TextAt(string path)
+        private Component TextAt(string path)
         {
-            return ComponentAt<Text>(path);
+            return nodes.TryGetValue(path, out RectTransform rect) ? FindLabel(rect) : null;
         }
 
-        private static void SetText(Text text, string value)
+        private static Component FindLabel(Transform root)
         {
-            if (text != null) text.text = value ?? string.Empty;
+            if (root == null) return null;
+            TMP_Text tmp = root.GetComponent<TMP_Text>() ?? root.GetComponentInChildren<TMP_Text>(true);
+            return tmp != null ? (Component)tmp : root.GetComponent<Text>() ?? root.GetComponentInChildren<Text>(true);
+        }
+
+        private static void SetText(Component label, string value)
+        {
+            if (label is TMP_Text tmp) tmp.text = value ?? string.Empty;
+            else if (label is Text text) text.text = value ?? string.Empty;
         }
 
         private static long Interpolate(long from, long to, float ratio)
@@ -754,9 +980,17 @@ namespace Zjcs.Presentation.Character
 
         private static void EnsureEventSystem()
         {
-            if (FindObjectOfType<EventSystem>() != null) return;
-            var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-            DontDestroyOnLoad(eventSystem);
+            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            if (eventSystem == null)
+            {
+                var eventSystemObject = new GameObject("EventSystem", typeof(EventSystem));
+                DontDestroyOnLoad(eventSystemObject);
+                eventSystem = eventSystemObject.GetComponent<EventSystem>();
+            }
+            BaseInputModule inputModule = eventSystem.GetComponent<BaseInputModule>();
+            if (inputModule == null)
+                inputModule = eventSystem.gameObject.AddComponent<StandaloneInputModule>();
+            if (!inputModule.enabled) inputModule.enabled = true;
         }
     }
 }

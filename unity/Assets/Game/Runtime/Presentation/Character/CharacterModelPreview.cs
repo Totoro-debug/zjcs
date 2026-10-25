@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
+using Zjcs.Presentation.CharacterCreation;
 
 namespace Zjcs.Presentation.Character
 {
@@ -150,6 +151,12 @@ namespace Zjcs.Presentation.Character
             throw new FormatException(label + " is not a JSON array.");
         }
 
+        public static string String(Dictionary<string, object> value, string key)
+        {
+            return value != null && value.TryGetValue(key, out object result)
+                ? Convert.ToString(result, CultureInfo.InvariantCulture) : string.Empty;
+        }
+
         public static float[] Floats(object value, string label)
         {
             return AsArray(value, label).Select(item => Convert.ToSingle(item, CultureInfo.InvariantCulture)).ToArray();
@@ -185,11 +192,22 @@ namespace Zjcs.Presentation.Character
         private static CharacterModelPackage sharedPackage;
         private OfflineCharacterProgressionService progression;
         private WardrobeResolution previewAppearance;
+        private string characterSlotId;
+        private string savesRoot;
         private RectTransform modelRect;
         private Vector2 renderedSize;
         private float modelScale;
         private Vector2 modelCenter;
         private readonly List<CharacterModelMeshGraphic> graphics = new List<CharacterModelMeshGraphic>();
+        private GameObject nativeWorldRoot;
+        private GameObject nativeModel;
+        private Animator nativeAnimator;
+        private Camera nativeCamera;
+        private RawImage nativeImage;
+        private RenderTexture nativeTexture;
+        private Coroutine wardrobeTransition;
+        private string currentNativeAnimation = "home/idle_01";
+        private string wardrobeAnimType = "idle";
 
         public void Initialize(OfflineCharacterProgressionService characterProgression)
         {
@@ -199,9 +217,18 @@ namespace Zjcs.Presentation.Character
         public void Initialize(OfflineCharacterProgressionService characterProgression,
             WardrobeResolution appearanceOverride)
         {
+            Initialize(characterProgression, appearanceOverride, null, null);
+        }
+
+        public void Initialize(OfflineCharacterProgressionService characterProgression,
+            WardrobeResolution appearanceOverride, string selectedSlotId, string profileSavesRoot)
+        {
             progression = characterProgression != null ? characterProgression
                 : throw new ArgumentNullException(nameof(characterProgression));
             previewAppearance = appearanceOverride;
+            characterSlotId = selectedSlotId;
+            savesRoot = string.IsNullOrWhiteSpace(profileSavesRoot)
+                ? Application.persistentDataPath : profileSavesRoot;
             modelRect = transform as RectTransform;
             if (modelRect == null) throw new InvalidOperationException("The character preview must be mounted to a RectTransform.");
             if (sharedPackage == null) sharedPackage = CharacterModelPackage.OpenDefault();
@@ -214,6 +241,13 @@ namespace Zjcs.Presentation.Character
             foreach (CharacterModelMeshGraphic graphic in graphics)
                 if (graphic != null) Destroy(graphic.gameObject);
             graphics.Clear();
+
+            if (!string.IsNullOrWhiteSpace(characterSlotId))
+            {
+                RefreshNativeModel();
+                renderedSize = modelRect.rect.size;
+                return;
+            }
 
             CharacterModelPackage package = sharedPackage ?? (sharedPackage = CharacterModelPackage.OpenDefault());
             Dictionary<string, object> catalog = package.Catalog;
@@ -300,10 +334,224 @@ namespace Zjcs.Presentation.Character
             if (progression != null) Refresh();
         }
 
+        public void EnterWardrobe()
+        {
+            wardrobeAnimType = "idle";
+            if (!PlayNativeAnimation(AppearanceAnimationName("idle", "01")))
+                throw new InvalidOperationException("The official wardrobe idle animation is missing from the native character model.");
+        }
+
+        public void LeaveWardrobe()
+        {
+            if (wardrobeTransition != null) StopCoroutine(wardrobeTransition);
+            wardrobeTransition = null;
+            wardrobeAnimType = "idle";
+            if (!PlayNativeAnimation("home/idle_01"))
+                throw new InvalidOperationException("The official home idle animation is missing from the native character model.");
+        }
+
+        public void PlayWardrobeCategory(string nextAnimType, IReadOnlyList<string> animInputs,
+            float transitionExitTime, float transitionMixDuration)
+        {
+            if (string.IsNullOrEmpty(nextAnimType) || animInputs == null || animInputs.Count < 2) return;
+            if (string.Equals(wardrobeAnimType, nextAnimType, StringComparison.Ordinal)) return;
+
+            string profession = WardrobeProfessionId();
+            string transitionName = profession + "/show_" + wardrobeAnimType + "_" + nextAnimType;
+            string loopName = profession + "/" + animInputs[0] + "_" + animInputs[1];
+            if (!HasNativeAnimation(transitionName) || !HasNativeAnimation(loopName))
+                throw new InvalidOperationException("The official wardrobe animation is missing: " + transitionName + " -> " + loopName);
+
+            wardrobeAnimType = nextAnimType;
+            if (wardrobeTransition != null) StopCoroutine(wardrobeTransition);
+            PlayNativeAnimation(transitionName);
+            wardrobeTransition = StartCoroutine(ContinueWardrobeTransition(transitionName, loopName,
+                transitionExitTime, transitionMixDuration));
+        }
+
         private void LateUpdate()
         {
-            if (progression != null && modelRect != null && modelRect.rect.size != renderedSize)
+            if (progression == null || modelRect == null || modelRect.rect.size == renderedSize) return;
+            if (nativeModel != null)
+            {
+                FitNativeCamera();
+                renderedSize = modelRect.rect.size;
+            }
+            else
                 Refresh();
+        }
+
+        private void RefreshNativeModel()
+        {
+            EnsureNativePreview();
+            if (nativeModel != null) Destroy(nativeModel);
+            nativeModel = CharacterCreationNativeModelFactory.CreatePreviewModel(characterSlotId, savesRoot,
+                previewAppearance ?? progression.ResolveAppearance());
+            nativeModel.name = "CharacterPageNativeModel";
+            nativeModel.transform.SetParent(nativeWorldRoot.transform, false);
+            nativeModel.transform.localPosition = Vector3.zero;
+            nativeModel.transform.localRotation = Quaternion.identity;
+            SetLayerRecursively(nativeModel, 31);
+            nativeAnimator = nativeModel.GetComponent<Animator>();
+            if (nativeAnimator == null || nativeAnimator.runtimeAnimatorController == null)
+                throw new InvalidOperationException("The official character preview prefab has no native Animator.");
+            nativeAnimator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            nativeAnimator.applyRootMotion = false;
+            if (!PlayNativeAnimation(currentNativeAnimation))
+                throw new InvalidOperationException("The official character model does not contain animation " + currentNativeAnimation);
+            FitNativeCamera();
+        }
+
+        private void EnsureNativePreview()
+        {
+            if (nativeWorldRoot != null) return;
+
+            var imageObject = new GameObject("NativeCharacterPreviewImage", typeof(RectTransform), typeof(RawImage));
+            imageObject.transform.SetParent(transform, false);
+            imageObject.transform.SetAsFirstSibling();
+            RectTransform imageRect = imageObject.GetComponent<RectTransform>();
+            imageRect.anchorMin = Vector2.zero;
+            imageRect.anchorMax = Vector2.one;
+            imageRect.offsetMin = Vector2.zero;
+            imageRect.offsetMax = Vector2.zero;
+            nativeImage = imageObject.GetComponent<RawImage>();
+            nativeImage.raycastTarget = false;
+            nativeImage.color = Color.white;
+            AspectRatioFitter aspect = imageObject.AddComponent<AspectRatioFitter>();
+            aspect.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            aspect.aspectRatio = 2f / 3f;
+
+            nativeTexture = new RenderTexture(512, 768, 24, RenderTextureFormat.ARGB32)
+            {
+                name = "CharacterPageNativePreview",
+                hideFlags = HideFlags.DontSave
+            };
+            nativeTexture.Create();
+            nativeImage.texture = nativeTexture;
+
+            nativeWorldRoot = new GameObject("CharacterPageNativePreviewWorld");
+            nativeWorldRoot.transform.SetParent(transform.root, false);
+            nativeWorldRoot.transform.localPosition = Vector3.zero;
+            nativeWorldRoot.transform.localRotation = Quaternion.identity;
+            nativeWorldRoot.transform.localScale = Vector3.one;
+            var cameraObject = new GameObject("CharacterPageNativePreviewCamera", typeof(Camera));
+            cameraObject.transform.SetParent(nativeWorldRoot.transform, false);
+            nativeCamera = cameraObject.GetComponent<Camera>();
+            nativeCamera.clearFlags = CameraClearFlags.SolidColor;
+            nativeCamera.backgroundColor = new Color(0f, 0f, 0f, 0f);
+            nativeCamera.orthographic = true;
+            nativeCamera.aspect = 2f / 3f;
+            nativeCamera.cullingMask = 1 << 31;
+            nativeCamera.targetTexture = nativeTexture;
+            nativeCamera.nearClipPlane = 0.01f;
+            nativeCamera.farClipPlane = 200f;
+            nativeCamera.allowHDR = false;
+            nativeCamera.allowMSAA = false;
+            nativeCamera.depth = -10f;
+            nativeCamera.enabled = true;
+        }
+
+        private void FitNativeCamera()
+        {
+            if (nativeCamera == null || nativeModel == null) return;
+            Renderer[] renderers = nativeModel.GetComponentsInChildren<Renderer>(false);
+            bool hasBounds = false;
+            Bounds bounds = new Bounds(nativeModel.transform.position, Vector3.zero);
+            foreach (Renderer renderer in renderers)
+            {
+                if (!hasBounds)
+                {
+                    bounds = renderer.bounds;
+                    hasBounds = true;
+                }
+                else bounds.Encapsulate(renderer.bounds);
+            }
+            if (!hasBounds)
+                throw new InvalidOperationException("The official native character model has no visible mesh renderers.");
+            nativeCamera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / nativeCamera.aspect) * 1.08f;
+            nativeCamera.transform.position = new Vector3(bounds.center.x, bounds.center.y,
+                bounds.center.z - Mathf.Max(bounds.extents.z + 10f, 20f));
+        }
+
+        private bool PlayNativeAnimation(string animationName, float mixDuration = 0f)
+        {
+            if (nativeAnimator == null || !HasNativeAnimation(animationName)) return false;
+            int stateHash = Animator.StringToHash("Base Layer." + animationName);
+            if (mixDuration > 0f) nativeAnimator.CrossFadeInFixedTime(stateHash, mixDuration, 0, 0f);
+            else nativeAnimator.Play(stateHash, 0, 0f);
+            nativeAnimator.Update(0f);
+            currentNativeAnimation = animationName;
+            return true;
+        }
+
+        private bool HasNativeAnimation(string animationName)
+        {
+            return nativeAnimator != null && nativeAnimator.runtimeAnimatorController != null
+                && nativeAnimator.HasState(0, Animator.StringToHash("Base Layer." + animationName));
+        }
+
+        private System.Collections.IEnumerator ContinueWardrobeTransition(string transitionName, string loopName,
+            float exitTime, float mixDuration)
+        {
+            int transitionHash = Animator.StringToHash("Base Layer." + transitionName);
+            while (nativeAnimator != null && nativeAnimator.gameObject != null)
+            {
+                AnimatorStateInfo state = nativeAnimator.GetCurrentAnimatorStateInfo(0);
+                if (state.fullPathHash == transitionHash && state.normalizedTime >= exitTime) break;
+                yield return null;
+            }
+            if (PlayNativeAnimation(loopName, mixDuration)) wardrobeTransition = null;
+        }
+
+        private string AppearanceAnimationName(string input0, string input1)
+        {
+            return WardrobeProfessionId() + "/" + input0 + "_" + input1;
+        }
+
+        private string WardrobeProfessionId()
+        {
+            Dictionary<string, object> profiles = CharacterModelPackage.AsObject(
+                sharedPackage.Catalog["profiles"], "character model profiles");
+            string sex = progression.Player.Wardrobe.Sex == 1 ? "female" : "male";
+            Dictionary<string, object> sexProfiles = CharacterModelPackage.AsObject(profiles[sex], sex + " profiles");
+            string profession = progression.Player.Wardrobe.Profession.ToString(CultureInfo.InvariantCulture);
+            if (!sexProfiles.TryGetValue(profession, out object profileRaw))
+                throw new InvalidOperationException("The official model catalog has no profession profile: " + profession);
+            Dictionary<string, object> profile = CharacterModelPackage.AsObject(profileRaw, "character model profile");
+            string pose = Convert.ToString(profile["pose"], CultureInfo.InvariantCulture);
+            int separator = pose.IndexOf('/', StringComparison.Ordinal);
+            if (separator <= 0)
+                throw new FormatException("The official character idle pose has no animation group: " + pose);
+            return pose.Substring(0, separator);
+        }
+
+        private static void SetLayerRecursively(GameObject target, int layer)
+        {
+            target.layer = layer;
+            foreach (Transform child in target.transform)
+                SetLayerRecursively(child.gameObject, layer);
+        }
+
+        private void OnDestroy()
+        {
+            if (nativeImage != null) nativeImage.texture = null;
+            if (nativeCamera != null) nativeCamera.targetTexture = null;
+            if (nativeTexture != null)
+            {
+                nativeTexture.Release();
+                Destroy(nativeTexture);
+            }
+            if (nativeWorldRoot != null) Destroy(nativeWorldRoot);
+        }
+
+        private void OnEnable()
+        {
+            if (nativeWorldRoot != null) nativeWorldRoot.SetActive(true);
+        }
+
+        private void OnDisable()
+        {
+            if (nativeWorldRoot != null) nativeWorldRoot.SetActive(false);
         }
 
         /// <summary>Official dye HSV offsets for one skin type, keyed by shader channel.</summary>

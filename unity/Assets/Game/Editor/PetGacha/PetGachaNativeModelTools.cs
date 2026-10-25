@@ -269,7 +269,8 @@ namespace Zjcs.Editor.PetGacha
             if (!File.Exists(path)) throw new BuildFailedException("The pet model source manifest is missing.");
             SourceManifest manifest = JsonUtility.FromJson<SourceManifest>(File.ReadAllText(path, Encoding.UTF8));
             if (manifest == null || manifest.manifest != rules.Manifest || manifest.models == null
-                || manifest.models.Length != PetIds.Length)
+                || manifest.models.Length < PetIds.Length || manifest.models.Any(value => value == null)
+                || manifest.models.Select(value => value.pet_class_id).Distinct().Count() != manifest.models.Length)
                 throw new BuildFailedException("The pet model source manifest is incomplete or unsupported.");
             foreach (PetGachaPetProfile profile in rules.PetProfiles)
             {

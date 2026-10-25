@@ -1,6 +1,7 @@
 """Restore source-verified character overview and property catalogs for Unity."""
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -21,9 +22,10 @@ SOURCES = (
      "output_sha256", "character-properties.json"),
 )
 RULE_TABLES = (
-    "item", "level_exp", "level_bless", "player_subrank", "function_limit",
-    "prop_cfg", "game_settings", "character_skin_dye", "character_skin_color",
-    "profession_base",
+    "item", "skill_skin", "level_exp", "level_bless", "player_subrank", "function_limit",
+    "prop_cfg", "score_level_group", "level_number", "game_settings",
+    "character_skin_dye", "character_skin_color",
+    "profession_base", "conditions", "npc", "npc_friendship_level", "npc_gift", "npc_unlock_item",
 )
 FIDELITY_TABLES = ("system_level_limit", "system_level_gap_limit", "level_prop_default_value")
 
@@ -178,8 +180,21 @@ def restore_sprites(manifests: list[dict]) -> list[dict]:
         icon = icons.get(item_id)
         if isinstance(icon, dict) and isinstance(icon.get("file"), str):
             referenced.add(icon["file"])
-    for item in json.loads((ROOT / "assets/official/rules.json").read_text(encoding="utf-8"))["item"]:
-        if item.get("ItemType") not in (100, 101, 111, 300, 309) and not 200 <= int(item.get("ItemType", 0)) <= 219:
+    all_rules = json.loads((ROOT / "assets/official/rules.json").read_text(encoding="utf-8"))
+    icon_files_by_name = {
+        value.get("name"): value.get("file") for value in icons.values()
+        if isinstance(value, dict) and isinstance(value.get("name"), str)
+        and isinstance(value.get("file"), str)
+    }
+    for item in all_rules["item"]:
+        item_type = int(item.get("ItemType", 0))
+        if item_type == 425:
+            icon_name = str(item.get("RawIcon", "")).rsplit("/", 1)[-1]
+            icon_file = icon_files_by_name.get(icon_name)
+            if icon_file:
+                referenced.add(icon_file)
+            continue
+        if item_type not in (100, 101, 111, 300, 309) and not 200 <= item_type <= 219:
             continue
         icon = icons.get(str(item["ClassId"]))
         if isinstance(icon, dict) and isinstance(icon.get("file"), str):
@@ -216,19 +231,28 @@ def restore_sprites(manifests: list[dict]) -> list[dict]:
     return result
 
 
-def restore() -> dict:
+def restore(catalog_only: bool = False) -> dict:
     previous_outputs = {}
+    previous_manifest = None
     manifest_path = TARGET / "source-manifest.json"
     if manifest_path.exists():
         previous = json.loads(manifest_path.read_text(encoding="utf-8"))
+        previous_manifest = previous
         allowed_operations = {
             "Restore original CharacterPanel and character property view metadata for Unity binding.",
             "Restore original character UI metadata and progression tables for Unity binding.",
             "Restore original character UI, progression tables, and base battle properties for Unity binding.",
+            "Restore original character UI, progression, and all character property sources for Unity binding.",
         }
         if previous.get("manifest") != "854_156383" or previous.get("operation") not in allowed_operations:
             raise ValueError("Refusing to overwrite an unrelated Unity character source manifest.")
         previous_outputs = {row.get("name"): row.get("sha256") for row in previous.get("outputs", [])}
+        if not catalog_only:
+            for name, expected in previous_outputs.items():
+                output_path = TARGET / name
+                actual = digest(output_path.read_bytes()) if output_path.exists() else None
+                if actual != expected:
+                    raise ValueError("Refusing to update a Unity character catalog with a changed output: " + name)
 
     TARGET.mkdir(parents=True, exist_ok=True)
     folder_meta = Path(str(TARGET) + ".meta")
@@ -271,11 +295,43 @@ def restore() -> dict:
     fidelity = json.loads(fidelity_data)
     if any(name not in rules for name in RULE_TABLES) or any(name not in fidelity for name in FIDELITY_TABLES):
         raise ValueError("Pinned character progression tables are incomplete.")
+    expected_property_rows = {"conditions": 4493, "npc": 148,
+                              "npc_friendship_level": 10000, "npc_gift": 115,
+                              "npc_unlock_item": 100}
+    for name, count in expected_property_rows.items():
+        if len(rules[name]) != count:
+            raise ValueError("Pinned NPC property table is incomplete: " + name)
     role_prop_bytes = (ROOT / ".tools/source-packages/official-data/role_prop_group.g.bytes").read_bytes()
     item_time_bytes = (ROOT / ".tools/source-packages/official-data/item_time_limit.g.bytes").read_bytes()
     parser = Constructors()
     role_groups = parser.table(role_prop_bytes, "TbRolePropGroupInfo")
     time_limits = parser.table(item_time_bytes, "TbItemTimeLimitInfo")
+    legion_tables = {}
+    legion_inputs = []
+    for table_name, constructor, expected_count in (
+        ("legion_map_skill", "TbLegionMapSkillInfo", 166),
+        ("legion_map_skill_study_level", "TbLegionMapSkillStudyLevelInfo", 498),
+        ("legion_map_building", "TbLegionMapBuildingInfo", 12),
+        ("legion_map_building_level", "TbLegionMapBuildingLevelInfo", 468),
+        ("legion_map_building_level_hall", "TbLegionMapBuildingLevelPartInfoHall", 75),
+        ("legion_map_hangup", "TbLegionMapHangUpInfo", 10),
+    ):
+        raw_path = ROOT / ".tools/source-packages/official-data" / (table_name + ".g.bytes")
+        raw_bytes = raw_path.read_bytes()
+        rows = parser.table(raw_bytes, constructor)
+        if len(rows) != expected_count:
+            raise ValueError("Pinned character property table is incomplete: " + table_name)
+        legion_tables[table_name] = rows
+        constructor_source = parser.source(constructor)
+        if not constructor_source:
+            raise ValueError("Pinned table constructor source is missing: " + constructor)
+        legion_inputs.append({
+            "path": str(raw_path.relative_to(ROOT)).replace("\\", "/"),
+            "sha256": digest(raw_bytes),
+            "manifest": "854_156383",
+            "constructor": constructor,
+            "constructor_sha256": digest(constructor_source.encode("utf-8")),
+        })
     level_prop_path = ROOT / ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile"
     level_prop_bytes = level_prop_path.read_bytes()
     game_settings = rules["game_settings"]
@@ -295,16 +351,116 @@ def restore() -> dict:
     wardrobe_items.update(row["ClassId"] for row in rules["item"] if row.get("ItemType") in fashion_types)
     wardrobe_items.update(row["ClassId"] for row in rules["item"] if row.get("ItemType") in (100, 101, 111, 300, 309)
                           or 200 <= int(row.get("ItemType", 0)) <= 219)
+    wardrobe_items.update(int(row["ClassId"]) for row in rules["npc_gift"])
+    wardrobe_items.update(int(row["ClassId"]) for row in rules["npc_unlock_item"])
     wardrobe_items.update([1, 43003])
     for rank in rules["player_subrank"]:
         wardrobe_items.update(int(item_id) for item_id in (rank.get("Items") or {}))
     filtered_rules = {name: rules[name] for name in RULE_TABLES if name != "item"}
     filtered_rules["item"] = [row for row in rules["item"] if row["ClassId"] in wardrobe_items]
     filtered_rules["equip_piece_merge"] = rules.get("equip_piece_merge", [])
+    property_source_path = ROOT / "assets/official/character-property-sources.json"
+    property_source_manifest_path = ROOT / "assets/reference/character-property-sources/source-manifest.json"
+    property_source_bytes = property_source_path.read_bytes()
+    property_source_manifest_bytes = property_source_manifest_path.read_bytes()
+    property_source = json.loads(property_source_bytes)
+    property_source_manifest = json.loads(property_source_manifest_bytes)
+    if (property_source.get("manifest") != "854_156383"
+            or property_source_manifest.get("manifest") != "854_156383"
+            or property_source_manifest.get("outputs", {}).get("assets/official/character-property-sources.json")
+                != digest(property_source_bytes)):
+        raise ValueError("Character property source tables differ from their pinned extraction manifest.")
+    property_source_target = TARGET / "character-property-sources.json"
+    install(property_source_target, property_source_bytes,
+            previous_outputs.get("character-property-sources.json"))
+    outputs.append({"name": "character-property-sources.json", "bytes": len(property_source_bytes),
+                    "sha256": digest(property_source_bytes)})
+    property_tables = property_source.get("tables", {})
+    for name, expected_count in (("map_region", 2039), ("npc_talent_tree_prop", 252),
+                                 ("npc_talent_tree_map", 252), ("npc_talent_item", 3)):
+        rows = property_tables.get(name)
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError("Pinned character property table is missing or incomplete: " + name)
+        filtered_rules[name] = rows
+
+    season_lifecycle_path = ROOT / "assets/official/season-lifecycle.json"
+    season_lifecycle_manifest_path = ROOT / "assets/reference/season-lifecycle/source-manifest.json"
+    season_lifecycle_bytes = season_lifecycle_path.read_bytes()
+    season_lifecycle_manifest_bytes = season_lifecycle_manifest_path.read_bytes()
+    season_lifecycle = json.loads(season_lifecycle_bytes)
+    season_lifecycle_manifest = json.loads(season_lifecycle_manifest_bytes)
+    if (season_lifecycle_manifest.get("manifest") != "854_156383"
+            or season_lifecycle_manifest.get("outputs", {}).get("season-lifecycle.json")
+                != digest(season_lifecycle_bytes)):
+        raise ValueError("Season lifecycle tables differ from their pinned extraction manifest.")
+    season_tables = season_lifecycle.get("tables", {})
+    expected_season_rows = {
+        "equip_cabinet_score": 1715,
+        "equip_cabinet_evaluate": 56,
+    }
+    for name, expected_count in expected_season_rows.items():
+        rows = season_tables.get(name)
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError("Pinned character property table is missing or incomplete: " + name)
+        filtered_rules[name] = rows
+    filtered_rules.update(legion_tables)
+
+    season_rules_path = ROOT / "assets/official/season-rules.json"
+    season_rules_manifest_path = ROOT / "assets/reference/seasons/source-manifest.json"
+    season_rules_bytes = season_rules_path.read_bytes()
+    season_rules_manifest_bytes = season_rules_manifest_path.read_bytes()
+    season_rules = json.loads(season_rules_bytes)
+    season_rules_manifest = json.loads(season_rules_manifest_bytes)
+    if (season_rules_manifest.get("manifest") != "854_156383"
+            or season_rules_manifest.get("output_sha256") != digest(season_rules_bytes)):
+        raise ValueError("Season rule tables differ from their pinned extraction manifest.")
+    expected_rule_rows = {
+        "equip_cabinet_gem_score": 75,
+        "daily_dungeon_destiny": 132,
+        "demon_battlefield_destiny": 50,
+        "secret_area_destiny": 83,
+        "map_progress_destiny": 10,
+        "map_group_progress_destiny": 40,
+        "map_group_region_progress_destiny": 12,
+        "map_completed_destiny_score": 3,
+    }
+    for name, expected_count in expected_rule_rows.items():
+        rows = season_rules.get("tables", {}).get(name)
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError("Pinned season scoring table is missing or incomplete: " + name)
+        filtered_rules[name] = rows
+    award_rows = season_lifecycle.get("tables", {}).get("destiny_score_award")
+    if not isinstance(award_rows, list) or not award_rows:
+        raise ValueError("Pinned season score grade and reward table is missing or incomplete.")
+    filtered_rules["destiny_score_award"] = award_rows
+
+    for name, expected_count in (("astrological_level", 520), ("astrological_season_config", 7)):
+        rows = fidelity.get(name)
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError("Pinned character property table is missing or incomplete: " + name)
+        filtered_rules[name] = rows
+
+    for row in legion_tables["legion_map_skill_study_level"]:
+        wardrobe_items.update(int(item_id) for item_id in (row.get("LevelUpCost") or {}))
+    for row in legion_tables["legion_map_building_level"]:
+        wardrobe_items.update(int(item_id) for item_id in (row.get("UpgradeCost") or {}))
+    filtered_rules["item"] = [row for row in rules["item"] if row["ClassId"] in wardrobe_items]
     icons = json.loads((ROOT / "assets/official/icons.json").read_text(encoding="utf-8"))
+    icon_files_by_name = {
+        value.get("name"): value.get("file") for value in icons.values()
+        if isinstance(value, dict) and isinstance(value.get("name"), str)
+        and isinstance(value.get("file"), str)
+    }
     item_icons = {str(row["ClassId"]): icons[str(row["ClassId"])]["file"]
                   for row in filtered_rules["item"]
                   if str(row["ClassId"]) in icons and isinstance(icons[str(row["ClassId"])], dict)}
+    for item in filtered_rules["item"]:
+        if int(item.get("ItemType", 0)) != 425:
+            continue
+        icon_name = str(item.get("RawIcon", "")).rsplit("/", 1)[-1]
+        icon_file = icon_files_by_name.get(icon_name)
+        if icon_file:
+            item_icons[str(item["ClassId"])] = icon_file
     from npc_travel_language import language
     unit_keys = {row["Unit"] for row in rules["prop_cfg"] if row.get("Unit")}
     prop_units, unit_sources = language(unit_keys)
@@ -377,10 +533,23 @@ def restore() -> dict:
     manifest_inputs.extend([
         {"path": "assets/official/rules.json", "sha256": expected_rules},
         {"path": "assets/official/fidelity-rules.json", "sha256": expected_fidelity},
+        {"path": "assets/official/character-property-sources.json",
+         "sha256": digest(property_source_bytes)},
+        {"path": "assets/reference/character-property-sources/source-manifest.json",
+         "sha256": digest(property_source_manifest_bytes)},
+        {"path": "assets/official/season-lifecycle.json", "sha256": digest(season_lifecycle_bytes)},
+        {"path": "assets/reference/season-lifecycle/source-manifest.json",
+         "sha256": digest(season_lifecycle_manifest_bytes)},
+        {"path": "assets/official/season-rules.json", "sha256": digest(season_rules_bytes)},
+        {"path": "assets/reference/seasons/source-manifest.json",
+         "sha256": digest(season_rules_manifest_bytes)},
+        {"path": "assets/reference/fidelity/source-manifest.json",
+         "sha256": digest((ROOT / "assets/reference/fidelity/source-manifest.json").read_bytes())},
         {"path": ".tools/source-packages/official-data/role_prop_group.g.bytes",
          "sha256": digest(role_prop_bytes), "constructor": "TbRolePropGroupInfo"},
         {"path": ".tools/source-packages/official-data/item_time_limit.g.bytes",
          "sha256": digest(item_time_bytes), "constructor": "TbItemTimeLimitInfo"},
+        *legion_inputs,
         {"path": str(level_prop_path.relative_to(ROOT)).replace("\\", "/"),
          "sha256": digest(level_prop_bytes),
          "source": json.loads((level_prop_path.parent / "bundle-sources.json").read_text(encoding="utf-8"))[level_prop_path.name],
@@ -407,22 +576,32 @@ def restore() -> dict:
     wardrobe_ui_data = (ROOT / wardrobe_ui_path).read_bytes()
     ui_manifest_data = (ROOT / "assets/reference/character-appearance/ui-source-manifest.json").read_bytes()
     ui_manifest = json.loads(ui_manifest_data)
-    if digest(wardrobe_ui_data) != ui_manifest.get("outputs", {}).get("res://" + wardrobe_ui_path):
+    if not catalog_only and digest(wardrobe_ui_data) != ui_manifest.get("outputs", {}).get("res://" + wardrobe_ui_path):
         raise ValueError("Wardrobe UI hierarchy differs from its official source manifest.")
-    manifest_inputs.append({"path": wardrobe_ui_path, "sha256": digest(wardrobe_ui_data)})
-    sprite_outputs = restore_sprites(sprite_manifests)
-    outputs.extend({"name": row["name"], "bytes": row["bytes"], "sha256": row["sha256"]}
-                   for row in sprite_outputs)
-    manifest_inputs.extend({"path": row["source"], "sha256": row["sha256"]} for row in sprite_outputs)
+    if not catalog_only:
+        manifest_inputs.append({"path": wardrobe_ui_path, "sha256": digest(wardrobe_ui_data)})
+        sprite_outputs = restore_sprites(sprite_manifests)
+        outputs.extend({"name": row["name"], "bytes": row["bytes"], "sha256": row["sha256"]}
+                       for row in sprite_outputs)
+        manifest_inputs.extend({"path": row["source"], "sha256": row["sha256"]} for row in sprite_outputs)
+    elif previous_manifest is not None:
+        current_input_paths = {row.get("path") for row in manifest_inputs}
+        manifest_inputs.extend(row for row in previous_manifest.get("inputs", [])
+                               if row.get("path") not in current_input_paths)
 
     if manifest_path.exists():
-        for row in json.loads(manifest_path.read_text(encoding="utf-8")).get("outputs", []):
-            if row.get("name") == "character-panels.json" and not any(
-                    output.get("name") == "character-panels.json" for output in outputs):
-                panel_path = TARGET / "character-panels.json"
-                if panel_path.exists():
-                    outputs.append({"name": "character-panels.json", "bytes": panel_path.stat().st_size,
-                                    "sha256": digest(panel_path.read_bytes())})
+        previous_rows = json.loads(manifest_path.read_text(encoding="utf-8")).get("outputs", [])
+        if catalog_only:
+            generated_names = {output.get("name") for output in outputs}
+            outputs.extend(row for row in previous_rows if row.get("name") not in generated_names)
+        else:
+            for row in previous_rows:
+                if row.get("name") == "character-panels.json" and not any(
+                        output.get("name") == "character-panels.json" for output in outputs):
+                    panel_path = TARGET / "character-panels.json"
+                    if panel_path.exists():
+                        outputs.append({"name": "character-panels.json", "bytes": panel_path.stat().st_size,
+                                        "sha256": digest(panel_path.read_bytes())})
 
     manifest = {
         "manifest": "854_156383",
@@ -438,9 +617,11 @@ def restore() -> dict:
             "Restore original CharacterPanel and character property view metadata for Unity binding.",
             "Restore original character UI metadata and progression tables for Unity binding.",
             "Restore original character UI, progression tables, and base battle properties for Unity binding.",
+            "Restore original character UI, progression, and all character property sources for Unity binding.",
         }
         known_outputs = {"character-overview.json", "character-properties.json", "character-panels.json",
-                         "character-progression.json", "item-time-limits.json"}
+                         "character-property-sources.json", "character-progression.json",
+                         "item-time-limits.json"}
         if (existing.get("manifest") != "854_156383" or existing.get("operation") not in allowed_operations
                 or not {"character-overview.json", "character-properties.json"}.issubset(old_outputs)
                 or not old_outputs.issubset(known_outputs | {name for name in old_outputs if name.startswith("Art/")})):
@@ -458,4 +639,8 @@ def restore() -> dict:
 
 
 if __name__ == "__main__":
-    print(json.dumps(restore(), ensure_ascii=False, indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--catalog-only", action="store_true",
+                        help="regenerate character catalogs while preserving existing sprite outputs")
+    arguments = parser.parse_args()
+    print(json.dumps(restore(catalog_only=arguments.catalog_only), ensure_ascii=False, indent=2))

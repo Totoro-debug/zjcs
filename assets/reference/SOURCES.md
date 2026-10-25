@@ -16,6 +16,10 @@
 
 战斗 Boss HP 层数表单独从固定 APK `854_156383` 的 `defaultpackage_assets_config_luban.bundle` 对象 `Assets/Config/Luban/monster_hp_plies.g.bytes` 解码，164 行输入 SHA256 为 `66b6496732f115b7370bc4fa3114d76c66f552de1fa73f70c06fa59b485e342e`。`python -B scripts/prepare_unity_combat_hp_plies.py` 通过固定版 `TbMonsterHpPliesInfo` 构造器生成 `unity/Assets/Official/Combat/monster-hp-plies.json`；输出、APK 对象、bundle 和转换版本记录在 [Boss HP 层数来源清单](official-map/monster-hp-plies-source-manifest.json)。
 
+### 人物属性与公会建筑规则表
+
+`python -B scripts/prepare_unity_character_catalog.py --catalog-only` 从固定 APK `854_156383` 的 Luban 输入生成 Unity 人物成长目录。该目录包含 166 条 `legion_map_skill`、498 条 `legion_map_skill_study_level`、12 条 `legion_map_building`、468 条 `legion_map_building_level`、75 条 `legion_map_building_level_hall` 和 10 条 `legion_map_hangup`；输入 SHA256 与官方 `Tb*` 构造器来源见[人物来源清单](../../unity/Assets/Official/Character/source-manifest.json)。`--catalog-only` 只更新人物配置并保留现有 Sprite 输出。
+
 ### 特殊物品原窗口与替换配置
 
 `scripts/prepare_special_items.py` 从固定 `854_156383` APK／匹配 CDN 的 `prefabs_ui_equip` 读取远古砥石的装备页、词条行、候选、确认和结果 prefab，并从 `config_luban_equipattribute` 解码 `equip_attribute_replace_range.g.bytes` 的20条记录。运行数据为 `assets/official/special-items.json`，原精灵复用或无损转换，不绘制替代窗口。逐对象、原客户端／共用逻辑、配置与输出哈希登记在 `assets/reference/special-items-source-manifest.json`；服务端请求的本地替代及用户确认边界见行囊功能文档。

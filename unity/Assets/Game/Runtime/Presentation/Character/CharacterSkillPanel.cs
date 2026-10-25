@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +9,7 @@ using UnityEngine.EventSystems;
 using Zjcs.Offline.Equipment;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.Skills;
+using Zjcs.Presentation.Skills;
 
 namespace Zjcs.Presentation.Character
 {
@@ -17,6 +19,13 @@ namespace Zjcs.Presentation.Character
     /// </summary>
     public sealed class CharacterSkillPanel : MonoBehaviour
     {
+        private sealed class SkillAnimationTrack
+        {
+            public Transform Target;
+            public string Property;
+            public AnimationCurve Curve;
+        }
+
         private const int ActiveSkillItemType = 100;
         private const int PassiveSkillItemType = 101;
         private const int PieceItemType = 111;
@@ -29,6 +38,7 @@ namespace Zjcs.Presentation.Character
         private Dictionary<string, object> itemTemplate;
         private Dictionary<string, object> promoteTemplate;
         private Dictionary<string, object> infoTemplate;
+        private Dictionary<string, object> skillUiTemplates;
         private GameObject panel;
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
@@ -42,7 +52,13 @@ namespace Zjcs.Presentation.Character
         private Text statusText;
         private GameObject promoteDialog;
         private int promoteSkillId;
+        private OfficialSkillQualityGradientData qualityGradient;
         private GameObject detailDialog;
+        private GameObject pieceDialog;
+        private GameObject mergeDialog;
+        private GameObject resultDialog;
+        private GameObject confirmationDialog;
+        private Coroutine batchReveal;
         private GameObject recommendDialog;
         private readonly List<GameObject> listRows = new List<GameObject>();
         private int listType = ActiveSkillItemType;
@@ -73,6 +89,8 @@ namespace Zjcs.Presentation.Character
             itemTemplate = CharacterModelPackage.AsObject(screens["item"], "item");
             promoteTemplate = CharacterModelPackage.AsObject(screens["skill_promote"], "skill_promote");
             infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
+            skillUiTemplates = CharacterModelPackage.AsObject(
+                OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI layouts");
         }
 
         public void Open(Transform parent)
@@ -88,6 +106,10 @@ namespace Zjcs.Presentation.Character
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             factory.Build(CharacterPanelNodeFactory.ReadRoot(screen), rect, nodes, buttons);
+            Dictionary<string, object> skillPanelLayout = CharacterModelPackage.AsObject(
+                skillUiTemplates["character_skills"], "character_skills");
+            PlayOfficialLayoutAnimations("character_skills", skillPanelLayout, nodes,
+                "CharacterPanelSkillPanel_Show");
             plan = progression.Player.Skills.SelectedPlan;
             Bind();
             Refresh();
@@ -95,8 +117,15 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            CloseUpgradeConfirmation();
             if (recommendDialog != null) Destroy(recommendDialog);
             recommendDialog = null;
+            if (mergeDialog != null) Destroy(mergeDialog);
+            mergeDialog = null;
+            if (resultDialog != null) Destroy(resultDialog);
+            resultDialog = null;
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
             if (detailDialog != null) Destroy(detailDialog);
             detailDialog = null;
             if (promoteDialog != null) Destroy(promoteDialog);
@@ -116,6 +145,7 @@ namespace Zjcs.Presentation.Character
             planName = null;
             emptyTip = null;
             showAll = null;
+            Changed?.Invoke();
         }
 
         public bool HandleEscape()
@@ -128,6 +158,21 @@ namespace Zjcs.Presentation.Character
             if (recommendDialog != null)
             {
                 CloseRecommendations();
+                return true;
+            }
+            if (mergeDialog != null)
+            {
+                CloseMergeConfirm();
+                return true;
+            }
+            if (resultDialog != null)
+            {
+                CloseResultDialog();
+                return true;
+            }
+            if (pieceDialog != null)
+            {
+                ClosePieceDetail();
                 return true;
             }
             if (detailDialog != null)
@@ -282,6 +327,7 @@ namespace Zjcs.Presentation.Character
                 drag.ItemType = itemType;
                 drag.Slot = slot;
                 drag.Dropped = SwapSkillSlots;
+                drag.DragLayer = panel.GetComponent<RectTransform>();
             }
         }
 
@@ -313,6 +359,31 @@ namespace Zjcs.Presentation.Character
             RefreshSlots(activeGroup, ActiveSkillItemType);
             RefreshSlots(passiveGroup, PassiveSkillItemType);
             RefreshList();
+            RefreshFastAction();
+        }
+
+        private void RefreshFastAction()
+        {
+            int promotable = 0;
+            OfflineSkillProfile profile = progression.Player.Skills;
+            foreach (OfflineOwnedSkill skill in profile.Skills)
+            {
+                if (skill == null) continue;
+                OfflineSkillDefinition definition = progression.SkillDefinition(skill.ClassId);
+                if (definition == null || skill.Rank >= definition.MaximumRank) continue;
+                OfflineSkillRankCost cost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == skill.Rank);
+                if (cost == null || cost.Items == null) continue;
+                bool affordable = cost.Items.All(item => item != null
+                    && progression.Player.Inventory.Where(value => value != null && value.ItemId == item.ItemId)
+                        .Sum(value => value.Count) >= item.Count);
+                if (affordable) promotable++;
+            }
+
+            bool fastPromotionUnlocked = progression.Player.Level >= 12;
+            if (nodes.TryGetValue("/SkillContentPanel/FastPromotionBtn", out RectTransform promotion))
+                promotion.gameObject.SetActive(fastPromotionUnlocked && promotable >= 5);
+            if (nodes.TryGetValue("/SkillContentPanel/FastLevelUpBtn", out RectTransform levelUp))
+                levelUp.gameObject.SetActive(!fastPromotionUnlocked || promotable < 5);
         }
 
         private void RefreshSlots(RectTransform group, int itemType)
@@ -366,26 +437,41 @@ namespace Zjcs.Presentation.Character
             }
             var owned = profile.Skills.Where(skill => skill != null && skill.ClassId > 0)
                 .ToDictionary(skill => skill.ClassId, skill => skill.Rank);
-            var entries = new List<int>();
+            var mergeable = new List<int>();
+            var collected = new List<int>();
+            var uncollected = new List<int>();
             foreach (OfflineSkillDefinition definition in progression.SkillRules?.Skills ?? Array.Empty<OfflineSkillDefinition>())
             {
                 if (definition.ItemType != listType) continue;
                 bool has = owned.ContainsKey(definition.ClassId);
                 bool craftable = !has && HasPiece(definition.PieceItemId);
-                if (!has && !craftable && !(showAll != null && showAll.isOn)) continue;
+                bool available = OfflineSkillProgression.IsAvailableFor(definition, progression.SkillContext());
+                if (!has && !available && !(showAll != null && showAll.isOn)) continue;
                 if (has && Array.IndexOf(equipped, definition.ClassId) >= 0) continue;
-                entries.Add(definition.ClassId);
+                if (craftable) mergeable.Add(definition.ClassId);
+                else if (OfflineSkillProgression.IsFavorite(profile, definition.ClassId)) collected.Add(definition.ClassId);
+                else uncollected.Add(definition.ClassId);
             }
-            entries.Sort((left, right) =>
-            {
-                bool leftFavorite = OfflineSkillProgression.IsFavorite(profile, left);
-                bool rightFavorite = OfflineSkillProgression.IsFavorite(profile, right);
-                if (leftFavorite != rightFavorite) return rightFavorite ? 1 : -1;
-                int quality = Quality(right).CompareTo(Quality(left));
-                return quality != 0 ? quality : right.CompareTo(left);
-            });
             OfflineSkillPlayerContext context = progression.SkillContext();
-            foreach (int skillId in entries)
+            Comparison<int> bySkillPanel = (left, right) =>
+            {
+                int canPromote = CanPromoteSkill(right).CompareTo(CanPromoteSkill(left));
+                if (canPromote != 0) return canPromote;
+                int available = IsAvailableForCurrentProfession(right, context)
+                    .CompareTo(IsAvailableForCurrentProfession(left, context));
+                if (available != 0) return available;
+                int rank = OfflineSkillProgression.OwnedRank(profile, right)
+                    .CompareTo(OfflineSkillProgression.OwnedRank(profile, left));
+                if (rank != 0) return rank;
+                int leftProfession = progression.SkillDefinition(left)?.AvailableProfessions?.DefaultIfEmpty(0).Min() ?? 0;
+                int rightProfession = progression.SkillDefinition(right)?.AvailableProfessions?.DefaultIfEmpty(0).Min() ?? 0;
+                int profession = rightProfession.CompareTo(leftProfession);
+                return profession != 0 ? profession : left.CompareTo(right);
+            };
+            mergeable.Sort(bySkillPanel);
+            collected.Sort(bySkillPanel);
+            uncollected.Sort(bySkillPanel);
+            foreach (int skillId in mergeable.Concat(collected).Concat(uncollected))
             {
                 OfflineSkillDefinition definition = progression.SkillRules.Skills
                     .FirstOrDefault(value => value.ClassId == skillId);
@@ -412,9 +498,13 @@ namespace Zjcs.Presentation.Character
 
         private void RefreshPieceList()
         {
+            OfflineSkillPlayerContext context = progression.SkillContext();
             var pieces = progression.Player.Inventory
-                .Where(value => value != null && value.Count > 0 && progression.Catalog.ItemType(value.ItemId) == PieceItemType)
-                .OrderByDescending(value => Quality(value.ItemId)).ThenByDescending(value => value.ItemId).ToList();
+                .Where(value => value != null && value.Count > 0
+                    && progression.Catalog.ItemType(value.ItemId) == PieceItemType
+                    && ((showAll != null && showAll.isOn) || IsPieceAvailable(value.ItemId, context)))
+                .OrderByDescending(value => Quality(value.ItemId)).ThenByDescending(value => value.Count)
+                .ThenBy(value => value.ItemId).ToList();
             foreach (OfflineItemStack stack in pieces)
             {
                 var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
@@ -438,12 +528,46 @@ namespace Zjcs.Presentation.Character
                 text.color = Color.white;
                 text.text = ItemName(stack.ItemId) + " \u00d7" + stack.Count.ToString("N0", CultureInfo.InvariantCulture);
                 text.raycastTarget = false;
+                OfflineSkillDefinition pieceDefinition = progression.SkillRules?.Skills
+                    .FirstOrDefault(value => value.PieceItemId == stack.ItemId);
+                if (pieceDefinition != null)
+                {
+                    Button rowButton = row.gameObject.GetComponent<Button>();
+                    if (rowButton == null) rowButton = row.gameObject.AddComponent<Button>();
+                    Image target = row.GetComponent<Image>() ?? row.GetComponentInChildren<Image>();
+                    rowButton.targetGraphic = target;
+                    if (target != null) target.raycastTarget = true;
+                    int skillId = pieceDefinition.ClassId;
+                    rowButton.onClick.AddListener(() => OpenPieceDetail(skillId));
+                }
                 LayoutElement element = row.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
                 element.preferredHeight = 150f;
                 element.minHeight = 150f;
                 listRows.Add(row.gameObject);
             }
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
+        }
+
+        private bool IsPieceAvailable(int itemId, OfflineSkillPlayerContext context)
+        {
+            OfflineSkillDefinition definition = progression.SkillRules?.Skills
+                .FirstOrDefault(value => value.PieceItemId == itemId);
+            return definition != null && OfflineSkillProgression.IsAvailableFor(definition, context);
+        }
+
+        private bool CanPromoteSkill(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            OfflineSkillRankCost cost = definition?.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
+            return rank > 0 && cost != null && cost.Items.All(item => item != null
+                && progression.Player.Inventory.Where(value => value != null && value.ItemId == item.ItemId)
+                    .Sum(value => value.Count) >= item.Count);
+        }
+
+        private bool IsAvailableForCurrentProfession(int skillId, OfflineSkillPlayerContext context)
+        {
+            return OfflineSkillProgression.IsAvailableFor(progression.SkillDefinition(skillId), context);
         }
 
         private string ItemName(int itemId)
@@ -617,20 +741,248 @@ namespace Zjcs.Presentation.Character
 
         private void UpgradeAllSlots()
         {
+            OfflineSkillProfile profile = progression.Player.Skills;
+            OfflineSkillPlayerContext context = progression.SkillContext();
+            int maximumBaseLevel = progression.SkillRules?.BaseLevelLimits?
+                .Where(value => value != null && value.SubRank == context.SubRank)
+                .Select(value => value.SkillLevel).DefaultIfEmpty(0).Max() ?? 0;
+            bool blessingOnly = maximumBaseLevel > 0
+                && profile.ActiveSlotLevels.All(value => value >= maximumBaseLevel)
+                && profile.PassiveSlotLevels.All(value => value >= maximumBaseLevel);
+            List<OfflineSkillSlotUpgradeChange> preview = progression.PreviewUpgradeAllSkillSlotChanges().ToList();
+            if (blessingOnly && preview.Count >= 40)
+            {
+                OpenUpgradeConfirmation(() => ApplyUpgradeAllSlots(preview));
+                return;
+            }
+            ApplyUpgradeAllSlots(preview);
+        }
+
+        private void ApplyUpgradeAllSlots(IReadOnlyList<OfflineSkillSlotUpgradeChange> preview)
+        {
             ProgressionResult result = progression.UpgradeAllSkillSlots();
             SetStatus(result.Message ?? result.Status.ToString());
             if (!result.IsApplied) return;
             Refresh();
+            if (assets.SkillSlotLevelUpAnimation != null)
+                StartCoroutine(PlaySlotUpgradeEffects(preview));
             Changed?.Invoke();
+        }
+
+        private IEnumerator PlaySlotUpgradeEffects(IReadOnlyList<OfflineSkillSlotUpgradeChange> changes)
+        {
+            AnimationClip clip = assets.SkillSlotLevelUpAnimation;
+            foreach (OfflineSkillSlotUpgradeChange change in changes)
+            {
+                RectTransform group = change.ItemType == ActiveSkillItemType ? activeGroup : passiveGroup;
+                if (group != null)
+                {
+                    RectTransform row = group.Cast<Transform>().OfType<RectTransform>()
+                        .Where(value => value.name.StartsWith("SkillContentPanelSkillGroupItem",
+                            StringComparison.Ordinal)).ElementAtOrDefault(change.Slot);
+                    if (row != null)
+                    {
+                        Animation animation = row.GetComponent<Animation>();
+                        if (animation == null) animation = row.gameObject.AddComponent<Animation>();
+                        if (animation.GetClip(clip.name) == null) animation.AddClip(clip, clip.name);
+                        animation.Play(clip.name);
+                        if (assets.SkillSlotLevelUpSound != null)
+                        {
+                            AudioSource source = row.GetComponent<AudioSource>();
+                            if (source == null) source = row.gameObject.AddComponent<AudioSource>();
+                            source.playOnAwake = false;
+                            source.spatialBlend = 0f;
+                            source.PlayOneShot(assets.SkillSlotLevelUpSound);
+                        }
+                    }
+                }
+                yield return new WaitForSecondsRealtime(0.06f);
+            }
+            if (changes.Count > 0 && clip != null)
+                yield return new WaitForSecondsRealtime(clip.length);
+        }
+
+        private void OpenUpgradeConfirmation(Action confirmed)
+        {
+            if (confirmationDialog != null) Destroy(confirmationDialog);
+            if (assets.ConfirmDialogPrefab == null)
+            {
+                SetStatus("缺少官方确认弹窗资源，未执行一键升级。");
+                return;
+            }
+            confirmationDialog = Instantiate(assets.ConfirmDialogPrefab, transform, false);
+            confirmationDialog.name = "SkillFastLevelUpConfirmation";
+            confirmationDialog.transform.SetAsLastSibling();
+            SetTextValue(FindText(confirmationDialog.transform, "TitleText"), "确认");
+            SetTextValue(FindText(confirmationDialog.transform, "ContentTxt"), "一键升级将消耗大量材料，是否继续？");
+            Transform confirmNode = FindDeep(confirmationDialog.transform, "ConfirmBtn");
+            Transform cancelNode = FindDeep(confirmationDialog.transform, "CancelBtn");
+            BindConfirmationButton(confirmNode, () =>
+            {
+                CloseUpgradeConfirmation();
+                confirmed?.Invoke();
+            });
+            BindConfirmationButton(cancelNode, CloseUpgradeConfirmation);
+        }
+
+        private static Text FindText(Transform root, string nodeName)
+        {
+            Transform node = FindDeep(root, nodeName);
+            return node == null ? null : node.GetComponentInChildren<Text>(true);
+        }
+
+        private static void BindConfirmationButton(Transform node, Action action)
+        {
+            if (node == null) return;
+            Button button = node.GetComponent<Button>();
+            if (button == null) button = node.gameObject.AddComponent<Button>();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => action?.Invoke());
+        }
+
+        private void CloseUpgradeConfirmation()
+        {
+            if (confirmationDialog != null) Destroy(confirmationDialog);
+            confirmationDialog = null;
         }
 
         private void PromoteAllSkills()
         {
+            var before = progression.Player.Skills.Skills.Where(value => value != null)
+                .ToDictionary(value => value.ClassId, value => value.Rank);
             ProgressionResult result = progression.PromoteAllSkills();
             SetStatus(result.Message ?? result.Status.ToString());
             if (!result.IsApplied) return;
+            var promoted = progression.Player.Skills.Skills.Where(value => value != null
+                    && before.TryGetValue(value.ClassId, out int oldRank) && value.Rank > oldRank)
+                .Select(value => new SkillRankChange(value.ClassId, before[value.ClassId], value.Rank))
+                .OrderByDescending(value => EquippedSkillUseCount(value.SkillId))
+                .ThenByDescending(value => value.ToRank).ThenBy(value => value.SkillId).ToList();
             Refresh();
             Changed?.Invoke();
+            if (promoted.Count > 0) OpenBatchPromotionResult(promoted);
+        }
+
+        private int EquippedSkillUseCount(int skillId)
+        {
+            int count = 0;
+            foreach (OfflineSkillPlan skillPlan in progression.Player.Skills.Plans ?? Array.Empty<OfflineSkillPlan>())
+            {
+                if (skillPlan == null) continue;
+                count += (skillPlan.ActiveSkills ?? Array.Empty<int>()).Count(value => value == skillId);
+                count += (skillPlan.PassiveSkills ?? Array.Empty<int>()).Count(value => value == skillId);
+            }
+            return count;
+        }
+
+        private sealed class SkillRankChange
+        {
+            public readonly int SkillId;
+            public readonly int FromRank;
+            public readonly int ToRank;
+
+            public SkillRankChange(int skillId, int fromRank, int toRank)
+            {
+                SkillId = skillId;
+                FromRank = fromRank;
+                ToRank = toRank;
+            }
+        }
+
+        private void OpenBatchPromotionResult(List<SkillRankChange> promoted)
+        {
+            if (batchReveal != null) StopCoroutine(batchReveal);
+            batchReveal = null;
+            CloseResultDialog();
+            resultDialog = BuildOfficialDialog("skill_batch_notify", out var resultNodes, out var resultButtons);
+            RectTransform content = DialogNodeEnding(resultNodes,
+                "/ContentGroup/ItemGrid/ViewPort/Content");
+            var resultRows = new List<CanvasGroup>();
+            if (content != null)
+            {
+                foreach (SkillRankChange change in promoted)
+                {
+                    Dictionary<string, object> template = CharacterModelPackage.AsObject(
+                        skillUiTemplates["skill_batch_item"], "skill_batch_item");
+                    var itemNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                    var itemButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                    RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(template), content,
+                        itemNodes, itemButtons);
+                    Transform icon = DialogNode(itemNodes, "ItemIconSkill") ?? row;
+                    BuildSkillIcon(change.SkillId, icon, "PromotedSkillIcon");
+                    SetTextValue(DialogNode(itemNodes, "BottomText")?.GetComponent<Text>(), SkillName(change.SkillId));
+                    SetTextValue(DialogNode(itemNodes, "CountText")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    SetTextValue(DialogNode(itemNodes, "DebugRankText")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    SetTextValue(DialogNode(itemNodes, "Count")?.GetComponent<Text>(), change.ToRank.ToString(CultureInfo.InvariantCulture));
+                    CanvasGroup rowAlpha = row.GetComponent<CanvasGroup>();
+                    if (rowAlpha == null) rowAlpha = row.gameObject.AddComponent<CanvasGroup>();
+                    rowAlpha.alpha = 0f;
+                    resultRows.Add(rowAlpha);
+                }
+            }
+            Button close = DialogButton(resultButtons, "CloseObj");
+            if (close != null)
+            {
+                close.gameObject.SetActive(false);
+                close.onClick.AddListener(CloseResultDialog);
+            }
+            Button skip = DialogButton(resultButtons, "SkipBtn");
+            if (skip != null) skip.gameObject.SetActive(resultRows.Count > 0);
+            batchReveal = StartCoroutine(RevealBatchPromotionRows(resultRows, resultNodes, close, skip));
+            if (skip != null) skip.onClick.AddListener(() =>
+            {
+                if (batchReveal != null) StopCoroutine(batchReveal);
+                batchReveal = null;
+                foreach (CanvasGroup row in resultRows) if (row != null) row.alpha = 1f;
+                ScrollSkillResultsToEnd(resultNodes);
+                skip.gameObject.SetActive(false);
+                if (close != null) close.gameObject.SetActive(true);
+            });
+        }
+
+        private IEnumerator RevealBatchPromotionRows(List<CanvasGroup> rows,
+            Dictionary<string, RectTransform> resultNodes,
+            Button closeButton, Button skipButton)
+        {
+            foreach (CanvasGroup row in rows)
+            {
+                yield return new WaitForSecondsRealtime(0.06f);
+                if (row != null) row.alpha = 1f;
+            }
+            ScrollSkillResultsToEnd(resultNodes);
+            batchReveal = null;
+            if (skipButton != null) skipButton.gameObject.SetActive(false);
+            if (closeButton != null) closeButton.gameObject.SetActive(true);
+        }
+
+        private static void ScrollSkillResultsToEnd(Dictionary<string, RectTransform> nodes)
+        {
+            RectTransform grid = DialogNode(nodes, "ItemGrid");
+            ScrollRect scroll = grid == null ? null : grid.GetComponent<ScrollRect>();
+            if (scroll != null) scroll.verticalNormalizedPosition = 0f;
+        }
+
+        private void OpenRankPromotionResult(int skillId, int fromRank, int toRank)
+        {
+            CloseResultDialog();
+            resultDialog = BuildOfficialDialog("skill_rank_notify", out var resultNodes, out var resultButtons);
+            SetTextValue(DialogNode(resultNodes, "SkillNameText")?.GetComponent<Text>(), SkillName(skillId));
+            SetTextValue(DialogNode(resultNodes, "FromRankText")?.GetComponent<Text>(), fromRank.ToString(CultureInfo.InvariantCulture));
+            SetTextValue(DialogNode(resultNodes, "ToRankText")?.GetComponent<Text>(), toRank.ToString(CultureInfo.InvariantCulture));
+            int skillQuality = Quality(skillId);
+            ApplyQualityGradient(DialogNode(resultNodes, "FromRankText")?.GetComponent<Text>(), skillQuality, 0f);
+            ApplyQualityGradient(DialogNode(resultNodes, "ToRankText")?.GetComponent<Text>(), skillQuality, 0f);
+            Transform icon = DialogNode(resultNodes, "ItemIconSkill");
+            if (icon != null) BuildSkillIcon(skillId, icon, "PromotedSkillIcon");
+            DialogButton(resultButtons, "CloseObj")?.onClick.AddListener(CloseResultDialog);
+        }
+
+        private void CloseResultDialog()
+        {
+            if (batchReveal != null) StopCoroutine(batchReveal);
+            batchReveal = null;
+            if (resultDialog != null) Destroy(resultDialog);
+            resultDialog = null;
         }
 
         private void SetStatus(string message)
@@ -732,7 +1084,427 @@ namespace Zjcs.Presentation.Character
             recommendDialog = null;
         }
 
+        private GameObject BuildOfficialDialog(string layoutKey,
+            out Dictionary<string, RectTransform> dialogNodes,
+            out Dictionary<string, Button> dialogButtons)
+        {
+            if (!skillUiTemplates.TryGetValue(layoutKey, out object raw))
+                throw new InvalidOperationException("Official skill UI layout is missing: " + layoutKey);
+            Dictionary<string, object> template = CharacterModelPackage.AsObject(raw, layoutKey);
+            GameObject dialog = new GameObject(layoutKey, typeof(RectTransform));
+            dialog.transform.SetParent(transform, false);
+            RectTransform root = (RectTransform)dialog.transform;
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = Vector2.one;
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            dialogNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            dialogButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            factory.Build(CharacterPanelNodeFactory.ReadRoot(template), root, dialogNodes, dialogButtons);
+            PlayOfficialLayoutAnimations(layoutKey, template, dialogNodes);
+            return dialog;
+        }
+
+        private void PlayOfficialLayoutAnimations(string layoutKey, Dictionary<string, object> template,
+            Dictionary<string, RectTransform> layoutNodes, string animationName = null)
+        {
+            if (!template.TryGetValue("root", out object rootValue)
+                || !(rootValue is Dictionary<string, object> root)
+                || !root.TryGetValue("animations", out object animationValue)
+                || !(animationValue is List<object> animations)) return;
+            List<Dictionary<string, object>> clips = animations
+                .Where(value => value is Dictionary<string, object>)
+                .Select(value => (Dictionary<string, object>)value).ToList();
+            Dictionary<string, object> clip = animationName == null
+                ? clips.FirstOrDefault(value => !CharacterPanelNodeFactory.Boolean(value, "loop", false))
+                : clips.FirstOrDefault(value => CharacterPanelNodeFactory.String(value, "name") == animationName);
+            if (clip == null || !TryBuildAnimationTracks(clip, layoutNodes, out List<SkillAnimationTrack> tracks,
+                out float duration)) return;
+            bool loop = CharacterPanelNodeFactory.Boolean(clip, "loop", false);
+            if (loop) StartCoroutine(PlaySkillAnimation(tracks, duration, true));
+            else
+            {
+                Dictionary<string, object> loopClip = clips.FirstOrDefault(value =>
+                    CharacterPanelNodeFactory.Boolean(value, "loop", false));
+                if (loopClip != null && TryBuildAnimationTracks(loopClip, layoutNodes,
+                    out List<SkillAnimationTrack> loopTracks, out float loopDuration))
+                    StartCoroutine(PlaySkillAnimationAfter(tracks, duration, loopTracks, loopDuration));
+            }
+        }
+
+        private static bool TryBuildAnimationTracks(Dictionary<string, object> clip,
+            Dictionary<string, RectTransform> layoutNodes, out List<SkillAnimationTrack> tracks, out float duration)
+        {
+            tracks = new List<SkillAnimationTrack>();
+            duration = CharacterPanelNodeFactory.Number(clip, "duration", 0f);
+            if (!clip.TryGetValue("tracks", out object rawTracks) || !(rawTracks is List<object> sourceTracks))
+                return false;
+            foreach (object rawTrack in sourceTracks)
+            {
+                if (!(rawTrack is Dictionary<string, object> source)
+                    || !source.TryGetValue("keys", out object rawKeys) || !(rawKeys is List<object> keys)
+                    || keys.Count == 0) continue;
+                string path = CharacterPanelNodeFactory.String(source, "path");
+                string property = CharacterPanelNodeFactory.String(source, "property");
+                if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(property)) continue;
+                RectTransform target = layoutNodes.TryGetValue(path, out RectTransform exact) ? exact : null;
+                const string skillPanelContentPath = "/CharacterPanelSkillPanel/Content";
+                if (target == null && path.StartsWith(skillPanelContentPath, StringComparison.Ordinal))
+                    layoutNodes.TryGetValue(path.Substring(skillPanelContentPath.Length), out target);
+                if (target == null)
+                    target = layoutNodes.FirstOrDefault(value => path.EndsWith("/" + value.Value.name,
+                        StringComparison.Ordinal)).Value;
+                if (target == null) continue;
+                var keyframes = new List<Keyframe>(keys.Count);
+                foreach (object rawKey in keys)
+                {
+                    if (!(rawKey is List<object> values) || values.Count < 2) continue;
+                    float time = Convert.ToSingle(values[0], CultureInfo.InvariantCulture);
+                    float value = Convert.ToSingle(values[1], CultureInfo.InvariantCulture);
+                    float inSlope = values.Count > 2 ? Convert.ToSingle(values[2], CultureInfo.InvariantCulture) : 0f;
+                    float outSlope = values.Count > 3 ? Convert.ToSingle(values[3], CultureInfo.InvariantCulture) : 0f;
+                    keyframes.Add(new Keyframe(time, value, inSlope, outSlope));
+                    duration = Mathf.Max(duration, time);
+                }
+                if (keyframes.Count == 0) continue;
+                tracks.Add(new SkillAnimationTrack
+                {
+                    Target = target,
+                    Property = property,
+                    Curve = new AnimationCurve(keyframes.ToArray())
+                });
+            }
+            return tracks.Count > 0 && duration > 0f;
+        }
+
+        private IEnumerator PlaySkillAnimationAfter(List<SkillAnimationTrack> intro, float introDuration,
+            List<SkillAnimationTrack> loopTracks, float loopDuration)
+        {
+            yield return PlaySkillAnimation(intro, introDuration, false);
+            yield return PlaySkillAnimation(loopTracks, loopDuration, true);
+        }
+
+        private IEnumerator PlaySkillAnimation(List<SkillAnimationTrack> tracks, float duration, bool loop)
+        {
+            float elapsed = 0f;
+            do
+            {
+                float time = loop ? elapsed % duration : Mathf.Min(elapsed, duration);
+                foreach (SkillAnimationTrack track in tracks)
+                    ApplySkillAnimationValue(track.Target, track.Property, track.Curve.Evaluate(time));
+                if (!loop && elapsed >= duration) yield break;
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            while (true);
+        }
+
+        private static void ApplySkillAnimationValue(Transform target, string property, float value)
+        {
+            if (target == null) return;
+            RectTransform rect = target as RectTransform;
+            if (property == "m_AnchoredPosition.x" || property == "m_AnchoredPosition.y")
+            {
+                if (rect == null) return;
+                Vector2 position = rect.anchoredPosition;
+                if (property.EndsWith(".x", StringComparison.Ordinal)) position.x = value;
+                else position.y = value;
+                rect.anchoredPosition = position;
+            }
+            else if (property == "scale.x" || property == "scale.y" || property == "scale.z")
+            {
+                Vector3 scale = target.localScale;
+                if (property.EndsWith(".x", StringComparison.Ordinal)) scale.x = value;
+                else if (property.EndsWith(".y", StringComparison.Ordinal)) scale.y = value;
+                else scale.z = value;
+                target.localScale = scale;
+            }
+            else if (property.StartsWith("rotation.", StringComparison.Ordinal))
+            {
+                Vector3 euler = target.localEulerAngles;
+                if (property.EndsWith(".x", StringComparison.Ordinal)) euler.x = value;
+                else if (property.EndsWith(".y", StringComparison.Ordinal)) euler.y = value;
+                else if (property.EndsWith(".z", StringComparison.Ordinal)) euler.z = value;
+                target.localEulerAngles = euler;
+            }
+            else if (property.StartsWith("quaternion.", StringComparison.Ordinal))
+            {
+                Quaternion rotation = target.localRotation;
+                if (property.EndsWith(".x", StringComparison.Ordinal)) rotation.x = value;
+                else if (property.EndsWith(".y", StringComparison.Ordinal)) rotation.y = value;
+                else if (property.EndsWith(".z", StringComparison.Ordinal)) rotation.z = value;
+                else if (property.EndsWith(".w", StringComparison.Ordinal)) rotation.w = value;
+                target.localRotation = rotation;
+            }
+            else if (property == "m_Alpha")
+            {
+                CanvasGroup group = target.GetComponent<CanvasGroup>();
+                if (group == null) group = target.gameObject.AddComponent<CanvasGroup>();
+                group.alpha = value;
+            }
+            else if (property == "m_IsActive") target.gameObject.SetActive(value >= 0.5f);
+            else if (property.StartsWith("m_Color.", StringComparison.Ordinal))
+            {
+                Graphic graphic = target.GetComponent<Graphic>();
+                if (graphic == null) return;
+                Color color = graphic.color;
+                if (property.EndsWith(".r", StringComparison.Ordinal)) color.r = value;
+                else if (property.EndsWith(".g", StringComparison.Ordinal)) color.g = value;
+                else if (property.EndsWith(".b", StringComparison.Ordinal)) color.b = value;
+                else if (property.EndsWith(".a", StringComparison.Ordinal)) color.a = value;
+                graphic.color = color;
+            }
+        }
+
+        private static Button DialogButton(Dictionary<string, Button> dialogButtons, string nodeName)
+        {
+            return dialogButtons.FirstOrDefault(pair => pair.Key.EndsWith("/" + nodeName,
+                StringComparison.Ordinal)).Value;
+        }
+
+        private static RectTransform DialogNode(Dictionary<string, RectTransform> dialogNodes,
+            string nodeName)
+        {
+            return dialogNodes.Values.FirstOrDefault(value => value.name == nodeName);
+        }
+
+        private static RectTransform DialogNodeEnding(Dictionary<string, RectTransform> dialogNodes,
+            string pathSuffix)
+        {
+            return dialogNodes.FirstOrDefault(pair => pair.Key.EndsWith(pathSuffix,
+                StringComparison.Ordinal)).Value;
+        }
+
         private void OpenSkillDetail(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            if (definition == null) return;
+            CloseSkillDetail();
+            detailDialog = BuildOfficialDialog("skill_panel_detail", out var dialogNodes, out var dialogButtons);
+            Text name = DialogNode(dialogNodes, "NameText")?.GetComponent<Text>();
+            Text level = DialogNode(dialogNodes, "LevelText")?.GetComponent<Text>();
+            Text rank = DialogNode(dialogNodes, "Count")?.GetComponent<Text>();
+            Text detail = DialogNode(dialogNodes, "DetailText")?.GetComponent<Text>();
+            Text quality = DialogNode(dialogNodes, "QualityText")?.GetComponent<Text>();
+            int qualityLevel = Quality(skillId);
+            ApplyQualityGradient(quality, qualityLevel, 45f);
+            int ownedRank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            SetTextValue(name, SkillName(skillId));
+            SetTextValue(rank, ownedRank.ToString(CultureInfo.InvariantCulture));
+            OfflineSkillRankCost nextCost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == ownedRank);
+            if (detail != null)
+            {
+                long pieces = progression.Player.Inventory.Where(value => value != null
+                    && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+                detail.text = (definition.ItemType == ActiveSkillItemType ? "战技" : "秘法")
+                    + "\n等阶 " + ownedRank.ToString(CultureInfo.InvariantCulture) + "/"
+                    + definition.MaximumRank.ToString(CultureInfo.InvariantCulture)
+                    + "\n碎片 " + pieces.ToString("N0", CultureInfo.InvariantCulture)
+                    + (nextCost == null ? "\n已达最高等阶。" : "\n下一阶消耗：" + string.Join("、",
+                        nextCost.Items.Select(item => ItemName(item.ItemId) + " ×"
+                            + item.Count.ToString("N0", CultureInfo.InvariantCulture))));
+            }
+            int[] equippedSlots = definition.ItemType == ActiveSkillItemType
+                ? progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills
+                : progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].PassiveSkills;
+            int equippedSlot = Array.IndexOf(equippedSlots, skillId);
+            int currentLevel = equippedSlot < 0 ? 0 : progression.SkillProgression.SlotLevel(
+                progression.Player.Skills, definition.ItemType, equippedSlot,
+                progression.SkillContext().CurrentSeasonId);
+            SetTextValue(level, currentLevel <= 0 ? string.Empty
+                : "Lv" + currentLevel.ToString(CultureInfo.InvariantCulture));
+            Transform iconSlot = DialogNode(dialogNodes, "ItemIconSkill") ?? DialogNode(dialogNodes, "IconSlot");
+            if (iconSlot != null) BuildSkillIcon(skillId, iconSlot, "OfficialSkillIcon");
+
+            bool owned = ownedRank > 0;
+            bool equipped = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills
+                .Concat(progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].PassiveSkills)
+                .Contains(skillId);
+            SetDialogNodeActive(dialogNodes, "UpgradeBtn", owned);
+            SetDialogNodeActive(dialogNodes, "EquipBtn", owned && !equipped);
+            SetDialogNodeActive(dialogNodes, "ReplaceBtn", owned && !equipped && selectedSlot >= 0);
+            SetDialogNodeActive(dialogNodes, "TakeOffBtn", equipped);
+            SetDialogNodeActive(dialogNodes, "DecomposeBtn", false);
+            SetDialogNodeActive(dialogNodes, "CommonBtn_11", !owned);
+
+            DialogButton(dialogButtons, "CollectionBtn")?.onClick.AddListener(() =>
+            {
+                ToggleFavorite(skillId);
+                CloseSkillDetail();
+            });
+            DialogButton(dialogButtons, "UpgradeBtn")?.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                OpenPromote(skillId);
+            });
+            DialogButton(dialogButtons, "EquipBtn")?.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                Install(skillId);
+            });
+            DialogButton(dialogButtons, "ReplaceBtn")?.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                Install(skillId);
+            });
+            DialogButton(dialogButtons, "TakeOffBtn")?.onClick.AddListener(() =>
+            {
+                int[] slots = definition.ItemType == ActiveSkillItemType
+                    ? progression.Player.Skills.Plans[plan].ActiveSkills
+                    : progression.Player.Skills.Plans[plan].PassiveSkills;
+                int slot = Array.IndexOf(slots, skillId);
+                if (slot >= 0) Unequip(definition.ItemType, slot);
+                CloseSkillDetail();
+            });
+            DialogButton(dialogButtons, "CommonBtn_11")?.onClick.AddListener(() =>
+            {
+                CloseSkillDetail();
+                OpenMergeConfirm(skillId);
+            });
+            return;
+        }
+
+        private void ApplyQualityGradient(Text target, int quality, float angle)
+        {
+            if (target == null) return;
+            OfficialSkillQualityTextGradient effect = target.GetComponent<OfficialSkillQualityTextGradient>();
+            if (quality != 7)
+            {
+                if (effect != null) Destroy(effect);
+                return;
+            }
+            if (qualityGradient == null)
+                qualityGradient = OfficialSkillAssetCatalog.LoadDefault().LoadQualityGradient();
+            if (effect == null) effect = target.gameObject.AddComponent<OfficialSkillQualityTextGradient>();
+            effect.Configure(target, qualityGradient, angle);
+        }
+
+        private static Text FindTextNodeEnding(Dictionary<string, RectTransform> dialogNodes, string suffix)
+        {
+            RectTransform node = dialogNodes.FirstOrDefault(pair =>
+                pair.Key.EndsWith(suffix, StringComparison.Ordinal)).Value;
+            return node == null ? null : node.GetComponent<Text>();
+        }
+
+        private static void SetTextValue(Text text, string value)
+        {
+            if (text != null) text.text = value ?? string.Empty;
+        }
+
+        private bool HasAffordableSkillCost(OfflineSkillItemCount[] items)
+        {
+            return items != null && items.Length > 0 && items.All(item => item != null && item.Count > 0
+                && progression.Player.Inventory.Where(value => value != null && value.ItemId == item.ItemId)
+                    .Sum(value => value.Count) >= item.Count);
+        }
+
+        private static void SetDialogNodeActive(Dictionary<string, RectTransform> dialogNodes,
+            string nodeName, bool active)
+        {
+            RectTransform node = DialogNode(dialogNodes, nodeName);
+            if (node != null) node.gameObject.SetActive(active);
+        }
+
+        private void OpenPieceDetail(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            if (definition == null) return;
+            ClosePieceDetail();
+            pieceDialog = BuildOfficialDialog("skill_piece_detail", out var dialogNodes, out var dialogButtons);
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            long count = progression.Player.Inventory.Where(value => value != null
+                && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+            SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<Text>(), ItemName(definition.PieceItemId));
+            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<Text>(),
+                count.ToString("N0", CultureInfo.InvariantCulture));
+            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<Text>(), ItemName(definition.PieceItemId));
+            Transform icon = DialogNode(dialogNodes, "Piece") ?? DialogNode(dialogNodes, "PieceIcon");
+            Image iconImage = icon == null ? null : icon.GetComponent<Image>();
+            string iconUri = progression.Catalog.ItemIconUri(definition.PieceItemId);
+            if (iconImage != null) iconImage.sprite = assets.FindSprite(iconUri);
+
+            bool owned = rank > 0;
+            OfflineSkillRankCost nextCost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
+            bool canRank = owned && nextCost != null && nextCost.Items.All(item => item != null
+                && progression.Player.Inventory.Where(value => value != null && value.ItemId == item.ItemId)
+                    .Sum(value => value.Count) >= item.Count);
+            int mergeCount = progression.SkillMergePiece(skillId);
+            bool canMerge = !owned && mergeCount > 0;
+            SetDialogNodeActive(dialogNodes, "CommonBtn_12_RankUp", canRank);
+            SetDialogNodeActive(dialogNodes, "CommonBtn_12_Merge", canMerge);
+            SetDialogNodeActive(dialogNodes, "CommonBtn_13_Max", owned && nextCost == null);
+            SetDialogNodeActive(dialogNodes, "DecomposeBtn", false);
+            SetDialogNodeActive(dialogNodes, "CommonBtn_11", false);
+            SetDialogNodeActive(dialogNodes, "RankUplDialogGridLayout", owned);
+            SetDialogNodeActive(dialogNodes, "MergeDetailDialogGridLayout", !owned);
+            Slider rankSlider = DialogNode(dialogNodes, "RankUplDialogGridLayout")?.GetComponentInChildren<Slider>(true);
+            Slider mergeSlider = DialogNode(dialogNodes, "MergeDetailDialogGridLayout")?.GetComponentInChildren<Slider>(true);
+            ConfigureProgressSlider(rankSlider, count, nextCost?.Items?.FirstOrDefault(value => value.ItemId == definition.PieceItemId)?.Count ?? 0);
+            ConfigureProgressSlider(mergeSlider, count, mergeCount);
+            DialogButton(dialogButtons, "CommonBtn_12_RankUp")?.onClick.AddListener(() => OpenPromote(skillId));
+            DialogButton(dialogButtons, "CommonBtn_12_Merge")?.onClick.AddListener(() => OpenMergeConfirm(skillId));
+        }
+
+        private static void ConfigureProgressSlider(Slider slider, long current, long required)
+        {
+            if (slider == null || required <= 0) return;
+            slider.minValue = 0;
+            slider.maxValue = required;
+            slider.SetValueWithoutNotify(Math.Min(current, required));
+        }
+
+        private void OpenMergeConfirm(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            if (definition == null || progression.SkillMergePiece(skillId) <= 0) return;
+            if (mergeDialog != null) Destroy(mergeDialog);
+            mergeDialog = BuildOfficialDialog("skill_merge_confirm", out var dialogNodes, out var dialogButtons);
+            SetTextValue(DialogNode(dialogNodes, "TitleText")?.GetComponent<Text>(), "合成技能");
+            Transform pieceIcon = DialogNode(dialogNodes, "ItemIconSkillPiece");
+            Transform skillIcon = DialogNode(dialogNodes, "ItemIconSkill");
+            if (pieceIcon != null) BuildSkillIcon(definition.PieceItemId, pieceIcon, "PieceIcon");
+            if (skillIcon != null) BuildSkillIcon(skillId, skillIcon, "SkillIcon");
+            SetTextValue(DialogNode(dialogNodes, "CountText")?.GetComponent<Text>(),
+                progression.SkillMergePiece(skillId).ToString(CultureInfo.InvariantCulture));
+            DialogButton(dialogButtons, "CancelBtn")?.onClick.AddListener(CloseMergeConfirm);
+            Button mergeButton = DialogButton(dialogButtons, "MergeBtn");
+            long ownedPieces = progression.Player.Inventory.Where(value => value != null
+                && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
+            if (mergeButton != null) mergeButton.interactable = ownedPieces >= progression.SkillMergePiece(skillId);
+            bool submitting = false;
+            mergeButton?.onClick.AddListener(() =>
+            {
+                if (submitting) return;
+                submitting = true;
+                mergeButton.interactable = false;
+                ProgressionResult result = progression.MergeSkill(skillId);
+                SetStatus(result.Message ?? result.Status.ToString());
+                if (!result.IsApplied)
+                {
+                    submitting = false;
+                    mergeButton.interactable = ownedPieces >= progression.SkillMergePiece(skillId);
+                    return;
+                }
+                CloseMergeConfirm();
+                if (pieceDialog != null) ClosePieceDetail();
+                Refresh();
+                Changed?.Invoke();
+            });
+        }
+
+        private void CloseMergeConfirm()
+        {
+            if (mergeDialog != null) Destroy(mergeDialog);
+            mergeDialog = null;
+        }
+
+        private void ClosePieceDetail()
+        {
+            if (pieceDialog != null) Destroy(pieceDialog);
+            pieceDialog = null;
+        }
+
+        private void OpenSkillDetailFallback(int skillId)
         {
             OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
             if (definition == null) return;
@@ -857,6 +1629,111 @@ namespace Zjcs.Presentation.Character
         private void OpenPromote(int skillId)
         {
             OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            if (definition == null || rank <= 0) return;
+            ClosePromote();
+            promoteSkillId = skillId;
+            promoteDialog = BuildOfficialDialog("skill_promote", out var dialogNodes, out var dialogButtons);
+            int itemType = definition.ItemType;
+            RectTransform rankContent = DialogNode(dialogNodes, "RankUpContent");
+            RectTransform levelContent = DialogNode(dialogNodes, "LevelUpContent");
+            if (rankContent != null) rankContent.gameObject.SetActive(true);
+            if (levelContent != null) levelContent.gameObject.SetActive(false);
+            Button close = DialogButton(dialogButtons, "CloseBtnDark");
+            if (close != null) close.onClick.AddListener(ClosePromote);
+            Button rankTab = DialogButton(dialogButtons, "SkillPromotePanelRankUpTabGroupItem_11");
+            if (rankTab != null) rankTab.onClick.AddListener(() =>
+            {
+                if (rankContent != null) rankContent.gameObject.SetActive(true);
+                if (levelContent != null) levelContent.gameObject.SetActive(false);
+                PlayOfficialLayoutAnimations("skill_promote", skillUiTemplates["skill_promote"]
+                    as Dictionary<string, object>, dialogNodes, "SkillPromotePanel_Switch");
+            });
+            Button levelTab = DialogButton(dialogButtons, "SkillPromotePanelLevelUpTabGroupItem_11");
+            if (levelTab != null) levelTab.onClick.AddListener(() =>
+            {
+                if (rankContent != null) rankContent.gameObject.SetActive(false);
+                if (levelContent != null) levelContent.gameObject.SetActive(true);
+                PlayOfficialLayoutAnimations("skill_promote", skillUiTemplates["skill_promote"]
+                    as Dictionary<string, object>, dialogNodes, "SkillPromotePanel_Switch");
+            });
+
+            OfflineSkillPlan planState = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan];
+            int[] skillSlots = itemType == ActiveSkillItemType ? planState.ActiveSkills : planState.PassiveSkills;
+            int equippedSlot = Array.IndexOf(skillSlots, skillId);
+            int currentLevel = equippedSlot < 0 ? 0 : progression.SkillProgression.SlotLevel(
+                progression.Player.Skills, itemType, equippedSlot, progression.SkillContext().CurrentSeasonId);
+            SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<Text>(), SkillName(skillId));
+            SetTextValue(DialogNode(dialogNodes, "CurrentLevelText")?.GetComponent<Text>(), currentLevel.ToString(CultureInfo.InvariantCulture));
+            SetTextValue(DialogNode(dialogNodes, "NextLevelText")?.GetComponent<Text>(), (currentLevel + 1).ToString(CultureInfo.InvariantCulture));
+            SetTextValue(DialogNode(dialogNodes, "Count")?.GetComponent<Text>(), rank.ToString(CultureInfo.InvariantCulture));
+            int skillQuality = Quality(skillId);
+            ApplyQualityGradient(FindTextNodeEnding(dialogNodes, "/From/upgradeText"), skillQuality, 0f);
+            ApplyQualityGradient(FindTextNodeEnding(dialogNodes, "/RankUpDetailContent/UpgradeRank/upgradeText"),
+                skillQuality, 45f);
+            Transform skillIcon = DialogNode(dialogNodes, "ItemIconSkill");
+            if (skillIcon != null) BuildSkillIcon(skillId, skillIcon, "OfficialSkillIcon");
+
+            OfflineSkillRankCost rankCost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
+            RectTransform rankButtonNode = dialogNodes.Values.FirstOrDefault(value =>
+                value.name == "UseItemBtn" && value.parent != null
+                && value.parent.parent != null && value.parent.parent.name == "RankUpContent");
+            Button rankUpgrade = rankButtonNode == null ? null : rankButtonNode.GetComponent<Button>();
+            SetTextValue(rankButtonNode == null ? null : FindDeep(rankButtonNode, "BtnTipTxt")?.GetComponent<Text>(),
+                rankCost == null ? "已达最高等阶" : string.Join("、", rankCost.Items.Select(item =>
+                    ItemName(item.ItemId) + " ×" + item.Count.ToString("N0", CultureInfo.InvariantCulture))));
+            if (rankUpgrade != null)
+            {
+                rankUpgrade.interactable = rankCost != null && HasAffordableSkillCost(rankCost.Items);
+                rankUpgrade.onClick.AddListener(DoPromote);
+            }
+
+            foreach (KeyValuePair<string, Button> pair in dialogButtons.Where(value =>
+                value.Key.EndsWith("/Slot", StringComparison.Ordinal)
+                && value.Key.Contains("/SkillContentPanelSkillGroupItem", StringComparison.Ordinal)))
+            {
+                string rowName = pair.Key.Substring(pair.Key.LastIndexOf("SkillContentPanelSkillGroupItem",
+                    StringComparison.Ordinal));
+                int slot = rowName.Contains("(3)", StringComparison.Ordinal) ? 3
+                    : rowName.Contains("(2)", StringComparison.Ordinal) ? 2
+                    : rowName.Contains("(1)", StringComparison.Ordinal) ? 1 : 0;
+                int level = progression.SkillProgression.SlotLevel(progression.Player.Skills,
+                    itemType, slot, progression.SkillContext().CurrentSeasonId);
+                RectTransform row = pair.Value.transform.parent as RectTransform;
+                SetTextValue(row == null ? null : FindDeep(row, "LevelText")?.GetComponent<Text>(),
+                    "Lv" + level.ToString(CultureInfo.InvariantCulture));
+                int capturedSlot = slot;
+                pair.Value.onClick.AddListener(() => UpgradePromoteSlot(itemType, capturedSlot));
+            }
+
+            RectTransform levelButtonNode = dialogNodes.Values.FirstOrDefault(value =>
+                value.name == "UseItemBtn" && value.parent != null
+                && value.parent.parent != null && value.parent.parent.name == "LevelUpContent");
+            Button levelUpgrade = levelButtonNode == null ? null : levelButtonNode.GetComponent<Button>();
+            if (levelUpgrade != null)
+            {
+                levelUpgrade.interactable = equippedSlot >= 0;
+                levelUpgrade.onClick.AddListener(() =>
+                {
+                    if (equippedSlot >= 0) UpgradePromoteSlot(itemType, equippedSlot);
+                });
+            }
+        }
+
+        private void UpgradePromoteSlot(int itemType, int slot)
+        {
+            ProgressionResult result = progression.UpgradeSkillSlot(itemType, slot);
+            SetStatus(result.Message ?? result.Status.ToString());
+            if (!result.IsApplied) return;
+            ClosePromote();
+            Refresh();
+            Changed?.Invoke();
+            OpenPromote(promoteSkillId);
+        }
+
+        private void OpenPromoteFallback(int skillId)
+        {
+            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
             if (definition == null) return;
             ClosePromote();
             promoteSkillId = skillId;
@@ -923,12 +1800,16 @@ namespace Zjcs.Presentation.Character
 
         private void DoPromote()
         {
+            int skillId = promoteSkillId;
+            int oldRank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             ProgressionResult result = progression.PromoteSkill(promoteSkillId);
             SetStatus(result.Message ?? result.Status.ToString());
             if (!result.IsApplied) return;
             ClosePromote();
             Refresh();
             Changed?.Invoke();
+            OpenRankPromotionResult(skillId, oldRank,
+                OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId));
         }
 
         private void ClosePromote()

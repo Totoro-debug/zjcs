@@ -462,6 +462,8 @@ namespace Zjcs.Presentation.Home
                 characterRuntime = characterRoot.AddComponent<Zjcs.Presentation.Character.CharacterFeatureRuntime>();
                 view.CloseRequested += CloseCharacterPage;
             }
+            characterRuntime.NavigationRequested -= OnCharacterNavigationRequested;
+            characterRuntime.NavigationRequested += OnCharacterNavigationRequested;
             characterRoot.SetActive(true);
             try
             {

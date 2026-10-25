@@ -27,7 +27,10 @@ namespace Zjcs.Editor.Character
                 throw new InvalidOperationException("Wait for Unity import and compilation to finish, then retry preparation.");
             bool force = Environment.GetEnvironmentVariable("ZJCS_CHARACTER_FORCE_REBAKE") == "1"
                 || Environment.GetCommandLineArgs().Contains("-forceAcceptanceRebuild");
-            PrepareCharacter(force);
+            if (Environment.GetEnvironmentVariable("ZJCS_CHARACTER_MODELS_PREPARED") == "1")
+                Debug.Log("[Acceptance preparation] character-models: reusing previously rebuilt and verified outputs.");
+            else
+                PrepareCharacter(force);
             PreparePets(force);
         }
 

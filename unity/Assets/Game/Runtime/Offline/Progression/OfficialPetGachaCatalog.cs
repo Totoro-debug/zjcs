@@ -41,7 +41,24 @@ namespace Zjcs.Offline.Progression
                 || catalog.QualityBackgrounds == null
                 || catalog.Achievements == null || catalog.PityProbabilities == null
                 || catalog.Shop == null || catalog.Settings == null)
-                throw new FormatException("The official pet gacha catalog is incomplete or from an unsupported manifest.");
+            {
+                var missing = new List<string>();
+                if (catalog.Manifest != "854_156383") missing.Add("Manifest");
+                if (catalog.Gacha == null) missing.Add("Gacha");
+                if (catalog.Chest == null) missing.Add("Chest");
+                if (catalog.RewardRules == null) missing.Add("RewardRules");
+                if (catalog.RandomRewards == null) missing.Add("RandomRewards");
+                if (catalog.PetProfiles == null) missing.Add("PetProfiles");
+                if (catalog.Items == null) missing.Add("Items");
+                if (catalog.Entries == null) missing.Add("Entries");
+                if (catalog.QualityBackgrounds == null) missing.Add("QualityBackgrounds");
+                if (catalog.Achievements == null) missing.Add("Achievements");
+                if (catalog.PityProbabilities == null) missing.Add("PityProbabilities");
+                if (catalog.Shop == null) missing.Add("Shop/PetShop");
+                if (catalog.Settings == null) missing.Add("Settings");
+                throw new FormatException("The official pet gacha catalog is incomplete or from an unsupported manifest: "
+                    + string.Join(", ", missing));
+            }
             catalog.BuildIndex();
             catalog.Validate();
             return catalog;
@@ -247,39 +264,4 @@ namespace Zjcs.Offline.Progression
         }
     }
 
-    [Serializable] public sealed class PetGachaNativeModel
-    {
-        public int PetClassId, UIModel;
-        public GameObject Prefab;
-    }
-
-    public sealed class OfficialPetGachaAssetCatalog : ScriptableObject
-    {
-        public const string DefaultResourcePath = "PetGacha/official-pet-gacha-assets";
-        public string Manifest;
-        public PetGachaNativeModel[] NativeModels;
-
-        public static OfficialPetGachaAssetCatalog LoadDefault()
-        {
-            OfficialPetGachaAssetCatalog catalog = Resources.Load<OfficialPetGachaAssetCatalog>(DefaultResourcePath);
-            if (catalog == null) throw new InvalidOperationException("Official pet gacha native models are not installed.");
-            return catalog;
-        }
-
-        public GameObject NativeModel(int petClassId, int uiModel)
-        {
-            PetGachaNativeModel entry = (NativeModels ?? Array.Empty<PetGachaNativeModel>())
-                .FirstOrDefault(value => value != null && value.PetClassId == petClassId && value.UIModel == uiModel);
-            return entry == null ? null : entry.Prefab;
-        }
-
-        public void Validate(PetGachaRuntimeCatalog rules)
-        {
-            if (Manifest != "854_156383" || rules == null || NativeModels == null)
-                throw new FormatException("The official pet gacha native model catalog is missing or unsupported.");
-            foreach (PetGachaPetProfile profile in rules.PetProfiles)
-                if (NativeModel(profile.ClassId, profile.UIModel) == null)
-                    throw new FormatException("The official native pet model is not installed: " + profile.ClassId);
-        }
-    }
 }

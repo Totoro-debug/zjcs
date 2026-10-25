@@ -13,6 +13,9 @@ namespace Zjcs.Presentation.Character
 
         private OfflineMainlineProgressSession session;
         private OfflineCharacterProgressionService progression;
+        private string activeSlotId;
+        private string activeSavesRoot;
+        private long nextLegionBuildingSettlementUnixSeconds;
 
         public OfflineCharacterProgressionService Progression => progression;
         public event Action<string> NavigationRequested;
@@ -33,6 +36,8 @@ namespace Zjcs.Presentation.Character
             if (!slots.Contains(selectedSlotId))
                 throw new InvalidOperationException("The selected profile slot no longer exists.");
 
+            activeSlotId = selectedSlotId;
+            activeSavesRoot = string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot;
             session = OfflineMainlineProgressSession.OpenCharacter(slots, selectedSlotId);
             progression = new OfflineCharacterProgressionService(session, assetCatalog.Load());
             TryRegisterEquipmentProperties();
@@ -53,11 +58,33 @@ namespace Zjcs.Presentation.Character
                 "wardrobe-expiry-sync-" + now.ToString(System.Globalization.CultureInfo.InvariantCulture));
             if (expiry.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(expiry.Message ?? "Expired character appearances could not be synchronized.");
+            ProgressionResult buildingSettlement = progression.LegionBuildings.Settle(now);
+            if (buildingSettlement.Status == ProgressionResultStatus.InvalidState)
+                throw new InvalidOperationException(buildingSettlement.Message
+                    ?? "Guild building HangUp progress could not be settled.");
+            nextLegionBuildingSettlementUnixSeconds = checked(now
+                + Math.Max(1, progression.LegionBuildings.SettlePeriodSeconds));
             if (panelView == null) panelView = GetComponent<OfficialCharacterPanelView>();
             if (panelView == null) panelView = gameObject.AddComponent<OfficialCharacterPanelView>();
-            panelView.Initialize(assetCatalog, progression);
+            panelView.Initialize(assetCatalog, progression, activeSlotId, activeSavesRoot);
             panelView.OfficialModuleRequested -= ForwardNavigation;
             panelView.OfficialModuleRequested += ForwardNavigation;
+        }
+
+        private void Update()
+        {
+            if (progression == null || progression.LegionBuildings.ActiveOperation == null) return;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (now < nextLegionBuildingSettlementUnixSeconds) return;
+            nextLegionBuildingSettlementUnixSeconds = checked(now
+                + Math.Max(1, progression.LegionBuildings.SettlePeriodSeconds));
+            ProgressionResult settlement = progression.LegionBuildings.Settle(now);
+            if (settlement.Status == ProgressionResultStatus.InvalidState)
+            {
+                Debug.LogWarning("Guild building HangUp progress could not be settled: " + settlement.Message);
+                return;
+            }
+            if (settlement.IsApplied && panelView != null) panelView.Refresh();
         }
 
         private void TryRegisterEquipmentProperties()
