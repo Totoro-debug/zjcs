@@ -21,6 +21,13 @@ namespace Zjcs.Presentation.World
         private int currentSide = -1;
         private string currentPortraitPath;
         private readonly int[] voiceOverIds;
+        private readonly Animation[] slotAnimations = new Animation[2];
+        private readonly Animation boardAnimation;
+        private readonly string boardLeftToRight, boardRightToLeft;
+        private readonly Transform[] characterSlots = new Transform[2];
+        private readonly string[] slotPortraitPaths = new string[2];
+        private readonly bool[] slotHasLeft = new bool[2];
+        private readonly string[] switchAnimations = new string[2];
         private bool disposed;
 
         public OfficialMap10DialoguePortraitView(OfficialMap10UiRenderer ui, string panelKey = "TalkDialog", int mapClassId = 10)
@@ -74,14 +81,36 @@ namespace Zjcs.Presentation.World
             Transform right = FindParent(ui, panelKey, RightParentPath.Replace("TalkDialog", panelKey));
             slots[0] = new PortraitSlot(CreatePortraitRoot(left, "Map10LeftPortrait"));
             slots[1] = new PortraitSlot(CreatePortraitRoot(right, "Map10RightPortrait"));
+            if (mapClassId == 11)
+            {
+                var native = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
+                var board = native.components.Single(value => value.panel == panelKey && value.type == "TalkDialogContentSwitch").fields;
+                boardAnimation = ui.Find(panelKey, board.mBattomBoardChangeAni).GetComponent<Animation>();
+                boardLeftToRight = board.mBattomBoardLeftToRight;
+                boardRightToLeft = board.mBattomBoardRightToLeft;
+                characterSlots[0] = left.GetComponentInParent<Animation>().transform;
+                characterSlots[1] = right.GetComponentInParent<Animation>().transform;
+                slotAnimations[0] = characterSlots[0].GetComponent<Animation>();
+                slotAnimations[1] = characterSlots[1].GetComponent<Animation>();
+                switchAnimations[0] = speakerStyles[0].switchAnimation;
+                switchAnimations[1] = speakerStyles[1].switchAnimation;
+            }
         }
 
-        public void SetSpeaker(Map10RuntimeDialogRole role, string faceType)
+        public void SetSpeaker(Map10RuntimeDialogRole role, string faceType, Action onContentSwitch = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialMap10DialoguePortraitView));
             if (role != null && voiceOverIds.Contains(role.RoleId))
             {
-                Clear();
+                foreach (int side in new[] { 0, 1 })
+                {
+                    slotAnimations[side]?.Play(speakerStyles[side].moveOutAnimation);
+                    slotHasLeft[side] = true;
+                }
+                if (currentSide == 1 && boardAnimation != null) SwitchBoard(false, onContentSwitch);
+                else onContentSwitch?.Invoke();
+                currentSide = -1;
+                currentPortraitPath = null;
                 return;
             }
             if (role == null || !portraits.TryGetValue(role.PortraitPath, out Map10RuntimeDialogPortrait portrait))
@@ -92,23 +121,53 @@ namespace Zjcs.Presentation.World
                 if (currentSide < 0)
                 {
                     currentSide = 0;
+                    if (slotHasLeft[currentSide]) slotAnimations[currentSide]?.Play(speakerStyles[currentSide].moveInAnimation);
                     slots[currentSide].SetPortrait(portrait, currentSide == 1);
                     slots[currentSide].SetColorImmediate(ToColor(speakerStyles[currentSide].light));
+                    onContentSwitch?.Invoke();
                 }
                 else
                 {
                     int previousSide = currentSide;
                     currentSide = 1 - currentSide;
+                    SwitchBoard(previousSide == 0, onContentSwitch);
+                    characterSlots[currentSide]?.SetAsLastSibling();
+                    slotAnimations[previousSide]?.Play(speakerStyles[previousSide].darkAnimation);
                     slots[previousSide].Transition(ToColor(speakerStyles[previousSide].dark),
                         speakerStyles[previousSide].colorDuration);
-                    slots[currentSide].SetPortrait(portrait, currentSide == 1);
-                    slots[currentSide].SetColorImmediate(ToColor(speakerStyles[currentSide].dark));
-                    slots[currentSide].Transition(ToColor(speakerStyles[currentSide].light),
-                        speakerStyles[currentSide].colorDuration);
+                    int target = currentSide;
+                    void UpdatePortrait()
+                    {
+                        slots[target].SetPortrait(portrait, target == 1);
+                        slots[target].SetExpression(portrait, faceType);
+                        slots[target].SetColorImmediate(ToColor(speakerStyles[target].dark));
+                        slots[target].Transition(ToColor(speakerStyles[target].light), speakerStyles[target].colorDuration);
+                    }
+                    if (!slotHasLeft[target] && slotPortraitPaths[target] != null && slotPortraitPaths[target] != role.PortraitPath
+                        && slotAnimations[target] != null)
+                    {
+                        slotAnimations[target].GetComponent<Zjcs.Official.WorldUI.WorldDialogueAnimationEvents>().PortraitSwitchHalf = UpdatePortrait;
+                        slotAnimations[target].Play(switchAnimations[target]);
+                    }
+                    else
+                    {
+                        UpdatePortrait();
+                        slotAnimations[target]?.Play(speakerStyles[target].lightAnimation);
+                    }
                 }
                 currentPortraitPath = role.PortraitPath;
             }
-            slots[currentSide].SetExpression(portrait, faceType);
+            else onContentSwitch?.Invoke();
+            slotHasLeft[currentSide] = false;
+            slotPortraitPaths[currentSide] = role.PortraitPath;
+            if (slots[currentSide].IsPortrait(portrait.portraitPath)) slots[currentSide].SetExpression(portrait, faceType);
+        }
+
+        private void SwitchBoard(bool leftToRight, Action onContentSwitch)
+        {
+            if (boardAnimation == null) { onContentSwitch?.Invoke(); return; }
+            boardAnimation.GetComponent<Zjcs.Official.WorldUI.WorldDialogueAnimationEvents>().ContentSwitchHalf = onContentSwitch;
+            boardAnimation.Play(leftToRight ? boardLeftToRight : boardRightToLeft);
         }
 
         public void Tick(float deltaTime)
@@ -125,6 +184,14 @@ namespace Zjcs.Presentation.World
             slots[1]?.Clear();
             currentPortraitPath = null;
             currentSide = -1;
+            Array.Clear(slotPortraitPaths, 0, slotPortraitPaths.Length);
+            Array.Clear(slotHasLeft, 0, slotHasLeft.Length);
+            if (boardAnimation != null && boardAnimation[boardRightToLeft] != null)
+            {
+                AnimationState state = boardAnimation[boardRightToLeft];
+                state.clip.SampleAnimation(boardAnimation.gameObject, state.length);
+                boardAnimation.Stop();
+            }
         }
 
         public void Dispose()
@@ -218,6 +285,8 @@ namespace Zjcs.Presentation.World
                 }
                 root.gameObject.SetActive(true);
             }
+
+            public bool IsPortrait(string path) => currentPortraitPath == path;
 
             public void SetExpression(Map10RuntimeDialogPortrait portrait, string faceType)
             {

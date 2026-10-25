@@ -8,6 +8,7 @@ namespace Zjcs.Presentation.World
 {
     public sealed class OfficialMap10UiRenderer : IDisposable
     {
+        public Transform OverlayRoot => canvasObject.transform;
         private readonly OfficialMap10UiCatalog catalog;
         private readonly Dictionary<string, OfficialBattleHudRenderer> renderers =
             new Dictionary<string, OfficialBattleHudRenderer>(StringComparer.Ordinal);
@@ -17,6 +18,7 @@ namespace Zjcs.Presentation.World
         private Vector2 previousResolution;
         private CanvasScaler.ScreenMatchMode previousMatchMode;
         private float previousMatch;
+        private OfficialMap11UiData nativeData;
 
         public OfficialMap10UiRenderer(OfficialMap10UiCatalog catalog)
         {
@@ -30,6 +32,11 @@ namespace Zjcs.Presentation.World
             canvasObject = new GameObject("OfficialMap10UI", typeof(RectTransform), typeof(Canvas),
                 typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(parent, false);
+            RectTransform canvasRect = (RectTransform)canvasObject.transform;
+            canvasRect.anchorMin = Vector2.zero;
+            canvasRect.anchorMax = Vector2.one;
+            canvasRect.sizeDelta = Vector2.zero;
+            canvasRect.anchoredPosition = Vector2.zero;
             Canvas canvas = canvasObject.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.overrideSorting = true;
@@ -50,6 +57,7 @@ namespace Zjcs.Presentation.World
                 TMPro.MaterialReferenceManager.AddSpriteAsset(TMPro.TMP_TextUtilities.GetSimpleHashCode(common.name), common);
                 OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(
                     Resources.Load<TextAsset>("Map11/UI/catalog").text);
+                nativeData = data;
                 OfficialMap11CanvasScaler original = data.worldBindings.canvasScaler;
                 Canvas activeCanvas = canvas.rootCanvas;
                 parentScaler = activeCanvas.GetComponent<CanvasScaler>();
@@ -69,8 +77,20 @@ namespace Zjcs.Presentation.World
                 if (mapClassId == 11 && panel.key == "WorldCanvas")
                 {
                     GameObject restored = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Map11/UI/WorldCanvas"),
-                        canvasObject.transform, false);
+                        (Transform)null, false);
                     restored.name = panel.key;
+                    // The official prefab is a root screen canvas. Unity drives its
+                    // serialized zero size/scale only when it remains a root canvas.
+                    Canvas worldCanvas = restored.GetComponent<Canvas>();
+                    worldCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    worldCanvas.sortingOrder = 99;
+                    CanvasScaler worldScaler = restored.AddComponent<CanvasScaler>();
+                    worldScaler.uiScaleMode = scaler.uiScaleMode;
+                    worldScaler.referenceResolution = scaler.referenceResolution;
+                    worldScaler.screenMatchMode = scaler.screenMatchMode;
+                    worldScaler.matchWidthOrHeight = scaler.matchWidthOrHeight;
+                    restored.AddComponent<GraphicRaycaster>();
+                    UnityEngine.Object.DontDestroyOnLoad(restored);
                     nativePanels.Add(panel.key, restored);
                     foreach (Transform child in restored.GetComponentsInChildren<Transform>(true))
                     {
@@ -79,6 +99,22 @@ namespace Zjcs.Presentation.World
                         bind?.Invoke("/" + panel.key + relative, child.gameObject);
                     }
                     restored.GetComponent<Zjcs.Official.WorldUI.WorldPanel>().Initialize(false);
+                    continue;
+                }
+                if (mapClassId == 11 && (panel.key == "TalkDialog" || panel.key == "OptionTalkDialog"))
+                {
+                    GameObject prefab = Resources.Load<GameObject>("Map11/UI/" + panel.key);
+                    if (prefab == null) throw new System.IO.InvalidDataException("Native dialogue prefab missing: Map11/UI/" + panel.key);
+                    GameObject restored = UnityEngine.Object.Instantiate(prefab,
+                        canvasObject.transform, false);
+                    restored.name = panel.key;
+                    restored.SetActive(false);
+                    var fields = Array.Find(nativeData.components, value => value.panel == panel.key
+                        && (value.type == "TalkDialog" || value.type == "OptionTalkDialogPanel")).fields;
+                    restored.transform.Find(fields.mBlackBgImg.Substring(panel.key.Length + 2)).GetComponent<Image>().color = fields.mBlackBgColorDarkLess;
+                    nativePanels.Add(panel.key, restored);
+                    foreach (Transform child in restored.GetComponentsInChildren<Transform>(true))
+                        bind?.Invoke("/" + panel.key + UnityPath(restored.transform, child), child.gameObject);
                     continue;
                 }
                 var renderer = new OfficialBattleHudRenderer(battleHud, catalog.FindSprite);
@@ -140,9 +176,34 @@ namespace Zjcs.Presentation.World
                 && renderer.SetActive(path, active);
         }
 
+        public void SetOptionChoicesVisible(bool visible)
+        {
+            if (nativeData == null) return;
+            var fields = Array.Find(nativeData.components, value => value.panel == "OptionTalkDialog"
+                && value.type == "OptionTalkDialogPanel").fields;
+            SetNodeActive("OptionTalkDialog", fields.mClickMask, visible);
+            SetNodeActive("OptionTalkDialog", fields.mDarkMask, visible);
+        }
+
         public bool SetPanelActive(string panelKey, bool active)
         {
             if (canvasObject == null) throw new InvalidOperationException("Mount the official Map10 UI before changing panel state.");
+            if (nativePanels.TryGetValue(panelKey, out GameObject native))
+            {
+                native.SetActive(active);
+                if (panelKey == "TalkDialog" || panelKey == "OptionTalkDialog")
+                {
+                    bool storyVisible = nativePanels.TryGetValue("TalkDialog", out GameObject talk) && talk.activeSelf
+                        || nativePanels.TryGetValue("OptionTalkDialog", out GameObject options) && options.activeSelf;
+                    var world = nativePanels["WorldCanvas"].GetComponent<Zjcs.Official.WorldUI.WorldPanel>();
+                    if (storyVisible) world.HideUI(); else world.ShowUI();
+                    // ECActionHideUIView also calls SetActiveUIVisible on the
+                    // current scene's UI root, including dynamically loaded HUD.
+                    Transform panelContent = nativePanels["WorldCanvas"].transform.Find("Content/Content/WorldPanel");
+                    panelContent.gameObject.SetActive(!storyVisible);
+                }
+                return true;
+            }
             Transform panel = canvasObject.transform.Find(panelKey);
             if (panel == null) return false;
             panel.gameObject.SetActive(active);
@@ -152,6 +213,8 @@ namespace Zjcs.Presentation.World
         public void Dispose()
         {
             renderers.Clear();
+            foreach (GameObject native in nativePanels.Values)
+                if (native != null) UnityEngine.Object.Destroy(native);
             nativePanels.Clear();
             if (parentScaler != null)
             {

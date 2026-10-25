@@ -186,8 +186,50 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeStory[] stories;
         public Map10RuntimeStory[] subgraphs;
         public Map10RuntimeEntityTemplate[] entityTemplates;
+        public Map11RuntimeWitchInfo[] witchInfos;
+        public Map11RuntimeWitchResult[] witchResultEffects;
+        public Map11RuntimePeriodicityAward[] witchPeriodicityAwards;
         public Zjcs.Offline.World.MapPuzzleRule[] puzzleRules;
         public Map11RuntimeQuickBuy[] quickBuys;
+    }
+
+    [Serializable]
+    public sealed class Map11RuntimeWitchInfo
+    {
+        public int ActiveCount;
+        public int StoryBookId;
+        public bool IsNextState;
+        public Map11RuntimeStageResultRef[] StageResults;
+    }
+
+    [Serializable]
+    public sealed class Map11RuntimeStageResultRef
+    {
+        public int ComponentType;
+        public int ComponentIndex;
+    }
+
+    [Serializable] public sealed class Map11RuntimeWitchResult
+    {
+        public int ComponentType, ComponentIndex;
+        public float HpPercentChange;
+        public Map10RuntimeAwardItem[] AwardItems;
+        public Map11RuntimeStatueStatus[] StatusEffects;
+        public int GroupId, SpawnEntityClassId, SpawnStageId, PlayerActionId, ActionId, AutoInteractionSubStateIndex;
+    }
+
+    [Serializable] public sealed class Map11RuntimeStatueStatus
+    {
+        public int StatusEffectId, EntryId, EffectType;
+        public int[] FightStatusClassIds;
+    }
+
+    [Serializable] public sealed class Map11RuntimePeriodicityAward
+    {
+        public int PeriodicityGroupId, AwardGroupId, PeriodicityId, Weight, Action;
+        public float ActionTime;
+        public bool IsFirstReward;
+        public Map11RuntimeStageResultRef[] StageResults;
     }
 
     [Serializable] public sealed class Map11RuntimeQuickBuy
@@ -458,6 +500,7 @@ namespace Zjcs.Presentation.World
     [Serializable]
     public sealed class Map10RuntimeDialogSpeakerSlot
     {
+        public string lightAnimation, darkAnimation, moveInAnimation, moveOutAnimation, switchAnimation;
         public int direction;
         public float[] light;
         public float[] dark;

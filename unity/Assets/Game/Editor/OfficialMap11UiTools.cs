@@ -30,10 +30,15 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map11-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 8)
+            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 36)
                 throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
             Directory.CreateDirectory(ResourceRoot);
-            File.Copy(path, ResourceRoot + "/catalog.json", true);
+            string catalogPath = ResourceRoot + "/catalog.json";
+            if (!File.Exists(catalogPath) || !File.ReadAllBytes(path).SequenceEqual(File.ReadAllBytes(catalogPath)))
+            {
+                AssetDatabase.ReleaseCachedFileHandles();
+                FileUtil.ReplaceFile(path, catalogPath);
+            }
             AssetDatabase.Refresh();
             RestoreCommonSpriteAsset(data.commonSpriteAsset);
             Shader colorShiftShader = Shader.Find("Zjcs/Official/UI/ColorShift");
@@ -64,6 +69,12 @@ namespace Zjcs.Editor
                         .Replace("-", "").ToLowerInvariant() != record.sha256)
                         throw new InvalidDataException("Map11 UI sprite differs from its official source: " + record.uri);
                 var importer = (TextureImporter)AssetImporter.GetAtPath(record.unityAssetPath);
+                if (importer == null)
+                {
+                    AssetDatabase.ImportAsset(record.unityAssetPath, ImportAssetOptions.ForceSynchronousImport);
+                    importer = AssetImporter.GetAtPath(record.unityAssetPath) as TextureImporter;
+                }
+                if (importer == null) throw new InvalidDataException("Official Map11 sprite has no texture importer: " + record.unityAssetPath);
                 string previousSettings = EditorJsonUtility.ToJson(importer);
                 importer.textureType = TextureImporterType.Sprite;
                 importer.spriteImportMode = SpriteImportMode.Single;
@@ -80,6 +91,7 @@ namespace Zjcs.Editor
                 if (EditorJsonUtility.ToJson(importer) != previousSettings) importer.SaveAndReimport();
                 sprites.Add(record.uri, AssetDatabase.LoadAssetAtPath<Sprite>(record.unityAssetPath));
             }
+            RestoreMiniMapCharacter(data, sprites);
             string itemAssetsPath = ResourceRoot + "/DynamicItems.asset";
             OfficialMap11UiAssets items = AssetDatabase.LoadAssetAtPath<OfficialMap11UiAssets>(itemAssetsPath);
             if (items == null)
@@ -89,7 +101,10 @@ namespace Zjcs.Editor
             }
             items.itemIds = data.itemIcons.Select(value => value.itemId).ToArray();
             items.itemSprites = data.itemIcons.Select(value => sprites[value.sprite]).ToArray();
+            items.itemQualities = data.itemIcons.Select(value => sprites[value.qualitySprite]).ToArray();
             items.quality = sprites[data.itemQualitySprite];
+            items.miniMapMarkNames = data.minimapMarks.Select(value => value.name).ToArray();
+            items.miniMapMarkSprites = data.minimapMarks.Select(value => sprites[value.sprite]).ToArray();
             EditorUtility.SetDirty(items);
             GameObject host = new GameObject("Map11PrefabRestoration", typeof(RectTransform));
             try
@@ -100,6 +115,15 @@ namespace Zjcs.Editor
                     var renderer = new OfficialBattleHudRenderer(OfficialBattleHudCatalog.LoadDefault(),
                         uri => sprites.TryGetValue(uri, out Sprite sprite) ? sprite : null);
                     GameObject root = renderer.CreateSubtree(panel.BuildRoot(), host.transform);
+                    foreach (var node in panel.nodes.Where(value => value.scripts.Contains("NoDrawingRayCast")))
+                    {
+                        GameObject target = renderer.Find(node.path);
+                        Graphic placeholder = target.GetComponent<Graphic>();
+                        if (placeholder != null) UnityEngine.Object.DestroyImmediate(placeholder);
+                        var graphic = target.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
+                        Button button = target.GetComponent<Button>();
+                        if (button != null) button.targetGraphic = graphic;
+                    }
                     Transform Require(string nodePath)
                     {
                         GameObject node = renderer.Find(nodePath);
@@ -122,17 +146,21 @@ namespace Zjcs.Editor
                         WorldPopupWindow popup = Require(component.path).gameObject.AddComponent<WorldPopupWindow>();
                         foreach (OfficialMap11UiClip sourceClip in component.fields.clips)
                         {
-                            if (sourceClip.unknown.Length != 0)
+                            // These source curves point to objects absent from the original prefab too.
+                            // Keep the recorded missing bindings; only real targets participate in playback.
+                            if (sourceClip.unknown.Any(value => value.reason != "target_absent"))
                                 throw new InvalidDataException("Unresolved official popup animation bindings: " + sourceClip.name);
                             var clip = new AnimationClip { name = sourceClip.name, frameRate = 30, wrapMode = sourceClip.loop ? WrapMode.Loop : WrapMode.Once };
                             foreach (OfficialMap11UiTrack track in sourceClip.tracks)
                             {
                                 string relative = track.path == component.path ? string.Empty : track.path.Substring(component.path.Length + 1);
                                 bool scale = track.property.StartsWith("scale.", StringComparison.Ordinal);
-                                if (!scale && track.property != "m_Alpha")
+                                bool active = track.property == "m_IsActive";
+                                bool position = track.property.StartsWith("m_AnchoredPosition.", StringComparison.Ordinal);
+                                if (!scale && !active && !position && track.property != "m_Alpha")
                                     throw new InvalidDataException("Unimplemented official popup curve: " + track.property);
                                 AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(relative,
-                                    scale ? typeof(Transform) : typeof(CanvasGroup), scale ? "m_LocalScale." + track.property.Substring(6) : track.property),
+                                    scale ? typeof(Transform) : active ? typeof(GameObject) : position ? typeof(RectTransform) : typeof(CanvasGroup), scale ? "m_LocalScale." + track.property.Substring(6) : track.property),
                                     new AnimationCurve(track.keyframes.Select(key => new Keyframe(key.time, key.value, key.inTangent, key.outTangent)).ToArray()));
                             }
                             string clipPath = ResourceRoot + "/" + sourceClip.name + ".anim";
@@ -148,8 +176,29 @@ namespace Zjcs.Editor
                             }
                         }
                     }
+                    if (panel.key == "TalkDialog" || panel.key == "OptionTalkDialog" || panel.key == "MiniMapMaskedUI"
+                        || panel.key == "MiniMapFullScreenPanel" || panel.key == "PublicTopBar" || panel.key == "MoneyUI" || panel.key == "TaskListItem"
+                        || panel.key == "TaskPanelListItemProgress"
+                        || panel.key == "WorldWitchTouchDialog"
+                        || panel.key.StartsWith("WorldStageInteraction", StringComparison.Ordinal)
+                        || panel.key == "WorldTouchDialogWitchPeriodicityInteraction"
+                        || panel.key == "WitchStoryCollectContent"
+                        || panel.key == "WorldStageDialogWithWitchStoryCollect"
+                        || panel.key == "StoryWitchBookDialog" || panel.key == "StoryBookDialog"
+                        || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
+                        || panel.key == "ItemAwardIcon" || panel.key == "6620_11_DialogIcon"
+                        || panel.key == "FunctionEntryDialog" || panel.key == "MarkUIFilterEntryItem"
+                        || panel.key == "MiniMapMarkFilterItem")
+                    {
+                        BindSupportPrefab(root, panel.key, data, Require, sprites);
+                        if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)
+                            throw new InvalidOperationException("Could not save restored official witch UI hierarchy: " + panel.key);
+                        UnityEngine.Object.DestroyImmediate(root);
+                        continue;
+                    }
                     if (panel.key == "WorldCanvas")
                     {
+                        BindSupportPrefab(root, panel.key, data, Require, sprites);
                         foreach (OfficialMap11UiComponent source in data.components.Where(value =>
                                      value.panel == panel.key && value.type == "PlayerCombatRatingText"))
                             Require(source.path).gameObject.AddComponent<WorldPlayerCombatRatingText>().Bind(
@@ -182,13 +231,6 @@ namespace Zjcs.Editor
                         }
                         foreach (OfficialMap11TeamPanelBinding teamPanelBinding in world.teamPanels)
                             Require(teamPanelBinding.path).gameObject.AddComponent<TeamMiniPanel>().mHasTeamStateSwitcher = States(teamPanelBinding.states);
-                        foreach (OfficialMap11SafeAreaBinding safe in world.safeAreas)
-                        {
-                            WorldSafeArea area = Require(safe.path).gameObject.AddComponent<WorldSafeArea>();
-                            area.PaddingTop = safe.paddingTop;
-                            area.PaddingBottom = safe.paddingBottom;
-                            area.enabled = safe.enabled;
-                        }
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/WorldCanvas.prefab") == null)
                             throw new InvalidOperationException("Could not save the restored official WorldCanvas.");
                         UnityEngine.Object.DestroyImmediate(root);
@@ -237,8 +279,17 @@ namespace Zjcs.Editor
             finally { UnityEngine.Object.DestroyImmediate(host); }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("Map11 native prefabs restored: WorldCanvas, 2 goddess panels, 2 dynamic icons, confirmation, exchange and item icon, "
-                + data.sprites.Length + " sprites, original component bindings and state lists.");
+            foreach (string panel in new[] { "WorldWitchTouchDialog", "WorldStageInteractionPreviewDialogWitch",
+                         "WorldTouchDialogWitchPeriodicityInteraction", "WitchStoryCollectContent",
+                         "WorldStageDialogWithWitchStoryCollect", "StoryWitchBookDialog", "StoryBookDialog",
+                         "OpenStoryBookItem" })
+            {
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ResourceRoot + "/" + panel + ".prefab");
+                if (prefab == null || prefab.GetComponentsInChildren<RectTransform>(true).Length < 2)
+                    throw new InvalidDataException("Official witch UI hierarchy did not import: " + panel);
+            }
+            Debug.Log("Map11 native prefabs restored: WorldCanvas, 2 goddess panels, 2 dynamic icons, confirmation, exchange, item icon, "
+                + "and native witch books, periodic interaction and result previews; " + data.sprites.Length + " sprites.");
         }
     }
 }

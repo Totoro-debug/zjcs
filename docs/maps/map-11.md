@@ -12,6 +12,12 @@
 
 ## 完整还原部分
 
+本图 UI 已从固定版本官方 prefab、程序集和资源绑定恢复为 36 份原生 panel、322 张 Sprite。`WorldCanvas` 保持官方根 Canvas、CanvasScaler、SafeArea、原始坐标和层级，修复 HUD 缩放与布局；头像使用官方角色模型、相机参数和排除皮肤列表生成，生命、等级、战力、货币／体力和固定任务内容接到本地状态。人物对话恢复原底板、左右立绘、说话人位置、明暗切换、选项、逐字显示及动画半程事件；首次点击补全当前句，之后才推进。右侧立绘的原 `RectMask2D` 为禁用状态，现按序列化状态还原，避免人物被错误裁掉。对话与选项期间按原流程隐藏地图 HUD。功能入口使用官方 `FunctionEntryDialog`，迁移 `GridLayoutGroupJSZX` 的间距、排列和自定义行数算法，恢复原按钮排列；没有本地服务器时钟区域或提示记录时使用官方关闭状态。
+
+小地图恢复原圆形遮罩材质、人物标记、地区名／坐标／探索度、全屏面板、缩放、拖拽边界与分类筛选。37 份原生标记 prefab 按官方实体／地图／区域／标签优先级绑定到 1,707 个放置点；标记偏移使用官方身体格中心，缩放与完成状态按原配置处理。筛选保存至所属档案的 `minimap-filter.json`，关闭、清空内存后重开可冷读恢复。跨地图页签、标记点击跳转和公共地区资源点提供器尚未完整接入，不能据此认定完整小地图功能已完成。
+
+Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。画面复核同时发现原基础地面瓦片未加载、地形／角色排序及遮罩绘制错误；这些场景问题仍须修复后再核对整体画面。代码入口为 `OfficialMap10GameRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
+
 尚无本图在 Unity 完整运行并验收的结论。
 
 已转换并放入 `unity/Assets/Official/World/Map/11/` 的官方载荷：地图定义含 77 区、81 面积配置、1,803 个放置实体及其一一对应的实体组件、导航和 8 条区域开放条件；绑定 110 条实体进度参数、247 条实体显示、128 条实体 UI、5 条阶段动作，以及地图、区域、逻辑实体配置。Map 11 有 17 个普通女神像（`EntityClassId=6010`），其所在区域各配置一组 `DropItems`；另有 49 个失落女神像（`EntityClassId=6011`），其所在区域各配置一组 `GoddessActivePropAwardDict`。1045～1160 范围含 24 条主线记录。地形几何为 14,427 批次，引用的 475 张官方纹理已复制至 `Resources/Map11/Textures/`；小地图为 85 批次并绑定 2 张官方纹理。输入版本固定为 `854_156383`，来源和输出哈希见该目录的 `*-source-manifest.json`。转换器为 `scripts/prepare_unity_map11_rendering.py`、`scripts/prepare_unity_map10_minimap.py --map-id 11` 和 `scripts/prepare_unity_map11_definition.py`。地形视图已支持原始 Map11 几何头格式，保留 Map10 默认格式。
@@ -20,7 +26,7 @@
 
 战斗载荷为 129 个官方阶段、57 个怪物编队数组、129 个展开编队、17 个战斗场景和 591 个实体阶段绑定，保留玩家等级／位阶动态阶段及官方等级属性缺行语义。`prepare_unity_map11_runtime_data.py` 已将 110 类基础实体组件、44 个故事图（666 个节点）、四个子图（64 个节点）、50 条地图对话、35 个逻辑标签、17 个对话角色、10 个可演出资源及 24 条主线写入本地 `Resources/Map11`。原放置组件是 `Lo` 覆盖，不能代替基础实体模板；基础组件与嵌套阶段列表保持官方顺序。转换测试已通过，来源及输出哈希分别见 `battle-source-manifest.json` 与 `assets/reference/official-map/map11-runtime-source-manifest.json`。
 
-`OfficialMap11Tools.ImportAndValidate` 已在 Unity `2022.3.57f1c2` 实际执行并正常退出，生成地形、小地图、实体 prefab，绑定 ClassId 11，并检查 77 区、1,803 实体、14,427 地形批次、85 小地图批次和相邻格寻路。`prepare_unity_map11_ui.py` 恢复 WorldCanvas、两种女神弹窗、两个动态图标、购买确认框、兑换框和默认物品图标，共八份原生 prefab、125 张 Sprite；保留原层级、脚本引用、状态列表、中文、条件颜色与弹窗曲线。动态布局和镜像图片直接迁移官方 `UGUIJszx`／`MirrorImage` 代码；Common 的七个 TMP 图标字形使用原图集、指标和字符表，并注册原序列化哈希及当前名称哈希。来源见 `UI/source-manifest.json`，加载绑定为 `Resources/Map11/UI`。上述导入不能代替整图玩法验收。
+`OfficialMap11Tools.ImportAndValidate` 已在 Unity `2022.3.57f1c2` 实际执行并正常退出，生成地形、小地图、实体 prefab，绑定 ClassId 11，并检查 77 区、1,803 实体、14,427 地形批次、85 小地图批次和相邻格寻路。`prepare_unity_map11_ui.py` 与 `map11_support_ui.py`／`map11_minimap_ui.py` 恢复原 UI、动态布局、TMP 字形和小地图标记；显式加载绑定为 `Resources/Map11/UI`。Common 的七个 TMP 图标字形使用原图集、指标和字符表，并注册原序列化哈希及当前名称哈希。上述导入不能代替整图玩法验收。
 
 机关配置已补齐 116 个相关放置记录、九组条件锁和七座终端，保留自状态、通知、生成、其他实体状态更新与自动进入下一状态的原执行顺序。`OfflineMapPuzzleSession` 已在 Editor 检查九组解锁、七终端解谜／重置、踏板计数、关联状态通知、奖励实体生成及存档冷读；同时检查 413 只跳过已确认的缺失目标 423，其他未知目标仍拒绝执行。窗口化 Play Mode 已用真实鼠标点击石碑 2302，核对其与 2303／2304／2305 的联动并重新进入地图恢复状态；机关动画和终端原界面尚待完整接入，不能据此认定九组玩法完整完成。
 

@@ -1,6 +1,7 @@
 """Read Map11's dynamic confirmation and item prefabs from the pinned APK."""
 import hashlib
 import io
+import json
 from pathlib import Path
 
 from UnityPy.classes.PPtr import PPtr
@@ -17,7 +18,9 @@ class Map11NativeUiSchemas(ScriptSchemas):
         # TextRendering assemblies. Read original bytes with strict consumption;
         # no official game scripts are replaced by these schema dependencies.
         self.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
-        for path in assemblies.values():
+        paths = {path.name: path for path in (ROOT / ".tools/source-packages/official-code/managed/decoded").glob("*.dll")}
+        paths.update({name + ".dll": path for name, path in assemblies.items()})
+        for path in paths.values():
             self.generator.load_dll(path.read_bytes())
         self.cache, self.records = {}, {}
 
@@ -93,14 +96,46 @@ def load_support_ui(apk, schemas):
     icon = PPtr(**fields["DefPrefab"], assetsfile=config.assets_file).deref()
     item_object = apk.asset("config_luban", "Assets/Config/Luban/item.g.bytes")
     item_payload = item_object.read().m_Script.encode("utf-8", "surrogateescape")
-    item_rows = [row for row in Constructors().table(item_payload, "TbItemInfo") if row["ClassId"] in (2, 3, 325)]
-    if len(item_rows) != 3 or any(row["Quality"] != 3 or row["ItemType"] in fields["TypeList"]
+    item_rows = [row for row in Constructors().table(item_payload, "TbItemInfo") if row["ClassId"] in (2, 3, 57, 110, 115, 118, 325)]
+    if len(item_rows) != 7 or any(row["ItemType"] in fields["TypeList"]
                                 or row["ClassId"] in fields["IdList"] for row in item_rows):
-        raise ValueError("Map11 quick-buy currencies and ticket must use the pinned quality and default item icon.")
+        raise ValueError("Map11 quick-buy and witch rewards must use their pinned default item icon.")
+    award_config = apk.asset("scriptableconfig_modules_itemicon", "/ItemAwardIconManagerConfig.asset")
+    award_fields = schemas.read(award_config)
+    if award_fields["TypeAwardList"] or award_fields["PrefabAwardList"]:
+        raise ValueError("Expected the pinned common award icon wrapper.")
+    award_icon = PPtr(**award_fields["DefAwardPrefab"], assetsfile=award_config.assets_file).deref()
     icon_name = icon.read().m_Name
     prefabs = {"CostItemConfirmDialog": "prefabs_ui_confirmdialog",
                "PayMoneyChangeDialog": "prefabs_ui_pay",
-               icon_name: apk.provenance(icon)["bundle"]}
+               icon_name: apk.provenance(icon)["bundle"],
+               "WorldWitchTouchDialog": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "WorldStageInteractionPreviewDialogWitch": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "WorldStageInteractionPreparePlayableDialog": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "WorldTouchDialogWitchPeriodicityInteraction": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "WitchStoryCollectContent": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "WorldStageDialogWithWitchStoryCollect": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+               "StoryWitchBookDialog": "defaultpackage_assets_prefabs_ui_storybook.bundle",
+               "StoryBookDialog": "defaultpackage_assets_prefabs_ui_storybook.bundle",
+               "OpenStoryBookItem": "defaultpackage_assets_prefabs_ui_storybook.bundle"}
+    map_ui_manifest = json.loads((ROOT / "assets/reference/official-map/ui-source-manifest.json").read_text(encoding="utf-8"))
+    for name in ("TalkDialog", "OptionTalkDialog", "MiniMapMaskedUI", "MiniMapFullScreenPanel"):
+        prefabs[name] = map_ui_manifest["prefabs"][name]["bundle"]
+    topbar_config = apk.asset("scriptableconfig_modules_topbar", "/TopBarManagerConfig.asset")
+    topbar_fields = schemas.read(topbar_config)
+    for field in ("TopBarPrefab", "CurrencyPrefab"):
+        obj = PPtr(**topbar_fields[field], assetsfile=topbar_config.assets_file).deref()
+        prefabs[obj.read().m_Name] = apk.provenance(obj)["bundle"]
+    prefabs["TaskPanelListItemProgress"] = "defaultpackage_assets_prefabs_ui_task.bundle"
+    prefabs["TaskListItem"] = "defaultpackage_assets_prefabs_ui_task.bundle"
+    prefabs["FunctionEntryDialog"] = "defaultpackage_assets_prefabs_ui_functionentry.bundle"
+    for name in ("MarkUIFilterEntryItem", "MiniMapMarkFilterItem"):
+        prefabs[name] = "defaultpackage_assets_prefabs_ui_map_minimap_filter.bundle"
+    prefabs[award_icon.read().m_Name] = apk.provenance(award_icon)["bundle"]
+    for name in ("PreviewContentGroup", "WorldStageInteractionAwardPreview",
+                 "WorldStageInteractionResultAwardStatusEffectPreview", "WorldStageInteractionResultAwardStatusEffectPreviewItem",
+                 "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview"):
+        prefabs[name] = "defaultpackage_assets_prefabs_ui_worldmap.bundle"
     trees, sources = {}, {}
     for key, bundle in prefabs.items():
         data, _ = exporter.object_tree(key, bundle)
@@ -126,11 +161,15 @@ def load_support_ui(apk, schemas):
         if len(matches) != 1:
             raise ValueError("Expected one pinned puzzle quick-buy item icon: " + raw_icon)
         sprite = exporter.add_sprite(matches[0][1].deref())
-        items.append({"itemId": item_id, "sprite": sprite["file"], "metadata": sprite})
+        item_quality = exporter.add_sprite(PPtr(**quality["QualityBgImages"][item["Quality"]], assetsfile=quality_object.assets_file).deref())
+        items.append({"itemId": item_id, "sprite": sprite["file"], "metadata": sprite,
+                      "qualitySprite": item_quality["file"], "qualityMetadata": item_quality})
     ui_sources = {"managerConfig": apk.provenance(config), "qualityConfig": apk.provenance(quality_object),
                   "items": dict(apk.provenance(item_object), payloadSha256=hashlib.sha256(item_payload).hexdigest(),
                                 rows=[{key: row[key] for key in ("ClassId", "ItemType", "Quality", "RawIcon")} for row in item_rows]),
+                  "awardManagerConfig": apk.provenance(award_config),
+                  "topBarManagerConfig": apk.provenance(topbar_config),
                   "schemas": exporter.ui_schemas.records,
                   "schemaAssemblies": {name: {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
                                        for name, path in exporter.ui_assemblies.items()}}
-    return trees, sources, exporter.resources, items, ui_sources, quality_sprite, exporter.ui_schemas
+    return trees, sources, exporter.resources, items, ui_sources, quality_sprite, exporter.ui_schemas, exporter

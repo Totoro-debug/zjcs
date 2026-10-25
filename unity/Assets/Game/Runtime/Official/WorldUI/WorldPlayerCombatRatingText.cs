@@ -21,6 +21,11 @@ namespace Zjcs.Official.WorldUI
 
         public void Refresh(long combatRating)
         {
+            Text.text = Format(combatRating, mNumberSize);
+        }
+
+        public static string Format(long combatRating, int numberSize = 0)
+        {
             double number = combatRating;
             int unit = 0;
             while (number >= 10000 && unit < Symbols.Length - 1)
@@ -36,7 +41,7 @@ namespace Zjcs.Official.WorldUI
                     : formatted.Substring(0, Math.Min(4, formatted.Length));
                 formatted = double.Parse(formatted, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
             }
-            Text.text = (mNumberSize > 0 ? "<size=" + mNumberSize + ">" + formatted + "</size>" : formatted)
+            return (numberSize > 0 ? "<size=" + numberSize + ">" + formatted + "</size>" : formatted)
                 + Symbols[unit];
         }
     }

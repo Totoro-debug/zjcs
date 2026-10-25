@@ -35,6 +35,7 @@ namespace Zjcs.Editor
         [MenuItem("Zjcs/Validate/Map11 Windowed Play Mode")]
         public static void Run()
         {
+            SessionState.SetBool(Key + ".ui", false);
             try { SessionState.SetBool(Key + ".background", false); RunCore(); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
@@ -43,9 +44,12 @@ namespace Zjcs.Editor
         {
             if (Application.isBatchMode && !SessionState.GetBool(Key + ".background", false))
                 throw new InvalidOperationException("Map11 native input requires a windowed editor.");
-            OfficialMap11UiTools.ImportAndValidate();
-            OfficialMap11PuzzleValidation.Validate();
-            ProjectTools.Validate();
+            if (!SessionState.GetBool(Key + ".ui", false))
+            {
+                OfficialMap11UiTools.ImportAndValidate();
+                OfficialMap11PuzzleValidation.Validate();
+                ProjectTools.Validate();
+            }
             string root = Path.Combine(Path.GetTempPath(), "zjcs-map11-play-" + Guid.NewGuid().ToString("N"));
             var slots = new ProfileSlotCatalog(root);
             string slot = slots.CreateSlot();
@@ -58,7 +62,12 @@ namespace Zjcs.Editor
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
             save.Player.Wardrobe.Profession = 1;
             save.Player.UnlockedMapClassIds.Add(11);
+            save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
+                .Where(value => value.classId <= 1040).Select(value => value.classId));
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
+            var fixtureProgress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+            new OfflineCharacterProgressionService(fixtureProgress, OfficialCharacterAssetCatalog.LoadDefault().Load())
+                .InitializeWardrobe("map11-ui-fixture-wardrobe");
             SessionState.SetString(Key + ".root", root);
             SessionState.SetString(Key + ".slot", slot);
             SessionState.SetBool(Key, true);
@@ -127,6 +136,7 @@ namespace Zjcs.Editor
                 canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
                 OpenMap(canvas.transform);
                 new GameObject("Map11AcceptanceRunner").AddComponent<Runner>().StartCoroutine(
+                    SessionState.GetBool(Key + ".ui", false) ? VerifyUiPresentation() :
                     SessionState.GetBool(Key + ".background", false) ? VerifyBackground(canvas.transform) : Verify(canvas.transform));
             }
             catch (Exception error) { Fail(error.ToString()); }

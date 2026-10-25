@@ -21,7 +21,7 @@ namespace Zjcs.Official.WorldUI
             foreach (GameObject child in ClearObjects) if (child != null) child.SetActive(false);
             foreach (Transform child in BgTransform) Destroy(child.gameObject);
             QualityImg.gameObject.SetActive(true);
-            QualityShadowImg.gameObject.SetActive(true);
+            if (QualityShadowImg != null) QualityShadowImg.gameObject.SetActive(true);
             QualityImg.sprite = quality;
             Icon.gameObject.SetActive(true);
             Icon.sprite = icon;

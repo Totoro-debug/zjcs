@@ -80,6 +80,8 @@ namespace Zjcs.Presentation.World
         private OfficialMap10UiRenderer ui;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
         private OfficialMap10DialoguePortraitView optionDialoguePortraits;
+        private WorldDialogueTypeWriter dialogueTypeWriter;
+        private bool dialogueContentSwitchWaiting;
         private OfficialBattleRuntimeController battleController;
         private FightDamageFormula damageFormula;
         private Map10RuntimeEntity pendingInteraction;
@@ -204,9 +206,12 @@ namespace Zjcs.Presentation.World
             if (session == null || closed) return;
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
+            UpdateMiniMapFilter();
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (quickBuyDialog != null) quickBuyDialog.Cancel();
+                if (worldFunctions != null) CloseNativeWorldFunctions();
+                else if (fullMiniMapPanel != null) CloseNativeFullMiniMap();
+                else if (quickBuyDialog != null) quickBuyDialog.Cancel();
                 else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
@@ -225,7 +230,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
-            if (storyRunning || goddessDialog != null) return;
+            if (worldFunctions != null || fullMiniMapPanel != null || storyRunning || goddessDialog != null) return;
 
             if (battleController != null)
             {
@@ -609,6 +614,7 @@ namespace Zjcs.Presentation.World
             worldCamera.backgroundColor = new Color(0.08f, 0.12f, 0.12f, 1f);
             worldCamera.nearClipPlane = 0.1f;
             worldCamera.farClipPlane = 100f;
+            worldCamera.cullingMask &= ~(1 << 30);
             worldCamera.transform.position = avatar.transform.position + new Vector3(0f, 0f, -20f);
         }
 
@@ -621,7 +627,7 @@ namespace Zjcs.Presentation.World
             map.name = "NativeMiniMap_10";
             map.SetActive(true);
             SetLayerRecursively(map, 30);
-            minimapTexture = new RenderTexture(256, 256, 16, RenderTextureFormat.ARGB32)
+            minimapTexture = new RenderTexture(256, 256, mapClassId == 11 ? 0 : 16, RenderTextureFormat.ARGB32)
             {
                 name = "Map10OfficialMinimap",
                 filterMode = FilterMode.Bilinear
@@ -638,6 +644,11 @@ namespace Zjcs.Presentation.World
             minimapCamera.cullingMask = 1 << 30;
             minimapCamera.targetTexture = minimapTexture;
             minimapCamera.transform.position = new Vector3(0f, 0f, -50f);
+            if (mapClassId == 11)
+            {
+                InitializeNativeMiniMap();
+                return;
+            }
             var minimapObject = new GameObject("OfficialMap10MiniMap", typeof(RectTransform), typeof(RawImage));
             minimapObject.transform.SetParent(uiParent, false);
             minimapImage = minimapObject.GetComponent<RawImage>();
@@ -663,11 +674,12 @@ namespace Zjcs.Presentation.World
                 button.onClick.AddListener(CloseStageDialog);
             else if (path.IndexOf("MiniMap", StringComparison.OrdinalIgnoreCase) >= 0)
                 button.onClick.AddListener(ToggleExpandedMinimap);
-            else if (path.IndexOf("/FunctionEntryGroup/", StringComparison.Ordinal) >= 0
+            else if (path.IndexOf("/FunctionEntryGroup/FunctionEntryFunc/", StringComparison.Ordinal) >= 0
                 && (path.EndsWith("/EntryBtnFolded", StringComparison.Ordinal)
                     || path.EndsWith("/EntryBtnExpanded", StringComparison.Ordinal)))
-                button.onClick.AddListener(OpenCommerceShop);
-            else if (path.IndexOf("BackBtn", StringComparison.OrdinalIgnoreCase) >= 0)
+                button.onClick.AddListener(mapClassId == 11 ? OpenNativeWorldFunctions : OpenCommerceShop);
+            else if (path.IndexOf("BackBtn", StringComparison.OrdinalIgnoreCase) >= 0
+                || path.EndsWith("/ReturnHomeBtn", StringComparison.Ordinal))
                 button.onClick.AddListener(CloseMap);
         }
 
@@ -744,6 +756,7 @@ namespace Zjcs.Presentation.World
 
         private void ToggleExpandedMinimap()
         {
+            if (mapClassId == 11) { ToggleNativeFullMiniMap(); return; }
             if (minimapImage == null) return;
             RectTransform rect = minimapImage.rectTransform;
             bool expanded = rect.sizeDelta.x < 400f;
@@ -1446,6 +1459,7 @@ namespace Zjcs.Presentation.World
             storyOptionsWaiting = true;
             storyOptionCount = node.options.Length;
             storyOptionSelected = selected;
+            ui.SetOptionChoicesVisible(true);
             ui.SetPanelActive("OptionTalkDialog", true);
             for (int index = 0; index < 5; index++)
             {
@@ -1477,6 +1491,7 @@ namespace Zjcs.Presentation.World
         {
             if (!storyOptionsWaiting || index < 0 || index >= storyOptionCount) return;
             storyOptionsWaiting = false;
+            ui.SetOptionChoicesVisible(false);
             ui.SetPanelActive("OptionTalkDialog", false);
             optionDialoguePortraits?.Clear();
             for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
@@ -2334,13 +2349,12 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 dialog role is missing: " + node.RoleId);
             nativeDialogChoicesWaiting = false;
             nativeDialogChoiceTargets = Array.Empty<int>();
+            ui.SetOptionChoicesVisible(false);
             for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
             ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", true);
             ui.SetPanelActive("OptionTalkDialog", true);
-            ui.SetText("OptionTalkDialog", "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/TalkText", node.Text);
-            ui.SetText("OptionTalkDialog", "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText", role.RoleName);
             optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, "OptionTalkDialog", mapClassId);
-            optionDialoguePortraits.SetSpeaker(role, node.RoleFaceType);
+            ShowDialogueContent("OptionTalkDialog", optionDialoguePortraits, role, node.RoleFaceType, node.Text, null);
             GameObject next = ui.Find("OptionTalkDialog", "/OptionTalkDialog/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button == null) throw new InvalidDataException("Official Map10 native dialog next button is missing.");
@@ -2352,6 +2366,7 @@ namespace Zjcs.Presentation.World
 
         private void ShowNativeDialogOptions(IEnumerable<int> nodeIds)
         {
+            dialogueTypeWriter?.StopType();
             nativeDialogChoiceTargets = nodeIds.Select(id => activeNativeDialog.Nodes.FirstOrDefault(value =>
                     value != null && value.NodeId == id))
                 .Where(value => value != null && value.NodeType == 1)
@@ -2362,6 +2377,7 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 native dialog has no available choices: " + nativeDialogNodeId);
 
             nativeDialogChoicesWaiting = true;
+            ui.SetOptionChoicesVisible(true);
             dialogueWaiting = true;
             dialogueAdvanceRequested = false;
             ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", false);
@@ -2393,6 +2409,7 @@ namespace Zjcs.Presentation.World
             int target = nativeDialogChoiceTargets[index];
             nativeDialogChoicesWaiting = false;
             for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
+            ui.SetOptionChoicesVisible(false);
             RunNativeDialog(target);
         }
 
@@ -2562,15 +2579,14 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 dialogue references an unknown role: " + line.RoleId);
             string panel = dialoguePanelKey;
             string prefix = "/" + panel;
+            if (panel == "OptionTalkDialog") ui.SetOptionChoicesVisible(false);
             ui.SetPanelActive(panel, true);
-            ui.SetText(panel, prefix + "/Content/CharacterAndTalkContent/TalkContent/TalkText",
-                dialogueOverrides != null && dialogueOverrides.TryGetValue(line.Order, out string formatted) ? formatted : line.Text);
-            ui.SetText(panel, prefix + "/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText", role.RoleName);
             OfficialMap10DialoguePortraitView portraits;
             if (panel == "TalkDialog") portraits = dialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
             else portraits = optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
-            portraits.SetSpeaker(role, line.RoleFaceType);
-            mapVoice?.RefreshVoice(!dialogueVoiceSuppressed && line.DialogType == "Voice" ? line.VoiceEventKey : null);
+            ShowDialogueContent(panel, portraits, role, line.RoleFaceType,
+                dialogueOverrides != null && dialogueOverrides.TryGetValue(line.Order, out string formatted) ? formatted : line.Text,
+                !dialogueVoiceSuppressed && line.DialogType == "Voice" ? line.VoiceEventKey : null);
             GameObject next = ui.Find(panel, prefix + "/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button != null)
@@ -2582,8 +2598,30 @@ namespace Zjcs.Presentation.World
 
         private void RequestDialogueAdvance()
         {
-            if (nativeDialogPlayableWaiting) return;
+            if (nativeDialogPlayableWaiting || dialogueContentSwitchWaiting) return;
+            if (dialogueTypeWriter != null && dialogueTypeWriter.IsPlaying) { dialogueTypeWriter.StopType(); return; }
             dialogueAdvanceRequested = true;
+        }
+
+        private void ShowDialogueContent(string panel, OfficialMap10DialoguePortraitView portraits,
+            Map10RuntimeDialogRole role, string face, string text, string voice)
+        {
+            dialogueTypeWriter?.StopType();
+            dialogueContentSwitchWaiting = true;
+            portraits.SetSpeaker(role, face, () =>
+            {
+                dialogueContentSwitchWaiting = false;
+                string path = "/" + panel + "/Content/CharacterAndTalkContent/TalkContent/";
+                ui.SetText(panel, path + "TalkText", text);
+                ui.SetText(panel, path + "NpcName/NpcNameText", role.RoleName);
+                mapVoice?.RefreshVoice(voice);
+                if (mapClassId != 11) return;
+                var node = ui.Find(panel, path + "TalkText");
+                dialogueTypeWriter = node.GetComponent<WorldDialogueTypeWriter>() ?? node.AddComponent<WorldDialogueTypeWriter>();
+                var source = miniMapUiData.components.Single(value => value.panel == panel
+                    && value.type == (panel == "TalkDialog" ? "TalkDialog" : "OptionTalkDialogPanel"));
+                dialogueTypeWriter.StartType(source.fields.mWordInterval);
+            });
         }
 
         private void AdvanceDialogue()
@@ -2721,6 +2759,7 @@ namespace Zjcs.Presentation.World
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
             }
+            if (mapClassId == 11) RefreshNativeMiniMapMarks();
         }
 
         private bool IsMapLogicEntityDestroyed(int placementId)
@@ -2923,6 +2962,8 @@ namespace Zjcs.Presentation.World
 
         private void UpdateWorldLabels()
         {
+            RefreshWorldTopBar();
+            RefreshPinnedWorldTask();
             ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
             if (mapClassId == 11)
                 ui.Find("WorldCanvas", "/WorldCanvas").GetComponentInChildren<WorldPlayerCombatRatingText>(true)
@@ -2931,6 +2972,11 @@ namespace Zjcs.Presentation.World
 
         private void UpdateMinimapMarker()
         {
+            if (mapClassId == 11)
+            {
+                RefreshNativeMiniMap();
+                return;
+            }
             if (minimapPlayerMarker == null || avatar == null) return;
             Vector2 local = avatar.transform.position - new Vector3(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y, 0f);
@@ -3015,6 +3061,10 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            CloseNativeFullMiniMap();
+            CloseNativeWorldFunctions();
+            if (playerHeadTexture != null) Destroy(playerHeadTexture);
+            playerHeadTexture = null;
             DisposeMapAudio();
             CloseGoddessDialog();
             // Dispose the modal without running its story continuation while the map closes.
@@ -3178,6 +3228,9 @@ namespace Zjcs.Presentation.World
             public int ClassId;
             public int Region;
             public int AccessibleConditionId;
+            public long CombatRating;
+            public long[] CombatRatingLevelValues;
+            public int SubRank;
             public int[] Areas;
             public string NotAccessibleMapTalkId;
         }

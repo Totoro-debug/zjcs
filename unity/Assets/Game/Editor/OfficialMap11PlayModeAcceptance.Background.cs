@@ -25,6 +25,7 @@ namespace Zjcs.Editor
         // This mode never invokes the native pointer helper or claims input acceptance.
         public static void RunBackground()
         {
+            SessionState.SetBool(Key + ".ui", false);
             try { SessionState.SetBool(Key + ".background", true); RunCore(); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }

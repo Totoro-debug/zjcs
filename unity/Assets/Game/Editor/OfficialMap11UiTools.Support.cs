@@ -19,6 +19,74 @@ namespace Zjcs.Editor
                 data.components.Single(value => value.panel == key && value.type == kind).fields;
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key))
             {
+                if (source.type == "RectMask2D")
+                    require(source.path).GetComponent<RectMask2D>().enabled = source.fields.m_Enabled != 0;
+                if (source.type == "Mask")
+                    require(source.path).GetComponent<Mask>().enabled = source.fields.m_Enabled != 0;
+                if (source.type == "NativeAnimation" || source.type == "NativeAnimator")
+                    RestoreNativeAnimation(source, require);
+                if (source.type == "GraphicCapsuleMeshClipper")
+                    require(source.path).gameObject.AddComponent<GraphicCapsuleMeshClipper>().mMeshClipperCapsuleArgs = source.fields.mMeshClipperCapsuleArgs;
+                if (source.type == "SlicedFilledImage")
+                {
+                    GameObject node = require(source.path).gameObject;
+                    Image old = node.GetComponent<Image>();
+                    if (old != null) UnityEngine.Object.DestroyImmediate(old);
+                    var image = node.AddComponent<SlicedFilledImage>();
+                    var f = source.fields;
+                    image.sprite = sprites[f.sprite];
+                    image.color = f.m_Color;
+                    image.type = (Image.Type)f.m_Type;
+                    image.fillMethod = (Image.FillMethod)f.m_FillMethod;
+                    image.fillOrigin = f.m_FillOrigin;
+                    image.fillClockwise = f.m_FillClockwise != 0;
+                    image.fillCenter = f.m_FillCenter != 0;
+                    image.preserveAspect = f.m_PreserveAspect != 0;
+                    image.fillAmount = f.m_FillAmount;
+                }
+                if (source.type == "Slider")
+                {
+                    Slider slider = require(source.path).GetComponent<Slider>();
+                    if (slider == null) slider = require(source.path).gameObject.AddComponent<Slider>();
+                    var f = source.fields;
+                    slider.fillRect = string.IsNullOrEmpty(f.m_FillRect) ? null : (RectTransform)require(f.m_FillRect);
+                    slider.handleRect = string.IsNullOrEmpty(f.m_HandleRect) ? null : (RectTransform)require(f.m_HandleRect);
+                    slider.direction = (Slider.Direction)f.m_Direction;
+                    slider.minValue = f.m_MinValue;
+                    slider.maxValue = f.m_MaxValue;
+                    slider.wholeNumbers = f.m_WholeNumbers != 0;
+                    slider.value = f.m_Value;
+                    slider.interactable = false;
+                }
+                if (source.type == "RawImage" && source.fields.material?.shader == "UI/Masked")
+                {
+                    Shader shader = Shader.Find("Zjcs/Official/UI/Masked");
+                    if (shader == null || UnityEditor.ShaderUtil.ShaderHasError(shader))
+                        throw new System.IO.InvalidDataException("Official minimap mask shader failed to compile.");
+                    const string path = ResourceRoot + "/MiniMapUIMask.mat";
+                    Material material = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(path);
+                    if (material == null)
+                    {
+                        material = new Material(shader);
+                        UnityEditor.AssetDatabase.CreateAsset(material, path);
+                    }
+                    material.SetTexture("_MaskTex", sprites[source.fields.maskTexture].texture);
+                    UnityEditor.EditorUtility.SetDirty(material);
+                    Component<RawImage>(source.path).material = material;
+                }
+                if (source.type == "Canvas")
+                {
+                    Canvas canvas = require(source.path).gameObject.AddComponent<Canvas>();
+                    canvas.renderMode = (RenderMode)source.fields.m_RenderMode;
+                    canvas.planeDistance = source.fields.m_PlaneDistance;
+                    canvas.overrideSorting = source.fields.m_OverrideSorting;
+                    canvas.sortingLayerID = source.fields.m_SortingLayerID;
+                    canvas.sortingOrder = source.fields.m_SortingOrder;
+                    canvas.additionalShaderChannels = (AdditionalCanvasShaderChannels)source.fields.m_AdditionalShaderChannelsFlag;
+                    canvas.enabled = source.fields.m_Enabled != 0;
+                }
+                if (source.type == "GraphicRaycaster" && require(source.path).GetComponent<GraphicRaycaster>() == null)
+                    require(source.path).gameObject.AddComponent<GraphicRaycaster>();
                 if (source.type == "MirrorImage")
                 {
                     var target = require(source.path).gameObject;
@@ -40,10 +108,31 @@ namespace Zjcs.Editor
                     mirror.MirrorStyle = (MirrorImage.MirrorType)source.fields.mirrorType;
                     mirror.Reversed = source.fields.reversed;
                 }
-                if (source.type == "HorizontalLayoutGroupJSZX")
+                if (source.type == "SafeArea")
+                {
+                    var area = require(source.path).gameObject.AddComponent<WorldSafeArea>();
+                    area.PaddingTop = source.fields.PaddingTop;
+                    area.PaddingBottom = source.fields.PaddingBottom;
+                    area.DisableTopAdapt = source.fields.DisableTopAdapt != 0;
+                    area.DisableBottomAdapt = source.fields.DisableBottomAdapt != 0;
+                    area.enabled = source.fields.m_Enabled != 0;
+                }
+                if (source.type == "WorldStageInteractionPreviewContentLayoutElement")
+                {
+                    var layout = require(source.path).gameObject.AddComponent<WorldStageInteractionPreviewContentLayoutElement>();
+                    layout.mVerticalLayoutGroup = require(source.fields.mVerticalLayoutGroup).GetComponent<VerticalLayoutGroup>();
+                    layout.mMaxHeight = source.fields.mMaxHeight;
+                    layout.mMinHeight = source.fields.mMinHeight;
+                    layout.mLayoutPriority = source.fields.mLayoutPriority;
+                }
+                if (source.type == "HorizontalLayoutGroupJSZX" || source.type == "VerticalLayoutGroupJSZX")
                 {
                     var f = source.fields;
-                    var layout = require(source.path).gameObject.AddComponent<UGUIJszx.HorizontalLayoutGroupJSZX>();
+                    LayoutGroup placeholder = require(source.path).GetComponent<LayoutGroup>();
+                    if (placeholder != null) UnityEngine.Object.DestroyImmediate(placeholder);
+                    UGUIJszx.HorizontalOrVerticalLayoutGroupJSZX layout = source.type == "HorizontalLayoutGroupJSZX"
+                        ? require(source.path).gameObject.AddComponent<UGUIJszx.HorizontalLayoutGroupJSZX>()
+                        : require(source.path).gameObject.AddComponent<UGUIJszx.VerticalLayoutGroupJSZX>();
                     layout.padding = new RectOffset(f.m_Padding.m_Left, f.m_Padding.m_Right, f.m_Padding.m_Top, f.m_Padding.m_Bottom);
                     layout.childAlignment = (TextAnchor)f.m_ChildAlignment;
                     layout.spacing = f.spacing;
@@ -57,10 +146,43 @@ namespace Zjcs.Editor
                     layout.reverseArrangement = f.m_ReverseArrangement != 0;
                     layout.enabled = f.m_Enabled != 0;
                 }
+                if (source.type == "GridLayoutGroupJSZX")
+                {
+                    var f = source.fields;
+                    var target = require(source.path).gameObject;
+                    var placeholder = target.GetComponent<LayoutGroup>();
+                    if (placeholder != null) UnityEngine.Object.DestroyImmediate(placeholder);
+                    var grid = target.AddComponent<UGUIJszx.GridLayoutGroupJSZX>();
+                    grid.padding = new RectOffset(f.m_Padding.m_Left, f.m_Padding.m_Right, f.m_Padding.m_Top, f.m_Padding.m_Bottom);
+                    grid.childAlignment = (TextAnchor)f.m_ChildAlignment;
+                    grid.cellSize = f.m_CellSize;
+                    grid.spacing = f.m_Spacing;
+                    grid.startCorner = (UGUIJszx.GridLayoutGroupJSZX.Corner)f.m_StartCorner;
+                    grid.startAxis = (UGUIJszx.GridLayoutGroupJSZX.Axis)f.m_StartAxis;
+                    grid.constraint = (UGUIJszx.GridLayoutGroupJSZX.Constraint)f.m_Constraint;
+                    grid.constraintCount = f.m_ConstraintCount;
+                    grid.verticalSpacingList = (f.m_VerticalSpacingList ?? Array.Empty<float>()).ToList();
+                    grid.horizontalSpacingList = (f.m_HorizontalSpacingList ?? Array.Empty<float>()).ToList();
+                    if (f.gridSettings?.settings != null)
+                    {
+                        string path = ResourceRoot + "/" + key + "-GridLayoutSettings.asset";
+                        var settings = UnityEditor.AssetDatabase.LoadAssetAtPath<UGUIJszx.GridLayoutSettings>(path);
+                        if (settings == null)
+                        {
+                            settings = ScriptableObject.CreateInstance<UGUIJszx.GridLayoutSettings>();
+                            UnityEditor.AssetDatabase.CreateAsset(settings, path);
+                        }
+                        settings.settings = f.gridSettings.settings.ToList();
+                        UnityEditor.EditorUtility.SetDirty(settings);
+                        grid.gridLayoutSettings = settings;
+                    }
+                    grid.enabled = f.m_Enabled != 0;
+                }
                 if (source.type == "GridLayoutGroup")
                 {
                     var f = source.fields;
-                    GridLayoutGroup grid = require(source.path).gameObject.AddComponent<GridLayoutGroup>();
+                    GridLayoutGroup grid = require(source.path).GetComponent<GridLayoutGroup>()
+                        ?? require(source.path).gameObject.AddComponent<GridLayoutGroup>();
                     grid.padding = new RectOffset(f.m_Padding.m_Left, f.m_Padding.m_Right, f.m_Padding.m_Top, f.m_Padding.m_Bottom);
                     grid.childAlignment = (TextAnchor)f.m_ChildAlignment;
                     grid.cellSize = f.m_CellSize;
@@ -86,7 +208,7 @@ namespace Zjcs.Editor
                 var icon = require(source.path).gameObject.AddComponent<WorldItemIcon>();
                 icon.Icon = Component<Image>(f.mIconProxy.mImage);
                 icon.QualityImg = Component<Image>(f.QualityImg);
-                icon.QualityShadowImg = Component<Image>(f.QualityShadowImg);
+                icon.QualityShadowImg = string.IsNullOrEmpty(f.QualityShadowImg) ? null : Component<Image>(f.QualityShadowImg);
                 icon.myText = Component<TMP_Text>(f.myText);
                 icon.myTextGo = require(f.myTextGo).gameObject;
                 icon.BottomGo = string.IsNullOrEmpty(f.BottomGo) ? null : require(f.BottomGo).gameObject;
@@ -107,6 +229,7 @@ namespace Zjcs.Editor
                 exchange.PopupWindow = root.GetComponent<WorldPopupWindow>();
                 return;
             }
+            if (key != "CostItemConfirmDialog") return;
             var confirm = Fields("ConfirmDialog");
             var cost = Fields("CostItemConfirmDialog");
             var money = data.components.Single(value => value.panel == key && value.type == "PlayerCostMoneyContent"

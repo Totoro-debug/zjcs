@@ -16,11 +16,65 @@ namespace Zjcs.Presentation.World
         public OfficialMap11UiText[] texts;
         public OfficialMap11TmpSpriteAsset commonSpriteAsset;
         public OfficialMap11ItemIcon[] itemIcons;
+        public OfficialMap11GuidPrefab[] guidPrefabs;
         public string itemQualitySprite;
+        public OfficialMap11MiniMapSettings minimapSettings;
+        public OfficialMap11PortraitSettings headPortraitSettings;
+        public OfficialMap11TopBarItem[] topBarItems;
+        public OfficialMap11SceneNode[] minimapCharacter;
+        public OfficialMap11MiniMapMark[] minimapMarks;
+        public OfficialMap11MiniMapPrefab[] minimapMarkPrefabs;
+        public OfficialMap11MiniMapBinding[] minimapMarkBindings;
         public float[] enoughColor, lackColor;
+        public int recommendCombatRatingIndex, suppressUnlockRank;
+        public OfficialMap11RatingColors[] combatRatingColors;
     }
+    [Serializable] public sealed class OfficialMap11RatingColors { public int type; public OfficialMap11RatingColor[] colors; }
+    [Serializable] public sealed class OfficialMap11RatingColor { public int Key; public UnityEngine.Color Value; }
+    [Serializable] public sealed class OfficialMap11MiniMapMark
+    {
+        public string name, sprite, description;
+        public bool showOnEntry;
+    }
+    [Serializable] public sealed class OfficialMap11MiniMapPrefab
+    {
+        public string key;
+        public OfficialMap11SceneNode[] nodes;
+    }
+    [Serializable] public sealed class OfficialMap11MiniMapBinding
+    {
+        public int placementId, completeState;
+        public string key;
+        public UnityEngine.Vector2 offset;
+        public bool hideInEnd;
+    }
+    [Serializable] public sealed class OfficialMap11SceneNode
+    {
+        public string name, path, sprite;
+        public int parentIndex, sortingOrder;
+        public bool active, flipX, flipY;
+        public UnityEngine.Vector3 position, scale;
+        public UnityEngine.Quaternion rotation;
+        public UnityEngine.Color color;
+    }
+    [Serializable] public sealed class OfficialMap11TopBarItem { public int type, itemId; public long maxCount; }
+    [Serializable] public sealed class OfficialMap11PortraitSettings
+    {
+        public int TextureWidth, TextureHeight, mDepthBuffer;
+        public float Size;
+        public UnityEngine.Vector3 mOffset;
+        public int[] mExcludeSkinTypes;
+    }
+    [Serializable] public sealed class OfficialMap11MiniMapSettings
+    {
+        public float MiniMapUICameraOrthographicSize, BoundExtendSize, MarkZoomThreshold;
+        public int ShowMapSwitch;
+        public OfficialMap11MiniMapCameraSetting CameraControllerSetting;
+    }
+    [Serializable] public sealed class OfficialMap11MiniMapCameraSetting { public float MinCameraOrthographicSize, MaxCameraOrthographicSize; }
 
-    [Serializable] public sealed class OfficialMap11ItemIcon { public int itemId; public string sprite; }
+    [Serializable] public sealed class OfficialMap11ItemIcon { public int itemId; public string sprite, qualitySprite; }
+    [Serializable] public sealed class OfficialMap11GuidPrefab { public string guid, key; }
     [Serializable] public sealed class OfficialMap11TmpSpriteAsset
     {
         public string name, version, texturePath, textureSha256;
@@ -53,7 +107,52 @@ namespace Zjcs.Presentation.World
     [Serializable] public sealed class OfficialMap11UiComponentFields
     {
         public OfficialMap11UiMaterial material;
+        public string maskTexture;
+        public string sprite, m_FillRect, m_HandleRect, mSlider;
+        public int m_Type, m_FillMethod, m_FillOrigin, m_FillClockwise, m_FillCenter, m_PreserveAspect;
+        public float m_FillAmount, m_MinValue, m_MaxValue, m_Value, mSliderMinValue, mSliderMaxValue;
+        public int m_Direction, m_WholeNumbers;
+        public UnityEngine.Color m_Color;
+        public OfficialMap11PortraitRequestor mRequestor;
+        public string mIcon, mCountText, mBtn, mAddBtn, Content, myTaskItemSlot;
+        public UnityEngine.Color mNormalColor, mTipColor, mLimitColor;
+        public string myTaskTitle, TaskGoal, RewardSection, RewardSlot, mClaimBtn, mJumpBtn, mTraceBtn, mCanclTraceBtn;
+        public string mCountdown, mGMBtn, mTaskLimitRemainTime, mRecommendCombatRatingItem;
+        public string ProgressText, ContentConditonsContent, ResourceGo, ItemSlot, mText;
+        public string[] ConditionItems;
+        public OfficialMap11StateSwitcher mStateSwitcher, mMapTaskStateSwitcher, mIsRankOverStates;
+        public OfficialMap11StateSwitcher StateSwitcher, mTipLevelState;
+        public string mDisplay, mLayoutElement, mTipDotContent, mNodeDataText;
+        public string mCostMoneyContent;
+        public string[] Guiders;
+        public string mContent;
+        public string mEntry, mEntryContent, mEntryBtn, mFilter, mFilterContent, mButton;
+        public string mDescription, mTabItem, mTextsControler, mActivityRecommondView;
+        public string MapImage, Button, MapNameText;
+        public OfficialMap11StateSwitcher SelectedSwitcher;
+        public string[] MultiTextList, myActiveObj, myDeactiveObj, EntryBtns;
+        public OfficialMap11StateSwitcher mSelectionTypeSwticher;
+        public string mMyContent;
+        public float mDefaultZoomThreshold;
+        public OfficialMap11StateSwitcher mActiveSwitcher, mShowSwitcher;
+        public string Slider, CameraController, PanelTitle, myInput, mMiniMapCamera;
+        public float mySizeMin, mySizeMax, ScaleFactor;
+        public float nearClip, farClip, orthographicSize;
+        public UnityEngine.Color backgroundColor;
+        public int clearFlags;
+        public Zjcs.Official.WorldUI.DragControllerData dragSettings;
+        public OfficialMap11StateSwitcher mChangeMapTabSwitcher;
+        public string mCombatRatingText;
+        public int mCombatRateColorType;
+        public string[] mGraphics, mSprites, mTmpMediators;
         public OfficialMap11UiClip[] clips;
+        public string defaultClip;
+        public bool playAutomatically;
+        public Zjcs.Official.WorldUI.MeshClipperCapsuleArgs mMeshClipperCapsuleArgs;
+        public string mAnimation, mBattomBoardChangeAni, mBattomBoardLeftToRight, mBattomBoardRightToLeft;
+        public string mTalkContentTxt, mCharacterNameBack, mBlackBgImg, mDarkMask, mClickMask;
+        public UnityEngine.Color mBlackBgColorDark, mBlackBgColorDarkLess;
+        public float mWordInterval;
         public string TitleText, ContentText, HintGo, HintText, ConfirmBtn, CancelBtn, ConfirmText, CancelText, LockMaskWithTime;
         public string CostMoneyContent, MoneyContent, CostItemIcon, CostText, ItemContentObj, Slot, mSlot;
         public string QualityImg, QualityShadowImg, myText, myTextGo, myContent, BottomGo, myBottomText, ItemIconAttachment, mFakeIcon, mProgress, BgTransform;
@@ -63,17 +162,39 @@ namespace Zjcs.Presentation.World
         public OfficialMap11IconProxy mIconProxy;
         public UnityEngine.Color EnoughColor, LackColor;
         public int m_Enabled;
+        public int m_RenderMode, m_SortingOrder, m_SortingLayerID, m_AdditionalShaderChannelsFlag;
+        public float m_PlaneDistance;
+        public bool m_OverrideSorting;
+        public int DisableTopAdapt, DisableBottomAdapt;
+        public string mContextSlot, MiniMapBtn, mRawImage, MyRegionInfoText, MyRegionProgress;
         public string Text;
+        public string myKey, TitleTxt, myStageName, myStageDesc, myDesc, mStoryTitle, mStoryContent, mStoryReadEndBtn, mStoryIamge;
+        public OfficialMap11IconSlot mIconSlot;
+        public string mCloseBtn, mTitleText, mDescContentText, mContentRoot, mInteractionBtn, mPeriodicityInteractionTips;
+        public string mRectTransform, mEntryText, mModifyHpPercentDescText, mSpawnEntityDesc, mAwardContent, Anchor;
+        public string mItemIconSlot;
+        public OfficialMap11PreviewGroup[] mWorldStageInteractionPreviewGroups;
+        public OfficialMap11PreviewAssets mStagePreviewAssetGuidProxy;
+        public OfficialMap11ManagedReferences references;
         public int mNumberSize;
         public int m_StartCorner, m_StartAxis, m_Constraint, m_ConstraintCount, m_ChildAlignment;
         public OfficialMap11Padding m_Padding;
         public UnityEngine.Vector2 m_CellSize, m_Spacing;
         public float spacing;
+        public float PaddingTop, PaddingBottom;
+        public string mVerticalLayoutGroup;
+        public float mMaxHeight, mMinHeight;
+        public int mLayoutPriority;
         public float[] m_SpacingList;
+        public float[] m_VerticalSpacingList, m_HorizontalSpacingList;
+        public OfficialMap11GridSettings gridSettings;
         public int m_ChildForceExpandWidth, m_ChildForceExpandHeight, m_ChildControlWidth, m_ChildControlHeight;
         public int m_ChildScaleWidth, m_ChildScaleHeight, m_ReverseArrangement;
     }
+    [Serializable] public sealed class OfficialMap11GridSettings { public UGUIJszx.GridLayoutSetting[] settings; }
+    [Serializable] public sealed class OfficialMap11PortraitRequestor { public string mRawImage, mAnimationName; }
     [Serializable] public sealed class OfficialMap11IconProxy { public string mImage; }
+    [Serializable] public sealed class OfficialMap11IconSlot { public string mPreviewSlot; }
     [Serializable] public sealed class OfficialMap11Padding { public int m_Left, m_Right, m_Top, m_Bottom; }
 
     [Serializable] public sealed class OfficialMap11UiMaterial { public string name, shader; }
@@ -83,8 +204,41 @@ namespace Zjcs.Presentation.World
         public float duration;
         public bool loop;
         public OfficialMap11UiTrack[] tracks;
-        public string[] unknown;
+        public OfficialMap11UnknownTrack[] unknown;
+        public OfficialMap11UiAnimationEvent[] events;
     }
+    [Serializable] public sealed class OfficialMap11UiAnimationEvent
+    {
+        public string functionName, data;
+        public float time, floatParameter;
+        public int intParameter, messageOptions;
+    }
+    [Serializable] public sealed class OfficialMap11UnknownTrack { public string reason, property; public uint path_hash; }
+    [Serializable] public sealed class OfficialMap11PreviewGroup { public string Slot, Content; }
+    [Serializable] public sealed class OfficialMap11PreviewAssets { public OfficialMap11PreviewAsset[] mSerializeBuffer; }
+    [Serializable] public sealed class OfficialMap11PreviewAsset { public int Key; public OfficialMap11AssetGuid Value; }
+    [Serializable] public sealed class OfficialMap11AssetGuid { public string mAssetGuid; }
+    [Serializable] public sealed class OfficialMap11ManagedReferences { public OfficialMap11ManagedReference[] RefIds; }
+    [Serializable] public sealed class OfficialMap11ManagedReference { public long rid; public OfficialMap11ManagedType type; public OfficialMap11ManagedData data; }
+    [Serializable] public sealed class OfficialMap11StateSwitcher { public OfficialMap11ReferenceId[] mStateConfigs; }
+    [Serializable] public sealed class OfficialMap11ReferenceId { public long rid; }
+    [Serializable] public sealed class OfficialMap11ManagedType { public string @class; }
+    [Serializable] public sealed class OfficialMap11ManagedData
+    {
+        public OfficialMap11ObjectStateData mStateGameObjectData;
+        public OfficialMap11ColorStateData mStateColorData;
+        public OfficialMap11TextStateData mStateMultiLanguageTextData;
+    }
+    [Serializable] public sealed class OfficialMap11StateValue { public int mValue; }
+    [Serializable] public sealed class OfficialMap11ObjectStateData { public OfficialMap11ObjectState[] GoConfig; }
+    [Serializable] public sealed class OfficialMap11ObjectState { public OfficialMap11StateValue State; public string[] GameObjects; }
+    [Serializable] public sealed class OfficialMap11ColorStateData { public OfficialMap11ColorState[] GraphicConfigs; }
+    [Serializable] public sealed class OfficialMap11ColorState { public string[] Graphics; public OfficialMap11ColorValues Color; }
+    [Serializable] public sealed class OfficialMap11ColorValues { public OfficialMap11ColorValue[] mSerializeBuffer; }
+    [Serializable] public sealed class OfficialMap11ColorValue { public OfficialMap11StateValue Key; public UnityEngine.Color Value; }
+    [Serializable] public sealed class OfficialMap11TextStateData { public string Text; public OfficialMap11TextValues Keys; }
+    [Serializable] public sealed class OfficialMap11TextValues { public OfficialMap11TextValue[] mSerializeBuffer; }
+    [Serializable] public sealed class OfficialMap11TextValue { public OfficialMap11StateValue Key; public string Value; }
     [Serializable] public sealed class OfficialMap11UiTrack
     {
         public string path, property;
