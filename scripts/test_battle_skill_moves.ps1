@@ -75,6 +75,21 @@ $dashEnemy = New-Unit 2 2 4 0 5000 50
 $dashResult = Invoke-Battle $dashPlayer $dashEnemy
 Assert-Move ($dashPlayer.X -eq 2 -and $dashResult.Event.Movements[0].Path.Count -eq 3) 'Positive-distance skill move mismatch'
 
+# Zero-probability skill movement is skipped.
+$chancePlayer = New-Unit 1 1 0 0 1000 100
+$chancePlayer.MoveDist = 0
+$chancePlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+$chancePlayer.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
+$chanceSkill = New-Skill 3005 4
+$chanceMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
+$chanceMove.Distance = 2; $chanceMove.Direction = 1; $chanceMove.TowardsTargetPos = $true
+$chanceMove.BasePercent = 0
+$chanceSkill.SourceMoves.Add($chanceMove)
+$chancePlayer.Skills.Add($chanceSkill)
+$chanceEnemy = New-Unit 2 2 4 0 5000 50
+$chanceResult = Invoke-Battle $chancePlayer $chanceEnemy
+Assert-Move ($chancePlayer.X -eq 0 -and $chanceResult.Event.Movements.Count -eq 0) 'Zero-probability skill movement was applied'
+
 # Occupied destination falls back to a shorter legal distance.
 $blockedPlayer = New-Unit 1 1 0 0 1000 100
 $blockedPlayer.MoveDist = 0
@@ -109,4 +124,4 @@ $skipEnemy = New-Unit 2 2 4 0 5000 50
 $skipResult = Invoke-Battle $skipPlayer $skipEnemy
 Assert-Move ($skipPlayer.X -eq 0 -and $skipResult.Event.Movements.Count -eq 0) 'Conditional or unsupported skill move was applied'
 
-Write-Output 'Battle skill move checks passed: pull to target, positive distance, occupied-cell fallback and unsupported-case skipping.'
+Write-Output 'Battle skill move checks passed: pull to target, probability gating, positive distance, occupied-cell fallback and unsupported-case skipping.'

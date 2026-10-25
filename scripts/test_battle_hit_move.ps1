@@ -18,12 +18,34 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
     (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
 
+$effectSchema = [Zjcs.Combat.Official.FightDamagePropertySchema]::new()
+$effectPropertyNames = @('BaseEffectRate', 'EffectRate', 'BaseEffectDodge', 'EffectDodge',
+    'EffectRateValue', 'EffectDodgeValue')
+foreach ($name in $effectPropertyNames) {
+    $id = $catalog.PropertyType($name)
+    Assert-Move ($id -gt 0) "Official move-rate property is missing: $name"
+    $effectSchema.Names.Add([Zjcs.Combat.Official.FightPropertyName]@{ Name = $name; Id = $id })
+    if ($name -eq 'EffectRateValue' -or $name -eq 'EffectDodgeValue')
+        { $effectSchema.FloatPropertyIds.Add($id) }
+}
+$moveFormula = [Zjcs.Combat.Official.FightDamageFormula]::new($effectSchema,
+    [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
+
+function Set-MoveProperty($properties, $name, $value) {
+    $id = $catalog.PropertyType($name)
+    foreach ($property in $properties) {
+        if ($property.Id -eq $id) { $property.Value = $value; return }
+    }
+    $properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $id; Value = $value })
+}
+
 $officialHit = $catalog.CreateSkill(12100, 1, 1, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12102 } | Select-Object -First 1
 Assert-Move ($null -ne $officialHit -and $null -ne $officialHit.HitMove) 'Official hit displacement was not mapped'
 Assert-Move ($officialHit.HitMove.Distance -eq 1 -and $officialHit.HitMove.Direction -eq 1 -and -not $officialHit.HitMove.TowardsTargetPos) 'Official hit displacement fields mismatch'
 $pathSideSkill = $catalog.CreateSkill(56230, 0, 56230, 1, 1, 0, $null)
 $pathSideHit = $pathSideSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 56231 } | Select-Object -First 1
 Assert-Move ($null -ne $pathSideHit -and $pathSideHit.HitMove.MoveBehaviourId -eq 56234 -and $pathSideHit.HitMove.Direction -eq 2) 'Official path-side displacement was not mapped'
+Assert-Move ($null -ne $pathSideHit.HitMove -and $pathSideHit.HitMove.BasePercent -ge 0 -and $pathSideHit.HitMove.AffectedByProp) 'Official path-side movement probability fields were not mapped'
 
 function New-Unit($id, $side, $x, $y, $hp) {
     $u = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -33,7 +55,8 @@ function New-Unit($id, $side, $x, $y, $hp) {
     return $u
 }
 
-function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1, $rangeY = 0) {
+function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1, $rangeY = 0,
+    $basePercent = 1.0, $affectedByProp = $false) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
     $skill.TargetType = 1
     $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new($rangeX, $rangeY))
@@ -42,6 +65,7 @@ function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1
     $hit.HasCustomDamage = $true; $hit.CustomDamage = 1; $hit.TargetMode = 0
     $hit.HitMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
     $hit.HitMove.Distance = $distance; $hit.HitMove.Direction = $direction; $hit.HitMove.TowardsTargetPos = $towards
+    $hit.HitMove.BasePercent = $basePercent; $hit.HitMove.AffectedByProp = $affectedByProp
     $hit.HitMove.HasConditions = $conditions
     $skill.Hits.Add($hit)
     return $skill
@@ -58,8 +82,7 @@ function Invoke-MoveBattle($skill, $player, $enemy) {
     $cp.Grid.Width = 10; $cp.Grid.Height = 10; $cp.Grid.DefaultGroundType = 2
     $cp.Units.Add($player); $cp.Units.Add($enemy)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2); $cp.Waves.Add($wave)
-    $f = [Zjcs.Combat.Official.FightDamageFormula]::new([Zjcs.Combat.Official.FightDamagePropertySchema]::new(), [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
-    return [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $f, [Zjcs.Combat.Official.FightDamageSettlement]::new()).Step(0, 1)
+    return [Zjcs.Combat.Official.FightBattleExecutor]::Begin($cp, $moveFormula, [Zjcs.Combat.Official.FightDamageSettlement]::new()).Step(0, 1)
 }
 
 $player = New-Unit 1 1 0 0 1000
@@ -67,6 +90,20 @@ $enemy = New-Unit 2 2 1 0 5000
 $push = Invoke-MoveBattle (New-MoveSkill 1 1 $false $false) $player $enemy
 Assert-Move ($enemy.X -eq 2 -and $enemy.Y -eq 0) 'Knockback did not push the target away'
 Assert-Move ($push.Event.Movements.Count -eq 1 -and $push.Event.Movements[0].UnitId -eq 2 -and $push.Event.Movements[0].Path.Count -eq 2) 'Knockback movement event mismatch'
+
+$zeroChancePlayer = New-Unit 1 1 0 0 1000
+$zeroChanceEnemy = New-Unit 2 2 1 0 5000
+$zeroChance = Invoke-MoveBattle (New-MoveSkill 1 1 $false $false 1 0 0.0) $zeroChancePlayer $zeroChanceEnemy
+Assert-Move ($zeroChanceEnemy.X -eq 1 -and $zeroChance.Event.Movements.Count -eq 0) 'Zero-probability displacement was applied'
+
+$propertyChancePlayer = New-Unit 1 1 0 0 1000
+$propertyChanceEnemy = New-Unit 2 2 1 0 5000
+Set-MoveProperty $propertyChancePlayer.Properties 'BaseEffectRate' 100
+Set-MoveProperty $propertyChancePlayer.Properties 'EffectRateValue' 20000
+Set-MoveProperty $propertyChanceEnemy.Properties 'BaseEffectDodge' 100
+Set-MoveProperty $propertyChanceEnemy.Properties 'EffectDodge' 0
+$propertyChance = Invoke-MoveBattle (New-MoveSkill 1 1 $false $false 1 0 0.0 $true) $propertyChancePlayer $propertyChanceEnemy
+Assert-Move ($propertyChanceEnemy.X -eq 2 -and $propertyChance.Event.Movements.Count -eq 1) 'Effect-rate properties did not raise the displacement chance'
 
 $pullPlayer = New-Unit 1 1 0 0 1000
 $pullEnemy = New-Unit 2 2 2 0 5000
@@ -103,4 +140,4 @@ $diagonalEnemy = New-Unit 2 2 3 3 5000
 $diagonal = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2 1) $diagonalPlayer $diagonalEnemy
 Assert-Move ($diagonalEnemy.X -eq 3 -and $diagonalEnemy.Y -eq 4) 'Diagonal path-side displacement did not use the deterministic horizontal-axis tie break'
 
-Write-Output 'Battle hit displacement checks passed: official mapping, knockback, pull, blocked destination, move conditions and deterministic path-side movement.'
+Write-Output 'Battle hit displacement checks passed: official mapping, probability and EffectRate, knockback, pull, blocked destination, move conditions and deterministic path-side movement.'

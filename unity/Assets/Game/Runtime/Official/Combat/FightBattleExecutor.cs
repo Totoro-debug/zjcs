@@ -350,6 +350,7 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleUnitState candidate in targets)
                     if (candidate != null && candidate.Id != actor.Id) { target = candidate; break; }
                 if (target == null) continue;
+                if (!MoveChanceSucceeded(move, actor, target)) continue;
                 if (move.Delay > lastDelay) lastDelay = move.Delay;
                 if (move.Distance < 0)
                 {
@@ -377,6 +378,16 @@ namespace Zjcs.Combat.Official
                     if (TryMoveActor(actor, desired, distance, movements)) break;
                 }
             }
+        }
+
+        private bool MoveChanceSucceeded(FightBattleSkillMove move,
+            FightBattleUnitState source, FightBattleUnitState target)
+        {
+            double chance = move.BasePercent;
+            if (move.AffectedByProp)
+                chance = formula.CalculateStatusEffectRate(source.Properties, target.Properties,
+                    move.BasePercent, 0);
+            return random.Next() <= chance;
         }
 
         private void MoveNextToTarget(FightBattleUnitState actor, FightBattleUnitState target,
@@ -715,6 +726,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillMove move = hit == null ? null : hit.HitMove;
             if (move == null || move.HasConditions || move.Distance <= 0 || movements == null
                 || target.Hp <= 0) return;
+            if (!MoveChanceSucceeded(move, actor, target)) return;
             if (move.Direction == 2)
             {
                 ApplyPathSideMove(target, actor, target, move, movements);
