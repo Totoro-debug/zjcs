@@ -786,7 +786,20 @@ namespace Zjcs.Combat.Official
                 && !statusCatalog.HasBackToLifeComponent(application.StatusId))) return;
             if (application.LessThanHpPer >= 0f
                 && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return;
-            if (application.Chance < 1f && random.Next() > application.Chance) return;
+            double chance = application.Chance;
+            bool affectedByProp = application.AffectedByProp;
+            if (application.CharacterTypeRateOverrides != null)
+                foreach (FightBattleStatusRateOverride rateOverride in application.CharacterTypeRateOverrides)
+                    if (rateOverride != null && rateOverride.CharacterType == owner.CharacterType)
+                    {
+                        chance = rateOverride.Rate;
+                        affectedByProp = rateOverride.AffectedByProp;
+                        break;
+                    }
+            if (affectedByProp)
+                chance = formula.CalculateStatusEffectRate(actor.Properties, owner.Properties,
+                    (float)chance, statusCatalog.StatusTypeFor(application.StatusId));
+            if (!(random.Next() <= chance)) return;
             int instanceId = 1;
             foreach (FightBattleStatusState existing in owner.Statuses)
                 if (existing != null && existing.InstanceId >= instanceId)

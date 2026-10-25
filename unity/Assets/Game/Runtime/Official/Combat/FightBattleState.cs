@@ -516,8 +516,19 @@ namespace Zjcs.Combat.Official
         // 1 = skill source, 2 = damage target (official DamageStatusCfg.ETargetType).
         public int TargetType = 2;
         public float Chance = 1f;
+        public bool AffectedByProp = true;
+        public List<FightBattleStatusRateOverride> CharacterTypeRateOverrides =
+            new List<FightBattleStatusRateOverride>();
         public float LessThanHpPer = -1f;
         public long CustomShieldValue;
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusRateOverride
+    {
+        public int CharacterType;
+        public float Rate;
+        public bool AffectedByProp;
     }
 
     [Serializable]

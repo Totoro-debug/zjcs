@@ -166,7 +166,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 命中节点补上了 `FightHitFixedComponent`（`battle-rules.json` 中 1936 个固定／治疗命中），此前这类节点不会被装配成命中定义；现在与链式／随机／自选命中一样读取伤害字段、范围、动作类型与附加配置。驱散按官方 `FightDamageComponent.DisperseStatus` 接入：命中后按 `TargetTypes` 与状态 `CanDispersed` 过滤，按 `Count`（0 表示全部）与 `IsRandom` 决定移除哪些状态，并按 `BasePercent` 判定概率；`AffectedByProp` 与 `FilterCondition` 尚未参与判定。核心规则里 66 个伤害实体配置了驱散。
 
-状态列表还支持官方 `StatusListRandomOne`：为 true 时从命中状态列表中随机取一条尝试，为 false 时按顺序逐条尝试；`OverrideRateByCharacterTypes`、`SkillCostHp`／`DamageCostHpPer` 与 `AffectedByProp` 仍未参与判定。
+状态列表还支持官方 `StatusListRandomOne`：为 true 时从命中状态列表中随机取一条尝试，为 false 时按顺序逐条尝试。`AffectedByProp` 已按共享 `BattleFormulaHandler.EffectRate` 计算施法者效果率、目标效果闪避、异常减益门槛及减益倍率；匹配目标 `CharacterType` 时使用 `OverrideRateByCharacterTypes` 的覆盖概率和覆盖属性开关。固定版512条状态项中191条开启属性影响，8条包含角色类型覆盖（均为状态24216，对怪物／召唤物／宠物实体覆盖至100%且不再受属性影响）。共享公式和字段结构可核实，但未取得服务端从 `DamageStatusCfg` 调用公式的实现；本地按该字段语义及官方公式接入。`SkillCostHp`／`DamageCostHpPer` 仍未参与状态自定义参数传递。
 
 吸血按官方 `FightHitExtHemophagiaComponent` 接入（`battle-rules.json` 中 16 个命中节点）：读取 `HemophagiaPropType`，按来源单位的该属性与本次实际伤害计算回血并受最大生命限制，回血写入治疗事件与统计。该属性未出现在 `percent_value_props` 表中，本实现按 10000 基准的百分比处理（显式本地假设），属性缺失或为 0 时不回血，治疗动作本身不再产生吸血。
 

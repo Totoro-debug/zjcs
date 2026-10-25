@@ -131,6 +131,29 @@ namespace Zjcs.Combat.Official
             return (int)((1.0 + Prop(values, "MoveDistPercent")) * Prop(values, "MoveDist"));
         }
 
+        public double CalculateStatusEffectRate(IList<FightPropertyValue> sourceProperties,
+            IList<FightPropertyValue> targetProperties, float baseRate, int statusType)
+        {
+            double baseEffectRate = Prop(sourceProperties, "BaseEffectRate");
+            double effectRate = Prop(sourceProperties, "EffectRate");
+            double baseEffectDodge = Prop(targetProperties, "BaseEffectDodge");
+            double effectDodge = Prop(targetProperties, "EffectDodge");
+            double effectRateValue = Prop(sourceProperties, "EffectRateValue");
+            double effectDodgeValue = Prop(targetProperties, "EffectDodgeValue");
+            double abnormalDebuffFactor = 1.0;
+            if (statusType == 3)
+                abnormalDebuffFactor = baseEffectRate > baseEffectDodge
+                    ? 1.0 : Math.Pow(baseEffectRate / baseEffectDodge, 3.0);
+
+            double rateScale = statusType == 3
+                ? Prop(sourceProperties, "AbnormalDebuffRateScale")
+                : statusType == 2 ? Prop(sourceProperties, "DebuffRateScale") : 0.0;
+            return (baseRate * (1.0 + effectRate / baseEffectRate)
+                    / Math.Max(0.1, 1.0 + effectDodge / baseEffectDodge)
+                + effectRateValue - effectDodgeValue)
+                * abnormalDebuffFactor * (1.0 + rateScale);
+        }
+
         public FightDamageTypeData CalculateDamageType(FightRandomStream random,
             IDictionary<int, long> source, IDictionary<int, long> target, int hitType)
         {
@@ -409,6 +432,16 @@ namespace Zjcs.Combat.Official
             long value;
             if (!values.TryGetValue(id, out value)) return 0;
             return schema.IsFloat(id) ? value / 10000.0 : value;
+        }
+
+        private double Prop(IList<FightPropertyValue> values, string name)
+        {
+            int id = schema.Id(name);
+            if (id == 0 || values == null) return 0;
+            for (int i = 0; i < values.Count; i++)
+                if (values[i] != null && values[i].Id == id)
+                    return schema.IsFloat(id) ? values[i].Value / 10000.0 : values[i].Value;
+            return 0;
         }
 
         private double OneAdd(IDictionary<int, long> values, string name, double minimum)

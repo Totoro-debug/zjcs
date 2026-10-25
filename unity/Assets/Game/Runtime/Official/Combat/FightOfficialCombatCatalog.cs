@@ -343,6 +343,12 @@ namespace Zjcs.Combat.Official
                 "FightStatusBackToLifeComponent") != null;
         }
 
+        public int StatusTypeFor(int statusClassId)
+        {
+            if (!entities.TryGetValue(statusClassId, out Dictionary<string, object> components)) return 0;
+            Dictionary<string, object> status = Component(components, "FightStatusComponent");
+            return status == null ? 0 : Int(status, "StatusType");
+        }
 
         public FightBattleResilienceInfo MonsterResilienceInfo(int monsterId, int groupNo)
         {
@@ -1576,9 +1582,30 @@ namespace Zjcs.Combat.Official
                     StatusId = statusId,
                     TargetType = Int(row, "TargetType", 2),
                     Chance = Float(row, "BasePercent", 1f),
+                    AffectedByProp = Bool(row, "AffectedByProp", true),
+                    CharacterTypeRateOverrides = ParseStatusRateOverrides(row),
                     LessThanHpPer = Float(row, "LessThanHpPer", -1f)
                 });
             }
+        }
+
+        private static List<FightBattleStatusRateOverride> ParseStatusRateOverrides(
+            Dictionary<string, object> row)
+        {
+            var result = new List<FightBattleStatusRateOverride>();
+            if (row == null || !row.TryGetValue("OverrideRateByCharacterTypes", out object raw)
+                || raw == null) return result;
+            foreach (object item in Array(raw, "OverrideRateByCharacterTypes"))
+            {
+                Dictionary<string, object> value = Object(item, "status rate override");
+                result.Add(new FightBattleStatusRateOverride
+                {
+                    CharacterType = Int(value, "CharacterType"),
+                    Rate = Float(value, "OverrideRate", 0f),
+                    AffectedByProp = Bool(value, "OverrideAffectedByProp")
+                });
+            }
+            return result;
         }
 
         private static FightBattleSkillMove ParseMove(Dictionary<string, object> row,
