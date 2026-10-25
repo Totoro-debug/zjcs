@@ -337,6 +337,22 @@ namespace Zjcs.Combat.Official
             return row == null ? -1 : Int(row, "AiType", -1);
         }
 
+
+        public FightBattleResilienceInfo MonsterResilienceInfo(int monsterId, int groupNo)
+        {
+            Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
+            if (group == null || !group.TryGetValue("ResilienceInfo", out object rawInfo)
+                || rawInfo == null) return null;
+            Dictionary<string, object> info = Object(rawInfo, "monster resilience info");
+            return new FightBattleResilienceInfo
+            {
+                DisappearStatusIds = new List<int>(IntArray(info, "DisappearStatusIds")),
+                DisappearSkillId = Int(info, "DisappearSkillId"),
+                SkillMaxHpPercent = Int(info, "SkillMaxHpPercent"),
+                SkillAtkPercent = Int(info, "SkillAtkPercent"),
+                ResetRound = Int(info, "ResetRound")
+            };
+        }
         public List<int> MonsterActiveSkillItems(int monsterId, int groupNo)
         {
             Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);

@@ -10,12 +10,13 @@ namespace Zjcs.Combat.Official
         public bool Replayed;
     }
 
-    public sealed class FightBattleExecutor
+    public sealed partial class FightBattleExecutor
     {
         /// <summary>Official GameMoveTime used by the scene view for one grid cell.</summary>
         public const float MovementSecondsPerCell = 0.5f;
         private const float DefaultStepSeconds = 0.35f;
         private readonly FightBattleCheckpoint checkpoint;
+        private readonly FightDamageFormula formula;
         private readonly FightBattleHitExecutor hitExecutor;
         private readonly List<FightBattleUnitState> units = new List<FightBattleUnitState>();
         private readonly Dictionary<int, FightBattleUnitState> unitById = new Dictionary<int, FightBattleUnitState>();
@@ -32,12 +33,14 @@ namespace Zjcs.Combat.Official
             this.statusCatalog = statusCatalog;
             FightBattleCheckpointRules.Validate(checkpoint, !initialize);
             if (formula == null) throw new ArgumentNullException(nameof(formula));
+            this.formula = formula;
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
             if (checkpoint.Units.Count == 0) throw new ArgumentException("Fight roster is empty.", nameof(checkpoint));
 
             hitExecutor = new FightBattleHitExecutor(formula, settlement);
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
+                InitializeUnitResilience(unit);
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
                 SynchronizeTurn(unit);
@@ -158,6 +161,7 @@ namespace Zjcs.Combat.Official
             SynchronizeTurn(actor);
             turns.Finish(turn);
             FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingEnd);
+            RestoreResilienceAfterPersonalRound(actor, actorRound);
             FightStatusLifecycle.RemoveDestroyedTargets(units);
 
             SpawnNextWaveIfCleared();
@@ -262,8 +266,20 @@ namespace Zjcs.Combat.Official
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     long beforeHp = target.Hp;
                     int damageId = NextDamageId();
-                    FightBattleHitResult resolved = hitExecutor.Apply(random, damageId, actor, target,
-                        skill, hit, 0, false, 0.0, new List<int>());
+                    bool originalHasCustomDamage = hit.HasCustomDamage;
+                    long originalCustomDamage = hit.CustomDamage;
+                    ApplyResilienceDamageOverride(actor, target, skill, hit);
+                    FightBattleHitResult resolved;
+                    try
+                    {
+                        resolved = hitExecutor.Apply(random, damageId, actor, target,
+                            skill, hit, 0, false, 0.0, new List<int>());
+                    }
+                    finally
+                    {
+                        hit.HasCustomDamage = originalHasCustomDamage;
+                        hit.CustomDamage = originalCustomDamage;
+                    }
                     if (resolved.Formula == null && resolved.Settlement == null) continue;
                     var damage = new FightBattleDamageEvent
                     {
@@ -292,6 +308,8 @@ namespace Zjcs.Combat.Official
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage);
                     ApplyHitStatuses(actor, target, hit, random);
+                    ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
+                        damageEvents, movements, ref lastDelay);
                     ApplyHitDisperse(target, hit, random);
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);

@@ -13,6 +13,16 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleResilienceInfo
+    {
+        public List<int> DisappearStatusIds = new List<int>();
+        public int DisappearSkillId;
+        public int SkillMaxHpPercent;
+        public int SkillAtkPercent;
+        public int ResetRound;
+    }
+
+    [Serializable]
     public sealed class FightBattleUnitState
     {
         public int Id;
