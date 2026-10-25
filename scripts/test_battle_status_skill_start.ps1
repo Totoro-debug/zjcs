@@ -75,4 +75,39 @@ $persisted = $null -ne $savedStatus -and $savedStatus.SkillStartTriggeredCount -
     $savedStatus.SkillStartSkills[0].EntityId -eq 12580
 Assert-SkillStart $persisted 'Skill-start trigger state did not survive checkpoint persistence'
 
-Write-Output 'Battle status skill-start checks passed: fixed 24476 action condition, creator/applicator targeting, skill-start timing and checkpoint persistence.'
+$thunder = $catalog.CreateStatus(24440, 2, 1, 1, 0, 0, 1, 1, 1, $null, 0)
+$enemy.Statuses.Add($thunder)
+$units = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$units.Add($player); $units.Add($enemy)
+$targets = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$targets.Add($player)
+# Seed 30000 gives 0.674..., deliberately above the ordinary 50% threshold.
+function Collect-Thunder {
+    return [Zjcs.Combat.Official.FightStatusTriggerRuntime]::CollectSkillStartSkills(
+        $enemy, $skill, $targets, $units,
+        [Zjcs.Combat.Official.FightRandomStream]::new(30000), $catalog)
+}
+Assert-SkillStart ($catalog.CalculateSkillStartTriggerRate($thunder, $enemy, 0.5) -eq 0.5) 'Dry Thunder Judgment base chance changed'
+Assert-SkillStart (@(Collect-Thunder).Count -eq 0) 'Dry Thunder Judgment ignored its 50% chance'
+$enemy.Statuses.Add($catalog.CreateStatus(24012, 2, 2, 1))
+Assert-SkillStart ($catalog.CalculateSkillStartTriggerRate($thunder, $enemy, 0.5) -eq 1.0) 'Wet did not raise Thunder Judgment chance to the described 100%'
+$wetCast = @(Collect-Thunder)
+Assert-SkillStart ($wetCast.Count -eq 1 -and $wetCast[0].Trigger.EntityId -eq 12520 -and
+    $wetCast[0].SourceUnitId -eq 1 -and $wetCast[0].TargetUnitId -eq 2) 'Wet Thunder Judgment was not invoked by the configured creator'
+$enemy.Statuses.RemoveAt(1)
+$enemy.Statuses.Add($catalog.CreateStatus(24441, 2, 2, 1))
+Assert-SkillStart (@(Collect-Thunder).Count -eq 1) 'Electric shock did not satisfy the alternative condition'
+$enemy.Statuses.Add($catalog.CreateStatus(24012, 2, 2, 1))
+Assert-SkillStart ($catalog.CalculateSkillStartTriggerRate($thunder, $enemy, 0.5) -eq 1.0) 'HasAnyStatus alternatives were multiplied more than once'
+$thunderCheckpoint = $checkpoint
+$restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($thunderCheckpoint))
+$restoredEnemy = $restored.Units[1]
+Assert-SkillStart ($catalog.CalculateSkillStartTriggerRate($restoredEnemy.Statuses[0], $restoredEnemy, 0.5) -eq 1.0) 'Conditional trigger chance did not survive checkpoint restoration'
+$enemy.Statuses.RemoveRange(1, 2)
+$player.Statuses.Add($catalog.CreateStatus(24012, 1, 1, 1))
+Assert-SkillStart (@(Collect-Thunder).Count -eq 0) 'Trigger incorrectly tested the creator instead of its applicator'
+$enemy.Statuses.Add($catalog.CreateStatus(24013, 2, 2, 1))
+Assert-SkillStart (@(Collect-Thunder).Count -eq 0) 'An unrelated status satisfied HasAnyStatus'
+
+Write-Output 'Battle status skill-start checks passed: 24476 timing/targeting/persistence; Thunder Judgment dry/wet/electric, any-condition semantics, applicator ownership and restored chance.'

@@ -374,7 +374,7 @@ namespace Zjcs.Combat.Official
             {
                 List<FightBattleStatusSkillInvocation> skillStartSkills =
                     FightStatusTriggerRuntime.CollectSkillStartSkills(actor, skill, targets,
-                        units, random);
+                        units, random, statusCatalog);
                 if (skillStartSkills.Count > 0)
                 {
                     float triggerDelay = 0f;

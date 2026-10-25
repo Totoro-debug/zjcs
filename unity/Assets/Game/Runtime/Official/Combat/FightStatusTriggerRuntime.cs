@@ -123,7 +123,8 @@ namespace Zjcs.Combat.Official
         public static List<FightBattleStatusSkillInvocation> CollectSkillStartSkills(
             FightBattleUnitState actor, FightBattleSkillDefinition skill,
             IReadOnlyList<FightBattleUnitState> skillTargets,
-            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random)
+            IReadOnlyList<FightBattleUnitState> units, FightRandomStream random,
+            FightOfficialCombatCatalog catalog = null)
         {
             var result = new List<FightBattleStatusSkillInvocation>();
             if (actor == null || skill == null || skillTargets == null || skillTargets.Count == 0
@@ -159,7 +160,9 @@ namespace Zjcs.Combat.Official
                     if (trigger == null || trigger.EntityId <= 0 || trigger.AffectedByProp
                         || trigger.Source != 3 || trigger.Target != 2 || trigger.UseAI
                         || trigger.TargetPos != 1 || trigger.StackedCountToDamageFactor
-                        || !Roll(trigger.BasePercent, random)) continue;
+                        || !Roll(catalog == null ? trigger.BasePercent
+                            : catalog.CalculateSkillStartTriggerRate(status, actor,
+                                trigger.BasePercent), random)) continue;
                     result.Add(new FightBattleStatusSkillInvocation
                     {
                         Trigger = trigger,
@@ -340,7 +343,7 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private static bool Roll(float chance, FightRandomStream random)
+        private static bool Roll(double chance, FightRandomStream random)
         {
             if (chance >= 1f) return true;
             if (chance <= 0f || random == null) return false;

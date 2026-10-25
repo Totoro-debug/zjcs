@@ -1,0 +1,48 @@
+{
+  "code_manifest": "871_156598",
+  "config_manifest": "854_156383",
+  "language_manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillRateComponentInfo.cs",
+      "sha256": "b4c90992106b1e2f79aec0f420a9e00e45954bd674a3711091e7c8e1443e9927"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs",
+      "sha256": "690c2b807601c00d473c7ab054d75ed8e4ffd14362b5f21efccadfe60fcd4e32"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-texts.json",
+      "sha256": "5d31a50c8260d6e16edbe503168dcffd4ebb8e222b3757fbf5829b598ff0c7e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialLevelPropDefaults.cs",
+      "sha256": "67d2fb2273f8bb17b776d00a229681942c26bcadf71f6e5b00952235a14c1336"
+    }
+  ],
+  "status": 24440,
+  "skill_item": 10624,
+  "trigger_skill": 12520,
+  "base_percent": 0.5,
+  "has_any_status": [
+    24441,
+    24012
+  ],
+  "add_prop_type": 2000,
+  "calculated_prop_value": 20000,
+  "prop_context": {
+    "rank": 1,
+    "level": 1,
+    "sub_rank": 1
+  },
+  "offline_rule": "For the recovered empty action/status-filter branch only, multiply BasePercent by the configured property / 10000 once if the applicator has any listed status. The official item wording explicitly states 50% becomes 100%. Do not interpret unobserved filters or generalize to EffectRate/external modifiers.",
+  "server_implementation_recovered": false
+}

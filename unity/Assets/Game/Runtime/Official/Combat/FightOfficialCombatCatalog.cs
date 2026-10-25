@@ -391,6 +391,39 @@ namespace Zjcs.Combat.Official
             return rate;
         }
 
+        /// <summary>
+        /// Configured conditional chance on the skill-start status itself. In the recovered
+        /// configuration, Thunder Judgment (24440) doubles its 50% base chance when its
+        /// applicator has electric shock or wet, matching item 10624's explicit 100% wording.
+        /// This condition changes the configured base chance, independently of EffectRate.
+        /// Nonempty action/status filters have no recovered example and are not interpreted.
+        /// </summary>
+        public double CalculateSkillStartTriggerRate(FightBattleStatusState status,
+            FightBattleUnitState applicator, double baseRate)
+        {
+            if (status == null || applicator == null
+                || !entities.TryGetValue(status.ClassId, out Dictionary<string, object> definition))
+                return baseRate;
+            Dictionary<string, object> config = Component(definition,
+                "FightStatusTriggerSkillRateComponent");
+            if (config == null || IntArray(config, "LimitActionTypes").Length > 0
+                || IntArray(config, "LimitStatusTypes").Length > 0) return baseRate;
+            int[] conditions = IntArray(config, "HasAnyStatus");
+            if (conditions.Length == 0) return baseRate;
+            bool matches = false;
+            foreach (FightBattleStatusState existing in applicator.Statuses)
+                if (existing != null && System.Array.IndexOf(conditions, existing.ClassId) >= 0)
+                {
+                    matches = true;
+                    break;
+                }
+            if (!matches) return baseRate;
+            IReadOnlyDictionary<int, long> properties = CalculateSkillProps(status.ClassId,
+                status.SourceSkillRank, status.SourceSkillLevel, status.SourceSubRank);
+            return properties.TryGetValue(Int(config, "AddPropType"), out long value)
+                ? baseRate * (value / 10000.0) : baseRate;
+        }
+
         public FightBattleResilienceInfo MonsterResilienceInfo(int monsterId, int groupNo)
         {
             Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
