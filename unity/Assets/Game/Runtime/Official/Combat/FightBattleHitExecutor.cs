@@ -40,14 +40,10 @@ namespace Zjcs.Combat.Official
             if (skill != null) AddProperties(sourceProps, skill.Properties);
             FightEntityState sourceEntity = actor.EntityState();
             FightEntityState targetEntity = target.EntityState();
-            var result = new FightBattleHitResult();
-            // Official DamageActionType: only Damage (4) and Cure (5) produce a settlement. None (0)
-            // and status/control actions do not apply HP changes here.
-            if (hit.ActionType != 4 && hit.ActionType != 5)
-            {
-                result.IsCure = hit.ActionType == 5;
-                return result;
-            }
+            var result = new FightBattleHitResult { Type = new FightDamageTypeData() };
+            // DamageActionType is the action-mutex category. None has no HP settlement; other hit
+            // actions resolve the configured damage type and attached status effects.
+            if (hit.ActionType == 0) return result;
             long? custom = CustomDamage(actor, target, skill, hit, sourceProps, targetProps);
 
             if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))

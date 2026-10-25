@@ -146,6 +146,7 @@ namespace Zjcs.Combat.Official
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
                 ActionType = template.ActionType,
+                HasBackToLifeComponent = template.HasBackToLifeComponent,
                 DurationRound = template.DurationRound,
                 CurDurationRound = template.DurationRound,
                 StartRound = round,
@@ -266,6 +267,7 @@ namespace Zjcs.Combat.Official
                 Scope = template.Scope
             };
             unit.Statuses.Add(applied);
+            if (applied.HasBackToLifeComponent) unit.Hp = 1;
             return applied;
         }
 

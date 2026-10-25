@@ -104,6 +104,7 @@ namespace Zjcs.Combat.Official
         public int StatusType;
         public int ActionType;
         // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
+        public bool HasBackToLifeComponent;
         public int DurationRound;
         public int CurDurationRound;
         public int StartRound;

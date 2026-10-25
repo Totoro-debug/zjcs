@@ -782,7 +782,8 @@ namespace Zjcs.Combat.Official
         {
             if (application == null || application.StatusId <= 0) return;
             FightBattleUnitState owner = application.TargetType == 1 ? actor : target;
-            if (owner == null || owner.Hp <= 0) return;
+            if (owner == null || (owner.Hp <= 0
+                && !statusCatalog.HasBackToLifeComponent(application.StatusId))) return;
             if (application.LessThanHpPer >= 0f
                 && owner.Hp / (double)Math.Max(1L, owner.MaxHp) >= application.LessThanHpPer) return;
             if (application.Chance < 1f && random.Next() > application.Chance) return;

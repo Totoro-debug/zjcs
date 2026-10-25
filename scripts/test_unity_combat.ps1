@@ -69,7 +69,9 @@ $officialSkill = $officialCatalog.CreateSkill(16100, 0, 16100, 1, 1, 0, $null)
 $officialStatus = $officialCatalog.CreateStatus(16104, 2, 1, 1, 16100, 16100)
 $ridiculeStatus = $officialCatalog.CreateStatus(24216, 2, 2, 1)
 $confusionStatus = $officialCatalog.CreateStatus(24217, 2, 2, 1)
+$backToLifeStatus = $officialCatalog.CreateStatus(24233, 2, 2, 2)
 Assert-Combat ($ridiculeStatus.ActionType -eq 58 -and $confusionStatus.ActionType -eq 54) 'Official status action types for ridicule or confusion did not map from ActionComponent'
+Assert-Combat ($backToLifeStatus.ActionType -eq 62 -and $backToLifeStatus.HasBackToLifeComponent) 'Official FightStatusBackToLifeComponent was not mapped from the status entity'
 $ridiculeOwner = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $ridiculeOwner.Id = 2
 $appliedRidiculeStatus = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply(
@@ -305,6 +307,21 @@ $directHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
 $directHit.DamageType = 8; $directHit.HasCustomDamage = $true; $directHit.CustomDamage = 23
 $directOne = $hitExecutor.Apply($null, 801, $cureActor, $directTarget, $null, $directHit, 0, $false)
 $directTwo = $hitExecutor.Apply($null, 801, $cureActor, $directTarget, $null, $directHit, 0, $false)
+$typedHitTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$typedHitTarget.Id = 25; $typedHitTarget.Hp = 100; $typedHitTarget.MaxHp = 100
+$typedHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$typedHit.ActionType = 50; $typedHit.DamageType = 8; $typedHit.HasCustomDamage = $true; $typedHit.CustomDamage = 7
+$typedResult = $hitExecutor.Apply($null, 805, $cureActor, $typedHitTarget, $null, $typedHit, 0, $false)
+Assert-Combat ($typedHitTarget.Hp -eq 93 -and $typedResult.Settlement.RealDamageValue -eq -7) 'Status action category incorrectly suppressed its configured damage settlement'
+$noneHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$noneHit.ActionType = 0; $noneHit.DamageType = 8; $noneHit.HasCustomDamage = $true; $noneHit.CustomDamage = 7
+$noneResult = $hitExecutor.Apply($null, 806, $cureActor, $typedHitTarget, $null, $noneHit, 0, $false)
+Assert-Combat ($typedHitTarget.Hp -eq 93 -and $null -eq $noneResult.Settlement) 'None action category unexpectedly settled HP'
+$deadTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$deadTarget.Id = 26; $deadTarget.Hp = 0; $deadTarget.MaxHp = 100
+$appliedBackToLife = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($deadTarget,
+    $backToLifeStatus, 0, 1)
+Assert-Combat ($deadTarget.Hp -eq 1 -and $appliedBackToLife.HasBackToLifeComponent) 'FightStatusBackToLifeComponent did not restore the newly affected unit to one HP'
 Assert-Combat ($directTarget.Hp -eq 54 -and $directOne.Settlement.RealDamageValue -eq -23 -and $directTwo.Settlement.RealDamageValue -eq -23) 'Sequential hit HP writeback mismatch'
 $falloffStatus = [Zjcs.Combat.Official.FightBattleStatusState]::new()
 $falloffStatus.InstanceId = 1; $falloffStatus.ClassId = 24102; $falloffStatus.OwnerId = 24

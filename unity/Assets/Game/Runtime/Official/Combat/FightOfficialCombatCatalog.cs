@@ -337,6 +337,12 @@ namespace Zjcs.Combat.Official
             return row == null ? -1 : Int(row, "AiType", -1);
         }
 
+        public bool HasBackToLifeComponent(int statusClassId)
+        {
+            return Component(RequiredEntity(statusClassId),
+                "FightStatusBackToLifeComponent") != null;
+        }
+
 
         public FightBattleResilienceInfo MonsterResilienceInfo(int monsterId, int groupNo)
         {
@@ -792,6 +798,7 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = classId,
                 StatusType = Int(status, "StatusType"),
+                HasBackToLifeComponent = HasBackToLifeComponent(classId),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
