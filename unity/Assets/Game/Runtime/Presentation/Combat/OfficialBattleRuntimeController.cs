@@ -24,6 +24,8 @@ namespace Zjcs.Presentation.Combat
         private FightOfficialCombatCatalog combatCatalog;
         private OfficialBattleHudCatalog hudCatalog;
         private OfficialBattleDamageColors damageColors;
+        private OfficialBattleNativeAnimationLibrary nativeModelLibrary;
+        private OfficialBattleEnvironmentView environmentView;
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
@@ -40,6 +42,12 @@ namespace Zjcs.Presentation.Combat
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;
         public bool IsPaused => paused;
 
+        public void SetHudVisible(bool visible)
+        {
+            if (hudRoot != null) hudRoot.SetActive(visible);
+        }
+        public bool HasBattleEnvironment => environmentView != null;
+
         public void Begin(FightBattleCheckpoint checkpoint, Transform worldRoot, Transform hudParent,
             OfficialBattleGridMapper gridMapper, Func<int, Sprite> skillIcon,
             Func<FightBattleUnitState, Sprite> timelinePortrait,
@@ -50,7 +58,10 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleModelCatalog modelCatalog = null,
             OfficialBattleHudCatalog hudCatalog = null,
             bool restoreCheckpoint = false,
-            Func<FightBattleUnitState, Sprite> timelineFactionIcon = null)
+            Func<FightBattleUnitState, Sprite> timelineFactionIcon = null,
+            int environmentGameId = 0,
+            bool? environmentIsDay = null,
+            Func<FightBattleUnitState, string> animationGroupResolver = null)
         {
             if (executor != null) throw new InvalidOperationException("A battle session is already active.");
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
@@ -60,7 +71,6 @@ namespace Zjcs.Presentation.Combat
             if (skillIcon == null) throw new ArgumentNullException(nameof(skillIcon));
             if (timelinePortrait == null) throw new ArgumentNullException(nameof(timelinePortrait));
             if (modelKey == null) throw new ArgumentNullException(nameof(modelKey));
-            if (animationForEvent == null) throw new ArgumentNullException(nameof(animationForEvent));
             if (orientUnit == null) throw new ArgumentNullException(nameof(orientUnit));
 
             OfficialCombatAssetCatalog resolvedCombatAssets = combatAssets != null
@@ -77,11 +87,19 @@ namespace Zjcs.Presentation.Combat
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
                 : resolvedCombatAssets.BeginBattle(checkpoint);
             var nextHud = new OfficialBattleHudView(resolvedHudCatalog);
-            var nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
-                modelKey, gridMapper, animationForEvent, orientUnit);
+            OfficialBattleNativeAnimationLibrary nextNativeModels = null;
+            OfficialBattleEnvironmentView nextEnvironment = null;
+            OfficialBattleSceneView nextScene = null;
             GameObject nextHudRoot = null;
             try
             {
+                nextNativeModels = OfficialBattleNativeAnimationLibrary.LoadDefault();
+                if (environmentGameId > 0)
+                    nextEnvironment = OfficialBattleEnvironmentView.Load(worldRoot, environmentGameId,
+                        isDay: environmentIsDay);
+                nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
+                    modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
+                    nextNativeModels, animationGroupResolver);
                 nextHudRoot = nextHud.Mount(hudParent);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
@@ -94,6 +112,8 @@ namespace Zjcs.Presentation.Combat
                 executor = nextExecutor;
                 hudView = nextHud;
                 sceneView = nextScene;
+                nativeModelLibrary = nextNativeModels;
+                environmentView = nextEnvironment;
                 hudRoot = nextHudRoot;
                 skillIconResolver = skillIcon;
                 timelinePortraitResolver = timelinePortrait;
@@ -104,7 +124,9 @@ namespace Zjcs.Presentation.Combat
             }
             catch
             {
-                nextScene.Dispose();
+                nextScene?.Dispose();
+                nextEnvironment?.Dispose();
+                nextNativeModels?.Dispose();
                 if (nextHudRoot != null) Destroy(nextHudRoot);
                 throw;
             }
@@ -229,6 +251,9 @@ namespace Zjcs.Presentation.Combat
             phases.PhaseChanged -= OnPhaseChanged;
             phases.Finish();
             sceneView?.Dispose();
+            environmentView?.Dispose();
+            environmentView = null;
+            nativeModelLibrary?.Dispose();
             if (hudRoot != null) Destroy(hudRoot);
             if (ownsTimeScale)
             {
@@ -242,6 +267,7 @@ namespace Zjcs.Presentation.Combat
             unlockedSpeeds.Clear();
             executor = null;
             sceneView = null;
+            nativeModelLibrary = null;
             hudView = null;
             hudRoot = null;
             combatCatalog = null;

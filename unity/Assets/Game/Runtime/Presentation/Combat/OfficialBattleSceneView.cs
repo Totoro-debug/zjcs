@@ -11,110 +11,397 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleSceneView : IDisposable
     {
         private readonly OfficialBattleModelCatalog catalog;
+        private readonly OfficialBattleNativeAnimationLibrary nativeModelLibrary;
         private readonly Transform root;
         private readonly Func<FightBattleUnitState, string> modelKey;
         private readonly Func<FightGridPoint, Vector3> gridToWorld;
         private readonly Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent;
+        private readonly bool usesOfficialAnimationFallback;
+        private readonly Func<FightBattleUnitState, string> animationGroupResolver;
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
+        private readonly OfficialBattleHudCatalog hudCatalog;
+        private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
+        private readonly Transform damageRoot;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         private readonly Dictionary<int, Transform> attachedTransforms = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, AttachedAnimatorView> attachedAnimators =
+            new Dictionary<int, AttachedAnimatorView>();
+        private readonly Dictionary<int, OfficialBattleUnitWorldHudView> attachedUnitHuds =
+            new Dictionary<int, OfficialBattleUnitWorldHudView>();
         private readonly Dictionary<int, UnitMotion> motions = new Dictionary<int, UnitMotion>();
         private readonly List<int> motionScratch = new List<int>();
+        private readonly List<PendingDamageFloat> pendingDamageFloats = new List<PendingDamageFloat>();
+        private readonly List<PendingUnitAnimation> pendingUnitAnimations = new List<PendingUnitAnimation>();
+        private readonly List<OfficialBattleDamageFloat> activeDamageFloats = new List<OfficialBattleDamageFloat>();
+        private readonly List<OfficialBattleDamageFloat> damageFloatStackScratch = new List<OfficialBattleDamageFloat>();
         private const float SecondsPerCell = 0.5f;
+        private Vector3 damageUiSpacing = new Vector3(0f, -0.1f, 0f);
+        private FightBattleCheckpoint latestCheckpoint;
+        private long pendingAnimationSerial;
+
+        private sealed class PendingDamageFloat
+        {
+            public FightBattleDamageEvent Damage;
+            public FightBattleUnitState Target;
+            public string PrefabKey;
+            public Color Color;
+            public float Elapsed;
+        }
+
+        private sealed class PendingUnitAnimation
+        {
+            public OfficialBattleAnimationCue Cue;
+            public float Elapsed;
+            public long Serial;
+        }
 
         private sealed class UnitMotion
         {
             public List<Vector3> Points;
+            public List<float> SegmentStarts;
+            public List<float> SegmentDurations;
             public float Elapsed;
-            public float Duration;
         }
 
         private sealed class UnitView
         {
             public FightBattleUnitState State;
             public SkeletonAnimation Skeleton;
+            public OfficialBattleNativeModelView NativeModel;
             public OfficialBattleModelBinding Binding;
+            public OfficialBattleUnitWorldHudView Hud;
             public string CurrentAnimation;
+            public bool AnimationLoops;
+            public bool Dying;
+        }
+
+        private sealed class AttachedAnimatorView
+        {
+            public Animator Animator;
+            public string Group;
+            public string CurrentAnimation;
+            public bool AnimationLoops;
+            public bool Dying;
+            public bool DeathFinished;
+            public RuntimeAnimatorController OriginalController;
+            public AnimatorOverrideController SkillOverrideController;
         }
 
         public OfficialBattleSceneView(OfficialBattleModelCatalog catalog, Transform root,
             Func<FightBattleUnitState, string> modelKey, OfficialBattleGridMapper gridMapper,
             Func<FightBattleUnitState, FightBattleStepEvent, string> animationForEvent,
-            Action<Transform, FightBattleUnitState> orientUnit)
+            Action<Transform, FightBattleUnitState> orientUnit,
+            OfficialBattleHudCatalog hudCatalog = null, Transform hudParent = null,
+            OfficialBattleNativeAnimationLibrary nativeModelLibrary = null,
+            Func<FightBattleUnitState, string> animationGroupResolver = null)
         {
             this.catalog = catalog != null ? catalog : OfficialBattleModelCatalog.LoadDefault();
+            this.nativeModelLibrary = nativeModelLibrary;
             this.root = root != null ? root : throw new ArgumentNullException(nameof(root));
             this.modelKey = modelKey ?? this.catalog.ResolveModelKey;
             if (gridMapper == null) throw new ArgumentNullException(nameof(gridMapper));
             gridToWorld = gridMapper.GridToWorld;
-            this.animationForEvent = animationForEvent ?? throw new ArgumentNullException(nameof(animationForEvent));
-            this.orientUnit = orientUnit ?? throw new ArgumentNullException(nameof(orientUnit));
+            usesOfficialAnimationFallback = animationForEvent == null;
+            this.animationForEvent = animationForEvent ?? OfficialBattleAnimationFallback.Resolve;
+            skillPlayableCatalog = usesOfficialAnimationFallback
+                ? OfficialBattleSkillPlayableCatalog.LoadDefault() : null;
+            this.animationGroupResolver = animationGroupResolver;
+            this.orientUnit = orientUnit ?? ((_, __) => { });
+            this.hudCatalog = hudCatalog;
+            damageRoot = hudParent != null ? hudParent : root;
+        }
+
+        public static string FormatBattleNumber(long value)
+        {
+            string[] symbols = { "", "万", "亿", "兆", "京" };
+            double scaled = Math.Abs((double)value);
+            int symbolIndex = 0;
+            while (scaled >= 10000.0 && symbolIndex < symbols.Length - 1)
+            {
+                scaled /= 10000.0;
+                symbolIndex++;
+            }
+            if (symbolIndex == 0) return value.ToString(CultureInfo.InvariantCulture);
+            double precision = scaled < 10.0 ? 100.0 : scaled < 100.0 ? 10.0 : 1.0;
+            scaled = Math.Floor(scaled * precision) / precision;
+            return scaled.ToString("0.##", CultureInfo.InvariantCulture) + symbols[symbolIndex];
+        }
+
+        public void ShowDamageFloats(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
+            OfficialBattleDamageColors colors)
+        {
+            ShowDamageFloats(stepEvent, checkpoint, hudCatalog == null ? null : hudCatalog.Font, colors);
         }
 
         /// <summary>
-        /// Spawns one official-coloured damage label per resolved hit at the target grid position.
-        /// Blinding/dodge/immunity labels have no localised text in the payload yet and are skipped
-        /// instead of showing a fake number.
+        /// Uses official damage prefabs and their localized status text when the HUD catalog is bound.
         /// </summary>
         public void ShowDamageFloats(FightBattleStepEvent stepEvent, FightBattleCheckpoint checkpoint,
             TMP_FontAsset font, OfficialBattleDamageColors colors)
         {
-            if (stepEvent == null || stepEvent.DamageEvents == null || checkpoint == null
-                || font == null || colors == null) return;
-            foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
+            if (stepEvent == null || checkpoint == null || colors == null) return;
+            damageUiSpacing = colors.Spacing;
+            if (stepEvent.DamageEvents != null)
+                foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
+                {
+                    if (damage == null || damage.Damage == 0 && !damage.Dodge && !damage.Immunity && !damage.Blinding) continue;
+                    FightBattleUnitState target = FindUnit(checkpoint, damage.TargetId);
+                    if (target == null) continue;
+                    string prefabKey = DamagePrefabKey(damage);
+                    Color tint = colors.Resolve(damage, damage.ElementType);
+                    if (hudCatalog != null && hudCatalog.Font != null)
+                    {
+                        var pending = new PendingDamageFloat
+                        {
+                            Damage = damage,
+                            Target = target,
+                            PrefabKey = prefabKey,
+                            Color = tint
+                        };
+                        if (damage.Delay > 0f) pendingDamageFloats.Add(pending);
+                        else SpawnOfficialDamageFloat(pending);
+                        continue;
+                    }
+                    if (font == null || damage.Damage == 0 || damage.Dodge || damage.Immunity || damage.Blinding) continue;
+                    Vector3 position = gridToWorld(new FightGridPoint(target.X, target.Y))
+                        + new Vector3(colors.Spacing.x, 1.2f + colors.Spacing.y, colors.Spacing.z);
+                    OfficialBattleDamageFloat.Spawn(damageRoot, font,
+                        FormatBattleNumber(AbsoluteDamage(damage.Damage)), tint, position);
+                }
+
+            if (hudCatalog == null || stepEvent.SkillCasts == null) return;
+            foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
-                if (damage == null || damage.Damage == 0) continue;
-                if (damage.Dodge || damage.Immunity || damage.Blinding) continue;
-                FightBattleUnitState unit = null;
-                foreach (FightBattleUnitState candidate in checkpoint.Units)
-                    if (candidate != null && candidate.Id == damage.TargetId) { unit = candidate; break; }
-                if (unit == null) continue;
-                Vector3 position = gridToWorld(new FightGridPoint(unit.X, unit.Y))
-                    + new Vector3(colors.Spacing.x, 1.2f + colors.Spacing.y, colors.Spacing.z);
-                OfficialBattleDamageFloat.Spawn(root, font,
-                    Math.Abs(damage.Damage).ToString(CultureInfo.InvariantCulture),
-                    colors.Resolve(damage, damage.ElementType), position);
+                if (cast == null || !cast.IsReplay) continue;
+                FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
+                if (actor == null) continue;
+                SpawnOfficialDamageFloat(new PendingDamageFloat
+                {
+                    Target = actor,
+                    PrefabKey = "damage_FightResetSkillCDFloatEffect",
+                    Color = Color.white
+                });
             }
+        }
+
+        private static long AbsoluteDamage(long value) => value == long.MinValue ? long.MaxValue : Math.Abs(value);
+
+        private static FightBattleUnitState FindUnit(FightBattleCheckpoint checkpoint, int unitId)
+        {
+            foreach (FightBattleUnitState unit in checkpoint.Units)
+                if (unit != null && unit.Id == unitId) return unit;
+            return null;
+        }
+
+        private static string DamagePrefabKey(FightBattleDamageEvent damage)
+        {
+            if (damage.Immunity) return "damage_BattleImmunityDamageFloatEffect";
+            if (damage.Dodge) return "damage_FightDodgeDamageFloatEffect";
+            if (damage.Blinding) return "damage_FightBlindingDamageFloatEffect";
+            if (damage.IsCure) return "damage_BattleCureFloatEffect";
+            if (damage.ElementType == 200)
+                return damage.Critical ? "damage_AbyssCritDamageFloatEffect"
+                    : damage.Block ? "damage_AbyssBlockDamageFloatEffect" : "damage_AbyssDamageFloatEffect";
+            if (damage.Critical) return "damage_BattleCritDamageFloatEffect";
+            if (damage.Block) return "damage_BattleBlockDamageFloatEffect";
+            return "damage_BattleDamageFloatEffect";
+        }
+
+        private OfficialBattleDamageFloat SpawnOfficialDamageFloat(PendingDamageFloat pending)
+        {
+            BattleHudPrefab prefab = hudCatalog.FindPrefab(pending.PrefabKey);
+            if (prefab == null || prefab.root == null || prefab.damageUi == null)
+                throw new InvalidOperationException("Official battle damage float is missing: " + pending.PrefabKey);
+            var renderer = new OfficialBattleHudRenderer(hudCatalog);
+            GameObject instance = renderer.Create(pending.PrefabKey, damageRoot);
+            OfficialBattleHudAnimationPlayer animations = renderer.InitializeAnimations(
+                pending.PrefabKey, instance, useManualTick: true);
+            BattleHudDamageFloatBinding binding = prefab.damageUi;
+            bool hasOfficialAnimation = PlayDamageFloatAnimation(prefab, animations);
+            Transform number = FindPrefabPath(instance.transform, binding.numberPath);
+            if (number != null)
+                foreach (TMP_Text label in number.GetComponentsInChildren<TMP_Text>(true))
+                    label.text = FormatBattleNumber(AbsoluteDamage(pending.Damage == null ? 0 : pending.Damage.Damage));
+
+            Transform trueDamage = FindPrefabPath(instance.transform, binding.trueDamagePath);
+            Transform breakResilience = FindPrefabPath(instance.transform, binding.breakResiliencePath);
+            bool isBreak = pending.Damage != null && pending.Damage.BreakResilience;
+            bool isTrue = pending.Damage != null && pending.Damage.TrueDamage && !isBreak;
+            if (trueDamage != null) trueDamage.gameObject.SetActive(isTrue);
+            if (breakResilience != null) breakResilience.gameObject.SetActive(isBreak);
+            foreach (TMP_Text label in instance.GetComponentsInChildren<TMP_Text>(true))
+                label.color = pending.Color.linear;
+
+            Vector3 world = gridToWorld(new FightGridPoint(pending.Target.X, pending.Target.Y))
+                + new Vector3(binding.sceneOffset != null && binding.sceneOffset.Length > 0 ? binding.sceneOffset[0] : 0f,
+                    1.2f + (binding.sceneOffset != null && binding.sceneOffset.Length > 1 ? binding.sceneOffset[1] : 0f),
+                    binding.sceneOffset != null && binding.sceneOffset.Length > 2 ? binding.sceneOffset[2] : 0f);
+            RectTransform rect = instance.transform as RectTransform;
+            Canvas canvas = damageRoot.GetComponentInParent<Canvas>();
+            bool screenSpace = canvas != null && canvas.renderMode != RenderMode.WorldSpace;
+            RectTransform parentRect = screenSpace ? damageRoot as RectTransform : null;
+            Camera projectionCamera = Camera.main != null ? Camera.main : (canvas == null ? null : canvas.worldCamera);
+            Camera eventCamera = canvas == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay
+                ? null : canvas.worldCamera;
+            if (screenSpace && rect != null && parentRect != null && projectionCamera != null)
+            {
+                Vector3 screen = projectionCamera.WorldToScreenPoint(world);
+                if (screen.z < 0f || !RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect,
+                        screen, eventCamera, out Vector2 local))
+                {
+                    UnityEngine.Object.Destroy(instance);
+                    return null;
+                }
+                rect.anchoredPosition = local;
+            }
+            else
+            {
+                instance.transform.position = world;
+                if (Camera.main != null) instance.transform.rotation = Camera.main.transform.rotation;
+            }
+
+            var group = instance.GetComponent<CanvasGroup>() ?? instance.AddComponent<CanvasGroup>();
+            TMP_Text primary = null;
+            if (number != null) primary = number.GetComponentInChildren<TMP_Text>(true);
+            if (primary == null) primary = instance.GetComponentInChildren<TMP_Text>(true);
+            OfficialBattleDamageFloat floatView = instance.AddComponent<OfficialBattleDamageFloat>();
+            floatView.InitializeOfficial(binding.type, primary, group, animations,
+                binding.showTime, screenSpace, hasOfficialAnimation, pending.Target.Id,
+                binding.height, world, parentRect, projectionCamera, eventCamera);
+            activeDamageFloats.Add(floatView);
+            RefreshDamageFloatStack(pending.Target.Id);
+            return floatView;
+        }
+
+        private void RefreshDamageFloatStack(int targetId)
+        {
+            damageFloatStackScratch.Clear();
+            foreach (OfficialBattleDamageFloat floatView in activeDamageFloats)
+                if (floatView != null && floatView.TargetId == targetId)
+                    damageFloatStackScratch.Add(floatView);
+
+            Vector3 offset = Vector3.zero;
+            for (int index = damageFloatStackScratch.Count - 1; index >= 0; index--)
+            {
+                OfficialBattleDamageFloat floatView = damageFloatStackScratch[index];
+                floatView.SetStackOffset(offset);
+                offset += new Vector3(damageUiSpacing.x,
+                    floatView.StackHeight + damageUiSpacing.y, damageUiSpacing.z);
+            }
+        }
+
+        private static bool PlayDamageFloatAnimation(BattleHudPrefab prefab,
+            OfficialBattleHudAnimationPlayer animations)
+        {
+            if (prefab.nodes == null || animations == null) return false;
+            bool hasAutomaticAnimation = false;
+            foreach (BattleHudNode node in prefab.nodes)
+            {
+                if (node != null && node.animation_play_automatically
+                    && !string.IsNullOrEmpty(node.default_animation)) hasAutomaticAnimation = true;
+                if (node?.animations == null) continue;
+                foreach (BattleHudAnimation animation in node.animations)
+                {
+                    if (animation == null || string.IsNullOrEmpty(animation.name)
+                        || !animation.name.StartsWith("GameCanvas_FlyText_", StringComparison.Ordinal)) continue;
+                    return animations.Play(animation.owner, animation.name);
+                }
+            }
+            return hasAutomaticAnimation;
+        }
+
+        private static Transform FindPrefabPath(Transform prefabRoot, string path)
+        {
+            if (prefabRoot == null || string.IsNullOrEmpty(path)) return null;
+            string[] parts = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            int index = parts.Length > 0 && parts[0] == prefabRoot.name ? 1 : 0;
+            Transform current = prefabRoot;
+            for (; index < parts.Length; index++)
+            {
+                current = current.Find(parts[index]);
+                if (current == null) return null;
+            }
+            return current;
         }
 
         public void Refresh(FightBattleCheckpoint checkpoint, FightBattleStepEvent stepEvent = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
+            latestCheckpoint = checkpoint;
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
                 if (state == null || !IsWaveSpawned(checkpoint, state.Id)) continue;
-                // Dead units leave the battlefield; the official death AnimationClip is not migrated
-                // yet, so the model is removed without a death animation.
-                if (state.Hp <= 0) continue;
+                if (state.Hp <= 0)
+                {
+                    Transform deadAttached = attachedTransforms.TryGetValue(state.Id, out Transform deadBody)
+                        ? deadBody : null;
+                    if (deadAttached != null)
+                    {
+                        if (TryBeginAttachedDeath(state, deadAttached)) present.Add(state.Id);
+                    }
+                    else if (TryBeginDeath(state)) present.Add(state.Id);
+                    continue;
+                }
                 present.Add(state.Id);
                 if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
                 {
                     PlaceUnit(state.Id, attached, state, stepEvent);
                     orientUnit(attached, state);
+                    RefreshAttachedAnimation(state, attached, stepEvent);
+                    RefreshAttachedHud(state, attached);
                     continue;
                 }
-                string key = modelKey(state);
-                if (string.IsNullOrEmpty(key)) continue;
                 UnitView view = GetOrCreate(state);
+                if (view == null) continue;
+                if (view.Dying)
+                {
+                    view.Dying = false;
+                    PlayAnimation(view, "idle_01", true);
+                }
                 view.State = state;
-                PlaceUnit(state.Id, view.Skeleton.transform, state, stepEvent);
-                orientUnit(view.Skeleton.transform, state);
+                view.Hud?.Refresh(state);
+                Transform body = Body(state.Id);
+                if (body == null) continue;
+                PlaceUnit(state.Id, body, state, stepEvent);
+                orientUnit(body, state);
                 if (stepEvent != null && (stepEvent.ActorId == state.Id
                     || (stepEvent.TargetIds != null && stepEvent.TargetIds.Contains(state.Id))))
-                    Play(view, animationForEvent(state, stepEvent), false);
+                {
+                    if (!usesOfficialAnimationFallback)
+                        PlayAnimation(view, animationForEvent(state, stepEvent), false);
+                }
                 else if (string.IsNullOrEmpty(view.CurrentAnimation))
-                    Play(view, "idle_01", true);
+                    PlayAnimation(view, "idle_01", true);
             }
+
+            if (usesOfficialAnimationFallback && stepEvent != null)
+                ScheduleOfficialAnimationCues(stepEvent);
 
             var removed = new List<int>();
             foreach (KeyValuePair<int, UnitView> entry in units)
                 if (!present.Contains(entry.Key)) removed.Add(entry.Key);
             foreach (int id in removed)
             {
-                UnityEngine.Object.Destroy(units[id].Skeleton.gameObject);
+                RemoveUnit(id);
                 units.Remove(id);
                 motions.Remove(id);
+            }
+            var removedAttachedHuds = new List<int>();
+            foreach (int id in attachedUnitHuds.Keys)
+                if (!present.Contains(id)) removedAttachedHuds.Add(id);
+            foreach (int id in removedAttachedHuds)
+            {
+                attachedUnitHuds[id]?.Dispose();
+                attachedUnitHuds.Remove(id);
+            }
+            var removedAttachedAnimators = new List<int>();
+            foreach (int id in attachedAnimators.Keys)
+                if (!present.Contains(id)) removedAttachedAnimators.Add(id);
+            foreach (int id in removedAttachedAnimators)
+            {
+                ReleaseAttachedAnimator(attachedAnimators[id]);
+                attachedAnimators.Remove(id);
             }
         }
 
@@ -125,22 +412,52 @@ namespace Zjcs.Presentation.Combat
         public void AttachUnitTransform(int unitId, Transform transform)
         {
             if (transform == null) throw new ArgumentNullException(nameof(transform));
+            if (units.ContainsKey(unitId))
+            {
+                RemoveUnit(unitId);
+                units.Remove(unitId);
+            }
+            motions.Remove(unitId);
+            if (attachedAnimators.TryGetValue(unitId, out AttachedAnimatorView oldAnimator))
+                ReleaseAttachedAnimator(oldAnimator);
+            attachedAnimators.Remove(unitId);
+            if (attachedUnitHuds.TryGetValue(unitId, out OfficialBattleUnitWorldHudView hud))
+            {
+                hud?.Dispose();
+                attachedUnitHuds.Remove(unitId);
+            }
             attachedTransforms[unitId] = transform;
+            FightBattleUnitState state = FindUnit(latestCheckpoint, unitId);
+            if (state == null) return;
+            if (state.Hp <= 0)
+            {
+                TryBeginAttachedDeath(state, transform);
+                return;
+            }
+            RefreshAttachedAnimation(state, transform, null);
+            RefreshAttachedHud(state, transform);
         }
 
         public void DetachUnitTransform(int unitId)
         {
             attachedTransforms.Remove(unitId);
             motions.Remove(unitId);
+            if (attachedAnimators.TryGetValue(unitId, out AttachedAnimatorView oldAnimator))
+                ReleaseAttachedAnimator(oldAnimator);
+            attachedAnimators.Remove(unitId);
+            if (attachedUnitHuds.TryGetValue(unitId, out OfficialBattleUnitWorldHudView hud))
+            {
+                hud?.Dispose();
+                attachedUnitHuds.Remove(unitId);
+            }
         }
 
         private void PlaceUnit(int unitId, Transform body, FightBattleUnitState state,
             FightBattleStepEvent stepEvent)
         {
             Vector3 target = gridToWorld(new FightGridPoint(state.X, state.Y));
-            FightBattleMovementEvent movement = FindMovement(stepEvent, unitId);
-            if (movement != null && movement.Path != null && movement.Path.Count > 1)
-                BeginMotion(unitId, body, movement);
+            if (HasMovement(stepEvent, unitId))
+                BeginMotion(unitId, body, stepEvent);
             else if (!motions.ContainsKey(unitId))
                 body.position = target;
         }
@@ -149,7 +466,8 @@ namespace Zjcs.Presentation.Combat
         {
             if (!units.TryGetValue(unitId, out UnitView view))
                 throw new KeyNotFoundException("Battle unit view is not mounted: " + unitId);
-            Play(view, animation, loop);
+            if (!PlayAnimation(view, animation, loop))
+                throw new KeyNotFoundException("Battle unit animation is not mounted: " + unitId + "/" + animation);
         }
 
         /// <summary>
@@ -158,72 +476,565 @@ namespace Zjcs.Presentation.Combat
         /// </summary>
         public void Tick(float deltaTime)
         {
-            if (motions.Count == 0 || deltaTime <= 0f) return;
-            motionScratch.Clear();
-            motionScratch.AddRange(motions.Keys);
-            foreach (int unitId in motionScratch)
+            if (deltaTime <= 0f) return;
+            if (motions.Count > 0)
             {
-                UnitMotion motion = motions[unitId];
-                Transform body = Body(unitId);
-                if (body == null)
+                motionScratch.Clear();
+                motionScratch.AddRange(motions.Keys);
+                foreach (int unitId in motionScratch)
                 {
-                    motions.Remove(unitId);
-                    continue;
-                }
-                motion.Elapsed += deltaTime;
-                float percent = motion.Duration <= 0f ? 1f : Mathf.Clamp01(motion.Elapsed / motion.Duration);
-                int segments = motion.Points.Count - 1;
-                float position = percent * segments;
-                int index = Mathf.Min(Mathf.FloorToInt(position), segments - 1);
-                float segment = position - index;
-                body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], segment);
-                if (percent >= 1f)
-                {
-                    body.position = motion.Points[motion.Points.Count - 1];
-                    motions.Remove(unitId);
+                    UnitMotion motion = motions[unitId];
+                    Transform body = Body(unitId);
+                    if (body == null)
+                    {
+                        motions.Remove(unitId);
+                        continue;
+                    }
+                    motion.Elapsed += deltaTime;
+                    bool complete = true;
+                    for (int index = 0; index < motion.SegmentDurations.Count; index++)
+                    {
+                        float segmentStart = motion.SegmentStarts[index];
+                        if (motion.Elapsed < segmentStart)
+                        {
+                            body.position = motion.Points[index];
+                            complete = false;
+                            break;
+                        }
+                        float segmentDuration = motion.SegmentDurations[index];
+                        float progress = segmentDuration <= 0f ? 1f
+                            : Mathf.Clamp01((motion.Elapsed - segmentStart) / segmentDuration);
+                        body.position = Vector3.Lerp(motion.Points[index], motion.Points[index + 1], progress);
+                        if (progress < 1f)
+                        {
+                            complete = false;
+                            break;
+                        }
+                    }
+                    if (complete)
+                    {
+                        body.position = motion.Points[motion.Points.Count - 1];
+                        motions.Remove(unitId);
+                    }
                 }
             }
+
+            var completedDeaths = new List<int>();
+            foreach (KeyValuePair<int, UnitView> entry in units)
+            {
+                UnitView view = entry.Value;
+                if (view.NativeModel != null)
+                {
+                    view.NativeModel.Tick(deltaTime);
+                    if (view.CurrentAnimation == "run_01" && !IsMotionRunning(entry.Key))
+                        PlayAnimation(view, "idle_01", true);
+                    else if (view.NativeModel.IsAnimationFinished)
+                    {
+                        if (view.Dying) completedDeaths.Add(entry.Key);
+                        else if (!view.AnimationLoops)
+                            PlayAnimation(view, IsMotionRunning(entry.Key) ? "run_01" : "idle_01", true);
+                    }
+                }
+                else if (view.Skeleton != null && view.Skeleton.AnimationState != null)
+                {
+                    Spine.TrackEntry track = view.Skeleton.AnimationState.GetCurrent(0);
+                    if (view.CurrentAnimation == "run_01" && !IsMotionRunning(entry.Key))
+                        PlayAnimation(view, "idle_01", true);
+                    else if (track != null && track.IsComplete)
+                    {
+                        if (view.Dying) completedDeaths.Add(entry.Key);
+                        else if (!view.AnimationLoops)
+                            PlayAnimation(view, IsMotionRunning(entry.Key) ? "run_01" : "idle_01", true);
+                    }
+                }
+            }
+            foreach (int id in completedDeaths)
+            {
+                RemoveUnit(id);
+                units.Remove(id);
+                motions.Remove(id);
+            }
+
+            var completedAttachedDeaths = new List<int>();
+            foreach (KeyValuePair<int, AttachedAnimatorView> entry in attachedAnimators)
+            {
+                AttachedAnimatorView view = entry.Value;
+                if (view.Animator == null) continue;
+                if (view.Dying)
+                {
+                    if (!view.DeathFinished && AttachedAnimationFinished(view))
+                    {
+                        view.DeathFinished = true;
+                        completedAttachedDeaths.Add(entry.Key);
+                    }
+                    continue;
+                }
+                if (!view.AnimationLoops && AttachedAnimationFinished(view))
+                    PlayAttachedAnimation(view,
+                        IsMotionRunning(entry.Key) ? "run_01" : "idle_01", true);
+                else if (view.CurrentAnimation == "run_01" && !IsMotionRunning(entry.Key))
+                    PlayAttachedAnimation(view, "idle_01", true);
+            }
+            AdvancePendingUnitAnimations(deltaTime);
+
+            foreach (int id in completedAttachedDeaths)
+            {
+                if (!attachedUnitHuds.TryGetValue(id, out OfficialBattleUnitWorldHudView hud)) continue;
+                hud?.Dispose();
+                attachedUnitHuds.Remove(id);
+            }
+
+            for (int index = activeDamageFloats.Count - 1; index >= 0; index--)
+            {
+                OfficialBattleDamageFloat floatView = activeDamageFloats[index];
+                if (floatView == null)
+                {
+                    activeDamageFloats.RemoveAt(index);
+                    continue;
+                }
+                floatView.Tick(deltaTime);
+            }
+            for (int index = pendingDamageFloats.Count - 1; index >= 0; index--)
+            {
+                PendingDamageFloat pending = pendingDamageFloats[index];
+                float previous = pending.Elapsed;
+                pending.Elapsed += deltaTime;
+                if (pending.Elapsed < pending.Damage.Delay) continue;
+                pendingDamageFloats.RemoveAt(index);
+                OfficialBattleDamageFloat floatView = SpawnOfficialDamageFloat(pending);
+                if (floatView != null)
+                    floatView.Tick(Mathf.Max(0f, pending.Elapsed - Math.Max(previous, pending.Damage.Delay)));
+            }
+            foreach (UnitView view in units.Values) view.Hud?.Tick(deltaTime);
+            foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Tick(deltaTime);
         }
 
-        private void BeginMotion(int unitId, Transform body, FightBattleMovementEvent movement)
+        private void BeginMotion(int unitId, Transform body, FightBattleStepEvent stepEvent)
         {
-            var motion = new UnitMotion { Points = new List<Vector3>(movement.Path.Count) };
-            foreach (FightGridPoint point in movement.Path) motion.Points.Add(gridToWorld(point));
-            if (motion.Points.Count <= 1) return;
+            var motion = new UnitMotion
+            {
+                Points = new List<Vector3>(),
+                SegmentStarts = new List<float>(),
+                SegmentDurations = new List<float>()
+            };
+            float cursor = 0f;
+            if (stepEvent.Movements != null)
+                foreach (FightBattleMovementEvent movement in stepEvent.Movements)
+                {
+                    if (movement == null || movement.UnitId != unitId
+                        || movement.Path == null || movement.Path.Count <= 1) continue;
+                    cursor = Mathf.Max(cursor, Mathf.Max(0f, movement.Delay));
+                    Vector3 first = gridToWorld(movement.Path[0]);
+                    if (motion.Points.Count == 0) motion.Points.Add(first);
+                    else if (motion.Points[motion.Points.Count - 1] != first)
+                    {
+                        motion.Points.Add(first);
+                        motion.SegmentStarts.Add(cursor);
+                        motion.SegmentDurations.Add(0f);
+                    }
+                    for (int index = 1; index < movement.Path.Count; index++)
+                    {
+                        Vector3 next = gridToWorld(movement.Path[index]);
+                        Vector3 previous = motion.Points[motion.Points.Count - 1];
+                        float duration = movement.MoveDuration >= 0f ? movement.MoveDuration
+                            : movement.MoveSpeed > 0f
+                                ? Vector3.Distance(previous, next) / movement.MoveSpeed
+                                : SecondsPerCell;
+                        motion.SegmentStarts.Add(cursor);
+                        motion.SegmentDurations.Add(duration);
+                        motion.Points.Add(next);
+                        cursor += duration;
+                    }
+                }
+            if (motion.SegmentDurations.Count == 0) return;
             body.position = motion.Points[0];
-            motion.Duration = (motion.Points.Count - 1) * SecondsPerCell;
             motions[unitId] = motion;
+        }
+
+        private bool IsMotionRunning(int unitId)
+        {
+            if (!motions.TryGetValue(unitId, out UnitMotion motion)) return false;
+            for (int index = 0; index < motion.SegmentDurations.Count; index++)
+            {
+                float start = motion.SegmentStarts[index];
+                float end = start + motion.SegmentDurations[index];
+                if (motion.Elapsed >= start && motion.Elapsed < end) return true;
+            }
+            return false;
         }
 
         private Transform Body(int unitId)
         {
             if (attachedTransforms.TryGetValue(unitId, out Transform attached) && attached != null)
                 return attached;
-            return units.TryGetValue(unitId, out UnitView view) && view.Skeleton != null
-                ? view.Skeleton.transform : null;
+            if (!units.TryGetValue(unitId, out UnitView view)) return null;
+            if (view.NativeModel != null) return view.NativeModel.Transform;
+            return view.Skeleton == null ? null : view.Skeleton.transform;
         }
 
-        private static FightBattleMovementEvent FindMovement(FightBattleStepEvent stepEvent, int unitId)
+        private bool TryBeginDeath(FightBattleUnitState state)
         {
-            if (stepEvent == null || stepEvent.Movements == null) return null;
+            if (!units.TryGetValue(state.Id, out UnitView view)) return false;
+            view.State = state;
+            if (view.Dying) return true;
+            if (!PlayAnimation(view, "die_01", false)) return false;
+            RemovePendingAnimations(state.Id);
+            view.Dying = true;
+            return true;
+        }
+
+        private bool TryBeginAttachedDeath(FightBattleUnitState state, Transform body)
+        {
+            AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, body);
+            if (view == null) return false;
+            if (view.Dying) return true;
+            if (!PlayAttachedAnimation(view, "die_01", false)) return false;
+            RemovePendingAnimations(state.Id);
+            view.Dying = true;
+            view.DeathFinished = false;
+            return true;
+        }
+
+        private void RefreshAttachedAnimation(FightBattleUnitState state, Transform body,
+            FightBattleStepEvent stepEvent)
+        {
+            AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, body);
+            if (view == null) return;
+            if (view.Dying)
+            {
+                view.Dying = false;
+                view.DeathFinished = false;
+            }
+            if (usesOfficialAnimationFallback)
+            {
+                if (string.IsNullOrEmpty(view.CurrentAnimation))
+                    PlayAttachedAnimation(view, "idle_01", true);
+                return;
+            }
+            string animation = AttachedAnimationForEvent(state, stepEvent);
+            if (animation == null && motions.ContainsKey(state.Id)) animation = "run_01";
+            if (animation == null) return;
+            bool loop = animation == "idle_01" || animation == "run_01";
+            PlayAttachedAnimation(view, animation, loop, restart: !loop);
+        }
+
+        private AttachedAnimatorView GetOrCreateAttachedAnimator(FightBattleUnitState state, Transform body)
+        {
+            if (attachedAnimators.TryGetValue(state.Id, out AttachedAnimatorView existing)
+                && existing.Animator != null) return existing;
+            if (animationGroupResolver == null) return null;
+            Animator animator = body.GetComponent<Animator>() ?? body.GetComponentInChildren<Animator>(true);
+            if (animator == null) return null;
+            string group = animationGroupResolver(state);
+            if (string.IsNullOrEmpty(group)) return null;
+            var view = new AttachedAnimatorView
+            {
+                Animator = animator,
+                Group = group,
+                OriginalController = animator.runtimeAnimatorController
+            };
+            attachedAnimators[state.Id] = view;
+            return view;
+        }
+
+        private void ScheduleOfficialAnimationCues(FightBattleStepEvent stepEvent)
+        {
+            foreach (OfficialBattleAnimationCue cue in OfficialBattleAnimationTimeline.Build(
+                         stepEvent, skillPlayableCatalog == null ? null : skillPlayableCatalog.Data))
+            {
+                FightBattleUnitState state = FindUnit(latestCheckpoint, cue.UnitId);
+                if (state == null || state.Hp <= 0) continue;
+                bool hasAttached = attachedTransforms.TryGetValue(cue.UnitId, out Transform attached)
+                    && attached != null;
+                if (!hasAttached && !units.ContainsKey(cue.UnitId)) continue;
+                pendingUnitAnimations.Add(new PendingUnitAnimation
+                {
+                    Cue = cue,
+                    Serial = ++pendingAnimationSerial
+                });
+            }
+        }
+
+        private void AdvancePendingUnitAnimations(float deltaTime)
+        {
+            foreach (PendingUnitAnimation pending in pendingUnitAnimations)
+                pending.Elapsed += deltaTime;
+
+            pendingUnitAnimations.Sort((left, right) =>
+            {
+                int result = (left.Cue.Delay - left.Elapsed)
+                    .CompareTo(right.Cue.Delay - right.Elapsed);
+                if (result != 0) return result;
+                result = left.Cue.Priority.CompareTo(right.Cue.Priority);
+                return result != 0 ? result : left.Serial.CompareTo(right.Serial);
+            });
+
+            int completed = 0;
+            while (completed < pendingUnitAnimations.Count
+                && pendingUnitAnimations[completed].Elapsed >= pendingUnitAnimations[completed].Cue.Delay)
+            {
+                PlayScheduledAnimation(pendingUnitAnimations[completed].Cue);
+                completed++;
+            }
+            if (completed > 0) pendingUnitAnimations.RemoveRange(0, completed);
+        }
+
+        private void PlayScheduledAnimation(OfficialBattleAnimationCue cue)
+        {
+            FightBattleUnitState state = FindUnit(latestCheckpoint, cue.UnitId);
+            if (state == null || state.Hp <= 0) return;
+            if (cue.SkillPlayable != null)
+            {
+                PlayScheduledSkillPlayable(cue, state);
+                return;
+            }
+            if (attachedTransforms.TryGetValue(cue.UnitId, out Transform attached) && attached != null)
+            {
+                AttachedAnimatorView attachedView = GetOrCreateAttachedAnimator(state, attached);
+                if (attachedView == null || attachedView.Dying) return;
+                PlayAttachedAnimation(attachedView, cue.Animation, cue.Loop, restart: !cue.Loop);
+                return;
+            }
+            if (!units.TryGetValue(cue.UnitId, out UnitView view) || view.Dying) return;
+            PlayAnimation(view, cue.Animation, cue.Loop);
+        }
+
+        private void PlayScheduledSkillPlayable(OfficialBattleAnimationCue eventCue,
+            FightBattleUnitState state)
+        {
+            OfficialBattleSkillPlayableCue playable = eventCue.SkillPlayable;
+            if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
+            {
+                AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, attached);
+                PlayAttachedSkillPlayable(view, playable);
+                return;
+            }
+
+            if (!units.TryGetValue(state.Id, out UnitView unit) || unit.Dying) return;
+            string exactAnimation = playable.kind == 1 ? playable.animation : null;
+            if (string.IsNullOrEmpty(exactAnimation)) return;
+            if (unit.NativeModel != null && unit.NativeModel.HasAnimation(exactAnimation))
+            {
+                unit.NativeModel.Play(exactAnimation, false, restart: true);
+                unit.CurrentAnimation = exactAnimation;
+                unit.AnimationLoops = false;
+                return;
+            }
+            if (unit.Binding != null && HasExactSpineAlias(unit.Binding, exactAnimation))
+                PlayAnimation(unit, exactAnimation, false);
+        }
+
+        private void PlayAttachedSkillPlayable(AttachedAnimatorView view,
+            OfficialBattleSkillPlayableCue playable)
+        {
+            if (view == null || view.Animator == null || playable == null) return;
+
+            if (playable.kind == 1)
+            {
+                AnimationClip clip = skillPlayableCatalog == null ? null : skillPlayableCatalog.LoadClip(playable);
+                if (clip != null) ApplyOfficialClipOverride(view, playable.origin_clip_name, clip);
+            }
+
+            Animator animator = view.Animator;
+            if (playable.pre_state_name_allow_list != null
+                && playable.pre_state_name_allow_list.Count > 0)
+            {
+                AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
+                bool allowed = false;
+                foreach (string stateName in playable.pre_state_name_allow_list)
+                    if (!string.IsNullOrEmpty(stateName) && current.IsName(stateName))
+                    {
+                        allowed = true;
+                        break;
+                    }
+                if (!allowed) return;
+            }
+
+            if (HasAnimatorParameter(animator, playable.my_bool_param,
+                    AnimatorControllerParameterType.Bool))
+                animator.SetBool(playable.my_bool_param, playable.my_bool_value);
+            if (HasAnimatorParameter(animator, playable.my_float_param,
+                    AnimatorControllerParameterType.Float))
+                animator.SetFloat(playable.my_float_param, playable.my_float_value);
+            if (HasAnimatorParameter(animator, playable.int_param,
+                    AnimatorControllerParameterType.Int))
+                animator.SetInteger(playable.int_param, playable.int_value);
+            if (HasAnimatorParameter(animator, playable.trigger_param,
+                    AnimatorControllerParameterType.Trigger))
+                animator.SetTrigger(playable.trigger_param);
+            if (!string.IsNullOrEmpty(playable.layer_name))
+            {
+                int layer = animator.GetLayerIndex(playable.layer_name);
+                if (layer >= 0) animator.SetLayerWeight(layer, playable.layer_weight);
+            }
+        }
+
+        private static bool ApplyOfficialClipOverride(AttachedAnimatorView view,
+            string originClipName, AnimationClip clip)
+        {
+            if (view == null || view.Animator == null || clip == null
+                || string.IsNullOrEmpty(originClipName)) return false;
+            if (view.SkillOverrideController == null)
+            {
+                AnimatorOverrideController current = view.Animator.runtimeAnimatorController
+                    as AnimatorOverrideController;
+                if (current == null) return false;
+                view.OriginalController = view.Animator.runtimeAnimatorController;
+                view.SkillOverrideController = new AnimatorOverrideController(current);
+                view.Animator.runtimeAnimatorController = view.SkillOverrideController;
+            }
+
+            var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+            view.SkillOverrideController.GetOverrides(overrides);
+            bool found = false;
+            for (int i = 0; i < overrides.Count; i++)
+            {
+                AnimationClip original = overrides[i].Key;
+                if (original == null || original.name != originClipName) continue;
+                overrides[i] = new KeyValuePair<AnimationClip, AnimationClip>(original, clip);
+                found = true;
+            }
+            if (found) view.SkillOverrideController.ApplyOverrides(overrides);
+            return found;
+        }
+
+        private static bool HasAnimatorParameter(Animator animator, string name,
+            AnimatorControllerParameterType type)
+        {
+            if (animator == null || string.IsNullOrEmpty(name)) return false;
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+                if (parameter.name == name && parameter.type == type) return true;
+            return false;
+        }
+
+        private static bool HasExactSpineAlias(OfficialBattleModelBinding binding, string name)
+        {
+            if (binding == null || binding.animations == null || string.IsNullOrEmpty(name)) return false;
+            foreach (OfficialBattleAnimationAlias alias in binding.animations)
+                if (alias != null && alias.name == name) return true;
+            return false;
+        }
+
+        private static void ReleaseAttachedAnimator(AttachedAnimatorView view)
+        {
+            if (view == null) return;
+            if (view.Animator != null && view.SkillOverrideController != null
+                && view.Animator.runtimeAnimatorController == view.SkillOverrideController)
+                view.Animator.runtimeAnimatorController = view.OriginalController;
+            if (view.SkillOverrideController != null)
+                UnityEngine.Object.Destroy(view.SkillOverrideController);
+            view.SkillOverrideController = null;
+        }
+
+        private void RemovePendingAnimations(int unitId)
+        {
+            pendingUnitAnimations.RemoveAll(pending => pending.Cue.UnitId == unitId);
+        }
+
+        private static string AttachedAnimationForEvent(FightBattleUnitState state,
+            FightBattleStepEvent stepEvent)
+        {
+            if (stepEvent?.DamageEvents != null)
+                foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
+                    if (damage != null && !damage.IsSkillCost && damage.TargetId == state.Id)
+                        return damage.Block ? "block_01" : "hit_01";
+            if (HasMovement(stepEvent, state.Id)) return "run_01";
+            if (stepEvent == null) return "idle_01";
+            if (stepEvent.SkillCasts != null)
+                foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
+                    if (cast != null && cast.ActorId == state.Id) return null;
+            if (stepEvent.ActorId != state.Id) return null;
+            return "idle_01";
+        }
+
+        private static bool PlayAttachedAnimation(AttachedAnimatorView view, string animation, bool loop,
+            bool restart = false)
+        {
+            if (view == null || view.Animator == null || string.IsNullOrEmpty(animation)) return false;
+            if (view.CurrentAnimation == animation && view.AnimationLoops == loop
+                && (loop || (!restart && !AttachedAnimationFinished(view)))) return true;
+            string stateName = "Base Layer." + view.Group + "/" + animation;
+            int stateHash = Animator.StringToHash(stateName);
+            if (!view.Animator.HasState(0, stateHash)) return false;
+            view.Animator.Play(stateHash, 0, 0f);
+            view.Animator.Update(0f);
+            view.CurrentAnimation = animation;
+            view.AnimationLoops = loop;
+            return true;
+        }
+
+        private static bool AttachedAnimationFinished(AttachedAnimatorView view)
+        {
+            if (view == null || view.Animator == null || string.IsNullOrEmpty(view.CurrentAnimation)
+                || view.Animator.IsInTransition(0)) return false;
+            AnimatorStateInfo state = view.Animator.GetCurrentAnimatorStateInfo(0);
+            int expected = Animator.StringToHash("Base Layer." + view.Group + "/" + view.CurrentAnimation);
+            return state.fullPathHash == expected && state.normalizedTime >= 1f;
+        }
+
+        private void RemoveUnit(int unitId)
+        {
+            RemovePendingAnimations(unitId);
+            if (!units.TryGetValue(unitId, out UnitView view)) return;
+            view.Hud?.Dispose();
+            if (view.NativeModel != null) view.NativeModel.Dispose();
+            else if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
+        }
+
+        private static bool HasMovement(FightBattleStepEvent stepEvent, int unitId)
+        {
+            if (stepEvent == null || stepEvent.Movements == null) return false;
             foreach (FightBattleMovementEvent movement in stepEvent.Movements)
-                if (movement != null && movement.UnitId == unitId) return movement;
-            return null;
+                if (movement != null && movement.UnitId == unitId
+                    && movement.Path != null && movement.Path.Count > 1) return true;
+            return false;
         }
 
         public void Dispose()
         {
             foreach (UnitView view in units.Values)
-                if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
+            {
+                view.Hud?.Dispose();
+                if (view.NativeModel != null) view.NativeModel.Dispose();
+                else if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
+            }
             units.Clear();
             motions.Clear();
+            pendingUnitAnimations.Clear();
             attachedTransforms.Clear();
+            foreach (AttachedAnimatorView view in attachedAnimators.Values)
+                ReleaseAttachedAnimator(view);
+            attachedAnimators.Clear();
+            foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Dispose();
+            attachedUnitHuds.Clear();
+            pendingDamageFloats.Clear();
+            foreach (OfficialBattleDamageFloat floatView in activeDamageFloats)
+                if (floatView != null) UnityEngine.Object.Destroy(floatView.gameObject);
+            activeDamageFloats.Clear();
         }
 
         private UnitView GetOrCreate(FightBattleUnitState state)
         {
             if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
+            if (nativeModelLibrary != null)
+            {
+                string nativeKey = nativeModelLibrary.ResolveModelKey(state);
+                OfficialBattleNativeModelRecord nativeBinding = nativeModelLibrary.FindModel(nativeKey);
+                if (nativeBinding != null && nativeModelLibrary.HasAnimation(nativeKey, "idle_01"))
+                {
+                    var nativeModel = new OfficialBattleNativeModelView(nativeModelLibrary,
+                        nativeBinding, root, "BattleUnit_" + state.Id);
+                    var nativeView = new UnitView { State = state, NativeModel = nativeModel };
+                    PlayAnimation(nativeView, "idle_01", true);
+                    nativeView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state,
+                        nativeModel.Transform);
+                    units.Add(state.Id, nativeView);
+                    return nativeView;
+                }
+            }
+
             string key = modelKey(state);
+            if (string.IsNullOrEmpty(key)) return null;
             OfficialBattleModelBinding binding = catalog.Find(key);
             if (binding == null)
                 throw new KeyNotFoundException("Official battle model binding is missing for unit " + state.Id + ": " + key);
@@ -246,8 +1057,20 @@ namespace Zjcs.Presentation.Combat
             }
             gameObject.transform.localScale = Vector3.one * binding.scale;
             var view = new UnitView { State = state, Skeleton = skeleton, Binding = binding };
+            view.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, skeleton.transform);
             units.Add(state.Id, view);
             return view;
+        }
+
+        private void RefreshAttachedHud(FightBattleUnitState state, Transform body)
+        {
+            if (!attachedUnitHuds.TryGetValue(state.Id,
+                    out OfficialBattleUnitWorldHudView hud))
+            {
+                hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, body);
+                attachedUnitHuds.Add(state.Id, hud);
+            }
+            hud?.Refresh(state);
         }
 
         private static bool IsWaveSpawned(FightBattleCheckpoint checkpoint, int unitId)
@@ -261,18 +1084,28 @@ namespace Zjcs.Presentation.Combat
             return true;
         }
 
-        private static void Play(UnitView view, string animation, bool loop)
+        private static bool PlayAnimation(UnitView view, string animation, bool loop)
         {
-            if (string.IsNullOrEmpty(animation)) return;
+            if (view == null || string.IsNullOrEmpty(animation)) return false;
+            if (view.NativeModel != null)
+            {
+                if (!view.NativeModel.Play(animation, loop)) return false;
+                view.CurrentAnimation = animation;
+                view.AnimationLoops = loop;
+                return true;
+            }
+            if (view.Skeleton == null || view.Binding == null) return false;
             string spineName = null;
             foreach (OfficialBattleAnimationAlias alias in view.Binding.animations)
                 if (alias.name == animation) { spineName = alias.spineName; break; }
-            if (spineName == null)
-                throw new InvalidOperationException("Official animation alias is missing: " + animation + " for unit " + view.State.Id);
-            if (view.CurrentAnimation == spineName && view.Skeleton.AnimationState.GetCurrent(0) != null)
-                return;
+            if (spineName == null) return false;
+            Spine.TrackEntry current = view.Skeleton.AnimationState.GetCurrent(0);
+            if (view.CurrentAnimation == animation && current != null && !current.IsComplete
+                && view.AnimationLoops == loop) return true;
             view.Skeleton.AnimationState.SetAnimation(0, spineName, loop);
-            view.CurrentAnimation = spineName;
+            view.CurrentAnimation = animation;
+            view.AnimationLoops = loop;
+            return true;
         }
     }
 }

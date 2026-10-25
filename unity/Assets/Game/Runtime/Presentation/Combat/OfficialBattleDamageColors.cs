@@ -69,6 +69,8 @@ namespace Zjcs.Presentation.Combat
         public Color Resolve(FightBattleDamageEvent damage, int element = 0)
         {
             if (damage == null) return ToColor(Settings == null ? null : Settings.defaultColor);
+            if (damage.IsSkillCost)
+                return ToColor(Settings == null ? null : Settings.skillCost);
             if (damage.IsCure)
                 return ToColor(Settings == null
                     ? null : (damage.SkillEntityId == 0 ? Settings.statusCure : Settings.cure));

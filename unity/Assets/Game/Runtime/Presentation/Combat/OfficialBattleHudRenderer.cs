@@ -39,6 +39,20 @@ namespace Zjcs.Presentation.Combat
 
         public GameObject Find(string path) => nodes.TryGetValue(path, out GameObject value) ? value : null;
 
+        public OfficialBattleHudAnimationPlayer InitializeAnimations(string prefabKey, GameObject instance,
+            bool useManualTick = false)
+        {
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            BattleHudPrefab prefab = catalog.FindPrefab(prefabKey);
+            if (prefab == null || prefab.nodes == null || prefab.nodes.Length == 0)
+                throw new InvalidOperationException("Official battle HUD animation data is missing: " + prefabKey);
+
+            var player = instance.AddComponent<OfficialBattleHudAnimationPlayer>();
+            player.Initialize(prefab.nodes, new Dictionary<string, GameObject>(nodes), useManualTick);
+            player.PlayDefaultAnimations();
+            return player;
+        }
+
         public bool SetText(string path, string value)
         {
             GameObject node = Find(path);
@@ -89,6 +103,11 @@ namespace Zjcs.Presentation.Combat
                 image.color = ColorValue(source.image_color, Color.white);
                 image.type = (Image.Type)Mathf.Clamp(source.image_type, 0, (int)Image.Type.Filled);
                 image.preserveAspect = source.image_preserve_aspect;
+                if (source.image_graphic_flags)
+                {
+                    image.raycastTarget = source.image_raycast_target;
+                    image.maskable = source.image_maskable;
+                }
                 if (source.image_type == (int)Image.Type.Sliced && source.image_sprite_border != null)
                     image.type = Image.Type.Sliced;
             }
