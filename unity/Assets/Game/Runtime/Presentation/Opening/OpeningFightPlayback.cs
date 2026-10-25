@@ -42,11 +42,14 @@ namespace Zjcs.Presentation.Opening
         private TMPro.TMP_FontAsset damageFont;
         private bool damageFontLoaded;
         private OpeningSkillEffectPlayer skillEffects;
+        private int completedEffects, completedSystems, completedSoundEvents;
+        private readonly List<Material> modelMaterials = new List<Material>();
         private bool skipRequested;
         private bool skipButtonPending;
         private float skipButtonAvailableAt;
-        private float scaleFactor;
         private readonly HashSet<string> skippedModels = new HashSet<string>(StringComparer.Ordinal);
+        private readonly Dictionary<int, Dictionary<string, object>> modelTransforms =
+            new Dictionary<int, Dictionary<string, object>>();
 
         public OpeningFightPlayback(OpeningAssets assets, OpeningUiView ui, OfficialBattleModelCatalog models,
             Transform world, OpeningBattlefield battlefield, Func<bool> showSkipButton, Action<string> log)
@@ -58,6 +61,16 @@ namespace Zjcs.Presentation.Opening
             this.battlefield = battlefield;
             this.showSkipButton = showSkipButton ?? (() => false);
             this.log = log ?? (_ => { });
+            var transforms = OpeningJson.Object(OpeningJson.Parse(System.IO.File.ReadAllBytes(
+                System.IO.Path.Combine(Application.streamingAssetsPath, "Opening", "model-transforms.json"))),
+                "opening model transforms");
+            if (OpeningJson.String(transforms, "manifest") != OpeningAssets.Manifest)
+                throw new FormatException("Opening model transforms are not pinned.");
+            foreach (object value in OpeningJson.Array(transforms["units"], "model transforms"))
+            {
+                var entry = OpeningJson.Object(value, "model transform");
+                modelTransforms.Add(OpeningJson.Int(entry, "class_id"), entry);
+            }
         }
 
         public bool SkipRequested => skipRequested;
@@ -67,9 +80,9 @@ namespace Zjcs.Presentation.Opening
         public int PreparedUnits { get; private set; }
         public int TimelineItems => timelineItems.Count;
         public int DamageNumbers { get; private set; }
-        public int SkillEffectsSpawned => skillEffects != null ? skillEffects.SpawnedEffects : 0;
-        public int SkillParticleSystems => skillEffects != null ? skillEffects.SpawnedSystems : 0;
-        public int SkillSoundEvents => skillEffects != null ? skillEffects.SpawnedSounds : 0;
+        public int SkillEffectsSpawned => skillEffects != null ? skillEffects.SpawnedEffects : completedEffects;
+        public int SkillParticleSystems => skillEffects != null ? skillEffects.SpawnedSystems : completedSystems;
+        public int SkillSoundEvents => skillEffects != null ? skillEffects.SpawnedSounds : completedSoundEvents;
         public int SkillSoundsPlaying => skillEffects != null ? skillEffects.PlayingSounds : 0;
         public int ActiveStatusEffects => skillEffects != null ? skillEffects.SpawnedStatusEffects : 0;
         public int StatusVisualsSpawned { get; private set; }
@@ -150,11 +163,19 @@ namespace Zjcs.Presentation.Opening
 
         public void Dispose()
         {
+            if (skillEffects != null)
+            {
+                completedEffects = skillEffects.SpawnedEffects;
+                completedSystems = skillEffects.SpawnedSystems;
+                completedSoundEvents = skillEffects.SpawnedSounds;
+            }
             skillEffects?.Dispose();
             skillEffects = null;
             foreach (SkeletonAnimation unit in units.Values)
                 if (unit != null) UnityEngine.Object.Destroy(unit.gameObject);
             units.Clear();
+            foreach (Material material in modelMaterials) UnityEngine.Object.Destroy(material);
+            modelMaterials.Clear();
             bindings.Clear();
             entityState.Clear();
             if (hud != null) UnityEngine.Object.Destroy(hud);
@@ -822,17 +843,28 @@ namespace Zjcs.Presentation.Opening
                 return;
             }
             // The unit root already carries the stage root plus the official grid origin.
-            gameObject.transform.localPosition = new Vector3(entity.GridX, entity.GridY, 0);
-            // The converted SkeletonDataAssets already carry the official import scale
-            // (0.01), so the pose bounds are measured instead of re-applying the catalog
-            // scale. The first model establishes one shared world factor that keeps the
-            // official relative sizes between units.
-            if (scaleFactor <= 0f)
-            {
-                float height = MeasureHeight(skeleton.Skeleton);
-                scaleFactor = height > 0.0001f ? 1.2f / height : 1f;
-            }
-            gameObject.transform.localScale = Vector3.one * scaleFactor;
+            if (!modelTransforms.TryGetValue(entity.ClassId, out var modelTransform))
+                throw new InvalidOperationException("Official opening model transform missing: " + entity.ClassId);
+            // Keep the full fight prefab chain, including model-specific foot offsets.
+            // SkeletonDataAsset's import scale and prefab scale are separate fields.
+            gameObject.transform.localPosition = new Vector3(entity.GridX, entity.GridY, 0)
+                + ModelVector(modelTransform["position"]);
+            gameObject.transform.localScale = ModelVector(modelTransform["scale"]);
+            // Converted PNGs retain the official straight alpha; the generic Spine
+            // material importer defaults to premultiplied input. Restore the prefab field.
+            if (modelTransform.TryGetValue("straight_alpha", out object alphaInput) && alphaInput != null)
+            foreach (AtlasAssetBase atlas in skeleton.SkeletonDataAsset.atlasAssets)
+                foreach (Material original in atlas.Materials)
+                {
+                    if (original == null || skeleton.CustomMaterialOverride.ContainsKey(original)) continue;
+                    var material = new Material(original);
+                    float straightAlpha = (float)OpeningJson.Number(modelTransform, "straight_alpha");
+                    material.SetFloat("_StraightAlphaInput", straightAlpha);
+                    if (straightAlpha > 0f) material.EnableKeyword("_STRAIGHT_ALPHA_INPUT");
+                    else material.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
+                    skeleton.CustomMaterialOverride.Add(original, material);
+                    modelMaterials.Add(material);
+                }
             // The official stage renders its ground through sorting layers up to 21;
             // fighters must sort in front of that scenery.
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
@@ -842,12 +874,10 @@ namespace Zjcs.Presentation.Opening
             Play(entity.EntityId, skeleton, "idle_01", true);
         }
 
-        private static float MeasureHeight(Spine.Skeleton skeleton)
+        private static Vector3 ModelVector(object value)
         {
-            if (skeleton == null) return 0f;
-            float[] buffer = null;
-            skeleton.GetBounds(out _, out _, out _, out float height, ref buffer);
-            return height;
+            var fields = OpeningJson.Array(value, "model vector");
+            return new Vector3(Convert.ToSingle(fields[0]), Convert.ToSingle(fields[1]), Convert.ToSingle(fields[2]));
         }
 
         private static bool HasBoundTexture(SkeletonDataAsset data)

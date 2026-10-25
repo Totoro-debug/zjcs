@@ -251,10 +251,15 @@ namespace Zjcs.Presentation.Opening
                 && rawAttach is Dictionary<string, object> value ? value : null;
             Dictionary<string, object> follow = source.TryGetValue("follow", out object rawFollow)
                 && rawFollow is Dictionary<string, object> flags ? flags : null;
+            string boneName = attach != null && attach.TryGetValue("myBoneName", out object rawBone)
+                ? Convert.ToString(rawBone) : "body";
+            // AttachPosRotCfg.GetBone returns the target transform when a named
+            // attachment is unavailable. Do not feed an unresolved alias to Spine's
+            // BoneFollower: it retries and reports an error on every LateUpdate.
+            if (target.Skeleton == null || target.Skeleton.FindBone(boneName) == null) return;
             var follower = root.AddComponent<Spine.Unity.BoneFollower>();
             follower.skeletonRenderer = target;
-            follower.boneName = attach != null && attach.TryGetValue("myBoneName", out object rawBone)
-                ? Convert.ToString(rawBone) : "body";
+            follower.boneName = boneName;
             follower.followXYPosition = Flag(follow, "IsFollowPos", true);
             follower.followZPosition = true;
             follower.followBoneRotation = Flag(follow, "IsFollowRot", false);

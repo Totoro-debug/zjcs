@@ -122,6 +122,12 @@ namespace Zjcs.Presentation.Opening
                 LocalRotation = ReadVector4(node, "local_rotation", new Vector4(0, 0, 0, 1)),
             };
             converted.Window = ParseWindow(node);
+            if (node.TryGetValue("size_fitter", out object sizeFitter))
+                converted.SizeFitter = OpeningJson.Array(sizeFitter, "size fitter");
+            if (node.TryGetValue("layout_element", out object layoutElement))
+                converted.LayoutElement = OpeningJson.Object(layoutElement, "layout element");
+            if (node.TryGetValue("horizontal_layout", out object horizontalLayout))
+                converted.HorizontalLayout = OpeningJson.Object(horizontalLayout, "horizontal layout");
             converted.ImageColor = ReadColor(node, "image_color", Color.white);
             converted.TextColor = ReadColor(node, "text_color", Color.white);
             converted.MeshColor = ReadColor(node, "mesh_color", Color.white);
@@ -392,6 +398,9 @@ namespace Zjcs.Presentation.Opening
         public bool CanvasGroupBlocksRaycasts = true;
         public bool CanvasGroupIgnoreParentGroups;
         public OpeningUiWindowData Window;
+        public List<object> SizeFitter;
+        public Dictionary<string, object> LayoutElement;
+        public Dictionary<string, object> HorizontalLayout;
         public readonly List<OpeningUiNode> Children = new List<OpeningUiNode>();
     }
 
@@ -812,6 +821,46 @@ namespace Zjcs.Presentation.Opening
                 gameObject.AddComponent<Button>();
             }
             if (node.Mask) gameObject.AddComponent<Mask>().showMaskGraphic = false;
+            if (node.LayoutElement != null)
+            {
+                Dictionary<string, object> fields = node.LayoutElement;
+                LayoutElement element = gameObject.AddComponent<LayoutElement>();
+                element.ignoreLayout = OpeningJson.Bool(fields, "ignore");
+                Vector2 minimum = LayoutVector(fields, "minimum");
+                Vector2 preferred = LayoutVector(fields, "preferred");
+                Vector2 flexible = LayoutVector(fields, "flexible");
+                element.minWidth = minimum.x; element.minHeight = minimum.y;
+                element.preferredWidth = preferred.x; element.preferredHeight = preferred.y;
+                element.flexibleWidth = flexible.x; element.flexibleHeight = flexible.y;
+                element.layoutPriority = OpeningJson.Int(fields, "priority", 1);
+            }
+            if (node.HorizontalLayout != null)
+            {
+                Dictionary<string, object> fields = node.HorizontalLayout;
+                var layout = gameObject.AddComponent<UGUIJszx.HorizontalLayoutGroupJSZX>();
+                List<object> padding = OpeningJson.Array(fields["padding"], "layout padding");
+                layout.padding = new RectOffset((int)OpeningJson.ToNumber(padding[0]),
+                    (int)OpeningJson.ToNumber(padding[1]), (int)OpeningJson.ToNumber(padding[2]),
+                    (int)OpeningJson.ToNumber(padding[3]));
+                layout.childAlignment = (TextAnchor)OpeningJson.Int(fields, "alignment");
+                layout.spacing = (float)OpeningJson.Number(fields, "spacing");
+                foreach (object spacing in OpeningJson.Array(fields["spacing_list"], "layout spacing"))
+                    layout.spacingList.Add((float)OpeningJson.ToNumber(spacing));
+                List<object> flags = OpeningJson.Array(fields["flags"], "layout flags");
+                layout.childForceExpandWidth = OpeningJson.ToNumber(flags[0]) != 0;
+                layout.childForceExpandHeight = OpeningJson.ToNumber(flags[1]) != 0;
+                layout.childControlWidth = OpeningJson.ToNumber(flags[2]) != 0;
+                layout.childControlHeight = OpeningJson.ToNumber(flags[3]) != 0;
+                layout.childScaleWidth = OpeningJson.ToNumber(flags[4]) != 0;
+                layout.childScaleHeight = OpeningJson.ToNumber(flags[5]) != 0;
+                layout.reverseArrangement = OpeningJson.ToNumber(flags[6]) != 0;
+            }
+            if (node.SizeFitter != null)
+            {
+                ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
+                fitter.horizontalFit = (ContentSizeFitter.FitMode)(int)OpeningJson.ToNumber(node.SizeFitter[0]);
+                fitter.verticalFit = (ContentSizeFitter.FitMode)(int)OpeningJson.ToNumber(node.SizeFitter[1]);
+            }
             if (!string.IsNullOrEmpty(node.Path)) bindings[node.Path] = gameObject;
             foreach (OpeningUiNode child in node.Children) Build(child, rect);
             if (node.UiParticle)
@@ -821,6 +870,12 @@ namespace Zjcs.Presentation.Opening
             }
             gameObject.SetActive(node.Active);
             return gameObject;
+        }
+
+        private static Vector2 LayoutVector(Dictionary<string, object> fields, string key)
+        {
+            List<object> values = OpeningJson.Array(fields[key], key);
+            return new Vector2((float)OpeningJson.ToNumber(values[0]), (float)OpeningJson.ToNumber(values[1]));
         }
 
         private Mesh GetMesh(OpeningUiNode node)

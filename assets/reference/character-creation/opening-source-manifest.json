@@ -1,0 +1,2155 @@
+{
+  "manifest": "854_156383",
+  "record": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_story.bundle",
+      "bundle_hash": "50ee5a2f1b0c5236442618152533e59d",
+      "path_id": "-8253350751407560433"
+    },
+    "path": "Assets/Config/Story/CreatePlayerFightRecord.bytes",
+    "gzip_bytes": 34004,
+    "gzip_sha256": "c3823dde6468257bc59c42db4cb2e237c1fa7ce8e0cdca2dd3c9515b67f3de5b",
+    "decoded_sha256": "d4211ed84f9c53ad6f0df3eae309619f28b252edb391b41c9b70bbac7f1b7f5f",
+    "summary": {
+      "game_id": 247616942062436354,
+      "stage_class_id": 20,
+      "rounds": 14,
+      "steps": 1168,
+      "entities": 19,
+      "has_result": false
+    }
+  },
+  "story": {
+    "source_path": "assets/official/adventure.json",
+    "source_sha256": "84b92c87a8cde16a1f1cb377ca8c03629ed2e4f522af04637d5db2e260f90aec",
+    "graphs": {
+      "BeforeFight": {
+        "bundle": "defaultpackage_assets_scriptableconfig_story_storyfight.bundle",
+        "bundle_hash": "157d0f0d505963840eae965ebef2846e",
+        "path_id": "8571960897618333318",
+        "nodes": 6,
+        "converted_nodes": 6
+      },
+      "AfterFight": {
+        "bundle": "defaultpackage_assets_scriptableconfig_story_storyfight.bundle",
+        "bundle_hash": "157d0f0d505963840eae965ebef2846e",
+        "path_id": "4664760319912269514",
+        "nodes": 14,
+        "converted_nodes": 14
+      },
+      "FirstStory": {
+        "bundle": "defaultpackage_assets_scriptableconfig_story_map10story_basicguide.bundle",
+        "bundle_hash": "ef2a5f3244e4a8d01713cac78aeafffe",
+        "path_id": "6346399689795721790",
+        "nodes": 12,
+        "converted_nodes": 12
+      }
+    },
+    "dialogues": 6,
+    "roles": {
+      "840200": {
+        "name": "绯乐",
+        "portrait": "UI/Portrait/Npc_Portrait_8402",
+        "portrait_prefab": "portrait_8402",
+        "portrait_sprites": {
+          "cry3": "0:-6152819459596852031:npc_portrait_8402_cry3"
+        },
+        "need_flip_on_right": true,
+        "portrait_face_offset": [
+          -15.899999618530273,
+          164.5
+        ],
+        "portrait_face_offsets": {
+          "proud": [
+            -27.0,
+            192.1999969482422
+          ],
+          "sweat": [
+            -13.899999618530273,
+            172.3000030517578
+          ],
+          "angry": [
+            -21.100000381469727,
+            174.39999389648438
+          ],
+          "shock2": [
+            -42.900001525878906,
+            178.5
+          ],
+          "doubt": [
+            -42.900001525878906,
+            178.5
+          ],
+          "cold": [
+            -30.5,
+            175.8000030517578
+          ]
+        }
+      },
+      "840100": {
+        "name": "薇兰",
+        "portrait": "UI/Portrait/Npc_Portrait_8401",
+        "portrait_prefab": "portrait_8401",
+        "portrait_sprites": {},
+        "need_flip_on_right": true,
+        "portrait_face_offset": [
+          -26.600000381469727,
+          190.1999969482422
+        ],
+        "portrait_face_offsets": {}
+      }
+    }
+  },
+  "stage": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "-1310591482892603796"
+    },
+    "stage_id": 20,
+    "game_id": 902,
+    "scene": "game_902",
+    "monsters": [
+      3803,
+      3282,
+      3281,
+      3283,
+      3481
+    ],
+    "cells": 648
+  },
+  "ui": {
+    "prefabs": [
+      "talk_dialog",
+      "story_mask",
+      "story_mask_graphic",
+      "exit_fight_transition",
+      "enter_game_transition",
+      "first_story",
+      "portrait_8402",
+      "portrait_8401",
+      "record_fight_hud"
+    ],
+    "sprites": 47,
+    "atlas": {
+      "file": "atlas.png",
+      "width": 4096,
+      "height": 3844
+    },
+    "atlases": [
+      {
+        "file": "atlas.png",
+        "width": 4096,
+        "height": 3844
+      },
+      {
+        "file": "atlas-1.png",
+        "width": 4096,
+        "height": 3836
+      },
+      {
+        "file": "atlas-2.png",
+        "width": 4096,
+        "height": 384
+      }
+    ],
+    "unresolved": {},
+    "portrait_sources": {
+      "840200": {
+        "prefab": {
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "path_id": "-535029621041193221",
+          "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8402.prefab",
+          "raw_sha256": "b492c360b507f2cdc17cf6b31f22b88c536f22cc430d83c6ef761442e487a160"
+        },
+        "portrait_face": {
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "path_id": "-5201593850142318853",
+          "raw_sha256": "9e43f33aec73396f31889f17f30281ae574ac0bc47cd3776ce71c0f9bc5cae53"
+        }
+      },
+      "840100": {
+        "prefab": {
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "path_id": "864834101218368512",
+          "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8401.prefab",
+          "raw_sha256": "8dee79753320f0160e760c805eeee5696d8167e251c76b5d7348f4a4b1dfea95"
+        },
+        "portrait_face": {
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "path_id": "-3587420175711544320",
+          "raw_sha256": "3ffcfa04585df63f1a47fe929176a464eca6f5eadbb7db8af88095ef983f6be5"
+        }
+      }
+    },
+    "sources": {
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:8298739047830044391": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "8298739047830044391",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "27087f2cb314c8f158a232d95e9588963df2e5c239fb02ff563946b9c040444e",
+        "object": "Assets/Prefabs/UI/Story/OptionTalkDialog.prefab"
+      },
+      "CAB-2d110d891dd5b5fe4a59656a4f8811a3:3445768169181503920": {
+        "bundle": "defaultpackage_share_e80d2b4ed2ee5c2bdc82b595ad0c4fd7.bundle",
+        "bundle_hash": "2bcf25b9a0f3f9a4254c5bbd89fc80a8",
+        "path_id": "3445768169181503920",
+        "kind": "AnimationClip",
+        "raw_sha256": "c5772bb50dad0fd450ead5694c08d05ba4ff2bcbf52ff1d7eabeefa6509b59e7",
+        "object": "/OptionTalkDialog"
+      },
+      "CAB-2d110d891dd5b5fe4a59656a4f8811a3:753524872316172383": {
+        "bundle": "defaultpackage_share_e80d2b4ed2ee5c2bdc82b595ad0c4fd7.bundle",
+        "bundle_hash": "2bcf25b9a0f3f9a4254c5bbd89fc80a8",
+        "path_id": "753524872316172383",
+        "kind": "AnimationClip",
+        "raw_sha256": "d1079c86ad72e816f6415e4eecb407012f07d181a04727579b02ae3d8f12f3c0",
+        "object": "/OptionTalkDialog"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-6201727972171027686",
+        "kind": "Sprite",
+        "raw_sha256": "73f8e0b4f17d8d9838fad0f678437b3e0ed26585c7e2525ce6ac4bd90ab90699"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:7027170908951735255": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7027170908951735255",
+        "kind": "SpriteAtlas",
+        "raw_sha256": "9d36c5be785859e80ca6304999830c104562d08a109dcd23ec500706c5c3fbd2"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:8373551068376853463": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8373551068376853463",
+        "kind": "Texture2D",
+        "raw_sha256": "53995e743aa5f4d717ce30a69b8100e7c73f21cfcc0c8f351a9f3a808f319cd0"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-313146286483776372": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-313146286483776372",
+        "kind": "Sprite",
+        "raw_sha256": "49c291e5780cdd252c9daa7ed8c92ec2b9aad4c2afbc5fb9fe2013fd4e7b3f68"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-5649983333097221507": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-5649983333097221507",
+        "kind": "SpriteAtlas",
+        "raw_sha256": "55ff6fe0deabcc6927487cca4389dc1b38865c301a0509a30be2876d1a3f1ab8"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-6560009390095281539": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-6560009390095281539",
+        "kind": "Texture2D",
+        "raw_sha256": "10fa44c14ecacf7f94652eeab51b0813f9dac6e9e1ff57ad80e0945f54b5f995"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-515404102175801489": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-515404102175801489",
+        "kind": "Sprite",
+        "raw_sha256": "20c48ea8993e52a95254569c2f3864e75e687c82f37836ba7128abbcd131ac99"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:3290019988076809563": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "3290019988076809563",
+        "kind": "Sprite",
+        "raw_sha256": "2aa980775a1677ae64a753b3ecfb6d9538e142dd0db00d9b7516460f60b97a27"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-8877504762126480037": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-8877504762126480037",
+        "kind": "Texture2D",
+        "raw_sha256": "eace12ba8ce26c217b821fbf14f4234616ba14a7357e72f97019cb3874f82ccd"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:6313316061186471889": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "6313316061186471889",
+        "kind": "Sprite",
+        "raw_sha256": "800184826e716139d7d1762095b2e3c407f6172d11bb258483513946f417cd2c"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:3785010174880731969": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "3785010174880731969",
+        "kind": "SpriteAtlas",
+        "raw_sha256": "47dd620619a3d2f739c60fd35303a2a9aab368edb653fe2b1c4dbca8b135646c"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:-2325065383948627135": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-2325065383948627135",
+        "kind": "Texture2D",
+        "raw_sha256": "c5d935d014bf898a17892aac543caa46678c3b3550678d2710c327989d6deb55"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-6239311087945648743": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-6239311087945648743",
+        "kind": "Sprite",
+        "raw_sha256": "3863c3e631f82f94f8a2a15c3c01b58f988e7bb56f13a5a2ad859b0150bbfb81"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:6792488468625301555": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "6792488468625301555",
+        "kind": "Sprite",
+        "raw_sha256": "6f7b4c930ecd5a76694cb758324b9ee35acb1fa287993a2cbdc0ef8583e539ad"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:-7782818149664467040": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "-7782818149664467040",
+        "kind": "Sprite",
+        "raw_sha256": "b8425b2dc8d720d378af2e293d9cbf265817fc3a772073edc739fd0ff21683c9"
+      },
+      "CAB-9b2d44c0c43aef59717b227afea2ccab:8005527159918519229": {
+        "bundle": "defaultpackage_assets_image_ui_dialogue.bundle",
+        "bundle_hash": "9a2956525b907e44fbdf9e255fb3c2ad",
+        "path_id": "8005527159918519229",
+        "kind": "Sprite",
+        "raw_sha256": "64ecf23f8b519d2d3c8d81ba52cc9340fba8679a0612665898b5e084b3df0174"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:1673019341292112014": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "1673019341292112014",
+        "kind": "Sprite",
+        "raw_sha256": "0d83e204dae1e2eac4f66d6feaeb034f1e824e9c9dc2f00894672e1494897788"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-4762768040487269659": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-4762768040487269659",
+        "kind": "Sprite",
+        "raw_sha256": "256a12650c0d9d5ec358c8466f2d335f04359a8f85b9aeb0a6f5c2b4dd74e420"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:4383800175575554389": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "4383800175575554389",
+        "kind": "Sprite",
+        "raw_sha256": "2c2b5666ec15e815662dfd7b246fc9db2a69fe045b4c0d569f080020b83e46d3"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:-172808607947729320": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-172808607947729320",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "0a086d95ba2caa4833b1680e1a4c6767eac854852a8fe89441147a0ec094b953",
+        "object": "Assets/Prefabs/UI/Story/StoryMask.prefab"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:4106744224145663956": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "4106744224145663956",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "69bd857685210d943895db0607a56f1819aba460490660b519480a62080fdc71",
+        "object": "Assets/Prefabs/UI/Story/Mask.prefab"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-5374351023008523011": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-5374351023008523011",
+        "kind": "Sprite",
+        "raw_sha256": "356d9c119a1ab3c70c1a9897c74cab81d3f1021ae88bf7a646a4e2338e8648ba"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:2320488814411635965": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "2320488814411635965",
+        "kind": "Texture2D",
+        "raw_sha256": "4380a183b197b20d4dd87e4484bcb3639aaf2466d3d258ccbe251e0b79779b12"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-1090292054595962110": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-1090292054595962110",
+        "kind": "Sprite",
+        "raw_sha256": "8e4c5afcd96caf686294f05044b0b95259f47d292d7332c742cfdc72d8c688bd"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-8162213072203646206": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-8162213072203646206",
+        "kind": "Texture2D",
+        "raw_sha256": "8ab3158ab9e38c6d182adc86b5479086d43ea5055cdcffd03e727e1f18fcd468"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-2062461811701046202": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-2062461811701046202",
+        "kind": "Sprite",
+        "raw_sha256": "8cc79dfd71d2c454126f21b6d6fe72017051f7f87ce5e9556e7daa9569d9b3a9"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-3949091199224896442": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-3949091199224896442",
+        "kind": "Texture2D",
+        "raw_sha256": "280831fc8d60024a261adece2dcc3dbf3716e6ade81aa40f00ca10d57280e07b"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-5382032089707013215": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-5382032089707013215",
+        "kind": "Sprite",
+        "raw_sha256": "3126682297ba16bd976743b71338e3b4096e8efe8fd69fb3e068870c849935de"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:8866652276263590817": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "8866652276263590817",
+        "kind": "Texture2D",
+        "raw_sha256": "3c09d8c21256a50f25aff7ece1666e75c9cf8fbf11080382b1df503d7f9ffb34"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:2800010717837066362": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "2800010717837066362",
+        "kind": "Sprite",
+        "raw_sha256": "ab0e3240b5f5a0f078a568bc8517141a639710ba200a0963663f23906aac02fb"
+      },
+      "CAB-51b00c1cbc00a053d2ec6db218ce8f4c:-7715502092878610310": {
+        "bundle": "defaultpackage_assets_image_ui_guide.bundle",
+        "bundle_hash": "678d00e28ac9ad064c538d5ada2dfe76",
+        "path_id": "-7715502092878610310",
+        "kind": "Texture2D",
+        "raw_sha256": "1ea4654beee626885902fa5c09a80e8df6d42e3f667b86d8bdca5178ea8d2833"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-3435489076392197362": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-3435489076392197362",
+        "kind": "Sprite",
+        "raw_sha256": "5608821f45fee86bf26d5fcbe3bb19936a8cf2abdc89c673fcd0dd67ae21cc80"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-3322258346799168754": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-3322258346799168754",
+        "kind": "Texture2D",
+        "raw_sha256": "14a16783d1a966cc7aa37bafafd8c2542710baa94b4e7d765e8be3ce860c4bc2"
+      },
+      "CAB-6de8620f9139765782949664d1856324:2570160978265195952": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "2570160978265195952",
+        "kind": "Sprite",
+        "raw_sha256": "001f789a4bebcb7a19db79047ed573c57efd782c77a33052be3d0fd0ff4a4471"
+      },
+      "CAB-6de8620f9139765782949664d1856324:-8216958100270791248": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "-8216958100270791248",
+        "kind": "Texture2D",
+        "raw_sha256": "22121c51f7da47bcdbd1008f41c85c235c7f6aeb7515a5365b3f010bd1a8c353"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:-6077680749431108249": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-6077680749431108249",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "057ab40eb11925069f89a88b7ee62ba36c8cc4828fc49adce8dc609b67678880",
+        "object": "Assets/Prefabs/UI/Story/ExitFightTransitionPanel.prefab"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:-8747119863452029051": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-8747119863452029051",
+        "kind": "AnimationClip",
+        "raw_sha256": "b3e0f686bbe2b0f56bd48cad4019801b6538b285f5c7055c26b1341275473544",
+        "object": "/ExitFightTransitionPanel"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:8239623269156010765": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "8239623269156010765",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "4ec2571b3dd3e6ee0cae86356c2270ac71910bda171945db2cb527a244b3bfc3",
+        "object": "Assets/Prefabs/UI/Story/EnterGameStoryTransitionPanel.prefab"
+      },
+      "CAB-8a9b7c6e51a53dd4f01ea796551c5baa:-1548284278350373909": {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-1548284278350373909",
+        "kind": "AnimationClip",
+        "raw_sha256": "8b98c672735d9b6ceab2ce6b396b2ec99efa75808ef091d3ce653fc1f82c86ad",
+        "object": "/EnterGameStoryTransitionPanel"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:3444454229701213521": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "3444454229701213521",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "54566a2761910bbca9860e98fd5abb317fe5f06767a5d8d719aaf3fbea1ad56c",
+        "object": "Assets/Prefabs/UI/Global/FirstStoryPanel.prefab"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-2904706597252044061": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-2904706597252044061",
+        "kind": "AnimationClip",
+        "raw_sha256": "c867fed308543c05de5e327f48af41f228faa210ae4a46e0937a90d0ac9b7db9",
+        "object": "/FirstStoryPanel"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:6831057944249845534": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "6831057944249845534",
+        "kind": "Sprite",
+        "raw_sha256": "791d00150650a5d168e1a8019d2cb89ced8180a4fcaae19992ab0006fb15e4cc"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-760792311696111842": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-760792311696111842",
+        "kind": "Texture2D",
+        "raw_sha256": "63604bdd06c74f0422f08a8de5141e024ff0837d7a4a2bbfd8c6bbcd0bcc5e60"
+      },
+      "CAB-475c07661a5dd5aa3802d7fb9379d290:-4096314246262989444": {
+        "bundle": "defaultpackage_share_01fcb87d55ad632a535017f738ad1451.bundle",
+        "bundle_hash": "46b0f8c993726c2849a050f4eee534e8",
+        "path_id": "-4096314246262989444",
+        "kind": "Mesh",
+        "raw_sha256": "11ec84cf1ccac4e309814817c76ec339f3ebd7b0ddd0b647bbaf4d324984b3f0",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Mesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-1758772511818206799": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-1758772511818206799",
+        "kind": "Material",
+        "raw_sha256": "f34a217f03d49149d50cf48dd2cb8eee8365a19d9aa8cc3b55c15c5a9822cc38",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Mesh"
+      },
+      "CAB-707e47dfb361c9830b256a11a2fe3efc:-5619254254946007606": {
+        "bundle": "defaultpackage_share_4ffd57f1555a40b5694900e396b7f8f5.bundle",
+        "bundle_hash": "5c6c528f07d175bd7ab2024d3a37bb8b",
+        "path_id": "-5619254254946007606",
+        "kind": "Texture2D",
+        "raw_sha256": "3a2bf41fc8a899ad9d8a4bd44187de6d1b8089d4d522d61c3728b44376d6efa5",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Mesh"
+      },
+      "CAB-739adead61578adde60f55fc69c43199:876996755972662306": {
+        "bundle": "defaultpackage_share_d81310153e63e4eea2a2116980abb733.bundle",
+        "bundle_hash": "83d7372dc4d7bed6cffd8314f6bc7d6c",
+        "path_id": "876996755972662306",
+        "kind": "Texture2D",
+        "raw_sha256": "60aef738106849e3195145ed8fcaf22860ac125de8426e96f4189e1395e6646d",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Mesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-7638851081282861645": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-7638851081282861645",
+        "kind": "Material",
+        "raw_sha256": "b747eff8b0b8909007a1afaf51ea6d650dd1f40c402b49d7beeeaff097935803",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Fire"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:8348071209208691379": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "8348071209208691379",
+        "kind": "Texture2D",
+        "raw_sha256": "94bd82b55952e61417f32e8994050aec5d72c90c979c6e951a867059cff87d0f",
+        "object": "/FirstStoryPanel/BgGo/BG1/BG1Fire"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:4803261558924185140": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "4803261558924185140",
+        "kind": "Sprite",
+        "raw_sha256": "9227ae954f09b0424faa8bf2bcce023f0c1ec24bd51c69f0c1a6b3159aa6d424"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-8445552949493232076": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-8445552949493232076",
+        "kind": "Texture2D",
+        "raw_sha256": "bf32b1c30673fc9ee15d23a9a099cff024f8119f1d69e315c34203e7ff73580f"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-6978180486639425813": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-6978180486639425813",
+        "kind": "Material",
+        "raw_sha256": "c05ee1556f8081b9a962987caed0a6e5717e3eeb08c342038266aad66e33c94c",
+        "object": "/FirstStoryPanel/BgGo/BG2/BG2Mesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-1400797594188035934": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-1400797594188035934",
+        "kind": "Material",
+        "raw_sha256": "bf63b414738724f8aaa8f3c6dfd02b34fbfbcc9c57bd8744fc8af5655d146b55",
+        "object": "/FirstStoryPanel/BgGo/BG2/BG2Fire"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-8606602261958316311": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-8606602261958316311",
+        "kind": "Sprite",
+        "raw_sha256": "9dd1fd509409d1d488a33e50e71faa67eb9de4b25e4cc8f057bfc6829843ea30"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:7996627900315971305": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "7996627900315971305",
+        "kind": "Texture2D",
+        "raw_sha256": "18ea71bc7750f6865177df4ccf92d126872d89716fe5d1117887fb010971e9fd"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-8875771768910709843": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-8875771768910709843",
+        "kind": "Material",
+        "raw_sha256": "82327c62749cb010393bb3a025bd15b9688846ba9cd8b33626b790cb58e6abbb",
+        "object": "/FirstStoryPanel/BgGo/BG3/BG3Mesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:9193166899951178091": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "9193166899951178091",
+        "kind": "Material",
+        "raw_sha256": "0cb8543dbc136615e031607af38a734150c48808cc7f6ac58d2968cc840c71f1",
+        "object": "/FirstStoryPanel/ZsGo/Star2"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-3524180752402625104": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-3524180752402625104",
+        "kind": "Texture2D",
+        "raw_sha256": "913cc229d20bfc3394bcf62e6a4e01b2715639c76bf708ed3b18854f0a59f1df",
+        "object": "/FirstStoryPanel/ZsGo/Star2"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-5239823221250851596": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-5239823221250851596",
+        "kind": "Texture2D",
+        "raw_sha256": "edcd6fb3c3f7baa80de0955b4e5dbcfd3e2ce5229cacc21853585cddab101ec7",
+        "object": "/FirstStoryPanel/ZsGo/Star2"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-7476532187152635280": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-7476532187152635280",
+        "kind": "Material",
+        "raw_sha256": "818db8713e4b62a39424d2010ee16a6e546592a1b8f1a4fb167a547f375471c8",
+        "object": "/FirstStoryPanel/ZsGo/Star3"
+      },
+      "CAB-b19d2fd76569104f377d534b12816ee5:447364416570247271": {
+        "bundle": "defaultpackage_share_b79a0d864c481da65cd9fcecf406fd9e.bundle",
+        "bundle_hash": "1dfb1b1dae1f01bd25edfe0cbae64ea8",
+        "path_id": "447364416570247271",
+        "kind": "Texture2D",
+        "raw_sha256": "04137afd2c6a7cf8a166551bb90b55f6f9197caf17ffe1a8d5bc4ffdaaa8224f",
+        "object": "/FirstStoryPanel/ZsGo/Star3"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:2155250483990061249": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "2155250483990061249",
+        "kind": "Texture2D",
+        "raw_sha256": "ef2251d6b38d65199f142e26b1eb8e357052322c67d19e0c2793918926132f73",
+        "object": "/FirstStoryPanel/ZsGo/Star3"
+      },
+      "CAB-87fd2c3859c4cda995f317111383de52:-1220501238266554673": {
+        "bundle": "defaultpackage_share_58409cc996d3974a450d8ead30fa8b94.bundle",
+        "bundle_hash": "974b5963f638198cc7e549e00adbd9f3",
+        "path_id": "-1220501238266554673",
+        "kind": "Mesh",
+        "raw_sha256": "7bbe472d11298ad59fd2bf787c041726eab67df181d6b5794db02507885f9d2c",
+        "object": "/FirstStoryPanel/ZsGo/Star3/BG3Mesh2"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-7312755437942750951": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-7312755437942750951",
+        "kind": "Material",
+        "raw_sha256": "f43ac0dadba754647da2861f00ff557c16343c89df96356d5e86114d34168bbf",
+        "object": "/FirstStoryPanel/ZsGo/Star3/BG3Mesh2"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:6023514622821623135": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "6023514622821623135",
+        "kind": "Texture2D",
+        "raw_sha256": "80e9c484364464875aa2509eb4d00e7e6f55e17b59e29fe71867a27a6fea20bc",
+        "object": "/FirstStoryPanel/ZsGo/Star3/BG3Mesh2"
+      },
+      "CAB-6bfb221c60fb10870f922bbf9c93fb07:4567275808548782661": {
+        "bundle": "defaultpackage_share_115b4466c4aa7302971f458659dd6152.bundle",
+        "bundle_hash": "e870152282df9a6f4ee584cd039191b6",
+        "path_id": "4567275808548782661",
+        "kind": "Texture2D",
+        "raw_sha256": "e9f6767c89744ac7fc9efbde8bf392df7e0b733ec8492e0ae887bae2a71036eb",
+        "object": "/FirstStoryPanel/ZsGo/Star3/BG3Mesh2"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:5315768710956039505": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "5315768710956039505",
+        "kind": "UIParticle",
+        "raw_sha256": "1cb87c0c0e0e800f70590a01748c67ce3e472887235369929dc4ed83a21eba10",
+        "object": "/FirstStoryPanel/ZsGo/UIParticle"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-5594629023989908143": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-5594629023989908143",
+        "kind": "ParticleSystem",
+        "raw_sha256": "0a4479e11579955ca141f53b0b30863e75e1e98cfec43bdc8a5b6b6f86b5f058",
+        "object": "/FirstStoryPanel/ZsGo/UIParticle/Particle System"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:3052384150572219729": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "3052384150572219729",
+        "kind": "ParticleSystemRenderer",
+        "raw_sha256": "6fd83983af7f9fe43ba7c2878b7f40e76c64d2ef23d1fea99850f5e52ca01203",
+        "object": "/FirstStoryPanel/ZsGo/UIParticle/Particle System"
+      },
+      "CAB-e9a2d37f536d05738a9662ad6a833b4e:-6960418820579337335": {
+        "bundle": "defaultpackage_share_44d10608abd15f158cfd25bb71382270.bundle",
+        "bundle_hash": "744325087809f1fec7a262d0f4effd57",
+        "path_id": "-6960418820579337335",
+        "kind": "Material",
+        "raw_sha256": "7e07235bf6a349c506cbcb7d00bbe52c83999adf88b9f0518932dcd485234a57",
+        "object": "/FirstStoryPanel/ZsGo/UIParticle/Particle System"
+      },
+      "CAB-16ef1df7f2a73a83f37807eff24211d5:2190223313525378358": {
+        "bundle": "defaultpackage_share_0092de44f95e4fb012ae11b0dcdb010e.bundle",
+        "bundle_hash": "b7c82d1a4e98e0464b080ff1f7bcd930",
+        "path_id": "2190223313525378358",
+        "kind": "Texture2D",
+        "raw_sha256": "f88f4edf6035934bbf8ae31161d1de7fd43ce333c509487f9058d7892705fcf4",
+        "object": "/FirstStoryPanel/ZsGo/UIParticle/Particle System"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-6032178095641319695": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-6032178095641319695",
+        "kind": "Sprite",
+        "raw_sha256": "91f7c39a4212b941350c391019524236ce51b1bb7aad45329f6193c50ab6f1a1"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-22478509743331599": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-22478509743331599",
+        "kind": "Texture2D",
+        "raw_sha256": "93eaec0bc2a2f9346c66d7e616304ae1b1530ce63860429204535cc38d87aa2f"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:25206941616739238": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "25206941616739238",
+        "kind": "Sprite",
+        "raw_sha256": "b3d365682af557384ab04b90f8171f27dd84bfd778b7b2c796121cb45f08625b"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:2467916412106216358": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "2467916412106216358",
+        "kind": "Texture2D",
+        "raw_sha256": "282e6828c5fc8eabdfcfd785c677ca74b0a3b046e0e023e68fa2b7a3bff90030"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-5095198487165817304": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-5095198487165817304",
+        "kind": "Sprite",
+        "raw_sha256": "acf96f2f60ff7579d2e982428254e7a3e86e282a1dc9301b27239dead71dfdcc"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:7478330768157093416": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "7478330768157093416",
+        "kind": "Texture2D",
+        "raw_sha256": "db163df41b148a63c8efa836fbd21a84f662f85f8b7eed40515e5c6569883162"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:1805819742487949409": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "1805819742487949409",
+        "kind": "Sprite",
+        "raw_sha256": "8f3acf7c6e0b660b2397f060506adc839b90c3f536dd29439a9e1c4632bb582a"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-3597501115993575327": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-3597501115993575327",
+        "kind": "Texture2D",
+        "raw_sha256": "6cf6955d68691103d29ca21a1992f31372e577d471501376edc160b202bb9d10"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:7463919418352337230": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "7463919418352337230",
+        "kind": "Sprite",
+        "raw_sha256": "4e222ff9d47f364180a92516f5828b0a0b738b2b5fd43ee5a4551d0cd4985ee7"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-3168422428611706546": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-3168422428611706546",
+        "kind": "Texture2D",
+        "raw_sha256": "549fe07a5841688e82c5647bfd60b34a71d3baffb5e76080f3ba526947a836e4"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-3786621607820880297": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-3786621607820880297",
+        "kind": "Sprite",
+        "raw_sha256": "206570bf2ab55c600d8f254e69902336521875ab016367a9525f35be2f15cfd8"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:1835385883558319703": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "1835385883558319703",
+        "kind": "Texture2D",
+        "raw_sha256": "114d4da398452b0d5ad65da2895272ab41561bccbd0be001e142717957e4118a"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:3416348373730519324": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "3416348373730519324",
+        "kind": "Sprite",
+        "raw_sha256": "1127e90a562f4f28a4647923709597c96ac15b9fbdeb2dd9d30c96229f621a08"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-2729836380242908900": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-2729836380242908900",
+        "kind": "Texture2D",
+        "raw_sha256": "d2d9b5656f14714bc81e15843a949accb71acbe7fec1402a4675af49d9a2e32f"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-4634969928169016671": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-4634969928169016671",
+        "kind": "Sprite",
+        "raw_sha256": "28ed97cddeda1f3ee3c51de1bac15b4679357792b2980c938dd9942c583b2574"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-286238288103001439": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-286238288103001439",
+        "kind": "Texture2D",
+        "raw_sha256": "cd0871b570c04868b09dc721ce6f1a4cd153b841a53f8b639dacdb5e338d195c"
+      },
+      "CAB-3007095f94cfe269b351ffd7456b70e2:3493003726359178952": {
+        "bundle": "defaultpackage_share_a57df10b731c7a469744bd2cbd64f18e.bundle",
+        "bundle_hash": "61782762f78e05f26c68592cf5829e50",
+        "path_id": "3493003726359178952",
+        "kind": "Sprite",
+        "raw_sha256": "04958d404e98eccacae44fedf762668ebfdd2ece1e3805481338c9ff5e42e4e4"
+      },
+      "CAB-3007095f94cfe269b351ffd7456b70e2:6406886418865139400": {
+        "bundle": "defaultpackage_share_a57df10b731c7a469744bd2cbd64f18e.bundle",
+        "bundle_hash": "61782762f78e05f26c68592cf5829e50",
+        "path_id": "6406886418865139400",
+        "kind": "Texture2D",
+        "raw_sha256": "89eb4a5ae89e2f2ea7135a710e9012a57b406b1e46a8fc7c1e8b6d309328ba9f"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:7073951049134386866": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "7073951049134386866",
+        "kind": "Sprite",
+        "raw_sha256": "0becb6a14bc004c9b20a0bddc2bd82231b4960b8ec3667b11568bd30a67c2864"
+      },
+      "CAB-e0c69d65ec3e86b100e4e405b5fb7f1f:-6157818021803315534": {
+        "bundle": "defaultpackage_assets_image_ui_story.bundle",
+        "bundle_hash": "b117f901aebeb36c39973a967f6da274",
+        "path_id": "-6157818021803315534",
+        "kind": "Texture2D",
+        "raw_sha256": "749e23a63639013b6beb54c24ba337dd1f2a53d4917e3cdce6cea9757579bc4a"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:7426080643958623802": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7426080643958623802",
+        "kind": "Sprite",
+        "raw_sha256": "c07c1b7b0c1d9c794652c560efb5a7de646b72d04a4339ac1ddc6b1a7bb6c3f1"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-553796915138672287": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-553796915138672287",
+        "kind": "Material",
+        "raw_sha256": "44d01e3334206e61ac55567191ff89fae1c1634cd1aca766f7a19b7f69bd8272",
+        "object": "/FirstStoryPanel/Image/DownMesh"
+      },
+      "CAB-1b84b665025b1e3452932cbf73688ba9:4336913690928091609": {
+        "bundle": "defaultpackage_share_fec4e555f463d5915d7a3f894aaf6600.bundle",
+        "bundle_hash": "3ae2186678488e26d41b5d444b49af00",
+        "path_id": "4336913690928091609",
+        "kind": "Texture2D",
+        "raw_sha256": "7e83d28e739e9f1bf8c4048a247b09686570171bf2d0de34ce9d79ebf3c2f905",
+        "object": "/FirstStoryPanel/Image/DownMesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:-8057306339279112245": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "-8057306339279112245",
+        "kind": "Material",
+        "raw_sha256": "006f9a499054ca94ee34c391df75b0fb861310ece82ae65a121a139aa8861a00",
+        "object": "/FirstStoryPanel/Mesh"
+      },
+      "CAB-d917cc43d885379e4cf7e1513fd68bd8:748052993314246117": {
+        "bundle": "defaultpackage_assets_prefabs_ui_global.bundle",
+        "bundle_hash": "b72ed11d120a4aa55d3588730d6a96fc",
+        "path_id": "748052993314246117",
+        "kind": "Material",
+        "raw_sha256": "de72bd9fd2073155ffd2f74c8a4b00129ef7dbe93c7c431c296b3d6120c20ce6",
+        "object": "/FirstStoryPanel/MeshFenWei"
+      },
+      "CAB-47ccb70277773f914f86aecdcc938ab1:2638888328294412506": {
+        "bundle": "defaultpackage_share_fca6b3e2c5f0a9ac77bddfcda6c1a9dc.bundle",
+        "bundle_hash": "7cd1c0a1fbf08ca69278cdcffd2840bc",
+        "path_id": "2638888328294412506",
+        "kind": "Texture2D",
+        "raw_sha256": "d8bb36863f155017a3129ba7934e1eb0f4b21c75fa0c05eb3abba8d43bfb04dc",
+        "object": "/FirstStoryPanel/MeshFenWei"
+      },
+      "CAB-eea979308a5d4e3803c3b3bc0495e4fb:-930512827547077489": {
+        "bundle": "defaultpackage_share_3f931bcfe4afecbea8506e184e098222.bundle",
+        "bundle_hash": "439011edf9b8503fb3ff04f8995aa8c9",
+        "path_id": "-930512827547077489",
+        "kind": "Texture2D",
+        "raw_sha256": "f8b7bb67c74b5c36d7ecc9a13a1c773bbf1c0b00d4123d13cdc55054de237179",
+        "object": "/FirstStoryPanel/MeshFenWei"
+      },
+      "CAB-033a10e7f4cbb22f354fa68c441445c1:-5201593850142318853": {
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "path_id": "-5201593850142318853",
+        "kind": "PortraitFace",
+        "raw_sha256": "9e43f33aec73396f31889f17f30281ae574ac0bc47cd3776ce71c0f9bc5cae53",
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8402.prefab"
+      },
+      "CAB-033a10e7f4cbb22f354fa68c441445c1:-535029621041193221": {
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "path_id": "-535029621041193221",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "b492c360b507f2cdc17cf6b31f22b88c536f22cc430d83c6ef761442e487a160",
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8402.prefab"
+      },
+      "CAB-6de8620f9139765782949664d1856324:451743026840601863": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "451743026840601863",
+        "kind": "Sprite",
+        "raw_sha256": "21add7314f365249084c333776de1fdbbdf5f3dcd35673cc72ceabca741bded4"
+      },
+      "CAB-6de8620f9139765782949664d1856324:-4744691344904944377": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "-4744691344904944377",
+        "kind": "Texture2D",
+        "raw_sha256": "f01e643c4a56971fd110d0c5a5ac0e76231b2a7df2c395f5dab8162604e119ad"
+      },
+      "CAB-6de8620f9139765782949664d1856324:-6152819459596852031": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "-6152819459596852031",
+        "kind": "Sprite",
+        "raw_sha256": "76c636fed6091b42aa295523a1176bf562ab2e0a329cd096d40b9f5d32772a24"
+      },
+      "CAB-6de8620f9139765782949664d1856324:3420802046407042241": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+        "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+        "path_id": "3420802046407042241",
+        "kind": "Texture2D",
+        "raw_sha256": "608a68a5e37b0d372cc6ca3bf05c3d4d82710e0e2922192117230dd736485f94"
+      },
+      "CAB-033a10e7f4cbb22f354fa68c441445c1:-3587420175711544320": {
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "path_id": "-3587420175711544320",
+        "kind": "PortraitFace",
+        "raw_sha256": "3ffcfa04585df63f1a47fe929176a464eca6f5eadbb7db8af88095ef983f6be5",
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8401.prefab"
+      },
+      "CAB-033a10e7f4cbb22f354fa68c441445c1:864834101218368512": {
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "path_id": "864834101218368512",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "8dee79753320f0160e760c805eeee5696d8167e251c76b5d7348f4a4b1dfea95",
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8401.prefab"
+      },
+      "CAB-ec264349d60160a68de744953ac195e7:-5518190121421345252": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8401.bundle",
+        "bundle_hash": "05068f4a8a4caf8a50a56df62c30ff52",
+        "path_id": "-5518190121421345252",
+        "kind": "Sprite",
+        "raw_sha256": "3ca02f0c899b897eddb689f03e6e4608ccbdc5db537e3462a7dff6dc1d1728ee"
+      },
+      "CAB-ec264349d60160a68de744953ac195e7:4429614762411126300": {
+        "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8401.bundle",
+        "bundle_hash": "05068f4a8a4caf8a50a56df62c30ff52",
+        "path_id": "4429614762411126300",
+        "kind": "Texture2D",
+        "raw_sha256": "7399e14ad30b1f561e1273f768e43a90700f0d3ab3de4f3e9f659e6afe000a54"
+      },
+      "CAB-ab4ba81d02f91237721fe2408f023d81:-8373030492824062546": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_extmodel_fightmainpanelrecordfight.bundle",
+        "bundle_hash": "567fcb4945d962dbcd2d20f4f6f0a0ba",
+        "path_id": "-8373030492824062546",
+        "kind": "GameObjectPrefab",
+        "raw_sha256": "216df8da56f1ab9b46c8db4dfbcd0dafb2fe949c29c3736696a9f22162fb2a09",
+        "object": "Assets/Prefabs/UI/Fight/FightMainPanel/ExtModel/FightMainPanelRecordFight.prefab"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-1068360722421169897": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-1068360722421169897",
+        "kind": "Sprite",
+        "raw_sha256": "9a9e24a58cd579a4aacfed8b366715be5087013e073ab4e19db162d3be54262c"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:8874225035503411772": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8874225035503411772",
+        "kind": "Sprite",
+        "raw_sha256": "4423aa247a364da9345538afb89b53d7e9d05ba82fced740c8d0a7a8333a28a7"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:7354043242766797127": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "7354043242766797127",
+        "kind": "Sprite",
+        "raw_sha256": "d3a451773cebba3c265f198ae096f4cfb152faf2884b4fdd49970a94427b070c"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:8494744683803939175": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "8494744683803939175",
+        "kind": "Sprite",
+        "raw_sha256": "2879b185f69cb46c8187a296b016caa47588a9585be972229e67b26005cd8b41"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:-2321075986142836405": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-2321075986142836405",
+        "kind": "Sprite",
+        "raw_sha256": "f1b50f10386426944c1d5b1fca157bedef2d22ffda8e3f7f6ec6d901eeb363a9"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:-8834430803358793438": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-8834430803358793438",
+        "kind": "SpriteAtlas",
+        "raw_sha256": "9cf87bbe03da43e5e58cb6599e48e937b00e35975c0df68578a5dfcc8e677971"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:528214093136511266": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "528214093136511266",
+        "kind": "Texture2D",
+        "raw_sha256": "a82d6c1baea8036a3aa9288404963a045e56780737bbf91d1a035bd549b18a50"
+      },
+      "CAB-3d6069bc867f9fc367f7d44a6b200580:-8971257960700171704": {
+        "bundle": "defaultpackage_assets_image_itemicon_props_buff_atlas.bundle",
+        "bundle_hash": "51ed933fc904c7d2eb92a577fc1c7c09",
+        "path_id": "-8971257960700171704",
+        "kind": "Sprite",
+        "raw_sha256": "25df50789d8c00e339e6c0c24893ef550a16b281761dc71774b2bc8dc0a758bc"
+      },
+      "CAB-3d6069bc867f9fc367f7d44a6b200580:-5404135928126938397": {
+        "bundle": "defaultpackage_assets_image_itemicon_props_buff_atlas.bundle",
+        "bundle_hash": "51ed933fc904c7d2eb92a577fc1c7c09",
+        "path_id": "-5404135928126938397",
+        "kind": "SpriteAtlas",
+        "raw_sha256": "59f0796d46a3388fbea30d9170cf73fd4cb3779a63c15f380b9d6877d0b82f81"
+      },
+      "CAB-3d6069bc867f9fc367f7d44a6b200580:-7317580878873337117": {
+        "bundle": "defaultpackage_assets_image_itemicon_props_buff_atlas.bundle",
+        "bundle_hash": "51ed933fc904c7d2eb92a577fc1c7c09",
+        "path_id": "-7317580878873337117",
+        "kind": "Texture2D",
+        "raw_sha256": "65577a0909727ba9a2695c4b6d36bf4ef0cba84b06cd4a181b5b2a4dbac6cae5"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:-3845844586857962762": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "-3845844586857962762",
+        "kind": "Sprite",
+        "raw_sha256": "bb9b49785440b0584d0bb75f8c5efb82a1f9f99cf0c1aa79f9d2931e1e2cf538"
+      },
+      "CAB-1c39c726b931a96a738348bad4b8625f:3086635568692373778": {
+        "bundle": "defaultpackage_assets_image_ui_game.bundle",
+        "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+        "path_id": "3086635568692373778",
+        "kind": "Sprite",
+        "raw_sha256": "571cde9a0f11b904711ad0303fc8a0e207d7ade4d9533b73ff3626839e9d6e1e"
+      },
+      "CAB-b162472e6e43e3e3d8cef5582d2f004d:-5796288785731620785": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "-5796288785731620785",
+        "kind": "Sprite",
+        "raw_sha256": "141f78248bb3db05bb2fb59910caeba107d9124e301e0d34391598cee5851917"
+      }
+    },
+    "layout_sources": [
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "6426997065083109095",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/CharacterFigureMask",
+        "component_sha256": "30514722e4e69f4e3034f9978c06d3ca9f6e836ab545b9c8291562367390cc47"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "9116449746943065831",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText",
+        "component_sha256": "5961e1047c72843fbde1161099762a734b01328df74a1e4a1eeb4134f003ae6d"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-6892084990049796377",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName",
+        "component_sha256": "2e789837d0b69199d5b62680ed29c28bc56ef6076b481cd41be03db7903f829e"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-4821178725328634137",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "HorizontalLayoutGroupJSZX",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName",
+        "component_sha256": "d79fc8b3d3ddd12a4b5e1df1e71096a9fce4cb0224f915b99fc7ded82186f632"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "6174023598704410343",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName",
+        "component_sha256": "c658cc492e46c483466fe20fc5c8a7e2236d306512f40c57475d1a6401b85d80"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-3131699671687315737",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NextIcon",
+        "component_sha256": "b68564b2b09e39d175b6849c15f66239a1182c74b6f7fa916eb220384863b17e"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "2811878800362618599",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent",
+        "component_sha256": "cb3ff71100ed59eb288ae8b5f19bbfcab79bbe5059d171ee145e57714cf997bc"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-4279231848624832793",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem /Content/DotGroup/BlueDot1",
+        "component_sha256": "c092a1877728efa9cccfacff7c618f41f29f7f5c29d67a41a4f3ee9e4578ede7"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "6883646503193067239",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem /Content/DotGroup/BlueDot3",
+        "component_sha256": "83f23835ecdf65804bc02051729f56680b1ce2eb5fc23f97f053e289a11315f0"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "5975242906874855143",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem /Content/DotGroup/BlueDot3",
+        "component_sha256": "d1d4fb1eb44b7028df7408603f30ea0303088e01e4391a761cf3e9fd5a5b8448"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-1068038885888114969",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (1)/Content/DotGroup/BlueDot1",
+        "component_sha256": "4783a171fcbbefd4e85c334aa503dd68b73901bd31b725bbf50b38251deab544"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-8862202583137337625",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (1)/Content/DotGroup/BlueDot3",
+        "component_sha256": "f8383416d3824d3a432e9ae54e5c83c7343dc2bb02f2ee95d7ce44ec2fe8d72e"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "7565092792883724007",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (1)/Content/DotGroup/BlueDot3",
+        "component_sha256": "882c71935f2c143d73bc7a0b3cd7a8e57e2a21317437ae895b9c94994049f254"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "4430451303445085927",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (2)/Content/DotGroup/BlueDot1",
+        "component_sha256": "fe445f5058fdd722155eaae7b331e6f6f7c1624ccdb24f721ba8d28a8fac2ca6"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-3130873828517232921",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (2)/Content/DotGroup/BlueDot3",
+        "component_sha256": "c89e8d3c48655fd1688aa531c0e87226e5134f2a130c971d41b96b2002e718e9"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-7080609948907028761",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (2)/Content/DotGroup/BlueDot3",
+        "component_sha256": "c4eae18bbe1e42ad497276fcd57b4573a8ca910ab7f18e903c694b6df96aa0f6"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "4540354508683067111",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (3)/Content/DotGroup/BlueDot1",
+        "component_sha256": "f27a9efc481858751d005804c88d6b027953461c75fe46bb8d5f02222382cc18"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-3457714643153142041",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (3)/Content/DotGroup/BlueDot3",
+        "component_sha256": "2c1a7aefe77026f2b1277045e69e878b38bb343d89ee6079685733ec3d2ca3fe"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-3363654501971149081",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (3)/Content/DotGroup/BlueDot3",
+        "component_sha256": "67871cd799c87649a80c998312ff7877d3bc1787fa2d305f470a502c187d9007"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "-3045229582753153305",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (4)/Content/DotGroup/BlueDot1",
+        "component_sha256": "4307599b67cd1c5c7173f232952762a9c458a4b51ac1a09f60e5724a7548767e"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "8854544612523425511",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "LayoutElement",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (4)/Content/DotGroup/BlueDot3",
+        "component_sha256": "486e24e82145761863fc7787d0d7cc11bae9bc8cf31003acc14e657d367d799e"
+      },
+      {
+        "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+        "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+        "path_id": "7089719196671590119",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+        "raw_size": 126656,
+        "raw_sha256": "03ada06d448a1c57d0eeb514a118f44fc47814a0ab1ce4c5fe9eb07587c0c310",
+        "script": "ContentSizeFitter",
+        "object_path": "/OptionTalkDialog/OptionSlots/Content/OptionItem  (4)/Content/DotGroup/BlueDot3",
+        "component_sha256": "d1fcf9868c3d04acf638a40af4c669ab3842e6bcf1f23c69629aaa0384494d3b"
+      }
+    ],
+    "layout_generator_sha256": "d8d679e3d8ed6351bc761b3c6f3d28c5780d88e0a92626c2f5324e4dcde5d874"
+  },
+  "outputs": [
+    {
+      "path": "assets/official/character-creation/opening-stage.json",
+      "bytes": 8003,
+      "sha256": "ba1aa62b78ed8802d8a80f9c703c714c083667378ff5327c56043b89595daae7"
+    },
+    {
+      "path": "assets/official/character-creation/opening-story.json",
+      "bytes": 6585,
+      "sha256": "acbd9ddb79960b93a1f2f689fe4d7d62f1815552b6a1aa41628cc5045f884d6e"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/opening-record.bytes",
+      "bytes": 34004,
+      "sha256": "c3823dde6468257bc59c42db4cb2e237c1fa7ce8e0cdca2dd3c9515b67f3de5b"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/opening-stage.json",
+      "bytes": 8003,
+      "sha256": "ba1aa62b78ed8802d8a80f9c703c714c083667378ff5327c56043b89595daae7"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/opening-story.json",
+      "bytes": 6585,
+      "sha256": "acbd9ddb79960b93a1f2f689fe4d7d62f1815552b6a1aa41628cc5045f884d6e"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/atlas-1.png",
+      "bytes": 4041991,
+      "sha256": "d504e27308f2528d669b2aa7ad35487976e3854524f36b61fcd6d3ef2c825b24"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/atlas-2.png",
+      "bytes": 416516,
+      "sha256": "b7e2c22f5a5323d38cdfd8272e59445d8fe16db43e307e079e0cce629a7816e0"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/atlas.png",
+      "bytes": 3663580,
+      "sha256": "0a170a7139cd965ea24952a6b2116490d48eb009f731b0f44dc8374fa65db01d"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/opening-ui.json",
+      "bytes": 282586,
+      "sha256": "08c4186721aa51ff3103bf283e0060690a4c4c477b9603f6fea03bd5683e5f52"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Fire_2-826b7cdc59a7.png",
+      "bytes": 56180,
+      "sha256": "53c0247552d44c14c6e1fc9be959a9d748e4a44b2443f14520aaa42508f8781d"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/ImgDi_shatan1-a139fd747c31.png",
+      "bytes": 14055,
+      "sha256": "6c56a5cf3802b30712db5b661214910c2fc239aa2275146aab15ec5ef64542fe"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/ImgNvShen_2_Star-ced556f0dfc7.png",
+      "bytes": 103892,
+      "sha256": "09c0496a1df50a3384596ad563fc6e501243372871e49028072d337dfd9b1a9d"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/ImgNvShen_3_Star-70b1dd737fd8.png",
+      "bytes": 286620,
+      "sha256": "035de951670c6db8b96af99388f5294a8d6aee1d524ce43dd3cf60e12d76ac5d"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/ImgStoryBg_3-d6c973754936.png",
+      "bytes": 1041723,
+      "sha256": "ce9b68bc9b3234466d5f1a43707b4ca2abad03a07faeb7f0685100219dd5e9f2"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Mask_028_tex-4fa70fcd0d5e.png",
+      "bytes": 528,
+      "sha256": "8ac22e3037d5af3004af909313ea259eee49bc4a5aee985ad0bd895462ac58e2"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Mask_029_tex-e655703b6a5c.png",
+      "bytes": 437,
+      "sha256": "735ebf2a0dc83a89b5e27962dce25b059f50bb75478b79a989e45108fedb7da3"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Mask_050_tex-2f978b66c71e.png",
+      "bytes": 8687,
+      "sha256": "22a50b6301c440db6c2d562ebed41aace18c85dbaeb985bb8737d776122f0b2b"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Mask_Speed-72bf83eec3bc.png",
+      "bytes": 1116452,
+      "sha256": "b34e5bdb33750534b270e807490e4798134f5227a786fdeb7cef42348226f5cd"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Sp_dungeon_square2-733850f86d34.png",
+      "bytes": 30181,
+      "sha256": "d6d568d2dfb3dc87cd2da59128aa8a9562b00e5b93f0cbfc9c47a3969638a560"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Square_006_tex-9c0f0358af1f.png",
+      "bytes": 17110,
+      "sha256": "89000d80d1fbc602ea981515f9e1d3018de569784079312d6a47c7907efd1e9e"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Square_027_tex-fc3507a431d4.png",
+      "bytes": 12897,
+      "sha256": "1ae5564f2171957637e514b07dbb8344eb2d03dadebfafd1864444f0143d0a0f"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Star-d5c4999b1eac.png",
+      "bytes": 14165,
+      "sha256": "8c51183923194872361c4ffb2c57bc6e727f5eae737196f845161e3c8f4d5dd9"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/ui/textures/Trail_008_tex-442871c7244d.png",
+      "bytes": 9321,
+      "sha256": "d0f4a58363ced355ed06a696b640e25d4bc0f35e40d6e7aaa40316546302dd7a"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Opening/model-transforms.json",
+      "bytes": 19265,
+      "sha256": "bee786adc1ec2b671fcacb006e1c1a554312990c9a26979b78454dda50a30631"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Opening/OpeningShaderVariants.shadervariants",
+      "bytes": 1001,
+      "sha256": "44dce5bc98b885df2779ef249413ee200365144e3f7da53afb2000eb9c69a279"
+    }
+  ],
+  "model_transforms": {
+    "units": [
+      {
+        "class_id": 3281,
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          1.0
+        ],
+        "object_path": "/3281/body/MonsterModel_3281",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3281.bundle",
+            "bundle_hash": "c19cfb93dd148b2fbc4f89b6b2270c27",
+            "path_id": "-4187436107575916668",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/c19cfb93dd148b2fbc4f89b6b2270c27.bundle",
+            "raw_size": 16157,
+            "raw_sha256": "5767f75b593c1d95d9d8010865a051143bb0aad8edf532053086eb0fb49cd19e",
+            "object_path": "/3281",
+            "sha256": "ce76a593a3d3162f05f92a000e2744a875a8cd2b7de706f10b6ed575387376e5"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3281.bundle",
+            "bundle_hash": "c19cfb93dd148b2fbc4f89b6b2270c27",
+            "path_id": "760132515990144900",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/c19cfb93dd148b2fbc4f89b6b2270c27.bundle",
+            "raw_size": 16157,
+            "raw_sha256": "5767f75b593c1d95d9d8010865a051143bb0aad8edf532053086eb0fb49cd19e",
+            "object_path": "/3281/body",
+            "sha256": "3f1d3413d1f9625938282215cb1a1760af7a2bd87f8a97f50ce2bdb8c202310b"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3281.bundle",
+            "bundle_hash": "c19cfb93dd148b2fbc4f89b6b2270c27",
+            "path_id": "-8835283754282580092",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/c19cfb93dd148b2fbc4f89b6b2270c27.bundle",
+            "raw_size": 16157,
+            "raw_sha256": "5767f75b593c1d95d9d8010865a051143bb0aad8edf532053086eb0fb49cd19e",
+            "object_path": "/3281/body/MonsterModel_3281",
+            "sha256": "07e2a3eba20569b600def02078b1b908c0740b85fb89fa71d3c8ee0f9216f74c"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3281.bundle",
+            "bundle_hash": "94bacb891155f9b366ef42f5b507d326",
+            "path_id": "6070283881803321633",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/94bacb891155f9b366ef42f5b507d326.bundle",
+            "raw_size": 102468,
+            "raw_sha256": "36ea1228f077e8c37404fa6a4f1586065a03a6685db06ba08038a18acab99e2c",
+            "sha256": "632405ee6fadeca8e4be18cac2d59c4e8a411fe4333cee824bf170d65a101a64",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      },
+      {
+        "class_id": 3282,
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          1.0
+        ],
+        "object_path": "/3282/body/MonsterModel_3282",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3282.bundle",
+            "bundle_hash": "e02c06ba9558a46f0c0ed5624a9cd46c",
+            "path_id": "1259489070114799418",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/e02c06ba9558a46f0c0ed5624a9cd46c.bundle",
+            "raw_size": 16023,
+            "raw_sha256": "af5d135189f1fedeb320810dcffaa532f6267a4b05e75f48c98428194eb5f4d8",
+            "object_path": "/3282",
+            "sha256": "5119974f1cfe6e97977adf971a1e67f32093f0045724655633791b75254e0989"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3282.bundle",
+            "bundle_hash": "e02c06ba9558a46f0c0ed5624a9cd46c",
+            "path_id": "3523417061237784378",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/e02c06ba9558a46f0c0ed5624a9cd46c.bundle",
+            "raw_size": 16023,
+            "raw_sha256": "af5d135189f1fedeb320810dcffaa532f6267a4b05e75f48c98428194eb5f4d8",
+            "object_path": "/3282/body",
+            "sha256": "171862942649e642ef2b54587d88616338b117d5a7ead3ac764f04b2407e4533"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3282.bundle",
+            "bundle_hash": "e02c06ba9558a46f0c0ed5624a9cd46c",
+            "path_id": "-2294925540974526662",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/e02c06ba9558a46f0c0ed5624a9cd46c.bundle",
+            "raw_size": 16023,
+            "raw_sha256": "af5d135189f1fedeb320810dcffaa532f6267a4b05e75f48c98428194eb5f4d8",
+            "object_path": "/3282/body/MonsterModel_3282",
+            "sha256": "bb4b899cc96d37fc4eeef30362a5aa571cda4e592c90c5e173830872383c47bc"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3282.bundle",
+            "bundle_hash": "8cff16c50db7031372ddd466b85f6d76",
+            "path_id": "-7617102115373212962",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/8cff16c50db7031372ddd466b85f6d76.bundle",
+            "raw_size": 116234,
+            "raw_sha256": "6cca7378fbc13713c6b54efe783057a2556f0e731685a7431f2619dbb8c9e73b",
+            "sha256": "7b595c3307108bb5b45ae213285dc57f19f17fa50f9836fd855f95541d5762de",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      },
+      {
+        "class_id": 3283,
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          1.0
+        ],
+        "object_path": "/3283/body/MonsterModel_3283",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3283.bundle",
+            "bundle_hash": "461578bd9005b79c815fb3fca34f5313",
+            "path_id": "126716519492381658",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/461578bd9005b79c815fb3fca34f5313.bundle",
+            "raw_size": 14177,
+            "raw_sha256": "6ceabdb6c3191a2986911757425c828057153ea145bfef93f09e53cc2786c37c",
+            "object_path": "/3283",
+            "sha256": "46a2a74e08cff8145b7b7210867ff6ad1dd50d589ac245a72a3535a06cd91af4"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3283.bundle",
+            "bundle_hash": "461578bd9005b79c815fb3fca34f5313",
+            "path_id": "4051992802408950746",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/461578bd9005b79c815fb3fca34f5313.bundle",
+            "raw_size": 14177,
+            "raw_sha256": "6ceabdb6c3191a2986911757425c828057153ea145bfef93f09e53cc2786c37c",
+            "object_path": "/3283/body",
+            "sha256": "04bf8f4c3ecb473af0bb4c884749623c77e845f03261febf0bb625ac41e41eee"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3283.bundle",
+            "bundle_hash": "461578bd9005b79c815fb3fca34f5313",
+            "path_id": "3963203773497895898",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/461578bd9005b79c815fb3fca34f5313.bundle",
+            "raw_size": 14177,
+            "raw_sha256": "6ceabdb6c3191a2986911757425c828057153ea145bfef93f09e53cc2786c37c",
+            "object_path": "/3283/body/MonsterModel_3283",
+            "sha256": "56adb12a898df24b9d1f628bfd65547121e5eb0a744549094f3ca2291ee2cbbb"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3283.bundle",
+            "bundle_hash": "7c0eab82495c13512aa96037a54712bf",
+            "path_id": "5537353769636225504",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/7c0eab82495c13512aa96037a54712bf.bundle",
+            "raw_size": 90380,
+            "raw_sha256": "51aead35c4bb99e09be9c4262b26380a3e2bf1ed13acc97b87db294a4444661e",
+            "sha256": "66e7eb8334206ab9025d0c31f01f6426628f605913dbef5d6a453d38b191eead",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      },
+      {
+        "class_id": 3481,
+        "position": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          1.0
+        ],
+        "object_path": "/3481/body/MonsterModel_3481",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3481.bundle",
+            "bundle_hash": "a21a4ffda4c8b965b00640a4656a0325",
+            "path_id": "-6993829331981873438",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/a21a4ffda4c8b965b00640a4656a0325.bundle",
+            "raw_size": 26758,
+            "raw_sha256": "c1ba88d1803896930fa6c4b51360a4264f787ab1b50438baafc4f140d5da2bbe",
+            "object_path": "/3481",
+            "sha256": "029080973b67e970d0096da428aa4dd8155028d5c61f1ab73b42f80c730b8d5c"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3481.bundle",
+            "bundle_hash": "a21a4ffda4c8b965b00640a4656a0325",
+            "path_id": "1311079834317573858",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/a21a4ffda4c8b965b00640a4656a0325.bundle",
+            "raw_size": 26758,
+            "raw_sha256": "c1ba88d1803896930fa6c4b51360a4264f787ab1b50438baafc4f140d5da2bbe",
+            "object_path": "/3481/body",
+            "sha256": "5c76f9ef40e634e92c4cfa8a533737e9d64b612acabf21f8fbdb8f02e9196ea8"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3481.bundle",
+            "bundle_hash": "a21a4ffda4c8b965b00640a4656a0325",
+            "path_id": "-211106978972741918",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/a21a4ffda4c8b965b00640a4656a0325.bundle",
+            "raw_size": 26758,
+            "raw_sha256": "c1ba88d1803896930fa6c4b51360a4264f787ab1b50438baafc4f140d5da2bbe",
+            "object_path": "/3481/body/MonsterModel_3481",
+            "sha256": "a339ad669aafded310991e9f368ee7770bb93c068e74237f1cb15c50790078a1"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3481.bundle",
+            "bundle_hash": "da6026ce1552f2696a27625349b185c2",
+            "path_id": "-5943685323602478373",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/da6026ce1552f2696a27625349b185c2.bundle",
+            "raw_size": 218656,
+            "raw_sha256": "73b11f58663562cb587f1254bd4bc86c34c5dc2ba8d078e1d26dc7132c9425be",
+            "sha256": "f1923893a97ca1a1b73d2aeeea96d1a6211c5954bb119ea1dc60d9cdf028300a",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      },
+      {
+        "class_id": 3803,
+        "position": [
+          0.0,
+          -2.5,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          1.0
+        ],
+        "object_path": "/3803/body/MonsterModel_3803",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3803.bundle",
+            "bundle_hash": "be7a8be3fa3153fca3ebc27447b2bc62",
+            "path_id": "-7920200484242918467",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/be7a8be3fa3153fca3ebc27447b2bc62.bundle",
+            "raw_size": 196819,
+            "raw_sha256": "0a5799fee8ef8b363193b5f737e2e45b0cc05224bee5c657d55dc81acffd7caa",
+            "object_path": "/3803",
+            "sha256": "0487c30cd58531963aab652d816a3cd8617226a2d8e80c8215c21eb21dd31099"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3803.bundle",
+            "bundle_hash": "be7a8be3fa3153fca3ebc27447b2bc62",
+            "path_id": "-6683313733473864771",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/be7a8be3fa3153fca3ebc27447b2bc62.bundle",
+            "raw_size": 196819,
+            "raw_sha256": "0a5799fee8ef8b363193b5f737e2e45b0cc05224bee5c657d55dc81acffd7caa",
+            "object_path": "/3803/body",
+            "sha256": "4387b4ca95e97a61b33f3b6005a4e763399ff3b85f4180ce1b362513821d7cc5"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3803.bundle",
+            "bundle_hash": "be7a8be3fa3153fca3ebc27447b2bc62",
+            "path_id": "-1088003460093774915",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/be7a8be3fa3153fca3ebc27447b2bc62.bundle",
+            "raw_size": 196819,
+            "raw_sha256": "0a5799fee8ef8b363193b5f737e2e45b0cc05224bee5c657d55dc81acffd7caa",
+            "object_path": "/3803/body/MonsterModel_3803",
+            "sha256": "9a4e61e893fcba5962fc9d5431ab4569a2f1eeb9ce0964071e799702cee76fd1"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3803.bundle",
+            "bundle_hash": "61883947f067684d33354150d3e478ff",
+            "path_id": "-5240279462252384908",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/61883947f067684d33354150d3e478ff.bundle",
+            "raw_size": 1004535,
+            "raw_sha256": "1933586c257431bc75785e9baec6438db79bfb409e15d8690b2365bab12a67b1",
+            "sha256": "9bb92f03a7daf2ff351d103e9995c4ef5d52d67f995d655ae7b73f78d0fbcf61",
+            "straight_alpha": 1.0
+          },
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3803.bundle",
+            "bundle_hash": "61883947f067684d33354150d3e478ff",
+            "path_id": "1202696956585431886",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/61883947f067684d33354150d3e478ff.bundle",
+            "raw_size": 1004535,
+            "raw_sha256": "1933586c257431bc75785e9baec6438db79bfb409e15d8690b2365bab12a67b1",
+            "sha256": "4838f2c17e643c43962d6b52d734199c61f5f3e26a832b7d73bbf6cd3ae015a7",
+            "straight_alpha": 1.0
+          },
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3803.bundle",
+            "bundle_hash": "61883947f067684d33354150d3e478ff",
+            "path_id": "4620300794924078102",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/61883947f067684d33354150d3e478ff.bundle",
+            "raw_size": 1004535,
+            "raw_sha256": "1933586c257431bc75785e9baec6438db79bfb409e15d8690b2365bab12a67b1",
+            "sha256": "38ab37dea3f998aec5281b9713f05fdce4249e253a7f58805dbc78c32305c1e6",
+            "straight_alpha": 1.0
+          },
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_monster_monster_3803.bundle",
+            "bundle_hash": "61883947f067684d33354150d3e478ff",
+            "path_id": "1202696956585431886",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/61883947f067684d33354150d3e478ff.bundle",
+            "raw_size": 1004535,
+            "raw_sha256": "1933586c257431bc75785e9baec6438db79bfb409e15d8690b2365bab12a67b1",
+            "sha256": "4838f2c17e643c43962d6b52d734199c61f5f3e26a832b7d73bbf6cd3ae015a7",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      },
+      {
+        "class_id": 4201,
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "scale": [
+          0.30000001192092896,
+          0.30000001192092896,
+          0.30000001192092896
+        ],
+        "object_path": "/4201/body/PlayerModel_Game",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4201.bundle",
+            "bundle_hash": "ac1994c974657fc85ee49be5cc484f7c",
+            "path_id": "1170426034308415260",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/ac1994c974657fc85ee49be5cc484f7c.bundle",
+            "raw_size": 15718,
+            "raw_sha256": "85c7ee45fdc2ff230a86c62a2d8a2292b04e8a1f9a52e8dec0393b4ea3590885",
+            "object_path": "/4201",
+            "sha256": "14f523ca515b395f6b88b4d2556e12c4190dfac9feebba63befcc2a37270d70a"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4201.bundle",
+            "bundle_hash": "ac1994c974657fc85ee49be5cc484f7c",
+            "path_id": "640568451823533852",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/ac1994c974657fc85ee49be5cc484f7c.bundle",
+            "raw_size": 15718,
+            "raw_sha256": "85c7ee45fdc2ff230a86c62a2d8a2292b04e8a1f9a52e8dec0393b4ea3590885",
+            "object_path": "/4201/body",
+            "sha256": "144db6f491f88321c849d4b7ff824a01b54dd7298ef2d2d7ce72b19f47731f52"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4201.bundle",
+            "bundle_hash": "ac1994c974657fc85ee49be5cc484f7c",
+            "path_id": "-1636028493862764772",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/ac1994c974657fc85ee49be5cc484f7c.bundle",
+            "raw_size": 15718,
+            "raw_sha256": "85c7ee45fdc2ff230a86c62a2d8a2292b04e8a1f9a52e8dec0393b4ea3590885",
+            "object_path": "/4201/body/PlayerModel_Game",
+            "sha256": "1f635cdb986f29197539efc819709147003cdb12741feaba156572771dcbb3a9"
+          }
+        ],
+        "materials": [],
+        "straight_alpha": null
+      },
+      {
+        "class_id": 4202,
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "scale": [
+          0.23000000417232513,
+          0.23000000417232513,
+          0.23000000417232513
+        ],
+        "object_path": "/4202/body/PlayerModel_Game",
+        "sources": [
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4202.bundle",
+            "bundle_hash": "0426d449e222b58b4a1cff135e408298",
+            "path_id": "-6838978147634798849",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/0426d449e222b58b4a1cff135e408298.bundle",
+            "raw_size": 27721,
+            "raw_sha256": "c311b848fd830ecacd9839113b400d3ff77c1a9d8e9e7863ab23829cdfc131a0",
+            "object_path": "/4202",
+            "sha256": "f90b2955bedde23a433e4f5374a3e6eaa21ea67b7c08145bd90eb2f08650f486"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4202.bundle",
+            "bundle_hash": "0426d449e222b58b4a1cff135e408298",
+            "path_id": "7459979117578133247",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/0426d449e222b58b4a1cff135e408298.bundle",
+            "raw_size": 27721,
+            "raw_sha256": "c311b848fd830ecacd9839113b400d3ff77c1a9d8e9e7863ab23829cdfc131a0",
+            "object_path": "/4202/body",
+            "sha256": "ee36dda52e34eff97b464bfbe4dd83882f988916069115da22e443ce3c3f2462"
+          },
+          {
+            "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightnpc_4202.bundle",
+            "bundle_hash": "0426d449e222b58b4a1cff135e408298",
+            "path_id": "1943324403887480575",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/0426d449e222b58b4a1cff135e408298.bundle",
+            "raw_size": 27721,
+            "raw_sha256": "c311b848fd830ecacd9839113b400d3ff77c1a9d8e9e7863ab23829cdfc131a0",
+            "object_path": "/4202/body/PlayerModel_Game",
+            "sha256": "8641375f2445ba065474ac88e0ddd8668c39f095741f2c0b192baa1f6304bed0"
+          }
+        ],
+        "materials": [
+          {
+            "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_materials.bundle",
+            "bundle_hash": "301c82379eeec5ce3c433a7b10c8b191",
+            "path_id": "1601366034732659983",
+            "origin": "apk_zip",
+            "manifest": "854_156383",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "apk_entry": "assets/yoo/DefaultPackage/301c82379eeec5ce3c433a7b10c8b191.bundle",
+            "raw_size": 14461,
+            "raw_sha256": "43887e0a9ad32f426f7c2227bc9dfd6f8420255acd159409d55bbfe7b533cf88",
+            "sha256": "99214478d31b86bd832b7b9c6aeb6ac41e97be8276bf1728930f5b0690125f7f",
+            "straight_alpha": 1.0
+          }
+        ],
+        "straight_alpha": 1.0
+      }
+    ],
+    "generator_sha256": "26fac69500b86cec8fe06da8acb322b6a86a5d398243a933e625015b561bf8c9"
+  },
+  "windows_shader_variants": {
+    "output": {
+      "path": "unity/Assets/Game/Resources/Opening/OpeningShaderVariants.shadervariants",
+      "bytes": 1001,
+      "sha256": "44dce5bc98b885df2779ef249413ee200365144e3f7da53afb2000eb9c69a279"
+    },
+    "shader_sources": [
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Opening/OpeningUiEffectDissolve.shader",
+        "sha256": "08b4f07a412328f376a388733d69f8a9f1ba840ae349c72b0731a2718f6ac040"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Opening/OpeningUiEffectDistort.shader",
+        "sha256": "4cd1d4addb8d3fb6f0b9b166dbd20d15fd127e039d2bfcd19e1b44f5d66aed8d"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Opening/OpeningUiEffectSequeue.shader",
+        "sha256": "159c12d437ec14e30122cf69a2e08f66ee67eb279d31f71071461919380ec93a"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Presentation/Opening/OpeningUiParticle.shader",
+        "sha256": "cbbc00b3893e92c18f5e3fe43f25af8c83cae8244f1aeddfad2a021b31758413"
+      }
+    ]
+  }
+}

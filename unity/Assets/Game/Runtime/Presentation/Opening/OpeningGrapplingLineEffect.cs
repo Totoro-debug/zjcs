@@ -127,14 +127,20 @@ namespace Zjcs.Presentation.Opening
             }
             anchor.transform.SetParent(owner.transform, false);
             anchor.transform.localPosition = Vector3.zero;
-            var follower = anchor.AddComponent<BoneFollower>();
-            follower.skeletonRenderer = owner;
-            follower.boneName = OpeningJson.String(config, "myBoneName");
-            follower.followXYPosition = true;
-            follower.followZPosition = true;
-            follower.followBoneRotation = false;
-            follower.followLocalScale = OpeningJson.Bool(config, "myOffsetScale");
-            follower.Initialize();
+            string boneName = OpeningJson.String(config, "myBoneName");
+            // AttachPosRotCfg.GetBone falls back to the owner's transform when an
+            // attachment alias is unavailable; an invalid BoneFollower retries forever.
+            if (owner.Skeleton != null && owner.Skeleton.FindBone(boneName) != null)
+            {
+                var follower = anchor.AddComponent<BoneFollower>();
+                follower.skeletonRenderer = owner;
+                follower.boneName = boneName;
+                follower.followXYPosition = true;
+                follower.followZPosition = true;
+                follower.followBoneRotation = false;
+                follower.followLocalScale = OpeningJson.Bool(config, "myOffsetScale");
+                follower.Initialize();
+            }
             var offset = new GameObject("Offset");
             offset.transform.SetParent(anchor.transform, false);
             offset.transform.localPosition = ReadVector(config, "myOffset");

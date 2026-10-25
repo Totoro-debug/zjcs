@@ -1,4 +1,11 @@
 # The asset lock hashes this layout's original LF bytes.
 asset-pack/layout.json text eol=lf
+# These runtime payloads are verified byte-for-byte against their source manifests.
+unity/Assets/StreamingAssets/Opening/Meshes/*.mesh.json text eol=lf
+unity/Assets/StreamingAssets/Opening/ui/opening-ui.json text eol=lf
+unity/Assets/StreamingAssets/Opening/model-transforms.json text eol=lf
+unity/Assets/Game/Resources/Opening/*.shadervariants text eol=lf
+scripts/prepare_character_creation_opening.py text eol=lf
+scripts/prepare_opening_model_transforms.py text eol=lf
 unity/Assets/StreamingAssets/CharacterCreation/creation-meshes.zip filter=lfs diff=lfs merge=lfs -text
 unity/Assets/StreamingAssets/Character/character-models.zip filter=lfs diff=lfs merge=lfs -text

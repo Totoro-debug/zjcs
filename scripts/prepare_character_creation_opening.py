@@ -475,6 +475,32 @@ def prefab_walk(go):
             yield entry
 
 
+def decode_layout_component(cls, raw, node):
+    """Read the fixed APK's UGUI fields, including its JSZX spacing-list extension."""
+    if cls == "ContentSizeFitter":
+        if len(raw) != 40:
+            raise ValueError("Unexpected official ContentSizeFitter: " + node["path"])
+        node["size_fitter"] = list(struct.unpack_from("<2i", raw, 32))
+    elif cls == "LayoutElement":
+        if len(raw) != 64:
+            raise ValueError("Unexpected official LayoutElement: " + node["path"])
+        values = struct.unpack_from("<i6fi", raw, 32)
+        node["layout_element"] = dict(ignore=bool(values[0]), minimum=list(values[1:3]),
+            preferred=list(values[3:5]), flexible=list(values[5:7]), priority=values[7])
+    elif cls == "HorizontalLayoutGroupJSZX":
+        left, right, top, bottom, alignment = struct.unpack_from("<5i", raw, 32)
+        spacing, count = struct.unpack_from("<fi", raw, 52)
+        offset = 60 + 4 * count
+        if count < 0 or offset + 28 != len(raw):
+            raise ValueError("Unexpected official JSZX layout: " + node["path"])
+        node["horizontal_layout"] = dict(padding=[left, right, top, bottom], alignment=alignment,
+            spacing=spacing, spacing_list=list(struct.unpack_from("<" + "f" * count, raw, 60)),
+            flags=list(struct.unpack_from("<7i", raw, offset)))
+    else:
+        return False
+    return True
+
+
 def convert_prefab(apk, sprites, schemas, path, bundle, target_dir):
     pointer = next((ptr for entry, val in apk.container(bundle) if entry == path
                     for ptr in [val]), None)
@@ -614,7 +640,9 @@ def convert_prefab(apk, sprites, schemas, path, bundle, target_dir):
             except Exception:
                 continue
             try:
-                if cls == "Image":
+                if decode_layout_component(cls, raw, node):
+                    sprites.record_source(reader, cls, node_path)
+                elif cls == "Image":
                     fields = schemas.read(reader)
                     payload = decode_image(fields)
                     node["has_image"] = True
@@ -941,9 +969,51 @@ def ui_payload(apk, target_dir, story):
     return payload, atlas_paths, texture_outputs, sprites.failures, count, portrait_sources, sprites.sources
 
 
+def restore_ui_layout(apk):
+    """Incrementally restore omitted layout components without repacking art atlases."""
+    target = PAYLOAD / "ui" / "opening-ui.json"
+    ui = json.loads(target.read_text(encoding="utf-8"))
+    receipt = json.loads(REFERENCE.read_text(encoding="utf-8"))
+    inputs = []
+    for prefab in ui["prefabs"]:
+        if prefab["key"] != "talk_dialog":
+            continue
+        nodes = {}
+        def index(node):
+            nodes[node["path"]] = node
+            for child in node["children"]:
+                index(child)
+        index(prefab["root"])
+        path, bundle = UI_PANELS[prefab["key"]]
+        pointer = next(ptr for entry, ptr in apk.container(bundle) if entry == path)
+        def visit(go, parent=""):
+            node_path = parent + "/" + go.m_Name
+            for component in go.m_Component:
+                reader = component.component.deref()
+                if reader.type.name == "MonoBehaviour":
+                    cls = reader.read(check_read=False).m_Script.read().m_ClassName
+                    raw = reader.get_raw_data()
+                    if decode_layout_component(cls, raw, nodes[node_path]):
+                        inputs.append(dict(apk.provenance(reader), script=cls, object_path=node_path,
+                                           component_sha256=sha256(raw)))
+                elif reader.type.name in ("RectTransform", "Transform"):
+                    for child in reader.read().m_Children:
+                        visit(child.read().m_GameObject.read(), node_path)
+        visit(pointer.read())
+    output = write_with_meta(target, json_bytes(ui))
+    receipt["outputs"] = [output if row["path"] == output["path"] else row for row in receipt["outputs"]]
+    receipt["ui"]["layout_sources"] = inputs
+    receipt["ui"]["layout_generator_sha256"] = sha256(Path(__file__).read_bytes())
+    REFERENCE.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    print(json.dumps(dict(layout_components=len(inputs), output=output), ensure_ascii=False))
+
+
 def main():
     from official_apk import Apk
     apk = Apk()
+    if "--ui-layout-only" in sys.argv:
+        restore_ui_layout(apk)
+        return
     story_manifest = json.loads(STORY_MANIFEST.read_text(encoding="utf-8"))
     story = story_payload(apk, story_manifest)
     record = record_payload(apk)

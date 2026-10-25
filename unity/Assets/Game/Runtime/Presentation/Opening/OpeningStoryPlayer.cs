@@ -210,6 +210,11 @@ namespace Zjcs.Presentation.Opening
             if (dialogPanel == null)
             {
                 dialogPanel = ui.Create("talk_dialog");
+                // OptionTalkDialogPanel.DoInit -> OptionSlot.Reset hides the prefab's
+                // sample options before a normal (non-option) DialogNode is presented.
+                Transform options = dialogPanel.transform.Find("OptionSlots/Content");
+                if (options != null)
+                    foreach (Transform option in options) option.gameObject.SetActive(false);
                 dialogPanel.SetActive(true);
                 if (assets.Ui.Prefabs.TryGetValue("talk_dialog", out OpeningUiNode dialogPrefab)
                     && dialogPrefab.Window != null)
@@ -229,13 +234,11 @@ namespace Zjcs.Presentation.Opening
                     next.onClick.RemoveAllListeners();
                     next.onClick.AddListener(() => confirmClicked = true);
                 }
-                float elapsed = 0f;
-                float autoDelay = node.AutoPlay ? Mathf.Max(0.5f, node.AutoDura) : float.PositiveInfinity;
-                while (!confirmClicked && elapsed < autoDelay)
-                {
-                    elapsed += Time.unscaledDeltaTime;
+                // Desktop dialogue advances on confirmation. The APK's optional idle
+                // autoplay (120-second initial wait, then 2 seconds) is disabled by
+                // the confirmed offline interaction requirement.
+                while (!confirmClicked && !skipMode)
                     yield return null;
-                }
                 if (audio != null) audio.Stop();
             }
         }
