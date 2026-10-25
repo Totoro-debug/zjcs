@@ -294,6 +294,10 @@ namespace Zjcs.Editor
                 yield break;
             }
 
+            // Keep this short, high-level test battle from ending while real
+            // mouse input exercises the HUD. UI/Animator updates remain live.
+            if (SessionState.GetBool(RealInputKey, false)) runtime.enabled = false;
+
             if (phaseProperty.GetValue(controller).ToString() == "Preparing")
             {
                 long counter = checkpointField("Counter");
@@ -320,6 +324,25 @@ namespace Zjcs.Editor
             }
 
             Transform[] all = UnityEngine.Object.FindObjectsOfType<Transform>(true);
+            Transform quickChat = all.FirstOrDefault(value => value.name == "FunctionEntryChatQuick"
+                && value.GetComponentInParent<Zjcs.Presentation.Combat.OfficialBattleHudAnimationPlayer>() != null);
+            Require(quickChat != null, "The official quick-chat entry is missing.");
+            Transform quickChatPanel = quickChat.Find("Content/Panel");
+            Require(quickChatPanel != null && !quickChatPanel.gameObject.activeSelf && quickChatPanel.localScale == Vector3.zero,
+                "The official quick-chat panel did not start in its folded Animator state.");
+            Image miniChatBackground = all.First(value => value.name == "ChatMiniPanel")
+                .Find("miniContent/BgImg").GetComponent<Image>();
+            Require(miniChatBackground.type == Image.Type.Sliced
+                && miniChatBackground.sprite.border == new Vector4(40, 40, 40, 40),
+                "The mini-chat background lost its original nine-slice border.");
+            if (SessionState.GetBool(RealInputKey, false))
+            {
+                long heldCounter = checkpointField("Counter");
+                yield return VerifyQuickChat(quickChat, quickChatPanel);
+                Require(checkpointField("Counter") == heldCounter,
+                    "The UI fixture advanced the battle while its controller loop was held.");
+                runtime.enabled = true;
+            }
             Transform skillCard = all.FirstOrDefault(value => value.name == "GameSkillIconItem_0");
             Require(skillCard != null, "Battle HUD did not create the first skill slot.");
             Image skillImage = skillCard.Find("Content/Bg/Anim/Icon/SkillIconImg")?.GetComponent<Image>();
@@ -417,6 +440,35 @@ namespace Zjcs.Editor
             Finish(true, null);
         }
 
+        private static IEnumerator VerifyQuickChat(Transform entry, Transform panel)
+        {
+            var controller = entry.GetComponent<Zjcs.Official.WorldUI.WorldFunctionEntrysPanelBase>();
+            Require(controller != null, "The official function-entry controller is not bound.");
+            Button folded = entry.Find("Content/Entry/EntryBtnFolded").GetComponent<Button>();
+            Button expanded = entry.Find("Content/Entry/EntryBtnExpanded").GetComponent<Button>();
+            Require(folded.gameObject.activeSelf && !expanded.gameObject.activeSelf,
+                "The official initial entry-button visibility is wrong.");
+            yield return Combat.BattleGameViewInput.Click(folded);
+            yield return new WaitForSecondsRealtime(0.35f);
+            Require(controller.Expanded && panel.gameObject.activeInHierarchy && expanded.gameObject.activeSelf && !folded.gameObject.activeSelf
+                && Mathf.Approximately(panel.localScale.x, 1f) && Mathf.Approximately(panel.localScale.y, 1f),
+                "The real quick-chat click did not finish the official expansion animation.");
+            yield return Capture("quick-chat-expanded.png");
+            yield return Combat.BattleGameViewInput.Click(expanded);
+            yield return new WaitForSecondsRealtime(0.5f);
+            Require(!controller.Expanded && !panel.gameObject.activeSelf && panel.localScale == Vector3.zero,
+                "The real quick-chat entry click did not fold the official panel.");
+            yield return Combat.BattleGameViewInput.Click(folded);
+            yield return new WaitForSecondsRealtime(0.35f);
+            Require(controller.Expanded, "Quick chat did not expand a second time.");
+            yield return Combat.BattleGameViewInput.ClickScreenPoint(new Vector2(Screen.width * .5f, Screen.height * .5f));
+            yield return new WaitForSecondsRealtime(0.5f);
+            Require(!controller.Expanded && !panel.gameObject.activeSelf && panel.localScale == Vector3.zero,
+                "A real click outside the official self rectangles did not fold quick chat.");
+            yield return Capture("quick-chat-folded.png");
+            Debug.Log("Battle quick-chat real input passed: default Folded, expand/fold buttons, animation events and outside-click dismissal.");
+        }
+
         private static void VerifyTimelinePortraits(object checkpoint)
         {
             Require(checkpoint != null, "Map10 battle checkpoint is missing before its first step.");
@@ -478,6 +530,7 @@ namespace Zjcs.Editor
             ScreenCapture.CaptureScreenshot(Path.Combine(output, filename));
             yield return new WaitForSecondsRealtime(0.25f);
         }
+
 
         private static void OnRuntimeLog(string message, string stackTrace, LogType type)
         {

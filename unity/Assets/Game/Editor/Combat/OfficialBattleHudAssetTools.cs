@@ -50,7 +50,7 @@ namespace Zjcs.Editor.Combat
             if (data == null || data.manifest != "854_156383" || data.prefabs == null || data.prefabs.Length != 30)
                 throw new BuildFailedException("Official battle HUD contains an incomplete prefab set.");
             foreach (BattleHudPrefab prefab in data.prefabs)
-                if (prefab == null || prefab.root == null)
+                if (prefab == null || prefab.BuildRoot() == null)
                     throw new BuildFailedException("Official battle HUD prefab has no root node.");
 
             string[] textureGuids = AssetDatabase.FindAssets("t:Texture2D", new[] { Payload + "Sprites" });
@@ -265,6 +265,8 @@ namespace Zjcs.Editor.Combat
         [MenuItem("Zjcs/Combat/Validate Official HUD Renderer")]
         public static void ValidateRenderer()
         {
+            OfficialBattleFunctionEntryTools.Validate();
+            OfficialBattleHudSpriteTools.Validate();
             OfficialBattleHudCatalog catalog = OfficialBattleHudCatalog.LoadDefault();
             ValidateStatusIconBindings(catalog);
             TMP_FontAsset font = catalog.Font;
@@ -648,7 +650,8 @@ namespace Zjcs.Editor.Combat
                     pivot = node.image_sprite_pivot,
                     ppu = node.image_sprite_ppu
                 };
-                if (settings.TryGetValue(sprite.file, out BattleHudSprite existing))
+                string key = Path.GetFileName(sprite.file);
+                if (settings.TryGetValue(key, out BattleHudSprite existing))
                 {
                     if (Conflicts(existing.border, sprite.border) || Conflicts(existing.pivot, sprite.pivot)
                         || existing.width != sprite.width || existing.height != sprite.height)
@@ -659,7 +662,7 @@ namespace Zjcs.Editor.Combat
                     if (existing.border == null) existing.border = sprite.border;
                     if (existing.pivot == null) existing.pivot = sprite.pivot;
                 }
-                else if (!string.IsNullOrEmpty(sprite.file)) settings.Add(sprite.file, sprite);
+                else if (!string.IsNullOrEmpty(sprite.file)) settings.Add(key, sprite);
             }
             if (node.children != null)
                 foreach (BattleHudNode child in node.children) CollectSpriteSettings(child, settings);

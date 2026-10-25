@@ -119,6 +119,8 @@ namespace Zjcs.Presentation.Combat
                 else button.onClick.AddListener(() => ControlClicked?.Invoke(path));
             });
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
+            OfficialBattleFunctionEntryBindings.Mount(renderer,
+                () => stageStatusDialogRoot != null && stageStatusDialogRoot.activeInHierarchy);
             GameObject slot = renderer.Find(TimelineSlotPath);
             timelineSlot = slot == null ? null : slot.GetComponent<RectTransform>();
             if (timelineSlot == null) throw new InvalidOperationException("Official battle timeline slot is missing.");

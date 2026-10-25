@@ -197,6 +197,10 @@ flowchart TD
 
 战斗 HUD 的30个原 prefab 已补取404项 Graphic／CanvasGroup 输入标记及3项初始可见性引用；按官方 `SafeArea` 恢复主面板适配，按 `ChatQuickMsgEntryPanel.OnEnable` 和 `GameMatchMiniPanel.RefreshUI` 关闭初始表情面板、无冷却遮罩和无会话匹配内容，并迁移 `NoDrawingRayCast`。输入绑定见[来源清单](../../assets/reference/battle-hud/graphic-bindings-source-manifest.json)，阶段与代码来源见[会话清单](../../assets/reference/battle-hud/session-source-manifest.json)。这些初始化分支不代表聊天、匹配和整个 HUD 已迁移完毕。
 
+快捷聊天入口已补回原 `FunctionEntrys` Animator：默认 `Fold=1`／`Folded`，面板缩放为零；展开设0，按原0.1667秒曲线及1.1倍过冲播放；收起设1，保留0.1333秒片段、原状态转换和动画事件。按钮、内部点击范围和整数映射均从原 prefab 字段恢复，显隐保持原浮点阶跃曲线。官方 `FunctionEntrysPanelBase`／`StateAnimatorConfig` 分支迁移至 `WorldFunctionEntrysPanelBase`，`WorldChatQuickMsgEntryPanel` 保留展开前激活、收起事件后隐藏表情面板的子类分支；桌面输入适配提供真实指针及当前阶段弹窗状态。APK 内控制器／片段、已校验同版 HUD prefab、反编译源码、缺少可选目标的曲线哈希及提取结果见[状态来源](../../assets/reference/battle-hud/function-entry-source-manifest.json)；Unity 原生 controller／三个 AnimationClip 的输入输出哈希见[原生资产来源](../../assets/reference/battle-hud/function-entry-native-source-manifest.json)。这只恢复入口收展，不代表聊天内容、发送、冷却或联网服务已实现；其他公共窗口接入时仍须提供 Panel／Dialog 状态。
+
+30个 HUD prefab 引用的88张 Sprite 已按原尺寸、九宫格边界、像素枢轴和 PPU 校验，修复38份导入设置（其中25份边界错误）。原导入工具未从扁平节点构建树，且将资源路径键与文件名混用，导致原元数据未应用；现已修复这两处读取，并可独立仅重导受影响 Sprite。底部异常椭圆实际来自 `ChatMiniPanel/miniContent/BgImg`，恢复官方40像素边界后呈原圆角矩形；保留原节点和布局，聊天内容绑定仍未完成。来源节点、原载荷／来源清单哈希、PNG／meta 及转换器哈希见[导入来源](../../assets/reference/battle-hud/sprite-import-source-manifest.json)。
+
 战场表现已从固定 APK／同版本已缓存资源恢复344种单位的模型 Transform 父链与 MeshRenderer 排序、256个战斗配置对应场景的原相机位置和正交尺寸，保留原始 CAB、pathID 和对象哈希，见[场景绑定来源](../../assets/reference/battle-scenes/layout-source-manifest.json)。运行时按现有场景载荷的排序层范围绑定单位及血条；怪物恢复原模型节点的缩放／落脚偏移和图集 V，战场网格恢复 Unity Y、原深度及纹理 V。进入战斗暂停场外根节点并切换场景镜头，退出按原 activeSelf 和镜头尺寸恢复。跟随／自由镜头、完整 Cinemachine、环境粒子／材质及原生角色动画仍未完成；旧采样网格的修复不代表已完成免费原生动画迁移。
 
 复用玩家模型时已恢复3100原 prefab 的模型父链、0.3缩放及落脚偏移，血条／移动根节点保持独立，转向只修改模型。退出还原原父级、局部变换、显隐及动画状态。现有男女原生控制器各26个有效片段按实际 Motion 名映射，排除442／449个空状态；战斗待机绑定到有效片段，查找 Animator 使用 Unity 显式判空后再检索子节点。输入控制器、prefab、既有转换凭据和绑定输出哈希见[角色动画绑定来源](../../assets/reference/battle-models/character-animation-binding-source-manifest.json)。本次只修复已有原生片段的接入，没有重新烘焙历史动画或完成全部动作转换。
@@ -210,6 +214,8 @@ flowchart TD
 断罪魔印24062的累计结算已接入本地生命周期：`FightStatusAccumulatedDamageRuntime` 按命中前后实际 HP 差累计，只接收配置列出的伤害类型1—7，排除真实伤害、治疗、技能扣血和护盾量，保留原角色／技能贡献；状态到期或被新实例替换后，`FightBattleExecutor.AccumulatedDamage` 触发官方技能13148／命中13149，取累计量的30%并截断整数，保留原命中“不忽略护盾、非真实伤害”的结算参数。累计值、来源贡献及尚未执行的结束队列随检查点保存，重复步骤不再次扣血。两版 APK 的此链配置均重新解析并与 Unity 实际载荷逐字段核对一致，官方中文说明、反编译字段、bundle 和对象凭据见[累计伤害来源](../../assets/reference/battle-rules/accumulated-damage-source-manifest.json)。魔印承伤加成、选敌优先级、来源已死亡等完整结束条件及 `TriggerDamageAddToDamageSource` 的额外战报归因仍未完成，不能将本子项视为整个状态已还原。
 
 ### 验证范围
+
+入口收展专项先复现默认状态遗漏，再验证三个原生片段的全部目标曲线、整数参数、状态／转换和事件；88张 HUD Sprite 的实际导入属性、静态检查及 Unity `ProjectTools.Validate` 通过。Play Mode 以真实鼠标验证开始、收起初态、两次展开、按钮收起和战场空白处点击收起，实际查看展开／收起画面及恢复后的聊天背景圆角。UI 检查期间只暂停测试宿主的回合推进并断言计数不变，随后恢复实际战斗至结算返回；没有用回调调用代替点击。该验证不覆盖消息发送、其他公共窗口或完整 HUD。
 
 累计伤害专项验证覆盖实际执行器命中60后在持有者回合结束追加18、实际 HP／来源／类型过滤、护盾吸收、溢出伤害截断、到期与替换只结算一次、模板深复制、累计及待结束队列保存恢复、重复步骤幂等；全部36个战斗专项脚本通过。Play Mode 通过真实鼠标开始后消费待结算魔印检查点，断言实际13148／13149事件扣血30，继续运行至结算返回并查看画面；静态检查和 Unity `ProjectTools.Validate` 通过。该验证未覆盖承伤加成、选敌优先级及战报分摊。
 

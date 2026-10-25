@@ -49,4 +49,11 @@ scripts/prepare_native_character_geometry.py text eol=lf
 scripts/convert_official_skeletons.py text eol=lf
 scripts/test_convert_official_skeletons.py text eol=lf
 scripts/prepare_battle_accumulated_damage.py text eol=lf
+scripts/prepare_battle_function_entry.py text eol=lf
+unity/Assets/Game/Resources/Combat/battle-function-entry.json text eol=lf
+unity/Assets/Official/Combat/HUD/Resources/Combat/** -text
+unity/Assets/Game/Editor/Combat/OfficialBattleFunctionEntryTools.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleHudSpriteTools.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs text eol=lf
+unity/Assets/Official/Combat/HUD/Sprites/*.png.meta -text
 unity/Assets/Game/Resources/CharacterCreation/native-character-geometry*.json text eol=lf

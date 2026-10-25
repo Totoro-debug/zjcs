@@ -56,6 +56,17 @@ namespace Zjcs.Editor.Combat
             Canvas canvas = button.GetComponentInParent<Canvas>();
             Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
             Vector2 point = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
+            string label = button.name;
+            yield return ClickScreenPoint(point, label);
+        }
+
+        public static IEnumerator ClickScreenPoint(Vector2 point, string label = "battlefield")
+        {
+            if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
+            if (point.x <= 2f || point.y <= 2f || point.x >= Screen.width - 2f || point.y >= Screen.height - 2f)
+                throw new InvalidOperationException("The real input target is outside the interior of the Game view: " + point);
+            gameView.Focus();
+            yield return null;
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = point }, hits);
             Debug.Log("Battle input raycast: " + string.Join(", ", hits.ConvertAll(hit => hit.gameObject.name)));
@@ -108,7 +119,7 @@ namespace Zjcs.Editor.Combat
                 + " focusedWindow=" + EditorWindow.focusedWindow?.GetType().Name
                 + " hits=" + string.Join(", ", actualHits.ConvertAll(hit => hit.gameObject.name)));
             SendMouse(new MouseInput { flags = 0x0004 });
-            Debug.Log("Battle real input: " + button.name + " at " + x + "," + y);
+            Debug.Log("Battle real input: " + label + " at " + x + "," + y);
             yield return new WaitForSecondsRealtime(0.12f);
         }
 
