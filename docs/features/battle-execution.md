@@ -246,7 +246,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 另有 `SummonSkillLandingPos` 枚举项没有出现在固定版40组 `ai_priority` 配置中，落点选择仍未实现；`BattleAISetting` 有默认策略与权重字段，但固定离线配置中没有对应运行时设置，按 `AiType` 选策略也未找到客户端执行链。当前 IL2CPP 工具链没有恢复出可供核对的 AI 函数体。
 - [ ] 伤害与治疗、闪避／免疫／致盲、深渊、暴击／格挡及 CD 重置已按官方 prefab 和本地化文本显示，飘字曲线由 prefab 动画数据驱动；尚缺 `_Combine` prefab 选择条件、状态伤害／治疗、自定义动作、驱散、护盾量飘字、元素克制提示与上下限提示。
-- [ ] 结算报告数据已由 `FightBattleReportBuilder` 生成，覆盖胜负／原因／回合、单位与技能统计；`FightEndReportPanelProvider` 的面板选择、个人／全员报告界面、护盾与状态次数展示及排行分数仍未接入。
+- [ ] 结算报告数据已由 `FightBattleReportBuilder` 生成，覆盖胜负／原因／回合、单位与技能统计；固定版官方个人／全员报告的7个prefab及34项依赖已按原层级迁移到 `Resources/Combat/BattleReport`，UGUI/TMP 脚本 GUID 按 Unity 包映射，闭包与来源由 `scripts/prepare_unity_battle_report_assets.py` 校验。AssetRipper 生成的8个官方 MonoBehaviour 是无行为空壳，尚无本地报告适配器接线；`FightEndReportPanelProvider` 面板选择、动态个人／技能／全员行、护盾与状态次数、排行分数及完整 Play Mode 显示仍未实现。官方个人技能报告消费服务器 `PlayerFightResult.Report` 的技能、宠物、装备词条和报告属性快照，本地统计模型尚不能构造这些字段，不以现有基础统计冒充完整报告。
 - [ ] 恢复单位 collider、查询条件与玩家／NPC／怪物／宠物详情入口，验证 UI 遮挡不会点到场景目标；详情点击不新增手动施法。中途加入／灵魂拖拽仅在所属玩法确认保留时接线。
 
 ### 技能、CD、命中与状态（F16—F25）
