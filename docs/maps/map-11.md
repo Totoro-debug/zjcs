@@ -32,6 +32,8 @@
 
 镜头位置查询已按原 `GetEntityBaseNode.GetEntityType` 修正：`0` 为主角，`4` 为放置 ID，`5` 为逻辑标签，位置保留原偏移。后台 Play Mode 已检查资格门、战斗门、方尖碑和圣兽故事中的实际主角查询，不再误读未使用的 `LoEntityId` 字段；周围对话标签中心、注册对象和多种相机控制器仍须完整恢复。
 
+默认 BGM 11 已以原媒体 `750073388` 接入本地 Unity AudioClip，使用 `Map_11_Play`／`Stop`／`Pause`／`Resume` 的无限循环与 Sine 淡变参数：1,000／250／250／500 毫秒。原区域／面积音乐表没有本图覆盖项。音量读取现有音乐设置，离图按原停止事件释放。带图形与原生音频的后台 Play Mode 已检查循环、暂停采样位置保持、恢复继续播放、音量变化和停止释放；音源保持静音，尚未试听或验证战斗音乐切换、剧情语音及其他音效。转换器为 `prepare_unity_map11_audio.py`，绑定为 `Resources/Map11/Audio`，来源见 `assets/reference/official-map/map11-audio-source-manifest.json`。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。

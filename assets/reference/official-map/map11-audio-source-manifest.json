@@ -1,0 +1,77 @@
+{
+  "inputs": {
+    "apkCheckedFirst": {
+      "entry": "assets/yoo/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile",
+      "packaged": false
+    },
+    "audioIndex": {
+      "path": "assets/official/map-audio.json",
+      "sha256": "0a37c49eee982c2dbe569fab17b82fbe922b015b3ac5f4d6c220634265c453fa"
+    },
+    "audioManifest": {
+      "path": "assets/reference/official-map/audio-source-manifest.json",
+      "sha256": "896dd183ddb45cd5ea655cebd8e7c50cc4e5e2850b6f321aa6026f565d9acfc1"
+    },
+    "code": [
+      {
+        "path": ".tools/source-packages/official-code/client-source/MapBgmHandler.cs",
+        "sha256": "6fdd179891844767fba50941feeaf22f429fbc63894511db5ea04a24fdcecb2f"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/BgmManager.cs",
+        "sha256": "27529fefe3b83f7064f505a3f830e3f7ff881d07a3de0274f9578f5d9dc37253"
+      }
+    ],
+    "config": {
+      "path": "assets/official/adventure.json",
+      "sha256": "a6820d65b7498af98f242ab797c24f5dc92646b0638f09da8331c793a0340b4e"
+    },
+    "media": {
+      "bank": "wwisebnk_assets_wwisedata_android_map_bgm_01_pck.rawfile",
+      "bytes": 1440393,
+      "file": "res://assets/official/map-audio/750073388.ogg",
+      "input_sha256": "78f1fbe74f9ec43c2f43265c899c26281bfd7687715c52066d7873f25bf5db54",
+      "language_id": 0,
+      "media_id": 750073388,
+      "offset": 5121877,
+      "operation": "Original Wwise Vorbis decoded with vgmstream; PCM encoded to local Vorbis with libsndfile",
+      "sha256": "f3eb946e7367f43858efad73f11f526f3f440677649f420fc792229015929d1c",
+      "source": {
+        "bundle_hash": "79a0238a1353c8a40ced36aa26769b00",
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+        "size": 9600789,
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile"
+      }
+    },
+    "package": {
+      "name": "wwisebnk_assets_wwisedata_android_map_bgm_01_pck.rawfile",
+      "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+      "source": {
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+        "size": 9600789,
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile"
+      }
+    },
+    "sound": {
+      "loopCount": 0,
+      "mediaId": 750073388
+    }
+  },
+  "manifest": "854_156383",
+  "mapClassId": 11,
+  "operation": "Reuse verified original Wwise Vorbis conversion; Unity native AudioClip with original loop and Sine event fades.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Audio/Map11Bgm.ogg",
+      "sha256": "f3eb946e7367f43858efad73f11f526f3f440677649f420fc792229015929d1c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Audio/bgm.json",
+      "sha256": "dd1f2dd1680820874e89a37977ba102e73a0085f939663d676c60fd52177b767"
+    }
+  ]
+}

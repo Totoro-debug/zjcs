@@ -136,6 +136,7 @@ namespace Zjcs.Editor
         {
             GameObject avatar = CharacterCreationNativeModelFactory.CreateWorldModel(Slot, Root, out string name);
             runtime = new GameObject("Map11AcceptanceRuntime").AddComponent<OfficialMap10GameRuntime>();
+            if (SessionState.GetBool(Key + ".background", false)) runtime.MapMusicVolume = () => 0f;
             runtime.Begin(11, Slot, Root, canvas, avatar, name, null);
         }
 

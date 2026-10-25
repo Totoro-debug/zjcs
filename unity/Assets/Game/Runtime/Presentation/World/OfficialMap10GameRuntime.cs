@@ -179,6 +179,7 @@ namespace Zjcs.Presentation.World
                 LoadLocalProgress();
                 RefreshRegionProgress();
                 InitializeView();
+                InitializeMapAudio();
                 currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
                 SetAvatarPosition(currentGrid);
                 UpdateWorldLabels();
@@ -2997,6 +2998,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            DisposeMapAudio();
             CloseGoddessDialog();
             // Dispose the modal without running its story continuation while the map closes.
             quickBuyDialog?.Abandon();

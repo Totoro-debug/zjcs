@@ -1396,6 +1396,7 @@ namespace Zjcs.Presentation.CharacterCreation
                     Application.persistentDataPath, out string name);
                 runtimeObject = new GameObject("Map" + mapClassId + "GameRuntime");
                 OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
+                runtime.MapMusicVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.MusicVolume;
                 runtime.Begin(mapClassId, slotId, Application.persistentDataPath, canvas.transform, model, name,
                     () => { if (screen != null) screen.SetActive(true); });
                 if (screen != null) screen.SetActive(false);

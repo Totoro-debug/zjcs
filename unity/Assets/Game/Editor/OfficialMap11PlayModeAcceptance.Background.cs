@@ -27,6 +27,7 @@ namespace Zjcs.Editor
         private static IEnumerator VerifyBackground(Transform canvas)
         {
             yield return new WaitForSecondsRealtime(1);
+            yield return VerifyMapMusic();
             var save = Field<OfflineMainlineProgressSession>("progressionSave");
             foreach (var region in save.Save.World.Maps.Single(value => value.MapClassId == 11).Regions.ToArray())
                 save.SetMapRegionProgress(11, region.Region, 10000);
@@ -130,6 +131,10 @@ namespace Zjcs.Editor
             Require(Field<CommerceScreenController>("commerceScreen") == null && Field<bool>("storyOptionsWaiting"),
                 "Closing exchange returns to original failure options");
             Require(ItemCount(2) == 0 && ItemCount(325) == 0, "Insufficient purchase does not mutate inventory");
+            var music = Field<MonoBehaviour>("mapMusic");
+            music.GetType().GetMethod("StopAndRelease").Invoke(music, null);
+            yield return new WaitForSecondsRealtime(.4f);
+            Require(music == null, "Original Stop event releases the local audio object after its fade");
             Debug.Log("Map11 scripted Play Mode passed: original option layout and sprites; gift/free reset/paid solve; quick-buy cancel/success; fixed currency shortage and confirmed return. No native mouse or keyboard input was used. Output: " + Root);
             SessionState.SetInt(Key + ".result", 0);
             EditorApplication.isPlaying = false;
@@ -145,6 +150,35 @@ namespace Zjcs.Editor
             }
             Require(Field<bool>("storyOptionsWaiting"), "Original story options appeared");
             yield return new WaitForSecondsRealtime(.2f);
+        }
+
+        private static IEnumerator VerifyMapMusic()
+        {
+            var music = Field<MonoBehaviour>("mapMusic");
+            Require(music != null, "Map11 default BGM binding");
+            AudioSource source = music.GetComponent<AudioSource>();
+            float deadline = Time.realtimeSinceStartup + 15f;
+            while (source.clip == null && Time.realtimeSinceStartup < deadline) yield return null;
+            Require(source.clip != null && source.clip.samples > 0 && source.loop && source.spatialBlend == 0f,
+                "Original BGM imports as a native looping 2D clip");
+            // Keep desktop audio silent while testing the actual Windows mixer.
+            source.mute = true;
+            runtime.MapMusicVolume = () => .35f;
+            yield return new WaitForSecondsRealtime(1.1f);
+            Require(source.isPlaying && Mathf.Abs(source.volume - .35f) < .001f,
+                "Original Play fade reaches the current music setting");
+            music.GetType().GetMethod("Pause").Invoke(music, null);
+            yield return new WaitForSecondsRealtime(.4f);
+            Require(!source.isPlaying, "Original Pause event pauses after the 250ms fade");
+            int pausedSample = source.timeSamples;
+            yield return new WaitForSecondsRealtime(.2f);
+            Require(source.timeSamples == pausedSample, "Paused music retains its playback position");
+            music.GetType().GetMethod("Resume").Invoke(music, null);
+            yield return new WaitForSecondsRealtime(.7f);
+            Require(source.isPlaying && source.timeSamples > pausedSample
+                && Mathf.Abs(source.volume - .35f) < .001f, "Original Resume advances from the paused position");
+            runtime.MapMusicVolume = () => 0f;
+            Debug.Log("Map11 native audio validated: original looping clip, 1000ms Play, 250ms Pause/Stop, 500ms Resume, retained sample position and current music setting. AudioSource was muted; audible listening was not performed.");
         }
 
         private static void VerifyMainPlayerStoryPositions()
