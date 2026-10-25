@@ -718,6 +718,7 @@ namespace Zjcs.Presentation.World
 
         private void CreateCommerceHudEntries()
         {
+            if (mapClassId == 11) { CreateNativeFirstPayEntry(); return; }
             try
             {
                 Transform container = ui.Find("WorldCanvas",

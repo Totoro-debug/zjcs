@@ -20,7 +20,8 @@ namespace Zjcs.Editor
             player.cullingType = AnimationCullingType.AlwaysAnimate;
             foreach (OfficialMap11UiClip record in source.fields.clips)
             {
-                if (record.unknown.Length != 0) throw new System.IO.InvalidDataException("Unresolved original UI animation: " + record.name);
+                if (record.unknown.Any(value => source.type != "NativeAnimatorInitialState" || value.reason != "target_absent"))
+                    throw new System.IO.InvalidDataException("Unresolved original UI animation: " + record.name);
                 var clip = new AnimationClip { name = record.name, legacy = true, frameRate = 30,
                     wrapMode = record.loop ? WrapMode.Loop : WrapMode.ClampForever };
                 foreach (OfficialMap11UiTrack track in record.tracks)
@@ -67,6 +68,9 @@ namespace Zjcs.Editor
                 if (record.name == source.fields.defaultClip
                     || source.type == "NativeAnimator" && player.clip == null) player.clip = clip;
             }
+            // The function-entry subclass opens its separate popup. Its unused
+            // inline panel still needs the original controller's default pose.
+            if (source.type == "NativeAnimatorInitialState") player.clip.SampleAnimation(root, 0);
             if (source.type == "NativeAnimator" && source.fields.clips.Any(value => value.name == "Pressed"))
                 root.AddComponent<WorldOptionButtonAnimation>();
         }

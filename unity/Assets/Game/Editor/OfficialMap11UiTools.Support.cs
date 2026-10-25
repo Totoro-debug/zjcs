@@ -23,7 +23,7 @@ namespace Zjcs.Editor
                     require(source.path).GetComponent<RectMask2D>().enabled = source.fields.m_Enabled != 0;
                 if (source.type == "Mask")
                     require(source.path).GetComponent<Mask>().enabled = source.fields.m_Enabled != 0;
-                if (source.type == "NativeAnimation" || source.type == "NativeAnimator")
+                if (source.type == "NativeAnimation" || source.type == "NativeAnimator" || source.type == "NativeAnimatorInitialState")
                     RestoreNativeAnimation(source, require);
                 if (source.type == "GraphicCapsuleMeshClipper")
                     require(source.path).gameObject.AddComponent<GraphicCapsuleMeshClipper>().mMeshClipperCapsuleArgs = source.fields.mMeshClipperCapsuleArgs;

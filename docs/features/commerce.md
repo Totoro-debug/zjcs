@@ -36,7 +36,7 @@
 
 ### HUD 入口
 
-[`OfficialMap10GameRuntime.BindWorldControl`](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs) 把官方 `FunctionEntryPhoto/EntryBtnFolded`、`EntryBtnExpanded` 绑定到商城；[`CommerceScreenController.OpenShop`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs) 以当前存档打开独立 1080×1920 商城 Canvas。HUD 首购入口使用商城直购顶部官方 `AccumulatedPayEntryGo` 节点作为入口结构，显示官方首购标题、红点，并按 `CommerceHudStatus.FirstPayShouldShow` 在全部领奖后隐藏；它由 `commerce_first_entry` 生成并位于 `EventAndPurchaseEntrys`。
+[`OfficialMap10GameRuntime.BindWorldControl`](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs) 通过功能入口接入商城：Map11 先打开原 `FunctionEntryDialog`，商城按钮再调用 [`CommerceScreenController.OpenShop`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs)；Map10 仍从功能入口直接打开商城。Map11 的首购 HUD 已替换为从固定版 APK 提取的原 `FirstPayBtn`，保持原图标、文字、按钮和 LayoutElement，由 WorldCanvas 原纵向布局定位；来源为 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。首购可见性继续使用现有 `CommerceHudStatus.FirstPayShouldShow`，原支付功能门槛与完整提示图绑定尚未迁移。Map10 仍使用旧 `commerce_first_entry`，其完整还原待后续处理。
 
 ### 商城界面与业务
 
@@ -66,7 +66,7 @@
 ## 自定义实现
 
 - HUD 不复制原 `FunctionEntryDialog` 中间层，直接把官方 `FunctionEntryPhoto` 点击绑定到商城；这是已实现的本地入口简化，官方 `commerce_functions/commerce_shop_entry` prefab 已进入目录但当前未作为必须中间页。
-- HUD 首购入口由官方 `AccumulatedPayEntryGo` 结构、标题和红点组成，不是原 `FirstPayIconEntry` prefab 的一比一复刻；原 `FirstPayIconEntry` 不在当前已提取 UI 载荷中。
+- Map10 HUD 首购入口仍由 `AccumulatedPayEntryGo` 组合；Map11 已恢复原 `FirstPayBtn` 外观，但原支付功能门槛及完整提示图状态绑定、真实鼠标打开和 Windows Player 尚未验收。
 - 活动页四个入口按官方 `ActivityCommonEntry` prefab 生成，但每日／每周／首购／兑换的图标、标题和位置是本地组合，未接入原活动入口表、活动开放条件或动态活动目录。
 - 首购预览使用官方 `ImgItem_FirstPay/FirstPay1/FirstPay2` 武器图，未恢复原角色模型预览、武器属性比较和装备详情弹窗。
 - 星眷页现展示全部 15 组、75 个档位与分组标题；每档仍用运行时组合行（等级、星值门槛、核心奖励图标、领取按钮），未恢复原完整 LayoutElement、进度线、锁定展示项、主副奖励分区和多奖励轮播。

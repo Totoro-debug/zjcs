@@ -129,6 +129,7 @@ def load_support_ui(apk, schemas):
     prefabs["TaskPanelListItemProgress"] = "defaultpackage_assets_prefabs_ui_task.bundle"
     prefabs["TaskListItem"] = "defaultpackage_assets_prefabs_ui_task.bundle"
     prefabs["FunctionEntryDialog"] = "defaultpackage_assets_prefabs_ui_functionentry.bundle"
+    prefabs["FirstPayBtn"] = "defaultpackage_assets_prefabs_ui_activityentry.bundle"
     for name in ("MarkUIFilterEntryItem", "MiniMapMarkFilterItem"):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_map_minimap_filter.bundle"
     prefabs[award_icon.read().m_Name] = apk.provenance(award_icon)["bundle"]

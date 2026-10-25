@@ -87,7 +87,9 @@ def build():
                         visit(child.read().m_GameObject.deref(), path)
                 elif component.type.name == "MonoBehaviour":
                     behaviours.append(component)
-                elif component.type.name in ("Animation", "Animator") and key in ("TalkDialog", "OptionTalkDialog"):
+                elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog")
+                        or key == "WorldCanvas" and component.type.name == "Animator"
+                        and go.m_Name in ("FunctionEntryFunc", "FunctionEntryPhoto", "FunctionEntryChatQuick")):
                     native_animations.append(component)
                 elif component.type.name == "Canvas":
                     native = component.read_typetree()
@@ -139,6 +141,8 @@ def build():
         for component in native_animations:
             location = paths[(component.assets_file.name, component.path_id)]
             default_name, auto_play = "", False
+            initial_state = key == "WorldCanvas"
+            controller_source = None
             if component.type.name == "Animation":
                 animation_data = component.read()
                 refs = animation_data.m_Animations
@@ -150,9 +154,23 @@ def build():
                 if not controller.m_PathID:
                     continue
                 refs = controller.read().m_AnimationClips
+                if initial_state:
+                    controller_data = controller.deref().read_typetree()
+                    machines = controller_data["m_Controller"]["m_StateMachineArray"]
+                    if len(machines) != 1:
+                        raise ValueError("Unexpected function-entry Animator layers")
+                    machine = machines[0]["data"]
+                    state = machine["m_StateConstantArray"][machine["m_DefaultState"]]["data"]
+                    leaves = [node["data"] for tree in state["m_BlendTreeConstantArray"] for node in tree["data"]["m_NodeArray"]]
+                    if len(leaves) != 1 or leaves[0]["m_ChildIndices"]:
+                        raise ValueError("Unexpected default function-entry blend tree")
+                    refs = [refs[leaves[0]["m_ClipID"]]]
+                    default_name = refs[0].read().m_Name
+                    controller_source = apk.provenance(controller.deref())
             clips = [animation_record(ref.deref(), subtree(source[key], location)) for ref in refs if ref.m_PathID]
-            components.append({"panel": key, "path": location, "type": "Native" + component.type.name,
-                               "fields": {"clips": clips, "defaultClip": default_name, "playAutomatically": auto_play},
+            components.append({"panel": key, "path": location, "type": "NativeAnimatorInitialState" if initial_state else "Native" + component.type.name,
+                               "fields": {"clips": clips, "defaultClip": default_name, "playAutomatically": auto_play,
+                                          "controllerSource": controller_source},
                                "source": apk.provenance(component)})
 
         def resolve(value, owner):
@@ -304,7 +322,7 @@ def build():
                                       "TaskListItem", "TaskGoal", "TaskListRecommendCombatRatingItem", "TaskConditionItem",
                                       "MiniMapFullScreenPanel", "MiniMapCameraController", "UITouchInput", "MiniMapMarkUIFilter",
                                       "TeamChallengeIconEntry", "DemonInvadeIconEntry", "VoidFissureIconEntry",
-                                      "LimitedTimeGiftIconEntry", "FightDemonBattlefieldAutoPushEndNotifyUI", "TipDotNodeLinker",
+                                      "LimitedTimeGiftIconEntry", "FirstPayIconEntry", "FightDemonBattlefieldAutoPushEndNotifyUI", "TipDotNodeLinker",
                                       "TeamMiniMemberItem", "FunctionEntrysPanel", "MapNpcTipHandler", "PublicMapBranchLineBtn",
                                       "FunctionEntryDialog", "TimeInfoUI", "FunctionEntryBigBtnItem", "MarkUIFilterEntryItem", "MiniMapMarkFilterItem", "TabItem", "TabObjectTransition", "MultiTextsControler", "MiniMapSwitchTabItem", "UIColorByLevel"):
                 reader = ui_schemas if script.m_ClassName == "TabItem" else schemas
@@ -627,7 +645,7 @@ def build():
                                                                            "MiniMapMarkUIFilter", "MiniMapMarkFilterItem", "MiniMapMarkManager", "MiniMapEntityMark", "MinimapMarkKeepSizeObjSupport",
                                                                            "HeadCharacterPortrait", "HeadCharacterPortraitBuilder", "PlayerExpSlider", "PlayerIconMeHpSlider",
                                                                            "TaskListItem", "TaskGoal", "TaskListRecommendCombatRatingItem", "UIColorByLevel", "CombatRatingConfig",
-                                                                           "FunctionEntrysPanel", "FunctionEntryDialog", "FunctionEntryBigBtnItem", "TimeInfoUI", "PlayerDefaultItemUIHandler", "MePlayerItemUI")]]},
+                                                                           "FunctionEntrysPanel", "FunctionEntryDialog", "FunctionEntryBigBtnItem", "FirstPayIconEntry", "TimeInfoUI", "PlayerDefaultItemUIHandler", "MePlayerItemUI")]]},
                        "output": {"path": "map11-ui.json", "sha256": sha256(data), "panels": len(panels), "sprites": len(records)}}
     write_ui_payload(target, data, known)
     write_ui_payload(previous, json_bytes(output_manifest), known)

@@ -30,7 +30,7 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map11-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 36)
+            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 37)
                 throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -188,7 +188,7 @@ namespace Zjcs.Editor
                         || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
                         || panel.key == "ItemAwardIcon" || panel.key == "6620_11_DialogIcon"
                         || panel.key == "FunctionEntryDialog" || panel.key == "MarkUIFilterEntryItem"
-                        || panel.key == "MiniMapMarkFilterItem")
+                        || panel.key == "MiniMapMarkFilterItem" || panel.key == "FirstPayBtn")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)

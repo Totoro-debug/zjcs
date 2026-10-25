@@ -37,6 +37,20 @@ namespace Zjcs.Presentation.World
                 end > start ? (float)(progression.Player.Experience - start) / (end - start) : 1);
         }
 
+        private void CreateNativeFirstPayEntry()
+        {
+            var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
+            Transform slot = ui.Find("WorldCanvas",
+                "/WorldCanvas/Content/Content/WorldPanel/Anim/Right/EventAndPurchaseEntrys").transform;
+            var entry = new OfficialMap11WitchWindow("FirstPayBtn", slot, data);
+            firstPayEntry = entry.Root;
+            var source = entry.Source("FirstPayIconEntry").fields;
+            entry.Find(source.mEntryBtn).GetComponent<UnityEngine.UI.Button>().onClick.AddListener(OpenCommerceFirstPay);
+            // The native VerticalLayoutGroup positions the original entry; no
+            // replacement art, title or hand-written anchored position is used.
+            RefreshCommerceHud();
+        }
+
         private void InitializeWorldHudProviders(OfficialMap11UiData data)
         {
             foreach (var entry in data.components.Where(value => value.panel == "WorldCanvas"))

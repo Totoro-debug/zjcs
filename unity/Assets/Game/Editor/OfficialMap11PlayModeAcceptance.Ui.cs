@@ -40,6 +40,9 @@ namespace Zjcs.Editor
             OfficialMap10UiRenderer renderer = Field<OfficialMap10UiRenderer>("ui");
             GameObject hud = renderer.Find("WorldCanvas", "/WorldCanvas");
             Rect hudRect = ScreenRect(hud);
+            Transform inlineFunctions = hud.transform.Find("Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryFunc/Content/Panel");
+            Require(Mathf.Approximately(inlineFunctions.localScale.x, 0) && Mathf.Approximately(inlineFunctions.localScale.y, 0),
+                "Original folded Animator pose hides the unused inline panel");
             yield return CaptureStatueFrame("ui-hud");
             string result = "HUD rect=" + hudRect + "; scale=" + hud.transform.lossyScale;
             Debug.Log("Map11 UI geometry: " + result);
