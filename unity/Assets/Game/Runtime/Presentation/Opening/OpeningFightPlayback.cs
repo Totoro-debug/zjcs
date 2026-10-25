@@ -34,13 +34,15 @@ namespace Zjcs.Presentation.Opening
         private Transform timelineContainer;
         private readonly List<GameObject> timelineItems = new List<GameObject>();
         private readonly Dictionary<int, GameObject> timelineById = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, bool> timelineActing = new Dictionary<int, bool>();
         private readonly Dictionary<int, float> nextActionTime = new Dictionary<int, float>();
         private int actingEntityId;
         private bool timelineUnavailable;
         private OfficialBattleHudCatalog timelineCatalog;
         private RectTransform damageLayer;
-        private TMPro.TMP_FontAsset damageFont;
-        private bool damageFontLoaded;
+        private OpeningBattlePresentation presentation;
+        private readonly Dictionary<int, Transform> actorRoots = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, float> roundIntervals = new Dictionary<int, float>();
         private OpeningSkillEffectPlayer skillEffects;
         private int completedEffects, completedSystems, completedSoundEvents;
         private readonly List<Material> modelMaterials = new List<Material>();
@@ -105,6 +107,7 @@ namespace Zjcs.Presentation.Opening
         public IEnumerator Prepare()
         {
             OpeningRecord record = assets.Record;
+            MountPresentation();
             MountHud();
             try { skillEffects = OpeningSkillEffectPlayer.LoadDefault(log); }
             catch (Exception error) { log("开场技能特效载荷不可用: " + error.Message); }
@@ -114,6 +117,8 @@ namespace Zjcs.Presentation.Opening
                 TryCreateUnit(entity);
             }
             FrameCamera();
+            UpdateRoundText();
+            RebuildTimeline();
             yield return null;
         }
 
@@ -122,6 +127,7 @@ namespace Zjcs.Presentation.Opening
             OpeningRecord record = assets.Record;
             if (units.Count == 0 && PreparedUnits == 0)
             {
+                MountPresentation();
                 MountHud();
                 foreach (OpeningRecordEntity entity in record.Entities)
                 {
@@ -171,8 +177,11 @@ namespace Zjcs.Presentation.Opening
             }
             skillEffects?.Dispose();
             skillEffects = null;
-            foreach (SkeletonAnimation unit in units.Values)
-                if (unit != null) UnityEngine.Object.Destroy(unit.gameObject);
+            foreach (Transform root in actorRoots.Values)
+                if (root != null) UnityEngine.Object.Destroy(root.gameObject);
+            actorRoots.Clear();
+            if (presentation != null) UnityEngine.Object.Destroy(presentation.gameObject);
+            if (damageLayer != null) UnityEngine.Object.Destroy(damageLayer.gameObject);
             units.Clear();
             foreach (Material material in modelMaterials) UnityEngine.Object.Destroy(material);
             modelMaterials.Clear();
@@ -219,6 +228,18 @@ namespace Zjcs.Presentation.Opening
             skipButton.SetActive(true);
         }
 
+        private void MountPresentation()
+        {
+            if (presentation != null) return;
+            var go = new GameObject("OpeningBattlePresentation");
+            go.transform.SetParent(world, false);
+            presentation = go.AddComponent<OpeningBattlePresentation>();
+            presentation.Initialize(battlefield.StageCamera);
+            foreach (OpeningRecordEntity entity in assets.Record.Entities)
+                foreach (var pair in entity.RoundTimes)
+                { nextActionTime[pair.Key] = pair.Value; roundIntervals[pair.Key] = pair.Value; }
+        }
+
         private void MountHud()
         {
             if (!assets.Ui.Prefabs.ContainsKey("record_fight_hud"))
@@ -243,8 +264,9 @@ namespace Zjcs.Presentation.Opening
             damageLayer.anchorMax = Vector2.one;
             damageLayer.offsetMin = Vector2.zero;
             damageLayer.offsetMax = Vector2.zero;
-            timelineContainer = ui.Find("/FightMainPanelRecordFight/Content/Top/FixedContent/RoundUI/Linear")?.transform;
+            timelineContainer = ui.Find(presentation.TimelinePath)?.transform;
             if (timelineContainer == null) log("官方录像行动时间轴容器缺失，跳过时间轴");
+            else timelineContainer.gameObject.SetActive(true);
             skipButton = FindNode(hud, "SkipBtn");
             if (skipButton != null)
             {
@@ -328,7 +350,7 @@ namespace Zjcs.Presentation.Opening
                             Dictionary<string, object> result = OpeningJson.Object(component["DamageResult"], "damage result");
                             Dictionary<string, object> position = OpeningJson.Object(result["Pos"], "damage position");
                             int targetId = ReadEntityReference(component, "TargetId");
-                            int sourceId = ReadEntityReference(component, "SourceId");
+                            int sourceId = ReadEntityReference(component, "SkillSrcEntityId");
                             SkeletonAnimation targetUnit = FindUnit(targetId);
                             SkeletonAnimation sourceUnit = FindUnit(sourceId);
                             Vector3 targetPosition = battlefield.CellToWorld(OpeningJson.Int(position, "X"),
@@ -530,27 +552,13 @@ namespace Zjcs.Presentation.Opening
             if (component.TryGetValue("TargetId", out object targetValue)
                 && targetValue is Dictionary<string, object> targetRef)
                 targetId = OpeningJson.Int(targetRef, "EntityId");
+            presentation.ApplyDamage(targetId, value);
+            if(value<0 && timelineById.TryGetValue(targetId,out GameObject hitItem) && hitItem!=null)
+                hitItem.GetComponent<OfficialBattleHudAnimationPlayer>().Play("/GameRoundCharacterItem","UIGameRound_Hurt");
             int stackIndex = NextDamageStack(targetId);
             if (stackIndex > 0) StackedDamages++;
-            Vector3 world = battlefield.GridToWorld(OpeningJson.Int(position, "X"),
-                OpeningJson.Int(position, "Y")) + new Vector3(0f, 0.7f, 0f)
-                + battlefield.DamageSpacing * stackIndex;
-            Vector3 screen = battlefield.StageCamera.WorldToScreenPoint(world);
-            if (screen.z < 0f) return;
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(damageLayer, screen, null,
-                    out Vector2 local)) return;
-            var labelObject = new GameObject("OpeningDamage", typeof(RectTransform));
-            labelObject.transform.SetParent(damageLayer, false);
-            var label = labelObject.AddComponent<TMPro.TextMeshProUGUI>();
-            label.font = ResolveDamageFont();
-            label.fontSize = 36f;
-            label.alignment = TMPro.TextAlignmentOptions.Center;
-            label.raycastTarget = false;
-            // BattleUIUtils.GetBattleNumberString(abs) -> Formula.BattleNumberToString.
-            label.text = FormatBattleNumber(Math.Abs(value));
-            string variant = immunity ? "immunity" : crit ? "crit" : block ? "block" : "normal";
-            Color color = battlefield.ResolveDamageColor(element, variant, type);
-            labelObject.AddComponent<OpeningDamageFloat>().Initialize(label, local, color);
+            Vector3 anchor = battlefield.GridToWorld(OpeningJson.Int(position, "X"), OpeningJson.Int(position, "Y"));
+            presentation.ShowDamage(damageLayer, anchor, targetId, value, element, type, crit, block, immunity);
             DamageNumbers++;
         }
 
@@ -570,57 +578,39 @@ namespace Zjcs.Presentation.Opening
             return index;
         }
 
-        private TMPro.TMP_FontAsset ResolveDamageFont()
-        {
-            if (damageFontLoaded) return damageFont;
-            damageFontLoaded = true;
-            try
-            {
-                OfficialBattleHudCatalog catalog = OfficialBattleHudCatalog.LoadDefault();
-                if (catalog != null) damageFont = catalog.Font;
-            }
-            catch (Exception error)
-            {
-                log("官方伤害数字字体不可用，使用 TMP 默认字体: " + error.Message);
-            }
-            if (damageFont == null) damageFont = TMPro.TMP_Settings.defaultFontAsset;
-            return damageFont;
-        }
-
         private void RemoveEntity(int entityId)
         {
             skillEffects?.StopEntity(entityId);
             skillEffects?.StopStatus(entityId);
             entityState.Remove(entityId);
             nextActionTime.Remove(entityId);
+            presentation?.RemoveUnit(entityId);
+            if (timelineById.TryGetValue(entityId, out GameObject timelineItem))
+            {
+                if (timelineItem != null)
+                {
+                    timelineItem.GetComponent<OfficialBattleHudAnimationPlayer>().Play("/GameRoundCharacterItem","UIGameRound_Dead");
+                    timelineItem.AddComponent<OpeningDelayedDestroy>().Delay=.5f;
+                }
+                timelineById.Remove(entityId);
+                timelineActing.Remove(entityId);
+                timelineItems.Remove(timelineItem);
+            }
             if (units.TryGetValue(entityId, out SkeletonAnimation defeated) && defeated != null)
             {
-                // Official plays a death animation before the unit disappears; keep the
-                // model for a short while instead of destroying it on the remove message.
-                if (bindings.TryGetValue(entityId, out OfficialBattleModelBinding deathBinding))
+                string die = bindings.TryGetValue(entityId, out OfficialBattleModelBinding binding)
+                    ? ResolveAlias(binding, "die_01") : null;
+                if (die != null) { defeated.AnimationState.SetAnimation(0, die, false); DeathHolds++; }
+                if (actorRoots.TryGetValue(entityId, out Transform actor))
                 {
-                    string die = ResolveAlias(deathBinding, "die_01");
-                    if (die != null)
-                    {
-                        defeated.AnimationState.SetAnimation(0, die, false);
-                        defeated.gameObject.AddComponent<OpeningDelayedDestroy>();
-                        DeathHolds++;
-                    }
+                    actor.gameObject.AddComponent<OpeningDelayedDestroy>();
+                    actorRoots.Remove(entityId);
                 }
                 units.Remove(entityId);
                 bindings.Remove(entityId);
-                return;
             }
-            if (timelineById.TryGetValue(entityId, out GameObject timelineItem))
-            {
-                if (timelineItem != null) UnityEngine.Object.Destroy(timelineItem);
-                timelineById.Remove(entityId);
-                timelineItems.Remove(timelineItem);
-            }
-            if (!units.TryGetValue(entityId, out SkeletonAnimation unit)) return;
-            if (unit != null) UnityEngine.Object.Destroy(unit.gameObject);
-            units.Remove(entityId);
-            bindings.Remove(entityId);
+            if(actingEntityId==entityId)actingEntityId=0;
+            RebuildTimeline();
         }
 
         private void ApplyModification(OpeningRecordStep step)
@@ -660,14 +650,12 @@ namespace Zjcs.Presentation.Opening
             int entityId = OpeningJson.Int(id, "EntityId");
             if (entityId <= 0) return;
             nextActionTime[entityId] = (float)OpeningJson.Number(data, "NextTime");
+            RebuildTimeline();
         }
 
         private void RebuildTimeline()
         {
             if (timelineContainer == null || timelineUnavailable) return;
-            foreach (GameObject item in timelineItems) if (item != null) UnityEngine.Object.Destroy(item);
-            timelineItems.Clear();
-            timelineById.Clear();
             if (timelineCatalog == null)
             {
                 try { timelineCatalog = OfficialBattleHudCatalog.LoadDefault(); }
@@ -685,16 +673,30 @@ namespace Zjcs.Presentation.Opening
             var ids = new List<int>(units.Keys);
             ids.Sort((left, right) =>
             {
+                if (left == actingEntityId) return -1;
+                if (right == actingEntityId) return 1;
                 float leftTime = nextActionTime.TryGetValue(left, out float l) ? l : float.MaxValue;
                 float rightTime = nextActionTime.TryGetValue(right, out float r) ? r : float.MaxValue;
                 int compare = leftTime.CompareTo(rightTime);
                 return compare != 0 ? compare : left.CompareTo(right);
             });
+            if(actingEntityId==0 && ids.Count>0)actingEntityId=ids[0];
             float width = ((RectTransform)timelineContainer).rect.width;
             if (width <= 1f) width = 800f;
+            float totalTime = 0f;
+            foreach (float interval in roundIntervals.Values) totalTime=Mathf.Max(totalTime,interval);
+            var offsets = new float[ids.Count];
+            for (int i=1;i<ids.Count;i++)
+            {
+                float gap=nextActionTime[ids[i]]-nextActionTime[ids[i-1]];
+                offsets[i]=offsets[i-1]+Mathf.Max(gap,totalTime*presentation.TimelineMinDist);
+            }
+            float extent=ids.Count==0?totalTime:Mathf.Max(totalTime,offsets[ids.Count-1]);
             for (int index = 0; index < ids.Count; index++)
             {
-                GameObject item;
+                bool created = !timelineById.TryGetValue(ids[index],out GameObject item) || item==null;
+                if (created)
+                {
                 try { item = renderer.Create("round_character", timelineContainer); }
                 catch (Exception error)
                 {
@@ -702,14 +704,21 @@ namespace Zjcs.Presentation.Opening
                     log("官方行动时间轴条目创建失败: " + error.Message);
                     return;
                 }
+                presentation.BindPortrait(item, entityState[ids[index]]);
+                renderer.InitializeAnimations("round_character", item);
+                timelineItems.Add(item);
+                timelineById[ids[index]] = item;
+                }
                 item.name = "RoundCharacter_" + ids[index];
                 item.SetActive(true);
                 var rect = (RectTransform)item.transform;
                 rect.anchorMin = new Vector2(0.5f, 0.5f);
                 rect.anchorMax = new Vector2(0.5f, 0.5f);
-                rect.anchoredPosition = new Vector2(-width * 0.5f + (index + 0.5f) * width / ids.Count, 0f);
-                timelineItems.Add(item);
-                timelineById[ids[index]] = item;
+                float x=Mathf.Lerp(width*.5f,-width*.5f,extent<=0?0:offsets[index]/extent);
+                if (created) rect.anchoredPosition=new Vector2(x,0);
+                else (item.GetComponent<OpeningTimelineMotion>() ?? item.AddComponent<OpeningTimelineMotion>())
+                    .MoveTo(x,width,presentation.TimelineDuration);
+                rect.SetSiblingIndex(ids.Count-index-1);
             }
             ApplyActingHighlight();
         }
@@ -720,8 +729,10 @@ namespace Zjcs.Presentation.Opening
             {
                 if (entry.Value == null) continue;
                 bool acting = entry.Key == actingEntityId;
-                foreach (Transform child in entry.Value.GetComponentsInChildren<Transform>(true))
-                    if (child.name == "WeGo") child.gameObject.SetActive(acting);
+                if(timelineActing.TryGetValue(entry.Key,out bool previous) && previous==acting)continue;
+                timelineActing[entry.Key]=acting;
+                var player=entry.Value.GetComponent<OfficialBattleHudAnimationPlayer>();
+                player.Play("/GameRoundCharacterItem", acting ? "UIGameRound_Acting" : "UIGameRound_Idle");
             }
         }
 
@@ -730,9 +741,7 @@ namespace Zjcs.Presentation.Opening
             if (!step.Data.TryGetValue("RoundEntityId", out object raw) || !(raw is Dictionary<string, object> id)) return;
             int entityId = OpeningJson.Int(id, "EntityId");
             actingEntityId = entityId;
-            ApplyActingHighlight();
-            if (units.TryGetValue(entityId, out SkeletonAnimation unit) && unit != null)
-                Play(entityId, unit, "attack_01", false);
+            RebuildTimeline();
         }
 
         private void ApplyFastForwardSnapshot(OpeningRecord record)
@@ -778,7 +787,7 @@ namespace Zjcs.Presentation.Opening
                     skin = skin,
                     scale = scale,
                     skeleton = skeleton,
-                    animations = Array.Empty<OfficialBattleAnimationAlias>(),
+                    animations = npcCatalog.Animations(entity.NpcClassId),
                 };
                 PreparedUnits++;
                 return;
@@ -822,12 +831,16 @@ namespace Zjcs.Presentation.Opening
                     return;
                 }
             }
+            var actor = new GameObject("RecordActor_" + entity.EntityId);
+            actor.transform.SetParent(world,false);
+            actor.transform.localPosition=new Vector3(entity.GridX,entity.GridY,0);
             var gameObject = new GameObject("RecordUnit_" + entity.EntityId);
-            gameObject.transform.SetParent(world, false);
+            gameObject.transform.SetParent(actor.transform, false);
             SkeletonAnimation skeleton = gameObject.AddComponent<SkeletonAnimation>();
             skeleton.skeletonDataAsset = binding.skeleton;
             skeleton.initialSkinName = binding.skin;
             skeleton.Initialize(true);
+            if (entity.NpcClassId > 0) OpeningNpcModelCatalog.LoadDefault().ApplySkins(entity.NpcClassId, skeleton.Skeleton);
             if (skeleton.Skeleton == null)
             {
                 log("官方战斗骨骼初始化失败: " + key);
@@ -847,8 +860,7 @@ namespace Zjcs.Presentation.Opening
                 throw new InvalidOperationException("Official opening model transform missing: " + entity.ClassId);
             // Keep the full fight prefab chain, including model-specific foot offsets.
             // SkeletonDataAsset's import scale and prefab scale are separate fields.
-            gameObject.transform.localPosition = new Vector3(entity.GridX, entity.GridY, 0)
-                + ModelVector(modelTransform["position"]);
+            gameObject.transform.localPosition = ModelVector(modelTransform["position"]);
             gameObject.transform.localScale = ModelVector(modelTransform["scale"]);
             // Converted PNGs retain the official straight alpha; the generic Spine
             // material importer defaults to premultiplied input. Restore the prefab field.
@@ -869,6 +881,9 @@ namespace Zjcs.Presentation.Opening
             // fighters must sort in front of that scenery.
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))
                 renderer.sortingOrder = 30000 - entity.GridY * 2;
+            actorRoots.Add(entity.EntityId,actor.transform);
+            presentation.AddUnit(entity,actor.transform);
+            skillEffects?.CreateModelPresentation(entity.ClassId,skeleton,actor.transform);
             units.Add(entity.EntityId, skeleton);
             bindings.Add(entity.EntityId, binding);
             Play(entity.EntityId, skeleton, "idle_01", true);

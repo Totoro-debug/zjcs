@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Zjcs.Presentation.Combat
 {
+    public interface IBattleHudSequenceImage { float Rate { get; set; } }
     public sealed class OfficialBattleHudAnimationPlayer : MonoBehaviour
     {
         private sealed class CompiledTrack
@@ -183,6 +184,10 @@ namespace Zjcs.Presentation.Combat
                     if (image != null) image.fillAmount = value;
                     return;
                 case "material._SquenceRate": SetSequenceRate(target, value); return;
+                case "mRate":
+                    var sequence=target.GetComponent<IBattleHudSequenceImage>();
+                    if(sequence!=null)sequence.Rate=value;
+                    return;
                 case "m_Alpha":
                     CanvasGroup group = target.GetComponent<CanvasGroup>();
                     if (group == null) group = target.AddComponent<CanvasGroup>();

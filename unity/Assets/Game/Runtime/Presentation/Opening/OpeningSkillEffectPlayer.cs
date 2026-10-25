@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.Opening
         private const string SpriteParticleShaderName = "Sprites/Default";
         private readonly Dictionary<string, List<Dictionary<string, object>>> effects =
             new Dictionary<string, List<Dictionary<string, object>>>(StringComparer.Ordinal);
+        private Dictionary<string, object> modelPresentations;
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>(StringComparer.Ordinal);
         private readonly Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> meshHashes = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -71,6 +72,8 @@ namespace Zjcs.Presentation.Opening
             if (OpeningJson.String(root, "manifest") != OpeningAssets.Manifest)
                 throw new FormatException("Opening skill effect payload is not pinned.");
             var player = new OpeningSkillEffectPlayer(log);
+            if (root.TryGetValue("models",out object modelData))
+                player.modelPresentations=OpeningJson.Object(modelData,"model presentations");
             if (player.shader == null)
                 throw new InvalidOperationException("Windows opening particle shader is unavailable: " + ParticleShaderName);
             foreach (object item in OpeningJson.Array(root["effects"], "effects"))
@@ -129,6 +132,118 @@ namespace Zjcs.Presentation.Opening
         {
             if (data == null || parent == null) return null;
             return CreateParticle(data, parent, 0f, eventSpeed, false);
+        }
+
+        public void CreateModelPresentation(int classId, Spine.Unity.SkeletonAnimation skeleton, Transform actor)
+        {
+            if(modelPresentations==null || !modelPresentations.TryGetValue(classId.ToString(),out object raw))return;
+            var data=OpeningJson.Object(raw,"model prefab");
+            var nodeData=OpeningJson.Array(data["nodes"],"model nodes");
+            var nodes=new Transform[nodeData.Count];
+            var group=actor.gameObject.AddComponent<SortingGroup>();
+            group.sortingOrder=skeleton.GetComponent<MeshRenderer>().sortingOrder;
+            var mainMaterials=new Dictionary<string,Material>();
+            foreach(object materialData in OpeningJson.Array(data["materials"],"model materials"))
+            {
+                var material=OpeningJson.Object(materialData,"model material");
+                string name=OpeningJson.String(material,"name");
+                if(mainMaterials.ContainsKey(name))continue;
+                foreach(var atlas in skeleton.SkeletonDataAsset.atlasAssets)
+                foreach(Material original in atlas.Materials)
+                {
+                    string resource=OpeningJson.String(OpeningJson.Object(OpeningJson.Object(material["textures"],"textures")["_MainTex"],"texture"),"resource");
+                    int hash=resource.LastIndexOf('-');
+                    string textureName=hash<0?resource:resource.Substring(0,hash);
+                    if(original.mainTexture==null || !original.mainTexture.name.StartsWith(textureName+"-",StringComparison.Ordinal))continue;
+                    Material replacement;
+                    if(OpeningJson.String(material,"shader")=="Spine/Default-Stencil")replacement=CreateModelMaterial(material);
+                    else
+                    {
+                        replacement=skeleton.CustomMaterialOverride.TryGetValue(original,out Material existing)?existing:new Material(original);
+                        replacement.name=name;
+                    }
+                    skeleton.CustomMaterialOverride[original]=replacement;
+                    mainMaterials[name]=replacement;
+                }
+            }
+            for(int i=0;i<nodes.Length;i++)
+            {
+                var node=OpeningJson.Object(nodeData[i],"model node");
+                int parent=OpeningJson.Int(node,"parent",-1);
+                string name=OpeningJson.String(node,"name");
+                Transform transform;
+                if(parent<0)transform=actor;
+                else if(name=="MonsterModel_3803")transform=skeleton.transform;
+                else transform=new GameObject(name).transform;
+                nodes[i]=transform;
+                if(parent>=0)
+                {
+                    transform.SetParent(nodes[parent],false);
+                    transform.localPosition=Vector3Value(node,"position");
+                    transform.localScale=Vector3Value(node,"scale",Vector3.one);
+                    var rotation=OpeningJson.Object(node["rotation"],"model rotation");
+                    transform.localRotation=new Quaternion((float)OpeningJson.Number(rotation,"x"),(float)OpeningJson.Number(rotation,"y"),
+                        (float)OpeningJson.Number(rotation,"z"),(float)OpeningJson.Number(rotation,"w",1));
+                }
+                foreach(object value in OpeningJson.Array(node["particles"],"model particles"))
+                {
+                    var particle=OpeningJson.Object(value,"model particle");
+                    GameObject go=CreateSpecialParticle(particle,transform,1);
+                    // The exported hierarchy already carries each ParticleSystem transform.
+                    go.transform.localPosition=Vector3.zero; go.transform.localRotation=Quaternion.identity; go.transform.localScale=Vector3.one;
+                    go.GetComponent<ParticleSystemRenderer>().sortingOrder=OpeningJson.Int(particle,"sorting_order");
+                }
+                if(name=="MonsterModel_3803")
+                {
+                    skeleton.GetComponent<MeshRenderer>().sortingOrder=OpeningJson.Int(node,"rendererOrder");
+                    var renderer=OpeningJson.Object(node["skeletonRenderer"],"native Spine renderer");
+                    skeleton.zSpacing=(float)OpeningJson.Number(renderer,"zSpacing");
+                }
+                if(node.TryGetValue("meshCopy",out object rawCopy))
+                {
+                    var copy=OpeningJson.Object(rawCopy,"mesh copy");
+                    if(OpeningJson.Bool(copy,"enabled"))
+                    {
+                        var replacements=new Dictionary<Material,Material>();
+                        foreach(object value in OpeningJson.Array(copy["materials"],"replacement materials"))
+                        {
+                            var pair=OpeningJson.Object(value,"material pair");
+                            var replacement=OpeningJson.Object(pair["replacement"],"replacement");
+                            replacements.Add(mainMaterials[OpeningJson.String(pair,"original")],CreateModelMaterial(replacement));
+                        }
+                        transform.gameObject.AddComponent<OpeningMeshCopy>().Initialize(skeleton,replacements,OpeningJson.Int(node,"rendererOrder"));
+                    }
+                }
+                if(parent>=0)transform.gameObject.SetActive(OpeningJson.Bool(node,"active"));
+            }
+            for(int i=0;i<nodes.Length;i++)
+            {
+                var node=OpeningJson.Object(nodeData[i],"model node");
+                if(node.TryGetValue("attachmentFollower",out object follower))
+                    nodes[i].gameObject.AddComponent<OpeningAttachmentFollower>().Initialize(skeleton,OpeningJson.Object(follower,"attachment follower"),nodes);
+            }
+            foreach(ParticleSystem system in actor.GetComponentsInChildren<ParticleSystem>(false))system.Play();
+        }
+
+        private Material CreateModelMaterial(Dictionary<string,object> data)
+        {
+            string name=OpeningJson.String(data,"name");
+            var material=new Material(Shader.Find(name.Contains("Outline")?"Zjcs/Opening/BossOutline":"Zjcs/Opening/BossMask")){name=name};
+            particleMaterials.Add(material);
+            foreach(var pair in OpeningJson.Object(data["floats"],"model floats"))
+                if(material.HasProperty(pair.Key))material.SetFloat(pair.Key,(float)OpeningJson.ToNumber(pair.Value));
+            foreach(var pair in OpeningJson.Object(data["colors"],"model colors"))
+                if(material.HasProperty(pair.Key))material.SetColor(pair.Key,ColorValue(OpeningJson.Array(pair.Value,"color")));
+            foreach(var pair in OpeningJson.Object(data["textures"],"model textures"))
+            {
+                if(!material.HasProperty(pair.Key))continue;
+                var texture=OpeningJson.Object(pair.Value,"model texture");
+                material.SetTexture(pair.Key,textures[OpeningJson.String(texture,"resource")]);
+                var scale=OpeningJson.Array(texture["scale"],"scale"); var offset=OpeningJson.Array(texture["offset"],"offset");
+                material.SetTextureScale(pair.Key,new Vector2((float)OpeningJson.ToNumber(scale[0]),(float)OpeningJson.ToNumber(scale[1])));
+                material.SetTextureOffset(pair.Key,new Vector2((float)OpeningJson.ToNumber(offset[0]),(float)OpeningJson.ToNumber(offset[1])));
+            }
+            return material;
         }
 
         public bool Play(string effectType, int classId, Vector3 worldPosition, Transform parent, int ownerEntityId = 0,
@@ -479,6 +594,22 @@ namespace Zjcs.Presentation.Opening
             var renderer = item.GetComponent<ParticleSystemRenderer>();
             renderer.renderMode = (ParticleSystemRenderMode)OpeningJson.Int(data, "render_mode");
             renderer.alignment = (ParticleSystemRenderSpace)OpeningJson.Int(data, "alignment");
+            if(data.TryGetValue("renderer",out object rawRenderer))
+            {
+                var native=OpeningJson.Object(rawRenderer,"native particle renderer");
+                renderer.sortMode=(ParticleSystemSortMode)OpeningJson.Int(native,"m_SortMode");
+                renderer.minParticleSize=(float)OpeningJson.Number(native,"m_MinParticleSize");
+                renderer.maxParticleSize=(float)OpeningJson.Number(native,"m_MaxParticleSize");
+                renderer.cameraVelocityScale=(float)OpeningJson.Number(native,"m_CameraVelocityScale");
+                renderer.velocityScale=(float)OpeningJson.Number(native,"m_VelocityScale");
+                renderer.lengthScale=(float)OpeningJson.Number(native,"m_LengthScale");
+                renderer.sortingFudge=(float)OpeningJson.Number(native,"m_SortingFudge");
+                renderer.normalDirection=(float)OpeningJson.Number(native,"m_NormalDirection");
+                renderer.pivot=Vector3Value(native,"m_Pivot"); renderer.flip=Vector3Value(native,"m_Flip");
+                renderer.allowRoll=OpeningJson.Bool(native,"m_AllowRoll");
+                renderer.freeformStretching=OpeningJson.Bool(native,"m_FreeformStretching");
+                renderer.rotateWithStretchDirection=OpeningJson.Bool(native,"m_RotateWithStretchDirection");
+            }
             // The source field is a layer index from the Android project, not a Unity
             // SortingLayer unique ID. This project intentionally uses the default layer.
             renderer.sortingLayerID = 0;
@@ -946,9 +1077,15 @@ namespace Zjcs.Presentation.Opening
                 ? ReadGradient(lowData) : null;
             Gradient high = source.TryGetValue("high", out object rawHigh) && rawHigh is Dictionary<string, object> highData
                 ? ReadGradient(highData) : null;
+            if (mode == 0) return new ParticleSystem.MinMaxGradient(maximum);
             if (mode == 1 && high != null) return new ParticleSystem.MinMaxGradient(high);
             if (mode == 3 && low != null && high != null) return new ParticleSystem.MinMaxGradient(low, high);
-            if (mode == 4) return new ParticleSystem.MinMaxGradient(minimum, maximum);
+            if (mode == 4 && high != null)
+            {
+                var randomColor=new ParticleSystem.MinMaxGradient(high);
+                randomColor.mode=ParticleSystemGradientMode.RandomColor;
+                return randomColor;
+            }
             if (mode == 2) return new ParticleSystem.MinMaxGradient(minimum, maximum);
             if (high != null) return new ParticleSystem.MinMaxGradient(high);
             return new ParticleSystem.MinMaxGradient(minimum);

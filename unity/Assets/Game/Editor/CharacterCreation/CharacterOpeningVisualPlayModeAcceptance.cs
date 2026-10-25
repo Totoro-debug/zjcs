@@ -29,6 +29,9 @@ namespace Zjcs.Editor.CharacterCreation
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running the visual acceptance.");
             CharacterOpeningPlayModeAcceptance.ConfigurePortraitGameView();
+            var gameView=EditorWindow.GetWindow(typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.GameView"));
+            gameView.GetType().GetProperty("drawGizmos",System.Reflection.BindingFlags.Instance
+                |System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.NonPublic)?.SetValue(gameView,false);
             SessionState.SetInt(ResultKey, 2);
             SessionState.SetFloat(DeadlineKey, (float)EditorApplication.timeSinceStartup + 420f);
             SessionState.SetBool(ActiveKey, true);
@@ -223,7 +226,10 @@ namespace Zjcs.Editor.CharacterCreation
                     session.Battlefield, () => false, Log);
                 yield return session.Playback.Prepare();
                 Require(session.Playback.PreparedUnits > 0, "record units were not prepared");
-                Require(session.Playback.SpawnedUnits > 0, "record units did not render");
+                Require(session.Playback.SpawnedUnits == 18, "all 18 official fighters, including both armed NPCs, must render");
+                Require(Array.Exists(session.Battlefield.UnitRoot.GetComponentsInChildren<Transform>(true),
+                    node => node.name == "HpBarGame"),
+                    "opening fighters have no official HpBarGame below their models");
                 Debug.Log("[Opening visual] units prepared=" + session.Playback.PreparedUnits
                           + " rendered=" + session.Playback.SpawnedUnits);
                 foreach (MeshRenderer renderer in session.Battlefield.UnitRoot.GetComponentsInChildren<MeshRenderer>(true))
@@ -239,6 +245,25 @@ namespace Zjcs.Editor.CharacterCreation
                                   ? renderer.GetComponent<MeshFilter>().sharedMesh.vertexCount : -1));
                 }
                 yield return Capture("visual-units");
+                int bars=0, starfields=0;
+                foreach(Transform node in session.Battlefield.UnitRoot.GetComponentsInChildren<Transform>(false))
+                    if(node.name=="HpBarGame")bars++;
+                Require(bars==18,"every opening fighter must have an active native HP bar");
+                foreach(ParticleSystem ps in session.Battlefield.UnitRoot.GetComponentsInChildren<ParticleSystem>(false))
+                {
+                    if(!ps.GetComponent<ParticleSystemRenderer>().sharedMaterial.name.StartsWith("Fx_WenLi_129"))continue;
+                    starfields++;
+                    Require(ps.transform.position.z<0,"boss starfield lost native slot depth");
+                    Require(ps.main.startColor.mode==ParticleSystemGradientMode.Color
+                        && ps.main.startColor.color.r<.9f,"boss constant tint was replaced by a white gradient");
+                }
+                Require(starfields==2,"both active boss wing starfields must render");
+                Require(session.Playback.TimelineItems==18,"all opening portraits must populate before dialogue");
+                var npc=Array.Find(session.Battlefield.UnitRoot.GetComponentsInChildren<Spine.Unity.SkeletonAnimation>(),
+                    model=>model.name=="RecordUnit_1017");
+                Require(npc!=null && npc.Skeleton.Skin.Name=="fight_npc_8401",
+                    "official NPC weapon skin must be combined with its body");
+                Vector3[] idleVertices=npc.GetComponent<MeshFilter>().sharedMesh.vertices;
                 Transform first = null;
                 foreach (MeshRenderer renderer in session.Battlefield.UnitRoot.GetComponentsInChildren<MeshRenderer>(true))
                 {
@@ -299,6 +324,22 @@ namespace Zjcs.Editor.CharacterCreation
                 Require(session.Playback.ActionAnimations > 0, "record action animations were not driven");
                 Debug.Log("[Opening visual] action animations=" + session.Playback.ActionAnimations);
                 yield return Capture("visual-damage");
+                Vector3[] actionVertices=npc.GetComponent<MeshFilter>().sharedMesh.vertices;
+                bool moved=idleVertices.Length!=actionVertices.Length;
+                for(int i=0;!moved && i<idleVertices.Length;i++)moved=(idleVertices[i]-actionVertices[i]).sqrMagnitude>.00001f;
+                Require(moved,"NPC skill playback did not change its actual rendered mesh");
+                bool nativeNumber=false, criticalLine=false;
+                foreach(var f in UnityEngine.Object.FindObjectsOfType<OpeningDamageFloat>())
+                {
+                    foreach(var text in f.GetComponentsInChildren<Text>(false))
+                        nativeNumber|=text.font!=null && text.font.name.EndsWith("DamageNumber",StringComparison.Ordinal);
+                    foreach(var graphic in f.GetComponentsInChildren<Graphic>(false))
+                    {
+                        if(graphic.name=="BgImg")criticalLine=true;
+                        Require(graphic.name!="Bg" || !graphic.enabled,"empty element confrontation background became visible");
+                    }
+                }
+                Require(nativeNumber && criticalLine,"native bitmap digits and critical underline must render");
                 if (Environment.GetEnvironmentVariable("ZJCS_OPENING_FULL_PLAYBACK") == "1")
                 {
                     float fullDeadline = Time.realtimeSinceStartup + 300f;
@@ -358,12 +399,12 @@ namespace Zjcs.Editor.CharacterCreation
             string directory = Environment.GetEnvironmentVariable("ZJCS_OPENING_CAPTURE_DIR");
             if (string.IsNullOrEmpty(directory)) yield break;
             Directory.CreateDirectory(directory);
-            yield return null;
             Canvas.ForceUpdateCanvases();
             string path = Path.Combine(directory, name + ".png");
-            ScreenCapture.CaptureScreenshot(path);
-            float deadline = Time.realtimeSinceStartup + 10f;
-            while (!File.Exists(path) && Time.realtimeSinceStartup < deadline) yield return null;
+            yield return new WaitForEndOfFrame();
+            Texture2D screenshot=ScreenCapture.CaptureScreenshotAsTexture();
+            File.WriteAllBytes(path,screenshot.EncodeToPNG());
+            UnityEngine.Object.Destroy(screenshot);
             Debug.Log("[Opening visual] snapshot " + path);
         }
 

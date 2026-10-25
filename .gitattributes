@@ -1,11 +1,30 @@
 # The asset lock hashes this layout's original LF bytes.
 asset-pack/layout.json text eol=lf
 # These runtime payloads are verified byte-for-byte against their source manifests.
-unity/Assets/StreamingAssets/Opening/Meshes/*.mesh.json text eol=lf
+unity/Assets/StreamingAssets/Opening/Meshes/*.mesh.json -text
 unity/Assets/StreamingAssets/Opening/ui/opening-ui.json text eol=lf
 unity/Assets/StreamingAssets/Opening/model-transforms.json text eol=lf
+unity/Assets/StreamingAssets/Opening/opening-stage.json text eol=lf
+unity/Assets/StreamingAssets/Opening/opening-story.json text eol=lf
 unity/Assets/Game/Resources/Opening/*.shadervariants text eol=lf
 scripts/prepare_character_creation_opening.py text eol=lf
 scripts/prepare_opening_model_transforms.py text eol=lf
+scripts/prepare_opening_fighters.py text eol=lf
+scripts/prepare_opening_damage_ui.py text eol=lf
+scripts/prepare_opening_unit_ui.py text eol=lf
+scripts/prepare_opening_skill_effects.py text eol=lf
+# Preserve generated native bindings and their recorded byte hashes.
+unity/Assets/Official/Opening/Fighters/** -text
+unity/Assets/Official/Opening/Damage/** -text
+unity/Assets/Game/Resources/Opening/OpeningBoss*.shader -text
+unity/Assets/Game/Resources/Opening/OpeningDamageBitmap.shader -text
+unity/Assets/StreamingAssets/Opening/skill-effects.json text eol=lf
+unity/Assets/StreamingAssets/Opening/unit-ui.json text eol=lf
+unity/Assets/StreamingAssets/Opening/damage-ui.json text eol=lf
+unity/Assets/Game/Resources/Combat/battle-status-icons.json text eol=lf
+unity/Assets/Game/Resources/Combat/unit-bars-runtime.json text eol=lf
+unity/Assets/Game/Resources/Combat/battle-custom-action-world-runtime.json text eol=lf
+unity/Assets/Official/Combat/HUD/Sprites/ImgLoad_HpBar-f915a5bb0c.png.meta -text
+unity/Assets/Official/Combat/HUD/Sprites/ImgBg_HpBar-8bcbf4b323.png.meta -text
 unity/Assets/StreamingAssets/CharacterCreation/creation-meshes.zip filter=lfs diff=lfs merge=lfs -text
 unity/Assets/StreamingAssets/Character/character-models.zip filter=lfs diff=lfs merge=lfs -text

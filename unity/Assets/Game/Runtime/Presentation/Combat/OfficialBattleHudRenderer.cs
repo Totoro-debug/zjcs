@@ -176,6 +176,11 @@ namespace Zjcs.Presentation.Combat
             rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
             rect.localScale = Vector(source.scale, Vector3.one);
             rect.localEulerAngles = new Vector3(0, 0, source.rotation);
+            // Both SafeArea components in the verified FightMainPanel prefab have zero
+            // padding and both adaptations enabled. Reuse the migrated official implementation.
+            if (HasScript(source, "SafeArea") && source.path.StartsWith("/FightMainPanel/",
+                StringComparison.Ordinal))
+                gameObject.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
             if (source.alpha < 0.999f)
                 gameObject.AddComponent<CanvasGroup>().alpha = Mathf.Clamp01(source.alpha);
 
@@ -326,7 +331,8 @@ namespace Zjcs.Presentation.Combat
         }
 
         private static Vector2 Vector(float[] v, Vector2 fallback) => v != null && v.Length >= 2 ? new Vector2(v[0], v[1]) : fallback;
-        private static Vector3 Vector(float[] v, Vector3 fallback) => v != null && v.Length >= 3 ? new Vector3(v[0], v[1], v[2]) : fallback;
+        private static Vector3 Vector(float[] v, Vector3 fallback) => v != null && v.Length >= 2
+            ? new Vector3(v[0], v[1], v.Length >= 3 ? v[2] : fallback.z) : fallback;
         private static Color ColorValue(float[] v, Color fallback) => v != null && v.Length >= 4 ? new Color(v[0], v[1], v[2], v[3]) : fallback;
         private static Vector4 Vector4Value(float[] v) => v != null && v.Length >= 4 ? new Vector4(v[0], v[1], v[2], v[3]) : Vector4.zero;
         private static bool Flag(bool[] values, int index) => values != null && values.Length > index && values[index];

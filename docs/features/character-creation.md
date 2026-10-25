@@ -86,6 +86,14 @@ Unity 2022.3 粒子参数适配：源 `boxThickness` 写入 `ShapeModule.boxThic
 
 Windows Player 的存档入口保留列表按钮原有 86 单位高度，关闭纵向布局组对按钮高度的自动控制，避免无布局首选高度时条目被压为零。通过新建测试槽实际进入开场场景，最终构建重启后已在实际画面确认存档条目显示；续玩点击、完整创角／初始武器／家园和地图全流程仍未验收。
 
+开场战斗的两名剧情 NPC 现在按固定 APK `854_156383` 的 FightNpc 4201／4202、外观组合 8401／8402 恢复身体与 `pWeapon_100_G_001`／`pWeapon_200_G_001` 武器皮肤；重建原控制器别名及录像技能 `MyPlayableOverrideAnimator` 引用的骨骼动画，使用已确认的 Spine 原生迁移方案。`prepare_opening_fighters.py` 提取原贴图、骨骼、蒙皮与动作；`OpeningFighterAssetTools` 显式绑定已批准的 Spine shader，避免同名 Android 占位 shader 被动态查找选中。角色名字、双方血条的尺寸、位置、分阵营颜色与九宫边框沿官方 prefab 恢复，血量消费录像内真实伤害与治疗。
+
+`prepare_opening_unit_ui.py` 恢复 `GamePlayManagerConfig.FactionEffectDatas`、NPC／怪物头像和 `GameRoundUI` 参数。行动条在战前显示全部 18 个头像，按录像 NextTime、官方最小间距及 0.2 秒移动参数排列，当前行动者放大，并播放原受击和死亡动画，死亡头像保持 0.5 秒后退出。`prepare_opening_damage_ui.py` 恢复五套原位图字体、字距／UV、元素颜色、普通／暴击 prefab、原曲线、暴击底线与 2×2 序列光圈；`ElementConfrontationUI.Reset` 对内容的隐藏不会被父节点动画重新启用。
+
+Boss 3803 按官方模型 prefab 恢复 107 个节点、47 个粒子系统、AttachmentFollower、原网格复制与描边、两组模板缓冲遮罩及星空纹理。Windows shader 由官方 `Spine/Default-Stencil`、描边和 `UI/GameDamage` 编译程序适配；保留原深度间隔、模板值与混合参数，正确读取 Unity 的 0／1 开关及常量粒子颜色，修复白色翼形遮挡。原版保留的细描边仍存在。开场数据保持固定版，与本页创角 `871_156598` 资源分开。输入对象、官方类、输出字节及 Unity 绑定哈希见 `assets/reference/character-creation/opening-source-manifest.json` 与 `opening-skill-effects-source-manifest.json`；47 个运行时网格按原清单字节以二进制 Git 属性保存，避免换行转换导致离线加载哈希失败。
+
+本次已在 Unity 2022.3.57f1c2 的可见 Play Mode 自然播放完整 14 回合录像，核对 18 个单位／血条／头像、两组星空遮罩、NPC 实际网格随动作变化、165 条飘字、44 次动作、15 次死亡保持及原音效；已查看运行截图中的武器、血条、星空、元素颜色与暴击底线。Windows 成品发布与真实输入复验尚在进行，不能用此 Play Mode 结论替代。
+
 ## 自定义实现
 
 存档槽、创角草稿和正式角色资料由 [CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs)、[CharacterCreationOfflineService](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs)、[CharacterCreationDraftStore](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 与 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 接入本地 JSON 保存。各槽独立保存草稿；提交角色时写入选中槽，草稿损坏可保留原文件副本后重新开始，不覆盖正式角色数据。写入失败会阻止页面切换并显示提示。
@@ -100,7 +108,7 @@ Windows Player 的存档入口保留列表按钮原有 86 单位高度，关闭�
 
 开场播放由 [OpeningStoryPlayer](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningStoryPlayer.cs) 按官方节点语义执行：`StartStoryNode` 不阻断；`WaitForSecondsNode` 在 `NeedMask` 时先挂全屏透明遮罩再等待，遮罩由后续对话或开面板节点的 `Reset` 关闭；`DialogNode` 打开官方 `OptionTalkDialog` 层级，按 `dialog.csv` 的 `StoryName+DialogId`、`Order` 顺序显示对白与角色名，Windows 单机按用户要求逐句点击推进；保留源 `AutoPlay` 数据，但不启用空闲自动播放（官方实现先等待 120 秒，再每 2 秒推进）；`ShowBlackMaskNode`／`CloseBlackMaskNode` 为硬切纯黑遮罩；`HideAllUINode`／`ShowAllUINode` 在节点结束时生效；`OpenShowPanelNode`／`CloseWindowNode` 打开和关闭 `Story/ExitFightTransitionPanel`；`LeaveStoryFightNode` 关闭战斗场景；`PlayBlackScreenStoryNode` 打开 `Global/FirstStoryPanel` 并在 `mIsKeepBlackScreen` 时保持黑幕；`PlayEnterGameTransitionNode` 打开开场转场面板；`PlayPlayableNode` 的两个 GUID（`e52fba61…`、`32bc3f4c…`）不在固定版五包 AssetTable 内，按官方空句柄行为跳过并记录。`HomePlayerPlayActionNode` 已连接 `StoryStun`：官方 `player.json` 的 `StoryWakeUp` 图将角色移到 `player_wake_point`、应用 `player_stun`，再以非循环方式播放 3 秒 `home/wakeUp_01`。离线实现用官方 Home 场景、床铺状态、玩家变换与已保存外观创建角色；固定来源中未找到锚点和该动画的可播放网格帧，所以以 3 秒起身摆动近似，不能视为原动画还原。`SafeEnd` 后其余仅展示类节点仍按 `ClientRunNode.InternalSkip` 语义跳过，仅保留关闭、离开和 UI 环境节点。
 
-录像回放由 [OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 驱动：先 GZip 解压并按 `GameServer`→`Console` 之外的原始 JSON 解析 `FightProcessRecordData`（[OpeningRecord](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningData.cs)），生成实体与回合步骤；回放按官方 `NormalPlaybackStrategy` 的时钟模型逐回合、逐步骤等待 `step.Time`（相对回合起点），并按官方 `CreatePlayerRecordFightSpeed = 1.5` 折算实际等待；`GAME_ENTITY_ADD`／`GAME_ENTITY_REMOVE` 增删单位，`Fight*Round*Modification` 触发当前行动者动作，`GAME_FASTFORWARD` 走跳跃到结尾（应用录像内快照），`GAME_PLAY_STATUS_CHANGE` 与 `GAME_MODIFACTION_RUN_BATTLE_END`／`_RUN_END` 记录状态。快进按钮按官方 `IsShowRecordFightSkipButton || Gm` 决定是否请求，延迟 `mShowSkipBtnTime = 500` 毫秒显示，点击后只推进到结尾而非加速；实装 `IsShowRecordFightSkipButton = false`，正常流程不显示按钮。
+录像回放由 [OpeningFightPlayback](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningFightPlayback.cs) 驱动：先 GZip 解压并按 `GameServer`→`Console` 之外的原始 JSON 解析 `FightProcessRecordData`（[OpeningRecord](../../unity/Assets/Game/Runtime/Presentation/Opening/OpeningData.cs)），生成实体与回合步骤；回放按官方 `NormalPlaybackStrategy` 的时钟模型逐回合、逐步骤等待 `step.Time`（相对回合起点），并按官方 `CreatePlayerRecordFightSpeed = 1.5` 折算实际等待；`GAME_ENTITY_ADD`／`GAME_ENTITY_REMOVE` 增删单位，`Fight*Round*Modification` 更新行动头像，单位动作消费录像 ActionComponent 与官方 playable，`GAME_FASTFORWARD` 走跳跃到结尾（应用录像内快照），`GAME_PLAY_STATUS_CHANGE` 与 `GAME_MODIFACTION_RUN_BATTLE_END`／`_RUN_END` 记录状态。快进按钮按官方 `IsShowRecordFightSkipButton || Gm` 决定是否请求，延迟 `mShowSkipBtnTime = 500` 毫秒显示，点击后只推进到结尾而非加速；实装 `IsShowRecordFightSkipButton = false`，正常流程不显示按钮。
 
 事件顺序按官方控制：`BeforeFight` 播放完成后才开始录像，录像结束触发 `AfterFight`，`AfterFight` 内 `LeaveStoryFightNode` 发起战斗到主场景切换；[CharacterOpeningFlow](../../unity/Assets/Game/Runtime/Presentation/Opening/CharacterOpeningFlow.cs) 等待该切换最多 5 秒，超时记录错误后仍打开创角面板，并使同一槽位只打开一次创角、只记录一次已播放。加载失败（缺文件、解析异常）按官方“回放返回 false”分支记录错误后直接打开创角。创角成功后的 `FirstStory` 先关闭创角面板，再以黑幕播放剧情，`FirstStory` 结束（或本轮无剧情可播）后进入本地初始武器选择，初始武器仍按已确认的离线按钮承接官方 `ChooseInitialWeaponNode` 的 `200`／`201` 数值。
 
@@ -113,11 +121,9 @@ Windows Player 的存档入口保留列表按钮原有 86 单位高度，关闭�
 ### 开场战斗表现资源
 
 1. **战场地面溶解材质。** 开场粒子事件目录和 295 种粒子材质已接入 Windows shader 适配，独立的 `Sprites/Ground-Dissolve` shader 仍只有固定包中的 Android 编译程序；`OpeningBattlefield` 也尚未把地面材质、`GroundDissolve` 曲线与 `OpeningGroundEffectRuntime` 绑定。该项待用户确认 Windows 2D HLSL 适配后实现并验证。
-2. **其余怪物 Spine 图集页。** 开场 5 只怪物与 2 名剧情角色的 9 张图集页已补齐并绑定；1678 个战斗骨骼引用的 2,348 个页名中仍有 2,301 张（约 98%）未导出，其他玩法遇到未补页的模型仍会跳过渲染。
+2. **其余怪物 Spine 图集页。** 开场 5 只怪物与 2 名剧情角色的 11 张图集页已补齐并绑定；1678 个战斗骨骼引用的 2,348 个页名中仍有 2,301 张（约 98%）未导出，其他玩法遇到未补页的模型仍会跳过渲染。
 3. **玩家外观单位。** 录像剧情角色按官方 NPC 骨骼渲染；自建角色进入战斗时的官方复合外观、换装与战斗动作仍未接入，模型目录目前只覆盖怪物与 NPC。
-4. **状态动作与状态图标。** 回合文本、行动时间轴、伤害飘字、四类明确动作（Skill／AirCombo／Move／Die）与死亡延迟销毁已接；完整回放实测时间轴 18 项、飘字 165 条、动作 21 次、死亡保持 15 次。仍缺：官方飘字 AnimationClip、`Status`／`Blinding`／`SuperArmor`／`Drag`／`None` 的动作语义未确认、`FightStatusComponent` 无状态 ID 因而状态图标无法绑定。
-
-开场怪物的缩放、落脚位置和直通透明已恢复；Boss 3803 的星空噪声／遮罩仍由共用 Spine 材质承接，尚未恢复原自定义 shader 的完整表现，不能据此认定怪物材质与原版完全一致。
+4. **其余状态语义。** 开场两名 NPC 的武器、控制器动作和技能替换动画、单位血条、行动头像与原生伤害飘字已恢复。`Blinding`／`SuperArmor`／`Drag` 等其余动作、完整状态图标与 Boss 阶段控制仍须继续核对，不将本次开场表现修复扩大为通用战斗全部表现完成。
 
 ### 剧情表现资源
 

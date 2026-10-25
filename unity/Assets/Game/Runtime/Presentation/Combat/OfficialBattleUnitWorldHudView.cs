@@ -236,6 +236,9 @@ namespace Zjcs.Presentation.Combat
                 image = go.AddComponent<Image>();
             }
             image.sprite = sprite;
+            // SpriteRenderer.size is expressed in world units; UGUI's sliced
+            // borders otherwise retain their pixel size and consume the bar.
+            image.pixelsPerUnitMultiplier = HudPixelsPerWorldUnit;
             image.raycastTarget = false;
             image.color = PartColor(part);
             image.type = part.fillMode < 0 || part.fillMode <= 3
@@ -265,7 +268,7 @@ namespace Zjcs.Presentation.Combat
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = Vector2.zero;
-            if (layout == null)
+            if (layout == null || layout.position == null || layout.scale == null || layout.cellSize == null)
             {
                 go.SetActive(false);
                 return rect;

@@ -14,10 +14,200 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - classId: 8401
-    skeleton: {fileID: 11400000, guid: 03cfea9aee099194aafc44673934e2cc, type: 2}
+    skeleton: {fileID: 11400000, guid: 3348d6ec776639a4c82998cdb0dc2609, type: 2}
     skin: body_8401
     scale: 0.01
+    skins:
+    - body_8401
+    - pWeapon_100_G_001
+    animations:
+    - name: 100/skill_05
+      spineName: 100/skill_05
+    - name: 100/skill_06
+      spineName: 100/skill_06
+    - name: 100/skill_20
+      spineName: 100/skill_20
+    - name: 100/skill_27
+      spineName: 100/skill_27
+    - name: 100/skill_41
+      spineName: 100/skill_41
+    - name: Damage
+      spineName: 100/hit_01
+    - name: Die
+      spineName: 100/die_01
+    - name: Floating
+      spineName: 100/floating_01
+    - name: Idle
+      spineName: 100/idle_01
+    - name: Knock_back
+      spineName: 100/hit_02
+    - name: OpenChest
+      spineName: map/openTheChest_03
+    - name: Run
+      spineName: 100/run_01
+    - name: Run_03
+      spineName: 100/run_03
+    - name: Skill
+      spineName: 100/skill_08
+    - name: attack_01
+      spineName: 100/skill_08
+    - name: block_01
+      spineName: 100/block_01
+    - name: damage
+      spineName: 100/hit_01
+    - name: die
+      spineName: 100/die_01
+    - name: die_01
+      spineName: 100/die_01
+    - name: die_02
+      spineName: 100/die_02
+    - name: down
+      spineName: 100/down_01
+    - name: down_01
+      spineName: 100/down_01
+    - name: floating
+      spineName: 100/floating_01
+    - name: floating_01
+      spineName: 100/floating_01
+    - name: hit_01
+      spineName: 100/hit_01
+    - name: hit_02
+      spineName: 100/hit_02
+    - name: houtui
+      spineName: 100/run_02
+    - name: idle
+      spineName: 100/idle_01
+    - name: idle_01
+      spineName: 100/idle_01
+    - name: immediately_die
+      spineName: 100/die_02
+    - name: knock_back
+      spineName: 100/hit_02
+    - name: openTheChest_03
+      spineName: map/openTheChest_03
+    - name: openchest
+      spineName: map/openTheChest_03
+    - name: raise
+      spineName: 100/raise_01
+    - name: raise_01
+      spineName: 100/raise_01
+    - name: run
+      spineName: 100/run_01
+    - name: run_01
+      spineName: 100/run_01
+    - name: run_02
+      spineName: 100/run_02
+    - name: run_03
+      spineName: 100/run_03
+    - name: skill
+      spineName: 100/skill_08
+    - name: skill_01
+      spineName: 100/skill_08
+    - name: skill_05
+      spineName: 100/skill_05
+    - name: skill_06
+      spineName: 100/skill_06
+    - name: skill_08
+      spineName: 100/skill_08
+    - name: skill_20
+      spineName: 100/skill_20
+    - name: skill_27
+      spineName: 100/skill_27
+    - name: skill_41
+      spineName: 100/skill_41
   - classId: 8402
-    skeleton: {fileID: 11400000, guid: a2a133236e5060d418ada1e6b488b6fc, type: 2}
+    skeleton: {fileID: 11400000, guid: b561f4fdb22c7034dbec520e27c02c91, type: 2}
     skin: body_8402
     scale: 0.01
+    skins:
+    - body_8402
+    - pWeapon_200_G_001
+    animations:
+    - name: 200/skill_11
+      spineName: 200/skill_11
+    - name: 200/skill_12
+      spineName: 200/skill_12
+    - name: 200/skill_13
+      spineName: 200/skill_13
+    - name: 200/skill_16
+      spineName: 200/skill_16
+    - name: Damage
+      spineName: 200/hit_01
+    - name: Die
+      spineName: 200/die_01
+    - name: Floating
+      spineName: 200/floating_01
+    - name: Idle
+      spineName: 200/idle_01
+    - name: Knock_back
+      spineName: 200/hit_02
+    - name: OpenChest
+      spineName: map/openTheChest_03
+    - name: Run
+      spineName: 200/run_01
+    - name: Skill
+      spineName: 200/skill_15
+    - name: attack_01
+      spineName: 200/skill_15
+    - name: block_01
+      spineName: 200/block_01
+    - name: damage
+      spineName: 200/hit_01
+    - name: die
+      spineName: 200/die_01
+    - name: die_01
+      spineName: 200/die_01
+    - name: die_02
+      spineName: 200/die_02
+    - name: down
+      spineName: 200/down_01
+    - name: down_01
+      spineName: 200/down_01
+    - name: floating
+      spineName: 200/floating_01
+    - name: floating_01
+      spineName: 200/floating_01
+    - name: hit_01
+      spineName: 200/hit_01
+    - name: hit_02
+      spineName: 200/hit_02
+    - name: houtui
+      spineName: 200/run_02
+    - name: idle
+      spineName: 200/idle_01
+    - name: idle_01
+      spineName: 200/idle_01
+    - name: immediately_die
+      spineName: 200/die_02
+    - name: knock_back
+      spineName: 200/hit_02
+    - name: openTheChest_03
+      spineName: map/openTheChest_03
+    - name: openchest
+      spineName: map/openTheChest_03
+    - name: raise
+      spineName: 200/raise_01
+    - name: raise_01
+      spineName: 200/raise_01
+    - name: run
+      spineName: 200/run_01
+    - name: run_01
+      spineName: 200/run_01
+    - name: run_02
+      spineName: 200/run_02
+    - name: run_03
+      spineName: 200/run_03
+    - name: skill
+      spineName: 200/skill_15
+    - name: skill_01
+      spineName: 200/skill_15
+    - name: skill_11
+      spineName: 200/skill_11
+    - name: skill_12
+      spineName: 200/skill_12
+    - name: skill_13
+      spineName: 200/skill_13
+    - name: skill_15
+      spineName: 200/skill_15
+    - name: skill_16
+      spineName: 200/skill_16

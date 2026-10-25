@@ -390,6 +390,7 @@ namespace Zjcs.Presentation.Opening
 
     public sealed class OpeningRecordEntity
     {
+        public readonly Dictionary<int, float> RoundTimes = new Dictionary<int, float>();
         public int ClassId;
         public int EntityId;
         public string CharacterType = string.Empty;
@@ -429,6 +430,14 @@ namespace Zjcs.Presentation.Opening
                 entity.Components.Add(name);
                 switch (name)
                 {
+                    case "FightRoundDriverComponent":
+                        foreach (object value in OpeningJson.Array(component["DataList"], "round data"))
+                        {
+                            var data=OpeningJson.Object(value,"round item");
+                            var roundId=OpeningJson.Object(data["EntityId"],"round entity");
+                            entity.RoundTimes[OpeningJson.Int(roundId,"EntityId")]=(float)OpeningJson.Number(data,"NextTime");
+                        }
+                        break;
                     case "FightRoleCharacterComponent":
                         entity.CharacterType = OpeningJson.String(component, "CharacterType");
                         break;

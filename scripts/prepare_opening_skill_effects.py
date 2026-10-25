@@ -470,8 +470,9 @@ def main() -> int:
                         matching.append(candidate)
             except OSError:
                 continue
-        if len(matching) > 1:
-            raise ValueError("Follow-spine texture has ambiguous verified exports: " + texture.m_Name)
+        # Different PNG encoders may have exported the same verified native pixels.
+        # Select deterministically only after the full dimensions/RGBA comparison above.
+        matching.sort()
         if matching:
             sprite_source = matching[0]
         else:
@@ -660,6 +661,10 @@ def main() -> int:
             "render_mode": int(renderer.m_RenderMode), "alignment": int(renderer.m_RenderAlignment),
             "sorting_layer": int(renderer.m_SortingLayer), "sorting_order": int(renderer.m_SortingOrder),
             "renderer_enabled": bool(renderer.m_Enabled), "material": material,
+            "renderer": {key: value for key, value in renderer.object_reader.read_typetree().items()
+                if key in ("m_SortMode", "m_MinParticleSize", "m_MaxParticleSize", "m_CameraVelocityScale",
+                    "m_VelocityScale", "m_LengthScale", "m_SortingFudge", "m_NormalDirection", "m_Pivot",
+                    "m_Flip", "m_AllowRoll", "m_FreeformStretching", "m_RotateWithStretchDirection")},
             "textureResources": material["textureResources"],
         }
         if shape.get("m_Mesh", {}).get("m_PathID", 0):
@@ -698,6 +703,7 @@ def main() -> int:
             children.setdefault(father_id, []).append(transform_object)
 
         nodes = []
+        node_ids = []
 
         def visit(game_object, transform_object, parent_index: int, path: str) -> None:
             transform = transform_object.read()
@@ -712,11 +718,33 @@ def main() -> int:
                     "particles": []}
             node_index = len(nodes)
             nodes.append(node)
+            node_ids.append(int(game_object.object_reader.path_id))
             particle_readers = []
             for component in game_object.m_Component:
                 component_object = component.component.deref()
                 if component_object.type.name == "ParticleSystem":
                     particle_readers.append(component_object)
+                elif source_path == "model:3803" and component_object.type.name == "MeshRenderer":
+                    renderer = component_object.read()
+                    node["rendererOrder"] = int(renderer.m_SortingOrder)
+                    node["rendererLayer"] = int(renderer.m_SortingLayer)
+                elif source_path == "model:3803" and component_object.type.name == "MonoBehaviour" and component_object.read(check_read=False).m_Script.read().m_ClassName == "SkeletonMecanim":
+                    from official_battle_spine_component import read_component
+                    node["skeletonRenderer"] = read_component(component_object.get_raw_data(), "SkeletonMecanim")
+                elif component_object.type.name == "MonoBehaviour" and component_object.read(check_read=False).m_Script.read().m_ClassName == "AttachmentFollower":
+                    from official_unity_schema import ScriptSchemas
+                    follower = ScriptSchemas().read(component_object)
+                    node["attachmentFollower"] = {key: value for key, value in follower.items()
+                        if key in ("BoneName", "SlotName", "AttachmentName", "Gos", "FollowZSpacing", "ZFront",
+                                   "FollowLocalScale", "FollowRotation", "FollowSkeletonTransformFlipX")}
+                elif source_path == "model:3803" and component_object.type.name == "MonoBehaviour" and component_object.read(check_read=False).m_Script.read().m_ClassName == "CustomRenderExistingMesh":
+                    from official_unity_schema import ScriptSchemas
+                    from UnityPy.classes.PPtr import PPtr
+                    copy = ScriptSchemas().read(component_object)
+                    node["meshCopy"] = {"enabled": bool(copy["m_Enabled"]), "materials": [
+                        {"original": PPtr(**pair["Key"], assetsfile=component_object.assets_file).read().m_Name,
+                         "replacement": model_material(PPtr(**pair["Value"], assetsfile=component_object.assets_file).deref())}
+                        for pair in copy["ReplacementMaterialDict"]["mSerializeBuffer"]]}
             for particle_reader in particle_readers:
                 node["particles"].append(convert_particle_object(particle_reader, game_object.m_Name,
                                                                   source_path_for_node))
@@ -726,9 +754,29 @@ def main() -> int:
                 visit(child_game_object, child_transform_object, node_index, source_path_for_node)
 
         visit(root_reader, root_transform, -1, "")
+        for node in nodes:
+            follower = node.get("attachmentFollower")
+            if follower:
+                follower["Gos"] = [node_ids.index(int(pointer["m_PathID"])) for pointer in follower["Gos"]]
         if sum(len(node["particles"]) for node in nodes) == 0:
             raise ValueError("Follow-spine prefab has no particle systems: " + bundle + "/" + str(root_id))
         return {"source": load_apk().provenance(root_object), "rootName": root_reader.m_Name, "nodes": nodes}
+
+    def model_material(obj):
+        material = obj.read()
+        saved = material.m_SavedProperties
+        textures = {}
+        for name, env in saved.m_TexEnvs:
+            if env.m_Texture.path_id:
+                uri = texture_uri_for(env.m_Texture)
+                textures[name] = {"file": uri, "resource": register_texture(uri),
+                    "scale": [env.m_Scale.x, env.m_Scale.y], "offset": [env.m_Offset.x, env.m_Offset.y]}
+        shader = material.m_Shader.deref()
+        return {"name": material.m_Name, "source": load_apk().provenance(obj),
+            "shader": shader.read().m_ParsedForm.m_Name, "shader_source": load_apk().provenance(shader),
+            "textures": textures, "keywords": list(material.m_ValidKeywords or []),
+            "floats": dict(saved.m_Floats),
+            "colors": {name: [getattr(value, c) for c in "rgba"] for name, value in saved.m_Colors}}
 
     def read_material_shader_data(material: dict) -> dict:
         source = material.get("source") or {}
@@ -1135,6 +1183,15 @@ def main() -> int:
             output_event["source_event"] = {k: v for k, v in event.items() if k != "file"}
             output_event["particles"] = particle_records
             output_effects.append(output_event)
+    boss_bundle = "defaultpackage_assets_prefabs_ecentity_fight_fightmonster_3803.bundle"
+    boss_root = next(ptr.deref() for path, ptr in load_apk().container(boss_bundle)
+                     if ptr.type.name == "GameObject" and path.endswith("/3803.prefab"))
+    boss = export_follow_prefab(boss_bundle, boss_root.path_id, "model:3803")
+    boss_renderer = next(obj.read() for obj in load_apk().objects(boss_bundle)
+                         if obj.type.name == "MeshRenderer" and obj.read().m_GameObject.read().m_Name == "MonsterModel_3803")
+    boss["materials"] = [model_material(pointer.deref()) for pointer in boss_renderer.m_Materials]
+    effect_inputs["model:3803"] = {"source": boss["source"],
+        "systems": [particle["source"] for node in boss["nodes"] for particle in node["particles"]]}
     output = {
         "manifest": VERSION,
         "record_sha256": sha(RECORD.read_bytes()),
@@ -1144,6 +1201,7 @@ def main() -> int:
         "textures": output_textures,
         "sounds": output_sounds,
         "meshes": output_meshes,
+        "models": {"3803": boss},
     }
     data = (json.dumps(output, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
     TARGET.parent.mkdir(parents=True, exist_ok=True)
