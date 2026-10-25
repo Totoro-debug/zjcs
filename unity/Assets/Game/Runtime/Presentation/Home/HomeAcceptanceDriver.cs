@@ -65,7 +65,7 @@ namespace Zjcs.Presentation.Home
             if (Environment.GetCommandLineArgs().Contains("-homeAcceptanceRealInput"))
             {
                 bool inputPassed = false;
-                yield return VerifyRealInput(runtime, value => inputPassed = value);
+                yield return VerifyRealShopInput(runtime, value => inputPassed = value);
                 ok &= inputPassed;
             }
 
@@ -747,7 +747,26 @@ namespace Zjcs.Presentation.Home
                     .First(value => value.SlotIndex == offer.SlotIndex);
                 Assert(saved.Goods.goods_id == offer.Goods.goods_id && saved.BoughtCount == 1,
                     "grocery purchase and random shelf survive profile reload");
-                log.Add("PASS grocery: 14 grocery goods, one purchase and reloaded shelf state");
+                int currencyId;
+                int refreshCost;
+                int remainingRefreshes;
+                Assert(shopService.TryGetGroceryRefreshCost(out currencyId, out refreshCost,
+                    out remainingRefreshes) && remainingRefreshes > 0, "grocery refresh is available");
+                long goldBeforeRefresh = runtime.ItemCount(currencyId);
+                Button refresh = GameObject.Find("HomeShopPanel/BgPanel1/Content/MiddleGo/ShopContent/TopGo/RefreshGo/RefreshInfoGo/RefreshBtn/CommonBtn_CostItem")
+                    ?.GetComponent<Button>();
+                Assert(refresh != null && refresh.interactable, "official grocery refresh button is enabled");
+                refresh.onClick.Invoke();
+                Assert(runtime.Profile.Save.Player.HomeShop.GroceryRefreshedCount == 1
+                    && runtime.ItemCount(currencyId) == goldBeforeRefresh - refreshCost,
+                    "grocery refresh spends its configured cost and advances the refresh count");
+                runtime.Profile.Reload();
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> refreshedShelf =
+                    shopService.GetGroceryShelf();
+                Assert(refreshedShelf.Count == grocery.Count
+                    && runtime.Profile.Save.Player.HomeShop.GroceryRefreshedCount == 1,
+                    "refreshed grocery shelf and refresh count survive profile reload");
+                log.Add("PASS grocery: displayed goods, purchase, refresh cost and shelf state survive reload");
             }, "open and buy grocery");
             yield return null;
             yield return null;
@@ -757,7 +776,18 @@ namespace Zjcs.Presentation.Home
                 long matureCreatedAt = System.DateTimeOffset.UtcNow.AddDays(-4).ToUnixTimeSeconds();
                 var ageResult = runtime.Profile.ApplyInventoryTransaction(
                     "acceptance:treasury-registered-days",
-                    save => save.CreatedAtUnixSeconds = matureCreatedAt);
+                    save =>
+                    {
+                        save.CreatedAtUnixSeconds = matureCreatedAt;
+                        Zjcs.Offline.Progression.OfflineItemStack stars = save.Player.Inventory
+                            .FirstOrDefault(value => value.ItemId == 2);
+                        if (stars == null)
+                        {
+                            stars = new Zjcs.Offline.Progression.OfflineItemStack { ItemId = 2 };
+                            save.Player.Inventory.Add(stars);
+                        }
+                        stars.Count = Math.Max(stars.Count, 10000000);
+                    });
                 Assert(ageResult.Status == Zjcs.Offline.Progression.ProgressionResultStatus.Applied,
                     "matured local account state persisted: " + ageResult.Status);
                 IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> matureTreasury =
@@ -772,8 +802,38 @@ namespace Zjcs.Presentation.Home
                 "the second official shop tab opens the treasury"), "open treasury");
             yield return null;
             yield return Capture("home-shop-treasury.png");
-            ok &= Ui(() => Assert(shop != null && shop.SelectPage(2) && shop.CurrentPageIndex == 2,
-                "the gift tab opens local rewards"), "open gifts");
+            ok &= Ui(() =>
+            {
+                int targetScore = shopService.GetGiftEntries(1)[0].TargetScore;
+                var scoreResult = runtime.Profile.ApplyInventoryTransaction("acceptance:home-shop-gift-score",
+                    save => save.Player.HomeShop.ShopScore = Math.Max(save.Player.HomeShop.ShopScore, targetScore));
+                Assert(scoreResult.Status == Zjcs.Offline.Progression.ProgressionResultStatus.Applied
+                    || scoreResult.Status == Zjcs.Offline.Progression.ProgressionResultStatus.Unchanged,
+                    "gift claim fixture score persisted: " + scoreResult.Status);
+                runtime.Profile.Reload();
+                Assert(shop != null && shop.SelectPage(2) && shop.CurrentPageIndex == 2,
+                    "the gift tab opens local rewards");
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopGiftEntry> entries = shopService.GetGiftEntries(5);
+                Zjcs.Offline.Progression.OfflineHomeShopGiftEntry claimable = entries.FirstOrDefault(value => value.CanClaim);
+                Assert(claimable != null, "the first official score milestone is claimable");
+                GameObject shopRoot = GameObject.Find("HomeShopPanel");
+                Button claim = shopRoot == null ? null : shopRoot.GetComponentsInChildren<Button>(true).FirstOrDefault(value =>
+                    value.name == "ReceiveBtn" && value.isActiveAndEnabled && value.interactable);
+                Assert(claim != null, "the official gift claim button is enabled");
+                long rewardBefore = runtime.ItemCount(claimable.Milestone.rewards[0].item_id);
+                claim.onClick.Invoke();
+                Assert(runtime.ItemCount(claimable.Milestone.rewards[0].item_id)
+                    >= rewardBefore + claimable.Milestone.rewards[0].count,
+                    "gift claim grants its configured reward");
+                runtime.Profile.Reload();
+                Assert(runtime.Profile.Save.Player.HomeShop.ClaimedGiftAchievementIds.Contains(claimable.AchievementId)
+                    && !shopService.GetGiftEntries(5).Any(value => value.AchievementId == claimable.AchievementId),
+                    "gift claim persists and removes the milestone from the unclaimed list");
+                Assert(shopService.ClaimGift(claimable.AchievementId, "acceptance:home-shop-gift-duplicate").Status
+                    == Zjcs.Offline.Progression.HomeShopPurchaseStatus.Duplicate,
+                    "a reloaded gift claim cannot be granted twice");
+                log.Add("PASS gifts: claim reward and reloaded claim state");
+            }, "claim gift reward");
             yield return null;
             yield return Capture("home-shop-gifts.png");
             shop?.CloseScreen();
@@ -783,6 +843,34 @@ namespace Zjcs.Presentation.Home
         }
 
         private bool Ui(Action action, string name)
+            ok &= Ui(() =>
+            {
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> shelf = shopService.GetTreasuryShelf();
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem purchase = shelf.FirstOrDefault(value =>
+                    value.Goods.currency_id == 2 && value.Goods.original_price > 0
+                    && value.RemainingInventory != 0
+                    && (long)(value.Goods.original_price * value.PriceOff) > 0);
+                Assert(purchase != null, "treasury has an available paid star-currency item");
+                GameObject row = GameObject.Find("ShopGoodsItem_" + purchase.Goods.goods_id);
+                Button buy = row == null ? null : row.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.gameObject.name == "BuyBtn");
+                Assert(buy != null && buy.interactable, "treasury item purchase button is enabled");
+                long starsBefore = runtime.ItemCount(2);
+                long itemBefore = runtime.ItemCount(purchase.Goods.item_id);
+                long scoreBefore = runtime.Profile.Save.Player.HomeShop.ShopScore;
+                buy.onClick.Invoke();
+                Assert(runtime.ItemCount(2) < starsBefore
+                    && runtime.ItemCount(purchase.Goods.item_id) >= itemBefore + purchase.Goods.item_count
+                    && runtime.Profile.Save.Player.HomeShop.ShopScore > scoreBefore,
+                    "treasury purchase spends stars, grants the item and increases gift score");
+                runtime.Profile.Reload();
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem savedPurchase = shopService.GetTreasuryShelf()
+                    .First(value => value.SlotIndex == purchase.SlotIndex);
+                Assert(savedPurchase.Goods.goods_id == purchase.Goods.goods_id && savedPurchase.BoughtCount == 1,
+                    "treasury purchase and shelf stock survive profile reload");
+                log.Add("PASS treasury: purchase settlement and reloaded stock");
+            }, "buy treasury item");
+            yield return null;
         {
             try
             {
@@ -796,55 +884,95 @@ namespace Zjcs.Presentation.Home
             }
         }
 
-        private IEnumerator VerifyRealInput(HomeFeatureRuntime runtime, Action<bool> completed)
+        private IEnumerator VerifyRealShopInput(HomeFeatureRuntime runtime, Action<bool> completed)
         {
-            HomeUiRenderer home = PrivateField<HomeUiRenderer>(runtime.Hud, "homeRenderer");
-            Button avatar = home.Find<Button>("/PublicPlayerIconHome");
-            if (avatar == null)
+            MethodInfo openShop = typeof(HomeFeatureRuntime).GetMethod("OpenHomeShop",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (openShop == null)
             {
-                log.Add("FAIL real-input: official player icon button is missing");
+                log.Add("FAIL real-input: the HomeShop route is missing");
+                completed(false);
+                yield break;
+            }
+            var accountAgeResult = runtime.Profile.ApplyInventoryTransaction("acceptance:treasury-account-age",
+                save => save.CreatedAtUnixSeconds = DateTimeOffset.UtcNow.AddDays(-4).ToUnixTimeSeconds());
+            if (accountAgeResult.Status != Zjcs.Offline.Progression.ProgressionResultStatus.Applied)
+            {
+                log.Add("FAIL real-input: mature account fixture was rejected: " + accountAgeResult.Status);
+                completed(false);
+                yield break;
+            }
+            openShop.Invoke(runtime, null);
+            HomeShopScreenController shop = UnityEngine.Object.FindObjectOfType<HomeShopScreenController>();
+            if (shop == null || !shop.IsOpen)
+            {
+                log.Add("FAIL real-input: the grocery page did not open");
                 completed(false);
                 yield break;
             }
 
-            Vector2 target = RectTransformUtility.WorldToScreenPoint(null, avatar.transform.position);
+            HomeUiRenderer renderer = PrivateField<HomeUiRenderer>(shop, "panelRenderer");
+            const string treasuryTabPath = "/HomeShopPanel/BgPanel1/Content/BottomGo/TabBottom/TabGroup/HomeShopPanelTabBottomBtn (1)";
+            Toggle treasuryTab = renderer == null ? null : renderer.Find<Toggle>(treasuryTabPath);
+            if (treasuryTab == null || !treasuryTab.interactable)
+            {
+                log.Add("FAIL real-input: the official treasury tab is unavailable");
+                completed(false);
+                yield break;
+            }
+
+            Vector2 target = RectTransformUtility.WorldToScreenPoint(null, treasuryTab.transform.position);
             Vector2 topLeftTarget = new Vector2(target.x, Screen.height - target.y);
             string marker = Path.Combine(Output, "real-input-waiting.txt");
-            File.WriteAllText(marker, "Click the top-left player icon at Game View pixel "
-                + topLeftTarget + " (top-left origin), then press Escape.");
-            Debug.Log("[HomeAcceptance] waiting for real mouse click at Game View pixel " + topLeftTarget);
-            float deadline = Time.realtimeSinceStartup + 60f;
-            while (!runtime.Hud.CharacterPageOpen && Time.realtimeSinceStartup < deadline)
+            File.WriteAllText(marker, "Click the official treasury tab at Game View pixel "
+                + topLeftTarget + " (top-left origin).");
+            Debug.Log("[HomeAcceptance] waiting for real mouse click on treasury tab at Game View pixel " + topLeftTarget);
+            float deadline = Time.realtimeSinceStartup + 180f;
+            while (shop.CurrentPageIndex != 1 && Time.realtimeSinceStartup < deadline)
                 yield return null;
-            bool clicked = runtime.Hud.CharacterPageOpen;
-            if (!clicked)
+            if (shop.CurrentPageIndex != 1)
+            yield return null;
+            yield return null;
             {
-                log.Add("FAIL real-input: mouse click did not open the character page");
+                log.Add("FAIL real-input: mouse click did not open the treasury page");
                 completed(false);
                 yield break;
             }
 
             yield return null;
             yield return new WaitForEndOfFrame();
-            string screenshot = Path.Combine(Output, "home-avatar-input.png");
+            string screenshot = Path.Combine(Output, "home-shop-real-input-treasury.png");
             ScreenCapture.CaptureScreenshot(screenshot);
             for (int attempt = 0; attempt < 120 && !File.Exists(screenshot); attempt++)
                 yield return null;
             if (!File.Exists(screenshot))
             {
-                log.Add("FAIL real-input: character page screenshot was not written");
+                log.Add("FAIL real-input: treasury page screenshot was not written");
+                completed(false);
+                yield break;
+            }
+            File.WriteAllText(marker, "Press PageDown, then Escape, in the focused Game View.");
+            Debug.Log("[HomeAcceptance] waiting for real PageDown input");
+            deadline = Time.realtimeSinceStartup + 180f;
+            while (shop.CurrentPageIndex != 2 && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            if (shop.CurrentPageIndex != 2)
+            {
+                log.Add("FAIL real-input: PageDown did not open the gifts page");
+                shop.CloseScreen();
                 completed(false);
                 yield break;
             }
             File.WriteAllText(marker, "Press Escape in the focused Game View.");
             Debug.Log("[HomeAcceptance] waiting for real Escape input");
-            deadline = Time.realtimeSinceStartup + 60f;
-            while (runtime.Hud.CharacterPageOpen && Time.realtimeSinceStartup < deadline)
+            deadline = Time.realtimeSinceStartup + 180f;
+            while (shop.IsOpen && Time.realtimeSinceStartup < deadline)
                 yield return null;
-            bool escaped = !runtime.Hud.CharacterPageOpen;
+            bool escaped = !shop.IsOpen;
             log.Add(escaped
-                ? "PASS real-input: mouse opened the avatar page and Escape closed it"
-                : "FAIL real-input: Escape did not close the avatar page");
+                ? "PASS real-input: mouse opened the treasury tab, PageDown opened gifts, and Escape closed the shop"
+                : "FAIL real-input: Escape did not close the shop");
+            if (!escaped) shop.CloseScreen();
             completed(escaped);
         }
 

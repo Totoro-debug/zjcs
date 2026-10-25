@@ -132,6 +132,18 @@ namespace Zjcs.Presentation.Home
 
         private void BindPanelControl(string path, GameObject node)
         {
+            Toggle tab = node.GetComponent<Toggle>();
+            if (tab != null)
+            {
+                if (path == FirstTabPath)
+                    tab.onValueChanged.AddListener(isOn => { if (isOn) ShowPage(Page.Grocery); });
+                else if (path == SecondTabPath)
+                    tab.onValueChanged.AddListener(isOn => { if (isOn) ShowPage(Page.Treasury); });
+                else if (path == GiftTabPath)
+                    tab.onValueChanged.AddListener(isOn => { if (isOn) ShowPage(Page.Gifts); });
+                return;
+            }
+
             Button button = node.GetComponent<Button>();
             if (button == null) return;
             if (path.EndsWith("/CloseBtn_dark", StringComparison.Ordinal))

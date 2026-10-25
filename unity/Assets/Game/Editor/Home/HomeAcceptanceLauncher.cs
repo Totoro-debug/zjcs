@@ -19,6 +19,8 @@ namespace Zjcs.Editor.Home
     public static class HomeAcceptanceLauncher
     {
         private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
+        private static bool autoRefreshSuspended;
+
             ?? Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
 
         public static void Run()
@@ -26,6 +28,10 @@ namespace Zjcs.Editor.Home
             try
             {
                 string runId = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-" + Guid.NewGuid().ToString("N");
+                AssetDatabase.DisallowAutoRefresh();
+                autoRefreshSuspended = true;
+                EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+                EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
                 Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT",
                     Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance-" + runId));
                 Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT",
@@ -39,11 +45,25 @@ namespace Zjcs.Editor.Home
             catch (Exception error)
             {
                 Debug.LogError("[HomeAcceptance] launcher failed: " + error);
+                RestoreAssetRefresh();
                 EditorApplication.Exit(1);
             }
         }
 
         private static void ConfigurePortraitGameView(int width = 450, int height = 800)
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredEditMode) RestoreAssetRefresh();
+        }
+
+        private static void RestoreAssetRefresh()
+        {
+            if (!autoRefreshSuspended) return;
+            autoRefreshSuspended = false;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            AssetDatabase.AllowAutoRefresh();
+        }
+
         {
             Assembly editor = typeof(EditorWindow).Assembly;
             Type sizesType = editor.GetType("UnityEditor.GameViewSizes");
