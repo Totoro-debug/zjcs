@@ -1,0 +1,174 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1fb2338c6a56a4e903c7e327160b44, type: 3}
+  m_Name: OfficialBattleCharacterAnimationCatalog
+  m_EditorClassIdentifier: 
+  controllers:
+  - {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+  - {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+  bindings:
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/idle_01
+    state: Base Layer.home/idle_01
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: map/run_01
+    state: Base Layer.map/run_01
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_07
+    state: Base Layer.home/pugilism_07 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/idle_01
+    state: Base Layer.100/idle_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_01
+    state: Base Layer.100/show_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_01_02
+    state: Base Layer.100/show_01_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_01_idle
+    state: Base Layer.100/show_01_idle 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_02
+    state: Base Layer.100/show_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_02_01
+    state: Base Layer.100/show_02_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_02_idle
+    state: Base Layer.100/show_02_idle 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_idle_01
+    state: Base Layer.100/show_idle_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 100/show_idle_02
+    state: Base Layer.100/show_idle_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/idle_01
+    state: Base Layer.200/idle_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_01
+    state: Base Layer.200/show_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_01_02
+    state: Base Layer.200/show_01_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_01_idle
+    state: Base Layer.200/show_01_idle 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_02
+    state: Base Layer.200/show_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_02_01
+    state: Base Layer.200/show_02_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_02_idle
+    state: Base Layer.200/show_02_idle 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_idle_01
+    state: Base Layer.200/show_idle_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: 200/show_idle_02
+    state: Base Layer.200/show_idle_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_06
+    state: Base Layer.home/pugilism_06 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_lianxu_01
+    state: Base Layer.home/pugilism_lianxu_01 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_lianxu_02
+    state: Base Layer.home/pugilism_lianxu_02 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_lianxu_03
+    state: Base Layer.home/pugilism_lianxu_03 0
+  - controller: {fileID: 9100000, guid: f74f37596873e2e44822adc8a989c6d7, type: 2}
+    clip: home/pugilism_lianxu_04
+    state: Base Layer.home/pugilism_lianxu_04 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/idle_01
+    state: Base Layer.home/idle_01
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: map/run_01
+    state: Base Layer.map/run_01
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_07
+    state: Base Layer.home/pugilism_07 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/idle_01
+    state: Base Layer.100/idle_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_01
+    state: Base Layer.100/show_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_01_02
+    state: Base Layer.100/show_01_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_01_idle
+    state: Base Layer.100/show_01_idle 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_02
+    state: Base Layer.100/show_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_02_01
+    state: Base Layer.100/show_02_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_02_idle
+    state: Base Layer.100/show_02_idle 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_idle_01
+    state: Base Layer.100/show_idle_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 100/show_idle_02
+    state: Base Layer.100/show_idle_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/idle_01
+    state: Base Layer.200/idle_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_01
+    state: Base Layer.200/show_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_01_02
+    state: Base Layer.200/show_01_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_01_idle
+    state: Base Layer.200/show_01_idle 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_02
+    state: Base Layer.200/show_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_02_01
+    state: Base Layer.200/show_02_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_02_idle
+    state: Base Layer.200/show_02_idle 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_idle_01
+    state: Base Layer.200/show_idle_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: 200/show_idle_02
+    state: Base Layer.200/show_idle_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_06
+    state: Base Layer.home/pugilism_06 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_lianxu_01
+    state: Base Layer.home/pugilism_lianxu_01 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_lianxu_02
+    state: Base Layer.home/pugilism_lianxu_02 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_lianxu_03
+    state: Base Layer.home/pugilism_lianxu_03 0
+  - controller: {fileID: 9100000, guid: 20fd0b900b14d004ca7c17aa13d9c962, type: 2}
+    clip: home/pugilism_lianxu_04
+    state: Base Layer.home/pugilism_lianxu_04 0

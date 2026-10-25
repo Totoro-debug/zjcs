@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using Zjcs.Offline.CharacterCreation;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
 using Zjcs.Presentation.World;
@@ -62,25 +63,22 @@ namespace Zjcs.Editor
             try
             {
                 var slots = new ProfileSlotCatalog(root);
-                string slot = slots.CreateSlot();
-                var save = new OfflineMainlineSave
-                {
-                    CreatedAtUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                };
-                save.Player.CharacterCreated = true;
-                save.Player.CharacterName = "Map10 battle acceptance";
-                save.Player.InitialWeaponType = 201;
+                var creation = CharacterCreationOfflineService.OpenDefault(root);
+                string slot = creation.CreateSlot();
+                var draft = creation.OpenDraft(slot);
+                draft.name = "战斗测试";
+                Require(creation.TryCreateCharacter(slot, draft, out string creationError), creationError);
+                Require(creation.TrySetInitialWeapon(slot, 201, out string weaponError), weaponError);
+                var save = OfflineMainlineProgressSession.OpenCharacter(slots, slot).Save;
                 save.Player.Level = 30;
                 save.Player.Rank = 1;
                 save.Player.SubRank = 3;
                 save.Player.SeasonRank = 1;
                 save.Player.Wardrobe.Profession = 1;
-                save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = 10011, Rank = 1 });
+                if (!save.Player.Skills.Skills.Any(value => value.ClassId == 10011))
+                    save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = 10011, Rank = 1 });
                 save.Player.Skills.Plans[0].ActiveSkills[0] = 10011;
                 File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
-                var fixtureProgress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
-                new OfflineCharacterProgressionService(fixtureProgress, OfficialCharacterAssetCatalog.LoadDefault().Load())
-                    .InitializeWardrobe("battle-scene-fixture-wardrobe");
                 File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
                     "{\"schema\":1,\"slotId\":\"" + slot + "\",\"gridX\":24,\"gridY\":23,"
                     + "\"firstBattleIntroShown\":true,\"completedStories\":[\"FirstEnterMap\"]}");
@@ -197,6 +195,11 @@ namespace Zjcs.Editor
             GameObject worldTerrain = GameObject.Find("Map10Terrain");
             Require(worldTerrain != null, "The map terrain is missing before battle entry.");
             float worldCameraSize = Camera.main.orthographicSize;
+            Animator playerAnimator = UnityEngine.Object.FindObjectsOfType<Animator>()
+                .Single(value => value.name.StartsWith("Map10Player_", StringComparison.Ordinal));
+            Transform worldModelParent = playerAnimator.transform.parent;
+            Vector3 worldModelScale = playerAnimator.transform.localScale;
+            int worldAnimationState = playerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash;
             object controller = null;
             foreach (object entity in entities.Values)
             {
@@ -234,6 +237,12 @@ namespace Zjcs.Editor
             Require(UnityEngine.Object.FindObjectsOfType<SkinnedMeshRenderer>().Any(value => value.isVisible
                 && value.GetComponentInParent<Animator>() != null),
                 "The real character appearance has no visible mesh in the battle camera.");
+            Require(playerAnimator.GetCurrentAnimatorClipInfo(0).Any(value => value.weight > 0f
+                    && value.clip != null && value.clip.name == "100/idle_01"),
+                "The native character entered an empty source state instead of its converted idle clip.");
+            Require(playerAnimator.transform.parent != worldModelParent
+                && Mathf.Approximately(Mathf.Abs(playerAnimator.transform.parent.localScale.x), 0.3f),
+                "The reused character did not receive the original fight model transform.");
 
             Type controllerType = controller.GetType();
             PropertyInfo phaseProperty = controllerType.GetProperty("Phase");
@@ -370,6 +379,11 @@ namespace Zjcs.Editor
                     "The battle did not restore its suspended world roots.");
                 Require(Mathf.Approximately(Camera.main.orthographicSize, worldCameraSize),
                     "The battle did not restore the world camera size.");
+                Require(playerAnimator != null && playerAnimator.transform.parent == worldModelParent
+                    && playerAnimator.transform.localScale == worldModelScale,
+                    "The battle did not restore the original world character hierarchy and scale.");
+                Require(playerAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash == worldAnimationState,
+                    "The battle did not restore the original world character animation state.");
                 Require(UnityEngine.Object.FindObjectsOfType<UnityEngine.Rendering.SortingGroup>()
                     .All(value => !value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
                     "The reused map avatar retained its temporary battle sorting group.");

@@ -25,6 +25,8 @@ namespace Zjcs.Presentation.Combat
         private readonly Transform damageRoot;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         private readonly Dictionary<int, Transform> attachedTransforms = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, OfficialBattleAttachedModelView> attachedModels =
+            new Dictionary<int, OfficialBattleAttachedModelView>();
         private readonly Dictionary<int, OfficialBattleUnitSorting> attachedSorting =
             new Dictionary<int, OfficialBattleUnitSorting>();
         private readonly Dictionary<int, AttachedAnimatorView> attachedAnimators =
@@ -86,6 +88,7 @@ namespace Zjcs.Presentation.Combat
             public bool AnimationLoops;
             public bool Dying;
             public bool DeathFinished;
+            public int CurrentStateHash;
             public RuntimeAnimatorController OriginalController;
             public AnimatorOverrideController SkillOverrideController;
             public readonly Dictionary<string, OfficialBattleAnimatorParameterStack<bool>> BoolParameters =
@@ -415,7 +418,7 @@ namespace Zjcs.Presentation.Combat
                 if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
                 {
                     PlaceUnit(state.Id, attached, state, stepEvent);
-                    orientUnit(attached, state);
+                    orientUnit(attachedModels.TryGetValue(state.Id, out var model) ? model.Model : attached, state);
                     RefreshAttachedAnimation(state, attached, stepEvent);
                     RefreshAttachedHud(state, attached);
                     continue;
@@ -480,37 +483,31 @@ namespace Zjcs.Presentation.Combat
         public void AttachUnitTransform(int unitId, Transform transform)
         {
             if (transform == null) throw new ArgumentNullException(nameof(transform));
-            if (attachedTransforms.TryGetValue(unitId, out Transform current) && current == transform)
+            if (attachedModels.TryGetValue(unitId, out var currentModel) && currentModel.Source == transform)
                 return;
             if (units.ContainsKey(unitId))
             {
                 RemoveUnit(unitId);
                 units.Remove(unitId);
             }
-            motions.Remove(unitId);
-            if (attachedAnimators.TryGetValue(unitId, out AttachedAnimatorView oldAnimator))
-                ReleaseAttachedAnimator(oldAnimator);
-            attachedAnimators.Remove(unitId);
-            if (attachedUnitHuds.TryGetValue(unitId, out OfficialBattleUnitWorldHudView hud))
-            {
-                hud?.Dispose();
-                attachedUnitHuds.Remove(unitId);
-            }
-            if (attachedSorting.TryGetValue(unitId, out OfficialBattleUnitSorting previousSorting))
-                previousSorting?.Dispose();
-            attachedSorting.Remove(unitId);
-            attachedTransforms[unitId] = transform;
+            DetachUnitTransform(unitId);
             FightBattleUnitState state = FindUnit(latestCheckpoint, unitId);
-            if (state == null) return;
-            attachedSorting[unitId] = OfficialBattleSceneBindings.BindModel(transform,
-                OfficialBattleSceneBindings.EntityId(state));
+            if (state == null) throw new InvalidOperationException("Cannot attach a model to an unknown battle unit: " + unitId);
+            int entityId = OfficialBattleSceneBindings.EntityId(state);
+            var attachedModel = new OfficialBattleAttachedModelView(transform, root, entityId);
+            attachedModels.Add(unitId, attachedModel);
+            Transform body = attachedModel.Root;
+            attachedTransforms[unitId] = body;
+            attachedSorting[unitId] = OfficialBattleSceneBindings.BindModel(attachedModel.Model, entityId);
+            PlaceUnit(unitId, body, state, null);
+            orientUnit(attachedModel.Model, state);
             if (state.Hp <= 0)
             {
-                TryBeginAttachedDeath(state, transform);
+                TryBeginAttachedDeath(state, body);
                 return;
             }
-            RefreshAttachedAnimation(state, transform, null);
-            RefreshAttachedHud(state, transform);
+            RefreshAttachedAnimation(state, body, null);
+            RefreshAttachedHud(state, body);
         }
 
         public void DetachUnitTransform(int unitId)
@@ -527,6 +524,8 @@ namespace Zjcs.Presentation.Combat
                 hud?.Dispose();
                 attachedUnitHuds.Remove(unitId);
             }
+            if (attachedModels.TryGetValue(unitId, out var model)) model.Dispose();
+            attachedModels.Remove(unitId);
         }
 
         private void PlaceUnit(int unitId, Transform body, FightBattleUnitState state,
@@ -802,7 +801,10 @@ namespace Zjcs.Presentation.Combat
             if (attachedAnimators.TryGetValue(state.Id, out AttachedAnimatorView existing)
                 && existing.Animator != null) return existing;
             if (animationGroupResolver == null) return null;
-            Animator animator = body.GetComponent<Animator>() ?? body.GetComponentInChildren<Animator>(true);
+            Animator animator = body.GetComponent<Animator>();
+            // Unity can return a managed component wrapper that compares equal to null.
+            // Use Unity's null check before looking inside the recovered model hierarchy.
+            if (animator == null) animator = body.GetComponentInChildren<Animator>(true);
             if (animator == null) return null;
             string group = animationGroupResolver(state);
             if (string.IsNullOrEmpty(group)) return null;
@@ -1166,12 +1168,14 @@ namespace Zjcs.Presentation.Combat
             if (view == null || view.Animator == null || string.IsNullOrEmpty(animation)) return false;
             if (view.CurrentAnimation == animation && view.AnimationLoops == loop
                 && (loop || (!restart && !AttachedAnimationFinished(view)))) return true;
-            string stateName = "Base Layer." + view.Group + "/" + animation;
+            if (!OfficialBattleCharacterAnimationCatalog.TryResolve(view.Animator.runtimeAnimatorController,
+                    view.Group + "/" + animation, out string stateName)) return false;
             int stateHash = Animator.StringToHash(stateName);
             if (!view.Animator.HasState(0, stateHash)) return false;
             view.Animator.Play(stateHash, 0, 0f);
             view.Animator.Update(0f);
             view.CurrentAnimation = animation;
+            view.CurrentStateHash = stateHash;
             view.AnimationLoops = loop;
             return true;
         }
@@ -1181,8 +1185,7 @@ namespace Zjcs.Presentation.Combat
             if (view == null || view.Animator == null || string.IsNullOrEmpty(view.CurrentAnimation)
                 || view.Animator.IsInTransition(0)) return false;
             AnimatorStateInfo state = view.Animator.GetCurrentAnimatorStateInfo(0);
-            int expected = Animator.StringToHash("Base Layer." + view.Group + "/" + view.CurrentAnimation);
-            return state.fullPathHash == expected && state.normalizedTime >= 1f;
+            return state.fullPathHash == view.CurrentStateHash && state.normalizedTime >= 1f;
         }
 
         private void RemoveUnit(int unitId)
@@ -1222,6 +1225,8 @@ namespace Zjcs.Presentation.Combat
             attachedAnimators.Clear();
             foreach (OfficialBattleUnitWorldHudView hud in attachedUnitHuds.Values) hud?.Dispose();
             attachedUnitHuds.Clear();
+            foreach (var model in attachedModels.Values) model.Dispose();
+            attachedModels.Clear();
             pendingDamageFloats.Clear();
             foreach (OfficialBattleDamageFloat floatView in activeDamageFloats)
                 if (floatView != null) DestroySceneObject(floatView.gameObject);

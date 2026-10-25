@@ -1,0 +1,38 @@
+{
+    "operation": "Bind existing converted clips to non-empty native Animator states by exact motion name. Empty source states are excluded. No runtime library or skeleton rebake is used. Historical conversion dependencies and unconverted animations remain unchanged.",
+    "inputs": [
+        {
+            "prefab": "Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Preview/CharacterCreation_Male.prefab",
+            "prefabSha256": "1322ad069d4dba0b3af2f7a581b3c58364a4acb8eec02511cdb2572127b9584d",
+            "controller": "Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Male/character_Male_1.skel Controller.controller",
+            "controllerSha256": "5cae4e42d0525b043836e570ce0074c21530e0eb8332a600ae1ada2bd8b82db5",
+            "clips": 26,
+            "emptyStates": 442
+        },
+        {
+            "prefab": "Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Preview/CharacterCreation_Female.prefab",
+            "prefabSha256": "9c77fc95e8f2d6317630e9f60b9f228c4111ffaceb81bc55c796fc588baaa5cc",
+            "controller": "Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Variants/Female/character_Female_1.skel Controller.controller",
+            "controllerSha256": "dd143aad48de4948b876c54b994a586c87afcff58ef881f9f48713c3d3fe2f1d",
+            "clips": 26,
+            "emptyStates": 449
+        }
+    ],
+    "existingConversionReceipts": [
+        {
+            "path": "assets/reference/character-creation/current-native-prefabs-source-manifest.json",
+            "sha256": "d067eeb637f4f5274e38fbfecdf0897820e31ada1a884315bfdb9bfba69b36a8"
+        },
+        {
+            "path": "assets/reference/character-creation/current-native-concurrent-bindings-source-manifest.json",
+            "sha256": "28f728c2fc51b607288c02c935a241faf9987a94e0bf3cb13f8005949513813b"
+        },
+        {
+            "path": "assets/reference/character-creation/native-character-model-bake-source-manifest.json",
+            "sha256": "5bbae87f1eb765529b842eb3e5a4a261efad739cb6ee2f7cc31b9e973d10c712"
+        }
+    ],
+    "generatorSha256": "7131dcd82ca81741e051b50b54b1baaf9342517b0991929f283836c2fba9d7be",
+    "output": "unity/Assets/Game/Resources/Combat/OfficialBattleCharacterAnimationCatalog.asset",
+    "outputSha256": "bb04b4f8d0336b0ddba425d2a7e3e54c892919bf4c6cf3950cdd8e07162119cc"
+}
