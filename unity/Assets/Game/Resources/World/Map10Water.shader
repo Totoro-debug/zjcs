@@ -144,20 +144,20 @@ Shader "Zjcs/World/Map10Water2"
             fixed4 frag(v2f input) : SV_Target
             {
                 float2 waterUv = input.uv;
-                float2 normalUvA = TRANSFORM_TEX(waterUv * _NormalTiling + float2(_Time.y * _NormalSpeed, 0.0), _BumpMap);
-                float2 normalUvB = TRANSFORM_TEX(waterUv.yx * (_NormalTiling * 1.37)
-                    - float2(0.0, _Time.y * _NormalSpeed * 0.73), _BumpMap);
+                float2 normalUvA = TRANSFORM_TEX((waterUv * _NormalTiling + float2(_Time.y * _NormalSpeed, 0.0)), _BumpMap);
+                float2 normalUvB = TRANSFORM_TEX((waterUv.yx * (_NormalTiling * 1.37)
+                    - float2(0.0, _Time.y * _NormalSpeed * 0.73)), _BumpMap);
                 float3 normalA = UnpackNormal(tex2D(_BumpMap, normalUvA));
                 float3 normalB = UnpackNormal(tex2D(_BumpMap, normalUvB));
                 float2 normal = (normalA.xy + normalB.xy) * _NormalStrength;
 
-                float noise = tex2D(_NoiseTex, TRANSFORM_TEX(waterUv * _NoiseTiling + _Time.y * _NoiseSpeed, _NoiseTex)).r;
-                float2 causticsUv = TRANSFORM_TEX(waterUv * _CausticsTiling + _Time.y * _CausticsSpeed,
+                float noise = tex2D(_NoiseTex, TRANSFORM_TEX((waterUv * _NoiseTiling + _Time.y * _NoiseSpeed), _NoiseTex)).r;
+                float2 causticsUv = TRANSFORM_TEX((waterUv * _CausticsTiling + _Time.y * _CausticsSpeed),
                     _CausticsTex)
                     + normal * _CausticsDistortion + (noise - 0.5) * _NoiseFrequency;
                 float caustics = max(tex2D(_CausticsTex, causticsUv).r - _CausticsThreshold, 0.0);
                 float foamTexture = tex2D(_FoamTex,
-                    TRANSFORM_TEX(waterUv * _FoamTiling + _Time.y * _FoamSpeed, _FoamTex)).r;
+                    TRANSFORM_TEX((waterUv * _FoamTiling + _Time.y * _FoamSpeed), _FoamTex)).r;
 
                 float2 maskUv = (input.worldXY - _MaskRect.xy) / max(_MaskRect.zw, float2(0.001, 0.001));
                 float shoreMask = tex2D(_WaterMask, maskUv).r;

@@ -1150,7 +1150,7 @@ namespace Zjcs.Presentation.Combat
             {
                 view.Hud?.Dispose();
                 if (view.NativeModel != null) view.NativeModel.Dispose();
-                else if (view.Skeleton != null) UnityEngine.Object.Destroy(view.Skeleton.gameObject);
+                else if (view.Skeleton != null) DestroySceneObject(view.Skeleton.gameObject);
             }
             units.Clear();
             motions.Clear();
@@ -1163,8 +1163,14 @@ namespace Zjcs.Presentation.Combat
             attachedUnitHuds.Clear();
             pendingDamageFloats.Clear();
             foreach (OfficialBattleDamageFloat floatView in activeDamageFloats)
-                if (floatView != null) UnityEngine.Object.Destroy(floatView.gameObject);
+                if (floatView != null) DestroySceneObject(floatView.gameObject);
             activeDamageFloats.Clear();
+        }
+
+        private static void DestroySceneObject(GameObject instance)
+        {
+            if (Application.isPlaying) UnityEngine.Object.Destroy(instance);
+            else UnityEngine.Object.DestroyImmediate(instance);
         }
 
         private UnitView GetOrCreate(FightBattleUnitState state)

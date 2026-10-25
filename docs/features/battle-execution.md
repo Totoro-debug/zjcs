@@ -192,6 +192,8 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 - 条件召唤：当前战斗核心回归通过，验证58140／70120分别从固定命中配置装配3907与3908各3只容量；满两个池时不可释放，六只其他类型的主人召唤物不占用这两个池；18480在配置触手少于4只时可释放，达到4只时不可释放。
 
+为 Windows 测试构建补齐了既有 HUD Sprite 目录对 `res://assets/official/battle-hud/sprites/` 来源路径的精确转换，不修改官方图片或载荷哈希。场景资源释放兼容 Editor 检查与 Play Mode。当前工作区另在未激活的世界飘字 TMP 赋字体前缓存 Renderer，并修正校验脚本只查 Canvas 而漏查场景飘字的范围；这两项位于尚未提交的世界飘字迁移代码中。`ProjectTools.Validate` 已正常退出并完成规则、HUD 和 Map10 检查，但仍有递归 DTO 序列化深度及其他 Edit Mode 销毁提示，不能视为完整战斗运行验收。
+
 ## 自定义实现
 
 战斗按本地单机方式设计，不依赖运行时服务器。原客户端共用入口和面板行为分别见 `FightSceneRoot`、`MyFightGridMover`、`MyFightGridGround`、`MyFightRoleGrid`、`FightMainPanelSkillUI`、`GameRoundUI`、`FightMainPanelBossUI`、`FightMainPanelBossUIItem` 和 `FightMainPanelStageStatus`。现有迁移只覆盖已经接入的规则、格网算法、部分战斗模型数据及 HUD 构建；没有把尚未迁移的原客户端行为写成已完成。

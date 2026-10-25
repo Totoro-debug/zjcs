@@ -1,0 +1,36 @@
+# Unity 工程与启动流程
+
+[总索引](../README.md)
+
+状态：未完成
+
+## 功能简介
+
+Unity 工程位于 [`unity/`](../../unity/)，目标为 Windows 10/11 离线桌面游戏，画面采用竖屏比例缩放。已按用户要求导出当前工作区测试版；完整游戏的迁移与全流程验收仍未完成，各功能和地图的实际范围见总索引。
+
+## 完整还原部分
+
+Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗口、文本序列化、可见 `.meta` 和 `Bootstrap.unity` 构建场景。工程已有官方战斗规则载荷、Map10 原始数据、部分规则运行时和编辑器校验入口，详见[战斗规则](battle-execution.md)及[世界地图](world-map.md)。
+
+`ProjectTools.Configure` 配置工程设置；`ProjectTools.Validate` 检查编辑器版本、启动场景、窗口设置，并调用战斗目录、HUD 与 Map10 校验。`Zjcs.Editor.ProjectTools.BuildWindowsGame` 是游戏测试构建入口，输出 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该文件，工作目录为同名文件夹。`BuildFrameworkWindows` 只构建空启动框架，不能替代游戏构建。代码位于 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs)。
+
+仓库根目录的 [`unity-tools.json`](../../unity-tools.json) 记录固定版本编辑器安装路径及工程路径；当前编辑器位于 `D:/Tool/Unity/Editor/Unity.exe`，实际文件版本为 `2022.3.57f1c2`。Unity Hub 为可选项，本机未安装。项目工具 [`unity.ps1`](../../scripts/unity.ps1) 提供 `info`、`open` 与 `initialize` 命令，并在启动前核对编辑器文件版本。运行 `& .\scripts/unity.ps1 info` 检查环境，`& .\scripts/unity.ps1 open` 启动工程，`& .\scripts/unity.ps1 initialize` 执行 `ProjectTools.Configure`。
+
+各模块／地图共享 [Android → Windows 素材迁移流程](../asset-management.md#android-资源迁移到-windows)，以 [`prepare_unity_bundle_inputs.py`](../../scripts/prepare_unity_bundle_inputs.py) 检查真实源版本、平台与递归 CAB 依赖并准备转换输入。输入闭包成功不代表 Unity 原生资产、运行时依赖和 Windows 表现已经恢复；完整处理和判断依据在该共用流程中维护。
+
+静态 metadata 检查通过，Editor 和 Windows Player 脚本编译通过，`ProjectTools.Validate` 已正常退出并完成规则、HUD 与 Map10 资源检查；该校验仍输出递归 DTO 序列化深度及部分 Edit Mode 销毁提示，不能据此认定完整运行验收通过。最终 Windows D3D11 构建成功，未报告 C# 或 shader 编译错误。已真实启动 Player，查看存档入口画面，用鼠标点击“新建存档”创建草稿并进入官方开场场景；关闭后重启，已确认存档条目显示。完整创角、家园、地图和战斗流程的实际范围继续由所属页维护。
+
+## 自定义实现
+
+本地单机规则沿用已确认的离线处理范围；外观、界面、动画、音效及流程以可恢复的官方 Unity 内容为准。其他功能页中记录的旧引擎实现不能据此视为 Unity 已接入。
+
+存档选择属于离线启动适配，已有用户存档不用于测试；本次新建的测试槽在验证后清理。本次应用户要求导出包含其他会话未提交迁移代码与资源的当前工作区测试版；独立构建修复单独提交，保留其他会话未提交内容。这份测试导出不计为与已提交源码完整对应的逐功能完成发布。
+
+## 尚未实现
+
+- 从完整创角到家园、地图、战斗与退出恢复的全流程真实输入验收。
+- 官方 UI、角色、地图、动画、音频、渲染管线及第三方运行依赖的恢复和绑定。
+- 存档列表续玩点击与已有完整角色档案的 Windows 冷启动回读验收。
+- Map10 原始 prefab bundle 的 Unity 版本兼容性处理及编辑器验证。
+- 清除工程校验中的序列化深度与 Edit Mode 清理提示。
+- 对应完整已提交源码和素材的逐功能 Windows 发布；当前工作区测试导出不替代该要求。

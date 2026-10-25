@@ -36,6 +36,8 @@
 
 44 个故事图与四个子图引用的 207 个原剧情语音事件已绑定本地流式 AudioClip。按原 `TalkDialog`／`OptionTalkDialogPanel`，仅 Voice 行播放，换句先执行 `Voice_StopAll`；纯文字行、普通对话关闭及故事结束立即停止，选项面板仍显示时保留当前语音，异步加载完成后核对当前行。音量读取现有语音设置。后台 Play Mode 已检查全部 207 份 Windows 导入结果、实际主图／子图对话播放、连续换句、纯文字停止、过期加载取消、关闭停止及音量；音源静音，未试听或验证真实输入。转换器为 `prepare_unity_map11_dialogue_audio.py`，加载绑定为 `Resources/Map11/Audio/voices`，来源与输入输出哈希见 `assets/reference/official-map/map11-dialogue-audio-source-manifest.json`；整段剧情的镜头、演出与主线仍须继续恢复。
 
+地图表现程序集与编辑器检查程序集已显式引用现有 `spine-csharp`／`spine-unity`，解决 `OfficialMap10GameRuntime.WorldMonsters` 与地图后台检查的 CS0246 编译错误。主工程 Editor 与 Windows Player 脚本编译已通过；未据此扩大本图运行验收范围。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。

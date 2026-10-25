@@ -179,7 +179,7 @@ namespace Zjcs.Presentation.CharacterCreation
             VerticalLayoutGroup layout = content.gameObject.AddComponent<VerticalLayoutGroup>();
             layout.spacing = 10;
             layout.childControlWidth = true;
-            layout.childControlHeight = true;
+            layout.childControlHeight = false;
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
             ContentSizeFitter fitter = content.gameObject.AddComponent<ContentSizeFitter>();

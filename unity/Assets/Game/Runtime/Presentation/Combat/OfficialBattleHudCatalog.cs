@@ -314,6 +314,9 @@ namespace Zjcs.Presentation.Combat
         public Sprite FindSprite(string file)
         {
             if (string.IsNullOrEmpty(file)) return null;
+            const string sourceSpritePrefix = "res://assets/official/battle-hud/sprites/";
+            if (file.StartsWith(sourceSpritePrefix, StringComparison.Ordinal))
+                file = file.Substring(sourceSpritePrefix.Length);
             bool matchByName = file.IndexOf('/') < 0 && file.IndexOf('\\') < 0;
             string fileSuffix = "/" + file;
             Sprite nameMatch = null;

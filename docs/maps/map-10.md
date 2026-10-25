@@ -16,6 +16,8 @@ Map10 已接入固定版官方地图定义、导航网格、原生地形网格�
 
 `OfficialWorldMapAssetCatalog` 与 `OfficialWorldMapAssetProvider` 拆分到同名脚本，修复 Unity Resources 目录资产的脚本绑定；`OfficialMap10Tools.Validate` 同时核对运行时目录加载。地图战斗在官方 `EvaluateProps().OutOfFightBattleProps` 流程中接入装备目录，避免使用未转换的 Base 属性作为最终战斗属性。`OfficialMap10PlayModeAcceptance.Run` 提供隔离入图、HUD、对话推进、实体和环境载荷检查入口；该入口尚未成功完成运行验收。
 
+Windows D3D11 构建已复现并修复水面 shader 的 `TRANSFORM_TEX` 复合参数展开错误：对传入的 UV 表达式整体加括号，避免 `.xy` 被应用到末尾标量。保留原有参数、纹理及 UV 计算表达式；原生重建文件的输出哈希同步到 `rendering-source-manifest.json.environment.water.material.reconstructionSha256`。Windows Player 构建通过且无 shader 编译错误；该项不代表地图水面动态画面与完整路线已验收。
+
 ## 自定义实现
 
 `OfficialMap10GameRuntime.RunStoryGraph` 对 `RemoveMapExclusiveNpcNode` 只保留一个分支：配置删除 playable 时先播放，再删除 NPC 并沿 `Exit` 继续；未配置时直接删除。执行顺序依据官方 `RemoveMapEntitiesByCfgNode.PlayPlayables/OnPlayableStop`。工程启用 Unity 内置 `unitywebrequest` 与 `unitywebrequestaudio` 模块，供 `OfficialMap10AudioPlayer` 从本地文件 URI 解码音频；模块启用不代表音频播放已验收。

@@ -76,6 +76,8 @@ Unity 2022.3 粒子参数适配：源 `boxThickness` 写入 `ShapeModule.boxThic
 
 捏脸各项控件的组合验收以 EventSystem 射线命中和软件指针事件驱动，系统鼠标另行实际点击过组 14；文本通过 TMP 输入值验证，尚未用实体键盘逐字符输入；槽位、弹窗及武器按钮部分直接派发按钮事件。正式存档验证为同一 Play Mode 内重新打开服务读取磁盘，未覆盖退出 Play Mode 或重启游戏后的完整恢复流程。隔离工程副本的 Unity Editor 编译与 Play Mode 已运行；根工程静态入口 `scripts/check_unity_project.py` 既有检查通过（29,733 GUID），不替代 Editor 导入、编译与运行。未构建或发布 Windows 成品。
 
+Windows Player 的存档入口保留列表按钮原有 86 单位高度，关闭纵向布局组对按钮高度的自动控制，避免无布局首选高度时条目被压为零。通过新建测试槽实际进入开场场景，最终构建重启后已在实际画面确认存档条目显示；续玩点击、完整创角／初始武器／家园和地图全流程仍未验收。
+
 ## 自定义实现
 
 存档槽、创角草稿和正式角色资料由 [CharacterCreationFlowController](../../unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs)、[CharacterCreationOfflineService](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationOfflineService.cs)、[CharacterCreationDraftStore](../../unity/Assets/Game/Runtime/Offline/CharacterCreation/CharacterCreationDraft.cs) 与 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 接入本地 JSON 保存。各槽独立保存草稿；提交角色时写入选中槽，草稿损坏可保留原文件副本后重新开始，不覆盖正式角色数据。写入失败会阻止页面切换并显示提示。
