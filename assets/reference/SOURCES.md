@@ -783,6 +783,8 @@ Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_da
 
 `prepare_unity_map11_dialogue_audio.py` 同样先查 APK 实际内容，再核对固定版云端语音包，验证 207 个剧情事件的 Play 动作、原媒体切片和已转换 Vorbis 哈希；`Voice_StopAll` 的两个立即停止动作保留原调用顺序。原语音以 Windows 原生流式 AudioClip 绑定 `Resources/Map11/Audio/voices`，来源、代码及输入输出哈希见 `official-map/map11-dialogue-audio-source-manifest.json`。带图形的后台 Play Mode 检查了全部导入、实际主图／子图换句与关闭、过期加载取消及语音音量，音源静音，未进行试听或真实输入检查。
 
+`prepare_unity_map11_story_spatial.py` 从 APK 实际 DefaultPackage 清单定位 EC 索引及 113 类 Map11／本地玩家 prefab，严格读取原 `MapEntityTag`、`StoryNodeRegister`、玩家活动范围及距离设置，保留 bundle、对象和组件来源哈希；结果绑定 `Resources/Map11/story-spatial.json`，清单为 `official-map/map11-story-spatial-source-manifest.json`。Play Mode 核对了 6101 世界树注册和主角回退位置。原 `StoryUtils` 会根据动态 AttachAgent 骨骼可见性筛掉地图 NPC，这部分自制地图视图尚未复原，不能将空间查询记作完整 NPC 可见性迁移。
+
 Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态几何和空状态原始字节。补充纹理 `building_naka1`、`building_luzi` 从原 `6330_11_view` 的真实 SpriteRenderer 引用定位至 `defaultpackage_assets_image_mapentity_entity11_building_grave.bundle`（SHA256 `6b24112c0669a6a45628ee51d92a568a8eecedea97ab91eb12ba877a2ec263ae`）；重新提取 PNG 与既有文件逐字节一致。161 份几何、27 个 Spine 实例、203 张纹理及额外对象来源保存在 `unity/Assets/Official/World/Map/11/entity-source-manifest.json`，未修改原 APK／CDN 预期哈希。
 
 `prepare_unity_map11_ui.py` 与 `map11_support_ui.py` 恢复 WorldCanvas、两种女神弹窗、两个动态图标、购买确认框、兑换框和默认物品图标，共八份原生 prefab、125 张原 Sprite。确认框在 APK 中未打包，按固定版本云端实际文件提取；兑换框与默认图标来自原 APK。原 MonoBehaviour 引用、严格读取的 UI／Framework 布局字段、中文、GlobalColors、PopupWindow 曲线、UGUIJszx 动态布局、MirrorImage 和战力数字格式来源哈希见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。物品 2／3／325 的原图标与品质均按官方物品表校验。`map11_tmp_sprites.py` 提取 Common 的七个原 TMP 字形、字符及 400×200 图集，恢复 Texture2D 与材质绑定，并保留原序列化哈希。显式加载入口为 `Resources/Map11/UI`；失落女神统一经验／罗拉各 +1%、最近可站立格传送及兑换关闭后的剧情返回是所属页记录的单机差异，未改动官方源数据。

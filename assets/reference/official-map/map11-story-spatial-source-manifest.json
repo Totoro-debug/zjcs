@@ -1,0 +1,2102 @@
+{
+  "inputs": {
+    "code": [
+      {
+        "path": ".tools/source-packages/official-code/client-source/StoryUtils.cs",
+        "sha256": "5e1c8678cb3b6cc4103dd0809e66e66a5c489e1e5e8903f2e14d3300a7ea62eb"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetEntityBaseNode.cs",
+        "sha256": "88200ed80a8dc1369afe73f0fc12ce6094697c00daaad515fba2c818fda8bc33"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetEntityPosNode.cs",
+        "sha256": "d9d744ef6cd0b1101f532c4eb77b79278b862a2011e0f55a09277301738c08b2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetPosAroundStoryObjectNode.cs",
+        "sha256": "02e39a252629c1c6b4b466b2577809d449dc2068e94a777e957423e02ab1ec71"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/MapEntityTag.cs",
+        "sha256": "7d1c129a71dd22024d728daae939c95b7b6d44e7ea94faf0a8527df2dfe43758"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/EMapEntityTagType.cs",
+        "sha256": "88a18f7c04f7cde432668b67e5298b8237f2720747d8cf9371c08d2d21d86203"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/StoryNodeRegister.cs",
+        "sha256": "d9d2962f28780506e846013a93225a9ca7d6a0e286ea8d4b661ff9e13a646155"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/Common/MyEntityIndexHandler.cs",
+        "sha256": "9d571925a2cbed3f9be0ccb16b1926ab4885aa6603f61f771aaea123ad0c3471"
+      }
+    ],
+    "entitiesSha256": "9940a5e62ca1028d8b869c701d397575b5699fc5b4caef69d75b261d89ac59f3",
+    "index": {
+      "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "807603736d511bb29adf0d607a139d95",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "7349830744708744641",
+      "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
+      "raw_size": 6901264
+    },
+    "prefabs": [
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -8969246423738281339
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+              "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+              "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+              "bundle_size": 2318988,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-2804864355402378619",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldmapcharacter/3001.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+          "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+          "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+          "bundle_size": 2318988,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8969246423738281339",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -1091024592027692369
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+              "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+              "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+              "bundle_size": 2318988,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "3724647942619157167",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldmapcharacter/3002.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+          "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+          "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+          "bundle_size": 2318988,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1091024592027692369",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5001.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2491808431494098049",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5003.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7870486620361146259",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5005.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7191550909259196650",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5008.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7298022847346749555",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5011.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6195054038983639433",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5013.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7839228535839863070",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5014.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7320785565756046481",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldmonster/5110.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+          "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+          "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc",
+          "bundle_size": 200566,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8217218011244582356",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6000.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-133624212220706457",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "StoryNodeRegister",
+            "fields": {
+              "StoryNodeKeys": [
+                "Fangjianbei"
+              ],
+              "StoryNodes": [
+                {
+                  "m_FileID": 0,
+                  "m_PathID": 5844871482587997495
+                }
+              ],
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 5844871482587997495
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -711665045149503606
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+              "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+              "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+              "bundle_size": 40213,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "8642114386441463095",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6002.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "5844871482587997495",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6010.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3948363629663740017",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6011.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6446586352799120290",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6015.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7190960534928693115",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6019.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "473006715468589696",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6026.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2201111836202614716",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "StoryNodeRegister",
+            "fields": {
+              "StoryNodeKeys": [
+                "WorldTree"
+              ],
+              "StoryNodes": [
+                {
+                  "m_FileID": 0,
+                  "m_PathID": 8723007132522316627
+                }
+              ],
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 8723007132522316627
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -711665045149503606
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_map_11_building.bundle",
+              "bundle_hash": "2679e3089774eeee335a4b53a9f847b5",
+              "bundle_sha256": "01688c7eced085e37451e46d18179e718f65944beefb1593b035f84873193719",
+              "bundle_size": 10400,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-1923506312652258477",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2679e3089774eeee335a4b53a9f847b5.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/map_11_building/6101.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_map_11_building.bundle",
+          "bundle_hash": "2679e3089774eeee335a4b53a9f847b5",
+          "bundle_sha256": "01688c7eced085e37451e46d18179e718f65944beefb1593b035f84873193719",
+          "bundle_size": 10400,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8723007132522316627",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2679e3089774eeee335a4b53a9f847b5.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/map_11_building/6301.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_map_11_building.bundle",
+          "bundle_hash": "2679e3089774eeee335a4b53a9f847b5",
+          "bundle_sha256": "01688c7eced085e37451e46d18179e718f65944beefb1593b035f84873193719",
+          "bundle_size": 10400,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-850478512245191684",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2679e3089774eeee335a4b53a9f847b5.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6320.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8502375168385691411",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6330.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "5136802663582756295",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6340.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-5518970058930447392",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6350.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4206649374718912085",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6360.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2394381430326033078",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbuilding/commonbuilding/6370.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbuilding_commonbuilding.bundle",
+          "bundle_hash": "bad4f8c61dda1490ca51b859e5fced1f",
+          "bundle_sha256": "16413fe04af5886630693836eec99ea095a121d7e434c1e7b999fd9f061ba6fb",
+          "bundle_size": 40213,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1287904892571026910",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/bad4f8c61dda1490ca51b859e5fced1f.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6501.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4926796627929895692",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6502.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4029769553205365532",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/map_11_play/6503.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_map_11_play.bundle",
+          "bundle_hash": "c4e2f910c00fb0a3499f038e0ec557c8",
+          "bundle_sha256": "3baa4b927a51a2c34d7a90d0a3893c7550455cecf31309822c9619b934abc2ba",
+          "bundle_size": 17137,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7730150636520976995",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c4e2f910c00fb0a3499f038e0ec557c8.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6530.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2545235300018123529",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6533.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-296058222964870437",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6541.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-4109978560772801197",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6542.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "357075375904745233",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6543.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7012982795438095079",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6560.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "6494762394070903950",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6563.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1613084194510247459",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6564.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-4842733888994872153",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6570.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-4530801088489571918",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6571.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8023909483868505886",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6572.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "816323050225942232",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6573.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4220088081511421863",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6620.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4005472168473365696",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6650.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1353870914150216036",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6655.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1311275893831511655",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6660.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8146906889773462389",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6690.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "514559392555342752",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "StoryNodeRegister",
+            "fields": {
+              "StoryNodeKeys": [
+                "HolyMonster"
+              ],
+              "StoryNodes": [
+                {
+                  "m_FileID": 0,
+                  "m_PathID": -3396874367055394893
+                }
+              ],
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3396874367055394893
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": -711665045149503606
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+              "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+              "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+              "bundle_size": 98725,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "6600619157631502259",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/6695.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-3396874367055394893",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8010.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-2213654387655288200",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8011.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8708418165728837428",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8015.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "9169501738273649186",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8016.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "692904178430211981",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8020.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1122654617290151489",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8021.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3752095422201742585",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8025.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-2550561797226605476",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8026.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8674292756520795484",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8030.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8316784644511021159",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8031.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1144967238428129797",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8034.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1754837724346796692",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8036.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "597514462625567951",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8037.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2145115951705954671",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8200.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8247709210654900270",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8201.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6438306878051168127",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8202.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-2536577803543274086",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8203.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1428255428165954927",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8205.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-5340920167821416509",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8206.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-3165701477201963040",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8207.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-4342128108875487312",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8210.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1030666824546431007",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8211.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "2019681630158760456",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8212.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8992929959070126336",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8213.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8466570405724783470",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8221.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3157375692835987547",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8222.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-3377628225341525016",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8223.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-9088689233912294657",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8241.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-473400585182857646",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8242.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-2833392468132021764",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8300.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "645987878997904239",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8305.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-5708940270589705125",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8310.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-5903679175284492457",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8311.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1539411096299766555",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8312.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-925666583742044069",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8315.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4755247846387707897",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8340.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-9090728116677102895",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8341.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1999755167019464926",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8342.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "5942923791112865901",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8343.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3835849379077644139",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8350.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "5874955763255271061",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8351.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "5890432935782722954",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8352.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7541941822786331076",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8360.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6343915928201285576",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/commonbonus/8363.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_commonbonus.bundle",
+          "bundle_hash": "3070469e9e1c4434df3bcfa59a244542",
+          "bundle_sha256": "8cc6abd4b8845085b4d02ff56d43c5d56c0bfe986696529d15f1f7d2f890d8d5",
+          "bundle_size": 54609,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1514754442069659116",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3070469e9e1c4434df3bcfa59a244542.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8365.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "9090726362362754019",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldbonus/map_11_bonus/8366.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldbonus_map_11_bonus.bundle",
+          "bundle_hash": "d196ab4e8bc471a7425fff20340fb40a",
+          "bundle_sha256": "70eb5c8490c0c9b69ce179afff39eb8e1b773e8c941c7b405b043b712d2281c1",
+          "bundle_size": 7350,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3178918918536321696",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d196ab4e8bc471a7425fff20340fb40a.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3182835749584672476
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+              "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+              "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+              "bundle_size": 59506,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-7023188247593391836",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/commonnpc/8402.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+          "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+          "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+          "bundle_size": 59506,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-3182835749584672476",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6479123784044423910
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "6878503866140240614",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8405.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "6479123784044423910",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -1624070253097590703
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-2355918554788667311",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8406.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1624070253097590703",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -516626042504863381
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-2381930732709666453",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8407.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-516626042504863381",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -3613377019172902403
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+              "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+              "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+              "bundle_size": 59506,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-2073815834292475395",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/commonnpc/8408.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+          "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+          "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+          "bundle_size": 59506,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-3613377019172902403",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 6447602087478919899
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+              "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+              "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+              "bundle_size": 59506,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "-2309927826460081445",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/commonnpc/8409.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+          "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+          "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+          "bundle_size": 59506,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "6447602087478919899",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -362390650518504766
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "972946228983233218",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8410.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-362390650518504766",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -7886537401975362638
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "1503733930361236402",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8412.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-7886537401975362638",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -8044994859654562627
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+              "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+              "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+              "bundle_size": 59506,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "5052239107899407549",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/commonnpc/8413.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+          "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+          "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+          "bundle_size": 59506,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-8044994859654562627",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": -6594940861478599629
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+              "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+              "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+              "bundle_size": 59506,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "4588282308232152115",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/commonnpc/8414.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_commonnpc.bundle",
+          "bundle_hash": "6bd94e96f1a7bcb7bef26b8be0e92f3b",
+          "bundle_sha256": "0da28459dc14c81dec049c9a79e96bb27ae08ff1240502a0baf8f02ed4f93e21",
+          "bundle_size": 59506,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-6594940861478599629",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6bd94e96f1a7bcb7bef26b8be0e92f3b.bundle"
+        }
+      },
+      {
+        "components": [
+          {
+            "class": "MapEntityTag",
+            "fields": {
+              "TagType": -1,
+              "m_Enabled": 1,
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 7287639582976361147
+              },
+              "m_Name": "",
+              "m_Script": {
+                "m_FileID": 0,
+                "m_PathID": 1646637469925796861
+              }
+            },
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+              "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+              "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+              "bundle_size": 36930,
+              "manifest": "854_156383",
+              "origin": "official_cdn",
+              "path_id": "1596817827330441915",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+            }
+          }
+        ],
+        "path": "assets/prefabs/ecentity/mapworld/worldnpc/map_11_npc/8420.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldnpc_map_11_npc.bundle",
+          "bundle_hash": "f535b4cda052e778a160fd269e56a091",
+          "bundle_sha256": "8516bafec3fb70cbd8eafabe2e0eb088ce1af0a88463de11ae5cf3c4a002f087",
+          "bundle_size": 36930,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7287639582976361147",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f535b4cda052e778a160fd269e56a091.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worldgameplay/commonplay/8601.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldgameplay_commonplay.bundle",
+          "bundle_hash": "2732dc79fece2ceff7712c52b8830cf2",
+          "bundle_sha256": "24d800aca7ed7b337e7057d8f0c303b56bbc0111f255722c307ac2a7dc9e04a7",
+          "bundle_size": 98725,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1285524864027954926",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2732dc79fece2ceff7712c52b8830cf2.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8620.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1433190852138313938",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8622.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "-1947860713472930302",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8623.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "8818720826650505268",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8626.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "3728408469968253527",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8628.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7952079577828821948",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8629.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "705338157162500125",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8634.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "7293487466771499778",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8635.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "4871483850932594090",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      },
+      {
+        "components": [],
+        "path": "assets/prefabs/ecentity/mapworld/worlddoor/commondoor/8638.prefab",
+        "root": {
+          "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worlddoor_commondoor.bundle",
+          "bundle_hash": "c7fdc2c1f08a09a24827a8f58acb6b50",
+          "bundle_sha256": "95d2f725adebaa720946312eb9598b7aad91b0c426bddad7b9c0e597504b59e6",
+          "bundle_size": 17129,
+          "manifest": "854_156383",
+          "origin": "official_cdn",
+          "path_id": "1966908758946211965",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c7fdc2c1f08a09a24827a8f58acb6b50.bundle"
+        }
+      }
+    ],
+    "storiesSha256": "29341a137d8c54b228a25fae1ca0767f27a643ba027ada49843c1c0fff2821e6",
+    "storySettingsManifestSha256": "580852095ec35a9be5beb75cb8705eae53c750b0bb1ce9730e7d395dc6315e67"
+  },
+  "manifest": "854_156383",
+  "mapClassId": 11,
+  "operation": "Read original EC index and prefabs, root StoryTalk tags, root story registrations and StorySettings; no inferred tags.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/story-spatial.json",
+      "sha256": "195cd84d4586d476ff0f34754e3a51185b0d8739fd5010e1ee0e0ef75732003d"
+    }
+  ]
+}

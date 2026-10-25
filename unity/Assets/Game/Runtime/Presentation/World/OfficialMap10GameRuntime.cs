@@ -540,6 +540,7 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
+            InitializeStorySpatial();
             ValidateBattleEntityStageBindings();
             ValidateEntityLockGroups();
             InitializePuzzles();
@@ -1276,6 +1277,9 @@ namespace Zjcs.Presentation.World
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
             if (targetNode.type == "GetPosAroundStoryObjectNode")
             {
+                if (mapClassId == 11)
+                    return ResolveRegisteredStoryPoint(targetNode.registerKey)
+                        + new Vector2(targetNode.offsetX, targetNode.offsetY);
                 Map10RuntimeEntity registered = targetNode.registerKey == "Fangjianbei"
                     ? mapEntities.Values.FirstOrDefault(value => value.EntityClassId == 6001)
                     : null;
@@ -1292,6 +1296,8 @@ namespace Zjcs.Presentation.World
                 return new Vector2(currentGrid.X + targetNode.offsetX, currentGrid.Y + targetNode.offsetY);
             if (targetNode.selectGetType == 6)
             {
+                if (mapClassId == 11)
+                    return ResolveStoryTalkCenter() + new Vector2(targetNode.offsetX, targetNode.offsetY);
                 GameObject storyNpc = storyEntities.OrderBy(value => value.Key).Select(value => value.Value)
                     .LastOrDefault(value => value != null);
                 if (storyNpc != null) return StoryGridPosition(storyNpc.transform.position);

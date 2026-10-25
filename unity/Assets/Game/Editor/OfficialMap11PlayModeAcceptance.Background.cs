@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.World;
+using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Commerce;
 using Zjcs.Presentation.World;
@@ -40,6 +42,7 @@ namespace Zjcs.Editor
             });
             Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(save.Save) == 11, "Home return follows active normal map order");
             VerifyMainPlayerStoryPositions();
+            VerifyStorySpatialBindings();
             OfficialMap11StoryBranchValidation.Validate(runtime);
             var story = ((IDictionary)Field<object>("stories"))["WorldTreeGuideToNPC"] as Map10RuntimeStory;
             typeof(OfficialMap10GameRuntime).GetField("activeStory", Private).SetValue(runtime, story);
@@ -261,6 +264,48 @@ namespace Zjcs.Editor
                 Require(checkedNodes > 0, key + " includes an actual MainPlayer camera query");
             }
             Debug.Log("Map11 camera query validated: official MainPlayer enum 0 in rank door, combat door, monument and holy monster graphs; original offsets retained.");
+        }
+
+        private static void VerifyStorySpatialBindings()
+        {
+            IDictionary entities = Field<IDictionary>("mapEntities");
+            var worldTree = entities.Values.Cast<object>().Single(value =>
+                (int)value.GetType().GetField("EntityClassId", BindingFlags.Instance | BindingFlags.Public).GetValue(value) == 6101);
+            const BindingFlags EntityFields = BindingFlags.Instance | BindingFlags.Public;
+            int placementId = (int)worldTree.GetType().GetField("PlacementId", EntityFields).GetValue(worldTree);
+            MapGridPoint worldTreeGrid = (MapGridPoint)worldTree.GetType().GetField("Grid", EntityFields).GetValue(worldTree);
+            OfficialMap10EntityView view = Field<OfficialMap10EntityView>("entityView");
+            GameObject instance = view.FindEntityObject(placementId);
+            Require(instance != null, "World Tree registered entity instance exists");
+            bool active = instance.activeSelf;
+            instance.SetActive(true);
+            Vector2 target = (Vector2)typeof(OfficialMap10GameRuntime)
+                .GetMethod("ResolveRegisteredStoryPoint", Private).Invoke(runtime, new object[] { "WorldTree" });
+            Require(target == new Vector2(worldTreeGrid.X, worldTreeGrid.Y),
+                "WorldTree camera target resolves the original 6101 StoryNodeRegister root");
+            instance.SetActive(active);
+
+            MapGridPoint grid = Field<MapGridPoint>("currentGrid");
+            GameObject avatar = Field<GameObject>("avatar");
+            Vector3 position = avatar.transform.position;
+            OfficialWorldMapSession session = Field<OfficialWorldMapSession>("session");
+            OfficialMapVector3 origin = session.Definition.Navigation.Origin;
+            try
+            {
+                typeof(OfficialMap10GameRuntime).GetField("currentGrid", Private)
+                    .SetValue(runtime, new MapGridPoint(-1000, -1000));
+                avatar.transform.position = new Vector3(origin.X - 1000, origin.Y - 1000, position.z);
+                Vector2 fallback = (Vector2)typeof(OfficialMap10GameRuntime)
+                    .GetMethod("ResolveStoryTalkCenter", Private).Invoke(runtime, null);
+                Require(fallback == new Vector2(-1000, -1001),
+                    "No nearby original StoryTalk tags fall back to player position and StorySettings offset");
+            }
+            finally
+            {
+                typeof(OfficialMap10GameRuntime).GetField("currentGrid", Private).SetValue(runtime, grid);
+                avatar.transform.position = position;
+            }
+            Debug.Log("Map11 spatial bindings validated: official 6101 WorldTree register, player fallback, and StorySettings offset.");
         }
 
         private static IEnumerator CheckRenderedOptions(string capture)

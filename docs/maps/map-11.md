@@ -30,7 +30,7 @@
 
 世界树与援助的实际故事图已检查计数 0／1／2 时的首项优先和无匹配分支，魔女 Switch 已检查原结果匹配、类型转换及默认出口，剧情状态条件已检查 None／Playing／End，并冷读核对计数与路由。后台 Play Mode 已验证无连接的 `Exit` 按原 `StoryGraph.AsyncRun` 正常结束并只记录一次完成；魔女实际查询节点已核对跨地图总数、同一像不同回执不重复计数及旧档默认值，Editor 冷读检查已通过。该项使用回调和隔离激活记录，未覆盖魔女原界面及完整主线。
 
-镜头位置查询已按原 `GetEntityBaseNode.GetEntityType` 修正：`0` 为主角，`4` 为放置 ID，`5` 为逻辑标签，位置保留原偏移。后台 Play Mode 已检查资格门、战斗门、方尖碑和圣兽故事中的实际主角查询，不再误读未使用的 `LoEntityId` 字段；周围对话标签中心、注册对象和多种相机控制器仍须完整恢复。
+镜头位置查询已按原 `GetEntityBaseNode.GetEntityType` 修正：`0` 为主角，`4` 为放置 ID，`5` 为逻辑标签，位置保留原偏移。后台 Play Mode 已检查资格门、战斗门、方尖碑和圣兽故事中的实际主角查询，不再误读未使用的 `LoEntityId` 字段。新增转换器按固定版本官方 EC 索引读取 111 类地图／故事实体与两类本地玩家 prefab 的 `MapEntityTag` 和 `StoryNodeRegister`；世界树注册核对为实体 6101，方尖碑为 6002，均指向原 prefab 根节点。周围对话中心按 `StorySettings.PlayerArroundRangeSize` 的 2×3 格范围，合并地图与故事 NPC 的 `StoryTalk` 实体世界位置边界；空范围或战斗中回退主角，中心距离超过 5 格也回退，并应用原 `GetEntityPosOffset`。后台 Play Mode 已补世界树注册位置和无标签回退检查。移动相机的其他 `WorldCameraNode` 行为、NPC 动画和可见性仍须恢复；原子 prefab 的动态骨骼显隐目前没有在自制实体视图中模拟，因此对话中心的 NPC 可见性筛选仍不完整。
 
 默认 BGM 11 已以原媒体 `750073388` 接入本地 Unity AudioClip，使用 `Map_11_Play`／`Stop`／`Pause`／`Resume` 的无限循环与 Sine 淡变参数：1,000／250／250／500 毫秒。原区域／面积音乐表没有本图覆盖项。音量读取现有音乐设置，离图按原停止事件释放。带图形与原生音频的后台 Play Mode 已检查循环、暂停采样位置保持、恢复继续播放、音量变化和停止释放；音源保持静音，尚未试听或验证战斗音乐切换及其他音效。转换器为 `prepare_unity_map11_audio.py`，绑定为 `Resources/Map11/Audio`，来源见 `assets/reference/official-map/map11-audio-source-manifest.json`。
 
