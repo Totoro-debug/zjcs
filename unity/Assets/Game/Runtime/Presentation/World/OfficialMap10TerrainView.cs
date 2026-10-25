@@ -110,6 +110,15 @@ namespace Zjcs.Presentation.World
             BatchCount = batchIndex;
             resourceTexturePrefix = texturePrefix;
             expectedBatchCount = batchCount;
+            if (texturePrefix == "Map11/Textures/")
+            {
+                TextAsset baseGround = Resources.Load<TextAsset>("Map11/BaseGround/geometry");
+                if (baseGround == null) throw new InvalidDataException("Native Map11 base ground is not bound.");
+                var nativeGround = new GameObject("Official base Ground Tilemap polygons");
+                nativeGround.transform.SetParent(generatedRoot, false);
+                nativeGround.AddComponent<OfficialMap10TerrainView>().Initialize(baseGround, template,
+                    "Map11/BaseGround/", ReadHeaderCount(baseGround.bytes));
+            }
         }
 
         private void CreateBatch(int index, BatchMetadata metadata, Vector3[] positions, Vector2[] uvs,

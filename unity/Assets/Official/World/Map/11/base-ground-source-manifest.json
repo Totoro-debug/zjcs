@@ -1,0 +1,1067 @@
+{
+  "batchCount": 55,
+  "cameraView": {
+    "camera": {
+      "bundle": "defaultpackage_assets_prefabs_map_common_entityui.bundle",
+      "bundle_hash": "2ede6a347e9ed89d835a731af424a03d",
+      "bundle_sha256": "3a15bb65c19129b45f429f8b27fb68973c7f77fa80bc4bd002008228f5ef21bd",
+      "bundle_size": 13880,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-2898731680540156935",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ede6a347e9ed89d835a731af424a03d.bundle"
+    },
+    "code": [
+      {
+        "path": ".tools/source-packages/official-code/client-source/WorldCameraBaseController.cs",
+        "sha256": "e3c61465f61a947d804ae80097f57431a8669e14b1d7c4bbbe0ab127777224cf"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/OrthographicCameraResolutionAdaptor.cs",
+        "sha256": "cc6df2565f22b19ae2f3564614db4236d2e40d53c7ef0744fea466f01afac01c"
+      }
+    ],
+    "resolutionAdaptor": {
+      "bundle": "defaultpackage_assets_prefabs_map_common_entityui.bundle",
+      "bundle_hash": "2ede6a347e9ed89d835a731af424a03d",
+      "bundle_sha256": "3a15bb65c19129b45f429f8b27fb68973c7f77fa80bc4bd002008228f5ef21bd",
+      "bundle_size": 13880,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "5755081812735138809",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ede6a347e9ed89d835a731af424a03d.bundle"
+    },
+    "root": {
+      "bundle": "defaultpackage_assets_prefabs_map_common_entityui.bundle",
+      "bundle_hash": "2ede6a347e9ed89d835a731af424a03d",
+      "bundle_sha256": "3a15bb65c19129b45f429f8b27fb68973c7f77fa80bc4bd002008228f5ef21bd",
+      "bundle_size": 13880,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-3314894532597474311",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ede6a347e9ed89d835a731af424a03d.bundle"
+    }
+  },
+  "geometry": {
+    "path": "Resources/Map11/BaseGround/geometry.bytes",
+    "sha256": "f7e948cec6dce80d3fbe252715bfcdf8ed2b7b984621cb37d6f7e105889d0cba"
+  },
+  "hierarchy": [
+    {
+      "bundle": "defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle",
+      "bundle_hash": "e4c39e5bc4b378e6f14b4888c4eae396",
+      "bundle_sha256": "fc1b11629f03f9a74b51c07c582d20b76208387cffcfa818757d6a14c028da93",
+      "bundle_size": 225194,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-1838301957865205800",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e4c39e5bc4b378e6f14b4888c4eae396.bundle"
+    },
+    {
+      "bundle": "defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle",
+      "bundle_hash": "e4c39e5bc4b378e6f14b4888c4eae396",
+      "bundle_sha256": "fc1b11629f03f9a74b51c07c582d20b76208387cffcfa818757d6a14c028da93",
+      "bundle_size": 225194,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-2604384829109301288",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e4c39e5bc4b378e6f14b4888c4eae396.bundle"
+    },
+    {
+      "bundle": "defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle",
+      "bundle_hash": "e4c39e5bc4b378e6f14b4888c4eae396",
+      "bundle_sha256": "fc1b11629f03f9a74b51c07c582d20b76208387cffcfa818757d6a14c028da93",
+      "bundle_size": 225194,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-7888800073960648744",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e4c39e5bc4b378e6f14b4888c4eae396.bundle"
+    }
+  ],
+  "limitations": [
+    "Existing region renderer material adaptation does not yet restore original URP lighting. This geometry receipt is not a complete rendering claim."
+  ],
+  "manifest": "854_156383",
+  "mapClassId": 11,
+  "material": {
+    "apk_entry": "assets/yoo/DefaultPackage/1292c3025df85c48c494ed42b02d7107.bundle",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "bundle": "defaultpackage_share_92a8f2415e5a582ff53cdf9e6b389f53.bundle",
+    "bundle_hash": "1292c3025df85c48c494ed42b02d7107",
+    "manifest": "854_156383",
+    "origin": "apk_zip",
+    "path_id": "1419505037369228759",
+    "raw_sha256": "05d7a28fa953c91c0d92b813afaa4ab96f0aa194694c0a6dee99f4161903b1c9",
+    "raw_size": 711
+  },
+  "operation": "Read native Sprite polygon vertices; apply original tile matrix, orientation, anchor and colors in unchanged Unity world coordinates.",
+  "playerView": {
+    "model": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+      "bundle_size": 2318988,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-4637137656642923899",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+    },
+    "offset": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+      "bundle_size": 2318988,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "4657065900959601285",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+    },
+    "renderer": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+      "bundle_size": 2318988,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "5660481975285584517",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+    },
+    "root": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+      "bundle_size": 2318988,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-8969246423738281339",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+    },
+    "sha256": "5e569fb2445aa01e9af66191ce434de0a6fa27de1e39aacdfda41444a692378f",
+    "transform": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle",
+      "bundle_hash": "b5e9d08ca87e9493e291cb9e434bce9f",
+      "bundle_sha256": "e3198b909dbdcced0dcd2832435872ad217e74768ed74b6ad709e0c166f9d163",
+      "bundle_size": 2318988,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "-9107663262609698171",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b5e9d08ca87e9493e291cb9e434bce9f.bundle"
+    }
+  },
+  "renderer": {
+    "bundle": "defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle",
+    "bundle_hash": "e4c39e5bc4b378e6f14b4888c4eae396",
+    "bundle_sha256": "fc1b11629f03f9a74b51c07c582d20b76208387cffcfa818757d6a14c028da93",
+    "bundle_size": 225194,
+    "manifest": "854_156383",
+    "origin": "official_cdn",
+    "path_id": "-1887383327025000488",
+    "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e4c39e5bc4b378e6f14b4888c4eae396.bundle"
+  },
+  "shader": {
+    "apk_entry": "assets/yoo/DefaultPackage/cac97355bb4799c415e3cb1ef38b6dc5.bundle",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "bundle": "defaultpackage_unityshaders.bundle",
+    "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+    "manifest": "854_156383",
+    "origin": "apk_zip",
+    "path_id": "3994547607707645358",
+    "raw_sha256": "f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe",
+    "raw_size": 850402
+  },
+  "sprites": [
+    {
+      "indices": 24,
+      "path": "Resources/Map11/BaseGround/BaseGround-973bf865c0288e4b.png",
+      "sha256": "973bf865c0288e4b93290133440c131d57822a87bbb7b049cf0e0f9a4360ebc8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "1248927895415957309",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 10
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-3490771c3ad7f209.png",
+      "sha256": "3490771c3ad7f209b919a8d1d40c3a2acf2f649c71316b94ec8ccb9730c9bb73",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-5509541501681767274",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 27,
+      "path": "Resources/Map11/BaseGround/BaseGround-c17d5c28cd2b3654.png",
+      "sha256": "c17d5c28cd2b365428d0ab37af47a9aad1ccb84b6a9636d7d2835cac282d5268",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-6480958306190006609",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-e739a54495e1b8f7.png",
+      "sha256": "e739a54495e1b8f74ed73f89d774a5dc02980ebb1b295e1929a15cf946c95a46",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "458907797228731503",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-64c8e198573fda8e.png",
+      "sha256": "64c8e198573fda8e609e35bf07a755e1bb56c16fc45f9586b430829a8d80e2ba",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2422464054621114377",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 18,
+      "path": "Resources/Map11/BaseGround/BaseGround-b33611b3f8bd5aa7.png",
+      "sha256": "b33611b3f8bd5aa7ac2a52f9a27a848d44c5e03904276c05636b56a6e7fc98ee",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-2019904209889664554",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 8
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-f92922dfc7e373f6.png",
+      "sha256": "f92922dfc7e373f677d0d3540a5b773b0a589073adcb1da2c1cb3cc56765a6cd",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-2000182018247884737",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 18,
+      "path": "Resources/Map11/BaseGround/BaseGround-5abda5f68349ae25.png",
+      "sha256": "5abda5f68349ae2589850c629a067edb2098cc59ba9ee165cdfb636d6f69ab44",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-9044771356260824160",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 8
+    },
+    {
+      "indices": 27,
+      "path": "Resources/Map11/BaseGround/BaseGround-66342ec9b4381485.png",
+      "sha256": "66342ec9b4381485c0b9fd60365cffef02f00edbb56baa50bfe7c30eb23db992",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-1412536772854976525",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 18,
+      "path": "Resources/Map11/BaseGround/BaseGround-61fd473592afe022.png",
+      "sha256": "61fd473592afe0221097fbae4ba397b76717f978d3a7657c16a38d9afd842dd6",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "6089225067236013223",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 8
+    },
+    {
+      "indices": 12,
+      "path": "Resources/Map11/BaseGround/BaseGround-a70e89b78f0e790e.png",
+      "sha256": "a70e89b78f0e790e3f1ff0b942bc22a0a1794f63578f4af13ae42cbaf9c8f68e",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "5990392446267076533",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 6
+    },
+    {
+      "indices": 27,
+      "path": "Resources/Map11/BaseGround/BaseGround-7e63511f5fe66083.png",
+      "sha256": "7e63511f5fe66083b88fd04c679c615636b3c5c087fca87b67f0382a1aa1c6d5",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-349884740718686999",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-172f074d52db314e.png",
+      "sha256": "172f074d52db314ec28d169b5769933f8a28a50b69d464c903b9453307ca6a03",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "150182757185719344",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 18,
+      "path": "Resources/Map11/BaseGround/BaseGround-e8b0eca2b5b113d9.png",
+      "sha256": "e8b0eca2b5b113d9c44125d3dd7874b36523802d9fb71e1fee9a2a206eee0a9c",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-3909259522506451532",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 8
+    },
+    {
+      "indices": 15,
+      "path": "Resources/Map11/BaseGround/BaseGround-683879b0c45f7fca.png",
+      "sha256": "683879b0c45f7fca3bc21626eccb10f06ed86f06a7eab7c041aea22fe73d64c2",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "4204056104091944561",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 7
+    },
+    {
+      "indices": 9,
+      "path": "Resources/Map11/BaseGround/BaseGround-6c478fe187b9ec95.png",
+      "sha256": "6c478fe187b9ec95e582c12fba344611c57a4bb21bec96981e20569e764d5775",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "6663253255539099031",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 5
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-2ef1c57f1ee3a954.png",
+      "sha256": "2ef1c57f1ee3a9540b2cdb90ed1787afadf72dba58b1d4a6b3ab2ab15db10562",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-7261670911250729782",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-52f2eb9fe19bdaac.png",
+      "sha256": "52f2eb9fe19bdaac5d98c91dae985cef8c2304b0d78005eda4aa9ed61c465268",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "7697362286933271558",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-ae4f65fff3496752.png",
+      "sha256": "ae4f65fff34967526e7e2e47166dab4c21ddded1b3dbcdc6001c25651c26d67a",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-4435792454014009475",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 9,
+      "path": "Resources/Map11/BaseGround/BaseGround-c789cb5e485f0fc0.png",
+      "sha256": "c789cb5e485f0fc0285b489973ba0bf110aa1e2f89d84b8d8fcbe1b7a237492d",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "6062447649371192993",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 5
+    },
+    {
+      "indices": 15,
+      "path": "Resources/Map11/BaseGround/BaseGround-2c51d9c39805361e.png",
+      "sha256": "2c51d9c39805361e796f0afcb0555dc87bb6d75847e4e69f7ea18f877486e76a",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2728504567576366580",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 9
+    },
+    {
+      "indices": 21,
+      "path": "Resources/Map11/BaseGround/BaseGround-c0e575e70591b8a3.png",
+      "sha256": "c0e575e70591b8a35c83ce4bf5e61aff8f686c8caee84b00745db1a661c9fb7f",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "6105637176278356789",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 21,
+      "path": "Resources/Map11/BaseGround/BaseGround-12363db523db1b4b.png",
+      "sha256": "12363db523db1b4b676d10f795c487f752909aa32496f1517e08a1b29f62f895",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "8863139958839804220",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 27,
+      "path": "Resources/Map11/BaseGround/BaseGround-1420caaa08fcee9c.png",
+      "sha256": "1420caaa08fcee9c0e6dfd0bd8057a0a666503fb2f8026bd066e9f2f4c4c769f",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-1682384368890042831",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 13
+    },
+    {
+      "indices": 27,
+      "path": "Resources/Map11/BaseGround/BaseGround-df3e2af15651f78e.png",
+      "sha256": "df3e2af15651f78ea3b40dabdd8318f1b355662a230e199375c533dc66349a50",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2779712862850126338",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 11
+    },
+    {
+      "indices": 30,
+      "path": "Resources/Map11/BaseGround/BaseGround-192379e69f888b14.png",
+      "sha256": "192379e69f888b14e051595049a65789a0f85170006e79387b6bf340b1a3886d",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-170662420989897898",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 12
+    },
+    {
+      "indices": 15,
+      "path": "Resources/Map11/BaseGround/BaseGround-d8911b01c59c4312.png",
+      "sha256": "d8911b01c59c4312dcdaf3ac654a13529ace40a0c6b1b005dc4faf9ab5f6f61d",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "5549614617514695953",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 9
+    },
+    {
+      "indices": 30,
+      "path": "Resources/Map11/BaseGround/BaseGround-f0a7c0582869908e.png",
+      "sha256": "f0a7c0582869908eeaf64058e6f5ded443bdfd7bf2c766262a62e0f77a1e5b07",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-9160550814841807568",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 12
+    },
+    {
+      "indices": 24,
+      "path": "Resources/Map11/BaseGround/BaseGround-a7962250e1a64002.png",
+      "sha256": "a7962250e1a64002f7b93d4963a78de66739f310897bde1be6a8e5401f1a71ca",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "8802604607636076038",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 12
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-0796ccc69c53bcdd.png",
+      "sha256": "0796ccc69c53bcdd00ea91ade76df3461286dcd985a4ed0586f07e18d5fb2a87",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-3755664797523567010",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-06c8f9f89b6834a5.png",
+      "sha256": "06c8f9f89b6834a5195f547d018dd4825d7f2f8b66892f8c429c78dae89fa98f",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "3686911789961623688",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-28118018efc98204.png",
+      "sha256": "28118018efc98204782affa1e7de37e21ede5adf455a75a2e93046ad46f085d0",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "7591356226933092056",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 24,
+      "path": "Resources/Map11/BaseGround/BaseGround-d5adc42a8e5e4c6b.png",
+      "sha256": "d5adc42a8e5e4c6bfc0158a12c77e7b42f787543c576e99caca25ca4fead7092",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-5291284851437953586",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 12
+    },
+    {
+      "indices": 12,
+      "path": "Resources/Map11/BaseGround/BaseGround-439866af7a744459.png",
+      "sha256": "439866af7a744459bbfdb7c8f35fbf55ef831fb11f1f5429b207061b704fa81a",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "3271706268394012677",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 6
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-50c396e96753a0d7.png",
+      "sha256": "50c396e96753a0d7780446a91112744b9f759b3806b8c0eac6b5820573352808",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-3951770438360785119",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-987ff0fd8fff7ec6.png",
+      "sha256": "987ff0fd8fff7ec6e9882348f3bde3a1669b92b12d7c3c967caffa50c623de9e",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-1719512031778356586",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-dc3b2da9da943fa0.png",
+      "sha256": "dc3b2da9da943fa0122246f7cbf6d7a3efc27bb808bd42b6d5e9a742232f5307",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-1030301347553351167",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 9,
+      "path": "Resources/Map11/BaseGround/BaseGround-ffc2ed2ecf28ca5b.png",
+      "sha256": "ffc2ed2ecf28ca5bb1b33d5e771e501736ca5ae06bb743a0dab5cab363d1fec8",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "5257862025101609846",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 5
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-7ef21be95acd5c1f.png",
+      "sha256": "7ef21be95acd5c1ff685999e1c707ebc4c18ce44dd3f65b31e76490c7b72a075",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "8790656390231864638",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-aee67a96286e0e97.png",
+      "sha256": "aee67a96286e0e97e157753be45b18a13c3ecb55f872642641b347b8da2b829d",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2335254078810028620",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-535559704060993a.png",
+      "sha256": "535559704060993ad67c73ab1cf5ff208d3cc3f8e7a39c024142380e29faf65c",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-6018563766123641843",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-ab9d2783cdc8711b.png",
+      "sha256": "ab9d2783cdc8711b0931ffdffb37cacab8eb3965266f23d018f6516a7c939f7d",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2009897720354036951",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-93b47542a2247fca.png",
+      "sha256": "93b47542a2247fca0f1e3cdfa1bc2c5790ac4319ab850a4d89b9a2633efbad07",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-5564930475086822302",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-7cc62e4b9399966b.png",
+      "sha256": "7cc62e4b9399966b9b2f3a1b4c10a412eb6ded19a7ddcb667300ccace470c1bb",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "911395470007555751",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 9,
+      "path": "Resources/Map11/BaseGround/BaseGround-cb0c466ea4f7d7c3.png",
+      "sha256": "cb0c466ea4f7d7c3ef4ec5d0c6374d705f062d7d997f398f96e0677cd548f7e2",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "3279239317073839927",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 5
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-852900201a3549bb.png",
+      "sha256": "852900201a3549bb2e13a8ff134b5c42e4c7cbfba58f77bfc0fc2cb79cb09a0b",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "526650838732984716",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-5d9208da74a0c147.png",
+      "sha256": "5d9208da74a0c147ba5f500dc7f950c06c7c7f2d82b1fadf811f3cf9c9d855a1",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-6001802281758788433",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 15,
+      "path": "Resources/Map11/BaseGround/BaseGround-ab7d3d818d7c3af5.png",
+      "sha256": "ab7d3d818d7c3af5831e5a1d76803e88e461bc40ae584ba29abc8963a583812e",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-4958740311819957218",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 7
+    },
+    {
+      "indices": 9,
+      "path": "Resources/Map11/BaseGround/BaseGround-98cfd0e75deb8fb9.png",
+      "sha256": "98cfd0e75deb8fb99fbf611e7d667f40961df9cb679e7ed1fe682e4f32a50125",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "8591118265273235118",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 5
+    },
+    {
+      "indices": 12,
+      "path": "Resources/Map11/BaseGround/BaseGround-a4a1c46a0a9c497d.png",
+      "sha256": "a4a1c46a0a9c497dbf9d7645ea923186682e32db2c0cc12002dfbbb14dad3e29",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "6831921531094887040",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 6
+    },
+    {
+      "indices": 15,
+      "path": "Resources/Map11/BaseGround/BaseGround-404c26d82b0cb240.png",
+      "sha256": "404c26d82b0cb24093a4b554a3cd369407d1a8a6d14fb96901af0e7e8baf34fa",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-8762030341767231906",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 7
+    },
+    {
+      "indices": 24,
+      "path": "Resources/Map11/BaseGround/BaseGround-1b5923681b08307d.png",
+      "sha256": "1b5923681b08307deea0fbec860961dfe25ce3a279999edd1194ac0888826032",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-8109724258729321785",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 10
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-dfe1f07878633dcd.png",
+      "sha256": "dfe1f07878633dcd05a712a4a697919342ab5dd01acb8b27b48fd73f90de72d3",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "492675412670197564",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-b7caaa62ff1220fb.png",
+      "sha256": "b7caaa62ff1220fb82493ca6dcb7865b8a0be15f101360347d98f1696864c934",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "1669246910795006957",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    },
+    {
+      "indices": 6,
+      "path": "Resources/Map11/BaseGround/BaseGround-d61572627f7276f7.png",
+      "sha256": "d61572627f7276f76cdcd24bc7a5b7b4295243ac34b2b9ab2762f62fe401bf3b",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapscence_map11_ground11.bundle",
+        "bundle_hash": "7787e65054102f117aa358b8135c6d32",
+        "bundle_sha256": "314c42b1f069dc75c631a5a9ee2483ebc2b2ae46462a626084fb31ac02e91225",
+        "bundle_size": 1098878,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-5118620869581394828",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7787e65054102f117aa358b8135c6d32.bundle"
+      },
+      "vertices": 4
+    }
+  ],
+  "tileCount": 17752,
+  "tilemap": {
+    "bundle": "defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle",
+    "bundle_hash": "e4c39e5bc4b378e6f14b4888c4eae396",
+    "bundle_sha256": "fc1b11629f03f9a74b51c07c582d20b76208387cffcfa818757d6a14c028da93",
+    "bundle_size": 225194,
+    "manifest": "854_156383",
+    "origin": "official_cdn",
+    "path_id": "3189613172165709784",
+    "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e4c39e5bc4b378e6f14b4888c4eae396.bundle"
+  }
+}

@@ -16,7 +16,9 @@
 
 小地图恢复原圆形遮罩材质、人物标记、地区名／坐标／探索度、全屏面板、缩放、拖拽边界与分类筛选。37 份原生标记 prefab 按官方实体／地图／区域／标签优先级绑定到 1,707 个放置点；标记偏移使用官方身体格中心，缩放与完成状态按原配置处理。筛选保存至所属档案的 `minimap-filter.json`，关闭、清空内存后重开可冷读恢复。跨地图页签、标记点击跳转和公共地区资源点提供器尚未完整接入，不能据此认定完整小地图功能已完成。
 
-Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。画面复核同时发现原基础地面瓦片未加载、地形／角色排序及遮罩绘制错误；这些场景问题仍须修复后再核对整体画面。代码入口为 `OfficialMap10GameRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
+Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。地形／角色遮挡排序、水面缺块和原 URP 材质表现仍须修复后再核对整体画面。代码入口为 `OfficialMap10GameRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
+
+基础地面补回原 `MapGround_11_bare/GridGround/Ground` 的 17,752 个 Tile，以 55 张原 Sprite 的多边形、三角形、UV、颜色、Tile 矩阵及锚点生成 55 批原生网格，不改变原世界坐标。角色模型挂回原 `3001_view/Model/Offset/Player_Model_Map` 的 `(0.3, 0.3, 1)` 缩放、`(0, -0.5, -0.5)` 偏移，并以排序组适配原单 Renderer 的世界槽位，恢复角色显示。地图相机从原 `WorldCamera` 读取 SafeArea、适配优先级及裁剪面，沿 `OrthographicCameraResolutionAdaptor.AdaptOrthographicSize` 恢复视野和窗口比例，剧情结束恢复同一基准。转换器为 `prepare_unity_map11_base_ground.py`，显式加载 `Resources/Map11/BaseGround`；对象、bundle、原 shader、源码与输出哈希见 `base-ground-source-manifest.json`。带图形 Play Mode 已实际查看基础地面和角色恢复后的 HUD／对话画面；该补载尚未恢复原 URP 光照、水面与完整排序，不代表整图渲染完成。
 
 尚无本图在 Unity 完整运行并验收的结论。
 

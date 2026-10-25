@@ -779,6 +779,8 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 ## 森之国地图11官方材质、机关与六碑文字
 
+`prepare_unity_map11_base_ground.py` 补取固定版 `defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle` 的原 `Ground` Tilemap：17,752 格、55 张原 Sprite、55 批多边形，保留原 Tile 矩阵、锚点、颜色及 Unity 坐标；`Resources/Map11/BaseGround/geometry.bytes` SHA256 为 `f7e948cec6dce80d3fbe252715bfcdf8ed2b7b984621cb37d6f7e105889d0cba`。同一转换器读取原世界角色 `3001.prefab` 的模型偏移、缩放和渲染槽位，以及原 `WorldCamera.prefab` 的视野适配、裁剪面。原对象、bundle 哈希、Sprite 及几何输出哈希、`WorldCameraBaseController`／`OrthographicCameraResolutionAdaptor` 源码哈希见 `unity/Assets/Official/World/Map/11/base-ground-source-manifest.json`。当前地面沿用既有材质适配，原 URP 光照、水面与遮挡排序未完整恢复；不能据此声称场景完整还原。
+
 Map11 女巫原界面沿固定版本 `854_156383` 的 `defaultpackage_assets_prefabs_ui_worldmap.bundle` 提取 `WorldWitchTouchDialog`（PathID `-3082449800091456431`）、`WorldStageInteractionPreviewDialogWitch`（PathID `8230908895915710719`）和 `WorldTouchDialogWitchPeriodicityInteraction`（PathID `640011520031964919`）。该 bundle 原始 SHA256 `b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a`，大小 1,186,915 字节。逐对象来源、原始引用、可选动画目标核对及输出哈希统一保存在 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`；当前行为与验证边界见地图所属页。
 
 Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_data.py` 将基础实体模板与地图 `Lo` 覆盖分别保留，生成 110 类实体组件、44 个故事图（666 节点）与四个子图（64 节点）、50 条地图对话、61 条选项、8 条固定奖励、24 条主线及 129 个战斗阶段；输入、官方客户端／共享程序集来源与输出哈希见 `official-map/map11-runtime-source-manifest.json`。`prepare_unity_map10_battle_data.py --map-id 11` 保留 57 个怪物编队数组、17 个场景和 591 个实体阶段绑定，来源见 `unity/Assets/Official/World/Map/11/battle-source-manifest.json`。

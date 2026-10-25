@@ -170,7 +170,7 @@ namespace Zjcs.Presentation.World
             mapSavePath = Path.Combine(new ProfileSlotCatalog(persistentDataPath).GetSlotDirectory(slotId),
                 "map-" + mapClassId + "-save.json");
             uiParent = targetUiParent;
-            avatar = characterModel;
+            avatar = selectedMapClassId == 11 ? MountMap11Player(characterModel) : characterModel;
             characterName = displayName ?? string.Empty;
             closeCallback = onClose;
             DontDestroyOnLoad(gameObject);
@@ -280,6 +280,7 @@ namespace Zjcs.Presentation.World
         {
             if (worldCamera == null || avatar == null || closed) return;
             if (UpdateBattleSceneCamera()) return;
+            RefreshMap11CameraResolution();
             Vector3 target = storyCameraActive
                 ? storyCameraTarget
                 : avatar.transform.position + new Vector3(0f, 0f, -20f);
@@ -609,11 +610,11 @@ namespace Zjcs.Presentation.World
                 worldCamera.transform.position = new Vector3(0f, 0f, -20f);
             }
             worldCamera.orthographic = true;
-            worldCamera.orthographicSize = 7.5f;
+            worldCamera.orthographicSize = DefaultWorldCameraSize();
             worldCamera.clearFlags = CameraClearFlags.SolidColor;
             worldCamera.backgroundColor = new Color(0.08f, 0.12f, 0.12f, 1f);
-            worldCamera.nearClipPlane = 0.1f;
-            worldCamera.farClipPlane = 100f;
+            worldCamera.nearClipPlane = mapClassId == 11 ? map11WorldViewSource.cameraNear : 0.1f;
+            worldCamera.farClipPlane = mapClassId == 11 ? map11WorldViewSource.cameraFar : 100f;
             worldCamera.cullingMask &= ~(1 << 30);
             worldCamera.transform.position = avatar.transform.position + new Vector3(0f, 0f, -20f);
         }
@@ -1167,7 +1168,7 @@ namespace Zjcs.Presentation.World
                         case "CameraMoveAndUnlockAreaNode":
                             Vector2 cameraPoint = ResolveStoryCameraPoint(activeStory, node);
                             storyCameraTarget = StoryWorldPoint(cameraPoint.x, cameraPoint.y) + new Vector3(0f, 0f, -20f);
-                            storyCameraSizeTarget = Mathf.Clamp(7.5f + node.viewSizeOffset, 4f, 30f);
+                            storyCameraSizeTarget = Mathf.Clamp(DefaultWorldCameraSize() + node.viewSizeOffset, 4f, 30f);
                             storyCameraActive = true;
                             StartCoroutine(ContinueStoryAfterDelay(node.duration, StoryNext(node, "Exit")));
                             return;
@@ -1527,7 +1528,7 @@ namespace Zjcs.Presentation.World
                 SetStoryStatus(activeStoryRootKey, 0);
             SetStoryWorldUiHidden(false);
             storyCameraActive = false;
-            if (worldCamera != null) worldCamera.orthographicSize = 7.5f;
+            if (worldCamera != null) worldCamera.orthographicSize = DefaultWorldCameraSize();
             cameraVelocity = Vector3.zero;
             storyCameraVelocity = Vector3.zero;
             if (storyHiddenContextEntity != null) storyHiddenContextEntity.SetActive(true);
