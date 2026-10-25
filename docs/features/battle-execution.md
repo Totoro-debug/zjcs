@@ -253,7 +253,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 - [ ] 从实际角色存档装配装备技能、槽序、等级／品阶、技能属性、被动、职业与其他来源状态，并在准备阶段变更后刷新快照。当前已会从技能档案读取方案主动技能、初始武器技能、阶位与槽位等级，并消费主动技能属性、被动属性、冷却及已装备被动的 `PassiveStatusIdList`；Map10 玩家与怪物的被动状态由同一官方绑定入口在战斗开始前装配。装备提供的技能、职业限制与其他加成仍待接入。
 - [x] 无技能回合按用户确认的本地规则移动到与最近敌人距离最大的可达格网位置（若没有更远的合法路径则留在原位），并推进个人回合、冷却、状态与胜负检查；核心回归断言实际落点达到该测试格网的最大可达距离，并覆盖无虚构攻击与冷却推进。官方客户端／共享代码没有提供该 AI 决策的服务器目的地规则。
-- [ ] 处理技能消耗与开场条件：`CostType=1` 已按正数 `SkillCost` 扣除 HP，缺值按0正常释放；`CostType=2` 已消耗全部持续护盾并按用户确认的等比例结算，HP 消耗也显示官方技能消耗飘字且不计作命中。技能 CD 已由 `FightOfficialCombatCatalog.CalculateSkillCooldown` 按来源与技能 CD 属性计算并写入槽状态；`ResetCDAtStart`、`MustHaveValidCost`、次数限制、换波次数重置及状态／召唤池条件释放均已接入。冷却增减、停止、永久缩短的状态触发链与职业限制执行仍待接入；来源和目标动作合法性已按固定 `state_mutex` 矩阵接入。
+- [ ] 处理技能消耗与开场条件：`CostType=1` 已按正数 `SkillCost` 扣除 HP，缺值按0正常释放；`CostType=2` 已消耗全部持续护盾并按用户确认的等比例结算，HP 消耗也显示官方技能消耗飘字且不计作命中。技能 CD 已由 `FightOfficialCombatCatalog.CalculateSkillCooldown` 按来源与技能 CD 属性计算并写入槽状态；`ResetCDAtStart`、`MustHaveValidCost`、次数限制、换波次数重置及状态／召唤池条件释放均已接入。停止冷却状态已按官方 `FightStatusSkillStopCdComponent.OnRoundUpdated` 在持有者个人回合开始时逐槽推进 `LastRound`；`scripts/test_battle_cooldown_status.ps1` 覆盖固定版24010／24011／24407和个人回合执行。`ModifyCD` 的 `OnInvoked` 目标选择及永久减 CD 修改的调用时机仍无可验证的客户端执行链。职业限制执行仍待接入；来源和目标动作合法性已按固定 `state_mutex` 矩阵接入。
 - [ ] 完整消费被动技能的状态部分：固定版 `PassiveStatusIdList` 已转换为开战状态绑定并覆盖 Map10 玩家与怪物；属性变换与护盾按通用状态执行器结算，控制、破韧／恢复、生命层及其他未实现事件仍按相应组件缺口处理。
 - [ ] 每槽主动施放、额外施放、状态阈值触发与状态层数重播已接入并生成独立施放事件；子技能、Replay 的其他条件与处理类型、白名单、触发上限和结束清理仍未贯通；不把所有负持续时间强制改为固定值。
 - [ ] 覆盖命中图各分支、锚点与跟随、Delay／覆盖延时、链式／随机／后继命中、临时属性、吸血／附加伤害及多目标时点，维持确定性随机流与命中来源。命中延迟、`ActOnSouce` 锚点、`Scope` 范围命中、按距离计算的延迟、固定／治疗命中节点、命中驱散与命中位移已接入；仍缺命中特效锚点／跟随、Scope 的 `NotSameTarget` 等标志与区域过滤、按 Delay 分帧结算与覆盖延时。
@@ -300,7 +300,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 - [ ] 战斗存档续战已覆盖非剧情 Map10 战斗：检查点经 `FightBattleCheckpointSerializer` 写入本地存档，重新进入同一阶段／放置点时恢复（关卡、波次、单位、技能、状态、格网、时间线、回执与统计均保留），结束／主动离开／异常终止时清除；剧情战斗不自动续战，跨模式入口、奖励回执与重复结算保护仍待贯通。
 - [ ] 将胜负交接和奖励回执与所属玩法存档贯通，覆盖重复点击、重复加载、退出／重启及已结算记录，防止重复奖励；具体奖励公式或服务器决策未取得时按所属页说明缺口，不自行推定。
 - [ ] 对尚未恢复的动态 UI、原相机与环境特效、模型、Playable、材质／shader、音频和 CAB 依赖按原清单补取、转换、导入并显式绑定；同步真实版本、来源、输入输出哈希。战场基础／昼夜几何与贴图现由 Unity Resources 显式加载，仍须在 Editor 和 Play Mode 核对全部入口的本地资源装配。所有入口运行时仅使用随游戏交付的本地资源，断网可用。
-- [ ] 对新增或修复的阶段、未来波次、同技能多怪物、范围／移动、CD／消耗、状态事件、盾／韧性、召唤及恢复运行有意义的规则回归；韧性已由 `scripts/test_fight_resilience_formula.ps1` 与 `scripts/test_battle_resilience.ps1` 覆盖公式、组配置、破韧响应、伤害上限及个人回合恢复，通用公式与执行器回归由 `scripts/test_unity_combat.ps1` 覆盖；其余尚未实现行为仍需补充测试。
+- [ ] 对新增或修复的阶段、未来波次、同技能多怪物、范围／移动、CD／消耗、状态事件、盾／韧性、召唤及恢复运行有意义的规则回归；韧性已由 `scripts/test_fight_resilience_formula.ps1` 与 `scripts/test_battle_resilience.ps1` 覆盖公式、组配置、破韧响应、伤害上限及个人回合恢复，`scripts/test_battle_cooldown_status.ps1` 覆盖固定停止 CD 状态与回合执行，通用公式与执行器回归由 `scripts/test_unity_combat.ps1` 覆盖；其余尚未实现行为仍需补充测试。
 - [ ] 执行 Editor 导入／编译及 `Zjcs.Editor.ProjectTools.Validate`。本轮 Unity 桌面 Editor 未解锁，日志只有进程启动记录，没有脚本导入／编译结果；`check_unity_project.py` 仅通过静态 GUID／元数据检查，不能代替 Editor 验证。
 - [ ] 在 Unity Play Mode 从真实入口完成准备／拖拽／方案、回合／波次、选敌／移动、技能与 CD、HUD／详情、倍率／快进／镜头、胜负／退出及重启恢复；用真实鼠标／键盘操作，检查画面、遮挡、状态和存档，不以直接调用回调代替输入。
 - [ ] 实际查看玩家／NPC／怪物／宠物／召唤物、地面、血条、状态、时间轴、动作、特效与音频；覆盖不同职业／技能、重复怪物、Boss／多波、不同竖屏比例、死亡／复活等受影响分支。没有实际画面验证的项目继续标为未完成。

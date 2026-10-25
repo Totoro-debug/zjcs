@@ -100,6 +100,10 @@ namespace Zjcs.Combat.Official
             var skillState = new FightSkillState(actor.SkillState);
             int actorRound = unchecked(actor.SkillState.Round + 1);
             skillState.BeginRound(actorRound);
+            if (statusCatalog != null && actor.Statuses != null)
+                foreach (FightBattleStatusState status in actor.Statuses)
+                    if (status != null && statusCatalog.StatusStopsSkillCooldown(status.ClassId))
+                        skillState.StopCooldownForRound();
             FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart);
             var before = new Dictionary<int, long>();
             for (int i = 0; i < units.Count; i++) before[units[i].Id] = units[i].Hp;

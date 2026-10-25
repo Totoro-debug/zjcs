@@ -353,6 +353,15 @@ namespace Zjcs.Combat.Official
                 ResetRound = Int(info, "ResetRound")
             };
         }
+
+        public bool StatusStopsSkillCooldown(int statusClassId)
+        {
+            return statusClassId > 0
+                && entities.TryGetValue(statusClassId,
+                    out Dictionary<string, object> components)
+                && Component(components, "FightStatusSkillStopCdComponent") != null;
+        }
+
         public List<int> MonsterActiveSkillItems(int monsterId, int groupNo)
         {
             Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
