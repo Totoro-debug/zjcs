@@ -24,7 +24,7 @@ namespace Zjcs.Editor.Combat
             Type entryType = combat.GetType("Zjcs.Combat.Official.FightTurnEntry", true);
             var playerTexture = new Texture2D(4, 4);
             Sprite playerFallback = Sprite.Create(playerTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
-            var canvas = new GameObject("BattleTimelinePortraitAcceptance", typeof(RectTransform), typeof(Canvas));
+            var canvas = new GameObject("BattleTimelinePortraitAcceptance", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
             try
             {
                 var view = new OfficialBattleHudView(hud);
@@ -48,15 +48,16 @@ namespace Zjcs.Editor.Combat
                 Delegate portraitResolver = Expression.Lambda(resolverType,
                     Expression.Invoke(Expression.Constant(resolve), Expression.Convert(argument, typeof(object))), argument).Compile();
                 typeof(OfficialBattleHudView).GetMethod("RefreshTimeline", BindingFlags.Instance | BindingFlags.Public)
-                    .Invoke(view, new object[] { checkpoint, portraitResolver, null, false });
+                    .Invoke(view, new object[] { checkpoint, portraitResolver, null, false, null });
 
-                Transform[] nodes = canvas.GetComponentsInChildren<Transform>(true);
+                Transform[] nodes = UnityEngine.Object.FindObjectsOfType<Transform>(true);
                 Transform player = Find(nodes, "GameRoundCharacterItem_1");
                 Transform monster = Find(nodes, "GameRoundCharacterItem_2");
-                RawImage playerImage = RequireRawImage(player, "IconGo/PlayerHeadETC2Go/HeadImg", "player head");
-                if (playerImage.texture != playerTexture)
-                    throw new InvalidOperationException("Player RawImage did not bind the fallback portrait texture.");
-                Image monsterImage = RequireImage(monster, "IconGo/MonsterIconImg", "monster head");
+                var properties = new MaterialPropertyBlock();
+                player.Find("IconGo/PlayerHeadETC2Go/HeadImg").GetComponent<MeshRenderer>().GetPropertyBlock(properties);
+                if (properties.GetTexture("_MainTex") != playerTexture)
+                    throw new InvalidOperationException("Player circular mesh did not bind the resolved portrait texture.");
+                SpriteRenderer monsterImage = monster.Find("IconGo/MonsterIconImg").GetComponent<SpriteRenderer>();
                 if (monsterImage.sprite == null || monsterImage.sprite.name != "G_3206")
                     throw new InvalidOperationException("Monster IconId 3206 did not bind G_3206.");
 
@@ -105,22 +106,5 @@ namespace Zjcs.Editor.Combat
             return null;
         }
 
-        private static RawImage RequireRawImage(Transform root, string path, string description)
-        {
-            Transform node = root == null ? null : root.Find(path);
-            RawImage image = node == null ? null : node.GetComponent<RawImage>();
-            if (image == null)
-                throw new InvalidOperationException("Battle timeline " + description + " RawImage is missing: " + path);
-            return image;
-        }
-
-        private static Image RequireImage(Transform root, string path, string description)
-        {
-            Transform node = root == null ? null : root.Find(path);
-            Image image = node == null ? null : node.GetComponent<Image>();
-            if (image == null)
-                throw new InvalidOperationException("Battle timeline " + description + " node is missing: " + path);
-            return image;
-        }
     }
 }

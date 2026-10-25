@@ -203,7 +203,7 @@ namespace Zjcs.Presentation.Combat
                     hudView.Refresh(result.Checkpoint);
                     hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
                     hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
-                        timelineFactionResolver, true);
+                        timelineFactionResolver, true, result.Event);
                     hudView.RefreshBoss(result.Checkpoint, UnitName);
                     hudView.RefreshStageStatus(result.Checkpoint);
                 }

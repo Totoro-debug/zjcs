@@ -48,12 +48,8 @@ namespace Zjcs.Presentation.Combat
         private const string RoundHintAnimation = "UIGameTop_GameProgress_Hint";
         private const int RoundCountDown = 5;
         private const string SkillSlotsPath = "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot";
-        private const string TimelineSlotPath = "/FightMainPanel/Content/Top/FixedContent/RoundUI/Linear/Slot";
-        private const float TimelineMinDistance = 0.05f;
-        private const float TimelineMoveDuration = 0.2f;
         private readonly OfficialBattleHudRenderer renderer;
         private readonly OfficialBattleHudRenderer skillRenderer;
-        private readonly OfficialBattleHudRenderer timelineRenderer;
         private readonly OfficialBattleHudRenderer speedRenderer;
         private readonly OfficialBattleHudRenderer bossRenderer;
         private readonly OfficialBattleHudCatalog resolvedCatalog;
@@ -77,20 +73,13 @@ namespace Zjcs.Presentation.Combat
         private readonly List<int> stageStatusIds = new List<int>();
         private readonly List<GameObject> stageStatusDialogItems = new List<GameObject>();
         private readonly Dictionary<int, GameObject> skillCards = new Dictionary<int, GameObject>();
-        private readonly Dictionary<int, GameObject> timelineCards = new Dictionary<int, GameObject>();
-        private readonly Dictionary<int, Vector3> timelineFrom = new Dictionary<int, Vector3>();
-        private readonly Dictionary<int, Vector3> timelineMove = new Dictionary<int, Vector3>();
-        private readonly Dictionary<int, Vector3> timelineTargets = new Dictionary<int, Vector3>();
         private GameObject root;
         private OfficialBattleHudAnimationPlayer mainAnimationPlayer;
         private GameObject stageStatusDialogRoot;
         private Transform stageStatusDialogContent;
         private string roundTextFormat;
         private int? lastShownRound;
-        private RectTransform timelineSlot;
-        private Vector2 timelineBounds;
-        private float timelineMoveTime;
-        private bool timelineMoving;
+        private OfficialBattleSceneTimelineView sceneTimeline;
 
         public event Action<string> ControlClicked;
         public event Action SpeedCycled;
@@ -101,7 +90,6 @@ namespace Zjcs.Presentation.Combat
             resolvedCatalog = resolved;
             renderer = new OfficialBattleHudRenderer(resolved);
             skillRenderer = new OfficialBattleHudRenderer(resolved);
-            timelineRenderer = new OfficialBattleHudRenderer(resolved);
             speedRenderer = new OfficialBattleHudRenderer(resolved);
             bossRenderer = new OfficialBattleHudRenderer(resolved);
             statusRenderer = new OfficialBattleHudRenderer(resolved);
@@ -121,11 +109,7 @@ namespace Zjcs.Presentation.Combat
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
             OfficialBattleFunctionEntryBindings.Mount(renderer,
                 () => stageStatusDialogRoot != null && stageStatusDialogRoot.activeInHierarchy);
-            GameObject slot = renderer.Find(TimelineSlotPath);
-            timelineSlot = slot == null ? null : slot.GetComponent<RectTransform>();
-            if (timelineSlot == null) throw new InvalidOperationException("Official battle timeline slot is missing.");
-            timelineSlot.gameObject.SetActive(true);
-            timelineBounds = new Vector2(timelineSlot.rect.xMax, timelineSlot.rect.xMin);
+            sceneTimeline = OfficialBattleSceneTimelineView.Mount(root);
             speedRoot = speedRenderer.Create("speed", root.transform, (path, node) =>
             {
                 Button button = node.GetComponent<Button>();
@@ -717,98 +701,19 @@ namespace Zjcs.Presentation.Combat
         }
         public void RefreshTimeline(FightBattleCheckpoint checkpoint,
             Func<FightBattleUnitState, Sprite> portraitIcon,
-            Func<FightBattleUnitState, Sprite> factionIcon = null, bool animate = true)
+            Func<FightBattleUnitState, Sprite> factionIcon = null, bool animate = true,
+            FightBattleStepEvent stepEvent = null)
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (portraitIcon == null) throw new ArgumentNullException(nameof(portraitIcon));
-            if (root == null || timelineSlot == null)
+            if (root == null || sceneTimeline == null)
                 throw new InvalidOperationException("Mount the official battle HUD before refreshing the timeline.");
-
-            var states = new Dictionary<int, FightBattleUnitState>();
-            foreach (FightBattleUnitState unit in checkpoint.Units)
-                if (unit != null && unit.Hp > 0 && IsWaveSpawned(checkpoint, unit.Id)) states.Add(unit.Id, unit);
-
-            var entries = new List<FightTurnEntry>();
-            foreach (FightTurnEntry entry in checkpoint.Timeline.Entries)
-                if (entry != null && states.ContainsKey(entry.Id)) entries.Add(entry);
-
-            var present = new HashSet<int>();
-            double totalInterval = 0;
-            foreach (FightBattleUnitState unit in states.Values)
-            {
-                double interval = Math.Max(0, unit.Turn.IntervalTicks);
-                if (interval > totalInterval) totalInterval = interval;
-            }
-
-            var timePositions = new List<double>(entries.Count);
-            timePositions.Add(0);
-            for (int i = 1; i < entries.Count; i++)
-            {
-                double spacing = entries[i].Next - entries[i - 1].Next;
-                timePositions.Add(timePositions[i - 1] + Math.Max(spacing, totalInterval * TimelineMinDistance));
-            }
-            double timelineDuration = timePositions.Count == 0
-                ? totalInterval : Math.Max(timePositions[timePositions.Count - 1], totalInterval);
-
-            timelineFrom.Clear();
-            timelineMove.Clear();
-            timelineTargets.Clear();
-            for (int i = 0; i < entries.Count; i++)
-            {
-                FightTurnEntry entry = entries[i];
-                FightBattleUnitState unit = states[entry.Id];
-                GameObject card;
-                bool isNew = !timelineCards.TryGetValue(unit.Id, out card);
-                if (isNew)
-                {
-                    card = timelineRenderer.Create("round_character", timelineSlot);
-                    card.name = "GameRoundCharacterItem_" + unit.Id;
-                    timelineCards.Add(unit.Id, card);
-                }
-
-                bool acting = i == 0;
-                RefreshTimelineCard(card, unit, portraitIcon(unit), factionIcon == null ? null : factionIcon(unit), acting);
-                present.Add(unit.Id);
-                RectTransform rect = card.transform as RectTransform;
-                Vector3 current = rect.localPosition;
-                float percent = timelineDuration < 0.00001
-                    ? 0 : (float)(timePositions[i] / timelineDuration);
-                Vector3 target = new Vector3(Mathf.Lerp(timelineBounds.x, timelineBounds.y, percent), 0, 0);
-                timelineFrom.Add(unit.Id, isNew ? target : current);
-                timelineTargets.Add(unit.Id, target);
-                timelineMove.Add(unit.Id, isNew ? Vector3.zero : current.x <= target.x
-                    ? target - current
-                    : target - new Vector3(timelineBounds.y, 0, 0)
-                        + new Vector3(timelineBounds.x, 0, 0) - current);
-                if (!animate || isNew || !card.activeSelf)
-                    rect.localPosition = target;
-                card.SetActive(true);
-                card.transform.SetSiblingIndex(entries.Count - i - 1);
-            }
-
-            var removed = new List<int>();
-            foreach (KeyValuePair<int, GameObject> item in timelineCards)
-                if (!present.Contains(item.Key)) removed.Add(item.Key);
-            foreach (int id in removed)
-            {
-                UnityEngine.Object.Destroy(timelineCards[id]);
-                timelineCards.Remove(id);
-            }
-
-            timelineMoving = animate && entries.Count > 0;
-            timelineMoveTime = 0;
-            if (!timelineMoving) SetTimelinePositions(1);
+            sceneTimeline.Refresh(checkpoint, portraitIcon, unit => factionIcon?.Invoke(unit)
+                ?? resolvedCatalog.FindSprite(unit.Side == 1 ? FactionPlayerIcon : FactionEnemyIcon), animate, stepEvent);
         }
 
         public void Tick(float deltaTime)
         {
-            if (timelineMoving)
-            {
-                timelineMoveTime = Mathf.Min(TimelineMoveDuration, timelineMoveTime + Mathf.Max(0, deltaTime));
-                float percent = timelineMoveTime / TimelineMoveDuration;
-                SetTimelinePositions(percent);
-                if (percent >= 1) timelineMoving = false;
-            }
             TickBossHpBars();
         }
 
@@ -871,63 +776,6 @@ namespace Zjcs.Presentation.Combat
 
         private const string FactionPlayerIcon = "res://assets/official/battle-hud/sprites/ImgWe-8447ae550c.png";
         private const string FactionEnemyIcon = "res://assets/official/battle-hud/sprites/ImgEnemy-db0a1794e6.png";
-
-        private void RefreshTimelineCard(GameObject card, FightBattleUnitState unit,
-            Sprite portrait, Sprite factionSprite, bool acting)
-        {
-            bool monster = unit.MonsterId > 0;
-            string iconPath = monster
-                ? "IconGo/MonsterIconImg"
-                : "IconGo/PlayerHeadETC2Go/HeadImg";
-            Transform icon = card.transform.Find(iconPath);
-            Image image = icon == null ? null : icon.GetComponent<Image>();
-            RawImage rawImage = icon == null ? null : icon.GetComponent<RawImage>();
-            if (icon == null || (image == null && rawImage == null))
-                throw new InvalidOperationException("Official battle timeline portrait graphic is missing: " + iconPath);
-            if (portrait != null)
-            {
-                if (image != null) image.sprite = portrait;
-                else BindRawImage(rawImage, portrait);
-            }
-            Transform monsterIcon = card.transform.Find("IconGo/MonsterIconImg");
-            Transform playerIcon = card.transform.Find("IconGo/PlayerHeadETC2Go");
-            if (monsterIcon != null) monsterIcon.gameObject.SetActive(monster);
-            if (playerIcon != null) playerIcon.gameObject.SetActive(!monster);
-            Transform actingBackground = card.transform.Find("WeGo/WeBg");
-            if (actingBackground != null) actingBackground.gameObject.SetActive(acting);
-            Transform faction = card.transform.Find("FactionImg");
-            Image factionImage = faction == null ? null : faction.GetComponent<Image>();
-            if (factionImage != null)
-            {
-                Sprite sprite = factionSprite ?? resolvedCatalog.FindSprite(
-                    unit.Side == 1 ? FactionPlayerIcon : FactionEnemyIcon);
-                factionImage.sprite = sprite;
-                faction.gameObject.SetActive(sprite != null);
-            }
-        }
-
-        private static void BindRawImage(RawImage target, Sprite sprite)
-        {
-            Texture2D texture = sprite.texture;
-            Rect rect;
-            try { rect = sprite.textureRect; }
-            catch (UnityException) { rect = sprite.rect; }
-            target.texture = texture;
-            target.uvRect = new Rect(rect.x / texture.width, rect.y / texture.height,
-                rect.width / texture.width, rect.height / texture.height);
-        }
-
-        private void SetTimelinePositions(float percent)
-        {
-            foreach (KeyValuePair<int, Vector3> entry in timelineFrom)
-            {
-                if (!timelineCards.TryGetValue(entry.Key, out GameObject card)) continue;
-                Vector3 value = entry.Value + timelineMove[entry.Key] * percent;
-                if (value.x > timelineBounds.x) value.x -= timelineBounds.x - timelineBounds.y;
-                if (percent >= 1) value = timelineTargets[entry.Key];
-                card.transform.localPosition = value;
-            }
-        }
 
         private static void CopyLayout(RectTransform target, RectTransform source)
         {

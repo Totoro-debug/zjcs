@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2599e931618ac444d8bc6658cd3af3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScenePrefab: {fileID: 7588949202990456910, guid: 1ecda45b27e64cb44983a78329cd698c, type: 3}
+  CardPrefab: {fileID: 8864823051573184237, guid: 6aea6a46a0c48564196a4517f04f1cea, type: 3}
+  SourceSha256: 5029c118107ff24873e0aa3dbc4873003ecc61d28dafb6135789d03c60e82bb5
+  SceneSize: 5
+  Z: -16
+  DeadTime: 0.5
+  MinDistance: 0.05
+  MoveDuration: 0.2
+  Anchor: Content/Top/FixedContent/RoundUI/Linear
+  CardBindings:
+    faction: FactionImg
+    mainPlayerEffect: WeGo
+    monster: IconGo/MonsterIconImg
+    monsterHurt: IconGo/MonsterIconImg/MonsterHurtImg
+    npcRoot: IconGo/NpcIconGO
+    npc: IconGo/NpcIconGO/NpcIconImg
+    playerRoot: IconGo/PlayerHeadETC2Go
+    player: IconGo/PlayerHeadETC2Go/HeadImg
+  SceneBindings:
+    line: Linear
+    slot: Slot

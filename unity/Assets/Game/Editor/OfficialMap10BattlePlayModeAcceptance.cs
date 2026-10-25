@@ -367,7 +367,7 @@ namespace Zjcs.Editor
                 int unitId = Convert.ToInt32(unit.GetType().GetField("Id").GetValue(unit));
                 Transform card = all.FirstOrDefault(value => value.name == "GameRoundCharacterItem_" + unitId);
                 Transform portrait = card == null ? null : card.Find("IconGo/MonsterIconImg");
-                Image portraitImage = portrait == null ? null : portrait.GetComponent<Image>();
+                SpriteRenderer portraitImage = portrait == null ? null : portrait.GetComponent<SpriteRenderer>();
                 Require(portraitImage != null && portraitImage.sprite != null
                     && portraitImage.sprite.name == "G_" + monsterId,
                     "Monster timeline portrait was not resolved for IconId " + monsterId);
@@ -437,6 +437,10 @@ namespace Zjcs.Editor
                 Require(UnityEngine.Object.FindObjectsOfType<UnityEngine.Rendering.SortingGroup>()
                     .All(value => !value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
                     "The reused map avatar retained its temporary battle sorting group.");
+                yield return null;
+                Require(UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.Combat.OfficialBattleSceneTimelineView>(true).Length == 0
+                    && UnityEngine.Object.FindObjectsOfType<Zjcs.Presentation.CharacterCreation.CharacterNativePortraitLease>(true).Length == 0,
+                    "The battle retained its scene timeline or captured portrait after returning.");
                 yield return Capture("returned.png");
                 Debug.Log("Battle scene return passed: final result, world roots, camera and avatar sorting restored.");
             }
@@ -490,7 +494,7 @@ namespace Zjcs.Editor
                 if (monsterId > 0)
                 {
                     Transform icon = card == null ? null : card.Find("IconGo/MonsterIconImg");
-                    Image image = icon == null ? null : icon.GetComponent<Image>();
+                    SpriteRenderer image = icon == null ? null : icon.GetComponent<SpriteRenderer>();
                     Require(image != null && image.sprite != null && image.sprite.name == "G_" + monsterId,
                         "Map10 monster timeline portrait did not bind G_" + monsterId + ".");
                     monsterChecked = true;
@@ -498,9 +502,12 @@ namespace Zjcs.Editor
                 else
                 {
                     Transform icon = card == null ? null : card.Find("IconGo/PlayerHeadETC2Go/HeadImg");
-                    RawImage image = icon == null ? null : icon.GetComponent<RawImage>();
-                    Require(image != null && image.texture != null,
-                        "Map10 player timeline RawImage did not bind its fallback portrait.");
+                    var circle = icon == null ? null : icon.GetComponent<Zjcs.Official.WorldUI.WorldCircleSpriteRenderer>();
+                    Texture2D texture = circle == null || circle.Sprite == null ? null : circle.Sprite.texture;
+                    Require(texture != null && texture.width == 100 && texture.height == 120
+                        && texture.GetPixels32().Count(value => value.a > 128) > 1000
+                        && icon.GetComponent<MeshFilter>().sharedMesh.vertexCount == 33,
+                        "Map10 player scene portrait did not bind its native head texture and original circular mesh.");
                     playerChecked = true;
                 }
                 if (playerChecked && monsterChecked) break;

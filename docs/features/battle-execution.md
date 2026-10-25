@@ -207,9 +207,13 @@ flowchart TD
 
 玩家附件几何已从当前 `871_156598` 官方骨骼／图集独立恢复，见[原生几何来源](../../assets/reference/character-creation/native-geometry-source-manifest.json)。`prepare_native_character_geometry.py` 通过 MIT 格式读取器提取原骨骼局部坐标、每个影响骨骼的权重、region 变换和图集裁剪／旋转；修复读取器遗漏二进制附件名称覆盖的问题，保留真实贴图路径。`CharacterNativeAttachmentGeometry` 在既有原生骨骼上计算 Unity 动态网格，沿用插槽／附件层级、材质、排序及染色属性，不使用逐帧网格代替本次几何修复。男性654／女性706个现有附件均有非零几何，男性旧 prefab 的498处失效网格引用也从官方数据重建；与有效旧网格的 UV 逐顶点核对。共享模型工厂已绑定，男女角色的头发、五官和身体在战斗实际画面中可见。此项保留既有 Animator 片段，完整动画曲线、约束、变形、绘制顺序动画及未迁移动作仍未完成；历史 runtime 转换依赖未被声明已替换。
 
-动态头像已核对两版官方 `GamePlayManagerConfig` 和 `PlayerPortraitSettings`：均启用 ETC2 场景分支，头照参数均为100×120、正交尺寸1、偏移(-0.07,2.7,-5)，排除外观类型7／8／12、不拍摄粒子，场景头像请求姿势为 `home/idle_01`。已从 APK 提取摄影棚、`GameRoundScene` 和 `GameRoundCharacterItem_Scene` 的层级／绑定，见[头像来源](../../assets/reference/battle-hud/portrait-source-manifest.json)。`CharacterNativePortraitCapture` 按官方摄影顺序先更新原生 Animator／附件网格，再以独立相机与 CommandBuffer 绘制当前外观并读取透明纹理；不使用逐帧网格。此处仅完成头像拍摄基础，现有时间轴使用普通 UI prefab 的分支错误仍待切换；圆形网格、材质／shader、阵营底图、动态缓存和完整事件动画尚未接通，不能据此声称头像白块已修复。
+动态头像已核对两版官方 `GamePlayManagerConfig` 和 `PlayerPortraitSettings`：均启用 ETC2 场景分支，头照参数均为100×120、正交尺寸1、偏移(-0.07,2.7,-5)，排除外观类型7／8／12、不拍摄粒子，场景头像请求姿势为 `home/idle_01`。已从 APK 提取摄影棚、`GameRoundScene` 和 `GameRoundCharacterItem_Scene` 的层级／绑定，见[头像来源](../../assets/reference/battle-hud/portrait-source-manifest.json)。`CharacterNativePortraitCapture` 按官方摄影顺序先更新原生 Animator／附件网格，再以独立相机与 CommandBuffer 绘制当前外观并读取透明纹理；不使用逐帧网格。时间轴已切换到此场景分支，以本场实际玩家外观生成透明头像，绑定原 `HeadSr` 与圆形网格，修复此前错误 UI 分支造成的头像白块。纹理／Sprite 随战斗释放；跨战斗动态缓存尚未恢复。
 
-头像拍摄已在男女隔离创角存档的 Play Mode 中验证，均使用官方 `home/idle_01` 有效片段；检查100×120输出、非空透明区域及多色像素，并实际查看头发／五官与透明背景。男女真实鼠标就绪、收展／点击空白关闭及完整战斗返回复验通过；静态检查和 `ProjectTools.Validate` 通过。本次没有改变战斗裁决规则，未重复运行此前通过的36个规则套件；尚未将拍摄纹理接入完整场景头像，未执行 Windows Player 验证。
+场景时间轴按原 `GameRoundUI`／`GameRoundScene`／`GameRoundCharacterItemScene` 的序列化字段恢复层级、屏幕到世界锚点、相机尺寸缩放和队列间距／环绕位移。`prepare_battle_timeline.py` 从固定854 APK 优先提取原 prefab、10张 Sprite、3份材质和3种编译 GLES shader；保留实际纹理尺寸／UV、裁剪／旋转、Sprite 边界／枢轴／PPU、材质参数及排序，来源见[场景时间轴来源](../../assets/reference/battle-hud/timeline-source-manifest.json)。`OfficialBattleTimelineTools` 转换为 Windows 原生 prefab、Sprite、材质、controller 及4个片段，5个原状态（含无 Motion 的 Me）、4个触发参数和 AnyState 转换保持原值；显隐仍为浮点阶跃曲线。圆形头像网格直接迁移 `CircleSpriteRenderer` 的半径、32段扇形、宽高修正及 UVOffset，主角色特效按主角色身份显示，行动缩放由原 Acting／Idle 片段控制。shader 从实际使用的 GLES 变体转换，保留透明裁剪、预乘／非预乘混合、深度写入及噪声遮罩；没有使用占位 shader 或自绘头像。原生输出及转换器哈希见[原生资产来源](../../assets/reference/battle-hud/timeline-native-source-manifest.json)。
+
+现已接入玩家头像、怪物 IconId、阵营图、当前行动缩放、队列位置、受击／死亡触发及战斗显隐清理；删除了普通 UI 时间轴的错误回退实现。完整逐事件调度、NPC／守护者／拟态等头像解析、死亡粒子和动态缓存仍待完成，不能把基础触发接线视为整套事件动画已还原。
+
+男女隔离创角存档的真实鼠标 Play Mode 已验证就绪、快捷入口收展／点击空白关闭、执行到最终结果和返回；实际查看准备及战斗画面，核对100×120真实头像、33顶点圆形网格、怪物 Sprite、透明背景及主角色标识。返回后场景时间轴和头像租约对象清除，场外层级、镜头与动画恢复。原生资产校验覆盖层级变换、Sprite 几何、renderer／圆形参数和完整 Animator 参数／状态／转换／曲线；静态检查及 `ProjectTools.Validate` 通过。此项未改裁决规则，未重复运行此前通过的36个规则套件；未执行 Windows Player 验证。
 
 已从当前官方中文语言资源提取5149条战斗相关名称／说明供核对技能、秘法与状态规则，保留原键、富文本和缺键；[文字清单](../../assets/reference/battle-rules/text-source-manifest.json)单独记录 `871_156598` 输入，未把它冒记为历史配置版本。运行载荷为 `Assets/Official/Combat/battle-texts.json`，技能／状态详情弹窗的交互与加载绑定仍待完成。默认属性的 APK 输入、解析源码、输出与哈希见[属性默认值清单](../../assets/reference/battle-rules/prop-defaults-source-manifest.json)。
 
@@ -225,7 +229,7 @@ flowchart TD
 
 已有规则回归覆盖公式固定样例、配置装配、队列／阶段、范围／移动／延迟、状态／CD／盾／韧性、触发技能、波次、统计与检查点往返；主要入口为 [test_unity_combat.ps1](../../scripts/test_unity_combat.ps1) 及 `scripts/test_battle_*.ps1` 的对应通用套件。规则检查还可由 [FightCombatValidation.RunSmokeTest](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs) 和 `Zjcs.Editor.ProjectTools.Validate` 执行。已完成的规则测试证明对应代码分支，不证明缺失服务端流程已被复刻。本页链接、功能编号与差异格式已核对，`python -B scripts/check_unity_project.py` 静态元数据检查通过；上述文档检查不扩大战斗规则或运行验证结论。
 
-已有97组公式与核心检查、36个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。角色修复复验经正式创角接口分别生成男女隔离存档和实际模型，断言战斗待机有非空片段、头发／眼／眉／嘴均有激活的非零原生网格，继续执行到最终结果，确认场外根节点、镜头尺寸、复用角色父级／缩放／动画和排序恢复；实际查看准备、战斗和返回画面。`CharacterNativeGeometryValidation.Run` 对男女全部1360个附件检查非零／有限几何、有效旧 UV 一致性、加权骨骼运动及姿态恢复通过；格式解码的三个名称／路径回归通过。场地、怪物贴图、玩家比例、待机及头发／五官已修复；其余战斗动作、动态头像白块、空技能位与部分 HUD 仍有问题，返回地图的完整画面亦未作为完成结论。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
+已有97组公式与核心检查、36个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。角色修复复验经正式创角接口分别生成男女隔离存档和实际模型，断言战斗待机有非空片段、头发／眼／眉／嘴均有激活的非零原生网格，继续执行到最终结果，确认场外根节点、镜头尺寸、复用角色父级／缩放／动画和排序恢复；实际查看准备、战斗和返回画面。`CharacterNativeGeometryValidation.Run` 对男女全部1360个附件检查非零／有限几何、有效旧 UV 一致性、加权骨骼运动及姿态恢复通过；格式解码的三个名称／路径回归通过。场地、怪物贴图、玩家比例、待机及头发／五官已修复；其余战斗动作、空技能位与部分 HUD 仍有问题，返回地图的完整画面亦未作为完成结论。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
 
 HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转换及绑定有独立回归。通用战斗尚未完成完整 Unity Play Mode 真实输入、画面、状态和重启恢复验证，也没有与该完整功能对应的 Windows Player 完成发布。全工程编译与构建状态见[Unity 工程与启动流程](unity-project.md)，不在本页维护其他模块编译错误或地图运行记录。
 
@@ -282,7 +286,7 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 | 状态、盾与复活（F22—F24） | 全量状态事件和条件组、来源限制／共享层数／按层属性／快照、死亡禁用与复活重启、转移／持续变化／累计和自定义伤害其余分支；补齐未覆盖护盾类型、控制／HP限制、CD修改触发及韧性联动。 |
 | 已确认规则的剩余接线 | `TriggerDamageAddToDamageSource` 按确认方案区分被动与技能效果归因、统计实际生命损失，当前尚未完整落实；技能／秘法效果间的独立外部概率修正应乘算，固定概率不受影响、直接加状态不掷概率，并保留官方 EffectRate 加减项，命中附加状态和天雷裁决的已描述条件触发率已接入，其他触发技能及施加路径仍需补齐。 |
 | 召唤与胜负（F06、F25） | 宠物／格子物件／智能物件／替身等非怪物召唤、完整继承、数量／寿命与来源死亡销毁、复活事件消费者；按结果组件和参与者标记恢复完整通用判定接口，缺服务器规则时再取证或确认。 |
-| HUD 与报告（F26—F32、F39、F43） | 真实玩家／NPC动态头像、名称与显示条件、完整时间轴事件动画、玩家目标／成员血条、Boss 真实视野／头像、单位状态详情／自定义数字／禁用态、技能详情／品质／全部状态、宠物能量、准备提示与方案刷新、阶段动态说明。战报需绑定官方交互面板，补齐被动／状态归因、盾量／状态次数／占比及属性快照。 |
+| HUD 与报告（F26—F32、F39、F43） | NPC／守护者／拟态头像及玩家动态缓存、名称与显示条件、时间轴死亡粒子与完整事件调度、玩家目标／成员血条、Boss 真实视野／头像、单位状态详情／自定义数字／禁用态、技能详情／品质／全部状态、宠物能量、准备提示与方案刷新、阶段动态说明。战报需绑定官方交互面板，补齐被动／状态归因、盾量／状态次数／占比及属性快照。 |
 | 公共控件（F33—F38） | 回放默认倍率与档位恢复、权限差异、快进条件／延时／防重／失败及本地快照消费、跟随／自由镜头、托管／背包入口、录像保存／回放／跳过的本地流程。观战／聊天等接口按所属页已确认离线方案接入，不自行新增联网或替代规则。 |
 | 画面、动画与声音（F40—F43） | 玩家／NPC／宠物／召唤物复合外观、全部原生动画和精确动作映射、生成／复活／召唤、Playable 停止／中断／淡入淡出、范围／弹道／挂点／层序、原相机控制和环境粒子／材质、材质／shader／纹理及 CAB 依赖；缺失飘字种类、合并条件、元素提示、Wwise音频与速度同步。未转换或加载失败不视为官方资源缺失。 |
 | 运行与交付 | 完成相关规则回归、静态检查、Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate`；在 Play Mode 用真实鼠标／键盘检查完整流程、缩放／遮挡、画面／声音、状态和重启续战。功能完成时构建并真实运行 Windows Player，保护已有存档，按项目要求发布对应可执行版本。 |

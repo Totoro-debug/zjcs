@@ -1729,11 +1729,12 @@ namespace Zjcs.Presentation.World
                 return icon != null ? icon : fallbackPortrait;
             };
             FightOfficialCombatCatalog combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
+            Sprite playerBattlePortrait = CaptureBattlePlayerHead(battleController.gameObject);
             battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
                 skillIconResolver,
                 unit => unit.MonsterId > 0
                     ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))
-                    : fallbackPortrait,
+                    : playerBattlePortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
                 null,
                 (root, unit) =>
