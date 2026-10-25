@@ -67,6 +67,7 @@ namespace Zjcs.Editor
                 string slot = creation.CreateSlot();
                 var draft = creation.OpenDraft(slot);
                 draft.name = "战斗测试";
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_BODY") == "female") draft.body_type = "female";
                 Require(creation.TryCreateCharacter(slot, draft, out string creationError), creationError);
                 Require(creation.TrySetInitialWeapon(slot, 201, out string weaponError), weaponError);
                 var save = OfflineMainlineProgressSession.OpenCharacter(slots, slot).Save;
@@ -234,12 +235,19 @@ namespace Zjcs.Editor
             Require(UnityEngine.Object.FindObjectsOfType<Animator>().Any(value =>
                 value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
                 "The battle test did not mount the real character model.");
-            Require(UnityEngine.Object.FindObjectsOfType<SkinnedMeshRenderer>().Any(value => value.isVisible
+            Require(UnityEngine.Object.FindObjectsOfType<MeshRenderer>().Any(value => value.isVisible
                 && value.GetComponentInParent<Animator>() != null),
                 "The real character appearance has no visible mesh in the battle camera.");
             Require(playerAnimator.GetCurrentAnimatorClipInfo(0).Any(value => value.weight > 0f
                     && value.clip != null && value.clip.name == "100/idle_01"),
                 "The native character entered an empty source state instead of its converted idle clip.");
+            Renderer[] characterParts = playerAnimator.GetComponentsInChildren<Renderer>(true);
+            foreach (string part in new[] { "hair_", "eye_", "brow_", "mouth_" })
+                Require(characterParts.Any(value => value.name == "Official native attachment geometry"
+                        && value.transform.parent.name.StartsWith("__skin__" + part, StringComparison.Ordinal)
+                        && value.enabled && value.gameObject.activeInHierarchy
+                        && value.GetComponent<MeshFilter>().sharedMesh.bounds.size.sqrMagnitude > .00001f),
+                    "The created character lost its native appearance part in battle: " + part);
             Require(playerAnimator.transform.parent != worldModelParent
                 && Mathf.Approximately(Mathf.Abs(playerAnimator.transform.parent.localScale.x), 0.3f),
                 "The reused character did not receive the original fight model transform.");

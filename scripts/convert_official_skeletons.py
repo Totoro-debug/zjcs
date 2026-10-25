@@ -46,6 +46,34 @@ def reader_type():
     converter.rf = lambda value, *args: value  # Keep every source float32 value.
 
     class LosslessReader(converter.SkelConverter):
+        def _read_attachment(self, attachment_name):
+            # Upstream drops the binary name override when path equals that name.
+            # Preserve it so a slot attachment key does not replace its image path.
+            original_byte = self.inp.read_byte
+            original_string = self.inp.read_string_ref
+            flags, names = [], []
+
+            def byte():
+                value = original_byte()
+                flags.append(value)
+                return value
+
+            def string():
+                value = original_string()
+                names.append(value)
+                return value
+
+            self.inp.read_byte = byte
+            self.inp.read_string_ref = string
+            try:
+                result = super()._read_attachment(attachment_name)
+            finally:
+                self.inp.read_byte = original_byte
+                self.inp.read_string_ref = original_string
+            if result is not None and flags[0] & 8 and names[0] != attachment_name:
+                result['name'] = names[0]
+            return result
+
         def _read_ik_constraint_data(self, name):
             # Upstream 1.0.1 incorrectly defaults an absent mix flag to one.
             # Record the final flag byte read by the upstream field reader.
@@ -122,7 +150,7 @@ def convert(manifest=None, sex='male', output=None):
     source = {'manifest': apk.source.version, 'sex': sex, 'output_sha256': digest(payload),
               'tool': {'name': 'SkelToJson', 'version': '1.0.1', 'wheel_sha256': WHEEL_SHA256,
                        'license': 'MIT', 'float_rounding': False,
-                       'correction': 'Absent IK setup mix flag decodes to zero.'},
+                       'correction': 'Absent IK setup mix flag decodes to zero; binary attachment name overrides are preserved.'},
               'converter_sha256': digest(Path(__file__).read_bytes()), 'inputs': records,
               'counts': {key: len(data.get(key, [])) for key in
                          ('bones', 'slots', 'skins', 'animations', 'ik', 'transform', 'path', 'physics')}}

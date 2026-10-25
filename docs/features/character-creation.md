@@ -26,6 +26,8 @@
 
 ## 完整还原部分
 
+共享原生模型工厂的附件几何已按当前 `871_156598` 官方骨骼／图集恢复：男性654、女性706个现有附件保留原骨骼局部坐标、权重、贴图路径、裁剪／旋转、排序与染色绑定；旧男性 prefab 中498处失效网格引用已可重建。实现与来源见[战斗执行：现有实现](battle-execution.md#完整还原部分)及[原生几何清单](../../assets/reference/character-creation/native-geometry-source-manifest.json)。全附件非零几何、有效旧 UV 一致性、骨骼变换及恢复检查通过，男女正式创角存档进入战斗的实际画面与真实开始输入、结算返回已检查。该项没有重建既有 Animator，也未将创角／家园的历史逐帧方案声明为已替换；各自完整原生动作和界面交互仍按本页缺项维护。
+
 当前资源输入已切换至热更新 `871_156598`：男女模型重新导出并保留 GUID，创角网格包及男体原生变体按新版骨骼／附件数据核对转换，女体 451 个动画独立解码后与原版一致。转换工具与输入输出哈希见[素材管理](../asset-management.md#官方来源与转换)及 `assets/reference/character-creation/current-mesh-source-manifest.json`。Editor 已导入并编译，Play Mode 检查了男女外观、固定／自定义染色、命名、草稿恢复和初始武器，已查看男女预览截图；创角控件组合验收以 EventSystem 模拟为主，外观组 14 另经真实系统鼠标点击验证。该结果不扩大本页其余未完成范围。
 
 地面溶解组件 `Runtime/Official/Opening/GroundDissolve.cs` 按当前官方同名类恢复材质参数更新，`OpeningGroundEffectRuntime` 按 `MyPlayableGroundEffect` 恢复曲线、播放时取实例及结束还原；已通过脚本编译。地面 shader、场景材质与组件的实际绑定及画面验证仍未完成，本段不代表地面溶解表现已还原。

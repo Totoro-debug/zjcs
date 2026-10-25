@@ -1,0 +1,78 @@
+{
+  "manifest": "871_156598",
+  "operation": "Recover attachment geometry and atlas rectangles without a Spine runtime dependency.",
+  "inputs": [
+    {
+      "skeleton": {
+        "path": ".tools/source-packages/current/871_156598/native-geometry-skeletons/male/source-manifest.json",
+        "sha256": "9f296780da25f268109c79faa375ed192823e5215f99518bb72d1f5b5bc17107"
+      },
+      "atlas": {
+        "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1.bundle",
+        "bundle_hash": "2ec21d403056db00dacfd3f6a0dbb3d5",
+        "path_id": "4002361005072521397",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/2ec21d403056db00dacfd3f6a0dbb3d5.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 2172416,
+        "bundle_sha256": "81ade0adc895094a0ebf6593a5d5822199995cd8a77560b561b61d1eb9280e87",
+        "payload_sha256": "5a47a720a985b699e1152b4bb6c3eaa460bf5d8b66a62d39c7dd8993ee1b5e32"
+      },
+      "native_prefab": {
+        "path": "unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Preview/CharacterCreation_Male.prefab",
+        "sha256": "1322ad069d4dba0b3af2f7a581b3c58364a4acb8eec02511cdb2572127b9584d"
+      }
+    },
+    {
+      "skeleton": {
+        "path": ".tools/source-packages/current/871_156598/native-geometry-skeletons/female/source-manifest.json",
+        "sha256": "823a93231cce4d0dc72415879f60e6c45b392c65daabbcc13d05ce8bb3d8f2bc"
+      },
+      "atlas": {
+        "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1.bundle",
+        "bundle_hash": "7c3ddfe5c1cd06cb60518dddb063438f",
+        "path_id": "3158601885852861767",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/7c3ddfe5c1cd06cb60518dddb063438f.bundle",
+        "raw_size": 2768341,
+        "raw_sha256": "768f5107528d1bdc038dd5a41a13d5aec44956a4c277ebb01cad5c0c401b91c1",
+        "payload_sha256": "984f4e8cff9de1ceea6d6c79de023c9b76f28c0d355ecf5c5dc2953c56be8a7e"
+      },
+      "native_prefab": {
+        "path": "unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/Baked/Preview/CharacterCreation_Female.prefab",
+        "sha256": "9c77fc95e8f2d6317630e9f60b9f228c4111ffaceb81bc55c796fc588baaa5cc"
+      }
+    }
+  ],
+  "format_references": [
+    "https://esotericsoftware.com/spine-json-format",
+    "https://esotericsoftware.com/spine-atlas-format"
+  ],
+  "scope": "Official attachment bone-local coordinates, weights, region transforms and atlas packing. Existing native Animator clips are retained, not regenerated or attributed to this converter.",
+  "generator_sha256": "cf62f215a6664f2ffe8f3801c603d38b18bbe0dcfa9ded59ec92303d2ab0bbcf",
+  "output": "unity/Assets/Game/Resources/CharacterCreation/native-character-geometry.json",
+  "output_sha256": "c67dc6b5d8c1af6d1895a569445cee87c533ae84c7ae05485b4330a7d36ce6e0",
+  "runtime_bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Character/CharacterNativeAttachmentGeometry.cs",
+      "sha256": "86b7743946d74470f29679ddbafb14af1f08ab574cd3657f82089aa0372be2c6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs",
+      "sha256": "d953df627d7f558bf1fd2849e8a17d26fc06b4c0711a28dae8b035c978f7ffc6"
+    }
+  ],
+  "counts": {
+    "male": {
+      "attachments": 654,
+      "atlas_regions": 9692
+    },
+    "female": {
+      "attachments": 706,
+      "atlas_regions": 10113
+    }
+  }
+}

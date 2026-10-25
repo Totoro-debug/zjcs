@@ -71,6 +71,7 @@ namespace Zjcs.Presentation.CharacterCreation
                     throw new InvalidOperationException("Official native character model has no Animator controller.");
                 animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                 animator.applyRootMotion = false;
+                model.AddComponent<CharacterNativeAttachmentGeometry>().Initialize(sex == 1 ? "female" : "male");
                 return model;
             }
             catch
@@ -130,6 +131,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
                 animator.applyRootMotion = false;
                 characterName = session.Save.Player.CharacterName;
+                model.AddComponent<CharacterNativeAttachmentGeometry>().Initialize(sex == 1 ? "female" : "male");
                 return model;
             }
             catch
