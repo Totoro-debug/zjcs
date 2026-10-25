@@ -110,6 +110,8 @@
 
 [`FightOfficialCombatCatalog`](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs) 从随工程交付的 Combat JSON 及来源清单装配单位、技能、命中图与状态数据。目录绑定和编辑器规则入口在 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs) 与 [`FightCombatValidation.cs`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)。规则数据位于 [`Assets/Official/Combat`](../../unity/Assets/Official/Combat/)；其来源清单记录原始来源及转换输出。
 
+固定版34个 FightStatusDamageReducePerComponent 已由 FightBattleStatusDamageReducePerRuntime 装配到状态快照，并在命中与治疗结算中按概率、条件计数、次数上限、技能目标类型、格挡／暴击、近远距离和状态类型数量计算 StatusDmgReducePer。官方共享层只提供配置与字段，客户端包装类为空；次数推进、状态匹配、互斥选择和治疗缩放是按用户确认完成的本地近似。未识别的状态逻辑标签或属性替换配置会跳过该减免组件。
+
 [`FightBattleGrid`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs) 保存格网地形、占位与边阻挡，并按官方 `AStarUtils` 的四方向代价和 MoveMask 规则计算路径；[`FightBattleExecutor`](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) 在技能超出范围时按 MoveDist 尝试移动，再重新选择目标；若整回合没有可释放技能，则不造成虚构伤害，并按用户确认的本地规则，在所有合法可达落点中选择与最近敌人曼哈顿距离最大的落点。格网移动按 `Move` 校验，带非零 `MoveBehaviourId` 的技能来源位移及受击位移按实际动作类型校验。固定版19个正距离且 `MoveBehaviourId=0` 的 `MoveCfg` 仍按配置位移，是否也应受行动互斥尚待确认。每个单位回合按技能槽检查可用技能，技能状态记录施放、次数限制与冷却，步骤事件记录移动、施放和目标。Map10 的 `BuildCheckpoint` 已从战斗 JSON 装配基础格网、出生位置和波次；`OfficialBattleSceneView` 按连续逐格路径播放同一单位在单步内的多次位移，并从动作实体读取 `MoveDuration`／`MoveSpeed` 和 `MoveCfg.Delay`，固定时长按段播放、速度模式按格间世界距离播放；没有动作实体的战术移位保留0.5秒每格。地图 avatar 通过 `AttachUnitTransform` 交给同一套移动播放，不再逐步瞬移。地形高度、身体占格与阵型字段仍未完整消费。
 
 跨波次生成与可选状态已统一：`FightBattleTargeting.IsSelectable` 要求单位存活、可选中且不属于未生成的后续波次，目标选择、命中目标收集与移动占位共用这一判定；`FightBattleExecutor.Initialize` 将后续波次单位标为 `Ended` 并排除出行动队列，`SpawnNextWaveIfCleared` 在清场后恢复生成、入队和可选中状态。`FightBattleCheckpointRules.Validate` 在恢复及步骤结束时校验“后续波次不得标记已生成、其单位必须 Ended”。无可用技能的单位不伪造普攻；若存在可行格网路径，会按本地确认规则选取与最近敌人距离最大的落点，且照常推进回合、冷却与状态时点。
@@ -208,6 +210,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 - 状态效果默认触发后立即结算，明确的回合时点保留：25256 在回合开始触发12980，25177 在主人回合结束触发50180；生成的行动条状态立即处理。作用于当前行动者的行动条调整在行动结束重新入队时用于下一次行动。
 - DamageFalloff 的同目标递减分别计数，整体递减跨目标累计；首击计数1且不减伤，30%递减的第二击乘70%，之后按原幂次继续。施放相互隔离，子技能沿用父施放编号，行动结束清理临时计数；明确的起始次数仍按原配置。命中后附加状态时补记首击属于已确认本地接线，未取得服务端执行器。
 - 状态24181 按用户补证先减伤再扣盾／HP；伤害严格超过目标最大生命的4%时，读取目标当前232号属性作为减伤率，每层降低一段并消耗一次，其余条件沿原配置。
+- FightStatusDamageReducePerComponent 按配置近似模拟：合格事件掷 Rate 并累计 ConditionCount/MaxCount；StatusType 数量依配置匹配状态类型、动作类型、叠层及上限，Unit 与战技／非战技缩放合成为 StatusDmgReducePer；IsMutexByBetter 的实例只取较强值。远近条件暂按曼哈顿距离1格划分。固定版34个组件无服务端执行器，AnyLogicTags、属性替换和未识别目标类型仍不执行。
 - HP 累积伤害按实际 HP 损失累计，治疗不抵消；跨越多个阈值时逐次触发并保留余数。该执行组件在客户端与共享代码中仅有数据结构，具体累计规则按用户确认在本地模拟。
 - 无可释放技能时不伪造普攻；若格网、占位与 MoveDist 允许，则移动到与最近敌人曼哈顿距离最大的可达落点，随后正常推进个人回合、冷却、状态时点与胜负检查。最大距离退避是按用户确认的本地规则，客户端／共享实现未提供服务器移动目的地规则。
 - 条件技能按状态 `ConditionalSkills` 与 `SkillConditionRules` 本地判定；固定版有15个 `FightStatusSkillConditionComponent` 实体，其 `Settings` 只出现6个 HP 条件、1个回合条件与1个召唤池条件，分别由本地检查点规则和召唤池容量执行。技能18480「肢体修复」按状态24314关联的召唤池计算，存活触手少于4只可释放、达到4只关闭。条件孵化技能58140／70120没有关联状态条件组件，按固定召唤命中配置检查自身召唤池：召唤物3907与3908各自未达到3只时可释放，两个池都满时关闭；其他召唤物不占用这两个池。共享枚举中的技能类型、召唤物数量、全局回合、命中目标类型、技能行为与元素条件在固定版未找到配置实例，也未找到客户端执行链。怪物召唤命中已按固定配置创建单位、属性、被动状态／技能、主人关系、占位、行动队列、检查点及模型模板；其他召唤类型、召唤继承属性与来源／死亡销毁联动仍未完整迁移。

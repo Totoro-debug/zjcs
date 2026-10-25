@@ -126,6 +126,16 @@ namespace Zjcs.Combat.Official
             return Prop(values, propertyId);
         }
 
+        public void AddPropertyValue(IDictionary<int, long> values, string name, double amount)
+        {
+            int id = schema.Id(name);
+            if (id == 0 || values == null || amount == 0.0) return;
+            double value = Prop(values, id) + amount;
+            values[id] = schema.IsFloat(id)
+                ? (long)Math.Round(value * 10000.0, MidpointRounding.AwayFromZero)
+                : (long)Math.Round(value, MidpointRounding.AwayFromZero);
+        }
+
         public int CalculateMoveDist(IDictionary<int, long> values)
         {
             return (int)((1.0 + Prop(values, "MoveDistPercent")) * Prop(values, "MoveDist"));

@@ -241,6 +241,8 @@ namespace Zjcs.Combat.Official
                 DamageCustomPropsPropertyId = template.DamageCustomPropsPropertyId,
                 DamageCustomPropsPhase = template.DamageCustomPropsPhase,
                 DamageCustomPropsTriggeredCount = template.DamageCustomPropsTriggeredCount,
+                DamageReducePer = template.DamageReducePer == null
+                    ? null : template.DamageReducePer.Clone(),
                 ShieldKind = template.ShieldKind,
                 ShieldRate = template.ShieldRate,
                 ShieldDamageGreaterMaxHpPer = template.ShieldDamageGreaterMaxHpPer,

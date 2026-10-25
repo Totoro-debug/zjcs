@@ -225,6 +225,7 @@ namespace Zjcs.Combat.Official
         public int DamageCustomPropsPropertyId;
         public int DamageCustomPropsPhase;
         public int DamageCustomPropsTriggeredCount;
+        public FightBattleStatusDamageReducePerInfo DamageReducePer;
         public FightBattleShieldKind ShieldKind;
         public float ShieldRate = 1f;
         public float ShieldDamageGreaterMaxHpPer = -1f;

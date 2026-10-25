@@ -794,6 +794,8 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> shieldInvincible =
                 Component(components, "FightStatusShieldInvincibleComponent");
             Dictionary<string, object> shieldCounted = Component(components, "FightStatusShieldComponent");
+            Dictionary<string, object> damageReducePer =
+                Component(components, "FightStatusDamageReducePerComponent");
             Dictionary<string, object> shield = shieldPersistent ?? shieldDisposable
                 ?? shieldInvincible ?? shieldCounted;
             if (status == null) throw new InvalidOperationException("Official entity is not a status: " + classId);
@@ -881,6 +883,7 @@ namespace Zjcs.Combat.Official
                     : Int(damageCustomProps, "DmgReducePer"),
                 DamageCustomPropsPhase = damageCustomProps == null ? 0
                     : Int(damageCustomProps, "Phase"),
+                DamageReducePer = ParseDamageReducePer(damageReducePer),
                 ShieldKind = shieldPersistent != null ? FightBattleShieldKind.Persistent
                     : shieldDisposable != null ? FightBattleShieldKind.Disposable
                     : shieldInvincible != null ? FightBattleShieldKind.Invincible
@@ -1048,6 +1051,55 @@ namespace Zjcs.Combat.Official
                 result.Rate = Number(falloff, "Rate", 1.0);
                 result.Scope = Int(falloff, "Scope");
             }
+            return result;
+        }
+
+        private static FightBattleStatusDamageReducePerInfo ParseDamageReducePer(
+            Dictionary<string, object> component)
+        {
+            if (component == null) return null;
+            Dictionary<string, object> statusType = Component(component, "StatusType");
+            Dictionary<string, object> skillType = Component(component, "SkillType");
+            var result = new FightBattleStatusDamageReducePerInfo
+            {
+                Rate = Float(component, "Rate", 1f),
+                Block = Bool(component, "Block"),
+                Crit = Bool(component, "Crit"),
+                Damage = Bool(component, "Damage", true),
+                Cure = Bool(component, "Cure"),
+                RangeCondition = Int(component, "RangeCondition"),
+                SkillTargetType = Int(component, "SkillTargetType", 4),
+                ConditionCount = Int(component, "ConditionCount", 1),
+                MaxCount = Int(component, "MaxCount", -1),
+                AutoDestroy = Bool(component, "AutoDestory"),
+                IsMutexByBetter = Bool(component, "IsMutexByBetter"),
+                ScalePropByStatusTypeCount = Bool(component, "ScalePropByStatusTypeCount"),
+                ActiveSkillScale = skillType == null ? 1f : Float(skillType, "ActiveSkillScale", 1f),
+                NotActiveSkillScale = skillType == null ? 1f : Float(skillType, "NotActiveSkillScale", 1f)
+            };
+            if (statusType != null)
+            {
+                result.StatusType.IsCondition = Bool(statusType, "IsCondition", true);
+                result.StatusType.Target = Int(statusType, "Target");
+                result.StatusType.CountType = Int(statusType, "CountType", 1);
+                result.StatusType.MaxStatusCount = Int(statusType, "MaxStatusCount", -1);
+                result.StatusType.Unit = Float(statusType, "Unit", 1f);
+                result.StatusType.IsAdditionCount = Bool(statusType, "IsAdditionCount");
+                result.StatusType.IsOpenZeroCheckWhenCalcStatus =
+                    Bool(statusType, "IsOpenZeroCheckWhenCalcStatus");
+                result.StatusType.IsCalculateStack = Bool(statusType, "IsCalculateStack");
+                result.StatusType.AnyStatusTypes.AddRange(IntArray(statusType, "AnyStatusTypes"));
+                result.StatusType.AnyActionTypes.AddRange(IntArray(statusType, "AnyActionTypes"));
+                result.Supported = IntArray(statusType, "AnyLogicTags").Length == 0
+                    && result.StatusType.CountType >= 0 && result.StatusType.CountType <= 2;
+                if (result.ScalePropByStatusTypeCount)
+                    result.Supported = result.Supported
+                        && (result.StatusType.Target == 1 || result.StatusType.Target == 2
+                            || result.StatusType.Target == 3 || result.StatusType.Target == 5
+                            || result.StatusType.Target == 6);
+            }
+            result.Supported = result.Supported && ArrayCount(component,
+                "StatusReplacePropertyValues") == 0;
             return result;
         }
 

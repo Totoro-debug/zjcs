@@ -49,9 +49,17 @@ namespace Zjcs.Combat.Official
             if (hit.ActionType == 5 || (skill != null && skill.SkillType == 3))
             {
                 result.IsCure = true;
+                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, true, random);
                 long? customCure = skill.HasCustomCure ? (long?)skill.CustomCure : custom;
                 result.Cure = formula.CalculateCure(sourceProps, targetProps,
                     hit.DamageProperty, hit.FixedDamageProperty, customCure);
+                if (reduction != 0.0)
+                {
+                    double scale = 1.0 / Math.Max(1.0 + reduction, 0.1);
+                    result.Cure.Cure = (long)(result.Cure.Cure * scale);
+                    result.Cure.AbsoluteCure = (long)(result.Cure.AbsoluteCure * scale);
+                }
                 result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity,
                     result.Cure.Cure);
             }
@@ -64,6 +72,9 @@ namespace Zjcs.Combat.Official
             {
                 long direct = custom.HasValue ? custom.Value : 0;
                 direct = direct == Int64.MinValue ? Int64.MinValue + 1 : -Math.Abs(direct);
+                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, false, random);
+                direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
                 direct = FightDamageFalloff.Apply(random, actor, target, skill, hit,
                     direct, processedFalloffStatuses);
                 result.Formula = new FightDamageFormulaResult { Damage = direct, AbsoluteDamage = direct };
@@ -96,6 +107,9 @@ namespace Zjcs.Combat.Official
                     IsPvp = isPvp
                 };
                 result.Type = formula.CalculateDamageType(random, sourceProps, targetProps, hit.DamageType);
+                double reduction = FightBattleStatusDamageReducePerRuntime.Resolve(actor, target,
+                    skill, result.Type, false, random);
+                formula.AddPropertyValue(targetProps, "StatusDmgReducePer", reduction);
                 result.Formula = formula.Calculate(request, result.Type, custom, elementConfrontation);
                 long damage = result.Formula.Damage;
                 if (hit.UseDamageRate)
