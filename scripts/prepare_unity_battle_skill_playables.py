@@ -14,8 +14,10 @@ SOURCE = ROOT / "assets/official/battle-animation/catalog.json"
 SOURCE_MANIFEST = ROOT / "assets/reference/battle-animation/source-manifest.json"
 CLIP_SOURCE = (ROOT / "unity/Assets/Official/CharacterCreation/Recovered/CharacterModels/Recovered"
                / "Male/AppearanceAssets/Character/Model/Male_1/Anim")
-RIPPER_NPC_SOURCE = (ROOT / ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject"
-                     / "Assets/AppearanceAssets/Npc")
+RIPPER_NPC_SOURCES = (
+    ROOT / ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/AppearanceAssets/Npc",
+    ROOT / ".tools/assetripper-1.3.14/temp/battle-animation-big-model-ripper/ExportedProject/Assets/AppearanceAssets/Npc",
+)
 OUTPUT_ROOT = ROOT / "unity/Assets/Game/Resources/Combat"
 CLIP_OUTPUT = OUTPUT_ROOT / "SkillAnimations"
 CLIP_OUTPUT_META = Path(str(CLIP_OUTPUT) + ".meta")
@@ -157,7 +159,8 @@ def find_ripper_clip(animation: str, official_source: dict) -> Path | None:
             and not source_bundle.endswith("_npc_big_model_anim.bundle"):
         return None
     file_name = animation.replace("/", "_") + ".anim"
-    candidates = list(RIPPER_NPC_SOURCE.rglob(file_name)) if RIPPER_NPC_SOURCE.is_dir() else []
+    candidates = [candidate for source in RIPPER_NPC_SOURCES if source.is_dir()
+                  for candidate in source.rglob(file_name)]
     expected_bundle = source_bundle[:-len(".bundle")]
     for candidate in candidates:
         meta_path = Path(str(candidate) + ".meta")

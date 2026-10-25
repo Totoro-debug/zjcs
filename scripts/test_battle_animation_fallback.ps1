@@ -121,10 +121,9 @@ $clipAssets = @{}
 foreach ($property in $sourceManifest.clip_assets.PSObject.Properties) {
     $clipAssets[$property.Name] = $property.Value
 }
-if ($sourceManifest.manifest -ne '854_156383' -or @($sourceManifest.clip_assets.PSObject.Properties).Count -ne 131 -or
+if ($sourceManifest.manifest -ne '854_156383' -or @($sourceManifest.clip_assets.PSObject.Properties).Count -ne 132 -or
     $sourceManifest.resolved_clip_source_names.Count -ne 8 -or
-    $sourceManifest.unavailable_clip_names.Count -ne 1 -or
-    $sourceManifest.unavailable_clip_names[0] -ne 'npc_10206/skill_01') {
+    $sourceManifest.unavailable_clip_names.Count -ne 0) {
     throw 'Fixed official skill clip source resolution changed unexpectedly.'
 }
 if ((Get-FileHash $runtimeCatalogPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $sourceManifest.output_sha256) {
@@ -154,12 +153,6 @@ foreach ($cue in $overrideCues | Where-Object { $_.clip_resource }) {
 foreach ($name in $sourceManifest.resolved_clip_source_names) {
     $cues = @($overrideCues | Where-Object { $_.animation -eq $name })
     if ($cues.Count -eq 0) { throw "Resolved official skill clip has no Playable cue: $name" }
-    if ($name -eq 'npc_10206/skill_01') {
-        if (@($cues | Where-Object { $_.clip_resource }).Count -ne 0) {
-            throw 'The unconverted official skill clip must remain unmapped.'
-        }
-        continue
-    }
     if (@($cues | Where-Object { $_.clip_resource -ne $name.Replace('/', '_') }).Count -ne 0) {
         throw "Resolved official skill clip was not packaged: $name"
     }

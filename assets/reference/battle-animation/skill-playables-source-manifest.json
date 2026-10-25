@@ -6,7 +6,7 @@
   "catalog_manifest": "assets/reference/battle-animation/source-manifest.json",
   "catalog_manifest_sha256": "ddf6968ee2e2930e4f95a6f9fd8aa802f0853da564efc49f92b787f900b0bd67",
   "output": "unity/Assets/Game/Resources/Combat/skill-playables.json",
-  "output_sha256": "220f94141662589a108d13dd41671dd0b9b5355042359cb07a510afbdfa9cfc0",
+  "output_sha256": "33c707b9fba7b9f9a4127e2f42f48c9845aba267d91ba333a7b65e04a41b9c5d",
   "output_meta": "unity/Assets/Game/Resources/Combat/skill-playables.json.meta",
   "output_guid": "f61f0bfb38f25fbd310d429cced8436d",
   "clip_folder_meta": "unity/Assets/Game/Resources/Combat/SkillAnimations.meta",
@@ -1398,6 +1398,48 @@
       "meta": "unity/Assets/Game/Resources/Combat/SkillAnimations/npc_10412_skill_01.anim.meta",
       "guid": "237b0299157b0c68d97125545cfd6943"
     },
+    "npc_10206/skill_01": {
+      "source": ".tools/assetripper-1.3.14/temp/battle-animation-big-model-ripper/ExportedProject/Assets/AppearanceAssets/Npc/npc_big_model/Anim/npc_10206_skill_01.anim",
+      "source_sha256": "b331f45ad0117359f3e34242bb01f8195612c014c93d8bf388c2c18295e410f7",
+      "official_clip_source": {
+        "references": [
+          {
+            "skill_entity_id": 63630,
+            "component": {
+              "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightskill_63630.bundle",
+              "bundle_hash": "811a792de287de91e3881ae0f4f9e8fa",
+              "path_id": "-7611595666902579362",
+              "origin": "official_cdn",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/811a792de287de91e3881ae0f4f9e8fa.bundle",
+              "manifest": "854_156383",
+              "bundle_size": 33203,
+              "bundle_sha256": "6b0d1ea14b65a7bb11a2f4f3ed9a20de1e4eb1cd95488755904f0ca5c54a6f25"
+            },
+            "clip": {
+              "type": "AnimationClip",
+              "name": "npc_10206/skill_01",
+              "bytes": 2296,
+              "sha256": "92777a742fd1146f6725d7b9d9a84686ac470bdc18f0a331caff6e5fbdf380c4",
+              "duration": 1.8333333730697632,
+              "source": {
+                "bundle": "defaultpackage_assets_appearanceassets_npc_npc_big_model_anim.bundle",
+                "bundle_hash": "d8a31d5677c2547e61ea5c2c107b7647",
+                "path_id": "-5580732306995874920",
+                "origin": "official_cdn",
+                "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d8a31d5677c2547e61ea5c2c107b7647.bundle",
+                "manifest": "854_156383",
+                "bundle_size": 34346,
+                "bundle_sha256": "15db0495ce770fe353785f57ae2eeddca0d9d1316fc2051add1a8ad0f2c3837b"
+              }
+            }
+          }
+        ]
+      },
+      "output": "unity/Assets/Game/Resources/Combat/SkillAnimations/npc_10206_skill_01.anim",
+      "output_sha256": "b331f45ad0117359f3e34242bb01f8195612c014c93d8bf388c2c18295e410f7",
+      "meta": "unity/Assets/Game/Resources/Combat/SkillAnimations/npc_10206_skill_01.anim.meta",
+      "guid": "f553980a22d136232ea6340db14e497b"
+    },
     "map/summon_01": {
       "source": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/AppearanceAssets/Npc/npc_middle_model/Anim/map_summon_01.anim",
       "source_sha256": "58ac1a99526545a351eb8604b4c3eb51dfee36f4cc67aae3404b227aaf5e9426",
@@ -1571,9 +1613,7 @@
       "guid": "8ec2094ec1fc4673a4b826a4f1e58317"
     }
   },
-  "unavailable_clip_names": [
-    "npc_10206/skill_01"
-  ],
+  "unavailable_clip_names": [],
   "resolved_clip_source_names": [
     "map/summon_01",
     "npc_10112/skill_01",
