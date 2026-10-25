@@ -10,10 +10,11 @@ namespace Zjcs.Presentation.World
     public sealed partial class OfficialMap10GameRuntime
     {
         private Dictionary<int, string> dialogueOverrides;
+        private bool dialogueVoiceSuppressed;
 
         [Serializable] private sealed class StoryValueFields
         {
-            public int ItemId, RequireCount, ActionType, GoByNodeId, GotoId, DialogId, Order;
+            public int ItemId, RequireCount, ActionType, GoByNodeId, GotoId, DialogId, Order, ShowOptionsAtBegin;
             public string GoTo;
             public StoryItemRequirement[] ItemConfigs;
             public StorySerializableValue[] Params;

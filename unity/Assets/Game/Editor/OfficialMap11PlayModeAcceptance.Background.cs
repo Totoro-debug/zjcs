@@ -28,6 +28,7 @@ namespace Zjcs.Editor
         {
             yield return new WaitForSecondsRealtime(1);
             yield return VerifyMapMusic();
+            yield return VerifyDialogueAudio();
             var save = Field<OfflineMainlineProgressSession>("progressionSave");
             foreach (var region in save.Save.World.Maps.Single(value => value.MapClassId == 11).Regions.ToArray())
                 save.SetMapRegionProgress(11, region.Region, 10000);
@@ -179,6 +180,60 @@ namespace Zjcs.Editor
                 && Mathf.Abs(source.volume - .35f) < .001f, "Original Resume advances from the paused position");
             runtime.MapMusicVolume = () => 0f;
             Debug.Log("Map11 native audio validated: original looping clip, 1000ms Play, 250ms Pause/Stop, 500ms Resume, retained sample position and current music setting. AudioSource was muted; audible listening was not performed.");
+        }
+
+        [Serializable] private sealed class VoiceCatalog { public VoiceBinding[] events; }
+        [Serializable] private sealed class VoiceBinding { public string eventKey, clip; }
+
+        private static IEnumerator VerifyDialogueAudio()
+        {
+            var catalog = JsonUtility.FromJson<VoiceCatalog>(Resources.Load<TextAsset>("Map11/Audio/voices").text);
+            var stories = Field<IDictionary>("stories").Values.Cast<Map10RuntimeStory>()
+                .Concat(Field<IDictionary>("storySubgraphs").Values.Cast<Map10RuntimeStory>()).ToArray();
+            string[] expected = stories.SelectMany(value => value.dialogueGroups).SelectMany(value => value.Lines)
+                .Where(value => value.DialogType == "Voice" && !string.IsNullOrEmpty(value.VoiceEventKey))
+                .Select(value => value.VoiceEventKey).Distinct().OrderBy(value => value).ToArray();
+            Require(expected.Length == 207 && expected.SequenceEqual(catalog.events.Select(value => value.eventKey).OrderBy(value => value)),
+                "All original main-graph and subgraph dialogue voice keys have explicit bindings");
+            foreach (VoiceBinding binding in catalog.events)
+            {
+                ResourceRequest request = Resources.LoadAsync<AudioClip>(binding.clip);
+                yield return request;
+                var clip = request.asset as AudioClip;
+                Require(clip != null && clip.samples > 0 && clip.loadType == AudioClipLoadType.Streaming,
+                    "Original dialogue clip imports for native streaming: " + binding.eventKey);
+            }
+            var voice = Field<MonoBehaviour>("mapVoice");
+            AudioSource source = voice.GetComponent<AudioSource>();
+            source.mute = true;
+            runtime.MapVoiceVolume = () => .4f;
+            Invoke("PlayStory", "FirstMeetSenSen", 0, null, null);
+            yield return new WaitForSecondsRealtime(.4f);
+            var story = stories.Single(value => value.key == "FirstMeetSenSen");
+            string first = catalog.events.Single(value => value.eventKey == story.dialogueGroups[0].Lines[0].VoiceEventKey).clip;
+            Require(source.isPlaying && source.clip.name == first.Substring(first.LastIndexOf('/') + 1)
+                && Mathf.Abs(source.volume - .4f) < .001f, "Actual dialogue starts its original voice at the current voice volume");
+            Invoke("AdvanceDialogue");
+            Require(source.clip == null, "Next dialogue immediately stops the previous voice before loading");
+            yield return new WaitForSecondsRealtime(.4f);
+            string second = catalog.events.Single(value => value.eventKey == story.dialogueGroups[0].Lines[1].VoiceEventKey).clip;
+            Require(source.isPlaying && source.clip.name == second.Substring(second.LastIndexOf('/') + 1),
+                "Next dialogue plays the next original voice");
+
+            var textStory = stories.First(value => value.dialogueGroups.Any(group => group.Lines.Length > 0 && group.Lines[0].DialogType == "Text"));
+            var textGroup = textStory.dialogueGroups.First(value => value.Lines.Length > 0 && value.Lines[0].DialogType == "Text");
+            Invoke("PlayStory", "FirstMeetSenSen", 0, null, null);
+            Invoke("PlayStory", textStory.key, textGroup.Id, null, null);
+            yield return new WaitForSecondsRealtime(.4f);
+            Require(!source.isPlaying && source.clip == null, "Text-only dialogue stops voice and rejects late asynchronous voice loads");
+            Invoke("PlayStory", "CombatAssistance", 0, null, null);
+            yield return new WaitForSecondsRealtime(.4f);
+            Require(source.isPlaying, "Actual public-subgraph dialogue resolves and plays its original voice");
+            Invoke("AdvanceDialogue");
+            Require(!Field<bool>("dialogueWaiting") && source.clip == null && !source.isPlaying,
+                "Closing the original talk panel stops its dialogue voice");
+            runtime.MapVoiceVolume = () => 0f;
+            Debug.Log("Map11 dialogue audio validated: all 207 original clips import for Windows streaming; actual main/subgraph dialogue playback, next-line replacement, text-only stop, stale async-load cancellation, panel close and current voice volume. Sources were muted; audible listening and native input remain unverified.");
         }
 
         private static void VerifyMainPlayerStoryPositions()

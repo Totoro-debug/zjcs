@@ -1493,6 +1493,7 @@ namespace Zjcs.Presentation.World
 
         private void FinishStoryGraph(bool invokeCompletion)
         {
+            mapVoice?.StopVoice();
             Action completed = invokeCompletion ? storyFinished : null;
             if (!invokeCompletion && mapClassId == 11 && !string.IsNullOrEmpty(activeStoryRootKey)
                 && progressionSave.StoryStatus(activeStoryRootKey) == 1)
@@ -2502,7 +2503,7 @@ namespace Zjcs.Presentation.World
 
         private void PlayStory(string key, int groupId, Action complete, Map10RuntimeStoryNode graphNode = null)
         {
-            if (!stories.TryGetValue(key, out Map10RuntimeStory story))
+            if (!stories.TryGetValue(key, out Map10RuntimeStory story) && !storySubgraphs.TryGetValue(key, out story))
                 throw new InvalidDataException("Official Map10 story is missing: " + key);
             Map10RuntimeDialogueGroup group = story.dialogueGroups.FirstOrDefault(value => value.Id == groupId);
             if (group == null || group.Lines == null || group.Lines.Length == 0)
@@ -2512,6 +2513,7 @@ namespace Zjcs.Presentation.World
             }
             dialogueOverrides = ResolveStoryDialogOverrides(story, graphNode);
             dialoguePanelKey = graphNode?.type == "OptionDialogNode" ? "OptionTalkDialog" : "TalkDialog";
+            dialogueVoiceSuppressed = graphNode?.type == "OptionDialogNode" && StoryFields(graphNode).ShowOptionsAtBegin != 0;
             if (dialoguePanelKey == "OptionTalkDialog")
             {
                 for (int index = 0; index < 5; index++) ui.SetNodeActive(dialoguePanelKey, StoryOptionSlotPath(index), false);
@@ -2532,6 +2534,7 @@ namespace Zjcs.Presentation.World
                 if (dialoguePanelKey == "TalkDialog")
                 {
                     ui.SetPanelActive(dialoguePanelKey, false);
+                    mapVoice?.StopVoice();
                     dialoguePortraits?.Clear();
                 }
                 else ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", false);
@@ -2554,6 +2557,7 @@ namespace Zjcs.Presentation.World
             if (panel == "TalkDialog") portraits = dialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
             else portraits = optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
             portraits.SetSpeaker(role, line.RoleFaceType);
+            mapVoice?.RefreshVoice(!dialogueVoiceSuppressed && line.DialogType == "Voice" ? line.VoiceEventKey : null);
             GameObject next = ui.Find(panel, prefix + "/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button != null)

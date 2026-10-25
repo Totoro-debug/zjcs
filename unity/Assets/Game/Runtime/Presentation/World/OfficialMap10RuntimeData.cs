@@ -534,6 +534,7 @@ namespace Zjcs.Presentation.World
     public sealed class Map10RuntimeDialogueLine
     {
         public int Order;
+        public string DialogType;
         public string Text;
         public string VoiceEventKey;
         public int RoleId;

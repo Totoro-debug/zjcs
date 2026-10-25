@@ -164,6 +164,7 @@ namespace Zjcs.Presentation.Home
     public static class HomeAudioSettings
     {
         public static float MusicVolume => ChannelVolume(HomeAudioChannel.Music);
+        public static float VoiceVolume => ChannelVolume(HomeAudioChannel.Voice);
         private static readonly Dictionary<AudioSource, HomeAudioChannel> Sources =
             new Dictionary<AudioSource, HomeAudioChannel>();
         private static HomeSettingsData state = new HomeSettingsData();
