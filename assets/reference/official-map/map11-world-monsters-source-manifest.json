@@ -1,0 +1,443 @@
+{
+  "format": 1,
+  "source_version": "854_156383",
+  "rule": "ECStageBehStageView.GetMonsterId calls Formula.GetMainMonster; each mapped roster contains one MonsterId identity, so the original ranking resolves to that ID.",
+  "converter": {
+    "path": "scripts/prepare_unity_map11_world_monsters.py",
+    "sha256": "ee6972efb9aedcde10d82b4d62f626fac01ebb41aad1725e668dd75b209aecd6"
+  },
+  "source_code": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/ECStageBehStageView.cs",
+      "sha256": "c5d606dc6573b27f3061a325aa7180134c51bd1c4b15286c523281f5df6e4e64"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MapMonsterLoader.cs",
+      "sha256": "9ae4ee9a3b2f4e7f6879a88a2b9a68912220e35cfe1519529643409d3b7d7c8b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MapMonsterLoadHandler.cs",
+      "sha256": "28255157553320d350af62a91a1a7fbe079d4cef0b83ecb490de2ebcf16033a6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/BaseSkeletonFollower.cs",
+      "sha256": "20edd124a320dbd087c479abaa8efba9fb6ff8880ab5afa9da97b505f9034b63"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/SkeletonRendererFollower.cs",
+      "sha256": "b040dc742c6cb232065fbf9a8d516c12bcd8388d5662b0720b8276d97f2e3b9a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    }
+  ],
+  "input_files": [
+    {
+      "path": "unity/Assets/Official/World/Map/11/map11-entities.json",
+      "sha256": "9940a5e62ca1028d8b869c701d397575b5699fc5b4caef69d75b261d89ac59f3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/11/map11-battles.json",
+      "sha256": "e4074ce5e25cd4be187c9a72cb784d4e42a1655a93fa10376282a959ac0b0741"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Presentation/model-identities.json",
+      "sha256": "a5d52f89136883e5674965e54ff1682c4f6aeb53d925ae23a3ad7a107bc28ded"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset",
+      "sha256": "dfe11abc855a85cb50d783b004551aff502186d84b7097e76c3659ed8788f8e8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.WorldMonsters.cs",
+      "sha256": "e1badc89eecd097de8feb9c10352257d9f45c7f83da8d65b8fbd4eec36beeb50"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs",
+      "sha256": "4a07573895e82f356a273361624d1b73dc9f76b427da5e9de8b22ab7954cc46e"
+    },
+    {
+      "path": "unity/Assets/Spine/Runtime/spine-unity/Components/Following/BoneFollower.cs",
+      "sha256": "0aed5efc9196243d59f2a88eba07794dcaa8140e1c7e9214013c47c0bcfd2671"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png.meta",
+      "sha256": "9f46561bed0e4e2700295144f5805215323d7d411ecfdf7ee0f893bedd6a4b8c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png",
+      "sha256": "d99038e52422e5299c1c7ebf2434dd88f12cc4645bf23aa3d8604c2316bdd610"
+    }
+  ],
+  "world_entity_prefab": {
+    "source_path": "Assets/Prefabs/EcEntity/MapWorld/WorldMonster/5110.prefab",
+    "provenance": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+      "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+      "path_id": "8217218011244582356",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle",
+      "manifest": "854_156383",
+      "bundle_size": 200566,
+      "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc"
+    },
+    "game_object_raw_sha256": "69d20c45cfba83212585af426d4ad403f7187386fe79e3a6d2949d90dfc0b85d",
+    "loader_provenance": {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_mapworld_worldmonster.bundle",
+      "bundle_hash": "ed45973fb8c295352dfcbf646f55cf6d",
+      "path_id": "2616973430032881108",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ed45973fb8c295352dfcbf646f55cf6d.bundle",
+      "manifest": "854_156383",
+      "bundle_size": 200566,
+      "bundle_sha256": "dc4ec8ba7246d23a2ba30e1e55bb87ec4c4b9b3c84cde93644424b6833b440dc"
+    },
+    "loader_raw_sha256": "6084cfe05eb6aa1d8bddd1bf4694b93388dfcc05b5f5f7e616446e54d7bb3e29"
+  },
+  "attachment_slots": {
+    "model_mount_parent": {
+      "name": "Model",
+      "local_position": [
+        0.0,
+        -0.5,
+        -0.5
+      ],
+      "local_rotation": [
+        -0.0,
+        -0.0,
+        -0.0,
+        1.0
+      ],
+      "local_scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "model_slot": {
+      "name": "ModelSlot",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "local_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "local_scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "shadow_slot": {
+      "name": "Shadow",
+      "local_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "local_rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "local_scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "world_model_prefabs": [
+    {
+      "monster_id": 3212,
+      "source_path": "Assets/Prefabs/Appearance/Monster/3212/MonsterModel_3212.prefab",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_appearance_monster_3212.bundle",
+        "bundle_hash": "c9d82f6985e9a1fa6f61ca86dcb24343",
+        "path_id": "806433364914005933",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/c9d82f6985e9a1fa6f61ca86dcb24343.bundle",
+        "manifest": "854_156383",
+        "bundle_size": 3489,
+        "bundle_sha256": "38a13b7e4cd89927eeaf7ee00a0a53ed16957219f29b88e9066b406fa5c8b22d"
+      },
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "game_object_raw_sha256": "1da006dbb7d971f63bf7f681c4034ef7d0e23e6cd0979f5b1937dd829e48956f"
+    },
+    {
+      "monster_id": 3215,
+      "source_path": "Assets/Prefabs/Appearance/Monster/3215/MonsterModel_3215.prefab",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_appearance_monster_3215.bundle",
+        "bundle_hash": "038f6be776ffe7470c8e199c0face168",
+        "path_id": "4456957502036034297",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/038f6be776ffe7470c8e199c0face168.bundle",
+        "manifest": "854_156383",
+        "bundle_size": 5971,
+        "bundle_sha256": "582cf1fea05773c3a0aede28132b96081a97e0c62095207b425c975912df621f"
+      },
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "game_object_raw_sha256": "9c68f44080ae5fe8c9f52f26570513737b3912b690abb6a304968c38d5894701"
+    },
+    {
+      "monster_id": 3216,
+      "source_path": "Assets/Prefabs/Appearance/Monster/3216/MonsterModel_3216.prefab",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_appearance_monster_3216.bundle",
+        "bundle_hash": "3766d4ec9cbea4cee27ef1da07c29f6c",
+        "path_id": "3277032284642726417",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3766d4ec9cbea4cee27ef1da07c29f6c.bundle",
+        "manifest": "854_156383",
+        "bundle_size": 7124,
+        "bundle_sha256": "26bef94277bdcc44ecc7b35ed13c68f702b485be04b7128dfed0ea79b9ec1eba"
+      },
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "game_object_raw_sha256": "9a0440be3a33ab575f6a4706b972f11f27bdcaad09856aab7d7a1f1ab45f7aae"
+    },
+    {
+      "monster_id": 3217,
+      "source_path": "Assets/Prefabs/Appearance/Monster/3217/MonsterModel_3217.prefab",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_appearance_monster_3217.bundle",
+        "bundle_hash": "a7fae39c3092fa0b64ed92e61a25bd5c",
+        "path_id": "2991278374096612071",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/a7fae39c3092fa0b64ed92e61a25bd5c.bundle",
+        "manifest": "854_156383",
+        "bundle_size": 4673,
+        "bundle_sha256": "178adbc708900d3a97e409c90a6a39252430696dfa35d9e29fce6bf658e33727"
+      },
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "game_object_raw_sha256": "7d1ef37bb05bc9b403199be1f35e50779323c2880557ddc3cf00d961884a88f7"
+    },
+    {
+      "monster_id": 3218,
+      "source_path": "Assets/Prefabs/Appearance/Monster/3218/MonsterModel_3218.prefab",
+      "provenance": {
+        "bundle": "defaultpackage_assets_prefabs_appearance_monster_3218.bundle",
+        "bundle_hash": "3073c0904fc7b56ec632d9763b1ac67f",
+        "path_id": "-4946174767030286188",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3073c0904fc7b56ec632d9763b1ac67f.bundle",
+        "manifest": "854_156383",
+        "bundle_size": 9331,
+        "bundle_sha256": "555bc17e00f02590cff7ca5d0087945e7501d3bafb752637cf5848452df6c4ce"
+      },
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "game_object_raw_sha256": "1c7354f4126be907b4c5fb1424c7ff26e5826ee7a125f1991073ca816fafdc21"
+    }
+  ],
+  "shadow_prefab": {
+    "name": "MonsterShadow",
+    "provenance": {
+      "bundle": "defaultpackage_assets_prefabs_appearance_monster_0template.bundle",
+      "bundle_hash": "cea52e48828914da1671bee6851abe9a",
+      "path_id": "2443797337644163231",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/cea52e48828914da1671bee6851abe9a.bundle",
+      "manifest": "854_156383",
+      "bundle_size": 3490,
+      "bundle_sha256": "6f568064049fc3062d557a65b8afbc18c485ef2e602de001a2eef2886fbb507f"
+    },
+    "game_object_raw_sha256": "cc8c974cd9d93439660e3949a43749b965c6705727e12b336d8e5bb6375ab4ac",
+    "follower_component": {
+      "source_code": [
+        ".tools/source-packages/official-code/client-source/BaseSkeletonFollower.cs",
+        ".tools/source-packages/official-code/client-source/SkeletonRendererFollower.cs"
+      ],
+      "serialized_fields": {
+        "BoneName": "shadow",
+        "FollowZSpacing": 0,
+        "ZFront": 0,
+        "FollowLocalScale": 1,
+        "FollowBoneWorldFlip": 0,
+        "FollowRotation": 1,
+        "FollowSkeletonTransformFlipX": 0,
+        "InitializeOnAwake": 1
+      }
+    },
+    "sprite_renderer": {
+      "sorting_order": -10,
+      "enabled": true,
+      "root_local_scale": [
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "sprite_provenance": {
+        "bundle": "defaultpackage_share_8133ca011e754cbd65529825da08ddc4.bundle",
+        "bundle_hash": "c9953fe436882fe25d61636a4f435b8d",
+        "path_id": "5212472164433198905",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/c9953fe436882fe25d61636a4f435b8d.bundle",
+        "raw_size": 25912,
+        "raw_sha256": "404f3f44313a49c7aa7494c9c0e9cda7aa8fc4e0af0baab5941f3e85f06483b9"
+      },
+      "sprite_raw_sha256": "f00a483a6a197e4f6f7de14ae712d465f2a30b3c49482b5b4dd3092db5c3beb1",
+      "pixels_per_unit": 100.0,
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "rect": [
+        0.0,
+        0.0,
+        717.0,
+        272.0
+      ],
+      "texture_rect": [
+        29.0,
+        14.0,
+        654.0,
+        244.0
+      ]
+    },
+    "texture_output": {
+      "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png",
+      "source_provenance": {
+        "bundle": "defaultpackage_share_8133ca011e754cbd65529825da08ddc4.bundle",
+        "bundle_hash": "c9953fe436882fe25d61636a4f435b8d",
+        "path_id": "-1641328942650294471",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/c9953fe436882fe25d61636a4f435b8d.bundle",
+        "raw_size": 25912,
+        "raw_sha256": "404f3f44313a49c7aa7494c9c0e9cda7aa8fc4e0af0baab5941f3e85f06483b9"
+      },
+      "source_raw_sha256": "ad70f13c82f55f772d92f750edcba2bcf37638901f4e433f0fcfc91213032be2",
+      "size": [
+        717,
+        272
+      ],
+      "mode": "RGBA",
+      "output_sha256": "d99038e52422e5299c1c7ebf2434dd88f12cc4645bf23aa3d8604c2316bdd610"
+    }
+  },
+  "runtime_bindings": [
+    {
+      "placement_id": 3828,
+      "entity_class_id": 5110,
+      "grid": [
+        85,
+        68
+      ],
+      "stage_id": 20020,
+      "roster_monster_ids": [
+        3216
+      ],
+      "monster_id": 3216,
+      "battle_model_key": "CAB-7e0bb42f8cf01808d8696bb31e1bf8af:-6681934430453334135:",
+      "world_animation": "idle_01"
+    },
+    {
+      "placement_id": 3830,
+      "entity_class_id": 5110,
+      "grid": [
+        79,
+        77
+      ],
+      "stage_id": 20021,
+      "roster_monster_ids": [
+        3217
+      ],
+      "monster_id": 3217,
+      "battle_model_key": "CAB-0daa32305ce7bd4f626fd1a02b5ce7cd:3327329219341094663:",
+      "world_animation": "idle_01"
+    },
+    {
+      "placement_id": 3916,
+      "entity_class_id": 5110,
+      "grid": [
+        84,
+        82
+      ],
+      "stage_id": 20019,
+      "roster_monster_ids": [
+        3215
+      ],
+      "monster_id": 3215,
+      "battle_model_key": "CAB-a5fb5a4619248d31ac1cd784ab683461:3865420283864730449:",
+      "world_animation": "idle_01"
+    },
+    {
+      "placement_id": 5120,
+      "entity_class_id": 5110,
+      "grid": [
+        34,
+        58
+      ],
+      "stage_id": 20018,
+      "roster_monster_ids": [
+        3212
+      ],
+      "monster_id": 3212,
+      "battle_model_key": "CAB-35049304ecf25d2cf1a6d5f32f053b7b:5724685006325109779:",
+      "world_animation": "idle_01"
+    },
+    {
+      "placement_id": 6217,
+      "entity_class_id": 5110,
+      "grid": [
+        15,
+        117
+      ],
+      "stage_id": 20022,
+      "roster_monster_ids": [
+        3218
+      ],
+      "monster_id": 3218,
+      "battle_model_key": "CAB-9a7ee5488a237f6e6590b60d22aac9e1:435142944177673400:",
+      "world_animation": "idle_01"
+    },
+    {
+      "placement_id": 6821,
+      "entity_class_id": 5110,
+      "grid": [
+        51,
+        122
+      ],
+      "stage_id": 20019,
+      "roster_monster_ids": [
+        3215
+      ],
+      "monster_id": 3215,
+      "battle_model_key": "CAB-a5fb5a4619248d31ac1cd784ab683461:3865420283864730449:",
+      "world_animation": "idle_01"
+    }
+  ],
+  "output_sha256": "693263bbbbf1daf928faefbc35518825285df6a663d9d6c14ba4e4b7fb8b48d6"
+}

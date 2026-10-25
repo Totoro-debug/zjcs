@@ -777,6 +777,8 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_data.py` 将基础实体模板与地图 `Lo` 覆盖分别保留，生成 110 类实体组件、44 个故事图（666 节点）与四个子图（64 节点）、50 条地图对话、61 条选项、8 条固定奖励、24 条主线及 129 个战斗阶段；输入、官方客户端／共享程序集来源与输出哈希见 `official-map/map11-runtime-source-manifest.json`。`prepare_unity_map10_battle_data.py --map-id 11` 保留 57 个怪物编队数组、17 个场景和 591 个实体阶段绑定，来源见 `unity/Assets/Official/World/Map/11/battle-source-manifest.json`。
 
+森之国 `5110` 动态怪物显示：`prepare_unity_map11_world_monsters.py` 沿固定版 `ECStageBehStageView.GetMonsterId`、`Formula.GetMainMonster`、`MapMonsterLoader` 和 `MapMonsterLoadHandler` 核验六个阶段绑定，以及 3212、3215、3216、3217、3218 的官方 `MonsterModel` prefab。原 `5110.prefab` 的 `ModelSlot`、`Shadow` 挂点及偏移均记录在来源清单；`MonsterShadow` prefab 跟随 `shadow` 骨骼，其 Sprite 从 APK 原 bundle 提取为 `unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png`。官方 CDN／APK 来源 URL、bundle 哈希、CAB 名、path ID、对象与纹理哈希、缩放和复用的战斗骨骼映射见 `official-map/map11-world-monsters-source-manifest.json`；运行时显式从 `Resources/Map11/Textures/MonsterShadow` 加载。
+
 机关规则从原 EC／Lo 配置恢复 116 个相关记录、九组锁与七座终端。锁 413 对缺失实体 423 的原结果保留，独立记录用户确认的单机跳过例外；已重新反编译原程序集并核对原始地图数据，未创建替代实体或修改官方源配置。
 
 终端物品 325 的 `quick_buy` 行从同版 APK 的 `config_luban` 提取，保留 50 晨星、每次一张、无购买次数上限及物品 4013 持有条件。剧情分支清单记录 `SelectorNode`、`SwitchNode`、`StoryGraph`、布尔条件及 `SerializableObj` 原代码哈希；按用户确认补全服务器缺失的首项匹配规则，未改动故事图的端口、顺序或默认出口。

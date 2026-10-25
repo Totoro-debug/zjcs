@@ -3,15 +3,18 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Spine.Unity;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Combat.Official;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.World;
 using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Commerce;
+using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor
@@ -43,6 +46,10 @@ namespace Zjcs.Editor
             Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(save.Save) == 11, "Home return follows active normal map order");
             VerifyMainPlayerStoryPositions();
             VerifyStorySpatialBindings();
+            VerifyWorldMonsterViews();
+            Capture("background-map-world-monsters");
+            yield return new WaitForEndOfFrame();
+            yield return CaptureWorldMonsterView(3828);
             OfficialMap11StoryBranchValidation.Validate(runtime);
             var story = ((IDictionary)Field<object>("stories"))["WorldTreeGuideToNPC"] as Map10RuntimeStory;
             typeof(OfficialMap10GameRuntime).GetField("activeStory", Private).SetValue(runtime, story);
@@ -306,6 +313,87 @@ namespace Zjcs.Editor
                 avatar.transform.position = position;
             }
             Debug.Log("Map11 spatial bindings validated: official 6101 WorldTree register, player fallback, and StorySettings offset.");
+        }
+
+        private static void VerifyWorldMonsterViews()
+        {
+            IDictionary views = Field<IDictionary>("worldMonsterViews");
+            IDictionary followers = Field<IDictionary>("worldMonsterFollowers");
+            IDictionary entities = Field<IDictionary>("mapEntities");
+            IDictionary rosters = Field<IDictionary>("rosters");
+            OfficialBattleModelCatalog catalog = OfficialBattleModelCatalog.LoadDefault();
+            Require(views.Count == 6, "All six official Map11 dynamic monster placements have model views");
+
+            foreach (DictionaryEntry entry in views)
+            {
+                int placementId = (int)entry.Key;
+                var skeleton = entry.Value as SkeletonAnimation;
+                Require(skeleton != null && skeleton.Skeleton != null && skeleton.AnimationState != null,
+                    "World monster skeleton initializes for placement " + placementId);
+                Require(skeleton.transform.localPosition == Vector3.zero
+                    && skeleton.transform.localScale == new Vector3(0.3f, 0.3f, 1f),
+                    "World monster retains the official ModelSlot origin and prefab root scale");
+                Transform modelRoot = skeleton.transform.parent.parent;
+                Require(skeleton.transform.parent.name == "ModelSlot" && modelRoot.name == "Model"
+                    && modelRoot.localPosition == new Vector3(0f, -0.5f, -0.5f)
+                    && modelRoot.parent.name == "5011_view",
+                    "World monster retains the official 5110 model mount hierarchy and offset");
+                MeshRenderer meshRenderer = skeleton.GetComponent<MeshRenderer>();
+                Require(meshRenderer != null && meshRenderer.enabled,
+                    "World monster skeleton renderer is active");
+                Material[] materials = meshRenderer.sharedMaterials;
+                Require(materials.Length > 0 && materials.All(value => value != null
+                    && value.shader != null && value.shader.isSupported && value.mainTexture != null),
+                    "World monster atlas materials resolve to supported textured shaders");
+
+                bool hasShadowBone = skeleton.Skeleton.FindBone("shadow") != null;
+                Require(followers.Contains(placementId) == hasShadowBone,
+                    "World monster shadow follows the original loader bone condition");
+                if (hasShadowBone)
+                {
+                    var follower = (BoneFollower)followers[placementId];
+                    SpriteRenderer renderer = follower.GetComponentInChildren<SpriteRenderer>(true);
+                    Require(follower.boneName == "shadow" && follower.followBoneRotation
+                        && follower.followLocalScale && !follower.followSkeletonFlip
+                        && follower.transform.parent.name == "Shadow",
+                        "World monster shadow retains the official follower settings and mount");
+                    Require(renderer != null && renderer.enabled && renderer.sprite != null
+                        && renderer.sortingOrder == -10
+                        && renderer.transform.localScale == new Vector3(0.3f, 0.3f, 1f),
+                        "World monster shadow uses the original sprite, sort order and prefab scale");
+                }
+
+                object entity = entities[placementId];
+                int stageId = (int)typeof(OfficialMap10GameRuntime)
+                    .GetMethod("ResolveEntityStageId", Private).Invoke(runtime, new[] { entity });
+                var roster = (Map10RuntimeRoster)rosters[stageId];
+                int monsterId = roster.Waves.SelectMany(value => value.Units).First().MonsterId;
+                OfficialBattleModelBinding binding = catalog.Find(catalog.ResolveModelKey(
+                    new FightBattleUnitState { MonsterId = monsterId }));
+                string idle = binding.animations.Single(value => value.name == "idle_01").spineName;
+                var current = skeleton.AnimationState.GetCurrent(0);
+                Require(current != null && current.Animation.Name == idle && current.Loop,
+                    "World monster plays its official idle animation for placement " + placementId);
+            }
+            Debug.Log("Map11 world monsters validated: six stage-bound instances, five official skeleton identities, idle animation and original shadow bindings.");
+        }
+
+        private static IEnumerator CaptureWorldMonsterView(int placementId)
+        {
+            var view = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            GameObject monster = view.FindEntityObject(placementId);
+            Require(monster != null, "World monster render target exists");
+            Camera camera = Field<Camera>("worldCamera");
+            Vector3 previousCameraPosition = camera.transform.position;
+            bool runtimeWasEnabled = runtime.enabled;
+            runtime.enabled = false;
+            camera.transform.position = new Vector3(monster.transform.position.x,
+                monster.transform.position.y, previousCameraPosition.z);
+            yield return new WaitForEndOfFrame();
+            Capture("background-world-monster-" + placementId);
+            yield return new WaitForSecondsRealtime(0.3f);
+            camera.transform.position = previousCameraPosition;
+            runtime.enabled = runtimeWasEnabled;
         }
 
         private static IEnumerator CheckRenderedOptions(string capture)

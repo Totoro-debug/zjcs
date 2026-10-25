@@ -540,6 +540,7 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
+            InitializeMap11WorldMonsters();
             InitializeStorySpatial();
             ValidateBattleEntityStageBindings();
             ValidateEntityLockGroups();
