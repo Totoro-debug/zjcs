@@ -207,6 +207,10 @@ flowchart TD
 
 玩家附件几何已从当前 `871_156598` 官方骨骼／图集独立恢复，见[原生几何来源](../../assets/reference/character-creation/native-geometry-source-manifest.json)。`prepare_native_character_geometry.py` 通过 MIT 格式读取器提取原骨骼局部坐标、每个影响骨骼的权重、region 变换和图集裁剪／旋转；修复读取器遗漏二进制附件名称覆盖的问题，保留真实贴图路径。`CharacterNativeAttachmentGeometry` 在既有原生骨骼上计算 Unity 动态网格，沿用插槽／附件层级、材质、排序及染色属性，不使用逐帧网格代替本次几何修复。男性654／女性706个现有附件均有非零几何，男性旧 prefab 的498处失效网格引用也从官方数据重建；与有效旧网格的 UV 逐顶点核对。共享模型工厂已绑定，男女角色的头发、五官和身体在战斗实际画面中可见。此项保留既有 Animator 片段，完整动画曲线、约束、变形、绘制顺序动画及未迁移动作仍未完成；历史 runtime 转换依赖未被声明已替换。
 
+动态头像已核对两版官方 `GamePlayManagerConfig` 和 `PlayerPortraitSettings`：均启用 ETC2 场景分支，头照参数均为100×120、正交尺寸1、偏移(-0.07,2.7,-5)，排除外观类型7／8／12、不拍摄粒子，场景头像请求姿势为 `home/idle_01`。已从 APK 提取摄影棚、`GameRoundScene` 和 `GameRoundCharacterItem_Scene` 的层级／绑定，见[头像来源](../../assets/reference/battle-hud/portrait-source-manifest.json)。`CharacterNativePortraitCapture` 按官方摄影顺序先更新原生 Animator／附件网格，再以独立相机与 CommandBuffer 绘制当前外观并读取透明纹理；不使用逐帧网格。此处仅完成头像拍摄基础，现有时间轴使用普通 UI prefab 的分支错误仍待切换；圆形网格、材质／shader、阵营底图、动态缓存和完整事件动画尚未接通，不能据此声称头像白块已修复。
+
+头像拍摄已在男女隔离创角存档的 Play Mode 中验证，均使用官方 `home/idle_01` 有效片段；检查100×120输出、非空透明区域及多色像素，并实际查看头发／五官与透明背景。男女真实鼠标就绪、收展／点击空白关闭及完整战斗返回复验通过；静态检查和 `ProjectTools.Validate` 通过。本次没有改变战斗裁决规则，未重复运行此前通过的36个规则套件；尚未将拍摄纹理接入完整场景头像，未执行 Windows Player 验证。
+
 已从当前官方中文语言资源提取5149条战斗相关名称／说明供核对技能、秘法与状态规则，保留原键、富文本和缺键；[文字清单](../../assets/reference/battle-rules/text-source-manifest.json)单独记录 `871_156598` 输入，未把它冒记为历史配置版本。运行载荷为 `Assets/Official/Combat/battle-texts.json`，技能／状态详情弹窗的交互与加载绑定仍待完成。默认属性的 APK 输入、解析源码、输出与哈希见[属性默认值清单](../../assets/reference/battle-rules/prop-defaults-source-manifest.json)。
 
 天雷裁决条件触发依据[来源清单](../../assets/reference/battle-rules/trigger-rate-source-manifest.json)中的组件字段、官方属性计算和 `item_10624_func_desc`。本地补足仅实现已取得配置的 `HasAnyStatus` 分支；服务器执行代码未取得，非空动作／状态类型过滤不作推测。固定随机流验证普通50%不触发、潮湿／感电各自100%触发、两条件不重复乘算、条件归属、无关状态和检查点恢复；`test_battle_status_skill_start.ps1` 和全部35个通用战斗套件均已通过，静态检查及 Unity `ProjectTools.Validate` 通过；准备页真实鼠标点击到首步执行复验通过，未将该局部流程视为全功能或 Windows 发布验证。

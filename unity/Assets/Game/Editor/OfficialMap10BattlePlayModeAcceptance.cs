@@ -182,6 +182,9 @@ namespace Zjcs.Editor
             yield return null;
             yield return null;
 
+            CharacterNativePortraitValidation.Validate(
+                SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty));
+
             FieldInfo entitiesField = typeof(OfficialMap10GameRuntime)
                 .GetField("mapEntities", BindingFlags.Instance | BindingFlags.NonPublic);
             MethodInfo startStage = typeof(OfficialMap10GameRuntime)

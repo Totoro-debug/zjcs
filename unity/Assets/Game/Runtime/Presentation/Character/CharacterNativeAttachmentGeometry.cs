@@ -214,6 +214,8 @@ namespace Zjcs.Presentation.CharacterCreation
             return result;
         }
 
+        public void RefreshForCapture() => LateUpdate();
+
         private void LateUpdate()
         {
             if (!initialized) return;
