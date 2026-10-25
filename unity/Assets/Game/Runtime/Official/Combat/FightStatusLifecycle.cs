@@ -139,7 +139,7 @@ namespace Zjcs.Combat.Official
                     return existing;
                 }
                 if (existing.ActionBehOfSameStatus == BehaviourDiscard) return existing;
-                if (existing.ActionBehOfSameStatus == BehaviourImmediate) unit.Statuses.Remove(existing);
+                if (existing.ActionBehOfSameStatus == BehaviourImmediate) End(unit, existing);
             }
             var applied = new FightBattleStatusState
             {
@@ -220,6 +220,7 @@ namespace Zjcs.Combat.Official
                 SkillEndFilteredActionTypes = Copy(template.SkillEndFilteredActionTypes),
                 SkillEndStatuses = CopyTriggers(template.SkillEndStatuses),
                 HasHpAccDecrease = template.HasHpAccDecrease,
+                AccumulatedDamage = template.AccumulatedDamage?.Copy(),
                 HpAccUnitHp = template.HpAccUnitHp,
                 HpAccUnitHpPercentage = template.HpAccUnitHpPercentage,
                 HpAccResetAtRoundEnd = template.HpAccResetAtRoundEnd,
@@ -307,10 +308,18 @@ namespace Zjcs.Combat.Official
                 if (status.RoundUpdateTiming != timing) continue;
                 if (ResolveTargetUnitId(status, units) != actor.Id) continue;
                 if (!IsExpired(status, round)) continue;
-                actor.Statuses.RemoveAt(i);
+                End(actor, status);
                 removed++;
             }
             return removed;
+        }
+
+        public static bool End(FightBattleUnitState unit, FightBattleStatusState status)
+        {
+            if (unit == null || status == null || unit.Statuses == null || !unit.Statuses.Remove(status)) return false;
+            if (status.AccumulatedDamage != null && status.AccumulatedDamage.RulesSupported)
+                unit.EndedAccumulatedDamageStatuses.Add(status);
+            return true;
         }
 
         private static List<int> Copy(List<int> values)
@@ -440,7 +449,7 @@ namespace Zjcs.Combat.Official
                     for (int t = 0; t < units.Count; t++)
                         if (units[t] != null && units[t].Id == targetId) { target = units[t]; break; }
                     if (target != null && target.Hp > 0) continue;
-                    unit.Statuses.RemoveAt(i);
+                    End(unit, status);
                     removed++;
                 }
             }

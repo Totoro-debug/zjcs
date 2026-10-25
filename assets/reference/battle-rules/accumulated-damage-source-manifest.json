@@ -1,0 +1,458 @@
+{
+  "config_manifest": "854_156383",
+  "code_manifest": "871_156598",
+  "language_manifest": "871_156598",
+  "versions": [
+    {
+      "manifest": "854_156383",
+      "inputs": [
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "807603736d511bb29adf0d607a139d95",
+          "path_id": "694607564633613521",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
+          "raw_size": 6901264,
+          "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
+          "file": "Assets/Config/EC/FightSkill_part157.g.bytes",
+          "payload_sha256": "f62def9bc6b1640d2c8f684db9cb64d21eb70642c766192f0e857e562ce9356b"
+        },
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "807603736d511bb29adf0d607a139d95",
+          "path_id": "-6459378756665213338",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
+          "raw_size": 6901264,
+          "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
+          "file": "Assets/Config/EC/FightSkill_part703.g.bytes",
+          "payload_sha256": "3f2e4fd64dced6438a17dbbb714a208d661012300897e03b6c0e56a4996131b2"
+        }
+      ],
+      "entities": {
+        "13148": {
+          "parent": 0,
+          "component": "FightSkillComponent",
+          "value": {
+            "SkillType": 0,
+            "CostType": 0,
+            "SkillTargetType": 1,
+            "TargetType": 1,
+            "HitTargetActionType": 0,
+            "ElementType": 0,
+            "RangeType": 1,
+            "Range": [],
+            "HitList": [
+              {
+                "ClassId": 13149,
+                "Delay": 0.0,
+                "ActOnSouce": 0,
+                "IgnoreAICount": false
+              }
+            ],
+            "SourceMoveList": [],
+            "ActionDuration": 1.0,
+            "AllEndedActionDuration": -1.0,
+            "AllRelevantEndedActionDuration": -1.0,
+            "Duration": 1.0,
+            "AllEndedDuration": -1.0,
+            "AllRelevantEndedDuration": -1.0,
+            "LimitedTimes": -1,
+            "ResetCDAtStart": false,
+            "ExtSkill": [],
+            "Replay": {
+              "Rate": 0.0,
+              "ReplaceSkillArrayOnReplay": []
+            },
+            "ReplayMaxCountEachRound": -1,
+            "CanTriggerChild": false,
+            "CanTriggerStatusEntityIds": [
+              24203
+            ],
+            "Ai": {
+              "DontKeepDistance": false,
+              "AiPriorityTypes": [],
+              "LastAIPriorityTypes": [],
+              "IgnoreStatusArray": [],
+              "AIPriroityCharacterType": 8,
+              "ReleaseWhileRidicule": false,
+              "ReleaseWhileConfusion": false,
+              "IsReleaseSkillAfterMove": false,
+              "IsFixSkillDirection": false,
+              "FixedDirection": 0,
+              "MoveByTeleport": false,
+              "AIPriorityHpLowerCharacterTypeFilter": [],
+              "AiPriorityPropType": 0,
+              "AiPriorityFindMax": true,
+              "AIPriorityCharacterTypeGroups": []
+            },
+            "ActionType": 0,
+            "FlipSource": false,
+            "NeedConditionStatusMeetToRelease": false,
+            "MustHaveValidCost": false,
+            "IsFixedProp": false,
+            "ResetReleasedTimeOnNextWave": false
+          }
+        },
+        "13149": {
+          "parent": 0,
+          "component": "FightHitFixedComponent",
+          "value": {
+            "DamageId": 13147,
+            "DamageType": 8,
+            "DamageBasicProp": 1,
+            "DamageProp": 200,
+            "FixedDamageProp": 190,
+            "DamageParam": 10000,
+            "DamageActionType": 4,
+            "DelayDistFactor": 0.0,
+            "Offset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "TargetOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "IsUseCenterRotation": false,
+            "RotateCenterOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "UseDamageFactor": false,
+            "DamageIgnoreShield": false,
+            "IsTrueDamage": false,
+            "AirCombo": {
+              "AirComboStatusId": 0,
+              "BasePercent": 0.0,
+              "AffectedByProp": false
+            },
+            "DestroyDelay": 0.10000000149011612,
+            "IsBreakResilience": false,
+            "Scope": [
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 0
+                },
+                "Delay": 0.0,
+                "DamageOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "DamageRotation": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "DamageRotZOffset": 0.0,
+                "FlipBySourceX": true,
+                "FlipByTargetY": true
+              }
+            ]
+          }
+        },
+        "24062": {
+          "parent": 0,
+          "component": "FightStatusAccDmgAndCastCustomDamageComponent",
+          "value": {
+            "StatusReplacePropertyValues": [],
+            "StatusTriggerSkillCfg": {
+              "SkillId": 13148,
+              "BasePercent": 1.0,
+              "AffectedByProp": false,
+              "Source": 3,
+              "UseAI": false,
+              "PropTarget": {
+                "IsEnemy": false,
+                "RoleType": [],
+                "IncludeApplicator": false,
+                "PropType": 0,
+                "Heighest": false,
+                "SupportCustomFilter": false
+              },
+              "Target": 2,
+              "TargetPos": 1,
+              "StackedCountToDamageFactor": false,
+              "CustomDamageInfo": {
+                "TargetType": 0,
+                "BaseProp": 0,
+                "BaseCurrentHp": false,
+                "DamageProp": 0,
+                "UpperLimitTarget": 0,
+                "UpperLimitPropType": 0,
+                "UpperLimitPercent": 0
+              },
+              "StatusReplacePropertyValues": [],
+              "TargetWithoutStatusIds": []
+            },
+            "AccumulationDamagePer": 3000,
+            "DamageType": 1,
+            "HitDamageTypes": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "OnlyAccDmgByStatusCreator": false,
+            "TriggerDamageAddToDamageSource": true
+          }
+        }
+      }
+    },
+    {
+      "manifest": "871_156598",
+      "inputs": [
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+          "path_id": "694607564633613521",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+          "manifest": "871_156598",
+          "bundle_size": 6898815,
+          "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595",
+          "file": "Assets/Config/EC/FightSkill_part157.g.bytes",
+          "payload_sha256": "f62def9bc6b1640d2c8f684db9cb64d21eb70642c766192f0e857e562ce9356b"
+        },
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+          "path_id": "-6459378756665213338",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+          "manifest": "871_156598",
+          "bundle_size": 6898815,
+          "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595",
+          "file": "Assets/Config/EC/FightSkill_part703.g.bytes",
+          "payload_sha256": "3f2e4fd64dced6438a17dbbb714a208d661012300897e03b6c0e56a4996131b2"
+        }
+      ],
+      "entities": {
+        "13148": {
+          "parent": 0,
+          "component": "FightSkillComponent",
+          "value": {
+            "SkillType": 0,
+            "CostType": 0,
+            "SkillTargetType": 1,
+            "TargetType": 1,
+            "HitTargetActionType": 0,
+            "ElementType": 0,
+            "RangeType": 1,
+            "Range": [],
+            "HitList": [
+              {
+                "ClassId": 13149,
+                "Delay": 0.0,
+                "ActOnSouce": 0,
+                "IgnoreAICount": false
+              }
+            ],
+            "SourceMoveList": [],
+            "ActionDuration": 1.0,
+            "AllEndedActionDuration": -1.0,
+            "AllRelevantEndedActionDuration": -1.0,
+            "Duration": 1.0,
+            "AllEndedDuration": -1.0,
+            "AllRelevantEndedDuration": -1.0,
+            "LimitedTimes": -1,
+            "ResetCDAtStart": false,
+            "ExtSkill": [],
+            "Replay": {
+              "Rate": 0.0,
+              "ReplaceSkillArrayOnReplay": []
+            },
+            "ReplayMaxCountEachRound": -1,
+            "CanTriggerChild": false,
+            "CanTriggerStatusEntityIds": [
+              24203
+            ],
+            "Ai": {
+              "DontKeepDistance": false,
+              "AiPriorityTypes": [],
+              "LastAIPriorityTypes": [],
+              "IgnoreStatusArray": [],
+              "AIPriroityCharacterType": 8,
+              "ReleaseWhileRidicule": false,
+              "ReleaseWhileConfusion": false,
+              "IsReleaseSkillAfterMove": false,
+              "IsFixSkillDirection": false,
+              "FixedDirection": 0,
+              "MoveByTeleport": false,
+              "AIPriorityHpLowerCharacterTypeFilter": [],
+              "AiPriorityPropType": 0,
+              "AiPriorityFindMax": true,
+              "AIPriorityCharacterTypeGroups": []
+            },
+            "ActionType": 0,
+            "FlipSource": false,
+            "NeedConditionStatusMeetToRelease": false,
+            "MustHaveValidCost": false,
+            "IsFixedProp": false,
+            "ResetReleasedTimeOnNextWave": false
+          }
+        },
+        "13149": {
+          "parent": 0,
+          "component": "FightHitFixedComponent",
+          "value": {
+            "DamageId": 13147,
+            "DamageType": 8,
+            "DamageBasicProp": 1,
+            "DamageProp": 200,
+            "FixedDamageProp": 190,
+            "DamageParam": 10000,
+            "DamageActionType": 4,
+            "DelayDistFactor": 0.0,
+            "Offset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "TargetOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "IsUseCenterRotation": false,
+            "RotateCenterOffset": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "UseDamageFactor": false,
+            "DamageIgnoreShield": false,
+            "IsTrueDamage": false,
+            "AirCombo": {
+              "AirComboStatusId": 0,
+              "BasePercent": 0.0,
+              "AffectedByProp": false
+            },
+            "DestroyDelay": 0.10000000149011612,
+            "IsBreakResilience": false,
+            "Scope": [
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 0
+                },
+                "Delay": 0.0,
+                "DamageOffset": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "DamageRotation": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "DamageRotZOffset": 0.0,
+                "FlipBySourceX": true,
+                "FlipByTargetY": true
+              }
+            ]
+          }
+        },
+        "24062": {
+          "parent": 0,
+          "component": "FightStatusAccDmgAndCastCustomDamageComponent",
+          "value": {
+            "StatusReplacePropertyValues": [],
+            "StatusTriggerSkillCfg": {
+              "SkillId": 13148,
+              "BasePercent": 1.0,
+              "AffectedByProp": false,
+              "Source": 3,
+              "UseAI": false,
+              "PropTarget": {
+                "IsEnemy": false,
+                "RoleType": [],
+                "IncludeApplicator": false,
+                "PropType": 0,
+                "Heighest": false,
+                "SupportCustomFilter": false
+              },
+              "Target": 2,
+              "TargetPos": 1,
+              "StackedCountToDamageFactor": false,
+              "CustomDamageInfo": {
+                "TargetType": 0,
+                "BaseProp": 0,
+                "BaseCurrentHp": false,
+                "DamageProp": 0,
+                "UpperLimitTarget": 0,
+                "UpperLimitPropType": 0,
+                "UpperLimitPercent": 0
+              },
+              "StatusReplacePropertyValues": [],
+              "TargetWithoutStatusIds": []
+            },
+            "AccumulationDamagePer": 3000,
+            "DamageType": 1,
+            "HitDamageTypes": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "OnlyAccDmgByStatusCreator": false,
+            "TriggerDamageAddToDamageSource": true
+          }
+        }
+      }
+    }
+  ],
+  "runtime_config_identical_in_both_versions": true,
+  "description": {
+    "key": "entry_24062_desc",
+    "text": "承受状态施加者造成的伤害增加，且会被优先选择为攻击目标，魔印消失时，额外受到1次物理伤害，伤害量为期间除真实伤害之外对其生命造成伤害的30%。"
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-texts.json",
+      "sha256": "5d31a50c8260d6e16edbe503168dcffd4ebb8e222b3757fbf5829b598ff0c7e9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs",
+      "sha256": "3e3863e11aa8f87968ec38d8d34d74876450713c23319a0a1c016afe688a1f4c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs",
+      "sha256": "690c2b807601c00d473c7ab054d75ed8e4ffd14362b5f21efccadfe60fcd4e32"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/HitDamageType.cs",
+      "sha256": "757e60cd3e1a05da9a008326e0b7c5d96c3757dc86ec8acb350e3adc155098f0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs",
+      "sha256": "916ee63a1c4d71e365a4638d774764ed7f3903acbb480f627899e925f5fa72d4"
+    }
+  ],
+  "generator_sha256": "2e47c423b1ac0fc1356c853f6ad3c6085615f7da7aeda54b80d0b96ccef1d8f2",
+  "scope": "Accumulate actual HP loss excluding true damage, invoke configured custom-damage skill at status end. Server execution and source-statistics allocation are not present in these inputs."
+}

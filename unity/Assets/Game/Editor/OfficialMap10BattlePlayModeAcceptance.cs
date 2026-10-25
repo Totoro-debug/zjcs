@@ -215,6 +215,18 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
+            if (accumulatedDamageTest)
+            {
+                // Exercise a restored pending status end through the actual presentation loop.
+                var owner = sceneController.Checkpoint.Units.First(value => value.MonsterId > 0);
+                var mark = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().Load()
+                    .CreateStatus(24062, owner.Id, 1, 1);
+                mark.AccumulatedDamage.HpDamage = 100;
+                mark.AccumulatedDamage.Contributions.Add(new Zjcs.Combat.Official.FightBattleDamageContribution
+                    { SourceId = 1, SkillEntityId = 10011, HpDamage = 100 });
+                owner.EndedAccumulatedDamageStatuses.Add(mark);
+            }
             Debug.Log("Battle scene: stage=" + sceneController.Checkpoint.StageId
                 + " camera=" + Camera.main?.transform.position + " size=" + Camera.main?.orthographicSize
                 + " units=" + string.Join(";", sceneController.Checkpoint.Units.Select(value =>
@@ -370,6 +382,10 @@ namespace Zjcs.Editor
             Require(checkpoint() != null, "Battle checkpoint is missing after the battle started.");
             Require(checkpointField("Counter") >= 1, "Battle did not execute its first step.");
             Require(checkpointField("DamageEventSerial") >= 1, "Battle did not record damage during the first steps.");
+            if (accumulatedDamageTest)
+                Require(((Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint()).Receipts.SelectMany(value => value.Event.DamageEvents)
+                    .Any(value => value.SkillEntityId == 13148 && value.HitEntityId == 13149 && value.Damage == -30),
+                    "The restored accumulated-damage status did not execute through the real battle presentation.");
             Require(active() || (bool)checkpoint().GetType().GetField("Finished").GetValue(checkpoint()),
                 "Battle left Play without a final result. Phase=" + phaseProperty.GetValue(controller));
 

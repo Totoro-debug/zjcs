@@ -146,7 +146,6 @@ namespace Zjcs.Combat.Official
                 foreach (FightBattleStatusState status in actor.Statuses)
                     if (status != null && statusCatalog.StatusStopsSkillCooldown(status.ClassId))
                         skillState.StopCooldownForRound();
-            FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart);
             var before = new Dictionary<int, long>();
             for (int i = 0; i < units.Count; i++) before[units[i].Id] = units[i].Hp;
             var movements = new List<FightBattleMovementEvent>();
@@ -159,6 +158,12 @@ namespace Zjcs.Combat.Official
             var checkedSlots = new HashSet<int>();
             float stepDuration = 0f;
             float stepActionDuration = -1f;
+
+            if (FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingStart) > 0)
+                RebuildBattleProperties();
+            float statusEndDelay = 0f;
+            ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
+                ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
             if (statusCatalog != null)
                 foreach (FightBattleUnitState source in new List<FightBattleUnitState>(units))
@@ -262,9 +267,14 @@ namespace Zjcs.Combat.Official
             SynchronizeTurn(actor);
             turns.Finish(turn);
             FightStatusLifecycle.TickTurn(actor, units, actorRound, FightStatusLifecycle.TimingEnd);
+            RebuildBattleProperties();
+            ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
+                ref statusEndDelay, ref stepDuration, ref stepActionDuration);
             RestoreResilienceAfterPersonalRound(actor, actorRound);
             CollectStatusCustomActions(statusCustomActions);
             FightStatusLifecycle.RemoveDestroyedTargets(units);
+            ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
+                ref statusEndDelay, ref stepDuration, ref stepActionDuration);
 
             SpawnNextWaveIfCleared();
             RefreshTurnUnits();
@@ -544,6 +554,7 @@ namespace Zjcs.Combat.Official
                     };
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage);
+                    FightStatusAccumulatedDamageRuntime.RecordHit(target, damage);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     var hpTriggerSkills = new List<int>();
@@ -562,6 +573,11 @@ namespace Zjcs.Combat.Official
                     FightStatusTriggerRuntime.Apply(target, statusCatalog, false, hpTriggerSkills,
                         random);
                     RebuildBattleProperties();
+                    float endedDuration = 0f, endedActionDuration = -1f;
+                    ExecuteAccumulatedDamageEnds(casts, damageEvents, movements,
+                        ref lastDelay, ref endedDuration, ref endedActionDuration);
+                    statusTriggerDuration = Math.Max(statusTriggerDuration, endedDuration);
+                    statusTriggerActionDuration = Math.Max(statusTriggerActionDuration, endedActionDuration);
                     if (triggerSkills.Count > 0)
                         ExecuteTriggerSkills(target, triggerSkills, casts, damageEvents, movements,
                             ref lastDelay);
@@ -1599,7 +1615,7 @@ namespace Zjcs.Combat.Official
                     candidates.RemoveAt(candidates.Count - 1);
                 }
             }
-            for (int i = 0; i < count; i++) target.Statuses.Remove(candidates[i]);
+            for (int i = 0; i < count; i++) FightStatusLifecycle.End(target, candidates[i]);
         }
 
         /// <summary>

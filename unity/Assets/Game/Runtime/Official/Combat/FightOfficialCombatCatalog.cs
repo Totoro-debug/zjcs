@@ -12,7 +12,7 @@ namespace Zjcs.Combat.Official
         public string OutputSha256;
     }
 
-    public sealed class FightOfficialCombatCatalog
+    public sealed partial class FightOfficialCombatCatalog
     {
         public const string ExpectedManifest = "854_156383";
         public const int MoveActionType = 1;
@@ -940,6 +940,7 @@ namespace Zjcs.Combat.Official
                 SkillEndRulesSupported = skillEnd != null && SupportsSkillEnd(skillEnd),
                 SkillEndMetCount = skillEnd == null ? 1 : Int(skillEnd, "MetCount", 1),
                 HasHpAccDecrease = hpAccDecrease != null,
+                AccumulatedDamage = ReadAccumulatedDamage(components),
                 HpAccUnitHp = hpAccDecrease == null ? -1L : Long(hpAccDecrease, "UnitHp", -1L),
                 HpAccUnitHpPercentage = hpAccDecrease == null ? -1f
                     : Float(hpAccDecrease, "UnitHpPercentage", -1f),

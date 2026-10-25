@@ -61,6 +61,7 @@ namespace Zjcs.Combat.Official
         public FightSkillAgentState SkillState = new FightSkillAgentState();
         public FightTurnUnit Turn = new FightTurnUnit();
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
+        public List<FightBattleStatusState> EndedAccumulatedDamageStatuses = new List<FightBattleStatusState>();
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
         public List<FightGridPoint> BodyOffsets = new List<FightGridPoint>
         {
@@ -194,6 +195,7 @@ namespace Zjcs.Combat.Official
         // Official FightStatusHpAccDecreaseComponent. Damage is accumulated independently of cures
         // per the confirmed offline rule; the configured threshold is consumed on each trigger.
         public bool HasHpAccDecrease;
+        public FightBattleStatusAccumulatedDamage AccumulatedDamage;
         public long HpAccUnitHp = -1;
         public float HpAccUnitHpPercentage = -1f;
         public bool HpAccResetAtRoundEnd;
