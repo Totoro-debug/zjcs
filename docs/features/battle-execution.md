@@ -89,6 +89,8 @@
 
 `GamePlayManager.UpdateTimeScale` 在准备阶段恢复1，在 PlayStart／Play／EntryTransition／BattleEndTransition 应用战斗速度，其他阶段按原分支处理，End 释放并复位；不能仅凭 Pause 枚举推定此函数会将时标置0。`GameSoundSpeedController` 用 Wwise RTPC 同步速度。逻辑、移动、技能 Playable、UI 动画与声音需分别核对使用缩放或未缩放时间的原意；快进解锁延迟等明确使用未缩放时间的控件不随意改动。
 
+离线 `OfficialBattleRuntimeController` 以 `Time.timeScale` 应用速度；Map10、副本、幻想塔与竞技场的步进计时使用缩放后的 `Time.deltaTime`，并直接采用步骤事件时长，保证战斗步进倍率只应用一次。
+
 ### 模型、场景、演出与资源
 
 | 编号 | 原始官方功能 | 官方入口与恢复要求 |
@@ -282,7 +284,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 ### 倍速与其他公共控件（F33—F38）
 
 - [ ] 补齐倍速的模式／权限限制与部分档位：当前按官方 `Speeds`／`SpeedUIs`／`PlayModeSpeeds` 解析、按钮文案与倍率分离、条件按本地存档判断并在切换时应用 `Time.timeScale`；`RecordPlaybackSpeedDefaultIndex`、团队／成员／观战差异及当前档跨战斗恢复仍待接通。
-- [ ] 让战斗调度、命中／技能／死亡演出与原本应受倍率影响的 UI／声音响应同一速度；当前战斗步骤、移动插值和模型播放受 `Time.timeScale` 影响，时间轴仍使用未缩放时间，声音 Wwise RTPC 同步尚未接入。
+- [ ] 让命中／技能／死亡演出与原本应受倍率影响的 UI／声音响应同一速度；移动插值和模型播放受 `Time.timeScale` 影响，时间轴仍使用未缩放时间，声音 Wwise RTPC 同步尚未接入。公共战斗步进调度已将倍率应用一次。
 - [ ] 恢复快进显示条件、1秒延迟、允许阶段、防重、不可用与失败提示及停用复位；本地快进须消费同一状态与事件，不能跳过必要结算或假定等于切高倍速。
 - [ ] 接入镜头跟随／自由模式、准备限制、默认锁定与外部模式覆盖，恢复原相机坐标和范围，实际检查角色移动时的镜头行为。
 - [ ] 按所属玩法保留范围处理托管、战斗内背包及红点、后台切出、录像保存意愿、录像／剧情跳过。每项须贯通条件、状态、提示与本地持久化；未确定的模式行为先定位消费链，不补造规则。

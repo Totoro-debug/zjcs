@@ -317,7 +317,7 @@ namespace Zjcs.Presentation.Home
             stepTimer -= Time.deltaTime;
             if (stepTimer > 0f) return;
             controller.Advance();
-            stepTimer = controller.LastStepSeconds / (float)Math.Max(1.0, controller.SpeedMultiplier);
+            stepTimer = controller.LastStepSeconds;
         }
 
         private void OnStepCompleted(FightBattleExecutionResult result)
