@@ -113,10 +113,10 @@ namespace Zjcs.Editor
             if (miniMapCatalog == null || AssetDatabase.LoadAssetAtPath<TextAsset>(MiniMapGeometryAsset) == null)
                 throw new InvalidOperationException("Run scripts/prepare_unity_map10_minimap.py to prepare verified Map10 minimap resources.");
 
-            string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
-            string manifestPath = Path.Combine(root, "unity", PrefabManifestAsset.Replace('/', Path.DirectorySeparatorChar));
-            string groundPath = Path.Combine(root, "unity", GroundAsset.Replace('/', Path.DirectorySeparatorChar));
-            string miniMapPath = Path.Combine(root, "unity", MiniMapAsset.Replace('/', Path.DirectorySeparatorChar));
+            string root = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            string manifestPath = Path.Combine(root, PrefabManifestAsset.Replace('/', Path.DirectorySeparatorChar));
+            string groundPath = Path.Combine(root, GroundAsset.Replace('/', Path.DirectorySeparatorChar));
+            string miniMapPath = Path.Combine(root, MiniMapAsset.Replace('/', Path.DirectorySeparatorChar));
             var inputs = new[]
             {
                 Input(root, PayloadRoot + "/map10.geom.bytes"),
@@ -136,7 +136,7 @@ namespace Zjcs.Editor
                     throw new InvalidOperationException("Existing Map10 native prefab manifest is incomplete or its inputs changed.");
                 foreach (PrefabOutput output in previous.outputs)
                 {
-                    string fullPath = Path.Combine(root, "unity", output.path.Replace('/', Path.DirectorySeparatorChar));
+                    string fullPath = Path.Combine(root, output.path.Replace('/', Path.DirectorySeparatorChar));
                     if (!File.Exists(fullPath) || new FileInfo(fullPath).Length != output.bytes || HashFile(fullPath) != output.sha256)
                         throw new InvalidOperationException("Existing Map10 native prefab differs from its manifest: " + output.path);
                 }
@@ -192,8 +192,19 @@ namespace Zjcs.Editor
             var serialized = new SerializedObject(catalog);
             SerializedProperty entries = serialized.FindProperty("entries");
             if (entries == null) throw new InvalidOperationException("Official map catalog entries field is missing.");
-            entries.arraySize = 1;
-            SerializedProperty entry = entries.GetArrayElementAtIndex(0);
+            int index = -1;
+            for (int candidate = 0; candidate < entries.arraySize; candidate++)
+                if (entries.GetArrayElementAtIndex(candidate).FindPropertyRelative("ClassId").intValue == 10)
+                {
+                    index = candidate;
+                    break;
+                }
+            if (index < 0)
+            {
+                index = entries.arraySize;
+                entries.InsertArrayElementAtIndex(index);
+            }
+            SerializedProperty entry = entries.GetArrayElementAtIndex(index);
             entry.FindPropertyRelative("ClassId").intValue = 10;
             entry.FindPropertyRelative("GroundPrefab").objectReferenceValue = ground;
             entry.FindPropertyRelative("MiniMapPrefab").objectReferenceValue = miniMap;
@@ -245,13 +256,13 @@ namespace Zjcs.Editor
 
         private static PrefabInput Input(string root, string path)
         {
-            string fullPath = Path.Combine(root, "unity", path.Replace('/', Path.DirectorySeparatorChar));
+            string fullPath = Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar));
             return new PrefabInput { path = path, sha256 = HashFile(fullPath) };
         }
 
         private static PrefabOutput Output(string root, string path)
         {
-            string fullPath = Path.Combine(root, "unity", path.Replace('/', Path.DirectorySeparatorChar));
+            string fullPath = Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar));
             return new PrefabOutput { path = path, bytes = new FileInfo(fullPath).Length, sha256 = HashFile(fullPath) };
         }
 

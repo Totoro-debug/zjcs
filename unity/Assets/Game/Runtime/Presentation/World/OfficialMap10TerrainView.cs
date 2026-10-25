@@ -10,7 +10,6 @@ namespace Zjcs.Presentation.World
     [DisallowMultipleComponent]
     public sealed class OfficialMap10TerrainView : MonoBehaviour
     {
-        private const int GeometryVersion = 5;
         private const string ResourceTexturePrefix = "Map10/Textures/";
         private const int Map10BatchCount = 1404;
         private readonly List<Mesh> generatedMeshes = new List<Mesh>();
@@ -186,15 +185,7 @@ namespace Zjcs.Presentation.World
         {
             if (data == null || data.Length < 16 || Encoding.ASCII.GetString(data, 0, 8) != "ZJMAP001")
                 throw new InvalidDataException("Map10 terrain header is invalid.");
-            if (data[8] == (byte)'|')
-            {
-                int version = data[9] | data[10] << 8 | data[11] << 16;
-                if (version != GeometryVersion)
-                    throw new InvalidDataException("Terrain geometry version is unsupported.");
-                return;
-            }
-
-            if (data[8] == (byte)'[' && ReadHeaderCount(data) == expectedBatchCount) return;
+            if (ReadHeaderCount(data) == expectedBatchCount) return;
             throw new InvalidDataException("Terrain geometry header does not match its expected format or batch count.");
         }
 

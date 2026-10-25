@@ -66,12 +66,12 @@ namespace Zjcs.Presentation.World
             Initialize(source, id);
         }
 
-        public void Initialize(TextAsset source, int id)
+        public void Initialize(TextAsset source, int id, int expectedMapClassId = 10)
         {
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             if (source == null) throw new ArgumentNullException(nameof(source));
             SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
-            ValidatePayload(loaded, id);
+            ValidatePayload(loaded, id, expectedMapClassId);
 
             InitializeSequence(loaded, id, null, Color.white, 0, 1f, 0f, -1000000f);
         }
@@ -81,7 +81,7 @@ namespace Zjcs.Presentation.World
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
-            ValidatePayload(loaded, 0);
+            ValidatePayload(loaded, 0, 10);
             if (shader == null) throw new ArgumentNullException(nameof(shader));
 
             InitializeSequence(loaded, 0, shader, tint, sortingOrderOffset, colorIntensity, alphaIntensity, clipHeight);
@@ -135,7 +135,7 @@ namespace Zjcs.Presentation.World
             if (monsterId <= 0 || generatedMesh == null || generatedMaterial == null)
                 throw new InvalidOperationException("Official Map10 entity Spine view is not initialized.");
             SequencePayload loaded = JsonUtility.FromJson<SequencePayload>(source.text);
-            ValidatePayload(loaded, monsterId);
+            ValidatePayload(loaded, monsterId, sequence.mapClassId);
             Texture2D atlas = Resources.Load<Texture2D>(loaded.textureResource);
             if (atlas == null)
                 throw new InvalidOperationException("Official Map10 story actor atlas is missing: " + loaded.textureResource);
@@ -156,18 +156,19 @@ namespace Zjcs.Presentation.World
             ApplyFrame(0);
         }
 
-        public static int ValidatePayload(TextAsset source, int expectedMonsterId, out string textureResource)
+        public static int ValidatePayload(TextAsset source, int expectedMonsterId, out string textureResource,
+            int expectedMapClassId = 10)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             SequencePayload parsed = JsonUtility.FromJson<SequencePayload>(source.text);
-            ValidatePayload(parsed, expectedMonsterId);
+            ValidatePayload(parsed, expectedMonsterId, expectedMapClassId);
             textureResource = parsed.textureResource;
             return parsed.frames.Length;
         }
 
-        private static void ValidatePayload(SequencePayload value, int expectedMonsterId)
+        private static void ValidatePayload(SequencePayload value, int expectedMonsterId, int expectedMapClassId)
         {
-            if (value == null || value.format != 1 || value.mapClassId != 10
+            if (value == null || value.format != 1 || value.mapClassId != expectedMapClassId
                 || (expectedMonsterId > 0 && value.monsterId != expectedMonsterId) || value.monsterId < 0
                 || value.fps <= 0 || value.frames == null || value.frames.Length == 0
                 || string.IsNullOrEmpty(value.textureResource))

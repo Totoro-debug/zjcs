@@ -170,8 +170,8 @@ class CookingConverter:
                 "m_enableWordWrapping": word_wrap, "m_overflowMode": overflow,
                 "m_margin": dict(zip(("x", "y", "z", "w"), margin))}
 
-    def object_tree(self, prefab_name: str):
-        matches = [(path, ptr) for path, ptr in self.apk.container("prefabs_ui_cooking")
+    def object_tree(self, prefab_name: str, bundle_name: str = "prefabs_ui_cooking"):
+        matches = [(path, ptr) for path, ptr in self.apk.container(bundle_name)
                    if path.endswith("/" + prefab_name + ".prefab") and ptr.type.name == "GameObject"]
         if len(matches) != 1:
             raise ValueError(f"Expected one original {prefab_name} prefab, found {len(matches)}")

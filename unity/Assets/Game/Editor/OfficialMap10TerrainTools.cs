@@ -30,10 +30,15 @@ namespace Zjcs.Editor
                 serialized.FindProperty("geometry").objectReferenceValue = geometry;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
 
-                GameObject prefab = PrefabUtility.SaveAsPrefabAsset(temporary, PrefabAsset);
-                if (prefab == null) throw new InvalidOperationException("Unity could not create the Map10 terrain prefab.");
-                AssetDatabase.SaveAssets();
-                AssetDatabase.ImportAsset(PrefabAsset, ImportAssetOptions.ForceUpdate);
+                // Validation must preserve an existing, source-manifested prefab byte for byte.
+                // New serialized fields have compatible Map10 defaults; re-saving them changes its hash.
+                if (AssetDatabase.LoadAssetAtPath<GameObject>(PrefabAsset) == null)
+                {
+                    GameObject prefab = PrefabUtility.SaveAsPrefabAsset(temporary, PrefabAsset);
+                    if (prefab == null) throw new InvalidOperationException("Unity could not create the Map10 terrain prefab.");
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.ImportAsset(PrefabAsset, ImportAssetOptions.ForceUpdate);
+                }
 
                 view.Initialize(geometry);
                 if (view.BatchCount != 1404)
@@ -47,7 +52,9 @@ namespace Zjcs.Editor
                 GameObject saved = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabAsset);
                 OfficialMap10TerrainView savedView = saved != null ? saved.GetComponent<OfficialMap10TerrainView>() : null;
                 var savedSerialized = savedView != null ? new SerializedObject(savedView) : null;
-                if (savedSerialized == null || savedSerialized.FindProperty("geometry").objectReferenceValue != geometry)
+                if (savedSerialized == null || savedSerialized.FindProperty("geometry").objectReferenceValue != geometry
+                    || savedSerialized.FindProperty("resourceTexturePrefix").stringValue != "Map10/Textures/"
+                    || savedSerialized.FindProperty("expectedBatchCount").intValue != 1404)
                     throw new InvalidOperationException("Map10 terrain prefab lost its geometry binding.");
 
                 ValidateMonsterModels();

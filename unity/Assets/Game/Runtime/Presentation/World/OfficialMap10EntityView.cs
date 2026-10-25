@@ -17,6 +17,8 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<Collider2D, OfficialMap10EntityInfo> hitTargets =
             new Dictionary<Collider2D, OfficialMap10EntityInfo>();
         private readonly Dictionary<int, GameObject> entityObjects = new Dictionary<int, GameObject>();
+        private readonly Dictionary<int, Dictionary<int, GameObject>> entityStateObjects =
+            new Dictionary<int, Dictionary<int, GameObject>>();
         private readonly List<OfficialMap10EntityInfo> entityInfos = new List<OfficialMap10EntityInfo>();
         private readonly List<Mesh> generatedMeshes = new List<Mesh>();
         private readonly List<Material> generatedMaterials = new List<Material>();
@@ -39,6 +41,15 @@ namespace Zjcs.Presentation.World
         public GameObject FindEntityObject(int placementId)
         {
             return entityObjects.TryGetValue(placementId, out GameObject entity) ? entity : null;
+        }
+
+        public void SetEntityState(int placementId, int state)
+        {
+            if (!entityStateObjects.TryGetValue(placementId, out Dictionary<int, GameObject> variants)) return;
+            // The source -1 variant contains the persistent objects with all switched objects disabled.
+            int visibleState = variants.ContainsKey(state) ? state : -1;
+            foreach (KeyValuePair<int, GameObject> variant in variants)
+                variant.Value.SetActive(variant.Key == visibleState);
         }
 
         public bool TrySelectScreenPosition(Vector2 screenPosition)
@@ -191,6 +202,12 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map10 entity geometry binding is malformed: " + model.modelPath);
                 geometryBatchCount += model.geometryBatchCount;
                 spineCount += model.spines.Length;
+                var states = new HashSet<int>();
+                foreach (EntityStateModel state in model.states ?? Array.Empty<EntityStateModel>())
+                    if (state == null || !states.Add(state.state) || state.spines == null
+                        || state.geometryBatchCount < 0
+                        || (state.geometryBatchCount > 0 && string.IsNullOrEmpty(state.geometryResource)))
+                        throw new InvalidDataException("Official entity stage-state binding is malformed: " + model.modelPath);
             }
             textureCount = catalog.textureUris.Length;
             return catalog.entities.Length;
@@ -198,6 +215,19 @@ namespace Zjcs.Presentation.World
 
         private GeneratedModel BuildModel(EntityModel model)
         {
+            if (model.states != null && model.states.Length > 0)
+            {
+                var variants = new Dictionary<int, GeneratedModel>();
+                foreach (EntityStateModel state in model.states)
+                    variants.Add(state.state, BuildModel(new EntityModel
+                    {
+                        modelPath = model.modelPath + ":state:" + state.state,
+                        geometryResource = state.geometryResource,
+                        geometryBatchCount = state.geometryBatchCount,
+                        spines = state.spines
+                    }));
+                return new GeneratedModel { states = variants };
+            }
             var batches = new List<GeneratedBatch>();
             if (!string.IsNullOrEmpty(model.geometryResource))
             {
@@ -223,7 +253,7 @@ namespace Zjcs.Presentation.World
             entity.transform.localPosition = new Vector3(mapOrigin.x + record.grid[0], mapOrigin.y + record.grid[1],
                 -record.grid[1] * 0.001f);
             entity.transform.localRotation = Quaternion.Euler(0f, 0f, record.direction * 90f);
-            entity.SetActive(record.active);
+            entity.SetActive(record.active || (mapClassId == 11 && record.typeId == 202));
             if (record.placementId > 0)
             {
                 entityObjects.Add(record.placementId, entity);
@@ -232,28 +262,20 @@ namespace Zjcs.Presentation.World
 
             if (!string.IsNullOrEmpty(record.modelPath) && models.TryGetValue(record.modelPath, out GeneratedModel model))
             {
-                foreach (GeneratedBatch batch in model.batches)
+                if (model.states != null)
                 {
-                    var child = new GameObject("Geometry " + batch.sortingOrder);
-                    child.transform.SetParent(entity.transform, false);
-                    child.AddComponent<MeshFilter>().sharedMesh = batch.mesh;
-                    MeshRenderer renderer = child.AddComponent<MeshRenderer>();
-                    renderer.sharedMaterial = batch.material;
-                    renderer.sortingOrder = batch.sortingOrder;
-                    renderer.shadowCastingMode = ShadowCastingMode.Off;
-                    renderer.receiveShadows = false;
+                    var variants = new Dictionary<int, GameObject>();
+                    foreach (KeyValuePair<int, GeneratedModel> variant in model.states)
+                    {
+                        var stateRoot = new GameObject("State " + variant.Key);
+                        stateRoot.transform.SetParent(entity.transform, false);
+                        CreateModelVisuals(stateRoot.transform, variant.Value, record.entityClassId);
+                        stateRoot.SetActive(variant.Key == (model.states.ContainsKey(record.state) ? record.state : -1));
+                        variants.Add(variant.Key, stateRoot);
+                    }
+                    if (record.placementId > 0) entityStateObjects.Add(record.placementId, variants);
                 }
-
-                foreach (SpineReference spine in model.spines)
-                {
-                    TextAsset source = Resources.Load<TextAsset>(spine.resource);
-                    if (source == null)
-                        throw new InvalidDataException("Official Map10 entity Spine payload is missing: " + spine.resource);
-                    var spineObject = new GameObject("Spine " + spine.key, typeof(MeshFilter), typeof(MeshRenderer));
-                    spineObject.transform.SetParent(entity.transform, false);
-                    OfficialMap10MonsterView view = spineObject.AddComponent<OfficialMap10MonsterView>();
-                    view.Initialize(source, record.entityClassId);
-                }
+                else CreateModelVisuals(entity.transform, model, record.entityClassId);
             }
 
             if (interactable)
@@ -267,15 +289,38 @@ namespace Zjcs.Presentation.World
             return entity;
         }
 
+        private void CreateModelVisuals(Transform parent, GeneratedModel model, int entityClassId)
+        {
+            foreach (GeneratedBatch batch in model.batches)
+            {
+                var child = new GameObject("Geometry " + batch.sortingOrder);
+                child.transform.SetParent(parent, false);
+                child.AddComponent<MeshFilter>().sharedMesh = batch.mesh;
+                MeshRenderer renderer = child.AddComponent<MeshRenderer>();
+                renderer.sharedMaterial = batch.material;
+                renderer.sortingOrder = batch.sortingOrder;
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+            }
+            foreach (SpineReference spine in model.spines)
+            {
+                TextAsset source = Resources.Load<TextAsset>(spine.resource);
+                if (source == null)
+                    throw new InvalidDataException("Official entity Spine payload is missing: " + spine.resource);
+                var spineObject = new GameObject("Spine " + spine.key, typeof(MeshFilter), typeof(MeshRenderer));
+                spineObject.transform.SetParent(parent, false);
+                spineObject.AddComponent<OfficialMap10MonsterView>().Initialize(source, entityClassId, mapClassId);
+            }
+        }
+
         private void ReadGeometry(byte[] data, EntityModel model, List<GeneratedBatch> batches)
         {
             if (data == null || data.Length < 16 || Encoding.ASCII.GetString(data, 0, 8) != "ZJMAP001")
                 throw new InvalidDataException("Official Map10 entity geometry header is invalid: " + model.modelPath);
-            int version = data[8] == (byte)'|'
-                ? data[9] | data[10] << 8 | data[11] << 16
-                : BitConverter.ToInt32(data, 8);
-            if (version != 1 && version != 2 && version != 3 && version != 8)
-                throw new InvalidDataException("Unsupported official Map10 entity geometry version: " + version);
+            int batchCount = BitConverter.ToInt32(data, 8);
+            // The word after ZJMAP001 is the exported batch count, not a format version.
+            if (batchCount != model.geometryBatchCount)
+                throw new InvalidDataException("Official entity geometry header batch count differs: " + model.modelPath);
 
             int offset = 16;
             uint firstMetadataLength = ReadUInt32(data, ref offset, 12);
@@ -432,6 +477,7 @@ namespace Zjcs.Presentation.World
             models.Clear();
             hitTargets.Clear();
             entityObjects.Clear();
+            entityStateObjects.Clear();
             entityInfos.Clear();
             EntityCount = 0;
         }
@@ -475,6 +521,9 @@ namespace Zjcs.Presentation.World
             public int changeMapClassId;
             public string modelPath;
             public int[] stageIds;
+            public Map10RuntimeEntityStageBinding[] stageBindings;
+            public int[] periodicityGroupIds;
+            public int[] playerPeriodicityGroupIds;
         }
 
         [Serializable]
@@ -488,6 +537,16 @@ namespace Zjcs.Presentation.World
             public string interactionsJson;
             public string monsterSlotsJson;
             public bool overlapDisplay;
+            public EntityStateModel[] states;
+        }
+
+        [Serializable]
+        private sealed class EntityStateModel
+        {
+            public int state;
+            public string geometryResource;
+            public int geometryBatchCount;
+            public SpineReference[] spines;
         }
 
         [Serializable]
@@ -509,6 +568,7 @@ namespace Zjcs.Presentation.World
         {
             public GeneratedBatch[] batches;
             public SpineReference[] spines;
+            public Dictionary<int, GeneratedModel> states;
         }
 
         private sealed class GeneratedBatch
@@ -540,6 +600,9 @@ namespace Zjcs.Presentation.World
         public bool Unique { get; }
         public int[] Grid { get; }
         public int[] StageIds { get; }
+        public Map10RuntimeEntityStageBinding[] StageBindings { get; }
+        public int[] PeriodicityGroupIds { get; }
+        public int[] PlayerPeriodicityGroupIds { get; }
         public string ModelPath { get; }
 
         internal OfficialMap10EntityInfo(OfficialMap10EntityView.EntityRecord record)
@@ -563,6 +626,9 @@ namespace Zjcs.Presentation.World
             Unique = record.unique;
             Grid = record.grid;
             StageIds = record.stageIds;
+            StageBindings = record.stageBindings ?? Array.Empty<Map10RuntimeEntityStageBinding>();
+            PeriodicityGroupIds = record.periodicityGroupIds ?? Array.Empty<int>();
+            PlayerPeriodicityGroupIds = record.playerPeriodicityGroupIds ?? Array.Empty<int>();
             ModelPath = record.modelPath;
         }
     }

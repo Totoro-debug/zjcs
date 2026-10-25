@@ -16,7 +16,7 @@ PROPERTIES = [
 PROPERTY_HASHES = {zlib.crc32(p.encode()): p for p in PROPERTIES}
 
 
-def mecanim_tracks(obj, tree, property_names=(), vector_property_names=()):
+def mecanim_tracks(obj, tree, property_names=(), vector_property_names=(), binding_paths=()):
     data = obj.read_typetree()
     muscle = data['m_MuscleClip']
     duration = muscle['m_StopTime']
@@ -28,6 +28,9 @@ def mecanim_tracks(obj, tree, property_names=(), vector_property_names=()):
             visit(child, relative + ('/' if relative else '') + child['name'])
 
     visit(tree)
+    # Shared official clips can contain curves for optional prefab nodes. Keep
+    # their original paths so Unity naturally ignores absent targets at runtime.
+    paths.update({zlib.crc32(path.encode()): tree['path'] + '/' + path for path in binding_paths})
     channels = []
     unknown = []
     property_hashes = dict(PROPERTY_HASHES)
