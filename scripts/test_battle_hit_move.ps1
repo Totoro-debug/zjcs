@@ -21,6 +21,9 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
 $officialHit = $catalog.CreateSkill(12100, 1, 1, 1, 1, 0, $null).HitGraphEntities | Where-Object { $_.EntityId -eq 12102 } | Select-Object -First 1
 Assert-Move ($null -ne $officialHit -and $null -ne $officialHit.HitMove) 'Official hit displacement was not mapped'
 Assert-Move ($officialHit.HitMove.Distance -eq 1 -and $officialHit.HitMove.Direction -eq 1 -and -not $officialHit.HitMove.TowardsTargetPos) 'Official hit displacement fields mismatch'
+$pathSideSkill = $catalog.CreateSkill(56230, 0, 56230, 1, 1, 0, $null)
+$pathSideHit = $pathSideSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 56231 } | Select-Object -First 1
+Assert-Move ($null -ne $pathSideHit -and $pathSideHit.HitMove.MoveBehaviourId -eq 56234 -and $pathSideHit.HitMove.Direction -eq 2) 'Official path-side displacement was not mapped'
 
 function New-Unit($id, $side, $x, $y, $hp) {
     $u = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -30,15 +33,15 @@ function New-Unit($id, $side, $x, $y, $hp) {
     return $u
 }
 
-function New-MoveSkill($rangeX, $distance, $towards, $conditions) {
+function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1, $rangeY = 0) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
     $skill.TargetType = 1
-    $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new($rangeX, 0))
+    $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new($rangeX, $rangeY))
     $hit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
     $hit.EntityId = 8201; $hit.DamageId = 8202; $hit.DamageType = 8
     $hit.HasCustomDamage = $true; $hit.CustomDamage = 1; $hit.TargetMode = 0
     $hit.HitMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
-    $hit.HitMove.Distance = $distance; $hit.HitMove.Direction = 1; $hit.HitMove.TowardsTargetPos = $towards
+    $hit.HitMove.Distance = $distance; $hit.HitMove.Direction = $direction; $hit.HitMove.TowardsTargetPos = $towards
     $hit.HitMove.HasConditions = $conditions
     $skill.Hits.Add($hit)
     return $skill
@@ -80,4 +83,24 @@ $conditionEnemy = New-Unit 2 2 1 0 5000
 $conditional = Invoke-MoveBattle (New-MoveSkill 1 1 $false $true) $conditionPlayer $conditionEnemy
 Assert-Move ($conditionEnemy.X -eq 1 -and $conditional.Event.Movements.Count -eq 0) 'Conditional displacement was applied'
 
-Write-Output 'Battle hit displacement checks passed: official mapping, knockback, pull, blocked destination and move conditions.'
+$sidePlayer = New-Unit 1 1 0 4 1000
+$sideEnemy = New-Unit 2 2 1 4 5000
+$side = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2) $sidePlayer $sideEnemy
+Assert-Move ($sideEnemy.X -eq 1 -and $sideEnemy.Y -eq 5) 'Path-side displacement did not choose the first positive-Y side'
+
+$sideFallbackPlayer = New-Unit 1 1 0 9 1000
+$sideFallbackEnemy = New-Unit 2 2 1 9 5000
+$sideFallback = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2) $sideFallbackPlayer $sideFallbackEnemy
+Assert-Move ($sideFallbackEnemy.X -eq 1 -and $sideFallbackEnemy.Y -eq 8) 'Path-side displacement did not fall back to the opposite side when the first side was out of bounds'
+
+$verticalPlayer = New-Unit 1 1 4 4 1000
+$verticalEnemy = New-Unit 2 2 4 5 5000
+$vertical = Invoke-MoveBattle (New-MoveSkill 0 1 $true $false 2 1) $verticalPlayer $verticalEnemy
+Assert-Move ($verticalEnemy.X -eq 5 -and $verticalEnemy.Y -eq 5) 'Vertical path-side displacement did not prefer positive X'
+
+$diagonalPlayer = New-Unit 1 1 2 2 1000
+$diagonalEnemy = New-Unit 2 2 3 3 5000
+$diagonal = Invoke-MoveBattle (New-MoveSkill 1 1 $true $false 2 1) $diagonalPlayer $diagonalEnemy
+Assert-Move ($diagonalEnemy.X -eq 3 -and $diagonalEnemy.Y -eq 4) 'Diagonal path-side displacement did not use the deterministic horizontal-axis tie break'
+
+Write-Output 'Battle hit displacement checks passed: official mapping, knockback, pull, blocked destination, move conditions and deterministic path-side movement.'

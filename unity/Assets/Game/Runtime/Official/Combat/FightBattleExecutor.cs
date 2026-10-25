@@ -356,7 +356,12 @@ namespace Zjcs.Combat.Official
                     MoveNextToTarget(actor, target, move, movements);
                     continue;
                 }
-                if (move.Direction != 1) continue; // RelativeToSource / TowardsPathSides not modelled
+                if (move.Direction == 2)
+                {
+                    ApplyPathSideMove(actor, actor, target, move, movements);
+                    continue;
+                }
+                if (move.Direction != 1) continue; // RelativeToSource is not modelled
                 int stepX = Math.Sign(target.X - actor.X);
                 int stepY = Math.Sign(target.Y - actor.Y);
                 if (!move.TowardsTargetPos) { stepX = -stepX; stepY = -stepY; }
@@ -710,6 +715,11 @@ namespace Zjcs.Combat.Official
             FightBattleSkillMove move = hit == null ? null : hit.HitMove;
             if (move == null || move.HasConditions || move.Distance <= 0 || movements == null
                 || target.Hp <= 0) return;
+            if (move.Direction == 2)
+            {
+                ApplyPathSideMove(target, actor, target, move, movements);
+                return;
+            }
             if (move.Direction != 0 && move.Direction != 1) return;
             int stepX = Math.Sign(target.X - actor.X);
             int stepY = Math.Sign(target.Y - actor.Y);
@@ -725,6 +735,51 @@ namespace Zjcs.Combat.Official
                 var desired = new FightGridPoint(target.X + stepX * distance + move.OffsetX,
                     target.Y + stepY * distance + move.OffsetY);
                 if (TryMoveUnit(target, desired, distance, movements)) break;
+            }
+        }
+        private bool ApplyPathSideMove(FightBattleUnitState mover, FightBattleUnitState source,
+            FightBattleUnitState target, FightBattleSkillMove move,
+            List<FightBattleMovementEvent> movements)
+        {
+            if (mover == null || source == null || target == null || move == null
+                || move.Distance <= 0 || movements == null) return false;
+
+            int deltaX = target.X - source.X;
+            int deltaY = target.Y - source.Y;
+            if (deltaX == 0 && deltaY == 0) return false;
+
+            // Keep the first side stable across runs: positive grid axis, then its opposite.
+            bool horizontalPath = Math.Abs(deltaX) >= Math.Abs(deltaY);
+            int firstSideX = horizontalPath ? 0 : 1;
+            int firstSideY = horizontalPath ? 1 : 0;
+            for (int side = 0; side < 2; side++)
+            {
+                int sideX = side == 0 ? firstSideX : -firstSideX;
+                int sideY = side == 0 ? firstSideY : -firstSideY;
+                for (int distance = move.Distance; distance > 0; distance--)
+                {
+                    var desired = new FightGridPoint(mover.X + sideX * distance + move.OffsetX,
+                        mover.Y + sideY * distance + move.OffsetY);
+                    int movementIndex = movements.Count;
+                    if (!TryMoveUnit(mover, desired, distance, movements)) continue;
+                    ApplyMovementAction(movements, movementIndex, move);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static void ApplyMovementAction(List<FightBattleMovementEvent> movements,
+            int startIndex, FightBattleSkillMove move)
+        {
+            if (movements == null || move == null) return;
+            for (int index = startIndex; index < movements.Count; index++)
+            {
+                FightBattleMovementEvent movement = movements[index];
+                if (movement == null) continue;
+                movement.Delay = move.Delay;
+                movement.MoveDuration = move.MoveDuration;
+                movement.MoveSpeed = move.MoveSpeed;
             }
         }
 

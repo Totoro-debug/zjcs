@@ -39,8 +39,8 @@ function New-EffectSkill($randomOne) {
     $hit.EntityId = 8301; $hit.DamageId = 8302; $hit.DamageType = 8
     $hit.HasCustomDamage = $true; $hit.CustomDamage = 1; $hit.TargetMode = 0
     $hit.StatusListRandomOne = $randomOne
-    $hit.AppliedStatuses.Add([Zjcs.Combat.Official.FightBattleStatusApplication]@{ StatusId = 26004; TargetType = 2; Chance = 1.0; LessThanHpPer = -1 })
-    $hit.AppliedStatuses.Add([Zjcs.Combat.Official.FightBattleStatusApplication]@{ StatusId = 26005; TargetType = 2; Chance = 1.0; LessThanHpPer = -1 })
+    $hit.AppliedStatuses.Add([Zjcs.Combat.Official.FightBattleStatusApplication]@{ StatusId = 26004; TargetType = 2; Chance = 1.0; AffectedByProp = $false; LessThanHpPer = -1 })
+    $hit.AppliedStatuses.Add([Zjcs.Combat.Official.FightBattleStatusApplication]@{ StatusId = 26005; TargetType = 2; Chance = 1.0; AffectedByProp = $false; LessThanHpPer = -1 })
     $hit.HitMove = [Zjcs.Combat.Official.FightBattleSkillMove]::new()
     $hit.HitMove.Distance = 1; $hit.HitMove.Direction = 1; $hit.HitMove.TowardsTargetPos = $false
     $hit.DisperseChance = 1.0; $hit.DisperseCount = 1
