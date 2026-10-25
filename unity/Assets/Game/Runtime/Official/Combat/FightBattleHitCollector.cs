@@ -87,6 +87,7 @@ namespace Zjcs.Combat.Official
                     ChildSkillRate = entity.ChildSkillRate,
                     ChildSkillLessThanHpPer = entity.ChildSkillLessThanHpPer,
                     DisperseChance = entity.DisperseChance,
+                    DisperseAffectedByProp = entity.DisperseAffectedByProp,
                     DisperseStatusTypes = entity.DisperseStatusTypes == null
                         ? new List<int>() : new List<int>(entity.DisperseStatusTypes),
                     DisperseCount = entity.DisperseCount,

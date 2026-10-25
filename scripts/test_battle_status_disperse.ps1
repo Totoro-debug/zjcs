@@ -24,6 +24,19 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
     (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
 
+$effectSchema = [Zjcs.Combat.Official.FightDamagePropertySchema]::new()
+$effectPropertyNames = @('BaseEffectRate', 'EffectRate', 'BaseEffectDodge', 'EffectDodge',
+    'EffectRateValue', 'EffectDodgeValue')
+foreach ($name in $effectPropertyNames) {
+    $id = $catalog.PropertyType($name)
+    Assert-Disperse ($id -gt 0) "Official disperse-rate property is missing: $name"
+    $effectSchema.Names.Add([Zjcs.Combat.Official.FightPropertyName]@{ Name = $name; Id = $id })
+    if ($name -eq 'EffectRateValue' -or $name -eq 'EffectDodgeValue')
+        { $effectSchema.FloatPropertyIds.Add($id) }
+}
+$disperseFormula = [Zjcs.Combat.Official.FightDamageFormula]::new($effectSchema,
+    [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
+
 # Official mapping: skill 12940 -> hit 12941 -> damage 12942 disperses types 2/3, one random status.
 $officialHit = $catalog.CreateSkill(12940, 1, 1, 1, 1, 0, $null).HitGraphEntities |
     Where-Object { $_.EntityId -eq 12941 } | Select-Object -First 1
@@ -45,7 +58,7 @@ function New-Status($classId, $statusType, $dispersible) {
     return $status
 }
 
-function New-DisperseSkill($chance, $types, $count, $random) {
+function New-DisperseSkill($chance, $types, $count, $random, $affectedByProp = $false) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
     $skill.TargetType = 1
     $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
@@ -53,6 +66,7 @@ function New-DisperseSkill($chance, $types, $count, $random) {
     $hit.EntityId = 8101; $hit.DamageId = 8102; $hit.DamageType = 8
     $hit.HasCustomDamage = $true; $hit.CustomDamage = 1; $hit.TargetMode = 0
     $hit.DisperseChance = $chance; $hit.DisperseCount = $count; $hit.DisperseRandom = $random
+    $hit.DisperseAffectedByProp = $affectedByProp
     foreach ($type in $types) { $hit.DisperseStatusTypes.Add($type) }
     $skill.Hits.Add($hit)
     return $skill
@@ -71,11 +85,16 @@ function Invoke-DisperseBattle($skill, $player, $enemy) {
     $checkpoint.Units.Add($player); $checkpoint.Units.Add($enemy)
     $wave = [Zjcs.Combat.Official.FightBattleWaveState]::new(); $wave.Index = 0; $wave.UnitIds.Add(2)
     $checkpoint.Waves.Add($wave)
-    $formula = [Zjcs.Combat.Official.FightDamageFormula]::new(
-        [Zjcs.Combat.Official.FightDamagePropertySchema]::new(),
-        [Zjcs.Combat.Official.FightDamageFormulaConfig]::new())
-    return [Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint, $formula,
+    return [Zjcs.Combat.Official.FightBattleExecutor]::Begin($checkpoint, $disperseFormula,
         [Zjcs.Combat.Official.FightDamageSettlement]::new()).Step(0, 1)
+}
+
+function Set-DisperseProperty($properties, $name, $value) {
+    $id = $catalog.PropertyType($name)
+    foreach ($property in $properties) {
+        if ($property.Id -eq $id) { $property.Value = $value; return }
+    }
+    $properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{ Id = $id; Value = $value })
 }
 
 function New-Player {
@@ -119,4 +138,19 @@ Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Zero-chance disperse removed a st
 [void](Invoke-DisperseBattle (New-DisperseSkill 1.0 @(3) 1 $false) $player $enemy)
 Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Disperse removed a status of another type'
 
-Write-Output 'Battle status dispel checks passed: official disperse mapping, type filter, dispersible flag, count limit, random pick and chance.'
+# EffectRate can raise a configured zero chance; missing rate inputs fail closed.
+$player = New-Player; $enemy = New-Enemy
+$enemy.Statuses.Add((New-Status 9301 2 $true))
+Set-DisperseProperty $player.Properties 'BaseEffectRate' 100
+Set-DisperseProperty $player.Properties 'EffectRateValue' 20000
+Set-DisperseProperty $enemy.Properties 'BaseEffectDodge' 100
+Set-DisperseProperty $enemy.Properties 'EffectDodge' 0
+[void](Invoke-DisperseBattle (New-DisperseSkill 0.0 @(2) 1 $false $true) $player $enemy)
+Assert-Disperse ($enemy.Statuses.Count -eq 0) 'EffectRate properties did not raise disperse chance'
+
+$player = New-Player; $enemy = New-Enemy
+$enemy.Statuses.Add((New-Status 9302 2 $true))
+[void](Invoke-DisperseBattle (New-DisperseSkill 1.0 @(2) 1 $false $true) $player $enemy)
+Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Missing EffectRate inputs did not fail closed'
+
+Write-Output 'Battle status dispel checks passed: official mapping, type filter, dispersible flag, count limit, random pick, chance and EffectRate.'

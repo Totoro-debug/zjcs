@@ -166,7 +166,7 @@ Boss 栏已接入官方 `FightMainPanelBossUI`：`RefreshBoss` 只选存活、�
 
 命中附加状态已按官方 `FightDamageComponent.StatusList` 接入：`FightBattleHitDefinition` 保存 `StatusId`、`TargetType`（1 技能来源／2 受击目标）、概率 `BasePercent` 与 `LessThanHpPer` 条件；命中结算后执行器按条目选择来源或目标、检查血量条件与概率，再经 `FightStatusLifecycle` 施加状态（起始回合留待拥有者的下次回合更新）。`battle-rules.json` 中有 470 个伤害实体配置了状态列表，官方技能 12860 的命中即会附加状态 24078；持续 0 回合的状态会在同回合结束时按生命周期移除。`FightDamageComponent` 的驱散、位移、切换形态、子技能与状态随机单条等其余字段尚未实现。
 
-命中节点补上了 `FightHitFixedComponent`（`battle-rules.json` 中 1936 个固定／治疗命中），此前这类节点不会被装配成命中定义；现在与链式／随机／自选命中一样读取伤害字段、范围、动作类型与附加配置。驱散按官方 `FightDamageComponent.DisperseStatus` 接入：命中后按 `TargetTypes` 与状态 `CanDispersed` 过滤，按 `Count`（0 表示全部）与 `IsRandom` 决定移除哪些状态，并按 `BasePercent` 判定概率；`AffectedByProp` 与 `FilterCondition` 尚未参与判定。核心规则里 66 个伤害实体配置了驱散。
+命中节点补上了 `FightHitFixedComponent`（`battle-rules.json` 中 1936 个固定／治疗命中），此前这类节点不会被装配成命中定义；现在与链式／随机／自选命中一样读取伤害字段、范围、动作类型与附加配置。驱散按官方 `FightDamageComponent.DisperseStatus` 接入：命中后按 `TargetTypes` 与状态 `CanDispersed` 过滤，按 `Count`（0 表示全部）与 `IsRandom` 决定移除哪些状态，并按 `BasePercent` 判定概率。`AffectedByProp` 按配置注释“受命中相关属性影响”使用官方 `EffectRate` 通用公式修正概率；驱散配置没有状态类别字段，故不应用减益专属倍率。服务端执行逻辑缺失，此处为本地模拟；固定版41个伤害实体包含 `TargetTypes` 字段，但均未开启 `AffectedByProp`，当前固定配置不覆盖该分支。共享 `DamageDisperseStatusCfg` 未定义 `FilterCondition` 字段。
 
 状态列表还支持官方 `StatusListRandomOne`：为 true 时从命中状态列表中随机取一条尝试，为 false 时按顺序逐条尝试。`AffectedByProp` 已按共享 `BattleFormulaHandler.EffectRate` 计算施法者效果率、目标效果闪避、异常减益门槛及减益倍率；匹配目标 `CharacterType` 时使用 `OverrideRateByCharacterTypes` 的覆盖概率和覆盖属性开关。固定版512条状态项中191条开启属性影响，8条包含角色类型覆盖（均为状态24216，对怪物／召唤物／宠物实体覆盖至100%且不再受属性影响）。共享公式和字段结构可核实，但未取得服务端从 `DamageStatusCfg` 调用公式的实现；本地按该字段语义及官方公式接入。`SkillCostHp`／`DamageCostHpPer` 仍未参与状态自定义参数传递。
 

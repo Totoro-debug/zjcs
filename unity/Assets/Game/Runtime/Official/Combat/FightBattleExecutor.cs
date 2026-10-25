@@ -314,7 +314,7 @@ namespace Zjcs.Combat.Official
                     ApplyHitStatuses(actor, target, hit, random);
                     ApplyResilienceHit(actor, target, skill, hit, resolved, casts,
                         damageEvents, movements, ref lastDelay);
-                    ApplyHitDisperse(target, hit, random);
+                    ApplyHitDisperse(actor, target, hit, random);
                     ApplyHitMove(actor, target, hit, movements);
                     ApplyHemophagia(actor, hit, damage, hitDelay, skill, damageEvents);
                     var triggerSkills = new List<int>();
@@ -799,12 +799,19 @@ namespace Zjcs.Combat.Official
         /// Official <c>DisperseStatus</c>: removes dispersible statuses of the configured types from
         /// the damaged target, either the first ones or a random subset.
         /// </summary>
-        private static void ApplyHitDisperse(FightBattleUnitState target, FightBattleHitDefinition hit,
-            FightRandomStream random)
+        private void ApplyHitDisperse(FightBattleUnitState source, FightBattleUnitState target,
+            FightBattleHitDefinition hit, FightRandomStream random)
         {
-            if (target == null || hit == null || hit.DisperseStatusTypes == null
+            if (source == null || target == null || hit == null || hit.DisperseStatusTypes == null
                 || hit.DisperseStatusTypes.Count == 0 || target.Statuses.Count == 0) return;
-            if (hit.DisperseChance < 1f && random.Next() > hit.DisperseChance) return;
+            double chance = hit.DisperseChance;
+            if (hit.DisperseAffectedByProp)
+            {
+                chance = formula.CalculateStatusEffectRate(source.Properties, target.Properties,
+                    hit.DisperseChance, 0);
+                if (double.IsNaN(chance)) return;
+            }
+            if (chance < 1.0 && random.Next() > chance) return;
             var candidates = new List<FightBattleStatusState>();
             foreach (FightBattleStatusState status in target.Statuses)
                 if (status != null && status.CanDispersed

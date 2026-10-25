@@ -1553,6 +1553,7 @@ namespace Zjcs.Combat.Official
                 || !damage.TryGetValue("DisperseStatus", out object rawDisperse)
                 || !(rawDisperse is Dictionary<string, object> disperse)) return;
             output.DisperseChance = Float(disperse, "BasePercent", 0f);
+            output.DisperseAffectedByProp = Bool(disperse, "AffectedByProp");
             output.DisperseCount = Int(disperse, "Count");
             output.DisperseRandom = Bool(disperse, "IsRandom");
             AddIntArray(disperse, "TargetTypes", output.DisperseStatusTypes,

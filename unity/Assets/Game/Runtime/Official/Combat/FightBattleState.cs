@@ -435,6 +435,7 @@ namespace Zjcs.Combat.Official
         public float ChildSkillLessThanHpPer = -1f;
         // Official FightDamageComponent.DisperseStatus (status types, count, chance, random pick).
         public float DisperseChance;
+        public bool DisperseAffectedByProp;
         public List<int> DisperseStatusTypes = new List<int>();
         public int DisperseCount;
         public bool DisperseRandom;
@@ -503,6 +504,7 @@ namespace Zjcs.Combat.Official
         public float ChildSkillRate = 1f;
         public float ChildSkillLessThanHpPer = -1f;
         public float DisperseChance;
+        public bool DisperseAffectedByProp;
         public List<int> DisperseStatusTypes = new List<int>();
         public int DisperseCount;
         public bool DisperseRandom;
