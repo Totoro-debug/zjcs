@@ -14,6 +14,115 @@
 
 客户端可以证明面板、请求、响应消费、数据结构与表现流程；共享组件中声明的配置不能单独证明完整服务端决策已取得。单机确认规则见“自定义实现”，尚需还原或核对的部分见“尚未实现”。特定玩法控件仅在其原显示条件下存在。
 
+### 战斗架构与源码核对范围
+
+本节分析原游戏实现机制，和下文 Unity 已迁移范围分别记录。以 `official-source.json` 当前选中的 `871_156598` 为主，复用 [当前官方反编译目录](../../.tools/source-packages/current/871_156598/official-code/)；其程序集从已校验的官方 HybridCLR 云端包解密取得，来源见 [当前代码清单](../../.tools/source-packages/current/871_156598/code-manifest.json)。固定 APK 的 `854_156383` 反编译结果与 [历史代码清单](../../assets/reference/official-city/code-manifest.json) 保留在原位置，F01—F43 与历史配置仍按各自版本解释。
+
+两个版本的 `Assembly-CSharp.dll`、`Console.dll` 均重新计算 SHA256，与各自清单完全一致；当前两者分别为 `bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a`、`0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397`。使用本机 ILSpy 对当前 `GamePlayManager`、`Common.FightSkillAgentComponent`、`Common.BattleFormulaHandler` 实际重新反编译，结果与缓存一致；`GamePlayManager` 比较时只归一化 project 导出对编译器生成标识符中 `<`、`>`、`$` 的转义。另对入口／消息播放／技能／命中／伤害／状态／回合／公式等48个核心源码文件逐字节跨版比较，均相同。该结果仅覆盖所选文件，不代表两个版本的所有代码、规则表或 prefab 相同。
+
+战斗实现分为三层：规则和状态数据、战斗过程消息、Unity 表现。`Common` 命名空间的 `EcEntity`／`EcComponent` 保存实体、属性、技能、命中、伤害、状态及其修改；客户端 `MyEntity`／`MyComponent` 将其绑定到 GameObject。官方客户端从网络消费裁决后的过程消息，同时保留共享公式和部分状态处理实现；完整 AI 与裁决调度器不能由这些结构自动补出。
+
+#### 一场战斗中的对象与关系
+
+| 对象 | 保存内容与作用 | 主要源码 |
+| --- | --- | --- |
+| 战斗会话与关卡 | StageId、模式、阵营、怪物波次、回合上限、站位范围、阶段状态、准备／离开／托管／快进／镜头／结算开关 | `FightRoot`、`FightComponent`、`StageInfo` |
+| 场地与格网 | 格坐标与世界坐标转换、地形／高度、通行条件、占格、朝向、出生点及移动路径 | `FightSceneInfo`、`GridGroundComponent`、`GridMoverComponentInfo`、`MyFightGridMover` |
+| 参战单位 | 玩家、怪物、NPC、召唤物、宠物、宠物实体、格子物件、智能格子物件、替身；各有阵营、主人、属性、HP、护盾、韧性与动作状态 | `GameCharacterType`、`FightRoleFightComponent`、`FightRoleSummonComponent` |
+| 回合与行动 | 单位个人回合、全局回合、当前行动者、前次／下次行动时间、行动互斥与结束 | `FightRoundComponent`、`FightRoundDriverComponent`、`RoundRuntimeData`、`ActionComponent` |
+| 技能槽与技能实例 | 物品技能 ID／实体模板、等级／品阶、技能属性、CD、释放次数、来源、目标实体／格子、方向、子技能及重放 | `FightSkillData`、`FightSkillAgentComponent`、`FightSkillComponent` |
+| 命中实例 | 相对锚点、范围格、延时、伤害模板、伤害基数／系数、子命中、跟踪与弹射等配置 | `HitCfg`、`FightHitBaseComponentInfo` 及 Fixed／Chained／RandomTarget 等派生组件 |
+| 伤害结果实例 | 来源技能／命中／施法者／目标 ID、HP 变化、盾值、绝对伤害、暴击／格挡／闪避／免疫／致盲／破韧／真实伤害标记 | `FightDamageComponent`、`DamageResultParameter`、`DamageTypeData` |
+| 状态实例 | 创建者与持有者、计时对象、持续回合、叠层、叠时、属性、触发条件、行为限制、护盾及禁用／移除 | `FightStatusComponent`、`FightStatusComponentInfo`、`FightStatusAgentComponent` |
+| 表现与统计 | 模型／外观、动作、技能与命中 Playable、声音、相机、飘字、HUD、技能统计、战报与录像 | `MyFightSkill`、`MyFightHitBase`、`MyFightDamage`、`MyFightStatus`、`FightMainPanel`、`FightRecordStreamWriter` |
+
+`SkillInfo.EcEntityId` 指向技能实体模板；实际实例之间使用 `EcEntityIdentifier` 连接。例如伤害实例同时保留 `SkillId`、`HitId`、`TargetId`、`SkillSrcEntityId`，因此一次技能可以产生多个命中，每个命中再关联多个目标的伤害／治疗结果。技能、命中、伤害和状态各有生命周期，不能合并成“某单位攻击一次、扣一次血”。
+
+#### 建立会话、准备与消息执行
+
+`FightRoot.Awake` 建立上下文、关卡规则、生命周期、离开、BGM、Playable、位置与称号处理器。`FightLifecycleHandler.Init` 的可见执行顺序为：初始化 `GamePlayManager` → 激活容器并绑定已有逻辑实体 → 启动全局 Playable → 加载主面板 → 同步时间 → 初始化飘字与掉落表现 → 发布初始化事件。`FightRoot.Init` 随后核对位置并触发称号。准备阶段的站位、就绪、倒计时与技能方案入口受 StageInfo 和权限约束；不是所有模式都进入准备阶段。
+
+普通战斗消息的已取得调用链如下。图中从消息接收开始；消息产生前的服务端完整裁决不在已取得链路中。
+
+```mermaid
+flowchart TD
+    A[MsgGameRound 接收回合分片] --> B[FightComponent.HandleRoundMsg 暂存]
+    C[MsgGameRoundEnd 接收回合结束] --> D[HandleRoundEndMsg 合并 StepList 并入队]
+    B --> D
+    D --> E[GamePlayManager.PlayRound 取出完整回合]
+    E --> F[NormalPlaybackStrategy 按步骤 Time 等待]
+    F --> G[GamePlayManager.DispatchStep 分发具体消息]
+    G --> H[实体增加／移除、动作与组件修改]
+    H --> I[共享状态及 MyComponent 生命周期]
+    I --> J[Playable、模型、HUD、事件与统计]
+```
+
+`FightEntityRoundMsg` 保存 GameId 和 StepList；`FightProcessStepMsg` 保存 MsgType、序列化载荷和相对回合的 Time。普通策略按 `max(0, step.Time - (Time.time - roundStartTime))` 等待，按原列表顺序分发，不在客户端重新排序。同一时刻的步骤也保留列表顺序。`DispatchStep` 通过 `Network.GetMsgListener` 调用相应处理器。
+
+例如 `MsgGameEntityAdd`：动作实体进入持有者的 `ActionAgentComponent.StartAction`；伤害实体先排队等待创建并调用 `OnAddInClient` 发送命中／受伤事件；其余实体直接加入容器。随后才由对应生命周期与表现组件工作。因此消息顺序、事件回调和视觉播放时点都是还原范围。入口证据：[消息接收与实体分发](../../.tools/source-packages/current/871_156598/official-code/common-source/MsgGameEntityAdd.cs)、[过程播放器](../../.tools/source-packages/current/871_156598/official-code/client-source/GamePlayManager.cs)、[普通播放策略](../../.tools/source-packages/current/871_156598/official-code/client-source/NormalPlaybackStrategy.cs)。
+
+#### 速度、行动队列与选敌
+
+`FightRoundDriverComponent.DataList` 是按 NextTime 升序插入的链表；插入条件严格使用 `已有.NextTime > 新.NextTime`，相等者追加在已有同时间项之后。`UpdateCurActing` 将 CurrentTime 设为当前行动者的 NextTime。初始化／重置时 `RoundRuntimeData.ResetTime` 把 PreTime 置0，NextTime 设为个人行动间隔；这些可见代码不能单独证明服务端如何推进每个全局回合。
+
+`FightRoundComponent.CalcRoundInterval` 经共享公式得到：
+
+```text
+行动间隔 = 100000 / sqrt(max(1, Speed) × 对应境界的 SpeedScale)
+```
+
+速度翻倍只会使该间隔变为原来的 `1/sqrt(2)`；战斗播放倍率另外通过 Unity 时间缩放控制，不与属性 Speed 混用。公式证据为 `BattleFormulaHandler.SpeedToTime`，境界缩放读取 `FightRankOffsetDamageInfoParser`。
+
+选敌和落点至少消费：敌友／主人／召唤物关系、目标角色类别、技能距离与范围格、地形和占位、动作互斥、嘲讽／混乱、AI 优先策略、属性最值、目标类型分组及施法朝向。`FightSkillComponentInfo.Range` 要求从近到远保存；`SkillAiCfg` 的旧 `AiPriorityTypes`／`LastAIPriorityTypes` 与 `IsReleaseSkillAfterMove` 明确废弃，不能据其字段名恢复旧逻辑。完整评分／决策器缺口见后文证据边界。普通单位点击与技能详情入口不证明支持手动指定攻击目标。
+
+#### 技能、移动与命中展开
+
+`FightSkillAgentComponentImplement.EquipSkill` 从技能物品配置定位 EcEntityId，建立 `FightSkillData`，结合单位、等级／品阶与来源属性初始化。`FightSkillComponentImplement.Start` 先处理可见的技能消耗，再关联来源技能管理器、按配置翻转来源、更新主动槽的已施放次数与 LastRound，最后发送技能开始事件；`End` 发送技能结束事件，`Interrupt` 单独设置中断标记和通知表现。此处是收到技能实例后的处理，不等于已经取得创建该实例前的完整可释放性检查。
+
+CD 保存为回合相关数据。战斗内 `FightSkillListDataEntityProvider.GetSkillLeftCD` 使用单位个人回合，非行动期间先将回合加1，再返回 `min(CD, CD - (round - LastRound) + 1)`；玩家方案预览的 `FightSkillListDataPlayerProvider.GetSkillLeftCD` 直接返回0，不能把预览提供者当成战斗内 CD 执行器。
+
+一个技能有施法动作持续时间、技能实例持续时间，以及等待自身或全部相关 Hit／Move／Damage／child Skill 结束后的附加时长。`ActionDuration` 与 `Duration` 等负值可表示不自动结束。`SourceMoveList` 按 Delay 排序；HitList 引用命中模板，命中自身还可展开后继／链式／随机子命中。每条命中保留释放时位置或目标位置等锚点、相对范围、延迟和伤害配置；`FightHitBaseComponentInfo` 明确距离延迟关系 `FinalDelay = Delay + dist × DelayDistFactor`。位移可能属于施法者，也可能由 `FightDamageComponentInfo.MoveCfg` 作用于受击者。
+
+`FightDamageComponentInfo` 还配置附加状态、驱散、形态切换、目标子技能、击杀后重放。其 `TriggerExistStateCfg` 注释明确约束“触发现有状态在上新状态之前”；其他未取得的跨组件触发顺序仍不能自行补定。主要证据：[技能配置](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightSkillComponentInfo.cs)、[技能实例执行](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightSkillComponentImplement.cs)、[命中基类配置](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightHitBaseComponentInfo.cs)。
+
+#### 数值结算与结果消费
+
+共享 [BattleFormulaHandler](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs) 中可见的判定与数值机制包括：
+
+- `CalcDamageTypeImpl` 依次抽取致盲、闪避、格挡；格挡成立时令暴击为 false，否则再判暴击。暴击概率含约0.05的基础常量、来源暴击加成及目标抗暴；格挡概率含目标格挡与来源破格挡。`RandomJudge` 直接比较随机数 `<= rate`，该函数没有额外概率截断。
+- `Damage` 在致盲／闪避／免疫时直接返回0。普通分支先取得攻击和防御，防御应用比例／固定忽防且最低为0；按命中所选基数属性、技能系数与固定伤害计算，应用 `Attack / (Attack + 有效Defence)` 防御因子，再计算带下限的固定增减伤项。来源玩家／NPC／宠物的专用减伤分支保持各自位置。
+- 此后依次处理元素与精通／抗性、百分比和角色／职业／特定怪物增减伤、最终伤害缩放、暴击／格挡倍率、非 PvP 等级差、适用的战力压制、料理与元素料理加减伤、目标类别最终缩放、目标失血／最大HP加伤、距离与大型目标、状态增减伤、境界和幻想阶梯专用境界修正、元素克制。各分支有适用条件；不是所有命中都无条件执行所有修正。
+- 治疗 `Cure` 可使用来源最大HP、攻击或目标最大HP作为基数，加入固定值，再处理治疗／受疗加成软上限与最终治疗缩放。吸血、按次吸血、状态伤害、弹射衰减、破韧及破韧附加伤害有独立函数。
+- 属性字典的原值使用 long；`GetProp` 根据属性配置 Float 标志决定是否除以10000，不能把所有属性都当百分比。伤害为负值、治疗为正值；数值函数内存在多处显式整数转换，迁移须保留截断位置。
+
+公式输出不等于实际扣除HP。`DamageResultParameter` 分开保存 DamageValue、ShieldValue、AbsoluteDamage；`FightDamageComponentImplement.CalcDamageValue` 将负向HP变化限制到最低0、治疗限制到最大HP，并计算实际差值。`OnAddInClient` 在实体创建前计算预期差值并发送受伤、来源命中、全局伤害事件；实际 Start 中再应用HP，不能把预通知误作重复扣血。护盾与韧性另有状态／修改数据和显示链路；不能把盾值与绝对伤害全部累计为HP损失。证据：[伤害应用与事件](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightDamageComponentImplement.cs)。
+
+#### 状态生命周期、召唤与胜负
+
+状态将计时、叠加、属性与触发行为拆成组件。`RoundTarget` 可以是 Creator、Applicator 或其主人，`RoundUpdateTiming` 决定回合开始／结束更新；还有计时对象死亡后跟随全局回合的时序配置。相同ClassId可平行、新顶旧、旧顶新；叠层与叠时分别检查同来源／同来源技能条件、上限和重置选项。`FightStatusComponentImplement.ChangeStack` 可将层数限制在0至上限，减至0移除实体；`SetStackedCount` 另处理共享层数、按层缩放属性与通知；`UpdateStatusRound` 处理剩余时长叠加及封顶。
+
+回合、行动、技能开始／结束、命中／受伤、死亡／击杀、层数变化等分别有状态组件；护盾、控制、属性替换、CD、子技能、累计伤害也各有组件。部分组件在客户端仅返回配置值，事件名和字段存在不代表触发裁决已经取得。状态应用、禁用、复活重启和移除还会驱动头顶图标及 Playable，不能只更新一个剩余回合数字。证据：[状态配置](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusComponentInfo.cs)、[共享状态实现](../../.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusComponentImplement.cs)。
+
+召唤需要保留来源、主人、属性继承、数量、生成位置、存活与销毁关系。`GameCharacterType` 对召唤物、宠物等带有 `NotCheckFightResult` 标记，说明胜负参与者不能直接按画面上所有单位统一处理；具体胜负仍需核对模式和结果组件。可见结果类型包括怪物死亡胜利、玩家死亡失败、守护失败和决斗失败。关卡是否需要结束过渡、显示结算页、继续下一波／下一层、发放奖励等也分属阶段和玩法接线。
+
+#### 演出、HUD、倍速与录像
+
+`MyFightSkill` 按方向选择技能Playable，并将来源对象、目标实体或格子代理及 Skill 参数传入；中断会停止对应Playable。`MyFightHitBase` 分开处理命中自身、范围格、来源到落点的演出及延迟。`MyFightDamage` 总是尝试播放 Common，再按格挡→暴击→普通分支播放反馈，另叠加触发状态效果，并保留零伤害飘字／隐藏飘字开关。`MyFightStatus` 独立处理开始、叠层、特定层数、触发与来源施加演出。它们共同驱动模型、材质、粒子、声音和镜头；HUD另订阅阶段、单位、技能、CD、宠物能量、血盾韧性与状态事件。
+
+正常播放按步骤Time等待；录像采用相同等待链路但在队列空时结束；快进策略则只分发 `GAME_MODIFACTION_RUN_BATTLE_END`、`GAME_MODIFACTION_RUN_END` 和 `GAME_FASTFORWARD` 三类消息，由快进快照等收束状态。快进不会在客户端把所有普通伤害步骤无延迟再算一遍。倍率切换、快进、后台战斗、录像回放和存档恢复有不同职责与边界。
+
+#### 已取得实现与服务端缺口
+
+| 机制 | 已取得证据 | 尚不能由客户端证明的内容 |
+| --- | --- | --- |
+| 回合调度 | NextTime有序队列、当前行动者、速度到间隔公式、回合消息播放器 | 产生每个回合和动作步骤的完整裁决循环、同时间候选的服务端决策规则 |
+| AI与随机命中 | `FightAIComponent` 的 AiType、技能AI配置、策略表；随机命中范围／子命中／去重字段 | `MyFightAI` 是空包装；随机命中组件仅提供配置，完整选敌评分器与随机候选分配执行器未取得 |
+| 技能与状态 | 技能实例开始／结束、次数与LastRound更新；状态叠层／叠时／属性及客户端通知 | 技能创建前的全部资格检查；多个状态事件组件的服务端订阅、触发限额与重入次序 |
+| 数值公式 | Damage、Cure、EffectRate、SpeedToTime等大量完整共享函数及结果消费 | `BattleFormulaHandler.InvokeDamagePhaseProcessor` 在发布程序集内为空；不能据此声称服务端自定义属性处理钩子已取得 |
+| 胜负与奖励 | 结果组件类型、阶段和结果消息、结算页消费 | `FightResultSucMonsterDieComponent`、`MyFightResultSucMonsterDie` 等仅有空壳／标识；完整模式胜负判定与服务端奖励执行器不能据类名补造 |
+
+以上缺口以已取得客户端与共享程序集为范围，不将其称为官方资源缺失。本节验证为程序集哈希核对、实际定向IL反编译、源码跨版比较与静态调用链阅读；没有据此宣称原游戏战斗实测或 Unity 战斗迁移已完成。后续离线补足仍使用下文已确认的单机差异，新增规则须另取官方证据或由用户确认。
+
 ### 进入、准备、回合与结束
 
 | 编号 | 原始官方功能 | 官方入口、条件与行为 |
