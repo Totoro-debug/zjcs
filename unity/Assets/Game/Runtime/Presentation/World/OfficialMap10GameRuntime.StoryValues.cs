@@ -91,6 +91,7 @@ namespace Zjcs.Presentation.World
             {
                 case "QueryItemCountNode": return StoryItemCount(StoryFields(node).ItemId);
                 case "QueryStoryCountNode": return GetStoryPlayCount(node.storyName);
+                case "GetMapWitchExploreInfoNode": return progressionSave.ActiveWitchCount;
                 case "QueryPlayerLevelNode": return progressionSave.Save.Player.Level;
                 case "StringFormatNode":
                     StorySerializableValue[] parameters = StoryFields(node).Params ?? Array.Empty<StorySerializableValue>();

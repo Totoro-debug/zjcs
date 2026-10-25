@@ -7,6 +7,11 @@
       "switch": "First equal configured output in the original serialized order; otherwise original Exit.",
       "reason": "User confirmed because the client consumes server SelectedIndex without a packaged server selector."
     },
+    "witchActiveCount": {
+      "scope": "All maps; durable keys contain both map class ID and placement ID.",
+      "repeatActivation": "Keep the existing record without increasing the count.",
+      "reason": "User confirmed the WorldWitchTouchUI all-map count for the missing server query."
+    },
     "missingStateTargets": [
       {
         "placementId": 413,
@@ -45,6 +50,22 @@
       {
         "path": ".tools/source-packages/official-code/client-source/IsInTargetMapNode.cs",
         "sha256": "c28859e4d8d7c0b6371e53690cf280f892c08f3a4a1beca144451c7836075fc5"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetEntityBaseNode.cs",
+        "sha256": "88200ed80a8dc1369afe73f0fc12ce6094697c00daaad515fba2c818fda8bc33"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetEntityPosNode.cs",
+        "sha256": "d9d744ef6cd0b1101f532c4eb77b79278b862a2011e0f55a09277301738c08b2"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/GetMapWitchExploreInfoNode.cs",
+        "sha256": "6de72dcda356b4ae325c73143b2dd09767d60d6417cceaa425dab28e52c80c26"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/WorldWitchTouchUI.cs",
+        "sha256": "f22a2617e33cf570d1e9c80be3b830c909d42ff55894f97ade17cd5dff685988"
       },
       {
         "path": ".tools/source-packages/official-code/common-source/SerializableObj.cs",

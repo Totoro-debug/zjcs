@@ -178,6 +178,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineStageWinCount> StageWinCounts = new List<OfflineStageWinCount>();
         public List<string> CompletedEntityTags = new List<string>();
         public List<OfflineMapRegionKey> ActivatedGoddessRegions = new List<OfflineMapRegionKey>();
+        public List<OfflineMapEntityKey> ActivatedWitches = new List<OfflineMapEntityKey>();
         public List<OfflineChestCount> OpenChestCounts = new List<OfflineChestCount>();
         public List<string> AppliedEventIds = new List<string>();
     }
@@ -217,6 +218,13 @@ namespace Zjcs.Offline.Progression
     {
         public int MapClassId;
         public int Region;
+    }
+
+    [Serializable]
+    public sealed class OfflineMapEntityKey
+    {
+        public int MapClassId;
+        public int PlacementId;
     }
 
     [Serializable]
@@ -461,6 +469,22 @@ namespace Zjcs.Offline.Progression
             OfflineMainlineSave next = Clone(Save);
             if (!next.World.ActivatedGoddessRegions.Any(value => value.MapClassId == mapClassId && value.Region == region))
                 next.World.ActivatedGoddessRegions.Add(new OfflineMapRegionKey { MapClassId = mapClassId, Region = region });
+            next.World.AppliedEventIds.Add(eventId);
+            return Commit(next, Result(ProgressionResultStatus.Applied));
+        }
+
+        public int ActiveWitchCount => Save.World.ActivatedWitches.Count;
+
+        public ProgressionResult RecordWitchActivated(int mapClassId, int placementId, string eventId)
+        {
+            if (placementId <= 0 || !Save.World.Maps.Any(value => value.MapClassId == mapClassId)
+                || string.IsNullOrWhiteSpace(eventId) || eventId.Length > 256)
+                return Result(ProgressionResultStatus.InvalidState, message: "An initialized map, witch placement and receipt are required.");
+            if (Save.World.AppliedEventIds.Contains(eventId)
+                || Save.World.ActivatedWitches.Any(value => value.MapClassId == mapClassId && value.PlacementId == placementId))
+                return Result(ProgressionResultStatus.Unchanged);
+            OfflineMainlineSave next = Clone(Save);
+            next.World.ActivatedWitches.Add(new OfflineMapEntityKey { MapClassId = mapClassId, PlacementId = placementId });
             next.World.AppliedEventIds.Add(eventId);
             return Commit(next, Result(ProgressionResultStatus.Applied));
         }
@@ -927,6 +951,7 @@ namespace Zjcs.Offline.Progression
                 || save.World.Maps.Count > 1000 || save.World.BattleCounts.Count > 100000
                 || save.World.StageWinCounts.Count > 100000
                 || save.World.CompletedEntityTags.Count > 100000 || save.World.ActivatedGoddessRegions.Count > 100000
+                || save.World.ActivatedWitches.Count > 100000
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
                 || save.Tasks.ClaimedMainlineTaskIds.Count > 10000)
                 return false;
@@ -968,6 +993,10 @@ namespace Zjcs.Offline.Progression
             if (!UniqueStrings(save.World.CompletedEntityTags) || !UniqueStrings(save.World.AppliedEventIds)) return false;
             foreach (OfflineMapRegionKey region in save.World.ActivatedGoddessRegions)
                 if (region == null || !HasMapRegion(save, region.MapClassId, region.Region)) return false;
+            var witchKeys = new HashSet<string>(StringComparer.Ordinal);
+            foreach (OfflineMapEntityKey witch in save.World.ActivatedWitches)
+                if (witch == null || witch.PlacementId <= 0 || !mapIds.Contains(witch.MapClassId)
+                    || !witchKeys.Add(witch.MapClassId + ":" + witch.PlacementId)) return false;
             foreach (OfflineChestCount chest in save.World.OpenChestCounts)
                 if (chest == null || chest.ChestId < 0 || chest.Count < 0) return false;
             return UniquePositiveIds(save.Tasks.ClaimedMainlineTaskIds);
@@ -1039,6 +1068,7 @@ namespace Zjcs.Offline.Progression
             if (save.World.StageWinCounts == null) save.World.StageWinCounts = new List<OfflineStageWinCount>();
             if (save.World.CompletedEntityTags == null) save.World.CompletedEntityTags = new List<string>();
             if (save.World.ActivatedGoddessRegions == null) save.World.ActivatedGoddessRegions = new List<OfflineMapRegionKey>();
+            if (save.World.ActivatedWitches == null) save.World.ActivatedWitches = new List<OfflineMapEntityKey>();
             if (save.World.OpenChestCounts == null) save.World.OpenChestCounts = new List<OfflineChestCount>();
             if (save.World.AppliedEventIds == null) save.World.AppliedEventIds = new List<string>();
             if (save.Tasks.ClaimedMainlineTaskIds == null) save.Tasks.ClaimedMainlineTaskIds = new List<int>();

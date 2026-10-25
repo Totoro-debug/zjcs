@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using Zjcs.Offline.Progression;
 using Zjcs.Presentation.World;
 
 namespace Zjcs.Editor
@@ -48,7 +49,22 @@ namespace Zjcs.Editor
                 Require((bool)Call(runtime, "EvaluateStoryBoolean", witch, storyState, 0)
                     == (status == storyState.storyStatus), "Official story status condition " + status);
             }
-            Debug.Log("Map11 story branches validated against pinned graphs: world tree and assistance prioritize the first simultaneous match; unmatched selectors use Exit; witch switch preserves primitive comparison and Exit; story status condition preserves None/Playing/End. Witch activation values and native input are outside this check.");
+            var save = (OfflineMainlineProgressSession)Runtime.GetField("progressionSave", Private).GetValue(runtime);
+            Map10RuntimeStoryNode witchQuery = witch.nodes.Single(value => value.type == "GetMapWitchExploreInfoNode");
+            Require(save.ActiveWitchCount == 0, "Existing saves without a witch ledger start at zero");
+            Require(save.RecordWitchActivated(11, 2801, "witch-count-fixture:11:2801").Status == ProgressionResultStatus.Applied,
+                "First activation commits the placed witch");
+            Require((int)Call(runtime, "EvaluateStoryValue", witch, witchQuery, 0) == 1
+                && (int)Call(runtime, "StorySwitchValue", witch, witchSwitch) == 1,
+                "Actual witch query supplies the original Switch input");
+            Require(save.RecordWitchActivated(11, 2801, "witch-count-fixture:duplicate").Status == ProgressionResultStatus.Unchanged
+                && save.ActiveWitchCount == 1, "Different receipt cannot count the same witch twice");
+            save.InitializeMap(10, new[] { 0 });
+            Require(save.RecordWitchActivated(10, 2801, "witch-count-fixture:10:2801").Status == ProgressionResultStatus.Applied
+                && save.ActiveWitchCount == 2, "Activation count spans maps and placement IDs are scoped by map");
+            Require((int)Call(runtime, "StorySwitchValue", witch, witchSwitch) == 2,
+                "Second map activation updates the original query output");
+            Debug.Log("Map11 story branches validated against pinned graphs: first-match selectors and original Exit; primitive Switch comparison; None/Playing/End; global witch activation ledger, duplicate protection and actual query output. Witch UI and native input remain outside this check.");
         }
 
         public static void ValidateColdLoad(OfficialMap10GameRuntime runtime)
@@ -59,6 +75,10 @@ namespace Zjcs.Editor
                 "Story branch count survives cold load");
             Require((int)Call(runtime, "SelectStoryBranch", story, story.nodes.Single(value => value.id == 14)) == 0,
                 "Cold load retains the unmatched original Exit");
+            var save = (OfflineMainlineProgressSession)Runtime.GetField("progressionSave", Private).GetValue(runtime);
+            Require(save.ActiveWitchCount == 2
+                && save.RecordWitchActivated(11, 2801, "witch-count-fixture:after-reload").Status == ProgressionResultStatus.Unchanged,
+                "Cold load preserves global witch records and duplicate protection");
         }
 
         private static object Call(object target, string name, params object[] arguments) =>

@@ -1083,6 +1083,11 @@ namespace Zjcs.Presentation.World
                         case "SwitchNode":
                             nodeId = SelectStorySwitch(node, StorySwitchValue(activeStory, node));
                             continue;
+                        case "GetMapWitchExploreInfoNode":
+                            // The confirmed local query reads the durable activation ledger
+                            // used by EvaluateStoryValue for this node's ActiveCount output.
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "ActivityPuzzleCompleteNode":
                             // This node queries the separate timed puzzle activity,
                             // not a mainline map lock. No such activity is active here.
@@ -1280,6 +1285,10 @@ namespace Zjcs.Presentation.World
             }
             if (targetNode.type != "GetEntityPosNode")
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
+            // GetEntityBaseNode.GetEntityType.MainPlayer is 0. A stale LoEntityId
+            // field is ignored for this mode by the official GetEntityPosNode.
+            if (targetNode.selectGetType == 0)
+                return new Vector2(currentGrid.X + targetNode.offsetX, currentGrid.Y + targetNode.offsetY);
             if (targetNode.selectGetType == 6)
             {
                 GameObject storyNpc = storyEntities.OrderBy(value => value.Key).Select(value => value.Value)
@@ -1288,12 +1297,15 @@ namespace Zjcs.Presentation.World
                 if (storyContextEntity != null)
                     return new Vector2(storyContextEntity.Grid.X, storyContextEntity.Grid.Y);
             }
-            else if (targetNode.selectGetType == 0)
+            else if (targetNode.selectGetType == 4 || targetNode.selectGetType == 5)
             {
-                if (mapEntities.TryGetValue(targetNode.loEntityId, out Map10RuntimeEntity targetEntity))
-                    return new Vector2(targetEntity.Grid.X, targetEntity.Grid.Y);
-                Map10RuntimeLogicTag tag = mapLogicTags.Values.FirstOrDefault(value => value.Tag == targetNode.tag);
-                string target = tag == null ? "logic entity " + targetNode.loEntityId : "Map" + tag.MapClass + " " + targetNode.tag;
+                Map10RuntimeLogicTag tag = targetNode.selectGetType == 5
+                    ? mapLogicTags.Values.FirstOrDefault(value => value.Tag == targetNode.tag) : null;
+                int targetId = targetNode.selectGetType == 4 ? targetNode.loEntityId : tag?.LogicId ?? 0;
+                if ((tag == null || tag.MapClass == mapClassId)
+                    && mapEntities.TryGetValue(targetId, out Map10RuntimeEntity targetEntity))
+                    return new Vector2(targetEntity.Grid.X + targetNode.offsetX, targetEntity.Grid.Y + targetNode.offsetY);
+                string target = tag == null ? "logic entity " + targetId : "Map" + tag.MapClass + " " + targetNode.tag;
                 throw new InvalidDataException("Official story camera target is outside the loaded map: " + target);
             }
             throw new InvalidDataException("Official Map10 story camera target cannot be resolved: " + targetNode.tag);

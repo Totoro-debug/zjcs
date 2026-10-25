@@ -37,6 +37,7 @@ namespace Zjcs.Editor
                 OfflineInventoryOperations.Grant(progress.Player, 2, 100, now);
             });
             Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(save.Save) == 11, "Home return follows active normal map order");
+            VerifyMainPlayerStoryPositions();
             OfficialMap11StoryBranchValidation.Validate(runtime);
             var story = ((IDictionary)Field<object>("stories"))["WorldTreeGuideToNPC"] as Map10RuntimeStory;
             typeof(OfficialMap10GameRuntime).GetField("activeStory", Private).SetValue(runtime, story);
@@ -144,6 +145,33 @@ namespace Zjcs.Editor
             }
             Require(Field<bool>("storyOptionsWaiting"), "Original story options appeared");
             yield return new WaitForSecondsRealtime(.2f);
+        }
+
+        private static void VerifyMainPlayerStoryPositions()
+        {
+            var stories = Field<IDictionary>("stories");
+            var subgraphs = Field<IDictionary>("storySubgraphs");
+            foreach (string key in new[] { "RankDoorActive", "CombatDoorActive", "FangjianbeiActive", "HolyMonsterActive" })
+            {
+                var story = (Map10RuntimeStory)(stories[key] ?? subgraphs[key]);
+                Require(story != null, key + " is loaded from the original graph or subgraph collection");
+                int checkedNodes = 0;
+                foreach (Map10RuntimeStoryNode camera in story.nodes.Where(value => value.type == "WorldCameraNode"))
+                {
+                    int sourceId = camera.ports.FirstOrDefault(value => value.name == "MoveToTargetPos")
+                        ?.connections.FirstOrDefault()?.nodeId ?? 0;
+                    Map10RuntimeStoryNode source = story.nodes.FirstOrDefault(value => value.id == sourceId);
+                    if (source == null || source.type != "GetEntityPosNode" || source.selectGetType != 0) continue;
+                    var point = (Vector2)typeof(OfficialMap10GameRuntime).GetMethod("ResolveStoryCameraPoint", Private)
+                        .Invoke(runtime, new object[] { story, camera });
+                    MapGridPoint player = Field<MapGridPoint>("currentGrid");
+                    Require(point == new Vector2(player.X + source.offsetX, player.Y + source.offsetY),
+                        key + " resolves MainPlayer and ignores unrelated serialized LoEntityId");
+                    checkedNodes++;
+                }
+                Require(checkedNodes > 0, key + " includes an actual MainPlayer camera query");
+            }
+            Debug.Log("Map11 camera query validated: official MainPlayer enum 0 in rank door, combat door, monument and holy monster graphs; original offsets retained.");
         }
 
         private static IEnumerator CheckRenderedOptions(string capture)
