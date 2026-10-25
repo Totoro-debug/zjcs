@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -26,6 +27,9 @@ namespace Zjcs.Presentation.Home
         private float fantasyTowerStageRowHeight;
         private DailyDungeonBattleRunner activeDungeonBattle;
         private ArenaBattleRunner activeArenaBattle;
+        private readonly Dictionary<string, Sprite> dungeonUiSprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+        private readonly Dictionary<string, DungeonOfficialPrefabBinding> dungeonOfficialBindings =
+            new Dictionary<string, DungeonOfficialPrefabBinding>(StringComparer.Ordinal);
         private int selectedDungeonId;
         private int selectedDifficulty;
 
@@ -44,7 +48,15 @@ namespace Zjcs.Presentation.Home
             travelNotesRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             travelNotesRoot.name = "TravelNotesPanel";
             travelNotesRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(travelNotesRoot);
+            ApplyOfficialDungeonBindings(travelNotesRoot, "TravelNotesPanel");
             Transform mapPlayEntry = Find(travelNotesRoot.transform, "MapGamePlayEntry");
+            SetOfficialPrefabSprite(travelNotesRoot,
+                "MapGamePlayEntry/NoteUnlockContent/Icon", LoadDungeonUiSprite(
+                    "defaultpackage_assets_image_ui_notes_travelnotes.bundle", "note_MapGamePlayEntry"));
+            SetOfficialPrefabSprite(travelNotesRoot,
+                "DailyDungeonEntry/NoteUnlockContent/Icon", LoadDungeonUiSprite(
+                    "defaultpackage_assets_image_ui_notes_travelnotes.bundle", "note_DailyDungeonEntry"));
             if (mapPlayEntry != null) BindPrefabButton(mapPlayEntry.gameObject, "EntryBtn", OpenDailyDungeons);
             Transform dailyActivityEntry = Find(travelNotesRoot.transform, "DailyActivityEntry");
             if (dailyActivityEntry != null) BindPrefabButton(dailyActivityEntry.gameObject, "EntryBtn", OpenDailyChallenges);
@@ -328,6 +340,8 @@ namespace Zjcs.Presentation.Home
             dailyDungeonRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonRoot.name = "DailyDungeonEntryPanel";
             dailyDungeonRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonRoot);
+            ApplyOfficialDungeonBindings(dailyDungeonRoot, "DailyDungeonEntryPanel");
             BindPrefabButton(dailyDungeonRoot, "CloseBtn2", CloseDungeonPages);
             BindPrefabButton(dailyDungeonRoot, "GoToBtn", OpenDailyDungeonRoute);
             RefreshDailyDungeonEntryPage();
@@ -345,9 +359,12 @@ namespace Zjcs.Presentation.Home
                 SetPrefabActive(dailyDungeonRoot, "GoToBtn", true);
             }
             int publicCount = 0;
+            IReadOnlyList<DailyDungeonRuntimeBattle> publicDungeons =
+                Array.Empty<DailyDungeonRuntimeBattle>();
             try
             {
-                publicCount = System.Linq.Enumerable.Count(host.DailyDungeons.PublicDungeons(IsMapRegionPublic));
+                publicDungeons = host.DailyDungeons.PublicDungeons(IsMapRegionPublic).ToArray();
+                publicCount = publicDungeons.Count;
             }
             catch (InvalidOperationException)
             {
@@ -357,15 +374,20 @@ namespace Zjcs.Presentation.Home
                 ? "存在未完成路线 · 今日剩余 " + host.DailyDungeons.RemainEntries
                 : publicCount == 0 ? "尚无已公开的日常副本入口区域"
                     : "已公开副本 " + publicCount + " 个 · 今日剩余 " + host.DailyDungeons.RemainEntries);
-            Transform list = Find(dailyDungeonRoot.transform, "DetailContent");
+            Transform list = FindPath(dailyDungeonRoot.transform,
+                "SelectContent/ScrollRect/Viewport/Content");
             if (list == null) return;
+            Transform selectContent = Find(dailyDungeonRoot.transform, "SelectContent");
+            if (selectContent != null) selectContent.gameObject.SetActive(true);
             foreach (Transform child in list) UnityEngine.Object.Destroy(child.gameObject);
             GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonEntryPanelItem");
             if (itemPrefab == null) throw new InvalidOperationException("Official daily dungeon list item is missing.");
-            foreach (var dungeon in host.DailyDungeons.PublicDungeons(IsMapRegionPublic))
+            foreach (var dungeon in publicDungeons)
             {
                 GameObject item = UnityEngine.Object.Instantiate(itemPrefab, list, false);
                 item.name = "Dungeon_" + dungeon.id;
+                ApplyOfficialDungeonBindings(item, "DailyDungeonEntryPanelItem");
+                BindDungeonListArtwork(item, dungeon.id);
                 SetNamedText(item.transform, "TitleGo", dungeon.title);
                 SetNamedText(item.transform, "DescTxt", "最高评级：" + BestGradeText(dungeon.id));
                 Button select = item.GetComponent<Button>();
@@ -377,6 +399,9 @@ namespace Zjcs.Presentation.Home
                 int id = dungeon.id;
                 select.onClick.AddListener(() => OpenDailyDungeonDetail(id));
             }
+            RectTransform listRect = list as RectTransform;
+            if (listRect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(listRect);
+            Canvas.ForceUpdateCanvases();
         }
 
         private bool IsMapRegionPublic(int mapClassId, int region)
@@ -399,6 +424,10 @@ namespace Zjcs.Presentation.Home
             arenaRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             arenaRoot.name = "ArenaPanel";
             arenaRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(arenaRoot);
+            ApplyOfficialDungeonBindings(arenaRoot, "ArenaPanel");
+            SetOfficialPrefabSprite(arenaRoot, "Bg", LoadDungeonUiSprite(
+                "defaultpackage_assets_image_ui_arena.bundle", "BgArena"));
             BindPrefabButton(arenaRoot, "CloseBtn_dark", CloseArena);
             BindPrefabButton(arenaRoot, "CloseBtn", CloseArena);
             BindPrefabButton(arenaRoot, "RefreshBtn", RefreshArenaOpponents);
@@ -572,6 +601,8 @@ namespace Zjcs.Presentation.Home
             arenaConfirmRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             arenaConfirmRoot.name = "ArenaConfirm";
             arenaConfirmRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(arenaConfirmRoot);
+            ApplyOfficialDungeonBindings(arenaConfirmRoot, "DailyDungeonConfirmEnterPanel");
             SetNamedText(arenaConfirmRoot.transform, "TitleText", title);
             SetNamedText(arenaConfirmRoot.transform, "Txt", message);
             SetNamedText(arenaConfirmRoot.transform, "CommonBtn_11", cancelText);
@@ -607,6 +638,9 @@ namespace Zjcs.Presentation.Home
             dailyDungeonDialogRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonDialogRoot.name = "DailyDungeonDialog";
             dailyDungeonDialogRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonDialogRoot);
+            ApplyOfficialDungeonBindings(dailyDungeonDialogRoot, "DailyDungeonDialog");
+            BindDungeonArtwork(dailyDungeonDialogRoot, dungeonId, "BgDialog3", "IconImg");
             SetNamedText(dailyDungeonDialogRoot.transform, "TitleTxt", dungeon.title);
             BindDifficultyTabs(dungeonId);
             RefreshDailyDungeonDetail();
@@ -810,6 +844,8 @@ namespace Zjcs.Presentation.Home
             dailyDungeonDialogRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonDialogRoot.name = "DailyDungeonBigMapDialog";
             dailyDungeonDialogRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonDialogRoot);
+            ApplyOfficialDungeonBindings(dailyDungeonDialogRoot, "DailyDungeonBigMapDialog");
             BindPrefabButton(dailyDungeonDialogRoot, "CloseBtn", ShowDailyDungeonLeaveConfirm);
             RenderDailyDungeonRoute();
         }
@@ -838,6 +874,7 @@ namespace Zjcs.Presentation.Home
                 if (!visible) continue;
                 GameObject item = UnityEngine.Object.Instantiate(roomPrefab, grid, false);
                 item.name = "Room_" + roomId;
+                ApplyOfficialDungeonBindings(item, "DailyDungeonRoomItem");
                 SetPrefabActive(item, "SelectImg", roomId == run.currentRoomId);
                 SetPrefabActive(item, "RewardIconImg", room.surpriseRewards != null
                     && room.surpriseRewards.Any(value => value.difficulty == run.difficulty
@@ -968,6 +1005,8 @@ namespace Zjcs.Presentation.Home
             dailyDungeonLeaveConfirmRoot = UnityEngine.Object.Instantiate(prefab, canvas.transform, false);
             dailyDungeonLeaveConfirmRoot.name = "DailyDungeonLeaveConfirm";
             dailyDungeonLeaveConfirmRoot.transform.SetAsLastSibling();
+            PlaceModalCanvasOnTop(dailyDungeonLeaveConfirmRoot);
+            ApplyOfficialDungeonBindings(dailyDungeonLeaveConfirmRoot, "DailyDungeonConfirmEnterPanel");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "TitleText", "离开副本路线");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "Txt", "离开后将结算已清理房间的配置掉落，挑战次数不返还");
             SetNamedText(dailyDungeonLeaveConfirmRoot.transform, "CommonBtn_11", "保存并返回");
@@ -1002,6 +1041,362 @@ namespace Zjcs.Presentation.Home
             TMPro.TMP_Text text = node == null ? null : node.GetComponent<TMPro.TMP_Text>();
             if (text == null && node != null) text = node.GetComponentInChildren<TMPro.TMP_Text>(true);
             if (text != null) text.text = value ?? string.Empty;
+        }
+
+        private void PlaceModalCanvasOnTop(GameObject root)
+        {
+            Canvas modalCanvas = root == null ? null : root.GetComponent<Canvas>();
+            if (modalCanvas == null || canvas == null) return;
+            int sortingOrder = canvas.sortingOrder;
+            foreach (Canvas existing in canvas.GetComponentsInChildren<Canvas>(true))
+            {
+                if (existing != modalCanvas && existing.overrideSorting)
+                    sortingOrder = Math.Max(sortingOrder, existing.sortingOrder);
+            }
+            modalCanvas.overrideSorting = true;
+            modalCanvas.sortingLayerID = canvas.sortingLayerID;
+            modalCanvas.sortingOrder = sortingOrder + 1;
+        }
+
+        private void ApplyOfficialDungeonBindings(GameObject root, string prefabName)
+        {
+            if (root == null) throw new ArgumentNullException(nameof(root));
+            DungeonOfficialPrefabBinding binding = LoadDungeonOfficialBindings(prefabName);
+            foreach (DungeonOfficialTransformBinding transformBinding in binding.transforms)
+            {
+                Transform node = FindOfficialBindingNode(root.transform, transformBinding.path,
+                    transformBinding.objects);
+                if (node == null)
+                    throw new InvalidOperationException("Official dungeon UI Transform binding does not match prefab "
+                        + prefabName + " at " + transformBinding.path);
+                node.localRotation = ReadQuaternion(transformBinding.localRotation);
+                node.localScale = ReadVector3(transformBinding.localScale, Vector3.one);
+                if (transformBinding.isRectTransform)
+                {
+                    RectTransform rect = node as RectTransform;
+                    if (rect == null)
+                        throw new InvalidOperationException("Official dungeon UI RectTransform binding does not match prefab "
+                            + prefabName + " at " + transformBinding.path);
+                    rect.anchorMin = ReadVector2(transformBinding.anchorMin, rect.anchorMin);
+                    rect.anchorMax = ReadVector2(transformBinding.anchorMax, rect.anchorMax);
+                    rect.pivot = ReadVector2(transformBinding.pivot, rect.pivot);
+                    rect.sizeDelta = ReadVector2(transformBinding.sizeDelta, rect.sizeDelta);
+                    rect.anchoredPosition = ReadVector2(transformBinding.anchoredPosition, rect.anchoredPosition);
+                }
+                else node.localPosition = ReadVector3(transformBinding.localPosition, node.localPosition);
+            }
+
+            int imageCount = 0;
+            foreach (DungeonOfficialImageBinding imageBinding in binding.images)
+            {
+                Transform node = FindOfficialBindingNode(root.transform, imageBinding.path,
+                    imageBinding.objects);
+                Image image = node == null ? null : node.GetComponent<Image>();
+                if (image == null)
+                    throw new InvalidOperationException("Official dungeon UI Image binding does not match prefab "
+                        + prefabName + " at " + imageBinding.path);
+                image.enabled = imageBinding.enabled;
+                image.color = ReadColor(imageBinding.color);
+                image.type = (Image.Type)imageBinding.type;
+                image.preserveAspect = imageBinding.preserveAspect;
+                image.raycastTarget = imageBinding.raycastTarget;
+                image.maskable = imageBinding.maskable;
+                if (imageBinding.sprite != null)
+                {
+                    DungeonOfficialSpriteBinding spriteBinding = imageBinding.sprite;
+                    image.sprite = LoadBoundDungeonUiSprite(spriteBinding);
+                }
+                else image.sprite = null;
+                imageCount++;
+            }
+
+            int textCount = 0;
+            foreach (DungeonOfficialTextBinding textBinding in binding.texts)
+            {
+                Transform node = FindOfficialBindingNode(root.transform, textBinding.path,
+                    textBinding.objects);
+                TMP_Text text = node == null ? null : node.GetComponent<TMP_Text>();
+                if (text == null)
+                    throw new InvalidOperationException("Official dungeon UI TMP binding does not match prefab "
+                        + prefabName + " at " + textBinding.path);
+                text.font = host.Catalog.Font;
+                text.text = textBinding.text ?? string.Empty;
+                text.fontSize = textBinding.fontSize;
+                text.fontWeight = (FontWeight)textBinding.fontWeight;
+                text.fontStyle = (FontStyles)textBinding.fontStyle;
+                text.enableAutoSizing = textBinding.autoSizing;
+                text.fontSizeMin = textBinding.fontSizeRange != null && textBinding.fontSizeRange.Length > 0
+                    ? textBinding.fontSizeRange[0] : textBinding.fontSize;
+                text.fontSizeMax = textBinding.fontSizeRange != null && textBinding.fontSizeRange.Length > 1
+                    ? textBinding.fontSizeRange[1] : textBinding.fontSize;
+                text.alignment = (TextAlignmentOptions)textBinding.alignment;
+                text.enableWordWrapping = textBinding.wordWrap;
+                text.overflowMode = (TextOverflowModes)textBinding.overflow;
+                if (textBinding.margin != null && textBinding.margin.Length == 4)
+                    text.margin = new Vector4(textBinding.margin[0], textBinding.margin[1],
+                        textBinding.margin[2], textBinding.margin[3]);
+                text.color = ReadColor(textBinding.color);
+                textCount++;
+            }
+
+            if (imageCount != binding.images.Length || textCount != binding.texts.Length)
+                throw new InvalidOperationException("Official dungeon UI binding count mismatch: " + prefabName);
+        }
+
+        private DungeonOfficialPrefabBinding LoadDungeonOfficialBindings(string prefabName)
+        {
+            if (dungeonOfficialBindings.TryGetValue(prefabName, out DungeonOfficialPrefabBinding cached))
+                return cached;
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
+            if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI bindings are missing.", path);
+            DungeonOfficialBindingsDocument document = JsonUtility.FromJson<DungeonOfficialBindingsDocument>(
+                File.ReadAllText(path));
+            if (document == null || document.manifest != "871_156598" || document.prefabs == null)
+                throw new FormatException("Official dungeon UI bindings have an unsupported manifest.");
+            DungeonOfficialPrefabBinding binding = document.prefabs.FirstOrDefault(value =>
+                value != null && string.Equals(value.name, prefabName, StringComparison.Ordinal));
+            if (binding == null || binding.transforms == null || binding.images == null || binding.texts == null)
+                throw new FormatException("Official dungeon UI binding is incomplete: " + prefabName);
+            dungeonOfficialBindings.Add(prefabName, binding);
+            return binding;
+        }
+
+        private Sprite LoadBoundDungeonUiSprite(DungeonOfficialSpriteBinding binding)
+        {
+            if (binding == null || string.IsNullOrEmpty(binding.file)) return null;
+            if (binding.file.Contains("..") || Path.IsPathRooted(binding.file))
+                throw new FormatException("Official dungeon UI sprite path is invalid: " + binding.file);
+            string relative = binding.file.Replace('/', Path.DirectorySeparatorChar);
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", relative);
+            if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI sprite is missing.", path);
+            string cacheKey = binding.file;
+            if (dungeonUiSprites.TryGetValue(cacheKey, out Sprite cached)) return cached;
+            Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!texture.LoadImage(File.ReadAllBytes(path), true))
+            {
+                UnityEngine.Object.Destroy(texture);
+                throw new InvalidDataException("Official dungeon UI sprite could not be decoded: " + path);
+            }
+            Vector2 pivot = ReadVector2(binding.pivot, new Vector2(0.5f, 0.5f));
+            Vector4 border = ReadVector4(binding.border, Vector4.zero);
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot,
+                Mathf.Max(0.01f, binding.pixelsPerUnit), 0, SpriteMeshType.FullRect, border);
+            sprite.name = binding.name;
+            dungeonUiSprites.Add(cacheKey, sprite);
+            return sprite;
+        }
+
+        private static Transform FindOfficialBindingNode(Transform root, string siblingPath,
+            string[] objectNames)
+        {
+            if (string.IsNullOrEmpty(siblingPath)) return root;
+            Transform current = root;
+            string[] indices = siblingPath.Split('/');
+            for (int depth = 0; depth < indices.Length; depth++)
+            {
+                if (!int.TryParse(indices[depth], out int index) || current == null) return null;
+                string expectedName = objectNames != null && depth + 1 < objectNames.Length
+                    ? objectNames[depth + 1] : null;
+                Transform indexed = index >= 0 && index < current.childCount ? current.GetChild(index) : null;
+                if (indexed != null && (expectedName == null || indexed.name == expectedName))
+                {
+                    current = indexed;
+                    continue;
+                }
+
+                Transform named = null;
+                for (int child = 0; child < current.childCount; child++)
+                {
+                    Transform candidate = current.GetChild(child);
+                    if (!string.Equals(candidate.name, expectedName, StringComparison.Ordinal)) continue;
+                    if (named != null) return null;
+                    named = candidate;
+                }
+                if (named == null) return null;
+                current = named;
+            }
+            return current;
+        }
+
+        private static Color ReadColor(float[] values)
+        {
+            return values != null && values.Length == 4
+                ? new Color(values[0], values[1], values[2], values[3]) : Color.white;
+        }
+
+        private static Vector2 ReadVector2(float[] values, Vector2 fallback)
+        {
+            return values != null && values.Length == 2 ? new Vector2(values[0], values[1]) : fallback;
+        }
+
+        private static Vector4 ReadVector4(float[] values, Vector4 fallback)
+        {
+            return values != null && values.Length == 4
+                ? new Vector4(values[0], values[1], values[2], values[3]) : fallback;
+        }
+
+        private static Vector3 ReadVector3(float[] values, Vector3 fallback)
+        {
+            return values != null && values.Length == 3
+                ? new Vector3(values[0], values[1], values[2]) : fallback;
+        }
+
+        private static Quaternion ReadQuaternion(float[] values)
+        {
+            return values != null && values.Length == 4
+                ? new Quaternion(values[0], values[1], values[2], values[3]) : Quaternion.identity;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialBindingsDocument
+        {
+            public string manifest;
+            public DungeonOfficialPrefabBinding[] prefabs;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialPrefabBinding
+        {
+            public string name;
+            public DungeonOfficialTransformBinding[] transforms;
+            public DungeonOfficialImageBinding[] images;
+            public DungeonOfficialTextBinding[] texts;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialTransformBinding
+        {
+            public string path;
+            public string[] objects;
+            public bool isRectTransform;
+            public float[] localPosition;
+            public float[] localRotation;
+            public float[] localScale;
+            public float[] anchorMin;
+            public float[] anchorMax;
+            public float[] anchoredPosition;
+            public float[] sizeDelta;
+            public float[] pivot;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialImageBinding
+        {
+            public string path;
+            public string[] objects;
+            public bool enabled;
+            public float[] color;
+            public int type;
+            public bool preserveAspect;
+            public bool raycastTarget;
+            public bool maskable;
+            public DungeonOfficialSpriteBinding sprite;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialTextBinding
+        {
+            public string path;
+            public string[] objects;
+            public string text;
+            public float fontSize;
+            public int fontWeight;
+            public int fontStyle;
+            public bool autoSizing;
+            public float[] fontSizeRange;
+            public int alignment;
+            public bool wordWrap;
+            public int overflow;
+            public float[] margin;
+            public float[] color;
+        }
+
+        [Serializable]
+        private sealed class DungeonOfficialSpriteBinding
+        {
+            public string file;
+            public string name;
+            public float[] pivot;
+            public float[] border;
+            public float pixelsPerUnit;
+        }
+
+        private void BindDungeonArtwork(GameObject root, int dungeonId, string backgroundNode,
+            string iconNode)
+        {
+            var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
+            if (dungeon == null) return;
+            int mapClass = dungeon.entryMapClassId;
+            int variant = host.DailyDungeons.Catalog.dungeons
+                .Where(value => value != null && value.entryMapClassId == mapClass)
+                .OrderBy(value => value.id).TakeWhile(value => value.id != dungeonId).Count() + 1;
+            string prefix = "Map_" + mapClass + "_" + variant;
+            string bundle = "defaultpackage_assets_image_ui_notes_dailydungeon_map_" + mapClass + ".bundle";
+            SetOfficialPrefabSprite(root, backgroundNode, LoadDungeonUiSprite(bundle,
+                "DetailBg_" + prefix));
+            SetOfficialPrefabSprite(root, iconNode, LoadDungeonUiSprite(bundle,
+                "DetailBuilding_" + prefix));
+        }
+
+        private void BindDungeonListArtwork(GameObject root, int dungeonId)
+        {
+            var dungeon = host.DailyDungeons.FindDungeon(dungeonId);
+            if (dungeon == null) return;
+            int mapClass = dungeon.entryMapClassId;
+            int variant = host.DailyDungeons.Catalog.dungeons
+                .Where(value => value != null && value.entryMapClassId == mapClass)
+                .OrderBy(value => value.id).TakeWhile(value => value.id != dungeonId).Count() + 1;
+            string bundle = "defaultpackage_assets_image_ui_notes_dailydungeon_map_" + mapClass + ".bundle";
+            SetOfficialPrefabSprite(root, "Icon", LoadDungeonUiSprite(bundle,
+                "ListImg_Map_" + mapClass + "_" + variant));
+        }
+
+        private void SetOfficialPrefabSprite(GameObject root, string nodeName, Sprite sprite)
+        {
+            if (root == null || sprite == null) return;
+            Transform node = FindPath(root.transform, nodeName);
+            Image image = node == null ? null : node.GetComponent<Image>();
+            if (image != null) SetOfficialImage(image, sprite);
+        }
+
+        private static Transform FindPath(Transform root, string path)
+        {
+            Transform current = root;
+            string[] parts = path.Split('/');
+            for (int index = 0; index < parts.Length; index++)
+            {
+                current = current == null ? null : index == 0
+                    ? Find(current, parts[index]) : current.Find(parts[index]);
+                if (current == null) return null;
+            }
+            return current;
+        }
+
+        private static void SetOfficialImage(Image image, Sprite sprite)
+        {
+            image.sprite = sprite;
+            image.color = Color.white;
+            image.enabled = true;
+        }
+
+        private Sprite LoadDungeonUiSprite(string bundle, string spriteName)
+        {
+            string key = bundle + "/" + spriteName;
+            if (dungeonUiSprites.TryGetValue(key, out Sprite cached)) return cached;
+            string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "Sprites",
+                Path.GetFileNameWithoutExtension(bundle), spriteName + ".png");
+            if (!File.Exists(path)) return null;
+            Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!texture.LoadImage(File.ReadAllBytes(path), true))
+            {
+                UnityEngine.Object.Destroy(texture);
+                return null;
+            }
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f), 100f);
+            sprite.name = spriteName;
+            dungeonUiSprites.Add(key, sprite);
+            return sprite;
         }
 
         private static void SetPrefabActive(GameObject root, string name, bool active)
@@ -1195,7 +1590,13 @@ namespace Zjcs.Presentation.Home
             Transform node = Find(root == null ? null : root.transform, name);
             if (node == null) return;
             Button button = node.GetComponent<Button>() ?? node.GetComponentInChildren<Button>(true);
-            if (button != null) button.onClick.AddListener(() => action());
+            if (button == null)
+            {
+                button = node.gameObject.AddComponent<Button>();
+                button.targetGraphic = node.GetComponent<Graphic>()
+                    ?? node.GetComponentInChildren<Graphic>(true);
+            }
+            button.onClick.AddListener(() => action());
         }
 
         private static void SetPrefabText(GameObject root, string name, string value)

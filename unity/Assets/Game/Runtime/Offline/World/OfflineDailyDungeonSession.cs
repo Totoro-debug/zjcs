@@ -328,7 +328,6 @@ namespace Zjcs.Offline.World
             Normalize(state);
             var session = new OfflineDailyDungeonSession(path, catalog, state);
             session.ResetDailyEntries(DateTime.Now);
-            if (read.Json == null) session.Persist(state);
             return session;
         }
 
@@ -701,7 +700,8 @@ namespace Zjcs.Offline.World
                 DailyDungeonSave data = JsonUtility.FromJson<DailyDungeonSave>(json);
                 if (data == null || data.schema != 1 || data.usedEntries < 0 || data.purchasedEntries < 0
                     || data.localDate == null || data.unlocked == null || data.bestGrades == null) return false;
-                if (data.activeRun != null && (string.IsNullOrWhiteSpace(data.activeRun.id)
+                if (data.activeRun != null && !IsEmptyRun(data.activeRun)
+                    && (string.IsNullOrWhiteSpace(data.activeRun.id)
                     || data.activeRun.dungeonId <= 0 || data.activeRun.mapGroupId <= 0
                     || data.activeRun.currentRoomId <= 0 || data.activeRun.clearedRoomIds == null
                     || data.activeRun.activeBattleCheckpoint == null)) return false;
@@ -720,12 +720,21 @@ namespace Zjcs.Offline.World
             if (data.localDate == null) data.localDate = string.Empty;
             if (data.unlocked == null) data.unlocked = new List<DailyDungeonDifficultySave>();
             if (data.bestGrades == null) data.bestGrades = new List<DailyDungeonBestGradeSave>();
+            if (data.activeRun != null && IsEmptyRun(data.activeRun)) data.activeRun = null;
             if (data.activeRun != null)
             {
                 if (data.activeRun.id == null) data.activeRun.id = string.Empty;
                 if (data.activeRun.clearedRoomIds == null) data.activeRun.clearedRoomIds = new List<int>();
                 if (data.activeRun.activeBattleCheckpoint == null) data.activeRun.activeBattleCheckpoint = string.Empty;
             }
+        }
+
+        private static bool IsEmptyRun(DailyDungeonRunSave run)
+        {
+            return run != null && string.IsNullOrEmpty(run.id) && run.dungeonId == 0
+                && run.difficulty == 0 && run.mapGroupId == 0 && run.currentRoomId == 0
+                && run.grade == 0 && (run.clearedRoomIds == null || run.clearedRoomIds.Count == 0)
+                && string.IsNullOrEmpty(run.activeBattleCheckpoint) && run.startedAtUnixSeconds == 0;
         }
     }
 }

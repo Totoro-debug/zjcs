@@ -8,6 +8,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zjcs.Offline.Progression;
+using Zjcs.Offline.World;
 using Zjcs.Offline.Home;
 using Zjcs.Offline.State;
 
@@ -61,6 +63,16 @@ namespace Zjcs.Presentation.Home
             yield return null;
             yield return null;
             yield return null;
+
+            if (Environment.GetCommandLineArgs().Contains("-dungeonsAcceptance"))
+            {
+                HideForeignCanvases();
+                DumpFullscreen();
+                bool passed = false;
+                yield return VerifyDungeonsAndArena(runtime, value => passed = value);
+                Finish(passed);
+                yield break;
+            }
 
             if (Environment.GetCommandLineArgs().Contains("-homeAcceptanceRealInput"))
             {
@@ -974,6 +986,294 @@ namespace Zjcs.Presentation.Home
                 : "FAIL real-input: Escape did not close the shop");
             if (!escaped) shop.CloseScreen();
             completed(escaped);
+        }
+
+        private IEnumerator VerifyDungeonsAndArena(HomeFeatureRuntime runtime, Action<bool> completed)
+        {
+            var regions = runtime.DailyDungeons.Catalog.dungeons
+                .Where(value => value != null && value.entryMapClassId > 0 && value.entryRegionId >= 0)
+                .Select(value => new KeyValuePair<int, int>(value.entryMapClassId, value.entryRegionId))
+                .Concat(runtime.Arena.Catalog.function_limits
+                    .Where(value => value != null && value.Type == 58 && value.Condition != null)
+                    .Select(value => new KeyValuePair<int, int>(value.Condition.MapClassId,
+                        value.Condition.Region)))
+                .GroupBy(value => value.Key)
+                .SelectMany(group => group.Select(value => value.Value).Distinct()
+                    .Select(region => new KeyValuePair<int, int>(group.Key, region)))
+                .ToArray();
+            bool ok = Check("dungeons-region-fixture", () =>
+            {
+                foreach (IGrouping<int, KeyValuePair<int, int>> map in regions.GroupBy(value => value.Key))
+                {
+                    ProgressionResult initialized = runtime.Profile.InitializeMap(map.Key,
+                        map.Select(value => value.Value).ToArray());
+                    Assert(initialized.Status == ProgressionResultStatus.Applied
+                        || initialized.Status == ProgressionResultStatus.Unchanged,
+                        "could not initialize map " + map.Key + ": " + initialized.Message);
+                }
+                foreach (KeyValuePair<int, int> region in regions)
+                {
+                    ProgressionResult result = runtime.Profile.SetMapRegionProgress(region.Key, region.Value, 10000);
+                    Assert(result.Status == ProgressionResultStatus.Applied
+                        || result.Status == ProgressionResultStatus.Unchanged,
+                        "could not publish region " + region.Key + ":" + region.Value);
+                }
+                Assert(runtime.DailyDungeons.PublicDungeons((mapId, regionId) =>
+                    runtime.MapRegionProgress(mapId, regionId) >= 10000).Any(),
+                    "no official daily dungeon became public");
+                Assert(runtime.Arena.IsFunctionLimitMet(58, 0, runtime.MapRegionProgress),
+                    "official arena entry limit stayed closed");
+                return regions.Length + " official map regions published in the isolated profile";
+            });
+            if (!ok) { completed(false); yield break; }
+
+            ok = Check("dungeons-travel-notes", () =>
+            {
+                InvokePrivate(runtime.Hud, "OpenTravelNotes");
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "travelNotesRoot");
+                AssertModalOnTop(panel, "travel notes");
+                DumpModalState("travel-notes", panel);
+                return "official travel notes panel opened";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-travel-notes.png");
+
+            GameObject travelNotes = GetPrivateGameObject(runtime.Hud, "travelNotesRoot");
+            Transform mapPlayEntry = travelNotes.GetComponentsInChildren<Transform>(true)
+                .FirstOrDefault(value => value.name == "MapGamePlayEntry");
+            Button dungeonEntry = mapPlayEntry == null ? null
+                : mapPlayEntry.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "EntryBtn");
+            ok = Check("dungeons-entry-input", () =>
+            {
+                ClickUi(dungeonEntry);
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
+                AssertModalOnTop(panel, "dungeon list");
+                DumpModalState("dungeon-list", panel);
+                return "official travel entry pointer event opened the daily dungeon list";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-entry.png");
+
+            GameObject entryPanel = GetPrivateGameObject(runtime.Hud, "dailyDungeonRoot");
+            Button dungeonRow = entryPanel.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name.StartsWith("Dungeon_", StringComparison.Ordinal));
+            ok = Check("dungeons-detail-input", () =>
+            {
+                ClickUi(dungeonRow);
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+                AssertModalOnTop(panel, "dungeon detail");
+                DumpModalState("dungeon-detail", panel);
+                return dungeonRow.name + " opened its official detail panel";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-detail.png");
+
+            GameObject detail = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+            Button enter = detail.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "BattleBtn" || value.name == "GoToBtn");
+            ok = Check("dungeons-enter", () =>
+            {
+                Assert(enter != null && enter.interactable, "official dungeon enter button is unavailable");
+                ClickUi(enter);
+                Assert(runtime.DailyDungeons.ActiveRun != null, "dungeon enter button did not save a route");
+                Assert(runtime.DailyDungeons.RecordRoomCleared(
+                    runtime.DailyDungeons.ActiveRun.currentRoomId, string.Empty),
+                    "could not record the cleared route room");
+                InvokePrivate(runtime.Hud, "RenderDailyDungeonRoute");
+                Assert(GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot") != null,
+                    "official daily dungeon route did not render");
+                AssertModalOnTop(GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot"), "dungeon route");
+                DumpModalState("dungeon-route", GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot"));
+                return "route " + runtime.DailyDungeons.ActiveRun.id + " entered with one cleared room";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("dungeons-route.png");
+
+            int usedEntries = runtime.DailyDungeons.Save.usedEntries;
+            int runDifficulty = runtime.DailyDungeons.ActiveRun.difficulty;
+            int[] rewardPath = FindRewardRoomPath(runtime.DailyDungeons,
+                runtime.DailyDungeons.ActiveRun);
+            Assert(rewardPath.Length > 0,
+                "official route has no reachable configured reward room for this difficulty");
+            for (int index = 1; index < rewardPath.Length; index++)
+            {
+                Assert(runtime.DailyDungeons.ChooseNextRoom(rewardPath[index]),
+                    "could not advance through official route to room " + rewardPath[index]);
+                Assert(runtime.DailyDungeons.RecordRoomCleared(rewardPath[index], string.Empty),
+                    "could not record cleared reward route room " + rewardPath[index]);
+            }
+            int[] expectedRoomRewards = runtime.DailyDungeons.ConfiguredRewardRuleIds(
+                runtime.DailyDungeons.ActiveRun, false);
+            GameObject route = GetPrivateGameObject(runtime.Hud, "dailyDungeonDialogRoot");
+            Button routeClose = route.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "CloseBtn");
+            ok = Check("dungeons-leave-input", () =>
+            {
+                ClickUi(routeClose);
+                GameObject confirmation = GetPrivateGameObject(runtime.Hud, "dailyDungeonLeaveConfirmRoot");
+                Assert(confirmation != null, "route close did not open leave confirmation");
+                Button confirm = confirmation.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.name == "CommonBtn_12");
+                ClickUi(confirm);
+                Assert(runtime.DailyDungeons.ActiveRun == null
+                    && runtime.DailyDungeons.Save.usedEntries == usedEntries,
+                    "leaving changed entry count or retained the route");
+                Assert(expectedRoomRewards.Length > 0,
+                    "official cleared room has no configured reward rules");
+                OfflineDailyDungeonSession reload = OfflineDailyDungeonSession.Open(
+                    new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
+                Assert(reload.ActiveRun == null && reload.Save.usedEntries == usedEntries,
+                    "daily dungeon leave state did not survive reload: difficulty=" + runDifficulty
+                    + ", expected entries=" + usedEntries + ", reloaded entries=" + reload.Save.usedEntries
+                    + ", active=" + (reload.ActiveRun == null ? "none" : reload.ActiveRun.id)
+                    + ", savePath=" + Path.Combine(new ProfileSlotCatalog(Root)
+                        .GetSlotDirectory(runtime.ActiveProfileSlotId), "daily-dungeon-save.json")
+                    + ", saved=" + File.ReadAllText(Path.Combine(new ProfileSlotCatalog(Root)
+                        .GetSlotDirectory(runtime.ActiveProfileSlotId), "daily-dungeon-save.json")));
+                return expectedRoomRewards.Length + " configured room reward rules granted from route "
+                    + string.Join("->", rewardPath) + "; entry count "
+                    + usedEntries + " persisted";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+
+            ok = Check("arena-panel", () =>
+            {
+                InvokePrivate(runtime.Hud, "OpenArena");
+                GameObject panel = GetPrivateGameObject(runtime.Hud, "arenaRoot");
+                AssertModalOnTop(panel, "arena");
+                DumpModalState("arena", panel);
+                return "official arena panel opened";
+            });
+            if (!ok) { completed(false); yield break; }
+            yield return null;
+            yield return null;
+            yield return Capture("arena-panel.png");
+
+            ok = Check("arena-win-persistence", () =>
+            {
+                Assert(runtime.Arena.Tickets == runtime.Arena.Catalog.settings.InitChallengeCount,
+                    "new arena save did not initialize official challenge tickets: "
+                    + runtime.Arena.Tickets + "/" + runtime.Arena.Catalog.settings.InitChallengeCount);
+                int opponentRank = runtime.Arena.Opponents[0].rank;
+                Assert(runtime.Arena.TryBeginChallenge(0, out string error),
+                    "arena challenge did not start: " + error);
+                int guardId = runtime.Arena.ActiveGuardTemplateId;
+                int guardSex = runtime.Arena.ActiveGuardSex;
+                ArenaRuntimeGuard guard = runtime.Arena.FindGuard(guardId);
+                Assert(guard != null && guard.appendAppearances.Any(value => value.sex == guardSex),
+                    "arena challenge did not persist an official guard appearance");
+                Assert(runtime.Arena.CompleteChallenge(true, runtime.GrantArenaReward),
+                    "arena victory settlement failed");
+                Assert(runtime.Arena.Rank == opponentRank && runtime.Arena.Wins == 1,
+                    "arena victory did not move the player to the opponent rank");
+                OfflineArenaSession reload = OfflineArenaSession.Open(
+                    new ProfileSlotCatalog(Root), runtime.ActiveProfileSlotId);
+                Assert(reload.Rank == opponentRank && reload.Wins == 1 && !reload.HasActiveChallenge,
+                    "arena victory state did not survive reload");
+                return "rank " + opponentRank + " persisted after victory; guard " + guardId
+                    + " appearance sex " + guardSex;
+            });
+            completed(ok);
+        }
+
+        private static void InvokePrivate(object target, string method)
+        {
+            MethodInfo info = target.GetType().GetMethod(method,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (info == null) throw new MissingMethodException(target.GetType().FullName, method);
+            info.Invoke(target, null);
+        }
+
+        private static GameObject GetPrivateGameObject(object target, string field)
+        {
+            FieldInfo info = target.GetType().GetField(field,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (info == null) throw new MissingFieldException(target.GetType().FullName, field);
+            return info.GetValue(target) as GameObject;
+        }
+
+        private static void AssertModalOnTop(GameObject panel, string name)
+        {
+            Assert(panel != null && panel.activeInHierarchy, name + " panel is missing or inactive");
+            Canvas homeCanvas = GameObject.Find("Home Canvas")?.GetComponent<Canvas>();
+            Canvas panelCanvas = panel.GetComponent<Canvas>();
+            Assert(homeCanvas != null && panelCanvas != null && panelCanvas.overrideSorting
+                && panelCanvas.sortingOrder > homeCanvas.sortingOrder,
+                name + " panel canvas is not sorted above the Home UI");
+        }
+
+        private void DumpModalState(string label, GameObject panel)
+        {
+            Canvas modalCanvas = panel == null ? null : panel.GetComponent<Canvas>();
+            RectTransform panelRect = panel == null ? null : panel.transform as RectTransform;
+            log.Add("PANEL " + label + " active=" + (panel != null && panel.activeInHierarchy)
+                + " rect=" + (panelRect == null ? "missing" : panelRect.rect.ToString())
+                + " canvas=" + (modalCanvas == null ? "missing" : modalCanvas.renderMode
+                    + ":enabled=" + modalCanvas.isActiveAndEnabled + ":sorting=" + modalCanvas.sortingOrder
+                    + ":pixelRect=" + modalCanvas.pixelRect + ":scale=" + modalCanvas.scaleFactor)
+                + " groups=" + string.Join("|", panel.GetComponentsInChildren<CanvasGroup>(true)
+                    .Take(4).Select(value => PathOf(value.transform) + ":" + value.alpha
+                        + ":" + value.isActiveAndEnabled)));
+            foreach (Image image in panel.GetComponentsInChildren<Image>(true)
+                .Where(value => value.isActiveAndEnabled).Take(6))
+                log.Add("PANELIMAGE " + label + " " + PathOf(image.transform) + " sprite="
+                    + (image.sprite == null ? "null" : image.sprite.name) + " color=" + image.color
+                    + " renderer=" + image.canvasRenderer.GetAlpha() + " culled=" + image.canvasRenderer.cull
+                    + " rect=" + image.rectTransform.rect);
+            foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true)
+                .Where(value => value.isActiveAndEnabled && !string.IsNullOrEmpty(value.text)).Take(8))
+                log.Add("PANELTEXT " + label + " " + PathOf(text.transform) + " text=" + text.text
+                    + " color=" + text.color + " renderer=" + text.canvasRenderer.GetAlpha()
+                    + " culled=" + text.canvasRenderer.cull + " rect=" + text.rectTransform.rect);
+            Canvas.ForceUpdateCanvases();
+        }
+
+        private static int[] FindRewardRoomPath(OfflineDailyDungeonSession session,
+            DailyDungeonRunSave run)
+        {
+            if (session == null || run == null) return Array.Empty<int>();
+            var pending = new Queue<int[]>();
+            pending.Enqueue(new[] { run.currentRoomId });
+            var visited = new HashSet<int>();
+            while (pending.Count > 0)
+            {
+                int[] path = pending.Dequeue();
+                int roomId = path[path.Length - 1];
+                if (!visited.Add(roomId)) continue;
+                DailyDungeonRuntimeRoom room = session.FindRoom(roomId);
+                if (room == null) continue;
+                if ((room.surpriseRewards ?? Array.Empty<DailyDungeonRuntimeSurpriseReward>())
+                    .Any(value => value != null && value.difficulty == run.difficulty
+                        && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0)) return path;
+                foreach (int nextRoomId in room.nextRoomIds ?? Array.Empty<int>())
+                    pending.Enqueue(path.Concat(new[] { nextRoomId }).ToArray());
+            }
+            return Array.Empty<int>();
+        }
+
+        private static void ClickUi(Button button)
+        {
+            Assert(button != null, "UI button is missing");
+            string groups = string.Join(",", button.GetComponentsInParent<CanvasGroup>(true)
+                .Select(value => value.name + ":active=" + value.isActiveAndEnabled
+                    + ":interactable=" + value.interactable + ":blocks=" + value.blocksRaycasts));
+            Assert(button.interactable, "UI button is not interactable: " + PathOf(button.transform)
+                + ", active=" + button.isActiveAndEnabled + ", groups=" + groups);
+            var pointer = new PointerEventData(EventSystem.current)
+            {
+                button = PointerEventData.InputButton.Left
+            };
+            ExecuteEvents.Execute(button.gameObject, pointer, ExecuteEvents.pointerClickHandler);
         }
 
         private static void ActivateTab(Selectable tab)
