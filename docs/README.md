@@ -8,7 +8,7 @@
 
 Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 数据与导入校验，以及主线任务目录和离线进度会话。主界面、角色创建、完整地图和战斗流程、功能 UI、完整素材与发布链尚未完成。
 
-静态工程检查通过；已执行的主工程 Unity 编译检查受 Map10 对话／剧情方法及商城交易接口错误阻塞，通用战斗尚未完成 Play Mode 验证，具体错误及检查边界见[战斗执行](features/battle-execution.md)。各模块既有验证范围见所属页；全局初始化与 Windows 完整游戏构建尚未验证。工程入口说明见 [Unity 工程与启动流程](features/unity-project.md)。
+静态工程检查通过；通用战斗尚未完成完整 Play Mode 与 Windows Player 验证。各模块的规则、资源、Unity 编译及实际运行范围见所属页，不以单项检查推定全工程完成。工程入口与构建状态见 [Unity 工程与启动流程](features/unity-project.md)。
 
 所有功能与地图共用 [Android 资源迁移到 Windows 流程](asset-management.md#android-资源迁移到-windows)，其中提供版本／平台核对、递归 CAB 依赖准备脚本、原生资产恢复、脚本／shader／插件适配及 Windows 验证方法。素材快照与日常验收也统一见 [素材管理](asset-management.md)。
 
@@ -25,7 +25,7 @@ Unity 工程包含空启动场景、部分官方战斗规则运行时、Map10 �
 | [成长成就与积分奖励](features/achievements.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [成长试炼与活动小游戏](features/activity-minigames.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [星命契约与累计属性](features/astrological.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
-| [战斗执行](features/battle-execution.md) | 未完成 | 通用执行器已接入 AI、冷却／属性状态、护盾、随机命中、职业技能标记及官方 HUD 飘字；规则与转换测试通过，完整 Play Mode、Windows 发布和其余表现仍待完成 |
+| [战斗执行](features/battle-execution.md) | 未完成 | 保留原版43项通用功能及机制，分别列出已迁移规则／执行器／HUD、缺服务器代码后的本地规则和缺项；完整准备、事件调度、表现、Play Mode 与 Windows 发布仍待完成 |
 | [羁绊冒险](features/bond-adventure.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [新建存档与角色创建](features/character-creation.md) | 未完成 | 开场姓名、点击推进、战斗接续和模型尺寸已修复并发布 Windows 测试版，实际启动可到体型选择页；开场到创角、捏脸染色、官方外观组试穿与草稿恢复、双槽正式保存回读、`FirstStory` 对白到初始武器选择已接通；无账号域类型时按官方条件隐藏四组，所选预设仅用于试穿；家园起身动作近似，地面溶解 shader 绑定及完整实体输入、重启恢复仍待验，明细见所属页 |
 | [人物属性、经验、位阶与衣柜](features/character.md) | 未完成 | 六项界面与离线属性状态已有代码接线；`r43` 窗口 Editor 可运行至交互检查点，但用户实测确认页面整体与原版不符、幻兽弹层没有可见关闭控件，视觉与真实输入验收未通过；官方 PetPanel 路由、画面修正、存档重启及 Player 入口仍待完成 |
