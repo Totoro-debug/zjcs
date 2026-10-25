@@ -1322,7 +1322,7 @@ namespace Zjcs.Presentation.CharacterCreation
             Button character = AddButton(screen.transform, "人物", 24, OpenCharacterProfile,
                 new Color32(77, 92, 79, 255), 74);
             Place(character.GetComponent<RectTransform>(), new Vector2(0.16f, 0.4f), new Vector2(0.84f, 0.49f));
-            Button enterMap = AddButton(screen.transform, "进入初始岛", 24, EnterInitialIsland,
+            Button enterMap = AddButton(screen.transform, "进入冒险", 24, EnterInitialIsland,
                 new Color32(76, 91, 71, 255), 74);
             Place(enterMap.GetComponent<RectTransform>(), new Vector2(0.16f, 0.29f), new Vector2(0.84f, 0.38f));
             Button enterHome = AddButton(screen.transform, "进入家园", 24, EnterHome,
@@ -1389,11 +1389,14 @@ namespace Zjcs.Presentation.CharacterCreation
             GameObject model = null;
             try
             {
+                var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+                OfflineMainlineProgressSession progress = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+                int mapClassId = OfficialMap10GameRuntime.ResolveHomeReturnMap(progress.Save);
                 model = CharacterCreationNativeModelFactory.CreateWorldModel(slotId,
                     Application.persistentDataPath, out string name);
-                runtimeObject = new GameObject("Map10GameRuntime");
+                runtimeObject = new GameObject("Map" + mapClassId + "GameRuntime");
                 OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
-                runtime.Begin(slotId, Application.persistentDataPath, canvas.transform, model, name,
+                runtime.Begin(mapClassId, slotId, Application.persistentDataPath, canvas.transform, model, name,
                     () => { if (screen != null) screen.SetActive(true); });
                 if (screen != null) screen.SetActive(false);
             }
@@ -1403,7 +1406,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 if (runtimeObject != null) Destroy(runtimeObject);
                 if (model != null) Destroy(model);
                 if (screen != null) screen.SetActive(true);
-                ShowComplete("初始岛未能打开：" + error.Message);
+                ShowComplete("冒险地图未能打开：" + error.Message);
             }
         }
 

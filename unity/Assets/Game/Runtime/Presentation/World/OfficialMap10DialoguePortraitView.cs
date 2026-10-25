@@ -19,24 +19,26 @@ namespace Zjcs.Presentation.World
         private readonly Map10RuntimeDialogSpeakerSlot[] speakerStyles;
         private readonly string panelKey;
         private int currentSide = -1;
-        private int currentRoleId;
+        private string currentPortraitPath;
+        private readonly int[] voiceOverIds;
         private bool disposed;
 
-        public OfficialMap10DialoguePortraitView(OfficialMap10UiRenderer ui, string panelKey = "TalkDialog")
+        public OfficialMap10DialoguePortraitView(OfficialMap10UiRenderer ui, string panelKey = "TalkDialog", int mapClassId = 10)
         {
             if (ui == null) throw new ArgumentNullException(nameof(ui));
             if (panelKey != "TalkDialog" && panelKey != "OptionTalkDialog")
                 throw new ArgumentOutOfRangeException(nameof(panelKey));
             this.panelKey = panelKey;
-            TextAsset dataAsset = Resources.Load<TextAsset>(PortraitDataResource);
+            TextAsset dataAsset = Resources.Load<TextAsset>("Map" + mapClassId + "/dialogue-portraits");
             Map10RuntimeDialogPortraitData data = dataAsset == null ? null
                 : JsonUtility.FromJson<Map10RuntimeDialogPortraitData>(dataAsset.text);
-            if (data == null || data.manifest != "854_156383" || data.mapClassId != 10
+            if (data == null || data.manifest != "854_156383" || data.mapClassId != mapClassId
                 || data.portraits == null || data.speakerStyle == null
                 || data.speakerStyle.left == null || data.speakerStyle.right == null || data.icons == null)
                 throw new InvalidDataException("Official Map10 dialogue portrait data is missing or malformed.");
 
             speakerStyles = new[] { data.speakerStyle.left, data.speakerStyle.right };
+            voiceOverIds = data.voiceOverIds ?? Array.Empty<int>();
             ValidateStyle(speakerStyles[0], 0);
             ValidateStyle(speakerStyles[1], 1);
             foreach (Map10RuntimeDialogPortrait portrait in data.portraits)
@@ -62,7 +64,8 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map10 dialogue icon binding is malformed.");
                 RequireSprite(icon.resource);
             }
-            if (portraits.Count != 3 || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8402")
+            if ((mapClassId == 10 && portraits.Count != 3) || (mapClassId == 11 && portraits.Count != 11)
+                || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8402")
                 || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8404")
                 || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8417"))
                 throw new InvalidDataException("Official Map10 dialogue portrait bindings are incomplete.");
@@ -76,10 +79,15 @@ namespace Zjcs.Presentation.World
         public void SetSpeaker(Map10RuntimeDialogRole role, string faceType)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialMap10DialoguePortraitView));
+            if (role != null && voiceOverIds.Contains(role.RoleId))
+            {
+                Clear();
+                return;
+            }
             if (role == null || !portraits.TryGetValue(role.PortraitPath, out Map10RuntimeDialogPortrait portrait))
                 throw new InvalidDataException("Map10 dialogue role has no native portrait layout.");
 
-            if (currentRoleId != role.RoleId)
+            if (currentPortraitPath != role.PortraitPath)
             {
                 if (currentSide < 0)
                 {
@@ -98,7 +106,7 @@ namespace Zjcs.Presentation.World
                     slots[currentSide].Transition(ToColor(speakerStyles[currentSide].light),
                         speakerStyles[currentSide].colorDuration);
                 }
-                currentRoleId = role.RoleId;
+                currentPortraitPath = role.PortraitPath;
             }
             slots[currentSide].SetExpression(portrait, faceType);
         }
@@ -115,7 +123,7 @@ namespace Zjcs.Presentation.World
             if (disposed) return;
             slots[0]?.Clear();
             slots[1]?.Clear();
-            currentRoleId = 0;
+            currentPortraitPath = null;
             currentSide = -1;
         }
 

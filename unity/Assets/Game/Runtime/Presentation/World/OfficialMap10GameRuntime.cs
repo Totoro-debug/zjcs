@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Zjcs.Offline.Equipment;
@@ -16,23 +17,27 @@ using Zjcs.Presentation.Combat;
 using Zjcs.Presentation.Commerce;
 using Zjcs.Presentation.OfflineWorld;
 using Zjcs.Official.World;
+using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.World
 {
     [DisallowMultipleComponent]
-    public sealed class OfficialMap10GameRuntime : MonoBehaviour
+    public sealed partial class OfficialMap10GameRuntime : MonoBehaviour
     {
-        private const string BattleDataResource = "Map10/battle-runtime";
-        private const string StoryDataResource = "Map10/stories";
-        private const string EntityDataResource = "Map10/Entities/catalog";
-        private const string MapSaveName = "map-10-save.json";
         private const float MovementSpeed = 4f;
+
+        private sealed class Map10RuntimeStoryFrame
+        {
+            public Map10RuntimeStory Parent;
+            public int NextNodeId;
+        }
 
         private readonly Dictionary<int, Map10RuntimeRoster> rosters = new Dictionary<int, Map10RuntimeRoster>();
         private readonly Dictionary<int, Map10RuntimeStage> stages = new Dictionary<int, Map10RuntimeStage>();
         private readonly Dictionary<int, Map10RuntimeBattleScene> battleScenes = new Dictionary<int, Map10RuntimeBattleScene>();
         private readonly Dictionary<int, Map10RuntimeEntity> mapEntities = new Dictionary<int, Map10RuntimeEntity>();
         private readonly Dictionary<string, Map10RuntimeStory> stories = new Dictionary<string, Map10RuntimeStory>(StringComparer.Ordinal);
+        private readonly Dictionary<string, Map10RuntimeStory> storySubgraphs = new Dictionary<string, Map10RuntimeStory>(StringComparer.Ordinal);
         private readonly Dictionary<int, Map10RuntimeDialogRole> dialogRoles = new Dictionary<int, Map10RuntimeDialogRole>();
         private readonly Dictionary<int, Map10RuntimeNativeDialog> nativeDialogs = new Dictionary<int, Map10RuntimeNativeDialog>();
         private readonly Dictionary<string, Map10RuntimePlayable> officialPlayables =
@@ -47,6 +52,12 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<int, Map10RuntimeCondition> mapConditions = new Dictionary<int, Map10RuntimeCondition>();
         private readonly Dictionary<int, int> regionPoints = new Dictionary<int, int>();
         private readonly Dictionary<int, int> regionPointLimits = new Dictionary<int, int>();
+        private readonly Dictionary<int, Map10RuntimeBattleEntityStageBinding> battleEntityStageBindings =
+            new Dictionary<int, Map10RuntimeBattleEntityStageBinding>();
+        private readonly Stack<Map10RuntimeStoryFrame> storyFrames = new Stack<Map10RuntimeStoryFrame>();
+        private readonly Dictionary<int, Map10RuntimeFixedReward> fixedRewards = new Dictionary<int, Map10RuntimeFixedReward>();
+        private readonly Dictionary<int, Map10RuntimeEntityTemplate> entityTemplates =
+            new Dictionary<int, Map10RuntimeEntityTemplate>();
         private OfficialWorldMapSession session;
         private OfflineMainlineProgressSession progressionSave;
         private OfflineCharacterProgressionService progression;
@@ -81,6 +92,7 @@ namespace Zjcs.Presentation.World
         private float battleStepTimer;
         private bool dialogueWaiting;
         private bool dialogueAdvanceRequested;
+        private string dialoguePanelKey = "TalkDialog";
         private bool nativeDialogActive;
         private bool nativeDialogChoicesWaiting;
         private bool nativeDialogPlayableWaiting;
@@ -94,6 +106,7 @@ namespace Zjcs.Presentation.World
         private int nativeDialogNodeId;
         private int[] nativeDialogChoiceTargets = Array.Empty<int>();
         private Map10RuntimeStory activeStory;
+        private string activeStoryRootKey = string.Empty;
         private Map10RuntimeEntity storyContextEntity;
         private Action storyFinished;
         private bool storyRunning;
@@ -116,19 +129,43 @@ namespace Zjcs.Presentation.World
         private bool closed;
         private CommerceScreenController commerceScreen;
         private GameObject firstPayEntry;
+        private int mapClassId = 10;
+        private bool localSaveCreated;
+
+        private string MapResource(string path) => "Map" + mapClassId + "/" + path;
+        private string MapReceiptPrefix => "map" + mapClassId + ":";
+
+        public static int ResolveHomeReturnMap(OfflineMainlineSave save)
+        {
+            if (save?.World == null) throw new ArgumentNullException(nameof(save));
+            // Player.GetLastActiveWorldMapClassId chooses the highest normal
+            // map Order in WorldMapRegionProgressDict. Pinned Map10/11 orders
+            // are 1/2; a merely unlocked map has no region progress entry yet.
+            return save.World.Maps.Any(value => value.MapClassId == 11) ? 11 : 10;
+        }
 
         public void Begin(string selectedSlotId, string savesRoot, Transform targetUiParent,
             GameObject characterModel, string displayName, Action onClose)
         {
-            if (session != null) throw new InvalidOperationException("Map10 is already open.");
+            Begin(10, selectedSlotId, savesRoot, targetUiParent, characterModel, displayName, onClose);
+        }
+
+        public void Begin(int selectedMapClassId, string selectedSlotId, string savesRoot,
+            Transform targetUiParent, GameObject characterModel, string displayName, Action onClose)
+        {
+            if (session != null) throw new InvalidOperationException("A world map is already open.");
+            if (selectedMapClassId != 10 && selectedMapClassId != 11)
+                throw new ArgumentOutOfRangeException(nameof(selectedMapClassId), "Only migrated world maps can be opened.");
             if (!ProfileSlotCatalog.TryParseSlotId(selectedSlotId)) throw new ArgumentException("Invalid profile slot id.", nameof(selectedSlotId));
             if (string.IsNullOrWhiteSpace(savesRoot)) throw new ArgumentException("A persistent data root is required.", nameof(savesRoot));
             if (targetUiParent == null) throw new ArgumentNullException(nameof(targetUiParent));
             if (characterModel == null) throw new ArgumentNullException(nameof(characterModel));
 
+            mapClassId = selectedMapClassId;
             slotId = selectedSlotId;
             persistentDataPath = Path.GetFullPath(savesRoot);
-            mapSavePath = Path.Combine(new ProfileSlotCatalog(persistentDataPath).GetSlotDirectory(slotId), MapSaveName);
+            mapSavePath = Path.Combine(new ProfileSlotCatalog(persistentDataPath).GetSlotDirectory(slotId),
+                "map-" + mapClassId + "-save.json");
             uiParent = targetUiParent;
             avatar = characterModel;
             characterName = displayName ?? string.Empty;
@@ -138,19 +175,20 @@ namespace Zjcs.Presentation.World
             try
             {
                 LoadOfficialData();
-                LoadLocalProgress();
                 InitializeMap();
+                LoadLocalProgress();
+                RefreshRegionProgress();
                 InitializeView();
                 currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
                 SetAvatarPosition(currentGrid);
                 UpdateWorldLabels();
-                if (!HasStory("FirstEnterMap")) PlayStory("FirstEnterMap", 0, () =>
+                if (mapClassId == 10 && !HasStory("FirstEnterMap")) PlayStory("FirstEnterMap", 0, () =>
                 {
                     CompleteStory("FirstEnterMap");
                     SaveLocalProgress();
                     StartFirstBattleIntroduction();
                 });
-                else StartFirstBattleIntroduction();
+                else if (mapClassId == 10) StartFirstBattleIntroduction();
             }
             catch
             {
@@ -166,9 +204,11 @@ namespace Zjcs.Presentation.World
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (dialogueWaiting) RequestDialogueAdvance();
+                if (quickBuyDialog != null) quickBuyDialog.Cancel();
+                else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
+                else if (goddessDialog != null) goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
                 else CloseMap();
             }
@@ -183,7 +223,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
-            if (storyRunning) return;
+            if (storyRunning || goddessDialog != null) return;
 
             if (battleController != null)
             {
@@ -244,86 +284,137 @@ namespace Zjcs.Presentation.World
 
         private void LoadOfficialData()
         {
-            TextAsset battleData = Resources.Load<TextAsset>(BattleDataResource);
-            TextAsset storyData = Resources.Load<TextAsset>(StoryDataResource);
+            TextAsset battleData = Resources.Load<TextAsset>(MapResource("battle-runtime"));
+            TextAsset storyData = Resources.Load<TextAsset>(MapResource("stories"));
             if (battleData == null || storyData == null)
-                throw new InvalidOperationException("Official Map10 battle and story payloads are missing from Resources.");
+                throw new InvalidOperationException("Official Map" + mapClassId + " battle and story payloads are missing from Resources.");
 
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
-            if (battles == null || battles.manifest != "854_156383" || battles.mapClassId != 10
+            puzzleRules = storyDataValue?.puzzleRules;
+            quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
+            int expectedStages = mapClassId == 10 ? 21 : 129;
+            int expectedStories = mapClassId == 10 ? 9 : 44;
+            if (battles == null || battles.manifest != "854_156383" || battles.mapClassId != mapClassId
                 || battles.stages == null || battles.monsterRosters == null || battles.battleScenes == null
-                || battles.stages.Length != 21 || battles.monsterRosters.Length != 21
+                || battles.stages.Length != expectedStages || battles.monsterRosters.Length != expectedStages
+                || (mapClassId == 11 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 591))
                 || storyDataValue == null || storyDataValue.manifest != "854_156383"
-                || storyDataValue.mapClassId != 10 || storyDataValue.stories == null
+                || storyDataValue.mapClassId != mapClassId || storyDataValue.stories == null
                 || storyDataValue.dialogRoles == null || storyDataValue.mapLogicTags == null
                 || storyDataValue.mapTalkEntries == null || storyDataValue.mapTalkConditions == null
                 || storyDataValue.storyOptions == null || storyDataValue.nativeDialogs == null
-                || storyDataValue.playables == null)
-                throw new InvalidDataException("Official Map10 runtime data does not match the pinned source.");
+                || storyDataValue.playables == null
+                || (mapClassId == 11 && (storyDataValue.fixedRewards == null
+                    || storyDataValue.mainlineTasks == null || storyDataValue.mainlineTasks.Length != 24
+                    || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 110)))
+                throw new InvalidDataException("Official Map" + mapClassId + " runtime data does not match the pinned source.");
 
             foreach (Map10RuntimeStage value in battles.stages) stages.Add(value.Id, value);
+            foreach (Map10RuntimeEntityTemplate template in storyDataValue.entityTemplates
+                         ?? Array.Empty<Map10RuntimeEntityTemplate>())
+            {
+                if (template == null || template.EntityClassId <= 0 || template.Components == null
+                    || template.Components.Length == 0 || entityTemplates.ContainsKey(template.EntityClassId)
+                    || template.Components.Any(value => value == null || string.IsNullOrEmpty(value.Type)
+                        || string.IsNullOrEmpty(value.Json))
+                    || template.Components.Select(value => value.Type).Distinct().Count() != template.Components.Length)
+                    throw new InvalidDataException("Official Map" + mapClassId + " EC entity template is malformed.");
+                entityTemplates.Add(template.EntityClassId, template);
+            }
             foreach (Map10RuntimeRoster value in battles.monsterRosters) rosters.Add(value.StageId, value);
             foreach (Map10RuntimeBattleScene value in battles.battleScenes) battleScenes.Add(value.GameId, value);
+            foreach (Map10RuntimeBattleEntityStageBinding value in battles.entityStageBindings ??
+                         Array.Empty<Map10RuntimeBattleEntityStageBinding>())
+            {
+                if (value == null || value.PlacementId <= 0 || value.StageComponents == null
+                    || value.StageComponents.Length == 0 || battleEntityStageBindings.ContainsKey(value.PlacementId))
+                    throw new InvalidDataException("Official Map" + mapClassId + " battle entity stage binding is malformed.");
+                battleEntityStageBindings.Add(value.PlacementId, value);
+            }
             foreach (Map10RuntimeStory value in storyDataValue.stories)
             {
                 if (value == null || string.IsNullOrWhiteSpace(value.key) || value.nodes == null
                     || value.nodes.Length == 0 || value.entryNodeId <= 0 || value.dialogueGroups == null)
-                    throw new InvalidDataException("Official Map10 story graph is malformed.");
+                    throw new InvalidDataException("Official Map" + mapClassId + " story graph is malformed.");
                 stories.Add(value.key, value);
+            }
+            Map10RuntimeStory[] subgraphs = storyDataValue.subgraphs ?? Array.Empty<Map10RuntimeStory>();
+            if ((mapClassId == 10 && subgraphs.Length != 0) || (mapClassId == 11 && subgraphs.Length != 4))
+                throw new InvalidDataException("Official Map" + mapClassId + " story subgraph closure is incomplete.");
+            foreach (Map10RuntimeStory value in subgraphs)
+            {
+                if (value == null || string.IsNullOrWhiteSpace(value.key) || value.nodes == null
+                    || value.nodes.Length == 0 || value.entryNodeId <= 0 || value.dialogueGroups == null
+                    || storySubgraphs.ContainsKey(value.key))
+                    throw new InvalidDataException("Official Map" + mapClassId + " story subgraph is malformed.");
+                storySubgraphs.Add(value.key, value);
+            }
+            foreach (Map10RuntimeFixedReward value in storyDataValue.fixedRewards ?? Array.Empty<Map10RuntimeFixedReward>())
+            {
+                if (value == null || value.Id <= 0 || value.CanGetTimes < 0 || value.Items == null
+                    || value.Items.Length == 0 || fixedRewards.ContainsKey(value.Id)
+                    || value.Items.Any(item => item == null || item.ItemId <= 0 || item.Count <= 0))
+                    throw new InvalidDataException("Official Map" + mapClassId + " fixed reward is malformed.");
+                fixedRewards.Add(value.Id, value);
             }
             foreach (Map10RuntimeDialogRole value in storyDataValue.dialogRoles)
             {
-                if (value == null || value.RoleId <= 0 || value.EntityClassId <= 0
-                    || string.IsNullOrWhiteSpace(value.RoleName) || string.IsNullOrWhiteSpace(value.PortraitPath))
-                    throw new InvalidDataException("Official Map10 dialogue role is malformed.");
+                if (value == null || value.RoleId <= 0 || value.EntityClassId < 0
+                    || string.IsNullOrWhiteSpace(value.RoleName)
+                    || (value.EntityClassId > 0 && string.IsNullOrWhiteSpace(value.PortraitPath))
+                    || (value.EntityClassId == 0 && value.RoleId != 100000))
+                    throw new InvalidDataException("Official Map" + mapClassId + " dialogue role is malformed.");
                 dialogRoles.Add(value.RoleId, value);
             }
-            if (dialogRoles.Count != 4 || !dialogRoles.ContainsKey(840200) || !dialogRoles.ContainsKey(840401)
-                || !dialogRoles.ContainsKey(840402) || !dialogRoles.ContainsKey(841700))
+            if (mapClassId == 10 && (dialogRoles.Count != 4 || !dialogRoles.ContainsKey(840200)
+                || !dialogRoles.ContainsKey(840401) || !dialogRoles.ContainsKey(840402)
+                || !dialogRoles.ContainsKey(841700)))
                 throw new InvalidDataException("Official Map10 dialogue roles are incomplete.");
             foreach (Map10RuntimeNativeDialog value in storyDataValue.nativeDialogs)
             {
                 if (value == null || value.Id <= 0 || value.EntryNodeId <= 0 || value.Nodes == null
                     || value.Nodes.Length == 0 || nativeDialogs.ContainsKey(value.Id))
-                    throw new InvalidDataException("Official Map10 native dialog is malformed.");
+                    throw new InvalidDataException("Official Map" + mapClassId + " native dialog is malformed.");
                 foreach (Map10RuntimeNativeDialogNode node in value.Nodes)
                 {
                     if (node == null || node.NodeId <= 0 || node.NextNodes == null
                         || (node.NodeType == 0 && (string.IsNullOrEmpty(node.Text) || !dialogRoles.ContainsKey(node.RoleId)))
                         || (node.NodeType == 1 && string.IsNullOrEmpty(node.Text))
                         || (node.ActionType == 4 && (node.AwardItems == null || node.AwardItems.Length == 0)))
-                        throw new InvalidDataException("Official Map10 native dialog node is malformed: " + value.Id);
+                        throw new InvalidDataException("Official Map" + mapClassId + " native dialog node is malformed: " + value.Id);
                 }
                 nativeDialogs.Add(value.Id, value);
             }
             foreach (Map10RuntimePlayable value in storyDataValue.playables)
             {
-                if (value == null || string.IsNullOrWhiteSpace(value.AssetGuid) || value.Duration <= 0f
+                if (value == null || string.IsNullOrWhiteSpace(value.AssetGuid) || value.Duration < -1f
+                    || (mapClassId == 10 && value.Duration <= 0f)
                     || officialPlayables.ContainsKey(value.AssetGuid))
-                    throw new InvalidDataException("Official Map10 playable binding is malformed.");
+                    throw new InvalidDataException("Official Map" + mapClassId + " playable binding is malformed.");
                 officialPlayables.Add(value.AssetGuid, value);
                 foreach (string key in value.Keys ?? Array.Empty<string>())
                 {
                     if (string.IsNullOrWhiteSpace(key) || officialPlayables.ContainsKey(key))
-                        throw new InvalidDataException("Official Map10 playable key is duplicated or empty.");
+                        throw new InvalidDataException("Official Map" + mapClassId + " playable key is duplicated or empty.");
                     officialPlayables.Add(key, value);
                 }
             }
-            if (!officialPlayables.ContainsKey("FeiLe_appear")
+            if (mapClassId == 10 && (!officialPlayables.ContainsKey("FeiLe_appear")
                 || !officialPlayables.ContainsKey("FeiLe_disappear")
-                || !officialPlayables.ContainsKey("9b248cde91299ee4287533b25b7dd468"))
+                || !officialPlayables.ContainsKey("9b248cde91299ee4287533b25b7dd468")))
                 throw new InvalidDataException("Official Map10 story playable bindings are incomplete.");
             foreach (Map10RuntimeStory story in stories.Values)
                 foreach (Map10RuntimeStoryNode node in story.nodes.Where(value => value != null
                              && value.type == "PlayPlayableNode"))
-                    if (node.playableDuration <= 0f || !officialPlayables.ContainsKey(node.playableAssetGuid))
-                        throw new InvalidDataException("Official Map10 story playable data is incomplete: " + story.key);
+                    if ((node.playableDuration <= 0f && node.waitPlayableStop)
+                        || !officialPlayables.ContainsKey(node.playableAssetGuid))
+                        throw new InvalidDataException("Official Map" + mapClassId + " story playable data is incomplete: " + story.key);
             foreach (Map10RuntimeLogicTag value in storyDataValue.mapLogicTags)
             {
-                if (value == null || value.MapClass != 10 || value.LogicId <= 0
+                if (value == null || value.MapClass != mapClassId || value.LogicId <= 0
                     || value.EntityClass <= 0 || string.IsNullOrWhiteSpace(value.Tag))
-                    throw new InvalidDataException("Official Map10 logic entity tag is malformed.");
+                    throw new InvalidDataException("Official Map" + mapClassId + " logic entity tag is malformed.");
                 mapLogicTags.Add(value.LogicId, value);
             }
             foreach (Map10RuntimeTalkConditionInfo value in storyDataValue.mapTalkConditions)
@@ -336,35 +427,48 @@ namespace Zjcs.Presentation.World
             mapTalkEntries = storyDataValue.mapTalkEntries;
             foreach (Map10RuntimeStoryOption value in storyDataValue.storyOptions)
             {
-                if (value == null || string.IsNullOrWhiteSpace(value.StoryName) || value.Id <= 0
+                if (value == null || string.IsNullOrWhiteSpace(value.StoryName) || value.Id < 0
                     || string.IsNullOrWhiteSpace(value.Text))
                     throw new InvalidDataException("Official Map10 story option is malformed.");
                 storyOptions.Add(StoryOptionKey(value.StoryName, value.Id), value);
             }
-            string[] requiredStories =
+            if (mapClassId == 10)
             {
-                "FirstEnterMap", "FirstBattle", "FirstMeetChaos", "SavingChick",
-                "ChickYell", "ChickYell2", "ChickChat", "FangjianbeiActive", "UnlockFangBei"
-            };
-            if (stories.Count != requiredStories.Length || requiredStories.Any(name => !stories.ContainsKey(name)))
-                throw new InvalidDataException("Official Map10 story payload is incomplete.");
+                string[] requiredStories =
+                {
+                    "FirstEnterMap", "FirstBattle", "FirstMeetChaos", "SavingChick",
+                    "ChickYell", "ChickYell2", "ChickChat", "FangjianbeiActive", "UnlockFangBei"
+                };
+                if (stories.Count != requiredStories.Length || requiredStories.Any(name => !stories.ContainsKey(name)))
+                    throw new InvalidDataException("Official Map10 story payload is incomplete.");
+            }
+            else if (stories.Count != expectedStories || !stories.ContainsKey("FirstMeetSenSen")
+                || !stories.ContainsKey("CureWorldTree") || !stories.ContainsKey("GriffonTogether"))
+                throw new InvalidDataException("Official Map11 story payload is incomplete.");
+            if (mapClassId == 11 && (!storySubgraphs.ContainsKey("FangjianbeiActive")
+                || !storySubgraphs.ContainsKey("GriffonTeamUp") || !storySubgraphs.ContainsKey("CombatAssistance")
+                || !storySubgraphs.ContainsKey("HolyMonsterActive") || fixedRewards.Count != 8))
+                throw new InvalidDataException("Official Map11 story support data is incomplete.");
         }
 
         private void LoadLocalProgress()
         {
             SaveReadResult read = LocalJsonSaveFile.Read(mapSavePath, ValidLocalSave);
             if (read.Status == SaveReadStatus.Corrupt)
-                throw new InvalidDataException("Map10 local save is corrupt; the profile remains unchanged.");
+                throw new InvalidDataException("Map" + mapClassId + " local save is corrupt; the profile remains unchanged.");
+            localSaveCreated = read.Json == null;
             localSave = read.Json == null
                 ? new Map10LocalSave { slotId = slotId, gridX = 24, gridY = 23 }
                 : JsonUtility.FromJson<Map10LocalSave>(read.Json);
             if (localSave == null || localSave.slotId != slotId)
-                throw new InvalidDataException("Map10 save belongs to another profile slot.");
+                throw new InvalidDataException("Map" + mapClassId + " save belongs to another profile slot.");
             localSave.completedStories ??= Array.Empty<string>();
             localSave.storyPlayCounts ??= Array.Empty<Map10RuntimeStoryCount>();
             localSave.completedStages ??= Array.Empty<int>();
+            localSave.completedPeriodicityGroups ??= Array.Empty<int>();
             localSave.completedEntityPlacements ??= Array.Empty<int>();
             localSave.mapLogicStates ??= Array.Empty<Map10RuntimeMapLogicState>();
+            localSave.puzzleStates ??= Array.Empty<MapPuzzleEntityState>();
             localSave.receipts ??= Array.Empty<string>();
             localSave.nativeDialogAwardReceipts ??= Array.Empty<string>();
             localSave.battleResults ??= Array.Empty<Map10RuntimeBattleResult>();
@@ -375,53 +479,58 @@ namespace Zjcs.Presentation.World
             var slots = new ProfileSlotCatalog(persistentDataPath);
             progressionSave = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
-                throw new InvalidOperationException("Finish character creation and weapon selection before entering Map10.");
+                throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
             progression = new OfflineCharacterProgressionService(progressionSave, characterAssets.Load());
             progression.AttachEquipmentCatalog(OfficialEquipmentAssetCatalog.LoadDefault().Load());
-            session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 10);
+            session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), mapClassId);
             if (session.Definition.MaxRegionProgress == null || session.Definition.MaxRegionProgress.Length == 0)
-                throw new InvalidDataException("Official Map10 region progress definitions are missing.");
+                throw new InvalidDataException("Official Map" + mapClassId + " region progress definitions are missing.");
             LoadRegionConditions();
             int[] regions = session.Definition.MaxRegionProgress.Select(value => value.Region).ToArray();
-            ProgressionResult initialized = progressionSave.InitializeMap(10, regions);
+            ProgressionResult initialized = progressionSave.InitializeMap(mapClassId, regions);
             if (initialized.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(initialized.Message);
-            RefreshRegionProgress();
         }
 
         private void InitializeView()
         {
-            mapRoot = new GameObject("OfficialMap10World").transform;
+            mapRoot = new GameObject("OfficialMap" + mapClassId + "World").transform;
             mapRoot.SetParent(transform, false);
             WorldMapAssets assets = session.Assets;
             GameObject terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
-            terrain.name = "Map10Terrain";
+            terrain.name = "Map" + mapClassId + "Terrain";
 
-            var environmentObject = new GameObject("Map10Environment");
-            environmentObject.transform.SetParent(mapRoot, false);
-            environmentView = environmentObject.AddComponent<OfficialMap10EnvironmentView>();
-            environmentView.Initialize();
+            if (mapClassId == 10)
+            {
+                var environmentObject = new GameObject("Map10Environment");
+                environmentObject.transform.SetParent(mapRoot, false);
+                environmentView = environmentObject.AddComponent<OfficialMap10EnvironmentView>();
+                environmentView.Initialize();
+            }
 
             CreateWorldCamera();
 
-            var entityObject = new GameObject("Map10EntityRuntime");
+            var entityObject = new GameObject("Map" + mapClassId + "EntityRuntime");
             entityObject.transform.SetParent(mapRoot, false);
             entityRoot = entityObject.transform;
             entityView = entityObject.AddComponent<OfficialMap10EntityView>();
-            TextAsset entityData = Resources.Load<TextAsset>(EntityDataResource);
-            if (entityData == null) throw new InvalidOperationException("Official Map10 entity data is missing.");
+            string entityResource = MapResource("Entities/catalog");
+            TextAsset entityData = Resources.Load<TextAsset>(entityResource);
+            if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
-            entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera);
+            entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
             entityView.EntitySelected += OnEntitySelected;
             mapEntities.Clear();
             foreach (OfficialMap10EntityInfo info in entityView.EntityInfos)
             {
                 if (info == null || info.PlacementId <= 0 || info.Grid == null || info.Grid.Length != 2
                     || mapEntities.ContainsKey(info.PlacementId))
-                    throw new InvalidDataException("Official Map10 entity placement is malformed or duplicated.");
+                    throw new InvalidDataException("Official Map" + mapClassId + " entity placement is malformed or duplicated.");
                 var entity = new Map10RuntimeEntity(info);
+                if (mapClassId == 11 && !entityTemplates.ContainsKey(info.EntityClassId))
+                    throw new InvalidDataException("Official Map11 EC entity template is missing: " + info.EntityClassId);
                 if (mapLogicTags.TryGetValue(info.PlacementId, out Map10RuntimeLogicTag tag))
                 {
                     if (tag.EntityClass != info.EntityClassId)
@@ -430,30 +539,41 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
+            ValidateBattleEntityStageBindings();
             ValidateEntityLockGroups();
+            InitializePuzzles();
 
             uiCatalog = OfficialMap10UiCatalog.LoadDefault();
             ui = new OfficialMap10UiRenderer(uiCatalog);
-            ui.Mount(uiParent, BindWorldControl);
+            ui.Mount(uiParent, BindWorldControl, mapClassId);
+            if (mapClassId == 11) InitializeNativeWorldHud();
             ui.SetPanelActive("WorldCanvas", true);
             ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
-            ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/LevelText",
-                "Lv." + progression.Player.Level);
+            ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/LevelBgImg/LevelTxt",
+                progression.Player.Level.ToString(CultureInfo.InvariantCulture) + "级");
             ui.SetPanelActive("TalkDialog", false);
             CreateCommerceHudEntries();
             CreateMinimap(assets.MiniMapPrefab);
 
             avatar.transform.SetParent(mapRoot, false);
-            avatar.name = "Map10Player_" + slotId;
+            avatar.name = "Map" + mapClassId + "Player_" + slotId;
+            if (localSaveCreated && mapClassId == 11)
+            {
+                int entryId = GetDefaultEntryId();
+                if (!mapEntities.TryGetValue(entryId, out Map10RuntimeEntity entry))
+                    throw new InvalidDataException("Official Map11 default entry placement is missing: " + entryId);
+                localSave.gridX = entry.Grid.X;
+                localSave.gridY = entry.Grid.Y;
+            }
             currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
             SetAvatarPosition(currentGrid);
             progressionSave.Save.Player.UnlockedMapClassIds ??= new List<int>();
-            if (!progressionSave.Save.Player.UnlockedMapClassIds.Contains(10))
+            if (!progressionSave.Save.Player.UnlockedMapClassIds.Contains(mapClassId))
             {
                 OfflinePlayerProgress player = progressionSave.Save.Player;
                 ProgressionResult unlocked = progressionSave.SetPlayerProgress(player.Level, player.Rank,
                     player.SubRank, player.MaxProfessionRank, player.GuildName ?? string.Empty,
-                    player.UnlockedMapClassIds.Concat(new[] { 10 }));
+                    player.UnlockedMapClassIds.Concat(new[] { mapClassId }));
                 if (unlocked.Status == ProgressionResultStatus.InvalidState)
                     throw new InvalidOperationException(unlocked.Message);
             }
@@ -640,6 +760,17 @@ namespace Zjcs.Presentation.World
             if (entity == null || entity.Grid == null || entity.Grid.Length != 2 || battleController != null)
                 return;
             if (!mapEntities.TryGetValue(entity.PlacementId, out Map10RuntimeEntity record)) return;
+            if (puzzles != null && puzzles.Contains(record.PlacementId)
+                && puzzleRules.First(value => value.PlacementId == record.PlacementId).HasOverlapDetector)
+            {
+                StartMovement(record.Grid, null);
+                return;
+            }
+            if (mapClassId == 11 && record.TypeId == 202 && IsGoddessActivated(record))
+            {
+                ShowGoddessDialog(record);
+                return;
+            }
             StartMovement(record.Grid, record);
         }
 
@@ -651,6 +782,8 @@ namespace Zjcs.Presentation.World
                 Start = currentGrid,
                 End = target,
                 PreciseTarget = interact == null,
+                // The official world character (3001/3002) occupies its own grid cell.
+                BodyOffsets = new[] { new MapGridPoint(0, 0) },
                 PreferDistance = interact == null ? 0 : 1,
                 CanEnd = interact == null ? null : point => Manhattan(point, target) <= 1
             });
@@ -689,7 +822,13 @@ namespace Zjcs.Presentation.World
                 MovementSpeed * deltaTime);
             if (Vector2.Distance(avatar.transform.position, target) < 0.025f)
             {
+                MapGridPoint previous = currentGrid;
                 currentGrid = point;
+                if (puzzles != null)
+                {
+                    puzzles.CharacterMoved(currentGrid, previous);
+                    SynchronizePuzzleEntities();
+                }
                 movementIndex++;
                 SaveLocalProgress();
                 if (movementIndex >= movementPath.Count) FinishMovement();
@@ -714,12 +853,25 @@ namespace Zjcs.Presentation.World
         private void Interact(Map10RuntimeEntity entity)
         {
             if (localSave.completedEntityPlacements.Contains(entity.PlacementId)) return;
+            if (mapClassId == 11 && entity.TypeId == 202)
+            {
+                ShowGoddessDialog(entity);
+                return;
+            }
             if (IsEntityLocked(entity))
             {
                 ShowOfficialNotice("前方有魔物阻挡");
                 return;
             }
-            if (entity.PlacementId == 216 && !HasStory("FirstMeetChaos"))
+            if (puzzles != null && entity.EntityClassId == 6503)
+            {
+                if (!puzzles.InteractionEnabled(entity.PlacementId)) return;
+                puzzles.RunStage(entity.PlacementId, 0);
+                SynchronizePuzzleEntities();
+                SaveLocalProgress();
+                return;
+            }
+            if (mapClassId == 10 && entity.PlacementId == 216 && !HasStory("FirstMeetChaos"))
             {
                 if (chaosNpc != null) entityView.RemoveStoryEntity(chaosNpc);
                 MapGridPoint npcGrid = FindAdjacentStoryGrid();
@@ -746,7 +898,9 @@ namespace Zjcs.Presentation.World
                 CollectEntityAwards(entity);
                 return;
             }
-            int scenario = entity.TypeId == 4 ? 1 : entity.TypeId == 103 ? 6 : 0;
+            int scenario = entity.EntityClassId == 6501 || entity.EntityClassId == 6502
+                ? (entity.State == 0 ? 1 : 6)
+                : entity.TypeId == 4 ? 1 : entity.TypeId == 103 ? 6 : 0;
             Map10RuntimeMapTalkEntry talk = scenario > 0 ? ResolveMapTalk(entity, scenario) : null;
             if (talk != null && !string.IsNullOrEmpty(talk.TalkId))
             {
@@ -761,7 +915,7 @@ namespace Zjcs.Presentation.World
                 PlayMapTalkDialog(talk, entity);
                 return;
             }
-            int stageId = entity.StageIds.FirstOrDefault(value => value > 0);
+            int stageId = ResolveEntityStageId(entity);
             if (stageId <= 0)
             {
                 ShowOfficialNotice("该实体暂无可执行的本地交互");
@@ -826,6 +980,19 @@ namespace Zjcs.Presentation.World
                 return condition.Ids != null && condition.Ids.Length > 0
                     && condition.Ids.All(id => mapTalkConditions.TryGetValue(id, out Map10RuntimeTalkCondition part)
                         && IsMapTalkConditionMet(part));
+            if (condition._type == "CompositeOrCondition")
+                return condition.Ids != null && condition.Ids.Any(id =>
+                    mapTalkConditions.TryGetValue(id, out Map10RuntimeTalkCondition part)
+                    && IsMapTalkConditionMet(part));
+            if (condition._type == "StoryCountCondition")
+                return Compare(GetStoryPlayCount(condition.StoryKey), condition.Op, condition.Count);
+            if (condition._type == "StagePassCondition")
+                return progressionSave.StageWinCount(condition.StageId) > 0
+                    || localSave.completedStages.Contains(condition.StageId);
+            if (condition._type == "MapLogicEntityEndByTagCondition")
+                return progressionSave.Save.World.CompletedEntityTags.Contains(condition.Tag)
+                    || localSave.mapLogicStates.Any(value => value != null && value.Tag == condition.Tag
+                        && value.State < 0);
             if (condition._type == "PlayerProfessionCondition")
                 return condition.Profession == 0;
             if (condition._type == "InitialWeaponCondition")
@@ -841,9 +1008,12 @@ namespace Zjcs.Presentation.World
             if (storyRunning) throw new InvalidOperationException("A Map10 story is already running.");
             if (!stories.TryGetValue(key, out activeStory))
                 throw new InvalidDataException("Official Map10 story is missing: " + key);
+            storyFrames.Clear();
+            activeStoryRootKey = key;
             storyRunning = true;
             storyContextEntity = context;
             storyFinished = completed;
+            SetStoryStatus(key, 1);
             storyEntities.Clear();
             storyEntityClasses.Clear();
             if (key == "SavingChick" && context != null && context.EntityClassId == 8417)
@@ -860,6 +1030,13 @@ namespace Zjcs.Presentation.World
             {
                 for (int count = 0; count < 256 && storyRunning; count++)
                 {
+                    // StoryGraph.AsyncRun ends normally when MoveNext returns
+                    // null, including an unconnected selector Exit.
+                    if (nodeId == 0)
+                    {
+                        if (FinishStoryFrame(out nodeId)) return;
+                        continue;
+                    }
                     Map10RuntimeStoryNode node = FindStoryNode(activeStory, nodeId);
                     if (node == null) throw new InvalidDataException("Official Map10 story node is missing: " + nodeId);
                     switch (node.type)
@@ -867,26 +1044,63 @@ namespace Zjcs.Presentation.World
                         case "StartStoryNode":
                         case "WaitStartStoryNode":
                         case "WaitAllNoTipWindowClosedNode":
+                        case "FinishStoryConditionNode":
                             nodeId = StoryNext(node, "Exit");
                             continue;
                         case "FinishStoryNode":
-                            CompleteStory(activeStory.key);
-                            IncrementStoryPlayCount(activeStory.key);
-                            SaveLocalProgress();
-                            FinishStoryGraph();
-                            return;
+                            if (FinishStoryFrame(out nodeId)) return;
+                            continue;
+                        case "SetStoryStateNode":
+                            SetStoryStatus(node.storyName, node.storyStatus);
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "GetFixAwardNode":
+                            if (TryGrantFixedStoryReward(node.awardId, out string rewardNotice))
+                            {
+                                ShowOfficialNotice(rewardNotice);
+                                nodeId = StoryNext(node, "Exit");
+                            }
+                            else
+                            {
+                                nodeId = StoryNext(node, "FailExit");
+                            }
+                            continue;
                         case "DialogNode":
-                            PlayStory(activeStory.key, node.dialogId, () => RunStoryGraph(StoryNext(node, "Exit")));
+                            PlayStory(activeStory.key, node.dialogId, () => RunStoryGraph(StoryNext(node, "Exit")), node);
                             return;
                         case "OptionDialogNode":
                             PlayStory(activeStory.key, node.dialogId, () =>
                                 ShowStoryOptions(activeStory.key, node, index =>
                                     RunStoryGraph(StoryNext(node, "Options " + index)
-                                        is int target && target > 0 ? target : StoryNext(node, "Exit"))));
+                                        is int target && target > 0 ? target : StoryNext(node, "Exit"))), node);
                             return;
                         case "IfNode":
                             nodeId = StoryNext(node, EvaluateStoryIf(activeStory, node) ? "True" : "False");
                             continue;
+                        case "SelectorNode":
+                            nodeId = SelectStoryBranch(activeStory, node);
+                            continue;
+                        case "SwitchNode":
+                            nodeId = SelectStorySwitch(node, StorySwitchValue(activeStory, node));
+                            continue;
+                        case "ActivityPuzzleCompleteNode":
+                            // This node queries the separate timed puzzle activity,
+                            // not a mainline map lock. No such activity is active here.
+                            nodeId = StoryNext(node, "NotComplete");
+                            continue;
+                        case "GoToNode":
+                            StoryValueFields jump = StoryFields(node);
+                            nodeId = jump.GoByNodeId != 0 ? jump.GoByNodeId : jump.GotoId != 0
+                                ? jump.GotoId : int.TryParse(jump.GoTo, out int targetNode) ? targetNode : StoryNext(node, "Exit");
+                            continue;
+                        case "InitiatorActionNode":
+                            bool success = ProcessPuzzleTerminalAction(StoryFields(node).ActionType);
+                            nodeId = StoryNext(node, success ? "Success" : "Failure");
+                            if (nodeId == 0) nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "ItemQuikBuyNode":
+                            RunStoryQuickBuy(node);
+                            return;
                         case "WaitForSecondsNode":
                             StartCoroutine(ContinueStoryAfterDelay(node.seconds, StoryNext(node, "Exit")));
                             return;
@@ -933,7 +1147,20 @@ namespace Zjcs.Presentation.World
                             return;
                         case "SetMapLogicEntitySetStateNode":
                             ApplyStoryMapLogicStates(node.mapLogicStates);
+                            if (node.endAsStoryFinish) SetStoryStatus(activeStory.key, 2);
                             nodeId = StoryNext(node, "Exit");
+                            continue;
+                        case "SubgraphRunNode":
+                            if (!storySubgraphs.TryGetValue(node.subgraphName, out Map10RuntimeStory subgraph))
+                                throw new InvalidDataException("Official Map" + mapClassId
+                                    + " story subgraph is not loaded: " + node.subgraphName);
+                            storyFrames.Push(new Map10RuntimeStoryFrame
+                            {
+                                Parent = activeStory,
+                                NextNodeId = StoryNext(node, "Exit")
+                            });
+                            activeStory = subgraph;
+                            nodeId = subgraph.entryNodeId;
                             continue;
                         case "PlayPlayableNode":
                             if (string.IsNullOrWhiteSpace(node.playableAssetGuid)
@@ -1108,23 +1335,82 @@ namespace Zjcs.Presentation.World
 
         private bool EvaluateStoryIf(Map10RuntimeStory story, Map10RuntimeStoryNode node)
         {
-            int compareId = StoryNext(node, "Input");
-            Map10RuntimeStoryNode compare = FindStoryNode(story, compareId);
-            int queryId = StoryNext(compare, "Origin");
-            Map10RuntimeStoryNode query = FindStoryNode(story, queryId);
-            if (compare == null || query == null || query.type != "QueryStoryCountNode")
-                throw new InvalidDataException("Official Map10 story count condition is malformed: " + story.key);
-            int current = GetStoryPlayCount(query.storyName);
-            int target = compare.compareTargetInt;
-            switch (compare.compareOption)
+            Map10RuntimeStoryNode input = FindStoryNode(story, StoryNext(node, "Input"));
+            if (input == null)
+                throw new InvalidDataException("Official Map" + mapClassId + " story condition input is missing: " + story.key);
+            return EvaluateStoryBoolean(story, input);
+        }
+
+        private bool CanGetFixedStoryReward(int rewardId)
+        {
+            if (!fixedRewards.TryGetValue(rewardId, out Map10RuntimeFixedReward reward))
+                throw new InvalidDataException("Official Map" + mapClassId + " fixed reward is missing: " + rewardId);
+            for (int count = 0; count < reward.CanGetTimes; count++)
+                if (!progressionSave.Save.Player.AppliedInventoryEventIds.Contains(FixedStoryRewardReceipt(rewardId, count)))
+                    return true;
+            return false;
+        }
+
+        private bool TryGrantFixedStoryReward(int rewardId, out string notice)
+        {
+            notice = string.Empty;
+            if (!fixedRewards.TryGetValue(rewardId, out Map10RuntimeFixedReward reward))
+                throw new InvalidDataException("Official Map" + mapClassId + " fixed reward is missing: " + rewardId);
+            int claimIndex = -1;
+            for (int count = 0; count < reward.CanGetTimes; count++)
+                if (!progressionSave.Save.Player.AppliedInventoryEventIds.Contains(FixedStoryRewardReceipt(rewardId, count)))
+                {
+                    claimIndex = count;
+                    break;
+                }
+            if (claimIndex < 0) return false;
+
+            string receipt = FixedStoryRewardReceipt(rewardId, claimIndex);
+            ProgressionResult result = progressionSave.ApplyInventoryTransaction(receipt, save =>
             {
-                case 0: return current == target;
-                case 1: return current > target;
-                case 2: return current < target;
-                case 3: return current >= target;
-                case 4: return current <= target;
-                case 5: return current != target;
-                default: throw new InvalidDataException("Unsupported official story comparison option: " + compare.compareOption);
+                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                foreach (Map10RuntimeAwardItem item in reward.Items)
+                {
+                    InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
+                        item.ItemId, item.Count, now);
+                    if (!granted.IsApplied)
+                        throw new InvalidOperationException("Official fixed story reward could not be applied: " + item.ItemId);
+                }
+            });
+            if (result.Status != ProgressionResultStatus.Applied) return false;
+            notice = "获得物品 " + string.Join("、", reward.Items.Select(value => value.ItemId + " ×" + value.Count));
+            return true;
+        }
+
+        private string FixedStoryRewardReceipt(int rewardId, int claimIndex) =>
+            MapReceiptPrefix + slotId + ":fixed-reward:" + rewardId + ":" + claimIndex;
+
+        private bool CheckStoryMapEntityState(Map10RuntimeStoryNode node)
+        {
+            int logicId = node.loEntityId;
+            if (!string.IsNullOrEmpty(node.entityTag))
+                logicId = mapLogicTags.Values.FirstOrDefault(value => value.Tag == node.entityTag)?.LogicId ?? 0;
+            if (logicId <= 0 || !mapEntities.TryGetValue(logicId, out Map10RuntimeEntity entity)) return false;
+            Map10RuntimeLogicTag tag = mapLogicTags.TryGetValue(logicId, out Map10RuntimeLogicTag byId)
+                ? byId : mapLogicTags.Values.FirstOrDefault(value => value.LogicId == logicId);
+            if (tag == null) return false;
+            if (progressionSave.Save.World.CompletedEntityTags.Contains(tag.Tag)) return node.entityState < 0;
+            Map10RuntimeMapLogicState saved = localSave.mapLogicStates.FirstOrDefault(value =>
+                value != null && value.Tag == tag.Tag);
+            return (saved?.State ?? entity.State) == node.entityState;
+        }
+
+        private static bool CompareStoryValues(int value, int target, int option)
+        {
+            switch (option)
+            {
+                case 0: return value == target;
+                case 1: return value != target;
+                case 2: return value > target;
+                case 3: return value < target;
+                case 4: return value >= target;
+                case 5: return value <= target;
+                default: throw new InvalidDataException("Unsupported official story comparison option: " + option);
             }
         }
 
@@ -1145,7 +1431,12 @@ namespace Zjcs.Presentation.World
                 int optionId = StoryOptionId(node, index);
                 if (!storyOptions.TryGetValue(StoryOptionKey(storyName, optionId), out Map10RuntimeStoryOption option))
                     throw new InvalidDataException("Official Map10 story option is missing: " + storyName + "/" + optionId);
-                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", option.Text);
+                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", FormatStoryOption(node, index, option.Text));
+                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText", true);
+                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionRemainTimeText", false);
+                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText/Tip", !string.IsNullOrEmpty(option.MinorText));
+                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Tip", option.MinorText);
+                ui.SetNodeActive("OptionTalkDialog", root + "/Content/DotGroup", false);
                 Sprite icon = uiCatalog.FindSprite(option.Icon);
                 if (icon != null) ui.SetSprite("OptionTalkDialog", root + "/Content/TypeImg", icon);
                 GameObject item = ui.Find("OptionTalkDialog", root);
@@ -1162,6 +1453,7 @@ namespace Zjcs.Presentation.World
             if (!storyOptionsWaiting || index < 0 || index >= storyOptionCount) return;
             storyOptionsWaiting = false;
             ui.SetPanelActive("OptionTalkDialog", false);
+            optionDialoguePortraits?.Clear();
             for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
             Action<int> selected = storyOptionSelected;
             storyOptionSelected = null;
@@ -1189,6 +1481,9 @@ namespace Zjcs.Presentation.World
         private void FinishStoryGraph(bool invokeCompletion)
         {
             Action completed = invokeCompletion ? storyFinished : null;
+            if (!invokeCompletion && mapClassId == 11 && !string.IsNullOrEmpty(activeStoryRootKey)
+                && progressionSave.StoryStatus(activeStoryRootKey) == 1)
+                SetStoryStatus(activeStoryRootKey, 0);
             SetStoryWorldUiHidden(false);
             storyCameraActive = false;
             if (worldCamera != null) worldCamera.orthographicSize = 7.5f;
@@ -1209,6 +1504,8 @@ namespace Zjcs.Presentation.World
             storyRunning = false;
             storyOptionsWaiting = false;
             storyOptionSelected = null;
+            storyFrames.Clear();
+            activeStoryRootKey = string.Empty;
             completed?.Invoke();
         }
 
@@ -1262,7 +1559,7 @@ namespace Zjcs.Presentation.World
 
         private void ShowStageDialog(Map10RuntimeEntity entity, Action completed)
         {
-            int stageId = entity.StageIds.FirstOrDefault(value => value > 0);
+            int stageId = ResolveEntityStageId(entity);
             if (stageId <= 0 || !stages.TryGetValue(stageId, out Map10RuntimeStage stage)
                 || !rosters.TryGetValue(stageId, out Map10RuntimeRoster roster)
                 || roster.Waves == null || roster.Waves.All(wave => wave == null || wave.Units == null || wave.Units.Length == 0))
@@ -1282,6 +1579,21 @@ namespace Zjcs.Presentation.World
             ui.SetNodeActive("WorldStageDialog", root + "/UnlockGo/BtnContent/BattleBtn", true);
             ui.SetNodeActive("WorldStageDialog", root + "/BottomContent/CommonBtn_12", true);
             ui.SetPanelActive("WorldStageDialog", true);
+        }
+
+        private int ResolveEntityStageId(Map10RuntimeEntity entity)
+        {
+            if (entity == null) return 0;
+            string preferred = entity.TypeId == 218
+                ? "LoStageBehBattleSteleStageComponent"
+                : entity.TypeId == 305 ? "LoStageBehStoneCastleStageComponent" : "LoStageBehStageComponent";
+            Map10RuntimeEntityStageBinding binding = entity.StageBindings.FirstOrDefault(value =>
+                value != null && value.Component == preferred && value.StageIds != null && value.StageIds.Length > 0);
+            if (binding == null)
+                binding = entity.StageBindings.FirstOrDefault(value => value != null && value.StageIds != null
+                    && value.StageIds.Length > 0);
+            return binding?.StageIds?.FirstOrDefault(value => value > 0)
+                ?? entity.StageIds.FirstOrDefault(value => value > 0);
         }
 
         private void StartSelectedStage()
@@ -1304,7 +1616,7 @@ namespace Zjcs.Presentation.World
 
         private void StartEntityStage(Map10RuntimeEntity entity, Action completed)
         {
-            int stageId = entity.StageIds.FirstOrDefault(value => value > 0);
+            int stageId = ResolveEntityStageId(entity);
             if (stageId <= 0 || !stages.TryGetValue(stageId, out Map10RuntimeStage stage)
                 || !rosters.TryGetValue(stageId, out Map10RuntimeRoster roster))
             {
@@ -1325,7 +1637,8 @@ namespace Zjcs.Presentation.World
             }
             if (!battleScenes.TryGetValue(stage.GameId, out Map10RuntimeBattleScene scene))
                 throw new InvalidDataException("Official Map10 battle scene is missing for GameId " + stage.GameId);
-            if (stage.Repeat >= 0 && localSave.completedStages.Contains(stageId))
+            bool periodicGroupAlreadyUsed = entity.PeriodicityGroupIds.Any(localSave.completedPeriodicityGroups.Contains);
+            if ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed)
             {
                 CompleteEntity(entity);
                 completed?.Invoke();
@@ -1341,6 +1654,7 @@ namespace Zjcs.Presentation.World
             FightBattleCheckpoint resume = null)
         {
             FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
+            if (checkpoint.StageType == 0) checkpoint.StageType = stage.Type;
             FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
             Map10RuntimeFactionInfo playerFaction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
             Map10RuntimePoint playerEntry = playerFaction.EntryPosList[0];
@@ -1371,6 +1685,7 @@ namespace Zjcs.Presentation.World
                 Sprite icon = skillIcons == null ? null : skillIcons.Find(itemId);
                 return icon != null ? icon : fallbackPortrait;
             };
+            FightOfficialCombatCatalog combatCatalog = OfficialCombatAssetCatalog.LoadDefault().Load();
             battleController.Begin(checkpoint, battleRoot, uiParent, mapper,
                 skillIconResolver,
                 unit => unit.MonsterId > 0
@@ -1491,6 +1806,8 @@ namespace Zjcs.Presentation.World
             var checkpoint = new FightBattleCheckpoint
             {
                 StageId = stage.Id,
+                StageType = stage.Type,
+                IsPvp = false,
                 MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
                 IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
                 PlayerRoundLimit = stage.PlayerRoundLimit,
@@ -1544,10 +1861,17 @@ namespace Zjcs.Presentation.World
                 var wave = new FightBattleWaveState { Index = sourceWave.Index, Spawned = sourceWave.Index == 0 };
                 foreach (Map10RuntimeMonster source in sourceWave.Units)
                 {
-                    Dictionary<int, long> properties = source.Properties.ToDictionary(value => value.Id, value => value.Value);
-                    int monsterLevel = Mathf.RoundToInt(source.Level);
+                    int monsterLevel = stage.AwardUsePlayerLevelAndSubRank
+                        ? Mathf.RoundToInt(progression.Player.Level + source.LevelOffset)
+                        : Mathf.RoundToInt(source.Level);
+                    int monsterSubRank = stage.AwardUsePlayerLevelAndSubRank
+                        ? progression.Player.SubRank : source.SubRank;
+                    Dictionary<int, long> properties = stage.AwardUsePlayerLevelAndSubRank
+                        ? new Dictionary<int, long>(combatCatalog.CalculateMonsterProps(source.MonsterId,
+                            source.MonsterGroupNo, monsterLevel, monsterSubRank))
+                        : source.Properties.ToDictionary(value => value.Id, value => value.Value);
                     ApplyMonsterPassiveSkills(combatCatalog, skillItems, properties, source,
-                        monsterLevel, source.SubRank);
+                        monsterLevel, monsterSubRank);
                     long maxHp = Property(properties, 3);
                     if (maxHp <= 0) throw new InvalidDataException("Official Map10 monster MaxHp is not positive: " + source.MonsterId);
                     var unit = new FightBattleUnitState
@@ -1556,9 +1880,12 @@ namespace Zjcs.Presentation.World
                         Side = 2,
                         CharacterType = 2,
                         MonsterId = source.MonsterId,
+                        MonsterGroupNo = source.MonsterGroupNo,
                         MonsterType = source.MonsterType,
+                        MaxHpPlies = combatCatalog.MonsterHpPliesFor(source.MonsterId,
+                            source.MonsterGroupNo, monsterLevel),
                         Level = Mathf.RoundToInt(source.Level),
-                        SubRank = source.SubRank,
+                        SubRank = monsterSubRank,
                         Wave = sourceWave.Index,
                         X = source.Position.X,
                         Y = source.Position.Y,
@@ -1574,7 +1901,7 @@ namespace Zjcs.Presentation.World
                     unit.Turn.Speed = CheckedProperty(properties, 4);
                     checkpoint.Units.Add(unit);
                     wave.UnitIds.Add(unit.Id);
-                    AssembleMonsterSkills(combatCatalog, unit, source);
+                    AssembleMonsterSkills(combatCatalog, skillItems, unit, source);
                 }
                 checkpoint.Waves.Add(wave);
             }
@@ -1634,6 +1961,7 @@ namespace Zjcs.Presentation.World
             }
 
             IReadOnlyDictionary<int, long> sourceProps = PropertyMap(player.Properties);
+            OfflineSkillPlayerContext skillContext = progression.SkillContext();
             var bindings = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
@@ -1655,6 +1983,7 @@ namespace Zjcs.Presentation.World
                     ItemId = itemId,
                     Rank = rank,
                     Level = level,
+                    ProfessionAvailability = ResolveSkillProfessionAvailability(itemId, skillContext),
                     SubRank = player.SubRank,
                     Cooldown = combatCatalog.CalculateSkillCooldown(item.EntityId, rank, level,
                         player.SubRank, sourceProps),
@@ -1664,11 +1993,47 @@ namespace Zjcs.Presentation.World
             }
             if (bindings.Count == 0)
                 throw new InvalidDataException("Official player has no equipped or initial active skill.");
-            combatCatalog.AssembleUnit(player, bindings, null);
+            List<FightOfficialPassiveSkillBinding> passives = new List<FightOfficialPassiveSkillBinding>();
+            int[] passiveItems = OfflineSkillProgression.EquippedPassiveSkills(profile);
+            for (int slot = 0; slot < passiveItems.Length; slot++)
+            {
+                int itemId = passiveItems[slot];
+                if (itemId <= 0) continue;
+                int rank = OfflineSkillProgression.OwnedRank(profile, itemId);
+                int level = profile.PassiveSlotLevels != null && slot < profile.PassiveSlotLevels.Length
+                    ? profile.PassiveSlotLevels[slot] : 1;
+                passives.Add(new FightOfficialPassiveSkillBinding
+                {
+                    ItemId = itemId,
+                    Rank = Math.Max(1, rank),
+                    Level = Math.Max(1, level),
+                    SubRank = player.SubRank
+                });
+            }
+            List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
+                .CreatePassiveStatusBindings(player, skillItems, passives);
+            combatCatalog.AssembleUnit(player, bindings, passiveStatuses);
+        }
+
+        private FightSkillProfessionAvailability ResolveSkillProfessionAvailability(int itemId,
+            OfflineSkillPlayerContext context)
+        {
+            OfflineSkillRules rules = progression.SkillRules;
+            if (rules == null || rules.Skills == null || context == null)
+                return FightSkillProfessionAvailability.Unknown;
+            foreach (OfflineSkillDefinition definition in rules.Skills)
+            {
+                if (definition == null || definition.ClassId != itemId) continue;
+                return OfflineSkillProgression.IsAvailableFor(definition, context)
+                    ? FightSkillProfessionAvailability.Available
+                    : FightSkillProfessionAvailability.Mismatch;
+            }
+            return FightSkillProfessionAvailability.Unknown;
         }
 
         private static void AssembleMonsterSkills(FightOfficialCombatCatalog combatCatalog,
-            FightBattleUnitState unit, Map10RuntimeMonster source)
+            FightOfficialSkillItemCatalog skillItems, FightBattleUnitState unit,
+            Map10RuntimeMonster source)
         {
             IReadOnlyDictionary<int, long> sourceProps = PropertyMap(unit.Properties);
             var bindings = new List<FightOfficialSkillBinding>();
@@ -1691,7 +2056,19 @@ namespace Zjcs.Presentation.World
                         level, unit.SubRank))
                 });
             }
-            combatCatalog.AssembleUnit(unit, bindings, null);
+            var passives = new List<FightOfficialPassiveSkillBinding>();
+            foreach (int itemId in source.PassiveSkills ?? Array.Empty<int>())
+                if (itemId > 0)
+                    passives.Add(new FightOfficialPassiveSkillBinding
+                    {
+                        ItemId = itemId,
+                        Rank = 1,
+                        Level = Math.Max(1, unit.Level),
+                        SubRank = unit.SubRank
+                    });
+            List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
+                .CreatePassiveStatusBindings(unit, skillItems, passives);
+            combatCatalog.AssembleUnit(unit, bindings, passiveStatuses);
         }
 
         private static IReadOnlyDictionary<int, long> PropertyMap(List<FightPropertyValue> properties)
@@ -1743,23 +2120,35 @@ namespace Zjcs.Presentation.World
                 }).ToArray();
             }
 
-            bool cleared = won || storyBattle;
+            bool cleared = won || (mapClassId == 10 && storyBattle);
             if (cleared && entity != null)
             {
-                string receipt = "map10:" + slotId + ":battle:" + entity.PlacementId + ":" + checkpoint.StageId
+                string receipt = MapReceiptPrefix + slotId + ":battle:" + entity.PlacementId + ":" + checkpoint.StageId
                     + ":" + (localSave.battleResults == null ? 0 : localSave.battleResults.Length);
                 if (!localSave.receipts.Contains(receipt))
                 {
-                    ProgressionResult recorded = progressionSave.RecordMapBattle(10, entity.Region, 0, receipt);
+                    ProgressionResult recorded = progressionSave.RecordMapBattle(mapClassId, entity.Region, 0, receipt);
                     if (recorded.Status == ProgressionResultStatus.InvalidState)
                         throw new InvalidOperationException(recorded.Message);
                     localSave.receipts = localSave.receipts.Concat(new[] { receipt }).ToArray();
                 }
-                if (!stages.TryGetValue(checkpoint.StageId, out Map10RuntimeStage stage)
-                    || stage.Repeat >= 0)
+                if (won)
+                {
+                    string winReceipt = MapReceiptPrefix + slotId + ":stage-win:" + checkpoint.StageId + ":"
+                        + localSave.battleResults.Length;
+                    ProgressionResult win = progressionSave.RecordStageWin(checkpoint.StageId, winReceipt);
+                    if (win.Status == ProgressionResultStatus.InvalidState)
+                        throw new InvalidOperationException(win.Message);
+                }
+                bool oneTimeStage = !stages.TryGetValue(checkpoint.StageId, out Map10RuntimeStage stage)
+                    || stage.Repeat >= 0 || entity.PeriodicityGroupIds.Length > 0;
+                if (oneTimeStage)
                 {
                     if (!localSave.completedStages.Contains(checkpoint.StageId))
                         localSave.completedStages = localSave.completedStages.Concat(new[] { checkpoint.StageId }).ToArray();
+                    foreach (int groupId in entity.PeriodicityGroupIds)
+                        if (!localSave.completedPeriodicityGroups.Contains(groupId))
+                            localSave.completedPeriodicityGroups = localSave.completedPeriodicityGroups.Concat(new[] { groupId }).ToArray();
                     CompleteEntity(entity);
                 }
             }
@@ -1864,7 +2253,7 @@ namespace Zjcs.Presentation.World
                         nodeId = next;
                         continue;
                     case 4:
-                        string receipt = "map10:" + slotId + ":dialog:" + activeNativeDialog.Id + ":node:" + node.NodeId;
+                        string receipt = MapReceiptPrefix + slotId + ":dialog:" + activeNativeDialog.Id + ":node:" + node.NodeId;
                         if (localSave.nativeDialogAwardReceipts.Contains(receipt))
                         {
                             if (node.AwardLimitedNodeId > 0
@@ -1923,7 +2312,7 @@ namespace Zjcs.Presentation.World
             ui.SetPanelActive("OptionTalkDialog", true);
             ui.SetText("OptionTalkDialog", "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/TalkText", node.Text);
             ui.SetText("OptionTalkDialog", "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText", role.RoleName);
-            optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, "OptionTalkDialog");
+            optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, "OptionTalkDialog", mapClassId);
             optionDialoguePortraits.SetSpeaker(role, node.RoleFaceType);
             GameObject next = ui.Find("OptionTalkDialog", "/OptionTalkDialog/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
@@ -2034,7 +2423,7 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Unsupported official Map10 dialog profession: " + node.Profession);
             ProgressionResult result = progressionSave.ApplyCharacterMutation(
                 player => player.Wardrobe.Profession = node.Profession,
-                "map10:" + slotId + ":dialog:" + activeNativeDialog.Id + ":profession:" + node.Profession);
+                MapReceiptPrefix + slotId + ":dialog:" + activeNativeDialog.Id + ":profession:" + node.Profession);
             if (result.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(result.Message);
             progression = new OfflineCharacterProgressionService(progressionSave, progression.Catalog);
@@ -2098,7 +2487,7 @@ namespace Zjcs.Presentation.World
             completed?.Invoke();
         }
 
-        private void PlayStory(string key, int groupId, Action complete)
+        private void PlayStory(string key, int groupId, Action complete, Map10RuntimeStoryNode graphNode = null)
         {
             if (!stories.TryGetValue(key, out Map10RuntimeStory story))
                 throw new InvalidDataException("Official Map10 story is missing: " + key);
@@ -2107,6 +2496,13 @@ namespace Zjcs.Presentation.World
             {
                 complete?.Invoke();
                 return;
+            }
+            dialogueOverrides = ResolveStoryDialogOverrides(story, graphNode);
+            dialoguePanelKey = graphNode?.type == "OptionDialogNode" ? "OptionTalkDialog" : "TalkDialog";
+            if (dialoguePanelKey == "OptionTalkDialog")
+            {
+                for (int index = 0; index < 5; index++) ui.SetNodeActive(dialoguePanelKey, StoryOptionSlotPath(index), false);
+                ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", true);
             }
             dialogueLines = group.Lines.OrderBy(value => value.Order).ToArray();
             dialogueLineIndex = 0;
@@ -2120,8 +2516,12 @@ namespace Zjcs.Presentation.World
         {
             if (dialogueLineIndex >= dialogueLines.Length)
             {
-                ui.SetPanelActive("TalkDialog", false);
-                dialoguePortraits?.Clear();
+                if (dialoguePanelKey == "TalkDialog")
+                {
+                    ui.SetPanelActive(dialoguePanelKey, false);
+                    dialoguePortraits?.Clear();
+                }
+                else ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", false);
                 dialogueWaiting = false;
                 Action complete = dialogueFinished;
                 dialogueFinished = null;
@@ -2131,12 +2531,17 @@ namespace Zjcs.Presentation.World
             Map10RuntimeDialogueLine line = dialogueLines[dialogueLineIndex];
             if (!dialogRoles.TryGetValue(line.RoleId, out Map10RuntimeDialogRole role))
                 throw new InvalidDataException("Official Map10 dialogue references an unknown role: " + line.RoleId);
-            ui.SetPanelActive("TalkDialog", true);
-            ui.SetText("TalkDialog", "/TalkDialog/Content/CharacterAndTalkContent/TalkContent/TalkText", line.Text);
-            ui.SetText("TalkDialog", "/TalkDialog/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText", role.RoleName);
-            dialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui);
-            dialoguePortraits.SetSpeaker(role, line.RoleFaceType);
-            GameObject next = ui.Find("TalkDialog", "/TalkDialog/NextBtn");
+            string panel = dialoguePanelKey;
+            string prefix = "/" + panel;
+            ui.SetPanelActive(panel, true);
+            ui.SetText(panel, prefix + "/Content/CharacterAndTalkContent/TalkContent/TalkText",
+                dialogueOverrides != null && dialogueOverrides.TryGetValue(line.Order, out string formatted) ? formatted : line.Text);
+            ui.SetText(panel, prefix + "/Content/CharacterAndTalkContent/TalkContent/NpcName/NpcNameText", role.RoleName);
+            OfficialMap10DialoguePortraitView portraits;
+            if (panel == "TalkDialog") portraits = dialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
+            else portraits = optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
+            portraits.SetSpeaker(role, line.RoleFaceType);
+            GameObject next = ui.Find(panel, prefix + "/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button != null)
             {
@@ -2164,8 +2569,8 @@ namespace Zjcs.Presentation.World
             {
                 localSave.completedEntityPlacements = localSave.completedEntityPlacements
                     .Concat(new[] { entity.PlacementId }).ToArray();
-                ProgressionResult recorded = progressionSave.RecordEntityTagCompleted("map10:entity:" + entity.PlacementId,
-                    "map10:" + slotId + ":entity:" + entity.PlacementId);
+                ProgressionResult recorded = progressionSave.RecordEntityTagCompleted(MapReceiptPrefix + "entity:" + entity.PlacementId,
+                    MapReceiptPrefix + slotId + ":entity:" + entity.PlacementId);
                 if (recorded.Status == ProgressionResultStatus.InvalidState)
                     throw new InvalidOperationException(recorded.Message);
             }
@@ -2177,17 +2582,23 @@ namespace Zjcs.Presentation.World
         private void RefreshRegionProgress()
         {
             var completed = new HashSet<int>(localSave.completedEntityPlacements);
+            var privateStates = (localSave.puzzleStates ?? Array.Empty<MapPuzzleEntityState>())
+                .ToDictionary(value => value.PlacementId, value => value.State);
+            foreach (Map10RuntimeEntity entity in mapEntities.Values) privateStates[entity.PlacementId] = entity.State;
+            foreach (Map10RuntimeMapLogicState state in localSave.mapLogicStates)
+                foreach (Map10RuntimeLogicTag tag in mapLogicTags.Values.Where(value => value.Tag == state.Tag))
+                    privateStates[tag.LogicId] = state.State;
             Dictionary<int, int> points = OfficialMapProgressAdapter.CalculateRegionPoints(
-                session.Definition, new Dictionary<int, int>(), completed);
+                session.Definition, privateStates, completed);
             regionPoints.Clear();
             foreach (KeyValuePair<int, int> region in points) regionPoints.Add(region.Key, region.Value);
             foreach (KeyValuePair<int, int> region in points)
             {
-                if (!regionPointLimits.TryGetValue(region.Key, out int maximum) || maximum <= 0 || region.Value > maximum)
+                if (!regionPointLimits.TryGetValue(region.Key, out int maximum) || maximum < 0 || region.Value > maximum)
                     throw new InvalidDataException("Official Map10 region progress exceeds its pinned maximum: " + region.Key);
                 int fixedProgress = OfficialMapProgressCalculator.CalculateRegionProgress(
                     session.Definition, region.Key, region.Value);
-                ProgressionResult result = progressionSave.SetMapRegionProgress(10, region.Key, fixedProgress);
+                ProgressionResult result = progressionSave.SetMapRegionProgress(mapClassId, region.Key, fixedProgress);
                 if (result.Status == ProgressionResultStatus.InvalidState)
                     throw new InvalidOperationException(result.Message);
             }
@@ -2197,7 +2608,7 @@ namespace Zjcs.Presentation.World
         {
             foreach (Map10RuntimeAwardItem award in entity.AwardItems)
             {
-                string receipt = "map10:" + slotId + ":entity:" + entity.PlacementId + ":item:" + award.ItemId;
+                string receipt = MapReceiptPrefix + slotId + ":entity:" + entity.PlacementId + ":item:" + award.ItemId;
                 ProgressionResult result = progressionSave.ApplyInventoryTransaction(receipt, save =>
                 {
                     InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
@@ -2217,6 +2628,8 @@ namespace Zjcs.Presentation.World
         private bool IsEntityLocked(Map10RuntimeEntity entity)
         {
             if (!IsRegionAccessible(entity.Region)) return true;
+            if (puzzles != null && puzzles.Contains(entity.PlacementId) && entity.LockType > 1)
+                return !puzzles.IsUnlocked(entity.PlacementId);
             if (entity.LockType <= 0 || entity.LockedByEntityGroups.Length == 0) return false;
             return entity.LockedByEntityGroups.Any(groupId => !IsEntityGroupComplete(groupId));
         }
@@ -2236,12 +2649,44 @@ namespace Zjcs.Presentation.World
                         throw new InvalidDataException("Official Map10 lock references a missing entity group: " + groupId);
         }
 
+        private void ValidateBattleEntityStageBindings()
+        {
+            if (mapClassId != 11) return;
+            foreach (Map10RuntimeBattleEntityStageBinding binding in battleEntityStageBindings.Values)
+            {
+                if (!mapEntities.TryGetValue(binding.PlacementId, out Map10RuntimeEntity entity))
+                    throw new InvalidDataException("Official Map11 battle stage references a missing entity: " + binding.PlacementId);
+                foreach (Map10RuntimeEntityStageBinding component in binding.StageComponents)
+                {
+                    Map10RuntimeEntityStageBinding local = entity.StageBindings.FirstOrDefault(value =>
+                        value != null && value.Component == component.Component);
+                    if (local == null || component.StageIds == null || local.StageIds == null
+                        || !local.StageIds.SequenceEqual(component.StageIds))
+                        throw new InvalidDataException("Map11 battle stage component differs from entity catalog: "
+                            + binding.PlacementId + "/" + component.Component);
+                }
+                if (!(binding.PeriodicityGroupIds ?? Array.Empty<int>()).SequenceEqual(entity.PeriodicityGroupIds)
+                    || !(binding.PlayerPeriodicityGroupIds ?? Array.Empty<int>()).SequenceEqual(entity.PlayerPeriodicityGroupIds))
+                    throw new InvalidDataException("Map11 battle periodic groups differ from entity catalog: " + binding.PlacementId);
+            }
+        }
+
         private void RefreshEntityActivity()
         {
             if (entityView == null || localSave == null) return;
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
-                bool active = entity.Active && IsRegionAccessible(entity.Region)
+                bool goddess = mapClassId == 11 && entity.TypeId == 202;
+                bool goddessActivated = goddess
+                    && progressionSave.Save.World.ActivatedGoddessRegions.Any(value =>
+                    value.MapClassId == mapClassId && value.Region == entity.Region);
+                int state = entity.State;
+                if (mapLogicTags.TryGetValue(entity.PlacementId, out Map10RuntimeLogicTag tag))
+                    state = localSave.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
+                if (goddessActivated) state = 1;
+                entityView.SetEntityState(entity.PlacementId, state);
+                bool spawned = puzzles != null && puzzles.Contains(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
+                bool active = (spawned || goddess) && IsRegionAccessible(entity.Region)
                     && !localSave.completedEntityPlacements.Contains(entity.PlacementId)
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
@@ -2251,7 +2696,8 @@ namespace Zjcs.Presentation.World
         private bool IsMapLogicEntityDestroyed(int placementId)
         {
             if (!mapLogicTags.TryGetValue(placementId, out Map10RuntimeLogicTag tag)) return false;
-            return localSave.mapLogicStates.Any(value => value != null && value.Tag == tag.Tag && value.State < 0);
+            return progressionSave.Save.World.CompletedEntityTags.Contains(tag.Tag)
+                || localSave.mapLogicStates.Any(value => value != null && value.Tag == tag.Tag && value.State < 0);
         }
 
         private void ApplyStoryMapLogicStates(Map10RuntimeMapLogicState[] states)
@@ -2263,6 +2709,13 @@ namespace Zjcs.Presentation.World
                 Map10RuntimeLogicTag logicTag = mapLogicTags.Values.FirstOrDefault(value => value.Tag == state.Tag);
                 if (logicTag == null || !mapEntities.ContainsKey(logicTag.LogicId))
                     throw new InvalidDataException("Official Map10 story map-logic tag is not in the loaded map: " + state.Tag);
+                if (state.State < 0)
+                {
+                    ProgressionResult result = progressionSave.RecordEntityTagCompleted(state.Tag,
+                        MapReceiptPrefix + slotId + ":logic-tag:" + state.Tag);
+                    if (result.Status == ProgressionResultStatus.InvalidState)
+                        throw new InvalidOperationException(result.Message);
+                }
                 Map10RuntimeMapLogicState saved = localSave.mapLogicStates.FirstOrDefault(value =>
                     value != null && value.Tag == state.Tag);
                 if (saved == null)
@@ -2283,7 +2736,7 @@ namespace Zjcs.Presentation.World
             regionPointLimits.Clear();
             foreach (OfficialMapRegionProgress progress in session.Definition.MaxRegionProgress)
             {
-                if (progress == null || progress.Value <= 0 || regionPointLimits.ContainsKey(progress.Region))
+                if (progress == null || progress.Value < 0 || regionPointLimits.ContainsKey(progress.Region))
                     throw new InvalidDataException("Official Map10 region progress maximum is malformed.");
                 regionPointLimits.Add(progress.Region, progress.Value);
             }
@@ -2294,7 +2747,7 @@ namespace Zjcs.Presentation.World
                 if (record.TableName == "TbMapRegionInfo")
                 {
                     Map10RuntimeRegionConfig region = JsonUtility.FromJson<Map10RuntimeRegionConfig>(record.Json);
-                    if (region == null || region.ClassId != 10 || region.Region < 0 || region.Areas == null
+                    if (region == null || region.ClassId != mapClassId || region.Region < 0 || region.Areas == null
                         || regionConfigs.ContainsKey(region.Region))
                         throw new InvalidDataException("Official Map10 region configuration is malformed.");
                     regionConfigs.Add(region.Region, region);
@@ -2312,54 +2765,110 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 regions and progress limits differ.");
             foreach (Map10RuntimeRegionConfig region in regionConfigs.Values)
                 if (region.AccessibleConditionId > 0 && !mapConditions.ContainsKey(region.AccessibleConditionId))
-                    throw new InvalidDataException("Map10 region references a missing official access condition: " + region.AccessibleConditionId);
+                    throw new InvalidDataException("Map" + mapClassId + " region references a missing official access condition: " + region.AccessibleConditionId);
 
-            foreach (int id in new[] { 1201, 1202, 1203, 1204 })
+            if (mapClassId == 10)
             {
-                if (!mapConditions.TryGetValue(id, out Map10RuntimeCondition condition)
-                    || condition.Type != "WorldMapProgressCondition" || condition.MapClassId != 10
-                    || condition.Progress != 10000 || !regionPointLimits.ContainsKey(condition.Region))
-                    throw new InvalidDataException("Pinned Map10 full-region access condition is invalid: " + id);
+                foreach (int id in new[] { 1201, 1202, 1203, 1204 })
+                {
+                    if (!mapConditions.TryGetValue(id, out Map10RuntimeCondition condition)
+                        || condition.Type != "WorldMapProgressCondition" || condition.MapClassId != mapClassId
+                        || condition.Progress != 10000 || !regionPointLimits.ContainsKey(condition.Region))
+                        throw new InvalidDataException("Pinned Map10 full-region access condition is invalid: " + id);
+                }
+            }
+            else
+            {
+                int[] required = { 1205, 1206, 1207, 1208, 4003, 4065, 4066, 4445 };
+                if (required.Any(id => !mapConditions.ContainsKey(id)))
+                    throw new InvalidDataException("Pinned Map11 region access conditions are incomplete.");
             }
         }
 
         private bool IsRegionAccessible(int regionId)
         {
             if (!regionConfigs.TryGetValue(regionId, out Map10RuntimeRegionConfig region))
-                throw new InvalidDataException("Map10 entity references an unknown region: " + regionId);
+                throw new InvalidDataException("Map" + mapClassId + " entity references an unknown region: " + regionId);
             if (region.AccessibleConditionId <= 0) return true;
-            if (!mapConditions.TryGetValue(region.AccessibleConditionId, out Map10RuntimeCondition condition)
-                || condition.Type != "WorldMapProgressCondition" || condition.MapClassId != 10
+            if (!mapConditions.TryGetValue(region.AccessibleConditionId, out Map10RuntimeCondition condition))
+                throw new InvalidDataException("Map" + mapClassId + " references an unknown access condition: " + region.AccessibleConditionId);
+            if (condition.Type == "StoryCountCondition")
+                return Compare(GetStoryPlayCount(condition.StoryKey), condition.Op, condition.Count);
+            if (condition.Type != "WorldMapProgressCondition" || condition.MapClassId != mapClassId
                 || condition.Progress != 10000)
-                throw new InvalidDataException("Unsupported official Map10 access condition: " + region.AccessibleConditionId);
+                throw new InvalidDataException("Unsupported official Map" + mapClassId + " access condition: " + region.AccessibleConditionId);
             if (!regionPointLimits.TryGetValue(condition.Region, out int maximum) || maximum <= 0)
-                throw new InvalidDataException("Map10 access condition references a region without a progress maximum.");
+                throw new InvalidDataException("Map" + mapClassId + " access condition references a region without a progress maximum.");
             return regionPoints.TryGetValue(condition.Region, out int progress) && progress >= maximum;
         }
 
-        private bool HasStory(string name) => localSave.completedStories.Contains(name);
+        private int GetDefaultEntryId()
+        {
+            return GetWorldInfo().DefEntryId;
+        }
 
-        private int GetStoryPlayCount(string name) => localSave.storyPlayCounts
-            .FirstOrDefault(value => value != null && value.key == name)?.count ?? 0;
+        private Map10RuntimeWorldInfo GetWorldInfo()
+        {
+            foreach (OfficialWorldConfigRecord record in session.Definition.Configs ?? Array.Empty<OfficialWorldConfigRecord>())
+            {
+                if (record == null || record.TableName != "TbMapWorldInfo") continue;
+                Map10RuntimeWorldInfo info = JsonUtility.FromJson<Map10RuntimeWorldInfo>(record.Json);
+                if (info != null && info.ClassId == mapClassId) return info;
+            }
+            throw new InvalidDataException("Official Map" + mapClassId + " default entry is missing.");
+        }
+
+        private bool HasStory(string name) => localSave.completedStories.Contains(name)
+            || progressionSave.StoryStatus(name) == 2;
+
+        private int GetStoryPlayCount(string name) => Math.Max(
+            localSave.storyPlayCounts.FirstOrDefault(value => value != null && value.key == name)?.count ?? 0,
+            progressionSave.StoryCount(name));
 
         private void IncrementStoryPlayCount(string name)
         {
             Map10RuntimeStoryCount current = localSave.storyPlayCounts
                 .FirstOrDefault(value => value != null && value.key == name);
+            int nextCount = checked(GetStoryPlayCount(name) + 1);
             if (current == null)
             {
                 localSave.storyPlayCounts = localSave.storyPlayCounts.Concat(new[]
                 {
-                    new Map10RuntimeStoryCount { key = name, count = 1 }
+                    new Map10RuntimeStoryCount { key = name, count = nextCount }
                 }).ToArray();
-                return;
             }
-            current.count = checked(current.count + 1);
+            else current.count = nextCount;
+            SetStoryProgress(name, nextCount, 2);
         }
 
         private void CompleteStory(string name)
         {
             if (!HasStory(name)) localSave.completedStories = localSave.completedStories.Concat(new[] { name }).ToArray();
+            SetStoryStatus(name, 2);
+        }
+
+        private void SetStoryStatus(string name, int status)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return;
+            SetStoryProgress(name, GetStoryPlayCount(name), status);
+        }
+
+        private void SetStoryProgress(string name, int count, int status)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return;
+            ProgressionResult result = progressionSave.SetStoryProgress(name, count, status,
+                MapReceiptPrefix + slotId + ":story:" + name + ":" + count + ":" + status);
+            if (result.Status == ProgressionResultStatus.InvalidState)
+                throw new InvalidOperationException(result.Message);
+            Map10RuntimeStoryCount current = localSave.storyPlayCounts
+                .FirstOrDefault(value => value != null && value.key == name);
+            if (current == null)
+                localSave.storyPlayCounts = localSave.storyPlayCounts.Concat(new[]
+                {
+                    new Map10RuntimeStoryCount { key = name, count = count }
+                }).ToArray();
+            else current.count = count;
+            SaveLocalProgress();
         }
 
         private void ShowOfficialNotice(string message)
@@ -2385,6 +2894,9 @@ namespace Zjcs.Presentation.World
         private void UpdateWorldLabels()
         {
             ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
+            if (mapClassId == 11)
+                ui.Find("WorldCanvas", "/WorldCanvas").GetComponentInChildren<WorldPlayerCombatRatingText>(true)
+                    .Refresh(progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating);
         }
 
         private void UpdateMinimapMarker()
@@ -2426,6 +2938,7 @@ namespace Zjcs.Presentation.World
             if (localSave == null || string.IsNullOrEmpty(mapSavePath)) return;
             localSave.gridX = currentGrid.X;
             localSave.gridY = currentGrid.Y;
+            if (puzzles != null) localSave.puzzleStates = puzzles.Save();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
         }
 
@@ -2434,14 +2947,28 @@ namespace Zjcs.Presentation.World
             try
             {
                 Map10LocalSave parsed = JsonUtility.FromJson<Map10LocalSave>(json);
+                int width = session == null ? (mapClassId == 11 ? 256 : 60)
+                    : Mathf.CeilToInt(session.Definition.Navigation.Width);
+                int height = session == null ? (mapClassId == 11 ? 256 : 60)
+                    : Mathf.CeilToInt(session.Definition.Navigation.Height);
                 return parsed != null && parsed.schema == 1 && parsed.slotId == slotId
-                    && parsed.gridX >= 0 && parsed.gridX < 60 && parsed.gridY >= 0 && parsed.gridY < 60
+                    && parsed.gridX >= 0 && parsed.gridX < width && parsed.gridY >= 0 && parsed.gridY < height
                     && (parsed.completedStories == null || parsed.completedStories.All(value => value != null))
                     && (parsed.storyPlayCounts == null || parsed.storyPlayCounts.All(value => value != null
                         && !string.IsNullOrEmpty(value.key) && value.count >= 0))
                     && (parsed.completedEntityPlacements == null || parsed.completedEntityPlacements.All(value => value > 0))
+                    && (parsed.completedPeriodicityGroups == null
+                        || parsed.completedPeriodicityGroups.All(value => value > 0))
                     && (parsed.mapLogicStates == null || parsed.mapLogicStates.All(value => value != null
                         && !string.IsNullOrWhiteSpace(value.Tag)))
+                    && (parsed.puzzleStates == null || parsed.puzzleStates.All(value => value != null
+                        && value.PlacementId > 0 && value.State >= 0 && value.OverlapTimes >= 0)
+                        && parsed.puzzleStates.Select(value => value.PlacementId).Distinct().Count() == parsed.puzzleStates.Length)
+                    && (!parsed.hasPendingPuzzleOperation || parsed.pendingPuzzleOperation != null
+                        && parsed.pendingPuzzleOperation.placementId > 0
+                        && parsed.pendingPuzzleOperation.subStateIndex == 0
+                        && !string.IsNullOrWhiteSpace(parsed.pendingPuzzleOperation.inventoryReceipt)
+                        && parsed.pendingPuzzleOperation.inventoryReceipt.Length <= 256)
                     && (parsed.receipts == null || parsed.receipts.All(value => value != null));
             }
             catch { return false; }
@@ -2458,6 +2985,12 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            CloseGoddessDialog();
+            // Dispose the modal without running its story continuation while the map closes.
+            quickBuyDialog?.Abandon();
+            if (quickBuyCanvas != null) Destroy(quickBuyCanvas);
+            quickBuyCanvas = null;
+            quickBuyDialog = null;
             if (entityView != null) entityView.EntitySelected -= OnEntitySelected;
             if (battleController != null)
             {
@@ -2562,6 +3095,7 @@ namespace Zjcs.Presentation.World
         private sealed class Map10RuntimeEntity
         {
             public int PlacementId;
+            public int State;
             public int EntityClassId;
             public int TypeId;
             public string TalkTag;
@@ -2569,9 +3103,14 @@ namespace Zjcs.Presentation.World
             public int Region;
             public MapGridPoint Grid;
             public int[] StageIds;
+            public Map10RuntimeEntityStageBinding[] StageBindings;
+            public int[] PeriodicityGroupIds;
+            public int[] PlayerPeriodicityGroupIds;
             public bool Active;
             public int LockType;
             public int[] LockedByEntityGroups;
+            public int[] LockConditionEntityIds;
+            public string LockParamsJson;
             public bool ConditionEntityNeverDestroy;
             public bool ConditionEntityInactiveInUnlock;
             public Map10RuntimeAwardItem[] AwardItems;
@@ -2580,15 +3119,21 @@ namespace Zjcs.Presentation.World
             public Map10RuntimeEntity(OfficialMap10EntityInfo info)
             {
                 PlacementId = info.PlacementId;
+                State = info.State;
                 EntityClassId = info.EntityClassId;
                 TypeId = info.TypeId;
                 ModelPath = info.ModelPath;
                 Region = info.Region;
                 Grid = new MapGridPoint(info.Grid[0], info.Grid[1]);
                 StageIds = info.StageIds ?? Array.Empty<int>();
+                StageBindings = info.StageBindings ?? Array.Empty<Map10RuntimeEntityStageBinding>();
+                PeriodicityGroupIds = info.PeriodicityGroupIds ?? Array.Empty<int>();
+                PlayerPeriodicityGroupIds = info.PlayerPeriodicityGroupIds ?? Array.Empty<int>();
                 Active = info.Active;
                 LockType = info.LockType;
                 LockedByEntityGroups = info.LockedByEntityGroups ?? Array.Empty<int>();
+                LockConditionEntityIds = info.LockConditionEntityIds;
+                LockParamsJson = info.LockParamsJson;
                 ConditionEntityNeverDestroy = info.ConditionEntityNeverDestroy;
                 ConditionEntityInactiveInUnlock = info.ConditionEntityInactiveInUnlock;
                 AwardItems = info.AwardItems ?? Array.Empty<Map10RuntimeAwardItem>();
@@ -2620,7 +3165,19 @@ namespace Zjcs.Presentation.World
             public int MapClassId;
             public int Region;
             public int Progress;
+            public string StoryKey;
+            public int Count;
+            public string Op;
             public string Type => _type;
+        }
+
+        [Serializable]
+        private sealed class Map10RuntimeWorldInfo
+        {
+            public int ClassId;
+            public int DefEntryId;
+            public int Type;
+            public bool AllowPrivateTeam, AllowPublicTeam;
         }
     }
 }

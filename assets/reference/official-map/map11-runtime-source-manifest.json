@@ -1,0 +1,210 @@
+{
+  "manifest": "854_156383",
+  "mapClassId": 11,
+  "offlineDecisions": {
+    "storyBranchSelection": {
+      "selector": "First true input in the original serialized order; otherwise original Exit.",
+      "switch": "First equal configured output in the original serialized order; otherwise original Exit.",
+      "reason": "User confirmed because the client consumes server SelectedIndex without a packaged server selector."
+    },
+    "missingStateTargets": [
+      {
+        "placementId": 413,
+        "targetId": 423,
+        "action": "Skip only the missing-target update; preserve all other ordered stage results.",
+        "reason": "User confirmed after original assembly decompilation and raw EC/MapInfoWrap verification."
+      }
+    ]
+  },
+  "inputs": {
+    "storyBranchCode": [
+      {
+        "path": ".tools/source-packages/official-code/client-source/SelectorNode.cs",
+        "sha256": "f2ff3138127325ffaf1cdf9264a8bb06400e45ba10579735d62cbe0aa369310c"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/SwitchNode.cs",
+        "sha256": "d839561638eb190dc9fd6eec953972d13ab95e41db3728d7910da275ce2b42be"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/StoryGraph.cs",
+        "sha256": "a4f16dea6823b68d4eac9129cb129b2cc88531cb733770af565406f8500416ee"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/AndNode.cs",
+        "sha256": "66952d2a8835eecfee53d7db945fd782e76557e34aed17da53880d4b6ff91889"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/NotNode.cs",
+        "sha256": "7ab34d1fc9b651bc168411807f63e3e790d451e19f6ebdac00ed2bdea9a92e0b"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/IsStoryStateNode.cs",
+        "sha256": "f9057d20189c92c6a7bfb014da3f362fd215db219d528dafab61330b3baf58c8"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/IsInTargetMapNode.cs",
+        "sha256": "c28859e4d8d7c0b6371e53690cf280f892c08f3a4a1beca144451c7836075fc5"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/SerializableObj.cs",
+        "sha256": "3b55d7680bdbdb1a786d3069382ae37d547e457e866527794612c6e4c7b8276e"
+      }
+    ],
+    "mapDefinition": {
+      "path": "unity/Assets/Official/World/Map/11/map11.json",
+      "sha256": "38b8caee230a4df54c1a99718022e480b68b88d9e5565ec6750caebee4b3ce70",
+      "sourceManifestSha256": "d8b3e3d3525a120b24c7f57f4fa03064dd3e8f1134292dd6ef6041b458888c47"
+    },
+    "entities": {
+      "path": "unity/Assets/Official/World/Map/11/map11-entities.json",
+      "sha256": "9940a5e62ca1028d8b869c701d397575b5699fc5b4caef69d75b261d89ac59f3",
+      "sourceManifestSha256": "167107c7ef7f67d6603738786f28ec10ebd480ed2ef5e0782e5f24a2d15b35ac"
+    },
+    "entityTemplates": {
+      "path": "assets/official/map-entities.json",
+      "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510",
+      "sourceManifest": "assets/reference/official-map/entities-source-manifest.json",
+      "sourceManifestSha256": "3ff0762ff880aa975e7c9f8c1df0551cab02c76b52b36c59342a2a89aa8a6ea1"
+    },
+    "battles": {
+      "path": "unity/Assets/Official/World/Map/11/map11-battles.json",
+      "sha256": "e4074ce5e25cd4be187c9a72cb784d4e42a1655a93fa10376282a959ac0b0741",
+      "sourceManifestSha256": "e3fa2437856fc281bf2779796bfd1db4ab106c819a6f2c89591f292fa0fbdc32"
+    },
+    "adventure": {
+      "path": "assets/official/adventure.json",
+      "sha256": "a6820d65b7498af98f242ab797c24f5dc92646b0638f09da8331c793a0340b4e",
+      "sourceManifest": "unity/Assets/Official/World/Map/11/source-manifest.json",
+      "sourceManifestSha256": "d8b3e3d3525a120b24c7f57f4fa03064dd3e8f1134292dd6ef6041b458888c47"
+    },
+    "localization": {
+      "path": "assets/official/map-localization.json",
+      "sha256": "29803ff3247f70feb03f1109dfc963121ba25bd3eb3c36dba4546a1d7137f805"
+    },
+    "playables": {
+      "path": "assets/official/map-playables.json",
+      "sha256": "17b5e324d78ab3cf3d846c1efe7cfb26acdcdd28f13092ffed3843e797980cfc",
+      "sourceManifestSha256": "2039d2f292586f2ad04e48606ee9433f9f73c649281809367d2d5b7a84681bb6"
+    },
+    "dialogRoles": {
+      "bundle": "defaultpackage_assets_config_luban_dialog.bundle",
+      "bundle_hash": "cc48a2130d3e62f6e57a055ecb02734e",
+      "path_id": "-7830826545954998254",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/cc48a2130d3e62f6e57a055ecb02734e.bundle",
+      "raw_size": 5754,
+      "raw_sha256": "2737764d3dd2a3c5aa447c84f99c47ae745104953ccda1be6cf7b500d0eedf34",
+      "object": "Assets/Config/Luban/Dialog/dialog_role.g.bytes",
+      "payload_sha256": "17fc1e8c41473daea75b04ca34e5a03049773058af417b6e561148b4fdccf81e"
+    },
+    "mapTalkConditions": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "2135504609496173008",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "023d7c223b798aef2325116b64d124b0d35a7e9fe5fcfffe98a20ea48f68cdb5",
+      "object": "Assets/Config/Luban/conditions.g.bytes",
+      "payload_sha256": "aba8a59f771f2c85de408832683ba4acbd1042f0a116a18cc21ca019cf740c54"
+    },
+    "quickBuys": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "-7898873451773041390",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "d699145888e0d1e5788b42a6a35bc7650e177ba8ebc2c6c032e83f9434dc736a",
+      "object": "Assets/Config/Luban/quick_buy.g.bytes",
+      "payload_sha256": "ff181d541883a5a0d111e208d54630506869e30556e0223f248f7029903a0a65"
+    }
+  },
+  "outputs": {
+    "battle-runtime.json": {
+      "path": "D:/Desktop/zjcs/unity/Assets/Official/World/Map/11/Resources/Map11/battle-runtime.json",
+      "sha256": "6ae5ab958022798ac9d1f3f5d012bea9977e10c2f68a640d58d3b1b6843649e3",
+      "stageCount": 129,
+      "rosterCount": 129,
+      "sceneCount": 17
+    },
+    "stories.json": {
+      "path": "D:/Desktop/zjcs/unity/Assets/Official/World/Map/11/Resources/Map11/stories.json",
+      "sha256": "29341a137d8c54b228a25fae1ca0767f27a643ba027ada49843c1c0fff2821e6",
+      "storyCount": 44,
+      "nodeCount": 666,
+      "entityTemplateCount": 110,
+      "logicTagCount": 35,
+      "mapTalkCount": 50,
+      "subgraphCount": 4,
+      "subgraphNodeCount": 64,
+      "mainlineTaskIds": [
+        1045,
+        1050,
+        1055,
+        1060,
+        1065,
+        1070,
+        1075,
+        1080,
+        1085,
+        1090,
+        1095,
+        1100,
+        1105,
+        1110,
+        1115,
+        1120,
+        1125,
+        1130,
+        1135,
+        1140,
+        1145,
+        1150,
+        1155,
+        1160
+      ],
+      "roleIds": [
+        100000,
+        650600,
+        840200,
+        840402,
+        840600,
+        840601,
+        840701,
+        840702,
+        840800,
+        840802,
+        840900,
+        840902,
+        841100,
+        841102,
+        841103,
+        841701,
+        1060900
+      ],
+      "playableGuids": [
+        "0d29abdc0654e524291a8568986f67a8",
+        "145d574e6a78a7a4ba6825a77aa1f745",
+        "5fd5bec6c4f91f54799a4b823888f49a",
+        "91ab22ab272abaf4eb63daaea8bb0d29",
+        "9b248cde91299ee4287533b25b7dd468",
+        "a30ca55d866d1c748ba9217732991de9",
+        "b26120dda176633498d79d774a952b2f",
+        "db80c82ee7328fa438d99bb696cb7ad8",
+        "ecf049329f5d09d438735801fa80d68b",
+        "f4d2e846f96581348aa326c7686926cc"
+      ]
+    }
+  }
+}

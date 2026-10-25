@@ -4,7 +4,7 @@ using Zjcs.Combat.Official;
 namespace Zjcs.Presentation.World
 {
     [Serializable]
-    internal sealed class Map10RuntimeBattleData
+    public sealed class Map10RuntimeBattleData
     {
         public string manifest;
         public int mapClassId;
@@ -12,10 +12,11 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeStage[] stages;
         public Map10RuntimeRoster[] monsterRosters;
         public Map10RuntimeBattleScene[] battleScenes;
+        public Map10RuntimeBattleEntityStageBinding[] entityStageBindings;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStage
+    public sealed class Map10RuntimeStage
     {
         public int Id;
         public int GameId;
@@ -27,6 +28,7 @@ namespace Zjcs.Presentation.World
         public int PlayerRoundLimit;
         public float ShowMainPanelDelay;
         public bool SkipPrepareStatus;
+        public bool AwardUsePlayerLevelAndSubRank;
         public bool UserStart;
         public bool LeaveInPreparing;
         public bool LeaveInPlaying;
@@ -35,10 +37,18 @@ namespace Zjcs.Presentation.World
         public bool JoinInMiddle;
         public bool DismissTeamWhenLeaveOrEnd;
         public int[] WaveArrayIds;
+        public int[] Awards;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeRoster
+    public sealed class Map10RuntimeLevelNumber
+    {
+        public int id;
+        public float[] values;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeRoster
     {
         public int StageId;
         public int GameId;
@@ -47,19 +57,20 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeWave
+    public sealed class Map10RuntimeWave
     {
         public int Index;
         public Map10RuntimeMonster[] Units;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeMonster
+    public sealed class Map10RuntimeMonster
     {
         public int MonsterId;
         public int MonsterGroupNo;
         public int MonsterType;
         public int Level;
+        public float LevelOffset;
         public int SubRank;
         public int Faction;
         public int WaveIndex;
@@ -79,7 +90,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeResilienceInfo
+    public sealed class Map10RuntimeResilienceInfo
     {
         public int[] DisappearStatusIds;
         public int DisappearSkillId;
@@ -89,7 +100,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeSkill
+    public sealed class Map10RuntimeSkill
     {
         public int EntityId;
         public int ItemId;
@@ -98,14 +109,14 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeProperty
+    public sealed class Map10RuntimeProperty
     {
         public int Id;
         public long Value;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeBattleScene
+    public sealed class Map10RuntimeBattleScene
     {
         public int GameId;
         public Map10RuntimeFightGridGroundComponent FightGridGroundComponent;
@@ -113,7 +124,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeFightGridGroundComponent
+    public sealed class Map10RuntimeFightGridGroundComponent
     {
         public Map10RuntimePoint Size;
         public Map10RuntimeVector3 OriginPos;
@@ -121,7 +132,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeBattleCell
+    public sealed class Map10RuntimeBattleCell
     {
         public Map10RuntimePoint Pos;
         public int GroundType;
@@ -129,13 +140,13 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeFightComponent
+    public sealed class Map10RuntimeFightComponent
     {
         public Map10RuntimeFactionInfo[] FactionInfoList;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeFactionInfo
+    public sealed class Map10RuntimeFactionInfo
     {
         public int Faction;
         public Map10RuntimePoint[] EntryPosList;
@@ -143,14 +154,14 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimePoint
+    public sealed class Map10RuntimePoint
     {
         public int X;
         public int Y;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeVector3
+    public sealed class Map10RuntimeVector3
     {
         public float X;
         public float Y;
@@ -158,7 +169,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryData
+    public sealed class Map10RuntimeStoryData
     {
         public string manifest;
         public int mapClassId;
@@ -168,13 +179,47 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeMapTalkEntry[] mapTalkEntries;
         public Map10RuntimeTalkConditionInfo[] mapTalkConditions;
         public Map10RuntimeStoryOption[] storyOptions;
+        public Map10RuntimeFixedReward[] fixedRewards;
         public Map10RuntimeNativeDialog[] nativeDialogs;
         public Map10RuntimePlayable[] playables;
+        public Map10RuntimeMainlineTask[] mainlineTasks;
         public Map10RuntimeStory[] stories;
+        public Map10RuntimeStory[] subgraphs;
+        public Map10RuntimeEntityTemplate[] entityTemplates;
+        public Zjcs.Offline.World.MapPuzzleRule[] puzzleRules;
+        public Map11RuntimeQuickBuy[] quickBuys;
+    }
+
+    [Serializable] public sealed class Map11RuntimeQuickBuy
+    {
+        public int ItemId, CurrencyId, RefreshType, SubRankScaleId, LevelScaleId;
+        public long BaseCount;
+        public long[] PriceList, PriceBuyCount;
+        public Map11RuntimeQuickBuyCondition Condition;
+    }
+    [Serializable] public sealed class Map11RuntimeQuickBuyCondition
+    {
+        public string _type, Op;
+        public int ClassId;
+        public long Count;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeLogicTag
+    public sealed class Map10RuntimeEntityTemplate
+    {
+        public int EntityClassId;
+        public Map10RuntimeTemplateComponent[] Components;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeTemplateComponent
+    {
+        public string Type;
+        public string Json;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeLogicTag
     {
         public string Tag;
         public int MapClass;
@@ -184,7 +229,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeMapTalkEntry
+    public sealed class Map10RuntimeMapTalkEntry
     {
         public string EntityId;
         public int Scenario;
@@ -196,10 +241,14 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeTalkCondition
+    public sealed class Map10RuntimeTalkCondition
     {
         public string _type;
         public int[] Ids;
+        public int StageId;
+        public string StoryKey;
+        public string Tag;
+        public int Count;
         public int Rank;
         public int Profession;
         public int WeaponType;
@@ -207,14 +256,14 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeTalkConditionInfo
+    public sealed class Map10RuntimeTalkConditionInfo
     {
         public int ClassId;
         public Map10RuntimeTalkCondition Condition;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryOption
+    public sealed class Map10RuntimeStoryOption
     {
         public string StoryName;
         public int Id;
@@ -227,16 +276,24 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryNode
+    public sealed class Map10RuntimeStoryNode
     {
         public int id;
         public string type;
+        public string sourceJson;
         public int dialogId;
+        public int awardId;
+        public int fixedRewardId;
         public string storyName;
+        public string subgraphName;
+        public int storyStatus;
+        public int entityState;
         public int count;
+        public int playerLevel;
         public int compareOption;
         public int compareTargetInt;
         public int entityClassId;
+        public string entityTag;
         public int positionX;
         public int positionY;
         public int destinationX;
@@ -248,6 +305,13 @@ namespace Zjcs.Presentation.World
         public int range;
         public int selectGetType;
         public int loEntityId;
+        public int sceneType;
+        public int mapClassId;
+        public int regionId;
+        public int[] followerClassIds;
+        public int positionType;
+        public int direction;
+        public bool movable;
         public string tag;
         public bool needHideUi;
         public bool needShowUi;
@@ -262,27 +326,28 @@ namespace Zjcs.Presentation.World
         public bool waitPlayableStop;
         public string[] playableKeys;
         public Map10RuntimeMapLogicState[] mapLogicStates;
+        public bool endAsStoryFinish;
         public int[] options;
         public int[] removeEntityClassIds;
         public Map10RuntimeStoryPort[] ports;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryPort
+    public sealed class Map10RuntimeStoryPort
     {
         public string name;
         public Map10RuntimeStoryConnection[] connections;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryConnection
+    public sealed class Map10RuntimeStoryConnection
     {
         public int nodeId;
         public string port;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeNativeDialog
+    public sealed class Map10RuntimeNativeDialog
     {
         public int Id;
         public int EntryNodeId;
@@ -290,7 +355,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimePlayable
+    public sealed class Map10RuntimePlayable
     {
         public string AssetGuid;
         public string[] Keys;
@@ -298,7 +363,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeNativeDialogNode
+    public sealed class Map10RuntimeNativeDialogNode
     {
         public int NodeId;
         public int NodeType;
@@ -328,39 +393,70 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeMapLogicState
+    public sealed class Map10RuntimeMapLogicState
     {
         public string Tag;
         public int State;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogPortraitData
+    public sealed class Map10RuntimeEntityStageBinding
+    {
+        public string Component;
+        public int[] StageIds;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeBattleEntityStageBinding
+    {
+        public int PlacementId;
+        public Map10RuntimeEntityStageBinding[] StageComponents;
+        public int[] PeriodicityGroupIds;
+        public int[] PlayerPeriodicityGroupIds;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeFixedReward
+    {
+        public int Id;
+        public int CanGetTimes;
+        public Map10RuntimeAwardItem[] Items;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeMainlineTask
+    {
+        public int ClassId;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeDialogPortraitData
     {
         public string manifest;
         public int mapClassId;
         public string sourceSha256;
         public Map10RuntimeDialogSpeakerStyle speakerStyle;
+        public int[] voiceOverIds;
         public Map10RuntimeDialogPortrait[] portraits;
         public Map10RuntimeDialogIcon[] icons;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogIcon
+    public sealed class Map10RuntimeDialogIcon
     {
         public string uri;
         public string resource;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogSpeakerStyle
+    public sealed class Map10RuntimeDialogSpeakerStyle
     {
         public Map10RuntimeDialogSpeakerSlot left;
         public Map10RuntimeDialogSpeakerSlot right;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogSpeakerSlot
+    public sealed class Map10RuntimeDialogSpeakerSlot
     {
         public int direction;
         public float[] light;
@@ -369,7 +465,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogPortrait
+    public sealed class Map10RuntimeDialogPortrait
     {
         public string portraitPath;
         public bool needFlipOnRight;
@@ -378,7 +474,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogPortraitLayer
+    public sealed class Map10RuntimeDialogPortraitLayer
     {
         public string resource;
         public string nodeName;
@@ -388,7 +484,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogPortraitFace
+    public sealed class Map10RuntimeDialogPortraitFace
     {
         public string nodeName;
         public float[] position;
@@ -399,7 +495,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogExpression
+    public sealed class Map10RuntimeDialogExpression
     {
         public string type;
         public string resource;
@@ -408,7 +504,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogRole
+    public sealed class Map10RuntimeDialogRole
     {
         public int RoleId;
         public int EntityClassId;
@@ -417,7 +513,7 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStory
+    public sealed class Map10RuntimeStory
     {
         public string key;
         public int maxCount;
@@ -428,14 +524,14 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogueGroup
+    public sealed class Map10RuntimeDialogueGroup
     {
         public int Id;
         public Map10RuntimeDialogueLine[] Lines;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeDialogueLine
+    public sealed class Map10RuntimeDialogueLine
     {
         public int Order;
         public string Text;
@@ -463,8 +559,12 @@ namespace Zjcs.Presentation.World
         public string[] completedStories = Array.Empty<string>();
         public Map10RuntimeStoryCount[] storyPlayCounts = Array.Empty<Map10RuntimeStoryCount>();
         public int[] completedStages = Array.Empty<int>();
+        public int[] completedPeriodicityGroups = Array.Empty<int>();
         public int[] completedEntityPlacements = Array.Empty<int>();
         public Map10RuntimeMapLogicState[] mapLogicStates = Array.Empty<Map10RuntimeMapLogicState>();
+        public Zjcs.Offline.World.MapPuzzleEntityState[] puzzleStates = Array.Empty<Zjcs.Offline.World.MapPuzzleEntityState>();
+        public Map11PendingPuzzleOperation pendingPuzzleOperation;
+        public bool hasPendingPuzzleOperation;
         public string[] receipts = Array.Empty<string>();
         public string[] nativeDialogAwardReceipts = Array.Empty<string>();
         public Map10RuntimeBattleResult[] battleResults = Array.Empty<Map10RuntimeBattleResult>();
@@ -475,14 +575,22 @@ namespace Zjcs.Presentation.World
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeStoryCount
+    internal sealed class Map11PendingPuzzleOperation
+    {
+        public int placementId;
+        public int subStateIndex;
+        public string inventoryReceipt;
+    }
+
+    [Serializable]
+    public sealed class Map10RuntimeStoryCount
     {
         public string key;
         public int count;
     }
 
     [Serializable]
-    internal sealed class Map10RuntimeBattleResult
+    public sealed class Map10RuntimeBattleResult
     {
         public int placementId;
         public int stageId;

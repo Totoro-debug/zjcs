@@ -406,7 +406,7 @@ namespace Zjcs.Presentation.Commerce
         {
             CloseDialogKind(DialogKind.Exchange);
             OfficialCommercePrefabRenderer renderer = runtime.CreatePrefabRenderer();
-            GameObject dialog = renderer.Create(ExchangePrefab, canvasRoot, (path, node) =>
+            void BindExchangeButton(string path, GameObject node)
             {
                 Button button = node.GetComponent<Button>();
                 if (button == null) return;
@@ -419,12 +419,20 @@ namespace Zjcs.Presentation.Commerce
                     button.onClick.AddListener(() => SetExchangeAmount(exchangeAmount + 1));
                 else if (path.EndsWith("/MaxBtn", StringComparison.Ordinal))
                     button.onClick.AddListener(() => SetExchangeAmount(runtime.Offers.ExchangeMax()));
-            });
+            }
+            GameObject dialog;
+            if (worldExchangeOnly && worldExchangeFactory != null)
+            {
+                dialog = worldExchangeFactory(canvasRoot);
+                foreach (Button button in dialog.GetComponentsInChildren<Button>(true))
+                    BindExchangeButton("/" + button.name, button.gameObject);
+            }
+            else dialog = renderer.Create(ExchangePrefab, canvasRoot, BindExchangeButton);
             dialog.name = "CommerceExchange";
             RegisterDialog(dialog, DialogKind.Exchange);
             SetText(dialog.transform, "BgDialog1/BgImg/BgTitle/TitleTxt", "兑换耀星");
             SetText(dialog.transform, "BgDialog1/Content/TipExchangeTxt", "耀星可兑换为等量晨星，兑换后不可撤销。");
-            PopulateExchangeItems(dialog.transform);
+            if (!worldExchangeOnly || worldExchangeFactory == null) PopulateExchangeItems(dialog.transform);
             long held = Amount(runtime.Catalog.Data.settings.flareStarItemId);
             exchangeAmount = held <= 0 ? 0
                 : Math.Max(runtime.Catalog.Data.settings.exchangeMin,
@@ -474,10 +482,12 @@ namespace Zjcs.Presentation.Commerce
         {
             long held = Amount(runtime.Catalog.Data.settings.flareStarItemId);
             long max = Math.Max(0, Math.Min(held, runtime.Catalog.Data.settings.exchangeMax));
-            exchangeAmount = held <= 0 ? 0 : Math.Max(runtime.Catalog.Data.settings.exchangeMin, Math.Min(amount, max));
+            exchangeAmount = fixedExchangeCount > 0 ? fixedExchangeCount
+                : held <= 0 ? 0 : Math.Max(runtime.Catalog.Data.settings.exchangeMin, Math.Min(amount, max));
             long back = exchangeAmount * runtime.Catalog.Data.settings.exchangeScale;
             Transform dialog = currentDialogObject == null ? null : currentDialogObject.transform;
             if (dialog == null) return;
+            RefreshFixedExchange(dialog);
             SetText(dialog, "BgDialog1/Content/ChangGo/SetCountSlider/SelectedCountTxt",
                 "兑换数量：" + exchangeAmount.ToString("N0"));
             SetText(dialog, "BgDialog1/Content/ItemGo/FrontItem/FrontItem/Content/BgCountText/CountText",
@@ -507,9 +517,7 @@ namespace Zjcs.Presentation.Commerce
             {
                 OpenSimpleConfirm("耀星不足。是否前往直购获取耀星？", "前往直购", () =>
                 {
-                    CloseDialogKind(DialogKind.Exchange);
-                    SetMainTab(MainTab.DirectPay);
-                    SwitchPayTab(true);
+                    OpenDirectPayFromExchange();
                 });
                 return;
             }

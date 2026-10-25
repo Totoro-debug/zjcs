@@ -775,6 +775,8 @@ Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_da
 
 机关规则从原 EC／Lo 配置恢复 116 个相关记录、九组锁与七座终端。锁 413 对缺失实体 423 的原结果保留，独立记录用户确认的单机跳过例外；已重新反编译原程序集并核对原始地图数据，未创建替代实体或修改官方源配置。
 
+终端物品 325 的 `quick_buy` 行从同版 APK 的 `config_luban` 提取，保留 50 晨星、每次一张、无购买次数上限及物品 4013 持有条件。剧情分支清单记录 `SelectorNode`、`SwitchNode`、`StoryGraph`、布尔条件及 `SerializableObj` 原代码哈希；按用户确认补全服务器缺失的首项匹配规则，未改动故事图的端口、顺序或默认出口。
+
 Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态几何和空状态原始字节。补充纹理 `building_naka1`、`building_luzi` 从原 `6330_11_view` 的真实 SpriteRenderer 引用定位至 `defaultpackage_assets_image_mapentity_entity11_building_grave.bundle`（SHA256 `6b24112c0669a6a45628ee51d92a568a8eecedea97ab91eb12ba877a2ec263ae`）；重新提取 PNG 与既有文件逐字节一致。161 份几何、27 个 Spine 实例、203 张纹理及额外对象来源保存在 `unity/Assets/Official/World/Map/11/entity-source-manifest.json`，未修改原 APK／CDN 预期哈希。
 
 `prepare_unity_map11_ui.py` 与 `map11_support_ui.py` 恢复 WorldCanvas、两种女神弹窗、两个动态图标、购买确认框、兑换框和默认物品图标，共八份原生 prefab、125 张原 Sprite。确认框在 APK 中未打包，按固定版本云端实际文件提取；兑换框与默认图标来自原 APK。原 MonoBehaviour 引用、严格读取的 UI／Framework 布局字段、中文、GlobalColors、PopupWindow 曲线、UGUIJszx 动态布局、MirrorImage 和战力数字格式来源哈希见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。物品 2／3／325 的原图标与品质均按官方物品表校验。`map11_tmp_sprites.py` 提取 Common 的七个原 TMP 字形、字符及 400×200 图集，恢复 Texture2D 与材质绑定，并保留原序列化哈希。显式加载入口为 `Resources/Map11/UI`；失落女神统一经验／罗拉各 +1%、最近可站立格传送及兑换关闭后的剧情返回是所属页记录的单机差异，未改动官方源数据。

@@ -79,6 +79,7 @@ namespace Zjcs.Presentation.World
     {
         public int parentIndex;
         public string name, path, localization_key;
+        public string[] scripts;
         public bool active, button, mask, rectmask2d;
         public bool has_image, has_text, has_scroll;
         public string text_value;
@@ -91,6 +92,8 @@ namespace Zjcs.Presentation.World
         public float[] image_sprite_border, image_sprite_pivot, image_color;
         public float image_sprite_ppu;
         public bool has_image_sprite, image_preserve_aspect;
+        public bool image_graphic_flags, image_raycast_target, image_maskable;
+        public bool mask_graphic_flags, mask_show_graphic;
         public bool scroll_horizontal, scroll_vertical, scroll_inertia;
         public int scroll_movement;
         public float scroll_sensitivity, scroll_elasticity, scroll_deceleration;

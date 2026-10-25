@@ -424,6 +424,15 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
     condition_ids = {condition_id for row in map_talk_rows
                      for condition_id in row.get("Condition", {}).get("Ids", [])}
     apk = Apk("854_156383")
+    quick_buy_object = apk.asset("config_luban", "Assets/Config/Luban/quick_buy.g.bytes")
+    quick_buy_payload = quick_buy_object.read().m_Script.encode("utf-8", "surrogateescape")
+    quick_buy_ids = {json.loads(node["sourceJson"])["ItemId"]
+                     for story in story_records + subgraph_records for node in story["nodes"]
+                     if node["type"] == "ItemQuikBuyNode"}
+    quick_buys = [row for row in Constructors().table(quick_buy_payload, "TbQuickBuyInfo")
+                 if row["ItemId"] in quick_buy_ids]
+    if {row["ItemId"] for row in quick_buys} != quick_buy_ids:
+        raise ValueError("Map11 story references an unresolved official quick buy.")
     condition_object = apk.asset("config_luban", "Assets/Config/Luban/conditions.g.bytes")
     condition_payload = condition_object.read().m_Script.encode("utf-8", "surrogateescape")
     condition_rows = Constructors().table(condition_payload, "TbConditionInfo")
@@ -488,6 +497,7 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
         "mapTalkConditions": map_talk_conditions,
         "storyOptions": story_options,
         "fixedRewards": fixed_rewards,
+        "quickBuys": quick_buys,
         "nativeDialogs": [],
         "playables": playable_records,
         "mainlineTasks": mainline_tasks,
@@ -500,10 +510,23 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
     manifest = {
         "manifest": "854_156383",
         "mapClassId": 11,
-        "offlineDecisions": {"missingStateTargets": [{"placementId": 413, "targetId": 423,
+        "offlineDecisions": {"storyBranchSelection": {
+            "selector": "First true input in the original serialized order; otherwise original Exit.",
+            "switch": "First equal configured output in the original serialized order; otherwise original Exit.",
+            "reason": "User confirmed because the client consumes server SelectedIndex without a packaged server selector."},
+            "missingStateTargets": [{"placementId": 413, "targetId": 423,
             "action": "Skip only the missing-target update; preserve all other ordered stage results.",
             "reason": "User confirmed after original assembly decompilation and raw EC/MapInfoWrap verification."}]},
         "inputs": {
+            "storyBranchCode": [{"path": source_path(path), "sha256": sha256(path)} for path in (
+                ROOT / ".tools/source-packages/official-code/client-source/SelectorNode.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/SwitchNode.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/StoryGraph.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/AndNode.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/NotNode.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/IsStoryStateNode.cs",
+                ROOT / ".tools/source-packages/official-code/client-source/IsInTargetMapNode.cs",
+                ROOT / ".tools/source-packages/official-code/common-source/SerializableObj.cs")],
             "mapDefinition": {"path": MAP_ROOT.joinpath("map11.json").relative_to(ROOT).as_posix(),
                               "sha256": map_hash, "sourceManifestSha256": sha256(MAP_SOURCE_MANIFEST_PATH)},
             "entities": {"path": MAP_ROOT.joinpath("map11-entities.json").relative_to(ROOT).as_posix(),
@@ -528,6 +551,9 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
             "mapTalkConditions": dict(apk.provenance(condition_object), object="Assets/Config/Luban/conditions.g.bytes",
                                       raw_sha256=hashlib.sha256(condition_object.get_raw_data()).hexdigest(),
                                       payload_sha256=hashlib.sha256(condition_payload).hexdigest()),
+            "quickBuys": dict(apk.provenance(quick_buy_object), object="Assets/Config/Luban/quick_buy.g.bytes",
+                              raw_sha256=hashlib.sha256(quick_buy_object.get_raw_data()).hexdigest(),
+                              payload_sha256=hashlib.sha256(quick_buy_payload).hexdigest()),
         },
         "outputs": {
             "battle-runtime.json": {"path": battle_output.resolve().as_posix(), "sha256": sha256(battle_output),

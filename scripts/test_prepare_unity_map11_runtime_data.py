@@ -36,6 +36,10 @@ class Map11RuntimeDataTests(unittest.TestCase):
         self.assertEqual(len(stories["storyOptions"]), 61)
         self.assertEqual([reward["Id"] for reward in stories["fixedRewards"]], [23, 29, 30, 31, 41, 42, 43, 45])
         self.assertTrue(all(reward["CanGetTimes"] == 1 for reward in stories["fixedRewards"]))
+        self.assertEqual(stories["fixedRewards"][-1]["Items"], [{"ItemId": 325, "Count": 1}])
+        self.assertEqual(stories["quickBuys"], [{"ItemId": 325, "CurrencyId": 2, "RefreshType": 0,
+            "PriceList": [50], "PriceBuyCount": [-1], "BaseCount": 1, "SubRankScaleId": 0, "LevelScaleId": 0,
+            "Condition": {"Jumpable": None, "ClassId": 4013, "Count": 1, "Op": ">=", "_type": "HasItemCondition"}}])
         self.assertEqual(len(stories["dialogRoles"]), 17)
         self.assertEqual(len(stories["playables"]), 10)
         templates = {row["EntityClassId"]: {component["Type"]: json.loads(component["Json"])

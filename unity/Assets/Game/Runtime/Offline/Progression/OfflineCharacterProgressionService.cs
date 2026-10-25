@@ -19,6 +19,7 @@ namespace Zjcs.Offline.Progression
             this.session = session ?? throw new ArgumentNullException(nameof(session));
             this.catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
             propertyCalculator = new CharacterPropCalculator(catalog);
+            propertyCalculator.AddSource(new OfflineGoddessPropSource(catalog, () => session.Save.World));
             RefreshDerivedProgress(session.Save.Player);
         }
 
