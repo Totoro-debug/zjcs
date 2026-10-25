@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 from pathlib import Path
 import re
@@ -42,6 +43,44 @@ def json_bytes(value) -> bytes:
 
 def compact_json(value) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+
+
+def recover_map11_state_textures() -> dict:
+    """Verify the two grave-building state sprites omitted by the legacy model manifest."""
+    from official_apk import Apk
+    apk = Apk()
+    root = apk.asset("prefabs_map_map_11_entitydisplays_worldbuilding", "6330_11_view.prefab")
+    names = {"building_naka1": "building_naka1-0c53fcc277.png",
+             "building_luzi": "building_luzi-5b63b3348a.png"}
+    result = {}
+
+    def visit(game_object):
+        for component in game_object.read().m_Component:
+            obj = component.component.deref()
+            if obj.type.name in ("Transform", "RectTransform"):
+                for child in obj.read().m_Children:
+                    visit(child.read().m_GameObject.deref())
+            elif obj.type.name == "SpriteRenderer":
+                pointer = obj.read().m_Sprite
+                if not pointer.path_id:
+                    continue
+                sprite = pointer.read()
+                if sprite.m_Name not in names:
+                    continue
+                target = ROOT / "assets/official/sprites" / names[sprite.m_Name]
+                output = io.BytesIO()
+                sprite.image.save(output, format="PNG")
+                raw = output.getvalue()
+                if target.read_bytes() != raw:
+                    raise ValueError("Map11 building-state sprite differs from the official Sprite extraction: " + str(target))
+                uri = "res://" + target.relative_to(ROOT).as_posix()
+                result[uri] = {"sha256": sha256(raw), "source": apk.provenance(pointer.deref()),
+                               "prefab": apk.provenance(root), "operation": "UnityPy Sprite.image to PNG"}
+
+    visit(root)
+    if len(result) != len(names):
+        raise ValueError("Official Map11 building-state Sprite references are incomplete")
+    return result
 
 
 def select_display_path(entity_class_id: int, model_paths: list[str], map_id: int = 10) -> str | None:
@@ -190,17 +229,41 @@ def source_digest(path: Path) -> dict:
 
 
 def stage_ids_for_entity(placement: dict, components: dict) -> list[int]:
-    component = components.get(str(placement["Id"]), {}).get("LoStageBehStageComponent", {})
-    stage_ids = component.get("StageIds") or []
-    if not stage_ids:
-        for stage in placement.get("Stages") or []:
-            try:
-                value = json.loads(stage["ValueJson"])
-            except (KeyError, TypeError, json.JSONDecodeError):
-                continue
-            if isinstance(value, list) and value and isinstance(value[0], list):
-                stage_ids.extend(value[0])
+    source = components.get(str(placement["Id"]), {})
+    stage_ids = []
+    for component_name in ("LoStageBehStageComponent", "LoStageBehBattleSteleStageComponent",
+                           "LoStageBehStoneCastleStageComponent"):
+        component = source.get(component_name, {}) or {}
+        values = component.get("StageIds") or []
+        if component.get("StageId", 0):
+            values = list(values) + [component["StageId"]]
+        if not isinstance(values, list) or any(not isinstance(value, int) or value <= 0 for value in values):
+            raise ValueError("Map entity stage component is malformed: " + str(placement["Id"]))
+        stage_ids.extend(values)
+    for stage in placement.get("Stages") or []:
+        try:
+            value = json.loads(stage["ValueJson"])
+        except (KeyError, TypeError, json.JSONDecodeError):
+            continue
+        if isinstance(value, list) and value and isinstance(value[0], list):
+            stage_ids.extend(value[0])
     return sorted({int(stage_id) for stage_id in stage_ids})
+
+
+def stage_behavior_bindings(placement_id: int, components: dict) -> list[dict]:
+    source = components.get(str(placement_id), {})
+    result = []
+    for component_name in ("LoStageBehStageComponent", "LoStageBehBattleSteleStageComponent",
+                           "LoStageBehStoneCastleStageComponent"):
+        component = source.get(component_name) or {}
+        stage_ids = component.get("StageIds") or []
+        if component.get("StageId", 0):
+            stage_ids = list(stage_ids) + [component["StageId"]]
+        if not isinstance(stage_ids, list) or any(not isinstance(value, int) or value <= 0 for value in stage_ids):
+            raise ValueError("Map stage behaviour binding is malformed: " + str(placement_id))
+        if stage_ids:
+            result.append({"Component": component_name, "StageIds": sorted(set(stage_ids))})
+    return result
 
 
 def entity_runtime_rules(placement_id: int, components: dict) -> dict:
@@ -232,6 +295,12 @@ def entity_runtime_rules(placement_id: int, components: dict) -> dict:
             raise ValueError("Map10 entity item award is malformed: " + str(placement_id))
 
     change_map = source.get("LoStageResultChangeMapComponent") or {}
+    periodic = source.get("LoStageResultPeriodicityInteractionComponent") or {}
+    player_periodic = source.get("LoStageConPlayerPeriodicityInteractionComponent") or {}
+    periodic_group_ids = periodic.get("PeriodicityGroupIds") or []
+    player_periodic_group_ids = player_periodic.get("PeriodicityGroupIds") or []
+    if any(not isinstance(value, int) or value <= 0 for value in periodic_group_ids + player_periodic_group_ids):
+        raise ValueError("Map entity periodicity interaction groups are invalid: " + str(placement_id))
     return {
         "lockType": int(lock.get("LockType", 0)),
         "lockedByEntityGroups": groups,
@@ -241,6 +310,8 @@ def entity_runtime_rules(placement_id: int, components: dict) -> dict:
         "conditionEntityInactiveInUnlock": bool(lock_rules.get("ConditionEntityInactiveInUnlock", False)),
         "awardItems": awards,
         "changeMapClassId": int(change_map.get("MapClassId", 0)),
+        "periodicityGroupIds": periodic_group_ids,
+        "playerPeriodicityGroupIds": player_periodic_group_ids,
     }
 
 
@@ -341,6 +412,8 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
             if uri in resource_sources and resource_sources[uri] != record:
                 raise ValueError("Official map texture manifests disagree for " + uri)
             resource_sources[uri] = record
+    state_texture_sources = recover_map11_state_textures() if map_id == 11 else {}
+    resource_sources.update(state_texture_sources)
     skeleton_sources = spine_manifest.get("skeleton_outputs", {})
     models = {}
     entities = []
@@ -349,6 +422,40 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
     spine_outputs = {}
     spine_payloads = {}
     verified_story_actor_payloads = None
+
+    def export_geometry(key: str, source_uri: str, batch_count: int) -> str | None:
+        if not source_uri.startswith("res://assets/official/map-models/"):
+            raise ValueError("Official entity geometry source is outside the pinned model catalog: " + source_uri)
+        if key in geometry_outputs:
+            previous = geometry_outputs[key]
+            if previous["source"] != source_uri.removeprefix("res://") or previous["batchCount"] != batch_count:
+                raise ValueError("Repeated official entity state has conflicting geometry: " + key)
+            return f"Map{map_id}/EntityGeometry/{key}.geom" if batch_count else None
+        source = ROOT / source_uri.removeprefix("res://")
+        raw = source.read_bytes()
+        if model_sources.get(source.name) != sha256(raw):
+            raise ValueError("Official entity geometry differs from its source manifest: " + source_uri)
+        if batch_count == 0:
+            if raw != b"ZJMAP001\x00\x00\x00\x00":
+                raise ValueError("Official empty entity geometry header differs: " + source_uri)
+            batches = []
+        else:
+            batches = decode(raw, expected_version=geometry_version(raw))
+        if len(batches) != batch_count:
+            raise ValueError("Official entity geometry batch count differs: " + source_uri)
+        geometry_outputs[key] = {
+            "source": source.relative_to(ROOT).as_posix(),
+            "sha256": sha256(raw),
+            "path": f"{geometry_resource_dir}/{key}.geom.bytes",
+            "batchCount": len(batches),
+        }
+        for batch in batches:
+            uri = batch["metadata"]["texture"]
+            texture_record = resource_sources.get(uri)
+            if not isinstance(texture_record, dict):
+                raise ValueError("Official entity texture is absent from the model source manifest: " + uri)
+            textures[uri] = texture_record["sha256"]
+        return f"Map{map_id}/EntityGeometry/{key}.geom" if batches else None
 
     story_placements = [{
         "Id": 0,
@@ -461,6 +568,19 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
             for interaction_state, rules in (model.get("interactions") or {}).items():
                 if not isinstance(rules, list):
                     raise ValueError("Map10 entity interaction rules are invalid: " + model_path + ":" + str(interaction_state))
+            state_bindings = []
+            if map_id == 11:
+                for state, variant in sorted((model.get("states") or {}).items(), key=lambda pair: int(pair[0])):
+                    state_spines = variant.get("skeleton_instances") or []
+                    if state_spines and state_spines != skeleton_instances:
+                        raise ValueError("Official entity state requires distinct Spine bindings: " + model_path + ":" + state)
+                    batch_count = int(variant.get("geometry", {}).get("batches", 0))
+                    state_bindings.append({
+                        "state": int(state),
+                        "geometryResource": export_geometry(model_id + "-state-" + state, variant["file"], batch_count),
+                        "geometryBatchCount": batch_count,
+                        "spines": spine_refs if state_spines else [],
+                    })
             models.setdefault(model_path, {
                 "modelPath": model_path,
                 "modelId": model_id,
@@ -470,6 +590,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
                 "interactionsJson": compact_json(model.get("interactions") or {}),
                 "monsterSlotsJson": compact_json(model.get("monster_slots") or []),
                 "overlapDisplay": bool(model.get("overlap_display", False)),
+                **({"states": state_bindings} if state_bindings else {}),
             })
             if models[model_path]["spines"] != spine_refs:
                 raise ValueError("Repeated Map10 entity display produced different Spine bindings: " + model_path)
@@ -495,6 +616,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
             **entity_runtime_rules(int(placement["Id"]), components),
             "modelPath": model_path,
             "stageIds": stage_ids,
+            "stageBindings": stage_behavior_bindings(int(placement["Id"]), components),
         })
 
     output_data = {
@@ -512,7 +634,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
         "format": 1,
         "manifest": VERSION,
         "mapClassId": map_id,
-        "operation": f"Resolve the original Map{map_id} EntityDisplay prefab view for each placed entity, preferring Map/Map_{map_id} over Map/Common; copy source geometry, texture, Spine frame, interaction, lock, item-award, and map-change data byte-for-byte or by schema-preserving serialization.",
+        "operation": f"Resolve the original Map{map_id} EntityDisplay prefab view for each placed entity, preferring Map/Map_{map_id} over Map/Common; copy source geometry, texture, Spine frame, interaction, lock, item-award, and map-change data byte-for-byte or by schema-preserving serialization. Map11 also preserves every exported official stage-state geometry and its Spine bindings.",
         "inputs": {
             "map_definition": source_digest(map_data_path),
             "map_entity_components": source_digest(components_path),
@@ -531,6 +653,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
         "geometry": geometry_outputs,
         "spines": spine_outputs,
         "textures": [{"uri": uri, "sha256": textures[uri]} for uri in sorted(textures)],
+        **({"additionalStateTextureSources": state_texture_sources} if state_texture_sources else {}),
         "output": {"path": output_name, "resourcePath": f"Map{map_id}/Entities/catalog",
                    "resourceSha256": sha256(payload_bytes), "size": len(payload_bytes),
                    "sha256": sha256(payload_bytes)},

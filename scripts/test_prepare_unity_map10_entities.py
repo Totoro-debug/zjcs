@@ -8,7 +8,9 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from prepare_unity_map10_entities import build, resolve_display_path, sha256, write_generated
+from prepare_unity_map10_entities import (build, resolve_display_path, sha256,
+                                          stage_behavior_bindings, stage_ids_for_entity,
+                                          write_generated)
 
 
 class PrepareUnityMap10EntitiesTests(unittest.TestCase):
@@ -86,6 +88,21 @@ class PrepareUnityMap10EntitiesTests(unittest.TestCase):
             output.write_text("changed", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Refusing to overwrite changed Map10 entity payload"):
                 write_generated(output, b"expected")
+
+    def test_includes_map_specific_stage_behaviour_bindings(self):
+        components = {"42": {
+            "LoStageBehStageComponent": {"StageIds": [171]},
+            "LoStageBehBattleSteleStageComponent": {"StageId": 900},
+            "LoStageBehStoneCastleStageComponent": {"StageId": 170},
+        }}
+        placement = {"Id": 42, "Stages": [{"ValueJson": "[[901],3253,[3253]]"}]}
+
+        self.assertEqual(stage_ids_for_entity(placement, components), [170, 171, 900, 901])
+        self.assertEqual(stage_behavior_bindings(42, components), [
+            {"Component": "LoStageBehStageComponent", "StageIds": [171]},
+            {"Component": "LoStageBehBattleSteleStageComponent", "StageIds": [900]},
+            {"Component": "LoStageBehStoneCastleStageComponent", "StageIds": [170]},
+        ])
 
 
 if __name__ == "__main__":

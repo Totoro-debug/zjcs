@@ -31,6 +31,8 @@ GENERAL_RULES_MANIFEST_PATH = ROOT / "assets/reference/official-city/source-mani
 PARSER_SOURCE_PATH = ROOT / ".tools/source-packages/official-code/common-source/Common/StageMonsterArrayInfoParser.cs"
 COMMON_SOURCE = ROOT / ".tools/source-packages/official-code/common-source/Common"
 REFERENCE_MANIFEST_PATH = ROOT / "assets/reference/official-map/map10-battles-source-manifest.json"
+MAP11_DEFINITION_PATH = ROOT / "unity/Assets/Official/World/Map/11/map11.json"
+MAP11_DEFINITION_MANIFEST_PATH = ROOT / "unity/Assets/Official/World/Map/11/source-manifest.json"
 
 
 def sha256(data: bytes) -> str:
@@ -74,6 +76,59 @@ def map_stage_ids(map_id: int, placements: dict, map_stage_rows: list[dict], exp
     if not stage_ids:
         raise ValueError(f"Map{map_id} does not reference any official stages")
     return stage_ids
+
+
+def map11_component_stage_bindings(definition: dict) -> list[dict]:
+    if (definition.get("ClassId") != 11 or not isinstance(definition.get("Entities"), list)
+            or not isinstance(definition.get("EntityComponents"), list)
+            or len(definition["Entities"]) != 1803
+            or len(definition["EntityComponents"]) != 1803):
+        raise ValueError("Pinned Map11 definition is missing its 1,803 entity component bindings")
+
+    placement_ids = {int(placement["Id"]) for placement in definition["Entities"]}
+    component_ids = [int(component.get("EntityId", 0)) for component in definition["EntityComponents"]]
+    if len(placement_ids) != 1803 or len(set(component_ids)) != 1803 or set(component_ids) != placement_ids:
+        raise ValueError("Map11 entity components do not map one-to-one to placements")
+
+    bindings = []
+    for component_record in sorted(definition["EntityComponents"], key=lambda row: int(row["EntityId"])):
+        placement_id = int(component_record["EntityId"])
+        try:
+            components = json.loads(component_record["Json"])
+        except (KeyError, TypeError, json.JSONDecodeError) as error:
+            raise ValueError("Map11 entity component JSON is invalid: " + str(placement_id)) from error
+
+        stage_components = []
+        for component_name in ("LoStageBehStageComponent", "LoStageBehBattleSteleStageComponent",
+                               "LoStageBehStoneCastleStageComponent"):
+            component = components.get(component_name)
+            if not isinstance(component, dict):
+                continue
+            stage_ids = component.get("StageIds") or []
+            if component.get("StageId", 0):
+                stage_ids = list(stage_ids) + [component["StageId"]]
+            if not isinstance(stage_ids, list) or any(not isinstance(value, int) or value <= 0
+                                                       for value in stage_ids):
+                raise ValueError("Map11 entity stage component is malformed: " + str(placement_id))
+            if stage_ids:
+                stage_components.append({"Component": component_name,
+                                         "StageIds": sorted(set(stage_ids))})
+
+        if not stage_components:
+            continue
+        periodic = components.get("LoStageResultPeriodicityInteractionComponent") or {}
+        player_periodic = components.get("LoStageConPlayerPeriodicityInteractionComponent") or {}
+        result = {"PlacementId": placement_id, "StageComponents": stage_components}
+        for key, source in (("PeriodicityGroupIds", periodic),
+                            ("PlayerPeriodicityGroupIds", player_periodic)):
+            group_ids = source.get("PeriodicityGroupIds") or []
+            if not isinstance(group_ids, list) or any(not isinstance(value, int) or value <= 0
+                                                       for value in group_ids):
+                raise ValueError("Map11 entity periodicity component is malformed: " + str(placement_id))
+            if group_ids:
+                result[key] = group_ids
+        bindings.append(result)
+    return bindings
 
 
 def map10_stage_ids(placements: dict, map_stage_rows: list[dict], expected_entity_count: int = 82) -> set[int]:
@@ -406,11 +461,37 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
     placements = decode_entities(placements_bytes)
     placements_source = source_record(apk, placements_obj, placement_path, placements_bytes)
 
+    component_stage_bindings = []
+    map11_definition_source = None
+    if map_id == 11:
+        definition_bytes = MAP11_DEFINITION_PATH.read_bytes()
+        definition_manifest_bytes = MAP11_DEFINITION_MANIFEST_PATH.read_bytes()
+        definition_manifest = json.loads(definition_manifest_bytes.decode("utf-8"))
+        if (definition_manifest.get("mapClassId") != 11
+                or definition_manifest.get("output", {}).get("sha256") != sha256(definition_bytes)):
+            raise ValueError("Pinned Map11 definition differs from its source manifest")
+        definition = json.loads(definition_bytes.decode("utf-8"))
+        component_stage_bindings = map11_component_stage_bindings(definition)
+        component_stage_ids = {
+            int(stage_id)
+            for binding in component_stage_bindings
+            for component in binding["StageComponents"]
+            for stage_id in component["StageIds"]
+        }
+        map11_definition_source = {
+            "path": MAP11_DEFINITION_PATH.relative_to(ROOT).as_posix(),
+            "sha256": sha256(definition_bytes),
+            "source_manifest": MAP11_DEFINITION_MANIFEST_PATH.relative_to(ROOT).as_posix(),
+            "source_manifest_sha256": sha256(definition_manifest_bytes),
+        }
+
     map_stage_obj = apk.asset(MAP_STAGE_TABLE[0], MAP_STAGE_TABLE[1])
     map_stage_bytes = text_asset_bytes(map_stage_obj)
     map_stage_rows = constructors.table(map_stage_bytes, MAP_STAGE_TABLE[2])
     stage_count = {10: 82, 11: 1803}[map_id]
     stage_ids = map_stage_ids(map_id, placements, map_stage_rows, stage_count)
+    if map_id == 11:
+        stage_ids.update(component_stage_ids)
     map_stage_source = source_record(apk, map_stage_obj, MAP_STAGE_TABLE[1], map_stage_bytes)
 
     stage_obj = apk.asset(STAGE_TABLE[0], STAGE_TABLE[1])
@@ -473,6 +554,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
         "monsterArrays": arrays,
         "battleScenes": scenes,
         "monsterRosters": rosters,
+        **({"entityStageBindings": component_stage_bindings} if map_id == 11 else {}),
         "formationOrder": "StageMonsterArrayInfoParser.PostParse sorts Monsters by GroupId",
         "rosterRules": "StageMonsterArrayInfoParser.GenerateMonsters repeats each monster id for every position in its contiguous GroupId; MonsterGroupNo comes from StageInfo.",
     }
@@ -492,6 +574,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
             },
             f"map{map_id}_placements": placements_source,
             f"map{map_id}_stage_index": map_stage_source,
+            **({"map11_definition": map11_definition_source} if map_id == 11 else {}),
             "battle_scenes": {
                 "path": BATTLE_SCENES_PATH.relative_to(ROOT).as_posix(),
                 "sha256": sha256(scene_payload),

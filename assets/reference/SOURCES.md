@@ -771,6 +771,14 @@ Unity 离线旅行 UI 载荷由 `scripts/prepare_unity_npc_travel_ui.py` 从固�
 
 ## 森之国地图11官方材质、机关与六碑文字
 
+Unity 森之国载荷固定使用 `854_156383`。`prepare_unity_map11_runtime_data.py` 将基础实体模板与地图 `Lo` 覆盖分别保留，生成 110 类实体组件、44 个故事图（666 节点）与四个子图（64 节点）、50 条地图对话、61 条选项、8 条固定奖励、24 条主线及 129 个战斗阶段；输入、官方客户端／共享程序集来源与输出哈希见 `official-map/map11-runtime-source-manifest.json`。`prepare_unity_map10_battle_data.py --map-id 11` 保留 57 个怪物编队数组、17 个场景和 591 个实体阶段绑定，来源见 `unity/Assets/Official/World/Map/11/battle-source-manifest.json`。
+
+机关规则从原 EC／Lo 配置恢复 116 个相关记录、九组锁与七座终端。锁 413 对缺失实体 423 的原结果保留，独立记录用户确认的单机跳过例外；已重新反编译原程序集并核对原始地图数据，未创建替代实体或修改官方源配置。
+
+Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态几何和空状态原始字节。补充纹理 `building_naka1`、`building_luzi` 从原 `6330_11_view` 的真实 SpriteRenderer 引用定位至 `defaultpackage_assets_image_mapentity_entity11_building_grave.bundle`（SHA256 `6b24112c0669a6a45628ee51d92a568a8eecedea97ab91eb12ba877a2ec263ae`）；重新提取 PNG 与既有文件逐字节一致。161 份几何、27 个 Spine 实例、203 张纹理及额外对象来源保存在 `unity/Assets/Official/World/Map/11/entity-source-manifest.json`，未修改原 APK／CDN 预期哈希。
+
+`prepare_unity_map11_ui.py` 复用 `map-ui.json` 的原女神弹窗与 `6010_11_DialogIcon`／`6011_11_DialogIcon`，同时从固定版本原 bundle 读取 MonoBehaviour 字段和托管状态配置；按这些引用恢复本地原生 prefab。94 张原 Sprite、WorldCanvas 与女神弹窗层级、两份原 APK 中文表、`GlobalColors.asset`、原 prefab 及迁移客户端代码的来源哈希见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。资源显式绑定到 `Resources/Map11/UI`；失落女神统一经验／罗拉各 +1% 和传送的最近可站立格是地图所属页记录的单机差异，未改动官方源数据。
+
 2026-10-16：地图11继续使用固定 manifest `854_156383` 的 APK／匹配 CDN。`prepare_map11_rendering.py` 直接读取 `MapGround_11_bare.prefab` 的活跃 Renderer、原材质和原输入对象，不再依赖临时检查输出。转换1188个地形Sprite、67510个Tile、192个Mesh与1803个放置实体；Ground1按原高度图保留水面上下两遍，Water2的原Mask按64采样／世界单位转换为本地纹理。`map11-rendering.json`、两份11区域文件、Mask及复用纹理的对象／输入输出哈希见 `official-map/materials-11-source-manifest.json`，历史区域／水面来源保留。
 
 `prepare_map11_lighting.py` 从固定 APK／校验 CDN 转换 MapGround_11 的原全局 Light2D、85 个地图可用显示 prefab 中的89盏局部灯和 FalloffLookupTexture 衰减；43个活跃 Water2 渲染器均核对为排序层16。`assets/official/map11-lighting.json`、衰减贴图及所有输入／输出哈希见 `official-map/lighting-11-source-manifest.json`；其余原版本缺包记录保持不变。

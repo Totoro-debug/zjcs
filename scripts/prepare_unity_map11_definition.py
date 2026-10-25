@@ -113,8 +113,10 @@ def build():
     configs = []
     for table_name, rows in config_sets:
         for row in rows:
-            if "EntityClassId" in row:
+            if "EntityClassId" in row and "MapClassId" in row:
                 key = str(row.get("MapClassId", 0)) + ":" + str(row["EntityClassId"])
+            elif "EntityClassId" in row:
+                key = str(row["EntityClassId"])
             else:
                 key = next((str(row[field]) for field in ("ClassId", "Region", "LogicId", "MapClassId", "StageId")
                             if field in row), "")
@@ -147,7 +149,7 @@ def build():
         "SourceManifest": "Assets/Official/World/Map/11/source-manifest.json",
         "SourceManifestSha256": inputs_hash,
         "CharacterMover": mover,
-        "MaxRegionProgress": [{"Region": key, "Value": value}
+        "MaxRegionProgress": [{"Region": int(key), "Value": value}
                               for key, value in sorted(region_data["placement"]["progress"].items(), key=lambda pair: int(pair[0]))],
         "Navigation": {
             "Width": navigation["size"][0], "Height": navigation["size"][1],
