@@ -72,6 +72,21 @@ $overrideHit = $overrideSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 
 $overrideStatus = $overrideHit.AppliedStatuses | Where-Object { $_.StatusId -eq 24216 } | Select-Object -First 1
 Assert-StatusApp ($null -ne $overrideStatus -and $overrideStatus.CharacterTypeRateOverrides.Count -eq 3 -and $catalog.StatusTypeFor(24216) -eq 2) 'Official status rate override or status type was not mapped'
 Assert-StatusApp (($overrideStatus.CharacterTypeRateOverrides | Where-Object { $_.CharacterType -eq 2 -and $_.Rate -eq 1 -and -not $_.AffectedByProp }).Count -eq 1) 'Monster status-rate override mismatch'
+$officialCostSkill = $catalog.CreateSkill(11870, 1, 1, 1, 1, 0, $null)
+$officialCostStatus = $officialCostSkill.HitGraphEntities |
+    Where-Object { $_.EntityId -eq 11871 } | Select-Object -ExpandProperty AppliedStatuses |
+    Where-Object { $_.StatusId -eq 24372 } | Select-Object -First 1
+Assert-StatusApp ($null -ne $officialCostStatus -and $officialCostStatus.SkillCostHp -and $officialCostStatus.DamageCostHpPer -lt 0) 'Official SkillCostHp fields were not mapped'
+$officialDamageCostSkill = $catalog.CreateSkill(13580, 1, 1, 1, 1, 0, $null)
+$officialDamageCostStatus = $officialDamageCostSkill.HitGraphEntities |
+    Where-Object { $_.EntityId -eq 13581 } | Select-Object -ExpandProperty AppliedStatuses |
+    Where-Object { $_.StatusId -eq 24659 } | Select-Object -First 1
+Assert-StatusApp ($null -ne $officialDamageCostStatus -and -not $officialDamageCostStatus.SkillCostHp -and [Math]::Abs($officialDamageCostStatus.DamageCostHpPer - 0.2) -lt 0.0001) 'Official DamageCostHpPer fields were not mapped'
+$officialDamageCostSkillTwo = $catalog.CreateSkill(11980, 1, 1, 1, 1, 0, $null)
+$officialDamageCostStatusTwo = $officialDamageCostSkillTwo.HitGraphEntities |
+    Where-Object { $_.EntityId -eq 11981 } | Select-Object -ExpandProperty AppliedStatuses |
+    Where-Object { $_.StatusId -eq 24377 } | Select-Object -First 1
+Assert-StatusApp ($null -ne $officialDamageCostStatusTwo -and [Math]::Abs($officialDamageCostStatusTwo.DamageCostHpPer - 0.2) -lt 0.0001) 'Second official DamageCostHpPer entry was not mapped'
 
 $player = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $player.Id = 1; $player.Side = 1; $player.CharacterType = 1; $player.Hp = 1000; $player.MaxHp = 1000
@@ -82,13 +97,16 @@ $enemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $enemy.Id = 2; $enemy.Side = 2; $enemy.CharacterType = 2; $enemy.X = 1; $enemy.Y = 0; $enemy.Hp = 5000; $enemy.MaxHp = 5000
 $enemy.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new(); $enemy.Turn.Id = 2; $enemy.Turn.Hp = 5000; $enemy.Turn.Speed = 1
 
-function Invoke-StatusBattle($skill, $player, $enemy) {
+function Invoke-StatusBattle($skill, $player, $enemy, $targetStatus = $null) {
     $skill.Slot = 0; $skill.EntityId = 12860; $skill.ItemId = 16000; $skill.TargetType = 1
+    $player.Hp = 1000; $player.Turn.Hp = 1000
+    $enemy.Hp = 5000; $enemy.Turn.Hp = 5000
     $player.Skills.Clear()
     $player.Skills.Add($skill)
     $player.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
     $player.SkillState.Slots.Add([Zjcs.Combat.Official.FightSkillSlotState]@{ Slot = 0; LimitedTimes = -1 })
     $enemy.Statuses.Clear()
+    if ($null -ne $targetStatus) { $enemy.Statuses.Add($targetStatus) }
     $checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
     $checkpoint.StageId = 1; $checkpoint.MaxRound = 10; $checkpoint.RandomSeed = 9
     $checkpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
@@ -147,6 +165,46 @@ $sourceSkill.Hits.Add($sourceHit)
 $sourceResult = Invoke-StatusBattle $sourceSkill $player $enemy
 Assert-StatusApp (($player.Statuses | Where-Object { $_.ClassId -eq 26004 }).Count -eq 1) 'Source-targeted damage status was not applied to the skill source'
 
+# SkillCostHp supplies the HP actually paid by the skill as the status custom parameter.
+$costApplication = [Zjcs.Combat.Official.FightBattleStatusApplication]::new()
+$costApplication.StatusId = 24372; $costApplication.TargetType = 2
+$costApplication.Chance = 1.0; $costApplication.AffectedByProp = $false
+$costApplication.SkillCostHp = $true; $costApplication.DamageCostHpPer = 0.5
+$costSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$costSkill.CostType = 1; $costSkill.SkillCost = 12; $costSkill.TargetType = 1
+$costSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$costHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$costHit.EntityId = 7009; $costHit.DamageId = 7012; $costHit.DamageType = 8
+$costHit.HasCustomDamage = $true; $costHit.CustomDamage = 1; $costHit.TargetMode = 0
+$costHit.AppliedStatuses.Add($costApplication)
+$costSkill.Hits.Add($costHit)
+$costResult = Invoke-StatusBattle $costSkill $player $enemy
+$costStatus = $enemy.Statuses | Where-Object { $_.ClassId -eq 24372 } | Select-Object -First 1
+Assert-StatusApp ($player.Hp -eq 988 -and $null -ne $costStatus -and $costStatus.CustomShieldValue -eq 12) 'Skill HP cost was not passed to the status custom parameter'
+
+# DamageCostHpPer uses HP actually lost after shields absorb the hit.
+$damageApplication = [Zjcs.Combat.Official.FightBattleStatusApplication]::new()
+$damageApplication.StatusId = 24659; $damageApplication.TargetType = 1
+$damageApplication.Chance = 1.0; $damageApplication.AffectedByProp = $false
+$damageApplication.DamageCostHpPer = 0.2
+$damageSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$damageSkill.TargetType = 1
+$damageSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$damageHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$damageHit.EntityId = 7013; $damageHit.DamageId = 7014; $damageHit.DamageType = 8
+$damageHit.HasCustomDamage = $true; $damageHit.CustomDamage = 53; $damageHit.TargetMode = 0
+$damageHit.AppliedStatuses.Add($damageApplication)
+$damageSkill.Hits.Add($damageHit)
+$absorbingShield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$absorbingShield.OwnerId = 2; $absorbingShield.ClassId = 26005
+$absorbingShield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Persistent
+$absorbingShield.ShieldUsesCustomValue = $true; $absorbingShield.CustomShieldValue = 30
+$absorbingShield.ShieldValue = 30; $absorbingShield.ShieldRemainValue = 30
+$absorbingShield.ShieldInitialized = $true
+$damageResult = Invoke-StatusBattle $damageSkill $player $enemy $absorbingShield
+$damageStatus = $player.Statuses | Where-Object { $_.ClassId -eq 24659 } | Select-Object -First 1
+Assert-StatusApp ($enemy.Hp -eq 4977 -and $null -ne $damageStatus -and $damageStatus.CustomShieldValue -eq 4 -and $damageStatus.ShieldValue -eq 4 -and $damageStatus.ShieldRemainValue -eq 4) 'DamageCostHpPer did not initialize the custom shield from HP lost after shield absorption'
+
 # The property-adjusted rate is used by hit execution, not only by the standalone formula.
 Set-EffectProperty $player.Properties 'BaseEffectRate' 100
 Set-EffectProperty $player.Properties 'EffectRateValue' 20000
@@ -187,4 +245,4 @@ $overrideTestSkill.Hits.Add($overrideTestHit)
 $overrideResult = Invoke-StatusBattle $overrideTestSkill $player $enemy
 Assert-StatusApp (($enemy.Statuses | Where-Object { $_.ClassId -eq 24216 }).Count -eq 1) 'Target character-type probability override was not applied'
 
-Write-Output 'Battle damage status checks passed: official status mapping, EffectRate formula, character-type overrides, target/source targeting, probability and HP condition.'
+Write-Output 'Battle damage status checks passed: official status mapping, custom HP-cost parameter, EffectRate formula, character-type overrides, target/source targeting, probability and HP condition.'

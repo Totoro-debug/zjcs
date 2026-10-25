@@ -4,6 +4,7 @@ using System.Globalization;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Combat
@@ -187,7 +188,11 @@ namespace Zjcs.Presentation.Combat
                         FormatBattleNumber(AbsoluteDamage(damage.Damage)), tint, position);
                 }
 
-            if (hudCatalog == null || stepEvent.SkillCasts == null) return;
+            if (hudCatalog == null) return;
+            if (stepEvent.StatusCustomActions != null)
+                foreach (FightBattleStatusCustomActionEvent action in stepEvent.StatusCustomActions)
+                    SpawnCustomActionFloat(action, checkpoint);
+            if (stepEvent.SkillCasts == null) return;
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
                 if (cast == null || !cast.IsReplay) continue;
@@ -200,6 +205,49 @@ namespace Zjcs.Presentation.Combat
                     Color = Color.white
                 });
             }
+        }
+
+        private void SpawnCustomActionFloat(FightBattleStatusCustomActionEvent action,
+            FightBattleCheckpoint checkpoint)
+        {
+            if (action == null) return;
+            FightBattleUnitState target = FindUnit(checkpoint, action.UnitId);
+            if (target == null) return;
+            BattleCustomActionWorldRuntimeData prefab = hudCatalog.LoadCustomActionWorldRuntime();
+            string text = prefab.TextForAction(action.Action);
+            if (string.IsNullOrEmpty(text)) return;
+
+            var renderer = new OfficialBattleHudRenderer(hudCatalog);
+            GameObject instance = renderer.CreateWorldFloat(prefab, root, out Dictionary<string, GameObject> nodes);
+            if (!nodes.TryGetValue(prefab.textPath, out GameObject labelObject))
+                throw new InvalidOperationException("Official custom action float text binding is missing.");
+            TMP_Text label = labelObject.GetComponent<TMP_Text>();
+            if (label == null) throw new InvalidOperationException("Official custom action float TMP text is missing.");
+            label.text = text;
+            if (!nodes.TryGetValue(prefab.iconPath, out GameObject iconObject))
+                throw new InvalidOperationException("Official custom action float icon binding is missing.");
+            iconObject.SetActive(action.Action == 3);
+
+            Vector3 offset = new Vector3(prefab.sceneOffset[0], prefab.sceneOffset[1], prefab.sceneOffset[2]);
+            Vector3 world = gridToWorld(new FightGridPoint(target.X, target.Y)) + offset;
+            instance.transform.position = world;
+            if (Camera.main != null) instance.transform.rotation = Camera.main.transform.rotation;
+            if (Camera.main != null && Camera.main.orthographic)
+            {
+                float scale = Camera.main.orthographicSize / prefab.cameraScale;
+                instance.transform.localScale = new Vector3(scale, scale, scale);
+            }
+            SortingGroup sortingGroup = instance.AddComponent<SortingGroup>();
+            sortingGroup.sortingOrder = prefab.sortingOrderStart + instance.transform.GetSiblingIndex();
+
+            OfficialBattleHudAnimationPlayer animations = renderer.InitializeWorldAnimations(
+                prefab.nodes, instance, nodes, useManualTick: true);
+            var floatView = instance.AddComponent<OfficialBattleDamageFloat>();
+            floatView.InitializeOfficial(prefab.effectType, label, null, animations,
+                prefab.showTime, false, true, target.Id, prefab.height, world,
+                null, Camera.main, null, prefab.cameraScale, prefab.sortingOrderStart);
+            activeDamageFloats.Add(floatView);
+            RefreshDamageFloatStack(target.Id);
         }
 
         private static long AbsoluteDamage(long value) => value == long.MinValue ? long.MaxValue : Math.Abs(value);

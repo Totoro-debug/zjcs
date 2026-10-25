@@ -35,7 +35,7 @@ function New-Unit($hp, $maxHp) {
 
 function New-TriggerStatus($per, $statusId, $maxCount, $atStart) {
     $status = [Zjcs.Combat.Official.FightBattleStatusState]::new()
-    $status.InstanceId = 1; $status.ClassId = 50000; $status.OwnerId = 1; $status.CreatorId = 1
+    $status.InstanceId = 1; $status.ClassId = 999999; $status.OwnerId = 1; $status.CreatorId = 1
     $status.DurationRound = -1; $status.CurDurationRound = -1; $status.StartRound = 0
     $status.HpTriggerPer = $per; $status.HpTriggerMaxCount = $maxCount
     $status.HpTriggerAtStart = $atStart

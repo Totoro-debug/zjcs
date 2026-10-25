@@ -14,6 +14,7 @@ using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 using Zjcs.Offline.World;
 using Zjcs.Presentation.Combat;
+using Zjcs.Presentation.Character;
 using Zjcs.Presentation.Commerce;
 using Zjcs.Presentation.OfflineWorld;
 using Zjcs.Official.World;
@@ -1713,14 +1714,16 @@ namespace Zjcs.Presentation.World
                     ? (monsterPortraits == null ? null : monsterPortraits.Find(combatCatalog.MonsterIconId(unit.MonsterId)))
                     : fallbackPortrait,
                 unit => unit.Id == 1 ? null : OfficialBattleModelCatalog.LoadDefault().ResolveModelKey(unit),
-                (_, __) => "idle_01",
+                null,
                 (root, unit) =>
                 {
                     Vector3 scale = root.localScale;
                     scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
                     root.localScale = scale;
                 },
-                null, null, null, resume != null);
+                null, null, null, resume != null, environmentGameId: scene.GameId,
+                animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                statueProgress: progressionSave);
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
@@ -1982,7 +1985,9 @@ namespace Zjcs.Presentation.World
             }
 
             IReadOnlyDictionary<int, long> sourceProps = PropertyMap(player.Properties);
-            OfflineSkillPlayerContext skillContext = progression.SkillContext();
+            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(
+                progression.Player.Equipment, 10);
+            int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
             var bindings = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
@@ -2004,7 +2009,8 @@ namespace Zjcs.Presentation.World
                     ItemId = itemId,
                     Rank = rank,
                     Level = level,
-                    ProfessionAvailability = ResolveSkillProfessionAvailability(itemId, skillContext),
+                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(itemId,
+                        player.Profession, currentWeaponType, progression.Player.InitialWeaponType),
                     SubRank = player.SubRank,
                     Cooldown = combatCatalog.CalculateSkillCooldown(item.EntityId, rank, level,
                         player.SubRank, sourceProps),
@@ -2034,22 +2040,6 @@ namespace Zjcs.Presentation.World
             List<FightOfficialStatusBinding> passiveStatuses = combatCatalog
                 .CreatePassiveStatusBindings(player, skillItems, passives);
             combatCatalog.AssembleUnit(player, bindings, passiveStatuses);
-        }
-
-        private FightSkillProfessionAvailability ResolveSkillProfessionAvailability(int itemId,
-            OfflineSkillPlayerContext context)
-        {
-            OfflineSkillRules rules = progression.SkillRules;
-            if (rules == null || rules.Skills == null || context == null)
-                return FightSkillProfessionAvailability.Unknown;
-            foreach (OfflineSkillDefinition definition in rules.Skills)
-            {
-                if (definition == null || definition.ClassId != itemId) continue;
-                return OfflineSkillProgression.IsAvailableFor(definition, context)
-                    ? FightSkillProfessionAvailability.Available
-                    : FightSkillProfessionAvailability.Mismatch;
-            }
-            return FightSkillProfessionAvailability.Unknown;
         }
 
         private static void AssembleMonsterSkills(FightOfficialCombatCatalog combatCatalog,
@@ -2190,6 +2180,7 @@ namespace Zjcs.Presentation.World
                 ShowOfficialNotice("当前阶段不能离开战斗");
                 return;
             }
+            battleController.EndBattle();
             ClearActiveBattle();
             Action callback = DestroyBattleSession();
             SaveLocalProgress();

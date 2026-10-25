@@ -12,6 +12,7 @@ function New-Unit($id, $side, $x, $y, $hp, $speed) {
     $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
     $unit.Id = $id; $unit.Side = $side; $unit.CharacterType = if ($side -eq 1) { 1 } else { 2 }
     $unit.X = $x; $unit.Y = $y; $unit.Hp = $hp; $unit.MaxHp = $hp
+    if ($side -eq 2) { $unit.MaxHpPlies = 4 }
     $unit.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new()
     $unit.Turn.Id = $id; $unit.Turn.Hp = $hp; $unit.Turn.Speed = $speed
     return $unit
@@ -48,10 +49,20 @@ $status.InstanceId = 1; $status.ClassId = 24078; $status.DurationRound = 2; $sta
 $status.RootSkillIds = [int[]]@(900, 901)
 $status.HpTriggerPer = 0.25; $status.HpTriggerMaxCount = 2; $status.HpTriggerAtStart = $true
 $status.HpTriggerStatuses.Add(24078); $status.HpTriggerSkills.Add(50010)
+$status.HasHpAccDecrease = $true; $status.HpAccUnitHp = -1; $status.HpAccUnitHpPercentage = 0.15
+$status.HpAccResetAtRoundEnd = $false; $status.HpAccMaxCount = 99; $status.HpAccUpdateHpPerOnCure = $true
+$status.HpAccDamageAccumulated = 125; $status.HpAccTriggeredCount = 3
+$status.HpAccTriggerStatuses.Add([Zjcs.Combat.Official.FightBattleStatusStateTrigger]@{
+    EntityId = 24240; BasePercent = 1; Target = 2
+})
+$status.HpAccTriggerSkills.Add([Zjcs.Combat.Official.FightBattleStatusStateTrigger]@{
+    EntityId = 58170; BasePercent = 1; Source = 2; Target = 2; TargetPos = 1
+})
 $player.Statuses.Add($status)
 $enemy = New-Unit 2 2 1 0 500 50
 $checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
-$checkpoint.StageId = 22001; $checkpoint.Mode = 1; $checkpoint.MaxRound = 12; $checkpoint.RandomSeed = 48271
+$checkpoint.StageId = 22001; $checkpoint.StageType = 3; $checkpoint.IsPvp = $true
+$checkpoint.Mode = 1; $checkpoint.MaxRound = 12; $checkpoint.RandomSeed = 48271
 $checkpoint.IsPlayerRoundLimit = $true; $checkpoint.PlayerRoundLimit = 8
 $checkpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
 $checkpoint.Grid.Width = 6; $checkpoint.Grid.Height = 7; $checkpoint.Grid.OriginX = 1.5; $checkpoint.Grid.OriginY = -2.25
@@ -73,9 +84,11 @@ Assert-Persist ($result.Checkpoint.Counter -eq 1 -and $result.Checkpoint.Receipt
 $json = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint)
 Assert-Persist ($json.Length -gt 100 -and $json.StartsWith('{"version":1,"checkpoint":')) 'Checkpoint payload header mismatch'
 $loaded = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($json)
-Assert-Persist ($loaded.StageId -eq 22001 -and $loaded.Mode -eq 1 -and $loaded.MaxRound -eq 12 -and $loaded.RandomSeed -eq 48271) 'Checkpoint header did not survive the round trip'
+Assert-Persist ($loaded.StageId -eq 22001 -and $loaded.Mode -eq 1 -and $loaded.MaxRound -eq 12 -and $loaded.RandomSeed -eq $checkpoint.RandomSeed) 'Checkpoint header did not survive the round trip'
+Assert-Persist ($loaded.StageType -eq 3 -and $loaded.IsPvp) 'Checkpoint formula context did not survive the round trip'
 Assert-Persist ($loaded.IsPlayerRoundLimit -and $loaded.PlayerRoundLimit -eq 8 -and $loaded.Counter -eq 1 -and $loaded.Receipts.Count -eq 1) 'Checkpoint limits or receipts did not survive the round trip'
 Assert-Persist ($loaded.Units.Count -eq 2 -and $loaded.Units[0].Hp -eq 1000 -and $loaded.Units[0].MoveMask -eq 4) 'Checkpoint units did not survive the round trip'
+Assert-Persist ($loaded.Units[1].MaxHpPlies -eq 4) 'Checkpoint boss HP plies did not survive the round trip'
 Assert-Persist ($loaded.Units[0].BodyOffsets.Count -eq 2 -and $loaded.Units[0].BodyOffsets[1].Y -eq 1) 'Checkpoint body offsets did not survive the round trip'
 Assert-Persist ($loaded.Units[0].Skills.Count -eq 1 -and $loaded.Units[0].Skills[0].EntityId -eq 900 -and [Math]::Abs($loaded.Units[0].Skills[0].ActionDuration - 1.1) -lt 0.0001) 'Checkpoint skills did not survive the round trip'
 Assert-Persist ($loaded.Units[0].Skills[0].Hits.Count -eq 1 -and [Math]::Abs($loaded.Units[0].Skills[0].Hits[0].Delay - 0.4) -lt 0.0001) 'Checkpoint hit delays did not survive the round trip'
@@ -88,6 +101,9 @@ Assert-Persist ($loaded.Receipts[0].Event.DamageEvents.Count -eq 1 -and $loaded.
 Assert-Persist ($loaded.Receipts[0].Event.DamageEvents[0].ElementType -eq 101) 'Checkpoint damage element did not survive the round trip'
 Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerPer -eq 0.25 -and $loaded.Units[0].Statuses[0].HpTriggerMaxCount -eq 2 -and $loaded.Units[0].Statuses[0].HpTriggerAtStart) 'Checkpoint HP trigger fields did not survive the round trip'
 Assert-Persist ($loaded.Units[0].Statuses[0].HpTriggerStatuses[0] -eq 24078 -and $loaded.Units[0].Statuses[0].HpTriggerSkills[0] -eq 50010) 'Checkpoint HP trigger lists did not survive the round trip'
+$loadedAcc = $loaded.Units[0].Statuses[0]
+Assert-Persist ($loadedAcc.HasHpAccDecrease -and $loadedAcc.HpAccUnitHp -eq -1 -and [Math]::Abs($loadedAcc.HpAccUnitHpPercentage - 0.15) -lt 0.00001 -and $loadedAcc.HpAccMaxCount -eq 99 -and $loadedAcc.HpAccDamageAccumulated -eq 125 -and $loadedAcc.HpAccTriggeredCount -eq 3) 'Checkpoint HP accumulated damage state did not survive the round trip'
+Assert-Persist ($loadedAcc.HpAccTriggerStatuses.Count -eq 1 -and $loadedAcc.HpAccTriggerStatuses[0].EntityId -eq 24240 -and $loadedAcc.HpAccTriggerSkills.Count -eq 1 -and $loadedAcc.HpAccTriggerSkills[0].EntityId -eq 58170 -and $loadedAcc.HpAccTriggerSkills[0].Source -eq 2 -and $loadedAcc.HpAccTriggerSkills[0].Target -eq 2 -and $loadedAcc.HpAccTriggerSkills[0].TargetPos -eq 1) 'Checkpoint HP accumulated trigger configuration did not survive the round trip'
 $loadedHit = $loaded.Units[0].Skills[0].Hits[0]
 Assert-Persist ($loadedHit.StatusListRandomOne -and $loadedHit.AppliedStatuses.Count -eq 1 -and $loadedHit.AppliedStatuses[0].Chance -eq 0.5) 'Checkpoint hit status list did not survive the round trip'
 Assert-Persist ($loadedHit.DisperseStatusTypes[0] -eq 2 -and $loadedHit.DisperseCount -eq 1 -and $loadedHit.DisperseRandom -and $loadedHit.DisperseChance -eq 0.25) 'Checkpoint hit dispel did not survive the round trip'

@@ -5,8 +5,7 @@ namespace Zjcs.Combat.Official
 {
     /// <summary>
     /// Base status lifecycle from <c>FightStatusComponentInfo</c>: round duration, stacking and the
-    /// official same-status merge rules. Status component effects (props, shields, triggers) are not
-    /// part of this type; it only owns the shared lifetime state.
+    /// official same-status merge rules. Component effects are delegated to their runtime handlers.
     /// </summary>
     public static class FightStatusLifecycle
     {
@@ -120,7 +119,8 @@ namespace Zjcs.Combat.Official
         /// keeps the old instance. Open stacking adds stacks to the existing instance instead.
         /// </summary>
         public static FightBattleStatusState Apply(FightBattleUnitState unit,
-            FightBattleStatusState template, int round, int instanceId)
+            FightBattleStatusState template, int round, int instanceId,
+            FightRandomStream random = null)
         {
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             if (template == null) throw new ArgumentNullException(nameof(template));
@@ -135,6 +135,7 @@ namespace Zjcs.Combat.Official
                     AddStack(existing, template.StackCount > 0 ? template.StackCount : 1);
                     if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, round);
                     else if (existing.IsResetDurationWhenStack) ResetDurationOnStack(existing, round);
+                    FightStatusCooldownRuntime.Invoke(unit, existing, random);
                     return existing;
                 }
                 if (existing.ActionBehOfSameStatus == BehaviourDiscard) return existing;
@@ -228,6 +229,17 @@ namespace Zjcs.Combat.Official
                 HpAccTriggeredCount = template.HpAccTriggeredCount,
                 HpAccTriggerStatuses = CopyTriggers(template.HpAccTriggerStatuses),
                 HpAccTriggerSkills = CopyTriggers(template.HpAccTriggerSkills),
+                HasUnflinchingOnDamageComponent = template.HasUnflinchingOnDamageComponent,
+                UnflinchingOnDamageRate = template.UnflinchingOnDamageRate,
+                HasSkillCooldownModify = template.HasSkillCooldownModify,
+                SkillCooldownModify = template.SkillCooldownModify,
+                SkillCooldownModifyIsRandom = template.SkillCooldownModifyIsRandom,
+                SkillCooldownModifyCount = template.SkillCooldownModifyCount,
+                SkillCooldownModifyOffset = template.SkillCooldownModifyOffset,
+                SkillCooldownModifySkills = CopyTriggers(template.SkillCooldownModifySkills),
+                SkillCooldownActionPendingCount = template.SkillCooldownActionPendingCount,
+                HasPermanentSkillCooldownReduction = template.HasPermanentSkillCooldownReduction,
+                PermanentSkillCooldownReduction = template.PermanentSkillCooldownReduction,
                 SkillConditionRulesSupported = template.SkillConditionRulesSupported,
                 SkillConditionRules = Copy(template.SkillConditionRules),
                 SummonConditionPools = Copy(template.SummonConditionPools),
@@ -270,6 +282,7 @@ namespace Zjcs.Combat.Official
             };
             unit.Statuses.Add(applied);
             if (applied.HasBackToLifeComponent) unit.Hp = 1;
+            FightStatusCooldownRuntime.Invoke(unit, applied, random);
             return applied;
         }
 

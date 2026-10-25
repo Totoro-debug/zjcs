@@ -15,6 +15,8 @@ namespace Zjcs.Combat.Official
     public sealed class FightOfficialCombatCatalog
     {
         public const string ExpectedManifest = "854_156383";
+        public const int MoveActionType = 1;
+        public const int SkillMoveActionType = 6;
 
         private readonly Dictionary<int, Dictionary<string, object>> entities =
             new Dictionary<int, Dictionary<string, object>>();
@@ -781,8 +783,14 @@ namespace Zjcs.Combat.Official
                 Component(components, "FightStatusSkillStartComponent");
             Dictionary<string, object> skillEnd =
                 Component(components, "FightStatusSkillEndComponent");
+            Dictionary<string, object> skillCooldownModify =
+                Component(components, "FightStatusSkillModifyCDComponent");
+            Dictionary<string, object> permanentSkillCooldownReduction =
+                Component(components, "FightStatusSkillPermanentReduceCdComponent");
             Dictionary<string, object> hpAccDecrease =
                 Component(components, "FightStatusHpAccDecreaseComponent");
+            Dictionary<string, object> unflinchingOnDamage =
+                Component(components, "FightStatusUnflinchingOnDamageComponent");
             Dictionary<string, object> skillCondition =
                 Component(components, "FightStatusSkillConditionComponent");
             Dictionary<string, object> damageCustomProps =
@@ -806,8 +814,8 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = classId,
                 StatusType = Int(status, "StatusType"),
-                HasBackToLifeComponent = HasBackToLifeComponent(classId),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
+                HasBackToLifeComponent = HasBackToLifeComponent(classId),
                 DurationRound = durationRound,
                 CurDurationRound = durationRound,
                 StartRound = -1,
@@ -868,6 +876,21 @@ namespace Zjcs.Combat.Official
                 HpAccMaxCount = hpAccDecrease == null ? -1 : Int(hpAccDecrease, "MaxCount", -1),
                 HpAccUpdateHpPerOnCure = hpAccDecrease == null
                     || Bool(hpAccDecrease, "UpdateHpPerOnCure", true),
+                HasUnflinchingOnDamageComponent = unflinchingOnDamage != null,
+                UnflinchingOnDamageRate = unflinchingOnDamage == null
+                    ? 1f : Float(unflinchingOnDamage, "Rate", 1f),
+                HasSkillCooldownModify = skillCooldownModify != null,
+                SkillCooldownModify = skillCooldownModify == null
+                    ? 0 : Int(skillCooldownModify, "ModifyCD"),
+                SkillCooldownModifyIsRandom = skillCooldownModify != null
+                    && Bool(skillCooldownModify, "IsRandom"),
+                SkillCooldownModifyCount = skillCooldownModify == null
+                    ? -1 : Int(skillCooldownModify, "Count", -1),
+                SkillCooldownModifyOffset = skillCooldownModify == null
+                    ? 0 : Int(skillCooldownModify, "CDOffset"),
+                HasPermanentSkillCooldownReduction = permanentSkillCooldownReduction != null,
+                PermanentSkillCooldownReduction = permanentSkillCooldownReduction == null
+                    ? 0 : Int(permanentSkillCooldownReduction, "ReduceCd", 1),
                 HasDamageCustomProps = damageCustomProps != null,
                 DamageCustomPropsRate = damageCustomProps == null ? 1f
                     : Float(damageCustomProps, "Rate", 1f),
@@ -965,6 +988,9 @@ namespace Zjcs.Combat.Official
                 AddHpAccTriggerEntries(hpAccDecrease, "Skills", "SkillId",
                     result.HpAccTriggerSkills, true);
             }
+            if (skillCooldownModify != null)
+                AddHpAccTriggerEntries(skillCooldownModify, "StatusTriggerSkillCfgs", "SkillId",
+                    result.SkillCooldownModifySkills, true);
             if (skillCondition != null)
             {
                 if (skillCondition.TryGetValue("Settings", out object rawSettings)
@@ -1095,8 +1121,8 @@ namespace Zjcs.Combat.Official
                 if (result.ScalePropByStatusTypeCount)
                     result.Supported = result.Supported
                         && (result.StatusType.Target == 1 || result.StatusType.Target == 2
-                            || result.StatusType.Target == 3 || result.StatusType.Target == 5
-                            || result.StatusType.Target == 6);
+                            || result.StatusType.Target == 3
+                            || result.StatusType.Target == 5 || result.StatusType.Target == 6);
             }
             result.Supported = result.Supported && ArrayCount(component,
                 "StatusReplacePropertyValues") == 0;
@@ -1186,7 +1212,6 @@ namespace Zjcs.Combat.Official
             new Dictionary<int, Dictionary<int, int>>();
         private int cooldownPropertyId;
 
-
         private const long ActionBehaviourDiscard = 2;
 
         private void ParseStateMutex()
@@ -1221,6 +1246,23 @@ namespace Zjcs.Combat.Official
                     out List<int> blockers)
                 ? new List<int>(blockers) : new List<int>();
         }
+
+        public bool CanStartAction(FightBattleUnitState unit, int actionType)
+        {
+            return unit != null && !unit.Ended
+                && !FightBattleTargeting.IsActionBlockedByStatus(unit,
+                    BlockingStatusActionTypes(actionType));
+        }
+
+        public bool CanStartEntityAction(FightBattleUnitState unit, int actionEntityId)
+        {
+            if (actionEntityId <= 0) return true;
+            if (!entities.TryGetValue(actionEntityId,
+                out Dictionary<string, object> components)) return false;
+            Dictionary<string, object> action = Component(components, "ActionComponent");
+            return action != null && CanStartAction(unit, Int(action, "ActionType"));
+        }
+
         private void ParseSkillPropertyTables(Dictionary<string, object> skillCatalog)
         {
             Dictionary<string, object> props = Object(Required(skillCatalog, "props"), "skill props");
@@ -1365,9 +1407,11 @@ namespace Zjcs.Combat.Official
             if (rows.Count == 0) return new Dictionary<int, long>();
             string selectedLevel = null;
             int selected = int.MinValue;
+            int minimum = int.MaxValue;
             foreach (string key in rows.Keys)
             {
                 int candidate = IntKey(key, "monster prop level");
+                if (candidate < minimum) minimum = candidate;
                 if (candidate <= level && candidate > selected)
                 {
                     selected = candidate;
@@ -1376,6 +1420,7 @@ namespace Zjcs.Combat.Official
             }
             if (selectedLevel == null)
             {
+                if (level < minimum) return new Dictionary<int, long>();
                 foreach (string key in rows.Keys)
                 {
                     int candidate = IntKey(key, "monster prop level");
@@ -1637,7 +1682,9 @@ namespace Zjcs.Combat.Official
                     Chance = Float(row, "BasePercent", 1f),
                     AffectedByProp = Bool(row, "AffectedByProp", true),
                     CharacterTypeRateOverrides = ParseStatusRateOverrides(row),
-                    LessThanHpPer = Float(row, "LessThanHpPer", -1f)
+                    LessThanHpPer = Float(row, "LessThanHpPer", -1f),
+                    SkillCostHp = Bool(row, "SkillCostHp"),
+                    DamageCostHpPer = Float(row, "DamageCostHpPer", -1f)
                 });
             }
         }
@@ -1661,7 +1708,7 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
-        private static FightBattleSkillMove ParseMove(Dictionary<string, object> row,
+        private FightBattleSkillMove ParseMove(Dictionary<string, object> row,
             int offsetX = int.MinValue, int offsetY = int.MinValue, bool? hasConditions = null)
         {
             if (offsetX == int.MinValue)
@@ -1675,9 +1722,9 @@ namespace Zjcs.Combat.Official
                     offsetY = Int(offset, "Y");
                 }
             }
-            bool conditions = hasConditions ?? (row.TryGetValue("DoMoveConditions", out object sourceConditions)
-                && sourceConditions != null && Array(sourceConditions, "DoMoveConditions").Count > 0);
-            return new FightBattleSkillMove
+            List<FightBattleSkillMoveCondition> moveConditions = ParseMoveConditions(row);
+            bool conditions = hasConditions ?? moveConditions.Count > 0;
+            var result = new FightBattleSkillMove
             {
                 MoveBehaviourId = Int(row, "MoveBehaviourId"),
                 Delay = Float(row, "Delay", 0f),
@@ -1690,8 +1737,16 @@ namespace Zjcs.Combat.Official
                 AffectedByProp = Bool(row, "AffectedByProp"),
                 CancelDiagonally = Bool(row, "CancelDiagonally"),
                 HasConditions = conditions,
-                Conditions = ParseMoveConditions(row)
+                Conditions = moveConditions
             };
+            if (entities.TryGetValue(result.MoveBehaviourId,
+                out Dictionary<string, object> moveEntity)
+                && Component(moveEntity, "FightActionSkillMoveComponent") is Dictionary<string, object> action)
+            {
+                result.MoveDuration = Float(action, "MoveDuration", -1f);
+                result.MoveSpeed = Float(action, "MoveSpeed", -1f);
+            }
+            return result;
         }
 
         private static List<FightBattleSkillMoveCondition> ParseMoveConditions(
@@ -2001,7 +2056,7 @@ namespace Zjcs.Combat.Official
             }
         }
 
-        private static void AddSourceMoves(Dictionary<string, object> skill,
+        private void AddSourceMoves(Dictionary<string, object> skill,
             List<FightBattleSkillMove> output)
         {
             object raw;
@@ -2077,7 +2132,7 @@ namespace Zjcs.Combat.Official
             foreach (Dictionary<string, object> holder in new[] { chained, custom, random, damage })
             {
                 if (holder == null || !holder.ContainsKey("Scope")) continue;
-                result.AllowEmptyScope = Bool(holder, "AllowEmptyScope");
+                result.AllowEmptyScope = Bool(holder, "AllowEmptyScope", holder == random);
                 foreach (object scopeItem in Array(holder["Scope"], "hit scope"))
                 {
                     Dictionary<string, object> scope = Object(scopeItem, "hit scope entry");
@@ -2094,6 +2149,12 @@ namespace Zjcs.Combat.Official
             {
                 AddIntArray(random, "HitList", result.RandomTargetHits, pending, references);
                 result.MiniHitTargetCount = Int(random, "MiniHitTargetCount", 1);
+                result.AllowEmptyScope = Bool(random, "AllowEmptyScope", true);
+                result.NotSameTarget = Bool(random, "NotSameTarget");
+                result.NotSameEmptyScope = Bool(random, "NotSameEmptyScope");
+                result.NotAllowHitEmpty = Bool(random, "NotAllowHitEmpty");
+                result.NotSameGrid = Bool(random, "NotSameGrid");
+                result.FilterOutOfGroundScope = Bool(random, "FilterOutOfGroundScope", true);
             }
             return result;
         }

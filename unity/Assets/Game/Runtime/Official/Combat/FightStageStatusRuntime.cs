@@ -12,30 +12,31 @@ namespace Zjcs.Combat.Official
     public static class FightStageStatusRuntime
     {
         public static void ApplyStart(FightBattleStageStatusConfig config,
-            FightOfficialCombatCatalog statuses, IReadOnlyList<FightBattleUnitState> units, int round)
+            FightOfficialCombatCatalog statuses, IReadOnlyList<FightBattleUnitState> units, int round,
+            FightRandomStream random)
         {
             if (config == null || statuses == null || units == null) return;
-            ApplyToAll(config.Status, statuses, units, round);
+            ApplyToAll(config.Status, statuses, units, round, random);
             foreach (FightBattleStatusGroup group in config.CharacterStatus)
             {
                 if (group == null) continue;
                 foreach (FightBattleUnitState unit in units)
                     if (unit != null && unit.CharacterType == group.Key)
-                        ApplyStatuses(unit, group.Status, statuses, round);
+                        ApplyStatuses(unit, group.Status, statuses, round, random);
             }
             foreach (FightBattleStatusGroup group in config.ProfessionStatus)
             {
                 if (group == null) continue;
                 foreach (FightBattleUnitState unit in units)
                     if (unit != null && unit.Profession == group.Key)
-                        ApplyStatuses(unit, group.Status, statuses, round);
+                        ApplyStatuses(unit, group.Status, statuses, round, random);
             }
             if (config.TargetIdStatus.Count > 0)
                 foreach (FightBattleUnitState unit in units)
                 {
                     if (unit == null || unit.MonsterId <= 0) continue;
                     if (config.TargetIdStatus.Contains(unit.MonsterId))
-                        ApplyStatuses(unit, config.TargetIdStatus, statuses, round);
+                        ApplyStatuses(unit, config.TargetIdStatus, statuses, round, random);
                 }
         }
 
@@ -45,18 +46,19 @@ namespace Zjcs.Combat.Official
         /// means the entries were already applied at battle start.
         /// </summary>
         public static void ApplyGlobalRound(FightBattleStageStatusConfig config,
-            FightOfficialCombatCatalog statuses, IReadOnlyList<FightBattleUnitState> units, int globalRound)
+            FightOfficialCombatCatalog statuses, IReadOnlyList<FightBattleUnitState> units,
+            int globalRound, FightRandomStream random)
         {
             if (config == null || statuses == null || units == null || globalRound <= 0) return;
             if (config.GlobalRoundStatusDelay <= 0f) return;
             if (globalRound % Math.Max(1, (int)Math.Round(config.GlobalRoundStatusDelay)) != 0) return;
-            ApplyToAll(config.GlobalRoundStatus, statuses, units, globalRound);
+            ApplyToAll(config.GlobalRoundStatus, statuses, units, globalRound, random);
             foreach (FightBattleStatusGroup group in config.FactionGlobalRoundStatus)
             {
                 if (group == null) continue;
                 foreach (FightBattleUnitState unit in units)
                     if (unit != null && unit.Side == group.Key + 1)
-                        ApplyStatuses(unit, group.Status, statuses, globalRound);
+                        ApplyStatuses(unit, group.Status, statuses, globalRound, random);
             }
         }
 
@@ -81,15 +83,15 @@ namespace Zjcs.Combat.Official
         }
 
         private static void ApplyToAll(List<int> classIds, FightOfficialCombatCatalog statuses,
-            IReadOnlyList<FightBattleUnitState> units, int round)
+            IReadOnlyList<FightBattleUnitState> units, int round, FightRandomStream random)
         {
             if (classIds == null || classIds.Count == 0) return;
             foreach (FightBattleUnitState unit in units)
-                ApplyStatuses(unit, classIds, statuses, round);
+                ApplyStatuses(unit, classIds, statuses, round, random);
         }
 
         private static void ApplyStatuses(FightBattleUnitState unit, List<int> classIds,
-            FightOfficialCombatCatalog statuses, int round)
+            FightOfficialCombatCatalog statuses, int round, FightRandomStream random)
         {
             if (unit == null || classIds == null) return;
             foreach (int classId in classIds)
@@ -101,7 +103,7 @@ namespace Zjcs.Combat.Official
                         instanceId = existing.InstanceId + 1;
                 FightBattleStatusState template = statuses.CreateStatus(classId, unit.Id, unit.Id,
                     instanceId);
-                FightStatusLifecycle.Apply(unit, template, round, instanceId);
+                FightStatusLifecycle.Apply(unit, template, round, instanceId, random);
             }
         }
     }

@@ -15,6 +15,8 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private TextAsset battleSourceManifest;
         [SerializeField] private TextAsset rules;
         [SerializeField] private TextAsset rulesSourceManifest;
+        [SerializeField] private TextAsset monsterHpPlies;
+        [SerializeField] private TextAsset monsterHpPliesSourceManifest;
 
         public static OfficialCombatAssetCatalog LoadDefault()
         {
@@ -24,16 +26,24 @@ namespace Zjcs.Presentation.Combat
             return catalog;
         }
 
+        public TextAsset Rules => rules;
+        public TextAsset RulesSourceManifest => rulesSourceManifest;
+
         public FightOfficialCombatCatalog Load()
         {
             if (loadedCatalog != null) return loadedCatalog;
             FightOfficialCombatSourceManifest skillSource = ReadManifest(skillSourceManifest, "skill-rules.json");
             FightOfficialCombatSourceManifest battleSource = ReadManifest(battleSourceManifest, "battle-rules.json");
+            FightOfficialCombatSourceManifest hpPliesSource = ReadManifest(
+                monsterHpPliesSourceManifest, "monster-hp-plies.json");
             if (skillRules == null || battleRules == null)
                 throw new InvalidOperationException("Official combat rule TextAssets are not bound.");
+            if (monsterHpPlies == null)
+                throw new InvalidOperationException("Official monster HP plies TextAsset is not bound.");
 
             loadedCatalog = FightOfficialCombatCatalog.Load(skillRules.text, skillSource.OutputSha256,
-                skillSource.Manifest, battleRules.text, battleSource.OutputSha256, battleSource.Manifest);
+                skillSource.Manifest, battleRules.text, battleSource.OutputSha256, battleSource.Manifest,
+                monsterHpPlies.text, hpPliesSource.OutputSha256, hpPliesSource.Manifest);
             return loadedCatalog;
         }
 
@@ -59,17 +69,33 @@ namespace Zjcs.Presentation.Combat
         private FightOfficialCombatCatalog loadedCatalog;
         private FightDamageFormula loadedFormula;
         private FightOfficialSkillItemCatalog loadedSkillItems;
+        private FightOfficialNpcAssistanceCatalog loadedNpcAssistance;
+
+        public FightOfficialNpcAssistanceCatalog LoadNpcAssistance()
+        {
+            if (loadedNpcAssistance != null) return loadedNpcAssistance;
+            TextAsset npcRules = Resources.Load<TextAsset>("DailyChallenges/npc-assistance-rules");
+            TextAsset npcSourceManifest = Resources.Load<TextAsset>(
+                "DailyChallenges/npc-assistance-rules-source-manifest");
+            FightOfficialCombatSourceManifest source = ReadManifest(npcSourceManifest,
+                "npc-assistance-rules.json");
+            if (npcRules == null)
+                throw new InvalidOperationException("Official NPC assistance rules are missing from Resources.");
+            loadedNpcAssistance = FightOfficialNpcAssistanceCatalog.Load(npcRules.text,
+                source.OutputSha256, source.Manifest, Load(), LoadSkillItems(), LoadDamageFormula());
+            return loadedNpcAssistance;
+        }
 
         public FightBattleExecutor BeginBattle(FightBattleCheckpoint checkpoint)
         {
             return FightBattleExecutor.Begin(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
-                Load());
+                Load(), LoadSkillItems());
         }
 
         public FightBattleExecutor RestoreBattle(FightBattleCheckpoint checkpoint)
         {
             return FightBattleExecutor.Restore(checkpoint, LoadDamageFormula(), new FightDamageSettlement(),
-                Load());
+                Load(), LoadSkillItems());
         }
 
         private FightStageStatusCatalog loadedStageStatus;

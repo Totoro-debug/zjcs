@@ -4,9 +4,8 @@ using System.Collections.Generic;
 namespace Zjcs.Combat.Official
 {
     /// <summary>
-    /// One resolved hit of a battle step. It keeps both the settlement value and the official hit
-    /// flags so the HUD can choose the matching floating text and the report can attribute the
-    /// damage to its actual source (skill, passive or status).
+    /// One resolved hit or presentation-only HP-cost float in a battle step. Hit records keep the
+    /// official flags for HUD and statistics; <see cref="IsSkillCost"/> records are not hits.
     /// </summary>
     [Serializable]
     public sealed class FightBattleDamageEvent
@@ -19,6 +18,7 @@ namespace Zjcs.Combat.Official
         public int HitEntityId;
         public int DamageType;
         public int ElementType;
+        public bool IsSkillCost;
         public float Delay;
         public int Anchor;
         public bool IsCure;
@@ -27,8 +27,12 @@ namespace Zjcs.Combat.Official
         public bool Dodge;
         public bool Immunity;
         public bool Blinding;
+        public bool IgnoreShield;
+        public bool TrueDamage;
+        public bool BreakResilience;
         public long Damage;
         public long AbsoluteDamage;
+        public long ShieldDamage;
         public long BeforeHp;
         public long AfterHp;
         public long MaxHp;
@@ -42,6 +46,7 @@ namespace Zjcs.Combat.Official
         public int Hits;
         public int HitsTaken;
         public long DamageDealt;
+        public long DamageAndShieldDamageDealt;
         public long DamageTaken;
         public long HealDealt;
         public long HealTaken;
@@ -119,6 +124,8 @@ namespace Zjcs.Combat.Official
             else
             {
                 source.DamageDealt += amount;
+                source.DamageAndShieldDamageDealt = checked(source.DamageAndShieldDamageDealt
+                    + amount + damage.ShieldDamage);
                 target.DamageTaken += amount;
                 skill.Damage += amount;
             }

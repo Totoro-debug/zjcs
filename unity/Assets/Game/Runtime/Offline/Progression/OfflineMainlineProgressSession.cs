@@ -81,6 +81,15 @@ namespace Zjcs.Offline.Progression
         public List<OfflineProfessionLevel> ProfessionLevels = new List<OfflineProfessionLevel>();
         public OfflineHomeShopProgress HomeShop = new OfflineHomeShopProgress();
         public List<string> AppliedCharacterEventIds = new List<string>();
+        public List<OfflineStatueBattleEffect> PendingStatueBattleEffects = new List<OfflineStatueBattleEffect>();
+    }
+
+    [Serializable]
+    public sealed class OfflineStatueBattleEffect
+    {
+        public string EventId = string.Empty;
+        public float HpPercentChange;
+        public List<int> StatusEffectClassIds = new List<int>();
     }
 
     [Serializable]
@@ -300,6 +309,16 @@ namespace Zjcs.Offline.Progression
                 player.HasManualMeetNpc = true;
                 return true;
             }, eventId);
+        }
+
+        public ProgressionResult ClearPendingStatueBattleEffects(string eventId)
+        {
+            if (string.IsNullOrWhiteSpace(eventId) || eventId.Length > 160)
+                return Result(ProgressionResultStatus.InvalidState, message: "A battle-end receipt is required.");
+            Reload();
+            if (Save.Player.PendingStatueBattleEffects.Count == 0)
+                return Result(ProgressionResultStatus.Unchanged);
+            return ApplyInventoryTransaction(eventId, save => save.Player.PendingStatueBattleEffects.Clear());
         }
 
         public static OfflineMainlineProgressSession Open(ProfileSlotCatalog slots, string slotId,
@@ -945,6 +964,8 @@ namespace Zjcs.Offline.Progression
                 || save.Player.Stories == null || save.Player.Stories.Count > 100000
                 || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
+                || save.Player.PendingStatueBattleEffects == null
+                || save.Player.PendingStatueBattleEffects.Count > 10000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
                 || save.Player.Inventory.Count > 20000 || save.Player.UnlockedMapClassIds.Count > 1000
                 || save.Player.RankUnlockTimes == null || save.Player.RankUnlockTimes.Count > 100
@@ -955,6 +976,19 @@ namespace Zjcs.Offline.Progression
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
                 || save.Tasks.ClaimedMainlineTaskIds.Count > 10000)
                 return false;
+
+            var statueEffectIds = new HashSet<string>(StringComparer.Ordinal);
+            foreach (OfflineStatueBattleEffect effect in save.Player.PendingStatueBattleEffects)
+            {
+                if (effect == null || string.IsNullOrWhiteSpace(effect.EventId) || effect.EventId.Length > 160
+                    || !statueEffectIds.Add(effect.EventId) || float.IsNaN(effect.HpPercentChange)
+                    || float.IsInfinity(effect.HpPercentChange) || effect.HpPercentChange < -1f
+                    || effect.HpPercentChange > 1f || effect.StatusEffectClassIds == null
+                    || effect.StatusEffectClassIds.Count > 100
+                    || effect.StatusEffectClassIds.Any(value => value <= 0)
+                    || effect.StatusEffectClassIds.Distinct().Count() != effect.StatusEffectClassIds.Count)
+                    return false;
+            }
 
             var items = new HashSet<int>();
             foreach (OfflineItemStack item in save.Player.Inventory)
@@ -1051,6 +1085,11 @@ namespace Zjcs.Offline.Progression
                 save.Player.ProfessionLevels = new List<OfflineProfessionLevel>();
             if (save.Player.HomeShop == null) save.Player.HomeShop = new OfflineHomeShopProgress();
             OfflineHomeShopProgress.Normalize(save.Player.HomeShop);
+            if (save.Player.PendingStatueBattleEffects == null)
+                save.Player.PendingStatueBattleEffects = new List<OfflineStatueBattleEffect>();
+            foreach (OfflineStatueBattleEffect effect in save.Player.PendingStatueBattleEffects)
+                if (effect != null && effect.StatusEffectClassIds == null)
+                    effect.StatusEffectClassIds = new List<int>();
             if (save.Player.Equipment.Instances == null) save.Player.Equipment.Instances = new List<OfflineEquipmentInstance>();
             if (save.Player.Equipment.Equipped == null) save.Player.Equipment.Equipped = new List<OfflineEquippedSlot>();
             if (save.Player.Equipment.SlotProgress == null) save.Player.Equipment.SlotProgress = new List<OfflineEquipmentSlotProgress>();

@@ -200,7 +200,7 @@ def decode_texture(apk, bundle: str, path_id: int, expected: str, label: str) ->
     return payload
 
 
-def find_page_texture(apk, base: str) -> dict:
+def find_page_texture(apk, base: str) -> list[dict]:
     """Locate an atlas page whose sprite-library manifest entry is absent.
 
     NPC appearance atlases were not registered by the earlier sprite library
@@ -226,13 +226,70 @@ def find_page_texture(apk, base: str) -> dict:
     unique = {}
     for name, path, pointer, object_name in matches:
         unique[(name, path)] = (path, pointer, object_name)
-    if len(unique) != 1:
-        raise ValueError("Expected one pinned texture for atlas page " + base
-                         + ", found " + str(len(unique)))
-    (name, _), (path, pointer, object_name) = next(iter(unique.items()))
-    value = pointer.deref()
-    return {"bundle": name, "path_id": int(value.path_id), "object": object_name,
-            "container": path, "sha256": "", "source_kind": "pinned-apk-scan"}
+    return [{"bundle": name, "path_id": int(pointer.deref().path_id), "object": object_name,
+             "container": path, "sha256": "", "source_kind": "pinned-apk-scan"}
+            for (name, _), (path, pointer, object_name) in sorted(unique.items())]
+
+
+def model_stems(catalog: dict, keys: list[str]) -> tuple[dict, dict]:
+    selected, failures = {}, {}
+    for key in keys:
+        entry = catalog.get(key)
+        if entry is None:
+            failures[key] = "No indexed official battle skeleton"
+            continue
+        stem = PurePosixPath(entry["file"]).stem
+        selected.setdefault(stem, []).append(key)
+    return selected, failures
+
+
+def decode_page(apk, resources: dict, uri: str, base: str, size: tuple[int, int],
+                cache: dict) -> tuple[bytes, dict]:
+    from PIL import Image
+
+    rejected = []
+
+    def decode(record):
+        key = (record["bundle"], int(record["path_id"]), record.get("sha256", ""))
+        if key not in cache:
+            cache[key] = decode_texture(apk, *key, base)
+        payload = cache[key]
+        with Image.open(io.BytesIO(payload)) as image:
+            actual = image.size
+        if actual != size:
+            rejected.append(f"{record['bundle']}:{record['path_id']} "
+                            f"{actual[0]}x{actual[1]}, atlas requires {size[0]}x{size[1]}")
+            return None
+        return payload
+
+    source = resources.get(uri)
+    if source is not None:
+        payload = decode(source)
+        if payload is not None:
+            return payload, source
+    candidates = find_page_texture(apk, base)
+    if isinstance(candidates, dict):
+        candidates = [candidates]
+    matches = []
+    for record in candidates:
+        payload = decode(record)
+        if payload is not None:
+            matches.append((payload, record))
+    if len({sha256(payload) for payload, _ in matches}) > 1:
+        raise ValueError("Pinned atlas page candidates contain different data: " + base)
+    if matches:
+        return matches[0]
+    raise ValueError("No matching pinned atlas page: " + base + "; " + "; ".join(rejected))
+
+
+def material_uses_identical_page(mat: Path, page: Path, expected_hash: str) -> bool:
+    meta = page.with_suffix(page.suffix + ".meta")
+    if not mat.is_file() or not page.is_file() or not meta.is_file():
+        return False
+    if sha256(page.read_bytes()) != expected_hash:
+        return False
+    guid = re.search(r"guid: ([0-9a-f]{32})", meta.read_text(encoding="utf-8"))
+    return guid is not None and ("guid: " + guid.group(1)) in mat.read_text(encoding="utf-8")
 
 
 def bind_atlas_asset(stem: str) -> None:
@@ -260,7 +317,7 @@ def bind_atlas_asset(stem: str) -> None:
     skeleton_data.write_text(updated, encoding="utf-8")
 
 
-def bind_material(mat: Path, guid: str) -> str:
+def bind_material(mat: Path, guid: str, previous_guid: str | None = None) -> str:
     text = mat.read_text(encoding="utf-8")
     marker = "    - _MainTex:\n"
     start = text.index(marker)
@@ -272,6 +329,9 @@ def bind_material(mat: Path, guid: str) -> str:
         return text[:start] + updated + text[end:]
     if "guid: " + guid in block:
         return text
+    if previous_guid and "guid: " + previous_guid in block:
+        updated = block.replace("guid: " + previous_guid, "guid: " + guid)
+        return text[:start] + updated + text[end:]
     raise ValueError("Material already binds a different texture: " + str(mat))
 
 
@@ -312,11 +372,16 @@ def build(monsters: tuple[int, ...], npcs: tuple[int, ...], all_pages: bool) -> 
     for npc in npcs:
         key = npc_skeleton(catalog, npc)
         stem_by_monster[-int(npc)] = PurePosixPath(catalog[key]["file"]).stem
+    entries, textures, failures = [], {}, {}
+    generic_keys = {}
     if all_pages:
-        stem_by_monster = {}
+        models = json.loads((ROOT / "assets/official/battle-presentation/models.json")
+                            .read_text(encoding="utf-8"))
+        generic_keys, failures = model_stems(catalog, list(models))
+        stem_by_monster = {index: stem for index, stem in enumerate(sorted(generic_keys))}
 
     apk = Apk()
-    entries, textures, failures = [], {}, {}
+    decoded = {}
     skeletons = {}
     for monster, stem in sorted(stem_by_monster.items()):
         bind_atlas_asset(stem)
@@ -328,18 +393,18 @@ def build(monsters: tuple[int, ...], npcs: tuple[int, ...], all_pages: bool) -> 
         for page, width, height in pages:
             base = page[:-4] if page.lower().endswith(".png") else page
             uri = "res://assets/official/sprites/" + base + ".png"
-            record = resources.get(uri)
-            if record is None:
-                record = find_page_texture(apk, base)
-            payload = decode_texture(apk, record["bundle"], int(record["path_id"]),
-                                     record.get("sha256", ""), base)
-            from PIL import Image
-            size = Image.open(io.BytesIO(payload)).size
-            if size != (width, height):
-                raise ValueError("Atlas page size differs from its atlas block: "
-                                 + base + " " + str(size) + " vs " + str((width, height)))
+            payload, record = decode_page(apk, resources, uri, base, (width, height), decoded)
             target = TEXTURE_DIR / (base + ".png")
             guid = texture_guid(base)
+            mat = SPINE_ROOT / (stem + "_" + base + ".mat")
+            if not mat.exists():
+                raise ValueError("Converted battle material is missing: " + str(mat))
+            old_meta = target.with_suffix(".png.meta")
+            old_guid = None
+            if material_uses_identical_page(mat, target, sha256(payload)):
+                old_guid = re.search(r"guid: ([0-9a-f]{32})", old_meta.read_text(
+                    encoding="utf-8")).group(1)
+            material = bind_material(mat, guid, old_guid)
             write_bytes(target, payload)
             write_bytes(target.with_suffix(".png.meta"),
                         TEXTURE_IMPORTER.format(guid=guid).encode("utf-8"))
@@ -348,13 +413,13 @@ def build(monsters: tuple[int, ...], npcs: tuple[int, ...], all_pages: bool) -> 
                               "sprite_source": uri, "bundle": record["bundle"],
                               "path_id": record["path_id"], "object": record.get("object", ""),
                               "guid": guid}
-            mat = SPINE_ROOT / (stem + "_" + base + ".mat")
-            if not mat.exists():
-                raise ValueError("Converted battle material is missing: " + str(mat))
-            write_bytes(mat, bind_material(mat, guid).encode("utf-8"))
+            write_bytes(mat, material.encode("utf-8"))
             bound.append({"page": base, "material": mat.relative_to(ROOT).as_posix()})
         skeletons[stem] = {"monster_id": monster, "atlas": atlas_path.relative_to(ROOT).as_posix(),
                            "pages": bound}
+        if all_pages:
+            skeletons[stem].pop("monster_id")
+            skeletons[stem]["model_keys"] = generic_keys[stem]
         entries.append({"monster_id": monster, "skeleton": stem, "pages": len(bound)})
 
     if not skeletons and not all_pages:

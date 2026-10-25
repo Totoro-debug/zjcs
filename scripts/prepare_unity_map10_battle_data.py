@@ -492,6 +492,19 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
     stage_ids = map_stage_ids(map_id, placements, map_stage_rows, stage_count)
     if map_id == 11:
         stage_ids.update(component_stage_ids)
+        group_path = "Assets/Config/Luban/Map/map_entity_group.g.bytes"
+        group_obj = apk.asset("config_luban_map", group_path)
+        group_bytes = text_asset_bytes(group_obj)
+        groups = constructors.table(group_bytes, "TbMapEntityGroupInfo")
+        witch_group = [row for row in groups if row["Group"] == 2000
+                       and row["FilterCondition"].get("MapClassId") == map_id]
+        if len(witch_group) != 1:
+            raise ValueError("Map11 witch summon must resolve one original map-specific group.")
+        for extra in witch_group[0]["ExtraDataInfos"]:
+            if extra["_type"] != "MapEntityGroupInfoExtraStageIdsData":
+                raise ValueError("Unsupported witch spawn stage binding")
+            stage_ids.update(stage_id for values in extra["StageIdsList"] for stage_id in values)
+        witch_group_source = source_record(apk, group_obj, group_path, group_bytes)
     map_stage_source = source_record(apk, map_stage_obj, MAP_STAGE_TABLE[1], map_stage_bytes)
 
     stage_obj = apk.asset(STAGE_TABLE[0], STAGE_TABLE[1])
@@ -575,6 +588,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
             f"map{map_id}_placements": placements_source,
             f"map{map_id}_stage_index": map_stage_source,
             **({"map11_definition": map11_definition_source} if map_id == 11 else {}),
+            **({"witch_spawn_group": witch_group_source} if map_id == 11 else {}),
             "battle_scenes": {
                 "path": BATTLE_SCENES_PATH.relative_to(ROOT).as_posix(),
                 "sha256": sha256(scene_payload),

@@ -228,7 +228,7 @@ namespace Zjcs.Presentation.Home
                     scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
                     root.localScale = scale;
                 },
-                null, null, hudCatalog, restore);
+                null, null, hudCatalog, restore, statueProgress: host.Profile);
             controller.AttachUnitTransform(1, playerTransform);
             controller.ConfigureSpeeds(combatAssets.Load().SpeedSettings, 0, IsBattleSpeedConditionMet);
             string serialized = FightBattleCheckpointSerializer.Save(checkpoint);
@@ -633,6 +633,8 @@ namespace Zjcs.Presentation.Home
                 if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
             }
             var properties = PropertyMap(player.Properties);
+            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(save.Equipment, 10);
+            int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
             var skills = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
@@ -645,7 +647,10 @@ namespace Zjcs.Presentation.Home
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot, ItemId = itemId, Rank = rank,
-                    Level = level, SubRank = player.SubRank,
+                    Level = level,
+                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(itemId,
+                        player.Profession, currentWeaponType, save.InitialWeaponType),
+                    SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level,
                         player.SubRank, properties),
                     Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))

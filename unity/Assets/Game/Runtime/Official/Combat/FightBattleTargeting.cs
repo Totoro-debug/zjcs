@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Zjcs.Combat.Official
 {
+    public sealed class FightBattleRandomScopeSelection
+    {
+        public FightGridPoint Position;
+        public bool IsEmpty;
+        public List<FightBattleUnitState> Targets = new List<FightBattleUnitState>();
+    }
+
     public static class FightBattleTargeting
     {
         private const int ConfusionActionType = 54;
@@ -22,7 +29,7 @@ namespace Zjcs.Combat.Official
         public static List<FightBattleUnitState> Select(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, int targetType, int ridiculeTargetId = 0,
             bool confused = false, bool releaseWhileConfused = false,
-            FightBattleSkillDefinition skill = null)
+            FightBattleSkillDefinition skill = null, FightRandomStream random = null)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (units == null) throw new ArgumentNullException(nameof(units));
@@ -45,7 +52,10 @@ namespace Zjcs.Combat.Official
                     candidates.Add(unit);
             }
 
-            candidates.Sort((left, right) => CompareCandidates(actor, left, right, skill, units));
+            Dictionary<int, double> randomPriorities = CreateRandomPriorities(actor,
+                candidates, skill, random);
+            candidates.Sort((left, right) => CompareCandidates(actor, left, right, skill,
+                units, randomPriorities));
             PrioritizeRidiculeSource(candidates, targetType, ridiculeTargetId);
             if (targetType == 1 || targetType == 2 || targetType == 3 || targetType == 8 || targetType == 9)
                 if (candidates.Count > 1) candidates.RemoveRange(1, candidates.Count - 1);
@@ -253,10 +263,11 @@ namespace Zjcs.Combat.Official
 
         public static List<FightBattleUnitState> SelectInSkillRange(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
-            int ridiculeTargetId = 0, bool confused = false, bool releaseWhileConfused = false)
+            int ridiculeTargetId = 0, bool confused = false, bool releaseWhileConfused = false,
+            FightRandomStream random = null)
         {
             List<FightBattleUnitState> candidates = Select(actor, units, skill.TargetType,
-                ridiculeTargetId, confused, releaseWhileConfused, skill);
+                ridiculeTargetId, confused, releaseWhileConfused, skill, random);
             if (skill.Range == null || skill.Range.Count == 0) return candidates;
 
             var inRange = new List<FightBattleUnitState>();
@@ -283,7 +294,8 @@ namespace Zjcs.Combat.Official
         /// </summary>
         public static List<FightBattleUnitState> SelectScopeTargets(FightBattleUnitState actor,
             IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
-            FightBattleUnitState primary, FightBattleHitDefinition hit)
+            FightBattleUnitState primary, FightBattleHitDefinition hit,
+            FightRandomStream random = null)
         {
             var result = new List<FightBattleUnitState>();
             if (actor == null || units == null || hit == null || hit.Scope == null
@@ -300,7 +312,10 @@ namespace Zjcs.Combat.Official
                     if (hit.Scope[i].X == dx && hit.Scope[i].Y == dy) { inScope = true; break; }
                 if (inScope) result.Add(unit);
             }
-            result.Sort((left, right) => CompareCandidates(actor, left, right, skill, units));
+            Dictionary<int, double> randomPriorities = CreateRandomPriorities(actor,
+                result, skill, random);
+            result.Sort((left, right) => CompareCandidates(actor, left, right, skill,
+                units, randomPriorities));
             PrioritizeRidiculeSource(result, skill == null ? 1 : skill.TargetType,
                 skill != null && skill.ReleaseWhileRidicule ? RidiculeSourceId(actor) : 0);
             if (hit.TargetMode != 1 && hit.TargetMode != 2 && result.Count > 1)
@@ -450,6 +465,107 @@ namespace Zjcs.Combat.Official
             return selected;
         }
 
+        public static List<FightBattleUnitState> SelectRandomHitTargets(
+            IReadOnlyList<FightBattleUnitState> candidates, int randomCount,
+            FightRandomStream random, ISet<int> excludedTargetIds = null)
+        {
+            if (candidates == null) throw new ArgumentNullException(nameof(candidates));
+            var available = new List<FightBattleUnitState>();
+            foreach (FightBattleUnitState candidate in candidates)
+                if (IsSelectable(candidate) && (excludedTargetIds == null
+                    || !excludedTargetIds.Contains(candidate.Id))) available.Add(candidate);
+            return SelectHitTargets(available, 2, randomCount, random);
+        }
+
+        public static List<FightBattleRandomScopeSelection> SelectRandomScopePositions(
+            FightBattleUnitState actor, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleSkillDefinition skill, FightBattleUnitState anchor,
+            IReadOnlyList<FightGridPoint> scope, FightBattleGrid grid, int randomCount,
+            FightRandomStream random, bool allowEmptyScope, bool notAllowHitEmpty,
+            bool notSameTarget, ISet<int> excludedTargetIds,
+            bool notSameEmptyScope, ISet<FightGridPoint> excludedEmptyPositions,
+            bool notSameGrid, ISet<FightGridPoint> excludedGridPositions,
+            bool filterOutOfGroundScope)
+        {
+            if (actor == null) throw new ArgumentNullException(nameof(actor));
+            if (units == null) throw new ArgumentNullException(nameof(units));
+            if (scope == null) throw new ArgumentNullException(nameof(scope));
+            if (random == null) throw new ArgumentNullException(nameof(random));
+
+            int centerX = anchor == null ? actor.X : anchor.X;
+            int centerY = anchor == null ? actor.Y : anchor.Y;
+            var validTargets = ScopeCandidates(actor, units,
+                skill == null ? 1 : skill.TargetType, skill);
+            var candidates = new List<FightBattleRandomScopeSelection>();
+            var visited = new HashSet<FightGridPoint>();
+            bool hasGridBounds = grid != null && grid.Width > 0 && grid.Height > 0;
+
+            foreach (FightGridPoint offset in scope)
+            {
+                var position = new FightGridPoint(centerX + offset.X, centerY + offset.Y);
+                if (!visited.Add(position)) continue;
+                bool inBounds = !hasGridBounds || grid.Contains(position);
+                if (filterOutOfGroundScope && !inBounds) continue;
+                if (notSameGrid && excludedGridPositions != null
+                    && excludedGridPositions.Contains(position)) continue;
+
+                var targetsAtPosition = new List<FightBattleUnitState>();
+                foreach (FightBattleUnitState unit in validTargets)
+                    if (OccupiesPosition(unit, position)
+                        && (!notSameTarget || excludedTargetIds == null
+                            || !excludedTargetIds.Contains(unit.Id)))
+                        targetsAtPosition.Add(unit);
+
+                if (targetsAtPosition.Count > 0)
+                {
+                    candidates.Add(new FightBattleRandomScopeSelection
+                    {
+                        Position = position,
+                        Targets = targetsAtPosition
+                    });
+                    continue;
+                }
+
+                if (IsOccupied(units, position) || !allowEmptyScope || notAllowHitEmpty)
+                    continue;
+                if (notSameEmptyScope && excludedEmptyPositions != null
+                    && excludedEmptyPositions.Contains(position)) continue;
+                candidates.Add(new FightBattleRandomScopeSelection
+                {
+                    Position = position,
+                    IsEmpty = true
+                });
+            }
+
+            int count = Math.Min(Math.Max(1, randomCount), candidates.Count);
+            var selected = new List<FightBattleRandomScopeSelection>(count);
+            for (int i = 0; i < count; i++)
+            {
+                int index = Math.Min((int)(random.Next() * candidates.Count), candidates.Count - 1);
+                selected.Add(candidates[index]);
+                candidates.RemoveAt(index);
+            }
+            return selected;
+        }
+
+        private static bool IsOccupied(IReadOnlyList<FightBattleUnitState> units,
+            FightGridPoint position)
+        {
+            foreach (FightBattleUnitState unit in units)
+                if (IsSelectable(unit) && OccupiesPosition(unit, position)) return true;
+            return false;
+        }
+
+        private static bool OccupiesPosition(FightBattleUnitState unit, FightGridPoint position)
+        {
+            if (unit == null || !IsSelectable(unit)) return false;
+            if (unit.X == position.X && unit.Y == position.Y) return true;
+            if (unit.BodyOffsets == null) return false;
+            foreach (FightGridPoint offset in unit.BodyOffsets)
+                if (unit.X + offset.X == position.X && unit.Y + offset.Y == position.Y) return true;
+            return false;
+        }
+
         /// <summary>
         /// Official <c>FightSkillComponentInfo.Range</c> is ordered from near to far and targeting
         /// depends on that order to prefer closer targets. An explicit AI priority property still
@@ -458,12 +574,14 @@ namespace Zjcs.Combat.Official
         /// </summary>
         private static int CompareCandidates(FightBattleUnitState actor,
             FightBattleUnitState left, FightBattleUnitState right, FightBattleSkillDefinition skill,
-            IReadOnlyList<FightBattleUnitState> units)
+            IReadOnlyList<FightBattleUnitState> units,
+            IReadOnlyDictionary<int, double> randomPriorities = null)
         {
             IReadOnlyList<int> priorities = PriorityTypes(skill);
             for (int i = 0; i < priorities.Count; i++)
             {
-                int comparison = ComparePriority(priorities[i], actor, left, right, units, skill);
+                int comparison = ComparePriority(priorities[i], actor, left, right, units,
+                    skill, randomPriorities);
                 if (comparison != 0) return comparison;
             }
             if (skill == null || skill.PriorityProperty > 0)
@@ -492,7 +610,8 @@ namespace Zjcs.Combat.Official
 
         private static int ComparePriority(int type, FightBattleUnitState actor,
             FightBattleUnitState left, FightBattleUnitState right,
-            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill)
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
+            IReadOnlyDictionary<int, double> randomPriorities)
         {
             switch (type)
             {
@@ -508,6 +627,8 @@ namespace Zjcs.Combat.Official
                     int rightFiltered = Contains(skill.HpLowerCharacterTypeFilter, right.CharacterType) ? 1 : 0;
                     if (leftFiltered != rightFiltered) return leftFiltered.CompareTo(rightFiltered);
                     return left.Hp.CompareTo(right.Hp);
+                case 3: // SaferPos (local approximation)
+                    return CompareSaferPositions(actor, left, right, units, skill);
                 case 4: // ShorterTargetDist
                     return Distance(actor, left).CompareTo(Distance(actor, right));
                 case 5: // ShorterMovedTargetDist
@@ -516,11 +637,26 @@ namespace Zjcs.Combat.Official
                 case 7: // MoreHitStatusCount
                     return HitStatusCount(actor, right, units, skill).CompareTo(
                         HitStatusCount(actor, left, units, skill));
+                case 6: // PriorTargetEntityPos (local target-continuity approximation)
+                    return PriorTargetRank(left, actor).CompareTo(PriorTargetRank(right, actor));
+                case 9: // ShorterEnemyTargetPosDistAndSameDir (local approximation)
+                    bool leftSameDirection = FacesTarget(actor, left);
+                    bool rightSameDirection = FacesTarget(actor, right);
+                    if (leftSameDirection != rightSameDirection)
+                        return leftSameDirection ? -1 : 1;
+                    return MoveDistanceToRange(actor, left, skill).CompareTo(
+                        MoveDistanceToRange(actor, right, skill));
                 case 10: // BiggerBodyRange
                     return BodyRange(right).CompareTo(BodyRange(left));
                 case 11: // PriorGameCharacterType
                     return PreferredCharacterType(right, skill).CompareTo(
                         PreferredCharacterType(left, skill));
+                case 12: // PriorBiggerBodyHitCoverage (local approximation)
+                    return BiggerBodyHitCoverageCount(actor, right, units, skill).CompareTo(
+                        BiggerBodyHitCoverageCount(actor, left, units, skill));
+                case 13: // PriorRandom (deterministic per battle stream)
+                    return RandomPriority(left, actor, skill, randomPriorities).CompareTo(
+                        RandomPriority(right, actor, skill, randomPriorities));
                 case 14: // PriorCloserTeammate
                 case 21: // ShorterFriendDistToTargetPos
                     return NearestFriendDistance(left, units, actor).CompareTo(
@@ -529,9 +665,172 @@ namespace Zjcs.Combat.Official
                     return ComparePriorityProperty(left, right, skill);
                 case 18: // PriorGameCharacterTypeGroups
                     return CharacterTypeGroup(left, skill).CompareTo(CharacterTypeGroup(right, skill));
+                case 16: // StayAwayFromEnemies (local position approximation)
+                    int leftEnemyDistance = NearestOtherEnemyDistance(actor, left, units, skill);
+                    int rightEnemyDistance = NearestOtherEnemyDistance(actor, right, units, skill);
+                    if (leftEnemyDistance != rightEnemyDistance)
+                        return rightEnemyDistance.CompareTo(leftEnemyDistance);
+                    return TotalOtherEnemyDistance(actor, right, units, skill).CompareTo(
+                        TotalOtherEnemyDistance(actor, left, units, skill));
+                case 17: // AttachOperateChildSkillFriendHp (local approximation)
+                    int leftFriend = left.Side == actor.Side ? 0 : 1;
+                    int rightFriend = right.Side == actor.Side ? 0 : 1;
+                    if (leftFriend != rightFriend) return leftFriend.CompareTo(rightFriend);
+                    return (left.Hp / (double)Math.Max(1L, left.MaxHp)).CompareTo(
+                        right.Hp / (double)Math.Max(1L, right.MaxHp));
+                case 20: // ShorterEnemyDistToTargetPos (local approximation)
+                    return NearestOtherEnemyDistance(actor, left, units, skill).CompareTo(
+                        NearestOtherEnemyDistance(actor, right, units, skill));
                 default:
                     return 0;
             }
+        }
+
+        private static Dictionary<int, double> CreateRandomPriorities(FightBattleUnitState actor,
+            IReadOnlyList<FightBattleUnitState> candidates, FightBattleSkillDefinition skill,
+            FightRandomStream random)
+        {
+            var values = new Dictionary<int, double>();
+            if (!Contains(PriorityTypes(skill), 13) || candidates == null
+                || candidates.Count < 2) return values;
+            foreach (FightBattleUnitState candidate in candidates)
+            {
+                if (candidate == null || values.ContainsKey(candidate.Id)) continue;
+                values.Add(candidate.Id, random == null
+                    ? StableRandomPriority(actor, candidate, skill)
+                    : random.Next());
+            }
+            return values;
+        }
+
+        private static double RandomPriority(FightBattleUnitState unit,
+            FightBattleUnitState actor, FightBattleSkillDefinition skill,
+            IReadOnlyDictionary<int, double> randomPriorities)
+        {
+            if (randomPriorities != null && randomPriorities.TryGetValue(unit.Id, out double value))
+                return value;
+            return StableRandomPriority(actor, unit, skill);
+        }
+
+        private static double StableRandomPriority(FightBattleUnitState actor,
+            FightBattleUnitState unit, FightBattleSkillDefinition skill)
+        {
+            long value = (long)unit.Id * 1103515245L + (long)actor.Id * 12345L
+                + (long)(skill == null ? 0 : skill.EntityId) * 2654435761L;
+            return (value & 0x7fffffffL) / 2147483647.0;
+        }
+
+        private static int PriorTargetRank(FightBattleUnitState candidate,
+            FightBattleUnitState actor)
+        {
+            return candidate.Id == actor.AiPreviousTargetId ? 0 : 1;
+        }
+
+        private static bool FacesTarget(FightBattleUnitState actor,
+            FightBattleUnitState target)
+        {
+            int dx = target.X - actor.X;
+            int dy = target.Y - actor.Y;
+            if (dx == 0 && dy == 0) return false;
+            int direction = Math.Abs(dx) >= Math.Abs(dy)
+                ? dx < 0 ? 1 : 3
+                : dy > 0 ? 2 : 0;
+            return actor.Direction == direction;
+        }
+
+        private static int CompareSaferPositions(FightBattleUnitState actor,
+            FightBattleUnitState left, FightBattleUnitState right,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill)
+        {
+            FightGridPoint leftPosition = ApproachPosition(actor, left, skill);
+            FightGridPoint rightPosition = ApproachPosition(actor, right, skill);
+            int leftThreats = NearbyEnemyCount(actor, left, leftPosition, units, skill, 2);
+            int rightThreats = NearbyEnemyCount(actor, right, rightPosition, units, skill, 2);
+            if (leftThreats != rightThreats) return leftThreats.CompareTo(rightThreats);
+            int leftDistance = NearestOtherEnemyDistance(actor, leftPosition, left, units, skill);
+            int rightDistance = NearestOtherEnemyDistance(actor, rightPosition, right, units, skill);
+            if (leftDistance != rightDistance) return rightDistance.CompareTo(leftDistance);
+            return MoveDistanceToRange(actor, left, skill).CompareTo(
+                MoveDistanceToRange(actor, right, skill));
+        }
+
+        private static FightGridPoint ApproachPosition(FightBattleUnitState actor,
+            FightBattleUnitState target, FightBattleSkillDefinition skill)
+        {
+            // Local target ordering has no server candidate-position set, so score the nearest
+            // Manhattan-approach tile from the configured skill range.
+            var position = new FightGridPoint(target.X, target.Y);
+            if (skill == null || skill.Range == null || skill.Range.Count == 0) return position;
+            int bestDistance = Int32.MaxValue;
+            foreach (FightGridPoint offset in skill.Range)
+            {
+                var candidate = new FightGridPoint(target.X - offset.X, target.Y - offset.Y);
+                int distance = Math.Abs(candidate.X - actor.X) + Math.Abs(candidate.Y - actor.Y);
+                if (distance >= bestDistance) continue;
+                position = candidate;
+                bestDistance = distance;
+            }
+            return position;
+        }
+
+        private static int NearbyEnemyCount(FightBattleUnitState actor,
+            FightBattleUnitState primary, FightGridPoint position,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill,
+            int radius)
+        {
+            int count = 0;
+            if (units == null) return count;
+            foreach (FightBattleUnitState unit in units)
+            {
+                if (!IsOtherEnemy(actor, primary, unit, skill)) continue;
+                if (Math.Abs(position.X - unit.X) + Math.Abs(position.Y - unit.Y) <= radius)
+                    count++;
+            }
+            return count;
+        }
+
+        private static int NearestOtherEnemyDistance(FightBattleUnitState actor,
+            FightBattleUnitState primary, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleSkillDefinition skill)
+        {
+            return NearestOtherEnemyDistance(actor,
+                ApproachPosition(actor, primary, skill), primary, units, skill);
+        }
+
+        private static int NearestOtherEnemyDistance(FightBattleUnitState actor,
+            FightGridPoint position, FightBattleUnitState primary,
+            IReadOnlyList<FightBattleUnitState> units, FightBattleSkillDefinition skill)
+        {
+            int best = Int32.MaxValue;
+            if (units == null) return best;
+            foreach (FightBattleUnitState unit in units)
+            {
+                if (!IsOtherEnemy(actor, primary, unit, skill)) continue;
+                best = Math.Min(best, Math.Abs(position.X - unit.X) + Math.Abs(position.Y - unit.Y));
+            }
+            return best;
+        }
+
+        private static long TotalOtherEnemyDistance(FightBattleUnitState actor,
+            FightBattleUnitState primary, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleSkillDefinition skill)
+        {
+            long total = 0;
+            if (units == null) return total;
+            FightGridPoint position = ApproachPosition(actor, primary, skill);
+            foreach (FightBattleUnitState unit in units)
+                if (IsOtherEnemy(actor, primary, unit, skill))
+                    total += Math.Abs(position.X - unit.X) + Math.Abs(position.Y - unit.Y);
+            return total;
+        }
+
+        private static bool IsOtherEnemy(FightBattleUnitState actor,
+            FightBattleUnitState primary, FightBattleUnitState candidate,
+            FightBattleSkillDefinition skill)
+        {
+            return candidate != null && primary != null && candidate.Id != primary.Id
+                && candidate.Side != actor.Side && IsSelectable(candidate)
+                && !HasIgnoredStatus(candidate, skill);
         }
 
         private static int MoveDistanceToRange(FightBattleUnitState actor,
@@ -566,6 +865,41 @@ namespace Zjcs.Combat.Official
                 }
             }
             return count;
+        }
+
+        private static int BiggerBodyHitCoverageCount(FightBattleUnitState actor,
+            FightBattleUnitState primary, IReadOnlyList<FightBattleUnitState> units,
+            FightBattleSkillDefinition skill)
+        {
+            int count = 0;
+            if (skill == null || skill.HitGraphEntities == null || units == null) return count;
+            foreach (FightBattleHitEntity hit in skill.HitGraphEntities)
+            {
+                if (hit == null || hit.Scope == null || hit.Scope.Count == 0) continue;
+                int centerX = hit.Anchor == 0 ? primary.X : actor.X;
+                int centerY = hit.Anchor == 0 ? primary.Y : actor.Y;
+                foreach (FightBattleUnitState unit in ScopeCandidates(actor, units,
+                    skill.TargetType, skill))
+                {
+                    if (unit.BodyOffsets == null || unit.BodyOffsets.Count == 0)
+                    {
+                        if (ContainsScopePoint(hit.Scope, unit.X - centerX, unit.Y - centerY)) count++;
+                        continue;
+                    }
+                    foreach (FightGridPoint offset in unit.BodyOffsets)
+                        if (ContainsScopePoint(hit.Scope, unit.X + offset.X - centerX,
+                            unit.Y + offset.Y - centerY)) count++;
+                }
+            }
+            return count;
+        }
+
+        private static bool ContainsScopePoint(IReadOnlyList<FightGridPoint> scope,
+            int x, int y)
+        {
+            foreach (FightGridPoint point in scope)
+                if (point.X == x && point.Y == y) return true;
+            return false;
         }
 
         private static int HitStatusCount(FightBattleUnitState actor,

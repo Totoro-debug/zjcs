@@ -53,6 +53,89 @@ namespace Zjcs.Presentation.Combat
             return player;
         }
 
+        public GameObject CreateWorldFloat(BattleCustomActionWorldRuntimeData prefab, Transform parent,
+            out Dictionary<string, GameObject> worldNodes)
+        {
+            if (prefab == null || prefab.nodes == null || prefab.nodes.Length == 0 || parent == null)
+                throw new ArgumentException("Official world float data or parent is missing.");
+            var created = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+            Transform[] transforms = new Transform[prefab.nodes.Length];
+            GameObject root = null;
+            for (int index = 0; index < prefab.nodes.Length; index++)
+            {
+                BattleHudNode source = prefab.nodes[index];
+                if (source == null || source.parentIndex >= index || source.parentIndex < -1)
+                    throw new FormatException("Official world float node hierarchy is invalid.");
+                GameObject gameObject = source.uses_rect_transform
+                    ? new GameObject(source.name, typeof(RectTransform))
+                    : new GameObject(source.name);
+                gameObject.SetActive(false);
+                gameObject.layer = parent.gameObject.layer;
+                Transform nodeParent = source.parentIndex < 0 ? parent : transforms[source.parentIndex];
+                if (nodeParent == null) throw new FormatException("Official world float parent node is missing.");
+                Transform transform = gameObject.transform;
+                transform.SetParent(nodeParent, false);
+                transform.localPosition = Vector(source.local_position, Vector3.zero);
+                transform.localScale = Vector(source.scale, Vector3.one);
+                transform.localEulerAngles = new Vector3(0f, 0f, source.rotation);
+                if (source.uses_rect_transform)
+                {
+                    RectTransform rect = (RectTransform)transform;
+                    rect.anchoredPosition = Vector(source.anchored_position, Vector2.zero);
+                    rect.sizeDelta = Vector(source.size_delta, Vector2.zero);
+                    rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
+                }
+                if (source.has_text)
+                {
+                    if (catalog.Font == null)
+                        throw new InvalidOperationException("Official world float TMP font is missing.");
+                    var text = gameObject.AddComponent<TextMeshPro>();
+                    // Inactive world text has not run Awake; cache its required renderer before LoadFontAsset.
+                    _ = text.renderer;
+                    text.font = catalog.Font;
+                    text.fontSize = Mathf.Max(1f, source.text_font_size);
+                    text.color = ColorValue(source.text_color, Color.white);
+                    text.alignment = (TextAlignmentOptions)(source.text_horizontal | source.text_vertical);
+                    text.enableWordWrapping = source.text_word_wrap;
+                    text.overflowMode = (TextOverflowModes)Mathf.Clamp(source.text_overflow, 0,
+                        (int)TextOverflowModes.Page);
+                    text.text = source.text_value ?? string.Empty;
+                }
+                if (source.has_sprite_renderer)
+                {
+                    var sprite = gameObject.AddComponent<SpriteRenderer>();
+                    sprite.sprite = ResolveSprite(source.image_sprite_file);
+                    if (sprite.sprite == null)
+                        throw new InvalidOperationException("Official world float sprite is missing: "
+                            + source.image_sprite_file);
+                    sprite.color = ColorValue(source.image_color, Color.white);
+                    sprite.sortingOrder = source.image_order;
+                }
+                if (!string.IsNullOrEmpty(source.path)) created[source.path] = gameObject;
+                transforms[index] = transform;
+                if (source.parentIndex == -1)
+                {
+                    if (root != null) throw new FormatException("Official world float has multiple roots.");
+                    root = gameObject;
+                }
+                gameObject.SetActive(source.active);
+            }
+            if (root == null || root.name != prefab.rootName)
+                throw new FormatException("Official world float root does not match its source prefab.");
+            worldNodes = created;
+            return root;
+        }
+
+        public OfficialBattleHudAnimationPlayer InitializeWorldAnimations(BattleHudNode[] sourceNodes,
+            GameObject instance, Dictionary<string, GameObject> worldNodes, bool useManualTick = false)
+        {
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            var player = instance.AddComponent<OfficialBattleHudAnimationPlayer>();
+            player.Initialize(sourceNodes, worldNodes, useManualTick);
+            player.PlayDefaultAnimations();
+            return player;
+        }
+
         public bool SetText(string path, string value)
         {
             GameObject node = Find(path);
@@ -149,10 +232,11 @@ namespace Zjcs.Presentation.Combat
             }
             if (source.button)
             {
-                if (gameObject.GetComponent<Image>() == null) gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
+                if (gameObject.GetComponent<Graphic>() == null) gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0);
                 gameObject.AddComponent<Button>();
             }
-            if (source.mask) gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            if (source.mask) gameObject.AddComponent<Mask>().showMaskGraphic =
+                !source.mask_graphic_flags || source.mask_show_graphic;
             if (source.rectmask2d) gameObject.AddComponent<RectMask2D>();
             if (source.has_scroll)
             {

@@ -80,7 +80,7 @@ namespace Zjcs.Combat.Official
                 skill == null ? 0 : skill.ItemId, skill == null ? 1 : skill.Rank,
                 skill == null ? 1 : skill.Level, skill == null ? actor.SubRank : skill.SubRank,
                 actor.Properties);
-            FightStatusLifecycle.Apply(target, template, -1, instanceId);
+            FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
         }
 
         private void ExecuteResilienceTriggerSkill(FightBattleUnitState owner,

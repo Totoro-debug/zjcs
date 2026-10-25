@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using Zjcs.Combat.Official;
+using Zjcs.Offline.Progression;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -26,6 +30,8 @@ namespace Zjcs.Presentation.Combat
         private OfficialBattleDamageColors damageColors;
         private OfficialBattleNativeAnimationLibrary nativeModelLibrary;
         private OfficialBattleEnvironmentView environmentView;
+        private OfflineMainlineProgressSession statueProgress;
+        private bool statueEffectsEnded;
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
@@ -61,7 +67,8 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleUnitState, Sprite> timelineFactionIcon = null,
             int environmentGameId = 0,
             bool? environmentIsDay = null,
-            Func<FightBattleUnitState, string> animationGroupResolver = null)
+            Func<FightBattleUnitState, string> animationGroupResolver = null,
+            OfflineMainlineProgressSession statueProgress = null)
         {
             if (executor != null) throw new InvalidOperationException("A battle session is already active.");
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
@@ -81,6 +88,13 @@ namespace Zjcs.Presentation.Combat
                 ? hudCatalog : OfficialBattleHudCatalog.LoadDefault();
 
             combatCatalog = resolvedCombatAssets.Load();
+            this.statueProgress = statueProgress;
+            statueEffectsEnded = false;
+            if (!restoreCheckpoint && statueProgress != null)
+            {
+                statueProgress.Reload();
+                ApplyPendingStatueEffects(checkpoint, combatCatalog, statueProgress.Save.Player);
+            }
             hudCatalog = resolvedHudCatalog;
             damageColors = OfficialBattleDamageColors.Load();
             FightBattleExecutor nextExecutor = restoreCheckpoint
@@ -155,6 +169,7 @@ namespace Zjcs.Presentation.Combat
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
                 if (result.Checkpoint.Finished) phases.BeginBattleEnd();
+                if (result.Checkpoint.Finished) EndBattle();
                 StepCompleted?.Invoke(result);
                 return result;
             }
@@ -162,6 +177,46 @@ namespace Zjcs.Presentation.Combat
             {
                 stepping = false;
             }
+        }
+
+        public void EndBattle()
+        {
+            if (statueEffectsEnded || statueProgress == null) return;
+            statueEffectsEnded = true;
+            ProgressionResult result = statueProgress.ClearPendingStatueBattleEffects(
+                "statue-battle-end:" + Guid.NewGuid().ToString("N"));
+            if (result.Status == ProgressionResultStatus.InvalidState)
+                throw new InvalidOperationException("Statue battle effects could not be cleared: " + result.Message);
+        }
+
+        private static void ApplyPendingStatueEffects(FightBattleCheckpoint checkpoint,
+            FightOfficialCombatCatalog combat, OfflinePlayerProgress playerProgress)
+        {
+            List<OfflineStatueBattleEffect> effects = playerProgress?.PendingStatueBattleEffects;
+            if (effects == null || effects.Count == 0) return;
+            FightBattleUnitState player = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
+            if (player == null || player.MaxHp <= 0 || player.Turn == null || player.Statuses == null)
+                throw new InvalidDataException("A pending statue effect requires a valid player battle unit.");
+
+            int statusSerial = Math.Max(checkpoint.StatusInstanceSerial,
+                player.Statuses.Where(value => value != null).Select(value => value.InstanceId).DefaultIfEmpty(0).Max());
+            foreach (OfflineStatueBattleEffect effect in effects)
+            {
+                if (effect.HpPercentChange != 0f)
+                {
+                    double hpRatio = 1.0 + effect.HpPercentChange;
+                    player.Hp = Math.Max(1L, Math.Min(player.MaxHp,
+                        (long)Math.Floor(player.Hp * hpRatio)));
+                    player.Turn.Hp = player.Hp;
+                }
+                foreach (int classId in effect.StatusEffectClassIds)
+                {
+                    FightBattleStatusState status = combat.CreateStatus(classId, player.Id, player.Id,
+                        ++statusSerial);
+                    player.Statuses.Add(status);
+                }
+            }
+            checkpoint.StatusInstanceSerial = statusSerial;
         }
 
         private Func<int, Sprite> skillIconResolver;

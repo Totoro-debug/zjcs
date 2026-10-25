@@ -61,18 +61,19 @@ $enemy.Id = 2; $enemy.Side = 2; $enemy.CharacterType = 2; $enemy.Hp = 5000; $ene
 $enemy.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new(); $enemy.Turn.Id = 2; $enemy.Turn.Hp = 5000; $enemy.Turn.Speed = 50
 $units = [Zjcs.Combat.Official.FightBattleUnitState[]]@($player, $enemy)
 
-[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyStart($config, $catalog, $units, 0)
+$random = [Zjcs.Combat.Official.FightRandomStream]::new(5)
+[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyStart($config, $catalog, $units, 0, $random)
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26004 }).Count -eq 1) 'Stage status was not applied to the player'
 Assert-Stage (($enemy.Statuses | Where-Object { $_.ClassId -eq 26004 }).Count -eq 1) 'Stage status was not applied to the enemy'
 Assert-Stage (($enemy.Statuses | Where-Object { $_.ClassId -eq 26030 }).Count -eq 1) 'Character status was not applied to its character type'
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26030 }).Count -eq 0) 'Character status leaked to another character type'
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 0) 'Global round status was applied at battle start'
 
-[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyGlobalRound($config, $catalog, $units, 1)
+[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyGlobalRound($config, $catalog, $units, 1, $random)
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 1) 'Global round status was not applied to the player'
 Assert-Stage (($enemy.Statuses | Where-Object { $_.ClassId -eq 26025 }).Count -eq 1) 'Faction global round status was not applied to the enemy side'
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26025 }).Count -eq 0) 'Faction global round status leaked to the other side'
-[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyGlobalRound($config, $catalog, $units, 2)
+[Zjcs.Combat.Official.FightStageStatusRuntime]::ApplyGlobalRound($config, $catalog, $units, 2, $random)
 Assert-Stage (($player.Statuses | Where-Object { $_.ClassId -eq 26005 }).Count -eq 1) 'Global round status was applied outside its cadence'
 
 $visible = [Zjcs.Combat.Official.FightStageStatusRuntime]::ViewStatusIds($config)

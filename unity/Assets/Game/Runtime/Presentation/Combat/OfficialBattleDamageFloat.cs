@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -15,6 +16,7 @@ namespace Zjcs.Presentation.Combat
         private TMP_Text primaryLabel;
         private CanvasGroup canvasGroup;
         private OfficialBattleHudAnimationPlayer animationPlayer;
+        private SortingGroup sortingGroup;
         private RectTransform rectTransform;
         private Vector3 start;
         private Vector3 worldAnchor;
@@ -25,6 +27,9 @@ namespace Zjcs.Presentation.Combat
         private Color color;
         private float duration = Duration;
         private float elapsed;
+        private float cameraScale;
+        private int sortingOrderStart;
+        private int lastSiblingIndex = -1;
         private bool screenSpace;
         private bool manualTick;
         private bool hasOfficialAnimation;
@@ -63,7 +68,8 @@ namespace Zjcs.Presentation.Combat
         public void InitializeOfficial(int effectType, TMP_Text text, CanvasGroup group,
             OfficialBattleHudAnimationPlayer animations, float showTime, bool isScreenSpace,
             bool usesOfficialAnimation, int targetId, float stackHeight, Vector3 anchorWorld,
-            RectTransform screenParent, Camera worldCamera, Camera canvasCamera)
+            RectTransform screenParent, Camera worldCamera, Camera canvasCamera, float worldCameraScale = 0f,
+            int worldSortingOrderStart = 0)
         {
             EffectType = effectType;
             primaryLabel = text;
@@ -71,6 +77,9 @@ namespace Zjcs.Presentation.Combat
             animationPlayer = animations;
             rectTransform = transform as RectTransform;
             duration = showTime > 0f ? showTime : Duration;
+            cameraScale = worldCameraScale;
+            sortingOrderStart = worldSortingOrderStart;
+            sortingGroup = GetComponent<SortingGroup>();
             screenSpace = isScreenSpace;
             manualTick = true;
             hasOfficialAnimation = usesOfficialAnimation;
@@ -84,6 +93,7 @@ namespace Zjcs.Presentation.Combat
             start = transform.position;
             anchoredStart = rectTransform == null ? Vector2.zero : rectTransform.anchoredPosition;
             color = primaryLabel == null ? Color.white : primaryLabel.color;
+            RefreshSortingOrder();
         }
 
         public void SetStackOffset(Vector3 offset)
@@ -115,6 +125,12 @@ namespace Zjcs.Presentation.Combat
             if (deltaTime <= 0f) return;
             elapsed += deltaTime;
             animationPlayer?.Tick(deltaTime);
+            RefreshSortingOrder();
+            if (cameraScale > 0f && Camera.main != null && Camera.main.orthographic)
+            {
+                float scale = Camera.main.orthographicSize / cameraScale;
+                transform.localScale = new Vector3(scale, scale, scale);
+            }
             if (!hasOfficialAnimation)
             {
                 float progress = Mathf.Clamp01(elapsed / duration);
@@ -141,6 +157,15 @@ namespace Zjcs.Presentation.Combat
         private void Update()
         {
             if (!manualTick) Tick(Time.deltaTime);
+        }
+
+        private void RefreshSortingOrder()
+        {
+            if (sortingGroup == null) return;
+            int siblingIndex = transform.GetSiblingIndex();
+            if (siblingIndex == lastSiblingIndex) return;
+            lastSiblingIndex = siblingIndex;
+            sortingGroup.sortingOrder = sortingOrderStart + siblingIndex;
         }
     }
 }

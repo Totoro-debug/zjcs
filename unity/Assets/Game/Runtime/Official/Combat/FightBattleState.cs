@@ -34,6 +34,7 @@ namespace Zjcs.Combat.Official
         public int MonsterTemplateId;
         public int MonsterGroupNo;
         public int AiType = -1;
+        public int AiPreviousTargetId;
         public int MonsterType;
         public int MaxHpPlies = 1;
         public int Level;
@@ -103,8 +104,8 @@ namespace Zjcs.Combat.Official
         public int ClassId;
         public int StatusType;
         public int ActionType;
-        // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
         public bool HasBackToLifeComponent;
+        // Official FightStatusComponentInfo base fields. DurationRound < 0 means infinite.
         public int DurationRound;
         public int CurDurationRound;
         public int StartRound;
@@ -204,6 +205,22 @@ namespace Zjcs.Combat.Official
             new List<FightBattleStatusStateTrigger>();
         public List<FightBattleStatusStateTrigger> HpAccTriggerSkills =
             new List<FightBattleStatusStateTrigger>();
+        public bool HasUnflinchingOnDamageComponent;
+        public float UnflinchingOnDamageRate = 1f;
+        public bool HasSkillCooldownModify;
+        public int SkillCooldownModify;
+        public bool SkillCooldownModifyIsRandom;
+        public int SkillCooldownModifyCount = -1;
+        public int SkillCooldownModifyOffset;
+        public bool SkillCooldownModifyInitialized;
+        public bool SkillCooldownModifyPending;
+        public int SkillCooldownActionPendingCount;
+        public List<FightBattleStatusStateTrigger> SkillCooldownModifySkills =
+            new List<FightBattleStatusStateTrigger>();
+        public bool SkillCooldownModifySkillsPending;
+        public bool HasPermanentSkillCooldownReduction;
+        public int PermanentSkillCooldownReduction;
+        public bool PermanentSkillCooldownReductionApplied;
         public bool SkillConditionRulesSupported = true;
         public List<FightBattleSkillConditionRule> SkillConditionRules =
             new List<FightBattleSkillConditionRule>();
@@ -363,7 +380,7 @@ namespace Zjcs.Combat.Official
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();
         // Official FightSKillMoveCfg entries from FightSkillComponent.SourceMoveList (sorted by
-        // Delay). The supported target-distance condition is evaluated locally; unknown types fail closed.
+        // Delay). The executor evaluates the fixed target-distance condition; unknown types fail closed.
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         // Official FightSkillExtSkillComponent: extra skills released when the action ends.
         public List<FightBattleSkillExtra> ExtraSkills = new List<FightBattleSkillExtra>();
@@ -389,6 +406,8 @@ namespace Zjcs.Combat.Official
     {
         public int MoveBehaviourId;
         public float Delay;
+        public float MoveDuration = -1f;
+        public float MoveSpeed = -1f;
         public int OffsetX;
         public int OffsetY;
         public bool TowardsTargetPos;
@@ -400,6 +419,7 @@ namespace Zjcs.Combat.Official
         public bool HasConditions;
         public List<FightBattleSkillMoveCondition> Conditions = new List<FightBattleSkillMoveCondition>();
     }
+
     [Serializable]
     public sealed class FightBattleSkillMoveCondition
     {
@@ -419,6 +439,15 @@ namespace Zjcs.Combat.Official
         public long DamageParam;
         public int TargetMode;
         public int RandomCount = 1;
+        public int RandomTargetGroupId;
+        public int RandomTargetAnchor;
+        public bool RandomTargetNotSameTarget;
+        public bool RandomTargetAllowEmptyScope;
+        public bool RandomTargetNotSameEmptyScope;
+        public bool RandomTargetNotAllowHitEmpty;
+        public bool RandomTargetNotSameGrid;
+        public bool RandomTargetFilterOutOfGroundScope = true;
+        public List<FightGridPoint> RandomTargetScope = new List<FightGridPoint>();
         // Official ActionType from FightHitBaseComponentInfo.DamageActionType: 4 Damage, 5 Cure,
         // 0 None. Synthetic definitions default to Damage.
         public int ActionType = 4;
@@ -482,6 +511,11 @@ namespace Zjcs.Combat.Official
         public List<int> CustomTargetHits = new List<int>();
         public List<int> RandomTargetHits = new List<int>();
         public int MiniHitTargetCount = 1;
+        public bool NotSameTarget;
+        public bool NotSameEmptyScope;
+        public bool NotAllowHitEmpty;
+        public bool NotSameGrid;
+        public bool FilterOutOfGroundScope = true;
         // Reference configuration of the edge that introduced this hit node (HitCfg.Delay and
         // HitCfg.ActOnSouce anchor). The same entity can be referenced from several parents; the
         // first reference wins for the shared node.
@@ -530,6 +564,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusRateOverride> CharacterTypeRateOverrides =
             new List<FightBattleStatusRateOverride>();
         public float LessThanHpPer = -1f;
+        public bool SkillCostHp;
+        public float DamageCostHpPer = -1f;
         public long CustomShieldValue;
     }
 
@@ -657,13 +693,25 @@ namespace Zjcs.Combat.Official
         public List<FightBattleDamageEvent> DamageEvents = new List<FightBattleDamageEvent>();
         public List<FightBattleMovementEvent> Movements = new List<FightBattleMovementEvent>();
         public List<FightBattleSkillCastEvent> SkillCasts = new List<FightBattleSkillCastEvent>();
+        public List<FightBattleStatusCustomActionEvent> StatusCustomActions =
+            new List<FightBattleStatusCustomActionEvent>();
         public List<int> SpawnedUnitIds = new List<int>();
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusCustomActionEvent
+    {
+        public int UnitId;
+        public int Action;
     }
 
     [Serializable]
     public sealed class FightBattleMovementEvent
     {
         public int UnitId;
+        public float Delay;
+        public float MoveDuration = -1f;
+        public float MoveSpeed = -1f;
         public List<FightGridPoint> Path = new List<FightGridPoint>();
     }
 

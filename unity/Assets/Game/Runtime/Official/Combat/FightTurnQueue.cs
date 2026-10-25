@@ -71,6 +71,16 @@ namespace Zjcs.Combat.Official
 
         public FightTurnQueueState State => state;
 
+        public void RegisterUnit(FightTurnUnit unit, bool immediate = false)
+        {
+            if (unit == null || unit.Id <= 0 || units.ContainsKey(unit.Id))
+                throw new ArgumentException("Fight turn unit identity is null or already registered.",
+                    nameof(unit));
+            units.Add(unit.Id, unit);
+            unitOrder.Add(unit);
+            if (unit.RoundType != 1) Insert(unit, immediate);
+        }
+
         public void InsertUnit(FightTurnUnit unit, bool immediate = false)
         {
             if (unit == null || !units.ContainsKey(unit.Id))

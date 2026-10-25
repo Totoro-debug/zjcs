@@ -13,7 +13,8 @@ namespace Zjcs.Combat.Official
     {
         public int ItemId;
         public int EntityId;
-        public int AiPriorityId;
+        public int AiPriorityId = -1;
+        public int LastAiPriorityId = -1;
         public int PassiveRankPropId;
         public int PassiveGroupLevelPropId;
         public int PassiveRankFactorId;
@@ -32,8 +33,19 @@ namespace Zjcs.Combat.Official
 
         private readonly Dictionary<int, FightOfficialSkillItem> items =
             new Dictionary<int, FightOfficialSkillItem>();
+        private readonly Dictionary<int, int> itemTypes = new Dictionary<int, int>();
         private readonly Dictionary<int, int> initialSkillByWeaponType =
             new Dictionary<int, int>();
+        private readonly Dictionary<int, int[]> aiPriorities = new Dictionary<int, int[]>();
+        private readonly Dictionary<int, ProfessionRule> professions =
+            new Dictionary<int, ProfessionRule>();
+
+        private sealed class ProfessionRule
+        {
+            public int PreProfession;
+            public int[] Skills;
+            public int[] FightUsedSkills;
+        }
 
         private FightOfficialSkillItemCatalog() { }
 
@@ -47,6 +59,15 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> rules = FightOfficialCombatCatalog.ParseObject(rulesJson,
                 "rules.json");
             var catalog = new FightOfficialSkillItemCatalog();
+            foreach (object row in FightOfficialCombatCatalog.ParseArray(
+                FightOfficialCombatCatalog.RequiredField(rules, "item"), "rules.item"))
+            {
+                Dictionary<string, object> item = FightOfficialCombatCatalog.ParseObject(row,
+                    "rules.item row");
+                int itemId = FightOfficialCombatCatalog.ReadInt(item, "ClassId");
+                if (itemId > 0)
+                    catalog.itemTypes[itemId] = FightOfficialCombatCatalog.ReadInt(item, "ItemType");
+            }
             foreach (object row in FightOfficialCombatCatalog.ParseArray(
                 FightOfficialCombatCatalog.RequiredField(rules, "skill"), "rules.skill"))
             {
@@ -63,6 +84,7 @@ namespace Zjcs.Combat.Official
                     ItemId = itemId,
                     EntityId = entityId,
                     AiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "AiPriorityId", -1),
+                    LastAiPriorityId = FightOfficialCombatCatalog.ReadInt(skill, "LastAiPriorityId", -1),
                     PassiveRankPropId = FightOfficialCombatCatalog.ReadInt(skill, "PassiveRankPropId"),
                     PassiveGroupLevelPropId = FightOfficialCombatCatalog.ReadInt(skill,
                         "PassiveGroupLevelPropId"),
@@ -72,8 +94,39 @@ namespace Zjcs.Combat.Official
                         "PassivePropFactors")
                 };
             }
+            foreach (object row in FightOfficialCombatCatalog.ParseArray(
+                FightOfficialCombatCatalog.RequiredField(rules, "ai_priority"), "rules.ai_priority"))
+            {
+                Dictionary<string, object> priority = FightOfficialCombatCatalog.ParseObject(row,
+                    "rules.ai_priority row");
+                int priorityId = FightOfficialCombatCatalog.ReadInt(priority, "Id");
+                int[] types = FightOfficialCombatCatalog.ReadIntArray(priority, "AiPriorityTypes");
+                if (priorityId <= 0 || types.Length == 0)
+                    throw new FormatException("Official AI priority row is invalid: " + priorityId);
+                catalog.aiPriorities[priorityId] = types;
+            }
+            foreach (object row in FightOfficialCombatCatalog.ParseArray(
+                FightOfficialCombatCatalog.RequiredField(rules, "profession_base"),
+                "rules.profession_base"))
+            {
+                Dictionary<string, object> profession = FightOfficialCombatCatalog.ParseObject(row,
+                    "rules.profession_base row");
+                int professionId = FightOfficialCombatCatalog.ReadInt(profession, "Profession");
+                if (professionId <= 0) continue;
+                if (catalog.professions.ContainsKey(professionId))
+                    throw new FormatException("Official profession row is duplicated: " + professionId);
+                catalog.professions.Add(professionId, new ProfessionRule
+                {
+                    PreProfession = FightOfficialCombatCatalog.ReadInt(profession, "PrePro"),
+                    Skills = FightOfficialCombatCatalog.ReadIntArray(profession, "Skills"),
+                    FightUsedSkills = FightOfficialCombatCatalog.ReadIntArray(profession,
+                        "FightUsedSkills")
+                });
+            }
             if (catalog.items.Count == 0)
                 throw new FormatException("Official skill item table is empty.");
+            if (catalog.professions.Count == 0)
+                throw new FormatException("Official profession base table is empty.");
 
             Dictionary<string, object> settings = null;
             if (rules.TryGetValue("game_settings", out object rawSettings))
@@ -100,6 +153,44 @@ namespace Zjcs.Combat.Official
             return item;
         }
 
+        public int[] PriorityTypes(int priorityId)
+        {
+            return aiPriorities.TryGetValue(priorityId, out int[] types)
+                ? (int[])types.Clone() : Array.Empty<int>();
+        }
+
+        public FightSkillProfessionAvailability ProfessionAvailabilityFor(int itemId,
+            int professionId, int currentWeaponType, int initialWeaponType)
+        {
+            if (itemId <= 0) return FightSkillProfessionAvailability.Unknown;
+            if (!items.ContainsKey(itemId)) return FightSkillProfessionAvailability.Mismatch;
+
+            int safeProfession = professionId;
+            if (safeProfession <= 0)
+            {
+                int weaponType = currentWeaponType > 0 ? currentWeaponType : initialWeaponType;
+                if (weaponType == SwordInitialWeaponType) safeProfession = 1;
+                else if (weaponType == WandInitialWeaponType) safeProfession = 10;
+            }
+            if (safeProfession <= 0 || !professions.ContainsKey(safeProfession))
+                return FightSkillProfessionAvailability.Unknown;
+
+            var visited = new HashSet<int>();
+            while (safeProfession > 0 && visited.Add(safeProfession)
+                && professions.TryGetValue(safeProfession, out ProfessionRule rule))
+            {
+                if (Contains(rule.Skills, itemId) || Contains(rule.FightUsedSkills, itemId))
+                    return FightSkillProfessionAvailability.Available;
+                safeProfession = rule.PreProfession;
+            }
+            return FightSkillProfessionAvailability.Mismatch;
+        }
+
+        public int ItemTypeFor(int itemId)
+        {
+            return itemTypes.TryGetValue(itemId, out int itemType) ? itemType : 0;
+        }
+
         /// <summary>
         /// Official initial active skill for the chosen starting weapon
         /// (<c>SkillOptionsWhenChooseSword</c> / <c>SkillOptionsWhenChooseWand</c>).
@@ -116,6 +207,14 @@ namespace Zjcs.Combat.Official
         {
             int[] values = FightOfficialCombatCatalog.ReadIntArray(settings, key);
             return values.Length == 0 ? 0 : values[0];
+        }
+
+        private static bool Contains(int[] values, int value)
+        {
+            if (values == null) return false;
+            for (int i = 0; i < values.Length; i++)
+                if (values[i] == value) return true;
+            return false;
         }
     }
 }

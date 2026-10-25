@@ -191,7 +191,7 @@ namespace Zjcs.Presentation.Home
                     Vector3 scale = root.localScale;
                     scale.x = Mathf.Abs(scale.x) * (unit.Direction == 1 ? -1f : 1f);
                     root.localScale = scale;
-                }, combatAssets, models, hudCatalog, restore);
+                }, combatAssets, models, hudCatalog, restore, statueProgress: host.Profile);
             controller.AttachUnitTransform(1, playerTransform);
             if (!backgroundExecution)
                 playerTransform.GetComponent<CharacterCreationMeshFramePlayer>()?.PlayOnce(
@@ -457,6 +457,8 @@ namespace Zjcs.Presentation.Home
                 if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
             }
             Dictionary<int, long> properties = PropertyMap(unit.Properties);
+            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(player.Equipment, 10);
+            int currentWeaponType = items.ItemTypeFor(weaponItemId);
             var active = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
@@ -466,7 +468,10 @@ namespace Zjcs.Presentation.Home
                 int level = player.Skills.ActiveSlotLevels != null && slot < player.Skills.ActiveSlotLevels.Length
                     ? Math.Max(1, player.Skills.ActiveSlotLevels[slot]) : 1;
                 active.Add(new FightOfficialSkillBinding { EntityId = item.EntityId, Slot = slot, ItemId = itemId,
-                    Rank = rank, Level = level, SubRank = player.SubRank,
+                    Rank = rank, Level = level,
+                    ProfessionAvailability = items.ProfessionAvailabilityFor(itemId,
+                        unit.Profession, currentWeaponType, player.InitialWeaponType),
+                    SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, properties),
                     Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank)) });
             }

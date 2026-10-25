@@ -161,7 +161,8 @@ namespace Zjcs.Presentation.Home
                     root.localScale = scale;
                 },
                 null, null, hudCatalog, restore,
-                animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession));
+                animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
+                statueProgress: host.Profile);
             controller.AttachUnitTransform(1, playerTransform);
             ArenaRuntimeAppearanceSet guardAppearance = (guard.appendAppearances
                     ?? Array.Empty<ArenaRuntimeAppearanceSet>())
@@ -341,6 +342,8 @@ namespace Zjcs.Presentation.Home
                 if (initial > 0) equipped = new[] { initial, 0, 0, 0 };
             }
             IReadOnlyDictionary<int, long> props = PropertyMap(player.Properties);
+            int weaponItemId = OfflineEquipmentOperations.EquippedItemIdAtPosition(save.Equipment, 10);
+            int currentWeaponType = skillItems.ItemTypeFor(weaponItemId);
             var skills = new List<FightOfficialSkillBinding>();
             for (int slot = 0; slot < equipped.Length; slot++)
             {
@@ -352,7 +355,10 @@ namespace Zjcs.Presentation.Home
                 skills.Add(new FightOfficialSkillBinding
                 {
                     EntityId = item.EntityId, Slot = slot, ItemId = itemId, Rank = rank,
-                    Level = level, SubRank = player.SubRank,
+                    Level = level,
+                    ProfessionAvailability = skillItems.ProfessionAvailabilityFor(itemId,
+                        player.Profession, currentWeaponType, save.InitialWeaponType),
+                    SubRank = player.SubRank,
                     Cooldown = combat.CalculateSkillCooldown(item.EntityId, rank, level, player.SubRank, props),
                     Properties = ToProperties(combat.CalculateSkillProps(item.EntityId, rank, level, player.SubRank))
                 });

@@ -47,6 +47,17 @@ namespace Zjcs.Offline.Progression
             return type == null ? 0 : Int(type, "EquipPos");
         }
 
+        public static int EquippedItemIdAtPosition(OfflineEquipmentProfile profile, int position)
+        {
+            if (profile?.Equipped == null || profile.Instances == null) return 0;
+            OfflineEquippedSlot equipped = profile.Equipped.FirstOrDefault(value =>
+                value != null && value.Position == position);
+            if (equipped == null) return 0;
+            OfflineEquipmentInstance instance = profile.Instances.FirstOrDefault(value =>
+                value != null && value.InstanceId == equipped.InstanceId);
+            return instance == null ? 0 : instance.ItemId;
+        }
+
         public static bool CanWear(OfficialEquipmentCatalog catalog, int itemId, int professionId)
         {
             Dictionary<string, object> item = catalog.Find("item", itemId);

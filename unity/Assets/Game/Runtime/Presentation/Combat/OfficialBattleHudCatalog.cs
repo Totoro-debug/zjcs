@@ -107,14 +107,16 @@ namespace Zjcs.Presentation.Combat
         public int parentIndex = -1;
         public string[] scripts;
         public bool active, button, mask, rectmask2d;
+        public bool mask_graphic_flags, mask_show_graphic;
         public bool has_image, has_text, has_scroll;
+        public bool uses_rect_transform, has_sprite_renderer;
         public string text_value;
         public float[] text_color, text_margin, text_auto_size;
         public float text_font_size;
         public int text_horizontal, text_vertical, text_overflow;
         public bool text_word_wrap;
         public string image_sprite_file;
-        public int image_sprite_width, image_sprite_height, image_type;
+        public int image_sprite_width, image_sprite_height, image_type, image_order;
         public float[] image_sprite_border, image_sprite_pivot, image_color;
         public float image_sprite_ppu;
         public bool has_image_sprite, image_preserve_aspect;
@@ -127,7 +129,7 @@ namespace Zjcs.Presentation.Combat
         public float layout_spacing;
         public int layout_axis, layout_alignment, fitter_horizontal, fitter_vertical;
         public bool[] layout_expand, layout_control, layout_child_scale;
-        public float[] anchor_min, anchor_max, anchored_position, size_delta, pivot, scale;
+        public float[] anchor_min, anchor_max, anchored_position, size_delta, pivot, scale, local_position;
         public float rotation, alpha = 1f;
         public bool animation_play_automatically;
         public string default_animation;
@@ -251,6 +253,31 @@ namespace Zjcs.Presentation.Combat
         public string manifest, source_path, source_sha256, output_path, output_sha256;
     }
 
+    [Serializable] public sealed class BattleCustomActionWorldRuntimeData
+    {
+        public string manifest, sourceSha256, sourceBundle, sourceBundleHash, sourcePathId;
+        public string rootName, iconPath, textPath;
+        public int effectType, sortingOrderStart;
+        public float showTime, height, cameraScale;
+        public float[] sceneOffset;
+        public BattleHudNode[] nodes;
+        public BattleHudCustomActionText[] actions;
+
+        public string TextForAction(int action)
+        {
+            if (actions == null) return null;
+            foreach (BattleHudCustomActionText entry in actions)
+                if (entry != null && entry.action == action) return entry.text;
+            return null;
+        }
+    }
+
+    [Serializable] public sealed class BattleHudCustomActionText
+    {
+        public int action;
+        public string key, text;
+    }
+
     [CreateAssetMenu(menuName = "Zjcs/Combat/Official Battle HUD Catalog")]
     public sealed class OfficialBattleHudCatalog : ScriptableObject
     {
@@ -260,12 +287,14 @@ namespace Zjcs.Presentation.Combat
         private const string StatusIconBattleRulesSha256 = "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803";
         private const string StatusIconSpriteManifestSha256 = "01962eb1dbfbebe32f4b161fdb57775827de9de6c3aa151b220052b79f42b485";
         private const string StatusIconStageRulesSha256 = "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256";
+        private const string BattleWorldUiSourceSha256 = "5c9a4daa0c4c9722df2ecbcbbe735749de491f423c2aef24d5010bfcd886bdf4";
         [SerializeField] private TextAsset runtimePanels;
         [SerializeField] private TextAsset originalPanels;
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private BattleHudSpriteBinding[] sprites = Array.Empty<BattleHudSpriteBinding>();
         [SerializeField] private TMPro.TMP_FontAsset font;
         private BattleHudCatalogData data;
+        private BattleCustomActionWorldRuntimeData customActionWorldRuntime;
         private BattleUnitBarRuntimeData unitBarData;
         private BattleStatusIconData statusIconData;
         private Dictionary<int, BattleUnitBarBinding> unitBarsByEntity;
@@ -309,6 +338,38 @@ namespace Zjcs.Presentation.Combat
             foreach (BattleHudPrefab prefab in Load().prefabs)
                 if (prefab.key == key) return prefab;
             return null;
+        }
+
+        public BattleCustomActionWorldRuntimeData LoadCustomActionWorldRuntime()
+        {
+            if (customActionWorldRuntime != null) return customActionWorldRuntime;
+            TextAsset runtimeText = Resources.Load<TextAsset>("Combat/battle-custom-action-world-runtime");
+            TextAsset manifestText = Resources.Load<TextAsset>("Combat/battle-custom-action-world-runtime-source-manifest");
+            if (runtimeText == null || manifestText == null)
+                throw new InvalidOperationException("Official custom action world float data is not installed.");
+            BattleHudRuntimeSourceManifest source = JsonUtility.FromJson<BattleHudRuntimeSourceManifest>(manifestText.text);
+            if (source == null || source.manifest != "854_156383"
+                || source.source_path != "Assets/Official/Combat/HUD/world-ui.json"
+                || source.source_sha256 != BattleWorldUiSourceSha256
+                || source.output_path != "Assets/Game/Resources/Combat/battle-custom-action-world-runtime.json"
+                || source.output_sha256 != Sha256(Encoding.UTF8.GetBytes(runtimeText.text)))
+                throw new InvalidOperationException("Official custom action world float source hashes do not match.");
+            BattleCustomActionWorldRuntimeData runtime = JsonUtility.FromJson<BattleCustomActionWorldRuntimeData>(runtimeText.text);
+            if (runtime == null || runtime.manifest != "854_156383"
+                || runtime.sourceSha256 != source.source_sha256
+                || runtime.sourceBundle != "defaultpackage_assets_prefabs_ui_fight_damagescene_battlecustomdamagefloateffect_scene.bundle"
+                || runtime.sourceBundleHash != "14e38fc9585d8e00567ae2f9f4b0e8bb"
+                || runtime.sourcePathId != "-2976502348647371213"
+                || runtime.rootName != "BattleCustomDamageFloatEffect_Scene"
+                || runtime.iconPath != "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText/Icon"
+                || runtime.textPath != "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText"
+                || runtime.effectType != 11 || runtime.showTime != 1f || runtime.cameraScale != 5f
+                || runtime.height <= 0f || runtime.sceneOffset == null || runtime.sceneOffset.Length != 3
+                || runtime.nodes == null || runtime.nodes.Length != 5 || runtime.actions == null
+                || runtime.TextForAction(3) != "减少冷却")
+                throw new FormatException("Official custom action world float data is incomplete or changed.");
+            customActionWorldRuntime = runtime;
+            return customActionWorldRuntime;
         }
 
         public Sprite FindSprite(string file)

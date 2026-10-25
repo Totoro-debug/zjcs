@@ -86,6 +86,8 @@ $hpAccEntities = @($battleRules.entities.PSObject.Properties | Where-Object {
 Assert-Combat ($hpAccEntities.Count -eq 22) 'Pinned HP accumulated damage status catalog count changed'
 $hpAccStatus = $officialCatalog.CreateStatus(25185, 2, 2, 1)
 Assert-Combat ($hpAccStatus.HasHpAccDecrease -and [Math]::Abs($hpAccStatus.HpAccUnitHpPercentage - 0.15) -lt 0.0001 -and $hpAccStatus.HpAccUnitHp -eq -1 -and $hpAccStatus.HpAccMaxCount -eq -1 -and -not $hpAccStatus.HpAccResetAtRoundEnd -and $hpAccStatus.HpAccTriggerSkills.Count -eq 1 -and $hpAccStatus.HpAccTriggerSkills[0].EntityId -eq 58170 -and $hpAccStatus.HpAccTriggerSkills[0].Source -eq 2 -and $hpAccStatus.HpAccTriggerSkills[0].Target -eq 2 -and $hpAccStatus.HpAccTriggerSkills[0].TargetPos -eq 1) 'Official HP accumulated damage skill status was not assembled'
+$unflinchingStatus = $officialCatalog.CreateStatus(25275, 2, 2, 2)
+Assert-Combat ($unflinchingStatus.HasUnflinchingOnDamageComponent -and [Math]::Abs($unflinchingStatus.UnflinchingOnDamageRate - 0.5) -lt 0.0001) 'Official Unflinching status rate was not assembled'
 $hpAccLimitedStatus = $officialCatalog.CreateStatus(24252, 2, 2, 2)
 $hpAccResetStatus = $officialCatalog.CreateStatus(25043, 2, 2, 3)
 Assert-Combat ($hpAccLimitedStatus.HpAccMaxCount -eq 99 -and $hpAccResetStatus.HpAccResetAtRoundEnd -and $hpAccResetStatus.HpAccTriggerStatuses.Count -eq 1 -and $hpAccResetStatus.HpAccTriggerStatuses[0].EntityId -eq 24240 -and $hpAccResetStatus.HpAccTriggerStatuses[0].Target -eq 2) 'HP accumulated damage limit, round reset or status trigger config mismatch'
@@ -102,6 +104,9 @@ $swordStarter = $skillItems.Required(10012)
 $wandStarter = $skillItems.Required(10028)
 Assert-Combat ($skillItems.Count -eq 1874 -and $swordStarter.EntityId -eq 10640 -and $wandStarter.EntityId -eq 10800) 'Official skill item to EC entity mapping mismatch'
 Assert-Combat ($skillItems.InitialActiveSkill(200) -eq 10012 -and $skillItems.InitialActiveSkill(201) -eq 10028 -and $skillItems.InitialActiveSkill(0) -eq 10012) 'Official initial weapon skill settings mismatch'
+Assert-Combat ($skillItems.ProfessionAvailabilityFor(10008, 1, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available -and $skillItems.ProfessionAvailabilityFor(10008, 10, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Mismatch) 'Official profession skill ownership lookup mismatch'
+Assert-Combat ($skillItems.ProfessionAvailabilityFor(10125, 1, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available -and $skillItems.ProfessionAvailabilityFor(10000, 11, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available) 'Official FightUsedSkills or predecessor profession inheritance lookup mismatch'
+Assert-Combat ($skillItems.ItemTypeFor(10012) -eq 100 -and $skillItems.ProfessionAvailabilityFor(10012, 0, 200, 201) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available -and $skillItems.ProfessionAvailabilityFor(10028, 0, 200, 201) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Mismatch -and $skillItems.ProfessionAvailabilityFor(10028, 0, 0, 201) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Available -and $skillItems.ProfessionAvailabilityFor(10012, 0, 0, 0) -eq [Zjcs.Combat.Official.FightSkillProfessionAvailability]::Unknown) 'Official safe profession fallback from current then initial weapon mismatch'
 $prioritySkillItem = $skillItems.Required(10009)
 Assert-Combat ($prioritySkillItem.AiPriorityId -eq 10 -and $prioritySkillItem.LastAiPriorityId -eq 11 -and ($skillItems.PriorityTypes(10) -join ',') -eq '11,10,7,1,0,2,9,6' -and ($skillItems.PriorityTypes(11) -join ',') -eq '11,10,7,1,3,2,9,6') 'Official AI priority id, last-priority id or ordered priority table mapping mismatch'
 Assert-Combat ($officialCatalog.MonsterCharacterType(3201) -eq 2 -and $officialCatalog.MonsterAiType(3201) -eq 1) 'Official MonsterInfo character type or AI type lookup mismatch'
@@ -132,6 +137,12 @@ $orderedSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
 Assert-Combat ($orderedSkill.Range.Count -eq 24 -and $orderedSkill.Range[0].Y -eq -1 -and $orderedSkill.Range[1].X -eq -1 -and $orderedSkill.Range[2].X -eq 1 -and $orderedSkill.Range[3].Y -eq 1 -and $orderedSkill.Range[4].X -eq 2) 'Official skill range order was not preserved'
 $moveSkill = $officialCatalog.CreateSkill(15980, 0, 0, 1, 1, 0, $null)
 Assert-Combat ($moveSkill.SourceMoves.Count -eq 1 -and [Math]::Abs($moveSkill.SourceMoves[0].Delay - 0.5667) -lt 0.001 -and $moveSkill.SourceMoves[0].Distance -eq -1 -and $moveSkill.SourceMoves[0].Direction -eq 1 -and $moveSkill.SourceMoves[0].TowardsTargetPos -and -not $moveSkill.SourceMoves[0].HasConditions) 'Official skill SourceMoveList mapping mismatch'
+$conditionMoveSkill = $officialCatalog.CreateSkill(13500, 0, 0, 1, 1, 0, $null)
+$conditionMove = $conditionMoveSkill.SourceMoves[0]
+Assert-Combat ($conditionMoveSkill.EntityId -eq 13500 -and $conditionMove.MoveBehaviourId -eq 13505 -and [Math]::Abs($conditionMove.Delay - 0.8) -lt 0.001 -and [Math]::Abs($conditionMove.MoveDuration - 0.2) -lt 0.001 -and $conditionMove.MoveSpeed -eq 0 -and $conditionMove.HasConditions -and $conditionMove.Conditions.Count -eq 1 -and $conditionMove.Conditions[0].Type -eq 'SkillTargetDistanceMoveCondition' -and $conditionMove.Conditions[0].Distance -eq 3) 'Official SkillTargetDistanceMoveCondition or action movement timing was not preserved in the battle snapshot'
+$speedMoveSkill = $officialCatalog.CreateSkill(10850, 0, 0, 1, 1, 0, $null)
+$speedMoveHit = $speedMoveSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 10851 } | Select-Object -First 1
+Assert-Combat ($null -ne $speedMoveHit -and $speedMoveHit.HitMove.MoveBehaviourId -eq 10853 -and $speedMoveHit.HitMove.MoveDuration -lt 0 -and [Math]::Abs($speedMoveHit.HitMove.MoveSpeed - 2.5) -lt 0.001) 'Official speed-based hit movement did not preserve its action entity timing'
 $monsterSkillProps = $officialCatalog.CalculateSkillProps(16020, 1, 101, 11)
 Assert-Combat ($monsterSkillProps.Count -eq 0) 'Official monster skill property factors produced unexpected properties'
 $attackPassiveFactors = [System.Collections.Generic.Dictionary[int,long]]::new()
@@ -167,6 +178,154 @@ Assert-Combat (($officialFalloffValues -join ',') -eq '-10000,-6000,-3600') 'Off
     [Zjcs.Combat.Official.FightBattleUnitState[]]@($configSource, $configTarget), $officialSkill)
 $integrationSkillData = $officialCatalog.CreateSkill(12860, 0, 12860, 1, 1, 0, $null)
 Assert-Combat ($integrationSkillData.HitGraphEntities.Count -eq 6 -and $integrationSkillData.HitGraphEntities[0].ChainedHits[0] -eq 12862) 'Official skill 12860 chained hit graph mapping mismatch'
+$randomTargetSkill = $officialCatalog.CreateSkill(11200, 0, 11200, 1, 1, 0, $null)
+$randomTargetHits = [Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($randomTargetSkill)
+$randomTargetChildren = @($randomTargetHits | Where-Object { $_.RandomTargetGroupId -gt 0 })
+Assert-Combat ($randomTargetChildren.Count -eq 3 -and $randomTargetChildren[0].RandomTargetGroupId -eq $randomTargetChildren[2].RandomTargetGroupId -and $randomTargetChildren[0].RandomTargetNotSameTarget -and $randomTargetChildren[0].RandomCount -eq 3 -and $randomTargetChildren[0].RandomTargetScope.Count -eq 24) 'Official random-target damage graph did not preserve parent scope, count, or de-duplication group'
+$randomTargetWideSkill = $officialCatalog.CreateSkill(13990, 0, 13990, 1, 1, 0, $null)
+$randomTargetWideHits = @([Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($randomTargetWideSkill) | Where-Object { $_.RandomTargetGroupId -gt 0 })
+Assert-Combat ($randomTargetWideHits.Count -eq 7 -and $randomTargetWideHits[0].RandomCount -eq 7 -and $randomTargetWideHits[0].RandomTargetScope.Count -eq 40) 'Official random-target multi-hit graph 13990 was not collected in HitList order'
+$randomTargetSummonSkill = $officialCatalog.CreateSkill(59360, 0, 59360, 1, 1, 0, $null)
+$randomTargetSummonHits = @([Zjcs.Combat.Official.FightBattleHitCollector]::CollectAll($randomTargetSummonSkill) | Where-Object { $_.RandomTargetGroupId -gt 0 })
+Assert-Combat ($randomTargetSummonHits.Count -eq 3 -and @($randomTargetSummonHits | Where-Object { -not $_.IsSummon }).Count -eq 0 -and $randomTargetSummonHits[0].RandomTargetNotSameTarget -and $randomTargetSummonHits[0].RandomTargetScope.Count -eq 48) 'Official random-target summon graph 59360 did not retain target context for its summons'
+$randomTargetActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetActor.Id = 20; $randomTargetActor.Side = 1; $randomTargetActor.Hp = 100; $randomTargetActor.MaxHp = 100; $randomTargetActor.Targetable = $true
+$randomTargetPrimary = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetPrimary.Id = 21; $randomTargetPrimary.Side = 2; $randomTargetPrimary.Hp = 100; $randomTargetPrimary.MaxHp = 100; $randomTargetPrimary.Targetable = $true
+$randomTargetInsideA = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetInsideA.Id = 22; $randomTargetInsideA.Side = 2; $randomTargetInsideA.X = 0; $randomTargetInsideA.Y = 1; $randomTargetInsideA.Hp = 100; $randomTargetInsideA.MaxHp = 100; $randomTargetInsideA.Targetable = $true
+$randomTargetInsideB = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetInsideB.Id = 23; $randomTargetInsideB.Side = 2; $randomTargetInsideB.X = 1; $randomTargetInsideB.Y = 0; $randomTargetInsideB.Hp = 100; $randomTargetInsideB.MaxHp = 100; $randomTargetInsideB.Targetable = $true
+$randomTargetOutside = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetOutside.Id = 24; $randomTargetOutside.Side = 2; $randomTargetOutside.X = 10; $randomTargetOutside.Y = 10; $randomTargetOutside.Hp = 100; $randomTargetOutside.MaxHp = 100; $randomTargetOutside.Targetable = $true
+$randomTargetScopeSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$randomTargetScopeSkill.TargetType = 1
+$randomTargetScopeHit = $randomTargetChildren[0]
+$randomTargetScopeDefinition = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$randomTargetScopeDefinition.TargetMode = 2; $randomTargetScopeDefinition.Anchor = $randomTargetScopeHit.RandomTargetAnchor; $randomTargetScopeDefinition.Scope = $randomTargetScopeHit.RandomTargetScope
+$randomTargetScopeCandidates = [Zjcs.Combat.Official.FightBattleTargeting]::SelectScopeTargets(
+    $randomTargetActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($randomTargetActor, $randomTargetPrimary, $randomTargetInsideA, $randomTargetInsideB, $randomTargetOutside),
+    $randomTargetScopeSkill, $randomTargetPrimary, $randomTargetScopeDefinition, [Zjcs.Combat.Official.FightRandomStream]::new(17))
+Assert-Combat ($randomTargetScopeCandidates.Count -eq 2 -and @($randomTargetScopeCandidates | Where-Object { $_.Id -eq 22 -or $_.Id -eq 23 }).Count -eq 2 -and @($randomTargetScopeCandidates | Where-Object { $_.Id -eq 24 }).Count -eq 0) 'Official random-target parent Scope did not constrain candidates to its grid offsets'
+$usedRandomTargetIds = [System.Collections.Generic.HashSet[int]]::new()
+$randomTargetCandidates = [Zjcs.Combat.Official.FightBattleUnitState[]]@($randomTargetPrimary, $randomTargetInsideA, $randomTargetInsideB, $randomTargetOutside)
+$randomTargetStream = [Zjcs.Combat.Official.FightRandomStream]::new(919)
+$randomTargetBatchA = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomHitTargets($randomTargetCandidates, 3, $randomTargetStream, $usedRandomTargetIds)
+foreach ($selectedRandomTarget in $randomTargetBatchA) { $usedRandomTargetIds.Add($selectedRandomTarget.Id) | Out-Null }
+$randomTargetBatchB = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomHitTargets($randomTargetCandidates, 3, $randomTargetStream, $usedRandomTargetIds)
+foreach ($selectedRandomTarget in $randomTargetBatchB) { $usedRandomTargetIds.Add($selectedRandomTarget.Id) | Out-Null }
+$randomTargetBatchC = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomHitTargets($randomTargetCandidates, 3, $randomTargetStream, $usedRandomTargetIds)
+Assert-Combat ($randomTargetBatchA.Count -eq 3 -and $randomTargetBatchB.Count -eq 1 -and $randomTargetBatchC.Count -eq 0 -and $usedRandomTargetIds.Count -eq 4) 'Random-target HitList processing did not avoid repeats and skip exhausted sub-hits'
+$randomTargetGrid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+$randomTargetGrid.Width = 3; $randomTargetGrid.Height = 3
+$randomTargetCellScope = [System.Collections.Generic.List[Zjcs.Combat.Official.FightGridPoint]]::new()
+foreach ($point in @(@{X=0;Y=0}, @{X=0;Y=1}, @{X=1;Y=0}, @{X=2;Y=0}, @{X=3;Y=0})) {
+    $randomTargetCellScope.Add([Zjcs.Combat.Official.FightGridPoint]::new($point.X, $point.Y))
+}
+$randomTargetCellUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@(
+    $randomTargetActor, $randomTargetPrimary, $randomTargetInsideA,
+    $randomTargetInsideB, $randomTargetOutside)
+$randomTargetCellSelections = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, $randomTargetCellUnits, $randomTargetScopeSkill,
+    $randomTargetPrimary, $randomTargetCellScope, $randomTargetGrid, 10,
+    [Zjcs.Combat.Official.FightRandomStream]::new(771), $true, $false,
+    $false, $null, $false, $null, $false, $null, $true)
+$randomTargetCellTargetIds = [System.Collections.Generic.HashSet[int]]::new()
+foreach ($selection in $randomTargetCellSelections) {
+    foreach ($selectedTarget in $selection.Targets) { $randomTargetCellTargetIds.Add($selectedTarget.Id) | Out-Null }
+}
+$randomTargetEmptySelections = @($randomTargetCellSelections | Where-Object { $_.IsEmpty })
+Assert-Combat ($randomTargetCellSelections.Count -eq 4 -and $randomTargetCellTargetIds.Count -eq 3 -and $randomTargetEmptySelections.Count -eq 1 -and @($randomTargetCellSelections | Where-Object { $_.Position.X -eq 3 }).Count -eq 0) 'Random-target scope did not filter out-of-grid cells before selecting units and empty cells'
+$randomTargetUsedEmptyCells = [System.Collections.Generic.HashSet[Zjcs.Combat.Official.FightGridPoint]]::new()
+$randomTargetUsedGridCells = [System.Collections.Generic.HashSet[Zjcs.Combat.Official.FightGridPoint]]::new()
+foreach ($selection in $randomTargetCellSelections) {
+    $randomTargetUsedGridCells.Add($selection.Position) | Out-Null
+    if ($selection.IsEmpty) { $randomTargetUsedEmptyCells.Add($selection.Position) | Out-Null }
+}
+$randomTargetNoRepeatedEmpty = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, $randomTargetCellUnits, $randomTargetScopeSkill,
+    $randomTargetPrimary, $randomTargetCellScope, $randomTargetGrid, 10,
+    [Zjcs.Combat.Official.FightRandomStream]::new(772), $true, $false,
+    $false, $null, $true, $randomTargetUsedEmptyCells, $false, $null, $true)
+$randomTargetNoEmptyAllowed = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, $randomTargetCellUnits, $randomTargetScopeSkill,
+    $randomTargetPrimary, $randomTargetCellScope, $randomTargetGrid, 10,
+    [Zjcs.Combat.Official.FightRandomStream]::new(773), $true, $true,
+    $false, $null, $false, $null, $false, $null, $true)
+$randomTargetNoRepeatedGrid = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, $randomTargetCellUnits, $randomTargetScopeSkill,
+    $randomTargetPrimary, $randomTargetCellScope, $randomTargetGrid, 10,
+    [Zjcs.Combat.Official.FightRandomStream]::new(774), $true, $false,
+    $false, $null, $false, $null, $true, $randomTargetUsedGridCells, $true)
+$randomTargetAllowOutOfGrid = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, $randomTargetCellUnits, $randomTargetScopeSkill,
+    $randomTargetPrimary, $randomTargetCellScope, $randomTargetGrid, 10,
+    [Zjcs.Combat.Official.FightRandomStream]::new(775), $true, $false,
+    $false, $null, $false, $null, $false, $null, $false)
+Assert-Combat (@($randomTargetNoRepeatedEmpty | Where-Object { $_.IsEmpty }).Count -eq 0 -and $randomTargetNoRepeatedEmpty.Count -eq 3 -and $randomTargetNoEmptyAllowed.Count -eq 3 -and $randomTargetNoRepeatedGrid.Count -eq 0 -and $randomTargetAllowOutOfGrid.Count -eq 5) 'Random-target empty/grid deduplication flags or FilterOutOfGroundScope behavior mismatch'
+$randomTargetMultiCellUnit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomTargetMultiCellUnit.Id = 26; $randomTargetMultiCellUnit.Side = 2
+$randomTargetMultiCellUnit.X = 1; $randomTargetMultiCellUnit.Y = 1
+$randomTargetMultiCellUnit.Hp = 100; $randomTargetMultiCellUnit.MaxHp = 100
+$randomTargetMultiCellUnit.BodyOffsets.Clear()
+$randomTargetMultiCellUnit.BodyOffsets.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$randomTargetMultiCellUnit.BodyOffsets.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$randomTargetMultiCellScope = [System.Collections.Generic.List[Zjcs.Combat.Official.FightGridPoint]]::new()
+$randomTargetMultiCellScope.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$randomTargetMultiCellScope.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$randomTargetMultiCellSelections = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($randomTargetMultiCellUnit),
+    $randomTargetScopeSkill, $randomTargetMultiCellUnit, $randomTargetMultiCellScope,
+    $randomTargetGrid, 2, [Zjcs.Combat.Official.FightRandomStream]::new(776),
+    $false, $false, $false, $null, $false, $null, $false, $null, $true)
+$randomTargetExcludedMultiCellId = [System.Collections.Generic.HashSet[int]]::new()
+$randomTargetExcludedMultiCellId.Add($randomTargetMultiCellUnit.Id) | Out-Null
+$randomTargetNoRepeatMultiCell = [Zjcs.Combat.Official.FightBattleTargeting]::SelectRandomScopePositions(
+    $randomTargetActor, [Zjcs.Combat.Official.FightBattleUnitState[]]@($randomTargetMultiCellUnit),
+    $randomTargetScopeSkill, $randomTargetMultiCellUnit, $randomTargetMultiCellScope,
+    $randomTargetGrid, 2, [Zjcs.Combat.Official.FightRandomStream]::new(777),
+    $false, $false, $true, $randomTargetExcludedMultiCellId, $false, $null,
+    $false, $null, $true)
+Assert-Combat ($randomTargetMultiCellSelections.Count -eq 2 -and $randomTargetMultiCellSelections[0].Targets[0].Id -eq 26 -and $randomTargetMultiCellSelections[1].Targets[0].Id -eq 26 -and $randomTargetNoRepeatMultiCell.Count -eq 0) 'Random-target cell selection did not separate multi-cell grid repeats from NotSameTarget unit de-duplication'
+$randomBattlePlayer = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomBattlePlayer.Id = 1; $randomBattlePlayer.Side = 1; $randomBattlePlayer.X = 0; $randomBattlePlayer.Y = 0
+$randomBattlePlayer.Hp = 1000; $randomBattlePlayer.MaxHp = 1000
+$randomBattlePlayer.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new()
+$randomBattlePlayer.Turn.Id = 1; $randomBattlePlayer.Turn.Hp = 1000; $randomBattlePlayer.Turn.Speed = 100
+$randomBattleBindings = [System.Collections.Generic.List[Zjcs.Combat.Official.FightOfficialSkillBinding]]::new()
+$randomBattleBindings.Add([Zjcs.Combat.Official.FightOfficialSkillBinding]@{
+    EntityId = 11200; Slot = 0; ItemId = 11200; Rank = 1; Level = 1; Cooldown = 0
+})
+$officialCatalog.AssembleUnit($randomBattlePlayer, $randomBattleBindings, $null)
+$randomBattleSkill = $randomBattlePlayer.Skills[0]
+$randomBattleSkill.TargetType = 1
+$randomBattleSkill.Range.Clear(); $randomBattleSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(4, 0))
+$randomBattleSkill.HasCustomDamage = $true; $randomBattleSkill.CustomDamage = 100
+$randomBattleEnemies = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+foreach ($enemyInfo in @(@{Id=2;X=4;Y=0}, @{Id=3;X=0;Y=1}, @{Id=4;X=-1;Y=0}, @{Id=5;X=0;Y=-1})) {
+    $randomEnemy = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+    $randomEnemy.Id = $enemyInfo.Id; $randomEnemy.Side = 2; $randomEnemy.X = $enemyInfo.X; $randomEnemy.Y = $enemyInfo.Y
+    $randomEnemy.Hp = 1000; $randomEnemy.MaxHp = 1000
+    $randomEnemy.Turn = [Zjcs.Combat.Official.FightTurnUnit]::new()
+    $randomEnemy.Turn.Id = $randomEnemy.Id; $randomEnemy.Turn.Hp = 1000; $randomEnemy.Turn.Speed = 10
+    $randomBattleEnemies.Add($randomEnemy)
+}
+$randomBattleCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$randomBattleCheckpoint.StageId = 22001; $randomBattleCheckpoint.RandomSeed = 919
+$randomBattleCheckpoint.Units.Add($randomBattlePlayer)
+foreach ($randomEnemy in $randomBattleEnemies) { $randomBattleCheckpoint.Units.Add($randomEnemy) }
+$randomBattleWave = [Zjcs.Combat.Official.FightBattleWaveState]::new()
+$randomBattleWave.Index = 0
+foreach ($randomEnemy in $randomBattleEnemies) { $randomBattleWave.UnitIds.Add($randomEnemy.Id) }
+$randomBattleCheckpoint.Waves.Add($randomBattleWave)
+$randomBattleFormula = $officialCatalog.CreateDamageFormula(
+    $rulesJson, $citySource.data_sha256.'rules.json', $citySource.manifest)
+$randomBattleExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $randomBattleCheckpoint, $randomBattleFormula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
+$randomBattleResult = $randomBattleExecutor.Step(0, 1)
+$randomBattleDamageEvents = @($randomBattleResult.Event.DamageEvents)
+$randomBattleTargetIds = @($randomBattleDamageEvents | ForEach-Object { $_.TargetId } | Sort-Object -Unique)
+Assert-Combat ($randomBattleResult.Event.ActorId -eq 1 -and $randomBattleDamageEvents.Count -eq 3 -and $randomBattleTargetIds.Count -eq 3 -and @($randomBattleDamageEvents | Where-Object { $_.SkillEntityId -ne 11200 }).Count -eq 0) 'Battle executor did not apply random HitList children once to distinct selected targets'
 $integrationPlayer = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $integrationPlayer.Id = 1; $integrationPlayer.Side = 1; $integrationPlayer.CharacterType = 1
 $integrationPlayer.Hp = 1000; $integrationPlayer.MaxHp = 1000
@@ -190,7 +349,13 @@ $integrationStatuses = [System.Collections.Generic.List[Zjcs.Combat.Official.Fig
 $integrationStatuses.Add([Zjcs.Combat.Official.FightOfficialStatusBinding]@{
     ClassId = 24078; InstanceId = 1; CreatorId = 1; RootSkillId = 12860; ApplyingSkillItemId = 12860
 })
+$integrationStatuses.Add([Zjcs.Combat.Official.FightOfficialStatusBinding]@{
+    ClassId = 25275; InstanceId = 2; CreatorId = 2
+})
 $officialCatalog.AssembleUnit($integrationEnemy, $null, $integrationStatuses)
+Assert-Combat ($integrationEnemy.Statuses[1].HasUnflinchingOnDamageComponent -and [Math]::Abs($integrationEnemy.Statuses[1].UnflinchingOnDamageRate - 0.5) -lt 0.0001) 'Applied Unflinching status lost its configured rate'
+# Force successful checks in this test so every actual HP loss can be matched to one custom-action event.
+$integrationEnemy.Statuses[1].UnflinchingOnDamageRate = 1.0
 Assert-Combat ($integrationPlayer.Skills.Count -eq 1 -and $integrationPlayer.SkillState.Slots.Count -eq 1 -and $integrationEnemy.Statuses[0].FalloffPercent -eq 4000) 'Official catalog unit assembly did not attach configured skills and status components'
 $badCatalogRejected = $false
 try {
@@ -237,6 +402,13 @@ Assert-Combat ($integrationResult.Event.ActorId -eq 1 -and $integrationResult.Ev
 Assert-Combat ($integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.Outcome.Won -and $integrationCheckpoint.Finished) 'Official skill and falloff status did not produce the expected battle victory'
 Assert-Combat ($integrationResult.Event.HpChanges.Count -eq 1 -and $integrationResult.Event.HpChanges[0].Before -eq 236 -and $integrationResult.Event.HpChanges[0].After -eq 0) 'Configured battle did not record the complete status-modified HP change'
 Assert-Combat ($integrationResult.Event.DamageEvents.Count -eq 6) 'Battle step did not record every resolved hit as a damage event'
+$integrationActualHpLosses = @($integrationResult.Event.DamageEvents | Where-Object {
+    -not $_.IsCure -and $_.AfterHp -lt $_.BeforeHp
+}).Count
+$integrationUnflinchingActions = @($integrationResult.Event.StatusCustomActions | Where-Object {
+    $_.UnitId -eq 2 -and $_.Action -eq 2
+}).Count
+Assert-Combat ($integrationActualHpLosses -gt 0 -and $integrationUnflinchingActions -eq $integrationActualHpLosses) 'Actual HP damage did not emit one configured Unflinching action per successful check'
 $firstDamageEvent = $integrationResult.Event.DamageEvents[0]
 Assert-Combat ($firstDamageEvent.SourceId -eq 1 -and $firstDamageEvent.TargetId -eq 2 -and $firstDamageEvent.SkillEntityId -eq 12860 -and $firstDamageEvent.SkillItemId -eq 12860 -and -not $firstDamageEvent.IsCure) 'Damage event identity or source attribution mismatch'
 Assert-Combat ($firstDamageEvent.BeforeHp -eq 236 -and $firstDamageEvent.AfterHp -lt 236 -and $firstDamageEvent.MaxHp -eq 236) 'Damage event HP snapshot mismatch'
@@ -253,6 +425,7 @@ $integrationRestored = [Zjcs.Combat.Official.FightBattleExecutor]::Restore(
     $integrationCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $integrationReplay = $integrationRestored.Step(0, 1)
 Assert-Combat ($integrationReplay.Replayed -and $integrationEnemy.Hp -eq 0 -and $integrationCheckpoint.DamageEventSerial -eq 6) 'Configured battle checkpoint replay applied official hit nodes twice'
+Assert-Combat (@($integrationReplay.Event.StatusCustomActions | Where-Object { $_.UnitId -eq 2 -and $_.Action -eq 2 }).Count -eq $integrationUnflinchingActions) 'Unflinching custom action was not preserved by receipt replay'
 foreach ($vector in $reference.cases) {
     $request = New-DamageRequest $vector.info $schema
     $flags = [Zjcs.Combat.Official.FightDamageTypeData]::new()
@@ -307,6 +480,7 @@ $directHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
 $directHit.DamageType = 8; $directHit.HasCustomDamage = $true; $directHit.CustomDamage = 23
 $directOne = $hitExecutor.Apply($null, 801, $cureActor, $directTarget, $null, $directHit, 0, $false)
 $directTwo = $hitExecutor.Apply($null, 801, $cureActor, $directTarget, $null, $directHit, 0, $false)
+Assert-Combat ($directTarget.Hp -eq 54 -and $directOne.Settlement.RealDamageValue -eq -23 -and $directTwo.Settlement.RealDamageValue -eq -23) 'Sequential hit HP writeback mismatch'
 $typedHitTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $typedHitTarget.Id = 25; $typedHitTarget.Hp = 100; $typedHitTarget.MaxHp = 100
 $typedHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
@@ -322,7 +496,6 @@ $deadTarget.Id = 26; $deadTarget.Hp = 0; $deadTarget.MaxHp = 100
 $appliedBackToLife = [Zjcs.Combat.Official.FightStatusLifecycle]::Apply($deadTarget,
     $backToLifeStatus, 0, 1)
 Assert-Combat ($deadTarget.Hp -eq 1 -and $appliedBackToLife.HasBackToLifeComponent) 'FightStatusBackToLifeComponent did not restore the newly affected unit to one HP'
-Assert-Combat ($directTarget.Hp -eq 54 -and $directOne.Settlement.RealDamageValue -eq -23 -and $directTwo.Settlement.RealDamageValue -eq -23) 'Sequential hit HP writeback mismatch'
 $falloffStatus = [Zjcs.Combat.Official.FightBattleStatusState]::new()
 $falloffStatus.InstanceId = 1; $falloffStatus.ClassId = 24102; $falloffStatus.OwnerId = 24
 $falloffStatus.FalloffTarget = 1; $falloffStatus.RootSkillId = 13080
@@ -612,6 +785,97 @@ Assert-Combat ($null -ne $readyAiSkill -and -not $aiSkill.UseLastAiPriority) 'A 
 $aiSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($aiActor, $aiUnits, 1, 0, $false, $false, $aiSkill)
 Assert-Combat ($aiSelection.Count -eq 1 -and $aiSelection[0].Id -eq 11) 'Normal skill priority did not resume after last-skill selection'
 
+$approxActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$approxActor.Id = 100; $approxActor.Side = 1; $approxActor.Hp = 100; $approxActor.MaxHp = 100
+$approxActor.Direction = 3
+$clusterTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$clusterTarget.Id = 101; $clusterTarget.Side = 2; $clusterTarget.X = 4; $clusterTarget.Hp = 100; $clusterTarget.MaxHp = 100
+$clusterMate = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$clusterMate.Id = 102; $clusterMate.Side = 2; $clusterMate.X = 5; $clusterMate.Hp = 100; $clusterMate.MaxHp = 100
+$isolatedTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$isolatedTarget.Id = 103; $isolatedTarget.Side = 2; $isolatedTarget.X = 10; $isolatedTarget.Hp = 100; $isolatedTarget.MaxHp = 100
+$approxUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($approxActor, $clusterTarget, $clusterMate, $isolatedTarget)
+$approxSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$approxSkill.TargetType = 1; $approxSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$approxSkill.AiPriorityTypes.Add(3)
+$approxSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($approxActor, $approxUnits, 1, 0, $false, $false, $approxSkill)
+Assert-Combat ($approxSelection[0].Id -eq 103) 'SaferPos approximation did not prefer the less threatened approach tile'
+$approxSkill.AiPriorityTypes.Clear(); $approxSkill.AiPriorityTypes.Add(16)
+$approxSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($approxActor, $approxUnits, 1, 0, $false, $false, $approxSkill)
+Assert-Combat ($approxSelection[0].Id -eq 103) 'StayAwayFromEnemies approximation did not prefer the most isolated approach tile'
+$approxSkill.AiPriorityTypes.Clear(); $approxSkill.AiPriorityTypes.Add(20)
+$approxSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($approxActor, $approxUnits, 1, 0, $false, $false, $approxSkill)
+Assert-Combat ($approxSelection[0].Id -eq 102) 'ShorterEnemyDistToTargetPos approximation did not group enemies'
+$approxActor.AiPreviousTargetId = 103
+$approxSkill.AiPriorityTypes.Clear(); $approxSkill.AiPriorityTypes.Add(6)
+$approxSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($approxActor, $approxUnits, 1, 0, $false, $false, $approxSkill)
+Assert-Combat ($approxSelection[0].Id -eq 103) 'PriorTargetEntityPos approximation did not retain the previous target'
+
+$directionActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$directionActor.Id = 120; $directionActor.Side = 1; $directionActor.Hp = 100; $directionActor.MaxHp = 100; $directionActor.Direction = 3
+$eastTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$eastTarget.Id = 121; $eastTarget.Side = 2; $eastTarget.X = 6; $eastTarget.Hp = 100; $eastTarget.MaxHp = 100
+$northTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$northTarget.Id = 122; $northTarget.Side = 2; $northTarget.Y = 6; $northTarget.Hp = 100; $northTarget.MaxHp = 100
+$directionUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($directionActor, $eastTarget, $northTarget)
+$directionSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$directionSkill.TargetType = 1; $directionSkill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$directionSkill.AiPriorityTypes.Add(9)
+$directionSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($directionActor, $directionUnits, 1, 0, $false, $false, $directionSkill)
+Assert-Combat ($directionSelection[0].Id -eq 121) 'ShorterEnemyTargetPosDistAndSameDir approximation did not prefer the current facing'
+
+$coverageActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$coverageActor.Id = 140; $coverageActor.Side = 1; $coverageActor.Hp = 100; $coverageActor.MaxHp = 100
+$largeBodyTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$largeBodyTarget.Id = 141; $largeBodyTarget.Side = 2; $largeBodyTarget.X = 3; $largeBodyTarget.Hp = 100; $largeBodyTarget.MaxHp = 100
+$largeBodyTarget.BodyOffsets.Clear()
+$largeBodyTarget.BodyOffsets.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$largeBodyTarget.BodyOffsets.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$largeBodyTarget.BodyOffsets.Add([Zjcs.Combat.Official.FightGridPoint]::new(2, 0))
+$smallBodyTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$smallBodyTarget.Id = 142; $smallBodyTarget.Side = 2; $smallBodyTarget.X = 10; $smallBodyTarget.Hp = 100; $smallBodyTarget.MaxHp = 100
+$smallBodyMate = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$smallBodyMate.Id = 143; $smallBodyMate.Side = 2; $smallBodyMate.X = 11; $smallBodyMate.Hp = 100; $smallBodyMate.MaxHp = 100
+$coverageUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($coverageActor, $largeBodyTarget, $smallBodyTarget, $smallBodyMate)
+$coverageSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$coverageSkill.TargetType = 1; $coverageSkill.AiPriorityTypes.Add(12)
+$coverageHit = [Zjcs.Combat.Official.FightBattleHitEntity]::new()
+$coverageHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$coverageHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$coverageHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(2, 0))
+$coverageSkill.HitGraphEntities.Add($coverageHit)
+$coverageSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($coverageActor, $coverageUnits, 1, 0, $false, $false, $coverageSkill)
+Assert-Combat ($coverageSelection[0].Id -eq 141) 'PriorBiggerBodyHitCoverage approximation did not count covered body cells'
+
+$healer = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$healer.Id = 150; $healer.Side = 1; $healer.Hp = 100; $healer.MaxHp = 100
+$woundedAlly = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$woundedAlly.Id = 151; $woundedAlly.Side = 1; $woundedAlly.Hp = 30; $woundedAlly.MaxHp = 100
+$lowerRatioAlly = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$lowerRatioAlly.Id = 152; $lowerRatioAlly.Side = 1; $lowerRatioAlly.Hp = 60; $lowerRatioAlly.MaxHp = 300
+$healerUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($healer, $woundedAlly, $lowerRatioAlly)
+$childSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$childSkill.TargetType = 2; $childSkill.AiPriorityTypes.Add(17)
+$childSelection = [Zjcs.Combat.Official.FightBattleTargeting]::Select($healer, $healerUnits, 2, 0, $false, $false, $childSkill)
+Assert-Combat ($childSelection[0].Id -eq 152) 'AttachOperateChildSkillFriendHp approximation did not choose the lower HP ratio'
+
+$randomActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$randomActor.Id = 160; $randomActor.Side = 1; $randomActor.Hp = 100; $randomActor.MaxHp = 100
+$randomTargets = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+$randomTargets.Add($randomActor)
+foreach ($id in 161..164) {
+    $randomTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+    $randomTarget.Id = $id; $randomTarget.Side = 2; $randomTarget.X = $id; $randomTarget.Hp = 100; $randomTarget.MaxHp = 100
+    $randomTargets.Add($randomTarget)
+}
+$randomSkill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
+$randomSkill.TargetType = 1; $randomSkill.AiPriorityTypes.Add(13)
+$randomA = [Zjcs.Combat.Official.FightRandomStream]::new(2468)
+$randomB = [Zjcs.Combat.Official.FightRandomStream]::new(2468)
+$randomSelectionA = [Zjcs.Combat.Official.FightBattleTargeting]::Select($randomActor, $randomTargets, 1, 0, $false, $false, $randomSkill, $randomA)
+$randomSelectionB = [Zjcs.Combat.Official.FightBattleTargeting]::Select($randomActor, $randomTargets, 1, 0, $false, $false, $randomSkill, $randomB)
+Assert-Combat ($randomSelectionA[0].Id -eq $randomSelectionB[0].Id -and $randomA.Seed -eq $randomB.Seed -and $randomA.Seed -ne 2468) 'PriorRandom did not replay deterministically from the battle random stream'
+
 $controlActor = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $controlActor.Id = 70; $controlActor.Side = 1; $controlActor.Hp = 100; $controlActor.MaxHp = 100
 $controlActor.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
@@ -675,9 +939,22 @@ $mutexEnemy.Id = 76; $mutexEnemy.Side = 2; $mutexEnemy.Hp = 100; $mutexEnemy.Max
 $mutexUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($mutexActor, $mutexEnemy)
 Assert-Combat ($mutexActionSkill.ActionType -eq 2 -and $mutexActionSkill.BlockingSourceActionTypes.Contains(57)) 'Official state mutex blockers were not compiled onto the skill'
 Assert-Combat ($null -ne [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($mutexActor, $mutexUnits, 1)) 'An unblocked official skill was not ready'
+$restricted = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$restricted.ActionType = 51
+$mutexActor.Statuses.Add($restricted)
+Assert-Combat ($null -ne [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($mutexActor, $mutexUnits, 1)) 'Restrict incorrectly blocked a Skill action'
+$moveAllowed = $officialCatalog.CanStartAction($mutexActor,
+    [Zjcs.Combat.Official.FightOfficialCombatCatalog]::MoveActionType)
+$skillMoveAllowed = $officialCatalog.CanStartAction($mutexActor,
+    [Zjcs.Combat.Official.FightOfficialCombatCatalog]::SkillMoveActionType)
+Assert-Combat (-not $moveAllowed -and -not $skillMoveAllowed) "Restrict did not block Move and SkillMove through the official state mutex (Move=$moveAllowed, SkillMove=$skillMoveAllowed)"
+Assert-Combat (-not $officialCatalog.CanStartEntityAction($mutexActor, 12103)) 'Restrict did not block a configured SkillMove action entity'
+$mutexActor.Statuses.Clear()
 $frozen = $officialCatalog.CreateStatus(24215, 2, 1, 1)
 $mutexActor.Statuses.Add($frozen)
 Assert-Combat ($null -eq [Zjcs.Combat.Official.FightBattleTargeting]::FindReadySkill($mutexActor, $mutexUnits, 1)) 'Frozen state did not block a skill through the official state mutex'
+Assert-Combat (-not $officialCatalog.CanStartAction($mutexActor, [Zjcs.Combat.Official.FightOfficialCombatCatalog]::MoveActionType) -and -not $officialCatalog.CanStartAction($mutexActor, [Zjcs.Combat.Official.FightOfficialCombatCatalog]::SkillMoveActionType)) 'Frozen state did not block Move and SkillMove through the official state mutex'
+Assert-Combat (-not $officialCatalog.CanStartEntityAction($mutexActor, 12083) -and -not $officialCatalog.CanStartEntityAction($mutexActor, 12878)) 'Frozen state did not block configured knockback and drag action entities'
 
 $hitActionSkill = $officialCatalog.CreateSkill(12030, 0, 12030, 1, 1, 0, $null)
 $safeAttackerTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
@@ -694,6 +971,7 @@ $actionTargetUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@(
     $mutexActor, $safeAttackerTarget, $invincibleTarget)
 Assert-Combat ($hitActionSkill.HitTargetActionType -eq 4 -and $hitActionSkill.BlockingTargetActionTypes.Contains(72) -and -not $hitActionSkill.BlockingTargetActionTypes.Contains(55)) 'Hit target action legality did not match the official damage mutex'
 Assert-Combat ([Zjcs.Combat.Official.FightBattleTargeting]::IsActionBlockedByStatus($safeAttackerTarget, $hitActionSkill.BlockingTargetActionTypes)) 'Explicit target action legality helper missed a blocked target'
+Assert-Combat (-not $officialCatalog.CanStartEntityAction($safeAttackerTarget, 12083)) 'SafeAttacker state did not block a configured knockback action entity'
 $actionTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select(
     $mutexActor, $actionTargetUnits, 1, 0, $false, $false, $hitActionSkill)
 Assert-Combat ($actionTargets.Count -eq 1 -and $actionTargets[0].Id -eq $invincibleTarget.Id) 'HitTargetActionType did not filter a target whose state discards damage'
@@ -840,6 +1118,36 @@ function New-WaveUnit($id, $side, $x, $y, $hp) {
     return $unit
 }
 
+foreach ($targetDistance in 3, 4) {
+    $conditionActor = New-WaveUnit 1 1 1 1 1000
+    $conditionActor.MoveMask = 4
+    $conditionSkill = $officialCatalog.CreateSkill(13500, 0, 10181, 1, 1, 0, $null)
+    $conditionSkill.HitGraphRootEntityIds.Clear()
+    $conditionSkill.HitGraphRoots.Clear()
+    $conditionSkill.HitGraphEntities.Clear()
+    $conditionSkill.Hits.Clear()
+    $conditionActor.Skills.Add($conditionSkill)
+    $conditionActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($conditionSkill, 0))
+    $conditionEnemy = New-WaveUnit 2 2 (1 + $targetDistance) 1 1000
+    $conditionCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+    $conditionCheckpoint.StageId = 22001; $conditionCheckpoint.RandomSeed = 13000 + $targetDistance
+    $conditionCheckpoint.Units.Add($conditionActor); $conditionCheckpoint.Units.Add($conditionEnemy)
+    $conditionCheckpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+    $conditionCheckpoint.Grid.Width = 8; $conditionCheckpoint.Grid.Height = 5
+    $conditionRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+        $conditionCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+        $officialCatalog, $skillItems)
+    $conditionStep = $conditionRunner.Step(0, 1)
+    $expectedActorX = if ($targetDistance -le 3) { 0 } else { 1 }
+    Assert-Combat ($conditionStep.Event.SkillCasts.Count -eq 1 -and $conditionActor.X -eq $expectedActorX) "Official skill target-distance move condition produced the wrong result at distance $targetDistance"
+    if ($targetDistance -le 3) {
+        $sourceMovement = $conditionStep.Event.Movements | Where-Object { $_.UnitId -eq $conditionActor.Id } | Select-Object -First 1
+        Assert-Combat ($null -ne $sourceMovement -and [Math]::Abs($sourceMovement.Delay - 0.8) -lt 0.001 -and [Math]::Abs($sourceMovement.MoveDuration - 0.2) -lt 0.001 -and $sourceMovement.MoveSpeed -eq 0 -and $sourceMovement.Path.Count -eq 2 -and $conditionStep.Event.Duration -ge 1.0) 'Official source movement event did not retain its delay, per-segment duration and path'
+    } else {
+        Assert-Combat ($conditionStep.Event.Movements.Count -eq 0) 'Conditionally blocked movement still emitted a movement event'
+    }
+}
+
 $priorityBindingPlayer = New-WaveUnit 1 1 0 0 1000
 $priorityBindingPlayer.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
 $priorityBindingSkill = $officialCatalog.CreateSkill(10610, 0, 10009, 1, 1, 0, $null)
@@ -932,8 +1240,9 @@ Assert-Combat ([Zjcs.Combat.Official.FightBattleTargeting]::Select($spawnPlayer,
 # Pinned summon skill execution: spawn pool units, attach their official statuses and register turns.
 $idleActor = New-WaveUnit 1 1 1 1 1000
 $idleActor.MoveMask = 4
+$idleMoveDist = 2
 $idleActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{
-    Id = $formula.PropertyId('MoveDist'); Value = 1
+    Id = $formula.PropertyId('MoveDist'); Value = $idleMoveDist
 })
 $coolingSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
 $idleActor.Skills.Add($coolingSkill)
@@ -947,10 +1256,43 @@ $idleCheckpoint.Grid.Width = 8; $idleCheckpoint.Grid.Height = 5
 $idleRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $idleCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
     $officialCatalog, $skillItems)
+$idleStartX = $idleActor.X; $idleStartY = $idleActor.Y
+$idleMaximumReachableDistance = 0
+for ($x = [Math]::Max(0, $idleStartX - $idleMoveDist); $x -le [Math]::Min($idleCheckpoint.Grid.Width - 1, $idleStartX + $idleMoveDist); $x++) {
+    for ($y = [Math]::Max(0, $idleStartY - $idleMoveDist); $y -le [Math]::Min($idleCheckpoint.Grid.Height - 1, $idleStartY + $idleMoveDist); $y++) {
+        if ([Math]::Abs($x - $idleStartX) + [Math]::Abs($y - $idleStartY) -gt $idleMoveDist) { continue }
+        $distance = [Math]::Abs($x - $idleEnemy.X) + [Math]::Abs($y - $idleEnemy.Y)
+        $idleMaximumReachableDistance = [Math]::Max($idleMaximumReachableDistance, $distance)
+    }
+}
 $cooldownBeforeIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
 $idleStep = $idleRunner.Step(0, 1)
 $cooldownAfterIdle = [Zjcs.Combat.Official.FightSkillState]::new($idleActor.SkillState).LeftCooldown(0)
-Assert-Combat ($idleStep.Event.SkillCasts.Count -eq 0 -and $idleStep.Event.DamageEvents.Count -eq 0 -and $idleStep.Event.Movements.Count -eq 1 -and ([Math]::Abs($idleActor.X - $idleEnemy.X) + [Math]::Abs($idleActor.Y - $idleEnemy.Y)) -gt 3 -and $idleEnemy.Hp -eq 1000 -and $idleActor.SkillState.Round -eq 1 -and $idleCheckpoint.Counter -eq 1 -and $cooldownAfterIdle -lt $cooldownBeforeIdle) 'No-release turn did not flee, advance its round/cooldown and avoid inventing an attack'
+$idleFinalDistance = [Math]::Abs($idleActor.X - $idleEnemy.X) + [Math]::Abs($idleActor.Y - $idleEnemy.Y)
+Assert-Combat ($idleStep.Event.SkillCasts.Count -eq 0 -and $idleStep.Event.DamageEvents.Count -eq 0 -and $idleStep.Event.Movements.Count -eq 1 -and $idleFinalDistance -eq $idleMaximumReachableDistance -and $idleEnemy.Hp -eq 1000 -and $idleActor.SkillState.Round -eq 1 -and $idleCheckpoint.Counter -eq 1 -and $cooldownAfterIdle -lt $cooldownBeforeIdle) 'No-release turn did not choose the farthest reachable position, advance its round/cooldown and avoid inventing an attack'
+
+$restrictedActor = New-WaveUnit 1 1 1 1 1000
+$restrictedActor.MoveMask = 4
+$restrictedActor.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{
+    Id = $formula.PropertyId('MoveDist'); Value = 1
+})
+$restrictedSkill = $officialCatalog.CreateSkill(12860, 0, 0, 1, 1, 0, $null)
+$restrictedActor.Skills.Add($restrictedSkill)
+$restrictedActor.SkillState.Slots.Add($officialCatalog.CreateSkillSlot($restrictedSkill, 3))
+$restrictStatus = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$restrictStatus.ActionType = 51
+$restrictedActor.Statuses.Add($restrictStatus)
+$restrictedEnemy = New-WaveUnit 2 2 4 1 1000
+$restrictedCheckpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$restrictedCheckpoint.StageId = 22001; $restrictedCheckpoint.RandomSeed = 20
+$restrictedCheckpoint.Units.Add($restrictedActor); $restrictedCheckpoint.Units.Add($restrictedEnemy)
+$restrictedCheckpoint.Grid = [Zjcs.Combat.Official.FightBattleGrid]::new()
+$restrictedCheckpoint.Grid.Width = 8; $restrictedCheckpoint.Grid.Height = 5
+$restrictedRunner = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
+    $restrictedCheckpoint, $formula, [Zjcs.Combat.Official.FightDamageSettlement]::new(),
+    $officialCatalog, $skillItems)
+$restrictedStep = $restrictedRunner.Step(0, 1)
+Assert-Combat ($restrictedStep.Event.SkillCasts.Count -eq 0 -and $restrictedStep.Event.DamageEvents.Count -eq 0 -and $restrictedStep.Event.Movements.Count -eq 0 -and $restrictedActor.SkillState.Round -eq 1 -and $restrictedCheckpoint.Counter -eq 1) 'Restrict did not hold the no-skill actor in place while advancing its round'
 
 $passiveSkill = $skillItems.Required(10128)
 Assert-Combat ($passiveSkill.PassiveStatusIds.Count -eq 1 -and $passiveSkill.PassiveStatusIds[0] -eq 25160) 'Pinned passive skill status mapping mismatch'

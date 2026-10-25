@@ -126,6 +126,11 @@ namespace Zjcs.Combat.Official
             return Prop(values, propertyId);
         }
 
+        public int PropertyId(string name)
+        {
+            return schema.Id(name);
+        }
+
         public void AddPropertyValue(IDictionary<int, long> values, string name, double amount)
         {
             int id = schema.Id(name);
@@ -134,6 +139,13 @@ namespace Zjcs.Combat.Official
             values[id] = schema.IsFloat(id)
                 ? (long)Math.Round(value * 10000.0, MidpointRounding.AwayFromZero)
                 : (long)Math.Round(value, MidpointRounding.AwayFromZero);
+        }
+
+        public string PropertyName(int id)
+        {
+            for (int i = 0; i < schema.Names.Count; i++)
+                if (schema.Names[i].Id == id) return schema.Names[i].Name;
+            return null;
         }
 
         public int CalculateMoveDist(IDictionary<int, long> values)
@@ -190,7 +202,8 @@ namespace Zjcs.Combat.Official
         }
 
         public FightDamageFormulaResult Calculate(FightDamageFormulaRequest request,
-            FightDamageTypeData type, long? customDamage = null, double elementConfrontation = 0)
+            FightDamageTypeData type, long? customDamage = null, double elementConfrontation = 0,
+            Func<double, double> beforeFixedDamageReduce = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             var result = new FightDamageFormulaResult();
@@ -224,6 +237,8 @@ namespace Zjcs.Combat.Official
                 amount += fixedDamage;
                 absolute += fixedDamage;
                 amount *= attack / (attack + defence);
+                if (beforeFixedDamageReduce != null)
+                    amount = beforeFixedDamageReduce(amount);
 
                 // This assignment order matches the pinned BattleFormulaHandler.Damage method.
                 absolute = basic;

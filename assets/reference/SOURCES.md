@@ -44,6 +44,10 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 同次登记战斗 UI 的 7 个原 prefab、29 个组件绑定及 48 个 Sprite，输入与输出见 [战斗 UI 来源](combat-ui/source-manifest.json)。这部分仅完成转换及显式加载登记，原战斗界面和完整流程仍在实施，不能因已入素材包声明功能完成。
 
+固定版战斗 world UI 中的 `BattleCustomDamageFloatEffect_Scene`（bundle `14e38fc9585d8e00567ae2f9f4b0e8bb`，对象 `-2976502348647371213`）由 `scripts/prepare_unity_battle_assets.py --runtime-hud-only` 转为 Windows 原生 3D TMP／SpriteRenderer 节点数据，按 Wwise 语言包生成 `EStatusCustomAction` 文案。输入 `world-ui.json` SHA256 为 `5c9a4daa0c4c9722df2ecbcbbe735749de491f423c2aef24d5010bfcd886bdf4`，运行载荷与输出哈希见 `unity/Assets/Game/Resources/Combat/battle-custom-action-world-runtime-source-manifest.json`；该 UI 的运行验证状态见[战斗执行](../../docs/features/battle-execution.md)。
+
+自定义战斗飘字 TMP 组件的 `m_fontAsset` PPtr（path ID `-1054575886599457342`）解析到固定版字体依赖 `CAB-43221b4d126447a2b398f3477e814a2c`，名称为 `FZY4K SDF - dynamic`；其 bundle SHA-256 为 `ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434`。运行时 HUD 绑定 `FZY4K-Dynamic.asset`（GUID `e9b69727f25b00e4c82f8bc68bd859c5`），该资产的源 TTF GUID `6318d84275f8ea84bb687a21c99efcf7` 与官方 `FZY4K.ttf` SHA-256 `90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386` 已由专项测试校验。
+
 运行时使用固定 `854_156383` APK／校验 CDN 的角色、家园、界面、区域地形、模型、动画、粒子和音频。大陆已接入区域探索、主线解释器与地图活动，古遗物、炼金炉、伙伴和幻兽专用界面也已落地。当前功能与剩余边界统一见 [功能索引](../../docs/README.md)；本页后续按日期保留的“缺包／未接入”和数量是当时阶段记录。
 
 原版本 185 个缺项仍保留。新版 `864_156496` 同名包中适用的同 CAB 对象，已经用于场景粒子、UI 粒子和音乐节舞台依赖，分别登记于 [场景粒子新版凭据](official-map/particle-counterparts-source-manifest.json)、[UI 粒子新版凭据](official-map/ui-particle-counterparts-source-manifest.json) 及 [舞台来源](official-map/music-stage-source-manifest.json)。仅按独立哈希和依赖核验使用，不覆盖原版本缓存。
@@ -1598,6 +1602,22 @@ DIY 外观选项缩略图使用固定 APK `854_156383` 的 `defaultpackage_asset
 ## 2026-10-24 幻想阶梯塔层战斗配置
 
 `scripts/prepare_tower_push.py` 从固定 APK manifest `854_156383` 解码 `stage_demon_battlefield.g.bytes`、`stage.g.bytes`、`stage_monster_array.g.bytes`、`skill.g.bytes`，并复用已校验的官方战斗场景与战斗/技能/通用规则，生成四入口共585层的官方战斗数据。编队按 `StageMonsterArrayInfoParser.GenerateMonsters` 的连续 GroupId 顺序展开；小数等级按 `LevelPropParser.GetPropsByFloat` 与 `BattleFormulaHandler.LerpProps` 插值。`scripts/prepare_tower_push_ui.py` 转换 `defaultpackage_assets_prefabs_ui_demonbattlefield.bundle` 中的入口、入口行、逐层页与四种塔层行 prefab，并导出原面板 Sprite、动态入口图及逐项输入／输出哈希；`scripts/prepare_tower_push_audio.py` 按固定 Wwise 来源校验并打包 `Note_FantasyLadder_Flash`、`Note_FantasyLadder_Elevator` 两条 OGG。来源、代码、输入及输出 SHA256 记录于 `tower-push/tower-battle-source-manifest.json`、`tower-push/ui-source-manifest.json` 和 `battle-audio/source-manifest.json`；运行载荷位于 `unity/Assets/Game/Resources/TowerPush/` 与 `unity/Assets/StreamingAssets/TowerPush/`，角色动作载荷另见 `character-creation/native-mesh-source-manifest.json`。玩法及奖励已接入本地运行时；塔行状态动画和粒子仍待从官方动画依赖恢复，Unity Play Mode 尚未验收，详见[幻想阶梯](../../docs/features/fantasy-tower.md)。
+
+## 战斗结算报告官方面板
+
+`scripts/prepare_unity_battle_report_assets.py` 校验固定 APK／CDN manifest `854_156383` 的7个报告 bundle SHA256，并将个人、全员、玩家统计行、技能统计行及分隔线7个 prefab 和34项依赖资产导入 `unity/Assets/Official/Combat/BattleReport/`；7个 Unity Resources prefab 位于 `unity/Assets/Game/Resources/Combat/BattleReport/`。Prefab 的 UGUI／TMP 脚本 GUID 映射至工程内 Unity 包，所有外部 PPtr 均在转换后检查；逐 bundle URL、输入／导出／运行时 prefab SHA256 和资产路径见 [report-panels-source-manifest.json](battle-hud/report-panels-source-manifest.json)。其中8个 AssetRipper MonoBehaviour 文件是缺少 IL2CPP 脚本重建后的空壳，不含行为。官方客户端面板逻辑见 `.tools/source-packages/official-code/client-source/FightEndReportPanelProvider.cs`、`FightEndReportPanel.cs`、`FightEndReportPlayerTabView.cs`、`FightEndReportSkillTabView.cs` 及同目录相关 Item／Base 类；业务代码依赖官方服务器报告结构和客户端框架，尚未接入本地执行器，具体功能缺项维护于[通用战斗页](../../docs/features/battle-execution.md)。
+
+## 通用战斗霸体状态飘字
+
+固定版 `854_156383` 的 `assets/official/battle-rules.json` 中状态实体 `25275` 配置 `FightStatusUnflinchingOnDamageComponent.Rate=0.5`；来源与输出哈希由 `assets/reference/battle-rules/source-manifest.json` 核验。官方共享代码 `.tools/source-packages/official-code/common-source/Common/FightStatusUnflinchingOnDamageComponent.cs` 在状态 `OnInvoked` 时向持有者发出 `EStatusCustomAction.Unflinching`，枚举值为 2（`EStatusCustomAction.cs`）；服务端调用时机未取得。离线实现按用户确认的推断在每次实际 HP 损失时掷配置率，并将动作 2 写入战斗步进事件／回执；固定 HUD world prefab 数据的文案绑定为“霸体”。
+
+## 通用战斗随机目标命中
+
+固定版 `854_156383` 的 `assets/official/battle-rules.json` 为随机命中实体 `13992`、`59361`、`11202` 配置 `MiniHitTargetCount` 与 `NotSameTarget=true`。官方共享类 `.tools/source-packages/official-code/common-source/Common/FightHitRandomTargetComponentInfo.cs` 定义随机范围、HitList 和去重字段；`.tools/source-packages/official-code/common-source/Common/FightHitRandomTargetComponent.cs` 仅提供这些配置，客户端 `.tools/source-packages/official-code/client-source/MyFightHitRandomTarget.cs` 是空包装，未取得服务端选敌器。离线按用户确认的规则，在同一组件的 HitList 子命中间按格网选择：`NotSameTarget` 排除已选单位，`NotSameEmptyScope` 排除已选空格，`NotSameGrid` 排除已选格子；候选耗尽时跳过后续子命中。`FilterOutOfGroundScope=true` 时越界格在分配前滤除，关闭时越界格可作为空格候选；`AllowEmptyScope` 允许空格消耗子命中名额，`NotAllowHitEmpty` 禁止空格命中，空格本身不造成伤害或召唤。选中单位作为子范围命中中心，召唤子命中仅消费选中的有效单位。执行和覆盖测试位于 `FightBattleHitCollector`、`FightBattleTargeting`、`FightBattleExecutor` 及 `scripts/test_unity_combat.ps1`；`FilterCondition` 等其他区域过滤仍未实现。
+
+## 通用战斗职业技能可用性
+
+固定版 `854_156383` 的 `FightUtilsHandler.IsSkillMeetProfession` 经 `ProfessionBaseInfoParser.IsSkillAvailableForProfession` 计算玩家主动／被动技能可用性；对应官方共享实现位于 `.tools/source-packages/official-code/common-source/Common/FightUtilsHandler.cs`、`FightSkillData.cs`、`PassiveSkillData.cs`、`ProfessionBaseInfoParser.cs` 与 `ProfessionUtils.cs`，数据来自 `assets/official/rules.json` 的 `profession_base`。离线目录按 `Skills`、`FightUsedSkills` 和 `PrePro` 继承链计算同一标记；职业为0时依据 `OfflineEquipmentProfile` 的装备位置10解析当前武器类型，按官方 Sword→Zhanshi（1）、Wand→Fashi（10）映射优先回退当前武器，再回退初始武器。Map10、日常副本、幻想塔和竞技场玩家技能绑定均写入 `ProfessionAvailability`。客户端 `FightMainPanelSkillUI` 将不匹配技能显示为 `GameSkillIcon.State.ProfessionLimit`。未找到施放执行链消费 `IsAvailable` 并拒绝技能的证据，故本地只迁移可用性标记与 HUD 状态，不添加释放禁令。
 
 Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参数补充整体括号；官方 shader 来源仍为固定版 `854_156383` 的 `defaultpackage_unityshaders.bundle` （bundle hash `cac97355bb4799c415e3cb1ef38b6dc5`、PathID `5093245133389786381`）。原生重建入口为 `unity/Assets/Game/Resources/World/Map10Water.shader`，输出 SHA256 为 `7d8488c9451eb99a4f688d288146dd5059dcc79c8a56c68a6c816536f00ecb43`；已同步 `unity/Assets/Official/World/Map/10/rendering-source-manifest.json` 中的重建输出记录。纹理、官方输入哈希和显式加载路径均沿用原记录，Windows 构建已无水面 shader 编译错误；动态画面仍按地图页验收。
 

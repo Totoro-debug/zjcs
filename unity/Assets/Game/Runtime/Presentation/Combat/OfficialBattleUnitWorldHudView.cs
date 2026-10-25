@@ -41,6 +41,18 @@ namespace Zjcs.Presentation.Combat
         private bool hasHpRatio;
         private bool disposed;
 
+        public Transform Root => root.transform;
+
+        public static OfficialBattleUnitWorldHudView Create(OfficialBattleHudCatalog catalog,
+            BattleUnitBarBinding binding, BattleUnitBarFaction faction, FightBattleUnitState unit,
+            Transform body, Camera camera, int sortingOrder)
+        {
+            var view = new OfficialBattleUnitWorldHudView(catalog, binding, unit, body, faction);
+            view.canvas.worldCamera = camera;
+            view.canvas.sortingOrder = sortingOrder;
+            return view;
+        }
+
         public static OfficialBattleUnitWorldHudView Create(OfficialBattleHudCatalog catalog,
             FightBattleUnitState unit, Transform body)
         {
@@ -70,11 +82,11 @@ namespace Zjcs.Presentation.Combat
         }
 
         private OfficialBattleUnitWorldHudView(OfficialBattleHudCatalog catalog,
-            BattleUnitBarBinding binding, FightBattleUnitState unit, Transform body)
+            BattleUnitBarBinding binding, FightBattleUnitState unit, Transform body, BattleUnitBarFaction factionOverride = null)
         {
             this.catalog = catalog;
             this.binding = binding;
-            faction = catalog.UnitBarFaction(unit.Id == 1 || unit.Side == 1);
+            faction = factionOverride ?? catalog.UnitBarFaction(unit.Id == 1 || unit.Side == 1);
             statusRenderer = new OfficialBattleHudRenderer(catalog);
 
             root = new GameObject("OfficialBattleUnitHud_" + unit.Id,
