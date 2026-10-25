@@ -362,7 +362,7 @@ namespace Zjcs.Combat.Official
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleHitDefinition> Hits = new List<FightBattleHitDefinition>();
         // Official FightSKillMoveCfg entries from FightSkillComponent.SourceMoveList (sorted by
-        // Delay). DoMoveConditions entries cannot be evaluated locally and are flagged.
+        // Delay). The supported target-distance condition is evaluated locally; unknown types fail closed.
         public List<FightBattleSkillMove> SourceMoves = new List<FightBattleSkillMove>();
         // Official FightSkillExtSkillComponent: extra skills released when the action ends.
         public List<FightBattleSkillExtra> ExtraSkills = new List<FightBattleSkillExtra>();
@@ -397,6 +397,13 @@ namespace Zjcs.Combat.Official
         public bool AffectedByProp;
         public bool CancelDiagonally;
         public bool HasConditions;
+        public List<FightBattleSkillMoveCondition> Conditions = new List<FightBattleSkillMoveCondition>();
+    }
+    [Serializable]
+    public sealed class FightBattleSkillMoveCondition
+    {
+        public string Type;
+        public int Distance;
     }
 
     [Serializable]

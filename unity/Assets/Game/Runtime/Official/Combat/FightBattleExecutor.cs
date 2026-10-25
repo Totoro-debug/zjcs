@@ -345,11 +345,11 @@ namespace Zjcs.Combat.Official
             if (movements == null) return;
             foreach (FightBattleSkillMove move in skill.SourceMoves)
             {
-                if (move == null || move.HasConditions) continue;
+                if (move == null) continue;
                 FightBattleUnitState target = null;
                 foreach (FightBattleUnitState candidate in targets)
                     if (candidate != null && candidate.Id != actor.Id) { target = candidate; break; }
-                if (target == null) continue;
+                if (target == null || !MoveConditionsSatisfied(move, actor, target)) continue;
                 if (!MoveChanceSucceeded(move, actor, target)) continue;
                 if (move.Delay > lastDelay) lastDelay = move.Delay;
                 if (move.Distance < 0)
@@ -388,6 +388,21 @@ namespace Zjcs.Combat.Official
                 chance = formula.CalculateStatusEffectRate(source.Properties, target.Properties,
                     move.BasePercent, 0);
             return random.Next() <= chance;
+        }
+
+        private static bool MoveConditionsSatisfied(FightBattleSkillMove move,
+            FightBattleUnitState actor, FightBattleUnitState target)
+        {
+            if (move == null || actor == null || target == null) return false;
+            if (move.Conditions == null || move.Conditions.Count == 0) return !move.HasConditions;
+            int targetDistance = Manhattan(new FightGridPoint(actor.X, actor.Y),
+                new FightGridPoint(target.X, target.Y));
+            foreach (FightBattleSkillMoveCondition condition in move.Conditions)
+            {
+                if (condition == null || condition.Type != "SkillTargetDistanceMoveCondition"
+                    || targetDistance > condition.Distance) return false;
+            }
+            return true;
         }
 
         private void MoveNextToTarget(FightBattleUnitState actor, FightBattleUnitState target,
@@ -724,7 +739,8 @@ namespace Zjcs.Combat.Official
             FightBattleHitDefinition hit, List<FightBattleMovementEvent> movements)
         {
             FightBattleSkillMove move = hit == null ? null : hit.HitMove;
-            if (move == null || move.HasConditions || move.Distance <= 0 || movements == null
+            if (move == null || !MoveConditionsSatisfied(move, actor, target)
+                || move.Distance <= 0 || movements == null
                 || target.Hp <= 0) return;
             if (!MoveChanceSucceeded(move, actor, target)) return;
             if (move.Direction == 2)

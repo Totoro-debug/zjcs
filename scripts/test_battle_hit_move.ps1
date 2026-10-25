@@ -18,6 +18,13 @@ $catalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     (Read-Text 'unity/Assets/Official/Combat/battle-rules.json'),
     (Get-Sha 'unity/Assets/Official/Combat/battle-rules.json'), '854_156383')
 
+$officialConditionalMove = $catalog.CreateSkill(13500, 0, 13500, 1, 1, 0, $null).SourceMoves |
+    Select-Object -First 1
+$officialConditionMapped = $officialConditionalMove.Conditions.Count -eq 1 `
+    -and $officialConditionalMove.Conditions[0].Type -eq 'SkillTargetDistanceMoveCondition' `
+    -and $officialConditionalMove.Conditions[0].Distance -eq 3
+Assert-Move $officialConditionMapped 'Official skill 13500 move condition was not mapped'
+
 $effectSchema = [Zjcs.Combat.Official.FightDamagePropertySchema]::new()
 $effectPropertyNames = @('BaseEffectRate', 'EffectRate', 'BaseEffectDodge', 'EffectDodge',
     'EffectRateValue', 'EffectDodgeValue')
@@ -56,7 +63,7 @@ function New-Unit($id, $side, $x, $y, $hp) {
 }
 
 function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1, $rangeY = 0,
-    $basePercent = 1.0, $affectedByProp = $false) {
+    $basePercent = 1.0, $affectedByProp = $false, $conditionDistance = -1) {
     $skill = [Zjcs.Combat.Official.FightBattleSkillDefinition]::new()
     $skill.TargetType = 1
     $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new($rangeX, $rangeY))
@@ -67,6 +74,11 @@ function New-MoveSkill($rangeX, $distance, $towards, $conditions, $direction = 1
     $hit.HitMove.Distance = $distance; $hit.HitMove.Direction = $direction; $hit.HitMove.TowardsTargetPos = $towards
     $hit.HitMove.BasePercent = $basePercent; $hit.HitMove.AffectedByProp = $affectedByProp
     $hit.HitMove.HasConditions = $conditions
+    if ($conditionDistance -ge 0) {
+        $condition = [Zjcs.Combat.Official.FightBattleSkillMoveCondition]::new()
+        $condition.Type = 'SkillTargetDistanceMoveCondition'; $condition.Distance = $conditionDistance
+        $hit.HitMove.Conditions.Add($condition)
+    }
     $skill.Hits.Add($hit)
     return $skill
 }
@@ -119,6 +131,20 @@ $conditionPlayer = New-Unit 1 1 0 0 1000
 $conditionEnemy = New-Unit 2 2 1 0 5000
 $conditional = Invoke-MoveBattle (New-MoveSkill 1 1 $false $true) $conditionPlayer $conditionEnemy
 Assert-Move ($conditionEnemy.X -eq 1 -and $conditional.Event.Movements.Count -eq 0) 'Conditional displacement was applied'
+
+$distanceConditionPlayer = New-Unit 1 1 0 0 1000
+$distanceConditionEnemy = New-Unit 2 2 3 0 5000
+$distanceCondition = Invoke-MoveBattle (New-MoveSkill 3 1 $false $true 1 0 1.0 $false 3) `
+    $distanceConditionPlayer $distanceConditionEnemy
+Assert-Move ($distanceConditionEnemy.X -eq 4 -and $distanceCondition.Event.Movements.Count -eq 1) `
+    'Hit displacement did not satisfy SkillTargetDistanceMoveCondition at its distance boundary'
+
+$overDistanceConditionPlayer = New-Unit 1 1 0 0 1000
+$overDistanceConditionEnemy = New-Unit 2 2 4 0 5000
+$overDistanceCondition = Invoke-MoveBattle (New-MoveSkill 4 1 $false $true 1 0 1.0 $false 3) `
+    $overDistanceConditionPlayer $overDistanceConditionEnemy
+Assert-Move ($overDistanceConditionEnemy.X -eq 4 -and $overDistanceCondition.Event.Movements.Count -eq 0) `
+    'Hit displacement ignored SkillTargetDistanceMoveCondition beyond its distance threshold'
 
 $sidePlayer = New-Unit 1 1 0 4 1000
 $sideEnemy = New-Unit 2 2 1 4 5000

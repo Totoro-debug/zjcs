@@ -1637,8 +1637,29 @@ namespace Zjcs.Combat.Official
                 BasePercent = Float(row, "BasePercent", 1f),
                 AffectedByProp = Bool(row, "AffectedByProp"),
                 CancelDiagonally = Bool(row, "CancelDiagonally"),
-                HasConditions = conditions
+                HasConditions = conditions,
+                Conditions = ParseMoveConditions(row)
             };
+        }
+
+        private static List<FightBattleSkillMoveCondition> ParseMoveConditions(
+            Dictionary<string, object> row)
+        {
+            var result = new List<FightBattleSkillMoveCondition>();
+            if (!row.TryGetValue("DoMoveConditions", out object sourceConditions)
+                || sourceConditions == null) return result;
+            foreach (object item in Array(sourceConditions, "DoMoveConditions"))
+            {
+                Dictionary<string, object> condition = Object(item, "move condition");
+                object rawType;
+                result.Add(new FightBattleSkillMoveCondition
+                {
+                    Type = condition.TryGetValue("_type", out rawType)
+                        ? Convert.ToString(rawType, CultureInfo.InvariantCulture) : string.Empty,
+                    Distance = Int(condition, "Distance")
+                });
+            }
+            return result;
         }
 
         private static void AddHpTriggerSkills(Dictionary<string, object> component,
