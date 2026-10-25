@@ -352,6 +352,45 @@ namespace Zjcs.Combat.Official
             return status == null ? 0 : Int(status, "StatusType");
         }
 
+        /// <summary>
+        /// Offline application of FightStatusAgentRateComponent. Official descriptions of
+        /// 24012 (wet) and 24013 (abnormal-status resistance) identify these as incoming status
+        /// probability modifiers. Independent effects multiply per the confirmed offline rule;
+        /// the shared EffectRate formula keeps its original additive terms and unclamped result.
+        /// </summary>
+        public double CalculateStatusApplicationRate(FightBattleUnitState source,
+            FightBattleUnitState target, int statusClassId, double baseRate, bool affectedByProp,
+            FightDamageFormula formula)
+        {
+            if (!affectedByProp) return baseRate;
+            if (source == null || target == null || formula == null)
+                throw new ArgumentNullException("Status probability requires source, target and formula.");
+            int statusType = StatusTypeFor(statusClassId);
+            double rate = formula.CalculateStatusEffectRate(source.Properties, target.Properties,
+                (float)baseRate, statusType);
+            int actionType = entities.TryGetValue(statusClassId, out Dictionary<string, object> incoming)
+                && Component(incoming, "ActionComponent") is Dictionary<string, object> action
+                ? Int(action, "ActionType") : 0;
+            foreach (FightBattleStatusState modifier in target.Statuses)
+            {
+                if (modifier == null || !entities.TryGetValue(modifier.ClassId,
+                        out Dictionary<string, object> definition)) continue;
+                Dictionary<string, object> config = Component(definition, "FightStatusAgentRateComponent");
+                if (config == null) continue;
+                int[] actions = IntArray(config, "LimitActionTypes");
+                int[] types = IntArray(config, "LimitStatusTypes");
+                if ((actions.Length > 0 && System.Array.IndexOf(actions, actionType) < 0)
+                    || (types.Length > 0 && System.Array.IndexOf(types, statusType) < 0)) continue;
+                IReadOnlyDictionary<int, long> properties = CalculateSkillProps(modifier.ClassId,
+                    modifier.SourceSkillRank, modifier.SourceSkillLevel, modifier.SourceSubRank);
+                if (!properties.TryGetValue(Int(config, "AddPropType"), out long value)) continue;
+                double scale = modifier.IsOpenStack && modifier.ScalePropWhenChangeStacked
+                    ? modifier.StackCount : 1;
+                rate *= 1.0 + value * scale / 10000.0;
+            }
+            return rate;
+        }
+
         public FightBattleResilienceInfo MonsterResilienceInfo(int monsterId, int groupNo)
         {
             Dictionary<string, object> group = FindMonsterGroup(monsterId, groupNo);
@@ -1334,14 +1373,23 @@ namespace Zjcs.Combat.Official
         {
             if (!skillPropTables.TryGetValue(classId, out SkillPropTable table)
                 || table.Rows.Count == 0) return EmptyProps;
-            if (table.Rows.TryGetValue(level, out Dictionary<int, long> exact)) return exact;
+            if (table.Rows.TryGetValue(level, out Dictionary<int, long> exact))
+            {
+                FightOfficialLevelPropDefaults.Apply(classId, exact);
+                return exact;
+            }
             if (level >= table.MaxLevel
-                && table.Rows.TryGetValue(table.MaxLevel, out Dictionary<int, long> maximum)) return maximum;
+                && table.Rows.TryGetValue(table.MaxLevel, out Dictionary<int, long> maximum))
+            {
+                FightOfficialLevelPropDefaults.Apply(classId, maximum);
+                return maximum;
+            }
             int nearest = table.MinLevel;
             foreach (int candidate in table.Rows.Keys)
                 if (candidate <= level && candidate > nearest) nearest = candidate;
-            return table.Rows.TryGetValue(nearest, out Dictionary<int, long> fallback)
-                ? fallback : EmptyProps;
+            if (!table.Rows.TryGetValue(nearest, out Dictionary<int, long> fallback)) return EmptyProps;
+            FightOfficialLevelPropDefaults.Apply(classId, fallback);
+            return fallback;
         }
 
         private Dictionary<string, object> FindMonsterGroup(int monsterId, int groupNo)

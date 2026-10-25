@@ -24,7 +24,11 @@ namespace Zjcs.Presentation.Combat
         private double speedMultiplier = 1.0;
         private bool paused;
         private bool ownsTimeScale;
-        private readonly FightBattlePhaseMachine phases = new FightBattlePhaseMachine();
+        private FightBattlePhaseMachine phases = new FightBattlePhaseMachine();
+        private OfficialBattleSessionOptions sessionOptions;
+        private Transform pendingHudParent;
+        private float remainingHudDelay;
+        private bool hudVisible = true;
         private FightOfficialCombatCatalog combatCatalog;
         private OfficialBattleHudCatalog hudCatalog;
         private OfficialBattleDamageColors damageColors;
@@ -47,9 +51,12 @@ namespace Zjcs.Presentation.Combat
         public double SpeedMultiplier => speedMultiplier;
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;
         public bool IsPaused => paused;
+        public bool CanAdvance => executor != null && !executor.State.Finished
+            && !paused && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart);
 
         public void SetHudVisible(bool visible)
         {
+            hudVisible = visible;
             if (hudRoot != null) hudRoot.SetActive(visible);
         }
         public bool HasBattleEnvironment => environmentView != null;
@@ -68,7 +75,8 @@ namespace Zjcs.Presentation.Combat
             int environmentGameId = 0,
             bool? environmentIsDay = null,
             Func<FightBattleUnitState, string> animationGroupResolver = null,
-            OfflineMainlineProgressSession statueProgress = null)
+            OfflineMainlineProgressSession statueProgress = null,
+            OfficialBattleSessionOptions options = null)
         {
             if (executor != null) throw new InvalidOperationException("A battle session is already active.");
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
@@ -79,6 +87,11 @@ namespace Zjcs.Presentation.Combat
             if (timelinePortrait == null) throw new ArgumentNullException(nameof(timelinePortrait));
             if (modelKey == null) throw new ArgumentNullException(nameof(modelKey));
             if (orientUnit == null) throw new ArgumentNullException(nameof(orientUnit));
+            sessionOptions = options ?? new OfficialBattleSessionOptions();
+            if (double.IsNaN(sessionOptions.PrepareSeconds) || double.IsInfinity(sessionOptions.PrepareSeconds)
+                || sessionOptions.PrepareSeconds < 0 || float.IsNaN(sessionOptions.ShowMainPanelDelay)
+                || float.IsInfinity(sessionOptions.ShowMainPanelDelay) || sessionOptions.ShowMainPanelDelay < 0)
+                throw new ArgumentException("Battle preparation and HUD delays must be finite and nonnegative.", nameof(options));
 
             OfficialCombatAssetCatalog resolvedCombatAssets = combatAssets != null
                 ? combatAssets : OfficialCombatAssetCatalog.LoadDefault();
@@ -95,7 +108,7 @@ namespace Zjcs.Presentation.Combat
                 statueProgress.Reload();
                 ApplyPendingStatueEffects(checkpoint, combatCatalog, statueProgress.Save.Player);
             }
-            hudCatalog = resolvedHudCatalog;
+            this.hudCatalog = resolvedHudCatalog;
             damageColors = OfficialBattleDamageColors.Load();
             FightBattleExecutor nextExecutor = restoreCheckpoint
                 ? resolvedCombatAssets.RestoreBattle(checkpoint)
@@ -114,14 +127,17 @@ namespace Zjcs.Presentation.Combat
                 nextScene = new OfficialBattleSceneView(resolvedModelCatalog, worldRoot,
                     modelKey, gridMapper, animationForEvent, orientUnit, resolvedHudCatalog, hudParent,
                     nextNativeModels, animationGroupResolver);
-                nextHudRoot = nextHud.Mount(hudParent);
                 nextHud.ControlClicked += OnHudControlClicked;
                 nextHud.SpeedCycled += OnSpeedCycled;
-                nextHud.Refresh(checkpoint);
-                nextHud.RefreshSkillSlots(checkpoint, skillIcon);
-                nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
-                nextHud.RefreshBoss(checkpoint, UnitName);
-                nextHud.RefreshStageStatus(checkpoint);
+                if (sessionOptions.ShowMainPanelDelay <= 0)
+                {
+                    nextHudRoot = nextHud.Mount(hudParent);
+                    nextHud.Refresh(checkpoint);
+                    nextHud.RefreshSkillSlots(checkpoint, skillIcon);
+                    nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
+                    nextHud.RefreshBoss(checkpoint, UnitName);
+                    nextHud.RefreshStageStatus(checkpoint);
+                }
                 nextScene.Refresh(checkpoint);
                 executor = nextExecutor;
                 hudView = nextHud;
@@ -132,16 +148,28 @@ namespace Zjcs.Presentation.Combat
                 skillIconResolver = skillIcon;
                 timelinePortraitResolver = timelinePortrait;
                 timelineFactionResolver = timelineFactionIcon;
+                pendingHudParent = hudParent;
+                remainingHudDelay = sessionOptions.ShowMainPanelDelay;
+                phases = new FightBattlePhaseMachine(sessionOptions.PrepareSeconds);
                 phases.PhaseChanged += OnPhaseChanged;
-                phases.Begin(true);
-                phases.StartPlay();
+                phases.AutoStartRequested += OnAutoStartRequested;
+                phases.CountdownChanged += OnPrepareCountdownChanged;
+                phases.Begin(restoreCheckpoint || sessionOptions.SkipPrepareStatus);
+                if (phases.Phase == FightBattlePhase.PlayStart) phases.StartPlay();
+                hudView.RefreshPhase(phases.Phase, sessionOptions);
+                hudView.RefreshPrepareCountdown(phases.CountdownRemaining);
+                if (hudRoot != null) hudRoot.SetActive(hudVisible);
             }
             catch
             {
-                nextScene?.Dispose();
-                nextEnvironment?.Dispose();
-                nextNativeModels?.Dispose();
-                if (nextHudRoot != null) Destroy(nextHudRoot);
+                if (executor == nextExecutor) DisposeSession();
+                else
+                {
+                    nextScene?.Dispose();
+                    nextEnvironment?.Dispose();
+                    nextNativeModels?.Dispose();
+                    if (nextHudRoot != null) Destroy(nextHudRoot);
+                }
                 throw;
             }
         }
@@ -151,6 +179,7 @@ namespace Zjcs.Presentation.Combat
             if (executor == null) throw new InvalidOperationException("Begin a battle session before advancing it.");
             if (stepping) throw new InvalidOperationException("A battle step is already being applied.");
             if (executor.State.Finished) throw new InvalidOperationException("The battle is already finished.");
+            if (!CanAdvance) throw new InvalidOperationException("The battle cannot advance in its current phase.");
 
             stepping = true;
             try
@@ -158,12 +187,15 @@ namespace Zjcs.Presentation.Combat
                 FightBattleExecutionResult result = executor.Step(executor.State.Sequence,
                     executor.State.Counter + 1);
                 sceneView.Refresh(result.Checkpoint, result.Event);
-                hudView.Refresh(result.Checkpoint);
-                hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
-                hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
-                    timelineFactionResolver, true);
-                hudView.RefreshBoss(result.Checkpoint, UnitName);
-                hudView.RefreshStageStatus(result.Checkpoint);
+                if (hudRoot != null)
+                {
+                    hudView.Refresh(result.Checkpoint);
+                    hudView.RefreshSkillSlots(result.Checkpoint, skillIconResolver, result.Event);
+                    hudView.RefreshTimeline(result.Checkpoint, timelinePortraitResolver,
+                        timelineFactionResolver, true);
+                    hudView.RefreshBoss(result.Checkpoint, UnitName);
+                    hudView.RefreshStageStatus(result.Checkpoint);
+                }
                 if (!result.Replayed)
                     sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
@@ -204,9 +236,8 @@ namespace Zjcs.Presentation.Combat
             {
                 if (effect.HpPercentChange != 0f)
                 {
-                    double hpRatio = 1.0 + effect.HpPercentChange;
                     player.Hp = Math.Max(1L, Math.Min(player.MaxHp,
-                        (long)Math.Floor(player.Hp * hpRatio)));
+                        player.Hp + (long)(player.MaxHp * (double)effect.HpPercentChange)));
                     player.Turn.Hp = player.Hp;
                 }
                 foreach (int classId in effect.StatusEffectClassIds)
@@ -273,18 +304,30 @@ namespace Zjcs.Presentation.Combat
         }
 
         /// <summary>Confirms readiness for modes that show the official prepare phase.</summary>
-        public bool Ready() => phases.Ready();
+        public bool Ready()
+        {
+            if (!phases.Ready()) return false;
+            return phases.StartPlay();
+        }
 
         public bool StartPlay() => phases.StartPlay();
 
         private void ApplyTimeScale()
         {
             if (!ownsTimeScale) return;
-            Time.timeScale = paused ? 0f : (float)speedMultiplier;
+            Time.timeScale = paused ? 0f : phases.Phase == FightBattlePhase.Preparing
+                ? 1f : (float)speedMultiplier;
         }
 
         private void Update()
         {
+            phases.Tick(Time.unscaledDeltaTime);
+            if (executor != null && hudRoot == null && pendingHudParent != null)
+            {
+                // FightMainPanelLoader.DealyLoad uses WaitForSeconds, hence scaled time.
+                remainingHudDelay -= Time.deltaTime;
+                if (remainingHudDelay <= 0) MountDelayedHud();
+            }
             hudView?.Tick(Time.unscaledDeltaTime);
             sceneView?.Tick(Time.deltaTime);
         }
@@ -304,6 +347,8 @@ namespace Zjcs.Presentation.Combat
                 hudView.SpeedCycled -= OnSpeedCycled;
             }
             phases.PhaseChanged -= OnPhaseChanged;
+            phases.AutoStartRequested -= OnAutoStartRequested;
+            phases.CountdownChanged -= OnPrepareCountdownChanged;
             phases.Finish();
             sceneView?.Dispose();
             environmentView?.Dispose();
@@ -331,6 +376,10 @@ namespace Zjcs.Presentation.Combat
             skillIconResolver = null;
             timelinePortraitResolver = null;
             timelineFactionResolver = null;
+            pendingHudParent = null;
+            remainingHudDelay = 0;
+            sessionOptions = null;
+            hudVisible = true;
         }
 
         private void OnDestroy()
@@ -340,6 +389,11 @@ namespace Zjcs.Presentation.Combat
 
         private void OnHudControlClicked(string path)
         {
+            if (path == OfficialBattleHudView.StartButtonPath)
+            {
+                Ready();
+                return;
+            }
             HudControlClicked?.Invoke(path);
         }
 
@@ -356,12 +410,38 @@ namespace Zjcs.Presentation.Combat
 
         private void OnPhaseChanged(FightBattlePhase previous, FightBattlePhase next)
         {
+            hudView?.RefreshPhase(next, sessionOptions);
+            hudView?.RefreshPrepareCountdown(next == FightBattlePhase.Preparing
+                ? phases.CountdownRemaining : 0);
             if (next == FightBattlePhase.End && ownsTimeScale)
             {
                 Time.timeScale = 1f;
                 ownsTimeScale = false;
             }
+            else ApplyTimeScale();
             PhaseChanged?.Invoke(previous, next);
+        }
+
+        private void OnAutoStartRequested() => Ready();
+
+        private void OnPrepareCountdownChanged(double remaining)
+        {
+            hudView?.RefreshPrepareCountdown(remaining);
+        }
+
+        private void MountDelayedHud()
+        {
+            if (executor == null || hudView == null || pendingHudParent == null || hudRoot != null) return;
+            hudRoot = hudView.Mount(pendingHudParent);
+            hudView.Refresh(Checkpoint);
+            hudView.RefreshSkillSlots(Checkpoint, skillIconResolver);
+            hudView.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false);
+            hudView.RefreshBoss(Checkpoint, UnitName);
+            hudView.RefreshStageStatus(Checkpoint);
+            hudView.RefreshPhase(Phase, sessionOptions);
+            hudView.RefreshPrepareCountdown(phases.CountdownRemaining);
+            if (speedSettings != null) hudView.RefreshSpeed(speedSettings, speedIndex, unlockedSpeeds);
+            hudRoot.SetActive(hudVisible);
         }
     }
 }

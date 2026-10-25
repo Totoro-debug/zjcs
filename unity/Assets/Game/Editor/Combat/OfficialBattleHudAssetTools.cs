@@ -294,19 +294,27 @@ namespace Zjcs.Editor.Combat
                     int prefabFitters = root.GetComponentsInChildren<ContentSizeFitter>(true).Length;
                     int prefabElements = root.GetComponentsInChildren<LayoutElement>(true).Length;
                     int prefabScrolls = root.GetComponentsInChildren<ScrollRect>(true).Length;
-                    int expectedImages = Count(prefab.root, node => node.has_image || node.button);
+                    int expectedImages = Count(prefab.root, node => node.has_image
+                        || (node.button && !node.has_text && (node.scripts == null
+                            || Array.IndexOf(node.scripts, "NoDrawingRayCast") < 0)));
+                    int expectedRaycasts = Count(prefab.root, node => !node.has_image && !node.has_text
+                        && node.scripts != null && Array.IndexOf(node.scripts, "NoDrawingRayCast") >= 0);
+                    int prefabRaycasts = 0;
+                    foreach (Graphic graphic in root.GetComponentsInChildren<Graphic>(true))
+                        if (graphic.GetType().FullName == "Zjcs.Official.WorldUI.NoDrawingRayCast") prefabRaycasts++;
                     int expectedTexts = Count(prefab.root, node => node.has_text);
                     int expectedButtons = Count(prefab.root, node => node.button);
                     int expectedLayouts = Count(prefab.root, node => node.has_layout);
                     int expectedFitters = Count(prefab.root, node => node.has_size_fitter);
                     int expectedElements = Count(prefab.root, node => node.has_layout_element);
                     int expectedScrolls = Count(prefab.root, node => node.has_scroll);
-                    if (prefabImages != expectedImages
+                    if (prefabImages != expectedImages || prefabRaycasts != expectedRaycasts
                         || prefabTexts != expectedTexts || prefabButtons != expectedButtons
                         || prefabLayouts != expectedLayouts || prefabFitters != expectedFitters
                         || prefabElements != expectedElements || prefabScrolls != expectedScrolls)
                         throw new BuildFailedException("Official HUD component counts differ in " + prefab.key
-                            + ": Image " + prefabImages + "/" + expectedImages + ", TMP " + prefabTexts + "/" + expectedTexts
+                            + ": Image " + prefabImages + "/" + expectedImages + ", NoDrawingRayCast " + prefabRaycasts + "/" + expectedRaycasts
+                            + ", TMP " + prefabTexts + "/" + expectedTexts
                             + ", Button " + prefabButtons + "/" + expectedButtons + ", LayoutGroup " + prefabLayouts + "/" + expectedLayouts
                             + ", ContentSizeFitter " + prefabFitters + "/" + expectedFitters + ", LayoutElement " + prefabElements + "/" + expectedElements
                             + ", ScrollRect " + prefabScrolls + "/" + expectedScrolls + ".");

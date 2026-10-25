@@ -167,12 +167,12 @@ flowchart TD
 | 子项 | 当前实现 | 主要入口 |
 | --- | --- | --- |
 | 官方数值函数与实际 HP 结算 | 已迁移伤害／治疗、命中类型、效果率、速度间隔、衰减、破韧等共享公式及 HP 上下限／实际差值；保留官方分支与截断。未取得的自定义伤害阶段钩子不在其中。 | [FightDamageFormula](../../unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.cs)、[FightDamageResolver](../../unity/Assets/Game/Runtime/Official/Combat/FightDamageResolver.cs)、[FightDamageSettlement](../../unity/Assets/Game/Runtime/Official/Combat/FightDamageSettlement.cs)、[FightResilienceFormula](../../unity/Assets/Game/Runtime/Official/Combat/FightResilienceFormula.cs) |
-| 配置装配 | 本地 JSON 装配单位、技能、命中图和状态；技能物品映射实体，技能／被动属性按等级与数值表计算，CD 按官方属性计算。 | [FightOfficialCombatCatalog](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs)、[FightOfficialSkillItemCatalog](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialSkillItemCatalog.cs) |
+| 配置装配 | 本地 JSON 装配单位、技能、命中图和状态；技能物品映射实体，技能／被动属性按等级与数值表计算；`LevelPropParser.TryGetPropDict` 的73条默认属性配置已从 APK 重新解码，缺键才补默认值，保留显式值，避免技能伤害倍率和状态数值丢失；CD 按官方属性计算。 | [FightOfficialCombatCatalog](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs)、[FightOfficialSkillItemCatalog](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialSkillItemCatalog.cs) |
 | 行动队列与技能状态 | 已接速度／NextTime 队列、个人／全局上限、初始 CD、HP 消耗、次数上限、换波重置及停止 CD；完整施法资格和服务器调度未取得。 | [FightTurnQueue](../../unity/Assets/Game/Runtime/Official/Combat/FightTurnQueue.cs)、[FightSkillState](../../unity/Assets/Game/Runtime/Official/Combat/FightSkillState.cs)、[FightStatusCooldownRuntime](../../unity/Assets/Game/Runtime/Official/Combat/FightStatusCooldownRuntime.cs) |
 | 格网与目标过滤 | 四方向 AStar、MoveMask、占位／边阻挡、可达路径、技能范围顺序、阵营／存活／可选中和动作互斥过滤已接入。身体占格已有数据与部分判定，高度和完整阵型仍未全部消费。 | [FightBattleGrid](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleGrid.cs)、[FightBattleTargeting](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs) |
 | 波次与命中基础 | 未生成波次不入队、不选中、不占位，清场后生成下一波；固定／后继／链式／随机等命中配置进入收集器，范围、锚点、距离延迟及主要类型标记进入事件。随机分配和未覆盖配置见后文。 | [FightBattleHitCollector](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleHitCollector.cs)、[FightBattleHitExecutor](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs)、[FightBattleExecutor](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs) |
 | 状态基础生命周期 | 计时对象、开始／结束时点、无限持续、平行／新顶旧／旧顶新、叠层／叠时上限、到期及对象销毁清理已实现；属性变换与持续／一次性／无敌护盾已有结算。完整来源约束、共享层数与事件体系仍有缺项。 | [FightStatusLifecycle](../../unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs)、[FightStatusPropertyRuntime](../../unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs) |
-| 阶段机与会话接口 | 阶段机有合法迁移、准备倒计时、Ready 和一次性自动开始；控制器现用 PlayStart→Play、Play/Pause、BattleEnd、释放 End，并重置时标。准备及入场／结束演出尚未贯通。 | [FightBattlePhaseMachine](../../unity/Assets/Game/Runtime/Official/Combat/FightBattlePhaseMachine.cs)、[OfficialBattleRuntimeController](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs) |
+| 阶段机与会话接口 | 已接 Preparing→StartGameBtn→PlayStart→Play、可选截止时间、一次性自动开始、Play/Pause、BattleEnd 和释放 End；无截止时间保持等待，`SkipPrepareStatus` 才跳过准备。主面板按 `ShowMainPanelDelay` 延迟挂载，释放取消等待；准备时调用方暂停推进规则。组队就绪、拖拽及入场／结束演出仍未贯通。 | [FightBattlePhaseMachine](../../unity/Assets/Game/Runtime/Official/Combat/FightBattlePhaseMachine.cs)、[OfficialBattleRuntimeController](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs) |
 
 通用执行器的 `Begin/Restore/Step` 已连接本地状态、随机流、序列／计数回执、波次、技能、状态和统计；重复步骤返回已有回执。检查点按版本化 JSON 保存单位属性／技能／状态、格网、队列、随机流、步骤事件和统计，并在恢复时校验。这是离线适配，不是原版录像服务器的复刻；入口何时保存、恢复或清除由调用方负责。
 
@@ -195,9 +195,15 @@ flowchart TD
 
 代码入口：[通用执行器](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs)、[状态触发](../../unity/Assets/Game/Runtime/Official/Combat/FightStatusTriggerRuntime.cs)、[阶段状态](../../unity/Assets/Game/Runtime/Official/Combat/FightStageStatusRuntime.cs)、[韧性接线](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.Resilience.cs)、[检查点](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleCheckpointSerializer.cs)、[统计报告](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs)、[场景表现](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs)、[HUD](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs)。规则、资源与运行目录分别为 [Assets/Official/Combat](../../unity/Assets/Official/Combat/)、[Resources/Combat](../../unity/Assets/Game/Resources/Combat/)、[StreamingAssets/Combat](../../unity/Assets/StreamingAssets/Combat/)；来源与转换约束统一见[素材管理](../asset-management.md)。
 
+战斗 HUD 的30个原 prefab 已补取404项 Graphic／CanvasGroup 输入标记及3项初始可见性引用；按官方 `SafeArea` 恢复主面板适配，按 `ChatQuickMsgEntryPanel.OnEnable` 和 `GameMatchMiniPanel.RefreshUI` 关闭初始表情面板、无冷却遮罩和无会话匹配内容，并迁移 `NoDrawingRayCast`。输入绑定见[来源清单](../../assets/reference/battle-hud/graphic-bindings-source-manifest.json)，阶段与代码来源见[会话清单](../../assets/reference/battle-hud/session-source-manifest.json)。这些初始化分支不代表聊天、匹配和整个 HUD 已迁移完毕。
+
+已从当前官方中文语言资源提取5149条战斗相关名称／说明供核对技能、秘法与状态规则，保留原键、富文本和缺键；[文字清单](../../assets/reference/battle-rules/text-source-manifest.json)单独记录 `871_156598` 输入，未把它冒记为历史配置版本。运行载荷为 `Assets/Official/Combat/battle-texts.json`，技能／状态详情弹窗的交互与加载绑定仍待完成。默认属性的 APK 输入、解析源码、输出与哈希见[属性默认值清单](../../assets/reference/battle-rules/prop-defaults-source-manifest.json)。
+
 ### 验证范围
 
 已有规则回归覆盖公式固定样例、配置装配、队列／阶段、范围／移动／延迟、状态／CD／盾／韧性、触发技能、波次、统计与检查点往返；主要入口为 [test_unity_combat.ps1](../../scripts/test_unity_combat.ps1) 及 `scripts/test_battle_*.ps1` 的对应通用套件。规则检查还可由 [FightCombatValidation.RunSmokeTest](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs) 和 `Zjcs.Editor.ProjectTools.Validate` 执行。已完成的规则测试证明对应代码分支，不证明缺失服务端流程已被复刻。本页链接、功能编号与差异格式已核对，`python -B scripts/check_unity_project.py` 静态元数据检查通过；上述文档检查不扩大战斗规则或运行验证结论。
+
+本次97组公式与核心检查、35个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 均通过；单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。此测试使用隔离存档和简化角色载体，查看了准备／运行截图；角色白块、未填充的技能栏和镜头／战场表现仍有问题，不能宣称画面完整还原。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
 
 HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转换及绑定有独立回归。通用战斗尚未完成完整 Unity Play Mode 真实输入、画面、状态和重启恢复验证，也没有与该完整功能对应的 Windows Player 完成发布。全工程编译与构建状态见[Unity 工程与启动流程](unity-project.md)，不在本页维护其他模块编译错误或地图运行记录。
 
@@ -213,7 +219,7 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 | AI 与控制状态 | 使用官方40组策略、候选、范围与过滤字段，本地按列表确定性比较；嘲讽优先状态来源，混乱放行技能可忽略阵营。评分方向、权重、位置搜索及 `AiType` 默认策略没有服务器实现依据，8种近似策略见下表。 |
 | 随机命中 | 根据范围、最小命中、禁止重复目标／空格／同格及越界标记，在可选格中确定性分配子命中；空格可消耗分配但不生成伤害／召唤。候选分配与取随机数的原服务器顺序未取得。 |
 | 技能资格、条件与消耗 | HP／回合／召唤池等已出现条件由检查点判断，部分条件召唤按配置池容量限制；CostType=2 暂消耗全部持久护盾并记录为 SkillCost，关联伤害类型6以该消耗值结算。官方前置资格执行器不全；未配置或未识别条件不擅自按枚举补全。职业不匹配保留官方 HUD 标记，因未取得拒绝释放入口，不另加释放禁令。 |
-| 状态应用概率与参数 | 按 `AffectedByProp`、角色类型覆盖及官方 EffectRate 接线，保留公式加减项；固定概率不套用该属性修正。`SkillCostHp` 取实际技能扣血，`DamageCostHpPer` 取本次实际 HP 损失乘比例并截断、排除护盾；同时启用时本地优先前者。服务端调用与参数赋值链未取得；独立外部概率修正尚待完整接入。 |
+| 状态应用概率与参数 | 按 `AffectedByProp`、角色类型覆盖及官方 EffectRate 接线，保留公式加减项；固定概率不套用该属性修正。`SkillCostHp` 取实际技能扣血，`DamageCostHpPer` 取本次实际 HP 损失乘比例并截断、排除护盾；同时启用时本地优先前者。命中附加状态已接 `FightStatusAgentRateComponent`：按动作／状态类型筛选，读取官方属性数值，独立效果乘算；潮湿使冰冻／霜缚概率×1.3，异常状态抵抗使异常状态概率×0.5。依据配置、官方说明及已确认乘算方案补足，未取得服务器实现；触发技能概率和其他状态路径仍待接线。 |
 | 驱散、位移与方向 | 驱散／位移的属性概率使用通用 EffectRate，不套用不存在类别字段的减益倍率；`SkillTargetDistanceMoveCondition` 暂按曼哈顿距离≤配置值执行，未知类型拒绝。路径侧移暂按横向先+Y后−Y、纵向先+X后−X，斜向按较大轴、同值按横向，各侧递减距离找合法格。缺省 `MoveBehaviourId=0` 仍按配置移动，互斥规则未证实。 |
 | 吸血 | 扩展吸血按本次实际 HP 损失计算并封顶最大HP，缺失属性不回血，治疗不再产生吸血；比例属性暂按10000基准解释，该属性的百分比表依据缺失。 |
 | 状态事件与触发顺序 | 已支持配置按本地事件点立即执行，保留明确回合时点；HP 累计只计实际 HP 损失、治疗不冲减，跨多个阈值重复触发并保留余数。额外／重放／子技能限一层，复杂来源、条件、延迟和重入尚未完整恢复；不将局部触发顺序推广为官方全局顺序。 |
@@ -247,12 +253,12 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 | 范围 | 仍需完成 |
 | --- | --- |
-| 会话与准备（F01—F07） | 主面板延迟加载／取消、真实准备／就绪／倒计时、合法站位拖拽与范围／权限／回退、取消就绪切方案、入场／结束过渡、离开／后台的条件及提示贯通。阶段机存在不能代替完整流程。 |
+| 会话与准备（F01—F07） | 单人开始与主面板延迟已接；仍需组队就绪／取消就绪切方案、合法站位拖拽与范围／权限／回退、入场／结束过渡、完整离开／后台条件及确认提示。局部分支通过不能代替完整流程。 |
 | 格网与 AI（F08—F15） | 高度、完整身体占格／阵型／出生偏移、未支持位移方向与条件、默认动作互斥、真实点击详情和镜头坐标；补证 AI 评分器、`AiType` 默认策略、嘲讽／混乱边界及所有近似的原版语义。 |
 | 调度与技能生命周期（F16—F20） | 当前同一 Step 内同步结算，尚未按每个 Delay 分帧结算、等待相关实体、处理负时长／中断／销毁和完整重入；需恢复技能资格、全部条件、重放限额与子技能／状态白名单，而非仅一层触发。 |
 | 命中与数值扩展（F20—F21） | Scope 旋转／逐格延迟／FilterCondition、未覆盖命中组件和临时属性、形态切换、现有状态触发、完整自定义伤害阶段钩子，以及衰减／元素克制聚合等缺失调用语义。 |
 | 状态、盾与复活（F22—F24） | 全量状态事件和条件组、来源限制／共享层数／按层属性／快照、死亡禁用与复活重启、转移／持续变化／累计和自定义伤害其余分支；补齐未覆盖护盾类型、控制／HP限制、CD修改触发及韧性联动。 |
-| 已确认规则的剩余接线 | `TriggerDamageAddToDamageSource` 按确认方案区分被动与技能效果归因、统计实际生命损失，当前尚未完整落实；技能／秘法效果间的独立外部概率修正应乘算，固定概率不受影响、直接加状态不掷概率，并保留官方 EffectRate 加减项，这部分也尚未完整接入。 |
+| 已确认规则的剩余接线 | `TriggerDamageAddToDamageSource` 按确认方案区分被动与技能效果归因、统计实际生命损失，当前尚未完整落实；技能／秘法效果间的独立外部概率修正应乘算，固定概率不受影响、直接加状态不掷概率，并保留官方 EffectRate 加减项，命中附加状态已接入，触发技能及其他施加路径仍需补齐。 |
 | 召唤与胜负（F06、F25） | 宠物／格子物件／智能物件／替身等非怪物召唤、完整继承、数量／寿命与来源死亡销毁、复活事件消费者；按结果组件和参与者标记恢复完整通用判定接口，缺服务器规则时再取证或确认。 |
 | HUD 与报告（F26—F32、F39、F43） | 真实玩家／NPC动态头像、名称与显示条件、完整时间轴事件动画、玩家目标／成员血条、Boss 真实视野／头像、单位状态详情／自定义数字／禁用态、技能详情／品质／全部状态、宠物能量、准备提示与方案刷新、阶段动态说明。战报需绑定官方交互面板，补齐被动／状态归因、盾量／状态次数／占比及属性快照。 |
 | 公共控件（F33—F38） | 回放默认倍率与档位恢复、权限差异、快进条件／延时／防重／失败及本地快照消费、跟随／自由镜头、托管／背包入口、录像保存／回放／跳过的本地流程。观战／聊天等接口按所属页已确认离线方案接入，不自行新增联网或替代规则。 |
@@ -265,4 +271,4 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 | --- | --- |
 | 已完整实现的规则子项 | 已取得共享公式的迁移、HP 上下限与实际差值、基础队列／CD／状态生命周期子集、检查点序列化已有实现及对应回归；通用战斗整项仍未完成。 |
 | 缺服务器代码后的自定义 | 本地回合循环、AI／随机命中、部分资格／概率／状态触发／位移／减伤／CD／破韧接线及局部胜负，按已确认单机方案或明确标出的近似执行。 |
-| 仍待实现 | 完整准备与拖拽、逐事件调度、剩余状态／召唤／胜负、完整 HUD／战报／控件、原版角色／Playable／特效／音频，以及 Play Mode 和 Windows 完整运行验证。 |
+| 仍待实现 | 组队准备与拖拽、逐事件调度、剩余状态／召唤／胜负、完整 HUD／战报／控件、原版角色／Playable／特效／音频，以及 Play Mode 和 Windows 完整运行验证。 |

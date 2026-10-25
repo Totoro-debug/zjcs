@@ -28,3 +28,12 @@ unity/Assets/Official/Combat/HUD/Sprites/ImgLoad_HpBar-f915a5bb0c.png.meta -text
 unity/Assets/Official/Combat/HUD/Sprites/ImgBg_HpBar-8bcbf4b323.png.meta -text
 unity/Assets/StreamingAssets/CharacterCreation/creation-meshes.zip filter=lfs diff=lfs merge=lfs -text
 unity/Assets/StreamingAssets/Character/character-models.zip filter=lfs diff=lfs merge=lfs -text
+# Combat migration outputs and generator fingerprints retain their exact bytes.
+unity/Assets/Game/Resources/Combat/battle-hud-graphic-bindings*.json text eol=lf
+unity/Assets/Official/Combat/battle-texts.json text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialLevelPropDefaults.cs text eol=lf
+unity/Assets/Official/Commerce/Art/animations/AccumulatedPayPanel_Show.anim -text
+unity/Assets/Official/Commerce/Art/animations/AccumulatedPayPanel_Show.anim.meta -text
+scripts/prepare_battle_hud_graphic_bindings.py text eol=lf
+scripts/prepare_battle_prop_defaults.py text eol=lf
+scripts/prepare_battle_rule_texts.py text eol=lf

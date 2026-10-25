@@ -8,7 +8,7 @@ using Zjcs.Combat.Official;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialBattleHudView
+    public sealed partial class OfficialBattleHudView
     {
         public struct BossHpBarDisplay
         {

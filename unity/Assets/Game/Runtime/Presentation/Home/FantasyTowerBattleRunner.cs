@@ -314,6 +314,7 @@ namespace Zjcs.Presentation.Home
             FightBattleCheckpoint checkpoint = controller.Checkpoint;
             if (checkpoint == null) return;
             if (checkpoint.Finished) { Complete(checkpoint.Outcome.Won); return; }
+            if (!controller.CanAdvance) return;
             stepTimer -= Time.deltaTime;
             if (stepTimer > 0f) return;
             controller.Advance();

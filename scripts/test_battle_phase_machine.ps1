@@ -31,9 +31,17 @@ Assert-Phase ($machine.IsFinished -and $machine.Phase -eq [Zjcs.Combat.Official.
 Assert-Phase (-not $machine.StartPlay() -and -not $machine.Pause()) 'Finished battle accepted another play transition'
 
 $skipped = [Zjcs.Combat.Official.FightBattlePhaseMachine]::new()
-$skipped.Begin($false)
-Assert-Phase ($skipped.Phase -eq [Zjcs.Combat.Official.FightBattlePhase]::PlayStart) 'Zero-prepare mode did not skip the prepare phase'
+$skipped.Begin($true)
+Assert-Phase ($skipped.Phase -eq [Zjcs.Combat.Official.FightBattlePhase]::PlayStart) 'SkipPrepareStatus did not skip preparation'
 Assert-Phase ($skipped.BeginBattleEnd()) 'Battle could not end directly from PlayStart'
+
+# Official StartGameBtn supports preparation without a server-supplied PrepareStartTime.
+# No deadline must leave the player free to position units and press the start button.
+$manual = [Zjcs.Combat.Official.FightBattlePhaseMachine]::new()
+$manual.Begin($false)
+$manual.Tick(100)
+Assert-Phase ($manual.IsPreparing -and $manual.CountdownRemaining -eq 0) 'A missing deadline silently skipped manual preparation'
+Assert-Phase ($manual.Ready() -and $manual.StartPlay()) 'Manual preparation could not start via the official start action'
 
 Assert-Phase (-not [Zjcs.Combat.Official.FightBattlePhaseMachine]::IsLegal(
     [Zjcs.Combat.Official.FightBattlePhase]::Preparing, [Zjcs.Combat.Official.FightBattlePhase]::Play)) 'Battle phase machine allowed Preparing to jump to Play'

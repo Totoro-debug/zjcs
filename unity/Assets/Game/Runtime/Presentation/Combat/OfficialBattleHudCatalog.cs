@@ -121,6 +121,7 @@ namespace Zjcs.Presentation.Combat
         public float image_sprite_ppu;
         public bool has_image_sprite, image_preserve_aspect;
         public bool image_graphic_flags, image_raycast_target, image_maskable;
+        public bool has_canvas_group_flags, canvas_group_interactable, canvas_group_blocks_raycasts;
         public bool scroll_horizontal, scroll_vertical, scroll_inertia;
         public int scroll_movement;
         public float scroll_sensitivity, scroll_elasticity, scroll_deceleration;
@@ -134,7 +135,7 @@ namespace Zjcs.Presentation.Combat
         public bool animation_play_automatically;
         public string default_animation;
         public BattleHudAnimation[] animations;
-        public BattleHudNode[] children;
+        [NonSerialized] public BattleHudNode[] children;
         public BattleHudImage image;
         public BattleHudText text;
         public BattleHudScroll scroll;
@@ -329,6 +330,7 @@ namespace Zjcs.Presentation.Combat
                 foreach (BattleHudPrefab prefab in data.prefabs)
                     if (prefab == null || prefab.BuildRoot() == null)
                         throw new FormatException("Official battle HUD prefab is invalid.");
+                OfficialBattleHudGraphicBindings.Apply(data);
             }
             return data;
         }

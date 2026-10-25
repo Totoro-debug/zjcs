@@ -1,0 +1,70 @@
+{
+  "code_manifest": "871_156598",
+  "code": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StartGameBtn.cs",
+      "sha256": "abad94358241f7c40be8efe9770687dde3df4e4867ad8fe5d6e99500705b46dc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/FightMainPanelLoader.cs",
+      "sha256": "ac9143f51f1bdd24382ff0ebe544ec7618125ed73e270566a7173ba3e43d5ec7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/FightMainPanel.cs",
+      "sha256": "b8f72d3d0ce64b96c606e5b3124b80676de8c2e6448e765cf9af74e4a57471ed"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/GameTimeoutUI.cs",
+      "sha256": "76536981fe495fa5ed15bf54bb782af32cdeefa83fec25b9d949aca5771ffcb1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/SafeArea.cs",
+      "sha256": "1aabb4bc2a5745bb3f532a323acad7a13918c439f015dfd751c9341327121509"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ChatQuickMsgEntryPanel.cs",
+      "sha256": "f658856f197a54b753da5616cc374d6e5094379cc885b7dbd95bd45f1649fbcb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/GameMatchMiniPanel.cs",
+      "sha256": "9a60d45ffb77b794bc6f4819b6ced9e4235ab580317b7c9457d02bf7e13666b8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/NoDrawingRayCast.cs",
+      "sha256": "d9a793a446c6912020aea93b4076ea7e8707f44be424d1391f99a48b4964b2e0"
+    }
+  ],
+  "prefab_manifest": "854_156383",
+  "prefab_source": "assets/reference/battle-hud/source-manifest.json",
+  "safe_area_components": {
+    "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
+    "bundle_sha256": "325dafb4c83536ae838ec953e01a44000ec53bb98323ba76739cca2749231eb0",
+    "path_ids": [
+      "4639390901595005084",
+      "8022411340465889436"
+    ],
+    "PaddingTop": 0,
+    "PaddingBottom": 0,
+    "DisableTopAdapt": false,
+    "DisableBottomAdapt": false
+  },
+  "migration": {
+    "preparation": "StartGameBtn solo Preparing visibility and StartGame entry. Zero deadline waits for input. Optional countdown uses unscaled time; skipped stages start playing directly.",
+    "loading": "FightMainPanelLoader scaled ShowMainPanelDelay and cancellation on disposal.",
+    "layout": "Bind FightMainPanel SafeArea nodes to the migrated SafeArea implementation in WorldSafeArea; original prefab coordinates retained.",
+    "runtime": [
+      "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs",
+      "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.Phases.cs",
+      "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSessionOptions.cs",
+      "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs"
+    ],
+    "input": "Recover 404 Graphic/CanvasGroup flags and 3 initial-visibility bindings from the 30 original prefabs. ChatQuickMsgEntryPanel.OnEnable closes EmojiPanel and its inactive local cooldown mask; GameMatchMiniPanel.RefreshUI hides mContentGo without a matching session. Port NoDrawingRayCast for invisible input surfaces."
+  },
+  "not_claimed": [
+    "team readiness",
+    "position dragging",
+    "full HUD visibility state providers",
+    "complete camera/fast-forward",
+    "entry/end transitions"
+  ]
+}

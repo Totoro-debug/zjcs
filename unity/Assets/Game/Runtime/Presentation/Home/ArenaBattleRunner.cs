@@ -202,6 +202,7 @@ namespace Zjcs.Presentation.Home
                 FinishBattle(controller.Checkpoint.Outcome.Won);
                 return;
             }
+            if (!controller.CanAdvance) return;
             stepTimer -= Time.deltaTime;
             if (stepTimer > 0f) return;
             controller.Advance();

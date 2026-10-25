@@ -229,6 +229,8 @@ namespace Zjcs.Presentation.World
 
             if (battleController != null)
             {
+                if (battleController.Checkpoint != null && !battleController.CanAdvance
+                    && !battleController.Checkpoint.Finished) return;
                 battleStepTimer -= Time.deltaTime;
                 if (battleStepTimer <= 0f)
                 {
@@ -1723,7 +1725,16 @@ namespace Zjcs.Presentation.World
                 },
                 null, null, null, resume != null, environmentGameId: scene.GameId,
                 animationGroupResolver: unit => OfficialCharacterAnimationProfile.GroupForProfession(unit.Profession),
-                statueProgress: progressionSave);
+                statueProgress: progressionSave,
+                options: new OfficialBattleSessionOptions
+                {
+                    SkipPrepareStatus = stage.SkipPrepareStatus,
+                    ShowMainPanelDelay = stage.ShowMainPanelDelay,
+                    LeaveInPreparing = stage.LeaveInPreparing,
+                    LeaveInPlaying = stage.LeaveInPlaying,
+                    ChangeCameraMode = stage.ChangeCameraMode,
+                    CanFastforward = stage.CanFastforward
+                });
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
@@ -2174,8 +2185,8 @@ namespace Zjcs.Presentation.World
         private void LeaveBattle()
         {
             if (battleController == null) return;
-            if (battleController.IsBattleActive && activeBattleStage != null
-                && !activeBattleStage.LeaveInPlaying)
+            if (activeBattleStage != null && (battleController.Phase == FightBattlePhase.Preparing
+                ? !activeBattleStage.LeaveInPreparing : !activeBattleStage.LeaveInPlaying))
             {
                 ShowOfficialNotice("当前阶段不能离开战斗");
                 return;

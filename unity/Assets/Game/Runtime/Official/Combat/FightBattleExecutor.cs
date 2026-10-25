@@ -1651,9 +1651,8 @@ namespace Zjcs.Combat.Official
                         affectedByProp = rateOverride.AffectedByProp;
                         break;
                     }
-            if (affectedByProp)
-                chance = formula.CalculateStatusEffectRate(actor.Properties, owner.Properties,
-                    (float)chance, statusCatalog.StatusTypeFor(application.StatusId));
+            chance = statusCatalog.CalculateStatusApplicationRate(actor, owner,
+                application.StatusId, chance, affectedByProp, formula);
             if (!(random.Next() <= chance)) return;
             int instanceId = 1;
             foreach (FightBattleStatusState existing in owner.Statuses)

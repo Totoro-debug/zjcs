@@ -1,0 +1,38 @@
+{
+  "manifest": "854_156383",
+  "asset": {
+    "path": "Assets/Config/Luban/level_prop_default_value.g.bytes",
+    "bundle": "defaultpackage_assets_config_luban.bundle"
+  },
+  "source": {
+    "bundle": "defaultpackage_assets_config_luban.bundle",
+    "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+    "path_id": "-3955754053971000225",
+    "origin": "apk_zip",
+    "manifest": "854_156383",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+    "raw_size": 2075461,
+    "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b"
+  },
+  "input_sha256": "e866fc9ed6f08b9c2debb0639c7626817e45efa7451cc5b88514720d5210ef98",
+  "code": [
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LevelPropParser.cs",
+      "sha256": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/LevelPropDefaultValue.cs",
+      "sha256": "1d4df96727239af646022a831472a801d65bbed9c3b3709930a8738df7784484"
+    },
+    {
+      "path": ".tools/source-packages/official-code/common-source/Common/TbLevelPropDefaultValue.cs",
+      "sha256": "5f5874b410c7497e5d84a0803496cd33257494f97bc82ead6df8259c971a9e07"
+    }
+  ],
+  "row_count": 73,
+  "output": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialLevelPropDefaults.cs",
+  "output_sha256": "67d2fb2273f8bb17b776d00a229681942c26bcadf71f6e5b00952235a14c1336",
+  "generator_sha256": "5068cb2063bdb275bb5087e11ca9eddf4214cae43c40caaa708260d4e078fe8b"
+}

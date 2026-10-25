@@ -183,6 +183,13 @@ namespace Zjcs.Presentation.Combat
                 gameObject.AddComponent<Zjcs.Official.WorldUI.WorldSafeArea>();
             if (source.alpha < 0.999f)
                 gameObject.AddComponent<CanvasGroup>().alpha = Mathf.Clamp01(source.alpha);
+            if (source.has_canvas_group_flags)
+            {
+                CanvasGroup group = gameObject.GetComponent<CanvasGroup>();
+                if (group == null) group = gameObject.AddComponent<CanvasGroup>();
+                group.interactable = source.canvas_group_interactable;
+                group.blocksRaycasts = source.canvas_group_blocks_raycasts;
+            }
 
             if (source.has_image)
             {
@@ -234,6 +241,14 @@ namespace Zjcs.Presentation.Combat
                     text.fontSizeMax = source.text_auto_size[1];
                 }
                 text.raycastTarget = false;
+            }
+            if (HasScript(source, "NoDrawingRayCast") && gameObject.GetComponent<Graphic>() == null)
+            {
+                var graphic = gameObject.AddComponent<Zjcs.Official.WorldUI.NoDrawingRayCast>();
+                if (source.image_graphic_flags)
+                {
+                    graphic.raycastTarget = source.image_raycast_target;
+                }
             }
             if (source.button)
             {

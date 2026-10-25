@@ -1,0 +1,57 @@
+{
+  "language_manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "entries": 108,
+      "source": {
+        "origin": "apk_zip",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "path": "assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "bundle_size": 5532,
+        "bundle_md5": "a373f2acc39aeb5c4560f1456879b997",
+        "bundle_sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+        "bundle_hash": "a373f2acc39aeb5c4560f1456879b997"
+      }
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile",
+      "sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24",
+      "entries": 100100,
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/WwiseBnk/02c0651354843a70513ee448be3350f9.rawfile",
+        "manifest": "871_156598",
+        "size": 5293307,
+        "sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24",
+        "apk_manifest": "854_156383",
+        "bundle_size": 5293307,
+        "bundle_md5": "02c0651354843a70513ee448be3350f9",
+        "bundle_sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24",
+        "bundle_hash": "02c0651354843a70513ee448be3350f9"
+      }
+    }
+  ],
+  "configuration_inputs": [
+    {
+      "path": "assets/official/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
+    },
+    {
+      "path": "assets/official/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+    },
+    {
+      "path": "assets/official/rules.json",
+      "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256"
+    }
+  ],
+  "output": "unity/Assets/Official/Combat/battle-texts.json",
+  "output_sha256": "5d31a50c8260d6e16edbe503168dcffd4ebb8e222b3757fbf5829b598ff0c7e9",
+  "text_count": 5149,
+  "operation": "Official LanguageUtils entry_{id}_name/desc and item_{id}_name/func_desc keys; xxHash64 lookup in verified Chinese language rawfiles. Omit absent keys; do not synthesize descriptions.",
+  "generator_sha256": "e71869583b1c9be02bf045df25916ae03938b64b684e278cdc3d7d11a20a23d8"
+}

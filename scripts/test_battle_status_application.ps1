@@ -245,4 +245,30 @@ $overrideTestSkill.Hits.Add($overrideTestHit)
 $overrideResult = Invoke-StatusBattle $overrideTestSkill $player $enemy
 Assert-StatusApp (($enemy.Statuses | Where-Object { $_.ClassId -eq 24216 }).Count -eq 1) 'Target character-type probability override was not applied'
 
-Write-Output 'Battle damage status checks passed: official status mapping, custom HP-cost parameter, EffectRate formula, character-type overrides, target/source targeting, probability and HP condition.'
+# Official wording + entity_prop: wet raises freeze/frost-bind application by 30%,
+# abnormal resistance lowers abnormal-status application by 50%. Independent effects multiply.
+$rateSource = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+$rateTarget = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+Set-EffectProperty $rateSource.Properties 'BaseEffectRate' 100
+Set-EffectProperty $rateTarget.Properties 'BaseEffectDodge' 100
+$wet = $catalog.CreateStatus(24012, 2, 1, 1, 0, 0, 1, 1, 1, $null, 0)
+$resistance = $catalog.CreateStatus(24013, 2, 2, 2, 0, 0, 1, 1, 1, $null, 0)
+$rateTarget.Statuses.Add($wet)
+$wetRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24215, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($wetRate - 0.52) -lt 0.000001) 'Wet did not raise freeze application by the official 30%'
+$frostRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24149, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($frostRate - 0.52) -lt 0.000001) 'Wet did not match the configured frost-bind action type'
+$unrelatedRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24234, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($unrelatedRate - 0.4) -lt 0.000001) 'Wet modified an unrelated status action'
+$rateTarget.Statuses.Add($resistance)
+$combinedRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24215, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($combinedRate - 0.26) -lt 0.000001) 'Independent wet/resistance modifiers did not multiply'
+$fixedRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24215, 0.4, $false, $formula)
+Assert-StatusApp ($fixedRate -eq 0.4) 'Fixed probability was changed by status modifiers'
+$notAbnormalRate = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24234, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($notAbnormalRate - 0.4) -lt 0.000001) 'Abnormal resistance changed a non-abnormal status'
+Set-EffectProperty $rateSource.Properties 'EffectRateValue' 1000
+$formulaThenModifier = $catalog.CalculateStatusApplicationRate($rateSource, $rateTarget, 24215, 0.4, $true, $formula)
+Assert-StatusApp ([Math]::Abs($formulaThenModifier - 0.325) -lt 0.000001) 'External modifiers replaced the shared EffectRate additive term'
+
+Write-Output 'Battle damage status checks passed: official status mapping, HP-cost parameters, EffectRate, wet/resistance multiplication, fixed-rate isolation, character-type overrides, targeting, probability and HP condition.'

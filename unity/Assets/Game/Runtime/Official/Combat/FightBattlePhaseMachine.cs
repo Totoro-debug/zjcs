@@ -37,7 +37,7 @@ namespace Zjcs.Combat.Official
 
         public double PrepareSeconds { get; set; }
         public double CountdownRemaining => countdown;
-        public bool IsPreparing => Phase == FightBattlePhase.Preparing && PrepareSeconds > 0;
+        public bool IsPreparing => Phase == FightBattlePhase.Preparing;
 
         public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
         public event Action AutoStartRequested;
@@ -49,13 +49,13 @@ namespace Zjcs.Combat.Official
         }
 
         /// <summary>
-        /// Enters the first phase. Modes that skip preparation (single-player mainline) start at
-        /// <c>PlayStart</c>; others begin the official prepare countdown.
+        /// Enters the first phase. A stage that skips preparation starts at <c>PlayStart</c>.
+        /// Otherwise preparation waits for readiness, with an optional automatic-start deadline.
         /// </summary>
         public void Begin(bool skipPrepare)
         {
             if (Phase != FightBattlePhase.Preparing) throw new InvalidOperationException("Battle session already started.");
-            if (skipPrepare || PrepareSeconds <= 0)
+            if (skipPrepare)
             {
                 countdown = 0;
                 Transition(FightBattlePhase.PlayStart);

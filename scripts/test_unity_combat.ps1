@@ -144,7 +144,7 @@ $speedMoveSkill = $officialCatalog.CreateSkill(10850, 0, 0, 1, 1, 0, $null)
 $speedMoveHit = $speedMoveSkill.HitGraphEntities | Where-Object { $_.EntityId -eq 10851 } | Select-Object -First 1
 Assert-Combat ($null -ne $speedMoveHit -and $speedMoveHit.HitMove.MoveBehaviourId -eq 10853 -and $speedMoveHit.HitMove.MoveDuration -lt 0 -and [Math]::Abs($speedMoveHit.HitMove.MoveSpeed - 2.5) -lt 0.001) 'Official speed-based hit movement did not preserve its action entity timing'
 $monsterSkillProps = $officialCatalog.CalculateSkillProps(16020, 1, 101, 11)
-Assert-Combat ($monsterSkillProps.Count -eq 0) 'Official monster skill property factors produced unexpected properties'
+Assert-Combat ($monsterSkillProps.Count -eq 1 -and $monsterSkillProps[200] -eq 7500) 'Official default property 10000 did not preserve the monster skill 75% damage factor'
 $attackPassiveFactors = [System.Collections.Generic.Dictionary[int,long]]::new()
 $attackPassiveFactors[1] = 8000
 $attackPassive = $officialCatalog.CalculatePassiveSkillProps(2001, 1, 2050, $attackPassiveFactors, 1, 1, 1)
