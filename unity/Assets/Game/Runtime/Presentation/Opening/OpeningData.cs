@@ -409,6 +409,7 @@ namespace Zjcs.Presentation.Opening
         public int TargetGridX;
         public int TargetGridY;
         public Quaternion SkillRotation = Quaternion.identity;
+        public bool FlipX;
         public readonly HashSet<string> Components = new HashSet<string>(StringComparer.Ordinal);
 
         public static OpeningRecordEntity Parse(Dictionary<string, object> node)
@@ -449,6 +450,7 @@ namespace Zjcs.Presentation.Opening
                         entity.GridX = OpeningJson.Int(position, "X");
                         entity.GridY = OpeningJson.Int(position, "Y");
                         entity.Direction = OpeningJson.String(component, "Direction");
+                        entity.FlipX = OpeningJson.Bool(component, "FlipX");
                         break;
                     case "FightRoleFightComponent":
                         entity.Hp = (long)OpeningJson.Number(component, "Hp");

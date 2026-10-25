@@ -39,9 +39,10 @@ namespace Zjcs.Presentation.Opening
 
         private sealed class HitTarget
         {
-            public Renderer[] Renderers;
-            public Material[][] Original;
-            public Material[][] Adapted;
+            public Spine.Unity.SkeletonAnimation Skeleton;
+            public OpeningMeshCopy[] Copies;
+            public readonly Dictionary<Material, Material> Previous = new Dictionary<Material, Material>();
+            public readonly Dictionary<Material, Material> Adapted = new Dictionary<Material, Material>();
             public readonly List<HitMove> Moves = new List<HitMove>();
         }
 
@@ -65,7 +66,6 @@ namespace Zjcs.Presentation.Opening
             public bool Started;
         }
 
-        private const string HitShaderName = "Zjcs/Opening/SpineHit";
         private readonly List<CameraMove> cameraMoves = new List<CameraMove>();
         private readonly Dictionary<Spine.Unity.SkeletonAnimation, HitTarget> hitTargets =
             new Dictionary<Spine.Unity.SkeletonAnimation, HitTarget>();
@@ -152,7 +152,7 @@ namespace Zjcs.Presentation.Opening
             Spine.Unity.SkeletonAnimation target, float eventSpeed)
         {
             if (target == null) return false;
-            hitShader ??= Shader.Find(HitShaderName);
+            hitShader ??= Resources.Load<Shader>("Opening/OpeningSpineHit");
             if (hitShader == null) return false;
             if (!hitTargets.TryGetValue(target, out HitTarget state))
             {
@@ -169,8 +169,8 @@ namespace Zjcs.Presentation.Opening
                     / Mathf.Clamp(eventSpeed, 0.01f, 3f),
                 Duration = duration,
                 Speed = Mathf.Clamp(eventSpeed, 0.01f, 3f),
-                Resume = OpeningJson.Bool(fields, "NeedResume", true),
-                KeywordValue = OpeningJson.Bool(fields, "KeywordBoolValue"),
+                Resume = NativeBool(fields, "NeedResume", true),
+                KeywordValue = NativeBool(fields, "KeywordBoolValue"),
                 Keyword = OpeningJson.String(fields, "Keyword"),
                 ColorProperty = OpeningJson.String(fields, "ColorPropertyName"),
                 FloatProperty = OpeningJson.String(fields, "FloatPropertyName"),
@@ -182,45 +182,33 @@ namespace Zjcs.Presentation.Opening
 
         private HitTarget CreateHitTarget(Spine.Unity.SkeletonAnimation target)
         {
-            Renderer[] renderers = target.GetComponentsInChildren<Renderer>(true);
-            var state = new HitTarget
+            // MeshMaterialProperty uses the configured appearance's independent atlas
+            // materials. Child particles, mesh copies and stencil-only passes are separate.
+            var state = new HitTarget { Skeleton = target,
+                Copies = target.transform.parent.GetComponentsInChildren<OpeningMeshCopy>(true) };
+            foreach (Spine.Unity.AtlasAssetBase atlas in target.SkeletonDataAsset.atlasAssets)
+            foreach (Material original in atlas.Materials)
             {
-                Renderers = renderers,
-                Original = new Material[renderers.Length][],
-                Adapted = new Material[renderers.Length][],
-            };
-            bool found = false;
-            for (int rendererIndex = 0; rendererIndex < renderers.Length; rendererIndex++)
-            {
-                Renderer renderer = renderers[rendererIndex];
-                if (renderer == null) continue;
-                Material[] originals = renderer.sharedMaterials;
-                var adapted = new Material[originals.Length];
-                state.Original[rendererIndex] = originals;
-                state.Adapted[rendererIndex] = adapted;
-                for (int materialIndex = 0; materialIndex < originals.Length; materialIndex++)
-                {
-                    Material original = originals[materialIndex];
-                    if (original == null) continue;
-                    var material = new Material(hitShader) { name = original.name + "_OpeningHit" };
-                    if (original.HasProperty("_MainTex"))
-                    {
-                        material.SetTexture("_MainTex", original.GetTexture("_MainTex"));
-                        material.SetTextureScale("_MainTex", original.GetTextureScale("_MainTex"));
-                        material.SetTextureOffset("_MainTex", original.GetTextureOffset("_MainTex"));
-                    }
-                    if (original.HasProperty("_Color")) material.SetColor("_Color", original.GetColor("_Color"));
-                    if (original.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", original.GetFloat("_SrcBlend"));
-                    if (original.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", original.GetFloat("_DstBlend"));
-                    if (original.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", original.GetFloat("_ZWrite"));
-                    if (original.HasProperty("_ZTest")) material.SetFloat("_ZTest", original.GetFloat("_ZTest"));
-                    if (original.HasProperty("_Cull")) material.SetFloat("_CullMode", original.GetFloat("_Cull"));
-                    adapted[materialIndex] = material;
-                    found = true;
-                }
-                renderer.sharedMaterials = adapted;
+                if (original == null || state.Adapted.ContainsKey(original)) continue;
+                target.CustomMaterialOverride.TryGetValue(original, out Material previous);
+                Material source = previous != null ? previous : original;
+                // Native Spine/Default-Stencil has no hit properties; retain its full
+                // ColorMask/StencilOp program rather than replacing it with the body pass.
+                if (source.shader.name == "Zjcs/Opening/BossMask"
+                    || source.shader.name == "Zjcs/Opening/BossOutline") continue;
+                var material = new Material(source) { shader = hitShader, name = source.name + "_OpeningHit" };
+                // Cloning also copies keywords from the source shader. Retain only
+                // the input-alpha variant supported by this Windows hit pass.
+                material.shaderKeywords = source.IsKeywordEnabled("_STRAIGHT_ALPHA_INPUT")
+                    ? new[] { "_STRAIGHT_ALPHA_INPUT" } : new string[0];
+                material.renderQueue = source.renderQueue;
+                state.Previous.Add(original, previous);
+                state.Adapted.Add(original, material);
+                target.CustomMaterialOverride[original] = material;
+                foreach (OpeningMeshCopy copy in state.Copies)
+                    copy.AddRuntimeReplacementMaterial(source, material);
             }
-            return found ? state : null;
+            return state.Adapted.Count > 0 ? state : null;
         }
 
         private void Update()
@@ -482,11 +470,8 @@ namespace Zjcs.Presentation.Opening
                     ? Mathf.Clamp01((Time.time - active.Start) * active.Speed / active.Duration) : 1f;
                 Color color = active.Color.Evaluate(time);
                 float blend = active.Float.Evaluate(time);
-                foreach (Material[] materials in state.Adapted)
+                foreach (Material material in state.Adapted.Values)
                 {
-                    if (materials == null) continue;
-                    foreach (Material material in materials)
-                    {
                         if (material == null) continue;
                         if (!string.IsNullOrEmpty(active.ColorProperty) && material.HasProperty(active.ColorProperty))
                             material.SetColor(active.ColorProperty, color);
@@ -494,7 +479,6 @@ namespace Zjcs.Presentation.Opening
                             material.SetFloat(active.FloatProperty, blend);
                         if (!string.IsNullOrEmpty(active.Keyword) && material.HasProperty(active.Keyword))
                             material.SetFloat(active.Keyword, active.KeywordValue ? 1f : 0f);
-                    }
                 }
             }
             foreach (Spine.Unity.SkeletonAnimation target in completed) hitTargets.Remove(target);
@@ -502,14 +486,24 @@ namespace Zjcs.Presentation.Opening
 
         private static void RestoreHitTarget(HitTarget state)
         {
-            for (int index = 0; index < state.Renderers.Length; index++)
+            foreach (var pair in state.Adapted)
             {
-                Renderer renderer = state.Renderers[index];
-                if (renderer != null && state.Original[index] != null) renderer.sharedMaterials = state.Original[index];
-                if (state.Adapted[index] == null) continue;
-                foreach (Material material in state.Adapted[index])
-                    if (material != null) UnityEngine.Object.Destroy(material);
+                foreach (OpeningMeshCopy copy in state.Copies)
+                    if (copy != null) copy.RemoveRuntimeReplacementMaterial(pair.Value);
+                if (state.Skeleton != null && state.Skeleton.CustomMaterialOverride.TryGetValue(pair.Key, out Material current)
+                    && current == pair.Value)
+                {
+                    if (state.Previous[pair.Key] != null) state.Skeleton.CustomMaterialOverride[pair.Key] = state.Previous[pair.Key];
+                    else state.Skeleton.CustomMaterialOverride.Remove(pair.Key);
+                }
+                UnityEngine.Object.Destroy(pair.Value);
             }
+        }
+
+        private static bool NativeBool(Dictionary<string, object> data, string key, bool fallback = false)
+        {
+            return data.TryGetValue(key, out object value)
+                ? value is bool flag ? flag : OpeningJson.Number(data, key) != 0 : fallback;
         }
 
         private bool PlayGrapplingLine(Dictionary<string, object> entry, Dictionary<string, object> sourceEvent,
@@ -521,7 +515,7 @@ namespace Zjcs.Presentation.Opening
                 sourcePosition, targetPosition, specialMaterial, eventSpeed);
         }
 
-        private static AnimationCurve ReadCurve(Dictionary<string, object> source, string key, float fallback)
+        public static AnimationCurve ReadCurve(Dictionary<string, object> source, string key, float fallback)
         {
             if (!source.TryGetValue(key, out object raw) || !(raw is Dictionary<string, object> data))
                 return AnimationCurve.Constant(0f, 1f, fallback);
@@ -532,8 +526,7 @@ namespace Zjcs.Presentation.Opening
             {
                 Dictionary<string, object> item = OpeningJson.Object(values[index], "animation curve key");
                 var frame = new Keyframe((float)OpeningJson.Number(item, "time"),
-                    (float)OpeningJson.Number(item, "value"), (float)OpeningJson.Number(item, "inSlope"),
-                    (float)OpeningJson.Number(item, "outSlope"));
+                    (float)OpeningJson.Number(item, "value"), ReadSlope(item, "inSlope"), ReadSlope(item, "outSlope"));
                 frame.weightedMode = (WeightedMode)OpeningJson.Int(item, "weightedMode");
                 frame.inWeight = (float)OpeningJson.Number(item, "inWeight", 1f / 3f);
                 frame.outWeight = (float)OpeningJson.Number(item, "outWeight", 1f / 3f);
@@ -545,6 +538,13 @@ namespace Zjcs.Presentation.Opening
                 postWrapMode = (WrapMode)OpeningJson.Int(data, "m_PostInfinity", 2),
             };
             return curve;
+        }
+
+        private static float ReadSlope(Dictionary<string, object> data, string key)
+        {
+            string text = OpeningJson.String(data, key);
+            return text == "Infinity" ? float.PositiveInfinity : text == "-Infinity" ? float.NegativeInfinity
+                : (float)OpeningJson.Number(data, key);
         }
 
         private static AnimationCurve ReadCurve(Dictionary<string, object> source, float fallback)

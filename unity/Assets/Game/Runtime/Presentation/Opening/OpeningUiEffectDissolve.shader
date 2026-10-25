@@ -51,6 +51,7 @@ Shader "Zjcs/Opening/UIEffectDissolve"
             #pragma fragment frag
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+            float4 _ClipRect;
             #include "OpeningUiEffectCommon.cginc"
 
             sampler2D _MainTex;
@@ -69,7 +70,6 @@ Shader "Zjcs/Opening/UIEffectDissolve"
             float _EdgeWidth;
             float _EdgeColor1Intensity;
             float _EdgeColor2Intensity;
-            float4 _ClipRect;
 
             fixed4 frag(OpeningUiVertex input) : SV_Target
             {

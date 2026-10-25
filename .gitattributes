@@ -13,14 +13,18 @@ scripts/prepare_opening_fighters.py text eol=lf
 scripts/prepare_opening_damage_ui.py text eol=lf
 scripts/prepare_opening_unit_ui.py text eol=lf
 scripts/prepare_opening_skill_effects.py text eol=lf
+scripts/prepare_opening_action_motion.py text eol=lf
 # Preserve generated native bindings and their recorded byte hashes.
 unity/Assets/Official/Opening/Fighters/** -text
 unity/Assets/Official/Opening/Damage/** -text
 unity/Assets/Game/Resources/Opening/OpeningBoss*.shader -text
 unity/Assets/Game/Resources/Opening/OpeningDamageBitmap.shader -text
+unity/Assets/Game/Resources/Opening/OpeningSpineHit.shader -text
+unity/Assets/Game/Runtime/Presentation/Opening/OpeningUi*.shader -text
 unity/Assets/StreamingAssets/Opening/skill-effects.json text eol=lf
 unity/Assets/StreamingAssets/Opening/unit-ui.json text eol=lf
 unity/Assets/StreamingAssets/Opening/damage-ui.json text eol=lf
+unity/Assets/StreamingAssets/Opening/action-motion.json text eol=lf
 unity/Assets/Game/Resources/Combat/battle-status-icons.json text eol=lf
 unity/Assets/Game/Resources/Combat/unit-bars-runtime.json text eol=lf
 unity/Assets/Game/Resources/Combat/battle-custom-action-world-runtime.json text eol=lf

@@ -41,6 +41,7 @@ namespace Zjcs.Presentation.Opening
         private OfficialBattleHudCatalog timelineCatalog;
         private RectTransform damageLayer;
         private OpeningBattlePresentation presentation;
+        private OpeningBattleActionPlayer actionPlayer;
         private readonly Dictionary<int, Transform> actorRoots = new Dictionary<int, Transform>();
         private readonly Dictionary<int, float> roundIntervals = new Dictionary<int, float>();
         private OpeningSkillEffectPlayer skillEffects;
@@ -93,6 +94,7 @@ namespace Zjcs.Presentation.Opening
         public int DieActions { get; private set; }
         public int DeathHolds { get; private set; }
         public int StackedDamages { get; private set; }
+        public OpeningBattleActionPlayer Actions => actionPlayer;
         private readonly Dictionary<int, List<float>> recentDamage = new Dictionary<int, List<float>>();
 
         public void RequestFastForward()
@@ -235,6 +237,9 @@ namespace Zjcs.Presentation.Opening
             go.transform.SetParent(world, false);
             presentation = go.AddComponent<OpeningBattlePresentation>();
             presentation.Initialize(battlefield.StageCamera);
+            actionPlayer = go.AddComponent<OpeningBattleActionPlayer>();
+            actionPlayer.Initialize();
+            actionPlayer.AnimationPlayed += (_, __) => ActionAnimations++;
             foreach (OpeningRecordEntity entity in assets.Record.Entities)
                 foreach (var pair in entity.RoundTimes)
                 { nextActionTime[pair.Key] = pair.Value; roundIntervals[pair.Key] = pair.Value; }
@@ -335,6 +340,9 @@ namespace Zjcs.Presentation.Opening
                 skillEffects.Play("cast", entity.ClassId, skillPosition, battlefield.Root.transform,
                     entity.EntityId, sourceUnit, targetUnit, battlefield.StageCamera,
                     sourcePosition, targetPosition, entity.SkillRotation);
+                // MyFightSkill.OnStart plays the skill's own playable. Action 20001
+                // only owns its lifetime and has no myEffect animation prefab.
+                SchedulePlayableAnimations("cast", entity.ClassId, entity.EntityId, entity.SourceEntityId);
             }
             if (raw.TryGetValue("ComponentList", out object components) && components is List<object> list)
             {
@@ -363,7 +371,21 @@ namespace Zjcs.Presentation.Opening
                                     : Quaternion.identity);
                         }
                     }
-                    else if (type.Contains("ActionComponent")) PlayAction(component, entity.ClassId, effectType, entity.EntityId);
+                    else if (type.Contains("ActionComponent"))
+                    {
+                        if (entity.ClassId != 20001)
+                            PlayAction(component, entity.ClassId, effectType, entity.EntityId);
+                    }
+                }
+                foreach (object item in list)
+                {
+                    if (!(item is Dictionary<string, object> component)
+                        || !OpeningJson.String(component, "$type").Contains("FightActionSkillMoveComponent")) continue;
+                    var action = list.Find(value => value is Dictionary<string, object> candidate
+                        && OpeningJson.String(candidate, "$type").StartsWith("Common.ActionComponent,")) as Dictionary<string, object>;
+                    int unitId = ReadEntityReference(action, "ApplyId");
+                    if (actorRoots.TryGetValue(unitId, out Transform actor) && entityState.TryGetValue(unitId, out var state))
+                        actionPlayer.MoveAlong(entity.EntityId, entity.ClassId, actor, state, component, assets.Record.FightSpeed);
                 }
                 if (effectType == "status") PlayStatusEntity(entity, list);
             }
@@ -376,8 +398,31 @@ namespace Zjcs.Presentation.Opening
 
         private static int ReadEntityReference(Dictionary<string, object> component, string key)
         {
-            return component.TryGetValue(key, out object raw) && raw is Dictionary<string, object> reference
+            return component != null && component.TryGetValue(key, out object raw) && raw is Dictionary<string, object> reference
                 ? OpeningJson.Int(reference, "EntityId") : 0;
+        }
+
+        private void SchedulePlayableAnimations(string type, int classId, int owner, int unitId)
+        {
+            if (skillEffects == null || !units.TryGetValue(unitId, out var unit)
+                || !bindings.TryGetValue(unitId, out var binding)) return;
+            var events = new List<Dictionary<string, object>>(skillEffects.GetEvents(type, classId));
+            if (type == "cast") events.AddRange(actionPlayer.GetEvents(classId));
+            foreach (var entry in events)
+            {
+                string kind = OpeningJson.String(entry, "kind");
+                if (kind != "override" && kind != "animator") continue;
+                var source = OpeningJson.Object(entry["source_event"], "animator event");
+                var fields = OpeningJson.Object(source["fields"], "animator fields");
+                string trigger = OpeningJson.String(fields, "myTriggerParam");
+                string animation = kind == "override" ? OpeningJson.String(source, "animation") : trigger;
+                // Full rig-qualified override names must resolve before controller aliases.
+                string clip = ResolveAlias(binding, animation) ?? ResolveAlias(binding, animation + "_01");
+                if (clip == null) { LogUnsupportedPlayableAnimation(type, classId); continue; }
+                actionPlayer.PlayAnimation(owner, unitId, classId, unit, clip, ResolveAlias(binding, "idle_01"),
+                    (float)OpeningJson.Number(entry, "eventTime"),
+                    Mathf.Max(.01f, (float)OpeningJson.Number(entry, "eventSpeed", 1)));
+            }
         }
 
         /// <summary>
@@ -580,6 +625,7 @@ namespace Zjcs.Presentation.Opening
 
         private void RemoveEntity(int entityId)
         {
+            actionPlayer?.StopOwner(entityId);
             skillEffects?.StopEntity(entityId);
             skillEffects?.StopStatus(entityId);
             entityState.Remove(entityId);
@@ -834,12 +880,14 @@ namespace Zjcs.Presentation.Opening
             var actor = new GameObject("RecordActor_" + entity.EntityId);
             actor.transform.SetParent(world,false);
             actor.transform.localPosition=new Vector3(entity.GridX,entity.GridY,0);
+            actor.transform.localScale=new Vector3(entity.FlipX ? -1 : 1,1,1);
             var gameObject = new GameObject("RecordUnit_" + entity.EntityId);
             gameObject.transform.SetParent(actor.transform, false);
             SkeletonAnimation skeleton = gameObject.AddComponent<SkeletonAnimation>();
             skeleton.skeletonDataAsset = binding.skeleton;
             skeleton.initialSkinName = binding.skin;
             skeleton.Initialize(true);
+            skeleton.AnimationState.TimeScale=assets.Record.FightSpeed;
             if (entity.NpcClassId > 0) OpeningNpcModelCatalog.LoadDefault().ApplySkins(entity.NpcClassId, skeleton.Skeleton);
             if (skeleton.Skeleton == null)
             {

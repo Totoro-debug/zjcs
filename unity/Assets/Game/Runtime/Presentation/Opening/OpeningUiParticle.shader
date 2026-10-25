@@ -44,6 +44,7 @@ Shader "Zjcs/Opening/UIParticle"
             #pragma fragment frag
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+            float4 _ClipRect;
             #include "OpeningUiEffectCommon.cginc"
 
             sampler2D _MainTex;
@@ -53,7 +54,6 @@ Shader "Zjcs/Opening/UIParticle"
             float _IntensityAffectAlpha;
             float _ClampMainUV;
             float _WorldClipHeight;
-            float4 _ClipRect;
 
             fixed4 frag(OpeningUiVertex input) : SV_Target
             {

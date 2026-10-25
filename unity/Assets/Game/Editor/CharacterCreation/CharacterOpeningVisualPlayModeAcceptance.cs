@@ -152,6 +152,7 @@ namespace Zjcs.Editor.CharacterCreation
 
             private IEnumerator Body(Session session)
             {
+                VerifyTransparentHitPixels();
                 Require(OpeningFightPlayback.FormatBattleNumber(7276) == "7276", "battle number formatting changed (7276)");
                 Require(OpeningFightPlayback.FormatBattleNumber(1000000) == "100万", "battle number formatting changed (1e6)");
                 Require(OpeningFightPlayback.FormatBattleNumber(428029000) == "42802万", "battle number formatting changed (4.28e8)");
@@ -264,6 +265,12 @@ namespace Zjcs.Editor.CharacterCreation
                 Require(npc!=null && npc.Skeleton.Skin.Name=="fight_npc_8401",
                     "official NPC weapon skin must be combined with its body");
                 Vector3[] idleVertices=npc.GetComponent<MeshFilter>().sharedMesh.vertices;
+                var npc2=Array.Find(session.Battlefield.UnitRoot.GetComponentsInChildren<Spine.Unity.SkeletonAnimation>(),
+                    model=>model.name=="RecordUnit_1018");
+                Vector3 npcStart=npc.transform.parent.localPosition, npc2Start=npc2.transform.parent.localPosition;
+                float npcDistance=0, npc2Distance=0;
+                var actions=session.Playback.Actions;
+                bool capturedMotion=false;
                 Transform first = null;
                 foreach (MeshRenderer renderer in session.Battlefield.UnitRoot.GetComponentsInChildren<MeshRenderer>(true))
                 {
@@ -345,6 +352,14 @@ namespace Zjcs.Editor.CharacterCreation
                     float fullDeadline = Time.realtimeSinceStartup + 300f;
                     while (!session.Playback.Finished && Time.realtimeSinceStartup < fullDeadline)
                     {
+                        if(npc!=null)npcDistance=Mathf.Max(npcDistance,Vector3.Distance(npcStart,npc.transform.parent.localPosition));
+                        if(npc2!=null)npc2Distance=Mathf.Max(npc2Distance,Vector3.Distance(npc2Start,npc2.transform.parent.localPosition));
+                        VerifyBossMaskMaterials(session.Battlefield.UnitRoot);
+                        if(!capturedMotion && npcDistance>1)
+                        {
+                            capturedMotion=true;
+                            yield return Capture("visual-native-movement");
+                        }
                         AdvanceDialog();
                         yield return null;
                     }
@@ -357,6 +372,17 @@ namespace Zjcs.Editor.CharacterCreation
                         "official cast/damage effect particles were not spawned");
                     Require(session.Playback.SkillParticleSystems > 0,
                         "official skill effect particle systems were not instantiated");
+                    Require(npcDistance>2 && npc2Distance>2,
+                        "both NPC actor roots must move along the official paths: "+npcDistance+" / "+npc2Distance);
+                    string[] sword={"11190:100/skill_20","11530:100/skill_05","11820:100/skill_41",
+                        "10660:100/skill_06","11250:100/skill_27"};
+                    string[] staff={"11000:200/skill_13","10890:200/skill_12","11130:200/skill_16","10920:200/skill_11"};
+                    foreach(string clip in sword)Require(actions.PlayedClips.ContainsKey(1017)
+                        && actions.PlayedClips[1017].Contains(clip),"sword skill used the wrong animation: "+clip);
+                    foreach(string clip in staff)Require(actions.PlayedClips.ContainsKey(1018)
+                        && actions.PlayedClips[1018].Contains(clip),"staff skill used the wrong animation: "+clip);
+                    Debug.Log("[Opening visual] NPC native movement="+npcDistance+" / "+npc2Distance
+                        +" completed segments="+actions.CompletedSegments+" dedicated skill clips=9");
                     Debug.Log("[Opening visual] full playback: die actions=" + session.Playback.DieActions
                               + " stacked damage=" + session.Playback.StackedDamages
                               + " death holds=" + session.Playback.DeathHolds
@@ -411,6 +437,53 @@ namespace Zjcs.Editor.CharacterCreation
         private static void Require(bool condition, string message)
         {
             if (!condition) throw new InvalidOperationException(message);
+        }
+
+        private static void VerifyBossMaskMaterials(Transform root)
+        {
+            foreach(var model in root.GetComponentsInChildren<Spine.Unity.SkeletonAnimation>())
+            foreach(var material in model.CustomMaterialOverride.Values)
+                if(material!=null && material.name.Contains("monster_3803")
+                    && (material.name.Contains("monster_3803_2") || material.name.Contains("monster_3803_3")))
+                    Require(material.shader.name=="Zjcs/Opening/BossMask",
+                        "boss stencil-only atlas pass was replaced by hit material: "+material.name);
+            foreach(var particle in root.GetComponentsInChildren<ParticleSystemRenderer>())
+                Require(particle.sharedMaterial==null || !particle.sharedMaterial.name.EndsWith("_OpeningHit"),
+                    "character hit tint replaced a child particle material");
+            foreach(var copy in root.GetComponentsInChildren<OpeningMeshCopy>())
+                foreach(var material in copy.GetComponent<MeshRenderer>().sharedMaterials)
+                    Require(material!=null,"boss outline lost its runtime replacement material during a hit");
+        }
+
+        private static void VerifyTransparentHitPixels()
+        {
+            var shader=Shader.Find("Zjcs/Opening/SpineHit");
+            Require(shader!=null,"native hit shader missing");
+            var material=new Material(shader);
+            var texture=new Texture2D(2,1,TextureFormat.RGBA32,false,true) { filterMode=FilterMode.Point };
+            texture.SetPixels(new[]{new Color(1,1,1,0),Color.white});texture.Apply();
+            material.mainTexture=texture;
+            material.SetFloat("_HITEFFECT",1);material.SetFloat("_HitEffectBlend",1);
+            material.SetFloat("_SrcBlend",1);material.SetFloat("_DstBlend",10);
+            material.SetColor("_HitEffectColor",new Color(.7f,.1f,1,1));
+            var quad=GameObject.CreatePrimitive(PrimitiveType.Quad);quad.layer=31;
+            quad.transform.position=new Vector3(500,500,0);quad.transform.localScale=new Vector3(2,1,1);
+            quad.GetComponent<MeshRenderer>().sharedMaterial=material;
+            var cameraObject=new GameObject("HitTransparencyProbe");var camera=cameraObject.AddComponent<Camera>();
+            cameraObject.transform.position=new Vector3(500,500,-10);
+            camera.orthographic=true;camera.orthographicSize=.5f;camera.aspect=2;
+            camera.cullingMask=1<<31;camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=Color.clear;
+            var target=new RenderTexture(32,16,24);camera.targetTexture=target;camera.Render();
+            var previous=RenderTexture.active;RenderTexture.active=target;
+            var pixels=new Texture2D(32,16,TextureFormat.RGBA32,false,true);pixels.ReadPixels(new Rect(0,0,32,16),0,0);pixels.Apply();
+            Color transparent=pixels.GetPixel(8,8), opaque=pixels.GetPixel(24,8);
+            RenderTexture.active=previous;camera.targetTexture=null;
+            UnityEngine.Object.DestroyImmediate(cameraObject);UnityEngine.Object.DestroyImmediate(quad);
+            UnityEngine.Object.DestroyImmediate(material);UnityEngine.Object.DestroyImmediate(texture);
+            UnityEngine.Object.DestroyImmediate(pixels);target.Release();UnityEngine.Object.DestroyImmediate(target);
+            Require(transparent.maxColorComponent<.01f,"hit shader colored a transparent atlas quad: "+transparent);
+            Require(opaque.b>.5f && opaque.r>.2f,"opaque monster texels lost their native hit tint: "+opaque);
+            Debug.Log("[Opening visual] transparent hit pixels="+transparent+" opaque="+opaque);
         }
 
         private static int HideExistingCanvases()

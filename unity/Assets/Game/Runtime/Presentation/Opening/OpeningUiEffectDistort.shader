@@ -51,6 +51,7 @@ Shader "Zjcs/Opening/UIEffectDistort"
             #pragma fragment frag
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+            float4 _ClipRect;
             #include "OpeningUiEffectCommon.cginc"
 
             sampler2D _MainTex;
@@ -71,7 +72,6 @@ Shader "Zjcs/Opening/UIEffectDistort"
             float _Float2;
             float _Brightness;
             float _Contrast;
-            float4 _ClipRect;
 
             fixed4 frag(OpeningUiVertex input) : SV_Target
             {

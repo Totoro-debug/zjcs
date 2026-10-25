@@ -11,6 +11,11 @@ namespace Zjcs.Presentation.Opening
         private MeshFilter filter;
         private MeshRenderer renderer;
         private Dictionary<Material,Material> replacements;
+        public void AddRuntimeReplacementMaterial(Material original, Material runtime)
+        {
+            if(replacements.TryGetValue(original,out Material replacement))replacements[runtime]=replacement;
+        }
+        public void RemoveRuntimeReplacementMaterial(Material runtime){replacements.Remove(runtime);}
         public void Initialize(SkeletonAnimation skeleton,Dictionary<Material,Material> materials,int order)
         {
             source=skeleton;
