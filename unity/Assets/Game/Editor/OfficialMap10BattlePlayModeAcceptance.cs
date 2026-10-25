@@ -50,7 +50,8 @@ namespace Zjcs.Editor
                 ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
             Require(AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Game/Resources/Combat/skill-playables.json") != null,
                 "The official skill Playable JSON did not import as a TextAsset.");
-            foreach (string name in new[] { "battle-hud-graphic-bindings", "battle-hud-graphic-bindings-source-manifest" })
+            foreach (string name in new[] { "battle-hud-graphic-bindings", "battle-hud-graphic-bindings-source-manifest",
+                         "battle-scene-bindings", "battle-scene-bindings-source-manifest" })
             {
                 string path = "Assets/Game/Resources/Combat/" + name + ".json";
                 AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
@@ -77,6 +78,9 @@ namespace Zjcs.Editor
                 save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = 10011, Rank = 1 });
                 save.Player.Skills.Plans[0].ActiveSkills[0] = 10011;
                 File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
+                var fixtureProgress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
+                new OfflineCharacterProgressionService(fixtureProgress, OfficialCharacterAssetCatalog.LoadDefault().Load())
+                    .InitializeWardrobe("battle-scene-fixture-wardrobe");
                 File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
                     "{\"schema\":1,\"slotId\":\"" + slot + "\",\"gridX\":24,\"gridY\":23,"
                     + "\"firstBattleIntroShown\":true,\"completedStories\":[\"FirstEnterMap\"]}");
@@ -157,7 +161,8 @@ namespace Zjcs.Editor
                 Application.runInBackground = true;
                 Canvas canvas = CreateCanvas();
                 canvas.gameObject.AddComponent<AudioListener>();
-                GameObject avatar = new GameObject("Map10BattleAvatar", typeof(SpriteRenderer));
+                GameObject avatar = Zjcs.Presentation.CharacterCreation.CharacterCreationNativeModelFactory.CreateWorldModel(
+                    SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty), out _);
                 var runtimeObject = new GameObject("Map10BattleRuntime");
                 OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
                 runtime.Begin(SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty),
@@ -189,6 +194,9 @@ namespace Zjcs.Editor
 
             var entities = ((System.Collections.IDictionary)entitiesField.GetValue(runtime));
             Require(entities != null && entities.Count > 0, "Map10 did not instantiate its entities.");
+            GameObject worldTerrain = GameObject.Find("Map10Terrain");
+            Require(worldTerrain != null, "The map terrain is missing before battle entry.");
+            float worldCameraSize = Camera.main.orthographicSize;
             object controller = null;
             foreach (object entity in entities.Values)
             {
@@ -201,6 +209,31 @@ namespace Zjcs.Editor
                 if (controller != null) break;
             }
             Require(controller != null, "No Map10 entity started a battle.");
+
+            var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            Debug.Log("Battle scene: stage=" + sceneController.Checkpoint.StageId
+                + " camera=" + Camera.main?.transform.position + " size=" + Camera.main?.orthographicSize
+                + " units=" + string.Join(";", sceneController.Checkpoint.Units.Select(value =>
+                    value.Id + "/" + value.MonsterId + "/" + value.X + "," + value.Y)));
+            foreach (Renderer modelRenderer in UnityEngine.Object.FindObjectsOfType<Renderer>()
+                .Where(value => value.name == "Native draw 00" || value.GetComponentInParent<Animator>() != null).Take(4))
+                Debug.Log("Battle model: " + modelRenderer.name + " position=" + modelRenderer.transform.position
+                    + " scale=" + modelRenderer.transform.lossyScale + " bounds=" + modelRenderer.bounds);
+            Require(!worldTerrain.activeSelf, "World terrain remained active over the battle scene.");
+            Require(((Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller)
+                    .TryGetSceneCamera(out _, out float sourceCameraSize)
+                && Camera.main != null && Mathf.Approximately(Camera.main.orthographicSize, sourceCameraSize),
+                "The recovered scene camera did not use its official orthographic size.");
+            Renderer[] battleModels = UnityEngine.Object.FindObjectsOfType<Renderer>()
+                .Where(value => value.name.StartsWith("Native draw ", StringComparison.Ordinal)).ToArray();
+            Require(battleModels.Length > 0 && battleModels.Any(value => value.isVisible),
+                "The official native monster meshes are outside the battle camera.");
+            Require(UnityEngine.Object.FindObjectsOfType<Animator>().Any(value =>
+                value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
+                "The battle test did not mount the real character model.");
+            Require(UnityEngine.Object.FindObjectsOfType<SkinnedMeshRenderer>().Any(value => value.isVisible
+                && value.GetComponentInParent<Animator>() != null),
+                "The real character appearance has no visible mesh in the battle camera.");
 
             Type controllerType = controller.GetType();
             PropertyInfo phaseProperty = controllerType.GetProperty("Phase");
@@ -326,6 +359,23 @@ namespace Zjcs.Editor
             Debug.Log("Map10 battle acceptance passed: battle reached Play, counter=" + checkpointField("Counter")
                 + ", damage events=" + checkpointField("DamageEventSerial")
                 + ", skill icons and timeline bound, round text and speed controls work.");
+            if (SessionState.GetBool(RealInputKey, false))
+            {
+                float endDeadline = Time.realtimeSinceStartup + 120f;
+                while (controllerField.GetValue(runtime) != null && Time.realtimeSinceStartup < endDeadline)
+                    yield return null;
+                yield return null; // Allow deferred destruction of the temporary renderer group.
+                Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
+                Require(controllerField.GetValue(runtime) == null && worldTerrain.activeSelf,
+                    "The battle did not restore its suspended world roots.");
+                Require(Mathf.Approximately(Camera.main.orthographicSize, worldCameraSize),
+                    "The battle did not restore the world camera size.");
+                Require(UnityEngine.Object.FindObjectsOfType<UnityEngine.Rendering.SortingGroup>()
+                    .All(value => !value.name.StartsWith("Map10Player_", StringComparison.Ordinal)),
+                    "The reused map avatar retained its temporary battle sorting group.");
+                yield return Capture("returned.png");
+                Debug.Log("Battle scene return passed: final result, world roots, camera and avatar sorting restored.");
+            }
             Finish(true, null);
         }
 

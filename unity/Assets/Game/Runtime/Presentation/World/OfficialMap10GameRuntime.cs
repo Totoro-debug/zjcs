@@ -274,6 +274,7 @@ namespace Zjcs.Presentation.World
         private void LateUpdate()
         {
             if (worldCamera == null || avatar == null || closed) return;
+            if (UpdateBattleSceneCamera()) return;
             Vector3 target = storyCameraActive
                 ? storyCameraTarget
                 : avatar.transform.position + new Vector3(0f, 0f, -20f);
@@ -593,6 +594,7 @@ namespace Zjcs.Presentation.World
             if (worldCamera == null)
             {
                 var cameraObject = new GameObject("Map10WorldCamera");
+                cameraObject.tag = "MainCamera";
                 cameraObject.transform.SetParent(transform, false);
                 worldCamera = cameraObject.AddComponent<Camera>();
                 worldCamera.orthographic = true;
@@ -1739,6 +1741,7 @@ namespace Zjcs.Presentation.World
             battleController.ConfigureSpeeds(
                 OfficialCombatAssetCatalog.LoadDefault().Load().SpeedSettings, 0,
                 IsBattleSpeedConditionMet);
+            SuspendWorldForBattle();
             battleStepTimer = 0.8f;
             pendingInteraction = entity;
             activeBattleStage = stage;
@@ -2220,6 +2223,7 @@ namespace Zjcs.Presentation.World
             }
             if (battleRoot != null) Destroy(battleRoot.gameObject);
             battleRoot = null;
+            RestoreWorldAfterBattle();
             if (entityRoot != null) entityRoot.gameObject.SetActive(true);
             SetAvatarPosition(currentGrid);
             pendingInteraction = null;

@@ -61,6 +61,17 @@ namespace Zjcs.Presentation.Combat
         }
         public bool HasBattleEnvironment => environmentView != null;
 
+        public bool TryGetSceneCamera(out Vector3 position, out float orthographicSize)
+        {
+            position = default;
+            orthographicSize = 0f;
+            if (environmentView == null || environmentView.CameraOrthographicSize <= 0f) return false;
+            position = environmentView.Root.TransformPoint(environmentView.CameraPosition);
+            orthographicSize = environmentView.CameraOrthographicSize;
+            return true;
+        }
+
+
         public void Begin(FightBattleCheckpoint checkpoint, Transform worldRoot, Transform hudParent,
             OfficialBattleGridMapper gridMapper, Func<int, Sprite> skillIcon,
             Func<FightBattleUnitState, Sprite> timelinePortrait,

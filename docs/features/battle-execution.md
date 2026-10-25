@@ -197,6 +197,8 @@ flowchart TD
 
 战斗 HUD 的30个原 prefab 已补取404项 Graphic／CanvasGroup 输入标记及3项初始可见性引用；按官方 `SafeArea` 恢复主面板适配，按 `ChatQuickMsgEntryPanel.OnEnable` 和 `GameMatchMiniPanel.RefreshUI` 关闭初始表情面板、无冷却遮罩和无会话匹配内容，并迁移 `NoDrawingRayCast`。输入绑定见[来源清单](../../assets/reference/battle-hud/graphic-bindings-source-manifest.json)，阶段与代码来源见[会话清单](../../assets/reference/battle-hud/session-source-manifest.json)。这些初始化分支不代表聊天、匹配和整个 HUD 已迁移完毕。
 
+战场表现已从固定 APK／同版本已缓存资源恢复344种单位的模型 Transform 父链与 MeshRenderer 排序、256个战斗配置对应场景的原相机位置和正交尺寸，保留原始 CAB、pathID 和对象哈希，见[场景绑定来源](../../assets/reference/battle-scenes/layout-source-manifest.json)。运行时按现有场景载荷的排序层范围绑定单位及血条；怪物恢复原模型节点的缩放／落脚偏移和图集 V，战场网格恢复 Unity Y、原深度及纹理 V。进入战斗暂停场外根节点并切换场景镜头，退出按原 activeSelf 和镜头尺寸恢复。跟随／自由镜头、完整 Cinemachine、环境粒子／材质及原生角色动画仍未完成；旧采样网格的修复不代表已完成免费原生动画迁移。
+
 已从当前官方中文语言资源提取5149条战斗相关名称／说明供核对技能、秘法与状态规则，保留原键、富文本和缺键；[文字清单](../../assets/reference/battle-rules/text-source-manifest.json)单独记录 `871_156598` 输入，未把它冒记为历史配置版本。运行载荷为 `Assets/Official/Combat/battle-texts.json`，技能／状态详情弹窗的交互与加载绑定仍待完成。默认属性的 APK 输入、解析源码、输出与哈希见[属性默认值清单](../../assets/reference/battle-rules/prop-defaults-source-manifest.json)。
 
 天雷裁决条件触发依据[来源清单](../../assets/reference/battle-rules/trigger-rate-source-manifest.json)中的组件字段、官方属性计算和 `item_10624_func_desc`。本地补足仅实现已取得配置的 `HasAnyStatus` 分支；服务器执行代码未取得，非空动作／状态类型过滤不作推测。固定随机流验证普通50%不触发、潮湿／感电各自100%触发、两条件不重复乘算、条件归属、无关状态和检查点恢复；`test_battle_status_skill_start.ps1` 和全部35个通用战斗套件均已通过，静态检查及 Unity `ProjectTools.Validate` 通过；准备页真实鼠标点击到首步执行复验通过，未将该局部流程视为全功能或 Windows 发布验证。
@@ -205,7 +207,7 @@ flowchart TD
 
 已有规则回归覆盖公式固定样例、配置装配、队列／阶段、范围／移动／延迟、状态／CD／盾／韧性、触发技能、波次、统计与检查点往返；主要入口为 [test_unity_combat.ps1](../../scripts/test_unity_combat.ps1) 及 `scripts/test_battle_*.ps1` 的对应通用套件。规则检查还可由 [FightCombatValidation.RunSmokeTest](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs) 和 `Zjcs.Editor.ProjectTools.Validate` 执行。已完成的规则测试证明对应代码分支，不证明缺失服务端流程已被复刻。本页链接、功能编号与差异格式已核对，`python -B scripts/check_unity_project.py` 静态元数据检查通过；上述文档检查不扩大战斗规则或运行验证结论。
 
-本次97组公式与核心检查、35个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 均通过；单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。此测试使用隔离存档和简化角色载体，查看了准备／运行截图；角色白块、未填充的技能栏和镜头／战场表现仍有问题，不能宣称画面完整还原。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
+已有97组公式与核心检查、35个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。场景修复复验使用隔离存档和实际角色 prefab，继续执行到最终结果，确认场外根节点、镜头尺寸及复用角色排序恢复；实际查看准备、战斗和返回画面。场地和怪物贴图错位已修复；玩家比例／动作／面部绑定、动态头像白块、空技能位与部分 HUD 仍有问题，不能宣称画面完整还原。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
 
 HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转换及绑定有独立回归。通用战斗尚未完成完整 Unity Play Mode 真实输入、画面、状态和重启恢复验证，也没有与该完整功能对应的 Windows Player 完成发布。全工程编译与构建状态见[Unity 工程与启动流程](unity-project.md)，不在本页维护其他模块编译错误或地图运行记录。
 
@@ -264,7 +266,7 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 | 召唤与胜负（F06、F25） | 宠物／格子物件／智能物件／替身等非怪物召唤、完整继承、数量／寿命与来源死亡销毁、复活事件消费者；按结果组件和参与者标记恢复完整通用判定接口，缺服务器规则时再取证或确认。 |
 | HUD 与报告（F26—F32、F39、F43） | 真实玩家／NPC动态头像、名称与显示条件、完整时间轴事件动画、玩家目标／成员血条、Boss 真实视野／头像、单位状态详情／自定义数字／禁用态、技能详情／品质／全部状态、宠物能量、准备提示与方案刷新、阶段动态说明。战报需绑定官方交互面板，补齐被动／状态归因、盾量／状态次数／占比及属性快照。 |
 | 公共控件（F33—F38） | 回放默认倍率与档位恢复、权限差异、快进条件／延时／防重／失败及本地快照消费、跟随／自由镜头、托管／背包入口、录像保存／回放／跳过的本地流程。观战／聊天等接口按所属页已确认离线方案接入，不自行新增联网或替代规则。 |
-| 画面、动画与声音（F40—F43） | 玩家／NPC／宠物／召唤物复合外观、全部原生动画和精确动作映射、生成／复活／召唤、Playable 停止／中断／淡入淡出、范围／弹道／挂点／层序、原相机和环境、材质／shader／纹理及 CAB 依赖；缺失飘字种类、合并条件、元素提示、Wwise音频与速度同步。未转换或加载失败不视为官方资源缺失。 |
+| 画面、动画与声音（F40—F43） | 玩家／NPC／宠物／召唤物复合外观、全部原生动画和精确动作映射、生成／复活／召唤、Playable 停止／中断／淡入淡出、范围／弹道／挂点／层序、原相机控制和环境粒子／材质、材质／shader／纹理及 CAB 依赖；缺失飘字种类、合并条件、元素提示、Wwise音频与速度同步。未转换或加载失败不视为官方资源缺失。 |
 | 运行与交付 | 完成相关规则回归、静态检查、Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate`；在 Play Mode 用真实鼠标／键盘检查完整流程、缩放／遮挡、画面／声音、状态和重启续战。功能完成时构建并真实运行 Windows Player，保护已有存档，按项目要求发布对应可执行版本。 |
 
 ### 实现概括

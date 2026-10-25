@@ -17,6 +17,7 @@ namespace Zjcs.Presentation.Combat
         private readonly OfficialBattleNativeAnimationLibrary library;
         private readonly OfficialBattleNativeModelRecord model;
         private readonly List<DrawView> draws = new List<DrawView>();
+        private readonly Vector3 modelScale;
         private OfficialBattleNativeAnimationData animation;
         private float elapsed;
         private int currentFrame = -1;
@@ -29,12 +30,28 @@ namespace Zjcs.Presentation.Combat
             this.library = library != null ? library : throw new ArgumentNullException(nameof(library));
             this.model = model != null ? model : throw new ArgumentNullException(nameof(model));
             if (parent == null) throw new ArgumentNullException(nameof(parent));
+            OfficialBattleSceneBindings.Unit source = OfficialBattleSceneBindings.Find(model.monsterId);
+            if (source?.model?.transforms == null || source.model.transforms.Length == 0)
+                throw new InvalidOperationException("Official native model transform binding is missing: " + model.monsterId);
             var root = new GameObject(objectName);
             Transform = root.transform;
             Transform.SetParent(parent, false);
+            Transform modelParent = Transform;
+            foreach (OfficialBattleSceneBindings.TransformBinding binding in source.model.transforms)
+            {
+                var child = new GameObject(binding.name).transform;
+                child.SetParent(modelParent, false);
+                child.localPosition = new Vector3(binding.position[0], binding.position[1], binding.position[2]);
+                child.localRotation = new Quaternion(binding.rotation[0], binding.rotation[1], binding.rotation[2], binding.rotation[3]);
+                child.localScale = new Vector3(binding.scale[0], binding.scale[1], binding.scale[2]);
+                modelParent = child;
+            }
+            ModelTransform = modelParent;
+            modelScale = ModelTransform.localScale;
         }
 
         public Transform Transform { get; }
+        public Transform ModelTransform { get; }
         public string Animation => animation == null ? string.Empty : animation.animation;
         public bool IsLooping => loop;
         public bool IsAnimationFinished { get; private set; }
@@ -56,7 +73,7 @@ namespace Zjcs.Presentation.Combat
             elapsed = 0f;
             IsAnimationFinished = false;
             currentFrame = -1;
-            Transform.localScale = Vector3.one * next.scale;
+            ModelTransform.localScale = modelScale * next.scale;
             ApplyFrame(0);
             return true;
         }
@@ -112,7 +129,8 @@ namespace Zjcs.Presentation.Combat
                 for (int vertex = 0; vertex < vertexCount; vertex++)
                 {
                     vertices[vertex] = new Vector3(draw.vertices[vertex * 2], draw.vertices[vertex * 2 + 1], 0f);
-                    uv[vertex] = new Vector2(draw.uv[vertex * 2], draw.uv[vertex * 2 + 1]);
+                    // Atlas V in the sampled payload starts at the top of the PNG.
+                    uv[vertex] = new Vector2(draw.uv[vertex * 2], 1f - draw.uv[vertex * 2 + 1]);
                     colors[vertex] = tint;
                 }
                 drawView.Mesh.Clear();
@@ -131,7 +149,7 @@ namespace Zjcs.Presentation.Combat
         private DrawView CreateDraw(int index)
         {
             var instance = new GameObject("Native draw " + index.ToString("D2"));
-            instance.transform.SetParent(Transform, false);
+            instance.transform.SetParent(ModelTransform, false);
             var mesh = new Mesh { name = "Official Battle Mesh " + model.key + " " + index.ToString("D2") };
             mesh.MarkDynamic();
             instance.AddComponent<MeshFilter>().sharedMesh = mesh;

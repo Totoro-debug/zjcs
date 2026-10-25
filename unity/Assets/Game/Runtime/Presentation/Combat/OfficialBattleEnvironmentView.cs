@@ -41,10 +41,11 @@ namespace Zjcs.Presentation.Combat
             SourceSkeletonCount = scene.sourceSkeletonCount;
             GeometryResource = scene.geometryResource;
             RootOffset = new Vector3(scene.rootOffset[0], scene.rootOffset[1], scene.rootOffset[2]);
-            CameraPosition = scene.cameraPosition != null && scene.cameraPosition.Length == 3
-                ? new Vector3(scene.cameraPosition[0], scene.cameraPosition[1], scene.cameraPosition[2])
-                : Vector3.zero;
-            CameraOrthographicSize = scene.cameraOrthographicSize;
+            OfficialBattleSceneBindings.CameraBinding camera = OfficialBattleSceneBindings.Camera(gameId);
+            if (camera == null || camera.sceneName != scene.sceneName)
+                throw new InvalidDataException("Official battle scene and camera bindings differ.");
+            CameraPosition = new Vector3(camera.position[0], camera.position[1], camera.position[2]);
+            CameraOrthographicSize = camera.orthographicSize;
             IsDay = isDay ?? scene.defaultTime == 0;
 
             TextAsset geometry = Resources.Load<TextAsset>(scene.geometryResource);
@@ -162,11 +163,12 @@ namespace Zjcs.Presentation.Combat
                     int vertexCount = ReadCount(data, ref offset, "vertex");
                     var vertices = new Vector3[vertexCount];
                     for (int i = 0; i < vertexCount; i++)
+                        // The retained 2D export stores downward Y; the prefab and camera use Unity Y.
                         vertices[i] = new Vector3(ReadSingle(data, ref offset) - RootOffset.x,
-                            ReadSingle(data, ref offset) - RootOffset.y, -RootOffset.z);
+                            -ReadSingle(data, ref offset) - RootOffset.y, metadata.depth - RootOffset.z);
                     var uvs = new Vector2[vertexCount];
                     for (int i = 0; i < vertexCount; i++)
-                        uvs[i] = new Vector2(ReadSingle(data, ref offset), ReadSingle(data, ref offset));
+                        uvs[i] = new Vector2(ReadSingle(data, ref offset), 1f - ReadSingle(data, ref offset));
                     var colors = new Color[vertexCount];
                     for (int i = 0; i < vertexCount; i++)
                         colors[i] = new Color(ReadSingle(data, ref offset), ReadSingle(data, ref offset),
@@ -339,6 +341,7 @@ namespace Zjcs.Presentation.Combat
             public string texture;
             public int layer;
             public int order;
+            public float depth;
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Zjcs.Presentation.Combat
         private readonly Transform damageRoot;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         private readonly Dictionary<int, Transform> attachedTransforms = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, OfficialBattleUnitSorting> attachedSorting =
+            new Dictionary<int, OfficialBattleUnitSorting>();
         private readonly Dictionary<int, AttachedAnimatorView> attachedAnimators =
             new Dictionary<int, AttachedAnimatorView>();
         private readonly Dictionary<int, OfficialBattleUnitWorldHudView> attachedUnitHuds =
@@ -478,6 +480,8 @@ namespace Zjcs.Presentation.Combat
         public void AttachUnitTransform(int unitId, Transform transform)
         {
             if (transform == null) throw new ArgumentNullException(nameof(transform));
+            if (attachedTransforms.TryGetValue(unitId, out Transform current) && current == transform)
+                return;
             if (units.ContainsKey(unitId))
             {
                 RemoveUnit(unitId);
@@ -492,9 +496,14 @@ namespace Zjcs.Presentation.Combat
                 hud?.Dispose();
                 attachedUnitHuds.Remove(unitId);
             }
+            if (attachedSorting.TryGetValue(unitId, out OfficialBattleUnitSorting previousSorting))
+                previousSorting?.Dispose();
+            attachedSorting.Remove(unitId);
             attachedTransforms[unitId] = transform;
             FightBattleUnitState state = FindUnit(latestCheckpoint, unitId);
             if (state == null) return;
+            attachedSorting[unitId] = OfficialBattleSceneBindings.BindModel(transform,
+                OfficialBattleSceneBindings.EntityId(state));
             if (state.Hp <= 0)
             {
                 TryBeginAttachedDeath(state, transform);
@@ -506,6 +515,8 @@ namespace Zjcs.Presentation.Combat
 
         public void DetachUnitTransform(int unitId)
         {
+            if (attachedSorting.TryGetValue(unitId, out OfficialBattleUnitSorting sorting)) sorting?.Dispose();
+            attachedSorting.Remove(unitId);
             attachedTransforms.Remove(unitId);
             motions.Remove(unitId);
             if (attachedAnimators.TryGetValue(unitId, out AttachedAnimatorView oldAnimator))
@@ -1203,6 +1214,8 @@ namespace Zjcs.Presentation.Combat
             units.Clear();
             motions.Clear();
             pendingUnitAnimations.Clear();
+            foreach (OfficialBattleUnitSorting sorting in attachedSorting.Values) sorting?.Dispose();
+            attachedSorting.Clear();
             attachedTransforms.Clear();
             foreach (AttachedAnimatorView view in attachedAnimators.Values)
                 ReleaseAttachedAnimator(view);
@@ -1232,6 +1245,7 @@ namespace Zjcs.Presentation.Combat
                 {
                     var nativeModel = new OfficialBattleNativeModelView(nativeModelLibrary,
                         nativeBinding, root, "BattleUnit_" + state.Id);
+                    OfficialBattleSceneBindings.BindModel(nativeModel.ModelTransform, nativeBinding.monsterId);
                     var nativeView = new UnitView { State = state, NativeModel = nativeModel };
                     PlayAnimation(nativeView, "idle_01", true);
                     nativeView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state,
@@ -1264,6 +1278,7 @@ namespace Zjcs.Presentation.Combat
                 throw new InvalidOperationException("Official battle model scale is invalid: " + key);
             }
             gameObject.transform.localScale = Vector3.one * binding.scale;
+            OfficialBattleSceneBindings.BindModel(gameObject.transform, OfficialBattleSceneBindings.EntityId(state));
             var view = new UnitView { State = state, Skeleton = skeleton, Binding = binding };
             view.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, skeleton.transform);
             units.Add(state.Id, view);

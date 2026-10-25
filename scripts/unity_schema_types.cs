@@ -144,6 +144,8 @@ namespace UnityEngine.Events {
 }
 namespace Cinemachine {
     using UnityEngine;
+    // These fields occur as PPtr references in the official FightCamera configuration.
+    public class CinemachineTargetGroup : MonoBehaviour {}
     public class CinemachineVirtualCameraBase : MonoBehaviour {
         public string[] m_ExcludedPropertiesInInspector; public int[] m_LockStageInInspector;
         public int m_StreamingVersion,m_Priority,m_StandbyUpdate;
@@ -304,3 +306,6 @@ namespace AK.Wwise {
     [Serializable] public class BaseGroupType : BaseType { public int groupIdInternal; public byte[] groupGuidInternal; }
     [Serializable] public class Switch : BaseGroupType { public WwiseSwitchReference WwiseObjectReference; }
 }
+
+// The APK Cinemachine assembly declares this extension in the global namespace.
+public class CinemachineCameraOffset : UnityEngine.MonoBehaviour {}

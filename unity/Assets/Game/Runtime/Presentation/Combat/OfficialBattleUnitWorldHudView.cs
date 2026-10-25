@@ -210,6 +210,16 @@ namespace Zjcs.Presentation.Combat
                 "Official unit bar sprite is missing: " + part.spriteFile);
             var go = new GameObject(part.name, typeof(RectTransform));
             go.transform.SetParent(root.transform, false);
+            OfficialBattleSceneBindings.Unit sourceUnit = OfficialBattleSceneBindings.Find(binding.entityId);
+            if (sourceUnit?.bars != null)
+                foreach (OfficialBattleSceneBindings.RendererBinding bar in sourceUnit.bars)
+                    if (bar.name == part.name)
+                    {
+                        Canvas barCanvas = go.AddComponent<Canvas>();
+                        barCanvas.overrideSorting = true;
+                        barCanvas.sortingOrder = bar.Order;
+                        break;
+                    }
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
