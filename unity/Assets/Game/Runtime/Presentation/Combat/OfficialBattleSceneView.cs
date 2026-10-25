@@ -85,6 +85,24 @@ namespace Zjcs.Presentation.Combat
             public bool DeathFinished;
             public RuntimeAnimatorController OriginalController;
             public AnimatorOverrideController SkillOverrideController;
+            public readonly Dictionary<string, OfficialBattleAnimatorParameterStack<bool>> BoolParameters =
+                new Dictionary<string, OfficialBattleAnimatorParameterStack<bool>>(StringComparer.Ordinal);
+            public readonly Dictionary<string, OfficialBattleAnimatorParameterStack<float>> FloatParameters =
+                new Dictionary<string, OfficialBattleAnimatorParameterStack<float>>(StringComparer.Ordinal);
+            public readonly Dictionary<string, OfficialBattleAnimatorParameterStack<int>> IntParameters =
+                new Dictionary<string, OfficialBattleAnimatorParameterStack<int>>(StringComparer.Ordinal);
+            public readonly List<ActiveAttachedPlayable> ActivePlayables = new List<ActiveAttachedPlayable>();
+        }
+
+        private sealed class ActiveAttachedPlayable
+        {
+            public long Serial;
+            public float Remaining;
+            public readonly List<string> BoolParameters = new List<string>();
+            public readonly List<string> FloatParameters = new List<string>();
+            public readonly List<string> IntParameters = new List<string>();
+            public int LayerIndex = -1;
+            public float PreviousLayerWeight;
         }
 
         public OfficialBattleSceneView(OfficialBattleModelCatalog catalog, Transform root,
@@ -575,6 +593,7 @@ namespace Zjcs.Presentation.Combat
                 else if (view.CurrentAnimation == "run_01" && !IsMotionRunning(entry.Key))
                     PlayAttachedAnimation(view, "idle_01", true);
             }
+            AdvanceAttachedPlayableLifetimes(deltaTime);
             AdvancePendingUnitAnimations(deltaTime);
 
             foreach (int id in completedAttachedDeaths)
@@ -688,6 +707,7 @@ namespace Zjcs.Presentation.Combat
             AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, body);
             if (view == null) return false;
             if (view.Dying) return true;
+            StopAttachedPlayables(view);
             if (!PlayAttachedAnimation(view, "die_01", false)) return false;
             RemovePendingAnimations(state.Id);
             view.Dying = true;
@@ -773,19 +793,22 @@ namespace Zjcs.Presentation.Combat
             while (completed < pendingUnitAnimations.Count
                 && pendingUnitAnimations[completed].Elapsed >= pendingUnitAnimations[completed].Cue.Delay)
             {
-                PlayScheduledAnimation(pendingUnitAnimations[completed].Cue);
+                PendingUnitAnimation pending = pendingUnitAnimations[completed];
+                PlayScheduledAnimation(pending.Cue, pending.Serial,
+                    Mathf.Max(0f, pending.Elapsed - pending.Cue.Delay));
                 completed++;
             }
             if (completed > 0) pendingUnitAnimations.RemoveRange(0, completed);
         }
 
-        private void PlayScheduledAnimation(OfficialBattleAnimationCue cue)
+        private void PlayScheduledAnimation(OfficialBattleAnimationCue cue, long serial,
+            float elapsedSinceScheduled)
         {
             FightBattleUnitState state = FindUnit(latestCheckpoint, cue.UnitId);
             if (state == null || state.Hp <= 0) return;
             if (cue.SkillPlayable != null)
             {
-                PlayScheduledSkillPlayable(cue, state);
+                PlayScheduledSkillPlayable(cue, state, serial, elapsedSinceScheduled);
                 return;
             }
             if (attachedTransforms.TryGetValue(cue.UnitId, out Transform attached) && attached != null)
@@ -800,13 +823,13 @@ namespace Zjcs.Presentation.Combat
         }
 
         private void PlayScheduledSkillPlayable(OfficialBattleAnimationCue eventCue,
-            FightBattleUnitState state)
+            FightBattleUnitState state, long serial, float elapsedSinceScheduled)
         {
             OfficialBattleSkillPlayableCue playable = eventCue.SkillPlayable;
             if (attachedTransforms.TryGetValue(state.Id, out Transform attached) && attached != null)
             {
                 AttachedAnimatorView view = GetOrCreateAttachedAnimator(state, attached);
-                PlayAttachedSkillPlayable(view, playable);
+                PlayAttachedSkillPlayable(view, playable, serial, elapsedSinceScheduled);
                 return;
             }
 
@@ -825,7 +848,7 @@ namespace Zjcs.Presentation.Combat
         }
 
         private void PlayAttachedSkillPlayable(AttachedAnimatorView view,
-            OfficialBattleSkillPlayableCue playable)
+            OfficialBattleSkillPlayableCue playable, long serial, float elapsedSinceScheduled)
         {
             if (view == null || view.Animator == null || playable == null) return;
 
@@ -850,23 +873,153 @@ namespace Zjcs.Presentation.Combat
                 if (!allowed) return;
             }
 
+            var active = new ActiveAttachedPlayable { Serial = serial };
             if (HasAnimatorParameter(animator, playable.my_bool_param,
                     AnimatorControllerParameterType.Bool))
+            {
+                if (playable.end_resume_param)
+                {
+                    if (!view.BoolParameters.TryGetValue(playable.my_bool_param,
+                            out OfficialBattleAnimatorParameterStack<bool> boolStack))
+                    {
+                        boolStack = new OfficialBattleAnimatorParameterStack<bool>(
+                            animator.GetBool(playable.my_bool_param));
+                        view.BoolParameters.Add(playable.my_bool_param, boolStack);
+                    }
+                    boolStack.Push(serial, playable.my_bool_value);
+                    active.BoolParameters.Add(playable.my_bool_param);
+                }
                 animator.SetBool(playable.my_bool_param, playable.my_bool_value);
+            }
             if (HasAnimatorParameter(animator, playable.my_float_param,
                     AnimatorControllerParameterType.Float))
+            {
+                if (playable.end_resume_param)
+                {
+                    if (!view.FloatParameters.TryGetValue(playable.my_float_param,
+                            out OfficialBattleAnimatorParameterStack<float> floatStack))
+                    {
+                        floatStack = new OfficialBattleAnimatorParameterStack<float>(
+                            animator.GetFloat(playable.my_float_param));
+                        view.FloatParameters.Add(playable.my_float_param, floatStack);
+                    }
+                    floatStack.Push(serial, playable.my_float_value);
+                    active.FloatParameters.Add(playable.my_float_param);
+                }
                 animator.SetFloat(playable.my_float_param, playable.my_float_value);
+            }
             if (HasAnimatorParameter(animator, playable.int_param,
                     AnimatorControllerParameterType.Int))
+            {
+                if (playable.end_resume_param)
+                {
+                    if (!view.IntParameters.TryGetValue(playable.int_param,
+                            out OfficialBattleAnimatorParameterStack<int> intStack))
+                    {
+                        intStack = new OfficialBattleAnimatorParameterStack<int>(
+                            animator.GetInteger(playable.int_param));
+                        view.IntParameters.Add(playable.int_param, intStack);
+                    }
+                    intStack.Push(serial, playable.int_value);
+                    active.IntParameters.Add(playable.int_param);
+                }
                 animator.SetInteger(playable.int_param, playable.int_value);
+            }
             if (HasAnimatorParameter(animator, playable.trigger_param,
                     AnimatorControllerParameterType.Trigger))
                 animator.SetTrigger(playable.trigger_param);
             if (!string.IsNullOrEmpty(playable.layer_name))
             {
                 int layer = animator.GetLayerIndex(playable.layer_name);
-                if (layer >= 0) animator.SetLayerWeight(layer, playable.layer_weight);
+                if (layer >= 0)
+                {
+                    if (playable.end_resume_param)
+                    {
+                        active.LayerIndex = layer;
+                        active.PreviousLayerWeight = animator.GetLayerWeight(layer);
+                    }
+                    animator.SetLayerWeight(layer, playable.layer_weight);
+                }
             }
+
+            if (playable.end_resume_param
+                && (active.BoolParameters.Count > 0 || active.FloatParameters.Count > 0
+                    || active.IntParameters.Count > 0 || active.LayerIndex >= 0))
+            {
+                float duration = playable.my_duration;
+                if (duration >= 0f)
+                {
+                    float speed = playable.speed > 0f && !float.IsNaN(playable.speed)
+                        && !float.IsInfinity(playable.speed) ? playable.speed : 1f;
+                    duration /= speed;
+                    active.Remaining = duration - elapsedSinceScheduled;
+                }
+                else
+                {
+                    active.Remaining = -1f;
+                }
+                view.ActivePlayables.Add(active);
+                if (active.Remaining <= 0f) RestoreAttachedPlayable(view, active);
+            }
+        }
+
+        private void AdvanceAttachedPlayableLifetimes(float deltaTime)
+        {
+            foreach (AttachedAnimatorView view in attachedAnimators.Values)
+            {
+                if (view == null || view.Animator == null) continue;
+                for (int index = view.ActivePlayables.Count - 1; index >= 0; index--)
+                {
+                    ActiveAttachedPlayable active = view.ActivePlayables[index];
+                    if (active.Remaining < 0f) continue;
+                    active.Remaining -= deltaTime;
+                    if (active.Remaining <= 0f) RestoreAttachedPlayable(view, active);
+                }
+            }
+        }
+
+        private static void RestoreAttachedPlayable(AttachedAnimatorView view,
+            ActiveAttachedPlayable active)
+        {
+            if (view == null || active == null) return;
+            Animator animator = view.Animator;
+            if (animator != null)
+            {
+                foreach (string name in active.BoolParameters)
+                    if (view.BoolParameters.TryGetValue(name,
+                            out OfficialBattleAnimatorParameterStack<bool> boolStack))
+                    {
+                        boolStack.Remove(active.Serial);
+                        animator.SetBool(name, boolStack.Current);
+                        if (boolStack.Count == 0) view.BoolParameters.Remove(name);
+                    }
+                foreach (string name in active.FloatParameters)
+                    if (view.FloatParameters.TryGetValue(name,
+                            out OfficialBattleAnimatorParameterStack<float> floatStack))
+                    {
+                        floatStack.Remove(active.Serial);
+                        animator.SetFloat(name, floatStack.Current);
+                        if (floatStack.Count == 0) view.FloatParameters.Remove(name);
+                    }
+                foreach (string name in active.IntParameters)
+                    if (view.IntParameters.TryGetValue(name,
+                            out OfficialBattleAnimatorParameterStack<int> intStack))
+                    {
+                        intStack.Remove(active.Serial);
+                        animator.SetInteger(name, intStack.Current);
+                        if (intStack.Count == 0) view.IntParameters.Remove(name);
+                    }
+                if (active.LayerIndex >= 0)
+                    animator.SetLayerWeight(active.LayerIndex, active.PreviousLayerWeight);
+            }
+            view.ActivePlayables.Remove(active);
+        }
+
+        private static void StopAttachedPlayables(AttachedAnimatorView view)
+        {
+            if (view == null) return;
+            while (view.ActivePlayables.Count > 0)
+                RestoreAttachedPlayable(view, view.ActivePlayables[view.ActivePlayables.Count - 1]);
         }
 
         private static bool ApplyOfficialClipOverride(AttachedAnimatorView view,
@@ -918,6 +1071,7 @@ namespace Zjcs.Presentation.Combat
         private static void ReleaseAttachedAnimator(AttachedAnimatorView view)
         {
             if (view == null) return;
+            StopAttachedPlayables(view);
             if (view.Animator != null && view.SkillOverrideController != null
                 && view.Animator.runtimeAnimatorController == view.SkillOverrideController)
                 view.Animator.runtimeAnimatorController = view.OriginalController;

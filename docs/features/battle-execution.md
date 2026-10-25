@@ -102,6 +102,8 @@
 
 ## 完整还原部分
 
+附属 Animator 的 `MyPlayableAnimator.myEndResumeParam` 现按反编译 `AnimationController` 的实例合并列表保存 bool／float／int 参数：恢复时移除自身值并取仍有效的上一值或初始值，层权重恢复其施放前值。仅对启用该标志的参数，有限 `myDuration` 按嵌套 Playable 的有效 `speed` 计时，到期或单位死亡、动画器释放时恢复；负时长保持到单位清理。固定版技能目录的1,191条 Animator cue 当前没有一条启用 `myEndResumeParam`，因此该恢复分支由通用状态栈测试覆盖，但不被现有固定 cue 实际触发。淡入淡出、`MyPlayableOverrideAnimator` 停止时恢复原 clip，以及所属序列的精确中断／停止信号仍待迁移；无技能映射继续保留当前动作。
+
 `FightDamageFormula`、`FightDamageResolver`、`FightDamageSettlement`、`FightSkillState`、`FightTurnQueue`、`FightBattleTargeting`、`FightBattleHitCollector`、`FightBattleHitExecutor`、`FightDamageFalloff` 和 `FightBattleExecutor` 位于 [`Runtime/Official/Combat`](../../unity/Assets/Game/Runtime/Official/Combat/)。它们覆盖公式伤害与治疗、命中结算、技能状态、行动队列、目标选择、命中图收集、部分状态衰减及带回执的分步执行／恢复。
 
 [`FightOfficialCombatCatalog`](../../unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs) 从随工程交付的 Combat JSON 及来源清单装配单位、技能、命中图与状态数据。目录绑定和编辑器规则入口在 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs) 与 [`FightCombatValidation.cs`](../../unity/Assets/Game/Runtime/Official/Combat/Editor/FightCombatValidation.cs)。规则数据位于 [`Assets/Official/Combat`](../../unity/Assets/Official/Combat/)；其来源清单记录原始来源及转换输出。

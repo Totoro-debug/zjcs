@@ -4,7 +4,24 @@ $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
 $sources = Get-ChildItem $combat -Filter '*.cs' -File | Select-Object -ExpandProperty FullName
 $fallback = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationFallback.cs'
 $timeline = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationTimeline.cs'
-Add-Type -Path (@($sources) + $fallback + $timeline)
+$parameterStack = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimatorParameterStack.cs'
+Add-Type -Path (@($sources) + $fallback + $timeline + $parameterStack)
+
+$stack = [Zjcs.Presentation.Combat.OfficialBattleAnimatorParameterStack[bool]]::new($false)
+$stack.Push(10, $true)
+$stack.Push(20, $false)
+if ($stack.Current -ne $false -or -not $stack.Remove(10) -or $stack.Current -ne $false) {
+    throw 'Removing an older Animator Playable changed the newest merged parameter value.'
+}
+if (-not $stack.Remove(20) -or $stack.Current -ne $false -or $stack.Count -ne 0) {
+    throw 'Removing the final Animator Playable did not restore the initial parameter value.'
+}
+$stack.Push(30, $true)
+$stack.Push(40, $false)
+if (-not $stack.Remove(40) -or $stack.Current -ne $true -or
+    -not $stack.Remove(30) -or $stack.Current -ne $false) {
+    throw 'Animator Playable parameters did not resume in stack order.'
+}
 
 $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
 $unit.Id = 4
@@ -91,6 +108,12 @@ $runtimeCatalogPath = Join-Path $root 'unity/Assets/Game/Resources/Combat/skill-
 $runtimeCatalog = Get-Content $runtimeCatalogPath -Raw | ConvertFrom-Json
 if ($runtimeCatalog.manifest -ne '854_156383' -or $runtimeCatalog.skills.Count -ne 1451) {
     throw 'Packaged skill Playable catalog does not match the fixed official manifest.'
+}
+$animatorCues = @($runtimeCatalog.skills | ForEach-Object { $_.playables } | Where-Object { $_.kind -eq 0 })
+if ($animatorCues.Count -ne 1191 -or
+    @($animatorCues | Where-Object { $_.end_resume_param }).Count -ne 0 -or
+    @($animatorCues | Where-Object { $_.my_duration -ne 0 }).Count -ne 16) {
+    throw 'Fixed official Animator Playable lifecycle fields changed unexpectedly.'
 }
 $sourceManifestPath = Join-Path $root 'assets/reference/battle-animation/skill-playables-source-manifest.json'
 $sourceManifest = Get-Content $sourceManifestPath -Raw | ConvertFrom-Json
