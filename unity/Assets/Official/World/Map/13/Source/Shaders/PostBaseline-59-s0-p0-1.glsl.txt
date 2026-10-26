@@ -1,0 +1,83 @@
+#ifdef VERTEX
+#version 300 es
+
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _BlitScaleBias;
+out highp vec2 vs_TEXCOORD0;
+vec2 u_xlat0;
+uvec3 u_xlatu0;
+int int_bitfieldInsert(int base, int insert, int offset, int bits) {
+    uint mask = uint(~(int(~0) << uint(bits)) << uint(offset));
+    return int((uint(base) & ~mask) | ((uint(insert) << uint(offset)) & mask));
+}
+
+void main()
+{
+    u_xlatu0.x =  uint(int(int_bitfieldInsert(0, gl_VertexID, 1 & int(0x1F), 1)));
+    u_xlatu0.z = uint(uint(gl_VertexID) & 2u);
+    u_xlat0.xy = vec2(u_xlatu0.xz);
+    gl_Position.xy = u_xlat0.xy * vec2(2.0, 2.0) + vec2(-1.0, -1.0);
+    vs_TEXCOORD0.xy = u_xlat0.xy * _BlitScaleBias.xy + _BlitScaleBias.zw;
+    gl_Position.zw = vec2(-1.0, 1.0);
+    return;
+}
+
+#endif
+#ifdef FRAGMENT
+#version 300 es
+
+precision highp float;
+precision highp int;
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _ZBufferParams;
+uniform 	vec4 _SourceSize;
+uniform 	vec3 _CoCParams;
+UNITY_LOCATION(0) uniform highp sampler2D _CameraDepthTexture;
+in highp vec2 vs_TEXCOORD0;
+layout(location = 0) out mediump float SV_Target0;
+vec2 u_xlat0;
+uvec4 u_xlatu0;
+float u_xlat1;
+void main()
+{
+    u_xlat0.xy = vs_TEXCOORD0.xy * _SourceSize.xy;
+    u_xlatu0.xy =  uvec2(ivec2(u_xlat0.xy));
+    u_xlatu0.z = uint(uint(0u));
+    u_xlatu0.w = uint(uint(0u));
+    u_xlat0.x = texelFetch(_CameraDepthTexture, ivec2(u_xlatu0.xy), int(u_xlatu0.w)).x;
+    u_xlat0.x = _ZBufferParams.z * u_xlat0.x + _ZBufferParams.w;
+    u_xlat0.x = float(1.0) / u_xlat0.x;
+    u_xlat0.x = u_xlat0.x + (-_CoCParams.x);
+    u_xlat1 = (-_CoCParams.x) + _CoCParams.y;
+    SV_Target0 = u_xlat0.x / u_xlat1;
+    SV_Target0 = clamp(SV_Target0, 0.0, 1.0);
+    return;
+}
+
+#endif

@@ -357,3 +357,10 @@ scripts/prepare_unity_map12.py -text
 scripts/prepare_unity_map12_runtime_data.py -text
 scripts/prepare_unity_map12_coordinates.py -text
 scripts/prepare_unity_mainline_tasks.py -text
+
+# Preserve original native Map13 render pipeline and reproducible converters.
+unity/Assets/Official/World/Map/13/NativePipeline/** -text
+unity/Assets/Official/World/Map/13/NativePipeline.meta -text
+scripts/prepare_unity_map13_pipeline_baseline.py text eol=lf
+scripts/prepare_unity_map13_pipeline_textures.py text eol=lf
+scripts/prepare_unity_map13_native_pipeline.py text eol=lf

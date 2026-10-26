@@ -1,0 +1,128 @@
+#ifdef VERTEX
+#version 300 es
+
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _BlitScaleBias;
+out highp vec2 vs_TEXCOORD0;
+vec2 u_xlat0;
+uvec3 u_xlatu0;
+int int_bitfieldInsert(int base, int insert, int offset, int bits) {
+    uint mask = uint(~(int(~0) << uint(bits)) << uint(offset));
+    return int((uint(base) & ~mask) | ((uint(insert) << uint(offset)) & mask));
+}
+
+void main()
+{
+    u_xlatu0.x =  uint(int(int_bitfieldInsert(0, gl_VertexID, 1 & int(0x1F), 1)));
+    u_xlatu0.z = uint(uint(gl_VertexID) & 2u);
+    u_xlat0.xy = vec2(u_xlatu0.xz);
+    gl_Position.xy = u_xlat0.xy * vec2(2.0, 2.0) + vec2(-1.0, -1.0);
+    vs_TEXCOORD0.xy = u_xlat0.xy * _BlitScaleBias.xy + _BlitScaleBias.zw;
+    gl_Position.zw = vec2(-1.0, 1.0);
+    return;
+}
+
+#endif
+#ifdef FRAGMENT
+#version 300 es
+#ifdef GL_EXT_shader_texture_lod
+#extension GL_EXT_shader_texture_lod : enable
+#endif
+
+precision highp float;
+precision highp int;
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec2 _GlobalMipBias;
+uniform 	vec4 _SourceTexLowMip_TexelSize;
+uniform 	vec4 _Params;
+UNITY_LOCATION(0) uniform mediump sampler2D _BlitTexture;
+UNITY_LOCATION(1) uniform mediump sampler2D _SourceTexLowMip;
+in highp vec2 vs_TEXCOORD0;
+layout(location = 0) out mediump vec4 SV_Target0;
+vec4 u_xlat0;
+mediump vec3 u_xlat16_0;
+vec4 u_xlat1;
+mediump vec2 u_xlat16_1;
+vec2 u_xlat2;
+mediump vec3 u_xlat16_2;
+vec4 u_xlat3;
+mediump vec4 u_xlat16_3;
+vec3 u_xlat4;
+mediump vec3 u_xlat16_4;
+vec3 u_xlat5;
+mediump vec3 u_xlat16_5;
+vec2 u_xlat12;
+vec2 u_xlat14;
+void main()
+{
+    u_xlat0.xy = vs_TEXCOORD0.xy * _SourceTexLowMip_TexelSize.zw + vec2(0.5, 0.5);
+    u_xlat12.xy = fract(u_xlat0.xy);
+    u_xlat0.xy = floor(u_xlat0.xy);
+    u_xlat16_1.xy = u_xlat12.xy * vec2(0.5, 0.5) + vec2(-1.0, -1.0);
+    u_xlat16_1.xy = u_xlat12.xy * u_xlat16_1.xy;
+    u_xlat16_1.xy = u_xlat16_1.xy * u_xlat12.xy + vec2(0.666666687, 0.666666687);
+    u_xlat2.xy = (-u_xlat16_1.xy) + vec2(1.0, 1.0);
+    u_xlat16_3 = (-u_xlat12.xyxy) * vec4(0.5, 0.5, 0.166666672, 0.166666672) + vec4(0.5, 0.5, 0.5, 0.5);
+    u_xlat16_3 = u_xlat12.xyxy * u_xlat16_3 + vec4(0.5, 0.5, -0.5, -0.5);
+    u_xlat16_3 = u_xlat12.xyxy * u_xlat16_3 + vec4(0.166666672, 0.166666672, 0.166666672, 0.166666672);
+    u_xlat12.xy = u_xlat2.xy + (-u_xlat16_3.xy);
+    u_xlat12.xy = (-u_xlat16_3.zw) + u_xlat12.xy;
+    u_xlat2.xy = u_xlat12.xy + u_xlat16_3.xy;
+    u_xlat14.xy = u_xlat16_1.xy + u_xlat16_3.zw;
+    u_xlat4.xy = vec2(1.0) / vec2(u_xlat2.xy);
+    u_xlat3.xy = u_xlat12.xy * u_xlat4.xy + vec2(1.0, 1.0);
+    u_xlat12.xy = vec2(1.0) / vec2(u_xlat14.xy);
+    u_xlat3.zw = u_xlat16_1.xy * u_xlat12.xy + vec2(-1.0, -1.0);
+    u_xlat1 = u_xlat0.xyxy + u_xlat3.zyxy;
+    u_xlat0 = u_xlat0.xyxy + u_xlat3.zwxw;
+    u_xlat0 = u_xlat0 + vec4(-0.5, -0.5, -0.5, -0.5);
+    u_xlat0 = u_xlat0 * _SourceTexLowMip_TexelSize.xyxy;
+    u_xlat0 = min(u_xlat0, vec4(1.0, 1.0, 1.0, 1.0));
+    u_xlat1 = u_xlat1 + vec4(-0.5, -0.5, -0.5, -0.5);
+    u_xlat1 = u_xlat1 * _SourceTexLowMip_TexelSize.xyxy;
+    u_xlat1 = min(u_xlat1, vec4(1.0, 1.0, 1.0, 1.0));
+    u_xlat16_4.xyz = textureLod(_SourceTexLowMip, u_xlat1.zw, 0.0).xyz;
+    u_xlat16_5.xyz = textureLod(_SourceTexLowMip, u_xlat1.xy, 0.0).xyz;
+    u_xlat4.xyz = u_xlat2.xxx * u_xlat16_4.xyz;
+    u_xlat4.xyz = u_xlat14.xxx * u_xlat16_5.xyz + u_xlat4.xyz;
+    u_xlat4.xyz = u_xlat2.yyy * u_xlat4.xyz;
+    u_xlat16_5.xyz = textureLod(_SourceTexLowMip, u_xlat0.zw, 0.0).xyz;
+    u_xlat16_0.xyz = textureLod(_SourceTexLowMip, u_xlat0.xy, 0.0).xyz;
+    u_xlat5.xyz = u_xlat2.xxx * u_xlat16_5.xyz;
+    u_xlat0.xyz = u_xlat14.xxx * u_xlat16_0.xyz + u_xlat5.xyz;
+    u_xlat0.xyz = u_xlat14.yyy * u_xlat0.xyz + u_xlat4.xyz;
+    u_xlat16_2.xyz = texture(_BlitTexture, vs_TEXCOORD0.xy, _GlobalMipBias.x).xyz;
+    u_xlat0.xyz = u_xlat0.xyz + (-u_xlat16_2.xyz);
+    u_xlat0.xyz = _Params.xxx * u_xlat0.xyz + u_xlat16_2.xyz;
+    SV_Target0.xyz = u_xlat0.xyz;
+    SV_Target0.w = 1.0;
+    return;
+}
+
+#endif

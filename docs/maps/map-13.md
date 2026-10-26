@@ -22,7 +22,7 @@
 - 从所选版本的官方 `CustomWater.dll` 反编译并直接迁移 `WaterController`、`PartialSubmersion`、`SeaRendererReplacement`、`FordingSpriteRenderer` 和 `WaterMaskRenderer`。仅增加命名空间，保留原数值、字段、回调与执行顺序；尚未完成场景脚本／贴图绑定。
 - 从原始 GPU 程序机械转换五类水面 shader 的全部 16 个 GLES 变体，保留原算式顺序、材质属性默认值与属性标记、顶点输入／插值数据、pass 标签，以及混合、深度、裁剪和颜色写入状态；原 GLES 文本随来源载荷保留。Windows D3D 的 16 组顶点／片元程序均已在 DX12 Unity 编辑器通过编译检查，尚无原场景中的渲染对照结论。
 - 从 APK 原生 IL2CPP 方法注册与 ARM64 指令恢复 `Light2D` 的四个衰减字段、材质键第 7 位、仅 Freeform 启用的 `USE_RECESSION` 关键字，以及绘制前按原顺序设置的中心／半径／边缘参数。使用本机 Unity 附带的 URP 14.0.11 作为可编译依赖基线；它不是完整游戏渲染管线的反编译替身。嵌入包保留运行时、编辑器、shader、纹理、许可证和元数据，只去除文档／示例／包测试。
-- 原版形状灯光 shader 的全部 32 个 GLES 变体已机械转换并通过 Windows D3D 顶点／片元编译，含原 `USE_RECESSION` 算式；矩阵按原列向量语义恢复。两套 `Renderer2DData` 和 `UniversalRenderPipelineAsset` 已按 APK 字段顺序严格解码，保留默认 Renderer 索引 0 和完整原参数；尚未将这些配置绑定为原生管线资产，也未切换项目渲染设置。
+- 原版形状灯光 shader 的全部 32 个 GLES 变体已机械转换并通过 Windows D3D 顶点／片元编译，含原 `USE_RECESSION` 算式；矩阵按原列向量语义恢复。两套 `Renderer2DData` 和 `UniversalRenderPipelineAsset` 已按 APK 字段顺序严格解码，保留默认 Renderer 索引 0 和完整原参数；已继续恢复原生管线资产和依赖；项目级切换及完整场景渲染仍待接通。
 - 从当前官方代码迁移 11 个地形／分区数据类型，保留字段、枚举、坐标公式和分块顺序。`MyTile.GetTileData` 的反编译虚调用按程序集 IL 修复为原 `base.GetTileData`；只适配命名空间、C# 构造器和错误日志，去掉未使用的网络序列化属性。
 - 原生地形依赖闭包 1,759 份资产已导入 Windows Unity，包含 200 个区块、768 个 Tile、764 个原生 Sprite 与 26 张贴图。保留原 Sprite 网格／UV／轴心和 Tile 引用；从原 ASTC 数据按原线性／sRGB 设置解码，关闭额外有损压缩、4096 图集降采样与透明颜色扩展，保持过滤／重复／各向异性／mip 参数。使用 Unity 实际内置 Tile 脚本 13312，未另造 Tile 替身。
 - `Resources/Map13/Native/native-terrain-catalog` 已显式绑定 200 个原区块路径及 `partition_data`。DX12 编辑器逐项验证资产输入哈希、GUID、原生引用、Sprite 网格、贴图尺寸和采样，以及全部 201 条目录加载；转换输入元数据和 Unity 规范化后的元数据分别记哈希。尚未实例化正式地形场景。
@@ -42,6 +42,11 @@
 
 工程静态检查及 Unity `2022.3.57f1c2` 的 DX12 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 已通过。全局校验中的地图资产检查针对 Map10，不代表 Map13 已运行或画面正确。
 
+- 从 APK 原 `PlayerSettings` 核实线性色彩空间。对照同版本引擎 HLSL，29 个管线 shader 的原属性、SubShader 标签／LOD 和全部原 pass 状态一致，25 个有 GLES 执行程序的 shader 共 434 个顶点／片元程序与原 APK 规范化文本逐字节匹配，因此直接复用已证明一致的引擎源码及其 Windows API 分支。另 4 个原包未保留 GLES 执行程序的库 shader 仅核对可用原属性／状态，不能声称已证明执行等价。
+- 景深与最终输出保留原 Android 使用的 SubShader；从已验证源码中移除原设备未采用的高规格分支，保留其余源码，避免 Windows 自动切换 Gather／FSR 算法。所选分支的 106 个 GLES 程序再次匹配原包；完整原生管线引用的 454 个 Windows D3D 顶点／片元程序编译通过，含 4 个原包剥离执行程序的库 shader 的 Windows 默认程序。
+- 两套原 `Renderer2DData`、`UniversalRenderPipelineAsset` 和 `PostProcessData` 已转换为 Unity 原生资产；显式绑定 81 个依赖并逐项检查 225 个原字段、脚本 GUID／fileID、名称和类型。保留原默认 Renderer 0、完整灯光／深度／后处理配置、原自定义形状灯光 shader，以及全部 47 张原 Alpha8／RGB24／RGBA32 纹理的原始字节、颜色空间、mip 和采样参数。目录为 `Resources/Map13/Native/native-render-pipeline-catalog`，以原 `globalgamemanagers.assets:pathID` 标识显式加载。
+- 主工程 DX12 导入、原生引用、全部管线 shader 和全局 `ProjectTools.Validate` 通过。同源隔离 Play Mode 在原 Linear 设置下，逐字节回读全部 47 张管线纹理；通过原生管线的默认与简化 Renderer 各渲染一帧测试相机，分别检查 3,136 个内部像素的颜色和行序，并查看实际输出截图。检查使用原生管线的独立 GPU 夹具，尚未激活正式地图管线、完整场景、鼠标交互或存档；测试结束恢复原工程图形设置。
+
 ## 自定义实现
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行同样缺少服务端逻辑；已核对其客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和原 `StageDatas`。用户已明确允许以下单机规则，规则模块已实现：每次触发沿原配置顺序前进一段，到末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则本次不移动；水位按原 `StageDatas` 顺序更新，不发奖励。
@@ -50,7 +55,7 @@
 
 ## 尚未实现
 
-- 地形主体 prefab、原材质、水面／地形／熔岩 shader 和昼夜组件已绑定或迁移；仍须恢复原渲染管线资产、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
+- 地形主体 prefab、原材质、水面／地形／熔岩 shader、昼夜组件和原生渲染管线资产已绑定或迁移；仍须接通地图运行时管线选择、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -71,3 +76,6 @@
 - [地形／熔岩 shader 转换](../../scripts/prepare_unity_map13_scene_shaders.py)及[来源](../../assets/reference/official-map/map13-scene-shaders-source-manifest.json)记录各原 pass 程序；[原生主体绑定工具](../../scripts/prepare_unity_map13_native_scene.py)、[来源](../../assets/reference/official-map/map13-native-scene-source-manifest.json)及[Unity 绑定清单](../../assets/reference/official-map/map13-native-scene-binding-source-manifest.json)记录主体闭包、完整 ASTC mip、原生 Texture2D 序列化、GUID 与实际导入哈希，[编辑器工具](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativeSceneTools.cs)验证绑定。新增地形主体和贴图未进入完整素材快照。
 
 - [Renderer2D shader 转换](../../scripts/prepare_unity_map13_pipeline_shaders.py)、[来源](../../assets/reference/official-map/map13-pipeline-shaders-source-manifest.json)、[逐 pass 编译检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineShaderTools.cs)及[GPU Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineAcceptance.cs)记录程序与实际验证范围；[原层配置恢复](../../scripts/prepare_unity_map13_layers.py)、[来源](../../assets/reference/official-map/map13-layers-source-manifest.json)和[绑定检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LayerTools.cs)记录全部原层位和排序 ID。新增程序未进入完整素材快照。
+
+- [引擎 shader 原执行程序提取与一致性证明](../../scripts/prepare_unity_map13_pipeline_baseline.py)、[提取来源](../../assets/reference/official-map/map13-pipeline-baseline-source-manifest.json)及[执行／状态绑定来源](../../assets/reference/official-map/map13-pipeline-baseline-binding-source-manifest.json)记录原 APK 程序、引擎源码、434 个阶段比对及原状态；[原生纹理提取](../../scripts/prepare_unity_map13_pipeline_textures.py)和[纹理来源](../../assets/reference/official-map/map13-pipeline-textures-source-manifest.json)记录原始像素与 GPU 格式。资产位于 `Assets/Official/World/Map/13/NativePipeline/`。
+- [原生管线生成](../../scripts/prepare_unity_map13_native_pipeline.py)、[来源](../../assets/reference/official-map/map13-native-pipeline-source-manifest.json)及[Unity 导入绑定来源](../../assets/reference/official-map/map13-native-pipeline-binding-source-manifest.json)记录全部配置、显式引用、模板、分支选择和导入哈希；[导入检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13RenderPipelineTools.cs)、[原程序比对](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineBaselineTools.cs)、[状态提取](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineStateTools.cs)、[Windows／分支编译检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativePipelineShaderTools.cs)和[原生 GPU 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativePipelineAcceptance.cs)对应上述验证范围。新增管线素材与原始程序未进入完整快照。

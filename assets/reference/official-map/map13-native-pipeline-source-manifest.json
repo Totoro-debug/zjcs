@@ -1,0 +1,312 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "outputs": [
+    {
+      "path_id": 22207,
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Renderer2D.asset",
+      "sha256": "6e8ba0f1ce2e4ed6d669f4b5b07430e2f71e6865f1965ea3d21f0d48e98bbc82",
+      "meta_sha256": "84416916a1feb3e699621856dad42e48a832e7f37c6d18d1153c301dfe7ddad4"
+    },
+    {
+      "path_id": 22208,
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Simple2DRenderer.asset",
+      "sha256": "6473f802e20ef09f09b3526e3de623b22118823ff40ff0a2cddb9f43d8f6c975",
+      "meta_sha256": "dcd1ddbe40ca1a92cc7b38b2245de833c6ad0b663b4073ab6d07dd7020d523dd"
+    },
+    {
+      "path_id": 22209,
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset",
+      "sha256": "990c2eca4474f1ce840c32bdc733223fec3228c18c220a276e494a863d20e4e3",
+      "meta_sha256": "51769c1cdf693bd3897d9afea99d7c20f8450cd64942b5e27a0d0a2e9b7c3dde"
+    },
+    {
+      "path_id": 22211,
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/PostProcessData.asset",
+      "sha256": "bc79b6a407e4db1ea26f9e75fc3873b0db511c99140d52e45ed457638a6254db",
+      "meta_sha256": "0e310f4a4baa305d5d8dc43d44bd4af2d027a6ee7ffe7861f8ebf80023724585"
+    }
+  ],
+  "configuration": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-render-pipeline.json",
+    "sha256": "d61fd8547f47bb89e545824cd65b96f8d0ba59834f2359751b25315050cd0d76"
+  },
+  "shader_proof": {
+    "path": "assets/reference/official-map/map13-pipeline-baseline-binding-source-manifest.json",
+    "sha256": "36fe68a0ddf32c3b2474818dd99dc74aaaffdc74d1eaf2c423caee571a57474c"
+  },
+  "texture_source": {
+    "path": "assets/reference/official-map/map13-pipeline-textures-source-manifest.json",
+    "sha256": "a3b4d3c6963934ae40221fbed49b993711cabba54a6471602ceefeb56b681fa5"
+  },
+  "serialization_templates": {
+    "Renderer2DData": {
+      "type": "Renderer2DData",
+      "path": ".tools/map13-native-cache-871_156598/native-pipeline-templates/Renderer2DData.asset",
+      "sha256": "ba04e48fc0fb554c1ac79cd5ac663dffb8cd8898b0f897da083e12b14d313aaf",
+      "script_guid": "11145981673336645838492a2d98e247",
+      "script_file_id": 11500000
+    },
+    "UniversalRenderPipelineAsset": {
+      "type": "UniversalRenderPipelineAsset",
+      "path": ".tools/map13-native-cache-871_156598/native-pipeline-templates/UniversalRenderPipelineAsset.asset",
+      "sha256": "5d3cf9e25a91e329b3a3ee9c3895f6c630cf49e696db7156f4d2685651d706bd",
+      "script_guid": "bf2edee5c58d82540a51f03df9d42094",
+      "script_file_id": 11500000
+    },
+    "PostProcessData": {
+      "type": "PostProcessData",
+      "path": ".tools/map13-native-cache-871_156598/native-pipeline-templates/PostProcessData.asset",
+      "sha256": "7031af01b18d01eaaa4c8b04908028fd92fd3b43122c6b0c9853151dce0504a0",
+      "script_guid": "572910c10080c0945a0ef731ccedc739",
+      "script_file_id": 11500000
+    }
+  },
+  "engine_shaders": [
+    {
+      "path_id": 51,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/StopNaN.shader",
+      "sha256": "a75d879192529b740e2cbe9399c4ed1e049b1b1a88d9d8300a0896046f85749d",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/StopNaN.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 61,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/SubpixelMorphologicalAntialiasing.shader",
+      "sha256": "375f245bd343736897014f5da727e5a201d4acffb35f1f6da237c6e95144a866",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/SubpixelMorphologicalAntialiasing.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 59,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/GaussianDepthOfField.shader",
+      "sha256": "513ccc2d619e0502ffe2d7f1b8a2f547985b8a1503380ba287fbbf594b95415c",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/GaussianDepthOfField.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 54,
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Pipeline/OriginalBokehDepthOfField.shader",
+      "sha256": "5f279391de23c6db845ab3c5b18f83a46210580bd21267f9efbc688f0bada480",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/BokehDepthOfField.shader",
+      "original_subshader_index": 1,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 53,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/CameraMotionBlur.shader",
+      "sha256": "cdeeb0fa44d76d783df854f35c7812fe67a3efda62edce5b10a3dae0fe0da12b",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/CameraMotionBlur.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 68,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/PaniniProjection.shader",
+      "sha256": "1183e236b0a58dd0dd217826119466eafe10609a9da69272dda2f3d62c23be49",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/PaniniProjection.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 62,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderLdr.shader",
+      "sha256": "2dffad1cd43fbd903fa1bf6722124e3f848edb8236af5747a050eb56d143420c",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderLdr.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 81,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderHdr.shader",
+      "sha256": "490010388e9ddf4ae80520a1ea9c8f9cf01467e7d5efdebed2761c5f05f14d0a",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderHdr.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 60,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Bloom.shader",
+      "sha256": "d03921c41befca1f98b904c3ec2585fa10226aa6965831bc17b4a048c3161d43",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Bloom.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 52,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/TemporalAA.shader",
+      "sha256": "abea5138079861414497b28f4490616b3ef31e171a128db8ebfc4e3c830e2e5c",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/TemporalAA.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 80,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/ScalingSetup.shader",
+      "sha256": "ee3adb8ac4a63ea09b846df52b5bd9fa26429e4c54cee7f54d8c16420436fadb",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/ScalingSetup.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 79,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/UberPost.shader",
+      "sha256": "483cf46eedd1f3226fd5ad43bd4c51aa7f8ffe3858803483cbc6f2de8c4b418b",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/UberPost.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 70,
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Pipeline/OriginalFinalPost.shader",
+      "sha256": "9b0479ec4fbcedee0dcc713794a5acab5a3ac1ff961c1653eaa9f3bb7f555a45",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/FinalPost.shader",
+      "original_subshader_index": 1,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 69,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/BlitHDROverlay.shader",
+      "sha256": "54a35f1ba15f29cf5ce3d393c432e6e84e7bc3395a08f7803f7e9ed60d634689",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/BlitHDROverlay.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": false
+    },
+    {
+      "path_id": 58,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/HDRDebugView.shader",
+      "sha256": "223732224ee90ec7e26fc8a1761a3cbaf6acb260a7740ae2f9c048a727e06d02",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/HDRDebugView.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": false
+    },
+    {
+      "path_id": 63,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LensFlareDataDriven.shader",
+      "sha256": "40886feace7696e81237c96738f3e290847aeccbc8320c41ef264e9425747715",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LensFlareDataDriven.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": false
+    },
+    {
+      "path_id": 57,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/EdgeAdaptiveSpatialUpsampling.shader",
+      "sha256": "39dcddf530f643634de08c692ed020e245d23b835e2b4cf696b033bc0ef1b5be",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/EdgeAdaptiveSpatialUpsampling.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": false
+    },
+    {
+      "path_id": 65,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Shape-Volumetric.shader",
+      "sha256": "8a89e9b1a7ed44c4eede445b40e7b69bc96a0a47f68d931d94dc5b6fa320d7f0",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Shape-Volumetric.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 77,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point.shader",
+      "sha256": "55aa11148efed9770fe2723c87123d3d01594f3595f683d5fc4387561a584e18",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 71,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point-Volumetric.shader",
+      "sha256": "00ad27c7ad029ab5f85259d670b560e1e359e726fcab5d4ce44611334268e55e",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point-Volumetric.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 66,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlit.shader",
+      "sha256": "00f324fc5b358d6d172bf31d919eabce575e2dffe08cced1e53d5a50ad57640d",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlit.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 74,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlitColorAndDepth.shader",
+      "sha256": "98ec3a4073d017c3b653e95f2327a90c8d8655ca4ced66d943e53901b00e79de",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlitColorAndDepth.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 50,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/Sampling.shader",
+      "sha256": "9c2790b927dbc9a27795580cb0d8d3a5608bf0b2771ca609ec4d30fe81aac0c3",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/Sampling.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 72,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Projected.shader",
+      "sha256": "df5d28596446dedf6e3fa45f7101cb83fd27e02227453603169531194896c24b",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Projected.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 56,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Shadow-Sprite.shader",
+      "sha256": "90b4f27bfa139cd7552ae69c398621e862200e129667a23125a77db3ccaaa25d",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Shadow-Sprite.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 76,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Sprite.shader",
+      "sha256": "dbb864a55f2ce4eaa640e2ca0040d8e796a03f6ca3948bf0330567df08830201",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Sprite.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 64,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Geometry.shader",
+      "sha256": "881d24d9f9c47f3e9a8f27690cefda849c186d4409419ed1e912c32520404ec1",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Geometry.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 78,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader",
+      "sha256": "04a9964d0260d1f175c19afec1fe3d7a625cc31d710f6707d93ef81c083fdbe4",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    },
+    {
+      "path_id": 73,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/DebugReplacement.shader",
+      "sha256": "b9509c00cf949c892eba9aafd2b60d5b5962908c0c59669a2dd7e865d7349a6c",
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/DebugReplacement.shader",
+      "original_subshader_index": 0,
+      "executable_equivalent": true
+    }
+  ],
+  "bindings": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-pipeline-bindings.json",
+    "sha256": "4a12b31f658a5e58a0d0ce83718f32e29159c769bc750ed2a56631446fe008ed"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_native_pipeline.py",
+    "sha256": "4b296cb8ae9b66ff831b3cf7d47dd77c35dc5e17d73a800cb7c50f2519d03cd4"
+  },
+  "operation": "Restore both original Renderer2DData objects, original pipeline/default renderer selection and original PostProcessData. Replace every original object pointer with an explicit verified engine shader, original custom shape-light shader, raw native texture or original pipeline object. Preserve every original runtime field; new baseline/editor-only fields retain the actual Unity template defaults. Produce exhaustive field and 81-object binding records for editor validation.",
+  "limitations": [
+    "Project graphics/color-space activation, native import, GPU rendering and full world scene validation remain required. Four platform-stripped library shaders use the same engine version's native Windows source; no APK GLES executable equivalence is asserted for those four."
+  ]
+}

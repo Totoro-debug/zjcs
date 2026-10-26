@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "cases": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-pipeline-baseline-cases.json",
+    "sha256": "af086e7a76795122d5b00eacaae89ad9d48295ec9b9567c0ef06ce958e3e0750"
+  },
+  "color_space": {
+    "value": 1,
+    "source": {
+      "bundle": "assets/bin/Data/data.unity3d",
+      "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+      "path_id": "1",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_entry": "assets/bin/Data/data.unity3d",
+      "raw_size": 3554552,
+      "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f"
+    },
+    "object_sha256": "1c3d95ae3af48f0285e1465049096db966a1361e5ed4ac291071ddc1b3ec4a21"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_pipeline_baseline.py",
+    "sha256": "9b347c2be9bf551076b269e11011f489b317efecee9deb873f15990684f92ecb"
+  },
+  "operation": "Select original APK post-process/HDR shader objects and every executable original subshader/pass/keyword case; preserve original GLES programs and normalized per-stage hashes. Identify matching installed URP 14.0.11 source by its original shader name. The Unity compiler must prove each executable stage matches before source reuse.",
+  "limitations": [
+    "This extraction is not an equivalence result. Platform-stripped shaders contain no executable APK GLES stages and cannot be marked equivalent by this comparison."
+  ]
+}

@@ -1,0 +1,80 @@
+#ifdef VERTEX
+#version 300 es
+
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _BlitScaleBias;
+uniform 	vec4 _BlitScaleBiasRt;
+out highp vec2 vs_TEXCOORD0;
+vec4 u_xlat0;
+int u_xlati0;
+uvec2 u_xlatu0;
+vec4 u_xlat1;
+int u_xlati4;
+void main()
+{
+    u_xlati0 = int(uint(uint(gl_VertexID) & 1u));
+    u_xlatu0.y = uint(uint(gl_VertexID) >> (1u & uint(0x1F)));
+    u_xlati4 = (-u_xlati0) + (-int(u_xlatu0.y));
+    u_xlati0 = u_xlati0 + int(u_xlatu0.y);
+    u_xlatu0.x = uint(uint(u_xlati0) & 1u);
+    u_xlat1.xw = vec2(u_xlatu0.yx);
+    vs_TEXCOORD0.xy = u_xlat1.xw * _BlitScaleBias.xy + _BlitScaleBias.zw;
+    u_xlati0 = u_xlati4 + 1;
+    u_xlatu0.x = uint(uint(u_xlati0) & 1u);
+    u_xlat1.y = float(u_xlatu0.x);
+    u_xlat0.xy = u_xlat1.xy * _BlitScaleBiasRt.xy + _BlitScaleBiasRt.zw;
+    u_xlat0.z = float(-1.0);
+    u_xlat0.w = float(1.0);
+    gl_Position = u_xlat0 * vec4(2.0, -2.0, 1.0, 1.0) + vec4(-1.0, 1.0, 0.0, 0.0);
+    return;
+}
+
+#endif
+#ifdef FRAGMENT
+#version 300 es
+#ifdef GL_EXT_shader_texture_lod
+#extension GL_EXT_shader_texture_lod : enable
+#endif
+
+precision highp float;
+precision highp int;
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	float _BlitMipLevel;
+UNITY_LOCATION(0) uniform mediump sampler2D _BlitTexture;
+in highp vec2 vs_TEXCOORD0;
+layout(location = 0) out highp vec4 SV_Target0;
+mediump vec3 u_xlat16_0;
+void main()
+{
+    u_xlat16_0.xyz = textureLod(_BlitTexture, vs_TEXCOORD0.xy, _BlitMipLevel).xyz;
+    SV_Target0 = vec4(dot(u_xlat16_0.xyz, vec3(0.212672904, 0.715152204, 0.0721750036)));
+    return;
+}
+
+#endif

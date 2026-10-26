@@ -1,0 +1,199 @@
+#ifdef VERTEX
+#version 300 es
+
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _BlitScaleBias;
+out highp vec2 vs_TEXCOORD0;
+vec2 u_xlat0;
+uvec3 u_xlatu0;
+int int_bitfieldInsert(int base, int insert, int offset, int bits) {
+    uint mask = uint(~(int(~0) << uint(bits)) << uint(offset));
+    return int((uint(base) & ~mask) | ((uint(insert) << uint(offset)) & mask));
+}
+
+void main()
+{
+    u_xlatu0.x =  uint(int(int_bitfieldInsert(0, gl_VertexID, 1 & int(0x1F), 1)));
+    u_xlatu0.z = uint(uint(gl_VertexID) & 2u);
+    u_xlat0.xy = vec2(u_xlatu0.xz);
+    gl_Position.xy = u_xlat0.xy * vec2(2.0, 2.0) + vec2(-1.0, -1.0);
+    vs_TEXCOORD0.xy = u_xlat0.xy * _BlitScaleBias.xy + _BlitScaleBias.zw;
+    gl_Position.zw = vec2(-1.0, 1.0);
+    return;
+}
+
+#endif
+#ifdef FRAGMENT
+#version 300 es
+#ifdef GL_EXT_shader_texture_lod
+#extension GL_EXT_shader_texture_lod : enable
+#endif
+
+precision highp float;
+precision highp int;
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec2 _GlobalMipBias;
+uniform 	vec4 _Lut_Params;
+uniform 	vec4 _UserLut_Params;
+uniform 	vec4 _Bloom_Params;
+uniform 	float _Bloom_RGBM;
+uniform 	vec4 _LensDirt_Params;
+uniform 	float _LensDirt_Intensity;
+uniform 	mediump vec4 _Vignette_Params1;
+uniform 	vec4 _Vignette_Params2;
+UNITY_LOCATION(0) uniform mediump sampler2D _BlitTexture;
+UNITY_LOCATION(1) uniform mediump sampler2D _Bloom_Texture;
+UNITY_LOCATION(2) uniform mediump sampler2D _LensDirt_Texture;
+UNITY_LOCATION(3) uniform mediump sampler2D _InternalLut;
+UNITY_LOCATION(4) uniform mediump sampler2D _UserLut;
+in highp vec2 vs_TEXCOORD0;
+layout(location = 0) out mediump vec4 SV_Target0;
+vec3 u_xlat0;
+mediump vec3 u_xlat16_0;
+bvec3 u_xlatb0;
+vec4 u_xlat1;
+mediump vec4 u_xlat16_1;
+bvec3 u_xlatb1;
+vec3 u_xlat2;
+mediump vec3 u_xlat16_2;
+vec3 u_xlat3;
+mediump vec3 u_xlat16_3;
+vec3 u_xlat4;
+mediump vec3 u_xlat16_4;
+vec2 u_xlat5;
+mediump vec3 u_xlat16_6;
+vec3 u_xlat7;
+mediump vec3 u_xlat16_7;
+float u_xlat21;
+bool u_xlatb21;
+void main()
+{
+    u_xlat16_0.xyz = texture(_BlitTexture, vs_TEXCOORD0.xy, _GlobalMipBias.x).xyz;
+    u_xlat16_1 = texture(_Bloom_Texture, vs_TEXCOORD0.xy, _GlobalMipBias.x);
+    u_xlatb21 = 0.0<_Bloom_RGBM;
+    if(u_xlatb21){
+        u_xlat16_2.xyz = u_xlat16_1.www * u_xlat16_1.xyz;
+        u_xlat3.xyz = u_xlat16_2.xyz * vec3(8.0, 8.0, 8.0);
+        u_xlat16_3.xyz = u_xlat3.xyz;
+    } else {
+        u_xlat16_3.xyz = u_xlat16_1.xyz;
+    }
+    u_xlat1.xyz = u_xlat16_3.xyz * _Bloom_Params.xxx;
+    u_xlat0.xyz = u_xlat1.xyz * _Bloom_Params.yzw + u_xlat16_0.xyz;
+    u_xlat4.xy = vs_TEXCOORD0.xy * _LensDirt_Params.xy + _LensDirt_Params.zw;
+    u_xlat16_4.xyz = texture(_LensDirt_Texture, u_xlat4.xy, _GlobalMipBias.x).xyz;
+    u_xlat4.xyz = u_xlat16_4.xyz * vec3(_LensDirt_Intensity);
+    u_xlat16_2.xyz = u_xlat4.xyz * u_xlat1.xyz + u_xlat0.xyz;
+    u_xlatb0.x = 0.0<_Vignette_Params2.z;
+    if(u_xlatb0.x){
+        u_xlat0.xy = vs_TEXCOORD0.xy + (-_Vignette_Params2.xy);
+        u_xlat0.yz = abs(u_xlat0.xy) * _Vignette_Params2.zz;
+        u_xlat0.x = u_xlat0.y * _Vignette_Params1.w;
+        u_xlat0.x = dot(u_xlat0.xz, u_xlat0.xz);
+        u_xlat0.x = (-u_xlat0.x) + 1.0;
+        u_xlat0.x = max(u_xlat0.x, 0.0);
+        u_xlat0.x = log2(u_xlat0.x);
+        u_xlat0.x = u_xlat0.x * _Vignette_Params2.w;
+        u_xlat0.x = exp2(u_xlat0.x);
+        u_xlat7.xyz = (-_Vignette_Params1.xyz) + vec3(1.0, 1.0, 1.0);
+        u_xlat0.xyz = u_xlat0.xxx * u_xlat7.xyz + _Vignette_Params1.xyz;
+        u_xlat2.xyz = u_xlat0.xyz * u_xlat16_2.xyz;
+        u_xlat16_2.xyz = u_xlat2.xyz;
+    }
+    u_xlat16_2.xyz = u_xlat16_2.xyz * _Lut_Params.www;
+    u_xlat16_2.xyz = clamp(u_xlat16_2.xyz, 0.0, 1.0);
+    u_xlatb0.x = 0.0<_UserLut_Params.w;
+    if(u_xlatb0.x){
+        u_xlatb0.xyz = greaterThanEqual(vec4(0.00313080009, 0.00313080009, 0.00313080009, 0.0), u_xlat16_2.xyzx).xyz;
+        u_xlat16_3.xyz = u_xlat16_2.xyz * vec3(12.9232101, 12.9232101, 12.9232101);
+        u_xlat1.xyz = log2(u_xlat16_2.xyz);
+        u_xlat1.xyz = u_xlat1.xyz * vec3(0.416666657, 0.416666657, 0.416666657);
+        u_xlat1.xyz = exp2(u_xlat1.xyz);
+        u_xlat1.xyz = u_xlat1.xyz * vec3(1.05499995, 1.05499995, 1.05499995) + vec3(-0.0549999997, -0.0549999997, -0.0549999997);
+        u_xlat0.x = (u_xlatb0.x) ? u_xlat16_3.x : u_xlat1.x;
+        u_xlat0.y = (u_xlatb0.y) ? u_xlat16_3.y : u_xlat1.y;
+        u_xlat0.z = (u_xlatb0.z) ? u_xlat16_3.z : u_xlat1.z;
+        u_xlat1.xyz = u_xlat0.zxy * _UserLut_Params.zzz;
+        u_xlat21 = floor(u_xlat1.x);
+        u_xlat1.xw = _UserLut_Params.xy * vec2(0.5, 0.5);
+        u_xlat1.yz = u_xlat1.yz * _UserLut_Params.xy + u_xlat1.xw;
+        u_xlat1.x = u_xlat21 * _UserLut_Params.y + u_xlat1.y;
+        u_xlat16_4.xyz = textureLod(_UserLut, u_xlat1.xz, 0.0).xyz;
+        u_xlat5.x = _UserLut_Params.y;
+        u_xlat5.y = 0.0;
+        u_xlat1.xy = u_xlat1.xz + u_xlat5.xy;
+        u_xlat16_1.xyz = textureLod(_UserLut, u_xlat1.xy, 0.0).xyz;
+        u_xlat21 = u_xlat0.z * _UserLut_Params.z + (-u_xlat21);
+        u_xlat1.xyz = (-u_xlat16_4.xyz) + u_xlat16_1.xyz;
+        u_xlat1.xyz = vec3(u_xlat21) * u_xlat1.xyz + u_xlat16_4.xyz;
+        u_xlat1.xyz = (-u_xlat0.xyz) + u_xlat1.xyz;
+        u_xlat0.xyz = _UserLut_Params.www * u_xlat1.xyz + u_xlat0.xyz;
+        u_xlat16_3.xyz = u_xlat0.xyz * vec3(0.0773993805, 0.0773993805, 0.0773993805);
+        u_xlat16_6.xyz = u_xlat0.xyz + vec3(0.0549999997, 0.0549999997, 0.0549999997);
+        u_xlat16_6.xyz = u_xlat16_6.xyz * vec3(0.947867334, 0.947867334, 0.947867334);
+        u_xlat1.xyz = log2(abs(u_xlat16_6.xyz));
+        u_xlat1.xyz = u_xlat1.xyz * vec3(2.4000001, 2.4000001, 2.4000001);
+        u_xlat1.xyz = exp2(u_xlat1.xyz);
+        u_xlatb0.xyz = greaterThanEqual(vec4(0.0404499993, 0.0404499993, 0.0404499993, 0.0), u_xlat0.xyzx).xyz;
+        u_xlat16_2.x = (u_xlatb0.x) ? u_xlat16_3.x : u_xlat1.x;
+        u_xlat16_2.y = (u_xlatb0.y) ? u_xlat16_3.y : u_xlat1.y;
+        u_xlat16_2.z = (u_xlatb0.z) ? u_xlat16_3.z : u_xlat1.z;
+    }
+    u_xlat0.xyz = u_xlat16_2.zxy * _Lut_Params.zzz;
+    u_xlat0.x = floor(u_xlat0.x);
+    u_xlat1.xy = _Lut_Params.xy * vec2(0.5, 0.5);
+    u_xlat1.yz = u_xlat0.yz * _Lut_Params.xy + u_xlat1.xy;
+    u_xlat1.x = u_xlat0.x * _Lut_Params.y + u_xlat1.y;
+    u_xlat16_7.xyz = textureLod(_InternalLut, u_xlat1.xz, 0.0).xyz;
+    u_xlat4.x = _Lut_Params.y;
+    u_xlat4.y = 0.0;
+    u_xlat1.xy = u_xlat1.xz + u_xlat4.xy;
+    u_xlat16_1.xyz = textureLod(_InternalLut, u_xlat1.xy, 0.0).xyz;
+    u_xlat0.x = u_xlat16_2.z * _Lut_Params.z + (-u_xlat0.x);
+    u_xlat1.xyz = (-u_xlat16_7.xyz) + u_xlat16_1.xyz;
+    u_xlat0.xyz = u_xlat0.xxx * u_xlat1.xyz + u_xlat16_7.xyz;
+    u_xlatb1.xyz = greaterThanEqual(vec4(0.00313080009, 0.00313080009, 0.00313080009, 0.0), u_xlat0.xyzx).xyz;
+    u_xlat16_2.xyz = u_xlat0.xyz * vec3(12.9232101, 12.9232101, 12.9232101);
+    u_xlat0.xyz = log2(abs(u_xlat0.xyz));
+    u_xlat0.xyz = u_xlat0.xyz * vec3(0.416666657, 0.416666657, 0.416666657);
+    u_xlat0.xyz = exp2(u_xlat0.xyz);
+    u_xlat0.xyz = u_xlat0.xyz * vec3(1.05499995, 1.05499995, 1.05499995) + vec3(-0.0549999997, -0.0549999997, -0.0549999997);
+    {
+        vec3 hlslcc_movcTemp = u_xlat0;
+        hlslcc_movcTemp.x = (u_xlatb1.x) ? u_xlat16_2.x : u_xlat0.x;
+        hlslcc_movcTemp.y = (u_xlatb1.y) ? u_xlat16_2.y : u_xlat0.y;
+        hlslcc_movcTemp.z = (u_xlatb1.z) ? u_xlat16_2.z : u_xlat0.z;
+        u_xlat0 = hlslcc_movcTemp;
+    }
+    SV_Target0.xyz = u_xlat0.xyz;
+    SV_Target0.w = 1.0;
+    return;
+}
+
+#endif
