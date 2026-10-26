@@ -232,3 +232,12 @@ scripts/restore_battle_report_scroll_sync.py text eol=lf
 assets/reference/battle-hud/report-scroll-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs.meta text eol=lf
+# Map13 source receipts and their generated payloads retain reproducible bytes.
+scripts/prepare_unity_map13_sources.py text eol=lf
+scripts/prepare_unity_map13_water.py text eol=lf
+scripts/test_map13_water.ps1 text eol=lf
+assets/reference/official-map/map13-*-manifest.json text eol=lf
+unity/Assets/Official/World/Map/13.meta text eol=lf
+unity/Assets/Official/World/Map/13/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/Map13WaterDefinition.cs* text eol=lf
+unity/Assets/Game/Runtime/Offline/World/OfflineMap13WaterSession.cs* text eol=lf

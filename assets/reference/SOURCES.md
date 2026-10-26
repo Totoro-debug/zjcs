@@ -1423,6 +1423,8 @@ read_official_native.py 沿固定 v31 metadata 的 image／type／method token �
 
 ## 泽之国原版场景、界面与小地图
 
+当前 Unity 来源使用 `871_156598`，由 `scripts/prepare_unity_map13_sources.py` 核验所选官方程序集、APK／云端文件及对象哈希后，解码 106 地区、2,690 放置实体、163 模板／动作、93 张表、88 份客户端剧情图、对应服务端配置及原中文文本。原组件和执行项保留序列化顺序。输出与代码、schema 来源见 [map13-source-manifest.json](official-map/map13-source-manifest.json)，载荷为 `unity/Assets/Official/World/Map/13/Source/`。`prepare_unity_map13_water.py` 将五终端、126 个相关实体和 10 个浮台投影到 `Resources/Map13/water-rules.json`，原代码、配置、单机确认及 C# 适配哈希见 [map13-water-source-manifest.json](official-map/map13-water-source-manifest.json)。水路规则测试、工程静态检查和 Unity DX12 导入／编译已通过；尚无 Map13 正式运行时加载、原界面／画面或 Windows Player 验证，不代表整图完成。新增素材尚未进入完整快照。以下历史 `854_156383` 来源独立保留。
+
 固定 APK／匹配原版 CDN 清单 `854_156383`；`prepare_map13_rendering.py` 从 `MapGround_13_bare`、原水面控制器及材质程序转换地形、岸线遮罩、水桥和熔岩，保留原导航、放置及17个骨骼实例，去除对应重复静态网格。`prepare_map13_dialogs.py` 接入8块挑战碑文及海之宫遗迹／源水大社／黄泉阁的原文案、背景、奖励配置；`prepare_map13_minimap_ui.py` 转换 `MiniMap_13`、原全屏地图控件、102项标记配置、资源点板、玩家图标动画、原逐格迷雾、区域说明与边界 prefab。输入来源、对象、处理及输出哈希分别见 `official-map/materials-13-source-manifest.json`、`dialogs-13-source-manifest.json`、`minimap-13-source-manifest.json`；运行目录分别为 `assets/official/regions/13.*`、`map13-rendering.json`、`map13-dialogs.json`、`map13-minimap.json` 及清单所列贴图。无自绘替代。
 
 `prepare_map13_lighting.py` 从固定 APK／校验 CDN 转换原 173 个 `Light2D`、106 个区域昼夜灯及 46 个 `MapLight`，按原 `MapEnvEffect` 状态和 `MapEnvData.FadeTime` 控制运行时；Water2 接收原排序层的场景灯光。运行数据为 `assets/official/map13-lighting.json` 及其原型衰减／Cookie 纹理，输入对象、原排序层、配置、输出哈希与阴影状态见 `official-map/lighting-13-source-manifest.json`。全图所有 `Light2D.shadow_enabled` 均为关闭，且没有 `ShadowCaster2D`；没有为原图增加投影阴影。

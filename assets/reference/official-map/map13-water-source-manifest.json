@@ -1,0 +1,68 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map13-source-manifest.json",
+      "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+    }
+  ],
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldConveyanceComponent.cs",
+      "sha256": "d551f6d32e90550d40db59ecaf318b0580358ad56f90d236acfb275b60b47e63"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultEntityFireTriggerComponentImplement.cs",
+      "sha256": "cdbc30e5f5e24da51050130b8bbfb68b81ba808369d839cfac3eb8f19952bc63"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultElevatorStateUpdateComponent.cs",
+      "sha256": "75e821f4191a3791a654ff6d7bde61ab770956ea7d6be1bbc55ed3f3962de42a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageConUncoveredEntityComponent.cs",
+      "sha256": "a3738dfb63758343cd7aa14eea8f11d57299d9be1713982bfc32ee34d1f9cb17"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultOverrideBodyGroundTypeComponent.cs",
+      "sha256": "f24262e00b6dc9f835f4c2a2c84380891f740d2ae7fbfae9f8946c20afef368a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPuzzleTerminalDataSwitchTheRoad.cs",
+      "sha256": "c95e7140ea85e13ca75d4a253dbfeff0b4b2238699118cd470193ae5b1888a8e"
+    }
+  ],
+  "offline_decisions": {
+    "manual_conveyance": "User confirmed: advance one original OffsetPath segment per trigger; reverse at the final endpoint; carry original passenger offsets; blocked route leaves the platform unmoved.",
+    "water_level": "User confirmed: apply original StageDatas in serialized order without rewards.",
+    "reset": "Restore only original NeedResetLoEntityIds state and position.",
+    "automatic": "Consume the original configured item and open ExtendRoadLoEntityIds; rewards require separate original claim."
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/water-rules.json",
+      "sha256": "b60f61fc92ea7159038cdec3927f1447868edfb6da4a3832667489695bd53c80"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13WaterDefinition.cs",
+      "sha256": "446fbd3ba96ce0b2d4467e8c6e5e67c23e9df75d4e541f2e9317b34aa14b497a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineMap13WaterSession.cs",
+      "sha256": "91caa8532babe82365981771e0e95ee865638dc661666f37e2aa99c99d9b9e83"
+    }
+  ],
+  "counts": {
+    "rules": 126,
+    "platforms": 10,
+    "terminals": 5
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_water.py",
+    "sha256": "4a9ced15bb9cd677e38ded13f8e47bb831ba3298e7c97ec5d1ab764beeec0ed9"
+  }
+}
