@@ -19,8 +19,10 @@
 - 五组水路共 126 个相关实体、10 个浮台的原交互范围、刚体、地面覆盖、状态、状态更新顺序、触发关系与路径已接入独立 C# 规则模块。保留 5328 配置中重复的 5324 更新及 `UseLoEntDefaultState` 语义。
 - 原生场景的 104 份来源文件及完整 CAB 依赖已核验；恢复 4,314 个组件的序列化描述，严格消费全部字段，并逐字节核对转换前后 23,818 个对象数据。涵盖 200 份地形分块、630 个原生文字组件、173 个自定义灯光、265 个浸没组件及 46 个骨骼实例。APK 内置资源整体保留，不改写其内容。
 - 导出工具不支持 `SerializeReference`，已核对本闭包唯一的 `StateGameObjectConfig` 类型，为转换输入补充等价结构描述；保留原引用 ID、类型、字段和配置顺序，并与原解码值全量比较。重导出的分块和区域标签引用已恢复；这只证明转换输入和中间 prefab 数据，不代表 Windows 场景已可用。
-- 从所选版本的官方 `CustomWater.dll` 反编译并直接迁移 `WaterController`、`PartialSubmersion`、`SeaRendererReplacement`、`FordingSpriteRenderer`。仅增加命名空间，保留原数值、字段、回调与执行顺序；尚未完成场景脚本／贴图绑定。
+- 从所选版本的官方 `CustomWater.dll` 反编译并直接迁移 `WaterController`、`PartialSubmersion`、`SeaRendererReplacement`、`FordingSpriteRenderer` 和 `WaterMaskRenderer`。仅增加命名空间，保留原数值、字段、回调与执行顺序；尚未完成场景脚本／贴图绑定。
 - 从原始 GPU 程序机械转换五类水面 shader 的全部 16 个 GLES 变体，保留原算式顺序、材质属性默认值与属性标记、顶点输入／插值数据、pass 标签，以及混合、深度、裁剪和颜色写入状态；原 GLES 文本随来源载荷保留。Windows D3D 的 16 组顶点／片元程序均已在 DX12 Unity 编辑器通过编译检查，尚无原场景中的渲染对照结论。
+- 从 APK 原生 IL2CPP 方法注册与 ARM64 指令恢复 `Light2D` 的四个衰减字段、材质键第 7 位、仅 Freeform 启用的 `USE_RECESSION` 关键字，以及绘制前按原顺序设置的中心／半径／边缘参数。使用本机 Unity 附带的 URP 14.0.11 作为可编译依赖基线；它不是完整游戏渲染管线的反编译替身。嵌入包保留运行时、编辑器、shader、纹理、许可证和元数据，只去除文档／示例／包测试。
+- 原版形状灯光 shader 的全部 32 个 GLES 变体已机械转换并通过 Windows D3D 顶点／片元编译，含原 `USE_RECESSION` 算式；矩阵按原列向量语义恢复。两套 `Renderer2DData` 和 `UniversalRenderPipelineAsset` 已按 APK 字段顺序严格解码，保留默认 Renderer 索引 0 和完整原参数；尚未将这些配置绑定为原生管线资产，也未切换项目渲染设置。
 - 从当前官方代码迁移 11 个地形／分区数据类型，保留字段、枚举、坐标公式和分块顺序。`MyTile.GetTileData` 的反编译虚调用按程序集 IL 修复为原 `base.GetTileData`；只适配命名空间、C# 构造器和错误日志，去掉未使用的网络序列化属性。
 - 原生地形依赖闭包 1,759 份资产已导入 Windows Unity，包含 200 个区块、768 个 Tile、764 个原生 Sprite 与 26 张贴图。保留原 Sprite 网格／UV／轴心和 Tile 引用；从原 ASTC 数据按原线性／sRGB 设置解码，关闭额外有损压缩、4096 图集降采样与透明颜色扩展，保持过滤／重复／各向异性／mip 参数。使用 Unity 实际内置 Tile 脚本 13312，未另造 Tile 替身。
 - `Resources/Map13/Native/native-terrain-catalog` 已显式绑定 200 个原区块路径及 `partition_data`。DX12 编辑器逐项验证资产输入哈希、GUID、原生引用、Sprite 网格、贴图尺寸和采样，以及全部 201 条目录加载；转换输入元数据和 Unity 规范化后的元数据分别记哈希。尚未实例化正式地形场景。
@@ -39,7 +41,7 @@
 
 ## 尚未实现
 
-- 恢复原生地形与分区加载、昼夜灯光、水面／浅水、粒子、骨骼、导演和音频，并完成 Windows 资源绑定。组件字段及区域标签托管引用的中间导出已恢复，五类水面 shader 译文已编译；导出材质尚未全部绑定译文，其他 shader 仍待转换，`WaterMaskRenderer` 还依赖原渲染管线。其他原生组件运行代码和显式绑定尚未全部接入，不能将中间导出当作最终资产。
+- 恢复原生地形与分区加载、昼夜灯光、水面／浅水、粒子、骨骼、导演和音频，并完成 Windows 资源绑定。组件字段及区域标签托管引用的中间导出已恢复，五类水面 shader 译文已编译；导出材质尚未全部绑定译文，其他 shader 仍待转换，`WaterMaskRenderer` 已迁移并编译，其原管线资产与遮罩层绑定仍待恢复。其他原生组件运行代码和显式绑定尚未全部接入，不能将中间导出当作最终资产。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -53,3 +55,5 @@
 - [水面 shader 转换工具](../../scripts/prepare_unity_map13_water_shaders.py)、[来源清单](../../assets/reference/official-map/map13-water-shaders-source-manifest.json)和[逐变体编译检查](../../unity/Assets/Game/Editor/OfficialMap13WaterShaderTools.cs)；原 GLES 程序位于 `Source/Shaders/`，译文位于 `Runtime/Official/World/NativeWater/Shaders/`。这些源程序和译文均尚未进入完整素材快照。
 - [地形代码迁移工具](../../scripts/prepare_unity_map13_terrain_components.py)及[代码来源清单](../../assets/reference/official-map/map13-native-terrain-code-source-manifest.json)记录原程序集、反编译文件、修复 IL 和输出；代码入口为 `Runtime/Official/World/NativeTerrain/`。[原生地形转换工具](../../scripts/prepare_unity_map13_native_terrain.py)、[素材来源清单](../../assets/reference/official-map/map13-native-terrain-source-manifest.json)、[Unity 绑定清单](../../assets/reference/official-map/map13-native-terrain-binding-source-manifest.json)记录 ASTC 输入／解码像素、ARM 解码器、素材及导入元数据哈希；载荷位于 `Assets/Official/World/Map/13/NativeTerrain/`，[导入与绑定检查](../../unity/Assets/Game/Editor/OfficialMap13TerrainTools.cs)生成本地目录。该批素材未进入完整快照。
 - [分区执行迁移工具](../../scripts/prepare_unity_map13_partition.py)及[代码来源清单](../../assets/reference/official-map/map13-partition-code-source-manifest.json)记录所选程序集、原控制器／状态机、适配和输出哈希。本地边界位于 `Runtime/Offline/World/NativePartition/`，目录资源句柄与实例绑定位于 `Runtime/Offline/World/NativeMap13/`；[Play Mode 分区检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PartitionAcceptance.cs)只覆盖上述原区块生命周期。
+
+- [渲染依赖恢复工具](../../scripts/prepare_unity_map13_render_pipeline.py)及[来源清单](../../assets/reference/official-map/map13-render-pipeline-source-manifest.json)记录 Unity URP 基线每文件输入／输出、APK 原生方法地址／元数据索引／哈希及适配；[原灯光 shader 转换](../../scripts/prepare_unity_map13_light_shader.py)、[来源清单](../../assets/reference/official-map/map13-light-shader-source-manifest.json)及[逐变体检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LightShaderTools.cs)记录全部 32 个程序；[管线配置解码](../../scripts/prepare_unity_map13_pipeline_config.py)与[配置来源清单](../../assets/reference/official-map/map13-render-config-source-manifest.json)记录原资产及 schema 参考程序集。新增灯光源程序与配置未进入完整素材快照。

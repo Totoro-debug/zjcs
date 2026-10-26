@@ -9,7 +9,7 @@ from prepare_unity_map13_sources import encode, sha, source_path, write
 
 DESTINATION = ROOT / "unity/Assets/Game/Runtime/Official/World/NativeWater"
 RECEIPT = ROOT / "assets/reference/official-map/map13-native-water-code-source-manifest.json"
-COMPONENTS = ("WaterController", "PartialSubmersion", "SeaRendererReplacement", "FordingSpriteRenderer")
+COMPONENTS = ("WaterController", "PartialSubmersion", "SeaRendererReplacement", "FordingSpriteRenderer", "WaterMaskRenderer")
 
 
 def import_meta(path, importer, folder=False):
@@ -53,7 +53,7 @@ def build():
         outputs.append(dict(path=source_path(path), sha256=sha(imported), original_class=name))
     asmdef = DESTINATION / "Zjcs.Official.World.NativeWater.asmdef"
     write(asmdef, encode(dict(name="Zjcs.Official.World.NativeWater", rootNamespace="Zjcs.Official.World.NativeWater",
-        references=[], includePlatforms=[], excludePlatforms=[], allowUnsafeCode=False,
+        references=["Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"], includePlatforms=[], excludePlatforms=[], allowUnsafeCode=False,
         overrideReferences=False, precompiledReferences=[], autoReferenced=True,
         defineConstraints=[], versionDefines=[], noEngineReferences=False)))
     import_meta(asmdef, "AssemblyDefinitionImporter")
@@ -65,8 +65,7 @@ def build():
         inputs=inputs, outputs=outputs + [dict(path=source_path(asmdef), sha256=sha(asmdef.read_bytes()))],
         generator=dict(path=source_path(Path(__file__)), sha256=sha(Path(__file__).read_bytes())),
         adaptation="Only enclose original decompiled source in the Zjcs.Official.World.NativeWater namespace; no numerical, state, callback or execution-order changes.",
-        limitations=["WaterMaskRenderer requires original rendering pipeline/shader restoration and is not included yet.",
-                      "Native prefab script and texture bindings, complete scene rendering and Play Mode verification remain required."])))
+        limitations=["Native prefab script and texture bindings, original render pipeline assets, complete scene rendering and Play Mode verification remain required."])))
     print("Imported official Map13 native water components:", ", ".join(COMPONENTS))
 
 

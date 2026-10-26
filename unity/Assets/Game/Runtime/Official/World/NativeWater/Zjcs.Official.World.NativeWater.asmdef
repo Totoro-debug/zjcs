@@ -1,7 +1,10 @@
 {
   "name": "Zjcs.Official.World.NativeWater",
   "rootNamespace": "Zjcs.Official.World.NativeWater",
-  "references": [],
+  "references": [
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

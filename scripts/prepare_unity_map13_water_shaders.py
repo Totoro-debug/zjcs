@@ -20,6 +20,9 @@ FAMILIES = {"Universal Render Pipeline/2D/Sprite-Lit-CustomWater2": "WaterSurfac
 
 
 def expressions(code):
+    # GLES stores matrix columns; HLSL indexes rows before columns.
+    code = re.sub(r"hlslcc_mtx4x4unity_MatrixV\[(\d)\]",
+                  lambda m: "float4(" + ",".join("UNITY_MATRIX_V[" + str(i) + "][" + m[1] + "]" for i in range(4)) + ")", code)
     code = code.replace("inversesqrt(", "rsqrt(")
     code = re.sub(r"\bin_TEXCOORD(\d)\b", r"input.uv\1", code)
     code = re.sub(r"\bin_NORMAL0\b", "input.normal", code)

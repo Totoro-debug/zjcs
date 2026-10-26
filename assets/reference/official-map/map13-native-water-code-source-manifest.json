@@ -40,6 +40,10 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/FordingSpriteRenderer.cs",
       "sha256": "d38c26b3c6d3b0448b5c53613bed35b258a05f7bf78b887ac281e04a1ef4bc37"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/WaterMaskRenderer.cs",
+      "sha256": "613eb43cc74ff98a1f3edf2753538fd5cfdfaeff9fc5e7d43483e740e860545c"
     }
   ],
   "outputs": [
@@ -64,17 +68,21 @@
       "original_class": "FordingSpriteRenderer"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterMaskRenderer.cs",
+      "sha256": "4af4a1d1c963e8c8b181fb9e839edc18b75a88ce63493f502e50e295ffda73ff",
+      "original_class": "WaterMaskRenderer"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Zjcs.Official.World.NativeWater.asmdef",
-      "sha256": "f9c1a9663d70b8b4f4d2fdfa177caee0065fe1884b9fc89d7ed437dd6df2b62c"
+      "sha256": "0889aca133334529fac06f0f2db52e6a6c18a9e54026e322f35d70bc3fb37121"
     }
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_water_components.py",
-    "sha256": "f56b97a958abc460b58a2a44f39f396f7bd34cacbf8f6e1fec303f3fa95c0141"
+    "sha256": "d19ae8741fdf0f4236aef83286bb9b25ba34e98c07b3d226300e2e17328fe4ac"
   },
   "adaptation": "Only enclose original decompiled source in the Zjcs.Official.World.NativeWater namespace; no numerical, state, callback or execution-order changes.",
   "limitations": [
-    "WaterMaskRenderer requires original rendering pipeline/shader restoration and is not included yet.",
-    "Native prefab script and texture bindings, complete scene rendering and Play Mode verification remain required."
+    "Native prefab script and texture bindings, original render pipeline assets, complete scene rendering and Play Mode verification remain required."
   ]
 }
