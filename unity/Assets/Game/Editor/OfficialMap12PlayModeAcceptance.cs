@@ -22,12 +22,19 @@ namespace Zjcs.Editor
         public static void RunUiImported() => RunCore(true, false);
         public static void RunRuntime()
         {
+            SessionState.SetBool(Key + ".runtimeTerminals", false);
             SessionState.SetBool(Key + ".runtimeDialogue", false);
             RunCore(false, false, 12, true);
         }
         public static void RunRuntimeDialogue()
         {
+            SessionState.SetBool(Key + ".runtimeTerminals", false);
             SessionState.SetBool(Key + ".runtimeDialogue", true);
+            RunCore(false, false, 12, true);
+        }
+        public static void RunRuntimeTerminals()
+        {
+            SessionState.SetBool(Key + ".runtimeTerminals", true);
             RunCore(false, false, 12, true);
         }
         public static void RunDialogueInput() => RunCore(false, false, 12, false, true);

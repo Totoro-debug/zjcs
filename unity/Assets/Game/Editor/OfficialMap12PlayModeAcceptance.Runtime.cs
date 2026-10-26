@@ -49,6 +49,8 @@ namespace Zjcs.Editor
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
             save.Player.Wardrobe.Profession = 1;
             save.Player.UnlockedMapClassIds.AddRange(new[] { 11, 12 });
+            if (UnityEditor.SessionState.GetBool(Key + ".runtimeTerminals", false))
+                OfflineInventoryOperations.Grant(save.Player, 325, 6, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
                 .Where(value => value.classId <= 1040).Select(value => value.classId));
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
@@ -65,6 +67,14 @@ namespace Zjcs.Editor
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
+
+            if (UnityEditor.SessionState.GetBool(Key + ".runtimeTerminals", false))
+            {
+                IEnumerator terminals = VerifyTerminalSteps(root, slot, canvas.transform, output);
+                while (terminals.MoveNext()) yield return terminals.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
 
             if (!UnityEditor.SessionState.GetBool(Key + ".runtimeDialogue", false))
             {
