@@ -101278,6 +101278,77 @@
     },
     {
       "fields": {
+        "mStateSwitcher": {
+          "mOwner": "/MiniMapBattlefield_1",
+          "mStateConfigs": [
+            {
+              "rid": 2954668778032726031
+            }
+          ]
+        },
+        "m_Enabled": 1,
+        "m_GameObject": "/MiniMapBattlefield_1",
+        "m_Name": "",
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "GameObjects": [
+                        "/MiniMapBattlefield_1/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 0
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapBattlefield_1/IconON"
+                      ],
+                      "State": {
+                        "mValue": 1
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapBattlefield_1/IconON"
+                      ],
+                      "State": {
+                        "mValue": 2
+                      }
+                    }
+                  ]
+                }
+              },
+              "rid": 2954668778032726031,
+              "type": {
+                "asm": "Framework",
+                "class": "StateGameObjectConfig",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "panel": "MiniMapBattlefield_1",
+      "path": "/MiniMapBattlefield_1",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_minimap_minimapmark.bundle",
+        "bundle_hash": "7f59201b9a32ea9350f775442b67729c",
+        "bundle_sha256": "1eb990ad60372d34b0d2892aabb7d20f40d7539e206ff94eed99b33c266b51f8",
+        "bundle_size": 1417913,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "2059823671208273017",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
+      },
+      "type": "MiniMapWorldStageSwitcherSupport"
+    },
+    {
+      "fields": {
         "mActiveSwitcher": {
           "mOwner": "/MiniMapCave",
           "mStateConfigs": [
@@ -101338,6 +101409,85 @@
         "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
       },
       "type": "MiniMapActiveSwitcherSupport"
+    },
+    {
+      "fields": {
+        "mStateSwitcher": {
+          "mOwner": "/MiniMapDailyDungeon_1",
+          "mStateConfigs": [
+            {
+              "rid": 2954668758536552849
+            }
+          ]
+        },
+        "m_Enabled": 1,
+        "m_GameObject": "/MiniMapDailyDungeon_1",
+        "m_Name": "",
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "GameObjects": [
+                        "/MiniMapDailyDungeon_1/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 0
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapDailyDungeon_1/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 1
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapDailyDungeon_1/IconON"
+                      ],
+                      "State": {
+                        "mValue": 2
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapDailyDungeon_1/IconON"
+                      ],
+                      "State": {
+                        "mValue": 3
+                      }
+                    }
+                  ]
+                }
+              },
+              "rid": 2954668758536552849,
+              "type": {
+                "asm": "Framework",
+                "class": "StateGameObjectConfig",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "panel": "MiniMapDailyDungeon_1",
+      "path": "/MiniMapDailyDungeon_1",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_minimap_minimapmark.bundle",
+        "bundle_hash": "7f59201b9a32ea9350f775442b67729c",
+        "bundle_sha256": "1eb990ad60372d34b0d2892aabb7d20f40d7539e206ff94eed99b33c266b51f8",
+        "bundle_size": 1417913,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-3123552534735740372",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
+      },
+      "type": "MiniMapWorldStageSwitcherSupport"
     },
     {
       "fields": {
@@ -107483,6 +107633,77 @@
     },
     {
       "fields": {
+        "mStateSwitcher": {
+          "mOwner": "/MiniMapGodMonster_1",
+          "mStateConfigs": [
+            {
+              "rid": 2954668778032726031
+            }
+          ]
+        },
+        "m_Enabled": 1,
+        "m_GameObject": "/MiniMapGodMonster_1",
+        "m_Name": "",
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "GameObjects": [
+                        "/MiniMapGodMonster_1/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 0
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapGodMonster_1/IconON"
+                      ],
+                      "State": {
+                        "mValue": 1
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapGodMonster_1/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 2
+                      }
+                    }
+                  ]
+                }
+              },
+              "rid": 2954668778032726031,
+              "type": {
+                "asm": "Framework",
+                "class": "StateGameObjectConfig",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "panel": "MiniMapGodMonster_1",
+      "path": "/MiniMapGodMonster_1",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_minimap_minimapmark.bundle",
+        "bundle_hash": "7f59201b9a32ea9350f775442b67729c",
+        "bundle_sha256": "1eb990ad60372d34b0d2892aabb7d20f40d7539e206ff94eed99b33c266b51f8",
+        "bundle_size": 1417913,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "7798936638650012615",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
+      },
+      "type": "MiniMapWorldStageSwitcherSupport"
+    },
+    {
+      "fields": {
         "mActiveSwitcher": {
           "mOwner": "/MiniMapGoddess",
           "mStateConfigs": [
@@ -108509,6 +108730,77 @@
     },
     {
       "fields": {
+        "mStateSwitcher": {
+          "mOwner": "/MiniMapStele",
+          "mStateConfigs": [
+            {
+              "rid": 2954668758536552849
+            }
+          ]
+        },
+        "m_Enabled": 1,
+        "m_GameObject": "/MiniMapStele",
+        "m_Name": "",
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "GameObjects": [
+                        "/MiniMapStele/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 0
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapStele/IconON"
+                      ],
+                      "State": {
+                        "mValue": 1
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapStele/IconON"
+                      ],
+                      "State": {
+                        "mValue": 2
+                      }
+                    }
+                  ]
+                }
+              },
+              "rid": 2954668758536552849,
+              "type": {
+                "asm": "Framework",
+                "class": "StateGameObjectConfig",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "panel": "MiniMapStele",
+      "path": "/MiniMapStele",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_minimap_minimapmark.bundle",
+        "bundle_hash": "7f59201b9a32ea9350f775442b67729c",
+        "bundle_sha256": "1eb990ad60372d34b0d2892aabb7d20f40d7539e206ff94eed99b33c266b51f8",
+        "bundle_size": 1417913,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "-7140281917414719855",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
+      },
+      "type": "MiniMapWorldStageSwitcherSupport"
+    },
+    {
+      "fields": {
         "mDefaultZoomThreshold": 0.10000000149011612,
         "mMyContent": "/MiniMapStele/IconOFF/MinimapSceneCommonTipdotLinker/Content",
         "m_Enabled": 1,
@@ -108593,6 +108885,69 @@
         "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
       },
       "type": "MapEntityTipDotNodeLinker"
+    },
+    {
+      "fields": {
+        "mStateSwitcher": {
+          "mOwner": "/MiniMapStorystela",
+          "mStateConfigs": [
+            {
+              "rid": 2954668778032726031
+            }
+          ]
+        },
+        "m_Enabled": 1,
+        "m_GameObject": "/MiniMapStorystela",
+        "m_Name": "",
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "GameObjects": [
+                        "/MiniMapStorystela/IconOFF"
+                      ],
+                      "State": {
+                        "mValue": 0
+                      }
+                    },
+                    {
+                      "GameObjects": [
+                        "/MiniMapStorystela/IconON"
+                      ],
+                      "State": {
+                        "mValue": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "rid": 2954668778032726031,
+              "type": {
+                "asm": "Framework",
+                "class": "StateGameObjectConfig",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "panel": "MiniMapStorystela",
+      "path": "/MiniMapStorystela",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_map_minimap_minimapmark.bundle",
+        "bundle_hash": "7f59201b9a32ea9350f775442b67729c",
+        "bundle_sha256": "1eb990ad60372d34b0d2892aabb7d20f40d7539e206ff94eed99b33c266b51f8",
+        "bundle_size": 1417913,
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "path_id": "7781473908504640939",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7f59201b9a32ea9350f775442b67729c.bundle"
+      },
+      "type": "MiniMapWorldStageSwitcherSupport"
     },
     {
       "fields": {

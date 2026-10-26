@@ -54,6 +54,7 @@ namespace Zjcs.Presentation.World
                 foreach (var support in mark.Supports)
                 {
                     if (support.type == "MiniMapActiveSwitcherSupport") ApplyMiniMapMarkState(mark, support.fields, completed ? 1 : 0);
+                    else if (support.type == "MiniMapWorldStageSwitcherSupport") ApplyMiniMapMarkState(mark, support.fields, state);
                     else if (support.type == "MiniMapActiveByNPCVisibleSupporter") ApplyMiniMapMarkState(mark, support.fields, active ? 1 : 0);
                     else if (support.type == "MapEntityTipDotNodeLinker") ApplyMiniMapMarkState(mark, support.fields, 0);
                 }

@@ -5,7 +5,7 @@
   "output": {
     "panels": 37,
     "path": "map11-ui.json",
-    "sha256": "756228335995609f6d56241544cf9633d21651c7f1d707b7c3887b95efaf16c5",
+    "sha256": "f30126a7a7a619aaec8f5a12da04c083e0d71bcb47c5c24e0b1b5fc01b3be5ae",
     "sprites": 325
   },
   "source": {
@@ -12999,6 +12999,10 @@
         "sha256": "0ca3df46471c8e04002ba66e3d78256c6e51b799d49d08396134e7fd34db479b"
       },
       {
+        "path": ".tools/source-packages/official-code/client-source/MiniMapWorldStageSwitcherSupport.cs",
+        "sha256": "b19aca41bad420cf02107f656b7e06433ddafc63e4cdda02a8623b72921a75f9"
+      },
+      {
         "path": ".tools/source-packages/official-code/client-source/MinimapMarkKeepSizeObjSupport.cs",
         "sha256": "656c8cab39dc3c8a7988a9ab925a6ca3451ee9fd926de331b24c18491295c0fa"
       },
@@ -22254,6 +22258,242 @@
         {
           "flags": 0,
           "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "references",
+          "type": "ManagedReferencesRegistry"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "version",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "RefIds",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "ReferencedObject"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "type",
+          "type": "ReferencedManagedType"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "class",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "ns",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 6,
+          "name": "asm",
+          "type": "string"
+        },
+        {
+          "flags": 16384,
+          "level": 7,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 8,
+          "name": "data",
+          "type": "char"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "data",
+          "type": "ReferencedObjectData"
+        }
+      ],
+      "Assembly-CSharp:MiniMapWorldStageSwitcherSupport": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "MiniMapWorldStageSwitcherSupport"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mStateSwitcher",
+          "type": "StateSwitcher`1"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mStateConfigs",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 3,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "data",
+          "type": "managedReference"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "rid",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "mOwner",
+          "type": "PPtr<$GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
           "name": "m_PathID",
           "type": "SInt64"
         },

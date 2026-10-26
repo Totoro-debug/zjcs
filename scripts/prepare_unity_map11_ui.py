@@ -656,7 +656,7 @@ def build():
                                                                            "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview", "ItemAwardIcon",
                                                                            "TalkDialog", "OptionTalkDialogPanel", "TalkDialogCharacterController", "TalkDialogCharacter", "TalkDialogContentSwitch", "TMP_TypeWriterEffect",
                                                                            "MiniMapMaskedUILoader", "MiniMapMaskedUI", "AreaInfoUI", "MiniMapCameraController", "MiniMapFullScreenPanel", "MiniMapSwitchTabItem",
-                                                                           "MiniMapMarkUIFilter", "MiniMapMarkFilterItem", "MiniMapMarkManager", "MiniMapEntityMark", "MinimapMarkKeepSizeObjSupport",
+                                                                           "MiniMapMarkUIFilter", "MiniMapMarkFilterItem", "MiniMapMarkManager", "MiniMapEntityMark", "MiniMapWorldStageSwitcherSupport", "MinimapMarkKeepSizeObjSupport",
                                                                            "HeadCharacterPortrait", "HeadCharacterPortraitBuilder", "PlayerExpSlider", "PlayerIconMeHpSlider",
                                                                            "TaskListItem", "TaskGoal", "TaskListRecommendCombatRatingItem", "UIColorByLevel", "CombatRatingConfig",
                                                                            "FunctionEntrysPanel", "FunctionEntryDialog", "FunctionEntryBigBtnItem", "FirstPayIconEntry", "TimeInfoUI", "PlayerDefaultItemUIHandler", "MePlayerItemUI")]]},

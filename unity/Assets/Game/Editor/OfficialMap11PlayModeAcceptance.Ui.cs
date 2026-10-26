@@ -98,6 +98,40 @@ namespace Zjcs.Editor
             yield return null;
             Require(Field<GameObject>("browsedMiniMapGeometry") == null && Field<GameObject>("currentMiniMapGeometry").activeSelf
                 && Field<GameObject>("nativeMiniMapCharacter").activeSelf, "Closing another map restores the circular map scene");
+            // Supply isolated region access to exercise the original exit mark's
+            // three stage states without completing or opening the next map.
+            var points = Field<IDictionary>("regionPoints");
+            var savedPoints = new System.Collections.Generic.Dictionary<int, int>();
+            foreach (DictionaryEntry row in points) savedPoints.Add((int)row.Key, (int)row.Value);
+            foreach (DictionaryEntry row in Field<IDictionary>("regionPointLimits")) points[row.Key] = row.Value;
+            Invoke("RefreshEntityActivity");
+            var mark = Field<IDictionary>("nativeMiniMapMarks")[6001];
+            Require(mark != null, "Exit mark created from original region binding");
+            var markRoot = (GameObject)mark.GetType().GetField("Root").GetValue(mark);
+            var stageEntity = Field<IDictionary>("mapEntities")[6001];
+            var stateField = stageEntity.GetType().GetField("State");
+            int originalState = (int)stateField.GetValue(stageEntity);
+            Invoke("ToggleExpandedMinimap");
+            var markCamera = Field<Camera>("fullMiniMapCamera");
+            markCamera.transform.position = new Vector3(markRoot.transform.position.x, markRoot.transform.position.y, 0);
+            for (int state = 0; state <= 2; state++)
+            {
+                stateField.SetValue(stageEntity, state);
+                Invoke("RefreshNativeMiniMapMarks");
+                Require(markRoot.transform.Find("IconOFF").gameObject.activeSelf == (state == 0)
+                    && markRoot.transform.Find("IconON").gameObject.activeSelf == (state > 0),
+                    "World-stage mark shows exactly the original state branch: " + state);
+                if (state < 2)
+                {
+                    Capture("ui-minimap-stage-" + state);
+                    yield return new WaitForEndOfFrame();
+                    yield return null;
+                }
+            }
+            Invoke("CloseNativeFullMiniMap");
+            stateField.SetValue(stageEntity, originalState);
+            foreach (var pair in savedPoints) points[pair.Key] = pair.Value;
+            Invoke("RefreshEntityActivity");
             Invoke("OpenNativeWorldFunctions");
             yield return null;
             yield return CaptureStatueFrame("ui-functions");

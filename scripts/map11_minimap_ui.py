@@ -102,7 +102,7 @@ def extract_marks(apk, schemas, exporter, animation_record, sprites):
             return value
         for obj in behaviours:
             kind = obj.read(check_read=False).m_Script.read().m_ClassName
-            if kind not in ("MiniMapActiveSwitcherSupport", "MinimapMarkKeepSizeObjSupport",
+            if kind not in ("MiniMapActiveSwitcherSupport", "MiniMapWorldStageSwitcherSupport", "MinimapMarkKeepSizeObjSupport",
                             "MiniMapActiveByNPCVisibleSupporter", "MapEntityTipDotNodeLinker"):
                 continue
             fields = schemas.read(obj)
