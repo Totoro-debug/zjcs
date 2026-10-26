@@ -1,0 +1,208 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a498d060085d5947917c37f1dbc94e8, type: 3}
+  m_Name: map_yuanShuiShenShe_Piaodai_02
+  m_EditorClassIdentifier: 
+  Scale: 0.01
+  Duration: 2
+  Bones:
+  - Name: root
+    Parent: -1
+    Position: {x: 0, y: 0}
+    Rotation: 0
+  - Name: bone
+    Parent: 0
+    Position: {x: 0, y: 0}
+    Rotation: 0
+  - Name: bone2
+    Parent: 1
+    Position: {x: -0.119670644, y: 46.23311}
+    Rotation: -90
+  - Name: bone3
+    Parent: 2
+    Position: {x: 16.888138, y: 0.0000014305115}
+    Rotation: 0
+  Vertices:
+  - First: 0
+    Count: 1
+  - First: 1
+    Count: 2
+  - First: 3
+    Count: 2
+  - First: 5
+    Count: 2
+  - First: 7
+    Count: 1
+  - First: 8
+    Count: 2
+  - First: 10
+    Count: 1
+  - First: 11
+    Count: 1
+  - First: 12
+    Count: 1
+  - First: 13
+    Count: 2
+  - First: 15
+    Count: 1
+  Influences:
+  - Bone: 2
+    Position: {x: 9.73872, y: 7.61967}
+    Weight: 1
+  - Bone: 2
+    Position: {x: 22.21631, y: 7.61967}
+    Weight: 0.53909
+  - Bone: 3
+    Position: {x: 5.32818, y: 7.61967}
+    Weight: 0.46091
+  - Bone: 2
+    Position: {x: 37.21461, y: 7.61967}
+    Weight: 0.00379
+  - Bone: 3
+    Position: {x: 20.32647, y: 7.61967}
+    Weight: 0.99621
+  - Bone: 2
+    Position: {x: 37.21461, y: 0.40507}
+    Weight: 0.00197
+  - Bone: 3
+    Position: {x: 20.32647, y: 0.40507}
+    Weight: 0.99803
+  - Bone: 3
+    Position: {x: 20.32647, y: -7.38033}
+    Weight: 1
+  - Bone: 2
+    Position: {x: 22.21631, y: -7.38033}
+    Weight: 0.65796
+  - Bone: 3
+    Position: {x: 5.32818, y: -7.38033}
+    Weight: 0.34204
+  - Bone: 2
+    Position: {x: 9.86918, y: -7.38033}
+    Weight: 1
+  - Bone: 2
+    Position: {x: 3.21461, y: -7.38033}
+    Weight: 1
+  - Bone: 2
+    Position: {x: 3.21461, y: 7.61967}
+    Weight: 1
+  - Bone: 2
+    Position: {x: 22.21631, y: 0.20695}
+    Weight: 0.59783
+  - Bone: 3
+    Position: {x: 5.32818, y: 0.20695}
+    Weight: 0.40217
+  - Bone: 2
+    Position: {x: 9.80153, y: 0.39777}
+    Weight: 1
+  UV:
+  - {x: 0.85, y: 0.7868971}
+  - {x: 0.85, y: 0.4749574}
+  - {x: 0.85, y: 0.1}
+  - {x: 0.48926994, y: 0.1}
+  - {x: 0.1, y: 0.1}
+  - {x: 0.1, y: 0.4749574}
+  - {x: 0.1, y: 0.78363574}
+  - {x: 0.1, y: 0.95}
+  - {x: 0.85, y: 0.95}
+  - {x: 0.47936395, y: 0.4749574}
+  - {x: 0.48890492, y: 0.7853269}
+  Triangles: 030000000100000002000000040000000900000003000000030000000900000001000000040000000500000009000000090000000a000000010000000a00000000000000010000000a000000090000000600000009000000050000000600000006000000070000000a000000000000000a000000080000000a0000000700000008000000
+  Material: {fileID: 2100000, guid: 183b72ca6752e28ef77a85f48639b460, type: 2}
+  Controller: {fileID: 9100000, guid: 8d3c601aa0f92374e9088a1f335682ef, type: 2}
+  Clip: {fileID: 7400000, guid: 975012d68f2233446b38d573cc6c0efb, type: 2}
+  RotationTracks:
+  - Bone: 2
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -92.157
+        inSlope: 0
+        outSlope: -12.591266
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.33333334
+        outWeight: 0.32166272
+      - serializedVersion: 3
+        time: 0.26666668
+        value: -94.04204
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.30912983
+        outWeight: 0.33419466
+      - serializedVersion: 3
+        time: 1.2666668
+        value: -82.26054
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.3341948
+        outWeight: 0.34330913
+      - serializedVersion: 3
+        time: 2
+        value: -92.157
+        inSlope: -13.278
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.33875167
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  - Bone: 3
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -2.3981667
+        inSlope: 0
+        outSlope: -43.19438
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.33333334
+        outWeight: 0.33865052
+      - serializedVersion: 3
+        time: 0.5
+        value: -17.124804
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.3319667
+        outWeight: 0.33419475
+      - serializedVersion: 3
+        time: 1.5000001
+        value: 12.328455
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.33419475
+        outWeight: 0.33642277
+      - serializedVersion: 3
+        time: 2
+        value: -2.3981667
+        inSlope: -44.957268
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 3
+        inWeight: 0.3297387
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4

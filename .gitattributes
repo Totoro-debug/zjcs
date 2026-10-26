@@ -364,3 +364,12 @@ unity/Assets/Official/World/Map/13/NativePipeline.meta -text
 scripts/prepare_unity_map13_pipeline_baseline.py text eol=lf
 scripts/prepare_unity_map13_pipeline_textures.py text eol=lf
 scripts/prepare_unity_map13_native_pipeline.py text eol=lf
+
+# Preserve Map13 original flag conversion and shrine payload bytes.
+unity/Assets/Official/World/Map/13/NativeFlags/** -text
+unity/Assets/Official/World/Map/13/NativeFlags.meta -text
+unity/Assets/Official/World/Map/13/NativeFlagScene/** -text
+unity/Assets/Official/World/Map/13/NativeFlagScene.meta -text
+scripts/prepare_unity_map13_flags.py text eol=lf
+scripts/generate_map13_flag_reference.py text eol=lf
+scripts/prepare_unity_map13_flag_scene.py text eol=lf

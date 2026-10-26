@@ -47,6 +47,11 @@
 - 两套原 `Renderer2DData`、`UniversalRenderPipelineAsset` 和 `PostProcessData` 已转换为 Unity 原生资产；显式绑定 81 个依赖并逐项检查 225 个原字段、脚本 GUID／fileID、名称和类型。保留原默认 Renderer 0、完整灯光／深度／后处理配置、原自定义形状灯光 shader，以及全部 47 张原 Alpha8／RGB24／RGBA32 纹理的原始字节、颜色空间、mip 和采样参数。目录为 `Resources/Map13/Native/native-render-pipeline-catalog`，以原 `globalgamemanagers.assets:pathID` 标识显式加载。
 - 主工程 DX12 导入、原生引用、全部管线 shader 和全局 `ProjectTools.Validate` 通过。同源隔离 Play Mode 在原 Linear 设置下，逐字节回读全部 47 张管线纹理；通过原生管线的默认与简化 Renderer 各渲染一帧测试相机，分别检查 3,136 个内部像素的颜色和行序，并查看实际输出截图。检查使用原生管线的独立 GPU 夹具，尚未激活正式地图管线、完整场景、鼠标交互或存档；测试结束恢复原工程图形设置。
 
+- 三份原 `Spine 4.2.28` 神社飘带经固定 MIT 格式读取器完整解码，转换为 Unity 原生骨骼层级、加权网格、原 atlas UV 和带权三次曲线。保留 23 根骨骼、51 个顶点、原影响顺序、比例和循环时间；原 Animator 控制器与原空动画保持原状态／时钟，曲线在原 Update 时序直接求值，避免 Animator 欧拉曲线重采样误差。没有复制、翻译或使用 Spine runtime。原配置没有约束、变形轨道、事件、换肤、裁剪或混合需求。
+- 原 `Skeleton-Lit-Atten` shader 的两个 pass、18 个 GLES 变体已机械转换并通过 Windows D3D 顶点／片元编译。三张飘带贴图及原材质参数显式绑定；另恢复神社分区与独立实体依赖中的五张原贴图。保留每份原像素、mip、采样与颜色空间，DX12 GPU 回读八个 mip 的字节哈希均一致。
+- 原 `2_-5` 分区含 17 个飘带，六个独立神社实体 prefab 另含 29 个；七份原层级共新增 132 个资产，复用 14 个已核验依赖。原 Transform、Animator、Renderer 和素材引用保留，骨骼组件与数据显式改绑到免费原生转换；全部子组件引用和缺失脚本检查通过。目录为 `Resources/Map13/Native/native-flag-scene-catalog`，独立骨骼数据为 `native-flag-catalog`。这两份目录尚未接入完整地图运行时。
+- 同源隔离工程在内置屏 DX12、原 Linear 管线的 Play Mode 中，以独立双精度三次贝塞尔／仿射参考核对 200 个姿态、3,418 个加权顶点，核对全部三角形及 UV；逐个实例化七份原 prefab，验证 46 个实例的正常帧动画、原离屏 Nothing 模式和禁用／重启，查看各两帧实际相机截图。未覆盖完整场景昼夜、其他动态分区、模拟鼠标或存档；该动画模块不能代表完整地图已完成。
+
 ## 自定义实现
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行同样缺少服务端逻辑；已核对其客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和原 `StageDatas`。用户已明确允许以下单机规则，规则模块已实现：每次触发沿原配置顺序前进一段，到末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则本次不移动；水位按原 `StageDatas` 顺序更新，不发奖励。
@@ -55,7 +60,7 @@
 
 ## 尚未实现
 
-- 地形主体 prefab、原材质、水面／地形／熔岩 shader、昼夜组件和原生渲染管线资产已绑定或迁移；仍须接通地图运行时管线选择、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
+- 地形主体 prefab、原材质、水面／地形／熔岩 shader、昼夜组件和原生渲染管线资产已绑定或迁移；仍须接通地图运行时管线选择、其余动态分区、地区标签、粒子、其他骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -79,3 +84,6 @@
 
 - [引擎 shader 原执行程序提取与一致性证明](../../scripts/prepare_unity_map13_pipeline_baseline.py)、[提取来源](../../assets/reference/official-map/map13-pipeline-baseline-source-manifest.json)及[执行／状态绑定来源](../../assets/reference/official-map/map13-pipeline-baseline-binding-source-manifest.json)记录原 APK 程序、引擎源码、434 个阶段比对及原状态；[原生纹理提取](../../scripts/prepare_unity_map13_pipeline_textures.py)和[纹理来源](../../assets/reference/official-map/map13-pipeline-textures-source-manifest.json)记录原始像素与 GPU 格式。资产位于 `Assets/Official/World/Map/13/NativePipeline/`。
 - [原生管线生成](../../scripts/prepare_unity_map13_native_pipeline.py)、[来源](../../assets/reference/official-map/map13-native-pipeline-source-manifest.json)及[Unity 导入绑定来源](../../assets/reference/official-map/map13-native-pipeline-binding-source-manifest.json)记录全部配置、显式引用、模板、分支选择和导入哈希；[导入检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13RenderPipelineTools.cs)、[原程序比对](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineBaselineTools.cs)、[状态提取](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineStateTools.cs)、[Windows／分支编译检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativePipelineShaderTools.cs)和[原生 GPU 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativePipelineAcceptance.cs)对应上述验证范围。新增管线素材与原始程序未进入完整快照。
+
+- [神社飘带解码与原 shader 转换](../../scripts/prepare_unity_map13_flags.py)、[来源](../../assets/reference/official-map/map13-native-flags-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map13-native-flags-binding-source-manifest.json)记录原 TextAsset／材质／纹理、MIT 读取器、仅用于调度枚举的 APK 元数据、输出及适配哈希；[独立参考生成](../../scripts/generate_map13_flag_reference.py)记录参考输入和生成器哈希。原生数据与网格适配位于 `Runtime/Offline/World/NativeMap13/NativeMap13Flag*.cs`，载荷为 `Assets/Official/World/Map/13/NativeFlags/`。
+- [神社原 prefab 绑定](../../scripts/prepare_unity_map13_flag_scene.py)、[来源](../../assets/reference/official-map/map13-native-flag-scene-source-manifest.json)、[Unity 绑定来源](../../assets/reference/official-map/map13-native-flag-scene-binding-source-manifest.json)、[导入检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13FlagSceneTools.cs)及[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13FlagAcceptance.cs)记录七份原层级、来源与复用依赖、原引用改绑及实际验证范围。载荷为 `Assets/Official/World/Map/13/NativeFlagScene/`；新增神社素材及原程序未进入完整快照。
