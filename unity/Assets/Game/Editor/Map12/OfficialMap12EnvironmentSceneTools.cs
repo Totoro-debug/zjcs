@@ -84,7 +84,7 @@ namespace Zjcs.Editor.Map12
             var catalog = AssetDatabase.LoadAssetAtPath<NativeMap13AssetCatalog>(catalogPath);
             if (!catalog) { catalog = ScriptableObject.CreateInstance<NativeMap13AssetCatalog>(); AssetDatabase.CreateAsset(catalog, catalogPath); }
             catalog.Bindings = bindings;
-            EditorUtility.SetDirty(catalog); AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(catalog); AssetDatabase.SaveAssetIfDirty(catalog);
             if (Resources.Load<NativeMap13AssetCatalog>("Map12/Native/native-environment-scene-catalog") != catalog || bindings.Any(b => catalog.Load<GameObject>(b.OfficialPath) != b.Asset))
                 throw new InvalidDataException("Original environment partition local resource path is not bound.");
             Output Record(string path) => new Output { path = "unity/" + path, sha256 = Hash(File.ReadAllBytes(path)), meta_sha256 = Hash(File.ReadAllBytes(path + ".meta")) };

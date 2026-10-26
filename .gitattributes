@@ -428,3 +428,19 @@ unity/Assets/Game/Editor/OfficialMap12AudioTools.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap11MusicPlayer.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap11StoryAudioPlayer.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Audio.cs.meta text eol=lf
+
+# Preserve original Map12 region-label payloads and migrated component hashes.
+scripts/prepare_unity_map12_label_components.py text eol=lf
+scripts/prepare_unity_map12_region_labels.py text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/** -text
+unity/Assets/Game/Runtime/Official/World/NativeMap12Labels.meta -text
+unity/Assets/Official/World/Map/12/NativeRegionLabels/** -text
+unity/Assets/Official/World/Map/12/NativeRegionLabels.meta -text
+unity/Assets/Official/World/Map/12/Resources/Map12/Native/** -text
+unity/Assets/Official/World/Map/12/Resources/Map12/Native.meta -text
+unity/Assets/Game/Editor/Map12/OfficialMap12LabelTools.cs text eol=lf
+unity/Assets/Game/Editor/Map12/OfficialMap12LabelTools.Binding.cs text eol=lf
+unity/Assets/Game/Editor/Map12/OfficialMap12LabelAcceptance.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels/** -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels.meta -text
+unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef text eol=lf

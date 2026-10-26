@@ -20,12 +20,14 @@ using Zjcs.Offline.World.NativeMap13;
 namespace Zjcs.Editor.Map12
 {
         // Tests original native renderer assets and texture upload; uses isolated fixtures, never user saves.
-    public static class OfficialMap12EnvironmentSceneAcceptance
+    public static partial class OfficialMap12EnvironmentSceneAcceptance
     {
         private const string Key = "Zjcs.Map12.EnvironmentSceneExecution";
         private static bool started;
 
-        public static void Run()
+        public static void Run() { SessionState.SetBool(Key + ".labels", false); RunCore(); }
+        public static void RunWithLabels() { SessionState.SetBool(Key + ".labels", true); RunCore(); }
+        private static void RunCore()
         {
             OfficialMap12EnvironmentSceneTools.RestoreAndValidate();
             SessionState.SetString(Key + ".pipeline", AssetDatabase.GetAssetPath(GraphicsSettings.defaultRenderPipeline));
@@ -92,7 +94,8 @@ namespace Zjcs.Editor.Map12
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map12 native environment Play Mode passed: 186 original tile chunks and 187 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and DX12 rendering. The 80 world labels, real world state, map interaction and saves remain unverified.");
+            if (SessionState.GetBool(Key + ".labels", false)) Debug.Log("Map12 full native partition and world-label Play Mode passed; real player/save integration remains unverified.");
+            else Debug.Log("Map12 native environment Play Mode passed: 186 original tile chunks and 187 original non-label scene resources through original partition/controller/environment callbacks, public/private fixtures, native texture GPU upload and DX12 rendering. The 80 world labels, real world state, map interaction and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -117,6 +120,10 @@ namespace Zjcs.Editor.Map12
             var bareSource = JsonUtility.FromJson<Source>(File.ReadAllText(Path.Combine(rootPath,
                 "assets/reference/official-map/map12-native-scene-source-manifest.json")));
             source.textures = source.textures.Concat(bareSource.textures).ToArray();
+            bool includeLabels = SessionState.GetBool(Key + ".labels", false);
+            if (includeLabels)
+                source.textures = source.textures.Concat(JsonUtility.FromJson<Source>(File.ReadAllText(Path.Combine(rootPath,
+                    "assets/reference/official-map/map12-native-region-labels-source-manifest.json"))).textures).ToArray();
             int mips = 0;
             foreach (var record in source.textures)
             {
@@ -136,6 +143,8 @@ namespace Zjcs.Editor.Map12
             if (!environment || environment.Bindings.Length != 187) throw new InvalidDataException("Original environment directory is incomplete.");
             var catalog = ScriptableObject.CreateInstance<NativeMap13AssetCatalog>();
             catalog.Bindings = terrain.Bindings.Concat(bare.Bindings).Concat(environment.Bindings).GroupBy(b => b.OfficialPath).Select(g => g.First()).ToArray();
+            var labels = includeLabels ? Resources.Load<NativeMap13AssetCatalog>("Map12/Native/native-region-labels-catalog") : null;
+            if (includeLabels) catalog.Bindings = catalog.Bindings.Concat(labels.Bindings).ToArray();
             var allowed = new HashSet<string>(catalog.Bindings.Select(b => b.OfficialPath));
             var originalData = terrain.Load<PartitionData>("Assets/MonoBehaviour/partition_data");
             string originalSerialization = JsonUtility.ToJson(originalData);
@@ -153,6 +162,8 @@ namespace Zjcs.Editor.Map12
                 // This is an explicit partial-scene fixture. Clone the original data
                 // and omit only the 80 unconverted world-label resource entries.
                 var data = UnityEngine.Object.Instantiate(originalData);
+                if (!includeLabels)
+                {
                 data.SceneChunks.RemoveAll(c => !allowed.Contains(c.Res));
                 data.Extensions.RemoveAll(c => !allowed.Contains(c.Res));
                 foreach (var region in data.RegionDatas)
@@ -161,13 +172,15 @@ namespace Zjcs.Editor.Map12
                         layer?.Scenes?.RemoveAll(c => !allowed.Contains(c.Res));
                         layer?.Extensions?.RemoveAll(c => !allowed.Contains(c.Res));
                     }
+                }
                 var host = new GameObject("Original partition " + status + " fixture"); host.SetActive(false);
                 var instance = UnityEngine.Object.Instantiate(bare.Load<GameObject>("Assets/Partition/MapGround_12/MapGround_12_bare"), host.transform, false);
                 var root = instance.GetComponent<MapGroundRoot>();
                 var services = new Services(root, OfficialMap12EnvironmentSceneTools.SharedAsset<MapEnvData>(false), status, data.RegionDatas.Length);
                 NativeMap13EnvironmentBinding.Bind(instance, services);
                 var resources = host.AddComponent<NativeMap13ResourceLoader>(); resources.Catalog = catalog;
-                resources.BindInstance = child => NativeMap13EnvironmentBinding.Bind(child, services);
+                LabelFixture labelServices = includeLabels ? new LabelFixture(services) : null;
+                resources.BindInstance = child => { NativeMap13EnvironmentBinding.Bind(child, services); if (labelServices != null) labelServices.Bind(child); };
                 var controller = root.PartitionController; var loader = controller.Loader;
                 controller.PartitionData = data; controller.Context = services;
                 loader.ResourceLoader = new TrackingResources(resources, requested); loader.ServiceProvider = resources;
@@ -177,13 +190,14 @@ namespace Zjcs.Editor.Map12
                     for (int x = data.MinX; x <= data.MaxX; x++) loader.LoadVicinity(x, y);
                 for (int frame = 0; frame < 8; frame++) yield return null;
                 if (lifecycleError) throw new InvalidDataException("Original partition Awake/Start/register callback logged an error.");
-                var expectedRegions = environment.Bindings.SelectMany(b => ((GameObject)b.Asset).GetComponentsInChildren<MapRegionLight>(true)).Select(l => l.Region).OrderBy(r => r).ToArray();
+                var expectedRegions = environment.Bindings.Concat(includeLabels ? labels.Bindings : Array.Empty<NativeMap13AssetCatalog.Binding>()).SelectMany(b => ((GameObject)b.Asset).GetComponentsInChildren<MapRegionLight>(true)).Select(l => l.Region).OrderBy(r => r).ToArray();
                 var actualRegions = root.EnvEffect.RegionLights.Where(h => h.RegionLight).Select(h => h.RegionLight.Region).OrderBy(r => r).ToArray();
-                if (root.EnvEffect.RegionLights.Length != originalData.RegionDatas.Length || expectedRegions.Length != 98 || !actualRegions.SequenceEqual(expectedRegions))
+                if (root.EnvEffect.RegionLights.Length != originalData.RegionDatas.Length || expectedRegions.Length != (includeLabels ? 99 : 98) || !actualRegions.SequenceEqual(expectedRegions))
                     throw new InvalidDataException("Original region-light registration differs: expected " + expectedRegions.Length + " registered " + actualRegions.Length);
+                if (includeLabels) VerifyLabels(root.gameObject, labelServices);
                 int activeTiles = root.GetComponentsInChildren<Tilemap>(true).Count(t => t.GetUsedTilesCount() > 0);
                 if (activeTiles == 0) throw new InvalidDataException("Original partition controller did not fill its original Tilemaps.");
-                foreach (var view in new[] { new Vector3(0, -40, -100), new Vector3(0, 0, -100) })
+                foreach (var view in new[] { new Vector3(0, -40, -100), new Vector3(0, 0, -100) }.Concat(includeLabels ? new[] { LabelView(root.gameObject) } : Array.Empty<Vector3>()))
                 {
                     camera.transform.position = view;
                     yield return new WaitForSeconds(0.15f); yield return null; yield return null;
@@ -192,7 +206,7 @@ namespace Zjcs.Editor.Map12
                     if (request.hasError) throw new InvalidDataException("Original partition DX12 camera readback failed.");
                     var image = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
-                    File.WriteAllBytes(Path.Combine(rootPath, "output/map12-partition-" + status + "-" + (view.y == 0 ? "center" : "mountain") + "-20261027.png"), image.EncodeToPNG());
+                    File.WriteAllBytes(Path.Combine(rootPath, "output/map12-partition-" + (includeLabels ? "labels-" : "") + status + "-" + (view.y == 0 ? "center" : view.x == 0 ? "mountain" : "region") + "-20261027.png"), image.EncodeToPNG());
                     UnityEngine.Object.Destroy(image);
                 }
                 root.OnSceneDeactivate(); yield return null;
@@ -214,10 +228,12 @@ namespace Zjcs.Editor.Map12
                     throw new InvalidDataException("Original partition removal retained scene instances or registered region lights.");
                 UnityEngine.Object.Destroy(host); UnityEngine.Object.Destroy(data); yield return null; yield return null;
                 if (lifecycleError) throw new InvalidDataException("Original partition clear/destroy callbacks logged an error.");
-                Debug.Log("Map12 original partition fixture passed " + status + ": original native hierarchy, 98 original region-light registrations in 99 slots; region 34 belongs to a pending label prefab, original Tilemaps, scene hide/show and clear.");
+                labelServices?.Dispose();
+                Debug.Log("Map12 original partition fixture passed " + status + ": native hierarchy, " + expectedRegions.Length + " region lights; Tilemaps, scene hide/show, complete clear and label subscription release.");
             }
             if (!environment.Bindings.All(b => requested.Contains(b.OfficialPath)) || requested.Count(p => p.Contains("/Chunks/")) != 186)
                 throw new InvalidDataException("Original controller did not request all 187 non-label prefabs and 186 tile chunks.");
+            if (includeLabels && !labels.Bindings.All(b => requested.Contains(b.OfficialPath))) throw new InvalidDataException("Original controller did not request all 80 label prefabs.");
             if (JsonUtility.ToJson(originalData) != originalSerialization) throw new InvalidDataException("Partial-scene fixture modified original partition data.");
             Debug.Log("Map12 original environment GPU and controller fixtures passed: " + source.textures.Length + " textures, " + mips + " exact mips, 187 prefab paths and 186 original chunks through native local handles.");
             Application.logMessageReceived -= Observe;
