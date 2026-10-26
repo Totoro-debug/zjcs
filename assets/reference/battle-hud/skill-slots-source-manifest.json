@@ -1,9 +1,24 @@
 {
   "manifest": "854_156383",
   "output": "unity/Assets/Game/Resources/Combat/battle-skill-slots.json",
-  "output_sha256": "400e2dd2b301a5e5dc01d39d9b561c2651e27982414aa71a60b0be6c66c4131e",
-  "generator_sha256": "54a6422208e4b185fb679b7781b8ce52c4bf8d153bc6b8ac4a8ff47a0555532c",
+  "output_sha256": "55fddbd736f1684da9a38d953978c09129297acfa38ce58556f9aeb4ecae9b36",
+  "generator_sha256": "5b74498aa75966a310214fcd280ec7c0338cab736577ba5129911aade8480073",
   "runtime_prefab_sha256": "a8a0d36b8cda8798fbd0f3489b96c0fda8c4b7f8edd4d16bc7ac6e77c3da284e",
+  "pet_unlock_input": {
+    "path": "assets/official/rules.json",
+    "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256",
+    "rows": [
+      {
+        "Type": 62,
+        "Key0": 0,
+        "Key1": 0,
+        "Condition": {
+          "Jumpable": null,
+          "_type": "HasAnyPetCondition"
+        }
+      }
+    ]
+  },
   "inputs": [
     {
       "bundle": "defaultpackage_assets_prefabs_ui_fight_fightmainpanel_fightmainpanel.bundle",
@@ -903,13 +918,16 @@
     "client-source/ItemIconSkill.cs": "bc296b9b30ba608351d4d4e8dcfb07613738cca815db15dbc682a7b6b66f0941",
     "client-source/FightSkillListDataEntityProvider.cs": "9ca060dae7f3558d9fa93b949381939c0b4add9dcfee5e54682457a7223d904e",
     "framework-source/StateGameObjectConfig.cs": "3d69fe3cb00b4c45165c1867f403ea3c58f409e25d1284b74550dfb85e10954a",
-    "framework-source/StateGameObjectData.cs": "4a5b4602d672091b85324e3b623742e8fd83a4325e45d90a617341b3dcae53d1"
+    "framework-source/StateGameObjectData.cs": "4a5b4602d672091b85324e3b623742e8fd83a4325e45d90a617341b3dcae53d1",
+    "common-source/Common/HasAnyPetCondition.cs": "b120e684c84b0e05483293bbaf7ae3d24e2bdaf13b96c032fb51a41dae3a56a2",
+    "common-source/Common/FunctionType.cs": "a5677eb5ef4aa8a1c7858e971341632c52d8da9021881b48995bbf50649f32bb"
   },
   "runtime": {
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs": "9a23407008f6a3b802eee1f83f1e6da0411cd4895a373cec2c2f26e4aaf684dd",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs": "74797cd17bb95f84502256be327aa1808d26db7e0b211a99c9111b8583ce25ea",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "2c90ca1f019ea88e0132d1756816ebe68c4be07c9ab5f39bc0667641a53a2d04"
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs": "081c19824b78b64cb841f69b2d98ff9cce4e3c694f50a1e8b4129b42c5ec8953",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "9fa6666f355ef69113ea7fcb58bad1c0df13ff47438cca8aee22999864f895a3",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs": "78dfa0b77cb6d8ebbcb7dc04b5e19a84d74af4e1b3c72ab8ab4c11964270bd13"
   },
   "operation": "Restore the original four serialized slots in order and apply each original StateGameObjectConfig. Preserve absent state 7 in the inline prefab; do not append replacement cards or invent a disabled overlay binding.",
-  "remaining": "Item quality, pet unlock/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings."
+  "remaining": "Item quality, pet icons/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings."
 }

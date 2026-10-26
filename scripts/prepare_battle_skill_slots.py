@@ -16,7 +16,7 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def build():
+def build(output_root=ROOT):
     source_path = ROOT / 'assets/reference/battle-hud/source-manifest.json'
     runtime_path = ROOT / 'unity/Assets/Official/Combat/HUD/panels-runtime.json'
     prefabs = json.loads(source_path.read_bytes())['prefabs']
@@ -89,27 +89,37 @@ def build():
     standalone = next(c for c in cards.values() if c['prefab'] == 'skill')
     if [s['state'] for s in standalone['states']] != list(range(8)):
         raise ValueError('Unexpected standalone skill-icon states')
-    output = ROOT / 'unity/Assets/Game/Resources/Combat/battle-skill-slots.json'
-    receipt_path = ROOT / 'assets/reference/battle-hud/skill-slots-source-manifest.json'
+    rules_path = ROOT / 'assets/official/rules.json'
+    unlock_rows = [r for r in json.loads(rules_path.read_bytes())['function_limit']
+                   if r['Type'] == 62 and r['Key0'] == 0 and r['Key1'] == 0]
+    if len(unlock_rows) != 1 or unlock_rows[0]['Condition'] != {'Jumpable': None, '_type': 'HasAnyPetCondition'}:
+        raise ValueError('Unsupported official pet function unlock condition')
+    output = output_root / 'unity/Assets/Game/Resources/Combat/battle-skill-slots.json'
+    receipt_path = output_root / 'assets/reference/battle-hud/skill-slots-source-manifest.json'
     payload = (json.dumps({'manifest': '854_156383', 'skillUI': skill_ui, 'slots': slots,
-                           'standalone': standalone}, ensure_ascii=False, separators=(',', ':')) + '\n').encode()
+                           'standalone': standalone, 'petUnlockCondition': 'HasAnyPetCondition'},
+                          ensure_ascii=False, separators=(',', ':')) + '\n').encode()
     if output.exists() and sha(output.read_bytes()) != json.loads(receipt_path.read_bytes())['output_sha256']:
         raise ValueError('Refusing to overwrite modified skill-slot bindings')
     output.write_bytes(payload)
     code = ['client-source/GameSkillIcon.cs', 'client-source/FightMainPanelSkillUI.cs',
             'client-source/ItemIconSkill.cs', 'client-source/FightSkillListDataEntityProvider.cs',
-            'framework-source/StateGameObjectConfig.cs', 'framework-source/StateGameObjectData.cs']
-    receipt = {'manifest': '854_156383', 'output': output.relative_to(ROOT).as_posix(),
+            'framework-source/StateGameObjectConfig.cs', 'framework-source/StateGameObjectData.cs',
+            'common-source/Common/HasAnyPetCondition.cs', 'common-source/Common/FunctionType.cs']
+    receipt = {'manifest': '854_156383', 'output': output.relative_to(output_root).as_posix(),
                'output_sha256': sha(payload), 'generator_sha256': sha(Path(__file__).read_bytes()),
                'runtime_prefab_sha256': sha(runtime_path.read_bytes()),
+               'pet_unlock_input': {'path': rules_path.relative_to(ROOT).as_posix(),
+                                    'sha256': sha(rules_path.read_bytes()), 'rows': unlock_rows},
                'inputs': list(inputs.values()),
                'official_code': {p: sha((ROOT / '.tools/source-packages/official-code' / p).read_bytes()) for p in code},
-               'runtime': {p: sha((ROOT / p).read_bytes()) for p in (
+               'runtime': {p: sha((output_root / p).read_bytes()) for p in (
                    'unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs',
                    'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs',
-                   'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs')},
+                   'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs',
+                   'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs')},
                'operation': 'Restore the original four serialized slots in order and apply each original StateGameObjectConfig. Preserve absent state 7 in the inline prefab; do not append replacement cards or invent a disabled overlay binding.',
-               'remaining': 'Item quality, pet unlock/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings.'}
+               'remaining': 'Item quality, pet icons/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings.'}
     receipt_path.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode())
     sidecar = output.with_name('battle-skill-slots-source-manifest.json')
     sidecar.write_bytes((json.dumps({'manifest': receipt['manifest'], 'output_sha256': receipt['output_sha256']})+'\n').encode())

@@ -12,8 +12,15 @@ namespace Zjcs.Presentation.Combat
     [Serializable] public sealed class BattleSkillSlotData
     {
         public string manifest;
+        public string petUnlockCondition;
+        public BattleSkillListBinding skillUI;
         public BattleSkillSlotBinding[] slots;
         public BattleSkillSlotBinding standalone;
+    }
+    [Serializable] public sealed class BattleSkillListBinding
+    {
+        public string owner, rect, pet;
+        public float noUnlockPetOffset;
     }
     [Serializable] public sealed class BattleSkillSlotBinding
     {
@@ -69,6 +76,15 @@ namespace Zjcs.Presentation.Combat
                 result[index].SetUIState(WorldGameSkillIcon.State.None);
             }
             return result;
+        }
+
+        public static bool IsPetFunctionUnlocked(int petCount)
+        {
+            // FunctionType.Pet (62), HasAnyPetCondition.IsMet: player.PetManager.Count > 0.
+            BattleSkillSlotData data = Load();
+            if (data.petUnlockCondition != "HasAnyPetCondition")
+                throw new InvalidOperationException("Unsupported official pet unlock condition.");
+            return petCount > 0;
         }
 
         private static GameObject Require(OfficialBattleHudRenderer renderer, string path) =>

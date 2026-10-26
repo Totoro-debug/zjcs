@@ -22,6 +22,18 @@ namespace Zjcs.Editor.Combat
                 var view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
                 GameObject root = view.Mount(canvas.transform);
                 BattleSkillSlotData data = OfficialBattleSkillSlotBindings.Load();
+                Require(!OfficialBattleSkillSlotBindings.IsPetFunctionUnlocked(0)
+                    && OfficialBattleSkillSlotBindings.IsPetFunctionUnlocked(1), "The official HasAnyPetCondition changed.");
+                Transform pet = root.transform.Find(data.skillUI.pet.Substring("/FightMainPanel/".Length));
+                var listRect = (RectTransform)root.transform.Find(data.skillUI.rect.Substring("/FightMainPanel/".Length));
+                float offsetY = listRect.offsetMax.y;
+                foreach (bool unlocked in new[] { false, true, false })
+                {
+                    view.RefreshPetFunction(unlocked);
+                    Require(pet.gameObject.activeSelf == unlocked
+                        && Mathf.Abs(listRect.offsetMax.x - (unlocked ? 0 : data.skillUI.noUnlockPetOffset)) < 0.001f
+                        && listRect.offsetMax.y == offsetY, "Pet visibility or the original right offset differs.");
+                }
                 var renderer = new OfficialBattleHudRenderer(OfficialBattleHudCatalog.LoadDefault());
                 // Exercise the official state switches against the same serialized main prefab.
                 GameObject stateRoot = renderer.Create("main", canvas.transform);
@@ -77,7 +89,7 @@ namespace Zjcs.Editor.Combat
                 Require(root.GetComponentsInChildren<Transform>(true).Length == count
                     && siblings.SequenceEqual(data.slots.Select(binding => Find(root, binding.owner).GetSiblingIndex())),
                     "Refreshing skills appended or reordered the original slots.");
-                Debug.Log("Original skill slots passed: four serialized references, all original states including absent Disabled, CD text, profession/count precedence, applied/empty transitions, no appended cards or sibling changes.");
+                Debug.Log("Original skill slots passed: four serialized references, all original states including absent Disabled, CD text, profession/count precedence, applied/empty transitions, no appended cards or sibling changes; HasAnyPetCondition and pet layout offsets 70/0/70.");
             }
             finally { UnityEngine.Object.DestroyImmediate(canvas); }
         }
@@ -86,6 +98,11 @@ namespace Zjcs.Editor.Combat
         {
             BattleSkillSlotData data = OfficialBattleSkillSlotBindings.Load();
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
+            // The isolated combat profile starts without any owned pet.
+            Transform pet = root.transform.Find(data.skillUI.pet.Substring("/FightMainPanel/".Length));
+            var listRect = (RectTransform)root.transform.Find(data.skillUI.rect.Substring("/FightMainPanel/".Length));
+            Require(!pet.gameObject.activeSelf && Mathf.Abs(listRect.offsetMax.x - data.skillUI.noUnlockPetOffset) < 0.001f,
+                "The saved profile without pets did not hide the pet slot and restore the official offset.");
             foreach (BattleSkillSlotBinding binding in data.slots)
                 Require(Find(root, binding.owner) != null, "An original skill slot is missing.");
             Require(!root.GetComponentsInChildren<Transform>(true).Any(node => node.name.StartsWith("GameSkillIconItem_", StringComparison.Ordinal)),

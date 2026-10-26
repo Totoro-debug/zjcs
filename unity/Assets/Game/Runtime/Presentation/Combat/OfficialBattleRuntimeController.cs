@@ -143,6 +143,7 @@ namespace Zjcs.Presentation.Combat
                 if (sessionOptions.ShowMainPanelDelay <= 0)
                 {
                     nextHudRoot = nextHud.Mount(hudParent);
+                    RefreshPetFunction(nextHud);
                     nextHud.Refresh(checkpoint);
                     nextHud.RefreshSkillSlots(checkpoint, skillIcon);
                     nextHud.RefreshTimeline(checkpoint, timelinePortrait, timelineFactionIcon, false);
@@ -440,10 +441,18 @@ namespace Zjcs.Presentation.Combat
             hudView?.RefreshPrepareCountdown(remaining);
         }
 
+        private void RefreshPetFunction(OfficialBattleHudView view)
+        {
+            if (statueProgress?.Save?.Player == null) return;
+            int petCount = statueProgress.Save.Player.Pets?.Pets?.Count ?? 0;
+            view.RefreshPetFunction(OfficialBattleSkillSlotBindings.IsPetFunctionUnlocked(petCount));
+        }
+
         private void MountDelayedHud()
         {
             if (executor == null || hudView == null || pendingHudParent == null || hudRoot != null) return;
             hudRoot = hudView.Mount(pendingHudParent);
+            RefreshPetFunction(hudView);
             hudView.Refresh(Checkpoint);
             hudView.RefreshSkillSlots(Checkpoint, skillIconResolver);
             hudView.RefreshTimeline(Checkpoint, timelinePortraitResolver, timelineFactionResolver, false);

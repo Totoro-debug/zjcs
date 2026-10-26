@@ -156,6 +156,18 @@ namespace Zjcs.Presentation.Combat
             roundText.text = OfficialBattleRoundTextFormatter.Format(roundTextFormat, display, RoundCountDown);
         }
 
+        public void RefreshPetFunction(bool unlocked)
+        {
+            BattleSkillListBinding binding = OfficialBattleSkillSlotBindings.Load().skillUI;
+            GameObject pet = renderer.Find(binding.pet);
+            RectTransform rect = renderer.Find(binding.rect)?.GetComponent<RectTransform>();
+            if (pet == null || rect == null) throw new InvalidOperationException("Official pet skill-list references are missing.");
+            // FightMainPanelSkillUI.RefreshView: preserve the original visibility and offset order.
+            pet.SetActive(unlocked);
+            Vector2 offsetMax = rect.offsetMax;
+            rect.offsetMax = new Vector2(unlocked ? 0f : binding.noUnlockPetOffset, offsetMax.y);
+        }
+
         public void RefreshSkillSlots(FightBattleCheckpoint checkpoint, Func<int, Sprite> skillIcon,
             FightBattleStepEvent stepEvent = null)
         {
