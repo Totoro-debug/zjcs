@@ -94,6 +94,8 @@
 - Play Mode 实际捕获 14 张画面并逐张检查：直购主页、价格表、确认框、物品详情、活动页、星眷全组页、每日礼包、每日规则、每日已购、每周礼包、首购、首购已激活、兑换、重开。画面确认官方角色立绘、标题、六档商品、每日三档、每周六档、首购三天奖励、兑换滑条和官方按钮均实际渲染；同时记录活动入口文字、礼品图标数量、首购顶部信息区和每日整组价格区仍有版式差异，不把差异写成官方最终版。
 - 验收的按钮输入通过 `ExecuteEvents` 向真实 Unity UI 控件派发点击并等待界面状态，不是直接调用业务方法；尚未用操作系统鼠标覆盖遮挡、滚动、拖拽和键盘焦点。
 - HUD 入口逻辑另由 `CommerceHudPlayModeAcceptance` 在 Play Mode 验证：官方 `WorldCanvas` 的 `FunctionEntryPhoto/EntryBtnFolded` 点击后实际打开商城，首购入口创建成功、标题为「首购」且红点显示。该验收只挂载官方 Map10 UI 与商城运行入口，不进入完整 Map10 地图场景；HUD 在真实地图中的遮挡、层级和最终位置仍未验收。
-- 未执行 Windows Player 构建或运行；完整游戏验收前不发布或覆盖 `D:/Desktop/杖剑传说/`。
+- 商城专属 Windows Player 交互尚未验收；开场战斗版本包含已提交的商城编译依赖修复，不据此判定商城完整玩法已通过 Windows 验证。
 
 累充面板的 `AccumulatedPayPanel_Show` 已从固定官方 bundle 经 AssetRipper 重建为 Unity 原生 AnimationClip，保留压缩曲线恢复结果，按现有 Animation 播放器设为 Legacy；编辑器优先加载该本地资产，避免直接反序列化 Android bundle 的 `2022.3.57f1`／`2022.3.57f1c2` 版本冲突。来源与输出哈希见 [动画来源清单](../../assets/reference/commerce-components/accumulated-panel-animation-source-manifest.json)。该依赖修复不代表商城其余动画已完成。
+
+开场战斗发布所需的商城数值转换、周期卡接口和原生动画事件接收已纳入提交，并通过所用基线的 Editor 编译、`ProjectTools.Validate` 与 Windows 构建。周期卡业务及属性刷新范围见[月卡与星眷累计奖励](monthly-card.md)；本次验证流程以开场战斗为主，商城专属流程仍沿用本页所列验证边界。
