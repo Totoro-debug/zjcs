@@ -642,21 +642,32 @@ namespace Zjcs.Editor
             if (string.IsNullOrEmpty(output)) yield break;
             Directory.CreateDirectory(output);
             string path = Path.Combine(output, filename);
-            int expectedWidth = Screen.width, expectedHeight = Screen.height;
-            DateTime requestedAt = DateTime.UtcNow;
-            ScreenCapture.CaptureScreenshot(path);
             float deadline = Time.realtimeSinceStartup + 5f;
-            do { yield return null; }
-            while ((!File.Exists(path) || File.GetLastWriteTimeUtc(path) < requestedAt.AddSeconds(-1))
-                && Time.realtimeSinceStartup < deadline);
-            byte[] png = File.ReadAllBytes(path);
-            Require(png.Length >= 24, "The runtime screenshot is incomplete.");
-            int width = (png[16] << 24) | (png[17] << 16) | (png[18] << 8) | png[19];
-            int height = (png[20] << 24) | (png[21] << 16) | (png[22] << 8) | png[23];
-            Require(width == expectedWidth && height == expectedHeight,
-                "The screenshot viewport differs from input/layout: " + width + "x" + height
-                + " versus " + expectedWidth + "x" + expectedHeight);
-            Debug.Log("Battle runtime screenshot matches input/layout: " + filename + " " + width + "x" + height);
+            int width=0,height=0,expectedWidth=0,expectedHeight=0;
+            do
+            {
+                // A native Game view resize can settle one frame after Screen reports its first size.
+                yield return null;
+                Canvas.ForceUpdateCanvases();
+                expectedWidth=Screen.width;expectedHeight=Screen.height;
+                if (File.Exists(path)) File.Delete(path);
+                ScreenCapture.CaptureScreenshot(path);
+                do { yield return null; }
+                while (!File.Exists(path) && Time.realtimeSinceStartup<deadline);
+                if (!File.Exists(path)) break;
+                byte[] png=File.ReadAllBytes(path);
+                Require(png.Length>=24,"The runtime screenshot is incomplete.");
+                width=(png[16]<<24)|(png[17]<<16)|(png[18]<<8)|png[19];
+                height=(png[20]<<24)|(png[21]<<16)|(png[22]<<8)|png[23];
+                if (width==expectedWidth && height==expectedHeight
+                    && Screen.width==expectedWidth && Screen.height==expectedHeight)
+                {
+                    Debug.Log("Battle runtime screenshot matches input/layout: "+filename+" "+width+"x"+height);
+                    yield break;
+                }
+            } while (Time.realtimeSinceStartup<deadline);
+            throw new InvalidOperationException("The screenshot viewport did not settle with input/layout: "+width+"x"+height
+                +" versus "+expectedWidth+"x"+expectedHeight);
         }
 
 

@@ -70,8 +70,21 @@ namespace Zjcs.Presentation.Combat
             text.lineSpacing=source.lineSpacing;
             text.margin=new Vector4(source.margin[0],source.margin[1],source.margin[2],source.margin[3]);
             text.renderer.sortingOrder=source.order;
+            text.enableVertexGradient=source.enableGradient;
+            if (source.enableGradient)
+            {
+                var gradient=source.gradient ?? throw new FormatException("Original TMP gradient is missing.");
+                text.colorGradient=new VertexGradient(GradientColor(gradient.topLeft),GradientColor(gradient.topRight),
+                    GradientColor(gradient.bottomLeft),GradientColor(gradient.bottomRight));
+            }
             if (source.effect!=null) ApplyTextEffect(text,source.effect);
             return text;
+        }
+
+        private static Color GradientColor(float[] value)
+        {
+            if (value==null || value.Length!=4) throw new FormatException("Original TMP gradient color is invalid.");
+            return new Color(value[0],value[1],value[2],value[3]);
         }
 
         private static void ApplyTextEffect(TMP_Text text, BattleElementTextEffect effect)

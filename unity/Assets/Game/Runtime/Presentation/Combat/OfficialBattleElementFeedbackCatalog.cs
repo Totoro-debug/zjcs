@@ -30,7 +30,13 @@ namespace Zjcs.Presentation.Combat
         public int style, weight, order;
         public float size, characterSpacing, wordSpacing, lineSpacing;
         public float[] margin;
+        public bool enableGradient;
+        public BattleElementTextGradient gradient;
         public BattleElementTextEffect effect;
+    }
+    [Serializable] public sealed class BattleElementTextGradient
+    {
+        public float[] topLeft, topRight, bottomLeft, bottomRight;
     }
     [Serializable] public sealed class BattleElementTextEffect
     {

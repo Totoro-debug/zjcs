@@ -700,6 +700,8 @@ namespace Zjcs.Combat.Official
         public List<FightBattleStatusCustomActionEvent> StatusCustomActions =
             new List<FightBattleStatusCustomActionEvent>();
         public List<int> SpawnedUnitIds = new List<int>();
+        // One notification per successful disperse operation; ordinary expiration is not a disperse.
+        public List<int> DispersedUnitIds = new List<int>();
     }
 
     [Serializable]
@@ -727,6 +729,7 @@ namespace Zjcs.Combat.Official
         public int SkillEntityId;
         public int SkillItemId;
         public bool IsReplay;
+        public int ReplayType; // Official EReplaySkillType: Normal=0, Extra=1, ExtraWithTip=2.
         public List<int> TargetIds = new List<int>();
     }
 

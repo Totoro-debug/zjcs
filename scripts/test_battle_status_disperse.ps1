@@ -117,7 +117,10 @@ $enemy.Statuses.Add((New-Status 9001 2 $true))
 $enemy.Statuses.Add((New-Status 9002 3 $true))
 $enemy.Statuses.Add((New-Status 9003 2 $false))
 $enemy.Statuses.Add((New-Status 9004 1 $true))
-[void](Invoke-DisperseBattle (New-DisperseSkill 1.0 @(2,3) 0 $false) $player $enemy)
+$removed = Invoke-DisperseBattle (New-DisperseSkill 1.0 @(2,3) 0 $false) $player $enemy
+Assert-Disperse ($removed.Event.DispersedUnitIds.Count -eq 1 -and $removed.Event.DispersedUnitIds[0] -eq 2) 'One successful disperse operation must emit one target notification, even when two statuses are removed'
+$restored = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($removed.Checkpoint))
+Assert-Disperse ($restored.Receipts[0].Event.DispersedUnitIds.Count -eq 1 -and $restored.Receipts[0].Event.DispersedUnitIds[0] -eq 2) 'Disperse notification did not survive checkpoint persistence'
 Assert-Disperse (($enemy.Statuses | Where-Object { $_.ClassId -eq 9001 }).Count -eq 0) 'Dispersible type-2 status survived'
 Assert-Disperse (($enemy.Statuses | Where-Object { $_.ClassId -eq 9002 }).Count -eq 0) 'Dispersible type-3 status survived'
 Assert-Disperse (($enemy.Statuses | Where-Object { $_.ClassId -eq 9003 }).Count -eq 1) 'Protected status was dispersed'
@@ -133,9 +136,11 @@ Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Count-limited disperse removed th
 # Zero chance and non-matching types remove nothing.
 $player = New-Player; $enemy = New-Enemy
 $enemy.Statuses.Add((New-Status 9201 2 $true))
-[void](Invoke-DisperseBattle (New-DisperseSkill 0.0 @(2) 1 $false) $player $enemy)
+$failed = Invoke-DisperseBattle (New-DisperseSkill 0.0 @(2) 1 $false) $player $enemy
+Assert-Disperse ($failed.Event.DispersedUnitIds.Count -eq 0) 'Failed probability emitted a disperse notification'
 Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Zero-chance disperse removed a status'
-[void](Invoke-DisperseBattle (New-DisperseSkill 1.0 @(3) 1 $false) $player $enemy)
+$unmatched = Invoke-DisperseBattle (New-DisperseSkill 1.0 @(3) 1 $false) $player $enemy
+Assert-Disperse ($unmatched.Event.DispersedUnitIds.Count -eq 0) 'No removable status emitted a disperse notification'
 Assert-Disperse ($enemy.Statuses.Count -eq 1) 'Disperse removed a status of another type'
 
 # EffectRate can raise a configured zero chance; missing rate inputs fail closed.

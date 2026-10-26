@@ -201,10 +201,18 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent.StatusCustomActions != null)
                 foreach (FightBattleStatusCustomActionEvent action in stepEvent.StatusCustomActions)
                     SpawnCustomActionFloat(action, checkpoint);
+            if (stepEvent.DispersedUnitIds!=null)
+                foreach (int targetId in stepEvent.DispersedUnitIds)
+                {
+                    var target=FindUnit(checkpoint,targetId);
+                    if (target!=null) SpawnOfficialDamageFloat(new PendingDamageFloat
+                        {Target=target,PrefabKey="damage_FightDisperseDamageFloatEffect"});
+                }
             if (stepEvent.SkillCasts == null) return;
             foreach (FightBattleSkillCastEvent cast in stepEvent.SkillCasts)
             {
-                if (cast == null || !cast.IsReplay) continue;
+                if (cast == null || !cast.IsReplay || cast.ReplayType==1
+                    || !OfficialBattleWorldTips.CanShowReplay(cast.SkillEntityId)) continue;
                 FightBattleUnitState actor = FindUnit(checkpoint, cast.ActorId);
                 if (actor == null) continue;
                 SpawnOfficialDamageFloat(new PendingDamageFloat
@@ -415,7 +423,18 @@ namespace Zjcs.Presentation.Combat
             foreach (var source in binding.texts)
             {
                 var text=OfficialBattleElementFeedback.BindText(source,nodes);
-                text.color=pending.Color.linear;
+                if (pending.Damage!=null) text.color=pending.Color.linear;
+            }
+            foreach (var source in binding.sprites)
+            {
+                var sprite=nodes[source.path].GetComponent<SpriteRenderer>();
+                sprite.sprite=Resources.Load<Sprite>(OfficialBattleElementFeedbackCatalog.ResourceRoot+source.sprite);
+                sprite.sharedMaterial=Resources.Load<Material>(OfficialBattleElementFeedbackCatalog.ResourceRoot+source.material);
+                if (sprite.sprite==null || sprite.sharedMaterial==null) throw new InvalidOperationException("Original world tip Sprite assets are missing.");
+                sprite.drawMode=(SpriteDrawMode)source.drawMode;
+                sprite.tileMode=(SpriteTileMode)source.tileMode;
+                sprite.size=new Vector2(source.size[0],source.size[1]);
+                sprite.sortingOrder=source.order;
             }
             Vector3 world=gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y))
                 +new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);

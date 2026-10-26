@@ -534,13 +534,13 @@ namespace Zjcs.Editor.Combat
                 if (resetFloat == null || !HasLocalizedMarkerText(resetFloat.transform, "\u91cd\u7f6e\u51b7\u5374"))
                     throw new BuildFailedException("Official skill cooldown reset float did not preserve its localized prefab text.");
                 Transform resetAnimationRoot = FindPrefabPath(resetFloat.transform,
-                    "/FightResetSkillCDFloatEffect/AnimationRoot");
+                    "/FightResetSkillCDFloatEffect_Scene/AnimationRoot");
                 if (resetAnimationRoot == null
                     || resetFloat.GetComponent<OfficialBattleHudAnimationPlayer>() == null)
                     throw new BuildFailedException("Official skill cooldown reset float animation was not initialized.");
-                Vector2 resetStart = ((RectTransform)resetAnimationRoot).anchoredPosition;
+                Vector3 resetStart = resetAnimationRoot.localPosition;
                 scene.Tick(0.1f);
-                if (Vector2.Distance(resetStart, ((RectTransform)resetAnimationRoot).anchoredPosition) < 0.01f)
+                if (Vector3.Distance(resetStart, resetAnimationRoot.localPosition) < 0.001f)
                     throw new BuildFailedException("Official skill cooldown reset animation did not advance with the battle clock.");
 
                 var stackRoot = new GameObject("BattleDamageFloatStackValidation");

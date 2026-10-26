@@ -33,6 +33,7 @@ namespace Zjcs.Combat.Official
         private readonly FightOfficialSkillItemCatalog skillItems;
         private List<int> currentStepSpawnedUnitIds;
         private List<FightBattleStatusCustomActionEvent> currentStepStatusCustomActions;
+        private List<int> currentStepDispersedUnitIds;
         private int lastGlobalRound;
         private FightBattleExecutor(FightBattleCheckpoint checkpoint, FightDamageFormula formula,
             FightDamageSettlement settlement, bool initialize,
@@ -161,6 +162,7 @@ namespace Zjcs.Combat.Official
             var statusCustomActions = new List<FightBattleStatusCustomActionEvent>();
             currentStepSpawnedUnitIds = new List<int>();
             currentStepStatusCustomActions = statusCustomActions;
+            currentStepDispersedUnitIds = new List<int>();
             var performedTargets = new List<FightBattleUnitState>();
             var checkedSlots = new HashSet<int>();
             float stepDuration = 0f;
@@ -299,6 +301,7 @@ namespace Zjcs.Combat.Official
                 statusCustomActions, stepDuration, stepActionDuration);
             currentStepSpawnedUnitIds = null;
             currentStepStatusCustomActions = null;
+            currentStepDispersedUnitIds = null;
             checkpoint.Counter = counter;
             checkpoint.RandomSeed = random.Seed;
             checkpoint.Receipts.Add(new FightBattleStepReceipt
@@ -1636,6 +1639,8 @@ namespace Zjcs.Combat.Official
                 }
             }
             for (int i = 0; i < count; i++) FightStatusLifecycle.End(target, candidates[i]);
+            // Confirmed local notification rule: successful removal only, once for this operation.
+            if (count > 0) currentStepDispersedUnitIds?.Add(target.Id);
         }
 
         /// <summary>
@@ -1791,6 +1796,7 @@ namespace Zjcs.Combat.Official
                 SkillCasts = casts,
                 DamageEvents = damageEvents ?? new List<FightBattleDamageEvent>(),
                 StatusCustomActions = statusCustomActions ?? new List<FightBattleStatusCustomActionEvent>(),
+                DispersedUnitIds = currentStepDispersedUnitIds ?? new List<int>(),
                 SpawnedUnitIds = spawnedUnitIds ?? new List<int>()
             };
             foreach (FightBattleUnitState target in targets)

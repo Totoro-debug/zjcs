@@ -189,6 +189,9 @@ namespace Zjcs.Presentation.Combat
                 case "scale.x": SetScale(target.transform, 0, value); return;
                 case "scale.y": SetScale(target.transform, 1, value); return;
                 case "scale.z": SetScale(target.transform, 2, value); return;
+                case "position.x": SetLocalPosition(target.transform, 0, value); return;
+                case "position.y": SetLocalPosition(target.transform, 1, value); return;
+                case "position.z": SetLocalPosition(target.transform, 2, value); return;
                 case "rotation.x": SetRotation(target.transform, 0, value); return;
                 case "rotation.y": SetRotation(target.transform, 1, value); return;
                 case "rotation.z": SetRotation(target.transform, 2, value); return;
@@ -219,6 +222,15 @@ namespace Zjcs.Presentation.Combat
                 case "m_fontColor.g": SetColor(target, 1, value); return;
                 case "m_fontColor.b": SetColor(target, 2, value); return;
             }
+        }
+
+        private static void SetLocalPosition(Transform target, int axis, float value)
+        {
+            Vector3 position=target.localPosition;
+            if (axis==0) position.x=value;
+            else if (axis==1) position.y=value;
+            else position.z=value;
+            target.localPosition=position;
         }
 
         private static void SetScale(Transform target, int axis, float value)
