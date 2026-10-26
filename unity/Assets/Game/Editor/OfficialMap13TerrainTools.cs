@@ -164,7 +164,7 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             var bindings = new List<Binding>();
             foreach (string name in new[] { "PartitionData", "TileChunkData", "MyTile", "MapGroundTile",
-                "PartitionElement", "PartitionGroup", "PartitionLayerAssigner" })
+                "PartitionElement", "PartitionGroup", "PartitionLayerAssigner", "PartitionLoader", "PartitionController" })
             {
                 Type type = Type.GetType("Zjcs.Official.World.NativeTerrain." + name + ", Zjcs.Official.World.NativeTerrain", true);
                 bindings.Add(Bind(name, type));

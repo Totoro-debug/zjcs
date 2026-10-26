@@ -91,7 +91,9 @@ def build():
     import_meta(DESTINATION, "DefaultImporter", folder=True)
     import_meta(DESTINATION / "Common", "DefaultImporter", folder=True)
     asmdef = DESTINATION / "Zjcs.Official.World.NativeTerrain.asmdef"
-    write(asmdef, encode(dict(name=NAMESPACE, rootNamespace=NAMESPACE, references=[],
+    partition_contract = ROOT / "unity/Assets/Game/Runtime/Offline/World/NativePartition/Zjcs.Offline.World.NativePartition.asmdef"
+    references = ["Zjcs.Offline.World.NativePartition"] if partition_contract.is_file() else []
+    write(asmdef, encode(dict(name=NAMESPACE, rootNamespace=NAMESPACE, references=references,
         includePlatforms=[], excludePlatforms=[], allowUnsafeCode=False, overrideReferences=False,
         precompiledReferences=[], autoReferenced=True, defineConstraints=[], versionDefines=[], noEngineReferences=False)))
     import_meta(asmdef, "AssemblyDefinitionImporter")
