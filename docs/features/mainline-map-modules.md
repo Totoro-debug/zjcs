@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成（已有主线运行时已提取；下列未迁移玩法仍待接入）
+状态：公共模块抽取已完成；功能迁移未完成（各玩法的原表现与内容缺项仍待接入）
 
 ## 功能简介
 
@@ -10,32 +10,34 @@
 
 ## 完整还原部分
 
-已从原 `OfficialMap10GameRuntime` 提取现有实现，公共代码位于 [`Presentation/World/Mainline`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/)。入口组件保留原 MonoScript GUID，使用 `MovedFrom` 记录类型迁移；角色创建流程与现有编辑器检查统一调用公共类型。
+公共代码位于 [`Presentation/World/Mainline`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/)。`OfficialMainlineMapRuntime` 在 `Awake` 为每次入图分别创建 HUD、区域、导航、雕像、体力、探寻、小地图七个模块，负责按原顺序组装、更新和退出；窗口、路线、待交互对象、区域进度、刷新计时、动态实体和渲染目标由所属模块持有。模块实现使用宿主内的私有类型保持封装，不把单张地图或单个角色的可变状态放入全局单例。各图专属剧情、首战引导、机关、音频与实体载荷留在原适配层。
+
+入口组件保留原 MonoScript GUID 和 `MovedFrom`；纯 C# 模块沿用原脚本 `.meta`，原 prefab、层级、坐标、动画、数值、执行次序与存档 DTO 保持兼容。`OfficialMainlineUiCatalog` 按当前 `MapProfile.NativeUiRoot` 缓存原 UI 目录，HUD、雕像、奖励列表、探寻与小地图共用它；通用文本不再由女神像持有或加载。
 
 | 模块 | 当前代码与复用范围 |
 | --- | --- |
 | 地图配置与载荷 | `OfficialMainlineMapProfile` 集中已迁移地图的资源根、原生 UI 根、阶段／故事数量及必须存在的区域条件。`Data` 分部保留各图官方模板、故事图和数量校验。 |
-| HUD、顶部栏、任务与功能入口 | `OfficialWorldUiRenderer` 与 `Hud`、`HudControls`、`TopBar`、`Tasks`、`Functions` 分部共用本地状态绑定；Map11 原生 prefab 路径从地图配置解析。Map10 现有 UI 迁移缺项继续保留在所属地图页。 |
-| 区域开放 | `OfficialMainlineRegionPolicy` 可独立装载官方 `TbMapRegionInfo`／`TbConditionInfo`。保留原有全探索与剧情次数分支、比较运算、错误拒绝及配置检查；实体显隐、交互锁、小地图和任务消费同一份策略。开放条件不等于已实现雾或公开地区状态转换。 |
-| 寻路与移动 | `Navigation` 分部负责屏幕点击、实体命中、交互距离、路径跟随和逐格存档；继续调用 `OfficialWorldMapSession`、`OfficialMapPathfinder` 与 `OfficialMapGroundRules`。桌面输入提供器与原鼠标输入共用遮挡、命中和寻路流程。 |
-| 女神像与失落的女神像 | `Goddess` 分部共用探索条件、原生弹窗、按原阶段顺序激活、回执与传送；地区名称按当前地图 ID 查询。当前接入范围为 Map11，珍宝预览等缺项见[森之国](../maps/map-11.md)。 |
-| 英雄／魔女访问及魔女阶段 | `OfflineMainlineProgressSession.Statues` 提取女神激活、全图魔女计数、英雄／魔女每日共享额度、奖励、HP 与待战斗效果事务；`Witch` 分部保留 Map11 原书页、预览、激活与周期访问。`HeroStatues` 分部已接入四种英雄雕像原弹窗、410 等级属性、首次激活与周期访问；原角色／粒子演出仍待恢复。 |
-| 探索进度 | `Regions` 分部与既有 `OfficialMapProgressAdapter`、`OfficialMapExplorationProgress`、`OfficialMapProgressCalculator` 共用官方实体状态和探索点计算。 |
-| 地图体力点 | `Stamina` 分部与 `OfflineMapStaminaService` 共用金币8011、铁矿8021、时之砂8026和怪物5011的扣费、奖励、战斗回执及本地刷新；原区域／组间隔由 `interactions.json` 加载。 |
-| 区域阴影 | `OfficialMainlineRegionFog` 恢复 Map11 的73份原 LightRegion 层级、Freeform网格、原衰减贴图及地区公开后的半径渐退；地表按原 Multiply 光照计算。其他地图及日夜场景装饰切换尚待接入。 |
-| 命运果实与探寻 | `OfflineFruitTreeService` 共用生产、容量、时间推进和收取事务；`OfflineWorldExplorationService` 共用探寻费用、候选／保底、动态实体与历史事务，`Exploration`／`ExploreUi`／`ExploreDetail`／`ExploreMask` 接入原 HUD 和窗口。完整实体交互与演出仍待完成，详见[命运探寻](world-exploration.md)。 |
-| 小地图与图标 | `MiniMap`、`MiniMapTabs`、`MiniMapMarks`、`MiniMapFilter` 共用已迁移的原面板、图标、跨图浏览、缩放与档案筛选存储；各图几何继续按 ID 加载。 |
+| HUD、顶部栏、任务与功能入口 | `OfficialMainlineHudModule` 管理 `OfficialWorldUiRenderer`、HUD 控件、顶部栏、任务、功能入口、头像、快速购买与提示的状态和销毁；原生 prefab 路径从地图配置解析。Map10 现有 UI 迁移缺项继续保留在所属地图页。 |
+| 区域开放 | `OfficialMainlineRegionsModule` 持有区域进度与雾层，`OfficialMainlineRegionPolicy` 可独立装载官方 `TbMapRegionInfo`／`TbConditionInfo`。保留原有全探索与剧情次数分支、比较运算、错误拒绝及配置检查；实体显隐、交互锁、小地图和任务消费同一份策略。开放条件不等于已实现雾或公开地区状态转换。 |
+| 寻路与移动 | `OfficialMainlineNavigationModule` 持有当前位置、路线、到达回调和待交互目标，负责屏幕点击、实体命中、交互距离、路径跟随和逐格存档；继续调用 `OfficialWorldMapSession`、`OfficialMapPathfinder` 与 `OfficialMapGroundRules`。桌面输入提供器与原鼠标输入共用遮挡、命中和寻路流程。 |
+| 女神像与失落的女神像 | `OfficialMainlineStatuesModule` 的 `Goddess.cs` 共用探索条件、原生弹窗、按原阶段顺序激活、回执与传送；地区名称按当前地图 ID 查询。当前接入范围为 Map11，珍宝预览等缺项见[森之国](../maps/map-11.md)。 |
+| 英雄／魔女访问及魔女阶段 | `OfflineMainlineProgressSession.Statues` 提取女神激活、全图魔女计数、英雄／魔女每日共享额度、奖励、HP 与待战斗效果事务；同一 `OfficialMainlineStatuesModule` 的 `Witch` 实现保留原书页、预览、激活与周期访问，`HeroStatues` 实现已接入四种英雄雕像原弹窗、410 等级属性、首次激活与周期访问；原角色／粒子演出仍待恢复。 |
+| 探索进度 | `OfficialMainlineRegionsModule` 与既有 `OfficialMapProgressAdapter`、`OfficialMapExplorationProgress`、`OfficialMapProgressCalculator` 共用官方实体状态和探索点计算。 |
+| 地图体力点 | `OfficialMainlineStaminaModule` 与 `OfflineMapStaminaService` 共用金币8011、铁矿8021、时之砂8026和怪物5011的扣费、奖励、战斗回执及本地刷新；原区域／组间隔由 `interactions.json` 加载。 |
+| 区域阴影 | `OfficialMainlineRegionsModule` 按 `MapProfile.HasRegionFog` 挂载 `OfficialMainlineRegionFog`，资源根与数量断言从当前地图配置传入，不再内置 Map11 路径；当前载荷恢复 Map11 的73份原 LightRegion 层级、Freeform网格、原衰减贴图及地区公开后的半径渐退；地表按原 Multiply 光照计算。其他地图及日夜场景装饰切换尚待接入。 |
+| 命运果实与探寻 | `OfflineFruitTreeService` 共用生产、容量、时间推进和收取事务；`OfflineWorldExplorationService` 共用探寻费用、候选／保底、动态实体与历史事务，`OfficialMainlineExplorationModule` 管理原 HUD 入口、动态实体、确认／详情／令牌窗口、遮罩与释放。果树生产服务继续由家园消费同一角色存档，不在地图重建一套生产规则。完整实体交互与演出仍待完成，详见[命运探寻](world-exploration.md)。 |
+| 小地图与图标 | `OfficialMainlineMiniMapModule` 管理相机、渲染纹理、圆形／全屏面板、图标、跨图页签和筛选，共用已迁移的原面板、图标、跨图浏览、缩放与档案筛选存储；各图几何继续按 ID 加载。 |
 | 交互、剧情、战斗与存档 | `Interactions`、`Story`、`Dialogue`、`Battle`、`Persistence` 分部保留既有执行顺序；Map10 首战引导独立在 `Map10` 分部。森之国机关、动态怪物与音频仍消费其专属载荷。 |
 
-`map-{ID}-save.json`、角色进度、回执前缀和 `minimap-filter.json` 的现有格式保持兼容。`Map10Runtime…` 数据 DTO 名称暂保留，避免把运行时代码抽取混入资源／存档结构变更。
+`Modules.cs` 集中模块组装与各自的 UI／渲染目标释放；开发检查通过 `OfficialMainlineMapInspection` 定位所属模块，只用于 Editor／development Player 或显式启用 `ZJCS_MAINLINE_MODULE_VALIDATION` 的回归构建，正式运行流程不依赖反射。`map-{ID}-save.json`、角色进度、回执前缀和 `minimap-filter.json` 的现有格式保持兼容。`Map10Runtime…` 数据 DTO 名称暂保留，避免把运行时代码抽取混入资源／存档结构变更。
 
-官方依据沿用已提取的 `WorldCanvas`、`WorldPanel`、`FunctionEntryDialog`、`MiniMapMaskedUI`、`MiniMapFullScreenPanel`、`GoddessTouchDialog`、`LostGoddessTouchDialog`、`WorldWitchTouchUI`、`WorldMapProgressCondition`、`StoryCountCondition` 以及现有地图导航／进度实现。各图来源与哈希见 Map10、Map11 所属页和原来源清单；动态怪物、战斗场景和时间轴的来源清单及生成器中的运行时代码绑定同步到公共目录，官方输入与素材哈希保持原值。
+官方依据沿用已提取的 `WorldCanvas`、`WorldPanel`、`FunctionEntryDialog`、`MiniMapMaskedUI`、`MiniMapFullScreenPanel`、`GoddessTouchDialog`、`LostGoddessTouchDialog`、`WorldWitchTouchUI`、`WorldMapProgressCondition`、`StoryCountCondition` 以及现有地图导航／进度实现。各图来源与哈希见 Map10、Map11 所属页和原来源清单；动态怪物、战斗场景和时间轴的来源清单及生成器中的运行时代码绑定同步到公共目录，官方输入与素材哈希保持原值。七类模块与原 Git 实现的对应、官方客户端代码、输入／输出 SHA256、四份原页签动画及 prefab 显式绑定见 [mainline-modules-source-manifest.json](../../assets/reference/official-map/mainline-modules-source-manifest.json)。
 
-验证入口为 `Zjcs.Editor.MainlineMapModuleValidation.Run`，使用 `-verify-mainline-modules <隔离输出目录>`；同一检查也可在 Windows development Player 运行。Unity `2022.3.57f1c2` 已通过编译、`ProjectTools.Validate`、主线／雕像事务检查与带图形的 Play Mode 回归。地图移动通过注入屏幕点击走 UI 遮挡、实体命中与寻路；Map11 小地图开关、跨图页签、筛选和女神激活使用原按钮的指针按下／抬起／点击事件，并核对最上层射线命中。检查覆盖区域探索／剧情门槛、Map10／Map11 位置冷读、筛选 JSON 冷读、女神激活恢复、英雄／魔女每日共享额度及待战斗效果恢复。女神地区完成度及打开弹窗由测试设置，未覆盖自然探索到 100% 或从地图点击雕像的完整路线。
+验证入口为 `Zjcs.Editor.MainlineMapModuleValidation.Run`，使用 `-verify-mainline-modules <隔离输出目录>`；同一检查也可在 Windows development Player 运行。Unity `2022.3.57f1c2` 已通过编译、`ProjectTools.Validate`、主线／雕像事务检查与带图形的 Play Mode 回归。地图移动通过注入屏幕点击走 UI 遮挡、实体命中与寻路；Map11 小地图开关、跨图页签、筛选和女神激活使用原按钮的指针按下／抬起／点击事件，并核对最上层射线命中。检查覆盖区域探索／剧情门槛、Map10／Map11 位置冷读、筛选 JSON 冷读、女神激活恢复、英雄／魔女每日共享额度及待战斗效果恢复。七类模块拆分后已在隔离工程以 DX12 重跑该完整流程，并覆盖探寻概率／历史页签、令牌拖动、单次／十连费用、原引导宝箱地图点击免体力领取及冷读恢复。女神地区完成度及打开弹窗由测试设置，未覆盖自然探索到 100% 或从地图点击雕像的完整路线。
 
 已实际查看 Map10 地图、Map11 HUD、全屏小地图和失落女神弹窗截图；Map10 HUD 当前不可见，Map11 地形／水面／遮挡仍有原有缺项，完整画面和地图验收继续由所属页维护。Python Map11 运行载荷生成与小地图转换三项检查通过。另一次 Map10 旧输入来源检查失败：未纳入当前 Git HEAD 的 `assets/official/adventure.json` 实际哈希为 `a6820d65…`，原清单期望 `84b92c87…`；本次未修改该输入或预期哈希，不能据此声明旧输入来源校验通过。
 
-Windows development Player 已成功构建并真实启动，以隔离档案重复通过上述指针交互、区域条件与冷读检查，并查看四张实际渲染画面；隐藏窗口产生的无效截图未计入通过结论。回归构建位于 `.tools/mainline-refactor-player/杖剑传说.exe`，入口参数与 Editor 相同，测试不会写入用户档案。本次交付是既有实现的公共代码抽取，下列功能及地图仍未完成，尚未作为新增完整功能发布到桌面正式目录。
+Windows 普通 Player 已成功构建，在内置屏以 DX12 真实运行并通过上述同一套模拟指针、拖动、区域条件、女神／英雄、金币采集／刷新、探寻和冷读检查；已查看小地图、清雾、探寻概率／历史的实际画面。构建入口 `BuildWindowsPlayer` 支持 `-mainline-player-output <exe>` 和 `-mainline-release-probe`；后者仅为本次普通回归构建增加 `ZJCS_MAINLINE_MODULE_VALIDATION`，启动参数仍为 `-verify-mainline-modules <隔离目录>`，并阻止正常启动流程另开存档界面，测试不写入用户档案。沿用本机已安装的 Mono Windows 支持，构建后恢复原脚本后端。回归版本位于 `.tools/mainline-modules-player/杖剑传说.exe`，不带验证参数时仍走正常游戏入口。当前 Unity DX12 日志仍有原生 `PresentFrame／WaitForLastPresentationAndGetTimestamp` 呈现时序告警；development 控制台遮挡的截图不作为画面通过证据，未声明该引擎告警已修复。本次为既有实现的公共模块抽取，完整玩法缺项见下文，未覆盖桌面正式版本。
 
 新增载荷固定 `854_156383`：`scripts/prepare_mainline_interactions.py` 导出英雄参数、地区等级、区域刷新和体力点奖励；`scripts/prepare_unity_world_exploration.py` 解码7种令牌、65条实体组变体、28种模板及68条递归条件，已接入公共探寻事务与原窗口入口。`prepare_unity_map11_ui.py` 扩展至59份官方面板、535张sprite，保留英雄、探寻、奖励列表层级与原动画事件；来源分别见 `mainline-interactions-source-manifest.json`、`world-exploration-source-manifest.json` 及 Map11 UI 清单。探寻令牌列表恢复原LoopScrollRect的9个类，模糊和渐变的原生方法及程序转换分别记录在所属来源清单。
 

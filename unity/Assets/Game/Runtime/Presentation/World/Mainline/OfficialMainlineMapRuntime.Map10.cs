@@ -27,19 +27,19 @@ namespace Zjcs.Presentation.World
         private void StartFirstBattleIntroduction()
         {
             if (HasStory("FirstBattle") || localSave.firstBattleIntroShown || dialogueWaiting
-                || movementPath != null || battleController != null)
+                || navigation.movementPath != null || battleController != null)
                 return;
             if (firstBattleNpc == null)
                 firstBattleNpc = entityView.SpawnStoryEntity(8402,
                     "Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view", new Vector2(23, 23));
             PlayStory("FirstBattle", 0, () =>
             {
-                movementCompletion = () => PlayStory("FirstBattle", 1, () =>
+                navigation.movementCompletion = () => PlayStory("FirstBattle", 1, () =>
                 {
                     localSave.firstBattleIntroShown = true;
                     SaveLocalProgress();
                 });
-                StartMovement(new MapGridPoint(23, 22), null);
+                navigation.StartMovement(new MapGridPoint(23, 22), null);
             });
         }
 
@@ -47,17 +47,17 @@ namespace Zjcs.Presentation.World
         {
             MapGridPoint[] candidates =
             {
-                new MapGridPoint(currentGrid.X, currentGrid.Y + 1),
-                new MapGridPoint(currentGrid.X + 1, currentGrid.Y),
-                new MapGridPoint(currentGrid.X, currentGrid.Y - 1),
-                new MapGridPoint(currentGrid.X - 1, currentGrid.Y)
+                new MapGridPoint(navigation.currentGrid.X, navigation.currentGrid.Y + 1),
+                new MapGridPoint(navigation.currentGrid.X + 1, navigation.currentGrid.Y),
+                new MapGridPoint(navigation.currentGrid.X, navigation.currentGrid.Y - 1),
+                new MapGridPoint(navigation.currentGrid.X - 1, navigation.currentGrid.Y)
             };
             foreach (MapGridPoint candidate in candidates)
             {
-                if (Manhattan(currentGrid, candidate) != 1) continue;
+                if (Manhattan(navigation.currentGrid, candidate) != 1) continue;
                 List<MapGridPoint> path = session.FindPath(new OfficialMapPathRequest
                 {
-                    Start = currentGrid,
+                    Start = navigation.currentGrid,
                     End = candidate,
                     PreciseTarget = true
                 });

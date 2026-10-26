@@ -58,9 +58,9 @@ namespace Zjcs.Presentation.World
                     StoryBooleanFields targetMap = JsonUtility.FromJson<StoryBooleanFields>(input.sourceJson);
                     if (session == null || avatar == null || mapClassId != targetMap.MapClassId) return false;
                     if (targetMap.RegionId == -1) return true;
-                    return regionConfigs.TryGetValue(targetMap.RegionId, out OfficialMainlineRegionConfig region)
+                    return regions.regionConfigs.TryGetValue(targetMap.RegionId, out OfficialMainlineRegionConfig region)
                         && Zjcs.Offline.World.OfficialMapNavigationView.TryGetCell(session.Definition.Navigation,
-                            currentGrid.X, currentGrid.Y, out int area, out int ground)
+                            navigation.currentGrid.X, navigation.currentGrid.Y, out int area, out int ground)
                         && region.Areas.Contains(area);
                 case "QueryPlayerContainsItemNode":
                     return StoryFields(input).ItemConfigs.All(value => StoryItemCount(value.ItemId) >= value.ItemCount);

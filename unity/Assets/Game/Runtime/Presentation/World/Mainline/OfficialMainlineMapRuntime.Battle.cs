@@ -31,21 +31,21 @@ namespace Zjcs.Presentation.World
                 || !rosters.TryGetValue(stageId, out Map10RuntimeRoster roster)
                 || roster.Waves == null || roster.Waves.All(wave => wave == null || wave.Units == null || wave.Units.Length == 0))
             {
-                ShowOfficialNotice("战斗配置缺失：" + stageId);
+                hud.ShowOfficialNotice("战斗配置缺失：" + stageId);
                 return;
             }
 
             selectedStageEntity = entity;
             selectedStageCompletion = completed;
             string root = "/WorldStageDialog/BgDialog3/Content/DialogContent (1)";
-            ui.SetText("WorldStageDialog", root + "/TitleGo/TitleGo/TitleTxt", "Stage " + stage.Id);
-            ui.SetText("WorldStageDialog", root + "/DescGo/DescText", string.Empty);
-            ui.SetText("WorldStageDialog", root + "/UnlockGo/BtnContent/BattleBtn/Content/Text", "开始战斗");
-            ui.SetNodeActive("WorldStageDialog", root + "/LockGo", false);
-            ui.SetNodeActive("WorldStageDialog", root + "/UnlockGo", true);
-            ui.SetNodeActive("WorldStageDialog", root + "/UnlockGo/BtnContent/BattleBtn", true);
-            ui.SetNodeActive("WorldStageDialog", root + "/BottomContent/CommonBtn_12", true);
-            ui.SetPanelActive("WorldStageDialog", true);
+            hud.ui.SetText("WorldStageDialog", root + "/TitleGo/TitleGo/TitleTxt", "Stage " + stage.Id);
+            hud.ui.SetText("WorldStageDialog", root + "/DescGo/DescText", string.Empty);
+            hud.ui.SetText("WorldStageDialog", root + "/UnlockGo/BtnContent/BattleBtn/Content/Text", "开始战斗");
+            hud.ui.SetNodeActive("WorldStageDialog", root + "/LockGo", false);
+            hud.ui.SetNodeActive("WorldStageDialog", root + "/UnlockGo", true);
+            hud.ui.SetNodeActive("WorldStageDialog", root + "/UnlockGo/BtnContent/BattleBtn", true);
+            hud.ui.SetNodeActive("WorldStageDialog", root + "/BottomContent/CommonBtn_12", true);
+            hud.ui.SetPanelActive("WorldStageDialog", true);
         }
 
         private int ResolveEntityStageId(Map10RuntimeEntity entity)
@@ -70,7 +70,7 @@ namespace Zjcs.Presentation.World
             Action completed = selectedStageCompletion;
             selectedStageEntity = null;
             selectedStageCompletion = null;
-            ui.SetPanelActive("WorldStageDialog", false);
+            hud.ui.SetPanelActive("WorldStageDialog", false);
             StartEntityStage(entity, completed);
         }
 
@@ -78,7 +78,7 @@ namespace Zjcs.Presentation.World
         {
             selectedStageEntity = null;
             selectedStageCompletion = null;
-            ui.SetPanelActive("WorldStageDialog", false);
+            hud.ui.SetPanelActive("WorldStageDialog", false);
         }
 
         private void StartEntityStage(Map10RuntimeEntity entity, Action completed)
@@ -87,7 +87,7 @@ namespace Zjcs.Presentation.World
             if (stageId <= 0 || !stages.TryGetValue(stageId, out Map10RuntimeStage stage)
                 || !rosters.TryGetValue(stageId, out Map10RuntimeRoster roster))
             {
-                ShowOfficialNotice("战斗配置缺失：" + stageId);
+                hud.ShowOfficialNotice("战斗配置缺失：" + stageId);
                 return;
             }
             if (stageId == 9910)
@@ -105,7 +105,7 @@ namespace Zjcs.Presentation.World
             if (!battleScenes.TryGetValue(stage.GameId, out Map10RuntimeBattleScene scene))
                 throw new InvalidDataException("Official Map10 battle scene is missing for GameId " + stage.GameId);
             bool periodicGroupAlreadyUsed = entity.PeriodicityGroupIds.Any(localSave.completedPeriodicityGroups.Contains);
-            if (!IsStaminaPoint(entity) && ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed))
+            if (!OfficialMainlineStaminaModule.IsStaminaPoint(entity) && ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed))
             {
                 CompleteEntity(entity);
                 completed?.Invoke();
@@ -121,16 +121,16 @@ namespace Zjcs.Presentation.World
             FightBattleCheckpoint resume = null)
         {
             FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
-            if (IsStaminaPoint(entity))
+            if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
             {
                 long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                ProgressionResult cost = Stamina.StartBattle(mapClassId, entity.PlacementId, StaminaCosts(entity), now);
+                ProgressionResult cost = stamina.Stamina.StartBattle(mapClassId, entity.PlacementId, stamina.StaminaCosts(entity), now);
                 if (cost.Status != ProgressionResultStatus.Applied && cost.Status != ProgressionResultStatus.Unchanged)
                 {
-                    if (cost.Status == ProgressionResultStatus.InvalidState) StaminaCanStart(entity);
+                    if (cost.Status == ProgressionResultStatus.InvalidState) stamina.StaminaCanStart(entity);
                     return;
                 }
-                RefreshWorldTopBar();
+                hud.RefreshWorldTopBar();
             }
             if (checkpoint.StageType == 0) checkpoint.StageType = stage.Type;
             FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
@@ -154,7 +154,7 @@ namespace Zjcs.Presentation.World
             battleController.HudControlClicked += OnBattleHudControl;
 
             OfficialBattleGridMapper mapper = new OfficialBattleGridMapper(battleRoot, grid);
-            Sprite fallbackPortrait = uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
+            Sprite fallbackPortrait = hud.uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
             OfficialBattleMonsterPortraitCatalog monsterPortraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
@@ -196,7 +196,7 @@ namespace Zjcs.Presentation.World
                 IsBattleSpeedConditionMet);
             SuspendWorldForBattle();
             battleStepTimer = 0.8f;
-            pendingInteraction = entity;
+            navigation.pendingInteraction = entity;
             activeBattleStage = stage;
             battleCompletion = completed;
         }
@@ -211,7 +211,7 @@ namespace Zjcs.Presentation.World
         /// </summary>
         private void SaveActiveBattle(bool force)
         {
-            if (battleController == null || activeBattleStage == null || pendingInteraction == null) return;
+            if (battleController == null || activeBattleStage == null || navigation.pendingInteraction == null) return;
             FightBattleCheckpoint checkpoint = battleController.Checkpoint;
             if (checkpoint == null || checkpoint.Finished) return;
             if (!force && checkpoint.Counter - lastActiveSaveCounter < 5) return;
@@ -219,7 +219,7 @@ namespace Zjcs.Presentation.World
             {
                 localSave.activeBattle = FightBattleCheckpointSerializer.Save(checkpoint);
                 localSave.activeBattleStageId = activeBattleStage.Id;
-                localSave.activeBattlePlacementId = pendingInteraction.PlacementId;
+                localSave.activeBattlePlacementId = navigation.pendingInteraction.PlacementId;
                 localSave.activeBattleSavedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 lastActiveSaveCounter = checkpoint.Counter;
                 SaveLocalProgress();
@@ -244,7 +244,7 @@ namespace Zjcs.Presentation.World
                     SaveLocalProgress();
                     return null;
                 }
-                ShowOfficialNotice("继续上次战斗");
+                hud.ShowOfficialNotice("继续上次战斗");
                 return checkpoint;
             }
             catch (Exception error)
@@ -575,12 +575,12 @@ namespace Zjcs.Presentation.World
             if (battleController == null) return;
             FightBattleCheckpoint checkpoint = battleController.Checkpoint;
             if (checkpoint == null || !checkpoint.Finished) return;
-            Map10RuntimeEntity entity = pendingInteraction;
+            Map10RuntimeEntity entity = navigation.pendingInteraction;
             Action callback = battleCompletion;
             bool storyBattle = callback != null;
             FightBattleOutcome outcome = checkpoint.Outcome;
             bool won = outcome != null && outcome.Won;
-            FinishStaminaBattle(entity, won);
+            stamina.FinishStaminaBattle(entity, won);
             if (entity != null)
             {
                 if (localSave.battleResults == null) localSave.battleResults = Array.Empty<Map10RuntimeBattleResult>();
@@ -625,9 +625,9 @@ namespace Zjcs.Presentation.World
                 {
                     entity.State = 1;
                     entityView.SetEntityState(entity.PlacementId, 1);
-                    witchSpawnPending = null;
+                    statues.witchSpawnPending = null;
                 }
-                else if (oneTimeStage && !IsStaminaPoint(entity))
+                else if (oneTimeStage && !OfficialMainlineStaminaModule.IsStaminaPoint(entity))
                 {
                     if (!localSave.completedStages.Contains(checkpoint.StageId))
                         localSave.completedStages = localSave.completedStages.Concat(new[] { checkpoint.StageId }).ToArray();
@@ -641,7 +641,7 @@ namespace Zjcs.Presentation.World
             ClearActiveBattle();
             Action completed = DestroyBattleSession();
             SaveLocalProgress();
-            if (!cleared) ShowOfficialNotice("战斗失败");
+            if (!cleared) hud.ShowOfficialNotice("战斗失败");
             completed?.Invoke();
         }
 
@@ -651,11 +651,11 @@ namespace Zjcs.Presentation.World
             if (activeBattleStage != null && (battleController.Phase == FightBattlePhase.Preparing
                 ? !activeBattleStage.LeaveInPreparing : !activeBattleStage.LeaveInPlaying))
             {
-                ShowOfficialNotice("当前阶段不能离开战斗");
+                hud.ShowOfficialNotice("当前阶段不能离开战斗");
                 return;
             }
             battleController.EndBattle();
-            FinishStaminaBattle(pendingInteraction, false);
+            stamina.FinishStaminaBattle(navigation.pendingInteraction, false);
             ClearActiveBattle();
             Action callback = DestroyBattleSession();
             SaveLocalProgress();
@@ -665,7 +665,7 @@ namespace Zjcs.Presentation.World
         private void AbortBattle()
         {
             if (battleController == null) return;
-            FinishStaminaBattle(pendingInteraction, false);
+            stamina.FinishStaminaBattle(navigation.pendingInteraction, false);
             ClearActiveBattle();
             DestroyBattleSession();
             SaveLocalProgress();
@@ -687,8 +687,8 @@ namespace Zjcs.Presentation.World
             battleRoot = null;
             RestoreWorldAfterBattle();
             if (entityRoot != null) entityRoot.gameObject.SetActive(true);
-            SetAvatarPosition(currentGrid);
-            pendingInteraction = null;
+            navigation.SetAvatarPosition(navigation.currentGrid);
+            navigation.pendingInteraction = null;
             return callback;
         }
 

@@ -88,7 +88,7 @@ namespace Zjcs.Presentation.World
                 changed |= mapEntities[rule.PlacementId].State != puzzles.State(rule.PlacementId);
                 mapEntities[rule.PlacementId].State = puzzles.State(rule.PlacementId);
             }
-            if (changed) RefreshRegionProgress();
+            if (changed) regions.RefreshRegionProgress();
             RefreshEntityActivity();
         }
     }

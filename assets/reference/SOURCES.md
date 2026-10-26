@@ -1720,3 +1720,5 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 战报同步滚动：`restore_battle_report_scroll_sync.py` 从同版原组件严格读取3处表头／列表引用，迁移 `FightEndReportSkillTabView` 的限制、归一化复位和比例跟随方法。来源、原对象及后续 prefab 输出哈希见 [report-scroll-source-manifest.json](battle-hud/report-scroll-source-manifest.json)。本地初始化入口适配原 UIBase 生命周期，保留原布局刷新次序；模拟列表拖拽与两端越界、普通战斗统计和结算返回通过。真实数据提供者、下拉框与正式入口仍待迁移。
 
 存档选择界面：`scripts/prepare_official_save_selection.py` 复用启动页提取工具，从固定854官方 APK 恢复 `PlanesListPanel`、列表内嵌 `PlanesRoleItem` 与原启动模糊遮罩，共131个对象、37张 Sprite、16个原动画片段；保留原层级、锚点、TMP字体／描边、Sprite几何、RawImage UV、页签 Animator 与窗口显示曲线。角色头像复用原外观网格、摄影参数及待机姿势；本地槽位替代在线位面提供者。APK、bundle／CAB／对象、官方代码及载荷哈希见 [source-manifest.json](save-selection/source-manifest.json)，Unity原生转换、资源目录和显式绑定哈希见 [native-source-manifest.json](save-selection/native-source-manifest.json)。提取均来自APK及严格同哈希缓存，没有混入其他版本；新增素材未生成完整备份快照。实际验证范围见[设置、拍照与本地存档](../../docs/features/settings-and-save.md)。
+
+主线地图七类公共模块的原实现 Git 来源、官方客户端代码、模块输出及探寻页签原动画绑定见 [mainline-modules-source-manifest.json](official-map/mainline-modules-source-manifest.json)。沿用854固定版与既有官方载荷；仅拆分状态／生命周期和恢复四份原页签动画的名称及 prefab 引用，没有新增绘制素材。

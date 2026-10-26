@@ -1,0 +1,742 @@
+{
+  "manifest": "854_156383",
+  "operation": "Extract the existing verified mainline implementation into seven per-map modules; preserve official rules and payloads. Restore four original tab animation assets and explicit prefab references.",
+  "prior_implementation": [
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Audio.cs",
+      "sha256_git_blob": "01003b39f5beb2799c1b0268ba95824d578f7d5a168f7682bcb4dfd2cedcf440"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
+      "sha256_git_blob": "56bbbea257eb171d69411bd678e7e58599d9b1b80922938b7bcb3158b9be0702"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattlePortrait.cs",
+      "sha256_git_blob": "7e4c0cb29c94ceb6865832cda8ea42f3d6750ea84c33cd1a29fef6e8f477ca47"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs",
+      "sha256_git_blob": "e2636fcc35aa5ad5f3f9ec3a006914a5cd58c06b26e7aac4ecdfaf8c4cb49db0"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256_git_blob": "90a1a70aa64e7e7d90b526aa408cc9acdd20cb57a065bd5e95a81ef2d06c86d6"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Data.cs",
+      "sha256_git_blob": "c0ffd7cbe1dad5102116f5ab3e90ae10f92e124403ff0127110540a916b61182"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Dialogue.cs",
+      "sha256_git_blob": "99f23f36d5e3df0089c2a3bf6523549049b2524eb71f7f66a6c31589e42aca03"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Exploration.cs",
+      "sha256_git_blob": "2b4f0b4383fa429ca5b7eb35a35330c26762f959d3142bd792788872d51331e1"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.ExploreDetail.cs",
+      "sha256_git_blob": "c90ee86e70775a6c71b9d2e6cddcca58e6437e60b674913eee6079f612ff0e00"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.ExploreMask.cs",
+      "sha256_git_blob": "7d35c9fab61f7a964aa1bec288e9ef12be30ec7d71b6ab278a65a8d4fa391edd"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.ExploreUi.cs",
+      "sha256_git_blob": "b9acb04413db515b2b359347727c31b957bf4cb84862060ab342e80d6b5efe58"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Functions.cs",
+      "sha256_git_blob": "deae322f5ca71dba73572472b40486dc256adf394f6ed2874f5c7cbc8df24ac9"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Goddess.cs",
+      "sha256_git_blob": "a47f7c5a3e9590ad76c3e0fcfb4f6996e3cbc8946903ef78a9e2513a2b368620"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.HeroStatues.cs",
+      "sha256_git_blob": "57bcf1d8ca538585c0238ff0329a4d8052bd11c9ef316c6e6cfaec86ecc6ce85"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Hud.cs",
+      "sha256_git_blob": "c5e19e0ac072959ead99e145c6f5725e36dd3c9a39f270d5f2626d2cfd5737ca"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.HudControls.cs",
+      "sha256_git_blob": "a1bb8a0a1496ef5a98ae32820eeb5b07853a1ce2f90d0925ce1e9b7aa070e558"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
+      "sha256_git_blob": "d2a8d9c001bfca548b0406d80552bd3cd2a78f9a0f6e5914540a5626cd15c305"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map10.cs",
+      "sha256_git_blob": "f311192a3c74d91cebea628f75f4ff5e5b85ecf91713a84ba3fe39fd765d2444"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.MiniMap.cs",
+      "sha256_git_blob": "ddef6a6d7b3376aeac3f09455fae54be0a5fd96e0c507498763a19a0dcd98881"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.MiniMapFilter.cs",
+      "sha256_git_blob": "b0b18a92a669662fb1f9876181fa34575bd016b2232ec507a0dbf9422ccf0549"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.MiniMapMarks.cs",
+      "sha256_git_blob": "1612ddeb0d8b20cba3e816cd4c5bb3bd3dafd21b7f890aacc252ecf3dc542dad"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.MiniMapTabs.cs",
+      "sha256_git_blob": "8aa2a28349929dfe4b8f9408388bfbb2867a0d34e3fda99fc590830bdc0e6252"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Navigation.cs",
+      "sha256_git_blob": "249101081008b8dd35b28e073112489fa34b352a8b043d94ca4c3836bdffd30c"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
+      "sha256_git_blob": "70e26305ec5d46e9f00e68a35e45709e4d91e20659d244f12a1a9cb6500d31d2"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs",
+      "sha256_git_blob": "8ca08290e3a1acc238736e33fb6762632ec5b9abbd142f4b06a7eab1e5484290"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Portrait.cs",
+      "sha256_git_blob": "14cf81efe256f6223d4808300b6f1342b54c2777197d2a4d62cd901a8ae54352"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs",
+      "sha256_git_blob": "19983d206a2d67378d3ce205b0e41fd9f9759c1a9724463bd79cc8f1928363a5"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.QuickBuy.cs",
+      "sha256_git_blob": "157dbbe0c0019fe1b6304e72c116859b0d569da6f730301a671ed4e288955bf4"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Regions.cs",
+      "sha256_git_blob": "4c46b0eed7f6d7ce4a186464d5f36589f67a119ca424daae0e8201fd4132757d"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Stamina.cs",
+      "sha256_git_blob": "7c514d052083ac1bf294ec23d9539e74716ac5b9fd19cdc7074e69fad2b31785"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Story.cs",
+      "sha256_git_blob": "96d4424f7a717353047edf3dd6c28f11e1267cf3aa4216efa048b036ce8d07fc"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryBranches.cs",
+      "sha256_git_blob": "bf91ccfe1efc2225bc85faf03de4444e11fbe124f9bfa1f329f8eb21038d8274"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StorySpatial.cs",
+      "sha256_git_blob": "59ddcfa2b2b5e50a083ca8ad14e241afdf0b59764c1dfcfd4b8b73a2a93b1621"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryValues.cs",
+      "sha256_git_blob": "2a4fa1c0d7f8b5b815fe20784b51924c15e836e2cf660ecc88ff1e221dcc57fe"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Tasks.cs",
+      "sha256_git_blob": "f2578f0da2aa2900421fb357f78456dcabbe2726c2457f1212cba055d7114336"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.TopBar.cs",
+      "sha256_git_blob": "36eb1b464aef1e4d39bd5b4e2894a1126bf44f6d9605e00c7773ee30a20a7de3"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Witch.cs",
+      "sha256_git_blob": "99b2c56dc07d6bf190c0d631efcf7411cf8d5699c555ffb18fa99ec6bb0164e3"
+    },
+    {
+      "git_commit": "a9efa6e5fb13353e1b18c49d061a282da1e922d7",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.WorldMonsters.cs",
+      "sha256_git_blob": "410a318df1a45b053c446d1355fcb652ad1f5d0434d922557aaedff3afc1c88c"
+    }
+  ],
+  "official_code": [
+    {
+      "path": ".tools/source-packages/official-code/client-source/WorldPanel.cs",
+      "sha256": "6cfa8c3bc2d8a331b3b04295c446c216fb18a1722dc6955315d57530eab6adeb"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/WorldExploreBtn.cs",
+      "sha256": "5252f70cb9f919b2e4cd4f9ba1ec046fa50a2c8d1ba350dc8c5bf3cb2fa1667a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/GoddessTouchDialog.cs",
+      "sha256": "98660c0b12b62f37c6873082546c5e0a6ea87f0d4d0d2037cc26759856b8c80c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/LostGoddessTouchDialog.cs",
+      "sha256": "69c6dd3ac193f5a4b6b6203d690b45cde06f1909dae73a065694fdc59ac01654"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/StageUtils.cs",
+      "sha256": "3d9707021c42770e70c7f0ea904e3b1e9aec6d8d6607dcdcd278acf6ca41c24e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MiniMapFullScreenPanel.cs",
+      "sha256": "db94485311da2c3db505ed95d8b2559c0207eaf8bf0d768fdacd313265964d09"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MapRegionLight.cs",
+      "sha256": "9eff4f2c5657afb1efad4549eead158ff0aaf6c526348e42927191e954621bf6"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/ExploreDetailDialog.cs",
+      "sha256": "0ff1dba535a317b241d161351ac9ffe92a8531f7eb98e412877716d61cbd176b"
+    }
+  ],
+  "official_asset_source_manifest": "unity/Assets/Official/World/Map/11/UI/source-manifest.json",
+  "ui_export_input": {
+    "path": "unity/Assets/Official/World/Map/11/UI/map11-ui.json",
+    "sha256": "e6e8387d5ba68893f2b6965ceb74f5fba2caecb68d3d12d2fa982cfb5114f887"
+  },
+  "tab_animation_records": [
+    {
+      "panel": "ExploreDetailDialog",
+      "path": "/ExploreDetailDialog/BgDialog1/Content/TabGroup_14/TabGroup/PreviewTabItem",
+      "clip": "ToggleOff",
+      "track_count": 6,
+      "sha256_export_record": "56955134989bf3e673556b4ac07b92c3996ed9e7684c3f2a140eab5db787d930"
+    },
+    {
+      "panel": "ExploreDetailDialog",
+      "path": "/ExploreDetailDialog/BgDialog1/Content/TabGroup_14/TabGroup/PreviewTabItem",
+      "clip": "ToggleOn",
+      "track_count": 6,
+      "sha256_export_record": "c72b82f427202ed5c96c6b5bd5db3993f28175c4a223b9741ee6f390bb99950c"
+    },
+    {
+      "panel": "ExploreDetailDialog",
+      "path": "/ExploreDetailDialog/BgDialog1/Content/TabGroup_14/TabGroup/HistoryTabItem",
+      "clip": "ToggleOff",
+      "track_count": 6,
+      "sha256_export_record": "25761da6fda115799328b4f769950a73f7dd51731829c8b4b0d2726754ca7eb8"
+    },
+    {
+      "panel": "ExploreDetailDialog",
+      "path": "/ExploreDetailDialog/BgDialog1/Content/TabGroup_14/TabGroup/HistoryTabItem",
+      "clip": "ToggleOn",
+      "track_count": 6,
+      "sha256_export_record": "5d490f4948012d3db5e47c8d218820482178a946f988f7fba84a145a64a5d97c"
+    }
+  ],
+  "tab_conversion": "Reuse OfficialMap11UiTools.RestoreNativeAnimation with original curves, timing, property types and legacy mode; retain ToggleOn/ToggleOff as the asset file name inside a unique hash directory. Explicitly bind the four clips to the original two tab objects. No new art or layout.",
+  "runtime_outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.Exploration.cs",
+      "sha256": "5f0ae01833889398596e5d2d903d8a32ba952c2ff1e362dec0bb992ba86fb306"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.Exploration.cs.meta",
+      "sha256": "e5229a5eef8eff7ccd59d3b802f697a7fc2cc5c0717622b26c6a2d5b4cb02d35"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreDetail.cs",
+      "sha256": "b9ec1d1a494296ca7ebc5bffb59284e1bb8927a0e0a9920b75e22241d4531018"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreDetail.cs.meta",
+      "sha256": "294d214becbdb11a8f3ef6041c11059a12e04728aff7bad4ef5b937747bd3934"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreMask.cs",
+      "sha256": "30b8a97e4527de40fc2764b56d6072ab7bde6c89d640084fa82144d29066838d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreMask.cs.meta",
+      "sha256": "02c4a1c3ca634115411d795416c4dec9fe5d039e30355aed4644802aa5483980"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreUi.cs",
+      "sha256": "6818162144a76b9615dfaef2f765934261b35d457602a202892967dd447f266c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineExplorationModule.ExploreUi.cs.meta",
+      "sha256": "cdbfcf744719c57bf693425cac8d3d2a239b494beb46cbd22e9a018fa8547620"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Functions.cs",
+      "sha256": "cf06df4428181267838332a88d66129cf99a8f625e31d4216c66bf590526dcb5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Functions.cs.meta",
+      "sha256": "998f81042e7e1b9403482b64b3e7de9d6939c48ec17a8debcb33f4420a2137da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Hud.cs",
+      "sha256": "c75f5c4fda258169133d5a5e21baf328f4b78080ea8535dad84acbaeee3dfcd2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Hud.cs.meta",
+      "sha256": "d4536fc48d4c8d36bd03c5025b1e9c4056fc964210378d55bdd30c1e743bfa26"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.HudControls.cs",
+      "sha256": "768af93ecf97b5ae55d605a7eef4d0be6a5271d086a06f842a5f709949cb6083"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.HudControls.cs.meta",
+      "sha256": "fc87967ba86cde3fb542d191d4ae43819642a3713f57bd8c95c680c4e240e848"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Portrait.cs",
+      "sha256": "175b2f91a222e5e30bd8113c7036d5ab7bff735515d35097032034e02669638b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Portrait.cs.meta",
+      "sha256": "67ff0462c4fcd52c946b0c77f7c2a822104d4014d478ba8d701013aee04a362d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.QuickBuy.cs",
+      "sha256": "bd0825c6c66727d7c7ce70e1a2cb359a12d27385c9f753a070132e584f71af8e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.QuickBuy.cs.meta",
+      "sha256": "8055fd2c326342a4b090dde3071de7ce03ddc5bc9f655639975f2dafea5d0cec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.State.cs",
+      "sha256": "24cf4d064c38e810116d7ffc4b87bde9bb8405710c2cd4cb786ae1e6594d1ba7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.State.cs.meta",
+      "sha256": "997caa31dbad6c63785a2f8a8efb4510b6954c1e3e4929700b977e7552e8b40c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Tasks.cs",
+      "sha256": "deb3fc53eabf3b7de0c0973bbec33856791bfd71363a74d1bcd2f16a8ec9494c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.Tasks.cs.meta",
+      "sha256": "d44448921708d53771ed59c11f2aa4b36fadfd4f3c55e5c198d5958ecc24eeca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.TopBar.cs",
+      "sha256": "3f3aad49b429cef3f50b06f44ae696609c43e521c9ca0f81f15401ceed7214b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineHudModule.TopBar.cs.meta",
+      "sha256": "1f29e1c150707bbac14d7430af7657dfcf5a02ae7e9ba6160531a3b518d5cf6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapInspection.cs",
+      "sha256": "4b25286ddaefa0b44eb5e17ec5cd6178a89240ce83c23bc94f57c1ff6f1a94d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapInspection.cs.meta",
+      "sha256": "d4eb8e534dc2b4a3878396c1517381ce8113669f7ed270b9eef0a3e3f806de33"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs",
+      "sha256": "87d220b6946098bb47cde6c1b981cf2ed4609ef0c4a67a77f36dfd763079d112"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapProfile.cs.meta",
+      "sha256": "2727f53d11604631fa8132980b13f8f6e3918cb7083200d1d38fcc73b6355504"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Audio.cs",
+      "sha256": "4bce9cf611a78aebf34364dd865281ed6af82cc7103f0c4bd3f97b9cf653d9b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Audio.cs.meta",
+      "sha256": "b3e384acd6c2600ffddba79313506d27f3cfd10080d47187fa5299e0baf85a14"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs",
+      "sha256": "6ad235fc30bdd84b2cd8c8b7d6c6ae35335ed416e0f3f80e9f14a457a22ce2d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Battle.cs.meta",
+      "sha256": "8354179e9125e08618529130c4fd15f8604333a4a0daa14e31a00df72275f21b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattlePortrait.cs",
+      "sha256": "7e4c0cb29c94ceb6865832cda8ea42f3d6750ea84c33cd1a29fef6e8f477ca47"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattlePortrait.cs.meta",
+      "sha256": "f4ca15eecab2d5d362ae16338a19c1418335f1002b969a1e8a984d027c32d137"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs",
+      "sha256": "e2636fcc35aa5ad5f3f9ec3a006914a5cd58c06b26e7aac4ecdfaf8c4cb49db0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs.meta",
+      "sha256": "79c25b2091e804639747f4bcadba1d1fb3b8bbd6a8840ad3ed362cfadd8cfdd8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Catalogs.cs",
+      "sha256": "92ead90b4161297631e1cb2fee41ca083cd223cd441f2095863bf21193098395"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Catalogs.cs.meta",
+      "sha256": "4c3288bbaafdb31ba53382b1787859dd847f2f0dfd1b9fc75279b3a2a5031335"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "d13e2ee36d5d602f53db211ee13efd5a2a4aee047b523450ecb90fb71a62bd8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs.meta",
+      "sha256": "97a7cfdc9e817106fe81624e134a04c4607d00978dda8ac3163e1d3b210ec9b7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Data.cs",
+      "sha256": "3a755217e7ccfd83cfdd31ef43225bea5825d20872316a2d007277d7822c2ee5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Data.cs.meta",
+      "sha256": "da3f1c433124a009a24e0a006f7e15e2618e182e50094c1025256bf00dd53a99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Dialogue.cs",
+      "sha256": "446bbfb97ac2e26d55e93b07258466610061dfea752fcbb20e2768e0b78f6d9f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Dialogue.cs.meta",
+      "sha256": "561aae3ca8a0c897184d88aeef7da2b8db02e4be49bbddfc7e080e93d9b6ee36"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
+      "sha256": "f5dc7d1a258a5a38d6b8fbf16c6f4d2bc2ed8910c08313b1f8763a540748f653"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs.meta",
+      "sha256": "97ec7f5afd19aaf3119bac6e9bb8bac3ba5ed02a6ddf8b3e63a5b44b26a0bdc5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map10.cs",
+      "sha256": "5ffcd77ca7524a31281e7402d3b04cb545821728b5b857d61013d69c4b77c73b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map10.cs.meta",
+      "sha256": "76a4d1c5a608ccb3f160897fa2564da628b223cd5570a677902fc67fd7777cac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Modules.cs",
+      "sha256": "359eab3a38ca42e052a82dc78218e1caaeda58ad374727abde2b4e7bed11f521"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Modules.cs.meta",
+      "sha256": "0565e54f978c2842cdb22ac2f15ad3e2d1746bd498abaf8b699b0b087b25c475"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
+      "sha256": "73b9e86a223673d654a695203e91ac5b31a1e0d675c5f4fd652d65c12781691c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs.meta",
+      "sha256": "89232cde66c3e2c8820855b880d9a6af2dd7f5de11b52ad4300a4596fe7a60ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs",
+      "sha256": "8ca08290e3a1acc238736e33fb6762632ec5b9abbd142f4b06a7eab1e5484290"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs.meta",
+      "sha256": "96fcd5f261e9d72d8cf3966a6e096f01774511db9013336efdb3bcbb75de56ee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs",
+      "sha256": "6f0fbf53803c7c7f0b2e98f6f37a7a2d40ae041233c73613c1220662ab47dc9b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Puzzles.cs.meta",
+      "sha256": "272384189078d5664d7d01182362311fc639016973d605778674dd82a02df547"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Story.cs",
+      "sha256": "03db53a743411098d048cea8688971baca756db8a7f68c8c15ab7899200ced65"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Story.cs.meta",
+      "sha256": "4decdd75618a4e797c1c038975483d105ca2f8f6e6e8f51ff1c85795d51e7e70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryBranches.cs",
+      "sha256": "bf91ccfe1efc2225bc85faf03de4444e11fbe124f9bfa1f329f8eb21038d8274"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryBranches.cs.meta",
+      "sha256": "d486cde975a64bba5af808cf7a00cb68f944f31966ef56bf18f7e40f093d549b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StorySpatial.cs",
+      "sha256": "1cd6b7907fe1f546a659c3f5f87312d29bd7c7f9f7ed97daba35de9577c975b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StorySpatial.cs.meta",
+      "sha256": "66d7fb6434256a68a94414cbb0f85bad6249b12d0b71b67d7a1281e153743560"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryValues.cs",
+      "sha256": "75062df36395a2665aded6a0b4f1d443b72c887e498cadca0f44ea7e405fe190"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.StoryValues.cs.meta",
+      "sha256": "057ce19528e811ec09f142a11274784c03c7725517ef1c74b01f9e8f28138963"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.WorldMonsters.cs",
+      "sha256": "410a318df1a45b053c446d1355fcb652ad1f5d0434d922557aaedff3afc1c88c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.WorldMonsters.cs.meta",
+      "sha256": "7105db7e22ffea08c472f1f7a9f9116d187bf04fef927da921746815da93ee9c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.HudControls.cs",
+      "sha256": "972c880ae0505f8524f0454d391e31e9af90cc2b2ee841432f141a8a986c00aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.HudControls.cs.meta",
+      "sha256": "a02a98e2f2d32eead46b1be27eafc89cbff8d418bfd83eb9798f1017f46a2579"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMap.cs",
+      "sha256": "246eebb68014500bd72ebe72efd9fb4f7c9fb9894016c5b38ac864ea0e0135b3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMap.cs.meta",
+      "sha256": "6b0b084eb9051a5f1248245187eae1d0ddd217d090077b30d7df2435fe86fcad"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapFilter.cs",
+      "sha256": "3432cdf0a77aed6778551e8dd4b2e845fd620b116457b4fc3bd07de27a7bf3dc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapFilter.cs.meta",
+      "sha256": "3d4e8d18dd40bfa780c8be0a75d38f53be8511724831ad646817359ed1c8c079"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapMarks.cs",
+      "sha256": "3266bdacad4d6905bd2731fd4efac30f9f9e7dd56d8337efb373d09190f468a7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapMarks.cs.meta",
+      "sha256": "809dbf76386268266810174c3c25d9b493f6e162811337387b86cc8041dbc310"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapTabs.cs",
+      "sha256": "5e7b716e142432e7692ada94ef95c443cb6812a1fe2e968625d74626d21151ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.MiniMapTabs.cs.meta",
+      "sha256": "02edb46bd80e10d07400a09681ada8bd93d442cf6617bbf1491c7f71b266c082"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.State.cs",
+      "sha256": "74eacf25205362dfc9fbd73e23ac4d41071a342b634f2c88fe9826a5af09b23a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMiniMapModule.State.cs.meta",
+      "sha256": "fdd3b2e110521b1ca554afe4ca661a5c3839cd252e75b9937c8816cdd770308e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineNavigationModule.Navigation.cs",
+      "sha256": "be0f56235b52c18b6e221a2d3f6b1e457937b206dc83b04c55b1f4135a98bbdf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineNavigationModule.Navigation.cs.meta",
+      "sha256": "9eaeee27aa7d201faf90f256311218a3e51b9a0ed7a886d8c59b3b3cfb4958cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineNavigationModule.State.cs",
+      "sha256": "76841290b1b075dff6310c2f7dff4da5801abbd961b6f8946725a64a5fc78700"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineNavigationModule.State.cs.meta",
+      "sha256": "2151f2c0b226c60bd5ac8f0cfae74e02dd86ad87697751e762e32d151d7da642"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionFog.cs",
+      "sha256": "36b8c34f0c38b2b10af721c9b3a96dd6ef20d10a6801b208e967185d8dba7aa9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionFog.cs.meta",
+      "sha256": "046b510811fb6a1b7c7dcd5532215d51cacbe0182edb4d782913a526a83731c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.HeroStatues.cs",
+      "sha256": "88182b8a04e5e81cb3e5613626ecdff2380b70eaa264bcfafb80fcd9e027bd19"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.HeroStatues.cs.meta",
+      "sha256": "48b861bba9a1a1a612cd6049b2762015bb896d732a386e7fb61e142491fa27a7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.Regions.cs",
+      "sha256": "727f041561ba10a4f2e4ae47f60b9da3aef87da879b0b2d0ff13026bf6c4e7d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.Regions.cs.meta",
+      "sha256": "41f5f4e11f96a853a0762bed835494fbd2edee934076f3660098800217766f15"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.State.cs",
+      "sha256": "b9fc908a69cab3b28c84e9be428b7946a67363cab012a160c2daa3860054a0d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineRegionsModule.State.cs.meta",
+      "sha256": "f86d36cbff7ed0d517bcc4c91c225f5bc5478c5c1f7bfb7458c8dd05b934f16e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStaminaModule.Stamina.cs",
+      "sha256": "4613c056aaf4d7489c3146939c482ff46e4b7cd598ca88950d5acc20c9c11294"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStaminaModule.Stamina.cs.meta",
+      "sha256": "0d605af036801822610e48d3cea258ef0f37c70e5ea6ea48d76d722078e1872d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs",
+      "sha256": "a831ca6a507f8e7e6e69a1ca6571af23bdecdbe6213003168ae70b25cae88804"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs.meta",
+      "sha256": "36f6da8c61d894cd841c718f604339d3b01d761506a37a3530cce136f3d8c3ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.HeroStatues.cs",
+      "sha256": "4296731cbca799417c5c4367220e1fcf91070b69f9d7a7ca194555326e4bd241"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.HeroStatues.cs.meta",
+      "sha256": "ec9f45f02be6ae3180dafb4ca74e966d30a84912109059e8c95ec98148e85b10"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.State.cs",
+      "sha256": "8d98fbac1503a42a08359574b6557e3204b5ba51a899a98b3b6b3f1313f647f3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.State.cs.meta",
+      "sha256": "a372a19911bff5d94b879c0cb43f4d00e7dd036d66c4f7eeb9a4795beb8c2de5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Witch.cs",
+      "sha256": "224bb313ab1c9050d4a3dc2a098e279b4397f9215aba8f07ae191e10f3c74e07"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Witch.cs.meta",
+      "sha256": "9e3c349d52c92b82d32f9277533cba9311b6916d0fb032fe2ea04a61b69913a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineUiCatalog.cs",
+      "sha256": "c3263be24d463700738719e3ce7c28bbdfc68a7c5aa9acd2f7c3c9abd6576435"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineUiCatalog.cs.meta",
+      "sha256": "c2042a27431966c9a41df74151e9d2d9bb0830875c66347ef01fd5cfad1b343b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialWorldUiRenderer.cs",
+      "sha256": "c60ce6f061d27d8f8cb5f2c917d86427dae53722a5f2b5c770ffee700ced6d43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialWorldUiRenderer.cs.meta",
+      "sha256": "16fd6da26e4f0e91ec8cfa17e386b25a8c2c950acd5b3be55bc5ed2d2fede702"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Animation.cs",
+      "sha256": "81e3c2938a1d709f52d8ec724fb4fd0495e2111faa9d10b61fb9086f82e829ca"
+    }
+  ],
+  "tab_outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/ExploreDetailDialog.prefab",
+      "sha256": "0ffc130036837618bb5ea7c7f7eadf061cf286805aba3725eb2938df6980961f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-a790a792c99636f51a49d9128aa20a6a.meta",
+      "sha256": "87909e0d9324f29d5baed689766842c7bad7673409bab0725610c3e7ab14032e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-a790a792c99636f51a49d9128aa20a6a/ToggleOff.anim",
+      "sha256": "4755deba14113c79e72c9d39c964bdb86e4873da6352e00c2df155333dcd57fa"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-a790a792c99636f51a49d9128aa20a6a/ToggleOff.anim.meta",
+      "sha256": "aa32a3de3c27877dce6f5a2a9a0eb3e69bfb7e4b4414b5422489ad4694751684"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-ae98a3566bcf478b9daab6626c1e109b.meta",
+      "sha256": "e2ec935d8d9e7790d42ff794406ce9b9cd955e84fe8bc149de68670cc94560fc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-ae98a3566bcf478b9daab6626c1e109b/ToggleOn.anim",
+      "sha256": "fb34d1cd2083b6ed3af3d6c2c2a918708429f63bc99c8fd5c94ea796d3fcda0c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-ae98a3566bcf478b9daab6626c1e109b/ToggleOn.anim.meta",
+      "sha256": "aa33c472e66c633d187ecc60a2df853a1075326d689be76409de6c649288d2e9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-28c549da7122732ed16f07feff0094c4.meta",
+      "sha256": "721150a6d23962101fda7a52976f3a4849b2f3141f102b37dbdf673309761989"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-28c549da7122732ed16f07feff0094c4/ToggleOff.anim",
+      "sha256": "4755deba14113c79e72c9d39c964bdb86e4873da6352e00c2df155333dcd57fa"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-28c549da7122732ed16f07feff0094c4/ToggleOff.anim.meta",
+      "sha256": "f9d31ba7eea96e969337cc64ececedd3071487ab079fbc7adb4d41fb8110f03f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-e4364bbece8ce603cda28f074517fd0d.meta",
+      "sha256": "296003a76ad20996822373433a254194ff7e44494212df6a29d2eb475983700a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-e4364bbece8ce603cda28f074517fd0d/ToggleOn.anim",
+      "sha256": "fb34d1cd2083b6ed3af3d6c2c2a918708429f63bc99c8fd5c94ea796d3fcda0c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map11/UI/Native-e4364bbece8ce603cda28f074517fd0d/ToggleOn.anim.meta",
+      "sha256": "da124f5030084ca0b3211de8de883228dd08853f8508f56c0e8eb6f1bb2790e0"
+    }
+  ]
+}

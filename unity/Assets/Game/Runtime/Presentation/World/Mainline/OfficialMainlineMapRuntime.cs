@@ -26,7 +26,6 @@ namespace Zjcs.Presentation.World
     [DisallowMultipleComponent]
     public sealed partial class OfficialMainlineMapRuntime : MonoBehaviour
     {
-        private const float MovementSpeed = 4f;
 
         private sealed class Map10RuntimeStoryFrame
         {
@@ -50,17 +49,12 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<int, GameObject> storyEntities = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, int> storyEntityClasses = new Dictionary<int, int>();
         private Map10RuntimeMapTalkEntry[] mapTalkEntries = Array.Empty<Map10RuntimeMapTalkEntry>();
-        private OfficialMainlineRegionPolicy regionPolicy;
-        private Dictionary<int, OfficialMainlineRegionConfig> regionConfigs => regionPolicy.regionConfigs;
-        private readonly Dictionary<int, int> regionPoints = new Dictionary<int, int>();
-        private Dictionary<int, int> regionPointLimits = new Dictionary<int, int>();
         private readonly Dictionary<int, Map10RuntimeBattleEntityStageBinding> battleEntityStageBindings =
             new Dictionary<int, Map10RuntimeBattleEntityStageBinding>();
         private readonly Stack<Map10RuntimeStoryFrame> storyFrames = new Stack<Map10RuntimeStoryFrame>();
         private readonly Dictionary<int, Map10RuntimeFixedReward> fixedRewards = new Dictionary<int, Map10RuntimeFixedReward>();
         private readonly Dictionary<int, Map10RuntimeEntityTemplate> entityTemplates =
             new Dictionary<int, Map10RuntimeEntityTemplate>();
-        private Map11RuntimeWitchInfo[] witchInfos = Array.Empty<Map11RuntimeWitchInfo>();
         private OfficialWorldMapSession session;
         private OfflineMainlineProgressSession progressionSave;
         private OfflineCharacterProgressionService progression;
@@ -78,22 +72,14 @@ namespace Zjcs.Presentation.World
         private Camera worldCamera;
         private OfficialMap10EntityView entityView;
         private OfficialMap10EnvironmentView environmentView;
-        private OfficialMainlineRegionFog regionFog;
-        private OfficialMap10UiCatalog uiCatalog;
-        private OfficialWorldUiRenderer ui;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
         private OfficialMap10DialoguePortraitView optionDialoguePortraits;
         private WorldDialogueTypeWriter dialogueTypeWriter;
         private bool dialogueContentSwitchWaiting;
         private OfficialBattleRuntimeController battleController;
         private FightDamageFormula damageFormula;
-        private Map10RuntimeEntity pendingInteraction;
         private Map10RuntimeEntity selectedStageEntity;
         private Action selectedStageCompletion;
-        private List<MapGridPoint> movementPath;
-        private int movementIndex;
-        private Action movementCompletion;
-        private MapGridPoint currentGrid;
         private Vector3 cameraVelocity;
         private float battleStepTimer;
         private bool dialogueWaiting;
@@ -125,16 +111,9 @@ namespace Zjcs.Presentation.World
         private Vector3 storyCameraVelocity;
         private bool storyCameraActive;
         private float storyCameraSizeTarget;
-        private Coroutine noticeRoutine;
-        private RawImage minimapImage;
-        private RenderTexture minimapTexture;
-        private Camera minimapCamera;
-        private RectTransform minimapPlayerMarker;
         private GameObject firstBattleNpc;
         private GameObject chaosNpc;
         private bool closed;
-        private CommerceScreenController commerceScreen;
-        private GameObject firstPayEntry;
         private int mapClassId = 10;
         private bool localSaveCreated;
 
@@ -181,15 +160,16 @@ namespace Zjcs.Presentation.World
 
             try
             {
+                InitializeModules();
                 LoadOfficialData();
                 InitializeMap();
                 LoadLocalProgress();
-                RefreshRegionProgress();
+                regions.RefreshRegionProgress();
                 InitializeView();
                 InitializeMapAudio();
-                currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
-                SetAvatarPosition(currentGrid);
-                UpdateWorldLabels();
+                navigation.currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
+                navigation.SetAvatarPosition(navigation.currentGrid);
+                hud.UpdateWorldLabels();
                 if (mapClassId == 10 && !HasStory("FirstEnterMap")) PlayStory("FirstEnterMap", 0, () =>
                 {
                     CompleteStory("FirstEnterMap");
@@ -208,22 +188,22 @@ namespace Zjcs.Presentation.World
         private void Update()
         {
             if (session == null || closed) return;
-            RefreshStaminaPoints();
-            RefreshExploration();
+            stamina.RefreshStaminaPoints();
+            exploration.RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
-            UpdateMiniMapFilter();
+            miniMap.UpdateMiniMapFilter();
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (exploreWindows.Count != 0) CloseExploreUi();
-                else if (worldFunctions != null) CloseNativeWorldFunctions();
-                else if (fullMiniMapPanel != null) CloseNativeFullMiniMap();
-                else if (quickBuyDialog != null) quickBuyDialog.Cancel();
-                else if (witchDialog != null) RequestWitchDialogClose();
+                if (exploration.exploreWindows.Count != 0) exploration.CloseExploreUi();
+                else if (hud.worldFunctions != null) hud.CloseNativeWorldFunctions();
+                else if (miniMap.fullMiniMapPanel != null) miniMap.CloseNativeFullMiniMap();
+                else if (hud.quickBuyDialog != null) hud.quickBuyDialog.Cancel();
+                else if (statues.witchDialog != null) statues.RequestWitchDialogClose();
                 else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
-                else if (goddessDialog != null) goddessDialog.Close();
+                else if (statues.goddessDialog != null) statues.goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
                 else CloseMap();
             }
@@ -238,7 +218,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
-            if (worldFunctions != null || fullMiniMapPanel != null || (storyRunning && battleController == null) || goddessDialog != null || witchDialog != null) return;
+            if (hud.worldFunctions != null || miniMap.fullMiniMapPanel != null || (storyRunning && battleController == null) || statues.goddessDialog != null || statues.witchDialog != null) return;
 
             if (battleController != null)
             {
@@ -264,21 +244,21 @@ namespace Zjcs.Presentation.World
                         Debug.LogException(error, this);
                         battleStepTimer = 0.5f;
                         AbortBattle();
-                        ShowOfficialNotice("战斗未完成，本次结果未记录");
+                        hud.ShowOfficialNotice("战斗未完成，本次结果未记录");
                     }
                 }
                 return;
             }
 
-            if (TryStartWitchSpawnBattle()) return;
+            if (statues.TryStartWitchSpawnBattle()) return;
 
-            if (movementPath != null)
+            if (navigation.movementPath != null)
             {
-                AdvanceMovement(Time.deltaTime);
+                navigation.AdvanceMovement(Time.deltaTime);
                 return;
             }
 
-            ProcessMapPointerPress();
+            navigation.ProcessMapPointerPress();
         }
 
         private void LateUpdate()
@@ -295,7 +275,7 @@ namespace Zjcs.Presentation.World
             if (storyCameraActive)
                 worldCamera.orthographicSize = Mathf.MoveTowards(worldCamera.orthographicSize,
                     storyCameraSizeTarget, Time.unscaledDeltaTime * 12f);
-            UpdateMinimapMarker();
+            miniMap.UpdateMinimapMarker();
         }
 
         private void InitializeMap()
@@ -314,7 +294,7 @@ namespace Zjcs.Presentation.World
             session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), mapClassId);
             if (session.Definition.MaxRegionProgress == null || session.Definition.MaxRegionProgress.Length == 0)
                 throw new InvalidDataException("Official Map" + mapClassId + " region progress definitions are missing.");
-            LoadRegionConditions();
+            this.regions.LoadRegionConditions();
             int[] regions = session.Definition.MaxRegionProgress.Select(value => value.Region).ToArray();
             ProgressionResult initialized = progressionSave.InitializeMap(mapClassId, regions);
             if (initialized.Status == ProgressionResultStatus.InvalidState)
@@ -349,7 +329,7 @@ namespace Zjcs.Presentation.World
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
             entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
-            entityView.EntitySelected += OnEntitySelected;
+            entityView.EntitySelected += navigation.OnEntitySelected;
             mapEntities.Clear();
             foreach (OfficialMap10EntityInfo info in entityView.EntityInfos)
             {
@@ -367,26 +347,17 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
-            if (mapClassId == 11) { ExploreService.Cleanup(ExploreNow); SynchronizeExploreEntities(); }
+            if (mapClassId == 11) { exploration.ExploreService.Cleanup(OfficialMainlineExplorationModule.ExploreNow); exploration.SynchronizeExploreEntities(); }
             InitializeMap11WorldMonsters();
             InitializeStorySpatial();
             ValidateBattleEntityStageBindings();
             ValidateEntityLockGroups();
             InitializePuzzles();
-            RecoverWitchStates();
-            RecoverHeroStates();
+            statues.RecoverWitchStates();
+            statues.RecoverHeroStates();
 
-            uiCatalog = OfficialMap10UiCatalog.LoadDefault();
-            ui = new OfficialWorldUiRenderer(uiCatalog);
-            ui.Mount(uiParent, BindWorldControl, mapClassId);
-            if (mapClassId == 11) InitializeNativeWorldHud();
-            ui.SetPanelActive("WorldCanvas", true);
-            ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
-            ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/LevelBgImg/LevelTxt",
-                progression.Player.Level.ToString(CultureInfo.InvariantCulture) + "级");
-            ui.SetPanelActive("TalkDialog", false);
-            CreateCommerceHudEntries();
-            CreateMinimap(assets.MiniMapPrefab);
+            hud.Mount();
+            miniMap.CreateMinimap(assets.MiniMapPrefab);
 
             avatar.transform.SetParent(mapRoot, false);
             avatar.name = "Map" + mapClassId + "Player_" + slotId;
@@ -398,8 +369,8 @@ namespace Zjcs.Presentation.World
                 localSave.gridX = entry.Grid.X;
                 localSave.gridY = entry.Grid.Y;
             }
-            currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
-            SetAvatarPosition(currentGrid);
+            navigation.currentGrid = new MapGridPoint(localSave.gridX, localSave.gridY);
+            navigation.SetAvatarPosition(navigation.currentGrid);
             progressionSave.Save.Player.UnlockedMapClassIds ??= new List<int>();
             if (!progressionSave.Save.Player.UnlockedMapClassIds.Contains(mapClassId))
             {
@@ -412,13 +383,7 @@ namespace Zjcs.Presentation.World
             }
             SaveLocalProgress();
             RefreshEntityActivity();
-            if (mapClassId == 11)
-            {
-                regionFog = new GameObject("Official region fog").AddComponent<OfficialMainlineRegionFog>();
-                regionFog.transform.SetParent(mapRoot, false);
-                regionFog.Initialize(worldCamera, terrain.transform, IsPublicRegion);
-                regionFog.BindCamera(minimapCamera);
-            }
+            regions.InitializeFog(terrain.transform);
         }
 
         private void CreateWorldCamera()
@@ -526,26 +491,15 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
-            CloseNativeFullMiniMap();
-            CloseNativeWorldFunctions();
-            if (playerHeadTexture != null) Destroy(playerHeadTexture);
-            playerHeadTexture = null;
+            miniMap.CloseNativeFullMiniMap();
+            hud.CloseNativeWorldFunctions();
+            hud.DisposePortrait();
             DisposeMapAudio();
-            CloseGoddessDialog();
-            CloseWitchDialog();
-            foreach (var window in exploreWindows) { ReleaseExploreMask(window); window.Destroy(); }
-            exploreWindows.Clear();
-            foreach (var texture in exploreSnapshots.Values) RenderTexture.ReleaseTemporary(texture);
-            exploreSnapshots.Clear();
-            exploreMasks.Clear();
-            if (exploreCanvas != null) Destroy(exploreCanvas);
-            exploreCanvas = null;
-            // Dispose the modal without running its story continuation while the map closes.
-            quickBuyDialog?.Abandon();
-            if (quickBuyCanvas != null) Destroy(quickBuyCanvas);
-            quickBuyCanvas = null;
-            quickBuyDialog = null;
-            if (entityView != null) entityView.EntitySelected -= OnEntitySelected;
+            statues.CloseGoddessDialog();
+            statues.CloseWitchDialog();
+            exploration.Dispose();
+            hud.DisposeQuickBuy();
+            if (entityView != null) entityView.EntitySelected -= navigation.OnEntitySelected;
             if (battleController != null)
             {
                 battleController.HudControlClicked -= OnBattleHudControl;
@@ -556,23 +510,14 @@ namespace Zjcs.Presentation.World
             dialoguePortraits = null;
             optionDialoguePortraits?.Dispose();
             optionDialoguePortraits = null;
-            ui?.Dispose();
+            hud.ui?.Dispose();
             if (avatar != null) Destroy(avatar);
-            if (minimapCamera != null) minimapCamera.targetTexture = null;
-            if (minimapTexture != null)
-            {
-                minimapTexture.Release();
-                Destroy(minimapTexture);
-            }
-            if (minimapImage != null) Destroy(minimapImage.gameObject);
+            miniMap.DisposeRendering();
             if (worldCamera != null && worldCamera.transform.IsChildOf(transform))
                 Destroy(worldCamera.gameObject);
             if (mapRoot != null) Destroy(mapRoot.gameObject);
             if (battleRoot != null) Destroy(battleRoot.gameObject);
-            if (commerceScreen != null) Destroy(commerceScreen.gameObject);
-            commerceScreen = null;
-            if (firstPayEntry != null) Destroy(firstPayEntry);
-            firstPayEntry = null;
+            hud.DisposeCommerce();
             session = null;
         }
 

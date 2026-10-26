@@ -75,7 +75,7 @@ namespace Zjcs.Presentation.CharacterCreation
             // Battle acceptance creates its own scene and isolated profile.
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") return;
 #endif
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD || ZJCS_MAINLINE_MODULE_VALIDATION
             if (Array.IndexOf(Environment.GetCommandLineArgs(), OfficialMainlineMapModuleProbe.Argument) >= 0) return;
 #endif
             if (FindObjectOfType<CharacterCreationFlowController>() != null) return;

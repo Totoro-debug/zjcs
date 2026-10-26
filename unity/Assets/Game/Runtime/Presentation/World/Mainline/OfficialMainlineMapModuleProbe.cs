@@ -1,4 +1,4 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEVELOPMENT_BUILD || ZJCS_MAINLINE_MODULE_VALIDATION
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -246,7 +246,7 @@ namespace Zjcs.Presentation.World
             {
                 MapGridPoint target = start + offset;
                 if (!session.Movement.IsFit(target) || !session.Movement.CanMoveToNext(start, target)) continue;
-                Vector3 world = (Vector3)typeof(OfficialMainlineMapRuntime).GetMethod("GridToWorld", Private).Invoke(runtime, new object[] { target });
+                Vector3 world = (Vector3)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "GridToWorld", new object[] { target });
                 Vector2 screen = camera.WorldToScreenPoint(world);
                 if (Hits(screen).Count != 0 || Physics2D.OverlapPoint(world) != null || entities.EntityInfos.Any(value => value.Active
                     && value.Grid[0] == target.X && value.Grid[1] == target.Y)) continue;
@@ -391,8 +391,7 @@ namespace Zjcs.Presentation.World
 
         private OfficialMap11WitchWindow ExploreTop => Field<List<OfficialMap11WitchWindow>>("exploreWindows").Last();
         private Dictionary<string, object> ExploreFields(OfficialMap11WitchWindow window, string kind) =>
-            (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
-                .Invoke(runtime, new object[] { window.Key, kind, null });
+            (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { window.Key, kind, null });
         private Button ExploreButton(OfficialMap11WitchWindow window, string kind, string field) =>
             window.Find((string)ExploreFields(window, kind)[field]).GetComponent<Button>();
         private IEnumerator VerifyExploration()
@@ -408,14 +407,14 @@ namespace Zjcs.Presentation.World
             var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
             Invoke("SetAvatarPosition", grid + new MapGridPoint(0, 1));
             yield return new WaitForSecondsRealtime(1.1f);
-            var data = Field<OfficialMap11UiData>("goddessUiData");
+            var data = Field<OfficialMap11UiData>("miniMapUiData");
             var ui = Field<OfficialWorldUiRenderer>("ui");
             var binding = data.worldBindings.exploreButtons.First(v => v.isOneTime);
             var worldFields = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "WorldExploreBtn" && v.path == binding.path).fields;
             var cost = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "PlayerCostMoneyContent" && v.path == worldFields.mCostMoneyContent).fields;
             Button entry = ui.Find("WorldCanvas", cost.Btn).GetComponent<Button>();
             yield return Capture("map-11-explore-hud");
-            var context = (OfflineExploreContext)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreContext", Private).Invoke(runtime, null);
+            var context = (OfflineExploreContext)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreContext", null);
             var service = new OfflineWorldExplorationService(progress);
             Require(entry.IsActive(), "Explore HUD is visible: map=" + context.MapClassId + ", area=" + context.Area
                 + ", region=" + context.Region + ", mapAllowed=" + context.MapCanExplore + ", regionForbids=" + context.RegionForbidsExplore
@@ -571,12 +570,9 @@ namespace Zjcs.Presentation.World
             yield return new WaitForSecondsRealtime(.65f);
             detail = ExploreTop;
             yield return Click(detail.Find((string)historyTab["TabItem"]).GetComponent<Button>());
-            var historyFields = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
-                .Invoke(runtime, new object[] { detail.Key, "ExploreHistoryContent", ExploreFields(detail, detail.Key)["mExploreHistoryContent"] });
-            var paging = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
-                .Invoke(runtime, new object[] { detail.Key, "TurnPageUI", historyFields["mTurnPageUI"] });
-            var nextPage = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
-                .Invoke(runtime, new object[] { detail.Key, "TurnPageBtn", paging["mNextBtn"] });
+            var historyFields = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "ExploreHistoryContent", ExploreFields(detail, detail.Key)["mExploreHistoryContent"] });
+            var paging = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "TurnPageUI", historyFields["mTurnPageUI"] });
+            var nextPage = (Dictionary<string, object>)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreFields", new object[] { detail.Key, "TurnPageBtn", paging["mNextBtn"] });
             yield return Click(detail.Find((string)nextPage["Btn"]).GetComponent<Button>());
             Require(detail.Find((string)paging["mCurPageText"]).GetComponent<TMPro.TMP_Text>().text.Contains("2"),
                 "Native history pagination advances to the second page");
@@ -595,7 +591,7 @@ namespace Zjcs.Presentation.World
             // Sampling writes only a second isolated fixture, never this profile.
             var slots = new ProfileSlotCatalog(Path.Combine(output, "spawn-fixture"));
             string sampleSlot = slots.CreateSlot();
-            var context = (OfflineExploreContext)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreContext", Private).Invoke(runtime, null);
+            var context = (OfflineExploreContext)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ExploreContext", null);
             long selected = 0;
             for (long seed = 1; seed <= 128; seed++)
             {
@@ -682,8 +678,8 @@ namespace Zjcs.Presentation.World
             Destroy(image);
         }
 
-        private T Field<T>(string name) => (T)typeof(OfficialMainlineMapRuntime).GetField(name, Private).GetValue(runtime);
-        private void Invoke(string name, params object[] args) => typeof(OfficialMainlineMapRuntime).GetMethod(name, Private).Invoke(runtime, args);
+        private T Field<T>(string name) => (T)OfficialMainlineMapInspection.Get((OfficialMainlineMapRuntime)runtime, name);
+        private void Invoke(string name, params object[] args) => OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, name, args);
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
         private void Complete(bool success)
         {

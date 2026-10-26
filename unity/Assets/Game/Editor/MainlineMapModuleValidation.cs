@@ -33,6 +33,8 @@ namespace Zjcs.Editor
 
         public static void RunLoadedPlayMode()
         {
+            ProjectTools.Validate();
+            Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run();
             Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
             Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run();
             StartPlayMode();
@@ -51,7 +53,6 @@ namespace Zjcs.Editor
                 .Invoke(null, new object[] { 540, 960 });
             EditorWindow gameView = EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));
             gameView.maximized = true;
-            gameView.Focus();
             EditorApplication.isPlaying = true;
         }
 
@@ -82,14 +83,30 @@ namespace Zjcs.Editor
         {
             string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "..", ".."));
             string destination = Path.Combine(repository, ".tools", "mainline-refactor-player", "杖剑传说.exe");
-            Directory.CreateDirectory(Path.GetDirectoryName(destination));
-            BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            string[] args = Environment.GetCommandLineArgs();
+            int output = Array.IndexOf(args, "-mainline-player-output");
+            bool releaseProbe = args.Contains("-mainline-release-probe");
+            if (output >= 0)
             {
-                scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
-                locationPathName = destination,
-                target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.Development
-            });
+                if (output + 1 >= args.Length) throw new ArgumentException("Pass a Windows executable path after -mainline-player-output.");
+                destination = Path.GetFullPath(args[output + 1]);
+            }
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            ScriptingImplementation previous = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone);
+            BuildReport report;
+            try
+            {
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = EditorBuildSettings.scenes.Where(value => value.enabled).Select(value => value.path).ToArray(),
+                    locationPathName = destination,
+                    target = BuildTarget.StandaloneWindows64,
+                    options = releaseProbe ? BuildOptions.None : BuildOptions.Development,
+                    extraScriptingDefines = releaseProbe ? new[] { "ZJCS_MAINLINE_MODULE_VALIDATION" } : Array.Empty<string>()
+                });
+            }
+            finally { PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, previous); }
             if (report == null || report.summary.result != BuildResult.Succeeded)
                 throw new BuildFailedException("Shared mainline module Windows regression build failed.");
             Debug.Log("Shared mainline module Windows regression Player: " + destination);

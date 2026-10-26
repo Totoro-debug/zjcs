@@ -10,7 +10,7 @@ Map10 已接入固定版官方地图定义、导航网格、原生地形网格�
 
 ## 完整还原部分
 
-地图公共能力统一由 `OfficialMainlineMapRuntime` 调用，模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
+地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
 固定 APK 转换出的 Map10 定义和数据来源位于 [`unity/Assets/Official/World/Map/10`](../../unity/Assets/Official/World/Map/10/)。`OfficialMap10TerrainView` 读取官方地形顶点载荷并绑定 1,404 个批次及 166 张原始纹理；`OfficialMap10MonsterView` 按原始骨骼采样帧播放官方模型。`scripts/prepare_unity_map10_rendering.py` 校验地形、模型、骨骼序列和纹理来源哈希。Map10 的 11 个战斗展示怪物共有 309 帧 idle 动画，按官方地图实体 `Stages` 映射至模型 ID。`OfficialMap10MiniMapView` 从固定版官方 geometry 和五张原始纹理构建九个小地图批次，`scripts/prepare_unity_map10_minimap.py` 校验固定 APK 来源、输入哈希和资源绑定。`scripts/prepare_unity_map10_battle_data.py` 从固定 APK 提取 21 个阶段（20 个实体阶段和切换阶段 9910）、13 个阵形及战场网格，并按 `StageMonsterArrayInfoParser.GenerateMonsters` 展开各波怪物；属性使用官方 `BattleFormulaHandler.CalcMonsterBattleProps` 与固定 `battle-rules.json` 等级表，技能道具通过 `TbSkillInfo` 映射到 `skill-rules.json` 战斗实体。首段 stage 1033（GameId 1000）由阵形 1205 展开为三只 3281，站位为 (10,13)、(12,12)、(11,13)，技能 14235/14236 分别映射至实体 18140/18150。固定版本、公式源码、输入输出哈希记录于 [`map10-battles-source-manifest.json`](../../assets/reference/official-map/map10-battles-source-manifest.json)。Unity 检查入口为 [`OfficialMap10TerrainTools.cs`](../../unity/Assets/Game/Editor/OfficialMap10TerrainTools.cs) 和 [`OfficialMap10Tools.cs`](../../unity/Assets/Game/Editor/OfficialMap10Tools.cs)，分别验证地形/怪物载荷及原生小地图、官方地图 catalog；官方 60×60 导航、移动掩码 65、最大寻路步数 27 及本地相邻格路径检查仍保留在 `OfficialMap10Tools`。这些编队数据尚未由 Map10 运行时装配为战斗检查点。原始 Android `MapGround_10` / `MiniMap_10` prefab 因平台与 CAB 依赖未直接用于 Windows。
 

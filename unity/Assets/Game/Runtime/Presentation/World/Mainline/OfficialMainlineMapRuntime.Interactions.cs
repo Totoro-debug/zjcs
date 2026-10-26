@@ -26,35 +26,35 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
-            if (InteractExploreEntity(entity)) return;
-            if (IsStaminaPoint(entity))
+            if (exploration.InteractExploreEntity(entity)) return;
+            if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
             {
                 if (entity.EntityClassId == 5011)
                 {
-                    if (StaminaCanStart(entity)) ShowStageDialog(entity, null);
+                    if (stamina.StaminaCanStart(entity)) ShowStageDialog(entity, null);
                 }
-                else CollectStaminaPoint(entity);
+                else stamina.CollectStaminaPoint(entity);
                 return;
             }
             if (entity.TypeId == 223)
             {
-                InteractHero(entity);
+                statues.InteractHero(entity);
                 return;
             }
             if (localSave.completedEntityPlacements.Contains(entity.PlacementId)) return;
             if (mapClassId == 11 && entity.EntityClassId == 6620)
             {
-                InteractWitch(entity);
+                statues.InteractWitch(entity);
                 return;
             }
             if (mapClassId == 11 && entity.TypeId == 202)
             {
-                ShowGoddessDialog(entity);
+                statues.ShowGoddessDialog(entity);
                 return;
             }
             if (IsEntityLocked(entity))
             {
-                ShowOfficialNotice("前方有魔物阻挡");
+                hud.ShowOfficialNotice("前方有魔物阻挡");
                 return;
             }
             if (puzzles != null && entity.EntityClassId == 6503)
@@ -84,7 +84,7 @@ namespace Zjcs.Presentation.World
             if (entity.TypeId == 503)
             {
                 CompleteEntity(entity);
-                ShowOfficialNotice("已探索");
+                hud.ShowOfficialNotice("已探索");
                 return;
             }
             if (entity.AwardItems.Length > 0)
@@ -112,7 +112,7 @@ namespace Zjcs.Presentation.World
             int stageId = ResolveEntityStageId(entity);
             if (stageId <= 0)
             {
-                ShowOfficialNotice("该实体暂无可执行的本地交互");
+                hud.ShowOfficialNotice("该实体暂无可执行的本地交互");
                 return;
             }
             if (stageId == 1001 && !HasStory("FirstBattle"))
@@ -143,7 +143,7 @@ namespace Zjcs.Presentation.World
                 if (recorded.Status == ProgressionResultStatus.InvalidState)
                     throw new InvalidOperationException(recorded.Message);
             }
-            RefreshRegionProgress();
+            regions.RefreshRegionProgress();
             RefreshEntityActivity();
             SaveLocalProgress();
         }
@@ -166,12 +166,12 @@ namespace Zjcs.Presentation.World
 
             CompleteEntity(entity);
             Map10RuntimeAwardItem first = entity.AwardItems[0];
-            ShowOfficialNotice("获得物品 " + first.ItemId + " ×" + first.Count);
+            hud.ShowOfficialNotice("获得物品 " + first.ItemId + " ×" + first.Count);
         }
 
         private bool IsEntityLocked(Map10RuntimeEntity entity)
         {
-            if (!IsRegionAccessible(entity.Region)) return true;
+            if (!regions.IsRegionAccessible(entity.Region)) return true;
             if (puzzles != null && puzzles.Contains(entity.PlacementId) && entity.LockType > 1)
                 return !puzzles.IsUnlocked(entity.PlacementId);
             if (entity.LockType <= 0 || entity.LockedByEntityGroups.Length == 0) return false;
@@ -206,22 +206,22 @@ namespace Zjcs.Presentation.World
                 if (mapLogicTags.TryGetValue(entity.PlacementId, out Map10RuntimeLogicTag tag))
                     state = localSave.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
                 if (goddessActivated) state = 1;
-                if (entity.TypeId == 223) state = IsPublicRegion(entity.Region) ? 2 : HeroActivated(entity) ? 1 : 0;
+                if (entity.TypeId == 223) state = regions.IsPublicRegion(entity.Region) ? 2 : statues.HeroActivated(entity) ? 1 : 0;
                 entityView.SetEntityState(entity.PlacementId, state);
                 bool spawned = puzzles != null && puzzles.Contains(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
-                if (IsStaminaPoint(entity))
+                if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
                 {
-                    var placement = StaminaPlacement(entity);
-                    bool[] flags = IsPublicRegion(entity.Region) ? placement.Public : placement.Private;
+                    var placement = stamina.StaminaPlacement(entity);
+                    bool[] flags = regions.IsPublicRegion(entity.Region) ? placement.Public : placement.Private;
                     spawned = flags != null && flags.Length > 0 && flags[0]
-                        && Stamina.Available(mapClassId, entity.PlacementId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                        && stamina.Stamina.Available(mapClassId, entity.PlacementId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
                 }
-                bool active = (spawned || goddess) && IsRegionAccessible(entity.Region)
+                bool active = (spawned || goddess) && regions.IsRegionAccessible(entity.Region)
                     && (entity.TypeId == 223 || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
             }
-            if (mapClassId == 11) RefreshNativeMiniMapMarks();
+            if (mapClassId == 11) miniMap.RefreshNativeMiniMapMarks();
         }
 
         private bool IsMapLogicEntityDestroyed(int placementId)

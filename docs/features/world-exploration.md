@@ -16,7 +16,7 @@
 
 原触碰奖励实体按配置读取奖励规则、条件、等级与阶位倍率，以及随机奖励包。探寻来源免体力；奖励只在领取时入包，宝箱开启计数与领取记录同时保存。协力宝箱的本地单人奖励结算保留原完成状态及 `DestroyOnEnd=false`，开启后直至原有效期届满才移除。该结算层已经接通，原交互动画和实际鼠标开启流程仍待验证。
 
-已恢复原 `WorldExploreBtn`、`ExploreConfirmDialog`、`ExploreSelectTokenDialog`、`ExploreDetailDialog`、`ExploreRewardPreviewItemDetailDialog` 与奖励列表的 prefab 层级、绑定、布局、文本及页签动画。原 LoopScrollRect 程序集反编译恢复9个类，令牌按原品质顺序排列并使用原拖动／回收算法；概率使用原候选、权重归一化、分组排序和保底显示分支。历史保存原实体组变体编号，避免将组编号误用于名称及品质。每日次数按原 `DailyResetTime=(08:00:00)` 重置。
+已恢复原 `WorldExploreBtn`、`ExploreConfirmDialog`、`ExploreSelectTokenDialog`、`ExploreDetailDialog`、`ExploreRewardPreviewItemDetailDialog` 与奖励列表的 prefab 层级、绑定、布局、文本及页签动画。原 LoopScrollRect 程序集反编译恢复9个类，令牌按原品质顺序排列并使用原拖动／回收算法；概率使用原候选、权重归一化、分组排序和保底显示分支。历史保存原实体组变体编号，避免将组编号误用于名称及品质。每日次数按原 `DailyResetTime=(08:00:00)` 重置。概率／历史两个页签的四份原动画保留 `ToggleOn／ToggleOff` 片段名，以唯一哈希目录保存并显式绑定原 prefab，修复片段以哈希文件名导入后无法重新播放的问题；原曲线、时序、层级和布局不变。来源与输出哈希见 [mainline-modules-source-manifest.json](../../assets/reference/official-map/mainline-modules-source-manifest.json)。
 
 探寻和采集共用原 `AwardListPanel`。森之国当前奖励范围绑定661条道具记录，按原 `ItemIconManagerConfig` 选择普通、装备和宝具模板；宝具候选素材范围取本图各地区 `DropItems` 并集，未把其他地图未接入的素材计为完成。原品质框、高品质光效、名称和数量均从官方数据绑定。弹窗模糊的采样顺序与七个原权重、TMP渐变的原45度旋转和顶点计算由 APK ARM64 实现核对后迁移；不以静态截图代替窗口。
 
@@ -58,7 +58,7 @@
 
 固定 APK 原规则由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`；包含7种令牌、65条实体组变体、28种完整实体模板、68条递归条件、奖励规则、随机奖励包、宝物选择器、等级映射及每表原字节哈希。来源见 `assets/reference/official-map/world-exploration-source-manifest.json`；规则入口为 `OfficialWorldExplorationCatalog`、`OfflineWorldExplorationService` 及 `OfflineMainlineProgressSession.Exploration`，隔离验证入口为 `Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run`。`JsonUtility` 对原始 JSON 空对象引用的处理已逐字段校正，避免将原空条件误当成未迁移的条件。
 
-界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；既有指针验证覆盖59份原面板、535张Sprite所绑定的探寻流程。地图入口为公共运行时 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 分部。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
+界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；既有指针验证覆盖59份原面板、535张Sprite所绑定的探寻流程。地图入口为公共 `OfficialMainlineExplorationModule`，由 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 四份实现分别管理实体、窗口、详情和遮罩；公共 UI 目录由 `OfficialMainlineUiCatalog` 提供。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
 
 遗失女神的来源准备另已提取原触碰窗、技能升阶／人物升级／永久属性结果窗、属性行和 `ItemIconSkill`，共享 UI 数据扩为65份原面板、945张Sprite及1,055条道具图标记录，其中新增394条原主动／被动技能。保留原35条技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、属性行动画、组件引用和三类标题，并补录相关反编译代码哈希。Unity 导入器接受这批层级及图标基础绑定；技能星级／结果数据控制器、关闭交互、地图领奖入口、粒子／泛光／音效仍待接通，不能把来源提取或 prefab 生成视为三类领奖窗口已可游玩。
 

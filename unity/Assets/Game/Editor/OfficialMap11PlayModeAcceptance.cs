@@ -151,9 +151,9 @@ namespace Zjcs.Editor
             runtime.Begin(11, Slot, Root, canvas, avatar, name, null);
         }
 
-        private static T Field<T>(string name) => (T)typeof(OfficialMainlineMapRuntime).GetField(name, Private).GetValue(runtime);
+        private static T Field<T>(string name) => (T)OfficialMainlineMapInspection.Get((OfficialMainlineMapRuntime)runtime, name);
         private static void Invoke(string name, params object[] args) =>
-            typeof(OfficialMainlineMapRuntime).GetMethod(name, Private).Invoke(runtime, args);
+            OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, name, args);
 
         private static IEnumerator Verify(Transform canvas)
         {

@@ -50,8 +50,8 @@ namespace Zjcs.Presentation.World
         private void SaveLocalProgress()
         {
             if (localSave == null || string.IsNullOrEmpty(mapSavePath)) return;
-            localSave.gridX = currentGrid.X;
-            localSave.gridY = currentGrid.Y;
+            localSave.gridX = navigation.currentGrid.X;
+            localSave.gridY = navigation.currentGrid.Y;
             if (puzzles != null) localSave.puzzleStates = puzzles.Save();
             LocalJsonSaveFile.Write(mapSavePath, JsonUtility.ToJson(localSave, true), ValidLocalSave);
         }

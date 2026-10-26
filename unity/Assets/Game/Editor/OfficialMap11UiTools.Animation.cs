@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -64,7 +65,13 @@ namespace Zjcs.Editor
                     }).ToArray());
                 }
                 string id = Hash128.Compute(source.panel + source.path + record.name).ToString();
-                string path = ResourceRoot + "/Native-" + id + ".anim";
+                // Animation stores clip references, so a serialized tab state
+                // must reload with its original ToggleOn/ToggleOff asset name.
+                // Keep the hash in the directory instead of replacing that name.
+                string directory = source.type == "NativeTabAnimation" ? ResourceRoot + "/Native-" + id : ResourceRoot;
+                if (!Directory.Exists(directory)) { Directory.CreateDirectory(directory); AssetDatabase.Refresh(); }
+                string path = source.type == "NativeTabAnimation" ? directory + "/" + record.name + ".anim"
+                    : ResourceRoot + "/Native-" + id + ".anim";
                 AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
                 if (existing == null) AssetDatabase.CreateAsset(clip, path);
                 else { EditorUtility.CopySerialized(clip, existing); UnityEngine.Object.DestroyImmediate(clip); clip = existing; }

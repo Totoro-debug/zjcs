@@ -25,7 +25,8 @@ namespace Zjcs.Presentation.World
             this.catalog = catalog != null ? catalog : throw new ArgumentNullException(nameof(catalog));
         }
 
-        public GameObject Mount(Transform parent, Action<string, GameObject> bind = null, int mapClassId = 10)
+        public GameObject Mount(Transform parent, Action<string, GameObject> bind = null, int mapClassId = 10,
+            OfficialMap11UiData nativeCatalog = null)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (canvasObject != null) throw new InvalidOperationException("Official world UI is already mounted.");
@@ -56,7 +57,7 @@ namespace Zjcs.Presentation.World
                 // TMP resolves a named sprite tag by its current name. The original
                 // asset retains a serialized hash from before it was renamed Common.
                 TMPro.MaterialReferenceManager.AddSpriteAsset(TMPro.TMP_TextUtilities.GetSimpleHashCode(common.name), common);
-                OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(
+                OfficialMap11UiData data = nativeCatalog ?? JsonUtility.FromJson<OfficialMap11UiData>(
                     Resources.Load<TextAsset>(profile.NativeUi("catalog")).text);
                 nativeData = data;
                 OfficialMap11CanvasScaler original = data.worldBindings.canvasScaler;

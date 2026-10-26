@@ -34,10 +34,10 @@ namespace Zjcs.Presentation.World
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
             puzzleRules = storyDataValue?.puzzleRules;
-            witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
-            witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
-            witchPeriodicAwards = storyDataValue?.witchPeriodicityAwards ?? Array.Empty<Map11RuntimePeriodicityAward>();
-            quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
+            statues.witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
+            statues.witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
+            statues.witchPeriodicAwards = storyDataValue?.witchPeriodicityAwards ?? Array.Empty<Map11RuntimePeriodicityAward>();
+            hud.quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
             int expectedStages = MapProfile.StageCount;
             int expectedStories = MapProfile.StoryCount;
             if (battles == null || battles.manifest != "854_156383" || battles.mapClassId != mapClassId

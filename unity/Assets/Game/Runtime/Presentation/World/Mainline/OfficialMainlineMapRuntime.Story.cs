@@ -143,7 +143,7 @@ namespace Zjcs.Presentation.World
                         case "GetFixAwardNode":
                             if (TryGrantFixedStoryReward(node.awardId, out string rewardNotice))
                             {
-                                ShowOfficialNotice(rewardNotice);
+                                hud.ShowOfficialNotice(rewardNotice);
                                 nodeId = StoryNext(node, "Exit");
                             }
                             else
@@ -178,13 +178,13 @@ namespace Zjcs.Presentation.World
                             if (activeStory.key != "WitchStory2" || storyContextEntity == null
                                 || storyContextEntity.EntityClassId != 6620)
                                 throw new InvalidDataException("Unsupported official window-open wait in Map" + mapClassId + ".");
-                            WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            statues.WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
                             return;
                         case "WaitWindowClosedNode":
                             if (activeStory.key != "WitchStory2" || storyContextEntity == null
                                 || storyContextEntity.EntityClassId != 6620)
                                 throw new InvalidDataException("Unsupported official window-close wait in Map" + mapClassId + ".");
-                            WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            statues.WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
                             return;
                         case "ActivityPuzzleCompleteNode":
                             // This node queries the separate timed puzzle activity,
@@ -202,7 +202,7 @@ namespace Zjcs.Presentation.World
                             if (nodeId == 0) nodeId = StoryNext(node, "Exit");
                             continue;
                         case "ItemQuikBuyNode":
-                            RunStoryQuickBuy(node);
+                            hud.RunStoryQuickBuy(node);
                             return;
                         case "WaitForSecondsNode":
                             StartCoroutine(ContinueStoryAfterDelay(node.seconds, StoryNext(node, "Exit")));
@@ -293,7 +293,7 @@ namespace Zjcs.Presentation.World
             {
                 Debug.LogException(error, this);
                 AbortStoryGraph();
-                ShowOfficialNotice("剧情暂时无法继续");
+                hud.ShowOfficialNotice("剧情暂时无法继续");
             }
         }
 
@@ -323,13 +323,13 @@ namespace Zjcs.Presentation.World
             if (path == null || path.Count == 0)
             {
                 AbortStoryGraph();
-                ShowOfficialNotice("剧情移动路线不可用");
+                hud.ShowOfficialNotice("剧情移动路线不可用");
                 yield break;
             }
             foreach (MapGridPoint point in path)
             {
                 if (entity == null || !storyRunning) yield break;
-                Vector3 target = GridToWorld(point);
+                Vector3 target = navigation.GridToWorld(point);
                 while (Vector2.Distance(entity.transform.position, target) > 0.025f)
                 {
                     entity.transform.position = Vector3.MoveTowards(entity.transform.position, target,
@@ -389,7 +389,7 @@ namespace Zjcs.Presentation.World
             // GetEntityBaseNode.GetEntityType.MainPlayer is 0. A stale LoEntityId
             // field is ignored for this mode by the official GetEntityPosNode.
             if (targetNode.selectGetType == 0)
-                return new Vector2(currentGrid.X + targetNode.offsetX, currentGrid.Y + targetNode.offsetY);
+                return new Vector2(navigation.currentGrid.X + targetNode.offsetX, navigation.currentGrid.Y + targetNode.offsetY);
             if (targetNode.selectGetType == 6)
             {
                 if (mapClassId == 11)
@@ -431,8 +431,8 @@ namespace Zjcs.Presentation.World
         {
             if (storyWorldUiHidden == hidden) return;
             storyWorldUiHidden = hidden;
-            if (ui != null) ui.SetPanelActive("WorldCanvas", !hidden);
-            if (minimapImage != null) minimapImage.gameObject.SetActive(!hidden);
+            if (hud.ui != null) hud.ui.SetPanelActive("WorldCanvas", !hidden);
+            if (miniMap.minimapImage != null) miniMap.minimapImage.gameObject.SetActive(!hidden);
         }
 
         private static Map10RuntimeStoryNode FindStoryNode(Map10RuntimeStory story, int nodeId) =>
@@ -537,26 +537,26 @@ namespace Zjcs.Presentation.World
             storyOptionsWaiting = true;
             storyOptionCount = node.options.Length;
             storyOptionSelected = selected;
-            ui.SetOptionChoicesVisible(true);
-            ui.SetPanelActive("OptionTalkDialog", true);
+            hud.ui.SetOptionChoicesVisible(true);
+            hud.ui.SetPanelActive("OptionTalkDialog", true);
             for (int index = 0; index < 5; index++)
             {
                 string root = StoryOptionSlotPath(index);
                 bool active = index < storyOptionCount;
-                ui.SetNodeActive("OptionTalkDialog", root, active);
+                hud.ui.SetNodeActive("OptionTalkDialog", root, active);
                 if (!active) continue;
                 int optionId = StoryOptionId(node, index);
                 if (!storyOptions.TryGetValue(StoryOptionKey(storyName, optionId), out Map10RuntimeStoryOption option))
                     throw new InvalidDataException("Official Map10 story option is missing: " + storyName + "/" + optionId);
-                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", FormatStoryOption(node, index, option.Text));
-                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText", true);
-                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionRemainTimeText", false);
-                ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText/Tip", !string.IsNullOrEmpty(option.MinorText));
-                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Tip", option.MinorText);
-                ui.SetNodeActive("OptionTalkDialog", root + "/Content/DotGroup", false);
-                Sprite icon = uiCatalog.FindSprite(option.Icon);
-                if (icon != null) ui.SetSprite("OptionTalkDialog", root + "/Content/TypeImg", icon);
-                GameObject item = ui.Find("OptionTalkDialog", root);
+                hud.ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", FormatStoryOption(node, index, option.Text));
+                hud.ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText", true);
+                hud.ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionRemainTimeText", false);
+                hud.ui.SetNodeActive("OptionTalkDialog", root + "/Content/OptionText/Tip", !string.IsNullOrEmpty(option.MinorText));
+                hud.ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Tip", option.MinorText);
+                hud.ui.SetNodeActive("OptionTalkDialog", root + "/Content/DotGroup", false);
+                Sprite icon = hud.uiCatalog.FindSprite(option.Icon);
+                if (icon != null) hud.ui.SetSprite("OptionTalkDialog", root + "/Content/TypeImg", icon);
+                GameObject item = hud.ui.Find("OptionTalkDialog", root);
                 Button button = item == null ? null : item.GetComponent<Button>();
                 if (button == null) throw new InvalidDataException("Official Map10 option button is missing: " + root);
                 int capturedIndex = index;
@@ -569,10 +569,10 @@ namespace Zjcs.Presentation.World
         {
             if (!storyOptionsWaiting || index < 0 || index >= storyOptionCount) return;
             storyOptionsWaiting = false;
-            ui.SetOptionChoicesVisible(false);
-            ui.SetPanelActive("OptionTalkDialog", false);
+            hud.ui.SetOptionChoicesVisible(false);
+            hud.ui.SetPanelActive("OptionTalkDialog", false);
             optionDialoguePortraits?.Clear();
-            for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
+            for (int i = 0; i < 5; i++) hud.ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
             Action<int> selected = storyOptionSelected;
             storyOptionSelected = null;
             selected?.Invoke(index);
@@ -613,8 +613,8 @@ namespace Zjcs.Presentation.World
             foreach (GameObject entity in storyEntities.Values) entityView.RemoveStoryEntity(entity);
             storyEntities.Clear();
             storyEntityClasses.Clear();
-            ui.SetPanelActive("TalkDialog", false);
-            ui.SetPanelActive("OptionTalkDialog", false);
+            hud.ui.SetPanelActive("TalkDialog", false);
+            hud.ui.SetPanelActive("OptionTalkDialog", false);
             dialoguePortraits?.Clear();
             optionDialoguePortraits?.Clear();
             activeStory = null;

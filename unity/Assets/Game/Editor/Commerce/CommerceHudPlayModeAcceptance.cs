@@ -146,9 +146,9 @@ namespace Zjcs.Editor.Commerce
             var runtimeObject = new GameObject("CommerceHudRuntime");
             var runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-            typeof(OfficialMainlineMapRuntime).GetField("slotId", flags).SetValue(runtime, slot);
-            typeof(OfficialMainlineMapRuntime).GetField("ui", flags).SetValue(runtime, renderer);
-            typeof(OfficialMainlineMapRuntime).GetMethod("CreateCommerceHudEntries", flags).Invoke(runtime, null);
+            OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "slotId", slot);
+            OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "ui", renderer);
+            OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "CreateCommerceHudEntries", null);
             yield return null;
 
             GameObject firstEntry = null;
@@ -178,8 +178,7 @@ namespace Zjcs.Editor.Commerce
                 "/WorldCanvas/Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryPhoto/Content/Entry/EntryBtnFolded");
             Require(entryButton != null, "The official HUD function entry button is missing.");
             const string entryPath = "/WorldCanvas/Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryPhoto/Content/Entry/EntryBtnFolded";
-            typeof(OfficialMainlineMapRuntime).GetMethod("BindWorldControl", flags)
-                .Invoke(runtime, new object[] { entryPath, entryButton });
+            OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "BindWorldControl", new object[] { entryPath, entryButton });
             Button button = entryButton.GetComponent<Button>();
             Require(button != null, "The official HUD function entry has no Button.");
             if (EventSystem.current == null)

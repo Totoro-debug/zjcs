@@ -65,16 +65,18 @@ namespace Zjcs.Presentation.World
         public int ShadowCount => views.Count;
         public int VisibleShadowCount => views.Count(v => !v.Public || v.UnlockAt >= 0 && Time.time - v.UnlockAt < v.Source.duration);
 
-        public void Initialize(Camera camera, Transform terrain, Func<int, bool> publicRegion)
+        public void Initialize(Camera camera, Transform terrain, Func<int, bool> publicRegion,
+            OfficialMainlineMapProfile profile)
         {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
             isPublic = publicRegion ?? throw new ArgumentNullException(nameof(publicRegion));
-            var source = Resources.Load<TextAsset>("Map11/Fog/region-lights");
+            var source = Resources.Load<TextAsset>(profile.Resource("Fog/region-lights"));
             data = source == null ? null : JsonUtility.FromJson<Data>(source.text);
-            if (data?.manifest != "854_156383" || data.regions?.Length != 73)
-                throw new InvalidDataException("Native Map11 region shadows are unbound.");
+            if (data?.manifest != "854_156383" || !profile.HasRegionFog || data.regions?.Length != profile.RegionShadowCount)
+                throw new InvalidDataException("Native region shadows are unbound for Map" + profile.MapClassId);
             var template = Resources.Load<Material>("World/Mainline/RegionLight2D");
             var lit = Resources.Load<Material>("World/Mainline/RegionSpriteLit");
-            var falloff = Resources.Load<Texture2D>("Map11/Fog/FalloffLookupTexture");
+            var falloff = Resources.Load<Texture2D>(profile.Resource("Fog/FalloffLookupTexture"));
             if (template == null || lit == null || falloff == null)
                 throw new InvalidDataException("Native 2D light materials or falloff lookup are unbound.");
             foreach (var sourceRegion in data.regions)
@@ -91,7 +93,7 @@ namespace Zjcs.Presentation.World
                     target.localScale = node.scale;
                     view.Nodes[i] = target;
                 }
-                view.Mesh = Resources.Load<Mesh>("Map11/Fog/Meshes/LightRegion" + sourceRegion.region);
+                view.Mesh = Resources.Load<Mesh>(profile.Resource("Fog/Meshes/LightRegion" + sourceRegion.region));
                 if (view.Mesh == null) throw new InvalidDataException("Native light mesh is unbound: " + sourceRegion.region);
                 view.Radius = new AnimationCurve(sourceRegion.activationRadius.Select(k => new Keyframe(k.time, k.value, k.inSlope, k.outSlope,
                     k.inWeight, k.outWeight) { weightedMode = (WeightedMode)k.weightedMode }).ToArray());

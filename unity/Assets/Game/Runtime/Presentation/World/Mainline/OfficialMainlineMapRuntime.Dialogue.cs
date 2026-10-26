@@ -128,13 +128,13 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 dialog role is missing: " + node.RoleId);
             nativeDialogChoicesWaiting = false;
             nativeDialogChoiceTargets = Array.Empty<int>();
-            ui.SetOptionChoicesVisible(false);
-            for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
-            ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", true);
-            ui.SetPanelActive("OptionTalkDialog", true);
-            optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, "OptionTalkDialog", mapClassId);
+            hud.ui.SetOptionChoicesVisible(false);
+            for (int i = 0; i < 5; i++) hud.ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
+            hud.ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", true);
+            hud.ui.SetPanelActive("OptionTalkDialog", true);
+            optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(hud.ui, "OptionTalkDialog", mapClassId);
             ShowDialogueContent("OptionTalkDialog", optionDialoguePortraits, role, node.RoleFaceType, node.Text, null);
-            GameObject next = ui.Find("OptionTalkDialog", "/OptionTalkDialog/NextBtn");
+            GameObject next = hud.ui.Find("OptionTalkDialog", "/OptionTalkDialog/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button == null) throw new InvalidDataException("Official Map10 native dialog next button is missing.");
             button.onClick.RemoveListener(RequestDialogueAdvance);
@@ -156,29 +156,29 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 native dialog has no available choices: " + nativeDialogNodeId);
 
             nativeDialogChoicesWaiting = true;
-            ui.SetOptionChoicesVisible(true);
+            hud.ui.SetOptionChoicesVisible(true);
             dialogueWaiting = true;
             dialogueAdvanceRequested = false;
-            ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", false);
+            hud.ui.SetNodeActive("OptionTalkDialog", "/OptionTalkDialog/NextBtn", false);
             for (int index = 0; index < 5; index++)
             {
                 string root = StoryOptionSlotPath(index);
                 bool active = index < nativeDialogChoiceTargets.Length;
-                ui.SetNodeActive("OptionTalkDialog", root, active);
+                hud.ui.SetNodeActive("OptionTalkDialog", root, active);
                 if (!active) continue;
                 Map10RuntimeNativeDialogNode option = activeNativeDialog.Nodes.First(value =>
                     value.NodeId == nativeDialogChoiceTargets[index]);
-                ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", option.Text);
-                Sprite icon = uiCatalog.FindSprite(option.OptionIconPath);
-                if (icon != null) ui.SetSprite("OptionTalkDialog", root + "/Content/TypeImg", icon);
-                GameObject item = ui.Find("OptionTalkDialog", root);
+                hud.ui.SetText("OptionTalkDialog", root + "/Content/OptionText/Text", option.Text);
+                Sprite icon = hud.uiCatalog.FindSprite(option.OptionIconPath);
+                if (icon != null) hud.ui.SetSprite("OptionTalkDialog", root + "/Content/TypeImg", icon);
+                GameObject item = hud.ui.Find("OptionTalkDialog", root);
                 Button button = item == null ? null : item.GetComponent<Button>();
                 if (button == null) throw new InvalidDataException("Official Map10 native option button is missing: " + root);
                 int capturedIndex = index;
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => SelectNativeDialogOption(capturedIndex));
             }
-            ui.SetPanelActive("OptionTalkDialog", true);
+            hud.ui.SetPanelActive("OptionTalkDialog", true);
         }
 
         private void SelectNativeDialogOption(int index)
@@ -187,8 +187,8 @@ namespace Zjcs.Presentation.World
                 || index < 0 || index >= nativeDialogChoiceTargets.Length) return;
             int target = nativeDialogChoiceTargets[index];
             nativeDialogChoicesWaiting = false;
-            for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
-            ui.SetOptionChoicesVisible(false);
+            for (int i = 0; i < 5; i++) hud.ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
+            hud.ui.SetOptionChoicesVisible(false);
             RunNativeDialog(target);
         }
 
@@ -233,7 +233,7 @@ namespace Zjcs.Presentation.World
         private IEnumerator ContinueNativeDialogAfterAward(int nextNodeId)
         {
             yield return new WaitForSecondsRealtime(2f);
-            HideOfficialNotice();
+            hud.HideOfficialNotice();
             if (!nativeDialogActive) yield break;
             nativeDialogPlayableWaiting = false;
             dialogueWaiting = true;
@@ -250,7 +250,7 @@ namespace Zjcs.Presentation.World
             if (result.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(result.Message);
             progression = new OfflineCharacterProgressionService(progressionSave, progression.Catalog);
-            ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
+            hud.ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", characterName);
         }
 
         private void GrantNativeDialogAwards(Map10RuntimeNativeDialogNode node, string receipt)
@@ -271,7 +271,7 @@ namespace Zjcs.Presentation.World
             if (!localSave.nativeDialogAwardReceipts.Contains(receipt))
                 localSave.nativeDialogAwardReceipts = localSave.nativeDialogAwardReceipts.Concat(new[] { receipt }).ToArray();
             SaveLocalProgress();
-            ShowOfficialNotice("獲得物品 " + string.Join("、", node.AwardItems.Select(value => value.ItemId + " ×" + value.Count)));
+            hud.ShowOfficialNotice("獲得物品 " + string.Join("、", node.AwardItems.Select(value => value.ItemId + " ×" + value.Count)));
         }
 
         private IEnumerator FinishNativeDialogAfterDelay(float seconds)
@@ -286,8 +286,8 @@ namespace Zjcs.Presentation.World
 
         private void HideNativeDialogPanel()
         {
-            ui.SetPanelActive("OptionTalkDialog", false);
-            for (int i = 0; i < 5; i++) ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
+            hud.ui.SetPanelActive("OptionTalkDialog", false);
+            for (int i = 0; i < 5; i++) hud.ui.SetNodeActive("OptionTalkDialog", StoryOptionSlotPath(i), false);
             optionDialoguePortraits?.Clear();
         }
 
@@ -325,8 +325,8 @@ namespace Zjcs.Presentation.World
             dialogueVoiceSuppressed = graphNode?.type == "OptionDialogNode" && StoryFields(graphNode).ShowOptionsAtBegin != 0;
             if (dialoguePanelKey == "OptionTalkDialog")
             {
-                for (int index = 0; index < 5; index++) ui.SetNodeActive(dialoguePanelKey, StoryOptionSlotPath(index), false);
-                ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", true);
+                for (int index = 0; index < 5; index++) hud.ui.SetNodeActive(dialoguePanelKey, StoryOptionSlotPath(index), false);
+                hud.ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", true);
             }
             dialogueLines = group.Lines.OrderBy(value => value.Order).ToArray();
             dialogueLineIndex = 0;
@@ -342,11 +342,11 @@ namespace Zjcs.Presentation.World
             {
                 if (dialoguePanelKey == "TalkDialog")
                 {
-                    ui.SetPanelActive(dialoguePanelKey, false);
+                    hud.ui.SetPanelActive(dialoguePanelKey, false);
                     mapVoice?.StopVoice();
                     dialoguePortraits?.Clear();
                 }
-                else ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", false);
+                else hud.ui.SetNodeActive(dialoguePanelKey, "/OptionTalkDialog/NextBtn", false);
                 dialogueWaiting = false;
                 Action complete = dialogueFinished;
                 dialogueFinished = null;
@@ -358,15 +358,15 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Official Map10 dialogue references an unknown role: " + line.RoleId);
             string panel = dialoguePanelKey;
             string prefix = "/" + panel;
-            if (panel == "OptionTalkDialog") ui.SetOptionChoicesVisible(false);
-            ui.SetPanelActive(panel, true);
+            if (panel == "OptionTalkDialog") hud.ui.SetOptionChoicesVisible(false);
+            hud.ui.SetPanelActive(panel, true);
             OfficialMap10DialoguePortraitView portraits;
-            if (panel == "TalkDialog") portraits = dialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
-            else portraits = optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(ui, panel, mapClassId);
+            if (panel == "TalkDialog") portraits = dialoguePortraits ??= new OfficialMap10DialoguePortraitView(hud.ui, panel, mapClassId);
+            else portraits = optionDialoguePortraits ??= new OfficialMap10DialoguePortraitView(hud.ui, panel, mapClassId);
             ShowDialogueContent(panel, portraits, role, line.RoleFaceType,
                 dialogueOverrides != null && dialogueOverrides.TryGetValue(line.Order, out string formatted) ? formatted : line.Text,
                 !dialogueVoiceSuppressed && line.DialogType == "Voice" ? line.VoiceEventKey : null);
-            GameObject next = ui.Find(panel, prefix + "/NextBtn");
+            GameObject next = hud.ui.Find(panel, prefix + "/NextBtn");
             Button button = next == null ? null : next.GetComponent<Button>();
             if (button != null)
             {
@@ -391,13 +391,13 @@ namespace Zjcs.Presentation.World
             {
                 dialogueContentSwitchWaiting = false;
                 string path = "/" + panel + "/Content/CharacterAndTalkContent/TalkContent/";
-                ui.SetText(panel, path + "TalkText", text);
-                ui.SetText(panel, path + "NpcName/NpcNameText", role.RoleName);
+                hud.ui.SetText(panel, path + "TalkText", text);
+                hud.ui.SetText(panel, path + "NpcName/NpcNameText", role.RoleName);
                 mapVoice?.RefreshVoice(voice);
                 if (mapClassId != 11) return;
-                var node = ui.Find(panel, path + "TalkText");
+                var node = hud.ui.Find(panel, path + "TalkText");
                 dialogueTypeWriter = node.GetComponent<WorldDialogueTypeWriter>() ?? node.AddComponent<WorldDialogueTypeWriter>();
-                var source = miniMapUiData.components.Single(value => value.panel == panel
+                var source = miniMap.miniMapUiData.components.Single(value => value.panel == panel
                     && value.type == (panel == "TalkDialog" ? "TalkDialog" : "OptionTalkDialogPanel"));
                 dialogueTypeWriter.StartType(source.fields.mWordInterval);
             });

@@ -53,9 +53,9 @@ namespace Zjcs.Editor
             yield return CaptureWorldMonsterView(3828);
             OfficialMap11StoryBranchValidation.Validate(runtime);
             var story = ((IDictionary)Field<object>("stories"))["WorldTreeGuideToNPC"] as Map10RuntimeStory;
-            typeof(OfficialMainlineMapRuntime).GetField("activeStory", Private).SetValue(runtime, story);
-            typeof(OfficialMainlineMapRuntime).GetField("activeStoryRootKey", Private).SetValue(runtime, story.key);
-            typeof(OfficialMainlineMapRuntime).GetField("storyRunning", Private).SetValue(runtime, true);
+            OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "activeStory", story);
+            OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "activeStoryRootKey", story.key);
+            OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "storyRunning", true);
             Invoke("RunStoryGraph", 14);
             Require(!Field<bool>("storyRunning") && save.StoryCount(story.key) == 1 && save.StoryStatus(story.key) == 2,
                 "Unconnected selector Exit ends normally and records exactly one completion");
@@ -267,8 +267,7 @@ namespace Zjcs.Editor
                         ?.connections.FirstOrDefault()?.nodeId ?? 0;
                     Map10RuntimeStoryNode source = story.nodes.FirstOrDefault(value => value.id == sourceId);
                     if (source == null || source.type != "GetEntityPosNode" || source.selectGetType != 0) continue;
-                    var point = (Vector2)typeof(OfficialMainlineMapRuntime).GetMethod("ResolveStoryCameraPoint", Private)
-                        .Invoke(runtime, new object[] { story, camera });
+                    var point = (Vector2)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ResolveStoryCameraPoint", new object[] { story, camera });
                     MapGridPoint player = Field<MapGridPoint>("currentGrid");
                     Require(point == new Vector2(player.X + source.offsetX, player.Y + source.offsetY),
                         key + " resolves MainPlayer and ignores unrelated serialized LoEntityId");
@@ -292,8 +291,7 @@ namespace Zjcs.Editor
             Require(instance != null, "World Tree registered entity instance exists");
             bool active = instance.activeSelf;
             instance.SetActive(true);
-            Vector2 target = (Vector2)typeof(OfficialMainlineMapRuntime)
-                .GetMethod("ResolveRegisteredStoryPoint", Private).Invoke(runtime, new object[] { "WorldTree" });
+            Vector2 target = (Vector2)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ResolveRegisteredStoryPoint", new object[] { "WorldTree" });
             Require(target == new Vector2(worldTreeGrid.X, worldTreeGrid.Y),
                 "WorldTree camera target resolves the original 6101 StoryNodeRegister root");
             instance.SetActive(active);
@@ -305,17 +303,15 @@ namespace Zjcs.Editor
             OfficialMapVector3 origin = session.Definition.Navigation.Origin;
             try
             {
-                typeof(OfficialMainlineMapRuntime).GetField("currentGrid", Private)
-                    .SetValue(runtime, new MapGridPoint(-1000, -1000));
+                OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "currentGrid", new MapGridPoint(-1000, -1000));
                 avatar.transform.position = new Vector3(origin.X - 1000, origin.Y - 1000, position.z);
-                Vector2 fallback = (Vector2)typeof(OfficialMainlineMapRuntime)
-                    .GetMethod("ResolveStoryTalkCenter", Private).Invoke(runtime, null);
+                Vector2 fallback = (Vector2)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ResolveStoryTalkCenter", null);
                 Require(fallback == new Vector2(-1000, -1001),
                     "No nearby original StoryTalk tags fall back to player position and StorySettings offset");
             }
             finally
             {
-                typeof(OfficialMainlineMapRuntime).GetField("currentGrid", Private).SetValue(runtime, grid);
+                OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)runtime, "currentGrid", grid);
                 avatar.transform.position = position;
             }
             Debug.Log("Map11 spatial bindings validated: official 6101 WorldTree register, player fallback, and StorySettings offset.");
@@ -370,8 +366,7 @@ namespace Zjcs.Editor
                 }
 
                 object entity = entities[placementId];
-                int stageId = (int)typeof(OfficialMainlineMapRuntime)
-                    .GetMethod("ResolveEntityStageId", Private).Invoke(runtime, new[] { entity });
+                int stageId = (int)OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)runtime, "ResolveEntityStageId", new[] { entity });
                 var roster = (Map10RuntimeRoster)rosters[stageId];
                 int monsterId = roster.Waves.SelectMany(value => value.Units).First().MonsterId;
                 OfficialBattleModelBinding binding = catalog.Find(catalog.ResolveModelKey(

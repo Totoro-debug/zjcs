@@ -138,9 +138,9 @@ namespace Zjcs.Editor
             if (runtime != null) UnityEngine.Object.DestroyImmediate(runtime.gameObject);
             runtime = null;
         }
-        private static void Set(object target, string name, object value) => Runtime.GetField(name, Private).SetValue(target, value);
-        private static object Get(object target, string name) => Runtime.GetField(name, Private).GetValue(target);
-        private static void Call(object target, string name) => Runtime.GetMethod(name, Private).Invoke(target, null);
+        private static void Set(object target, string name, object value) => OfficialMainlineMapInspection.Set((OfficialMainlineMapRuntime)target, name, value);
+        private static object Get(object target, string name) => OfficialMainlineMapInspection.Get((OfficialMainlineMapRuntime)target, name);
+        private static void Call(object target, string name) => OfficialMainlineMapInspection.Call((OfficialMainlineMapRuntime)target, name, null);
         private static void Require(bool value, string name) { if (!value) throw new InvalidDataException(name); }
     }
 }

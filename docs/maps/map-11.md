@@ -12,7 +12,7 @@
 
 ## 完整还原部分
 
-地图公共能力统一由 `OfficialMainlineMapRuntime` 调用，模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
+地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
 UI素材目录的385张Sprite已核对PNG的SHA256、稳定GUID、原尺寸、PPU、枢轴和边框，其中18份仅含GUID的 `.meta` 已补全。`OfficialMap11UiTools.RestoreSpriteMetadata` 复用原Sprite转换步骤，可独立修复导入设置；明确使用Texture2D、Single Sprite、无mipmap／NPOT缩放、Clamp、Bilinear和无压缩Alpha，避免不完整元数据将图片识别为Cube纹理。Unity `2022.3.57f1c2` 实际导入及Sprite对象／尺寸校验通过，现有PNG、prefab、目录绑定和GUID均保留。输入清单、转换工具及18份元数据的前后哈希见 `assets/reference/official-map/map11-sprite-metadata-source-manifest.json`；该项验证范围为元数据与Editor导入。
 
@@ -60,7 +60,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 带图形后台 Play Mode 已通过魔女原书页、首次结果预览、成功后计数、周期访问及其原 ActionTime、英雄／魔女每日额度互斥、未用效果冷读恢复和结果文本绑定检查；实际进入战斗确认 `-100%` 保留 1 HP、绑定官方战斗状态，并等待战斗结束核对效果清除且每日额度保留。已查看首次预览与战斗运行帧。该检查调用脚本回调，音源静音，没有真实鼠标输入；战斗画面仍有地图 HUD 叠加，不能作为整体战斗界面还原结论。资源转换、38 种怪物头像来源／PNG／Sprite 绑定检查与工程静态检查通过；没有据此发布 Windows Player。
 
-四类英雄雕像6570～6573的官方触摸／首次奖励／周期访问面板已接入公共 `HeroStatues` 分部，首次激活按地区等级读取410生命属性；本轮实际指针已验证永久生命170与生命恢复、周期访问和跨雕像每日共享额度。普通金币点位115已通过地图模拟点击验证扣5体力、奖励入包、隐藏和原3秒间隔刷新。铁矿、时之砂与历战精华奖励、怪物回执去重和离线刷新已有隔离事务检查；完整地图刷怪操作、英雄原角色／粒子演出、探寻动态实体及雾层尚未完成。规则和来源统一见[主线地图公共模块](../features/mainline-map-modules.md)。
+四类英雄雕像6570～6573的官方触摸／首次奖励／周期访问面板已接入公共 `OfficialMainlineStatuesModule` 的 `HeroStatues.cs` 实现，首次激活按地区等级读取410生命属性；本轮实际指针已验证永久生命170与生命恢复、周期访问和跨雕像每日共享额度。普通金币点位115已通过地图模拟点击验证扣5体力、奖励入包、隐藏和原3秒间隔刷新。铁矿、时之砂与历战精华奖励、怪物回执去重和离线刷新已有隔离事务检查；完整地图刷怪操作、英雄原角色／粒子演出、探寻动态实体及雾层尚未完成。规则和来源统一见[主线地图公共模块](../features/mainline-map-modules.md)。
 
 本图73份 `LightRegion` 原生阴影已绑定 `OfficialMainlineRegionFog`，恢复原形状／falloff网格、衰减贴图、Multiply光照和女神解锁时2.01666665秒的消雾曲线。原73份资源不包含地区21／28／57／62，未补造阴影。图形 Play Mode 已用模拟指针激活女神，检查渐退结束、公开地区冷读并查看前后实际画面；`ProjectTools.Validate` 与原地图回归通过。日夜专属装饰、局部灯光及小地图未探索遮罩仍未完成，完整边界与来源见[公共模块](../features/mainline-map-modules.md)。
 

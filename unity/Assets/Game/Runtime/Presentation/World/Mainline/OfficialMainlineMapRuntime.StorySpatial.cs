@@ -104,10 +104,10 @@ namespace Zjcs.Presentation.World
             OfficialMapVector3 origin = session.Definition.Navigation.Origin;
             return new Vector2(center.x - origin.X, center.y - origin.Y) + storySpatial.GetEntityPosOffset;
 
-            bool InRange(float x, float y) => x >= currentGrid.X - storySpatial.PlayerArroundRangeSize.X
-                && x <= currentGrid.X + storySpatial.PlayerArroundRangeSize.X
-                && y >= currentGrid.Y - storySpatial.PlayerArroundRangeSize.Y
-                && y <= currentGrid.Y + storySpatial.PlayerArroundRangeSize.Y;
+            bool InRange(float x, float y) => x >= navigation.currentGrid.X - storySpatial.PlayerArroundRangeSize.X
+                && x <= navigation.currentGrid.X + storySpatial.PlayerArroundRangeSize.X
+                && y >= navigation.currentGrid.Y - storySpatial.PlayerArroundRangeSize.Y
+                && y <= navigation.currentGrid.Y + storySpatial.PlayerArroundRangeSize.Y;
 
             void Append(Vector3 position)
             {
