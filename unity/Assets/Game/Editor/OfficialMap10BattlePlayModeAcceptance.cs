@@ -221,6 +221,9 @@ namespace Zjcs.Editor
             Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
                 damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);
+            Combat.OfficialBattleElementConfrontationAcceptance elementTest = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ELEMENT_CONFRONTATION") == "1")
+                elementTest = Combat.OfficialBattleElementConfrontationAcceptance.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
             if (accumulatedDamageTest)
             {
@@ -432,6 +435,13 @@ namespace Zjcs.Editor
                     && Time.realtimeSinceStartup < deadline) yield return null;
                 damageProcessTest.Verify(sceneController.Checkpoint);
                 yield return Capture("damage-process.png");
+            }
+            if (elementTest != null)
+            {
+                while (active() && !elementTest.HasExecuted(sceneController.Checkpoint)
+                    && Time.realtimeSinceStartup < deadline) yield return null;
+                elementTest.Verify(sceneController.Checkpoint);
+                yield return Capture("element-confrontation.png");
             }
             if (accumulatedDamageTest)
             {

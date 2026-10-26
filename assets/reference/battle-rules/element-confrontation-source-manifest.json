@@ -1,0 +1,1295 @@
+{
+  "config_manifest": "854_156383",
+  "versions": [
+    {
+      "manifest": "854_156383",
+      "inputs": [
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "807603736d511bb29adf0d607a139d95",
+          "path_id": "-4441209254358796372",
+          "origin": "apk_zip",
+          "manifest": "854_156383",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "apk_entry": "assets/yoo/DefaultPackage/807603736d511bb29adf0d607a139d95.bundle",
+          "raw_size": 6901264,
+          "raw_sha256": "0fff321f5f2382947543b8b4cfa027dfef7716d3510219a6b185a9b7158b7e74",
+          "file": "Assets/Config/EC/FightSkill_part753.g.bytes",
+          "payload_sha256": "8f828065bca86c236f6158d09106b33ad7c7a2c8926f08514d5a54d3b2fd685c"
+        }
+      ],
+      "entities": {
+        "25051": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25052": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25053": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25054": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25055": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25056": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25057": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25058": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25059": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25060": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "manifest": "871_156598",
+      "inputs": [
+        {
+          "bundle": "defaultpackage_assets_config_ec.bundle",
+          "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+          "path_id": "-4441209254358796372",
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+          "manifest": "871_156598",
+          "bundle_size": 6898815,
+          "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595",
+          "file": "Assets/Config/EC/FightSkill_part753.g.bytes",
+          "payload_sha256": "8f828065bca86c236f6158d09106b33ad7c7a2c8926f08514d5a54d3b2fd685c"
+        }
+      ],
+      "entities": {
+        "25051": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25052": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25053": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25054": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25055": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": 0.20000000298023224
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": -0.20000000298023224
+                }
+              ]
+            }
+          }
+        },
+        "25056": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25057": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 101,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25058": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 100,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 102,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25059": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        },
+        "25060": {
+          "parent": 0,
+          "components": {
+            "FightStatusComponent": {
+              "_unused_0": null,
+              "RoundTarget": 2,
+              "DurationRound": -1,
+              "RoundUpdateTiming": 1,
+              "RemoveAtRoundTargetDestroy": false,
+              "ElementType": 0,
+              "ActionBehOfSameStatus": 1,
+              "StatusType": 0,
+              "CanDispersed": false,
+              "IsOpenStack": false,
+              "InitStackCount": 1,
+              "AddStackedCount": 1,
+              "MaxStackedCount": 0,
+              "IsAddDurationRound": false,
+              "MaxAddDurationRound": 100,
+              "ScalePropWhenChangeStacked": false,
+              "StatusSourceType": 1,
+              "ApplyIgnoreResilience": false,
+              "CheckTriggerLimitActions": false,
+              "AI": {
+                "MoreHit": false
+              },
+              "ForbiddenOnApplicatorDie": false,
+              "StackRoundCondition": 0,
+              "StackCountCondition": 0,
+              "IsResetDurationWhenStack": false,
+              "AddStackedRandomMinCount": 1,
+              "AddStackedRandomMaxCount": 1,
+              "IsFixedProp": false,
+              "MutexChecker": null,
+              "FollowRoundUpdateTimingOnGlobalRound": false
+            },
+            "ActionComponent": {
+              "ActionType": 75
+            },
+            "FightStatusDamageElementComponent": {
+              "StatusReplacePropertyValues": [],
+              "_unused_1": null,
+              "_unused_2": null,
+              "ElementInfos": [
+                {
+                  "_unused_0": null,
+                  "ElementType": 104,
+                  "Value": 1.0
+                },
+                {
+                  "_unused_0": null,
+                  "ElementType": 103,
+                  "Value": -0.30000001192092896
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "official_code": [
+    {
+      "manifest": "854_156383",
+      "files": [
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/FightStatusDamageElementComponent.cs",
+          "sha256": "7960db74025ea4174edbd5be40b1ce61e9388440c5e493646addc87d06d02899"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/FightStatusDamageElementComponentInfo.cs",
+          "sha256": "45f6d00fb4991ae6f108d27df9bb22463708b2d57391134777d9c67abc1eb219"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/DamageResultParameter.cs",
+          "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs",
+          "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/ElementType.cs",
+          "sha256": "ab024210d5614725aaff5fb5fc36dce43788ff6bf3d9ec1cf67bedb830b8925e"
+        }
+      ]
+    },
+    {
+      "manifest": "871_156598",
+      "files": [
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusDamageElementComponent.cs",
+          "sha256": "7960db74025ea4174edbd5be40b1ce61e9388440c5e493646addc87d06d02899"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusDamageElementComponentInfo.cs",
+          "sha256": "45f6d00fb4991ae6f108d27df9bb22463708b2d57391134777d9c67abc1eb219"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultParameter.cs",
+          "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
+          "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ElementType.cs",
+          "sha256": "ab024210d5614725aaff5fb5fc36dce43788ff6bf3d9ec1cf67bedb830b8925e"
+        }
+      ]
+    }
+  ],
+  "runtime_config_identical_in_both_versions": true,
+  "runtime_config": {
+    "path": "unity/Assets/Official/Combat/battle-rules.json",
+    "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
+  },
+  "generator_sha256": "98358b1af7fec194752769c6f30dfc31751135c5bf85126833a1a0a6a12290df",
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.ElementConfrontation.cs",
+      "sha256": "0b79d24446b94eb9689409890089d6f2ad59c895fc26a4dd8740d8b7892f4900"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "a45b022def1159e69831255f9b9ad07b7ff848888b67aba991ada2e54a63153c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
+      "sha256": "c342e14fe386c182019a45140730c08d76ab3850655d8afe9700b351551cd885"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.cs",
+      "sha256": "d1285d89405c39fd4f3674c22a1849aa0e4cc2cfc5e2ef8ca20f1640b24abd2f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs",
+      "sha256": "4c066aef5a0693361c2571329ee5f02ce98ca3bda06c7e2200157ecc547a01cd"
+    },
+    {
+      "path": "scripts/test_battle_element_confrontation.ps1",
+      "sha256": "32bc0e3f1b547714e796bf968b545fae6cd7bafbf106373439cf87269ba69ad9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs",
+      "sha256": "83949bd915eeb8d615b25a08ded1e85dc6c6e356528ac6c3de0f378a8be680a3"
+    }
+  ],
+  "operation": "For one matching incoming-element status, supply its original float Value to the existing shared damage formula. Preserve the original 1-Value operation, integer conversion, pre-shield settlement, result fields and checkpoint replay. Do not merge matching statuses without a confirmed rule.",
+  "evidence_boundary": "The component configurations and shared formula are recovered. The server status-to-damage binding is absent; single-status wiring follows those explicit inputs. Multiple matching statuses retain the previous neutral input and set ElementConfrontationUnresolved; their combination, direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work."
+}

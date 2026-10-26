@@ -95,3 +95,12 @@ unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset* text
 assets/reference/battle-hud/skill-*-source-manifest.json text eol=lf
 unity/Assets/Official/Combat/SkillQualities/** -text
 unity/Assets/Official/Combat/SkillQualities.meta -text
+
+# Elemental-status evidence hashes the adapted source bytes.
+scripts/prepare_battle_element_confrontation.py text eol=lf
+scripts/test_battle_element_confrontation.ps1 text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.ElementConfrontation.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs text eol=lf
+assets/reference/battle-rules/element-confrontation-source-manifest.json text eol=lf

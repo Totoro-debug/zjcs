@@ -519,11 +519,17 @@ namespace Zjcs.Combat.Official
                     bool originalHasCustomDamage = hit.HasCustomDamage;
                     long originalCustomDamage = hit.CustomDamage;
                     ApplyResilienceDamageOverride(actor, target, skill, hit);
+                    float elementConfrontation = 0f;
+                    bool elementConfrontationResolved = true;
+                    if (statusCatalog != null && hit.ActionType != 0 && hit.ActionType != 5
+                        && skill.SkillType != 3 && hit.DamageType >= 1 && hit.DamageType <= 7)
+                        elementConfrontationResolved = statusCatalog.TryResolveElementConfrontation(
+                            target, skill.ElementType, out elementConfrontation);
                     FightBattleHitResult resolved;
                     try
                     {
                         resolved = hitExecutor.Apply(random, damageId, actor, target,
-                            skill, hit, checkpoint.StageType, checkpoint.IsPvp, 0.0,
+                            skill, hit, checkpoint.StageType, checkpoint.IsPvp, elementConfrontation,
                             new List<int>(), allowDeadSource);
                     }
                     finally
@@ -542,6 +548,9 @@ namespace Zjcs.Combat.Official
                         HitEntityId = hit.EntityId,
                         DamageType = hit.DamageType,
                         ElementType = skill == null ? 0 : skill.ElementType,
+                        ElementConfrontation = elementConfrontation,
+                        IsElementAffect = resolved.Formula != null && resolved.Formula.ElementAffected,
+                        ElementConfrontationUnresolved = !elementConfrontationResolved,
                         Delay = hitDelay,
                         Anchor = hit.Anchor,
                         IsCure = resolved.IsCure,

@@ -18,6 +18,10 @@ namespace Zjcs.Combat.Official
         public int HitEntityId;
         public int DamageType;
         public int ElementType;
+        public float ElementConfrontation;
+        public bool IsElementAffect;
+        // Explicit offline evidence gap; do not report an invented overlapping-state modifier.
+        public bool ElementConfrontationUnresolved;
         public bool IsSkillCost;
         public float Delay;
         public int Anchor;
