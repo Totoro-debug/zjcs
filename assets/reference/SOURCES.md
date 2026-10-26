@@ -1690,3 +1690,7 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 ## 登录前启动画面
 
 `scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `854_156383` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](startup/native-source-manifest.json)，实际流程与发布边界见[功能页](../../docs/features/startup.md)。新增载荷未生成完整素材快照。
+
+## 森之国区域地表阴影
+
+`scripts/prepare_mainline_fog.py` 读取固定854官方 `partition_mapground_11_extensions` 的73份 `LightRegion` 原层级、Light2D字段和 `map_region_active_anim`，从 APK builtin 取原 `2D Renderer Data` 与2048×128 `FalloffLookupTexture`；全局白光来自已核实的同版本 bare 地形依赖。APK／缓存实际对象、输入与输出哈希见 [区域阴影来源](official-map/map11-region-lights-source-manifest.json)。`prepare_mainline_fog_meshes.py` 在隔离 Unity 2022.3.57f1c2 工程中调用固定原 Unity Graphics `LightUtility.GenerateShapeMesh`、UTess／Clipper；固定Git blob、Mathematics包和73份网格哈希见 [网格来源](official-map/map11-light-meshes-source-manifest.json)。`prepare_mainline_fog_shaders.py` 机械转换 APK 原 Light2D 与 Sprite-Lit GLES 程序，保持原表达式、深度／剔除和 Multiply 分支，见 [程序来源](official-map/map11-light-shaders-source-manifest.json)。显式加载 `Resources/Map11/Fog` 与 `World/Mainline/RegionLight2D`／`RegionSpriteLit`，运行范围和仍缺的日夜装饰／小地图遮罩见 [公共模块](../../docs/features/mainline-map-modules.md)。未生成完整素材快照。

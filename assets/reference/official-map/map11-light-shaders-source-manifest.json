@@ -1,0 +1,61 @@
+{
+  "converter": {
+    "path": "scripts/prepare_mainline_fog_shaders.py",
+    "sha256": "76ce11bc8f106ec24249b4f2c7d5079bf637639ed0a576d8da13c8dd2aa88b41"
+  },
+  "manifest": "854_156383",
+  "operation": "Mechanical GLES-to-HLSL translation; original expressions, native alpha light overlap and single Multiply blend style retained.",
+  "outputs": [
+    {
+      "material": {
+        "path": "unity/Assets/Game/Resources/World/Mainline/RegionLight2D.mat",
+        "sha256": "1f9b7addf27687681207fa938e1deddcca26814ee2088169c6c631f3f1dd7ecf"
+      },
+      "objectSha256": "eeb8967195c2d74bf8deff2b874d6e0f64889ec5ea0ea66ad9dd243bb0781b48",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Shaders/RegionLight2D.shader",
+      "sha256": "38ef6abb9d908212ae127df644fad32f4c61cba43ae627ac830e0a4fd74e4353",
+      "source": {
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "75",
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+        "raw_size": 3554552
+      },
+      "variants": [
+        [
+          "USE_RECESSION"
+        ],
+        []
+      ]
+    },
+    {
+      "material": {
+        "path": "unity/Assets/Game/Resources/World/Mainline/RegionSpriteLit.mat",
+        "sha256": "01b08a8d4ddac2331abb7ba2d60c526876143c35866be48ea12305463cdc906f"
+      },
+      "objectSha256": "2a1aaf872063130b306e2d0cb127cfe50de0c227efdd6753e32e21d5c29b163a",
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Shaders/RegionSpriteLit.shader",
+      "sha256": "bc9b7d23cac5d5cf700ecf4f8a8ad03d3393382283825c08d3f23bb4f80418cc",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/cac97355bb4799c415e3cb1ef38b6dc5.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "cac97355bb4799c415e3cb1ef38b6dc5",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "3994547607707645358",
+        "raw_sha256": "f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe",
+        "raw_size": 850402
+      },
+      "variants": [
+        [
+          "USE_SHAPE_LIGHT_TYPE_0"
+        ]
+      ]
+    }
+  ]
+}

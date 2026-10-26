@@ -14,6 +14,7 @@ namespace Zjcs.Presentation.World
         private const int Map10BatchCount = 1404;
         private readonly List<Mesh> generatedMeshes = new List<Mesh>();
         private readonly List<Material> generatedMaterials = new List<Material>();
+        private readonly Dictionary<Material, int> nativeSortingLayers = new Dictionary<Material, int>();
         private Transform generatedRoot;
 
         [SerializeField] private TextAsset geometry;
@@ -146,6 +147,22 @@ namespace Zjcs.Presentation.World
             renderer.shadowCastingMode = ShadowCastingMode.Off;
             renderer.receiveShadows = false;
             generatedMaterials.Add(material);
+            nativeSortingLayers.Add(material, metadata.layer);
+        }
+
+        public void BindRegionLighting(Material nativeLitMaterial)
+        {
+            if (nativeLitMaterial == null) throw new ArgumentNullException(nameof(nativeLitMaterial));
+            // Native Map11 Light2D targets sorting layers 16, 17 and 18. Water
+            // masks and other layers retain their own material path.
+            foreach (var pair in nativeSortingLayers)
+            {
+                if (pair.Value < 16 || pair.Value > 18) continue;
+                Texture main = pair.Key.mainTexture;
+                pair.Key.shader = nativeLitMaterial.shader;
+                pair.Key.CopyPropertiesFromMaterial(nativeLitMaterial);
+                pair.Key.mainTexture = main;
+            }
         }
 
         private static Texture2D LoadTexture(string uri, string resourceTexturePrefix)
@@ -252,6 +269,7 @@ namespace Zjcs.Presentation.World
             }
             generatedMeshes.Clear();
             generatedMaterials.Clear();
+            nativeSortingLayers.Clear();
             BatchCount = 0;
         }
 

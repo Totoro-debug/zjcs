@@ -164,8 +164,12 @@ namespace Zjcs.Presentation.World
                 Open(id, canvas.transform);
                 Require(Field<MapGridPoint>("currentGrid").Equals(position), "Map position survives a cold runtime reload");
                 if (id == 11)
+                {
                     Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
                         "Goddess activation survives a cold reload");
+                    Require(Field<OfficialMainlineRegionFog>("regionFog").VisibleShadowCount == 70,
+                        "Cold map entry keeps all three public region shadows cleared");
+                }
                 Destroy(runtime.gameObject);
                 yield return null;
             }
@@ -251,11 +255,23 @@ namespace Zjcs.Presentation.World
             var entities = Field<IDictionary>("mapEntities");
             object goddess = entities[202]; // pinned Map11 lost goddess placement
             progress.SetMapRegionProgress(11, 1, 10000);
+            var goddessGrid = (MapGridPoint)goddess.GetType().GetField("Grid").GetValue(goddess);
+            Invoke("SetAvatarPosition", goddessGrid + new MapGridPoint(0, 1));
+            yield return new WaitForSecondsRealtime(1);
+            var fog = Field<OfficialMainlineRegionFog>("regionFog");
+            Require(fog != null && fog.ShadowCount == 73, "All native region light meshes are mounted");
+            int shadows = fog.VisibleShadowCount;
+            yield return Capture("map-11-region-fog");
             Invoke("ShowGoddessDialog", goddess); // dialog fixture; activation itself uses pointer events
             yield return new WaitForSecondsRealtime(.5f);
             yield return Capture("map-11-goddess");
             yield return Click(Field<GoddessTouchDialog>("goddessDialog").myTouchBtn);
             Require(progress.Save.World.ActivatedGoddessRegions.Count == 1, "Pointer activates the original goddess stage");
+            yield return new WaitForSecondsRealtime(.7f);
+            yield return Capture("map-11-region-fog-clearing");
+            yield return new WaitForSecondsRealtime(1.5f);
+            Require(fog.VisibleShadowCount == shadows - 1, "Native region shadow disappears after its original animation duration");
+            yield return Capture("map-11-region-fog-cleared");
         }
 
         private IEnumerator VerifyHeroStatues()

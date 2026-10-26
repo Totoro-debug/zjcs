@@ -78,6 +78,7 @@ namespace Zjcs.Presentation.World
         private Camera worldCamera;
         private OfficialMap10EntityView entityView;
         private OfficialMap10EnvironmentView environmentView;
+        private OfficialMainlineRegionFog regionFog;
         private OfficialMap10UiCatalog uiCatalog;
         private OfficialWorldUiRenderer ui;
         private OfficialMap10DialoguePortraitView dialoguePortraits;
@@ -408,6 +409,13 @@ namespace Zjcs.Presentation.World
             }
             SaveLocalProgress();
             RefreshEntityActivity();
+            if (mapClassId == 11)
+            {
+                regionFog = new GameObject("Official region fog").AddComponent<OfficialMainlineRegionFog>();
+                regionFog.transform.SetParent(mapRoot, false);
+                regionFog.Initialize(worldCamera, terrain.transform, IsPublicRegion);
+                regionFog.BindCamera(minimapCamera);
+            }
         }
 
         private void CreateWorldCamera()

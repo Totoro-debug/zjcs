@@ -22,6 +22,7 @@
 | 英雄／魔女访问及魔女阶段 | `OfflineMainlineProgressSession.Statues` 提取女神激活、全图魔女计数、英雄／魔女每日共享额度、奖励、HP 与待战斗效果事务；`Witch` 分部保留 Map11 原书页、预览、激活与周期访问。`HeroStatues` 分部已接入四种英雄雕像原弹窗、410 等级属性、首次激活与周期访问；原角色／粒子演出仍待恢复。 |
 | 探索进度 | `Regions` 分部与既有 `OfficialMapProgressAdapter`、`OfficialMapExplorationProgress`、`OfficialMapProgressCalculator` 共用官方实体状态和探索点计算。 |
 | 地图体力点 | `Stamina` 分部与 `OfflineMapStaminaService` 共用金币8011、铁矿8021、时之砂8026和怪物5011的扣费、奖励、战斗回执及本地刷新；原区域／组间隔由 `interactions.json` 加载。 |
+| 区域阴影 | `OfficialMainlineRegionFog` 恢复 Map11 的73份原 LightRegion 层级、Freeform网格、原衰减贴图及地区公开后的半径渐退；地表按原 Multiply 光照计算。其他地图及日夜场景装饰切换尚待接入。 |
 | 命运果实生产 | 既有 `OfflineFruitTreeService` 已是与地图无关的公共服务，沿用其生产、容量、时间推进和收取事务；家园入口继续复用，不再为各地图复制一份。命运探寻的地图入口仍未接通。 |
 | 小地图与图标 | `MiniMap`、`MiniMapTabs`、`MiniMapMarks`、`MiniMapFilter` 共用已迁移的原面板、图标、跨图浏览、缩放与档案筛选存储；各图几何继续按 ID 加载。 |
 | 交互、剧情、战斗与存档 | `Interactions`、`Story`、`Dialogue`、`Battle`、`Persistence` 分部保留既有执行顺序；Map10 首战引导独立在 `Map10` 分部。森之国机关、动态怪物与音频仍消费其专属载荷。 |
@@ -40,6 +41,8 @@ Windows development Player 已成功构建并真实启动，以隔离档案重�
 
 本轮带图形 Play Mode 已通过英雄首次领取、永久生命170／HP恢复、周期访问与每日共享额度、冷读，以及通过地图模拟指针采集金币（扣5体力、入包、点位隐藏、原3秒间隔刷新）。隔离事务检查覆盖体力不足回滚、金币／铁矿／时之砂数量倍率、离线刷新、怪物开始去重、失败重试、胜利历战精华与重复回包。已查看英雄面板和实际金币采集画面；奖励条已恢复原叠加材质、CanvasGroup动画和位置，粒子尚未完成，故未声明本功能完整验收或发布。
 
+Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode 和实际截图复查：未公开区域使用原 Light2D 颜色／强度，模拟指针激活女神后播放原 `map_region_active_anim`，半径从0增至30，在2.01666665秒关闭对应阴影，冷读按已公开地区恢复。保留原全局白光、0.7倍光照纹理、HDR格式选择、受光排序层16／17／18和原衰减纹理；GLES程序机械转换为HLSL，网格由固定Unity Graphics的 `LightUtility.GenerateShapeMesh`／UTess／Clipper生成。来源与全部输出哈希分别见 `map11-region-lights-source-manifest.json`、`map11-light-meshes-source-manifest.json`、`map11-light-shaders-source-manifest.json`。这项验证覆盖区域地表阴影；未把日夜专属装饰、其他局部灯光或小地图未探索遮罩算作完成，也未发布新的完整功能版本。
+
 ## 自定义实现
 
 沿用已确认的本地地图存档、神像最近可站立格传送和英雄／魔女共享每日访问额度。规则细节分别见[森之国](../maps/map-11.md)、[战斗执行](battle-execution.md)；地图奖励沿用户确认方案：原权重选取、原数量乘等级／阶位倍率，小数按概率取整，再应用原属性29加成并向下取整。普通点位按原配置扣体力57×5；命运探寻来源实体须按官方来源规则免体力。刷新沿用户确认的本地方案：保留点位、区域开放、原组间隔与上限，计入离线时间。
@@ -49,5 +52,5 @@ Windows development Player 已成功构建并真实启动，以隔离档案重�
 - 英雄雕像原激活动作与三种周期效果的角色、粒子、音效和 MyPlayable 演出；界面与永久属性事务已有实际指针验证，完整表现未完成。
 - [命运果实与命运探寻](world-exploration.md)的完整地图交互。果树生产继续复用已有 [果树服务](fruit-tree.md)，探寻费用、候选／保底、动态实体、历史与原演出仍须完成 Unity 接入。
 - 地图体力怪物的实际战斗完整操作和冷读回归、铁矿／时之砂地图点击、奖励粒子及全部原生材质；不能仅以服务事务检查替代运行验证。
-- 未探索区域原雾层、按区域状态显示及探索后的清除动画；官方 `ActiveRegionTilemapDisplayHelper`／`ActiveRegionTileMapDisplayHandler` 已有反编译结果，尚未接入本地地区状态与原资源绑定。
+- Map11原日夜专属场景装饰、局部灯光和小地图未探索遮罩；区域地表阴影与原渐退已接通，但 `ActiveRegionTilemapDisplayHelper`／`ActiveRegionTileMapDisplayHandler` 及其他地图原载荷仍待接入。
 - 小地图的公共地区资源提供器、其余地图实体图标与详情、未完成的官方表现和各图完整路线；共享底层不自动完成单张地图。

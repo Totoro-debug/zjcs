@@ -113,6 +113,7 @@ namespace Zjcs.Presentation.World
                 else throw new InvalidDataException("Unimplemented official goddess stage result: " + result.CompType);
             }
             RefreshEntityActivity();
+            regionFog?.Refresh(GridToWorld(entity.Grid));
             SaveLocalProgress();
         }
 
