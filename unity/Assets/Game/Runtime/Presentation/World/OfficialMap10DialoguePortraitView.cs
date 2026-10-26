@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.World
         private bool disposed;
         private int speakerVersion;
 
-        public OfficialMap10DialoguePortraitView(OfficialMap10UiRenderer ui, string panelKey = "TalkDialog", int mapClassId = 10)
+        public OfficialMap10DialoguePortraitView(OfficialWorldUiRenderer ui, string panelKey = "TalkDialog", int mapClassId = 10)
         {
             if (ui == null) throw new ArgumentNullException(nameof(ui));
             if (panelKey != "TalkDialog" && panelKey != "OptionTalkDialog")
@@ -210,7 +210,7 @@ namespace Zjcs.Presentation.World
             slots[1]?.Dispose();
         }
 
-        private static Transform FindParent(OfficialMap10UiRenderer ui, string panelKey, string path)
+        private static Transform FindParent(OfficialWorldUiRenderer ui, string panelKey, string path)
         {
             GameObject parent = ui.Find(panelKey, path);
             if (parent == null) throw new InvalidDataException("Official dialogue portrait parent is missing: " + path);

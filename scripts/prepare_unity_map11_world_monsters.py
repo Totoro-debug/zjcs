@@ -17,8 +17,9 @@ ENTITY_DATA = ROOT / "unity/Assets/Official/World/Map/11/map11-entities.json"
 BATTLE_DATA = ROOT / "unity/Assets/Official/World/Map/11/map11-battles.json"
 MODEL_IDENTITIES = ROOT / "unity/Assets/Official/Combat/Presentation/model-identities.json"
 MODEL_CATALOG = ROOT / "unity/Assets/Game/Resources/Combat/OfficialBattleModelCatalog.asset"
-RUNTIME_BINDING = ROOT / "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.WorldMonsters.cs"
-RUNTIME_ENTRY = ROOT / "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs"
+RUNTIME_BINDING = ROOT / "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.WorldMonsters.cs"
+RUNTIME_ENTRY = ROOT / "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs"
+RUNTIME_DATA = ROOT / "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Data.cs"
 FOLLOWER_RUNTIME = ROOT / "unity/Assets/Spine/Runtime/spine-unity/Components/Following/BoneFollower.cs"
 OUTPUT = ROOT / "assets/reference/official-map/map11-world-monsters-source-manifest.json"
 CONVERTER = ROOT / "scripts/prepare_unity_map11_world_monsters.py"
@@ -230,6 +231,7 @@ def main() -> None:
             file_record(MODEL_CATALOG),
             file_record(RUNTIME_BINDING),
             file_record(RUNTIME_ENTRY),
+            file_record(RUNTIME_DATA),
             file_record(FOLLOWER_RUNTIME),
             file_record(SHADOW_META),
             file_record(SHADOW_PNG),

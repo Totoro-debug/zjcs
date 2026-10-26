@@ -15,7 +15,7 @@ namespace Zjcs.Editor
     public static class OfficialMap11PuzzlePersistenceValidation
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-        private static readonly Type Runtime = typeof(OfficialMap10GameRuntime);
+        private static readonly Type Runtime = typeof(OfficialMainlineMapRuntime);
         private static readonly Type Entity = Runtime.GetNestedType("Map10RuntimeEntity", BindingFlags.NonPublic);
 
         public static void Run()
@@ -43,7 +43,7 @@ namespace Zjcs.Editor
             initial.Player.UnlockedMapClassIds.Add(11);
             OfflineInventoryOperations.Grant(initial.Player, 325, 1, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(initial));
-            OfficialMap10GameRuntime runtime = null;
+            OfficialMainlineMapRuntime runtime = null;
             try
             {
                 runtime = Open(root, slot);
@@ -90,11 +90,11 @@ namespace Zjcs.Editor
             }
         }
 
-        private static OfficialMap10GameRuntime Open(string root, string slot)
+        private static OfficialMainlineMapRuntime Open(string root, string slot)
         {
             var host = new GameObject("Map11PersistenceValidation");
             host.SetActive(false);
-            OfficialMap10GameRuntime runtime = host.AddComponent<OfficialMap10GameRuntime>();
+            OfficialMainlineMapRuntime runtime = host.AddComponent<OfficialMainlineMapRuntime>();
             Set(runtime, "closed", true);
             Set(runtime, "mapClassId", 11);
             Set(runtime, "slotId", slot);
@@ -116,7 +116,7 @@ namespace Zjcs.Editor
             return runtime;
         }
 
-        private static void WriteIntent(OfficialMap10GameRuntime runtime, string receipt)
+        private static void WriteIntent(OfficialMainlineMapRuntime runtime, string receipt)
         {
             object local = Get(runtime, "localSave");
             FieldInfo operation = local.GetType().GetField("pendingPuzzleOperation");
@@ -125,15 +125,15 @@ namespace Zjcs.Editor
             local.GetType().GetField("hasPendingPuzzleOperation").SetValue(local, true);
             Call(runtime, "SaveLocalProgress");
         }
-        private static bool HasIntent(OfficialMap10GameRuntime runtime)
+        private static bool HasIntent(OfficialMainlineMapRuntime runtime)
         {
             object local = Get(runtime, "localSave");
             return (bool)local.GetType().GetField("hasPendingPuzzleOperation").GetValue(local);
         }
-        private static long Count(OfficialMap10GameRuntime runtime) =>
+        private static long Count(OfficialMainlineMapRuntime runtime) =>
             ((OfflineMainlineProgressSession)Get(runtime, "progressionSave")).Save.Player.Inventory.FirstOrDefault(value => value.ItemId == 325)?.Count ?? 0;
-        private static OfflineMapPuzzleSession Puzzle(OfficialMap10GameRuntime runtime) => (OfflineMapPuzzleSession)Get(runtime, "puzzles");
-        private static void Release(ref OfficialMap10GameRuntime runtime)
+        private static OfflineMapPuzzleSession Puzzle(OfficialMainlineMapRuntime runtime) => (OfflineMapPuzzleSession)Get(runtime, "puzzles");
+        private static void Release(ref OfficialMainlineMapRuntime runtime)
         {
             if (runtime != null) UnityEngine.Object.DestroyImmediate(runtime.gameObject);
             runtime = null;

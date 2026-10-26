@@ -15,14 +15,16 @@ namespace Zjcs.Presentation.World
     internal sealed class OfficialMap11WitchWindow
     {
         private readonly OfficialMap11UiData data;
+        private readonly string uiRoot;
         public GameObject Root { get; }
         public string Key { get; }
 
-        public OfficialMap11WitchWindow(string key, Transform parent, OfficialMap11UiData data)
+        public OfficialMap11WitchWindow(string key, Transform parent, OfficialMap11UiData data, string uiRoot = "Map11/UI/")
         {
             this.data = data;
+            this.uiRoot = uiRoot ?? throw new ArgumentNullException(nameof(uiRoot));
             Key = key;
-            GameObject prefab = Resources.Load<GameObject>("Map11/UI/" + key);
+            GameObject prefab = Resources.Load<GameObject>(uiRoot + key);
             if (prefab == null) throw new InvalidDataException("Unbound official witch prefab: " + key);
             Root = UnityEngine.Object.Instantiate(prefab, parent, false);
             Root.name = key;
@@ -110,7 +112,7 @@ namespace Zjcs.Presentation.World
         public void EntityIcon()
         {
             Transform slot = Find(Source("WorldDialogEntityContent").fields.mIconSlot.mPreviewSlot);
-            GameObject prefab = Resources.Load<GameObject>("Map11/UI/6620_11_DialogIcon");
+            GameObject prefab = Resources.Load<GameObject>(uiRoot + "6620_11_DialogIcon");
             if (prefab == null) throw new InvalidDataException("Official witch dialog icon is missing.");
             UnityEngine.Object.Instantiate(prefab, slot, false);
         }
@@ -121,12 +123,12 @@ namespace Zjcs.Presentation.World
             {
                 case 200:
                     Transform awards = Find(Source("WorldStageInteractionAwardPreview").fields.mAwardContent);
-                    OfficialMap11UiAssets assets = Resources.Load<OfficialMap11UiAssets>("Map11/UI/DynamicItems");
+                    OfficialMap11UiAssets assets = Resources.Load<OfficialMap11UiAssets>(uiRoot + "DynamicItems");
                     foreach (Map10RuntimeAwardItem award in result.AwardItems)
                     {
                         var wrapper = new OfficialMap11WitchWindow("ItemAwardIcon", awards, data);
                         wrapper.State(wrapper.Source("ItemAwardIcon"), 0);
-                        WorldItemIcon icon = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Map11/UI/ItemIconDefault"),
+                        WorldItemIcon icon = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(uiRoot + "ItemIconDefault"),
                             wrapper.Find(wrapper.Source("ItemAwardIcon").fields.Anchor), false).GetComponent<WorldItemIcon>();
                         icon.Init(assets.Item(award.ItemId), assets.ItemQuality(award.ItemId),
                             award.Count.ToString(CultureInfo.InvariantCulture));

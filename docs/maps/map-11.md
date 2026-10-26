@@ -12,11 +12,13 @@
 
 ## 完整还原部分
 
+地图公共能力统一由 `OfficialMainlineMapRuntime` 调用，模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
+
 本图 UI 已从固定版本官方 prefab、程序集和资源绑定恢复为 37 份原生 panel、325 张 Sprite。`WorldCanvas` 保持官方根 Canvas、CanvasScaler、SafeArea、原始坐标和层级，修复 HUD 缩放与布局；头像使用官方角色模型、相机参数和排除皮肤列表生成，生命、等级、战力、货币／体力和固定任务内容接到本地状态。人物对话恢复原底板、左右立绘、说话人位置、明暗切换、选项、逐字显示及动画半程事件；首次点击补全当前句，之后才推进。右侧立绘的原 `RectMask2D` 为禁用状态，现按序列化状态还原，避免人物被错误裁掉。对话与选项期间按原流程隐藏地图 HUD。功能入口使用官方 `FunctionEntryDialog`，迁移 `GridLayoutGroupJSZX` 的间距、排列和自定义行数算法，恢复原按钮排列；没有本地服务器时钟区域或提示记录时使用官方关闭状态。功能入口和快捷消息恢复原 Animator 默认片段的初始状态，修复未收起的内嵌面板残留。首购 HUD 改为原 `FirstPayBtn` prefab，由原纵向布局定位，不再借用累计星值图标或手写坐标；仍沿用现有首购可见性业务查询。
 
 小地图恢复原圆形遮罩材质、人物标记、地区名／坐标／探索度、全屏面板、缩放、拖拽边界与分类筛选。37 份原生标记 prefab 按官方实体／地图／区域／标签优先级绑定到 1,707 个放置点；标记偏移使用官方身体格中心，缩放与完成状态按原配置处理。`MiniMapWorldStageSwitcherSupport` 直接消费原世界阶段状态，传送点、战场、副本与圣兽标记按各自序列化状态切换，避免未激活／已激活图标叠加。筛选保存至所属档案的 `minimap-filter.json`，关闭、清空内存后重开可冷读恢复。跨地图页签沿 `MiniMapFullScreenPanel`／`MiniMapSwitchTabItem`，按官方 `MapInfo` 顺序筛选同组、已有访问记录且已迁移的 Map10／Map11；使用原 `ImgMapSwitch_0`／`_1`、标题、选中态及各图缩放参数。浏览其他地图不创建访问记录或移动角色，隐藏当前图角色和标记；关闭后恢复当前图。其他地图的离线实体标记、标记点击／详情、公共地区资源点提供器仍未完整接入，不能据此认定完整小地图功能已完成。
 
-Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查世界阶段标记 0／1／2 三种状态的互斥图标分支及跨图页签的未访问过滤、Map10／Map11 切换、位置与访问记录不变及关闭恢复，并检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。地形／角色遮挡排序、水面缺块和原 URP 材质表现仍须修复后再核对整体画面。代码入口为 `OfficialMap10GameRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapTabs／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
+Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD、全屏小地图、筛选、功能菜单、单人及双人对话和选项画面，检查世界阶段标记 0／1／2 三种状态的互斥图标分支及跨图页签的未访问过滤、Map10／Map11 切换、位置与访问记录不变及关闭恢复，并检查筛选切换／冷读恢复、逐字显示／首击补全文本、动画半程换句、HUD 遮挡和右侧立绘遮罩状态。该项调用脚本回调，未执行真实鼠标／键盘／拖拽，Windows Player 尚未构建验证。地形／角色遮挡排序、水面缺块和原 URP 材质表现仍须修复后再核对整体画面。代码入口为 `OfficialMainlineMapRuntime` 的 Hud／TopBar／Tasks／MiniMap／MiniMapTabs／MiniMapFilter／MiniMapMarks／Portrait／Functions 分部、`OfficialMap10DialoguePortraitView` 和 `Runtime/Official/WorldUI`；原始对象与代码哈希见 `UI/source-manifest.json`。
 
 基础地面补回原 `MapGround_11_bare/GridGround/Ground` 的 17,752 个 Tile，以 55 张原 Sprite 的多边形、三角形、UV、颜色、Tile 矩阵及锚点生成 55 批原生网格，不改变原世界坐标。角色模型挂回原 `3001_view/Model/Offset/Player_Model_Map` 的 `(0.3, 0.3, 1)` 缩放、`(0, -0.5, -0.5)` 偏移，并以排序组适配原单 Renderer 的世界槽位，恢复角色显示。地图相机从原 `WorldCamera` 读取 SafeArea、适配优先级及裁剪面，沿 `OrthographicCameraResolutionAdaptor.AdaptOrthographicSize` 恢复视野和窗口比例，剧情结束恢复同一基准。转换器为 `prepare_unity_map11_base_ground.py`，显式加载 `Resources/Map11/BaseGround`；对象、bundle、原 shader、源码与输出哈希见 `base-ground-source-manifest.json`。带图形 Play Mode 已实际查看基础地面和角色恢复后的 HUD／对话画面；该补载尚未恢复原 URP 光照、水面与完整排序，不代表整图渲染完成。
 
@@ -50,7 +52,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 44 个故事图与四个子图引用的 207 个原剧情语音事件已绑定本地流式 AudioClip。按原 `TalkDialog`／`OptionTalkDialogPanel`，仅 Voice 行播放，换句先执行 `Voice_StopAll`；纯文字行、普通对话关闭及故事结束立即停止，选项面板仍显示时保留当前语音，异步加载完成后核对当前行。音量读取现有语音设置。后台 Play Mode 已检查全部 207 份 Windows 导入结果、实际主图／子图对话播放、连续换句、纯文字停止、过期加载取消、关闭停止及音量；音源静音，未试听或验证真实输入。转换器为 `prepare_unity_map11_dialogue_audio.py`，加载绑定为 `Resources/Map11/Audio/voices`，来源与输入输出哈希见 `assets/reference/official-map/map11-dialogue-audio-source-manifest.json`；整段剧情的镜头、演出与主线仍须继续恢复。
 
-地图表现程序集与编辑器检查程序集已显式引用现有 `spine-csharp`／`spine-unity`，解决 `OfficialMap10GameRuntime.WorldMonsters` 与地图后台检查的 CS0246 编译错误。主工程 Editor 与 Windows Player 脚本编译已通过；未据此扩大本图运行验收范围。
+地图表现程序集与编辑器检查程序集已显式引用现有 `spine-csharp`／`spine-unity`，解决 `OfficialMainlineMapRuntime.WorldMonsters` 与地图后台检查的 CS0246 编译错误。主工程 Editor 与 Windows Player 脚本编译已通过；未据此扩大本图运行验收范围。
 
 共享地图定义、阶段结构、寻路／探索计算、表现适配及本图复用的演出／音频代码随地图纳入版本控制；原生 UI catalog 的静态 GUID 依赖沿现有官方绑定补入。战斗怪物头像由固定版本原 Sprite 扩展至 Map10／Map11 共 38 个 IconId，修复森之国进入战斗时缺少头像的异常；来源见 `assets/reference/battle-hud/monster-portraits-source-manifest.json`。对白切换继续等待原动画半程事件，已替换或关闭对白的旧回调不再覆盖新内容和语音。
 
@@ -74,7 +76,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 `SelectorNode`／`SwitchNode` 的客户端只消费服务器返回的 `SelectedIndex`，包内没有选择实现。用户确认单机按原配置顺序取首个为真的条件或首个与输入相等的结果，均未匹配时走原 `Exit`；结果比较保留 `SerializableObj.Compare` 的原始类型转换。规则用于世界树、援助和魔女剧情；分支路由接入不代表魔女激活状态和整段剧情已经完成。
 
-`GetMapWitchExploreInfoNode` 只读取服务器返回的 `ActiveCount`，缺少服务端计数实现；用户确认沿用 `WorldWitchTouchUI` 的所有地图已激活魔女总数。`OfflineMainlineProgressSession.ActivatedWitches` 账本按地图／放置实体持久化，重复激活不重复计数，缺少新字段的旧档从零开始；原查询节点及 Switch 输入已接入该总数，并通过跨地图累计、重复回执和存档冷读校验。Map11 两处魔女实体 6620（放置 ID 2801、6901）已接入原书页、结果预览、世界阶段成功结算和周期访问；预览不发奖，阶段成功后按激活前全图计数选择原 `WitchInfo`，应用奖励、HP、状态或实体组生成结果。实现入口为 `OfficialMap10GameRuntime.Witch.cs`、`OfficialMap11WitchWindow.cs`，运行载荷保留 14 条激活规则和七条原权重周期奖励。完整剧情与召唤战斗循环仍待验证。
+`GetMapWitchExploreInfoNode` 只读取服务器返回的 `ActiveCount`，缺少服务端计数实现；用户确认沿用 `WorldWitchTouchUI` 的所有地图已激活魔女总数。`OfflineMainlineProgressSession.ActivatedWitches` 账本按地图／放置实体持久化，重复激活不重复计数，缺少新字段的旧档从零开始；原查询节点及 Switch 输入已接入该总数，并通过跨地图累计、重复回执和存档冷读校验。Map11 两处魔女实体 6620（放置 ID 2801、6901）已接入原书页、结果预览、世界阶段成功结算和周期访问；预览不发奖，阶段成功后按激活前全图计数选择原 `WitchInfo`，应用奖励、HP、状态或实体组生成结果。实现入口为 `OfficialMainlineMapRuntime.Witch.cs`、`OfficialMap11WitchWindow.cs`，运行载荷保留 14 条激活规则和七条原权重周期奖励。完整剧情与召唤战斗循环仍待验证。
 
 按用户确认，英雄／魔女共用每日一次访问额度，访问记录、道具和待战斗效果在同一本地事务中写入。状态退出游戏后保留，进入下一场任意战斗生效，战斗结束后清除；HP 减少按入场最大生命百分比结算，`-100%` 至少保留 1 HP。首次剧情激活与周期访问沿原阶段图分别处理。普通女神／失落女神的探索激活不占该每日额度；Map11 没有英雄雕像放置点，英雄界面与随机增益入口仍待所属地图迁移。
 
@@ -94,7 +96,7 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 以下为拟实施方案，不代表已接入或验证。主要缺口是 Map 11 的实际游玩运行时；当前没有经核实必须由用户补充资料才能继续的外部阻塞。
 
-从 `OfficialMap10GameRuntime` 提取地图加载、移动、点击、战斗调用和存档等公共能力，建立按地图 ID 加载的运行时；森之国的踏板、战斗碑、剧情与出口条件放在地图专属处理器中。提取时保留官方分支、状态变化和执行顺序，并回归 Map 10；不以复制 Map 10 后仅替换地图 ID 代替专属机制实现。
+地图加载、HUD、区域策略、移动、点击、交互、战斗调用与存档已提取为[公共模块](../features/mainline-map-modules.md)，并保持 Map10／Map11 的资源和存档隔离。森之国踏板、战斗碑、剧情与出口仍须按本页缺项继续完成；公共抽取不代表本图完整迁移完成。
 
 | 部分 | 尚需完成的范围 | 实施要求 |
 | --- | --- | --- |
@@ -128,4 +130,4 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 官方转换数据：[regions/11.json](../../assets/official/regions/11.json)、[adventure.json](../../assets/official/adventure.json)、[map11-rendering.json](../../assets/official/map11-rendering.json)、[map11-lighting.json](../../assets/official/map11-lighting.json)、[map11-stone-animations.json](../../assets/official/map11-stone-animations.json)、[map11-logic-views.json](../../assets/official/map11-logic-views.json)、[map11-dialogs.json](../../assets/official/map11-dialogs.json)。Unity 载荷：[map11.json](../../unity/Assets/Official/World/Map/11/map11.json)、[OfficialMap11Tools](../../unity/Assets/Game/Editor/OfficialMap11Tools.cs)。
 
-Unity 共享地图接入：[OfficialWorldMapAssetCatalog](../../unity/Assets/Game/Runtime/Presentation/World/OfficialWorldMapAssetCatalog.cs)、[OfficialWorldMapSession](../../unity/Assets/Game/Runtime/Presentation/World/OfficialWorldMapSession.cs)。map10 运行时仅作架构参考：[OfficialMap10GameRuntime](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs)。离线激活与奖励属性：[OfflineMainlineProgressSession](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)、[OfflineCharacterConfiguredPropSource](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterConfiguredPropSource.cs)。官方地图逻辑与特效参考：[MyPlayableManager](../../.tools/source-packages/official-code/playable-manager-source/GameFramework.MyPlayableManager.decompiled.cs)。
+Unity 共享地图接入：[OfficialWorldMapAssetCatalog](../../unity/Assets/Game/Runtime/Presentation/World/OfficialWorldMapAssetCatalog.cs)、[OfficialWorldMapSession](../../unity/Assets/Game/Runtime/Presentation/World/OfficialWorldMapSession.cs)。主线公共运行时：[OfficialMainlineMapRuntime](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs)。离线激活与奖励属性：[OfflineMainlineProgressSession](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs)、[OfflineCharacterConfiguredPropSource](../../unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterConfiguredPropSource.cs)。官方地图逻辑与特效参考：[MyPlayableManager](../../.tools/source-packages/official-code/playable-manager-source/GameFramework.MyPlayableManager.decompiled.cs)。

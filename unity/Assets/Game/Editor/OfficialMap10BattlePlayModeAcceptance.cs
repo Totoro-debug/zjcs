@@ -163,7 +163,7 @@ namespace Zjcs.Editor
                 GameObject avatar = Zjcs.Presentation.CharacterCreation.CharacterCreationNativeModelFactory.CreateWorldModel(
                     SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty), out _);
                 var runtimeObject = new GameObject("Map10BattleRuntime");
-                OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
+                OfficialMainlineMapRuntime runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
                 runtime.Begin(SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty),
                     canvas.transform, avatar, "Map10 battle acceptance", null);
 
@@ -177,7 +177,7 @@ namespace Zjcs.Editor
             }
         }
 
-        private static IEnumerator VerifyBattle(OfficialMap10GameRuntime runtime)
+        private static IEnumerator VerifyBattle(OfficialMainlineMapRuntime runtime)
         {
             yield return null;
             yield return null;
@@ -185,11 +185,11 @@ namespace Zjcs.Editor
             CharacterNativePortraitValidation.Validate(
                 SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty));
 
-            FieldInfo entitiesField = typeof(OfficialMap10GameRuntime)
+            FieldInfo entitiesField = typeof(OfficialMainlineMapRuntime)
                 .GetField("mapEntities", BindingFlags.Instance | BindingFlags.NonPublic);
-            MethodInfo startStage = typeof(OfficialMap10GameRuntime)
+            MethodInfo startStage = typeof(OfficialMainlineMapRuntime)
                 .GetMethod("StartEntityStage", BindingFlags.Instance | BindingFlags.NonPublic);
-            FieldInfo controllerField = typeof(OfficialMap10GameRuntime)
+            FieldInfo controllerField = typeof(OfficialMainlineMapRuntime)
                 .GetField("battleController", BindingFlags.Instance | BindingFlags.NonPublic);
             Require(entitiesField != null && startStage != null && controllerField != null,
                 "Map10 battle entry points are missing.");
@@ -354,9 +354,11 @@ namespace Zjcs.Editor
                     "The UI fixture advanced the battle while its controller loop was held.");
                 runtime.enabled = true;
             }
-            Transform skillCard = all.FirstOrDefault(value => value.name == "GameSkillIconItem_0");
-            Require(skillCard != null, "Battle HUD did not create the first skill slot.");
-            Image skillImage = skillCard.Find("Content/Bg/Anim/Icon/SkillIconImg")?.GetComponent<Image>();
+            var skillBindings = Zjcs.Presentation.Combat.OfficialBattleSkillSlotBindings.Load();
+            Transform mainHud = all.First(value => value.name == "FightMainPanel");
+            Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+            string iconPath = skillBindings.slots[0].icon;
+            Image skillImage = mainHud.Find(iconPath.Substring("/FightMainPanel/".Length))?.GetComponent<Image>();
             Require(skillImage != null && skillImage.sprite != null
                 && skillImage.sprite.name.StartsWith("official_skill_icon_", StringComparison.Ordinal),
                 "Skill slot is not bound to an official icon: "

@@ -71,6 +71,9 @@ namespace Zjcs.Presentation.CharacterCreation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void StartWithFirstScene()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), OfficialMainlineMapModuleProbe.Argument) >= 0) return;
+#endif
             if (FindObjectOfType<CharacterCreationFlowController>() != null) return;
             new GameObject("CharacterCreationFlow").AddComponent<CharacterCreationFlowController>();
         }
@@ -1391,11 +1394,11 @@ namespace Zjcs.Presentation.CharacterCreation
             {
                 var slots = new ProfileSlotCatalog(Application.persistentDataPath);
                 OfflineMainlineProgressSession progress = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
-                int mapClassId = OfficialMap10GameRuntime.ResolveHomeReturnMap(progress.Save);
+                int mapClassId = OfficialMainlineMapRuntime.ResolveHomeReturnMap(progress.Save);
                 model = CharacterCreationNativeModelFactory.CreateWorldModel(slotId,
                     Application.persistentDataPath, out string name);
                 runtimeObject = new GameObject("Map" + mapClassId + "GameRuntime");
-                OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
+                OfficialMainlineMapRuntime runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
                 runtime.MapMusicVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.MusicVolume;
                 runtime.MapVoiceVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.VoiceVolume;
                 runtime.Begin(mapClassId, slotId, Application.persistentDataPath, canvas.transform, model, name,

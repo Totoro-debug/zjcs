@@ -36,7 +36,7 @@
 
 ### HUD 入口
 
-[`OfficialMap10GameRuntime.BindWorldControl`](../../unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs) 通过功能入口接入商城：Map11 先打开原 `FunctionEntryDialog`，商城按钮再调用 [`CommerceScreenController.OpenShop`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs)；Map10 仍从功能入口直接打开商城。Map11 的首购 HUD 已替换为从固定版 APK 提取的原 `FirstPayBtn`，保持原图标、文字、按钮和 LayoutElement，由 WorldCanvas 原纵向布局定位；来源为 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。首购可见性继续使用现有 `CommerceHudStatus.FirstPayShouldShow`，原支付功能门槛与完整提示图绑定尚未迁移。Map10 仍使用旧 `commerce_first_entry`，其完整还原待后续处理。
+[`OfficialMainlineMapRuntime.BindWorldControl`](../../unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs) 通过功能入口接入商城：Map11 先打开原 `FunctionEntryDialog`，商城按钮再调用 [`CommerceScreenController.OpenShop`](../../unity/Assets/Game/Runtime/Presentation/Commerce/CommerceScreenController.cs)；Map10 仍从功能入口直接打开商城。Map11 的首购 HUD 已替换为从固定版 APK 提取的原 `FirstPayBtn`，保持原图标、文字、按钮和 LayoutElement，由 WorldCanvas 原纵向布局定位；来源为 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`。首购可见性继续使用现有 `CommerceHudStatus.FirstPayShouldShow`，原支付功能门槛与完整提示图绑定尚未迁移。Map10 仍使用旧 `commerce_first_entry`，其完整还原待后续处理。
 
 ### 商城界面与业务
 

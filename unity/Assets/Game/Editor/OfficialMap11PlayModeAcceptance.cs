@@ -26,7 +26,7 @@ namespace Zjcs.Editor
         private static bool started;
         private static double playReadyAt;
         private static EditorWindow gameView;
-        private static OfficialMap10GameRuntime runtime;
+        private static OfficialMainlineMapRuntime runtime;
         private static System.Diagnostics.Process pointerProcess;
         private static int pointerSequence;
         private static string Root => SessionState.GetString(Key + ".root", "");
@@ -145,15 +145,15 @@ namespace Zjcs.Editor
         private static void OpenMap(Transform canvas)
         {
             GameObject avatar = CharacterCreationNativeModelFactory.CreateWorldModel(Slot, Root, out string name);
-            runtime = new GameObject("Map11AcceptanceRuntime").AddComponent<OfficialMap10GameRuntime>();
+            runtime = new GameObject("Map11AcceptanceRuntime").AddComponent<OfficialMainlineMapRuntime>();
             if (SessionState.GetBool(Key + ".background", false)) runtime.MapMusicVolume = () => 0f;
             if (SessionState.GetBool(Key + ".background", false)) runtime.MapVoiceVolume = () => 0f;
             runtime.Begin(11, Slot, Root, canvas, avatar, name, null);
         }
 
-        private static T Field<T>(string name) => (T)typeof(OfficialMap10GameRuntime).GetField(name, Private).GetValue(runtime);
+        private static T Field<T>(string name) => (T)typeof(OfficialMainlineMapRuntime).GetField(name, Private).GetValue(runtime);
         private static void Invoke(string name, params object[] args) =>
-            typeof(OfficialMap10GameRuntime).GetMethod(name, Private).Invoke(runtime, args);
+            typeof(OfficialMainlineMapRuntime).GetMethod(name, Private).Invoke(runtime, args);
 
         private static IEnumerator Verify(Transform canvas)
         {
@@ -175,7 +175,7 @@ namespace Zjcs.Editor
             }
             yield return new WaitForSecondsRealtime(2);
             Require(runtime.GetComponentInChildren<OfficialMap10EntityView>().EntityCount == 1803, "Map11 entity count");
-            OfficialMap10UiRenderer hud = Field<OfficialMap10UiRenderer>("ui");
+            OfficialWorldUiRenderer hud = Field<OfficialWorldUiRenderer>("ui");
             var uiData = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
             foreach (OfficialMap11ExploreButtonBinding binding in uiData.worldBindings.exploreButtons)
                 foreach (OfficialMap11UiState state in binding.states)
@@ -299,7 +299,7 @@ namespace Zjcs.Editor
             Require(ItemCount(325) == 1, "Reopening terminal does not repeat first ticket reward");
             yield return ClickStoryOption(0);
             yield return AdvanceToStoryOptions();
-            Require(!Field<OfficialMap10UiRenderer>("ui").Find("OptionTalkDialog",
+            Require(!Field<OfficialWorldUiRenderer>("ui").Find("OptionTalkDialog",
                 StoryOptionPath(0) + "/Content/OptionText/Text").GetComponent<TMPro.TMP_Text>().text.Contains("{0}"),
                 "Original submit option formats live ticket amount");
             Capture("terminal-submit");
@@ -328,7 +328,7 @@ namespace Zjcs.Editor
             for (int count = 0; count < 12 && !Field<bool>("storyOptionsWaiting"); count++)
             {
                 Require(Field<bool>("dialogueWaiting"), "Terminal story is waiting for original dialogue input");
-                var hud = Field<OfficialMap10UiRenderer>("ui");
+                var hud = Field<OfficialWorldUiRenderer>("ui");
                 string panel = Field<string>("dialoguePanelKey");
                 RectTransform next = hud.Find(panel, "/" + panel + "/NextBtn").GetComponent<RectTransform>();
                 yield return Click(RectTransformUtility.WorldToScreenPoint(null, next.TransformPoint(next.rect.center)));
@@ -338,7 +338,7 @@ namespace Zjcs.Editor
         }
         private static IEnumerator ClickStoryOption(int index)
         {
-            var hud = Field<OfficialMap10UiRenderer>("ui");
+            var hud = Field<OfficialWorldUiRenderer>("ui");
             RectTransform option = hud.Find("OptionTalkDialog", StoryOptionPath(index)).GetComponent<RectTransform>();
             yield return Click(RectTransformUtility.WorldToScreenPoint(null, option.TransformPoint(option.rect.center)));
             yield return new WaitForSecondsRealtime(0.5f);

@@ -32,10 +32,10 @@ namespace Zjcs.Editor.Progression
                     "Copy the profile creation time into its progress save");
                 Require(session.InitializeMap(10, new[] { 0, 1, 2, 3, 4 }).IsApplied,
                     "Initialize the five official Map10 regions");
-                Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(session.Save) == 10,
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 10,
                     "Keep Map11 closed until Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);
-                Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(session.Save) == 11,
+                Require(OfficialMainlineMapRuntime.ResolveHomeReturnMap(session.Save) == 11,
                     "Open Map11 after Map10 task 1040 is claimed");
                 session.Save.Tasks.ClaimedMainlineTaskIds.Remove(1040);
 

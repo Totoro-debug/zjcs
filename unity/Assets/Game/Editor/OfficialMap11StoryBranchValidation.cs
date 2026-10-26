@@ -12,9 +12,9 @@ namespace Zjcs.Editor
     public static class OfficialMap11StoryBranchValidation
     {
         private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
-        private static readonly Type Runtime = typeof(OfficialMap10GameRuntime);
+        private static readonly Type Runtime = typeof(OfficialMainlineMapRuntime);
 
-        public static void Validate(OfficialMap10GameRuntime runtime)
+        public static void Validate(OfficialMainlineMapRuntime runtime)
         {
             var stories = (IDictionary)Runtime.GetField("stories", Private).GetValue(runtime);
             var subgraphs = (IDictionary)Runtime.GetField("storySubgraphs", Private).GetValue(runtime);
@@ -67,7 +67,7 @@ namespace Zjcs.Editor
             Debug.Log("Map11 story branches validated against pinned graphs: first-match selectors and original Exit; primitive Switch comparison; None/Playing/End; global witch activation ledger, duplicate protection and actual query output. Witch UI and native input remain outside this check.");
         }
 
-        public static void ValidateColdLoad(OfficialMap10GameRuntime runtime)
+        public static void ValidateColdLoad(OfficialMainlineMapRuntime runtime)
         {
             var stories = (IDictionary)Runtime.GetField("stories", Private).GetValue(runtime);
             var story = (Map10RuntimeStory)stories["WorldTreeGuideToNPC"];

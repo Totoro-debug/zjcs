@@ -37927,13 +37927,13 @@
   },
   "output": "unity/Assets/Game/Resources/Combat/battle-scene-bindings.json",
   "output_sha256": "d8eb8a7c4b7cbc586d71f6b73e4536eee6f20b016eea0d4dff20f4c86192cf11",
-  "generator_sha256": "4328c6b635ddac1ac5561eea5971c4c975500d6da70630e5f40c7400c2067dcf",
+  "generator_sha256": "9d8ca0c0a1d116a9a9a6f50f85f308e153e6eee33cd48ead0afd309e606bbadb",
   "schema_sha256": "88b680c9405811a6f2bbf6174c1d438af8a9a137c2253ea9e47ac51dc7473a6b",
   "runtime_bindings": {
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneBindings.cs": "ab6c70ff8b5e1e50d53afef9f241f3deedb7794b1cf3cb7ded0c7ce8344c015d",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleEnvironmentView.cs": "2a3974e68af286e462202485330f6f4525aed5c6f1345ce6999b80e51688083a",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNativeModelView.cs": "66196b9f94e3febbec28f70d9661dc5b245ebb3dacdbc73ded5c91f1c21c3f1b",
-    "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.BattleScene.cs": "eeab47bd6528759ec8b669180c75208c0d18ed5ef83a3f15268329ef85ad6abf"
+    "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleScene.cs": "e2636fcc35aa5ad5f3f9ec3a006914a5cd58c06b26e7aac4ecdfaf8c4cb49db0"
   },
   "operation": "Read original TagManager, model Transform chains, MeshRenderer sorting layers/orders, native Camera and strict GameCameraController fields. Preserve internal native draw order with a SortingGroup; express source layer index/order in the existing flattened scene range. Restore legacy scene export downward Y and PNG atlas V to Unity coordinates, retain exported source depth. Legacy mesh samples are repaired, not claimed as the completed native Spine migration. APK-first verified cloud fallback through Apk; no images synthesized."
 }

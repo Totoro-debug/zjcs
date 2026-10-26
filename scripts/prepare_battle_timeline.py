@@ -242,7 +242,7 @@ def build():
             'Presentation/Combat/OfficialBattleTimelineAssets.cs','Presentation/Combat/OfficialBattleSceneTimelineView.cs',
             'Presentation/Combat/OfficialBattleNpcPortraitCatalog.cs',
             'Presentation/Combat/OfficialBattleTimelineLifetime.cs','Presentation/Character/CharacterNativePortraitLease.cs',
-            'Presentation/World/OfficialMap10GameRuntime.BattlePortrait.cs')]),
+            'Presentation/World/Mainline/OfficialMainlineMapRuntime.BattlePortrait.cs')]),
         shader_conversions=file_hashes(sorted((runtime/'Presentation/Combat/Shaders').glob('Timeline*.shader'))),
         generator_sha256=sha(Path(__file__).read_bytes()),output=OUTPUT.relative_to(ROOT).as_posix(),
         output_sha256=sha(OUTPUT.read_bytes()),textures=list(textures.values()),

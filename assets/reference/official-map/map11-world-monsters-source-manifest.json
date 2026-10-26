@@ -4,7 +4,7 @@
   "rule": "ECStageBehStageView.GetMonsterId calls Formula.GetMainMonster; each mapped roster contains one MonsterId identity, so the original ranking resolves to that ID.",
   "converter": {
     "path": "scripts/prepare_unity_map11_world_monsters.py",
-    "sha256": "ee6972efb9aedcde10d82b4d62f626fac01ebb41aad1725e668dd75b209aecd6"
+    "sha256": "d21b61d572d5ed4f2bf4ba7962310ede75b19d18bbc019f0402ca9804d03b12b"
   },
   "source_code": [
     {
@@ -50,12 +50,12 @@
       "sha256": "dfe11abc855a85cb50d783b004551aff502186d84b7097e76c3659ed8788f8e8"
     },
     {
-      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.WorldMonsters.cs",
-      "sha256": "e1badc89eecd097de8feb9c10352257d9f45c7f83da8d65b8fbd4eec36beeb50"
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.WorldMonsters.cs",
+      "sha256": "410a318df1a45b053c446d1355fcb652ad1f5d0434d922557aaedff3afc1c88c"
     },
     {
-      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10GameRuntime.cs",
-      "sha256": "4a07573895e82f356a273361624d1b73dc9f76b427da5e9de8b22ab7954cc46e"
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "8ab6c7713f288000e3c1452cb2c32884a11b3b8fc9fc4f72de2d2d78f1d5d8da"
     },
     {
       "path": "unity/Assets/Spine/Runtime/spine-unity/Components/Following/BoneFollower.cs",
@@ -68,6 +68,10 @@
     {
       "path": "unity/Assets/Official/World/Map/11/Resources/Map11/Textures/MonsterShadow.png",
       "sha256": "d99038e52422e5299c1c7ebf2434dd88f12cc4645bf23aa3d8604c2316bdd610"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Data.cs",
+      "sha256": "c0ffd7cbe1dad5102116f5ab3e90ae10f92e124403ff0127110540a916b61182"
     }
   ],
   "world_entity_prefab": {

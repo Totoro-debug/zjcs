@@ -109,7 +109,7 @@ namespace Zjcs.Editor
                 Canvas canvas = CreateCanvas();
                 GameObject avatar = new GameObject("Map10AcceptanceAvatar", typeof(SpriteRenderer));
                 var runtimeObject = new GameObject("Map10AcceptanceRuntime");
-                OfficialMap10GameRuntime runtime = runtimeObject.AddComponent<OfficialMap10GameRuntime>();
+                OfficialMainlineMapRuntime runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
                 runtime.Begin(SessionState.GetString(SlotKey, string.Empty), SessionState.GetString(RootKey, string.Empty),
                     canvas.transform, avatar, "Map10 acceptance", null);
 
@@ -123,7 +123,7 @@ namespace Zjcs.Editor
             }
         }
 
-        private static IEnumerator VerifyMapStarted(OfficialMap10GameRuntime runtime, GameObject runtimeObject)
+        private static IEnumerator VerifyMapStarted(OfficialMainlineMapRuntime runtime, GameObject runtimeObject)
         {
             yield return null;
             yield return null;

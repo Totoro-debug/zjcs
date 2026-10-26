@@ -44,7 +44,7 @@ namespace Zjcs.Editor
         private static IEnumerator VerifyUiPresentation()
         {
             yield return new WaitForSecondsRealtime(1);
-            OfficialMap10UiRenderer renderer = Field<OfficialMap10UiRenderer>("ui");
+            OfficialWorldUiRenderer renderer = Field<OfficialWorldUiRenderer>("ui");
             GameObject hud = renderer.Find("WorldCanvas", "/WorldCanvas");
             Rect hudRect = ScreenRect(hud);
             Transform inlineFunctions = hud.transform.Find("Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryFunc/Content/Panel");
