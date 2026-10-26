@@ -218,6 +218,8 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_STATUS_COUNTER") == "1")
+                Combat.OfficialBattleStatusCounterAcceptance.Run();
             Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
                 damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);

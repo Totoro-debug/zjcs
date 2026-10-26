@@ -48,6 +48,25 @@ namespace Zjcs.Combat.Official
         }
 
         /// <summary>
+        /// FightStatusController.CalcStatusRemainRound reads the status RoundComp, which can belong
+        /// to its creator, applicator or either master. Without that component the original UI
+        /// returns the configured duration, rather than using the displayed unit's round.
+        /// </summary>
+        public static int IconRemainingRound(FightBattleStatusState status,
+            IReadOnlyList<FightBattleUnitState> units)
+        {
+            if (status == null) return 0;
+            if (status.DurationRound < 0) return status.DurationRound;
+            int clockId = ResolveTargetUnitId(status, units);
+            if (clockId > 0 && units != null)
+                foreach (FightBattleUnitState unit in units)
+                    if (unit != null && unit.Id == clockId && unit.SkillState != null)
+                        return Math.Max(0, status.CurDurationRound
+                            - (unit.SkillState.Round - status.StartRound));
+            return status.DurationRound;
+        }
+
+        /// <summary>
         /// Official stacking extension (<c>UpdateStatusRound</c>): the remaining time is added to the
         /// configured duration and capped by <c>MaxAddDurationRound</c>.
         /// </summary>

@@ -106,7 +106,10 @@ namespace Zjcs.Presentation.Combat
             Refresh(unit);
         }
 
-        public void Refresh(FightBattleUnitState unit)
+        public void Refresh(FightBattleUnitState unit) => Refresh(unit,
+            unit == null ? null : new[] { unit });
+
+        public void Refresh(FightBattleUnitState unit, IReadOnlyList<FightBattleUnitState> units)
         {
             if (disposed || unit == null) return;
             CalculateBarRatios(unit, out float nextHp, out float shieldRatio);
@@ -141,7 +144,7 @@ namespace Zjcs.Presentation.Combat
             SetBar("Resilience", unit.MaxResilience <= 0 ? 0f
                 : Mathf.Clamp01((float)unit.Resilience / unit.MaxResilience), unit.MaxResilience > 0);
             SetBar("ShieldSlider", shieldRatio, shieldRatio > 0f);
-            RefreshStatuses(unit);
+            RefreshStatuses(unit, units);
         }
 
         public static void CalculateBarRatios(FightBattleUnitState unit,
@@ -290,7 +293,7 @@ namespace Zjcs.Presentation.Combat
             return rect;
         }
 
-        private void RefreshStatuses(FightBattleUnitState unit)
+        private void RefreshStatuses(FightBattleUnitState unit, IReadOnlyList<FightBattleUnitState> units)
         {
             var signature = new StringBuilder();
             if (unit.Statuses != null)
@@ -303,7 +306,7 @@ namespace Zjcs.Presentation.Combat
                         && showSpriteAboveUnit)
                         signature.Append(status.InstanceId).Append(':').Append(status.ClassId).Append(':')
                             .Append(status.StackCount).Append(':')
-                            .Append(StatusCountText(status, unit, showStackCount,
+                            .Append(StatusCountText(status, units, showStackCount,
                                 showRoundReplaceStack, showCustomCount, hasRoundStartComponent)).Append(';');
             string nextSignature = signature.ToString();
             if (statusSignature == nextSignature) return;
@@ -363,14 +366,18 @@ namespace Zjcs.Presentation.Combat
                 Transform countNode = item.transform.Find("CountTxt");
                 TMP_Text countText = countNode == null ? null : countNode.GetComponent<TMP_Text>();
                 if (countText != null)
-                    countText.text = StatusCountText(status, unit, showStackCount,
+                {
+                    string count = StatusCountText(status, units, showStackCount,
                         showRoundReplaceStack, showCustomCount, hasRoundStartComponent);
+                    countText.gameObject.SetActive(!string.IsNullOrEmpty(count));
+                    if (!string.IsNullOrEmpty(count)) countText.text = count;
+                }
                 shown++;
             }
             SetUnusedStatusItemsActive(shown);
         }
 
-        private static string StatusCountText(FightBattleStatusState status, FightBattleUnitState unit,
+        private static string StatusCountText(FightBattleStatusState status, IReadOnlyList<FightBattleUnitState> units,
             bool showStackCount, bool showRoundReplaceStack, bool showCustomCount,
             bool hasRoundStartComponent)
         {
@@ -378,17 +385,7 @@ namespace Zjcs.Presentation.Combat
             if (showRoundReplaceStack)
             {
                 if (hasRoundStartComponent) return string.Empty;
-                int remaining;
-                if (status.RoundTarget == FightStatusLifecycle.TargetNone)
-                    remaining = status.DurationRound;
-                else if (unit != null && unit.SkillState != null
-                    && (status.RoundTarget == FightStatusLifecycle.TargetApplicator
-                        && status.OwnerId == unit.Id
-                        || status.RoundTarget == FightStatusLifecycle.TargetCreator
-                        && status.CreatorId == unit.Id))
-                    remaining = FightStatusLifecycle.LeftRound(status, unit.SkillState.Round);
-                else
-                    return string.Empty;
+                int remaining = FightStatusLifecycle.IconRemainingRound(status, units);
                 return remaining > 0 ? remaining.ToString(CultureInfo.InvariantCulture) : string.Empty;
             }
             if (showCustomCount || !showStackCount || status.StackCount <= 0)

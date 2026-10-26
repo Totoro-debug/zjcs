@@ -339,6 +339,7 @@ namespace Zjcs.Editor.Combat
                 OfficialBattleDamageDisplayAcceptance.Run();
                 OfficialBattleDamageVisibilityAcceptance.Run();
                 OfficialBattleWorldTipsAcceptance.Run();
+                OfficialBattleStatusCounterAcceptance.Run();
                 OfficialBattleElementFeedbackAcceptance.Run();
                 Debug.Log("Official battle HUD renderer validated: 30 prefab trees, " + images + " images, " + texts
                     + " texts, " + buttons + " buttons, " + layouts + " layout groups, " + fitters + " fitters, "

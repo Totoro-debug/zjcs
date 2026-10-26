@@ -1,0 +1,33 @@
+{
+  "manifest": "854_156383",
+  "generator_sha256": "a2329e643d658b168d2b2522b1498d77cf53ccbc65bf2a2897e3b4f8720a93cb",
+  "operation": "Port FightStatusController.CalcStatusRemainRound and FightStatusItemBase.GetCountText; resolve RoundComp through the complete roster without changing combat clocks or status duration.",
+  "official_code": {
+    "client-source/FightStatusController.cs": "22d9a2ef0d7f4c6a4059517775c66da7d188412ae81c8e0f1f9a67c2ee837bab",
+    "client-source/FightStatusItemBase.cs": "a2eb4b8d0431eee2bab87be95e599e4d4e87371c1f20103c66efd3e4cd856143",
+    "client-source/FightStatusUIItem.cs": "8ac8766c247ffcdf79946540a676973cecfc2070547123d1a6e0db22d0b2ebf1",
+    "client-source/FightStatusItem.cs": "92b3c698b21d860d7758123c82420303ddba7f34ca33238ec3c422a1b25e48cf",
+    "common-source/Common/FightStatusComponent.cs": "4f9b0133c6404da6ddcea3ed192fc760fc927f914a1276b987ee894872ecf68c",
+    "common-source/Common/FightStatusUtils.cs": "455246d6a42637a9822a0509c109f0efcc3eb15fb5df5f58f7ce76a2f5ec32c2",
+    "common-source/Common/FightStatusUtilsHandler.cs": "7ac28ba04c74cf5908f4014f41505282e28168857dc73d75d1b2093469d09421"
+  },
+  "inputs": {
+    "assets/reference/battle-hud/status-icons-source-manifest.json": "4625c051e152e4171362ebac089a5c0e55d2d611c0ac3b2386bbf0fe0f28634e",
+    "unity/Assets/Game/Resources/Combat/battle-status-icons.json": "ac23e85cfcf855ec4c997f62b28e91ed1ee580f182bcf393f3783cfe57a8a6f4"
+  },
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs": "85efb33d7245b5a6a0969be668793950dcbe3170d34adcb48e66cf3822c59b1f",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleUnitWorldHudView.cs": "88826806bfc9e324690a4d639589a4559756d6182cd5647c1803db464be488ee",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs": "94fcf06a5e20a52666c4ee8fa3d1cca288ee3777aca39640f57a4644934c9a9a",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleStatusCounterAcceptance.cs": "79e75ae925da928bd27780a5ca8827fbf796b5170206cf6c2d01420bdc693b44",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs": "579549605ef280543969447361cc7e3704672e1a056412f878188f298fd11998",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "3ea91a28903a72684d8672b46c8aca2e58b3586b47f920bfc9f284ae6445e6d2",
+    "scripts/test_battle_status_lifecycle.ps1": "f28103ddf8f1c49052a471ce7a09c1e60fe8d6509678541649307b075a9b12e2"
+  },
+  "rules": {
+    "clock": "RoundComp belongs to the configured creator, applicator or master; do not require its HP to be positive.",
+    "remaining": "DurationRound < 0 or missing RoundComp: DurationRound; otherwise Max(0, CurDurationRound - (RoundComp.Round - StartRound)).",
+    "text": "Positive count enables the original count node and displays the count, including one; zero or negative disables it."
+  },
+  "remaining": "Round-start invocation/custom counts, forbidden-state ordering and status detail input remain incomplete."
+}

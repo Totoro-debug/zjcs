@@ -520,7 +520,7 @@ namespace Zjcs.Presentation.Combat
                     PlayAnimation(view, "idle_01", true);
                 }
                 view.State = state;
-                view.Hud?.Refresh(state);
+                view.Hud?.Refresh(state, checkpoint.Units);
                 Transform body = Body(state.Id);
                 if (body == null) continue;
                 PlaceUnit(state.Id, body, state, stepEvent);
@@ -1387,7 +1387,7 @@ namespace Zjcs.Presentation.Combat
                 hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, body);
                 attachedUnitHuds.Add(state.Id, hud);
             }
-            hud?.Refresh(state);
+            hud?.Refresh(state, latestCheckpoint?.Units);
         }
 
         private static bool IsWaveSpawned(FightBattleCheckpoint checkpoint, int unitId)

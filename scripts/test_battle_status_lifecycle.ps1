@@ -160,4 +160,30 @@ $executor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
 $null = $executor.Step(0, 1)
 Assert-Status ($player.Statuses.Count -eq 0) 'Executed turn did not expire the one-round status at the player round end'
 
-Write-Output 'Battle status lifecycle checks passed: round duration, infinite duration, stack extension and caps, same-status merge rules, round-timing expiry, destroyed-target sweep and executor integration.'
+$iconUnits = [System.Collections.Generic.List[Zjcs.Combat.Official.FightBattleUnitState]]::new()
+foreach ($clock in @(@(10, 30, 7), @(20, 40, 9), @(30, 0, 8), @(40, 0, 10))) {
+    $unit = [Zjcs.Combat.Official.FightBattleUnitState]::new()
+    $unit.Id = $clock[0]; $unit.MasterId = $clock[1]
+    $unit.SkillState = [Zjcs.Combat.Official.FightSkillAgentState]::new()
+    $unit.SkillState.Round = $clock[2]
+    $iconUnits.Add($unit)
+}
+$iconStatus = New-Status 24679 8
+$iconStatus.CreatorId = 10; $iconStatus.OwnerId = 20
+$iconStatus.StartRound = 4; $iconStatus.CurDurationRound = 10
+foreach ($example in @(@(0, 8), @(1, 7), @(2, 5), @(3, 6), @(4, 4))) {
+    $iconStatus.RoundTarget = $example[0]
+    Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $iconUnits) -eq $example[1]) "Status icon used the wrong clock for target $($example[0])"
+}
+$iconUnits[3].Hp = 0
+Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $iconUnits) -eq 4) 'Status icon discarded a still-existing dead clock entity'
+$iconUnits[3].SkillState = $null
+Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $iconUnits) -eq 8) 'Missing round component did not preserve configured duration'
+$iconStatus.OwnerId = 999
+Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $iconUnits) -eq 8) 'Missing applicator master did not use the original fallback'
+$iconStatus.RoundTarget = 1; $iconUnits[0].SkillState.Round = 100
+Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $iconUnits) -eq 0) 'Status icon countdown went below zero'
+$iconStatus.DurationRound = -5
+Assert-Status ([Zjcs.Combat.Official.FightStatusLifecycle]::IconRemainingRound($iconStatus, $null) -eq -5) 'Status icon changed an infinite configured duration'
+
+Write-Output 'Battle status lifecycle checks passed: round duration, infinite duration, stacking, expiry, destroyed targets, executor integration and all five original icon round targets/fallbacks.'
