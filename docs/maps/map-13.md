@@ -35,6 +35,9 @@
 - 原 `MapGround_13_bare.prefab` 的依赖闭包已绑定：228 份新增原生资产、93 份复用地形资产、实际官方脚本、8 份原材质及 shader。7 张额外贴图保留全部 54 个原 mip，按原线性／sRGB 配置解码成原生 RGBA32 Texture2D；保留原底部起始行顺序、过滤和重复等参数，未重新生成 mip 或额外压缩。纹理和同名 Sprite 使用独立资产路径，原生纹理引用使用 Unity 的正确类型标记。
 - 内置屏 DX12 编辑器验证全部新增资产及引用、完整 mip 参数、地形主体无缺失脚本，并生成含 202 条原路径的 `Resources/Map13/Native/native-scene-catalog`。同源隔离 Play Mode 实际加载该目录／prefab，并从 GPU 回读 7 张贴图的全部 54 个 mip，每字节哈希均与官方 ASTC 解码数据一致，核对颜色及行顺序。尚未实例化完整官方地图、渲染对照、模拟鼠标或正式存档。
 
+- 从 APK 迁移 Renderer2D 依赖的点光、体积光、Blit／颜色深度复制、阴影、采样和诊断 shader：12 类、39 个原 pass、91 组 pass／变体均已逐顶点／片元通过 Windows D3D 编译。保留原模板比较／掩码／写入操作、显式 LOD、顶点 ID、位域插入及片元深度；原 GLES 源程序随来源保留。平台适配恢复原矩阵列，并按 DX12 约定转换程序生成顶点的近裁剪深度和渲染目标 Y 方向。同源隔离 DX12 Play Mode 验证四层 mip 的全部颜色／行序及 64 个深度值经实际深度缓冲写入、再采样；使用 GPU 夹具，未覆盖完整地图画面。
+- 原 APK `TagManager` 的 19 个标签、32 个物理层槽位、23 个排序层及其原始顺序／ID 已恢复。`WaterMask` 固定位于第 13 层；编辑器验证 163 个原主体 Renderer 的排序 ID 均可解析。完整 `PostProcessData` 已严格解码，保留 15 个 shader 引用及有序噪声／胶片／SMAA 纹理引用；后处理执行资源及管线原生绑定仍待恢复。
+
 `scripts/test_map13_water.ps1` 已实际通过：10 个浮台完整多段往返、载人路径、阻挡后状态回滚、五终端开放／重置范围、已开放道路保留、原水位状态切换、JSON 冷读和越界存档拒绝。它直接调用规则模块，不覆盖鼠标输入、场景动画、背包扣费或正式存档接线。
 
 工程静态检查及 Unity `2022.3.57f1c2` 的 DX12 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 已通过。全局校验中的地图资产检查针对 Map10，不代表 Map13 已运行或画面正确。
@@ -47,7 +50,7 @@
 
 ## 尚未实现
 
-- 地形主体 prefab、原材质、水面／地形／熔岩 shader 和昼夜组件已绑定或迁移；仍须恢复原渲染管线资产、遮罩层／排序层、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
+- 地形主体 prefab、原材质、水面／地形／熔岩 shader 和昼夜组件已绑定或迁移；仍须恢复原渲染管线资产、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -66,3 +69,5 @@
 
 - [异步依赖安装](../../scripts/prepare_unity_map13_async_dependency.py)及[MIT 上游包来源](../../assets/reference/official-map/map13-async-dependency-source-manifest.json)记录 UniTask 2.5.10 ZIP、许可和逐文件哈希；此为兼容依赖基线，不声称恢复了游戏所用的确切包版本。[环境代码迁移](../../scripts/prepare_unity_map13_environment.py)、[代码来源](../../assets/reference/official-map/map13-environment-code-source-manifest.json)、[配置绑定](../../assets/reference/official-map/map13-environment-binding-source-manifest.json)和[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13EnvironmentAcceptance.cs)记录原状态机、配置、接口与验证范围。
 - [地形／熔岩 shader 转换](../../scripts/prepare_unity_map13_scene_shaders.py)及[来源](../../assets/reference/official-map/map13-scene-shaders-source-manifest.json)记录各原 pass 程序；[原生主体绑定工具](../../scripts/prepare_unity_map13_native_scene.py)、[来源](../../assets/reference/official-map/map13-native-scene-source-manifest.json)及[Unity 绑定清单](../../assets/reference/official-map/map13-native-scene-binding-source-manifest.json)记录主体闭包、完整 ASTC mip、原生 Texture2D 序列化、GUID 与实际导入哈希，[编辑器工具](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativeSceneTools.cs)验证绑定。新增地形主体和贴图未进入完整素材快照。
+
+- [Renderer2D shader 转换](../../scripts/prepare_unity_map13_pipeline_shaders.py)、[来源](../../assets/reference/official-map/map13-pipeline-shaders-source-manifest.json)、[逐 pass 编译检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineShaderTools.cs)及[GPU Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PipelineAcceptance.cs)记录程序与实际验证范围；[原层配置恢复](../../scripts/prepare_unity_map13_layers.py)、[来源](../../assets/reference/official-map/map13-layers-source-manifest.json)和[绑定检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LayerTools.cs)记录全部原层位和排序 ID。新增程序未进入完整素材快照。

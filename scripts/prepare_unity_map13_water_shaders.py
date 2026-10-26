@@ -84,7 +84,7 @@ def pass_state(state):
         "ColorMask " + color_mask])
 
 
-def translate(shader, name):
+def translate(shader, name, *, program_body=body, program_structure=structure, render_state=pass_state, target="3.0"):
     programs = gles_programs(shader, with_keywords=True)
     if len(shader.m_ParsedForm.m_SubShaders) != 1 or len(shader.m_ParsedForm.m_SubShaders[0].m_Passes) != 1:
         raise ValueError("Recheck original water shader passes")
@@ -106,7 +106,7 @@ def translate(shader, name):
     sub = shader.m_ParsedForm.m_SubShaders[0]
     text = 'Shader "Zjcs/Official/World/Map13/' + name + '" {\nProperties {\n' + "\n".join(props) + "\n}\nSubShader {\n"
     text += "Tags { " + " ".join('"' + k + '"="' + v + '"' for k, v in sub.m_Tags.tags) + " }\n"
-    text += "Pass {\n" + pass_state(sub.m_Passes[0].m_State) + "\nCGPROGRAM\n#pragma target 3.0\n#pragma vertex vert\n#pragma fragment frag\n"
+    text += "Pass {\n" + render_state(sub.m_Passes[0].m_State) + "\nCGPROGRAM\n#pragma target " + target + "\n#pragma vertex vert\n#pragma fragment frag\n"
     if "_WATER_ABOVE" in keywords:
         text += "#pragma multi_compile_local _WATER_ABOVE _WATER_UNDER\n"
     for k in keywords:
@@ -116,11 +116,11 @@ def translate(shader, name):
         if keywords:
             condition = " && ".join(("defined(" + k + ")") if k in p["keywords"] else ("!defined(" + k + ")") for k in keywords)
             text += ("#if " if i == 0 else "#elif ") + condition + "\n"
-        vertex, vu = body(p["source"], True)
-        fragment, fu = body(p["source"], False)
+        vertex, vu = program_body(p["source"], True)
+        fragment, fu = program_body(p["source"], False)
         uniforms = {}
         for u in sorted(set(vu + fu)): uniforms[u.split()[-1]] = u
-        text += structure(p["source"]) + "\n" + "\n".join(uniforms.values()) + "\n" + vertex + "\n" + fragment + "\n"
+        text += program_structure(p["source"]) + "\n" + "\n".join(uniforms.values()) + "\n" + vertex + "\n" + fragment + "\n"
     if keywords: text += "#endif\n"
     return text + "ENDCG\n}\n}\nFallback Off\n}\n", programs
 

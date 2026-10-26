@@ -178,6 +178,24 @@
         "m_ShaderVariantLogLevel",
         "m_ShadowCascades"
       ]
+    },
+    {
+      "source": {
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "path_id": "22211",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "raw_size": 3554552,
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f"
+      },
+      "object_sha256": "5b741b4749a1c897a69d130f9de84f0d3b01e8e5a94cb24410ae6a196d599b44",
+      "class_name": "UnityEngine.Rendering.Universal.PostProcessData",
+      "serialized_fields": [
+        "shaders",
+        "textures"
+      ]
     }
   ],
   "reference_assemblies": [
@@ -539,7 +557,7 @@
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.Burst.dll",
-      "sha256": "99aaa62c004fdf9f8e4645e998663f7b35d5b1dd4c2656218058ec39f90b69bb"
+      "sha256": "d95d1ef96bf6345c6614933c6bd4f771880fc28e98c6fdbd98f1eed7608e6cda"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.Burst.Editor.dll",
@@ -547,7 +565,7 @@
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.Mathematics.dll",
-      "sha256": "50015c80c4d1378b1ebb9f13df51e225554a25981437853d75cb6d77b6bc799b"
+      "sha256": "3d9c3c1184db57a3edf57c60fba6ce7fe4909da3b7f8809041a238a2c4716423"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll",
@@ -555,7 +573,7 @@
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll",
-      "sha256": "d4ec9ade7ca56a5e875f1f9ce01f8b7921292d26197e0470139494e8e7fd78c9"
+      "sha256": "786138ac359e6186241021fb2d1fb69799b7547a212cfd04ba81639f4da8e81a"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll",
@@ -563,19 +581,19 @@
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll",
-      "sha256": "f4a3f3d7a21f5eaacab5d52663aa22265a26cac14731b43e4c384fe94a161617"
+      "sha256": "50d7aca18634e72baa5361e3855dc4e7d074aeb167af1ccde56cc01c46a31b02"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll",
-      "sha256": "3caed19af49453e874eca1f4faef3d4657b443c7fd01e2c0048265c0c91297b6"
+      "sha256": "a962589748ce05ec97f76ae07353401f5e8b6ddbe0e126f8939dedf3c549b9dd"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll",
-      "sha256": "81d2cc54c5f6d5e73d8386a69ccdc2b8e71909ffb2de4e0f2fe738a9e0a51007"
+      "sha256": "60c474fb9d3a92fe324febcc95c2b7975a22225ea4edd5aa4998b4e0662407ec"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Runtime.dll",
-      "sha256": "0059bd2af4e7bdb44ace2166bb02f418e3d21fa3802f04d21ec44fd2ba046721"
+      "sha256": "64bf3faae2c1c1c17c6c4f63c4c30b27ecd2f4810b4dc22d3a9dff4c78a9e334"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Editor.dll",
@@ -583,11 +601,11 @@
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll",
-      "sha256": "f5dcfd00eeb52ef7cc03815b66ffdf99ad6dc3946de83c76de8bc1197643cb1f"
+      "sha256": "7cae10ecd59e74ba4e5233c01e3b7fd3b49cf1abce548289cc0c1b1cec014fc0"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll",
-      "sha256": "977b0ce04827354e2cf1bbcbf05a6b7956fe8340d2b999e8d386a8f64db7505f"
+      "sha256": "3bf885ee8cc2234b12270c09e7a75673bce8f5a05b87616f02566e52666f06eb"
     },
     {
       "path": ".tools/map13-partition-validation/unity/Library/ScriptAssemblies/Unity.Searcher.Editor.dll",
@@ -605,13 +623,13 @@
   "outputs": [
     {
       "path": "unity/Assets/Official/World/Map/13/Source/native-render-pipeline.json",
-      "sha256": "04e6fb3683135d326c3a1c4c283d82e5a26168993786574895886bbb5d43a9b5"
+      "sha256": "d61fd8547f47bb89e545824cd65b96f8d0ba59834f2359751b25315050cd0d76"
     }
   ],
   "converters": [
     {
       "path": "scripts/prepare_unity_map13_pipeline_config.py",
-      "sha256": "f8a3f3a4749dd21e18f8e1f7f553769a974bc7d6f2f4353d448903ee6cc87c69"
+      "sha256": "6d52799840f85738f2f01a8dfa0efbcdeec28ab0403f00384dba4ac2938ab956"
     },
     {
       "path": "scripts/official_unity_schema.py",
@@ -623,10 +641,10 @@
     },
     {
       "path": "scripts/prepare_mainline_fog.py",
-      "sha256": "abb47be6281b3391cd75eb91a4aa3a492b3e4204a7617397cfc22c3fc75079bf"
+      "sha256": "d5638e8b665bbd550a16fe48fdf957079b52351be4fdcd7c757b3fcde82f2eb8"
     }
   ],
-  "operation": "Generate engine serialization trees from Unity URP references, restrict to original APK metadata field order, strictly consume all bytes of both Renderer2DData and the selected pipeline asset. Cross-check renderer values with the existing independent binary reader. Preserve both renderer slots and original default index.",
+  "operation": "Generate engine serialization trees from Unity URP references, restrict to original APK metadata field order, strictly consume all bytes of both Renderer2DData, the selected pipeline asset and original PostProcessData. Cross-check renderer values with the existing independent binary reader. Preserve both renderer slots, original default index, all post-process shader references and original ordered noise/grain/SMAA textures.",
   "limitations": [
     "These are decoded source settings. Native pipeline assets, dependency bindings and rendered scene validation remain required; no graphics project setting is changed by this extraction."
   ]

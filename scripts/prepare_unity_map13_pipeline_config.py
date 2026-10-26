@@ -30,7 +30,7 @@ def build(reference_project):
     if len(files) != 1: raise ValueError("Original pipeline assets file must be unique")
     records, outputs, values = [], [], {}
     destination = ROOT / "unity/Assets/Official/World/Map/13/Source"
-    for pid, expected in [(22207, "Renderer2DData"), (22208, "Renderer2DData"), (22209, "UniversalRenderPipelineAsset")]:
+    for pid, expected in [(22207, "Renderer2DData"), (22208, "Renderer2DData"), (22209, "UniversalRenderPipelineAsset"), (22211, "PostProcessData")]:
         obj = files[0].objects[pid]
         script = obj.read(check_read=False).m_Script.read()
         if script.m_ClassName != expected: raise ValueError("Original pipeline object identity changed")
@@ -65,9 +65,9 @@ def build(reference_project):
         reference_assemblies=references, outputs=outputs,
         converters=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in
                     [Path(__file__), ROOT / "scripts/official_unity_schema.py", ROOT / "scripts/map13_native_schemas.py", ROOT / "scripts/prepare_mainline_fog.py"]],
-        operation="Generate engine serialization trees from Unity URP references, restrict to original APK metadata field order, strictly consume all bytes of both Renderer2DData and the selected pipeline asset. Cross-check renderer values with the existing independent binary reader. Preserve both renderer slots and original default index.",
+        operation="Generate engine serialization trees from Unity URP references, restrict to original APK metadata field order, strictly consume all bytes of both Renderer2DData, the selected pipeline asset and original PostProcessData. Cross-check renderer values with the existing independent binary reader. Preserve both renderer slots, original default index, all post-process shader references and original ordered noise/grain/SMAA textures.",
         limitations=["These are decoded source settings. Native pipeline assets, dependency bindings and rendered scene validation remain required; no graphics project setting is changed by this extraction."])))
-    print("Decoded complete original APK pipeline settings: 2 renderers, default renderer 0")
+    print("Decoded complete original APK pipeline settings: 2 renderers, default renderer 0, original post-process dependencies")
 
 
 if __name__ == "__main__":

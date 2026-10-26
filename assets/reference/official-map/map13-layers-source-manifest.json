@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "input": {
+    "source": {
+      "bundle": "assets/bin/Data/data.unity3d",
+      "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+      "path_id": "3",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_entry": "assets/bin/Data/data.unity3d",
+      "raw_size": 3554552,
+      "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f"
+    },
+    "object_sha256": "a3b3f89b4a3225e6f4b801ba1c4af444bd9f830c858084854d879d8c68e064bd"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-layers.json",
+      "sha256": "27c522ad4133017315da44a44a64655fe71dc267c00dfbf193a7f1e819680c84"
+    },
+    {
+      "path": "unity/ProjectSettings/TagManager.asset",
+      "sha256": "16fe6dfd6b07f8c0795e661509ec1fe0c31d2fdd917047efcf07fa44e4b3d5a9"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_layers.py",
+    "sha256": "1d7ce45cfb5d2a42975c0694a25243adbd4987635030084d0a30a02411d385fb"
+  },
+  "operation": "Strictly decode the original APK TagManager and restore every tag, all 32 physical layer slots and all 23 ordered sorting layers with original unsigned IDs. Rendering components consume the same IDs as signed 32-bit values.",
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map13/OfficialMap13LayerTools.cs",
+    "sha256": "39776125a0231e3fbdb3fbd8237074928e6a599a98a873dfed47381d27705d75"
+  }
+}
