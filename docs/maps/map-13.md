@@ -29,6 +29,12 @@
 - 官方 `PartitionLoader`、`PartitionController`、`PartitionAsset`／`Tile`／`Scene`／`Extension` 和三种状态枚举已迁移。保留原九宫格顺序、区块／Tilemap 引用计数、逐格矩阵、完整及局部区块填充／清除、900 帧闲置和超过 5 帧的卸载间隔。资源句柄、实例绑定、相机与世界状态通过明确的本地接口接入；低内存通知使用 Unity 原事件。原 UniTask 延续按反编译状态机恢复为协程，保留 5 秒实时夜层移除及预递增、最多 120 次的就绪等待；GM 专用版本提示尚未接入。
 - 使用与主工程源文件／资产逐字节一致的隔离 Unity 工程，在内置屏 DX12 Play Mode 实际运行全部 200 个原区块：延迟资源完成、未激活时预载、启用／禁用、清除／重载、移除和待加载时移除均通过；2,444 组含偏移的 Tilemap 项逐格验证原 Tile 与矩阵。本图 200 份来源均为完整区块，局部区块分支已迁移但未由本图覆盖。测试使用专门的 Tilemap 逻辑夹具，不是正式地形场景，没有覆盖地图画面、模拟鼠标、区域世界状态、界面或存档。
 
+- 官方 `MapGroundRoot`、`MapEnvEffect`、`MapEffect`、`MapLight`、`MapRegionLight`、`RegionLightHub`、环境数据、场景跟随与相机剔除等 12 个类型已迁移。保留原灯光异步状态机及 Update 调度、取消、原强度字典、严格大于时长的结束条件；依赖注入改为明确的本地服务接口。全部 117 个剔除组件的原骨骼列表均为空，列表接口允许免费原生动画的 Behaviour 适配，原启停循环保持不变。
+- 原 `MapEnvData` 通过所选索引先核对 APK 后从校验云端包读取：消失前延迟 0.5 秒、消失 1 秒、熄灯 2 秒。已生成并显式绑定 `Resources/Map13/Native/map-env-data`。主工程及同源隔离工程的 Play Mode 通过 106 个区域槽位、原注册／昼夜切换、两秒渐变、取消、衰减中心、场景启停；使用测试夹具，尚未覆盖正式世界状态服务。
+- 地形／熔岩 shader 的 4 个原 pass、全部 20 个 GLES 变体已转换并逐顶点／片元通过 Windows D3D 编译。地形保留 `Universal2D`、法线和前向 pass；独立保留各 pass 的原程序、材质属性与渲染状态。
+- 原 `MapGround_13_bare.prefab` 的依赖闭包已绑定：228 份新增原生资产、93 份复用地形资产、实际官方脚本、8 份原材质及 shader。7 张额外贴图保留全部 54 个原 mip，按原线性／sRGB 配置解码成原生 RGBA32 Texture2D；保留原底部起始行顺序、过滤和重复等参数，未重新生成 mip 或额外压缩。纹理和同名 Sprite 使用独立资产路径，原生纹理引用使用 Unity 的正确类型标记。
+- 内置屏 DX12 编辑器验证全部新增资产及引用、完整 mip 参数、地形主体无缺失脚本，并生成含 202 条原路径的 `Resources/Map13/Native/native-scene-catalog`。同源隔离 Play Mode 实际加载该目录／prefab，并从 GPU 回读 7 张贴图的全部 54 个 mip，每字节哈希均与官方 ASTC 解码数据一致，核对颜色及行顺序。尚未实例化完整官方地图、渲染对照、模拟鼠标或正式存档。
+
 `scripts/test_map13_water.ps1` 已实际通过：10 个浮台完整多段往返、载人路径、阻挡后状态回滚、五终端开放／重置范围、已开放道路保留、原水位状态切换、JSON 冷读和越界存档拒绝。它直接调用规则模块，不覆盖鼠标输入、场景动画、背包扣费或正式存档接线。
 
 工程静态检查及 Unity `2022.3.57f1c2` 的 DX12 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 已通过。全局校验中的地图资产检查针对 Map10，不代表 Map13 已运行或画面正确。
@@ -41,7 +47,7 @@
 
 ## 尚未实现
 
-- 恢复原生地形与分区加载、昼夜灯光、水面／浅水、粒子、骨骼、导演和音频，并完成 Windows 资源绑定。组件字段及区域标签托管引用的中间导出已恢复，五类水面 shader 译文已编译；导出材质尚未全部绑定译文，其他 shader 仍待转换，`WaterMaskRenderer` 已迁移并编译，其原管线资产与遮罩层绑定仍待恢复。其他原生组件运行代码和显式绑定尚未全部接入，不能将中间导出当作最终资产。
+- 地形主体 prefab、原材质、水面／地形／熔岩 shader 和昼夜组件已绑定或迁移；仍须恢复原渲染管线资产、遮罩层／排序层、动态分区、地区标签、粒子、骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -57,3 +63,6 @@
 - [分区执行迁移工具](../../scripts/prepare_unity_map13_partition.py)及[代码来源清单](../../assets/reference/official-map/map13-partition-code-source-manifest.json)记录所选程序集、原控制器／状态机、适配和输出哈希。本地边界位于 `Runtime/Offline/World/NativePartition/`，目录资源句柄与实例绑定位于 `Runtime/Offline/World/NativeMap13/`；[Play Mode 分区检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13PartitionAcceptance.cs)只覆盖上述原区块生命周期。
 
 - [渲染依赖恢复工具](../../scripts/prepare_unity_map13_render_pipeline.py)及[来源清单](../../assets/reference/official-map/map13-render-pipeline-source-manifest.json)记录 Unity URP 基线每文件输入／输出、APK 原生方法地址／元数据索引／哈希及适配；[原灯光 shader 转换](../../scripts/prepare_unity_map13_light_shader.py)、[来源清单](../../assets/reference/official-map/map13-light-shader-source-manifest.json)及[逐变体检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LightShaderTools.cs)记录全部 32 个程序；[管线配置解码](../../scripts/prepare_unity_map13_pipeline_config.py)与[配置来源清单](../../assets/reference/official-map/map13-render-config-source-manifest.json)记录原资产及 schema 参考程序集。新增灯光源程序与配置未进入完整素材快照。
+
+- [异步依赖安装](../../scripts/prepare_unity_map13_async_dependency.py)及[MIT 上游包来源](../../assets/reference/official-map/map13-async-dependency-source-manifest.json)记录 UniTask 2.5.10 ZIP、许可和逐文件哈希；此为兼容依赖基线，不声称恢复了游戏所用的确切包版本。[环境代码迁移](../../scripts/prepare_unity_map13_environment.py)、[代码来源](../../assets/reference/official-map/map13-environment-code-source-manifest.json)、[配置绑定](../../assets/reference/official-map/map13-environment-binding-source-manifest.json)和[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13EnvironmentAcceptance.cs)记录原状态机、配置、接口与验证范围。
+- [地形／熔岩 shader 转换](../../scripts/prepare_unity_map13_scene_shaders.py)及[来源](../../assets/reference/official-map/map13-scene-shaders-source-manifest.json)记录各原 pass 程序；[原生主体绑定工具](../../scripts/prepare_unity_map13_native_scene.py)、[来源](../../assets/reference/official-map/map13-native-scene-source-manifest.json)及[Unity 绑定清单](../../assets/reference/official-map/map13-native-scene-binding-source-manifest.json)记录主体闭包、完整 ASTC mip、原生 Texture2D 序列化、GUID 与实际导入哈希，[编辑器工具](../../unity/Assets/Game/Editor/Map13/OfficialMap13NativeSceneTools.cs)验证绑定。新增地形主体和贴图未进入完整素材快照。

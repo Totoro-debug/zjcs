@@ -272,6 +272,17 @@ scripts/test_battle_report_sources.ps1 text eol=lf
 # Map13 source receipts and their generated payloads retain reproducible bytes.
 # Embedded Unity URP payloads and original package metadata retain recorded bytes.
 unity/Packages/com.unity.render-pipelines.universal/** -text
+unity/Packages/com.cysharp.unitask/** -text
+unity/Assets/Official/World/Map/13/NativeScene/** -text
+unity/Assets/Official/World/Map/13/NativeScene.meta -text
+unity/Assets/Game/Runtime/Official/World/NativeEnvironment/** text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeEnvironment.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeEnvironment/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeEnvironment.meta text eol=lf
+scripts/prepare_unity_map13_async_dependency.py text eol=lf
+scripts/prepare_unity_map13_environment.py text eol=lf
+scripts/prepare_unity_map13_scene_shaders.py text eol=lf
+scripts/prepare_unity_map13_native_scene.py text eol=lf
 scripts/prepare_unity_map13_render_pipeline.py text eol=lf
 scripts/prepare_unity_map13_light_shader.py text eol=lf
 scripts/prepare_unity_map13_pipeline_config.py text eol=lf
