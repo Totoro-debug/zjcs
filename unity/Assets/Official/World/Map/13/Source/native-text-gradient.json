@@ -1,0 +1,101 @@
+{
+  "methods": [
+    {
+      "method": "TMPColorGradient.get_TextMeshPro",
+      "metadata_index": 296516,
+      "address": "0x1121d7b0",
+      "byte_count": 168,
+      "sha256": "3e5275387f483fed517e61ae6cca296acd1b9fdc3ece3057c98f70a5f6deb5d7"
+    },
+    {
+      "method": "TMPColorGradient.OnEnable",
+      "metadata_index": 296517,
+      "address": "0x1121d858",
+      "byte_count": 232,
+      "sha256": "89102d091eaaaf564e0167adc871e14d8a8f437c7ec0d8204fd7a7b3ebc97dc6"
+    },
+    {
+      "method": "TMPColorGradient.OnDisable",
+      "metadata_index": 296518,
+      "address": "0x1121d9e0",
+      "byte_count": 232,
+      "sha256": "064f72050f220c3ab5c89b928f507e85d49a355e1ba33e455e62aad40b10d483"
+    },
+    {
+      "method": "TMPColorGradient.SetColors",
+      "metadata_index": 296519,
+      "address": "0x1121dac8",
+      "byte_count": 532,
+      "sha256": "1fefa0b7d11e2e807f76713aa3605eaae5299be09157755eb64da1e46a702037"
+    },
+    {
+      "method": "TMPColorGradient.SetGradientColor",
+      "metadata_index": 296520,
+      "address": "0x1121dcdc",
+      "byte_count": 104,
+      "sha256": "46a07d015438c5618e44ffb98ea42388efe165a56bafc96b54717c17be81fd82"
+    },
+    {
+      "method": "TMPColorGradient.OnPreRenderText",
+      "metadata_index": 296521,
+      "address": "0x1121dd44",
+      "byte_count": 472,
+      "sha256": "76fc2b89c3f53e813e9fe7d630fd55fdcb8ebcc65a745db6f8490809b9b78227"
+    },
+    {
+      "method": "TMPColorGradient.UpdateMesh",
+      "metadata_index": 296522,
+      "address": "0x1121d940",
+      "byte_count": 160,
+      "sha256": "34d103c75b337c09d652a2df4b77d6983197355e629854720037ec08a6794b3d"
+    },
+    {
+      "method": "TMPColorGradient..ctor",
+      "metadata_index": 296523,
+      "address": "0x1121df1c",
+      "byte_count": 116,
+      "sha256": "793a8f530852069164d55339749a8dff0d11a0b87c6f8412bdcedf1eaa38e8b0"
+    }
+  ],
+  "metadata_type": {
+    "index": 49871,
+    "name": "TMPColorGradient",
+    "namespace": "",
+    "byval": 131354,
+    "parent": 111481,
+    "flags": 1048577,
+    "fields": [
+      {
+        "name": "Gradient",
+        "type_index": 98247,
+        "token": 67108865,
+        "index": 182622
+      },
+      {
+        "name": "Angle",
+        "type_index": 128086,
+        "token": 67108866,
+        "index": 182623
+      },
+      {
+        "name": "mTextMeshPro",
+        "type_index": 131445,
+        "token": 67108867,
+        "index": 182624
+      },
+      {
+        "name": "mRotatedMatrix4X4",
+        "type_index": 110605,
+        "token": 67108868,
+        "index": 182625
+      }
+    ],
+    "enum": false
+  },
+  "angle": 45.0,
+  "observations": {
+    "set_colors": "List<Color>.Count keys; time i/(Count-1); two alpha=1 keys at times 0 and 1; no mode replacement.",
+    "update_mesh": "Rotate Quaternion.Euler(0,0,Angle); set renderMode=255; ForceMeshUpdate(false,false).",
+    "render": "Each line firstCharacterIndex through lastCharacterIndex inclusive; every character and all four vertices, including invisible characters; rotate the vertex and InverseLerp against original unrotated line min/max; write Color32 from Gradient.Evaluate."
+  }
+}

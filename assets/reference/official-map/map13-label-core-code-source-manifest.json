@@ -1,0 +1,314 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateConfigValue.cs",
+      "sha256": "ccc2db49d0fc53d01b846634c53b441be7a2ba6b1fb4958df0d453aebaa19a68"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateKVMatch.cs",
+      "sha256": "c41ec225bad5d750df29b875e925494e324b037ba01c3ab0e0bdb85e662fc58f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateGameObjectData.cs",
+      "sha256": "4a5b4602d672091b85324e3b623742e8fd83a4325e45d90a617341b3dcae53d1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/IStateConfig.cs",
+      "sha256": "2138738d4d5bd7fb0aee9a1d51b65e18034bbfadaa76a6e86c5636302b12762c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateGameObjectConfig.cs",
+      "sha256": "3d69fe3cb00b4c45165c1867f403ea3c58f409e25d1284b74550dfb85e10954a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateSwitcher.cs",
+      "sha256": "4321aa3e4c2a2c4a4575b20a6f2b7d4cb737ec970c0bc4c5900ad520d979cae5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MonoKeyValuePair.cs",
+      "sha256": "c34cf4bae7f206f60ce7edbe4b6615c23a5c0d78dc078bb9426445e41cf85fe6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/ColorGradientData.cs",
+      "sha256": "f7394551ef1f9b81c279703061d4cd9a3b45788d03c53574614d7d9fb710f009"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/TextMeshProColorProxy.cs",
+      "sha256": "c45b1979627c1ef6a6528251cd544a5282f3e340c7521ce14df554afd6d5ee10"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MultiLanguageFontAsset.cs",
+      "sha256": "a962d0870855cfa0e0de59f54ff96a0ba0da3f68920ce43cb27074661d6c2e78"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/IMultiLanguageFontService.cs",
+      "sha256": "0dc4bce3d1aab163ee99fa5f69c1dff071f3a9628cbf59c797c9cbb05fd33386"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/IMultiLanguageUIService.cs",
+      "sha256": "7eb166ea4a4615607ccfc3f37ff27ae4513027d14696339ca9a3b5f4e8882f8d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MultiLanguageUIService.cs",
+      "sha256": "c4bf83415181f72279a610a1f3ed234317ef72e9ed138d6e1c337fffe84fd96d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MultiLanguageUI.cs",
+      "sha256": "ee820eb3e284c1d1179bc441f8c645209b94c24268dcc5d2a23a93682781e9ad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MultiLanguageText.cs",
+      "sha256": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Common/ITextProcessor.cs",
+      "sha256": "0d677f998665097f75704b2bc096e5a168e382deefccc2a5157538b500715de5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageType.cs",
+      "sha256": "b210affe39919e8910223f8d8e28643d4a5af472578da494715677848021c121"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ILanguageTypeService.cs",
+      "sha256": "2e34d0f471f936f9063cc8e50b26f995b5aced2322bace7137bdcbbed603c7d7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ILocalizationTextService.cs",
+      "sha256": "5df72334978e5ceecf19941c795ba5c79852d85e093262126c7202df2aa188f7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ITextReplacer.cs",
+      "sha256": "a6462a7f8ab89d26c57027ae855db785158cd6bf9536bc183f180aae811a4ae9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ILanguageTextDataProvider.cs",
+      "sha256": "752932b4818f08a130c17d7fda40ae9ce6efde6d08b5df2fc3150ecf96e31fa7"
+    }
+  ],
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+      "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    }
+  ],
+  "native_methods": [
+    {
+      "method": "TMPColorGradient.get_TextMeshPro",
+      "metadata_index": 296516,
+      "address": "0x1121d7b0",
+      "byte_count": 168,
+      "sha256": "3e5275387f483fed517e61ae6cca296acd1b9fdc3ece3057c98f70a5f6deb5d7"
+    },
+    {
+      "method": "TMPColorGradient.OnEnable",
+      "metadata_index": 296517,
+      "address": "0x1121d858",
+      "byte_count": 232,
+      "sha256": "89102d091eaaaf564e0167adc871e14d8a8f437c7ec0d8204fd7a7b3ebc97dc6"
+    },
+    {
+      "method": "TMPColorGradient.OnDisable",
+      "metadata_index": 296518,
+      "address": "0x1121d9e0",
+      "byte_count": 232,
+      "sha256": "064f72050f220c3ab5c89b928f507e85d49a355e1ba33e455e62aad40b10d483"
+    },
+    {
+      "method": "TMPColorGradient.SetColors",
+      "metadata_index": 296519,
+      "address": "0x1121dac8",
+      "byte_count": 532,
+      "sha256": "1fefa0b7d11e2e807f76713aa3605eaae5299be09157755eb64da1e46a702037"
+    },
+    {
+      "method": "TMPColorGradient.SetGradientColor",
+      "metadata_index": 296520,
+      "address": "0x1121dcdc",
+      "byte_count": 104,
+      "sha256": "46a07d015438c5618e44ffb98ea42388efe165a56bafc96b54717c17be81fd82"
+    },
+    {
+      "method": "TMPColorGradient.OnPreRenderText",
+      "metadata_index": 296521,
+      "address": "0x1121dd44",
+      "byte_count": 472,
+      "sha256": "76fc2b89c3f53e813e9fe7d630fd55fdcb8ebcc65a745db6f8490809b9b78227"
+    },
+    {
+      "method": "TMPColorGradient.UpdateMesh",
+      "metadata_index": 296522,
+      "address": "0x1121d940",
+      "byte_count": 160,
+      "sha256": "34d103c75b337c09d652a2df4b77d6983197355e629854720037ec08a6794b3d"
+    },
+    {
+      "method": "TMPColorGradient..ctor",
+      "metadata_index": 296523,
+      "address": "0x1121df1c",
+      "byte_count": 116,
+      "sha256": "793a8f530852069164d55339749a8dff0d11a0b87c6f8412bdcedf1eaa38e8b0"
+    }
+  ],
+  "evidence": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-text-gradient.json",
+    "sha256": "084ccb449e6f0bde213c07b5990821afa4eaec04aa400a3917a72b2c7e1d6909"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/ColorGradientData.cs",
+      "sha256": "6dac973372b2bab745c4aa954cd009fece0de2f20e50ea3c34ae53cb2990581c",
+      "meta_sha256": "e0bac7de99b037460c8e691e2b635b913f74544c79e93076e4750e528fb54696"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Common/ITextProcessor.cs",
+      "sha256": "c2151caab5392bbcc7178d142749bbe573e62b12cb8a819fcf6f69fa211beefd",
+      "meta_sha256": "bbf9e6e994c7bb407ba6684c278fa6b2aa3fe2735dc78746ed44cf0d005d3850"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ILanguageTextDataProvider.cs",
+      "sha256": "eba638f7729adf4943c22f35f075753fb46c3fc96df30fda514ce6c021f24b09",
+      "meta_sha256": "efd87372eb23524997a9ef055821dbf4e781f1cd3aa2a92b13358d3a49a14d23"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ILanguageTypeService.cs",
+      "sha256": "41ce259642591290725fa359e154a5722d42209f83a51129c7f543ba223e3b5a",
+      "meta_sha256": "1ba498b18ee228f363e2a9f3c4d7490556d8af16bad66e5cf9aef3409cd63fdc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ILocalizationTextService.cs",
+      "sha256": "6b68035586c1a98b630e67a295c7d392f6e016d8f5d8c4d29c5838c6d53ad24a",
+      "meta_sha256": "24f7ac05ece29183ee1938ed15f9598f1cd9c841cc86791694e284ea18aed148"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ITextReplacer.cs",
+      "sha256": "2e018f0969d4684b65759b7e7b029362a592be5f227bbf97e80a55cc2e8bc34a",
+      "meta_sha256": "47e6aef50d638f7757b95559cddce30aa998434e205245309008747438902714"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LanguageType.cs",
+      "sha256": "483a6e1989d510cb292779faee7e3ea7e49ccb4adbb3f4d5d77084abd4529098",
+      "meta_sha256": "15bee75950e7afa7687ef4f3c6c85bd7be3c062a84cd23d62b63b3a69bd4afa4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/IMultiLanguageFontService.cs",
+      "sha256": "b729d7e1641608d002046d7ff34790b0e762a04b979a9c6b2105230035092710",
+      "meta_sha256": "15bca3d04fbba7b11eaff4f752ffdd9310136382bdf48ff27d56381bf51a78be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/IMultiLanguageUIService.cs",
+      "sha256": "ef89b718647fe74895621b728eedafa46dd7a29b71eca93b7cfef75a5e256f4a",
+      "meta_sha256": "5e7d99e08dce75c3529568fab304289e944ef562d4623f480efd4747301b3260"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/IStateConfig.cs",
+      "sha256": "221c73a41ed5384b9a377a9192ce2224b9b4eb5a398423c419dac994e5a3cea3",
+      "meta_sha256": "e783570c0df440f598b139b4b93a5088ec79f814b978524413103af88270aa56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MonoKeyValuePair.cs",
+      "sha256": "eb213bdbd31850d16cd872f772c098956e0e56214e0278d56d64925cdb7c6776",
+      "meta_sha256": "368a36e9852f150aa16edaf1f47c99853d27c1463431e584359cdc06451949bd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageFontAsset.cs",
+      "sha256": "496dac1ad580adab8d5627095d6c035daa9e6677b7613ec2357ad38c8b0596be",
+      "meta_sha256": "31b9c4b4d4be9d4aaed64512c4ab7c2e419c52731436be9bc1752f46953f4161"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs",
+      "sha256": "cee26fc59b7993ff48217c32c76c4f9de8072599bdd0e2a9f3121fe5a138234c",
+      "meta_sha256": "0cc699b754306805784db4b03bfc704b836fd10b51406dc674075ec14dbbc16c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageUI.cs",
+      "sha256": "95d4d48bc7dd1a8e82067e733d556030bf763270400f813851dfdc06f8c0f45a",
+      "meta_sha256": "202d40d47b94bf969b3588823f81af22c8dcd89068054d10faf1b90a6e8442e0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageUIService.cs",
+      "sha256": "61a2f727372f655e3b0b0bb700404d6e011454df23ad90cc77d9142fa93dc461",
+      "meta_sha256": "a8d34fa8d8853a0aabe3f3067e3538485b82805080d6ac5e46bdff06f50052c7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateConfigValue.cs",
+      "sha256": "b6c750b3b767a626c293c20cd87d54c347224f002935bde994852cb9dad1a59d",
+      "meta_sha256": "ea911a82256de7156fff0e64278dad1f771979d97e9b0c06f1fbcf91810a02dd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateGameObjectConfig.cs",
+      "sha256": "9e107a17814498d633f06550f0cbdd64ed565d95292240e325cc1fb686b2bf10",
+      "meta_sha256": "7cbfa64f1f8d939c01d6aa946c952bd792f2529fbec4918d75213c712d13e100"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateGameObjectData.cs",
+      "sha256": "f5c7528d70e1d59e8e7d9f124ee5abce51648f124f03cdcf600043d6861ccaab",
+      "meta_sha256": "e9981a3bf042910931c0948038b9f19a507add963ec8627f071c2023c3fba518"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateKVMatch.cs",
+      "sha256": "0fc099bb745b1e7bc584974d8a37e6561858226b07af483f13e1e6cf84b9e905",
+      "meta_sha256": "dd96d6f6798552d9d67690518581321bff73bba07703f35c4b16321dd8f52aa0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/StateSwitcher.cs",
+      "sha256": "ebef710792b3eb0602837efe8e76bdf408f1b00ea436184bcd8e50bfb0b6f10c",
+      "meta_sha256": "a37083e9f2ea8eb759316fef6dcb961e149395fd265e86c6cccea46e9a62aec6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/TextMeshProColorProxy.cs",
+      "sha256": "754cfa288336680a2c0e63d0a8c790663e49d65d7e7b4c6d58cb2b047a37f432",
+      "meta_sha256": "bb4c67f80f9472f438a454606309cb50fca7a39f9fc3b829de85e2c858bcd636"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/TMPColorGradient.cs",
+      "sha256": "304858d65b7ba0db75f6ad073c66cdc3a37109946209c98e8e2bf792fda1ee73",
+      "meta_sha256": "f89c6b531f370a20d7eba31e576a93798f1570b94af64603063a66af2a1881b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Zjcs.Official.World.NativeLabelUI.asmdef",
+      "sha256": "430d159b65b97004ad9afa9d1db55a0831f7586e9e3a8595a3bdaee243eb6ff0",
+      "meta_sha256": "9c3bd12151efb0406bc7f884bf5f54697685c3110124cfe67d02bc767880cfc0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_label_core.py",
+    "sha256": "18b682f6a6a986da10a1be00fb7f31435611a9a812ba2267f67ad6d2e493dfb8"
+  },
+  "templates": [
+    {
+      "path": "scripts/map13_tmp_gradient_runtime.cs",
+      "sha256": "304858d65b7ba0db75f6ad073c66cdc3a37109946209c98e8e2bf792fda1ee73"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13/OfficialMap13LabelCoreAcceptance.cs",
+      "sha256": "22a3a90a4b7d9c294801760ab289a601c887c50ff89d05b517d3e4ac9707ba18"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13/Zjcs.Editor.Map13.asmdef",
+      "sha256": "4683e74b23a69949d0fa0291ade863dd5c2c7f4ff72454749ef8fbb919c7291d"
+    }
+  ],
+  "operation": "Copy selected official text/service/interfaces, color proxy and state code into an isolated namespace. Replace DI with explicit pre-Awake binding; replace unavailable logging only, preserving catch/return/iteration/order and all branches. Preserve fields, shared GameObject membership and source no-op Clear; reconstruct all eight original AOT gradient methods and metadata fields.",
+  "limitations": [
+    "Original label prefabs, region/world/time/player service binding and full map interaction/save integration remain required."
+  ]
+}

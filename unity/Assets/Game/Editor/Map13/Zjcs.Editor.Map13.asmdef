@@ -1,6 +1,19 @@
 {
   "name": "Zjcs.Editor.Map13",
-  "references": ["Zjcs.Official.World.NativeTerrain", "Zjcs.Offline.World.NativeMap13", "Zjcs.Offline.World.NativePartition", "Zjcs.Official.World.NativeEnvironment", "Zjcs.Offline.World.NativeEnvironment", "Unity.RenderPipelines.Universal.Runtime", "Unity.TextMeshPro", "Unity.ugui", "Zjcs.Official.World.NativeText"],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "Zjcs.Official.World.NativeTerrain",
+    "Zjcs.Offline.World.NativeMap13",
+    "Zjcs.Offline.World.NativePartition",
+    "Zjcs.Official.World.NativeEnvironment",
+    "Zjcs.Offline.World.NativeEnvironment",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.TextMeshPro",
+    "Unity.ugui",
+    "Zjcs.Official.World.NativeText",
+    "Zjcs.Official.World.NativeLabelUI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "autoReferenced": true
 }

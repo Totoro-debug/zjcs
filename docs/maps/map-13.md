@@ -65,6 +65,9 @@
 - 原材质先按 shader 取得参考材质，复制原属性、执行效果设置并计算 CRC，再按 shader／CRC 共享与计数；最后一个引用销毁效果材质，最后一个条目同时释放参考材质。保留 OnEnable／OnDisable／OnValidate／SetupEffect／SetGray／RealtimeUpdate 的先释放后设置、原字体材质重置、两次 ForceMeshUpdate，以及自动字号 TEXT_CHANGED_EVENT 的检查和重建顺序。原元数据中私有／受保护方法被独立字号管理器直接调用，迁移仅增加内部访问桥接；原 TMP 的 `m_isMaterialDirty` 直接字段访问通过显式反射和 linker 字段保留适配，没有调用其他脏标记接口。
 - 同源隔离内置屏 Linear／DX12 Play Mode 验证原地区描边参数、颜色无额外线性转换、CRC 复用／隔离、剩余引用保留、最后引用销毁、真实组件禁用／重启／Update、outline2 关闭变更、五种阴影角度、自动字号事件与字号恢复；完整销毁后缓存与参考材质字典均为空，期间无错误日志。原参数文字实际渲染截图已查看；使用独立字体／材质／图集副本，不改用户存档。主工程 DX12 导入／编译、来源检查和全局 `ProjectTools.Validate` 通过，静态检查通过。该批验证尚未覆盖在 Canvas graphics 重建期间设置 material-dirty 的分支、原地区标签层级、世界状态与正式交互；完整引擎 TMP 的执行等价性仍未证明。
 
+- 从当前官方 Framework／Framework.FirstPass 迁移 21 份文字、服务、接口、状态与颜色代理源码；保留状态共用节点的成员判断、先关后开与配置顺序、原无动作 Clear、语言注册／变化刷新／销毁注销、文本处理与格式化顺序、换字体事件与特效重建、颜色代理的原 `.linear` 转换。仅替换命名空间、依赖注入入口和日志；原多语言服务的停用后仍注册行为保留。另从固定 APK 的全部 8 个 AOT 方法与元数据恢复可选 TMPColorGradient，保留键间距、独立 alpha、每行范围、旋转后顶点位置和逐字符四角处理，不额外复制 Gradient mode。
+- 同源隔离内置屏 Linear／DX12 Play Mode 验证共用节点的真实启停回调次序、枚举／整数／布尔状态及无匹配状态、语言变化／停用更新／销毁注销、处理器先后、格式化与事件、换字体后原特效重建、双行 24 个可见顶点的渐变颜色、四角线性颜色代理；真实相机文字截图已查看，期间无错误日志。字体／图集使用独立副本，未接触用户存档。主工程 DX12 导入／编译、来源核对及全局 `ProjectTools.Validate` 通过，静态检查通过。此为基础组件夹具，原 88 份标签 prefab、正式语言数据提供者、地区／时间／玩家状态与鼠标交互尚未绑定。
+
 ## 自定义实现
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行同样缺少服务端逻辑；已核对其客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和原 `StageDatas`。用户已明确允许以下单机规则，规则模块已实现：每次触发沿原配置顺序前进一段，到末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则本次不移动；水位按原 `StageDatas` 顺序更新，不发奖励。
@@ -106,3 +109,5 @@
 - [文字 shader 转换](../../scripts/prepare_unity_map13_text_shader.py)及[来源](../../assets/reference/official-map/map13-text-shader-source-manifest.json)、[原中文字体恢复](../../scripts/prepare_unity_map13_text_font.py)、[字体来源](../../assets/reference/official-map/map13-native-text-font-source-manifest.json)与[Unity 绑定](../../assets/reference/official-map/map13-native-text-binding-source-manifest.json)记录原字体／配置／图集／shader、哈希和显式引用；[导入／编译检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13TextTools.cs)及[原生文字 Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13TextAcceptance.cs)对应上述验证范围。新增字体素材及程序未进入完整素材快照。
 
 - [原文字特效恢复](../../scripts/prepare_unity_map13_text_effects.py)、[C# 重建模板](../../scripts/map13_tmp_effect_runtime.cs)、[代码来源](../../assets/reference/official-map/map13-text-effects-code-source-manifest.json)和[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13TextEffectAcceptance.cs)记录 30 个原方法、字面量／常量／元数据、访问边界和验证范围。代码入口为 `Runtime/Official/World/NativeText/`；`Source/native-text-effects.json` 保存原代码证据，不代表全套 TMP 引擎已恢复。新增来源载荷未进入完整快照。
+
+- [地区标签基础代码迁移](../../scripts/prepare_unity_map13_label_core.py)、[原渐变重建模板](../../scripts/map13_tmp_gradient_runtime.cs)、[代码来源](../../assets/reference/official-map/map13-label-core-code-source-manifest.json)及[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LabelCoreAcceptance.cs)记录 21 份官方源码、8 个原生方法、输入输出与验证哈希。代码位于 `Runtime/Official/World/NativeLabelUI/`，可选渐变原方法证据位于 `Source/native-text-gradient.json`；新增来源载荷未进入完整素材快照。
