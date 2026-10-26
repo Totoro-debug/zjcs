@@ -110,7 +110,7 @@ def load_support_ui(apk, schemas):
     drop_items = {item for row in regions if row["ClassId"] == 11 for item in row["DropItems"]}
     # Treasure-gacha tables span every mainland. Their selector intersects the
     # active region's DropItems; retain all common rewards and this map's union.
-    item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ClassId"] in exploration_ids
+    item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ItemType"] in (100, 101) or row["ClassId"] in exploration_ids
                  and (row["ItemType"] != 305 or row["ClassId"] in drop_items)]
     def template(item):
         if item["ClassId"] in fields["IdList"]:
@@ -161,6 +161,10 @@ def load_support_ui(apk, schemas):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_map_explore.bundle"
     for name in ("AwardListPanel", "AwardListPanelItem"):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_award.bundle"
+    for name in ("WorldTouchDialogLostGoddess", "LostGoddessResultSkillRankDialog",
+                 "LostGoddessResultCharacterLevelDialog", "LostGoddessResultPlayerPropDialog",
+                 "LostGoddessResultPlayerPropDialogItem"):
+        prefabs[name] = "defaultpackage_assets_prefabs_ui_map_upgraderesult.bundle"
     for name in ("PreviewContentGroup", "WorldStageInteractionAwardPreview",
                  "WorldTouchDialogWithPreview", "WorldTouchDialogPeriodicityInteraction",
                  "WorldTouchDialogNegativePeriodicityInteraction", "WorldStageInteractionPreviewDialogHeroStatue",

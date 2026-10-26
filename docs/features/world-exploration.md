@@ -58,7 +58,11 @@
 
 固定 APK 原规则由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`；包含7种令牌、65条实体组变体、28种完整实体模板、68条递归条件、奖励规则、随机奖励包、宝物选择器、等级映射及每表原字节哈希。来源见 `assets/reference/official-map/world-exploration-source-manifest.json`；规则入口为 `OfficialWorldExplorationCatalog`、`OfflineWorldExplorationService` 及 `OfflineMainlineProgressSession.Exploration`，隔离验证入口为 `Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run`。`JsonUtility` 对原始 JSON 空对象引用的处理已逐字段校正，避免将原空条件误当成未迁移的条件。
 
-界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；当前Map11共享载荷为59份原面板、535张sprite。地图入口为公共运行时 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 分部。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
+界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；既有指针验证覆盖59份原面板、535张Sprite所绑定的探寻流程。地图入口为公共运行时 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 分部。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
+
+遗失女神的来源准备另已提取原触碰窗、技能升阶／人物升级／永久属性结果窗、属性行和 `ItemIconSkill`，共享 UI 数据扩为65份原面板、945张Sprite及1,055条道具图标记录，其中新增394条原主动／被动技能。保留原35条技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、属性行动画、组件引用和三类标题，并补录相关反编译代码哈希。Unity 导入器接受这批层级及图标基础绑定；技能星级／结果数据控制器、关闭交互、地图领奖入口、粒子／泛光／音效仍待接通，不能把来源提取或 prefab 生成视为三类领奖窗口已可游玩。
+
+该批载荷已通过 Unity 2022.3.57f1c2 导入／编译和 `ProjectTools.Validate`；原三类结果窗的 Button 绑定与离散启用时刻3.183333／2.8／2.416667秒均与原曲线核对，共用原动画按各窗实际目标子集分别保存，避免转换结果互相覆盖。新增六份 prefab、十份被引用动画及技能图标基础资产已入工程，既有运行 prefab 未在本次批量覆盖。Map10／Map11 图形 Play Mode 的移动、HUD、小地图、女神激活、英雄奖励、金币采集／刷新、探寻窗口／拖动／十连及冷读回归通过，并已查看实际截图；使用内置屏与 DX12。遗失女神结果控制器及实际领奖交互仍未完成，也未构建或发布本批 Windows Player。
 
 原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
 

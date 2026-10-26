@@ -6,6 +6,7 @@ import struct
 import os
 import uuid
 import io
+import zlib
 
 from official_apk import Apk
 from official_unity_schema import ScriptSchemas
@@ -52,6 +53,32 @@ def write_ui_payload(path, content, known):
         temporary.unlink(missing_ok=True)
 
 
+def bind_enabled_track_types(animation, tree, tracks):
+    native = animation.read_typetree()
+    for track in tracks:
+        if track["property"] != "m_Enabled":
+            continue
+        relative = track["path"][len(tree["path"]):].lstrip("/")
+        if native["m_Legacy"]:
+            bindings = [curve for curve in native["m_FloatCurves"]
+                        if curve["path"] == relative and curve["attribute"] == "m_Enabled"]
+            type_id = bindings[0]["classID"] if len(bindings) == 1 else None
+        else:
+            bindings = [binding for binding in native["m_ClipBindingConstant"]["genericBindings"]
+                        if binding["path"] == zlib.crc32(relative.encode())
+                        and binding["attribute"] == zlib.crc32(b"m_Enabled")]
+            type_id = bindings[0]["typeID"] if len(bindings) == 1 else None
+        if type_id == 225:
+            component_type = "CanvasGroup"
+        elif type_id == 114:
+            component_type = PPtr(**bindings[0]["script"], assetsfile=animation.assets_file).read().m_ClassName
+        else:
+            raise ValueError("Unconverted enabled UI animation target: " + str(bindings))
+        if component_type not in ("CanvasGroup", "Button", "NoDrawingRayCast"):
+            raise ValueError("Unconverted enabled UI animation component: " + component_type)
+        track["componentType"] = component_type
+
+
 def animation_record(apk, animation, tree):
     native = animation.read_typetree()
     if native["m_Legacy"]:
@@ -73,6 +100,7 @@ def animation_record(apk, animation, tree):
         loop = native["m_WrapMode"] == 2
     else:
         tracks, duration, loop, unknown = mecanim_tracks(animation, tree)
+    bind_enabled_track_types(animation, tree, tracks)
     for track in tracks:
         track["keyframes"] = [dict(zip(("time", "value", "inTangent", "outTangent"),
             [values[0], values[1], values[2] or 0, values[3] or 0])) for values in track["keys"]]
@@ -103,7 +131,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                         visit(child.read().m_GameObject.deref(), path)
                 elif component.type.name == "MonoBehaviour":
                     behaviours.append(component)
-                elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog", "AwardListPanel", "AwardListPanelItem")
+                elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog", "AwardListPanel", "AwardListPanelItem", "LostGoddessResultPlayerPropDialogItem")
                         or key == "ExploreDetailDialog" and go.m_Name in ("PreviewTabItem", "HistoryTabItem")
                         or key == "WorldCanvas" and component.type.name == "Animator"
                         and go.m_Name in ("FunctionEntryFunc", "FunctionEntryPhoto", "FunctionEntryChatQuick")):
@@ -292,6 +320,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                        if isinstance(tree, dict) and "children" in tree):
                                 raise ValueError("Unverified optional shared animation path: " + relative)
                     tracks, duration, loop, unknown = mecanim_tracks(animation, source[key], binding_paths=optional_paths)
+                    bind_enabled_track_types(animation, source[key], tracks)
                     for track in tracks:
                         track["keyframes"] = [dict(zip(("time", "value", "inTangent", "outTangent"), values))
                                               for values in track["keys"]]
@@ -332,12 +361,18 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(ui_schemas.read(obj), obj),
                                    "source": apk.provenance(obj)})
+            elif script.m_ClassName.startswith("StateSwitcher"):
+                components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
+                                   "type": script.m_ClassName, "fields": resolve(schemas.read(obj), obj),
+                                   "source": apk.provenance(obj)})
             elif script.m_ClassName in (key, "StageDialog", "ConditionItem", "PropTextItem",
                                       "WorldDialogEntityContent", "GoddessDialogIcon", "SafeArea", "WorldPanel",
                                       "GameMatchMiniSwitchPanel", "PlayAsYouDownloadEntry", "WorldExploreBtn",
                                       "ChatQuickMsgEntryPanel", "ChatActionQuickMsgEntryPanel", "WorldMapCharActionEndBtn",
                                       "PlayerCombatRatingText", "PlayerBlessLevelViewController", "TeamMiniPanel", "ShowMapRequire",
-                                      "ConfirmDialog", "CostItemConfirmDialog", "PlayerCostMoneyContent", "TopBarHandler", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "ItemProgress",
+                                      "ConfirmDialog", "CostItemConfirmDialog", "PlayerCostMoneyContent", "TopBarHandler", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "ItemIconSkill", "ItemProgress",
+                                      "LostGoddessResultDialog", "LostGoddessResultTipsSkillRankItem", "LostGoddessResultDialogCharacterLevelItem",
+                                      "LostGoddessResultDialogPlayerPropItem", "LostGoddessResultPlayerPropDialogItem", "SkillStarInfo", "StarMiniInfo",
                                       "WorldWitchTouchUI", "StoryBookDialog", "PanelTitle", "PeriodicityInteractionStageUI",
                                       "WorldStageInteractionPreviewDialog", "WorldStageInteractionPreviewContent", "MultiLanguageText",
                                       "WorldStageInteractionPreviewContentLayoutElement",
@@ -383,6 +418,12 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                     for pointer in schemas.read(obj)['mRedDots']:
                         red_dot = PPtr(**pointer, assetsfile=obj.assets_file).deref()
                         fields['extraClearObjects'].append(resolve(schemas.read(red_dot)['myRedDotObj'], red_dot))
+                if script.m_ClassName == "StarMiniInfo":
+                    fields['qualitySprites'] = []
+                    for row in schemas.read(obj)['mQualitySpriteDict']['mSerializeBuffer']:
+                        sprite = support_exporter.add_sprite(PPtr(**row['Value'], assetsfile=obj.assets_file).deref())
+                        sprites[sprite['file']] = sprite
+                        fields['qualitySprites'].append(dict(quality=row['Key'], sprite=sprite['file']))
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": fields,
                                    "source": apk.provenance(obj)})
@@ -513,6 +554,10 @@ def build():
             "sprite": sprite["file"], "settings": next(setting for setting in settings["Settings"]
                 if setting["MinimapConfigId"] == row["MinimapConfigId"])})
     exploration_ui = extract_exploration_ui(apk, schemas, support_exporter, sprites)
+    rank_obj = apk.asset('config_luban', '/skill_rank.g.bytes')
+    skill_ranks = Constructors().table(rank_obj.read().m_Script.encode('utf-8', 'surrogateescape'), 'TbSkillRankInfo')
+    lost_config_obj = apk.asset('scriptableconfig_modules_maplostgoddessawarddialogconfig', '/MapLostGoddessAwardDialogConfig.asset')
+    lost_config = schemas.read(lost_config_obj)
     for icon in item_icons:
         sprites.setdefault(icon["sprite"], icon.pop("metadata"))
         sprites.setdefault(icon["qualitySprite"], icon.pop("qualityMetadata"))
@@ -617,6 +662,7 @@ def build():
     keys.extend('rule_tip_MapExploreRule_' + str(r['Order']) for r in exploration_ui['rule'])
     keys.extend('Quality.' + n for n in ('White', 'Blue', 'Purple', 'Orange', 'Gold', 'Red', 'Rainbow'))
     keys.append('DateTimeFormat_yyyyMMddHHmmss')
+    keys.extend('lostGoddess_' + name + '_title' for name in ('SkillRank', 'CharacterLevel', 'PlayerProp'))
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28600, 28601, 28602, 28603, 28610, 28611,
                 28612, 28613, 28620, 28621, 28622, 28623) for suffix in ("name", "desc"))
     keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
@@ -646,6 +692,7 @@ def build():
     required = set(keys[:9])
     required.update('Quality.' + n for n in ('White', 'Blue', 'Purple', 'Orange', 'Gold', 'Red', 'Rainbow'))
     required.add("WORLD_EXPLORE_POS_NOT_ENOUGH")
+    required.update('lostGoddess_' + name + '_title' for name in ('SkillRank', 'CharacterLevel', 'PlayerProp'))
     required.update('item_' + str(row['itemId']) + '_name' for row in item_icons)
     required.update(node["localization_key"] for panel in panels for node in panel["nodes"] if node["localization_key"])
     # MultiLanguageText also accepts these literal format strings in the pinned prefabs.
@@ -706,6 +753,7 @@ def build():
                "itemQualitySprite": quality_sprite["file"], "mapBackgroundSprite": background_sprite["file"],
                "itemIcons": item_icons,
                "explorationUi": exploration_ui,
+               "lostGoddessUi": {"skillRanks": skill_ranks, "config": lost_config},
                "qualityTextColors": colors['QualityColorConfig']['TextColorLists'],
                "guidPrefabs": guid_prefabs,
                "enoughColor": [colors["EnoughColor"][channel] for channel in "rgba"],
@@ -731,13 +779,18 @@ def build():
                                   "manifestPath": manifest_path.relative_to(ROOT).as_posix(), "manifestSha256": sha256(manifest_path.read_bytes()),
                                   "prefabs": {k: manifest["prefabs"][k] for k in panel_keys},
                                   "itemIconConfig": icon_config_source,
+                                  "lostGoddessUi": {"skillRanks": apk.provenance(rank_obj), "dialogConfig": apk.provenance(lost_config_obj)},
                                   "explorationCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
                                       for path in [ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
                                           for name in ("WorldExploreBtn", "ExploreConfirmDialog", "ConfirmDialog", "ExploreDetailDialog",
                                               "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreProbabilityContent",
                                               "ExploreProbabilityItem", "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog",
                                               "ExploreHistoryContent", "ExploreHistoryItem", "ExploreEntityRewardData", "TurnPageUI", "TurnPageBtn",
-                                              "RuleDialog", "RuleTipNumer", "TipInfo", "ItemProgress", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "AwardListPanelItem")]
+                                              "RuleDialog", "RuleTipNumer", "TipInfo", "ItemProgress", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "AwardListPanelItem",
+                                              "WorldTouchDialogLostGoddness", "LostGoddessResultDialog", "LostGoddessResultDialogBaseItem",
+                                              "LostGoddessResultTipsSkillRankItem", "LostGoddessResultDialogCharacterLevelItem",
+                                              "LostGoddessResultDialogPlayerPropItem", "LostGoddessResultPlayerPropDialogItem",
+                                              "ItemIconSkill", "SkillStarInfo", "StarMiniInfo")]
                                       + [ROOT / ".tools/source-packages/official-code/framework-source/StateGameObjectConfig.cs",
                                          ROOT / ".tools/source-packages/official-code/common-source/TextReplacer.cs",
                                          ROOT / ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs",

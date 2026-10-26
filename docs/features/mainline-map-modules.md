@@ -39,6 +39,10 @@ Windows development Player 已成功构建并真实启动，以隔离档案重�
 
 新增载荷固定 `854_156383`：`scripts/prepare_mainline_interactions.py` 导出英雄参数、地区等级、区域刷新和体力点奖励；`scripts/prepare_unity_world_exploration.py` 解码7种令牌、65条实体组变体、28种模板及68条递归条件，已接入公共探寻事务与原窗口入口。`prepare_unity_map11_ui.py` 扩展至59份官方面板、535张sprite，保留英雄、探寻、奖励列表层级与原动画事件；来源分别见 `mainline-interactions-source-manifest.json`、`world-exploration-source-manifest.json` 及 Map11 UI 清单。探寻令牌列表恢复原LoopScrollRect的9个类，模糊和渐变的原生方法及程序转换分别记录在所属来源清单。
 
+遗失女神领奖 UI 的来源准备将提取数据进一步扩为65份面板、945张Sprite和1,055条图标记录，新增六份原层级及394项主动／被动技能图标；导入器同步接受原结果窗和技能图标基础组件。该批工作保留原阶位／窗口映射／星级图／属性行动画及来源哈希，尚未接通地图入口和结果控制器，完整边界见[命运探寻](world-exploration.md)。各地图未完成页及配套提取／转换工具一并保留，入口见[世界地图](world-map.md)。
+
+本批65份原面板已通过 Unity 导入／编译与 `ProjectTools.Validate`，既有公共流程的内置屏 DX12 图形 Play Mode 回归通过；新增结果窗仅验证原基础组件与动画资产，不作为完整交互验收或 Windows 发布结论。
+
 本轮带图形 Play Mode 已通过英雄首次领取、永久生命170／HP恢复、周期访问与每日共享额度、冷读，以及通过地图模拟指针采集金币（扣5体力、入包、点位隐藏、原3秒间隔刷新）。隔离事务检查覆盖体力不足回滚、金币／铁矿／时之砂数量倍率、离线刷新、怪物开始去重、失败重试、胜利历战精华与重复回包。已查看英雄面板和实际金币采集画面；奖励条已恢复原叠加材质、CanvasGroup动画和位置，粒子尚未完成，故未声明本功能完整验收或发布。
 
 Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode 和实际截图复查：未公开区域使用原 Light2D 颜色／强度，模拟指针激活女神后播放原 `map_region_active_anim`，半径从0增至30，在2.01666665秒关闭对应阴影，冷读按已公开地区恢复。保留原全局白光、0.7倍光照纹理、HDR格式选择、受光排序层16／17／18和原衰减纹理；GLES程序机械转换为HLSL，网格由固定Unity Graphics的 `LightUtility.GenerateShapeMesh`／UTess／Clipper生成。来源与全部输出哈希分别见 `map11-region-lights-source-manifest.json`、`map11-light-meshes-source-manifest.json`、`map11-light-shaders-source-manifest.json`。这项验证覆盖区域地表阴影；未把日夜专属装饰、其他局部灯光或小地图未探索遮罩算作完成，也未发布新的完整功能版本。

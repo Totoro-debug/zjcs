@@ -85,7 +85,7 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map11-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 59)
+            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 65)
                 throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -193,18 +193,30 @@ namespace Zjcs.Editor
                                 bool scale = track.property.StartsWith("scale.", StringComparison.Ordinal);
                                 bool active = track.property == "m_IsActive";
                                 bool position = track.property.StartsWith("m_AnchoredPosition.", StringComparison.Ordinal);
+                                bool size = track.property.StartsWith("m_SizeDelta.", StringComparison.Ordinal);
                                 bool rotation = track.property.StartsWith("rotation.", StringComparison.Ordinal);
                                 bool color = track.property.StartsWith("m_Color.", StringComparison.Ordinal);
-                                if (!scale && !active && !position && !rotation && !color && track.property != "m_Alpha")
+                                bool fontColor = track.property.StartsWith("m_fontColor.", StringComparison.Ordinal);
+                                bool enabled = track.property == "m_Enabled";
+                                Type enabledTarget = !enabled ? null : track.componentType == "CanvasGroup" ? typeof(CanvasGroup)
+                                    : track.componentType == "Button" ? typeof(Button)
+                                    : track.componentType == "NoDrawingRayCast" ? typeof(Zjcs.Official.UI.NoDrawingRayCast)
+                                    : throw new InvalidDataException("Unknown official UI enabled target: " + track.componentType);
+                                if (!scale && !active && !position && !size && !rotation && !color && !fontColor && !enabled && track.property != "m_Alpha")
                                     throw new InvalidDataException("Unimplemented official popup curve: " + track.property);
                                 AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(relative,
-                                    scale || rotation ? typeof(Transform) : active ? typeof(GameObject) : position ? typeof(RectTransform)
-                                        : color ? Require(track.path).GetComponent<Graphic>().GetType() : typeof(CanvasGroup),
+                                    enabled ? enabledTarget : scale || rotation ? typeof(Transform) : active ? typeof(GameObject) : position || size ? typeof(RectTransform)
+                                        : fontColor ? typeof(TextMeshProUGUI) : color ? Require(track.path).GetComponent<Graphic>().GetType() : typeof(CanvasGroup),
                                     scale ? "m_LocalScale." + track.property.Substring(6)
                                         : rotation ? "localEulerAnglesRaw." + track.property.Substring(9) : track.property),
-                                    new AnimationCurve(track.keyframes.Select(key => new Keyframe(key.time, key.value, key.inTangent, key.outTangent)).ToArray()));
+                                    new AnimationCurve(track.keyframes.Select(key => new Keyframe(key.time, key.value,
+                                        active || enabled ? float.PositiveInfinity : key.inTangent,
+                                        active || enabled ? float.PositiveInfinity : key.outTangent)).ToArray()));
                             }
-                            string clipPath = ResourceRoot + "/" + sourceClip.name + ".anim";
+                            // Shared result clips resolve different optional nodes in each prefab.
+                            string clipName = panel.key.StartsWith("LostGoddessResult", StringComparison.Ordinal)
+                                ? panel.key + "-" + sourceClip.name : sourceClip.name;
+                            string clipPath = ResourceRoot + "/" + clipName + ".anim";
                             AnimationClip existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
                             if (existing == null) AssetDatabase.CreateAsset(clip, clipPath);
                             else { EditorUtility.CopySerialized(clip, existing); UnityEngine.Object.DestroyImmediate(clip); clip = existing; }
@@ -230,7 +242,8 @@ namespace Zjcs.Editor
                         || panel.key == "ItemAwardIcon" || panel.key.EndsWith("_DialogIcon", StringComparison.Ordinal)
                         || panel.key == "FunctionEntryDialog" || panel.key == "MarkUIFilterEntryItem"
                         || panel.key == "MiniMapMarkFilterItem" || panel.key == "FirstPayBtn"
-                        || panel.key.StartsWith("Explore", StringComparison.Ordinal) || panel.key.StartsWith("AwardListPanel", StringComparison.Ordinal))
+                        || panel.key.StartsWith("Explore", StringComparison.Ordinal) || panel.key.StartsWith("AwardListPanel", StringComparison.Ordinal)
+                        || panel.key.StartsWith("LostGoddessResult", StringComparison.Ordinal))
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)
@@ -291,7 +304,7 @@ namespace Zjcs.Editor
                         continue;
                     }
                     if (panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault"
-                        || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "PayMoneyChangeDialog")
+                        || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "ItemIconSkill" || panel.key == "PayMoneyChangeDialog")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)

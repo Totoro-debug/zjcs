@@ -319,7 +319,7 @@ namespace Zjcs.Presentation.World
     [Serializable] public sealed class OfficialMap11TextValue { public OfficialMap11StateValue Key; public string Value; }
     [Serializable] public sealed class OfficialMap11UiTrack
     {
-        public string path, property;
+        public string path, property, componentType;
         // JsonUtility does not support nested arrays; the converter also emits named key fields.
         public OfficialMap11UiKey[] keyframes;
     }

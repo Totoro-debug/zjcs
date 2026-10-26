@@ -290,11 +290,16 @@ namespace Zjcs.Editor
                     : source.type == "VerticalLayoutGroup" ? typeof(VerticalLayoutGroup)
                     : source.type == "ContentSizeFitter" ? typeof(ContentSizeFitter)
                     : source.type == "ScrollRect" ? typeof(ScrollRect) : null;
+                if (type == typeof(Button) && require(source.path).GetComponent<Button>() == null)
+                {
+                    var button = require(source.path).gameObject.AddComponent<Button>();
+                    button.targetGraphic = require(source.path).GetComponent<Graphic>();
+                }
                 if (type != null && require(source.path).GetComponent(type) is Behaviour behaviour)
                     behaviour.enabled = source.fields.m_Enabled != 0;
             }
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key
-                && (value.type == "ItemIcon" || value.type == "ItemIconEquip" || value.type == "ItemIconTreasure")))
+                && (value.type == "ItemIcon" || value.type == "ItemIconEquip" || value.type == "ItemIconTreasure" || value.type == "ItemIconSkill")))
             {
                 var f = source.fields;
                 var icon = require(source.path).gameObject.AddComponent<WorldItemIcon>();

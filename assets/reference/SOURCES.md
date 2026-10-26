@@ -1683,6 +1683,10 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 ## 主线公共交互的 Unity 载荷
 
+遗失女神8364的原领奖层级另由同一提取入口读取 `defaultpackage_assets_prefabs_ui_map_upgraderesult.bundle`，包括触碰窗、三类结果窗及属性行；原 `ItemIconManagerConfig` 绑定 `ItemIconSkill`，新增394条主动／被动技能图标。完整来源数据现为65份原面板、945张Sprite和1,055条图标记录，保留35条原技能阶位、`MapLostGoddessAwardDialogConfig`、星级品质图、三类原标题及属性行动画。新增客户端代码、对象／bundle真实来源和提取输出哈希见 `unity/Assets/Official/World/Map/11/UI/source-manifest.json`；原生 prefab／动画、图标元数据和转换器的换行归一化哈希见同目录 `native-source-manifest.json`。Unity 导入器已同步层级与图标基础绑定；结果控制器、原关闭交互、地图入口、粒子／泛光／音效仍未完成，不能将提取或导入通过等同于领奖流程已迁移。未生成完整素材快照。
+
+原结果窗的 Button 类型、离散启用曲线及各窗动画目标子集已在 Unity 中核对；共享原动画的转换结果按窗口分别保存，不覆盖其他结果窗。新增六份 prefab、十份被引用动画及其稳定元数据随源数据提交，验证范围见所属功能页。
+
 固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至59份原面板、535张sprite。`map11_support_ui.py` 按原 `ItemIconManagerConfig` 的ID／类型／默认优先级绑定661条本图奖励道具记录，使用原普通、装备、宝具模板；宝具素材取Map11原地区 `DropItems` 并集。名称、品质框、奖励高品质光效、GraphicRaycaster和原数字标题均显式绑定。完整输入、各对象来源、客户端／共享代码哈希及输出见 Map11 `UI/source-manifest.json`。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
 
 `prepare_mainline_loop_scroll.py` 从固定官方 `LoopScrollRect.Runtime.dll` 完整反编译并恢复9个类，保留原拖动、惯性、网格和回收分支，仅修复C#反编译基类调用及工程命名空间；程序集、逐文件源码与输出哈希见 [循环列表来源](official-map/loop-scroll-source-manifest.json)。`prepare_mainline_popup_effects.py` 核对 APK 恢复的ARM64实现，迁移 `TMPColorGradient` 的原顶点计算以及 `ScreenBlur` 原程序；原窗口模糊保留4级下采样、3级上采样、七个权重、screen/13快照、原遮罩颜色及半秒关闭门槛。元数据／原生映像、方法地址／字节哈希、原shader／material及显式加载绑定见 [弹窗表现来源](official-map/popup-effects-source-manifest.json)。这些恢复只覆盖当前原窗口使用的分支，原动作、奖励粒子、图标附件和完整实体交互尚未完成；未生成素材快照。
