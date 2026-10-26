@@ -260,6 +260,8 @@ namespace Zjcs.Combat.Official
         public long ShieldValue;
         public long ShieldRemainValue;
         public bool ShieldInitialized;
+        // Set only by a successful new lifecycle application, never inferred from a restored shield.
+        public bool ShieldGrantPending;
     }
 
     [Serializable]

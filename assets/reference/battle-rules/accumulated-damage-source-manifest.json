@@ -497,7 +497,7 @@
   "runtime_config_identical_in_both_versions": true,
   "description": {
     "key": "entry_24062_desc",
-    "text": "\u627f\u53d7\u72b6\u6001\u65bd\u52a0\u8005\u9020\u6210\u7684\u4f24\u5bb3\u589e\u52a0\uff0c\u4e14\u4f1a\u88ab\u4f18\u5148\u9009\u62e9\u4e3a\u653b\u51fb\u76ee\u6807\uff0c\u9b54\u5370\u6d88\u5931\u65f6\uff0c\u989d\u5916\u53d7\u52301\u6b21\u7269\u7406\u4f24\u5bb3\uff0c\u4f24\u5bb3\u91cf\u4e3a\u671f\u95f4\u9664\u771f\u5b9e\u4f24\u5bb3\u4e4b\u5916\u5bf9\u5176\u751f\u547d\u9020\u6210\u4f24\u5bb3\u768430%\u3002"
+    "text": "承受状态施加者造成的伤害增加，且会被优先选择为攻击目标，魔印消失时，额外受到1次物理伤害，伤害量为期间除真实伤害之外对其生命造成伤害的30%。"
   },
   "inputs": [
     {
@@ -569,11 +569,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
-      "sha256": "3790a8cf9aff5129064db48c502730059fa27bb52ee4b138352e6e139d64b0f8"
+      "sha256": "2df5875c74f8b34e777502423a6685b7822c5781e3a902339e041e6d3b826526"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs",
-      "sha256": "b3380564607e6f0e1009bdee2a396553cb052ad03705e4333b38ae2dc998432d"
+      "sha256": "74627ff21e4bf70d8b2806be230d723ee2a4fe9bf7114fd9b4704a43cce13184"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs",
@@ -581,7 +581,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "491cb4a5d744975892509baa407d91c1b8fc22e30f2a6e27b96f6a7e82020b2b"
+      "sha256": "12ca11304732eee81ab7dc1f17fc10ecb1251031f20daf95b5d696a754035d9a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
@@ -589,11 +589,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
-      "sha256": "25f59eaf79f3757b20757ae1eb3bdedace91a5b6fd7756506650b448de18a362"
+      "sha256": "82ac2bfba9e409401573e24378df20ab975b5eba62885861331e13c5945ab00a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
-      "sha256": "586a29b5ccc480ac0d77cdda5c11f29138d551250280af70bff99364957d34dc"
+      "sha256": "56c363bffbe5dba2ef30b5aed2a2774f799d6a053f31c4ab9ce5e845f7809a89"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusCreatorDamageBoostRuntime.cs",

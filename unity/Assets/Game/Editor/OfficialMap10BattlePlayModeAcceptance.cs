@@ -244,6 +244,8 @@ namespace Zjcs.Editor
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_VISIBILITY") == "1")
                 damageVisibilityTest = Combat.OfficialBattleDamageVisibilityAcceptance.Probe.Install(sceneController);
             Combat.OfficialBattleWorldTipsAcceptance.Probe worldTipTest=null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SHIELDS") == "1")
+                Combat.OfficialBattleReportStatisticsAcceptance.InstallShieldFixture(sceneController);
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP")=="1")
                 worldTipTest=Combat.OfficialBattleWorldTipsAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";

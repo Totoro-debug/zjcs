@@ -1671,6 +1671,7 @@ namespace Zjcs.Combat.Official
         {
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
+            checkpoint.Statistics.RecordPendingShieldGrants(units);
         }
 
         private void ApplyHitStatus(FightBattleUnitState actor, FightBattleUnitState target,

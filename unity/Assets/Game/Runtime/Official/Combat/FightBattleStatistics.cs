@@ -61,6 +61,9 @@ namespace Zjcs.Combat.Official
         public long DamageTaken;
         public long HealDealt;
         public long HealTaken;
+        public long ShieldGranted;
+        public long ShieldReceived;
+        public long UnattributedShieldGranted;
     }
 
     [Serializable]
@@ -78,6 +81,8 @@ namespace Zjcs.Combat.Official
         public long Damage;
         public long AdditionalAttributedDamage;
         public long Heal;
+        public bool HasShieldGrantCounts;
+        public long ShieldGranted;
     }
 
     /// <summary>
@@ -109,7 +114,8 @@ namespace Zjcs.Combat.Official
                 UnitId = unitId,
                 SkillEntityId = skillEntityId,
                 SkillItemId = skillItemId,
-                HasDamageHitCounts = true
+                HasDamageHitCounts = true,
+                HasShieldGrantCounts = true
             };
             Skills.Add(created);
             return created;
@@ -119,6 +125,38 @@ namespace Zjcs.Combat.Official
         {
             Unit(unitId).Casts++;
             Skill(unitId, skillEntityId, skillItemId).Casts++;
+        }
+
+        // The confirmed report value is successfully added shield, independent of later absorption.
+        // Rebuilding resolves its configured/custom value; the pending bit prevents replay, refresh,
+        // discard and existing stack updates from counting the same grant again.
+        public void RecordPendingShieldGrants(IReadOnlyList<FightBattleUnitState> units)
+        {
+            if (units == null) return;
+            foreach (FightBattleUnitState owner in units)
+            {
+                if (owner == null || owner.Statuses == null) continue;
+                foreach (FightBattleStatusState status in owner.Statuses)
+                {
+                    if (status == null || !status.ShieldGrantPending || !status.ShieldInitialized) continue;
+                    status.ShieldGrantPending = false;
+                    long amount = Math.Max(0L, status.ShieldValue);
+                    if (amount == 0) continue;
+                    FightBattleUnitStatistics target = Unit(owner.Id);
+                    target.ShieldReceived = checked(target.ShieldReceived + amount);
+                    if (status.CreatorId <= 0) continue;
+                    FightBattleUnitStatistics source = Unit(status.CreatorId);
+                    source.ShieldGranted = checked(source.ShieldGranted + amount);
+                    if (status.RootSkillId <= 0)
+                    {
+                        source.UnattributedShieldGranted = checked(source.UnattributedShieldGranted + amount);
+                        continue;
+                    }
+                    FightBattleSkillStatistics skill = Skill(status.CreatorId, status.RootSkillId,
+                        status.ApplyingSkillItemId);
+                    skill.ShieldGranted = checked(skill.ShieldGranted + amount);
+                }
+            }
         }
 
         // Additional source credit is statistical only: it creates no second hit, HP loss or shield loss.

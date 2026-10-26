@@ -290,6 +290,7 @@ namespace Zjcs.Combat.Official
                 ShieldValue = template.ShieldValue,
                 ShieldRemainValue = template.ShieldRemainValue,
                 ShieldInitialized = template.ShieldInitialized,
+                ShieldGrantPending = template.ShieldKind != FightBattleShieldKind.None,
                 FalloffTarget = template.FalloffTarget,
                 DamageId = template.DamageId,
                 RootSkillIds = template.RootSkillIds == null ? Array.Empty<int>() : (int[])template.RootSkillIds.Clone(),

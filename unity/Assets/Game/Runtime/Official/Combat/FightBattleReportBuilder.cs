@@ -22,6 +22,9 @@ namespace Zjcs.Combat.Official
         public long DamageTaken;
         public long HealDealt;
         public long HealTaken;
+        public long ShieldGranted;
+        public long ShieldReceived;
+        public long UnattributedShieldGranted;
     }
 
     [Serializable]
@@ -40,6 +43,14 @@ namespace Zjcs.Combat.Official
         public long Damage;
         public long AdditionalAttributedDamage;
         public long Heal;
+        public bool HasShieldGrantCounts;
+        public long ShieldGranted;
+        public float DamagePer;
+        public float HealPer;
+        public float ShieldPer;
+        public bool HasMaxHpPercentages;
+        public float HealMaxHpPer;
+        public float ShieldMaxHpPer;
     }
 
     /// <summary>
@@ -60,6 +71,7 @@ namespace Zjcs.Combat.Official
         public long TotalDamageDealt;
         public long TotalDamageTaken;
         public long TotalHealDealt;
+        public long TotalShieldGranted;
         public List<FightBattleReportUnit> Units = new List<FightBattleReportUnit>();
         public List<FightBattleReportSkill> Skills = new List<FightBattleReportSkill>();
 
@@ -115,7 +127,10 @@ namespace Zjcs.Combat.Official
                     AdditionalAttributedDamage = stats == null ? 0 : stats.AdditionalAttributedDamage,
                     DamageTaken = stats == null ? 0 : stats.DamageTaken,
                     HealDealt = stats == null ? 0 : stats.HealDealt,
-                    HealTaken = stats == null ? 0 : stats.HealTaken
+                    HealTaken = stats == null ? 0 : stats.HealTaken,
+                    ShieldGranted = stats == null ? 0 : stats.ShieldGranted,
+                    ShieldReceived = stats == null ? 0 : stats.ShieldReceived,
+                    UnattributedShieldGranted = stats == null ? 0 : stats.UnattributedShieldGranted
                 };
                 if (unit.Id == 1)
                 {
@@ -125,6 +140,7 @@ namespace Zjcs.Combat.Official
                 report.TotalDamageDealt += row.DamageDealt;
                 report.TotalDamageTaken += row.DamageTaken;
                 report.TotalHealDealt += row.HealDealt;
+                report.TotalShieldGranted += row.ShieldGranted;
                 report.Units.Add(row);
             }
             foreach (FightBattleSkillStatistics skill in statistics.Skills)
@@ -146,8 +162,32 @@ namespace Zjcs.Combat.Official
                         ? (float)skill.DamageHits / skill.DamageTargets : 0f,
                     Damage = skill.Damage,
                     AdditionalAttributedDamage = skill.AdditionalAttributedDamage,
-                    Heal = skill.Heal
+                    Heal = skill.Heal,
+                    HasShieldGrantCounts = skill.HasShieldGrantCounts,
+                    ShieldGranted = skill.ShieldGranted
                 });
+            }
+            foreach (FightBattleReportSkill skill in report.Skills)
+            {
+                long damage = 0, heal = 0, shield = 0;
+                FightBattleReportUnit source = report.Unit(skill.UnitId);
+                bool completeShield = source == null || source.UnattributedShieldGranted == 0;
+                foreach (FightBattleReportSkill candidate in report.Skills)
+                {
+                    if (candidate.UnitId != skill.UnitId) continue;
+                    damage = checked(damage + candidate.Damage);
+                    heal = checked(heal + candidate.Heal);
+                    shield = checked(shield + candidate.ShieldGranted);
+                    completeShield &= candidate.HasShieldGrantCounts;
+                }
+                skill.DamagePer = damage > 0 ? (float)((double)skill.Damage / damage) : 0f;
+                skill.HealPer = heal > 0 ? (float)((double)skill.Heal / heal) : 0f;
+                skill.HasShieldGrantCounts = completeShield;
+                skill.ShieldPer = completeShield && shield > 0 ? (float)((double)skill.ShieldGranted / shield) : 0f;
+                skill.HasMaxHpPercentages = source != null && source.MaxHp > 0;
+                if (!skill.HasMaxHpPercentages) continue;
+                skill.HealMaxHpPer = (float)((double)skill.Heal / source.MaxHp);
+                skill.ShieldMaxHpPer = completeShield ? (float)((double)skill.ShieldGranted / source.MaxHp) : 0f;
             }
             return report;
         }
