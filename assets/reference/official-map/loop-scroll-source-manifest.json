@@ -1,0 +1,88 @@
+{
+  "assembly": {
+    "path": ".tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll",
+    "sha256": "3a4e7ee9543b016c60fa4e57e3c6a597a2950c242278f0f9109bf856ce8bde68"
+  },
+  "converter": {
+    "path": "scripts/prepare_mainline_loop_scroll.py",
+    "sha256": "e525be4b21b91860da62b7ec02fc7aca83e3e0d40e5e64951c72546f462ee733"
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollRectBase.cs",
+      "sha256": "b7426089053515fa5cc8e1189cda1fd112fa9836b64d7910ce1f1ae15a8e110d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollRect.cs",
+      "sha256": "778d2208f6163270f99e4dc4b45d39121b0edd62e318fa9a08db552b66b7d95d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopVerticalScrollRect.cs",
+      "sha256": "eaaae9cfc566dee032695466b71e2d9019047203b847c219150d9319afd2a651"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollSinglePrefabSource.cs",
+      "sha256": "7a278833a644133998ce5df8fa37caf211aa4d08678f5f9c8b01e99ec05b14f1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollPrefabSource.cs",
+      "sha256": "251762a9de006c41efe27cf3e0328b10b486fd8878e0413f20baa763b1c66822"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollDataSource.cs",
+      "sha256": "f18350391d158496ada57cf77196e8d7393644137319ac62eb98a687ad3030b3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollSizeHelper.cs",
+      "sha256": "ab9664f19c52f8526b602da1b8320c525b79e047f4c35eb8266a7d9f9de49b6c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/UnityEngine.UI/LoopScrollSizeUtils.cs",
+      "sha256": "70fd86b42844b26c08820080ee1eb59844b9f9e54f2f794788c4009e9eac7b8e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/loop-scroll-full-source/LoopScrollGridLayoutGroup.cs",
+      "sha256": "9357bc518eb8184a2cf3cf0728db2bf3cbe9d2ddc498f29463b722a2c8b91879"
+    }
+  ],
+  "manifest": "854_156383",
+  "operation": "Retain original scroll layout, bounds, velocity, drag, virtualization and pool order; repair decompiler base calls/conversions and use Unity Instantiate instead of offline-unavailable service-provider injection.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollRectBase.cs",
+      "sha256": "fa9b1863d7ef01589a3df9ff22e5f56ec276fe9a26e5bc380b0ae2c6db511173"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollRect.cs",
+      "sha256": "9a7f99d589572c01ef8117c90f29b54609e764d264758a0d2e356d795ff6e1e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopVerticalScrollRect.cs",
+      "sha256": "d81a5ae1e4c10f6646191b8ccf596c7ec81d64d4447be4d60ea9b95471df7bf9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollSinglePrefabSource.cs",
+      "sha256": "daa9e774d3eb2481a0db38f127eb77b482d92a8b6bf89570d8958a640df353ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollPrefabSource.cs",
+      "sha256": "d7a58f26996cdba8c828c0efa4e264d59fbcf5e1f72cf430103f94592ad3726c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollDataSource.cs",
+      "sha256": "cd8519d759641e3f74aaf7e64952284d53f3961a02da2cca3eaa3349dc6edff9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollSizeHelper.cs",
+      "sha256": "d95500969f29c5b8fd1185a6175eff0609cece9ae506ffd4f2f3d825e01ce542"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollSizeUtils.cs",
+      "sha256": "a6fcc459536d550f8bb84d279466e43f02621fa7db9e56f347e7a726d18c8b7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/LoopScroll/LoopScrollGridLayoutGroup.cs",
+      "sha256": "e801195ca944ad12f160d4624ddd6cbe31129127f813188f84b9b4ef3b395b83"
+    }
+  ]
+}

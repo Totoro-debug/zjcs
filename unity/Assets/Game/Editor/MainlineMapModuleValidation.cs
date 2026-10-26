@@ -21,6 +21,7 @@ namespace Zjcs.Editor
             ProjectTools.Validate();
             Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run();
             Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
+            Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run();
             StartPlayMode();
         }
 
@@ -33,6 +34,7 @@ namespace Zjcs.Editor
         public static void RunLoadedPlayMode()
         {
             Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
+            Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run();
             StartPlayMode();
         }
 

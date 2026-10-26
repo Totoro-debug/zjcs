@@ -10,6 +10,7 @@ namespace Zjcs.Presentation.World
         private void InitializeNativeWorldHud()
         {
             var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>(NativeUiResource("catalog")).text);
+            goddessUiData = data;
             Map10RuntimeWorldInfo world = GetWorldInfo();
             foreach (OfficialMap11TeamPanelBinding binding in data.worldBindings.teamPanels)
                 ui.Find("WorldCanvas", binding.path).GetComponent<TeamMiniPanel>().Refresh(
@@ -79,6 +80,8 @@ namespace Zjcs.Presentation.World
                     foreach (string path in fields.Guiders) ui.Find("WorldCanvas", path).SetActive(false);
                 else if (entry.type == "WorldExploreBtn")
                 {
+                    var binding = data.worldBindings.exploreButtons.Single(value => value.path == entry.path);
+                    ApplyWorldHudState(fields, fields.IsOneTimesStateSwitcher, binding.isOneTime ? 1 : 0);
                     // The local map has not entered the Public region state.
                     // WorldExploreBtn.CanShowBtn rejects Private/None regions.
                     ui.Find("WorldCanvas", fields.mCostMoneyContent).SetActive(false);

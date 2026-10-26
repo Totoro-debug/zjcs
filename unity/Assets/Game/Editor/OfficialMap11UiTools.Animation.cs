@@ -20,7 +20,7 @@ namespace Zjcs.Editor
             player.cullingType = AnimationCullingType.AlwaysAnimate;
             foreach (OfficialMap11UiClip record in source.fields.clips)
             {
-                if (record.unknown.Any(value => source.type != "NativeAnimatorInitialState" || value.reason != "target_absent"))
+                if (record.unknown.Any(value => (source.type != "NativeAnimatorInitialState" && source.type != "NativeTabAnimation") || value.reason != "target_absent"))
                     throw new System.IO.InvalidDataException("Unresolved original UI animation: " + record.name);
                 var clip = new AnimationClip { name = record.name, legacy = true, frameRate = 30,
                     wrapMode = record.loop ? WrapMode.Loop : WrapMode.ClampForever };

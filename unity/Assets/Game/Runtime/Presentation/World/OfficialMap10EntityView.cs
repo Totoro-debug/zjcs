@@ -149,6 +149,23 @@ namespace Zjcs.Presentation.World
             }, mapOrigin, false);
         }
 
+        internal OfficialMap10EntityInfo SpawnRuntimeEntity(EntityRecord record)
+        {
+            if (record.placementId <= 0 || models.ContainsKey(record.modelPath) == false)
+                throw new InvalidDataException("Original dynamic map entity model is unbound: " + record.modelPath);
+            CreateEntity(record, mapOrigin);
+            return entityInfos[entityInfos.Count - 1];
+        }
+
+        internal void RemoveRuntimeEntity(int placement)
+        {
+            if (!entityObjects.TryGetValue(placement, out var entity)) return;
+            foreach (var collider in entity.GetComponentsInChildren<Collider2D>(true)) hitTargets.Remove(collider);
+            entityObjects.Remove(placement); entityStateObjects.Remove(placement);
+            entityInfos.RemoveAll(v => v.PlacementId == placement);
+            EntityCount--; DestroyGeneratedObject(entity);
+        }
+
         public void RemoveStoryEntity(GameObject entity)
         {
             if (entity == null || generatedRoot == null || !entity.transform.IsChildOf(generatedRoot)) return;

@@ -69,13 +69,16 @@ namespace Zjcs.Presentation.World
                 var item = new OfficialMap11WitchWindow("AwardListPanelItem", slot, data, uiRoot);
                 var fields = item.Source("AwardListPanelItem").fields;
                 item.State(item.Source("AwardListPanelItem"), 0);
-                item.Find(fields.mLightImage).gameObject.SetActive(false); // All four map rewards have native Quality.White.
-                string name = item.Text("item_" + award.Key + "_name");
+                int qualityId = assets.ItemQualityId(award.Key);
+                var light = item.Find(fields.mLightImage).GetComponent<Image>();
+                light.gameObject.SetActive(qualityId >= 4);
+                if (qualityId >= 4) light.sprite = assets.AwardLight(qualityId);
+                string name = data.texts.Single(v => v.key == "item_" + award.Key + "_name").value;
                 item.SetText(fields.mItemNameText, award.Value > 1
                     ? string.Format(CultureInfo.CurrentCulture, item.Text("ui_award_list_tip"), name, OfficialPropFormat.Compact(award.Value)) : name);
                 var wrapper = new OfficialMap11WitchWindow("ItemAwardIcon", item.Find(fields.mSlot), data, uiRoot);
                 wrapper.State(wrapper.Source("ItemAwardIcon"), 0);
-                var icon = Instantiate(Resources.Load<GameObject>(uiRoot + "ItemIconDefault"),
+                var icon = Instantiate(Resources.Load<GameObject>(uiRoot + assets.ItemTemplate(award.Key)),
                     wrapper.Find(wrapper.Source("ItemAwardIcon").fields.Anchor), false).GetComponent<WorldItemIcon>();
                 icon.Init(assets.Item(award.Key), assets.ItemQuality(award.Key), string.Empty);
                 icon.myTextGo.SetActive(false);

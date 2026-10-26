@@ -1683,9 +1683,11 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 ## 主线公共交互的 Unity 载荷
 
-固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至57份原面板。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
+固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至59份原面板、535张sprite。`map11_support_ui.py` 按原 `ItemIconManagerConfig` 的ID／类型／默认优先级绑定661条本图奖励道具记录，使用原普通、装备、宝具模板；宝具素材取Map11原地区 `DropItems` 并集。名称、品质框、奖励高品质光效、GraphicRaycaster和原数字标题均显式绑定。完整输入、各对象来源、客户端／共享代码哈希及输出见 Map11 `UI/source-manifest.json`。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
 
-`assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体及17条条件。运行时显式加载 `Resources/World/Mainline/interactions.json` 与英雄属性，探寻配置尚未接入可玩流程。英雄原演出、奖励粒子、命运探寻和区域雾仍未完成，验证范围见[公共模块](../../docs/features/mainline-map-modules.md)，不以资源提取代替完成结论。
+`prepare_mainline_loop_scroll.py` 从固定官方 `LoopScrollRect.Runtime.dll` 完整反编译并恢复9个类，保留原拖动、惯性、网格和回收分支，仅修复C#反编译基类调用及工程命名空间；程序集、逐文件源码与输出哈希见 [循环列表来源](official-map/loop-scroll-source-manifest.json)。`prepare_mainline_popup_effects.py` 核对 APK 恢复的ARM64实现，迁移 `TMPColorGradient` 的原顶点计算以及 `ScreenBlur` 原程序；原窗口模糊保留4级下采样、3级上采样、七个权重、screen/13快照、原遮罩颜色及半秒关闭门槛。元数据／原生映像、方法地址／字节哈希、原shader／material及显式加载绑定见 [弹窗表现来源](official-map/popup-effects-source-manifest.json)。这些恢复只覆盖当前原窗口使用的分支，原动作、奖励粒子、图标附件和完整实体交互尚未完成；未生成素材快照。
+
+`assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体、28份完整实体模板、68条递归条件，以及奖励／随机包／宝物选择器／等级映射的原配置。运行时显式加载 `Resources/World/Mainline/interactions.json`、英雄属性及 `exploration.json`。探寻本地生成、保底、费用、奖励和存档事务，以及原窗口鼠标操作、令牌拖动、十连、历史分页与动态实体冷启动已通过隔离 Unity 编辑器验证；完整生成实体交互、模型材质、动画与 Player 尚未完成，范围见[命运探寻](../../docs/features/world-exploration.md)和[公共模块](../../docs/features/mainline-map-modules.md)。旧云端缓存不再保留，历史重建显式复用当前871缓存的相同哈希字节，核对原清单MD5／大小及真实凭据SHA256，来源保持实际版本及URL，不重建旧目录或替换变化资源。
 
 ## 战斗飘字显示条件
 

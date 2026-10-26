@@ -304,7 +304,7 @@ namespace Zjcs.Offline.Progression
         public IReadOnlyDictionary<int, long> GetLevelProps(int propClassId, int level)
         {
             if (!levelProps.TryGetValue(propClassId, out Dictionary<int, Dictionary<int, long>> rows))
-                return new Dictionary<int, long>();
+                return OfficialHeroStatueProperties.Get(propClassId, level);
             if (rows.TryGetValue(level, out Dictionary<int, long> props)) return props;
             int maximum = rows.Keys.DefaultIfEmpty(0).Max();
             return level > maximum && rows.TryGetValue(maximum, out props)

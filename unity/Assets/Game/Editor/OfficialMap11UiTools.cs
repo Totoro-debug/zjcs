@@ -85,7 +85,7 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map11-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 57)
+            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 59)
                 throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -126,6 +126,7 @@ namespace Zjcs.Editor
                 AssetDatabase.CreateAsset(items, itemAssetsPath);
             }
             items.itemIds = data.itemIcons.Select(value => value.itemId).ToArray();
+            items.itemTemplates = data.itemIcons.Select(value => value.template).ToArray();
             items.itemSprites = data.itemIcons.Select(value => sprites[value.sprite]).ToArray();
             items.itemQualities = data.itemIcons.Select(value => sprites[value.qualitySprite]).ToArray();
             items.quality = sprites[data.itemQualitySprite];
@@ -134,6 +135,12 @@ namespace Zjcs.Editor
             items.miniMapMarkSprites = data.minimapMarks.Select(value => sprites[value.sprite]).ToArray();
             items.miniMapTabIds = data.minimapTabs.Select(value => value.mapClassId).ToArray();
             items.miniMapTabSprites = data.minimapTabs.Select(value => sprites[value.sprite]).ToArray();
+            items.exploreIconNames = data.explorationUi.icons.Select(value => value.name).ToArray();
+            items.exploreIcons = data.explorationUi.icons.Select(value => sprites[value.sprite]).ToArray();
+            items.exploreQualityIds = data.explorationUi.qualities.Select(value => value.quality).ToArray();
+            items.exploreQualities = data.explorationUi.qualities.Select(value => sprites[value.sprite]).ToArray();
+            items.exploreDetailQualities = data.explorationUi.qualities.Select(value => sprites[value.detailSprite]).ToArray();
+            items.exploreAwardLights = data.explorationUi.qualities.Select(value => string.IsNullOrEmpty(value.awardLight) ? null : sprites[value.awardLight]).ToArray();
             EditorUtility.SetDirty(items);
             GameObject host = new GameObject("Map11PrefabRestoration", typeof(RectTransform));
             try
@@ -283,7 +290,8 @@ namespace Zjcs.Editor
                         UnityEngine.Object.DestroyImmediate(root);
                         continue;
                     }
-                    if (panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault" || panel.key == "PayMoneyChangeDialog")
+                    if (panel.key == "CostItemConfirmDialog" || panel.key == "ItemIconDefault"
+                        || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "PayMoneyChangeDialog")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)

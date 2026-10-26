@@ -48,7 +48,7 @@ def compact_json(value) -> str:
 def recover_map11_state_textures() -> dict:
     """Verify the two grave-building state sprites omitted by the legacy model manifest."""
     from official_apk import Apk
-    apk = Apk()
+    apk = Apk(reuse_current_cache=True)
     root = apk.asset("prefabs_map_map_11_entitydisplays_worldbuilding", "6330_11_view.prefab")
     names = {"building_naka1": "building_naka1-0c53fcc277.png",
              "building_luzi": "building_luzi-5b63b3348a.png"}
@@ -154,7 +154,7 @@ def write_generated(path: Path, content: bytes, previous_hashes: dict[Path, str]
     path.write_bytes(content)
 
 
-def verified_previous_outputs(output: Path, current_inputs: dict, map_id: int = 10) -> dict[Path, str]:
+def verified_previous_outputs(output: Path, current_inputs: dict, map_id: int = 10, unchanged_placements: bool = False) -> dict[Path, str]:
     source_manifest_name = "entity-source-manifest.json"
     source_path = output / source_manifest_name
     if not source_path.is_file():
@@ -163,7 +163,7 @@ def verified_previous_outputs(output: Path, current_inputs: dict, map_id: int = 
     if previous.get("format") != 1 or previous.get("manifest") != VERSION or previous.get("mapClassId") != map_id:
         raise ValueError(f"Existing Map{map_id} entity manifest has an unexpected identity")
     for name, record in previous.get("inputs", {}).items():
-        if current_inputs.get(name) != record and name not in VALIDATED_REFRESH_INPUTS:
+        if current_inputs.get(name) != record and name not in VALIDATED_REFRESH_INPUTS and not (name == "map_definition" and unchanged_placements):
             raise ValueError(f"Existing Map{map_id} entity manifest input changed: " + name)
 
     verified = {}
@@ -217,7 +217,10 @@ def write_texture_meta(path: Path) -> None:
     target = Path(str(path) + ".meta")
     if target.exists() and target.read_text(encoding="utf-8") != content:
         existing = target.read_text(encoding="utf-8")
-        if f"guid: {guid}" not in existing or "TextureImporter:" not in existing:
+        # Unity-native imports can already own a stable GUID referenced by
+        # materials. Retain that metadata verbatim when adding more map models.
+        import re
+        if len(re.findall(r'^guid: [0-9a-f]{32}$', existing, re.M)) != 1 or "TextureImporter:" not in existing:
             raise ValueError("Refusing to replace an existing Unity texture meta file: " + str(target))
     if not target.exists():
         target.write_text(content, encoding="utf-8", newline="\n")
@@ -463,7 +466,10 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
         "StoryOnly": True,
         "StoryModelPath": "Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view",
     }] if map_id == 10 else []
-    for placement in sorted(placements["Entities"] + story_placements, key=lambda row: int(row["Id"])):
+    exploration_path = ROOT / 'unity/Assets/Game/Resources/World/Mainline/exploration.json'
+    exploration_placements = [dict(Id=0, EntityId=row['entityClassId'], StoryOnly=True)
+        for row in json.loads(exploration_path.read_text(encoding='utf-8'))['entities']] if map_id == 11 else []
+    for placement in sorted(placements["Entities"] + story_placements + exploration_placements, key=lambda row: int(row["Id"])):
         entity_class_id = int(placement["EntityId"])
         model_path = placement.get("StoryModelPath") or resolve_display_path(
             entity_class_id, model_catalog, map_displays, map_id)
@@ -645,6 +651,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
             },
             "map_model_source_manifest": source_digest(MODEL_SOURCE_MANIFEST),
             "map_extra_model_source_manifest": source_digest(EXTRA_MODEL_SOURCE_MANIFEST),
+            **({"world_exploration": source_digest(exploration_path)} if map_id == 11 else {}),
             "map_spine_source_manifest": source_digest(SPINE_SOURCE_MANIFEST),
             "map_story_actor_source_manifest": source_digest(STORY_ACTOR_SOURCE_MANIFEST),
             **({"battle_data": source_digest(BATTLE_DATA),
@@ -658,8 +665,6 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
                    "resourceSha256": sha256(payload_bytes), "size": len(payload_bytes),
                    "sha256": sha256(payload_bytes)},
     }
-    manifest_bytes = json_bytes(source_manifest)
-
     output.mkdir(parents=True, exist_ok=True)
     output_path = output / output_name
     source_path = output / SOURCE_MANIFEST_NAME
@@ -667,7 +672,21 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
     geometry_root = output / geometry_resource_dir
     spine_root = output / spine_resource_dir
     texture_root = output / texture_resource_dir
-    previous_hashes = verified_previous_outputs(output, source_manifest["inputs"], map_id)
+    unchanged_placements = False
+    if source_path.exists():
+        previous = json.loads(source_path.read_text(encoding="utf-8"))
+        previous_output = output / previous['output']['path']
+        if sha256(previous_output.read_bytes()) != previous['output']['sha256']:
+            raise ValueError('Previous entity payload differs from its verified source')
+        unchanged_placements = json.loads(previous_output.read_bytes())['entities'] == entities
+        old_definition = previous['inputs'].get('map_definition')
+        if old_definition != source_manifest['inputs']['map_definition'] and unchanged_placements:
+            source_manifest['unchangedPlacementInputRefresh'] = dict(previous=old_definition,
+                current=source_manifest['inputs']['map_definition'], placementCount=len(entities),
+                previousManifestSha256=sha256(source_path.read_bytes()),
+                operation='All converted placement fields are identical to the verified previous entity payload; retain every original placement and update the map definition input receipt.')
+    manifest_bytes = json_bytes(source_manifest)
+    previous_hashes = verified_previous_outputs(output, source_manifest["inputs"], map_id, unchanged_placements)
     for model_id, record in geometry_outputs.items():
         source = ROOT / record["source"]
         target = output / record["path"]

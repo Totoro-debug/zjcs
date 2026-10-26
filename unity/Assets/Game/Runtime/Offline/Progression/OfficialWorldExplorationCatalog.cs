@@ -10,6 +10,7 @@ namespace Zjcs.Offline.Progression
 {
     [Serializable] public sealed class OfficialExploreSettings
     {
+        public string DailyResetTime;
         public int FoodId, ExploreFoodCost, ExploreFoodTokenCost, WorldExploreMaxTimes,
             WorldExploreGuideFixedRewardId, ExploreEntityMaxDist, ExploreHistoryRecordDays,
             WorldExploreActionId, WorldExploreMoreTimesActionId;

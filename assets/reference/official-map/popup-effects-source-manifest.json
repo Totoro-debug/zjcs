@@ -1,0 +1,125 @@
+{
+  "converter": {
+    "path": "scripts/prepare_mainline_popup_effects.py",
+    "sha256": "44836b5084de02150e73cd3cac27dc9454ee52119ff9d66204cb6ca021805906"
+  },
+  "manifest": "854_156383",
+  "metadata": {
+    "path": ".tools/source-packages/official-code/global-metadata.dat",
+    "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+  },
+  "nativeImage": {
+    "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+    "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+  },
+  "nativeMethods": [
+    {
+      "address": "0x1121d7b0",
+      "length": 168,
+      "metadata_index": 296516,
+      "name": "TMPColorGradient.get_TextMeshPro",
+      "sha256": "3e5275387f483fed517e61ae6cca296acd1b9fdc3ece3057c98f70a5f6deb5d7"
+    },
+    {
+      "address": "0x1121d858",
+      "length": 232,
+      "metadata_index": 296517,
+      "name": "TMPColorGradient.OnEnable",
+      "sha256": "89102d091eaaaf564e0167adc871e14d8a8f437c7ec0d8204fd7a7b3ebc97dc6"
+    },
+    {
+      "address": "0x1121d9e0",
+      "length": 232,
+      "metadata_index": 296518,
+      "name": "TMPColorGradient.OnDisable",
+      "sha256": "064f72050f220c3ab5c89b928f507e85d49a355e1ba33e455e62aad40b10d483"
+    },
+    {
+      "address": "0x1121dac8",
+      "length": 532,
+      "metadata_index": 296519,
+      "name": "TMPColorGradient.SetColors",
+      "sha256": "1fefa0b7d11e2e807f76713aa3605eaae5299be09157755eb64da1e46a702037"
+    },
+    {
+      "address": "0x1121dcdc",
+      "length": 104,
+      "metadata_index": 296520,
+      "name": "TMPColorGradient.SetGradientColor",
+      "sha256": "46a07d015438c5618e44ffb98ea42388efe165a56bafc96b54717c17be81fd82"
+    },
+    {
+      "address": "0x1121dd44",
+      "length": 472,
+      "metadata_index": 296521,
+      "name": "TMPColorGradient.OnPreRenderText",
+      "sha256": "76fc2b89c3f53e813e9fe7d630fd55fdcb8ebcc65a745db6f8490809b9b78227"
+    },
+    {
+      "address": "0x1121d940",
+      "length": 160,
+      "metadata_index": 296522,
+      "name": "TMPColorGradient.UpdateMesh",
+      "sha256": "34d103c75b337c09d652a2df4b77d6983197355e629854720037ec08a6794b3d"
+    },
+    {
+      "address": "0x1121df1c",
+      "length": 116,
+      "metadata_index": 296523,
+      "name": "TMPColorGradient..ctor",
+      "sha256": "793a8f530852069164d55339749a8dff0d11a0b87c6f8412bdcedf1eaa38e8b0"
+    }
+  ],
+  "officialCode": [
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/ScreenBlurPass.cs",
+      "sha256": "bdaf823e1871d04fa12568325799aee686b9ef8e3bb8b15fcaf8e71c16d1bf16"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/BlurManager.cs",
+      "sha256": "c7a1af9d5e4554c35d3412291a3e17a657b225019ac5c2cc8635b409ffed9de9"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/WindowBlurMask.cs",
+      "sha256": "13b746d2455c3187f53207aea6650ee7343f91ea343f72d01b10412114d202fa"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/WindowMaskBase.cs",
+      "sha256": "88cd8933009d7b9309cfafcbb5d37e0d31eec265dd0773d54b066e157e951b98"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/PopupWindow.cs",
+      "sha256": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80"
+    }
+  ],
+  "operation": "Original seven-tap expressions and four down/up levels; original line extents, rotated vertices and Gradient.Evaluate; Built-in render capture and blit quad adapt the original URP pass.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader",
+      "sha256": "003539bdd3ebbe1a1dad4f44b5bc9104ece5b06e50a54af7c77a52229c7d7a77"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat",
+      "sha256": "3dde4139d9afbe6b644bc7458549d4cde58c8352e2601946cc350166af674aac"
+    }
+  ],
+  "programs": [
+    {
+      "index": 1,
+      "keywords": [],
+      "source": "#ifdef VERTEX\n#version 300 es\n\n#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1\n#if HLSLCC_ENABLE_UNIFORM_BUFFERS\n#define UNITY_UNIFORM\n#else\n#define UNITY_UNIFORM uniform\n#endif\n#define UNITY_SUPPORTS_UNIFORM_LOCATION 1\n#if UNITY_SUPPORTS_UNIFORM_LOCATION\n#define UNITY_LOCATION(x) layout(location = x)\n#define UNITY_BINDING(x) layout(binding = x, std140)\n#else\n#define UNITY_LOCATION(x)\n#define UNITY_BINDING(x) layout(std140)\n#endif\nuniform \tvec4 _BlitScaleBias;\nout highp vec2 vs_TEXCOORD0;\nvec2 u_xlat0;\nuvec3 u_xlatu0;\nint int_bitfieldInsert(int base, int insert, int offset, int bits) {\n    uint mask = uint(~(int(~0) << uint(bits)) << uint(offset));\n    return int((uint(base) & ~mask) | ((uint(insert) << uint(offset)) & mask));\n}\n\nvoid main()\n{\n    u_xlatu0.x =  uint(int(int_bitfieldInsert(0, gl_VertexID, 1 & int(0x1F), 1)));\n    u_xlatu0.z = uint(uint(gl_VertexID) & 2u);\n    u_xlat0.xy = vec2(u_xlatu0.xz);\n    gl_Position.xy = u_xlat0.xy * vec2(2.0, 2.0) + vec2(-1.0, -1.0);\n    vs_TEXCOORD0.xy = u_xlat0.xy * _BlitScaleBias.xy + _BlitScaleBias.zw;\n    gl_Position.zw = vec2(-1.0, 1.0);\n    return;\n}\n\n#endif\n#ifdef FRAGMENT\n#version 300 es\n\nprecision highp float;\nprecision highp int;\n#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1\n#if HLSLCC_ENABLE_UNIFORM_BUFFERS\n#define UNITY_UNIFORM\n#else\n#define UNITY_UNIFORM uniform\n#endif\n#define UNITY_SUPPORTS_UNIFORM_LOCATION 1\n#if UNITY_SUPPORTS_UNIFORM_LOCATION\n#define UNITY_LOCATION(x) layout(location = x)\n#define UNITY_BINDING(x) layout(binding = x, std140)\n#else\n#define UNITY_LOCATION(x)\n#define UNITY_BINDING(x) layout(std140)\n#endif\nuniform \tvec2 _GlobalMipBias;\nuniform \tvec4 _BlitTexture_TexelSize;\nuniform \tvec2 _BlurDir;\nUNITY_LOCATION(0) uniform mediump sampler2D _BlitTexture;\nin highp vec2 vs_TEXCOORD0;\nlayout(location = 0) out mediump vec4 SV_Target0;\nvec2 u_xlat0;\nmediump vec3 u_xlat16_0;\nvec2 u_xlat1;\nmediump vec3 u_xlat16_1;\nmediump vec3 u_xlat16_2;\nmediump vec3 u_xlat16_3;\nvec2 u_xlat8;\nvec2 u_xlat9;\nvoid main()\n{\n    u_xlat0.xy = (-_BlurDir.xy) * _BlitTexture_TexelSize.xy + vs_TEXCOORD0.xy;\n    u_xlat16_0.xyz = texture(_BlitTexture, u_xlat0.xy, _GlobalMipBias.x).xyz;\n    u_xlat1.xy = _BlitTexture_TexelSize.xy * _BlurDir.xy;\n    u_xlat9.xy = (-u_xlat1.xy) * vec2(2.0, 2.0) + vs_TEXCOORD0.xy;\n    u_xlat16_2.xyz = texture(_BlitTexture, u_xlat9.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_3.xyz = u_xlat16_2.xyz * vec3(0.0606257617, 0.0606257617, 0.0606257617);\n    u_xlat9.xy = (-u_xlat1.xy) * vec2(3.0, 3.0) + vs_TEXCOORD0.xy;\n    u_xlat16_2.xyz = texture(_BlitTexture, u_xlat9.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_3.xyz = u_xlat16_2.xyz * vec3(0.00597978989, 0.00597978989, 0.00597978989) + u_xlat16_3.xyz;\n    u_xlat16_3.xyz = u_xlat16_0.xyz * vec3(0.241842851, 0.241842851, 0.241842851) + u_xlat16_3.xyz;\n    u_xlat16_0.xyz = texture(_BlitTexture, vs_TEXCOORD0.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_3.xyz = u_xlat16_0.xyz * vec3(0.383103192, 0.383103192, 0.383103192) + u_xlat16_3.xyz;\n    u_xlat0.xy = _BlurDir.xy * _BlitTexture_TexelSize.xy + vs_TEXCOORD0.xy;\n    u_xlat16_0.xyz = texture(_BlitTexture, u_xlat0.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_3.xyz = u_xlat16_0.xyz * vec3(0.241842851, 0.241842851, 0.241842851) + u_xlat16_3.xyz;\n    u_xlat0.xy = u_xlat1.xy * vec2(2.0, 2.0) + vs_TEXCOORD0.xy;\n    u_xlat8.xy = u_xlat1.xy * vec2(3.0, 3.0) + vs_TEXCOORD0.xy;\n    u_xlat16_1.xyz = texture(_BlitTexture, u_xlat8.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_0.xyz = texture(_BlitTexture, u_xlat0.xy, _GlobalMipBias.x).xyz;\n    u_xlat16_3.xyz = u_xlat16_0.xyz * vec3(0.0606257617, 0.0606257617, 0.0606257617) + u_xlat16_3.xyz;\n    SV_Target0.xyz = u_xlat16_1.xyz * vec3(0.00597978989, 0.00597978989, 0.00597978989) + u_xlat16_3.xyz;\n    SV_Target0.w = 1.0;\n    return;\n}\n\n#endif\n",
+      "type": "kShaderGpuProgramGLES3"
+    }
+  ],
+  "shader": {
+    "apk_entry": "assets/bin/Data/data.unity3d",
+    "bundle": "assets/bin/Data/data.unity3d",
+    "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+    "manifest": "854_156383",
+    "objectSha256": "5bbc3c1e4568518bd56bc2ddbc7f573beda0b15a4582df0921f4c705dad25ba0",
+    "origin": "apk_zip",
+    "path_id": "4800000",
+    "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+    "raw_size": 3554552
+  }
+}

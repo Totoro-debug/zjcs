@@ -19,6 +19,7 @@ namespace Zjcs.Offline.Progression
             foreach (var entity in value.Entities)
             {
                 if (entity == null) continue;
+                if (entity.LostGoddessAward != null) entity.LostGoddessAward.Properties ??= Array.Empty<OfflineExtraProperty>();
                 entity.Extra ??= new List<OfflineExploreExtra>();
                 foreach (var extra in entity.Extra)
                 {
@@ -27,6 +28,10 @@ namespace Zjcs.Offline.Progression
                     extra.ActivityIds ??= Array.Empty<int>();
                 }
             }
+            foreach (var history in value.History)
+                if (history != null && history.Variant == 0)
+                    history.Variant = value.Entities.FirstOrDefault(entity => history.EntitySerials != null
+                        && history.EntitySerials.Contains(entity.Serial))?.Variant ?? history.EntityGroup;
         }
         private static bool ValidateExploration(OfflineWorldExplorationProgress value)
         {
@@ -52,11 +57,20 @@ namespace Zjcs.Offline.Progression
                 foreach (var extra in entity.Extra)
                     if (extra == null || string.IsNullOrEmpty(extra.Kind) || extra.StageIds == null || extra.ActivityIds == null
                         || extra.ItemId < 0 || extra.Count < 0 || extra.StageIds.Any(id => id <= 0) || extra.ActivityIds.Any(id => id <= 0)) return false;
+                var award = entity.LostGoddessAward;
+                if (award != null && award.Type != 0)
+                {
+                    if (!entity.Completed || award.Type < 2 || award.Type > 4 || award.Properties == null) return false;
+                    if (award.Type == 2 && (award.SkillId <= 0 || award.SourceRank <= 0 || award.TargetRank != award.SourceRank + 1)) return false;
+                    if (award.Type == 3 && (award.SourceLevel < 0 || award.TargetLevel <= award.SourceLevel)) return false;
+                    if (award.Type == 4 && (award.Properties.Length == 0 || award.Properties.Any(v => v == null
+                        || v.SourceId != "world-explore-lost-goddess:" + entity.Serial || v.PropId <= 0 || v.Level < 0 || v.PropType <= 0 || v.Count != 1))) return false;
+                }
             }
             foreach (var row in value.History)
                 if (row == null || string.IsNullOrEmpty(row.EventId) || row.EventId.Length > 160 || row.CreatedAt <= 0
                     || row.MapClassId <= 0 || row.Region < 0 || row.Area < 0 || row.X < 0 || row.Y < 0 || row.TokenItemId < 0
-                    || row.ExploreGroup <= 0 || row.EntityGroup <= 0 || row.Count <= 0 || row.EntitySerials == null
+                    || row.ExploreGroup <= 0 || row.EntityGroup <= 0 || row.Variant < 0 || row.Count <= 0 || row.EntitySerials == null
                     || row.EntitySerials.Length != row.Count || row.EntitySerials.Any(id => id <= 0)) return false;
             return true;
         }

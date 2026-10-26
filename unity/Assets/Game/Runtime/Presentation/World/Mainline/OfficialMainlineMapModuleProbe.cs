@@ -55,15 +55,24 @@ namespace Zjcs.Presentation.World
             probe.output = Path.GetFullPath(outputDirectory);
             probe.root = Path.Combine(probe.output, "isolated-profile");
             probe.completed = onCompleted;
-            probe.deadline = Time.realtimeSinceStartup + 180f;
+            probe.deadline = Time.realtimeSinceStartup + 240f;
             Directory.CreateDirectory(probe.output);
+            Application.logMessageReceived += probe.LogFailure;
             probe.StartCoroutine(probe.Guarded(probe.Verify()));
         }
+
+        private void LogFailure(string message, string stack, LogType type)
+        {
+            if (finished || type != LogType.Exception && type != LogType.Error && type != LogType.Assert) return;
+            File.WriteAllText(Path.Combine(output, "failed.txt"), message + Environment.NewLine + stack);
+            Complete(false);
+        }
+        private void OnDestroy() => Application.logMessageReceived -= LogFailure;
 
         private void Update()
         {
             if (finished || Time.realtimeSinceStartup < deadline) return;
-            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 180 second deadline.");
+            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 240 second deadline.");
             Complete(false);
         }
 
@@ -90,7 +99,9 @@ namespace Zjcs.Presentation.World
                 else yield return next;
             }
             File.WriteAllText(Path.Combine(output, "passed.txt"),
-                "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn and cold save reload passed.");
+                Environment.GetCommandLineArgs().Contains("-verify-exploration-only")
+                    ? "Exploration pointer flow: native HUD, confirmation, probability/detail/history, token scrolling/selection/cost, guide chest reward without stamina, ten-times exploration and cold reload passed."
+                    : "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn, exploration and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
         }
@@ -118,9 +129,11 @@ namespace Zjcs.Presentation.World
             save.Player.CharacterCreated = true;
             save.Player.CharacterName = "公共地图验证";
             save.Player.InitialWeaponType = 200;
-            save.Player.Level = 20;
-            save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[20];
+            save.Player.Level = 31;
+            save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[31];
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
+            save.Player.SubRank = OfficialCharacterAssetCatalog.LoadDefault().Load().LevelLimits
+                .Where(value => value.PlayerLevel >= save.Player.Level).Min(value => value.SubRank);
             save.Player.Wardrobe.Profession = 1;
             save.Tasks.ClaimedMainlineTaskIds.AddRange(OfficialMainlineTaskCatalog.LoadDefault().OrderedTasks
                 .Where(value => value.classId <= 1040).Select(value => value.classId));
@@ -128,6 +141,30 @@ namespace Zjcs.Presentation.World
             var progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
             new OfflineCharacterProgressionService(progress, OfficialCharacterAssetCatalog.LoadDefault().Load())
                 .InitializeWardrobe("shared-map-probe-wardrobe");
+            if (Environment.GetCommandLineArgs().Contains("-verify-exploration-only"))
+            {
+                Open(11, canvas.transform);
+                yield return new WaitForSecondsRealtime(1);
+                progress = Field<OfflineMainlineProgressSession>("progressionSave");
+                foreach (int region in new[] { 0, 1, 12 })
+                {
+                    progress.SetMapRegionProgress(11, region, 10000);
+                    Require(progress.RecordGoddessActivated(11, region, "probe-explore-public-" + region).IsApplied,
+                        "Public exploration region fixture");
+                }
+                Invoke("RefreshEntityActivity");
+                yield return VerifyExploration();
+                Destroy(runtime.gameObject);
+                yield return null;
+                Open(11, canvas.transform);
+                yield return new WaitForSecondsRealtime(1);
+                Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.Exploration.TotalCount == 12,
+                    "Pointer exploration result survives a cold runtime reload");
+                yield return Capture("map-11-explore-cold");
+                Destroy(runtime.gameObject);
+                Destroy(canvas);
+                yield break;
+            }
             File.WriteAllText(Path.Combine(slots.GetSlotDirectory(slot), "map-10-save.json"),
                 JsonUtility.ToJson(new Map10LocalSave { slotId = slot, completedStories = new[] { "FirstEnterMap", "FirstBattle" } }));
 
@@ -156,6 +193,7 @@ namespace Zjcs.Presentation.World
                     yield return VerifyNativeUi();
                     yield return VerifyHeroStatues();
                     yield return VerifyStaminaGathering();
+                    yield return VerifyExploration();
                 }
                 MapGridPoint position = Field<MapGridPoint>("currentGrid");
                 Invoke("SaveLocalProgress");
@@ -351,6 +389,250 @@ namespace Zjcs.Presentation.World
             yield return Capture("map-11-stamina-respawn");
         }
 
+        private OfficialMap11WitchWindow ExploreTop => Field<List<OfficialMap11WitchWindow>>("exploreWindows").Last();
+        private Dictionary<string, object> ExploreFields(OfficialMap11WitchWindow window, string kind) =>
+            (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
+                .Invoke(runtime, new object[] { window.Key, kind, null });
+        private Button ExploreButton(OfficialMap11WitchWindow window, string kind, string field) =>
+            window.Find((string)ExploreFields(window, kind)[field]).GetComponent<Button>();
+        private IEnumerator VerifyExploration()
+        {
+            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            Require(progress.ApplyInventoryTransaction("probe-world-explore-items", save =>
+            {
+                foreach (int id in new[] { 115, 4016, 2011, 2012, 2013, 2014, 2015, 2016 })
+                    if (!OfflineInventoryOperations.Grant(save.Player, id, id == 115 ? 30 : 2, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
+                        throw new InvalidOperationException("Explore inventory fixture failed.");
+            }).IsApplied, "Explore inventory fixture");
+            var entity = Field<IDictionary>("mapEntities")[115];
+            var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
+            Invoke("SetAvatarPosition", grid + new MapGridPoint(0, 1));
+            yield return new WaitForSecondsRealtime(1.1f);
+            var data = Field<OfficialMap11UiData>("goddessUiData");
+            var ui = Field<OfficialWorldUiRenderer>("ui");
+            var binding = data.worldBindings.exploreButtons.First(v => v.isOneTime);
+            var worldFields = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "WorldExploreBtn" && v.path == binding.path).fields;
+            var cost = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "PlayerCostMoneyContent" && v.path == worldFields.mCostMoneyContent).fields;
+            Button entry = ui.Find("WorldCanvas", cost.Btn).GetComponent<Button>();
+            yield return Capture("map-11-explore-hud");
+            var context = (OfflineExploreContext)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreContext", Private).Invoke(runtime, null);
+            var service = new OfflineWorldExplorationService(progress);
+            Require(entry.IsActive(), "Explore HUD is visible: map=" + context.MapClassId + ", area=" + context.Area
+                + ", region=" + context.Region + ", mapAllowed=" + context.MapCanExplore + ", regionForbids=" + context.RegionForbidsExplore
+                + ", level=" + progress.Save.Player.Level + ", unlockItem=" + progress.InventoryCount(4016)
+                + ", functionOpen=" + service.FunctionOpen(8, context) + ", canExplore=" + service.CanExplore(context)
+                + ", inactiveParents=" + string.Join(",", entry.GetComponentsInParent<Transform>(true)
+                    .Where(value => !value.gameObject.activeSelf).Select(value => value.name)));
+            yield return Click(entry);
+            yield return new WaitForSecondsRealtime(.65f);
+            var confirm = ExploreTop;
+            yield return Capture("map-11-explore-confirm-first");
+            var firstMask = Field<Dictionary<OfficialMap11WitchWindow, GameObject>>("exploreMasks")[confirm];
+            var maskImage = firstMask.GetComponent<RawImage>();
+            Require(maskImage.rectTransform.rect.width > 0 && maskImage.rectTransform.rect.height > 0,
+                "Original blur mask expands to the active root canvas");
+            Require(confirm.Key == "ExploreConfirmDialog", "Original exploration confirmation opens from HUD");
+            yield return Click(ExploreButton(confirm, confirm.Key, "mProbabilityBtn"));
+            yield return new WaitForSecondsRealtime(.65f);
+            var detail = ExploreTop;
+            Require(detail.Key == "ExploreDetailDialog", "Original probability dialog opens");
+            yield return Capture("map-11-explore-probability");
+            // Close the native blur mask through an exposed top-screen point.
+            var masks = Field<Dictionary<OfficialMap11WitchWindow, GameObject>>("exploreMasks");
+            yield return Click(masks[detail].GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            Require(ExploreTop == confirm, "Native mask click closes the upper dialog");
+            long food = progress.InventoryCount(115), guide = progress.InventoryCount(56);
+            yield return Click(ExploreButton(confirm, "ConfirmDialog", "ConfirmBtn"));
+            yield return new WaitForSecondsRealtime(.8f);
+            Require(progress.Save.World.Exploration.TotalCount == 1 && progress.InventoryCount(115) == food - 1
+                && progress.InventoryCount(56) == guide + 1, "Pointer exploration spends original fruit and grants guide exactly once");
+            var spawned = progress.Save.World.Exploration.Entities.Single();
+            Require(spawned.Group == 51 && spawned.EntityClassId == 8201, "First result uses original guide entity");
+            var view = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            Require(view.FindEntityObject(spawned.PlacementId) != null, "Generated original map view is mounted");
+            yield return Capture("map-11-explore-guide-entity");
+            yield return new WaitForSecondsRealtime(2);
+            long stamina = progress.InventoryCount(57);
+            Vector3 chestPoint = view.FindEntityObject(spawned.PlacementId).GetComponentsInChildren<Collider2D>()
+                .First(v => v.enabled).bounds.center;
+            Require(Hits(Field<Camera>("worldCamera").WorldToScreenPoint(chestPoint)).Count == 0, "Guide chest is exposed to world picking");
+            var beforeItems = progress.Save.Player.Inventory.ToDictionary(v => v.ItemId, v => v.Count);
+            worldPress = chestPoint;
+            float collectDeadline = Time.realtimeSinceStartup + 10;
+            while (!progress.Save.World.Exploration.Entities.Single(v => v.Serial == spawned.Serial).Completed
+                && Time.realtimeSinceStartup < collectDeadline) yield return null;
+            Require(progress.Save.World.Exploration.Entities.Single(v => v.Serial == spawned.Serial).Completed
+                && progress.InventoryCount(57) == stamina
+                && progress.Save.Player.Inventory.Any(v => v.Count > (beforeItems.TryGetValue(v.ItemId, out long old) ? old : 0)),
+                "World pointer opens guide chest, grants native rewards and consumes no stamina");
+            yield return Capture("map-11-explore-guide-collected");
+            yield return new WaitForSecondsRealtime(2.2f);
+            yield return Click(entry);
+            yield return new WaitForSecondsRealtime(.65f);
+            confirm = ExploreTop;
+            yield return Click(ExploreButton(confirm, confirm.Key, "mProbabilityBtn"));
+            yield return new WaitForSecondsRealtime(.65f);
+            detail = ExploreTop;
+            var rewardIcon = detail.Root.GetComponentsInChildren<WorldItemIcon>().First(v => v.GetComponent<Button>() != null);
+            yield return Click(rewardIcon.GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.65f);
+            var rewardDetail = ExploreTop;
+            Require(rewardDetail.Key == "ExploreRewardPreviewItemDetailDialog", "Native exploration reward detail opens from its icon");
+            Canvas rewardCanvas = rewardDetail.Root.GetComponent<Canvas>();
+            Canvas detailMaskCanvas = masks[rewardDetail].GetComponent<Canvas>();
+            Require(rewardCanvas.overrideSorting && detailMaskCanvas.overrideSorting
+                && detailMaskCanvas.sortingOrder == rewardCanvas.sortingOrder - 1
+                && detailMaskCanvas.sortingOrder > detail.Root.GetComponent<Canvas>().sortingOrder,
+                "Stacked native blur mask covers the previous popup beneath its attached window: window="
+                + rewardCanvas.sortingOrder + ", mask=" + detailMaskCanvas.sortingOrder
+                + ", previous=" + detail.Root.GetComponent<Canvas>().sortingOrder);
+            yield return Capture("map-11-explore-reward-detail");
+            yield return Click(masks[rewardDetail].GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            var detailFields = ExploreFields(detail, detail.Key);
+            var tabs = (List<object>)detailFields["mTabItems"];
+            var historyTab = (Dictionary<string, object>)tabs.Single(v => Convert.ToInt32(((Dictionary<string, object>)v)["State"]) == 1);
+            yield return Click(detail.Find((string)historyTab["TabItem"]).GetComponent<Button>());
+            yield return Capture("map-11-explore-history");
+            yield return Click(masks[detail].GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            yield return Click(ExploreButton(confirm, confirm.Key, "SelectNewBtn"));
+            yield return new WaitForSecondsRealtime(.65f);
+            var tokens = ExploreTop;
+            Require(tokens.Key == "ExploreSelectTokenDialog", "Original token dialog opens");
+            yield return Capture("map-11-explore-tokens");
+            var tokenFields = ExploreFields(tokens, tokens.Key);
+            var scroll = tokens.Find((string)tokenFields["ScrollRect"]).GetComponent<LoopVerticalScrollRect>();
+            yield return DragScroll(scroll);
+            yield return Capture("map-11-explore-tokens-scrolled");
+            var row = scroll.content.GetComponentsInChildren<Button>().First(v => v.name == "Btn"
+                && ExecuteEvents.GetEventHandler<IPointerClickHandler>(Hits(RectTransformUtility.WorldToScreenPoint(null,
+                    ((RectTransform)v.transform).TransformPoint(((RectTransform)v.transform).rect.center)))
+                    .FirstOrDefault().gameObject) == v.gameObject);
+            yield return Click(row);
+            yield return Click(ExploreButton(tokens, tokens.Key, "ConfirmButton"));
+            yield return new WaitForSecondsRealtime(.6f);
+            Require(Field<int>("exploreToken") > 0, "Native token row selection is applied by pointer");
+            yield return Capture("map-11-explore-selected-token");
+            int selectedToken = Field<int>("exploreToken");
+            long tokenBefore = progress.InventoryCount(selectedToken);
+            food = progress.InventoryCount(115);
+            yield return Click(ExploreButton(confirm, "ConfirmDialog", "ConfirmBtn"));
+            yield return new WaitForSecondsRealtime(.8f);
+            Require(progress.Save.World.Exploration.TotalCount == 2 && progress.InventoryCount(115) == food - 1
+                && progress.InventoryCount(selectedToken) == tokenBefore - 1 && progress.InventoryCount(56) == guide + 1,
+                "Token exploration consumes one native token and fruit without repeating the guide award");
+            // Locate an open original area for the ten-result fixture. The
+            // spawn service keeps its native distance and occupancy checks.
+            var map = Field<OfficialWorldMapSession>("session");
+            var occupied = new HashSet<MapGridPoint>(Field<IDictionary>("mapEntities").Values.Cast<object>()
+                .Select(v => (MapGridPoint)v.GetType().GetField("Grid").GetValue(v)));
+            var open = new List<KeyValuePair<MapGridPoint, int>>();
+            for (int y = 3; y < map.Definition.Navigation.Height - 3; y++)
+                for (int x = 3; x < map.Definition.Navigation.Width - 3; x++)
+                {
+                    if (!OfficialMapNavigationView.TryGetCell(map.Definition.Navigation, x, y, out int area, out int ground)
+                        || area != context.Area || !map.Movement.IsFit(new MapGridPoint(x, y))) continue;
+                    int free = 0;
+                    for (int dy = -3; dy <= 3; dy++) for (int dx = -3; dx <= 3; dx++)
+                    {
+                        var p = new MapGridPoint(x + dx, y + dy);
+                        if (dx * dx + dy * dy <= 9 && !occupied.Contains(p)
+                            && OfficialMapNavigationView.TryGetCell(map.Definition.Navigation, p.X, p.Y, out int a, out int g)
+                            && a == area && (g == 0 || g == 6) && map.Movement.IsFit(p)) free++;
+                    }
+                    open.Add(new KeyValuePair<MapGridPoint, int>(new MapGridPoint(x, y), free));
+                }
+            Require(open.Count > 0, "Original area contains a ten-times exploration test position");
+            Invoke("SetAvatarPosition", open.OrderByDescending(v => v.Value).First().Key);
+            yield return new WaitForSecondsRealtime(.8f);
+            PrepareTenExploreRandomFixture(progress);
+            var manyBinding = data.worldBindings.exploreButtons.Single(v => !v.isOneTime);
+            var manyWorld = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "WorldExploreBtn" && v.path == manyBinding.path).fields;
+            var manyCost = data.components.Single(v => v.panel == "WorldCanvas" && v.type == "PlayerCostMoneyContent" && v.path == manyWorld.mCostMoneyContent).fields;
+            yield return Click(ui.Find("WorldCanvas", manyCost.Btn).GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.65f);
+            confirm = ExploreTop;
+            yield return Capture("map-11-explore-ten-confirm");
+            food = progress.InventoryCount(115);
+            yield return Click(ExploreButton(confirm, "ConfirmDialog", "ConfirmBtn"));
+            yield return new WaitForSecondsRealtime(.8f);
+            Require(progress.Save.World.Exploration.TotalCount == 12 && progress.InventoryCount(115) == food - 10
+                && progress.Save.World.Exploration.History.Count == 12 && progress.InventoryCount(56) == guide + 1,
+                "Original ten-times HUD button commits ten independent results and native fruit cost; count="
+                + progress.Save.World.Exploration.TotalCount + "; fruit=" + progress.InventoryCount(115));
+            yield return Capture("map-11-explore-ten-results");
+            yield return new WaitForSecondsRealtime(2.1f);
+            yield return Click(entry);
+            yield return new WaitForSecondsRealtime(.65f);
+            confirm = ExploreTop;
+            yield return Click(ExploreButton(confirm, confirm.Key, "mProbabilityBtn"));
+            yield return new WaitForSecondsRealtime(.65f);
+            detail = ExploreTop;
+            yield return Click(detail.Find((string)historyTab["TabItem"]).GetComponent<Button>());
+            var historyFields = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
+                .Invoke(runtime, new object[] { detail.Key, "ExploreHistoryContent", ExploreFields(detail, detail.Key)["mExploreHistoryContent"] });
+            var paging = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
+                .Invoke(runtime, new object[] { detail.Key, "TurnPageUI", historyFields["mTurnPageUI"] });
+            var nextPage = (Dictionary<string, object>)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreFields", Private)
+                .Invoke(runtime, new object[] { detail.Key, "TurnPageBtn", paging["mNextBtn"] });
+            yield return Click(detail.Find((string)nextPage["Btn"]).GetComponent<Button>());
+            Require(detail.Find((string)paging["mCurPageText"]).GetComponent<TMPro.TMP_Text>().text.Contains("2"),
+                "Native history pagination advances to the second page");
+            yield return Capture("map-11-explore-history-second-page");
+            yield return Click(masks[detail].GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            yield return Click(ExploreButton(confirm, "ConfirmDialog", "CancelBtn"));
+            yield return new WaitForSecondsRealtime(.6f);
+        }
+
+        private void PrepareTenExploreRandomFixture(OfflineMainlineProgressSession progress)
+        {
+            // Find a reproducible native sequence that fits the approved local
+            // placement policy. Distance-one entities can otherwise arrive after
+            // all four neighbouring cells were taken by distance-three results.
+            // Sampling writes only a second isolated fixture, never this profile.
+            var slots = new ProfileSlotCatalog(Path.Combine(output, "spawn-fixture"));
+            string sampleSlot = slots.CreateSlot();
+            var context = (OfflineExploreContext)typeof(OfficialMainlineMapRuntime).GetMethod("ExploreContext", Private).Invoke(runtime, null);
+            long selected = 0;
+            for (long seed = 1; seed <= 128; seed++)
+            {
+                var save = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(progress.Save));
+                save.Player.InventoryRandomState = seed;
+                File.WriteAllText(Path.Combine(slots.GetSlotDirectory(sampleSlot), "city-save.json"), JsonUtility.ToJson(save));
+                var sample = OfflineMainlineProgressSession.Open(slots, sampleSlot, OfficialMainlineTaskCatalog.LoadDefault());
+                var service = new OfflineWorldExplorationService(sample);
+                if (service.Explore(context, 10, 0, "ten-position-fixture", DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out _).IsApplied)
+                { selected = seed; break; }
+            }
+            Require(selected > 0, "An original ten-result sequence fits the isolated map position");
+            Require(progress.ApplyInventoryTransaction("probe-ten-seed", save => save.Player.InventoryRandomState = selected).IsApplied,
+                "Reproducible ten-times exploration fixture");
+        }
+
+        private static IEnumerator DragScroll(LoopVerticalScrollRect scroll)
+        {
+            Canvas.ForceUpdateCanvases();
+            Vector2 start = RectTransformUtility.WorldToScreenPoint(null, scroll.viewport.TransformPoint(scroll.viewport.rect.center));
+            var hit = Hits(start).First();
+            Require(ExecuteEvents.GetEventHandler<IDragHandler>(hit.gameObject) == scroll.gameObject,
+                "Native loop scroll receives pointer drag through its viewport");
+            var pointer = new PointerEventData(EventSystem.current) { position = start, pressPosition = start, button = PointerEventData.InputButton.Left };
+            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.initializePotentialDrag);
+            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.beginDragHandler);
+            for (int step = 1; step <= 12; step++)
+            {
+                Vector2 next = start + Vector2.up * (step * 14);
+                pointer.delta = next - pointer.position; pointer.position = next;
+                ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.dragHandler);
+                yield return null;
+            }
+            ExecuteEvents.Execute(scroll.gameObject, pointer, ExecuteEvents.endDragHandler);
+            yield return new WaitForSecondsRealtime(.4f);
+        }
+
         private static List<RaycastResult> Hits(Vector2 position)
         {
             var hits = new List<RaycastResult>();
@@ -379,7 +661,9 @@ namespace Zjcs.Presentation.World
                     if (target == button.gameObject) break;
                 }
             }
-            Require(target == button.gameObject, "Original button receives the topmost raycast at " + button.name);
+            Require(target == button.gameObject, "Original button receives the topmost raycast at " + button.name
+                + "; position=" + position + "; rect=" + ((RectTransform)button.transform).rect
+                + "; hits=" + string.Join(",", hits.Take(6).Select(value => value.gameObject.name)));
             var pointer = new PointerEventData(EventSystem.current) { position = position, button = PointerEventData.InputButton.Left };
             ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerDownHandler);
             yield return null;
@@ -405,6 +689,7 @@ namespace Zjcs.Presentation.World
         {
             if (finished) return;
             finished = true;
+            Application.logMessageReceived -= LogFailure;
             if (runtime != null) Destroy(runtime.gameObject);
             completed?.Invoke(success);
         }

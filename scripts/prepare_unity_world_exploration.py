@@ -81,6 +81,10 @@ def build():
     item_ids = {item for row in packages for item in (row['IdList'] or [])}
     item_ids.update(item for row in treasures for item in row['ChestGachaItems'])
     item_ids.update(row['ItemId'] for row in tokens if row['ItemId'] > 0)
+    item_ids.update(item for row in reward_rules for item in row['IdList'])
+    item_ids.update(item for row in entity_groups for extra in row['ExtraDataInfos']
+                    if extra['_type']=='MapEntityGroupInfoExtraAwardItemData' for item in extra['AwardItemIds'])
+    item_ids.update(int(key) for key in fixed_reward['Reward'])
     payload = dict(manifest="854_156383", tokenGroups=tokens, exploreGroups=explore_groups,
                    entityGroups=entity_groups,
                    entities=[dict(entityClassId=entity, components=templates[str(entity)],
@@ -104,7 +108,7 @@ def build():
                    settings={key: settings[key] for key in ("FoodId", "ExploreFoodCost", "ExploreFoodTokenCost",
                        "WorldExploreMaxTimes", "WorldExploreGuideFixedRewardId",
                        "ExploreEntityMaxDist", "ExploreHistoryRecordDays", "WorldExploreActionId", "WorldExploreMoreTimesActionId",
-                       "DailyGachaMaxCountDict")}, dailyLimit=settings['DailyGachaMaxCountDict'][3])
+                       "DailyGachaMaxCountDict", "DailyResetTime")}, dailyLimit=settings['DailyGachaMaxCountDict'][3])
     known = {}
     if RECEIPT.exists():
         old = json.loads(RECEIPT.read_text(encoding="utf-8"))

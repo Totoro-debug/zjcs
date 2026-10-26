@@ -20,6 +20,7 @@ from map11_tmp_sprites import extract_common
 from map11_minimap_ui import extract_marks
 from official_manifest import read_asset_manifest
 from official_tables import Constructors
+from map11_exploration_ui import extract_exploration_ui
 
 
 PANELS = ("GoddessTouchDialog", "LostGoddessTouchDialog")
@@ -103,6 +104,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 elif component.type.name == "MonoBehaviour":
                     behaviours.append(component)
                 elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog", "AwardListPanel", "AwardListPanelItem")
+                        or key == "ExploreDetailDialog" and go.m_Name in ("PreviewTabItem", "HistoryTabItem")
                         or key == "WorldCanvas" and component.type.name == "Animator"
                         and go.m_Name in ("FunctionEntryFunc", "FunctionEntryPhoto", "FunctionEntryChatQuick")):
                     native_animations.append(component)
@@ -137,6 +139,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
             default_name, auto_play = "", False
             initial_state = key == "WorldCanvas"
             controller_source = None
+            clip_names = {}
             if component.type.name == "Animation":
                 animation_data = component.read()
                 refs = animation_data.m_Animations
@@ -147,7 +150,18 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 controller = component.read().m_Controller
                 if not controller.m_PathID:
                     continue
-                refs = controller.read().m_AnimationClips
+                controller_object = controller.deref()
+                if controller_object.type.name == 'AnimatorOverrideController':
+                    native_controller = controller_object.read_typetree()
+                    refs = []
+                    for override in native_controller['m_Clips']:
+                        original = PPtr(**override['m_OriginalClip'], assetsfile=controller_object.assets_file)
+                        replacement = PPtr(**override['m_OverrideClip'], assetsfile=controller_object.assets_file)
+                        refs.append(replacement if replacement.m_PathID else original)
+                        clip_names[refs[-1].path_id] = original.read().m_Name
+                    controller_source = apk.provenance(controller_object)
+                else:
+                    refs = controller.read().m_AnimationClips
                 if initial_state:
                     controller_data = controller.deref().read_typetree()
                     machines = controller_data["m_Controller"]["m_StateMachineArray"]
@@ -162,7 +176,10 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                     default_name = refs[0].read().m_Name
                     controller_source = apk.provenance(controller.deref())
             clips = [animation_record(apk, ref.deref(), subtree(source[key], location)) for ref in refs if ref.m_PathID]
-            components.append({"panel": key, "path": location, "type": "NativeAnimatorInitialState" if initial_state else "Native" + component.type.name,
+            for ref, clip in zip((ref for ref in refs if ref.m_PathID), clips):
+                if ref.path_id in clip_names:
+                    clip['nativeName'], clip['name'] = clip['name'], clip_names[ref.path_id]
+            components.append({"panel": key, "path": location, "type": "NativeAnimatorInitialState" if initial_state else "NativeTabAnimation" if clip_names else "Native" + component.type.name,
                                "fields": {"clips": clips, "defaultClip": default_name, "playAutomatically": auto_play,
                                           "controllerSource": controller_source},
                                "source": apk.provenance(component)})
@@ -202,6 +219,12 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)], "type": "RawImage",
                                    "fields": {"maskTexture": uri, "material": {"name": material.m_Name, "shader": "UI/Masked"}},
                                    "source": apk.provenance(obj)})
+            elif script.m_ClassName == "RawImage" and key == "WorldCanvas":
+                components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)], "type": "WindowMaskRawImage",
+                                   "fields": resolve(ui_schemas.read(obj), obj), "source": apk.provenance(obj)})
+            elif script.m_ClassName == "GraphicRaycaster":
+                components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)], "type": "GraphicRaycaster",
+                                   "fields": resolve(ui_schemas.read(obj), obj), "source": apk.provenance(obj)})
             elif script.m_ClassName == "SlicedFilledImage":
                 fields = ui_schemas.read(obj)
                 sprite = support_exporter.add_sprite(PPtr(**fields["m_Sprite"], assetsfile=obj.assets_file).deref())
@@ -276,7 +299,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                   "loop": loop, "tracks": tracks, "unknown": unknown,
                                   "optionalTargetPaths": optional_paths, "source": apk.provenance(animation)})
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)], "type": "PopupWindow",
-                                   "fields": {"clips": clips}, "source": apk.provenance(obj)})
+                                   "fields": {"clips": clips, "closeByClickMask": window['mCloseByClickMask'], "maskType": window['mMaskType']}, "source": apk.provenance(obj)})
             elif script.m_ClassName == "CanvasScaler" and key == "WorldCanvas":
                 raw_scaler = obj.get_raw_data()
                 if len(raw_scaler) != 80:
@@ -314,7 +337,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                       "GameMatchMiniSwitchPanel", "PlayAsYouDownloadEntry", "WorldExploreBtn",
                                       "ChatQuickMsgEntryPanel", "ChatActionQuickMsgEntryPanel", "WorldMapCharActionEndBtn",
                                       "PlayerCombatRatingText", "PlayerBlessLevelViewController", "TeamMiniPanel", "ShowMapRequire",
-                                      "ConfirmDialog", "CostItemConfirmDialog", "PlayerCostMoneyContent", "TopBarHandler", "ItemIcon",
+                                      "ConfirmDialog", "CostItemConfirmDialog", "PlayerCostMoneyContent", "TopBarHandler", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "ItemProgress",
                                       "WorldWitchTouchUI", "StoryBookDialog", "PanelTitle", "PeriodicityInteractionStageUI",
                                       "WorldStageInteractionPreviewDialog", "WorldStageInteractionPreviewContent", "MultiLanguageText",
                                       "WorldStageInteractionPreviewContentLayoutElement",
@@ -324,7 +347,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                       "StageTouchUI", "StageUIWithPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
                                       "ExploreConfirmDialog", "ExploreDetailDialog", "ExploreHistoryContent", "ExploreProbabilityContent",
                                       "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreHistoryItem", "ExploreProbabilityItem",
-                                      "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog", "TurnPageUI", "RuleDialog",
+                                      "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog", "TurnPageUI", "TurnPageBtn", "RuleDialog", "RuleTipNumer", "TipInfo", "ItemDetailDialog", "PopupWindow", "TMPColorGradient", "LoopVerticalScrollRect",
                                       "AwardListPanel", "AwardListPanelItem", "AwardListPanelNormalPath", "AwardListPanelSinglePath", "AwardListPanelBasePath",
                                       "ItemAwardIcon", "MiniMapMaskedUILoader",
                                       "MiniMapMaskedUI", "AreaInfoUI", "TalkDialog", "OptionTalkDialogPanel",
@@ -350,6 +373,16 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                     fields["dragSettings"] = {k: v for k, v in fields["Data"].items() if k != "Target"}
                     for flag in ("Horizontal", "Vertical", "Inertia", "UseMultipleRectangleBorders"):
                         fields["dragSettings"][flag] = bool(fields["dragSettings"][flag])
+                if script.m_ClassName == "LoopVerticalScrollRect":
+                    native = schemas.read(obj)
+                    prefab = PPtr(**native['DefaultPrefabSource']['Prefab'], assetsfile=obj.assets_file).deref()
+                    fields['defaultLoopPrefabName'] = prefab.read().m_Name
+                    fields['defaultLoopPrefabSource'] = apk.provenance(prefab)
+                if script.m_ClassName == "ItemIconTreasure":
+                    fields['extraClearObjects'] = []
+                    for pointer in schemas.read(obj)['mRedDots']:
+                        red_dot = PPtr(**pointer, assetsfile=obj.assets_file).deref()
+                        fields['extraClearObjects'].append(resolve(schemas.read(red_dot)['myRedDotObj'], red_dot))
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": fields,
                                    "source": apk.provenance(obj)})
@@ -389,7 +422,7 @@ def build():
     if manifest["manifest"] != VERSION or manifest["output_sha256"] != sha256(raw):
         raise ValueError("Official map UI differs from the pinned source manifest")
     source = json.loads(raw)
-    apk, schemas = Apk(), ScriptSchemas(assembly_overrides={
+    apk, schemas = Apk(reuse_current_cache=True), ScriptSchemas(assembly_overrides={
         "Coffee.UIParticle": ROOT / ".tools/home-particle-schema/Coffee.UIParticle.dll"})
     panels, components, sprites, shader_programs = [], [], {}, {}
     extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = load_support_ui(apk, schemas)
@@ -479,6 +512,7 @@ def build():
         minimap_tabs.append({"mapClassId": row["ClassId"], "group": row["MiniMapSwitchTabGroup"],
             "sprite": sprite["file"], "settings": next(setting for setting in settings["Settings"]
                 if setting["MinimapConfigId"] == row["MinimapConfigId"])})
+    exploration_ui = extract_exploration_ui(apk, schemas, support_exporter, sprites)
     for icon in item_icons:
         sprites.setdefault(icon["sprite"], icon.pop("metadata"))
         sprites.setdefault(icon["qualitySprite"], icon.pop("qualityMetadata"))
@@ -567,10 +601,22 @@ def build():
     keys.extend("entity_" + str(i) + suffix for i in range(6570, 6574)
                 for suffix in ("_name", "_desc", "_entitytouchtitle", "_entitytouchdesc", "_funcdesc"))
     keys.extend(("ui_witch_visit_btn_text", "ui_modify_cure_Hp", "PropType.MaxHp", "PropType.Attack", "PropType.Defence", "PropType.Speed"))
-    keys.extend(("explore_confirm", "explore_none_token_tip", "explore_use_token_in_invalid_area_tip", "ui_award_list_tip"))
+    keys.extend(("explore_confirm", "explore_none_token_tip", "explore_use_token_in_invalid_area_tip", "ui_award_list_tip", "time_format", "time_zone_format"))
+    keys.extend(("ui_WorldCanvas_explore", "ui_WorldCanvas_explore_moretimes"))
+    keys.append("WORLD_EXPLORE_POS_NOT_ENOUGH")
     keys.extend("item_" + str(row["itemId"]) + "_name" for row in item_icons)
     keys.extend("explore_token_group_rule_" + suffix + "_" + str(i)
                 for i in (0, 2011, 2012, 2013, 2014, 2015, 2016) for suffix in ("title", "content"))
+    exploration = json.loads((ROOT / 'unity/Assets/Game/Resources/World/Mainline/exploration.json').read_text(encoding='utf-8'))
+    keys.extend('item_' + str(row['ClassId']) + '_name' for row in exploration['items'])
+    keys.extend('map_entity_group_explore_' + suffix + '_' + str(row['Id'])
+                for row in exploration['entityGroups'] for suffix in ('name', 'desc'))
+    keys.extend('explore_entity_group_' + suffix + '_' + str(i)
+                for i in {r['GroupId'] for r in exploration['exploreGroups']} | {r['Id'] for r in exploration['exploreGroups']}
+                for suffix in ('name', 'title'))
+    keys.extend('rule_tip_MapExploreRule_' + str(r['Order']) for r in exploration_ui['rule'])
+    keys.extend('Quality.' + n for n in ('White', 'Blue', 'Purple', 'Orange', 'Gold', 'Red', 'Rainbow'))
+    keys.append('DateTimeFormat_yyyyMMddHHmmss')
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28600, 28601, 28602, 28603, 28610, 28611,
                 28612, 28613, 28620, 28621, 28622, 28623) for suffix in ("name", "desc"))
     keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
@@ -598,6 +644,9 @@ def build():
             size = struct.unpack_from("<H", raw, pos)[0]
             texts[wanted[identity]] = raw[pos + 2:pos + 2 + size].decode("utf-8")
     required = set(keys[:9])
+    required.update('Quality.' + n for n in ('White', 'Blue', 'Purple', 'Orange', 'Gold', 'Red', 'Rainbow'))
+    required.add("WORLD_EXPLORE_POS_NOT_ENOUGH")
+    required.update('item_' + str(row['itemId']) + '_name' for row in item_icons)
     required.update(node["localization_key"] for panel in panels for node in panel["nodes"] if node["localization_key"])
     # MultiLanguageText also accepts these literal format strings in the pinned prefabs.
     # Numeric prefab samples are literal MultiLanguageText keys. The detail
@@ -624,6 +673,10 @@ def build():
         raise ValueError("A witch preview GUID has no extracted native prefab.")
     colors_object = apk.asset("scriptableconfig_modules_systemsetting", "/GlobalColors.asset")
     colors = schemas.read(colors_object)
+    light_colors = next(row for row in colors['TextColorConfig']['TextColorLists'] if row['ThemeColorType'] == 1)
+    light_red = light_colors['TextColors'][light_colors['TypeList'].index(3)]
+    if light_red['EnableGradient']:
+        raise ValueError('ItemProgress LightRed requires the original gradient renderer')
     common, common_sources = extract_common(apk, OUTPUT)
     minimap_setting = next(row for row in settings["Settings"] if row["MinimapConfigId"] == world_row["MinimapConfigId"])
     portrait_settings = apk.asset("scriptableconfig_modules_playerportrait", "/PlayerPortraitSettings.asset")
@@ -652,9 +705,13 @@ def build():
                "commonSpriteAsset": common,
                "itemQualitySprite": quality_sprite["file"], "mapBackgroundSprite": background_sprite["file"],
                "itemIcons": item_icons,
+               "explorationUi": exploration_ui,
+               "qualityTextColors": colors['QualityColorConfig']['TextColorLists'],
                "guidPrefabs": guid_prefabs,
                "enoughColor": [colors["EnoughColor"][channel] for channel in "rgba"],
                "lackColor": [colors["LackColor"][channel] for channel in "rgba"],
+               "itemProgressEnoughColor": [colors["Green"][channel] for channel in "rgba"],
+               "itemProgressLackColor": [light_red['Color'][channel] for channel in "rgba"],
                "bindings": bindings, "iconBindings": icon_bindings, "worldBindings": world_bindings,
                "texts": [{"key": k, "value": v} for k, v in sorted(texts.items())],
                "sourceUiSha256": sha256(source_path.read_bytes()), "components": components,
@@ -674,6 +731,19 @@ def build():
                                   "manifestPath": manifest_path.relative_to(ROOT).as_posix(), "manifestSha256": sha256(manifest_path.read_bytes()),
                                   "prefabs": {k: manifest["prefabs"][k] for k in panel_keys},
                                   "itemIconConfig": icon_config_source,
+                                  "explorationCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
+                                      for path in [ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+                                          for name in ("WorldExploreBtn", "ExploreConfirmDialog", "ConfirmDialog", "ExploreDetailDialog",
+                                              "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreProbabilityContent",
+                                              "ExploreProbabilityItem", "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog",
+                                              "ExploreHistoryContent", "ExploreHistoryItem", "ExploreEntityRewardData", "TurnPageUI", "TurnPageBtn",
+                                              "RuleDialog", "RuleTipNumer", "TipInfo", "ItemProgress", "ItemIcon", "ItemIconEquip", "ItemIconTreasure", "AwardListPanelItem")]
+                                      + [ROOT / ".tools/source-packages/official-code/framework-source/StateGameObjectConfig.cs",
+                                         ROOT / ".tools/source-packages/official-code/common-source/TextReplacer.cs",
+                                         ROOT / ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs",
+                                         ROOT / ".tools/source-packages/official-code/common-source/Common/ErrCode.cs",
+                                         ROOT / ".tools/source-packages/official-code/common-source/BroadcastManager.cs",
+                                         ROOT / "scripts/map11_exploration_ui.py", ROOT / "scripts/map11_support_ui.py"]],
                                   "commonSpriteAsset": common_sources,
                                   "minimapSettings": apk.provenance(minimap_settings),
                                   "minimapCharacter": apk.provenance(marker_root),

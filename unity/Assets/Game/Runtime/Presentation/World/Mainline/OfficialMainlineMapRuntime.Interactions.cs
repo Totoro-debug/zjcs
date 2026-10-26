@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
+            if (InteractExploreEntity(entity)) return;
             if (IsStaminaPoint(entity))
             {
                 if (entity.EntityClassId == 5011)

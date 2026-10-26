@@ -35,6 +35,7 @@ namespace Zjcs.Offline.Progression
         public int Serial, MapClassId, Area, Region, X, Y, Group, Variant, EntityClassId, State, Level, SubRank;
         public long CreatedAt, ExpiresAt;
         public bool Completed, RemoveOnComplete;
+        public OfflineExploreLostGoddessAward LostGoddessAward;
         public List<OfflineExploreExtra> Extra = new List<OfflineExploreExtra>();
         public int PlacementId => checked(1000000000 + Serial);
         public bool Active(long now) => (!Completed || !RemoveOnComplete) && (ExpiresAt == 0 || ExpiresAt > now);
@@ -42,7 +43,7 @@ namespace Zjcs.Offline.Progression
     [Serializable] public sealed class OfflineExploreHistory
     {
         public string EventId;
-        public int MapClassId, Area, Region, X, Y, TokenItemId, ExploreGroup, EntityGroup, Count;
+        public int MapClassId, Area, Region, X, Y, TokenItemId, ExploreGroup, EntityGroup, Variant, Count;
         public long CreatedAt;
         public bool Guaranteed;
         public int[] EntitySerials;
@@ -171,7 +172,7 @@ namespace Zjcs.Offline.Progression
                         int entityClass = group.Entitys[Choose(group.Weights, ref save.Player.InventoryRandomState)];
                         int distance = group.RefreshDistance > 0 ? group.RefreshDistance : Data.settings.ExploreEntityMaxDist;
                         var point = context.FindSpawn(entityClass, distance, progress.Entities.Where(v => v.Active(now)).ToArray());
-                        if (!point.HasValue) throw new InvalidOperationException("No native exploration spawn position is available.");
+                        if (!point.HasValue) throw new InvalidOperationException("WORLD_EXPLORE_POS_NOT_ENOUGH");
                         var parameters = Catalog.Parameters(entityClass);
                         // EntityExtendParameterInfoParser.GetPublicEntityLevelAndSubRank;
                         // WorldEntityLevelComponent preserves Explore-source levels.
@@ -197,7 +198,7 @@ namespace Zjcs.Offline.Progression
                     Record(token, index, guaranteed, progress);
                     var history = new OfflineExploreHistory { EventId = receipt, MapClassId = context.MapClassId, Area = context.Area,
                         Region = context.Region, X = context.X, Y = context.Y, TokenItemId = tokenItemId,
-                        ExploreGroup = token.ExploreGroups[index], EntityGroup = group.Group, Count = count,
+                        ExploreGroup = token.ExploreGroups[index], EntityGroup = group.Group, Variant = group.Id, Count = count,
                         CreatedAt = now, Guaranteed = guaranteed, EntitySerials = serials.ToArray() };
                     progress.History.Add(history); output.History.Add(history);
                     progress.TotalCount++; progress.DailyCount++;
@@ -214,6 +215,8 @@ namespace Zjcs.Offline.Progression
             if (!transaction.IsApplied)
             {
                 output.Entities.Clear(); output.History.Clear(); output.GuideRewardGranted = false;
+                if (transaction.Message == "WORLD_EXPLORE_POS_NOT_ENOUGH"
+                    || transaction.Message == "explore_use_token_in_invalid_area_tip") return Failure(transaction.Message);
             }
             return transaction;
         }
@@ -362,7 +365,9 @@ namespace Zjcs.Offline.Progression
             if (!OfflineInventoryOperations.Consume(player, item, count, now).IsApplied)
                 throw new InvalidOperationException("1153");
         }
-        private static string Day(long now) => DateTimeOffset.FromUnixTimeSeconds(now).ToLocalTime().ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+        private string Day(long now) => DateTimeOffset.FromUnixTimeSeconds(now).LocalDateTime
+            .Subtract(DateTime.ParseExact(Data.settings.DailyResetTime, "(HH:mm:ss)", CultureInfo.InvariantCulture).TimeOfDay)
+            .ToString("yyyyMMdd", CultureInfo.InvariantCulture);
         private static ProgressionResult Failure(string message, ProgressionResultStatus status = ProgressionResultStatus.NotReady) =>
             new ProgressionResult { Status = status, Message = message };
         private static int Choose(int[] weights, ref long state)

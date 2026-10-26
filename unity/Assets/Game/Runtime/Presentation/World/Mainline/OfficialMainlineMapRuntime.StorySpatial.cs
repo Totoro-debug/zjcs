@@ -48,7 +48,10 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Original Map11 story entity binding is malformed.");
                 storySpatialEntities.Add(entity.EntityClassId, entity);
             }
-            if (mapEntities.Values.Any(entity => !storySpatialEntities.ContainsKey(entity.EntityClassId)))
+            // This source closure covers the pinned map placements and story
+            // additions. Exploration instances have their own prefab bindings.
+            if (mapEntities.Values.Any(entity => entity.PlacementId < 1000000000
+                && !storySpatialEntities.ContainsKey(entity.EntityClassId)))
                 throw new InvalidDataException("Map11 entity has no original story prefab binding.");
         }
 

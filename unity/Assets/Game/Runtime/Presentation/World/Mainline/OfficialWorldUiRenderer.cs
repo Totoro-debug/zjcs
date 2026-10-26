@@ -90,7 +90,7 @@ namespace Zjcs.Presentation.World
                     worldScaler.referenceResolution = scaler.referenceResolution;
                     worldScaler.screenMatchMode = scaler.screenMatchMode;
                     worldScaler.matchWidthOrHeight = scaler.matchWidthOrHeight;
-                    restored.AddComponent<GraphicRaycaster>();
+                    if (restored.GetComponent<GraphicRaycaster>() == null) restored.AddComponent<GraphicRaycaster>();
                     UnityEngine.Object.DontDestroyOnLoad(restored);
                     nativePanels.Add(panel.key, restored);
                     foreach (Transform child in restored.GetComponentsInChildren<Transform>(true))

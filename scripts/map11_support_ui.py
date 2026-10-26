@@ -98,10 +98,28 @@ def load_support_ui(apk, schemas):
     item_object = apk.asset("config_luban", "Assets/Config/Luban/item.g.bytes")
     item_payload = item_object.read().m_Script.encode("utf-8", "surrogateescape")
     item_ids = (1, 2, 3, 56, 57, 110, 115, 118, 325, 2011, 2012, 2013, 2014, 2015, 2016, 41300, 41400, 42200)
-    item_rows = [row for row in Constructors().table(item_payload, "TbItemInfo") if row["ClassId"] in item_ids]
+    all_items = Constructors().table(item_payload, "TbItemInfo")
+    item_rows = [row for row in all_items if row["ClassId"] in item_ids]
     if len(item_rows) != len(item_ids) or any(row["ItemType"] in fields["TypeList"]
                                 or row["ClassId"] in fields["IdList"] for row in item_rows):
         raise ValueError("Map11 quick-buy and witch rewards must use their pinned default item icon.")
+    exploration = json.loads((ROOT / "unity/Assets/Game/Resources/World/Mainline/exploration.json").read_text(encoding="utf-8"))
+    exploration_ids = {row["ClassId"] for row in exploration["items"]}
+    region_obj = apk.asset("config_luban_map", "/map_region.g.bytes")
+    regions = Constructors().table(region_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapRegionInfo")
+    drop_items = {item for row in regions if row["ClassId"] == 11 for item in row["DropItems"]}
+    # Treasure-gacha tables span every mainland. Their selector intersects the
+    # active region's DropItems; retain all common rewards and this map's union.
+    item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ClassId"] in exploration_ids
+                 and (row["ItemType"] != 305 or row["ClassId"] in drop_items)]
+    def template(item):
+        if item["ClassId"] in fields["IdList"]:
+            pointer = fields["IdPrefabList"][fields["IdList"].index(item["ClassId"])]
+        elif item["ItemType"] in fields["TypeList"]:
+            pointer = fields["PrefabList"][fields["TypeList"].index(item["ItemType"])]
+        else:
+            pointer = fields["DefPrefab"]
+        return PPtr(**pointer, assetsfile=config.assets_file).deref()
     award_config = apk.asset("scriptableconfig_modules_itemicon", "/ItemAwardIconManagerConfig.asset")
     award_fields = schemas.read(award_config)
     if award_fields["TypeAwardList"] or award_fields["PrefabAwardList"]:
@@ -120,6 +138,9 @@ def load_support_ui(apk, schemas):
                "StoryWitchBookDialog": "defaultpackage_assets_prefabs_ui_storybook.bundle",
                "StoryBookDialog": "defaultpackage_assets_prefabs_ui_storybook.bundle",
                "OpenStoryBookItem": "defaultpackage_assets_prefabs_ui_storybook.bundle"}
+    for item in item_rows:
+        prefab = template(item)
+        prefabs[prefab.read().m_Name] = apk.provenance(prefab)["bundle"]
     map_ui_manifest = json.loads((ROOT / "assets/reference/official-map/ui-source-manifest.json").read_text(encoding="utf-8"))
     for name in ("TalkDialog", "OptionTalkDialog", "MiniMapMaskedUI", "MiniMapFullScreenPanel"):
         prefabs[name] = map_ui_manifest["prefabs"][name]["bundle"]
@@ -174,12 +195,13 @@ def load_support_ui(apk, schemas):
             raise ValueError("Expected one pinned puzzle quick-buy item icon: " + raw_icon)
         sprite = exporter.add_sprite(matches[0][1].deref())
         item_quality = exporter.add_sprite(PPtr(**quality["QualityBgImages"][item["Quality"]], assetsfile=quality_object.assets_file).deref())
-        items.append({"itemId": item_id, "sprite": sprite["file"], "metadata": sprite,
+        items.append({"itemId": item_id, "template": template(item).read().m_Name, "sprite": sprite["file"], "metadata": sprite,
                       "qualitySprite": item_quality["file"], "qualityMetadata": item_quality})
     ui_sources = {"managerConfig": apk.provenance(config), "qualityConfig": apk.provenance(quality_object),
                   "items": dict(apk.provenance(item_object), payloadSha256=hashlib.sha256(item_payload).hexdigest(),
                                 rows=[{key: row[key] for key in ("ClassId", "ItemType", "Quality", "RawIcon")} for row in item_rows]),
                   "awardManagerConfig": apk.provenance(award_config),
+                  "regionDropItems": dict(apk.provenance(region_obj), mapClassId=11, items=sorted(drop_items)),
                   "topBarManagerConfig": apk.provenance(topbar_config),
                   "schemas": exporter.ui_schemas.records,
                   "schemaAssemblies": {name: {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}

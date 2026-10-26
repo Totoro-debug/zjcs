@@ -209,12 +209,14 @@ namespace Zjcs.Presentation.World
         {
             if (session == null || closed) return;
             RefreshStaminaPoints();
+            RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
             UpdateMiniMapFilter();
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (worldFunctions != null) CloseNativeWorldFunctions();
+                if (exploreWindows.Count != 0) CloseExploreUi();
+                else if (worldFunctions != null) CloseNativeWorldFunctions();
                 else if (fullMiniMapPanel != null) CloseNativeFullMiniMap();
                 else if (quickBuyDialog != null) quickBuyDialog.Cancel();
                 else if (witchDialog != null) RequestWitchDialogClose();
@@ -365,6 +367,7 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
+            if (mapClassId == 11) { ExploreService.Cleanup(ExploreNow); SynchronizeExploreEntities(); }
             InitializeMap11WorldMonsters();
             InitializeStorySpatial();
             ValidateBattleEntityStageBindings();
@@ -530,6 +533,13 @@ namespace Zjcs.Presentation.World
             DisposeMapAudio();
             CloseGoddessDialog();
             CloseWitchDialog();
+            foreach (var window in exploreWindows) { ReleaseExploreMask(window); window.Destroy(); }
+            exploreWindows.Clear();
+            foreach (var texture in exploreSnapshots.Values) RenderTexture.ReleaseTemporary(texture);
+            exploreSnapshots.Clear();
+            exploreMasks.Clear();
+            if (exploreCanvas != null) Destroy(exploreCanvas);
+            exploreCanvas = null;
             // Dispose the modal without running its story continuation while the map closes.
             quickBuyDialog?.Abandon();
             if (quickBuyCanvas != null) Destroy(quickBuyCanvas);
@@ -642,7 +652,7 @@ namespace Zjcs.Presentation.World
             public int ClassId;
             public int DefEntryId;
             public int Type;
-            public bool AllowPrivateTeam, AllowPublicTeam;
+            public bool AllowPrivateTeam, AllowPublicTeam, CanExplore;
         }
     }
 }

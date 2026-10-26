@@ -28,8 +28,37 @@ namespace Zjcs.Presentation.World
         public OfficialMap11MiniMapPrefab[] minimapMarkPrefabs;
         public OfficialMap11MiniMapBinding[] minimapMarkBindings;
         public float[] enoughColor, lackColor;
+        public float[] itemProgressEnoughColor, itemProgressLackColor;
         public int recommendCombatRatingIndex, suppressUnlockRank;
         public OfficialMap11RatingColors[] combatRatingColors;
+        public OfficialExploreUiAssets explorationUi;
+        public OfficialExploreQualityText[] qualityTextColors;
+    }
+    [Serializable] public sealed class OfficialExploreUiAssets { public OfficialExploreUiIcon[] icons; public OfficialExploreUiQuality[] qualities; public OfficialExploreUiRule[] rule; }
+    [Serializable] public sealed class OfficialExploreUiIcon { public string name, sprite; }
+    [Serializable] public sealed class OfficialExploreUiQuality { public int quality; public string sprite, detailSprite, awardLight; }
+    [Serializable] public sealed class OfficialExploreUiRule { public int Order; }
+    [Serializable] public sealed class OfficialExploreQualityText { public int ThemeColorType; public int[] TypeList; public OfficialExploreTextColor[] TextColors; }
+    [Serializable] public sealed class OfficialExploreTextColor { public UnityEngine.Color Color; public int EnableGradient; public OfficialExploreGradient GradientColor; }
+    [Serializable] public sealed class OfficialExploreGradient
+    {
+        public UnityEngine.Color key0, key1, key2, key3, key4, key5, key6, key7;
+        public int ctime0, ctime1, ctime2, ctime3, ctime4, ctime5, ctime6, ctime7;
+        public int atime0, atime1, atime2, atime3, atime4, atime5, atime6, atime7;
+        public int m_NumColorKeys, m_NumAlphaKeys;
+        public UnityEngine.Gradient Value()
+        {
+            var keys = new[] { key0, key1, key2, key3, key4, key5, key6, key7 };
+            var times = new[] { ctime0, ctime1, ctime2, ctime3, ctime4, ctime5, ctime6, ctime7 };
+            var alphaTimes = new[] { atime0, atime1, atime2, atime3, atime4, atime5, atime6, atime7 };
+            var colors = new UnityEngine.GradientColorKey[m_NumColorKeys];
+            var alphas = new UnityEngine.GradientAlphaKey[m_NumAlphaKeys];
+            for (int i = 0; i < colors.Length; i++) colors[i] = new UnityEngine.GradientColorKey(keys[i], times[i] / 65535f);
+            for (int i = 0; i < alphas.Length; i++) alphas[i] = new UnityEngine.GradientAlphaKey(keys[i].a, alphaTimes[i] / 65535f);
+            var gradient = new UnityEngine.Gradient();
+            gradient.SetKeys(colors, alphas);
+            return gradient;
+        }
     }
     [Serializable] public sealed class OfficialMap11RatingColors { public int type; public OfficialMap11RatingColor[] colors; }
     [Serializable] public sealed class OfficialMap11RatingColor { public int Key; public UnityEngine.Color Value; }
@@ -81,7 +110,7 @@ namespace Zjcs.Presentation.World
         public OfficialMap11MiniMapSettings settings;
     }
 
-    [Serializable] public sealed class OfficialMap11ItemIcon { public int itemId; public string sprite, qualitySprite; }
+    [Serializable] public sealed class OfficialMap11ItemIcon { public int itemId; public string sprite, qualitySprite, template; }
     [Serializable] public sealed class OfficialMap11GuidPrefab { public string guid, key; }
     [Serializable] public sealed class OfficialMap11TmpSpriteAsset
     {
@@ -114,6 +143,12 @@ namespace Zjcs.Presentation.World
 
     [Serializable] public sealed class OfficialMap11UiComponentFields
     {
+        public OfficialExploreGradient Gradient;
+        public float Angle;
+        public UnityEngine.Rect m_UVRect;
+        public int m_RaycastTarget, m_Maskable;
+        public int m_IgnoreReversedGraphics, m_BlockingObjects;
+        public OfficialMap11LayerMask m_BlockingMask;
         public float m_Alpha;
         public bool m_Interactable, m_BlocksRaycasts, m_IgnoreParentGroups;
         public OfficialMap11UiMaterial material;
@@ -125,12 +160,17 @@ namespace Zjcs.Presentation.World
         public UnityEngine.Color m_Color;
         public OfficialMap11PortraitRequestor mRequestor;
         public string mIcon, mCountText, mBtn, mAddBtn, Content, myTaskItemSlot;
+        public string Btn, BtnText, AmountText;
+        public string defaultLoopPrefabName;
+        public int totalCount, reverseDirection, reverseIndex, m_Horizontal, m_Vertical, m_MovementType, m_Inertia;
+        public float m_Elasticity, m_DecelerationRate, m_ScrollSensitivity;
         public UnityEngine.Color mNormalColor, mTipColor, mLimitColor;
         public string myTaskTitle, TaskGoal, RewardSection, RewardSlot, mClaimBtn, mJumpBtn, mTraceBtn, mCanclTraceBtn;
         public string mCountdown, mGMBtn, mTaskLimitRemainTime, mRecommendCombatRatingItem;
         public string ProgressText, ContentConditonsContent, ResourceGo, ItemSlot, mText;
         public string[] ConditionItems;
         public OfficialMap11StateSwitcher mStateSwitcher, mMapTaskStateSwitcher, mIsRankOverStates;
+        public OfficialMap11StateSwitcher IsOneTimesStateSwitcher;
         public OfficialMap11StateSwitcher StateSwitcher, mTipLevelState;
         public string mDisplay, mLayoutElement, mTipDotContent, mNodeDataText;
         public string mCostMoneyContent;
@@ -166,6 +206,8 @@ namespace Zjcs.Presentation.World
         public string TitleText, ContentText, HintGo, HintText, ConfirmBtn, CancelBtn, ConfirmText, CancelText, LockMaskWithTime;
         public string CostMoneyContent, MoneyContent, CostItemIcon, CostText, ItemContentObj, Slot, mSlot;
         public string QualityImg, QualityShadowImg, myText, myTextGo, myContent, BottomGo, myBottomText, ItemIconAttachment, mFakeIcon, mProgress, BgTransform;
+        public string EquipedGo, LevelLimit, SubRankLimit, EquipedIconObj, MiniGemsContent, myStarInfo, mHasHinit;
+        public string[] extraClearObjects;
         public string FlareStarItemIcon, DiamondItemIcon, ExchangeFixedTxt, CountSliderGo;
         public int mirrorType;
         public bool reversed;
@@ -256,6 +298,7 @@ namespace Zjcs.Presentation.World
     [Serializable] public sealed class OfficialMap11ManagedReferences { public OfficialMap11ManagedReference[] RefIds; }
     [Serializable] public sealed class OfficialMap11ManagedReference { public long rid; public OfficialMap11ManagedType type; public OfficialMap11ManagedData data; }
     [Serializable] public sealed class OfficialMap11StateSwitcher { public OfficialMap11ReferenceId[] mStateConfigs; }
+    [Serializable] public sealed class OfficialMap11LayerMask { public int m_Bits; }
     [Serializable] public sealed class OfficialMap11ReferenceId { public long rid; }
     [Serializable] public sealed class OfficialMap11ManagedType { public string @class; }
     [Serializable] public sealed class OfficialMap11ManagedData

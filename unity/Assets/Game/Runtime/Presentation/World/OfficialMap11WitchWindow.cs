@@ -17,8 +17,10 @@ namespace Zjcs.Presentation.World
         private readonly OfficialMap11UiData data;
         private readonly string uiRoot;
         private readonly int entityClassId;
+        private readonly string sourceRoot;
         public GameObject Root { get; }
         public string Key { get; }
+        public Action<Action> PrepareShow;
 
         public OfficialMap11WitchWindow(string key, Transform parent, OfficialMap11UiData data,
             string uiRoot = "Map11/UI/", int entityClassId = 6620)
@@ -27,10 +29,25 @@ namespace Zjcs.Presentation.World
             this.uiRoot = uiRoot ?? throw new ArgumentNullException(nameof(uiRoot));
             this.entityClassId = entityClassId;
             Key = key;
+            sourceRoot = "/" + key;
             GameObject prefab = Resources.Load<GameObject>(uiRoot + key);
             if (prefab == null) throw new InvalidDataException("Unbound official witch prefab: " + key);
             Root = UnityEngine.Object.Instantiate(prefab, parent, false);
             Root.name = key;
+        }
+
+        // Preserve prefab-instance overrides on embedded list templates.
+        public OfficialMap11WitchWindow(string key, GameObject instance, OfficialMap11UiData data, string uiRoot)
+        {
+            Key = key; Root = instance; this.data = data; this.uiRoot = uiRoot;
+            entityClassId = 6620; sourceRoot = "/" + key;
+        }
+
+        public OfficialMap11WitchWindow(OfficialMap11WitchWindow source, string path, Transform parent)
+        {
+            data = source.data; uiRoot = source.uiRoot; entityClassId = source.entityClassId;
+            Key = source.Key; sourceRoot = path;
+            Root = UnityEngine.Object.Instantiate(source.Find(path).gameObject, parent, false);
         }
 
         public string Text(string key) => data.texts.Single(value => value.key == key).value;
@@ -39,7 +56,7 @@ namespace Zjcs.Presentation.World
 
         public Transform Find(string path)
         {
-            string prefix = "/" + Key;
+            string prefix = sourceRoot;
             if (path == prefix) return Root.transform;
             if (string.IsNullOrEmpty(path) || !path.StartsWith(prefix + "/", StringComparison.Ordinal))
                 throw new InvalidDataException("Invalid official witch UI reference: " + path);
@@ -61,8 +78,16 @@ namespace Zjcs.Presentation.World
             {
                 OfficialMap11ManagedData value = reference.data;
                 if (reference.type.@class == "StateGameObjectConfig")
-                    foreach (OfficialMap11ObjectState row in value.mStateGameObjectData.GoConfig)
-                        foreach (string path in row.GameObjects) Find(path).gameObject.SetActive(row.State.mValue == state);
+                {
+                    // StateGameObjectConfig.SetState retains objects shared by
+                    // several states, then enables the first matching list.
+                    var rows = value.mStateGameObjectData.GoConfig;
+                    var selected = rows.FirstOrDefault(row => row.State.mValue == state)?.GameObjects;
+                    foreach (var row in rows.Where(row => row.State.mValue != state))
+                        foreach (string path in row.GameObjects)
+                            if (selected == null || !selected.Contains(path)) Find(path).gameObject.SetActive(false);
+                    if (selected != null) foreach (string path in selected) Find(path).gameObject.SetActive(true);
+                }
                 if (reference.type.@class == "StateUIColorConfig")
                     foreach (OfficialMap11ColorState row in value.mStateColorData.GraphicConfigs)
                     {
@@ -180,6 +205,13 @@ namespace Zjcs.Presentation.World
 
         public void Show()
         {
+            if (PrepareShow != null)
+            {
+                Action<Action> prepare = PrepareShow;
+                PrepareShow = null;
+                prepare(Show);
+                return;
+            }
             Root.SetActive(true);
             foreach (WorldStageInteractionPreviewContentLayoutElement layout in Root.GetComponentsInChildren<WorldStageInteractionPreviewContentLayoutElement>())
                 layout.Init();

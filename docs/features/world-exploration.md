@@ -8,7 +8,7 @@
 
 修复生产果树并满足原个人条件后，在允许探寻的公开区域使用命运果实115；可查看地区、次数、概率和历史。
 
-以上为 Unity / C# 的目标范围，尚未完整接入和验收。
+原 HUD、确认、令牌选择、概率、奖励详情与历史入口已接入 Unity。完整实体交互、演出和 Windows 发布仍未完成。
 
 ## 完整还原部分
 
@@ -16,7 +16,11 @@
 
 原触碰奖励实体按配置读取奖励规则、条件、等级与阶位倍率，以及随机奖励包。探寻来源免体力；奖励只在领取时入包，宝箱开启计数与领取记录同时保存。协力宝箱的本地单人奖励结算保留原完成状态及 `DestroyOnEnd=false`，开启后直至原有效期届满才移除。该结算层已经接通，原交互动画和实际鼠标开启流程仍待验证。
 
-隔离 Unity 编辑器验证已覆盖个人条件、首次令牌限制、首次引导与全局一次奖励、重复请求、批量失败回滚、冷启动恢复、原实体等级、同时满足多个保底、协力宝箱累计上限20、五分钟实体过期、180天历史清理、旧剧情奖励记录兼容，以及奖励失败完整回滚、宝箱重复领取和协力宝箱开启状态。`python -B scripts/check_unity_project.py` 与隔离 Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 已通过。尚无完整界面、Play Mode 交互或 Windows Player 发布结论。
+已恢复原 `WorldExploreBtn`、`ExploreConfirmDialog`、`ExploreSelectTokenDialog`、`ExploreDetailDialog`、`ExploreRewardPreviewItemDetailDialog` 与奖励列表的 prefab 层级、绑定、布局、文本及页签动画。原 LoopScrollRect 程序集反编译恢复9个类，令牌按原品质顺序排列并使用原拖动／回收算法；概率使用原候选、权重归一化、分组排序和保底显示分支。历史保存原实体组变体编号，避免将组编号误用于名称及品质。每日次数按原 `DailyResetTime=(08:00:00)` 重置。
+
+探寻和采集共用原 `AwardListPanel`。森之国当前奖励范围绑定661条道具记录，按原 `ItemIconManagerConfig` 选择普通、装备和宝具模板；宝具候选素材范围取本图各地区 `DropItems` 并集，未把其他地图未接入的素材计为完成。原品质框、高品质光效、名称和数量均从官方数据绑定。弹窗模糊的采样顺序与七个原权重、TMP渐变的原45度旋转和顶点计算由 APK ARM64 实现核对后迁移；不以静态截图代替窗口。
+
+隔离 Unity 编辑器规则检查覆盖个人条件、首次令牌限制、首次引导与全局一次奖励、重复请求、批量失败回滚、冷启动恢复、原实体等级、同时满足多个保底、协力宝箱累计上限20、五分钟实体过期、180天历史清理、旧剧情奖励记录兼容、奖励失败完整回滚、宝箱重复领取、协力宝箱开启状态及08:00重置边界。图形 Play Mode 已通过原 HUD／确认／概率／详情、令牌拖动与选择、实际果实和令牌扣除、引导宝箱地图点击免体力领取及十连结果保存；已检查实际渲染画面。历史分页、叠层窗口遮罩、Map10／Map11公共模块回归及动态实体冷启动恢复均已通过。叠层遮罩按原 WindowMaskBase 在激活后恢复独立排序，实际截图已确认覆盖下层弹窗。尚无完整功能或 Windows Player 发布结论。
 
 ## 自定义实现
 
@@ -24,7 +28,7 @@
 
 未取得 `OperPlayerWorldExplore` 服务端体，用户允许本地结算：候选取当前Map／Area的原地区 `DropItems` 与原宝物选择器交集；多保底同时命中按 `ExplorePriorities` 及原配置次序选择。
 
-实体落在同Area最近的可通行、允许地表、未占用格，范围使用原 `RefreshDistance`／`ExploreEntityMaxDist`。`LastMapRefreshOnly` 替换前一同组结果，保留原数量上限、持续时间和180天历史，过期按本地时间清理。
+实体落在同Area最近的可通行、允许地表、未占用格，范围使用原 `RefreshDistance`／`ExploreEntityMaxDist`。`LastMapRefreshOnly` 替换前一同组结果，保留原数量上限、持续时间和180天历史，过期按本地时间清理。附近空位不足时整批回滚费用、随机和记录，显示原 `WORLD_EXPLORE_POS_NOT_ENOUGH` 提示。连续生成可能先占满距离1的格，玩家须清理附近实体或移动后再试；未擅自扩大原生成距离。
 
 实体组54「协力宝箱」7050沿用户确认方案，保留原概率、累计产出上限20次、原奖励和有效期，改为本地玩家独自完成原交互；原客户端的两人要求不再作为本地开启条件。此差异尚待运行流程接入与验证。
 
@@ -32,10 +36,12 @@
 
 原奖励表缺少小宝箱8200的711、大宝箱8201的721／722、稀有宝箱8202的732／735、传说宝箱8203的742／745。用户明确确认沿用客户端 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 跳过空引用的行为，其余原奖励保留；没有编造额外奖励。8200仍执行710／713／714／716／717，715未被现行实体模板、山之国覆盖或探寻配置引用。
 
+探寻实体8364“遗失女神”使用独立的 `WorldTouchDialogLostGoddness`／`StageResultAwardLostGoddess` 领奖流程，不沿用地图失落女神像激活。服务器实现未取得，用户确认：按原 `LostGoddnessAwardWeights` 抽可用类型；人物升原配置1级并保留等级内经验；已拥有且未满阶技能等概率免费升1阶；永久属性按原410／Level1及原属性组权重发放；封顶或无候选的类型排除后重抽。奖励、随机、原完成状态和响应内容一同保存，重复领取不重抽。三类结算、封顶排除和存档恢复已通过隔离规则检查，原领奖界面与地图入口仍待接入。
+
 ## 尚未实现
 
-- 完成原确认框、令牌选择、概率、详情、历史分页与 HUD 的实际入口、资源绑定及点击验证。
-- 完成生成实体的地图显示、碰撞／寻路与小地图绑定，以及宝箱、战斗、副本、商店和活动实体的完整交互。
+- 补齐所有原图标附件、奖励粒子与道具详情交互；现有窗口入口、历史分页及主要指针操作已接通。
+- 完成生成实体的地图显示、碰撞／寻路与小地图绑定，以及宝箱、战斗、副本、商店和活动实体的完整交互。部分模型仍出现白片、黑块，原材质／UV绑定须修复；动态物体的剧情标签闭包仍待补齐，现有静态剧情登记校验不再误拒绝冷启动后的探寻实体。
 - 恢复原动作、MyPlayable、粒子及音效，完成 Play Mode 正常操作、画面与存档恢复，并构建、运行和发布 Windows Player。
 
 ### 待迁移的规则与表现
@@ -51,6 +57,8 @@
 ### 依据与代码定位
 
 固定 APK 原规则由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`；包含7种令牌、65条实体组变体、28种完整实体模板、68条递归条件、奖励规则、随机奖励包、宝物选择器、等级映射及每表原字节哈希。来源见 `assets/reference/official-map/world-exploration-source-manifest.json`；规则入口为 `OfficialWorldExplorationCatalog`、`OfflineWorldExplorationService` 及 `OfflineMainlineProgressSession.Exploration`，隔离验证入口为 `Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run`。`JsonUtility` 对原始 JSON 空对象引用的处理已逐字段校正，避免将原空条件误当成未迁移的条件。
+
+界面来源见 Map11 `UI/source-manifest.json`、`loop-scroll-source-manifest.json`、`popup-effects-source-manifest.json`；当前Map11共享载荷为59份原面板、535张sprite。地图入口为公共运行时 `Exploration`、`ExploreUi`、`ExploreDetail`、`ExploreMask` 分部。动态实体复用 `OfficialMap10EntityView` 与本地 Map11 Entities 资源；当前恢复116种模型，完整支持范围仍以下述未完成项为准。十连指针检查使用隔离档案及可容纳原生成序列的地图位置／随机夹具，实际费用、生成和保存仍由原 HUD 点击触发。
 
 原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
 

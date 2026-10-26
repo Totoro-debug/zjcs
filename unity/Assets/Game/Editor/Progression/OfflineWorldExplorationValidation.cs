@@ -72,9 +72,9 @@ namespace Zjcs.Editor.Progression
                 int calls = 0;
                 context.FindSpawn = (entity, distance, existing) => ++calls == 2 ? (OfflineExplorePoint?)null : new OfflineExplorePoint(16, 20);
                 after = JsonUtility.ToJson(session.Save);
-                Require(service.Explore(context, 2, 0, "rollback", now, out var failed).Status == ProgressionResultStatus.InvalidState
+                Require(service.Explore(context, 2, 0, "rollback", now, out var failed).Status == ProgressionResultStatus.NotReady
                     && failed.Entities.Count == 0 && failed.History.Count == 0 && JsonUtility.ToJson(session.Save) == after,
-                    "A later spawn failure rolls back the entire batch, cost, RNG, pity, replacements and outward result");
+                    "No free spawn cell rejects the request and rolls back the entire batch, cost, RNG, pity, replacements and outward result");
                 context.FindSpawn = (entity, distance, existing) => new OfflineExplorePoint(16 + existing.Count, 20);
                 Require(service.Explore(context, 2, 0, "two", now, out var two).IsApplied
                     && two.History.Count == 2 && session.Save.World.Exploration.Entities.Count(v => v.Group == 52) == 1
@@ -113,6 +113,7 @@ namespace Zjcs.Editor.Progression
                     "Offline expiry removes entities while retaining lifetime produced counts");
                 Require(service.Cleanup(now + 181L * 86400).IsApplied && session.Save.World.Exploration.History.Count == 0,
                     "History expires after the original 180 days");
+                VerifyLostGoddess(session, service, catalog, now);
                 var old = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(session.Save));
                 old.World.Exploration = null;
                 old.Player.AppliedInventoryEventIds.Remove("fixed_award:5");
@@ -121,9 +122,80 @@ namespace Zjcs.Editor.Progression
                 session = OfflineMainlineProgressSession.Open(slots, slot, OfficialMainlineTaskCatalog.LoadDefault());
                 Require(session.Save.World.Exploration.TotalCount == 0 && session.Save.Player.AppliedInventoryEventIds.Contains("fixed_award:5")
                     && session.InventoryCount(56) == 1, "Legacy story award migrates to the global receipt without granting again");
-                Debug.Log("World exploration validation passed: native gates, guide, atomic batch rollback, saved levels, expiry, competing guarantees, lifetime cap and legacy receipt.");
+                Debug.Log("World exploration validation passed: native gates, guide, atomic batch rollback, saved levels, expiry, competing guarantees, lifetime cap, legacy receipt, lost goddess level/skill/property transactions, cap filtering, replay/cold read and 08:00 daily boundary.");
             }
             finally { if (Directory.Exists(root)) Directory.Delete(root, true); }
+        }
+        private static void VerifyLostGoddess(OfflineMainlineProgressSession session, OfflineWorldExplorationService service,
+            OfficialWorldExplorationCatalog catalog, long now)
+        {
+            var assets = OfficialCharacterAssetCatalog.LoadDefault();
+            var character = assets.Load();
+            var skills = assets.LoadSkillRules();
+            var definition = skills.Skills.First(v => v.MaximumRank > 1);
+            var group = catalog.Data.entityGroups.First(v => v.Entitys.Contains(8364));
+            var settings = character.Rows("game_settings").Single();
+            var weights = OfficialWorldExplorationCatalog.Object(settings["LostGoddnessAwardWeights"]);
+            var originalWeights = weights.ToDictionary(v => v.Key, v => v.Value);
+            try
+            {
+                foreach (int type in new[] { 2, 3, 4 })
+                {
+                    foreach (string key in weights.Keys.ToArray()) weights[key] = key == type.ToString() ? 100 : 0;
+                    int serial = session.Save.World.Exploration.NextSerial;
+                    Require(session.ApplyInventoryTransaction("lost-fixture:" + serial, save =>
+                    {
+                        save.Player.Level = 31;
+                        save.Player.SubRank = character.LevelLimits.Where(v => v.PlayerLevel > 32).Min(v => v.SubRank);
+                        save.Player.Experience = character.CumulativeLevelExperience[31] + 17;
+                        save.Player.Skills.Skills.Clear();
+                        save.Player.Skills.Skills.Add(new Zjcs.Offline.Skills.OfflineOwnedSkill { ClassId = definition.ClassId, Rank = 1 });
+                        save.World.Exploration.Entities.Add(new OfflineExploreEntity { Serial = save.World.Exploration.NextSerial++,
+                            MapClassId = 11, Area = 11, Region = 11, X = 20, Y = 20, Group = group.Group, Variant = group.Id,
+                            EntityClassId = 8364, State = catalog.Parameters(8364).PublicDefaultState, CreatedAt = now, ExpiresAt = now + 300 });
+                    }).IsApplied, "Lost goddess isolated fixture");
+                    var transaction = service.AwardLostGoddess(serial, 11, now, character, skills, out var award);
+                    Require(transaction.IsApplied && award.Type == type
+                        && session.Save.World.Exploration.Entities.Single(v => v.Serial == serial).Completed,
+                        "Lost goddess award and native completion save atomically: " + transaction.Message);
+                    if (type == 2) Require(award.TargetRank == 2
+                        && session.Save.Player.Skills.Skills.Single().Rank == 2, "An owned skill upgrades one rank without consuming materials");
+                    if (type == 3) Require(session.Save.Player.Level == 32
+                        && session.Save.Player.Experience == character.CumulativeLevelExperience[32] + 17,
+                        "The character gains one level and retains within-level experience");
+                    if (type == 4) Require(award.Properties.Length > 0 && award.Properties.All(v => v.PropId == 410 && v.Level == 1)
+                        && session.Save.Player.CharacterProperties.ExtraProperties.Count(v => v.SourceId == "world-explore-lost-goddess:" + serial) == award.Properties.Length,
+                        "Original weighted property group is permanently recorded once");
+                    string after = JsonUtility.ToJson(session.Save);
+                    Require(service.AwardLostGoddess(serial, 11, now, character, skills, out _).Status == ProgressionResultStatus.Unchanged
+                        && JsonUtility.ToJson(session.Save) == after, "A repeated lost goddess callback cannot reroll or duplicate awards");
+                    session.Reload();
+                    Require(session.Save.World.Exploration.Entities.Single(v => v.Serial == serial).LostGoddessAward.Type == type,
+                        "Lost goddess response survives a cold JSON read");
+                }
+                foreach (var value in originalWeights) weights[value.Key] = value.Value;
+                int capped = session.Save.World.Exploration.NextSerial;
+                Require(session.ApplyInventoryTransaction("lost-capped:" + capped, save =>
+                {
+                    save.Player.Level = OfflineCharacterExperience.BaseLevelLimit(save.Player.SubRank, character.LevelLimits);
+                    save.Player.Experience = character.CumulativeLevelExperience[save.Player.Level];
+                    save.Player.Skills.Skills.Single().Rank = definition.MaximumRank;
+                    save.World.Exploration.Entities.Add(new OfflineExploreEntity { Serial = save.World.Exploration.NextSerial++,
+                        MapClassId = 11, Area = 11, Region = 11, X = 20, Y = 20, Group = group.Group, Variant = group.Id,
+                        EntityClassId = 8364, State = catalog.Parameters(8364).PublicDefaultState, CreatedAt = now, ExpiresAt = now + 300 });
+                }).IsApplied, "Lost goddess capped fixture");
+                Require(service.AwardLostGoddess(capped, 11, now, character, skills, out var fallback).IsApplied && fallback.Type == 4,
+                    "Capped level and skill categories are removed before weighted selection");
+                var reset = DateTime.Now.Date.AddHours(8);
+                long boundary = new DateTimeOffset(reset).ToUnixTimeSeconds();
+                Require(session.ApplyInventoryTransaction("explore-daily-boundary", save =>
+                {
+                    save.World.Exploration.Day = reset.AddDays(-1).ToString("yyyyMMdd");
+                    save.World.Exploration.DailyCount = 1;
+                }).IsApplied && service.DailyCount(boundary - 1) == 1 && service.DailyCount(boundary) == 0,
+                    "Native local 08:00 daily reset preserves the previous day until its exact boundary");
+            }
+            finally { foreach (var value in originalWeights) weights[value.Key] = value.Value; }
         }
         private static void Require(bool condition, string message)
         {

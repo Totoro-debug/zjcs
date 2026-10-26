@@ -20,6 +20,39 @@ namespace Zjcs.Editor
                 data.components.Single(value => value.panel == key && value.type == kind).fields;
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key))
             {
+                if (source.type == "TMPColorGradient")
+                {
+                    var gradient = require(source.path).gameObject.AddComponent<TMPColorGradient>();
+                    gradient.Gradient = source.fields.Gradient.Value();
+                    gradient.Angle = source.fields.Angle;
+                    gradient.enabled = source.fields.m_Enabled != 0;
+                }
+                if (source.type == "WindowMaskRawImage")
+                {
+                    var image = require(source.path).GetComponent<RawImage>() ?? require(source.path).gameObject.AddComponent<RawImage>();
+                    image.color = source.fields.m_Color;
+                    image.raycastTarget = source.fields.m_RaycastTarget != 0;
+                    image.maskable = source.fields.m_Maskable != 0;
+                    image.uvRect = source.fields.m_UVRect;
+                    image.enabled = source.fields.m_Enabled != 0;
+                }
+                if (source.type == "LoopVerticalScrollRect")
+                {
+                    var node = require(source.path).gameObject;
+                    var old = node.GetComponent<ScrollRect>();
+                    if (old != null) UnityEngine.Object.DestroyImmediate(old);
+                    var scroll = node.AddComponent<LoopVerticalScrollRect>();
+                    var f = source.fields;
+                    scroll.content = (RectTransform)require(f.m_Content);
+                    scroll.viewport = (RectTransform)require(f.m_Viewport);
+                    scroll.horizontal = f.m_Horizontal != 0; scroll.vertical = f.m_Vertical != 0;
+                    scroll.movementType = (LoopScrollRectBase.MovementType)f.m_MovementType;
+                    scroll.elasticity = f.m_Elasticity; scroll.inertia = f.m_Inertia != 0;
+                    scroll.decelerationRate = f.m_DecelerationRate; scroll.scrollSensitivity = f.m_ScrollSensitivity;
+                    scroll.totalCount = f.totalCount; scroll.reverseDirection = f.reverseDirection != 0; scroll.reverseIndex = f.reverseIndex != 0;
+                    scroll.DefaultPrefabSource = new LoopScrollSinglePrefabSource { Prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ResourceRoot + "/" + f.defaultLoopPrefabName + ".prefab") };
+                    scroll.enabled = f.m_Enabled != 0;
+                }
                 if (source.type == "CanvasGroup")
                 {
                     var group = Component<CanvasGroup>(source.path);
@@ -52,7 +85,7 @@ namespace Zjcs.Editor
                     require(source.path).GetComponent<RectMask2D>().enabled = source.fields.m_Enabled != 0;
                 if (source.type == "Mask")
                     require(source.path).GetComponent<Mask>().enabled = source.fields.m_Enabled != 0;
-                if (source.type == "NativeAnimation" || source.type == "NativeAnimator" || source.type == "NativeAnimatorInitialState")
+                if (source.type == "NativeAnimation" || source.type == "NativeAnimator" || source.type == "NativeAnimatorInitialState" || source.type == "NativeTabAnimation")
                     RestoreNativeAnimation(source, require);
                 if (source.type == "GraphicCapsuleMeshClipper")
                     require(source.path).gameObject.AddComponent<GraphicCapsuleMeshClipper>().mMeshClipperCapsuleArgs = source.fields.mMeshClipperCapsuleArgs;
@@ -136,8 +169,15 @@ namespace Zjcs.Editor
                     canvas.additionalShaderChannels = (AdditionalCanvasShaderChannels)source.fields.m_AdditionalShaderChannelsFlag;
                     canvas.enabled = source.fields.m_Enabled != 0;
                 }
-                if (source.type == "GraphicRaycaster" && require(source.path).GetComponent<GraphicRaycaster>() == null)
-                    require(source.path).gameObject.AddComponent<GraphicRaycaster>();
+                if (source.type == "GraphicRaycaster")
+                {
+                    var raycaster = require(source.path).GetComponent<GraphicRaycaster>()
+                        ?? require(source.path).gameObject.AddComponent<GraphicRaycaster>();
+                    raycaster.ignoreReversedGraphics = source.fields.m_IgnoreReversedGraphics != 0;
+                    raycaster.blockingObjects = (GraphicRaycaster.BlockingObjects)source.fields.m_BlockingObjects;
+                    raycaster.blockingMask = source.fields.m_BlockingMask.m_Bits;
+                    raycaster.enabled = source.fields.m_Enabled != 0;
+                }
                 if (source.type == "MirrorImage")
                 {
                     var target = require(source.path).gameObject;
@@ -253,7 +293,8 @@ namespace Zjcs.Editor
                 if (type != null && require(source.path).GetComponent(type) is Behaviour behaviour)
                     behaviour.enabled = source.fields.m_Enabled != 0;
             }
-            foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key && value.type == "ItemIcon"))
+            foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key
+                && (value.type == "ItemIcon" || value.type == "ItemIconEquip" || value.type == "ItemIconTreasure")))
             {
                 var f = source.fields;
                 var icon = require(source.path).gameObject.AddComponent<WorldItemIcon>();
@@ -265,8 +306,10 @@ namespace Zjcs.Editor
                 icon.BottomGo = string.IsNullOrEmpty(f.BottomGo) ? null : require(f.BottomGo).gameObject;
                 icon.myBottomText = string.IsNullOrEmpty(f.myBottomText) ? null : Component<TMP_Text>(f.myBottomText);
                 icon.BgTransform = string.IsNullOrEmpty(f.BgTransform) ? null : require(f.BgTransform);
-                icon.ClearObjects = new[] { f.BottomGo, f.ItemIconAttachment, f.mFakeIcon, f.mProgress }
-                    .Where(value => !string.IsNullOrEmpty(value)).Select(value => require(value).gameObject).ToArray();
+                icon.ClearObjects = new[] { f.BottomGo, f.ItemIconAttachment, f.mFakeIcon, f.mProgress,
+                    f.EquipedGo, f.LevelLimit, f.SubRankLimit, f.EquipedIconObj, f.MiniGemsContent, f.myStarInfo, f.mHasHinit }
+                    .Concat(f.extraClearObjects ?? Array.Empty<string>()).Where(value => !string.IsNullOrEmpty(value))
+                    .Select(value => require(value).gameObject).ToArray();
             }
             if (key == "ItemIconDefault") return;
             if (key == "PayMoneyChangeDialog")
