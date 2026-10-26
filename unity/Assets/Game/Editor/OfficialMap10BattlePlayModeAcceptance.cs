@@ -357,6 +357,14 @@ namespace Zjcs.Editor
             var skillBindings = Zjcs.Presentation.Combat.OfficialBattleSkillSlotBindings.Load();
             Transform mainHud = all.First(value => value.name == "FightMainPanel");
             Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+            if (SessionState.GetBool(RealInputKey, false))
+            {
+                yield return Combat.BattleGameViewInput.ResizePortrait(300f);
+            Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+                yield return Capture("skill-slots-small.png");
+                yield return Combat.BattleGameViewInput.ResizePortrait(450f);
+            Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+            }
             string iconPath = skillBindings.slots[0].icon;
             Image skillImage = mainHud.Find(iconPath.Substring("/FightMainPanel/".Length))?.GetComponent<Image>();
             Require(skillImage != null && skillImage.sprite != null
@@ -571,8 +579,22 @@ namespace Zjcs.Editor
             string output = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_OUTPUT");
             if (string.IsNullOrEmpty(output)) yield break;
             Directory.CreateDirectory(output);
-            ScreenCapture.CaptureScreenshot(Path.Combine(output, filename));
-            yield return new WaitForSecondsRealtime(0.25f);
+            string path = Path.Combine(output, filename);
+            int expectedWidth = Screen.width, expectedHeight = Screen.height;
+            DateTime requestedAt = DateTime.UtcNow;
+            ScreenCapture.CaptureScreenshot(path);
+            float deadline = Time.realtimeSinceStartup + 5f;
+            do { yield return null; }
+            while ((!File.Exists(path) || File.GetLastWriteTimeUtc(path) < requestedAt.AddSeconds(-1))
+                && Time.realtimeSinceStartup < deadline);
+            byte[] png = File.ReadAllBytes(path);
+            Require(png.Length >= 24, "The runtime screenshot is incomplete.");
+            int width = (png[16] << 24) | (png[17] << 16) | (png[18] << 8) | png[19];
+            int height = (png[20] << 24) | (png[21] << 16) | (png[22] << 8) | png[23];
+            Require(width == expectedWidth && height == expectedHeight,
+                "The screenshot viewport differs from input/layout: " + width + "x" + height
+                + " versus " + expectedWidth + "x" + expectedHeight);
+            Debug.Log("Battle runtime screenshot matches input/layout: " + filename + " " + width + "x" + height);
         }
 
 

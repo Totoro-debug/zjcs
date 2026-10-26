@@ -103,13 +103,28 @@ namespace Zjcs.Editor.Combat
             var listRect = (RectTransform)root.transform.Find(data.skillUI.rect.Substring("/FightMainPanel/".Length));
             Require(!pet.gameObject.activeSelf && Mathf.Abs(listRect.offsetMax.x - data.skillUI.noUnlockPetOffset) < 0.001f,
                 "The saved profile without pets did not hide the pet slot and restore the official offset.");
+            Canvas.ForceUpdateCanvases();
             foreach (BattleSkillSlotBinding binding in data.slots)
-                Require(Find(root, binding.owner) != null, "An original skill slot is missing.");
+            {
+                var rect = Find(root, binding.owner) as RectTransform;
+                Require(rect != null, "An original skill slot is missing.");
+                var corners = new Vector3[4];
+                rect.GetWorldCorners(corners);
+                Canvas canvas = rect.GetComponentInParent<Canvas>();
+                Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+                foreach (Vector3 corner in corners)
+                {
+                    Vector2 point = RectTransformUtility.WorldToScreenPoint(camera, corner);
+                    Require(point.x >= 0 && point.x <= Screen.width && point.y >= 0 && point.y <= Screen.height,
+                        "An original skill slot is outside the Game view: " + binding.owner + " at " + point
+                        + " in " + Screen.width + "x" + Screen.height);
+                }
+            }
             Require(!root.GetComponentsInChildren<Transform>(true).Any(node => node.name.StartsWith("GameSkillIconItem_", StringComparison.Ordinal)),
                 "The battle appended a replacement skill card.");
             for (int index = 0; index < data.slots.Length; index++)
                 if (!player.Skills.Any(skill => skill.Slot == index)) AssertState(root, data.slots[index], 0);
-            Debug.Log("Original skill slots Play Mode passed: original four objects retained, empty slots use None, no appended cards.");
+            Debug.Log("Original skill slots Play Mode passed: original four objects retained inside " + Screen.width + "x" + Screen.height + ", empty slots use None, no appended cards.");
         }
 
         private static void AssertState(GameObject root, BattleSkillSlotBinding binding, int state)

@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 
 namespace Zjcs.Editor.Combat
 {
-    /// <summary>Delivers actual Windows mouse input to a floating, free-aspect Game view.</summary>
+    /// <summary>Delivers raycasted simulated pointer input or Windows mouse input to one Game view.</summary>
     public static class BattleGameViewInput
     {
         private static EditorWindow gameView;
@@ -20,7 +20,8 @@ namespace Zjcs.Editor.Combat
         {
             Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView", true);
             foreach (EditorWindow old in Resources.FindObjectsOfTypeAll(type))
-                if (old.titleContent.text == "Battle input validation") old.Close();
+                if (old.titleContent.text == "Battle input validation"
+                    || Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") old.Close();
             gameView = ScriptableObject.CreateInstance(type) as EditorWindow;
             gameView.titleContent = new GUIContent("Battle input validation");
             gameView.position = new Rect(80, 60, 450, 821);
@@ -42,6 +43,16 @@ namespace Zjcs.Editor.Combat
                 SetForegroundWindow(handle);
                 return false;
             }, IntPtr.Zero);
+        }
+
+        public static IEnumerator ResizePortrait(float width)
+        {
+            if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
+            gameView.position = new Rect(80, 60, width, width * 16f / 9f + 21f);
+            gameView.Focus();
+            gameView.Repaint();
+            yield return new WaitForSecondsRealtime(0.5f);
+            Canvas.ForceUpdateCanvases();
         }
 
         public static IEnumerator Click(Button button)
