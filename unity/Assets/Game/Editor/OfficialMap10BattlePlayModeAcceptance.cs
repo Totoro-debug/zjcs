@@ -223,6 +223,8 @@ namespace Zjcs.Editor
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_STATUS_COUNTER") == "1")
                 Combat.OfficialBattleStatusCounterAcceptance.Run();
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_TABS") == "1")
+                yield return Combat.OfficialBattleReportTabAcceptance.Run();
             Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
                 damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);
