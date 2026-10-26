@@ -9,7 +9,7 @@ namespace Zjcs.Presentation.Opening
     {
         private SkeletonAnimation source;
         private MeshFilter filter;
-        private MeshRenderer renderer;
+        private MeshRenderer meshRenderer;
         private Dictionary<Material,Material> replacements;
         public void AddRuntimeReplacementMaterial(Material original, Material runtime)
         {
@@ -20,9 +20,9 @@ namespace Zjcs.Presentation.Opening
         {
             source=skeleton;
             filter=gameObject.AddComponent<MeshFilter>();
-            renderer=gameObject.AddComponent<MeshRenderer>();
+            meshRenderer=gameObject.AddComponent<MeshRenderer>();
             replacements=materials;
-            renderer.sortingOrder=order;
+            meshRenderer.sortingOrder=order;
             skeleton.OnMeshAndMaterialsUpdated+=Refresh;
         }
         private void Refresh(SkeletonRenderer _)
@@ -31,7 +31,7 @@ namespace Zjcs.Presentation.Opening
             Material[] original=source.GetComponent<MeshRenderer>().sharedMaterials;
             var mapped=new Material[original.Length];
             for(int i=0;i<mapped.Length;i++)replacements.TryGetValue(original[i],out mapped[i]);
-            renderer.sharedMaterials=mapped;
+            meshRenderer.sharedMaterials=mapped;
         }
         private void OnDestroy(){if(source!=null)source.OnMeshAndMaterialsUpdated-=Refresh;}
     }

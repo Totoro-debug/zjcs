@@ -26,14 +26,14 @@ namespace Zjcs.Presentation.Opening
         private List<object> factions;
         private Dictionary<string, object> colors;
         private OfficialBattleHudCatalog catalog;
-        private Camera camera;
+        private Camera battleCamera;
         public string TimelinePath { get; private set; }
         public float TimelineMinDist { get; private set; }
         public float TimelineDuration { get; private set; }
 
         public void Initialize(Camera stageCamera)
         {
-            camera = stageCamera;
+            battleCamera = stageCamera;
             catalog = OfficialBattleHudCatalog.LoadDefault();
             var ui = Read("unit-ui.json");
             factions = OpeningJson.Array(ui["factions"], "factions");
@@ -65,7 +65,7 @@ namespace Zjcs.Presentation.Opening
                 MaxHp=entity.MaxHp, LastMaxHp=entity.MaxHp, MonsterId=entity.MonsterId };
             var view = OfficialBattleUnitWorldHudView.Create(catalog, binding,
                 new BattleUnitBarFaction { hpColor=Floats(faction["hpColor"]), hpAddColor=Floats(faction["hpAddColor"]),
-                    hpSubColor=Floats(faction["hpSubColor"]) }, state, root, camera, 32000);
+                    hpSubColor=Floats(faction["hpSubColor"]) }, state, root, battleCamera, 32000);
             view.Root.name = "HpBarGame";
             units.Add(entity.EntityId, new Unit { State=state, View=view });
             if (entity.NpcClassId <= 0) return;
@@ -212,7 +212,7 @@ namespace Zjcs.Presentation.Opening
             if (!played) throw new InvalidOperationException("Official damage float animation is missing: "+key);
             instance.SetActive(true);
             var floating=instance.AddComponent<OpeningDamageFloat>();
-            floating.Initialize(animations, prefab.damageUi.showTime, layer, camera, anchor, targetId);
+            floating.Initialize(animations, prefab.damageUi.showTime, layer, battleCamera, anchor, targetId);
             damage.Add(floating);
             Vector3 offset=Vector3.zero;
             Vector3 spacing=NativeVector(colors,"DamageUISpacing");

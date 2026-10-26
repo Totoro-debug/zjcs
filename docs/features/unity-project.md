@@ -20,6 +20,12 @@ Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗
 
 静态 metadata 检查通过，Editor 和 Windows Player 脚本编译通过，`ProjectTools.Validate` 已正常退出并完成规则、HUD 与 Map10 资源检查；该校验仍输出递归 DTO 序列化深度及部分 Edit Mode 销毁提示，不能据此认定完整运行验收通过。最终 Windows D3D11 构建成功，未报告 C# 或 shader 编译错误。已真实启动 Player，查看存档入口画面，用鼠标点击“新建存档”创建草稿并进入官方开场场景；关闭后重启，已确认存档条目显示。完整创角、家园、地图和战斗流程的实际范围继续由所属页维护。
 
+开场组件 `OpeningAttachmentFollower`、`OpeningMeshCopy` 的私有渲染器字段分别命名为 `skeletonRenderer`、`meshRenderer`，`OpeningDamageFloat`、`OpeningBattlePresentation` 的私有相机字段命名为 `battleCamera`，消除与 Unity `Component.renderer`／`Component.camera` 重名产生的四条 CS0108 警告。英雄雕像等级属性读取使用进度服务已加载的 `OfficialCharacterCatalog.GetLevelProps`，阶段条件列表使用 `Count`。运行时程序集编译失败时，`-executeMethod` 可能同时报告编辑器验证类找不到；应先修复编译错误，再检查实际入口。
+
+`OfficialMap10BattlePlayModeAcceptance.RunRealInput` 在快捷聊天、窗口缩放和 HUD 截图检查全部结束后才恢复地图战斗执行，避免短战斗提前结束、销毁 HUD 并使检查持有失效的 `RectTransform`。静态 metadata 检查（40,688 个 GUID）、Unity Editor 导入／编译、`ProjectTools.Validate` 及该入口的 D3D11 Play Mode 回归通过；模拟指针经过实际射线命中和按下／抬起／点击事件，覆盖开始战斗、快捷聊天、450×800／675×1200 布局、技能图标、时间轴和返回地图，并实际查看运行画面。验证使用临时档案，不覆盖用户存档；该范围不代表完整地图或游戏迁移完成。
+
+`CharacterOpeningVisualPlayModeAcceptance.Run` 的 D3D11 可见 Play Mode 回归通过，实际装配官方开场战场和录像单位、播放战前／战后剧情，检查技能／状态特效、18 个时间轴项目与 25 个伤害飘字，并查看单位和伤害运行画面。该检查验证开场组件的渲染及快进交接，不替代完整创角输入与存档恢复验收。
+
 ## 自定义实现
 
 本地单机规则沿用已确认的离线处理范围；外观、界面、动画、音效及流程以可恢复的官方 Unity 内容为准。其他功能页中记录的旧引擎实现不能据此视为 Unity 已接入。

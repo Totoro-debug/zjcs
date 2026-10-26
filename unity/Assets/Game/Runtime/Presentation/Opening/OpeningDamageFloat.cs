@@ -8,7 +8,7 @@ namespace Zjcs.Presentation.Opening
     {
         private OfficialBattleHudAnimationPlayer animations;
         private RectTransform parent, rect;
-        private Camera camera;
+        private Camera battleCamera;
         private Vector3 anchor;
         private float elapsed, duration;
         public int TargetId { get; private set; }
@@ -17,7 +17,7 @@ namespace Zjcs.Presentation.Opening
         public void Initialize(OfficialBattleHudAnimationPlayer player, float showTime,
             RectTransform screenParent, Camera worldCamera, Vector3 worldAnchor, int targetId)
         {
-            animations=player; duration=showTime; parent=screenParent; camera=worldCamera;
+            animations=player; duration=showTime; parent=screenParent; battleCamera=worldCamera;
             anchor=worldAnchor; TargetId=targetId; rect=(RectTransform)transform;
             Project();
         }
@@ -30,7 +30,7 @@ namespace Zjcs.Presentation.Opening
         }
         private void Project()
         {
-            Vector3 screen=camera.WorldToScreenPoint(anchor+StackOffset);
+            Vector3 screen=battleCamera.WorldToScreenPoint(anchor+StackOffset);
             if (screen.z>=0 && RectTransformUtility.ScreenPointToLocalPointInRectangle(parent,screen,null,out Vector2 local))
                 rect.localPosition=new Vector3(local.x,local.y,rect.localPosition.z);
         }

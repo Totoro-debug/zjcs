@@ -9,7 +9,7 @@ namespace Zjcs.Presentation.Opening
     /// <summary>AttachmentFollower.Initialize/Update/LateUpdate/GetPosZ from the official client.</summary>
     public sealed class OpeningAttachmentFollower : MonoBehaviour
     {
-        private SkeletonAnimation renderer;
+        private SkeletonAnimation skeletonRenderer;
         private Bone bone;
         private Slot slot;
         private Attachment attachment;
@@ -17,7 +17,7 @@ namespace Zjcs.Presentation.Opening
         private bool followZ, zFront, followScale, followRotation, flip;
         public void Initialize(SkeletonAnimation skeleton,Dictionary<string,object> data,Transform[] nodes)
         {
-            renderer=skeleton;
+            skeletonRenderer=skeleton;
             bone=skeleton.Skeleton.FindBone(OpeningJson.String(data,"BoneName"));
             string slotName=OpeningJson.String(data,"SlotName"), attachmentName=OpeningJson.String(data,"AttachmentName");
             if (!string.IsNullOrEmpty(slotName) && !string.IsNullOrEmpty(attachmentName))
@@ -46,14 +46,14 @@ namespace Zjcs.Presentation.Opening
         }
         private void LateUpdate()
         {
-            if (renderer==null || bone==null || !bone.Active || (attachment!=null && slot.Attachment!=attachment)) return;
+            if (skeletonRenderer==null || bone==null || !bone.Active || (attachment!=null && slot.Attachment!=attachment)) return;
             Vector3 point=new Vector3(bone.WorldX,bone.WorldY,0);
             if(followZ && attachment!=null)
             {
-                int index=renderer.Skeleton.DrawOrder.IndexOf(slot);
-                point.z=renderer.zSpacing*(index+(zFront?.5f:-.5f));
+                int index=skeletonRenderer.Skeleton.DrawOrder.IndexOf(slot);
+                point.z=skeletonRenderer.zSpacing*(index+(zFront?.5f:-.5f));
             }
-            Transform source=renderer.transform;
+            Transform source=skeletonRenderer.transform;
             if(source==transform.parent)
             {
                 transform.localPosition=point;
