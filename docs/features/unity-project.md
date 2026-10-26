@@ -20,6 +20,12 @@ Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗
 
 各模块／地图共享 [Android → Windows 素材迁移流程](../asset-management.md#android-资源迁移到-windows)，以 [`prepare_unity_bundle_inputs.py`](../../scripts/prepare_unity_bundle_inputs.py) 检查真实源版本、平台与递归 CAB 依赖并准备转换输入。输入闭包成功不代表 Unity 原生资产、运行时依赖和 Windows 表现已经恢复；完整处理和判断依据在该共用流程中维护。
 
+Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_internal_display.ps1) 识别内置屏的硬件标识，将编辑器与验证窗口放到该屏，独立于 Windows 主屏设置及屏幕编号。自定义验证命令先点源该脚本，再用 `Start-UnityOnInternalDisplay -Editor <编辑器路径> -ArgumentList <原参数数组>` 启动；隔离 worktree 复用仓库根目录工具。启动时隐藏窗口，定位时不激活窗口或改变前后顺序；保留现有渲染参数。内置屏未启用或识别不唯一时停止启动并报告原因，不回退到外接主屏。窗口启动阶段定位完成后可由用户自由移动。
+
+为覆盖其他会话从隔离 worktree 直接启动 `Unity.exe` 的路径，本机还安装了随用户登录启动的窗口定位守护；脚本与 `status.json` 位于 `%LOCALAPPDATA%/UnityInternalDisplay/`，启动入口为用户 Startup 文件夹中的 `Unity 内置屏.lnk`。守护只匹配 `D:/Desktop/zjcs/` 下的 Unity 工程，将其可见窗口保持在内置屏，既有会话无需更换命令。停用时删除该启动快捷方式并结束 `status.json` 记录的守护进程即可；可用仓库脚本的 `-WatchProjectRoot D:/Desktop/zjcs` 参数手动启动。
+
+启动工具已用相同版本 Unity 的临时空工程完成真实 GUI 检查：外接屏为系统主屏、内置 BOE 面板为副屏时，编辑器主窗口完整位于内置屏工作区；检查后关闭临时实例。对既有隔离 worktree 的实际导入／编译窗口检查曾检出位于外接屏，定位后同一检查通过。绕过项目启动脚本、直接启动仓库 `.tools/` 下临时空工程的检查也通过，编辑器主窗口完整位于内置屏；随后关闭该临时实例。上述检查只验证启动与窗口定位，不计为游戏功能、渲染效果或 Play Mode 验收。
+
 静态 metadata 检查通过，Editor 和 Windows Player 脚本编译通过，`ProjectTools.Validate` 已正常退出并完成规则、HUD 与 Map10 资源检查；该校验仍输出递归 DTO 序列化深度及部分 Edit Mode 销毁提示，不能据此认定完整运行验收通过。最终 Windows D3D11 构建成功，未报告 C# 或 shader 编译错误。已真实启动 Player，查看存档入口画面，用鼠标点击“新建存档”创建草稿并进入官方开场场景；关闭后重启，已确认存档条目显示。完整创角、家园、地图和战斗流程的实际范围继续由所属页维护。
 
 开场组件 `OpeningAttachmentFollower`、`OpeningMeshCopy` 的私有渲染器字段分别命名为 `skeletonRenderer`、`meshRenderer`，`OpeningDamageFloat`、`OpeningBattlePresentation` 的私有相机字段命名为 `battleCamera`，消除与 Unity `Component.renderer`／`Component.camera` 重名产生的四条 CS0108 警告。英雄雕像等级属性读取使用进度服务已加载的 `OfficialCharacterCatalog.GetLevelProps`，阶段条件列表使用 `Count`。运行时程序集编译失败时，`-executeMethod` 可能同时报告编辑器验证类找不到；应先修复编译错误，再检查实际入口。
