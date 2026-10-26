@@ -52,6 +52,11 @@
 - 原 `2_-5` 分区含 17 个飘带，六个独立神社实体 prefab 另含 29 个；七份原层级共新增 132 个资产，复用 14 个已核验依赖。原 Transform、Animator、Renderer 和素材引用保留，骨骼组件与数据显式改绑到免费原生转换；全部子组件引用和缺失脚本检查通过。目录为 `Resources/Map13/Native/native-flag-scene-catalog`，独立骨骼数据为 `native-flag-catalog`。这两份目录尚未接入完整地图运行时。
 - 同源隔离工程在内置屏 DX12、原 Linear 管线的 Play Mode 中，以独立双精度三次贝塞尔／仿射参考核对 200 个姿态、3,418 个加权顶点，核对全部三角形及 UV；逐个实例化七份原 prefab，验证 46 个实例的正常帧动画、原离屏 Nothing 模式和禁用／重启，查看各两帧实际相机截图。未覆盖完整场景昼夜、其他动态分区、模拟鼠标或存档；该动画模块不能代表完整地图已完成。
 
+- 其余不含地区文字的原分区共 183 份 prefab 已恢复：新增 313 个原生资产、复用 22 个已核验依赖，全部子组件引用、官方脚本、灯光／材质和原始层级通过导入检查。新增 50 张 Texture2D 保留全部 263 个原 mip、颜色空间、行序与采样。目录为 `Resources/Map13/Native/native-environment-scene-catalog`；原地区文字所在的 88 份 prefab 尚未转换，其中包含地区 2／22／35 的三份区域灯光，不能声称本批覆盖全部区域灯。
+- 环境 `Effect/Noise_Mask_Pro` 的两个原 pass、全部 520 个 GLES 变体已机械转换并逐顶点／片元通过 Windows D3D 编译。保留原材质属性、带材质参数的模板状态、UV／溶解／扰动与裁剪分支；保留原中间变量及向量逐分量比较。原 `INSTANCING_ON` 程序固定读取首个对象矩阵，不含实例 ID；该访问显式绑定 Unity 原生当前对象矩阵，保留原列向量运算。
+- `NativeMap13EnvironmentBinding` 在未激活的原实例中显式绑定环境服务，然后由原 Awake／Start 注册。单机适配程序集增加对已迁移官方环境和本地服务接口的依赖；没有改写原分区或环境规则。
+- 同源隔离工程在内置屏 DX12、原 Linear 管线的 Play Mode 中，经原 `PartitionController`／`PartitionLoader` 和本地异步资源句柄实际加载 200 个 Tile 区块及 183 个原 prefab；在明确的公开／私有测试状态下检查 106 个区域槽位中的 103 个原灯光注册、原 Tilemap 填充、17 个神社飘带、场景隐藏／恢复、原资源移除和反注册。测试只在原 PartitionData 的内存副本中排除尚未转换的 88 份地区文字资源，原配置不变；该排除不是游戏功能删减或正式运行方案。全部 50 张新增贴图的 263 层 mip 经 GPU 逐字节回读，查看中心与神社的两种状态实际画面。测试未接真实世界状态、地区文字、鼠标交互、音频或存档。
+
 ## 自定义实现
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行同样缺少服务端逻辑；已核对其客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和原 `StageDatas`。用户已明确允许以下单机规则，规则模块已实现：每次触发沿原配置顺序前进一段，到末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则本次不移动；水位按原 `StageDatas` 顺序更新，不发奖励。
@@ -60,7 +65,7 @@
 
 ## 尚未实现
 
-- 地形主体 prefab、原材质、水面／地形／熔岩 shader、昼夜组件和原生渲染管线资产已绑定或迁移；仍须接通地图运行时管线选择、其余动态分区、地区标签、粒子、其他骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
+- 地形主体 prefab、原材质、水面／地形／熔岩 shader、昼夜组件和原生渲染管线资产已绑定或迁移；仍须接通地图运行时管线选择、地区标签所在的 88 份动态 prefab、正式世界状态、其他特效／骨骼、导演和音频，完成完整 Windows 场景表现。`WaterMaskRenderer` 的运行代码已迁移，其他特效 shader 与剩余组件／资源仍待接入；原生主体资产导入不代表完整地图已可游玩。
 - 接通泽之国入口、正常移动、海之宫剧情、探索／任务、战斗、交互、条件、奖励、小地图和地图出口，以及五组手动水路和终端原界面。
 - 将水路位置、方向、水位、终端扣费意图和奖励凭据接入正式本地存档，验证取消、条件不足、重复操作、中断和重新启动。
 - 在内置屏使用 DX12 实际运行 Play Mode，经模拟鼠标命中完成受影响流程，查看运行画面；构建并真实启动 Windows Player，验证后发布至 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完成成果的发布版本。
@@ -87,3 +92,5 @@
 
 - [神社飘带解码与原 shader 转换](../../scripts/prepare_unity_map13_flags.py)、[来源](../../assets/reference/official-map/map13-native-flags-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map13-native-flags-binding-source-manifest.json)记录原 TextAsset／材质／纹理、MIT 读取器、仅用于调度枚举的 APK 元数据、输出及适配哈希；[独立参考生成](../../scripts/generate_map13_flag_reference.py)记录参考输入和生成器哈希。原生数据与网格适配位于 `Runtime/Offline/World/NativeMap13/NativeMap13Flag*.cs`，载荷为 `Assets/Official/World/Map/13/NativeFlags/`。
 - [神社原 prefab 绑定](../../scripts/prepare_unity_map13_flag_scene.py)、[来源](../../assets/reference/official-map/map13-native-flag-scene-source-manifest.json)、[Unity 绑定来源](../../assets/reference/official-map/map13-native-flag-scene-binding-source-manifest.json)、[导入检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13FlagSceneTools.cs)及[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13FlagAcceptance.cs)记录七份原层级、来源与复用依赖、原引用改绑及实际验证范围。载荷为 `Assets/Official/World/Map/13/NativeFlagScene/`；新增神社素材及原程序未进入完整快照。
+
+- [环境特效 shader 转换](../../scripts/prepare_unity_map13_environment_shader.py)及[来源](../../assets/reference/official-map/map13-environment-shader-source-manifest.json)记录 520 个原程序与 Windows 转换；[原环境分区恢复](../../scripts/prepare_unity_map13_environment_scene.py)、[来源](../../assets/reference/official-map/map13-native-environment-scene-source-manifest.json)、[Unity 绑定](../../assets/reference/official-map/map13-native-environment-scene-binding-source-manifest.json)、[导入／编译](../../unity/Assets/Game/Editor/Map13/OfficialMap13EnvironmentSceneTools.cs)及[原分区联动 Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13EnvironmentSceneAcceptance.cs)记录原输入闭包、资产／mip／复用引用、绑定适配和验证范围。原生载荷位于 `Assets/Official/World/Map/13/NativeEnvironmentScene/`，新增内容未进入完整快照。

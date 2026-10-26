@@ -382,3 +382,9 @@ unity/Assets/Official/World/Map/12/NativeTerrain.meta -text
 unity/Assets/Game/Editor/OfficialMap12TerrainTools.cs -text
 unity/Assets/Game/Resources/Map12/Native/** -text
 unity/Assets/Game/Resources/Map12/Native.meta -text
+
+# Preserve original Map13 non-label partition payloads.
+unity/Assets/Official/World/Map/13/NativeEnvironmentScene/** -text
+unity/Assets/Official/World/Map/13/NativeEnvironmentScene.meta -text
+scripts/prepare_unity_map13_environment_shader.py text eol=lf
+scripts/prepare_unity_map13_environment_scene.py text eol=lf
