@@ -194,6 +194,7 @@ namespace Zjcs.Presentation.Combat
             if (source.has_image)
             {
                 Image image = gameObject.AddComponent<Image>();
+                image.material = OfficialBattleHudMaterialAssets.Load().Find(source.path);
                 image.sprite = source.has_image_sprite ? ResolveSprite(source.image_sprite_file) : null;
                 image.color = ColorValue(source.image_color, Color.white);
                 image.type = (Image.Type)Mathf.Clamp(source.image_type, 0, (int)Image.Type.Filled);

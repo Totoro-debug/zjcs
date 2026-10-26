@@ -219,6 +219,10 @@ NPC 时间轴头像按原 `RefreshNpcIcon → NpcInfo.Icon → GetDynamicTexture
 
 89张头像已通过 Unity 原图哈希、Sprite 几何与导入参数校验；实际 Play Mode 在独立时间轴样本中显示8401／8411／11001三种 NPC，检查专用节点、纹理和33顶点圆形网格，并查看运行截图。随后真实鼠标就绪、快捷入口、战斗结算和返回通过；静态检查及 `ProjectTools.Validate` 通过。样本只验证头像分支，不代表这些 NPC 的模型、技能和助战流程均已迁移，也未执行该子项的 Windows Player 发布。
 
+战斗主面板的三处原 `Image.m_Material` 引用已恢复：技能方案提示 `FightMainPanel_SkillList`／`UI/EffectSequeue`、宠物支援技能 `UIImgAdd`／`UI/EffectAdditive` 和回合边框 `UICapsuleBorderFlow_SaveToggle`／`UI/CapsuleBorderFlow`。`prepare_battle_hud_materials.py` 从固定854原 prefab 沿实际引用闭包取得材质、原序列图和编译 GLES 程序，保留全部材质数值、纹理变换、混合／模板／ColorMask 与采样参数；机械转换原顶点和片元表达式、矩阵列及精度，生成 Windows HLSL，保留12个实际使用的 UI 裁剪组合及另外4个原未用序列分支。显式目录为 `Combat/OfficialBattleHudMaterialAssets`，由通用 HUD renderer 按原节点路径绑定，见[主面板材质来源](../../assets/reference/battle-hud/materials-source-manifest.json)及[原生输出](../../assets/reference/battle-hud/materials-native-source-manifest.json)。
+
+Unity 已校验三处运行绑定、全部声明属性、纹理尺寸／哈希／采样和12个 shader 变体；实际 Play Mode 中原4×4循环序列的两次屏幕采样相差722像素，查看准备和战斗画面，技能方案处的白色方块已恢复为原贴图效果。真实鼠标就绪、快捷聊天、结算和返回通过，静态检查通过。此项仅恢复材质链，技能方案首次点击标记、至少两组有效方案的提示显隐及完整切换面板仍待恢复；未据此宣称这些交互已完成，未发布整套战斗 Windows 版本。
+
 现已接入玩家头像、怪物 IconId、已取得的 NPC 头像、阵营图、当前行动缩放、队列位置、受击／死亡触发及战斗显隐清理；删除了普通 UI 时间轴的错误回退实现。完整逐事件调度、NPC剩余头像／守护者／拟态等解析和动态缓存仍待完成，不能把基础触发接线视为整套事件动画已还原。
 
 男女隔离创角存档的真实鼠标 Play Mode 已验证就绪、快捷入口收展／点击空白关闭、执行到最终结果和返回；实际查看准备及战斗画面，核对100×120真实头像、33顶点圆形网格、怪物 Sprite、透明背景及主角色标识。返回后场景时间轴和头像租约对象清除，场外层级、镜头与动画恢复。原生资产校验覆盖层级变换、Sprite 几何、renderer／圆形参数和完整 Animator 参数／状态／转换／曲线；静态检查及 `ProjectTools.Validate` 通过。此项未改裁决规则，未重复运行此前通过的36个规则套件；未执行 Windows Player 验证。

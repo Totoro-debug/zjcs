@@ -302,6 +302,7 @@ namespace Zjcs.Editor
             if (SessionState.GetBool(RealInputKey, false)) runtime.enabled = false;
 
             yield return Combat.OfficialBattleTimelinePortraitAcceptance.VerifyNpcInPlayMode();
+            yield return Combat.OfficialBattleHudMaterialTools.VerifyInPlayMode();
 
             if (phaseProperty.GetValue(controller).ToString() == "Preparing")
             {

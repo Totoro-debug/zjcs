@@ -243,7 +243,7 @@ def build():
             'Presentation/Combat/OfficialBattleNpcPortraitCatalog.cs',
             'Presentation/Combat/OfficialBattleTimelineLifetime.cs','Presentation/Character/CharacterNativePortraitLease.cs',
             'Presentation/World/OfficialMap10GameRuntime.BattlePortrait.cs')]),
-        shader_conversions=file_hashes(sorted((runtime/'Presentation/Combat/Shaders').glob('*.shader'))),
+        shader_conversions=file_hashes(sorted((runtime/'Presentation/Combat/Shaders').glob('Timeline*.shader'))),
         generator_sha256=sha(Path(__file__).read_bytes()),output=OUTPUT.relative_to(ROOT).as_posix(),
         output_sha256=sha(OUTPUT.read_bytes()),textures=list(textures.values()),
         operation='Preserve original scene timeline Transform hierarchy, Sprite texture/rect/PPU/border, material properties, compiled GLES programs and native Animator tracks/states/AnyState transitions. Bind the separately recorded native death-particle prefab, preserving its original disabled parent.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
