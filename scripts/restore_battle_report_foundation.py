@@ -233,8 +233,13 @@ def build(source_root):
 
 def record_runtime():
     receipt = json.loads(RECEIPT.read_bytes())
+    scroll_path = ROOT / 'assets/reference/battle-hud/report-scroll-source-manifest.json'
+    scroll = json.loads(scroll_path.read_bytes()) if scroll_path.exists() else None
     for entry in receipt['outputs']:
-        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) != entry['sha256']:
+        allowed = {entry['sha256']}
+        if scroll:
+            allowed.update(row['sha256'] for row in scroll['outputs'] if row['path'] == entry['path'])
+        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Report foundation prefab changed: ' + entry['path'])
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
     unity_data = Path('D:/Tool/Unity/Editor/Data')

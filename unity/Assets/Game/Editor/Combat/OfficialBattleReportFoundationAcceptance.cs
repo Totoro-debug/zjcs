@@ -18,6 +18,9 @@ namespace Zjcs.Editor.Combat
         [Serializable] private sealed class Binding { public string prefab, path, kind; public Check[] checks; }
         [Serializable] private sealed class Check { public string path, kind, text; public double number; public int count; public Reference reference; }
         [Serializable] private sealed class Reference { public long fileID; public string guid; }
+        [Serializable] private sealed class ScrollReceipt { public ScrollBinding[] bindings; }
+        [Serializable] private sealed class ScrollBinding { public string prefab, path; public ScrollFields fields; }
+        [Serializable] private sealed class ScrollFields { public Reference mTitleScrollRect, mItemScrollRect; }
         private static readonly Dictionary<string, Type> Types = new Dictionary<string, Type>
         {
             { "LayoutElementClamper", typeof(WorldLayoutElementClamper) },
@@ -32,6 +35,7 @@ namespace Zjcs.Editor.Combat
         {
             Require(Application.isPlaying, "Report layout input requires Play Mode.");
             var receipt = JsonUtility.FromJson<Receipt>(File.ReadAllText("../assets/reference/battle-hud/report-foundation-source-manifest.json"));
+            var scrollReceipt = JsonUtility.FromJson<ScrollReceipt>(File.ReadAllText("../assets/reference/battle-hud/report-scroll-source-manifest.json"));
             var canvasRoot = new GameObject("ReportLayoutFixture", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasRoot.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             canvasRoot.GetComponent<Canvas>().sortingOrder = 30000;
@@ -39,7 +43,7 @@ namespace Zjcs.Editor.Combat
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
             scaler.matchWidthOrHeight = 0.5f;
-            int components = 0, fields = 0, drags = 0;
+            int components = 0, fields = 0, drags = 0, scrollBindings = 0;
             try
             {
                 foreach (var panel in receipt.bindings.GroupBy(value => value.prefab))
@@ -69,6 +73,16 @@ namespace Zjcs.Editor.Combat
                             }
                             components++;
                         }
+                        foreach (ScrollBinding binding in scrollReceipt.bindings.Where(value => value.prefab == panel.Key))
+                        {
+                            Require(nodes.TryGetValue(binding.path, out Transform node), "Report scroll owner missing: " + binding.path);
+                            var sync = node.GetComponent<WorldBattleReportSkillScrollSync>();
+                            Require(sync != null, "Original report scroll methods not bound: " + binding.path);
+                            var serialized = new SerializedObject(sync);
+                            Match(serialized.FindProperty("mTitleScrollRect"), new Check { kind = "reference", reference = binding.fields.mTitleScrollRect }, localReferences);
+                            Match(serialized.FindProperty("mItemScrollRect"), new Check { kind = "reference", reference = binding.fields.mItemScrollRect }, localReferences);
+                            scrollBindings++;
+                        }
                         yield return null;
                         Canvas.ForceUpdateCanvases();
                         if (asset.name == "FightEndReportSkillTabView")
@@ -91,9 +105,31 @@ namespace Zjcs.Editor.Combat
                             yield return null;
                             Canvas.ForceUpdateCanvases();
                             Require(list.content.childCount > 0, "Original report list failed to instantiate its native row prefab.");
+                            var scrollSync = root.GetComponent<WorldBattleReportSkillScrollSync>();
+                            Require(scrollSync != null, "Report scroll lifecycle adapter is missing.");
+                            scrollSync.Initialize();
+                            scrollSync.RefreshLayout();
+                            Require(!header.horizontal, "Official report header must follow the list and disable its own horizontal drag.");
                             Vector2 before = list.content.anchoredPosition;
                             Drag(list.gameObject, list.viewport, new Vector2(-150f, 80f));
+                            yield return null;
                             Require(Vector2.Distance(list.content.anchoredPosition, before) > 1f, "Simulated drag did not move the original report list.");
+                            float itemOverflow = Mathf.Max(list.content.rect.width - list.viewport.rect.width, 0f);
+                            float titleOverflow = Mathf.Max(header.content.rect.width - header.viewport.rect.width, 0f);
+                            Require(itemOverflow > 0f && titleOverflow > 0f && list.content.anchoredPosition.x < -1f,
+                                "Simulated drag did not exercise horizontal report synchronization.");
+                            float expectedTitleX = -Mathf.Clamp01(-list.content.anchoredPosition.x / itemOverflow) * titleOverflow;
+                            Require(Mathf.Abs(header.content.anchoredPosition.x - expectedTitleX) < 0.1f,
+                                "Report header failed to follow the original proportional-overflow formula after simulated drag.");
+                            list.content.anchoredPosition = new Vector2(500f, list.content.anchoredPosition.y);
+                            yield return null;
+                            Require(Mathf.Abs(list.content.anchoredPosition.x) < 0.1f && Mathf.Abs(header.content.anchoredPosition.x) < 0.1f,
+                                "Official report positive horizontal overscroll clamp failed.");
+                            list.content.anchoredPosition = new Vector2(-itemOverflow - 500f, list.content.anchoredPosition.y);
+                            yield return null;
+                            Require(Mathf.Abs(list.content.anchoredPosition.x + itemOverflow) < 0.1f
+                                && Mathf.Abs(header.content.anchoredPosition.x + titleOverflow) < 0.1f,
+                                "Official report end-of-list horizontal clamp/header synchronization failed.");
                             drags++;
                             string output = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_OUTPUT");
                             if (!string.IsNullOrEmpty(output))
@@ -107,9 +143,10 @@ namespace Zjcs.Editor.Combat
                     }
                     finally { UnityEngine.Object.DestroyImmediate(root); }
                 }
-                Require(components == 117 && drags == 1, "Original report foundation validation scope changed.");
+                Require(components == 117 && drags == 1 && scrollBindings == scrollReceipt.bindings.Length && scrollBindings > 0,
+                    "Original report foundation validation scope changed.");
                 Debug.Log("Original report foundation passed: " + components + " components, " + fields
-                    + " original serialized fields, native column geometry, row pooling and simulated list drag. Dropdown provider, report data and header synchronization remain incomplete.");
+                    + " original serialized fields, " + scrollBindings + " original header/list bindings, native column geometry, row pooling, simulated list drag and header synchronization with both horizontal clamps. Dropdown provider and report data remain incomplete.");
             }
             finally { UnityEngine.Object.DestroyImmediate(canvasRoot); }
         }

@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "manifest": "854_156383",
+  "generator_sha256": "0e24cf87d0e2a5ca42cbe30c575c9e459eb015a7009e21f39f788821a90c4548",
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendallplayerreportpanel.bundle",
+      "bundle_hash": "d1116e4bd9fe89f80a4cd28c6bdf9f15",
+      "path_id": "2131268210946344617",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d1116e4bd9fe89f80a4cd28c6bdf9f15.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 28536,
+      "bundle_sha256": "cff2583e5e8fd2dc5b920e0175202589759052d747bceee7a33f82d6340f5ec5"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+      "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+      "path_id": "-5066114166948339034",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 22288,
+      "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportskilltabview.bundle",
+      "bundle_hash": "1b63b439e39307c4f792622e7a39c43b",
+      "path_id": "-873967528594785948",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1b63b439e39307c4f792622e7a39c43b.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13534,
+      "bundle_sha256": "0657a6c7b571626d851707d25bd6ea49555a13678474b9392db1d7002bd2eac7"
+    }
+  ],
+  "original": {
+    "path": ".tools/source-packages/official-code/client-source/FightEndReportSkillTabView.cs",
+    "sha256": "4251961836c91777bfa6fdc4ca5ae41c25ab0aac97be8d81385aaa54e3c9df18"
+  },
+  "bindings": [
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndAllPlayerReportPanel.prefab",
+      "path": "/FightEndAllPlayerReportPanel/Content/MiddleGo/FightEndReportSkillTabView",
+      "file_id": "114562080017223558",
+      "original_path_id": "2131268210946344617",
+      "object_sha256": "74fac87aa75e637eeed0878c091e679728f48b239358ee84fd571e64a022b0f9",
+      "fields": {
+        "mTitleScrollRect": {
+          "fileID": 114573076885614623
+        },
+        "mItemScrollRect": {
+          "fileID": 114290791091168379
+        }
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPanel.prefab",
+      "path": "/FightEndReportPanel/Content/MiddleGo/FightEndReportSkillTabView",
+      "file_id": "114016852445014956",
+      "original_path_id": "-5066114166948339034",
+      "object_sha256": "ed8b66c955bcd699449184bd0ac586d927da76476b58847b8eb8334f116ea41a",
+      "fields": {
+        "mTitleScrollRect": {
+          "fileID": 114719897623072781
+        },
+        "mItemScrollRect": {
+          "fileID": 114559203567323380
+        }
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabView.prefab",
+      "path": "/FightEndReportSkillTabView",
+      "file_id": "114094320201520353",
+      "original_path_id": "-873967528594785948",
+      "object_sha256": "69e94b03159963e35094a089d1ec139d4c3684dfc3cfe25b737636be5b5f5c20",
+      "fields": {
+        "mTitleScrollRect": {
+          "fileID": 114571878917323452
+        },
+        "mItemScrollRect": {
+          "fileID": 114358105479016104
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndAllPlayerReportPanel.prefab",
+      "sha256": "31ea7f853961ae7caee7191a52b835a66bf73a678a92076fda39d2c4afab0e7a",
+      "bytes": 532077
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPanel.prefab",
+      "sha256": "3ec0b2e1c4697975da8913ac9ddf624726d8e8114c3244e71eb8ad369879060b",
+      "bytes": 405874
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabView.prefab",
+      "sha256": "4ac8a400204e7f73415447b81f614e26c416bcdcf32c7efdc1d3ff29ec89ef42",
+      "bytes": 34518
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "sha256": "d2ca9e5ca29cd820af06ee64876baa2545b1272ddb714b0b4bf4fed2e0a81466",
+      "bytes": 96013
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabView.prefab",
+      "sha256": "5b61251bc3f1101ec35fedc849a0cc1ee08bca631f929be3b988f5e8abfc98c8",
+      "bytes": 233851
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabViewItem.prefab",
+      "sha256": "7af6cb902b26c18a19173152caff5a4da91e15c942307abd45690c976e835409",
+      "bytes": 100878
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSplit.prefab",
+      "sha256": "da660796bbb611e59dc98a9cb39d1c2a08ff1c2706d01b2975bbc40141a0f38b",
+      "bytes": 10925
+    }
+  ],
+  "methods": [
+    "OnItemScrollRectValueChanged",
+    "ClampItemHorizontalAnchorX",
+    "SetTitleHorizontalNormalizedPosition",
+    "SyncTitleByItemAnchoredX"
+  ],
+  "adaptations": [
+    "The offline Initialize/OnDisable adapter replaces the UIBase initialization gate for the extracted scrolling methods only.",
+    "RefreshLayout preserves the original forced canvas/layout rebuild order. Report providers and data initialization are not included."
+  ],
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs": "3e4f77fb97314c795113763441971aa7948bebc47776eb02b210d9c11a9d5b47",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs.meta": "a9bc48648c7daf05ca125691ea01e9829019ba918b417e6d498d77d423a2bb20",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportFoundationAcceptance.cs": "02354ce9ecfd0bf7064fe633253c57ca31e28f1af509dc2f62f0a26c73ed720c",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "e44aeca1069072cba2be073965a43f7ae702be8e4aed8620146ee0d8eb64de5d"
+  }
+}

@@ -1715,6 +1715,8 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 战报平均数的原代码证据及本地接线见 [report-statistics-source-manifest.json](battle-rules/report-statistics-source-manifest.json)。原客户端读取两项平均数，共享数据类仅合并服务器结果，未取得单场生成逻辑；按用户确认使用伤害命中／释放次数及伤害命中／每次释放的去重目标数之和，闪避不计、免疫与全额盾吸收计入。原始计数及旧检查点未知标记随本地存档保存；数据行、显示取整与正式入口仍待完成。
 
-战报布局／缩放／滚动和标准控件：`restore_battle_report_foundation.py` 严格读取同版原组件字段，新增迁移客户端 `LayoutElementClamper／MaintainGlobalScale／MaintainGlobalScaleUI`，复用原 Grid／横向布局、已提交的完整 LoopScroll 代码及 Unity UGUI。原对象、程序集、代码、原生引用、117个组件／1223个字段和输出哈希见 [report-foundation-source-manifest.json](battle-hud/report-foundation-source-manifest.json)，此清单覆盖运行 prefab 的后续输出；表头列宽／间距、行池及模拟列表拖拽通过，数据／同步滚动／下拉提供者与正式入口尚未完成。此前新增战报图集和字体尚未生成完整素材快照。
+战报布局／缩放／滚动和标准控件：`restore_battle_report_foundation.py` 严格读取同版原组件字段，新增迁移客户端 `LayoutElementClamper／MaintainGlobalScale／MaintainGlobalScaleUI`，复用原 Grid／横向布局、已提交的完整 LoopScroll 代码及 Unity UGUI。原对象、程序集、代码、原生引用、117个组件／1223个字段和输出哈希见 [report-foundation-source-manifest.json](battle-hud/report-foundation-source-manifest.json)，此清单覆盖运行 prefab 的后续输出；表头列宽／间距、行池及模拟列表拖拽通过，数据／下拉提供者与正式入口尚未完成，同步滚动见下条。此前新增战报图集和字体尚未生成完整素材快照。
+
+战报同步滚动：`restore_battle_report_scroll_sync.py` 从同版原组件严格读取3处表头／列表引用，迁移 `FightEndReportSkillTabView` 的限制、归一化复位和比例跟随方法。来源、原对象及后续 prefab 输出哈希见 [report-scroll-source-manifest.json](battle-hud/report-scroll-source-manifest.json)。本地初始化入口适配原 UIBase 生命周期，保留原布局刷新次序；模拟列表拖拽与两端越界、普通战斗统计和结算返回通过。真实数据提供者、下拉框与正式入口仍待迁移。
 
 存档选择界面：`scripts/prepare_official_save_selection.py` 复用启动页提取工具，从固定854官方 APK 恢复 `PlanesListPanel`、列表内嵌 `PlanesRoleItem` 与原启动模糊遮罩，共131个对象、37张 Sprite、16个原动画片段；保留原层级、锚点、TMP字体／描边、Sprite几何、RawImage UV、页签 Animator 与窗口显示曲线。角色头像复用原外观网格、摄影参数及待机姿势；本地槽位替代在线位面提供者。APK、bundle／CAB／对象、官方代码及载荷哈希见 [source-manifest.json](save-selection/source-manifest.json)，Unity原生转换、资源目录和显式绑定哈希见 [native-source-manifest.json](save-selection/native-source-manifest.json)。提取均来自APK及严格同哈希缓存，没有混入其他版本；新增素材未生成完整备份快照。实际验证范围见[设置、拍照与本地存档](../../docs/features/settings-and-save.md)。

@@ -67,6 +67,8 @@ def build(source_root, ugui, netstandard):
     graphics = json.loads(graphics_path.read_bytes()) if graphics_path.exists() else None
     foundation_path = ROOT / 'assets/reference/battle-hud/report-foundation-source-manifest.json'
     foundation = json.loads(foundation_path.read_bytes()) if foundation_path.exists() else None
+    scroll_path = ROOT / 'assets/reference/battle-hud/report-scroll-source-manifest.json'
+    scroll = json.loads(scroll_path.read_bytes()) if scroll_path.exists() else None
     baseline = json.loads((ROOT / 'assets/reference/battle-hud/report-panels-source-manifest.json').read_bytes())
     by_name = {Path(row['path']).name: row for row in baseline['runtime_prefabs']}
     guids = {name: metadata(ROOT / SCRIPT_PATH / ('World' + name + '.cs')) for name in TAB_CLASSES}
@@ -85,6 +87,8 @@ def build(source_root, ugui, netstandard):
         graphic_output = next((r['sha256'] for r in graphics['outputs'] if r['path'] == record['path']), None) if graphics else None
         foundation_output = next((r['sha256'] for r in foundation['outputs'] if r['path'] == record['path']), None) if foundation else None
         allowed = {record['sha256'], expected, graphic_output, foundation_output}
+        if scroll:
+            allowed.update(x['sha256'] for x in scroll['outputs'] if x['path'] == record['path'])
         if digest(raw) not in allowed and digest(raw.replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Changed runtime report prefab: ' + str(target))
         # Always rebuild from the unmodified native export, with the existing UGUI/TMP adaptation.
