@@ -9,6 +9,19 @@ namespace Zjcs.Editor.Combat
 {
     public static class OfficialBattleReportStatisticsAcceptance
     {
+        public static void InstallSourceFixture(Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
+        {
+            var player = controller.Checkpoint.Units.First(value => value.Id == 1);
+            var skill = player.Skills.First(value => value.Hits.Count > 0 || value.HitGraphEntities.Any(hit => hit.HasFixedDamage));
+            var catalog = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().Load();
+            int instanceId = player.Statuses.Select(value => value.InstanceId).DefaultIfEmpty(0).Max() + 1;
+            // Original 60840 reacts to a skill ending by adding Buff 60841 to its creator.
+            // Only the source binding is a controlled fixture, rather than inferred player loadout.
+            player.Statuses.Add(catalog.CreateStatus(60840, player.Id, player.Id,
+                instanceId, skill.EntityId, skill.ItemId, skill.Rank, skill.Level,
+                skill.SubRank, player.Properties));
+        }
+
         public static void InstallShieldFixture(Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
         {
             var player = controller.Checkpoint.Units.First(value => value.Id == 1);
@@ -84,6 +97,29 @@ namespace Zjcs.Editor.Combat
                 totalHits += row.DamageHits;
             }
             Require(totalHits > 0, "Completed battle did not exercise report damage-hit counting.");
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SOURCES") == "1")
+            {
+                var child = checkpoint.Units.SelectMany(value => value.Statuses)
+                    .First(value => value.ClassId == 60841);
+                var source = FightBattleStatusReportSource.Resolve(child);
+                Require(child.ReportSource != null && child.ReportSource.IsSet
+                    && source.UnitId == 1 && report.Skills.Any(value => value.UnitId == source.UnitId
+                        && value.SkillEntityId == source.SkillEntityId && value.BuffApplications > 0),
+                    "Live skill-end reaction lost its established report root.");
+                var savedChild = restored.Units.SelectMany(value => value.Statuses)
+                    .First(value => value.ClassId == 60841);
+                var savedSource = FightBattleStatusReportSource.Resolve(savedChild);
+                Require(savedSource.UnitId == source.UnitId && savedSource.SkillEntityId == source.SkillEntityId
+                    && savedSource.SkillItemId == source.SkillItemId, "Unity serialization lost inherited report ancestry.");
+                foreach (var status in restored.Units.SelectMany(value => value.Statuses)
+                    .Where(value => value.ReportSource == null || !value.ReportSource.IsSet))
+                {
+                    var direct = FightBattleStatusReportSource.Resolve(status);
+                    Require(direct.UnitId == status.CreatorId && direct.SkillEntityId == status.RootSkillId,
+                        "Unity default inline object replaced an established direct report source.");
+                }
+                Debug.Log("Battle report source ancestry passed in Play Mode: original 60840/60841 reaction, root credit and Unity checkpoint persistence.");
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SHIELDS") == "1")
             {
                 long shield = report.Skills.Where(value => value.UnitId == 1).Sum(value => value.ShieldGranted);

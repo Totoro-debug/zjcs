@@ -248,6 +248,8 @@ namespace Zjcs.Editor
             Combat.OfficialBattleWorldTipsAcceptance.Probe worldTipTest=null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SHIELDS") == "1")
                 Combat.OfficialBattleReportStatisticsAcceptance.InstallShieldFixture(sceneController);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SOURCES") == "1")
+                Combat.OfficialBattleReportStatisticsAcceptance.InstallSourceFixture(sceneController);
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP")=="1")
                 worldTipTest=Combat.OfficialBattleWorldTipsAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";

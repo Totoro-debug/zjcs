@@ -45,16 +45,16 @@ function New-DamageRequest($info, $schema) {
     return $request
 }
 
-$rules = Get-Content (Join-Path $root 'assets/official/rules.json') -Raw | ConvertFrom-Json
-$skillRules = Get-Content (Join-Path $root 'assets/official/skill-rules.json') -Raw | ConvertFrom-Json
-$battleRules = Get-Content (Join-Path $root 'assets/official/battle-rules.json') -Raw | ConvertFrom-Json
-$skillSource = Get-Content (Join-Path $root 'assets/reference/skill-rules/source-manifest.json') -Raw | ConvertFrom-Json
-$battleSource = Get-Content (Join-Path $root 'assets/reference/battle-rules/source-manifest.json') -Raw | ConvertFrom-Json
-$skillJson = Get-Content (Join-Path $root 'assets/official/skill-rules.json') -Raw
-$battleJson = Get-Content (Join-Path $root 'assets/official/battle-rules.json') -Raw
+$rules = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/rules.json') -Raw | ConvertFrom-Json
+$skillRules = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/skill-rules.json') -Raw | ConvertFrom-Json
+$battleRules = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/battle-rules.json') -Raw | ConvertFrom-Json
+$skillSource = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/skill-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$battleSource = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/battle-rules-source-manifest.json') -Raw | ConvertFrom-Json
+$skillJson = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/skill-rules.json') -Raw
+$battleJson = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/battle-rules.json') -Raw
 $hpPliesJson = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/monster-hp-plies.json') -Raw
-$rulesJson = Get-Content (Join-Path $root 'assets/official/rules.json') -Raw
-$citySource = Get-Content (Join-Path $root 'assets/reference/official-city/source-manifest.json') -Raw | ConvertFrom-Json
+$rulesJson = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/rules.json') -Raw
+$rulesSource = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/rules-source-manifest.json') -Raw | ConvertFrom-Json
 $hpPliesSource = Get-Content (Join-Path $root 'unity/Assets/Official/Combat/monster-hp-plies-source-manifest.json') -Raw | ConvertFrom-Json
 $officialCatalog = [Zjcs.Combat.Official.FightOfficialCombatCatalog]::Load(
     $skillJson, $skillSource.output_sha256, $skillSource.manifest,
@@ -99,7 +99,7 @@ Assert-Combat (($multiRootSkill.HitGraphRootEntityIds -join ',') -eq '56131,5613
 Assert-Combat ($officialStatus.FalloffTarget -eq 1 -and $officialStatus.FalloffPercent -eq 4000 -and $officialStatus.RootSkillIds -contains 16100) 'Official falloff status mapping mismatch'
 Assert-Combat ($officialStatus.DurationRound -eq 0 -and $officialStatus.StackCount -eq 1) 'Official base status fields were not instantiated'
 $skillItems = [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load(
-    $rulesJson, $citySource.data_sha256.'rules.json', $citySource.manifest)
+    $rulesJson, $rulesSource.output_sha256, $rulesSource.manifest)
 $swordStarter = $skillItems.Required(10012)
 $wandStarter = $skillItems.Required(10028)
 Assert-Combat ($skillItems.Count -eq 1874 -and $swordStarter.EntityId -eq 10640 -and $wandStarter.EntityId -eq 10800) 'Official skill item to EC entity mapping mismatch'
@@ -114,7 +114,7 @@ $missingSkillItem = $null
 Assert-Combat (-not $skillItems.TryGet(1, [ref]$missingSkillItem) -and $null -eq $missingSkillItem) 'Official skill item catalog resolved an absent item'
 $badSkillItemCatalogRejected = $false
 try {
-    [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load($rulesJson, ('0' * 64), $citySource.manifest)
+    [Zjcs.Combat.Official.FightOfficialSkillItemCatalog]::Load($rulesJson, ('0' * 64), $rulesSource.manifest)
 } catch { $badSkillItemCatalogRejected = $true }
 Assert-Combat $badSkillItemCatalogRejected 'Official skill item catalog accepted a mismatched rules digest'
 $pigName = $officialCatalog.MonsterName(3206)
@@ -319,7 +319,7 @@ $randomBattleWave.Index = 0
 foreach ($randomEnemy in $randomBattleEnemies) { $randomBattleWave.UnitIds.Add($randomEnemy.Id) }
 $randomBattleCheckpoint.Waves.Add($randomBattleWave)
 $randomBattleFormula = $officialCatalog.CreateDamageFormula(
-    $rulesJson, $citySource.data_sha256.'rules.json', $citySource.manifest)
+    $rulesJson, $rulesSource.output_sha256, $rulesSource.manifest)
 $randomBattleExecutor = [Zjcs.Combat.Official.FightBattleExecutor]::Begin(
     $randomBattleCheckpoint, $randomBattleFormula, [Zjcs.Combat.Official.FightDamageSettlement]::new())
 $randomBattleResult = $randomBattleExecutor.Step(0, 1)
@@ -366,7 +366,7 @@ try {
 Assert-Combat $badCatalogRejected 'Official catalog accepted a payload with a mismatched source digest'
 $badFormulaRulesRejected = $false
 try {
-    $officialCatalog.CreateDamageFormula($rulesJson, ('0' * 64), $citySource.manifest)
+    $officialCatalog.CreateDamageFormula($rulesJson, ('0' * 64), $rulesSource.manifest)
 } catch { $badFormulaRulesRejected = $true }
 Assert-Combat $badFormulaRulesRejected 'Official damage formula accepted a rules payload with a mismatched source digest'
 $reference = Get-Content (Join-Path $root 'assets/reference/battle-rules/damage-reference.json') -Raw | ConvertFrom-Json
@@ -380,7 +380,7 @@ foreach ($property in $rules.prop_cfg) {
 }
 
 $formula = $officialCatalog.CreateDamageFormula(
-    $rulesJson, $citySource.data_sha256.'rules.json', $citySource.manifest)
+    $rulesJson, $rulesSource.output_sha256, $rulesSource.manifest)
 $speeds = $officialCatalog.SpeedSettings
 Assert-Combat ($speeds.Speeds.Count -eq 4 -and $speeds.Speeds[1] -eq 1.5 -and $speeds.Label(2) -eq '3') 'Official battle speed table or label mapping mismatch'
 $lockedSpeeds = $speeds.Resolve(0, { param($id) $false })

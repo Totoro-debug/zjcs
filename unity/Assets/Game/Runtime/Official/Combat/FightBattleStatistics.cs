@@ -184,16 +184,17 @@ namespace Zjcs.Combat.Official
                     if (amount == 0) continue;
                     FightBattleUnitStatistics target = Unit(owner.Id);
                     target.ShieldReceived = checked(target.ShieldReceived + amount);
-                    if (status.CreatorId <= 0) continue;
-                    FightBattleUnitStatistics source = Unit(status.CreatorId);
+                    FightBattleStatusReportSource reportSource = FightBattleStatusReportSource.Resolve(status);
+                    if (reportSource.UnitId <= 0) continue;
+                    FightBattleUnitStatistics source = Unit(reportSource.UnitId);
                     source.ShieldGranted = checked(source.ShieldGranted + amount);
-                    if (status.RootSkillId <= 0)
+                    if (reportSource.SkillEntityId <= 0)
                     {
                         source.UnattributedShieldGranted = checked(source.UnattributedShieldGranted + amount);
                         continue;
                     }
-                    FightBattleSkillStatistics skill = Skill(status.CreatorId, status.RootSkillId,
-                        status.ApplyingSkillItemId);
+                    FightBattleSkillStatistics skill = Skill(reportSource.UnitId, reportSource.SkillEntityId,
+                        reportSource.SkillItemId);
                     skill.ShieldGranted = checked(skill.ShieldGranted + amount);
                 }
             }

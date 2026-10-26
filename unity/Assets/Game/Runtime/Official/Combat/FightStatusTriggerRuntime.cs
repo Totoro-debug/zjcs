@@ -213,6 +213,7 @@ namespace Zjcs.Combat.Official
                     FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId,
                         target.Id, actor.Id, instanceId, skill.EntityId, skill.ItemId,
                         skill.Rank, skill.Level, skill.SubRank, actor.Properties);
+                    template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
                     FightStatusLifecycle.Apply(target, template, -1, instanceId, random);
                     applied++;
                 }
@@ -254,6 +255,7 @@ namespace Zjcs.Combat.Official
                             instanceId = existing.InstanceId + 1;
                     FightBattleStatusState template = catalog.CreateStatus(statusId, unit.Id,
                         status.CreatorId <= 0 ? unit.Id : status.CreatorId, instanceId);
+                    template.ReportSource = FightBattleStatusReportSource.Resolve(status).Copy();
                     FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
                 }
                 if (triggerSkills != null && status.HpTriggerSkills != null)
@@ -326,6 +328,7 @@ namespace Zjcs.Combat.Official
                         instanceId = existing.InstanceId + 1;
                 FightBattleStatusState template = catalog.CreateStatus(trigger.EntityId, unit.Id,
                     unit.Id, instanceId);
+                template.ReportSource = FightBattleStatusReportSource.Resolve(source).Copy();
                 FightStatusLifecycle.Apply(unit, template, -1, instanceId, random);
             }
         }

@@ -196,6 +196,7 @@ namespace Zjcs.Combat.Official
                 CreatorId = template.CreatorId,
                 RootSkillId = template.RootSkillId,
                 ApplyingSkillItemId = template.ApplyingSkillItemId,
+                ReportSource = template.ReportSource == null ? null : template.ReportSource.Copy(),
                 SourceSkillRank = template.SourceSkillRank,
                 SourceSkillLevel = template.SourceSkillLevel,
                 SourceSubRank = template.SourceSubRank,
@@ -319,11 +320,12 @@ namespace Zjcs.Combat.Official
             if (template.StatusType < 1 || template.StatusType > 3) return;
             if (unit.PendingStatusApplications == null)
                 unit.PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
+            FightBattleStatusReportSource source = FightBattleStatusReportSource.Resolve(template);
             unit.PendingStatusApplications.Add(new FightBattleStatusApplicationEvent
             {
-                CreatorId = template.CreatorId,
-                RootSkillId = template.RootSkillId,
-                ApplyingSkillItemId = template.ApplyingSkillItemId,
+                CreatorId = source.UnitId,
+                RootSkillId = source.SkillEntityId,
+                ApplyingSkillItemId = source.SkillItemId,
                 StatusType = template.StatusType
             });
         }

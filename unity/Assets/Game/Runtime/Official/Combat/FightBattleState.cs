@@ -109,6 +109,35 @@ namespace Zjcs.Combat.Official
     }
 
     [Serializable]
+    public sealed class FightBattleStatusReportSource
+    {
+        // Unity may deserialize a null inline class as a default object; that is not an ancestry record.
+        public bool IsSet;
+        public int UnitId;
+        public int SkillEntityId;
+        public int SkillItemId;
+
+        public FightBattleStatusReportSource Copy()
+        {
+            return new FightBattleStatusReportSource
+            {
+                IsSet = IsSet, UnitId = UnitId, SkillEntityId = SkillEntityId, SkillItemId = SkillItemId
+            };
+        }
+
+        public static FightBattleStatusReportSource Resolve(FightBattleStatusState status)
+        {
+            // Missing legacy metadata can use only the direct source already stored in that save.
+            return status.ReportSource != null && status.ReportSource.IsSet
+                ? status.ReportSource : new FightBattleStatusReportSource
+            {
+                IsSet = true, UnitId = status.CreatorId, SkillEntityId = status.RootSkillId,
+                SkillItemId = status.ApplyingSkillItemId
+            };
+        }
+    }
+
+    [Serializable]
     public sealed class FightBattleStatusState
     {
         public int InstanceId;
@@ -145,6 +174,8 @@ namespace Zjcs.Combat.Official
         public int CreatorId;
         public int RootSkillId;
         public int ApplyingSkillItemId;
+        // Statistical ancestry is independent of gameplay creator, property snapshots and falloff.
+        public FightBattleStatusReportSource ReportSource;
         public int FalloffTarget;
         public int DamageId;
         public int[] RootSkillIds = Array.Empty<int>();
