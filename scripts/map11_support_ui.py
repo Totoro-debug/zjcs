@@ -13,12 +13,13 @@ from prepare_unity_map10_entities import ROOT, write_generated
 
 
 class Map11NativeUiSchemas(ScriptSchemas):
-    def __init__(self, assemblies):
+    def __init__(self, assemblies, code_root=None):
         # UGUI layout enums and RectOffset require the actual editor Core and
         # TextRendering assemblies. Read original bytes with strict consumption;
         # no official game scripts are replaced by these schema dependencies.
         self.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
-        paths = {path.name: path for path in (ROOT / ".tools/source-packages/official-code/managed/decoded").glob("*.dll")}
+        code_root = code_root or ROOT / ".tools/source-packages/official-code"
+        paths = {path.name: path for path in (code_root / "managed/decoded").glob("*.dll")}
         paths.update({name + ".dll": path for name, path in assemblies.items()})
         for path in paths.values():
             self.generator.load_dll(path.read_bytes())
@@ -26,7 +27,7 @@ class Map11NativeUiSchemas(ScriptSchemas):
 
 
 class Map11SupportUi(CookingConverter):
-    def __init__(self, apk, schemas, sprite_root=None):
+    def __init__(self, apk, schemas, sprite_root=None, code_root=None):
         self.apk, self.schemas = apk, schemas
         self.sprite_root = sprite_root or ROOT / "unity/Assets/Official/World/Map/11/UI/Sprites"
         self.sprite_outputs = {}
@@ -37,10 +38,10 @@ class Map11SupportUi(CookingConverter):
             "UnityEngine.CoreModule": editor / "Managed/UnityEngine/UnityEngine.CoreModule.dll",
             "UnityEngine.TextRenderingModule": editor / "Managed/UnityEngine/UnityEngine.TextRenderingModule.dll",
             "netstandard": editor / "NetStandard/ref/2.1.0/netstandard.dll",
-            "Framework": ROOT / ".tools/source-packages/official-code/managed/decoded/Framework.dll",
+            "Framework": (code_root or ROOT / ".tools/source-packages/official-code") / "managed/decoded/Framework.dll",
             "mscorlib": Path("C:/Windows/Microsoft.NET/Framework64/v4.0.30319/mscorlib.dll"),
         }
-        self.ui_schemas = Map11NativeUiSchemas(self.ui_assemblies)
+        self.ui_schemas = Map11NativeUiSchemas(self.ui_assemblies, code_root)
         self.native_components = []
 
     def game_object_components(self, game_object):
@@ -90,15 +91,17 @@ class Map11SupportUi(CookingConverter):
         return record
 
 
-def load_support_ui(apk, schemas):
-    exporter = Map11SupportUi(apk, schemas)
+def load_support_ui(apk, schemas, map_id=11, code_root=None):
+    exporter = Map11SupportUi(apk, schemas,
+        ROOT / f"unity/Assets/Official/World/Map/{map_id}/UI/Sprites", code_root)
+    constructors = Constructors(code_root)
     config = apk.asset("scriptableconfig_modules_itemicon", "/ItemIconManagerConfig.asset")
     fields = schemas.read(config)
     icon = PPtr(**fields["DefPrefab"], assetsfile=config.assets_file).deref()
     item_object = apk.asset("config_luban", "Assets/Config/Luban/item.g.bytes")
     item_payload = item_object.read().m_Script.encode("utf-8", "surrogateescape")
     item_ids = (1, 2, 3, 56, 57, 110, 115, 118, 325, 2011, 2012, 2013, 2014, 2015, 2016, 41300, 41400, 42200)
-    all_items = Constructors().table(item_payload, "TbItemInfo")
+    all_items = constructors.table(item_payload, "TbItemInfo")
     item_rows = [row for row in all_items if row["ClassId"] in item_ids]
     if len(item_rows) != len(item_ids) or any(row["ItemType"] in fields["TypeList"]
                                 or row["ClassId"] in fields["IdList"] for row in item_rows):
@@ -106,8 +109,8 @@ def load_support_ui(apk, schemas):
     exploration = json.loads((ROOT / "unity/Assets/Game/Resources/World/Mainline/exploration.json").read_text(encoding="utf-8"))
     exploration_ids = {row["ClassId"] for row in exploration["items"]}
     region_obj = apk.asset("config_luban_map", "/map_region.g.bytes")
-    regions = Constructors().table(region_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapRegionInfo")
-    drop_items = {item for row in regions if row["ClassId"] == 11 for item in row["DropItems"]}
+    regions = constructors.table(region_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapRegionInfo")
+    drop_items = {item for row in regions if row["ClassId"] == map_id for item in row["DropItems"]}
     # Treasure-gacha tables span every mainland. Their selector intersects the
     # active region's DropItems; retain all common rewards and this map's union.
     item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ItemType"] in (100, 101) or row["ClassId"] in exploration_ids
@@ -169,7 +172,7 @@ def load_support_ui(apk, schemas):
                  "WorldTouchDialogWithPreview", "WorldTouchDialogPeriodicityInteraction",
                  "WorldTouchDialogNegativePeriodicityInteraction", "WorldStageInteractionPreviewDialogHeroStatue",
                  "WorldStageInteractionResultAwardExtraPropPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
-                 "6570_11_DialogIcon", "6571_11_DialogIcon", "6572_11_DialogIcon", "6573_11_DialogIcon",
+                 *[f"{identity}_{map_id}_DialogIcon" for identity in range(6570, 6574)],
                  "WorldStageInteractionResultAwardStatusEffectPreview", "WorldStageInteractionResultAwardStatusEffectPreviewItem",
                  "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview"):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_worldmap.bundle"
@@ -205,7 +208,7 @@ def load_support_ui(apk, schemas):
                   "items": dict(apk.provenance(item_object), payloadSha256=hashlib.sha256(item_payload).hexdigest(),
                                 rows=[{key: row[key] for key in ("ClassId", "ItemType", "Quality", "RawIcon")} for row in item_rows]),
                   "awardManagerConfig": apk.provenance(award_config),
-                  "regionDropItems": dict(apk.provenance(region_obj), mapClassId=11, items=sorted(drop_items)),
+                  "regionDropItems": dict(apk.provenance(region_obj), mapClassId=map_id, items=sorted(drop_items)),
                   "topBarManagerConfig": apk.provenance(topbar_config),
                   "schemas": exporter.ui_schemas.records,
                   "schemaAssemblies": {name: {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}

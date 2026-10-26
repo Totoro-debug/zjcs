@@ -12,17 +12,29 @@ using Zjcs.Presentation.World;
 namespace Zjcs.Editor
 {
     // Payload rendering check. Complete map interactions have a separate scope.
-    public static class OfficialMap12PlayModeAcceptance
+    public static partial class OfficialMap12PlayModeAcceptance
     {
         private const string Key = "Zjcs.Map12.SourceRendering";
         private static bool started;
 
-        public static void Run()
+        public static void Run() => RunCore(false);
+        public static void RunUi() => RunCore(true);
+        public static void RunUiImported() => RunCore(true, false);
+        public static void RunUiMap11Regression()
+        {
+            try { OfficialMap11UiTools.ImportForMap(11); RunCore(true, false, 11); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12)
         {
             try
             {
-                OfficialMap12Tools.ImportAndValidate();
+                if (import) OfficialMap12Tools.ImportAndValidate();
+                if (verifyUi && import) OfficialMap11UiTools.ImportForMap(12);
                 ProjectTools.Validate();
+                SessionState.SetBool(Key + ".ui", verifyUi);
+                SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);
                 SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
@@ -78,7 +90,9 @@ namespace Zjcs.Editor
                 yield return current;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map12 source Play Mode rendering passed. Gameplay, UI, puzzles and save recovery are not covered.");
+            Debug.Log(SessionState.GetBool(Key + ".ui", false)
+                ? "Map" + SessionState.GetInt(Key + ".uiMap", 12) + " native UI Play Mode passed: two portrait scales, goddess icon states and simulated button input. Full map and persistence remain separate."
+                : "Map12 source Play Mode rendering passed. Gameplay, UI, puzzles and save recovery are not covered.");
             EditorApplication.isPlaying = false;
         }
 
@@ -86,6 +100,12 @@ namespace Zjcs.Editor
         {
             if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
                 throw new InvalidOperationException("Map12 graphics must run with Direct3D12.");
+            if (SessionState.GetBool(Key + ".ui", false))
+            {
+                IEnumerator uiSteps = VerifyUiSteps();
+                while (uiSteps.MoveNext()) yield return uiSteps.Current;
+                yield break;
+            }
             var session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 12);
             var terrain = UnityEngine.Object.Instantiate(session.Assets.GroundPrefab);
             var camera = new GameObject("Map12SourceCamera").AddComponent<Camera>();

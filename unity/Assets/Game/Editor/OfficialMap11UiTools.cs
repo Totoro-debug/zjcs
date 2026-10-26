@@ -15,8 +15,9 @@ namespace Zjcs.Editor
 {
     public static partial class OfficialMap11UiTools
     {
-        private const string SourceRoot = "Assets/Official/World/Map/11/UI";
-        private const string ResourceRoot = "Assets/Game/Resources/Map11/UI";
+        private static int activeMapId = 11;
+        private static string SourceRoot => "Assets/Official/World/Map/" + activeMapId + "/UI";
+        private static string ResourceRoot => "Assets/Game/Resources/Map" + activeMapId + "/UI";
 
         public static void ImportAndValidate()
         {
@@ -80,13 +81,24 @@ namespace Zjcs.Editor
         }
 
         [MenuItem("Zjcs/World/Map11/Restore Goddess Prefabs")]
-        public static void Import()
+        public static void Import() => ImportForMap(11);
+
+        public static void ImportForMap(int mapClassId)
+        {
+            if (mapClassId != 11 && mapClassId != 12) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            int previous = activeMapId;
+            try { activeMapId = mapClassId; ImportNative(); }
+            finally { activeMapId = previous; }
+        }
+
+        private static void ImportNative()
         {
             AssetDatabase.Refresh();
-            string path = SourceRoot + "/map11-ui.json";
+            string path = SourceRoot + "/map" + activeMapId + "-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 65)
-                throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
+            if (data.manifest != (activeMapId == 11 ? "854_156383" : "871_156598")
+                || data.mapClassId != activeMapId || data.panels.Length != 65)
+                throw new InvalidDataException("Official map UI data is incomplete: " + activeMapId);
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
             if (!File.Exists(catalogPath) || !File.ReadAllBytes(path).SequenceEqual(File.ReadAllBytes(catalogPath)))
@@ -239,7 +251,7 @@ namespace Zjcs.Editor
                         || panel.key == "WorldStageDialogWithWitchStoryCollect"
                         || panel.key == "StoryWitchBookDialog" || panel.key == "StoryBookDialog"
                         || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
-                        || panel.key == "ItemAwardIcon" || panel.key.EndsWith("_DialogIcon", StringComparison.Ordinal)
+                        || panel.key == "ItemAwardIcon"
                         || panel.key == "FunctionEntryDialog" || panel.key == "MarkUIFilterEntryItem"
                         || panel.key == "MiniMapMarkFilterItem" || panel.key == "FirstPayBtn"
                         || panel.key.StartsWith("Explore", StringComparison.Ordinal) || panel.key.StartsWith("AwardListPanel", StringComparison.Ordinal)
@@ -293,6 +305,7 @@ namespace Zjcs.Editor
                     }
                     if (panel.key.EndsWith("_DialogIcon"))
                     {
+                        BindSupportPrefab(root, panel.key, data, Require, sprites);
                         foreach (OfficialMap11UiIconBinding iconBinding in data.iconBindings.Where(value => value.key == panel.key))
                         {
                             GoddessDialogIcon icon = Require(iconBinding.path).gameObject.AddComponent<GoddessDialogIcon>();
@@ -312,6 +325,9 @@ namespace Zjcs.Editor
                         UnityEngine.Object.DestroyImmediate(root);
                         continue;
                     }
+                    // The selected native prefab owns its JSZX layout groups,
+                    // Canvas and raycaster too; its content height is layout-driven.
+                    if (activeMapId == 12) BindSupportPrefab(root, panel.key, data, Require, sprites);
                     OfficialMap11UiBindings binding = data.bindings.Single(value => value.key == panel.key);
                     GoddessTouchDialog dialog = root.AddComponent<GoddessTouchDialog>();
                     dialog.myTouchBtn = Component<Button>(binding.touchButton);
@@ -344,7 +360,7 @@ namespace Zjcs.Editor
                 if (prefab == null || prefab.GetComponentsInChildren<RectTransform>(true).Length < 2)
                     throw new InvalidDataException("Official witch UI hierarchy did not import: " + panel);
             }
-            Debug.Log("Map11 native prefabs restored: WorldCanvas, 2 goddess panels, 2 dynamic icons, confirmation, exchange, item icon, "
+            Debug.Log("Map" + activeMapId + " native prefabs restored: WorldCanvas, 2 goddess panels, dynamic icons, confirmation, exchange, item icon, "
                 + "and native witch books, periodic interaction and result previews; " + data.sprites.Length + " sprites.");
         }
     }

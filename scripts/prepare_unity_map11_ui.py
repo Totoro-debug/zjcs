@@ -264,11 +264,13 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 if script.m_ClassName == "Mask":
                     if len(component_data) != 36 or component_data[32] not in (0, 1):
                         raise ValueError("Unexpected pinned UI Mask layout")
-                    fields = {"showMaskGraphic": bool(component_data[32])}
+                    fields = {"showMaskGraphic": bool(component_data[32]),
+                              "m_Enabled": int(obj.read(check_read=False).m_Enabled)}
                 else:
                     if len(component_data) < 84 or component_data[60] not in (0, 1) or component_data[80] not in (0, 1):
                         raise ValueError("Unexpected pinned UI Image Graphic layout")
                     fields = {"color": list(struct.unpack_from("<4f", component_data, 44)),
+                              "m_Enabled": int(obj.read(check_read=False).m_Enabled),
                               "raycastTarget": bool(component_data[60]), "maskable": bool(component_data[80])}
                     if script.m_ClassName == "MirrorImage":
                         mirror = schemas.read(obj)
@@ -455,25 +457,39 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
     return panels, components, sprites, shader_programs
 
 
-def build():
-    source_path = ROOT / "assets/official/map-ui.json"
-    manifest_path = ROOT / "assets/reference/official-map/ui-source-manifest.json"
-    raw = source_path.read_bytes()
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest["manifest"] != VERSION or manifest["output_sha256"] != sha256(raw):
-        raise ValueError("Official map UI differs from the pinned source manifest")
-    source = json.loads(raw)
-    apk, schemas = Apk(reuse_current_cache=True), ScriptSchemas(assembly_overrides={
-        "Coffee.UIParticle": ROOT / ".tools/home-particle-schema/Coffee.UIParticle.dll"})
+def build(map_id=11):
+    if map_id not in (11, 12):
+        raise ValueError("Unsupported native mainline UI map")
+    OUTPUT = ROOT / f"unity/Assets/Official/World/Map/{map_id}/UI"
+    ICONS = tuple(f"{identity}_{map_id}_DialogIcon" for identity in (6010, 6011, 6620))
+    code_root = None
+    if map_id == 12:
+        from prepare_unity_map12_ui import prepare_context
+        (source_path, manifest_path, raw, manifest, source, apk, schemas, support) = prepare_context()
+        code_root = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    else:
+        source_path = ROOT / "assets/official/map-ui.json"
+        manifest_path = ROOT / "assets/reference/official-map/ui-source-manifest.json"
+        raw = source_path.read_bytes()
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest["manifest"] != VERSION or manifest["output_sha256"] != sha256(raw):
+            raise ValueError("Official map UI differs from the pinned source manifest")
+        source = json.loads(raw)
+        apk, schemas = Apk(reuse_current_cache=True), ScriptSchemas(assembly_overrides={
+            "Coffee.UIParticle": ROOT / ".tools/home-particle-schema/Coffee.UIParticle.dll"})
+        support = load_support_ui(apk, schemas)
+    constructors = Constructors(code_root)
+    official_code = code_root or ROOT / ".tools/source-packages/official-code"
+    version = apk.version if map_id == 12 else VERSION
     panels, components, sprites, shader_programs = [], [], {}, {}
-    extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = load_support_ui(apk, schemas)
+    extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = support
     source.update(extra_trees)
     manifest["prefabs"].update(extra_sources)
     manifest["resources"].update(extra_resources)
     panel_keys = PANELS + ICONS + ("WorldCanvas",) + tuple(extra_trees)
 
     panels, components, sprites, shader_programs = extract_panels(
-        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw)
+        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, OUTPUT)
 
     # Native world-space player marker used by MiniMapCharacterManager. Its
     # SpriteRenderers and loop clip are independent of the UGUI panel hierarchy.
@@ -522,11 +538,11 @@ def build():
                            "source": apk.provenance(component)})
 
     mark_prefabs, mark_bindings, mark_components, mark_sources, mark_inputs = extract_marks(
-        apk, schemas, support_exporter, lambda animation, tree: animation_record(apk, animation, tree), sprites)
+        apk, schemas, support_exporter, lambda animation, tree: animation_record(apk, animation, tree), sprites, map_id)
     components.extend(mark_components)
     marks_object = apk.asset("config_luban", "/minimap_marks.g.bytes")
-    mark_rows = Constructors().table(marks_object.read().m_Script.encode("utf-8", "surrogateescape"), "TbMiniMapMarkInfo")
-    mark_rows = [row for row in mark_rows if 11 in (row["ShowOnMapClassId"] or []) or 11 in (row["ShowOnMapGroupId"] or [])]
+    mark_rows = constructors.table(marks_object.read().m_Script.encode("utf-8", "surrogateescape"), "TbMiniMapMarkInfo")
+    mark_rows = [row for row in mark_rows if map_id in (row["ShowOnMapClassId"] or []) or map_id in (row["ShowOnMapGroupId"] or [])]
     mark_sprite_objects = {obj.read().m_Name: obj for obj in apk.objects("defaultpackage_assets_image_mapworld_minimap_atlas.bundle")
                            if obj.type.name == "Sprite"}
     minimap_marks = []
@@ -536,8 +552,8 @@ def build():
         minimap_marks.append({"name": row["Name"], "sprite": sprite["file"], "description": row["Description"],
                               "showOnEntry": row["ShowOnFilterEntry"]})
     world_table = apk.asset("config_luban_map", "/map.g.bytes")
-    world_rows = Constructors().table(world_table.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapInfo")
-    world_row = next(row for row in world_rows if row["ClassId"] == 11)
+    world_rows = constructors.table(world_table.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapInfo")
+    world_row = next(row for row in world_rows if row["ClassId"] == map_id)
     minimap_settings = apk.asset("scriptableconfig_modules_mapcommon", "/MiniMapSettings.asset")
     settings = schemas.read(minimap_settings)
     tab_sprites = {obj.read().m_Name: obj for obj in apk.objects("defaultpackage_assets_image_ui_minimap.bundle")
@@ -546,16 +562,16 @@ def build():
     # Preserve MapInfo parser order and the official shared tab group. Only maps
     # with a migrated local asset provider can be browsed in this release.
     for row in world_rows:
-        if row["ClassId"] not in (10, 11) or row["MiniMapSwitchTabGroup"] != world_row["MiniMapSwitchTabGroup"]:
+        if row["ClassId"] not in tuple(range(10, map_id + 1)) or row["MiniMapSwitchTabGroup"] != world_row["MiniMapSwitchTabGroup"]:
             continue
         sprite = support_exporter.add_sprite(tab_sprites[row["MiniMapIcon"].rsplit("/", 1)[-1]])
         sprites[sprite["file"]] = sprite
         minimap_tabs.append({"mapClassId": row["ClassId"], "group": row["MiniMapSwitchTabGroup"],
             "sprite": sprite["file"], "settings": next(setting for setting in settings["Settings"]
                 if setting["MinimapConfigId"] == row["MinimapConfigId"])})
-    exploration_ui = extract_exploration_ui(apk, schemas, support_exporter, sprites)
+    exploration_ui = extract_exploration_ui(apk, schemas, support_exporter, sprites, code_root)
     rank_obj = apk.asset('config_luban', '/skill_rank.g.bytes')
-    skill_ranks = Constructors().table(rank_obj.read().m_Script.encode('utf-8', 'surrogateescape'), 'TbSkillRankInfo')
+    skill_ranks = constructors.table(rank_obj.read().m_Script.encode('utf-8', 'surrogateescape'), 'TbSkillRankInfo')
     lost_config_obj = apk.asset('scriptableconfig_modules_maplostgoddessawarddialogconfig', '/MapLostGoddessAwardDialogConfig.asset')
     lost_config = schemas.read(lost_config_obj)
     for icon in item_icons:
@@ -563,7 +579,7 @@ def build():
         sprites.setdefault(icon["qualitySprite"], icon.pop("qualityMetadata"))
     sprites.setdefault(quality_sprite["file"], quality_sprite)
     background_object = next(obj.deref() for path, obj in apk.container("defaultpackage_assets_image_ui_itemnotes.bundle")
-                             if path.endswith("/map_11_stage_bg.png") and obj.type.name == "Sprite")
+                             if path.endswith(f"/map_{map_id}_stage_bg.png") and obj.type.name == "Sprite")
     background_sprite = support_exporter.add_sprite(background_object)
     sprites[background_sprite["file"]] = background_sprite
     manifest["resources"].update(support_exporter.resources)
@@ -641,8 +657,8 @@ def build():
                 for i in range(1, 8) for suffix in ("title", "desc"))
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28500, 28501, 28502, 28503, 28504, 28505,
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
-    keys.extend("region_11_" + str(i) for i in range(77))
-    keys.extend(("map_pos_info", "Mainland_11", "Mainland_10"))
+    keys.extend(f"region_{map_id}_" + str(i) for i in range(77 if map_id == 11 else 99))
+    keys.extend(["map_pos_info"] + [f"Mainland_{i}" for i in range(10, map_id + 1)])
     keys.extend("entity_" + str(i) + suffix for i in range(6570, 6574)
                 for suffix in ("_name", "_desc", "_entitytouchtitle", "_entitytouchdesc", "_funcdesc"))
     keys.extend(("ui_witch_visit_btn_text", "ui_modify_cure_Hp", "PropType.MaxHp", "PropType.Attack", "PropType.Defence", "PropType.Speed"))
@@ -668,7 +684,7 @@ def build():
     keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
                 for i in range(100, 103) for suffix in ("title", "desc"))
     keys.extend(row["description"] for row in minimap_marks)
-    keys.extend("task_" + str(i) + suffix for i in range(1000, 1161, 5) for suffix in ("_title", "_progress", "_desc"))
+    keys.extend("task_" + str(i) + suffix for i in (range(1000, 1161, 5) if map_id == 11 else range(1165, 1271, 5)) for suffix in ("_title", "_progress", "_desc"))
     keys.extend(("confirmation", "confirm", "cancel", "GachaPanel.ReplaceRaffleTicket",
                  "ItemInfoDialog.Limit.QuickBuyConditionNotMet", "ui_ItemIcon_count_key",
                  "common_format_args1", "ui_common_item_not_enough", "item_325_name", "item_2_name", "item_3_name",
@@ -729,18 +745,18 @@ def build():
     portrait_settings = apk.asset("scriptableconfig_modules_playerportrait", "/PlayerPortraitSettings.asset")
     head_settings = next(row for row in schemas.read(portrait_settings)["mPhotographyParameters"] if row["MyTypes"] == [0])
     game_object = apk.asset("config_luban", "/game_settings.g.bytes")
-    game_settings = Constructors().table(game_object.read().m_Script.encode("utf-8", "surrogateescape"), "TbGameSettings")
+    game_settings = constructors.table(game_object.read().m_Script.encode("utf-8", "surrogateescape"), "TbGameSettings")
     game_settings = game_settings[0] if isinstance(game_settings, list) else game_settings
     rating_config = apk.asset("scriptableconfig_modules_combatrating", "/CombatRatingConfig.asset")
     rating_fields = schemas.read(rating_config)
     rating_colors = [{"type": row["Key"], "colors": rating_fields["mColorTemplates"][row["Value"]]["LevelColors"]["mSerializeBuffer"]}
                      for row in rating_fields["mTypeToThemes"]["mSerializeBuffer"]]
     item_settings = [{"type": 4, "itemId": game_settings["FoodId"]}, {"type": 2, "itemId": game_settings["TiliId"]}]
-    tili = next(row for row in Constructors().table(
+    tili = next(row for row in constructors.table(
         apk.asset("config_luban", "/item.g.bytes").read().m_Script.encode("utf-8", "surrogateescape"), "TbItemInfo")
         if row["ClassId"] == game_settings["TiliId"])
     item_settings[1]["maxCount"] = next(row["MaxCount"] for row in tili["Effects"] if row["_type"] == "ItemEffectAutoIncrease")
-    payload = {"manifest": VERSION, "mapClassId": 11, "panels": panels, "sprites": records,
+    payload = {"manifest": version, "mapClassId": map_id, "panels": panels, "sprites": records,
                "recommendCombatRatingIndex": game_settings["RecommendCombatRatingIndex"],
                "suppressUnlockRank": game_settings["SuppressUnlockRank"], "combatRatingColors": rating_colors,
                "minimapSettings": minimap_setting,
@@ -765,7 +781,7 @@ def build():
                "sourceUiSha256": sha256(source_path.read_bytes()), "components": components,
                "shaderPrograms": shader_programs}
     data = json_bytes(payload)
-    target = OUTPUT / "map11-ui.json"
+    target = OUTPUT / f"map{map_id}-ui.json"
     # This file is a deterministic source conversion; verify any previous version before replacing it.
     previous = OUTPUT / "source-manifest.json"
     known = {}
@@ -773,7 +789,7 @@ def build():
         old = json.loads(previous.read_text(encoding="utf-8"))
         known[target.resolve()] = old["output"]["sha256"]
         known[previous.resolve()] = sha256(previous.read_bytes())
-    output_manifest = {"manifest": VERSION, "mapClassId": 11,
+    output_manifest = {"manifest": version, "mapClassId": map_id,
                        "operation": "Preserve official prefab nodes, sprites, fields and managed StateSwitcher references; restore native Unity prefabs with explicit component bindings.",
                        "source": {"path": source_path.relative_to(ROOT).as_posix(), "sha256": payload["sourceUiSha256"],
                                   "manifestPath": manifest_path.relative_to(ROOT).as_posix(), "manifestSha256": sha256(manifest_path.read_bytes()),
@@ -781,7 +797,7 @@ def build():
                                   "itemIconConfig": icon_config_source,
                                   "lostGoddessUi": {"skillRanks": apk.provenance(rank_obj), "dialogConfig": apk.provenance(lost_config_obj)},
                                   "explorationCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
-                                      for path in [ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+                                      for path in [official_code / "client-source" / (name + ".cs")
                                           for name in ("WorldExploreBtn", "ExploreConfirmDialog", "ConfirmDialog", "ExploreDetailDialog",
                                               "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreProbabilityContent",
                                               "ExploreProbabilityItem", "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog",
@@ -791,11 +807,11 @@ def build():
                                               "LostGoddessResultTipsSkillRankItem", "LostGoddessResultDialogCharacterLevelItem",
                                               "LostGoddessResultDialogPlayerPropItem", "LostGoddessResultPlayerPropDialogItem",
                                               "ItemIconSkill", "SkillStarInfo", "StarMiniInfo")]
-                                      + [ROOT / ".tools/source-packages/official-code/framework-source/StateGameObjectConfig.cs",
-                                         ROOT / ".tools/source-packages/official-code/common-source/TextReplacer.cs",
-                                         ROOT / ".tools/source-packages/official-code/common-source/Common/LanguageUtils.cs",
-                                         ROOT / ".tools/source-packages/official-code/common-source/Common/ErrCode.cs",
-                                         ROOT / ".tools/source-packages/official-code/common-source/BroadcastManager.cs",
+                                      + [official_code / "framework-source/StateGameObjectConfig.cs",
+                                         official_code / "common-source/TextReplacer.cs",
+                                         official_code / "common-source/Common/LanguageUtils.cs",
+                                         official_code / "common-source/Common/ErrCode.cs",
+                                         official_code / "common-source/BroadcastManager.cs",
                                          ROOT / "scripts/map11_exploration_ui.py", ROOT / "scripts/map11_support_ui.py"]],
                                   "commonSpriteAsset": common_sources,
                                   "minimapSettings": apk.provenance(minimap_settings),
@@ -810,17 +826,17 @@ def build():
                                   "schemas": schemas.records,
                                   "nativeLayoutSchemas": ui_schemas.records,
                                   "nativeLayoutCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
-                                      for path in [ROOT / ".tools/source-packages/official-code/framework-source/UGUIJszx" / (name + ".cs")
+                                      for path in [official_code / "framework-source/UGUIJszx" / (name + ".cs")
                                           for name in ("HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "HorizontalOrVerticalLayoutGroupJSZX",
                                                        "GridLayoutGroupJSZX", "GridLayoutSettings", "GridLayoutSetting")]],
                                   "numberFormatCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
-                                      for path in [ROOT / ".tools/source-packages/official-code/framework-firstpass-source/Framework" / (name + ".cs")
+                                      for path in [official_code / "framework-firstpass-source/Framework" / (name + ".cs")
                                           for name in ("NumberWithSizeArg", "CultureNumberFormatterBase", "NumberCultureFormatter_CN", "NumberFormatHelper")]],
                                   "language": language_inputs,
                                   "globalColors": apk.provenance(colors_object),
                                   "sprites": {uri: manifest["resources"][uri] for uri in sorted(sprites)},
                                   "portedCode": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path.read_bytes())}
-                                                 for path in [ROOT / ".tools/source-packages/official-code" /
+                                                 for path in [official_code /
                                                               ("framework-firstpass-source" if name in ("SafeArea", "PopupWindow", "MirrorImage") else "client-source") / (name + ".cs")
                                                               for name in ("GoddessTouchDialog", "LostGoddessTouchDialog", "StageTouchUI", "StageDialog",
                                                                            "WorldDialogEntityContent", "GoddessDialogIcon", "MapDialogIconPreviewSlot",
@@ -839,14 +855,14 @@ def build():
                                                                            "HeadCharacterPortrait", "HeadCharacterPortraitBuilder", "PlayerExpSlider", "PlayerIconMeHpSlider",
                                                                            "TaskListItem", "TaskGoal", "TaskListRecommendCombatRatingItem", "UIColorByLevel", "CombatRatingConfig",
                                                                            "FunctionEntrysPanel", "FunctionEntryDialog", "FunctionEntryBigBtnItem", "FirstPayIconEntry", "TimeInfoUI", "PlayerDefaultItemUIHandler", "MePlayerItemUI")]]},
-                       "output": {"path": "map11-ui.json", "sha256": sha256(data), "panels": len(panels), "sprites": len(records)}}
+                       "output": {"path": f"map{map_id}-ui.json", "sha256": sha256(data), "panels": len(panels), "sprites": len(records)}}
     write_ui_payload(target, data, known)
     write_ui_payload(previous, json_bytes(output_manifest), known)
     for directory in (OUTPUT, OUTPUT / "Sprites"):
         write_meta(directory, "DefaultImporter")
     for path in (target, previous):
         write_meta(path, "TextScriptImporter")
-    print("Map11 official UI:", len(panels), "panels,", len(records), "sprites; SHA256", sha256(data))
+    print(f"Map{map_id} official UI:", len(panels), "panels,", len(records), "sprites; SHA256", sha256(data))
 
 
 if __name__ == "__main__":

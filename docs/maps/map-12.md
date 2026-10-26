@@ -18,6 +18,10 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 剧情载荷保留49个入口与17个递归子图、22项1165～1270主线任务、11处终端的完整原始参数；战斗载荷保留155关／858项实体绑定／17个场景。放置202的未消费 `LoStageBehStageComponent.StageIds=[2000]` 保留在源数据中；其原 EC 模板没有对应行为消费者，故不把缺失的2000伪造为可执行战斗。
 
+官方 UI 从当前选定来源重新解析65份 prefab 层级、928张 Sprite、序列化引用、JSZX 布局、原动画曲线和中文文本，绑定到 `Resources/Map12/UI/`；不使用截图或手写布局。`prepare_unity_map12_ui.py` 负责原对象提取，`OfficialMap11UiTools.ImportForMap(12)` 复用原生导入步骤，保留各 Sprite 的尺寸、边框、枢轴和 PPU。女神图标按原 `GoddessDialogIcon` 的状态对象清单切换；当前源数据另保留 Image／Mask 启用值，防止把遮罩禁用后直接显示黑色遮罩贴图。原 UIParticle 引用已记录，完整粒子模拟和全部特效尚未接入。当前仅为界面素材与组件绑定，地图运行状态、费用、奖励和存档仍须整体验证。
+
+`OfficialMap12PlayModeAcceptance.RunUiImported` 已在内置屏以 Direct3D12 实际运行，分别设置真实 GameView 分辨率并等待 Screen 尺寸同步，查看450×800和720×1280下的 HUD、女神及失落女神三种状态画面，核对原遮罩启用值、图标对象组、按钮尺寸与射线遮挡；模拟鼠标按下／抬起／点击，验证未满足条件、激活关闭及传送关闭分支。运行夹具使用独立界面数据与计数回调，未调用实际地图的发奖、扣费或存档，不代表正式玩家流程已经接通。
+
 `prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用及终端原清单5项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Play Mode 使用 Direct3D12 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
 
 ## 自定义实现
@@ -46,7 +50,7 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 ### 依据与代码定位
 
 - [当前程序集、配置、剧情与模板来源](../../assets/reference/official-map/map12-source-manifest.json)、[资源转换与哈希](../../assets/reference/official-map/map12-unity-source-manifest.json)。
-- [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)。
+- [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)、[官方界面原对象与转换](../../unity/Assets/Official/World/Map/12/UI/source-manifest.json)、[原生界面加载绑定及哈希](../../assets/reference/official-map/map12-ui-native-source-manifest.json)。
 - [剧情／任务／机关载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗来源](../../assets/reference/official-map/map12-battles-source-manifest.json)。
 - [原区域](../../assets/official/regions/12.json)、[原配置](../../assets/official/adventure.json)、[Unity 地图定义](../../unity/Assets/Official/World/Map/12/map12.json)。
 - [转换入口](../../scripts/prepare_unity_map12.py)、[当前来源解码](../../scripts/prepare_unity_map12_sources.py)、[Unity 导入](../../unity/Assets/Game/Editor/OfficialMap12Tools.cs)、[场景渲染检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs)。

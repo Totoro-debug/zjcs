@@ -12,6 +12,18 @@ namespace Zjcs.Editor
     {
         private const string Root = "Assets/Official/World/Map/12";
 
+        public static void ImportUiAndValidate()
+        {
+            try
+            {
+                OfficialMap11UiTools.ImportForMap(12);
+                ImportAndValidate();
+                ProjectTools.Validate();
+                EditorApplication.Exit(0);
+            }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
         [MenuItem("Zjcs/World/Import and Validate Map12")]
         public static void ImportAndValidate()
         {

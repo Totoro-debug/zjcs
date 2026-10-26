@@ -29,7 +29,8 @@ def texture_imports(apk):
     for record in base['sprites']:
         records[Path(record['path']).name] = record['source']
     objects, imports = {}, []
-    for path in sorted(DEST.rglob('*.png')):
+    # UI sprites have their own native Sprite settings and source receipt.
+    for path in sorted((DEST / 'Resources').rglob('*.png')):
         record = records[path.name]
         if record.get('origin') == 'derived_official':
             record = record['source']

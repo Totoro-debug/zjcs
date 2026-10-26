@@ -20,6 +20,9 @@ namespace Zjcs.Editor
                 data.components.Single(value => value.panel == key && value.type == kind).fields;
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key))
             {
+                // Current-source exports also retain the native Graphic enabled bit.
+                if (activeMapId == 12 && (source.type == "Image" || source.type == "MirrorImage"))
+                    Component<Image>(source.path).enabled = source.fields.m_Enabled != 0;
                 if (source.type == "TMPColorGradient")
                 {
                     var gradient = require(source.path).gameObject.AddComponent<TMPColorGradient>();
@@ -125,7 +128,7 @@ namespace Zjcs.Editor
                     Shader shader = Shader.Find("Zjcs/Official/UI/Masked");
                     if (shader == null || UnityEditor.ShaderUtil.ShaderHasError(shader))
                         throw new System.IO.InvalidDataException("Official minimap mask shader failed to compile.");
-                    const string path = ResourceRoot + "/MiniMapUIMask.mat";
+                    string path = ResourceRoot + "/MiniMapUIMask.mat";
                     Material material = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(path);
                     if (material == null)
                     {

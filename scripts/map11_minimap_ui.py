@@ -6,9 +6,9 @@ from UnityPy.classes.PPtr import PPtr
 from official_apk import ROOT
 
 
-def extract_marks(apk, schemas, exporter, animation_record, sprites):
-    definition_path = ROOT / "unity/Assets/Official/World/Map/11/map11.json"
-    templates_path = ROOT / "unity/Assets/Official/World/Map/11/Resources/Map11/stories.json"
+def extract_marks(apk, schemas, exporter, animation_record, sprites, map_id=11):
+    definition_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/map{map_id}.json"
+    templates_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/stories.json"
     definition = json.loads(definition_path.read_text("utf-8"))
     templates = {row["EntityClassId"]: {c["Type"]: json.loads(c["Json"]) for c in row["Components"]}
                  for row in json.loads(templates_path.read_text("utf-8"))["entityTemplates"]}
@@ -31,7 +31,7 @@ def extract_marks(apk, schemas, exporter, animation_record, sprites):
             continue
         value = ui.get(cls, {})
         value = value.get(definition["MapGroupId"], value.get(0, {}))
-        value = value.get(11, value.get(0, {}))
+        value = value.get(map_id, value.get(0, {}))
         value = value.get(areas[entity["Area"]], value.get("IgnoreKey", {}))
         tag = placements[placement].get("LoEntityComponent", {}).get("Tag") or ""
         value = value.get(tag, value.get("", {}))

@@ -99,9 +99,11 @@ def build():
     from prepare_unity_map12_coordinates import build as coordinates
     coordinates()
     runtime()
+    from prepare_unity_map12_ui import build as ui
+    ui()
     manifests = [OUTPUT / name for name in ("source-manifest.json", "rendering-source-manifest.json",
         "entity-source-manifest.json", "minimap-source-manifest.json", "battle-source-manifest.json",
-        "base-ground-source-manifest.json")]
+        "base-ground-source-manifest.json", "UI/source-manifest.json", "Source/ui-prefabs-source-manifest.json")]
     manifests += [ROOT / "assets/reference/official-map/map12-coordinate-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-runtime-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-source-manifest.json"]
@@ -113,7 +115,7 @@ def build():
         source_manifests=[dict(path=source_path(p), sha256=sha(p.read_bytes())) for p in manifests + art_receipts],
         outputs=[dict(path=source_path(p), sha256=sha(p.read_bytes()), bytes=p.stat().st_size) for p in files],
         generator=dict(path=source_path(Path(__file__)), sha256=sha(Path(__file__).read_bytes())),
-        limitations=["Converted payloads are not a completed map. Runtime, original UI, dynamic monsters, puzzles, water/lava/light rendering, audio, saves and Windows Player gameplay must be validated separately."])
+        limitations=["Converted payloads are not a completed map. Runtime integration, complete UI effects, dynamic monsters, puzzles, water/lava/light rendering, audio, saves and Windows Player gameplay must be validated separately."])
     write(RECEIPT, encode(result))
     print(f"Map12 checked conversion: {len(art)} verified official art bundles, {len(files)} payload files", flush=True)
     return result

@@ -3,10 +3,10 @@ from UnityPy.classes.PPtr import PPtr
 from official_tables import Constructors
 
 
-def extract_exploration_ui(apk, schemas, exporter, sprites):
+def extract_exploration_ui(apk, schemas, exporter, sprites, code_root=None):
     def rows(name, kind, bundle='config_luban'):
         obj = apk.asset(bundle, '/' + name + '.g.bytes')
-        return Constructors().table(obj.read().m_Script.encode('utf-8', 'surrogateescape'), kind)
+        return Constructors(code_root).table(obj.read().m_Script.encode('utf-8', 'surrogateescape'), kind)
 
     outer = rows('explore_entity_group', 'TbExploreEntityGroupInfo')
     groups = {g for row in outer for g in row['EntityGroups']} | {51}

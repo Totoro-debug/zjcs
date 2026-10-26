@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+共用原生 UI 导入器补回 `6010_11_DialogIcon` 的 `GoddessDialogIcon` 原状态清单，未激活／已激活图标按原对象组互斥显示。两种竖屏尺寸的弹窗按钮模拟点击及图标切换回归通过；该回归使用独立界面夹具，不代表本图完整游玩或存档验证。
+
 地图公共能力由 `OfficialMainlineMapRuntime` 组装 HUD、区域／雾、四类雕像、导航、体力、探寻、小地图七个独立状态模块；本图资源、剧情和进度按地图 ID 注入。模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
 UI素材目录的385张Sprite已核对PNG的SHA256、稳定GUID、原尺寸、PPU、枢轴和边框，其中18份仅含GUID的 `.meta` 已补全。`OfficialMap11UiTools.RestoreSpriteMetadata` 复用原Sprite转换步骤，可独立修复导入设置；明确使用Texture2D、Single Sprite、无mipmap／NPOT缩放、Clamp、Bilinear和无压缩Alpha，避免不完整元数据将图片识别为Cube纹理。Unity `2022.3.57f1c2` 实际导入及Sprite对象／尺寸校验通过，现有PNG、prefab、目录绑定和GUID均保留。输入清单、转换工具及18份元数据的前后哈希见 `assets/reference/official-map/map11-sprite-metadata-source-manifest.json`；该项验证范围为元数据与Editor导入。
