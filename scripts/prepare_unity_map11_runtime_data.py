@@ -26,6 +26,57 @@ DEFAULT_MANIFEST_PATH = ROOT / "assets/reference/official-map/map11-runtime-sour
 MAINLINE_TASK_IDS = tuple(range(1045, 1161, 5))
 
 
+def build_witch_results(tables, entity_templates, rules):
+    """Resolve EC result indices without losing their original type/index identity."""
+    template = next(row for row in entity_templates if row["EntityClassId"] == 6620)
+    components = {row["Type"]: json.loads(row["Json"]) for row in template["Components"]}
+    statuses = {row["ClassId"]: row for row in tables["status_effect"]}
+    results = []
+    for index, info in enumerate(components["StageResultAwardComponent"]["AwardInfos"]):
+        awards = []
+        for rule_id in info["RuleIds"]:
+            matches = [row for row in rules if row["Id"] == rule_id]
+            if len(matches) != 1:
+                raise ValueError("Witch reward rule is not a single deterministic row: " + str(rule_id))
+            rule = matches[0]
+            if rule["Condition"] is not None or rule["Percent"] != 1 or len(rule["IdList"]) != 1 \
+                    or rule["LevelCountId"] or rule["SubRankCountId"] or rule["IndexMininum"] \
+                    or len(rule["CountList"]) != 1 or int(rule["CountList"][0]) != rule["CountList"][0]:
+                raise ValueError("Unsupported non-deterministic witch reward: " + str(rule_id))
+            awards.append({"ItemId": rule["IdList"][0], "Count": int(rule["CountList"][0])})
+        results.append({"ComponentType": 200, "ComponentIndex": index, "AwardItems": awards})
+    for index, amount in enumerate(components["StageResultModifyHpPercentComponent"]["HpModifyInfos"]):
+        results.append({"ComponentType": 212, "ComponentIndex": index, "HpPercentChange": amount})
+    for index, info in enumerate(components["StageResultAwardStatusEffectComponent"]["AwardStatusEffectInfos"]):
+        ids = info["mAwardStatusEffects"]
+        if any(statuses[value]["Duration"] != 0 or statuses[value]["MaxActivateTimes"] != 1 for value in ids):
+            raise ValueError("Witch status is not a one-battle, saved-until-used effect.")
+        results.append({"ComponentType": 235, "ComponentIndex": index, "StatusEffects": [
+            {"StatusEffectId": value, "FightStatusClassIds": statuses[value]["FightStatusIds"],
+             "EntryId": statuses[value]["EntryId"], "EffectType": statuses[value]["EffectType"]} for value in ids]})
+    for index, info in enumerate(components["StageResultSpawnEntityComponent"]["SpawnEntityInfos"]):
+        matches = [row for row in tables["Map/map_entity_group"] if row["Group"] == info["GroupId"]
+                   and row["FilterCondition"].get("MapClassId") == 11]
+        if len(matches) != 1 or len(matches[0]["Entitys"]) != 1:
+            raise ValueError("Witch spawn must resolve its pinned Map11 group.")
+        extra = matches[0]["ExtraDataInfos"]
+        if len(extra) != 1 or extra[0]["_type"] != "MapEntityGroupInfoExtraStageIdsData" \
+                or len(extra[0]["StageIdsList"]) != 1 or len(extra[0]["StageIdsList"][0]) != 1:
+            raise ValueError("Witch spawn must resolve one official battle stage.")
+        results.append(dict({"ComponentType": 245, "ComponentIndex": index,
+                             "SpawnEntityClassId": matches[0]["Entitys"][0],
+                             "SpawnStageId": extra[0]["StageIdsList"][0][0]}, **info))
+    periodic = [dict({key: row[key] for key in ("PeriodicityGroupId", "AwardGroupId", "PeriodicityId",
+                                                "Weight", "Action", "ActionTime", "IsFirstReward")},
+                     StageResults=[{"ComponentType": int(kind), "ComponentIndex": int(index)}
+                                   for kind, index in row["StageResultComps"].items()])
+                for row in tables["Map/map_periodicity_random_award_interaction"]
+                if row["PeriodicityGroupId"] == 1 and row["AwardGroupId"] == 1]
+    if len(periodic) != 7 or sum(row["Weight"] for row in periodic) != 100:
+        raise ValueError("Pinned witch periodic group must retain its seven weights totaling 100.")
+    return results, periodic
+
+
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -239,10 +290,10 @@ def load_checked_sources():
     if battle_source.get("mapClassId") != 11 or battle_source.get("manifest") != "854_156383" \
             or not isinstance(scenes, dict):
         raise ValueError("Pinned Map11 battle input is malformed.")
-    if (len(battle_source.get("stages", [])) != 129
-            or len(battle_source.get("monsterRosters", [])) != 129
+    if (len(battle_source.get("stages", [])) != 130
+            or len(battle_source.get("monsterRosters", [])) != 130
             or len(battle_source.get("entityStageBindings", [])) != 591):
-        raise ValueError("Pinned Map11 battle input must contain all 129 stages and 591 entity bindings.")
+        raise ValueError("Pinned Map11 battle input must contain 129 placed stages, the witch summon stage and 591 entity bindings.")
     battle_runtime = {
         "manifest": battle_source["manifest"],
         "mapClassId": battle_source["mapClassId"],
@@ -298,6 +349,21 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
         raise ValueError("Pinned official playable scenes or registry are missing.")
 
     tables = adventure["tables"]
+    witch_rows = tables.get("witch", [])
+    if len(witch_rows) != 14 or [int(row["WitchActivedCount"]) for row in witch_rows] != list(range(14)):
+        raise ValueError("Pinned WitchInfo must define activation counts 0 through 13.")
+    witch_infos = [{
+        "ActiveCount": int(row["WitchActivedCount"]),
+        "StoryBookId": int(row["StoryBookId"]),
+        "IsNextState": bool(row["IsNextState"]),
+        "StageResults": [{"ComponentType": int(component_type), "ComponentIndex": int(component_index)}
+                          for component_type, component_index in row["StageResultComps"].items()],
+    } for row in witch_rows]
+    apk = Apk("854_156383")
+    witch_reward_object = apk.asset("config_luban", "Assets/Config/Luban/reward_rule.g.bytes")
+    witch_reward_payload = witch_reward_object.read().m_Script.encode("utf-8", "surrogateescape")
+    witch_results, witch_periodic_awards = build_witch_results(tables, entity_templates,
+        Constructors().table(witch_reward_payload, "TbRewardRuleInfo"))
     map_logic_tags = [row for row in tables["Map/map_logic_entity_tag"] if row["MapClass"] == 11]
     if len(map_logic_tags) != 35 or len({row["LogicId"] for row in map_logic_tags}) != 35:
         raise ValueError("Map11 must have 35 uniquely identified official logic tags.")
@@ -423,7 +489,6 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
 
     condition_ids = {condition_id for row in map_talk_rows
                      for condition_id in row.get("Condition", {}).get("Ids", [])}
-    apk = Apk("854_156383")
     quick_buy_object = apk.asset("config_luban", "Assets/Config/Luban/quick_buy.g.bytes")
     quick_buy_payload = quick_buy_object.read().m_Script.encode("utf-8", "surrogateescape")
     quick_buy_ids = {json.loads(node["sourceJson"])["ItemId"]
@@ -490,6 +555,9 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
         "mapDefinitionSha256": map_hash,
         "entityCatalogSha256": entity_hash,
         "entityTemplates": entity_templates,
+        "witchInfos": witch_infos,
+        "witchResultEffects": witch_results,
+        "witchPeriodicityAwards": witch_periodic_awards,
         "puzzleRules": build_puzzle_rules(entity_templates),
         "dialogRoles": dialog_roles,
         "mapLogicTags": map_logic_tags,
@@ -518,6 +586,10 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
                 "scope": "All maps; durable keys contain both map class ID and placement ID.",
                 "repeatActivation": "Keep the existing record without increasing the count.",
                 "reason": "User confirmed the WorldWitchTouchUI all-map count for the missing server query."},
+            "witchStageResults": {
+                "selection": "Use the pinned WitchInfo row matching the all-map activation count before success.",
+                "effects": "Apply every listed StageResult component after successful stage completion in the configured order.",
+                "reason": "User confirmed all original configured witch-touch results should apply."},
             "missingStateTargets": [{"placementId": 413, "targetId": 423,
             "action": "Skip only the missing-target update; preserve all other ordered stage results.",
             "reason": "User confirmed after original assembly decompilation and raw EC/MapInfoWrap verification."}]},
@@ -562,6 +634,9 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
             "quickBuys": dict(apk.provenance(quick_buy_object), object="Assets/Config/Luban/quick_buy.g.bytes",
                               raw_sha256=hashlib.sha256(quick_buy_object.get_raw_data()).hexdigest(),
                               payload_sha256=hashlib.sha256(quick_buy_payload).hexdigest()),
+            "witchRewardRules": dict(apk.provenance(witch_reward_object),
+                object="Assets/Config/Luban/reward_rule.g.bytes",
+                payload_sha256=hashlib.sha256(witch_reward_payload).hexdigest()),
         },
         "outputs": {
             "battle-runtime.json": {"path": battle_output.resolve().as_posix(), "sha256": sha256(battle_output),
@@ -571,6 +646,7 @@ def build(output_root=DEFAULT_OUTPUT_ROOT, manifest_path=None):
             "stories.json": {"path": story_output.resolve().as_posix(), "sha256": sha256(story_output),
                              "storyCount": len(story_records), "nodeCount": sum(len(s["nodes"]) for s in story_records),
                              "entityTemplateCount": len(entity_templates),
+                             "witchInfoCount": len(witch_infos),
                              "logicTagCount": len(map_logic_tags), "mapTalkCount": len(map_talk_rows),
             "subgraphCount": len(subgraph_records),
             "subgraphNodeCount": sum(len(story["nodes"]) for story in subgraph_records),

@@ -264,7 +264,7 @@ namespace Zjcs.Offline.Progression
                 wish.History.AddRange(history);
                 TrimHistory(wish, nowUnixSeconds);
                 EnsureGuarantees(wish, gachaType, profession, sharedRule);
-            });
+            }, chest.ClassId, count);
 
             if (transaction.Status == ProgressionResultStatus.Unchanged)
             {

@@ -26,7 +26,11 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 实体载荷含 1,803 个放置记录、105 个模型绑定、161 份官方几何（97 份基础几何和 24 类模型的 64 份状态几何）、27 个 Spine 实例和 203 张实体贴图。状态 `-1` 保留原 `StateGameObjectConfig` 关闭所有切换对象后的常驻内容，空几何也保留来源文件；女神像激活切换原 0／1 状态。补入的 `building_naka1` 和 `building_luzi` 均从固定版本官方 `worldbuilding/6330_11_view` 的 Sprite 引用重新提取，与已有 PNG 逐字节一致；来源见 `entity-source-manifest.json`。`8210–8213` 世界奖励实体按官方 `Map/entity_map_display` 绑定到公共单物品模板；展示表有常规地面与浅水两个版本，当前载荷保留常规地面版本。原 9 个无静态模型实例属于 `5110` 和 `6533`：`6533` 的官方逻辑视图明确无显示实体；`5110` 由 `ECStageBehStageView` 按当前阶段编队取得主怪，再由 `MapMonsterLoader` 动态装载怪物模型。六个 `5110` 放置点现按各自阶段编队绑定 3212、3215、3216、3217、3218 五种官方骨骼，挂在原实体格位并播放官方 `idle_01`；这些地图模型 prefab 的根缩放均为 `(0.3, 0.3, 1)`。来源核验见 `assets/reference/official-map/map11-world-monsters-source-manifest.json`，转换器为 `scripts/prepare_unity_map11_world_monsters.py`。
 
-战斗载荷为 129 个官方阶段、57 个怪物编队数组、129 个展开编队、17 个战斗场景和 591 个实体阶段绑定，保留玩家等级／位阶动态阶段及官方等级属性缺行语义。`prepare_unity_map11_runtime_data.py` 已将 110 类基础实体组件、44 个故事图（666 个节点）、四个子图（64 个节点）、50 条地图对话、35 个逻辑标签、17 个对话角色、10 个可演出资源及 24 条主线写入本地 `Resources/Map11`。原放置组件是 `Lo` 覆盖，不能代替基础实体模板；基础组件与嵌套阶段列表保持官方顺序。转换测试已通过，来源及输出哈希分别见 `battle-source-manifest.json` 与 `assets/reference/official-map/map11-runtime-source-manifest.json`。
+战斗载荷包含 129 个放置阶段及魔女实体组 2000 的召唤阶段 20001，共 130 个阶段／展开编队，保留 57 个怪物编队数组、17 个战斗场景和 591 个实体阶段绑定，以及玩家等级／位阶动态阶段及官方等级属性缺行语义。`prepare_unity_map11_runtime_data.py` 已将 110 类基础实体组件、44 个故事图（666 个节点）、四个子图（64 个节点）、50 条地图对话、35 个逻辑标签、17 个对话角色、10 个可演出资源及 24 条主线写入本地 `Resources/Map11`。原放置组件是 `Lo` 覆盖，不能代替基础实体模板；基础组件与嵌套阶段列表保持官方顺序。转换测试已通过，来源及输出哈希分别见 `battle-source-manifest.json` 与 `assets/reference/official-map/map11-runtime-source-manifest.json`。
+
+固定版主线目录已扩展到 1045～1160 的 24 项森之国目标，包含地区探索、女神激活、“月影之森”实体完成及 1070 恶魔战场第 1 入口通关第 2 层。条件按 `OfflineMainlineProgressSession` 的本地地图状态与独立幻想阶梯存档判定，原固定物品奖励通过任务领取事务提交；1070 的进度显示采用官方客户端的层数加一规则，并可跳转到幻想阶梯入口。`OfflineMainlineProgressValidation.Run` 已实际通过，覆盖主线固定奖励、条件和存档冷读；目录生成器为 `scripts/prepare_unity_mainline_tasks.py`。目录接入和逻辑校验不代表完整剧情、主城地图跳转或实机主线流程已验收。
+
+森之国正式入口按用户确认要求先完成并领取 Map10 主线任务 1040。`ResolveHomeReturnMap` 和 Map11 初始化都会检查已领取任务 ID；固定版 1040 要求开启 10 次 `chestId=6000` 普通祈愿宝箱，本地成功祈愿事务会原子记录实际开启数量、奖励与消耗，重复回执不会重复计数。`OfficialWishAcceptance.Run` 已通过十连抽实际增加 10、重复及无效请求不增加、1040 达到 10/10 与冷读恢复检查。地图内的 `EntityClassId=6000` 放置实体不计入祈愿次数。已有 Map11 区域记录不会绕过入口门槛；完整前序路线和新档实际输入尚未完成 Play Mode 验收。
 
 `OfficialMap11Tools.ImportAndValidate` 已在 Unity `2022.3.57f1c2` 实际执行并正常退出，生成地形、小地图、实体 prefab，绑定 ClassId 11，并检查 77 区、1,803 实体、14,427 地形批次、85 小地图批次和相邻格寻路。`prepare_unity_map11_ui.py` 与 `map11_support_ui.py`／`map11_minimap_ui.py` 恢复原 UI、动态布局、TMP 字形和小地图标记；显式加载绑定为 `Resources/Map11/UI`。Common 的七个 TMP 图标字形使用原图集、指标和字符表，并注册原序列化哈希及当前名称哈希。上述导入不能代替整图玩法验收。
 
@@ -48,6 +52,10 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 地图表现程序集与编辑器检查程序集已显式引用现有 `spine-csharp`／`spine-unity`，解决 `OfficialMap10GameRuntime.WorldMonsters` 与地图后台检查的 CS0246 编译错误。主工程 Editor 与 Windows Player 脚本编译已通过；未据此扩大本图运行验收范围。
 
+共享地图定义、阶段结构、寻路／探索计算、表现适配及本图复用的演出／音频代码随地图纳入版本控制；原生 UI catalog 的静态 GUID 依赖沿现有官方绑定补入。战斗怪物头像由固定版本原 Sprite 扩展至 Map10／Map11 共 38 个 IconId，修复森之国进入战斗时缺少头像的异常；来源见 `assets/reference/battle-hud/monster-portraits-source-manifest.json`。对白切换继续等待原动画半程事件，已替换或关闭对白的旧回调不再覆盖新内容和语音。
+
+带图形后台 Play Mode 已通过魔女原书页、首次结果预览、成功后计数、周期访问及其原 ActionTime、英雄／魔女每日额度互斥、未用效果冷读恢复和结果文本绑定检查；实际进入战斗确认 `-100%` 保留 1 HP、绑定官方战斗状态，并等待战斗结束核对效果清除且每日额度保留。已查看首次预览与战斗运行帧。该检查调用脚本回调，音源静音，没有真实鼠标输入；战斗画面仍有地图 HUD 叠加，不能作为整体战斗界面还原结论。资源转换、38 种怪物头像来源／PNG／Sprite 绑定检查与工程静态检查通过；没有据此发布 Windows Player。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
@@ -66,15 +74,19 @@ Unity `2022.3.57f1c2` 已执行带图形的后台 Play Mode，实际查看 HUD�
 
 `SelectorNode`／`SwitchNode` 的客户端只消费服务器返回的 `SelectedIndex`，包内没有选择实现。用户确认单机按原配置顺序取首个为真的条件或首个与输入相等的结果，均未匹配时走原 `Exit`；结果比较保留 `SerializableObj.Compare` 的原始类型转换。规则用于世界树、援助和魔女剧情；分支路由接入不代表魔女激活状态和整段剧情已经完成。
 
-`GetMapWitchExploreInfoNode` 只读取服务器返回的 `ActiveCount`，缺少服务端计数实现；用户确认沿用 `WorldWitchTouchUI` 的所有地图已激活魔女总数。`OfflineMainlineProgressSession.ActivatedWitches` 账本按地图／放置实体持久化，重复激活不重复计数，缺少新字段的旧档从零开始；原查询节点及 Switch 输入已接入该总数。魔女原界面、周期奖励和完整剧情仍待迁移。
+`GetMapWitchExploreInfoNode` 只读取服务器返回的 `ActiveCount`，缺少服务端计数实现；用户确认沿用 `WorldWitchTouchUI` 的所有地图已激活魔女总数。`OfflineMainlineProgressSession.ActivatedWitches` 账本按地图／放置实体持久化，重复激活不重复计数，缺少新字段的旧档从零开始；原查询节点及 Switch 输入已接入该总数，并通过跨地图累计、重复回执和存档冷读校验。Map11 两处魔女实体 6620（放置 ID 2801、6901）已接入原书页、结果预览、世界阶段成功结算和周期访问；预览不发奖，阶段成功后按激活前全图计数选择原 `WitchInfo`，应用奖励、HP、状态或实体组生成结果。实现入口为 `OfficialMap10GameRuntime.Witch.cs`、`OfficialMap11WitchWindow.cs`，运行载荷保留 14 条激活规则和七条原权重周期奖励。完整剧情与召唤战斗循环仍待验证。
+
+按用户确认，英雄／魔女共用每日一次访问额度，访问记录、道具和待战斗效果在同一本地事务中写入。状态退出游戏后保留，进入下一场任意战斗生效，战斗结束后清除；HP 减少按入场最大生命百分比结算，`-100%` 至少保留 1 HP。首次剧情激活与周期访问沿原阶段图分别处理。普通女神／失落女神的探索激活不占该每日额度；Map11 没有英雄雕像放置点，英雄界面与随机增益入口仍待所属地图迁移。
 
 ## 尚未实现
 
 完整小地图仍需其他地图的离线实体标记、标记点击／详情与公共资源点提供器；功能菜单仍需接通商城、关闭之外的功能窗口。真实鼠标／键盘／拖拽和 Windows Player 验证尚未执行，不能用后台脚本回调代替。
 
-恢复 77 区、九组踏板、六块战斗碑、森林老人／世界树／狮鹫剧情与 1045～1160 主线；验证个人资格、公共化、全区激活与 6001 出口条件，不能仅按任务 1160 完成推断可以离图。
+森之国进入战斗后，地图 HUD 与战斗场景仍有叠加，玩家和战斗镜头比例、场景缺块／排序及完整演出需要继续恢复；魔女召唤阶段 20001 的完整循环尚未 Play Mode 验证。
 
-继续按原配置接通正式入口、区域、放置实体、条件、交互、战斗、奖励和出口前置状态。共享运行时已支持按地图 ID 加载资源、区域开放条件、位置与状态存档，但 Map10 的正常出口与家园返回入口尚未接通本图。原地图 NPC、建筑、世界奖励、交互物、怪物及小地图 bundle 已提取校验；`map11-lighting.json`、`map11-stone-animations.json`、`map11-logic-views.json`、`map11-dialogs.json` 的完整动态行为、特效和音频仍待绑定。地形与小地图原生 prefab 已生成，Windows 实际画面、输入和完整流程仍待验证。
+继续验证 77 区、九组踏板、六块战斗碑、森林老人／世界树／狮鹫完整剧情与 1045～1160 主线领奖路线；任务数据和条件接入不代表任务流程已在主城及地图中完整跑通。还须验证个人资格、公共化、全区激活与 6001 出口条件，不能仅按任务 1160 完成推断可以离图。
+
+正式入口已按 Map10 主线任务 1040 加入运行时门槛；普通祈愿成功开启 6000 宝箱现已原子更新任务计数，但前序任务条件、新档累计 10 次祈愿的实际操作及领奖后进入森之国仍未完成 Play Mode 验收。仍须接通区域、放置实体、条件、交互、战斗、奖励和出口前置状态。共享运行时已支持按地图 ID 加载资源、区域开放条件、位置与状态存档，但 Map10 的正常出口与家园返回入口尚未接通本图。原地图 NPC、建筑、世界奖励、交互物、怪物及小地图 bundle 已提取校验；`map11-lighting.json`、`map11-stone-animations.json`、`map11-logic-views.json`、`map11-dialogs.json` 的完整动态行为、特效和音频仍待绑定。地形与小地图原生 prefab 已生成，Windows 实际画面、输入和完整流程仍待验证。
 
 普通女神像与失落女神像是不同机制。共享运行时的 Map11 女神处理器已按基础阶段先检查地区 100%，再依次执行结果 204（激活并持久化回执）与 209（自身状态变为 1）；已激活神像按官方输入分支直接打开弹窗。两种基础模板均没有 `StageResultAwardComponent`，地区 `DropItems` 在 `GoddessTouchDialog.RefreshAward` 中仅生成珍宝预览，不在激活时自动发放。珍宝预览及详情操作限制、普通女神祝福等级派生和提示、失落女神奖励提示动画尚待接通。`WorldTouchDialogLostGoddness` 的 `PlayerGetLostGoddessAwardRequest` 是独立的“找回遗失女神奖励”流程，不能作为像的激活奖励。探索里程碑仍须按 `MapGoddessExpProcessItem` 手动领取；命运果实独立核对日常领取与探索事件。
 

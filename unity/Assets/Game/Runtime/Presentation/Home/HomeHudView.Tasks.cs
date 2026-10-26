@@ -338,6 +338,7 @@ namespace Zjcs.Presentation.Home
                 case "WorldMapProgressCondition":
                 case "MapLogicEntityEndByTagCondition":
                 case "MapRegionGoddessCondition":
+                case "DemonBattleLayerPassCondition":
                     return true;
                 default:
                     return false;
@@ -356,6 +357,11 @@ namespace Zjcs.Presentation.Home
                     return;
                 }
                 if (!host.EnterMainland()) Notify("初始岛暂时无法进入");
+                return;
+            }
+            if (condition.type == "DemonBattleLayerPassCondition")
+            {
+                OpenFantasyTowerEntries();
                 return;
             }
 

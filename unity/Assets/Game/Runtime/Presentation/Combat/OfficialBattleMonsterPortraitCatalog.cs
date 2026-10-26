@@ -12,8 +12,8 @@ namespace Zjcs.Presentation.Combat
     }
 
     /// <summary>
-    /// Extracted official Map10 monster portrait sprites keyed by the battle-rules monster IconId.
-    /// Unknown ids return null so timeline cards retain the official prefab default portrait.
+    /// Extracted official Map10/Map11 monster portrait sprites keyed by the battle-rules monster IconId.
+    /// Unknown ids return null; callers must report missing official portrait bindings.
     /// </summary>
     [CreateAssetMenu(menuName = "Zjcs/Combat/Official Battle Monster Portrait Catalog")]
     public sealed class OfficialBattleMonsterPortraitCatalog : ScriptableObject

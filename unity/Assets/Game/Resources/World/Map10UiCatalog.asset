@@ -1,0 +1,464 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22c10b72f33392147bb9f8eb37e7f558, type: 3}
+  m_Name: Map10UiCatalog
+  m_EditorClassIdentifier: 
+  panelData: {fileID: 4900000, guid: 565a29289426490418c17cace8695378, type: 3}
+  sourceManifest: {fileID: 4900000, guid: eb8876c15b879e940a980014371a714c, type: 3}
+  sprites:
+  - uri: res://assets/official/sprites/Activity_DemonInvade-5f59209e03.png
+    file: Activity_DemonInvade-5f59209e03.png
+    sprite: {fileID: 21300000, guid: ba776e2a7ef7be54ca8fd1c43edd4f00, type: 3}
+  - uri: res://assets/official/sprites/Activity_LimitedTimeGift-fe79e4ac58.png
+    file: Activity_LimitedTimeGift-fe79e4ac58.png
+    sprite: {fileID: 21300000, guid: e9def0bcb5845104c811fc014ae257b0, type: 3}
+  - uri: res://assets/official/sprites/Activity_TeamChallenge-128e7ad151.png
+    file: Activity_TeamChallenge-128e7ad151.png
+    sprite: {fileID: 21300000, guid: 034db7863eeb2f2449487c3f7e251ea2, type: 3}
+  - uri: res://assets/official/sprites/Activity_VoidFissure-8175582e87.png
+    file: Activity_VoidFissure-8175582e87.png
+    sprite: {fileID: 21300000, guid: 9d05ccfb388f4234aa5750b817dcce5c, type: 3}
+  - uri: res://assets/official/sprites/BtnCancelMatch-35fe202476.png
+    file: BtnCancelMatch-35fe202476.png
+    sprite: {fileID: 21300000, guid: 030e156080b03244e95fe6567965dc8c, type: 3}
+  - uri: res://assets/official/sprites/BtnCanel-2ea38e1a5a.png
+    file: BtnCanel-2ea38e1a5a.png
+    sprite: {fileID: 21300000, guid: df218f8d250f9824a9818baa50f7554b, type: 3}
+  - uri: res://assets/official/sprites/BtnCheck_Empty-563ce0b7a1.png
+    file: BtnCheck_Empty-563ce0b7a1.png
+    sprite: {fileID: 21300000, guid: 338f504dca6408a418c4d35ae73580ed, type: 3}
+  - uri: res://assets/official/sprites/BtnCheck_Sel-cbe9e7c698.png
+    file: BtnCheck_Sel-cbe9e7c698.png
+    sprite: {fileID: 21300000, guid: 8dad1f2fd8fb44a4fafd7f8fddb6081a, type: 3}
+  - uri: res://assets/official/sprites/BtnExplore_Bg-458fb2180a.png
+    file: BtnExplore_Bg-458fb2180a.png
+    sprite: {fileID: 21300000, guid: 87631e13051e434498b7866f7e010930, type: 3}
+  - uri: res://assets/official/sprites/BtnFunction-4253b0044d.png
+    file: BtnFunction-4253b0044d.png
+    sprite: {fileID: 21300000, guid: e9a44133cad6deb4d992730dc3e4f110, type: 3}
+  - uri: res://assets/official/sprites/BtnItem_Team-bebbf47045.png
+    file: BtnItem_Team-bebbf47045.png
+    sprite: {fileID: 21300000, guid: a0b5e8475a28b614b8b5b10d45be0b2b, type: 3}
+  - uri: res://assets/official/sprites/BtnLook-0efdbcfe10.png
+    file: BtnLook-0efdbcfe10.png
+    sprite: {fileID: 21300000, guid: ef655f71741ca7e40ab10297fc6935f2, type: 3}
+  - uri: res://assets/official/sprites/BtnNext-cd57afa383.png
+    file: BtnNext-cd57afa383.png
+    sprite: {fileID: 21300000, guid: 93f8c6999cf68ac41833fb0ea1212682, type: 3}
+  - uri: res://assets/official/sprites/BtnOk-623eab01b4.png
+    file: BtnOk-623eab01b4.png
+    sprite: {fileID: 21300000, guid: 98fc302436d9eb841b55367ee9924e0d, type: 3}
+  - uri: res://assets/official/sprites/BtnOk_Notice-2f696d05cf.png
+    file: BtnOk_Notice-2f696d05cf.png
+    sprite: {fileID: 21300000, guid: b814cf6f3d681264ea42fb221709dd07, type: 3}
+  - uri: res://assets/official/sprites/BtnStorage-b885065631.png
+    file: BtnStorage-b885065631.png
+    sprite: {fileID: 21300000, guid: 7026df1e29f550841af38bd0de705113, type: 3}
+  - uri: res://assets/official/sprites/Btnxuanxiang-376660c096.png
+    file: Btnxuanxiang-376660c096.png
+    sprite: {fileID: 21300000, guid: 3bc037f112e258d41951d87251a80ae1, type: 3}
+  - uri: res://assets/official/sprites/Btnxuanxiang_click-a48cfd6038.png
+    file: Btnxuanxiang_click-a48cfd6038.png
+    sprite: {fileID: 21300000, guid: 536051a8bc6fea5459086233b803e517, type: 3}
+  - uri: res://assets/official/sprites/C_none-fa3e084e40.png
+    file: C_none-fa3e084e40.png
+    sprite: {fileID: 21300000, guid: e8a10a7254f78ee4b958834e682001d9, type: 3}
+  - uri: res://assets/official/sprites/Darkness-Corner-d9eb777141.png
+    file: Darkness-Corner-d9eb777141.png
+    sprite: {fileID: 21300000, guid: 3d784c83752b2324bb32201577abbd2f, type: 3}
+  - uri: res://assets/official/sprites/G_3201-49f31847fd.png
+    file: G_3201-49f31847fd.png
+    sprite: {fileID: 21300000, guid: 5420e0051e02bd542a1c694a72e62cd1, type: 3}
+  - uri: res://assets/official/sprites/G_3608-3f2410ea13.png
+    file: G_3608-3f2410ea13.png
+    sprite: {fileID: 21300000, guid: 5e1e4f8fff83a4843b87a7c8dd938dc2, type: 3}
+  - uri: res://assets/official/sprites/IconDialogue-ea67fc64b8.png
+    file: IconDialogue-ea67fc64b8.png
+    sprite: {fileID: 21300000, guid: da03ec0460bcd9440ad34c2ac8286454, type: 3}
+  - uri: res://assets/official/sprites/IconRemind3-b56ecd66a6.png
+    file: IconRemind3-b56ecd66a6.png
+    sprite: {fileID: 21300000, guid: 86571b13c7299d0459d9bdd72865b330, type: 3}
+  - uri: res://assets/official/sprites/ImgAction1-73447822ce.png
+    file: ImgAction1-73447822ce.png
+    sprite: {fileID: 21300000, guid: 13ffa71944767974cb61d0096633cb24, type: 3}
+  - uri: res://assets/official/sprites/ImgActionBg_1-aae5e9cd28.png
+    file: ImgActionBg_1-aae5e9cd28.png
+    sprite: {fileID: 21300000, guid: 9fc8d5991c0550f42a40ad51f90c8369, type: 3}
+  - uri: res://assets/official/sprites/ImgActivity-161835b51f.png
+    file: ImgActivity-161835b51f.png
+    sprite: {fileID: 21300000, guid: eeb66b5c49dd8104e8bdb8afa858fc3c, type: 3}
+  - uri: res://assets/official/sprites/ImgArrow_Mask-ee743b66b1.png
+    file: ImgArrow_Mask-ee743b66b1.png
+    sprite: {fileID: 21300000, guid: 1a3441da8f27e76439e75057de9fbf45, type: 3}
+  - uri: res://assets/official/sprites/ImgAuto_Pre-0886acc873.png
+    file: ImgAuto_Pre-0886acc873.png
+    sprite: {fileID: 21300000, guid: 630faae728e9a5d44a6fb287e2d63933, type: 3}
+  - uri: res://assets/official/sprites/ImgBgCondition_WenLi-9d17305101.png
+    file: ImgBgCondition_WenLi-9d17305101.png
+    sprite: {fileID: 21300000, guid: c655857599bd39448bf8e2f1989b7b6b, type: 3}
+  - uri: res://assets/official/sprites/ImgBgHead_Bg-92ccb17d05.png
+    file: ImgBgHead_Bg-92ccb17d05.png
+    sprite: {fileID: 21300000, guid: 8b0ed80e980ea8843a95e615db246379, type: 3}
+  - uri: res://assets/official/sprites/ImgBgScreen-c6d4114ea4.png
+    file: ImgBgScreen-c6d4114ea4.png
+    sprite: {fileID: 21300000, guid: f14920ba0ef3a364ea3e9476ee508928, type: 3}
+  - uri: res://assets/official/sprites/ImgBgYuan-e7bee2d0bf.png
+    file: ImgBgYuan-e7bee2d0bf.png
+    sprite: {fileID: 21300000, guid: b0e4e399f8cd77b479e762ca9504d1e2, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Battle-671b684600.png
+    file: ImgBg_Battle-671b684600.png
+    sprite: {fileID: 21300000, guid: 39015dfd705173a42bca5c1a7a08ec15, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_CountText-43bcc7f5cb.png
+    file: ImgBg_CountText-43bcc7f5cb.png
+    sprite: {fileID: 21300000, guid: 310ed32644e6d8b4d84fce42663ca16d, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_GalaxyShip_Space_01-178f7ee899.png
+    file: ImgBg_GalaxyShip_Space_01-178f7ee899.png
+    sprite: {fileID: 21300000, guid: 06120fafb85baed448e5347df754039d, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Goddess-0fd2a043f7.png
+    file: ImgBg_Goddess-0fd2a043f7.png
+    sprite: {fileID: 21300000, guid: 3cafb39e17ae0a5489f9dde8e2ae5454, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_MainHp-f94416632b.png
+    file: ImgBg_MainHp-f94416632b.png
+    sprite: {fileID: 21300000, guid: efeb83ce6f30bbd4e90e3c6b3f567142, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_MainListItem-8fd36c6945.png
+    file: ImgBg_MainListItem-8fd36c6945.png
+    sprite: {fileID: 21300000, guid: b4608d3d91f783440a00e85f21ab8ac6, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_MapAvatar-11cd0951c3.png
+    file: ImgBg_MapAvatar-11cd0951c3.png
+    sprite: {fileID: 21300000, guid: d5ad20b971a5d1449b941287a227d7db, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_MapTitle-7489b4894e.png
+    file: ImgBg_MapTitle-7489b4894e.png
+    sprite: {fileID: 21300000, guid: be386c19cff60b940a9af1a0475328a4, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_NameSel-688e495eb9.png
+    file: ImgBg_NameSel-688e495eb9.png
+    sprite: {fileID: 21300000, guid: 63fbc5f3e0f6113448e6d9a7d3591a66, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Round-95f905868e.png
+    file: ImgBg_Round-95f905868e.png
+    sprite: {fileID: 21300000, guid: 8d79d47eb724ccb489cf8f04b22d2859, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_RoundLoad-42b5051b1d.png
+    file: ImgBg_RoundLoad-42b5051b1d.png
+    sprite: {fileID: 21300000, guid: 7e0789a5c467f4f409d39cfebdf8e9df, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Star1-3b6593e074.png
+    file: ImgBg_Star1-3b6593e074.png
+    sprite: {fileID: 21300000, guid: 2a228a2b7d4487546a3467a5a9ae9d80, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Talk-921c13be8c.png
+    file: ImgBg_Talk-921c13be8c.png
+    sprite: {fileID: 21300000, guid: fe01cab4b0b4b4248869fb142f771bd9, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_TeamList-81bebea2c4.png
+    file: ImgBg_TeamList-81bebea2c4.png
+    sprite: {fileID: 21300000, guid: a6d3bf2312866ae449f60a94aefa5cd4, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_TipInfo-00747eeea6.png
+    file: ImgBg_TipInfo-00747eeea6.png
+    sprite: {fileID: 21300000, guid: 218ec7cd0460a7045b22ce760c2db545, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_Title-497505d3a3.png
+    file: ImgBg_Title-497505d3a3.png
+    sprite: {fileID: 21300000, guid: 3d4dc4e576b49f849a20e60c2c46da2f, type: 3}
+  - uri: res://assets/official/sprites/ImgBg_loading-792d13f12a.png
+    file: ImgBg_loading-792d13f12a.png
+    sprite: {fileID: 21300000, guid: 06228135bcda36349816a66efba46636, type: 3}
+  - uri: res://assets/official/sprites/ImgBlue-797552ab98.png
+    file: ImgBlue-797552ab98.png
+    sprite: {fileID: 21300000, guid: 9968cfb010c5aec4eab336e228a7837d, type: 3}
+  - uri: res://assets/official/sprites/ImgBlueDot-a28b58f9f6.png
+    file: ImgBlueDot-a28b58f9f6.png
+    sprite: {fileID: 21300000, guid: c73566530d01fb54ea233f41a85cec22, type: 3}
+  - uri: res://assets/official/sprites/ImgBlue_Upgrade-12b45e0972.png
+    file: ImgBlue_Upgrade-12b45e0972.png
+    sprite: {fileID: 21300000, guid: 66547d7af4c09584fbdb7ab46c7fe520, type: 3}
+  - uri: res://assets/official/sprites/ImgCharActionLine-3c1bcf29ae.png
+    file: ImgCharActionLine-3c1bcf29ae.png
+    sprite: {fileID: 21300000, guid: 517f297a5e4a2b7469f1e4bf602d0df1, type: 3}
+  - uri: res://assets/official/sprites/ImgCharActionLine1-407f4aec7e.png
+    file: ImgCharActionLine1-407f4aec7e.png
+    sprite: {fileID: 21300000, guid: 8341b1ba40cc5c0418200a4e763091b8, type: 3}
+  - uri: res://assets/official/sprites/ImgCharActionLine2-17f5a092db.png
+    file: ImgCharActionLine2-17f5a092db.png
+    sprite: {fileID: 21300000, guid: 6cdf4ba94bc5ca74f9cdfe7a0686242e, type: 3}
+  - uri: res://assets/official/sprites/ImgCharacterAction_Bg-1d369223dc.png
+    file: ImgCharacterAction_Bg-1d369223dc.png
+    sprite: {fileID: 21300000, guid: adc19c11cede28249915e856c162760f, type: 3}
+  - uri: res://assets/official/sprites/ImgChatBg-3bf869fa58.png
+    file: ImgChatBg-3bf869fa58.png
+    sprite: {fileID: 21300000, guid: 713b649f6add5c14aa4d97dcd70efc61, type: 3}
+  - uri: res://assets/official/sprites/ImgChatMiniPanel_Bg-6c70746894.png
+    file: ImgChatMiniPanel_Bg-6c70746894.png
+    sprite: {fileID: 21300000, guid: 5bcfd70a80c28264c8549783cb28b8be, type: 3}
+  - uri: res://assets/official/sprites/ImgCombatRating-256265cbf9.png
+    file: ImgCombatRating-256265cbf9.png
+    sprite: {fileID: 21300000, guid: 8179104db712a3545acd49ceb07eb8df, type: 3}
+  - uri: res://assets/official/sprites/ImgCompleted-7226b33298.png
+    file: ImgCompleted-7226b33298.png
+    sprite: {fileID: 21300000, guid: b18d325852766ba42ba7a6cf88a6d1b4, type: 3}
+  - uri: res://assets/official/sprites/ImgDot-4ed3349f24.png
+    file: ImgDot-4ed3349f24.png
+    sprite: {fileID: 21300000, guid: 0b31f1a49b5fd4e469c764411f0382c0, type: 3}
+  - uri: res://assets/official/sprites/ImgDrop_Title2-e8c9abf761.png
+    file: ImgDrop_Title2-e8c9abf761.png
+    sprite: {fileID: 21300000, guid: 41b6ac7de71105f49b166554a597e092, type: 3}
+  - uri: res://assets/official/sprites/ImgEmoji_1-9385a05773.png
+    file: ImgEmoji_1-9385a05773.png
+    sprite: {fileID: 21300000, guid: 675ce5d868c33c64dadef361032b78b0, type: 3}
+  - uri: res://assets/official/sprites/ImgEnd-ac0cb6c178.png
+    file: ImgEnd-ac0cb6c178.png
+    sprite: {fileID: 21300000, guid: a0d37ba750cdbbf4bb8f95166a8d451a, type: 3}
+  - uri: res://assets/official/sprites/ImgEquipListBg_Nor-0149e24621.png
+    file: ImgEquipListBg_Nor-0149e24621.png
+    sprite: {fileID: 21300000, guid: 6951aebe36d731a42999f73536e01d76, type: 3}
+  - uri: res://assets/official/sprites/ImgExp-ca3e2b4e08.png
+    file: ImgExp-ca3e2b4e08.png
+    sprite: {fileID: 21300000, guid: 81ea8830ab9c1c84faa12231abb060d9, type: 3}
+  - uri: res://assets/official/sprites/ImgExp_Green-fd82428fb1.png
+    file: ImgExp_Green-fd82428fb1.png
+    sprite: {fileID: 21300000, guid: 3ca05478ee2a9714da33bfdbf466b0f5, type: 3}
+  - uri: res://assets/official/sprites/ImgFennu-989523546c.png
+    file: ImgFennu-989523546c.png
+    sprite: {fileID: 21300000, guid: da24a2d183fafe444b672863f003f9cf, type: 3}
+  - uri: res://assets/official/sprites/ImgFriends-7b257fd6ca.png
+    file: ImgFriends-7b257fd6ca.png
+    sprite: {fileID: 21300000, guid: 0e39403ed65de144098df5f1e40c03a7, type: 3}
+  - uri: res://assets/official/sprites/ImgItemCamera_Nor-03d990d547.png
+    file: ImgItemCamera_Nor-03d990d547.png
+    sprite: {fileID: 21300000, guid: 647126e8bd836a74580d4c1075eda7e9, type: 3}
+  - uri: res://assets/official/sprites/ImgItemEmote_Nor-1c28ec24c9.png
+    file: ImgItemEmote_Nor-1c28ec24c9.png
+    sprite: {fileID: 21300000, guid: c5a8d9239da2c7e4bbb505dbe3cf3fe8, type: 3}
+  - uri: res://assets/official/sprites/ImgItemEmote_Sel-53e9be74db.png
+    file: ImgItemEmote_Sel-53e9be74db.png
+    sprite: {fileID: 21300000, guid: bb404d5804e54e04fbf52a8cf05b3c1b, type: 3}
+  - uri: res://assets/official/sprites/ImgItemSubFunction_Nor-d1ca0130a3.png
+    file: ImgItemSubFunction_Nor-d1ca0130a3.png
+    sprite: {fileID: 21300000, guid: e2db2a9572088124984dbbcc4ce03a34, type: 3}
+  - uri: res://assets/official/sprites/ImgItemSubFunction_Pre-2a0294c74b.png
+    file: ImgItemSubFunction_Pre-2a0294c74b.png
+    sprite: {fileID: 21300000, guid: 28261d5ce3c09114fba9f50037d409b1, type: 3}
+  - uri: res://assets/official/sprites/ImgItem_CombatRating-e67301a9fd.png
+    file: ImgItem_CombatRating-e67301a9fd.png
+    sprite: {fileID: 21300000, guid: fffd3a878faf09f46b1aa93e51407314, type: 3}
+  - uri: res://assets/official/sprites/ImgItem_TeamList-a9031be15a.png
+    file: ImgItem_TeamList-a9031be15a.png
+    sprite: {fileID: 21300000, guid: 9a1153c9aaa90f342b2af1ba99b2fa58, type: 3}
+  - uri: res://assets/official/sprites/ImgLine-3dc3678e90.png
+    file: ImgLine-3dc3678e90.png
+    sprite: {fileID: 21300000, guid: 0c77f1c47f2747942a7bc4c9d5cc9237, type: 3}
+  - uri: res://assets/official/sprites/ImgLine_Title2-e62cc03282.png
+    file: ImgLine_Title2-e62cc03282.png
+    sprite: {fileID: 21300000, guid: dfe2f67ec9761ee4ba9e40e372d015db, type: 3}
+  - uri: res://assets/official/sprites/ImgLoadTrack_Bg-d4d195d177.png
+    file: ImgLoadTrack_Bg-d4d195d177.png
+    sprite: {fileID: 21300000, guid: cf87681f19440054ca6d2c81e13a966e, type: 3}
+  - uri: res://assets/official/sprites/ImgLoadTrack_Bg1-a95e99ae81.png
+    file: ImgLoadTrack_Bg1-a95e99ae81.png
+    sprite: {fileID: 21300000, guid: d76ec825187db414a95e0761429e8af1, type: 3}
+  - uri: res://assets/official/sprites/ImgLoadTrack_Load-1df0f67068.png
+    file: ImgLoadTrack_Load-1df0f67068.png
+    sprite: {fileID: 21300000, guid: 941f3ecded4c8c044a29230b073cd7d5, type: 3}
+  - uri: res://assets/official/sprites/ImgLoad_MainHp-2ad8346368.png
+    file: ImgLoad_MainHp-2ad8346368.png
+    sprite: {fileID: 21300000, guid: f68275ffbb682bf45a17cc39fcb72e6f, type: 3}
+  - uri: res://assets/official/sprites/ImgMapBg_Avatar-e4cce4355f.png
+    file: ImgMapBg_Avatar-e4cce4355f.png
+    sprite: {fileID: 21300000, guid: 041d2275a1d2bc845bdab081fd8e1782, type: 3}
+  - uri: res://assets/official/sprites/ImgMapDrop_Title-e4fcfd83a3.png
+    file: ImgMapDrop_Title-e4fcfd83a3.png
+    sprite: {fileID: 21300000, guid: ef1a42d875763e44b8461d9e808aeac7, type: 3}
+  - uri: res://assets/official/sprites/ImgMapSwitch_1-9e5d4ffdc4.png
+    file: ImgMapSwitch_1-9e5d4ffdc4.png
+    sprite: {fileID: 21300000, guid: 42e033c1686af9e48bff27be450973df, type: 3}
+  - uri: res://assets/official/sprites/ImgMapSwitch_Sel-fb73e99f29.png
+    file: ImgMapSwitch_Sel-fb73e99f29.png
+    sprite: {fileID: 21300000, guid: 1f4f201a1391a6f46bb9b39fa90f8100, type: 3}
+  - uri: res://assets/official/sprites/ImgMap_Avatar-43d8922b7e.png
+    file: ImgMap_Avatar-43d8922b7e.png
+    sprite: {fileID: 21300000, guid: 8f63a33c66aa9e943aef0718eb715106, type: 3}
+  - uri: res://assets/official/sprites/ImgMask-24a3320123.png
+    file: ImgMask-24a3320123.png
+    sprite: {fileID: 21300000, guid: 32fe65bf72fea2f4d91746e510c5f064, type: 3}
+  - uri: res://assets/official/sprites/ImgMask_BgCondition-37620ee0b3.png
+    file: ImgMask_BgCondition-37620ee0b3.png
+    sprite: {fileID: 21300000, guid: e5bc329c229e38543b7015837a270b65, type: 3}
+  - uri: res://assets/official/sprites/ImgMask_BgDialog3-90add1fe9f.png
+    file: ImgMask_BgDialog3-90add1fe9f.png
+    sprite: {fileID: 21300000, guid: e76a33f6ef39dd64393c8e07234f1c69, type: 3}
+  - uri: res://assets/official/sprites/ImgMatch-5ae3472fa9.png
+    file: ImgMatch-5ae3472fa9.png
+    sprite: {fileID: 21300000, guid: 36d47cd3a495434488048c5198bfd228, type: 3}
+  - uri: res://assets/official/sprites/ImgMiniLegend-ea62759f1c.png
+    file: ImgMiniLegend-ea62759f1c.png
+    sprite: {fileID: 21300000, guid: c30270f1fca39c7459479b42c79243ea, type: 3}
+  - uri: res://assets/official/sprites/ImgMiniMap_Slide-cdafd3872e.png
+    file: ImgMiniMap_Slide-cdafd3872e.png
+    sprite: {fileID: 21300000, guid: 05f9d62203706864b95fa5c681b92843, type: 3}
+  - uri: res://assets/official/sprites/ImgMiniMap_SlideKnob-31a156d4d5.png
+    file: ImgMiniMap_SlideKnob-31a156d4d5.png
+    sprite: {fileID: 21300000, guid: bf6e99923abf08d4fabd814ee4b9998e, type: 3}
+  - uri: res://assets/official/sprites/ImgMiniView-f5dbd5020d.png
+    file: ImgMiniView-f5dbd5020d.png
+    sprite: {fileID: 21300000, guid: 55ef63fd219c3634191bd8aa171defe8, type: 3}
+  - uri: res://assets/official/sprites/ImgNew-9b7c346dac.png
+    file: ImgNew-9b7c346dac.png
+    sprite: {fileID: 21300000, guid: e181e7e8c6e5c364dabe468d4c169c50, type: 3}
+  - uri: res://assets/official/sprites/ImgNpcPanelNpcItem_Pinned-8501fe453e.png
+    file: ImgNpcPanelNpcItem_Pinned-8501fe453e.png
+    sprite: {fileID: 21300000, guid: 96b45b074c81e0f4ba762864e61a8448, type: 3}
+  - uri: res://assets/official/sprites/ImgPageBig_Bg-bf19db1c71.png
+    file: ImgPageBig_Bg-bf19db1c71.png
+    sprite: {fileID: 21300000, guid: feae22de78d305d419c5e2ba632b3026, type: 3}
+  - uri: res://assets/official/sprites/ImgPlayAsYou_Light-be704da611.png
+    file: ImgPlayAsYou_Light-be704da611.png
+    sprite: {fileID: 21300000, guid: 85ef6f09d5b2ef24c8d11eb29c7d8b33, type: 3}
+  - uri: res://assets/official/sprites/ImgPlayAsYou_icon-e1b43d592b.png
+    file: ImgPlayAsYou_icon-e1b43d592b.png
+    sprite: {fileID: 21300000, guid: 16b12076527146846953bbec2e94298e, type: 3}
+  - uri: res://assets/official/sprites/ImgPlayAsYou_ripple-9e97935f95.png
+    file: ImgPlayAsYou_ripple-9e97935f95.png
+    sprite: {fileID: 21300000, guid: b07c9e96cbb22cf4385dd7d68d8ee068, type: 3}
+  - uri: res://assets/official/sprites/ImgPresent-b98847ead9.png
+    file: ImgPresent-b98847ead9.png
+    sprite: {fileID: 21300000, guid: 62e4ef51b6209ac41b52d55c8239802d, type: 3}
+  - uri: res://assets/official/sprites/ImgQuality_Blue-42b8cb9630.png
+    file: ImgQuality_Blue-42b8cb9630.png
+    sprite: {fileID: 21300000, guid: f96321f98c6e5994c81c158e3623a052, type: 3}
+  - uri: res://assets/official/sprites/ImgRed-f3845f3f04.png
+    file: ImgRed-f3845f3f04.png
+    sprite: {fileID: 21300000, guid: be7a8c9ff5b432248a2b8b156048e892, type: 3}
+  - uri: res://assets/official/sprites/ImgRedDot-8154d7a8c2.png
+    file: ImgRedDot-8154d7a8c2.png
+    sprite: {fileID: 21300000, guid: 63be09895173f6d4bb4e19b9a68b1439, type: 3}
+  - uri: res://assets/official/sprites/ImgReturn-48efaa6e6b.png
+    file: ImgReturn-48efaa6e6b.png
+    sprite: {fileID: 21300000, guid: 2231211c5116aad4caf8531c739175ae, type: 3}
+  - uri: res://assets/official/sprites/ImgReturnBg-25d824248c.png
+    file: ImgReturnBg-25d824248c.png
+    sprite: {fileID: 21300000, guid: 5f62bf8a4292f8249be303b9e1cb1667, type: 3}
+  - uri: res://assets/official/sprites/ImgRound-f7cf02c86e.png
+    file: ImgRound-f7cf02c86e.png
+    sprite: {fileID: 21300000, guid: bcf0a660f37d79a45bf0fd55499f970c, type: 3}
+  - uri: res://assets/official/sprites/ImgSelected_bg-ab2290a60f.png
+    file: ImgSelected_bg-ab2290a60f.png
+    sprite: {fileID: 21300000, guid: 7d057a53df34c7e40b97ee0d992b160c, type: 3}
+  - uri: res://assets/official/sprites/ImgSpeed_Nor-d28a44b45a.png
+    file: ImgSpeed_Nor-d28a44b45a.png
+    sprite: {fileID: 21300000, guid: b738e5abf3228ed4583c12c6a0de01cb, type: 3}
+  - uri: res://assets/official/sprites/ImgSpeed_Pre-29e2c4637b.png
+    file: ImgSpeed_Pre-29e2c4637b.png
+    sprite: {fileID: 21300000, guid: a78fb6013be9452469ae7ec59c449191, type: 3}
+  - uri: res://assets/official/sprites/ImgSwitchItem-e03deb88b4.png
+    file: ImgSwitchItem-e03deb88b4.png
+    sprite: {fileID: 21300000, guid: cc487bd08e1a42644b940ca5da247e8c, type: 3}
+  - uri: res://assets/official/sprites/ImgTimeClock_Line-b38af88370.png
+    file: ImgTimeClock_Line-b38af88370.png
+    sprite: {fileID: 21300000, guid: 43b5433c6ee731b42a5492b89377cd3e, type: 3}
+  - uri: res://assets/official/sprites/ImgTimeFull_Mask-f86c97ab8a.png
+    file: ImgTimeFull_Mask-f86c97ab8a.png
+    sprite: {fileID: 21300000, guid: 7e0c168c1c800bf458973ec9d934b217, type: 3}
+  - uri: res://assets/official/sprites/ImgTimeLine_Mask-02cc606a6b.png
+    file: ImgTimeLine_Mask-02cc606a6b.png
+    sprite: {fileID: 21300000, guid: 27e810bbfa41f994db74abc07257696e, type: 3}
+  - uri: res://assets/official/sprites/ImgTimeRing_Mask-9cb338e2a2.png
+    file: ImgTimeRing_Mask-9cb338e2a2.png
+    sprite: {fileID: 21300000, guid: 40b2b983aea335647ab2f42a8190b70f, type: 3}
+  - uri: res://assets/official/sprites/ImgTopBg-897a6e72d2.png
+    file: ImgTopBg-897a6e72d2.png
+    sprite: {fileID: 21300000, guid: 78badc1239f170245b6b0c60f4b3e9a7, type: 3}
+  - uri: res://assets/official/sprites/ImgTouxiang_2-789aa62968.png
+    file: ImgTouxiang_2-789aa62968.png
+    sprite: {fileID: 21300000, guid: 2ef4f4363168cd24ba66adaa3c6a1342, type: 3}
+  - uri: res://assets/official/sprites/ImgTrackBg-162f6a64d3.png
+    file: ImgTrackBg-162f6a64d3.png
+    sprite: {fileID: 21300000, guid: f2d8832a59749e546ad9c83a2320b133, type: 3}
+  - uri: res://assets/official/sprites/ImgTxtBg-c34273b607.png
+    file: ImgTxtBg-c34273b607.png
+    sprite: {fileID: 21300000, guid: 69fbdc79b8b89fc4c81293988379014a, type: 3}
+  - uri: res://assets/official/sprites/ImgTxt_Bg-a1500cf33c.png
+    file: ImgTxt_Bg-a1500cf33c.png
+    sprite: {fileID: 21300000, guid: 36d5acdbc8c88d04d8e8abd4ce5ffd8d, type: 3}
+  - uri: res://assets/official/sprites/ImgUnuse-3ea76fae9b.png
+    file: ImgUnuse-3ea76fae9b.png
+    sprite: {fileID: 21300000, guid: b51de474771b4584dab48fd2715496d1, type: 3}
+  - uri: res://assets/official/sprites/ImgWorldPanel_Btn-f24519a943.png
+    file: ImgWorldPanel_Btn-f24519a943.png
+    sprite: {fileID: 21300000, guid: 7591ff044028175418dc9d7669f96844, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Dashboard-eaacb23609.png
+    file: Img_GalaxyShip_Dashboard-eaacb23609.png
+    sprite: {fileID: 21300000, guid: dc4961fd85a8f6441a9c65d8b5678797, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Dashboard_02-c988fc2501.png
+    file: Img_GalaxyShip_Dashboard_02-c988fc2501.png
+    sprite: {fileID: 21300000, guid: 5028aac1d28d96f42bd43147823e02e1, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Dashboard_03-494bb13976.png
+    file: Img_GalaxyShip_Dashboard_03-494bb13976.png
+    sprite: {fileID: 21300000, guid: 453ddb3adcd71d64b86c135d3bde7ca4, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_ErrorHUD_Circle-b39f09e4b2.png
+    file: Img_GalaxyShip_ErrorHUD_Circle-b39f09e4b2.png
+    sprite: {fileID: 21300000, guid: f3f05f2d4c57d59408af99339eabf702, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_HUD_01-61eae678b7.png
+    file: Img_GalaxyShip_HUD_01-61eae678b7.png
+    sprite: {fileID: 21300000, guid: 6533bc23592cec645be5561375eb4112, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_HUD_02-c39abee5cf.png
+    file: Img_GalaxyShip_HUD_02-c39abee5cf.png
+    sprite: {fileID: 21300000, guid: e9daf475a623efa4c98311ee6c447020, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_HUD_03-9b931ad5ba.png
+    file: Img_GalaxyShip_HUD_03-9b931ad5ba.png
+    sprite: {fileID: 21300000, guid: 26dbbd38a834bd74fb4bb691a2c8fc56, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_HUD_04-df926bcfe9.png
+    file: Img_GalaxyShip_HUD_04-df926bcfe9.png
+    sprite: {fileID: 21300000, guid: f58ef80f4d1f57b4b81a141c23a40321, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Message-42c1f42b71.png
+    file: Img_GalaxyShip_Message-42c1f42b71.png
+    sprite: {fileID: 21300000, guid: 576c07ada26860b40a215272be3c8ad8, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Message_Right-096866ee7b.png
+    file: Img_GalaxyShip_Message_Right-096866ee7b.png
+    sprite: {fileID: 21300000, guid: b9d1691165284fa4088545eb85f5dc69, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Message_left-76f18f253c.png
+    file: Img_GalaxyShip_Message_left-76f18f253c.png
+    sprite: {fileID: 21300000, guid: 1418ea584b89dc044b5796a8d2ed81a1, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_Ship-c2e568e4d1.png
+    file: Img_GalaxyShip_Ship-c2e568e4d1.png
+    sprite: {fileID: 21300000, guid: bc5329b4811df7446a7abf61e31afd1b, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_ShipHead-ee68819484.png
+    file: Img_GalaxyShip_ShipHead-ee68819484.png
+    sprite: {fileID: 21300000, guid: c12ad4f75bbc4af4fa213ae69db6d939, type: 3}
+  - uri: res://assets/official/sprites/Img_GalaxyShip_ShipHead_Light-e2d3eeb13a.png
+    file: Img_GalaxyShip_ShipHead_Light-e2d3eeb13a.png
+    sprite: {fileID: 21300000, guid: 4796c59cdbb552848876c181bccb4a05, type: 3}
+  - uri: res://assets/official/sprites/Img_RoundLoad-be07d10645.png
+    file: Img_RoundLoad-be07d10645.png
+    sprite: {fileID: 21300000, guid: c2a4690e4e53b774192f3ee169fe6655, type: 3}
+  - uri: res://assets/official/sprites/Imgcontent-d7ecd3437f.png
+    file: Imgcontent-d7ecd3437f.png
+    sprite: {fileID: 21300000, guid: a6c1c3aadacc0af47bf03789ba7483a5, type: 3}
+  - uri: res://assets/official/sprites/Imgzhengchang-19cdf94600.png
+    file: Imgzhengchang-19cdf94600.png
+    sprite: {fileID: 21300000, guid: 7d09f4963ae2a864997e282d6c65201d, type: 3}
+  - uri: res://assets/official/sprites/Money_57_Tili-56c548f327.png
+    file: Money_57_Tili-56c548f327.png
+    sprite: {fileID: 21300000, guid: 6e81589b89d014b4e80afdae65534210, type: 3}
+  - uri: res://assets/official/sprites/Stage_Sen_WorldTree_Ordinary-ed9fc29108.png
+    file: Stage_Sen_WorldTree_Ordinary-ed9fc29108.png
+    sprite: {fileID: 21300000, guid: 5375c28896f7fa14682cb7ebdffae364, type: 3}
+  - uri: res://assets/official/sprites/Temporary1-bd1ce4fb01.png
+    file: Temporary1-bd1ce4fb01.png
+    sprite: {fileID: 21300000, guid: 57645d2cf11a38044bada80d70d8dba7, type: 3}
+  - uri: res://assets/official/sprites/UIMask-eb1b1ef6f1.png
+    file: UIMask-eb1b1ef6f1.png
+    sprite: {fileID: 21300000, guid: 548de0cf2c0c9794597da176398b6f9c, type: 3}
+  - uri: res://assets/official/sprites/item_115-6624d2a9df.png
+    file: item_115-6624d2a9df.png
+    sprite: {fileID: 21300000, guid: 878bfbc9eedfbaa428ca5b7a3120211b, type: 3}
+  - uri: res://assets/official/sprites/item_40500-01973e907b.png
+    file: item_40500-01973e907b.png
+    sprite: {fileID: 21300000, guid: 5e190b41a783ed34786c8279387d080e, type: 3}
+  - uri: res://assets/official/sprites/map_11_stage_bg-e0c6d3925a.png
+    file: map_11_stage_bg-e0c6d3925a.png
+    sprite: {fileID: 21300000, guid: b1a0778b1151c334fa298717d2277f6e, type: 3}
+  - uri: res://assets/official/sprites/npc_icon_8441-afab069a58.png
+    file: npc_icon_8441-afab069a58.png
+    sprite: {fileID: 21300000, guid: 6fdf165eca38cec42a2e1f21c6dfbdf9, type: 3}

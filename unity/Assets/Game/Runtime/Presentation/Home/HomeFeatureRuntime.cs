@@ -662,7 +662,10 @@ namespace Zjcs.Presentation.Home
             if (!slots.Contains(slotId)) throw new DirectoryNotFoundException("The selected profile does not exist.");
             homeSettings = new HomeSettingsProfile(Path.Combine(slots.GetSlotDirectory(slotId), "settings.json"));
             homeSettings.Load();
-            profile = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            string fantasyTowerSavePath = Path.Combine(slots.GetSlotDirectory(slotId), "fantasy-tower-save.json");
+            profile = OfflineMainlineProgressSession.Open(slots, slotId,
+                OfficialMainlineTaskCatalog.LoadDefault(), entryIndex =>
+                    OfflineFantasyTowerSession.ReadClearedLayer(fantasyTowerSavePath, entryIndex));
             profile.Reload();
             dailyChallenges = new OfflineDailyChallengeService(
                 Path.Combine(slots.GetSlotDirectory(slotId), "daily-challenges.json"));

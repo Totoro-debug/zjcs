@@ -30,7 +30,8 @@ namespace Zjcs.Editor.Wishes
                 VerifyGuideDrawFriendshipAndShop(catalog, slots, profession.Profession);
                 VerifyGuaranteeCollision(catalog, slots, profession.Profession);
                 VerifyDuplicateAndPieceAwards(catalog, slots);
-                Debug.Log("[WishAcceptance] guide, draw, pity, friendship, shop, conversion and persistence passed");
+                VerifyMainlineChestProgress(catalog, slots, profession.Profession);
+                Debug.Log("[WishAcceptance] guide, draw, pity, friendship, shop, conversion, chest progress and persistence passed");
                 EditorApplication.Exit(0);
             }
             catch (Exception error)
@@ -120,6 +121,49 @@ namespace Zjcs.Editor.Wishes
                 || restoredService.History(0, now, 0, 10).Count != 1
                 || restoredService.State.Shops.First(value => value.ShopId == 5).ManualRefreshCount != 0)
                 throw new InvalidOperationException("Wish progress did not survive reopening the profile save.");
+        }
+
+        private static void VerifyMainlineChestProgress(WishRuntimeCatalog catalog,
+            ProfileSlotCatalog slots, int profession)
+        {
+            string slotId = slots.CreateSlot();
+            OfflineMainlineProgressSession profile = CreateProfile(slots, slotId, catalog, profession);
+            var service = new OfflineWishService(profile, catalog);
+            WishGacha regular = catalog.Gacha(0);
+            WishChest chest = catalog.Chest(regular.ChestId);
+            if (chest.ClassId != 6000)
+                throw new InvalidOperationException("The official regular wish pool no longer uses chest 6000.");
+
+            long now = DateTimeOffset.Now.ToUnixTimeSeconds();
+            string receipt = "acceptance:wish:mainline-chest:" + slotId;
+            WishResult draw = service.Draw(0, 10, profession, receipt, now, true);
+            if (!draw.IsApplied || draw.Awards.Count != 10)
+                throw new InvalidOperationException("A successful ten-pull did not produce ten wish rewards.");
+            OfflineChestCount opened = profile.Save.World.OpenChestCounts.FirstOrDefault(value =>
+                value.ChestId == chest.ClassId);
+            if (opened == null || opened.Count != 10)
+                throw new InvalidOperationException("A ten-pull did not record ten opened chests for task progress.");
+
+            WishResult duplicate = service.Draw(0, 10, profession, receipt, now, true);
+            if (duplicate.Code != WishResultCode.Unchanged || opened.Count != 10)
+                throw new InvalidOperationException("A repeated ten-pull receipt changed chest progress.");
+            if (service.Draw(0, 2, profession, "acceptance:wish:mainline-chest-invalid:" + slotId,
+                now, true).Code != WishResultCode.InvalidArgument || opened.Count != 10)
+                throw new InvalidOperationException("An invalid draw changed chest progress.");
+
+            OfficialMainlineTaskCatalog tasks = OfficialMainlineTaskCatalog.LoadDefault();
+            if (!tasks.TryGetTask(1040, out OfficialMainlineTaskDefinition task))
+                throw new InvalidOperationException("Map10 mainline task 1040 is missing.");
+            ProgressionResult progress = profile.GetTaskProgress(task.finishCondition,
+                out long current, out long target);
+            if (progress.Status != ProgressionResultStatus.Ready || current != 10 || target != 10)
+                throw new InvalidOperationException("The official task 1040 chest condition did not reach 10/10.");
+
+            OfflineMainlineProgressSession restored = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            OfflineChestCount restoredCount = restored.Save.World.OpenChestCounts.FirstOrDefault(value =>
+                value.ChestId == chest.ClassId);
+            if (restoredCount == null || restoredCount.Count != 10)
+                throw new InvalidOperationException("The ten-pull chest progress did not survive reloading the profile save.");
         }
 
         private static void VerifyGuaranteeCollision(WishRuntimeCatalog source, ProfileSlotCatalog slots, int professionId)

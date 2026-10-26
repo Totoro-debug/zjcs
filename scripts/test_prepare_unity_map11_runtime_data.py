@@ -46,6 +46,17 @@ class Map11RuntimeDataTests(unittest.TestCase):
                                            for component in row["Components"]}
                      for row in stories["entityTemplates"]}
         self.assertEqual(len(templates), 110)
+        self.assertEqual(len(stories["witchInfos"]), 14)
+        self.assertEqual([row["ActiveCount"] for row in stories["witchInfos"]], list(range(14)))
+        self.assertEqual(stories["witchInfos"][0]["StoryBookId"], 1)
+        self.assertEqual(stories["witchInfos"][0]["StageResults"], [
+            {"ComponentType": 212, "ComponentIndex": 0},
+            {"ComponentType": 235, "ComponentIndex": 11},
+        ])
+        self.assertTrue(all(any(value["ComponentType"] == 245 for value in stories["witchInfos"][index]["StageResults"])
+                            for index in (3, 9)))
+        self.assertTrue(all(not any(value["ComponentType"] == 245 for value in stories["witchInfos"][index]["StageResults"])
+                            for index in set(range(14)) - {3, 9}))
         puzzle_rules = {row["PlacementId"]: row for row in stories["puzzleRules"]}
         self.assertEqual(sum(bool(row["TerminalLockIds"]) for row in puzzle_rules.values()), 7)
         self.assertEqual(sum(row["LockType"] in (2, 7) and row["EntityClassId"] in (6530, 6533)
@@ -75,9 +86,15 @@ class Map11RuntimeDataTests(unittest.TestCase):
         self.assertTrue(all(json.loads(node["sourceJson"])["_type"] == node["type"]
                             for story in all_graphs for node in story["nodes"]))
         self.assertEqual((len(battles["stages"]), len(battles["monsterRosters"]), len(battles["battleScenes"])),
-                         (129, 129, 17))
+                         (130, 130, 17))
         self.assertEqual(len(battles["entityStageBindings"]), 591)
-        self.assertEqual(manifest["outputs"]["battle-runtime.json"]["stageCount"], 129)
+        self.assertEqual(manifest["outputs"]["battle-runtime.json"]["stageCount"], 130)
+        self.assertIn(20001, [row["Id"] for row in battles["stages"]])
+        self.assertEqual([row["Weight"] for row in stories["witchPeriodicityAwards"]], [2, 16, 16, 16, 16, 14, 20])
+        witch_results = {(row["ComponentType"], row["ComponentIndex"]): row for row in stories["witchResultEffects"]}
+        self.assertEqual(witch_results[(235, 11)]["StatusEffects"][0]["FightStatusClassIds"], [28500])
+        self.assertEqual(witch_results[(245, 0)]["SpawnStageId"], 20001)
+        self.assertEqual(witch_results[(200, 5)]["AwardItems"], [{"ItemId": 110, "Count": 10}])
         self.assertEqual(manifest["outputs"]["stories.json"]["subgraphCount"], 4)
         self.assertEqual(manifest["outputs"]["stories.json"]["subgraphNodeCount"], 64)
         self.assertEqual(manifest["outputs"]["stories.json"]["entityTemplateCount"], 110)

@@ -23,6 +23,10 @@ namespace Zjcs.Editor
         public static void ImportAndValidate()
         {
             RequireEditorVersion();
+            string resources = PayloadRoot + "/Resources";
+            if (Resources.Load<TextAsset>("Map11/MiniMap/catalog") == null || Resources.Load<TextAsset>("Map11/Audio/bgm") == null)
+                AssetDatabase.ImportAsset(resources, ImportAssetOptions.ImportRecursive
+                    | ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
             BuildPrefabs();
             BindCatalog();
             ValidateMap();

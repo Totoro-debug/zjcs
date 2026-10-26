@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using Zjcs.Offline.Progression;
 using Zjcs.Offline.State;
+using Zjcs.Offline.World;
+using Zjcs.Presentation.World;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,13 +21,23 @@ namespace Zjcs.Editor.Progression
             {
                 var slots = new ProfileSlotCatalog(root);
                 string slot = slots.CreateSlot();
+                string fantasyTowerSavePath = Path.Combine(slots.GetSlotDirectory(slot), "fantasy-tower-save.json");
+                Func<int, int> readDemonBattleLayer = entryIndex =>
+                    OfflineFantasyTowerSession.ReadClearedLayer(fantasyTowerSavePath, entryIndex);
                 long slotCreatedAt = slots.GetCreatedAtUnixSeconds(slot);
                 Require(slotCreatedAt > 0, "Persist the local profile creation time");
-                OfflineMainlineProgressSession session = OfflineMainlineProgressSession.Open(slots, slot, catalog);
+                OfflineMainlineProgressSession session = OfflineMainlineProgressSession.Open(
+                    slots, slot, catalog, readDemonBattleLayer);
                 Require(session.Save.CreatedAtUnixSeconds == slotCreatedAt,
                     "Copy the profile creation time into its progress save");
                 Require(session.InitializeMap(10, new[] { 0, 1, 2, 3, 4 }).IsApplied,
                     "Initialize the five official Map10 regions");
+                Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(session.Save) == 10,
+                    "Keep Map11 closed until Map10 task 1040 is claimed");
+                session.Save.Tasks.ClaimedMainlineTaskIds.Add(1040);
+                Require(OfficialMap10GameRuntime.ResolveHomeReturnMap(session.Save) == 11,
+                    "Open Map11 after Map10 task 1040 is claimed");
+                session.Save.Tasks.ClaimedMainlineTaskIds.Remove(1040);
 
                 Require(session.RecordMapBattle(10, 0, 1, "map10-battle-1").IsApplied,
                     "Record the first actual victory");
@@ -33,9 +45,14 @@ namespace Zjcs.Editor.Progression
                     "Ignore a replayed battle receipt");
                 Require(session.RecordMapBattle(10, 0, 1, "map10-battle-2").IsApplied,
                     "Record the second actual victory");
-                Require(session.GetCurrentTask(out OfficialMainlineTaskDefinition task, out bool ready).Status
-                    == ProgressionResultStatus.Ready && task.classId == 1000 && ready,
-                    "Unlock original mainline task 1000 from two region 0 wins");
+                ProgressionResult firstTaskResult = session.GetCurrentTask(
+                    out OfficialMainlineTaskDefinition task, out bool ready);
+                Require(firstTaskResult.Status == ProgressionResultStatus.Ready
+                    && task.classId == 1000 && ready,
+                    "Unlock original mainline task 1000 from two region 0 wins (status="
+                    + firstTaskResult.Status + ", task=" + (task == null ? 0 : task.classId)
+                    + ", candidate=" + firstTaskResult.TaskClassId + ", ready=" + ready
+                    + ", unsupported=" + firstTaskResult.UnsupportedCondition + ")");
                 Require(session.ClaimTask(1000).IsApplied && session.InventoryCount(2) == 30,
                     "Claim task 1000 and persist its original 30 item 2 reward");
 
@@ -47,7 +64,8 @@ namespace Zjcs.Editor.Progression
                 Require(session.ClaimTask(1005).IsApplied && session.InventoryCount(2) == 60,
                     "Claim task 1005 and persist its original reward");
 
-                OfflineMainlineProgressSession restored = OfflineMainlineProgressSession.Open(slots, slot, catalog);
+                OfflineMainlineProgressSession restored = OfflineMainlineProgressSession.Open(
+                    slots, slot, catalog, readDemonBattleLayer);
                 Require(restored.Save.Tasks.ClaimedMainlineTaskIds.Contains(1000)
                     && restored.Save.Tasks.ClaimedMainlineTaskIds.Contains(1005)
                     && restored.InventoryCount(2) == 60,
@@ -55,6 +73,77 @@ namespace Zjcs.Editor.Progression
                 Require(restored.GetCurrentTask(out task, out ready).Status == ProgressionResultStatus.NotReady
                     && task.classId == 1010 && !ready,
                     "Expose the next task only after its own region progress condition");
+
+                Require(catalog.OrderedTasks.Count(value => value.classId >= 1045
+                    && value.classId <= 1160 && value.classId % 5 == 0) == 24,
+                    "Load all 24 fixed-version Map11 mainline tasks");
+                Require(catalog.TryGetTask(1070, out OfficialMainlineTaskDefinition demonTask),
+                    "Load Map11 demon battlefield task 1070");
+                restored.Save.Tasks.ClaimedMainlineTaskIds.Add(1065);
+                OfflineFantasyTowerSession tower = OfflineFantasyTowerSession.Open(slots, slot);
+                Require(tower.SetClearedLayer(1, 1) == FantasyTowerResult.Applied,
+                    "Persist the first cleared demon battlefield layer");
+                ProgressionResult towerProgress = restored.GetTaskProgress(demonTask.finishCondition,
+                    out long towerCurrent, out long towerTarget);
+                Require(towerProgress.Status == ProgressionResultStatus.Ready
+                    && towerCurrent == 2 && towerTarget == 3
+                    && restored.ClaimTask(1070).Status == ProgressionResultStatus.NotReady,
+                    "Match official layer-plus-one display and reject a premature task claim");
+                FantasyTowerResult secondLayer = tower.SetClearedLayer(1, 2);
+                ProgressionResult demonTaskClaim = restored.ClaimTask(1070);
+                Require(secondLayer == FantasyTowerResult.Applied && demonTaskClaim.IsApplied
+                    && restored.InventoryCount(2) == 90 && restored.Save.Player.Experience == 50,
+                    "Claim task 1070 after clearing its configured layer and grant fixed rewards (layer="
+                    + secondLayer + ", claim=" + demonTaskClaim.Status + ", unsupported="
+                    + demonTaskClaim.UnsupportedCondition + ", message=" + demonTaskClaim.Message
+                    + ", cleared=" + readDemonBattleLayer(1) + ", item2=" + restored.InventoryCount(2)
+                    + ", experience=" + restored.Save.Player.Experience + ")");
+                OfflineMainlineProgressSession towerRestored = OfflineMainlineProgressSession.Open(
+                    slots, slot, catalog, readDemonBattleLayer);
+                Require(towerRestored.Save.Tasks.ClaimedMainlineTaskIds.Contains(1070)
+                    && towerRestored.InventoryCount(2) == 90 && towerRestored.Save.Player.Experience == 50,
+                    "Restore Map11 task claim and rewards from the local save");
+
+                Require(restored.InitializeMap(11, new[] { 0 }).IsApplied,
+                    "Initialize a second map for the shared witch activation count");
+                Require(restored.RecordWitchActivated(10, 9001, "witch-map10-9001").IsApplied
+                    && restored.ActiveWitchCount == 1,
+                    "Count the first activated witch from Map10");
+                Require(restored.RecordWitchActivated(11, 11001, "witch-map11-11001").IsApplied
+                    && restored.ActiveWitchCount == 2,
+                    "Accumulate activated witches across maps");
+                Require(restored.RecordWitchActivated(11, 11001, "witch-map11-11001-replay").Status
+                    == ProgressionResultStatus.Unchanged && restored.ActiveWitchCount == 2,
+                    "Do not count a previously activated witch twice");
+                OfflineMainlineProgressSession witchRestored = OfflineMainlineProgressSession.Open(
+                    slots, slot, catalog, readDemonBattleLayer);
+                Require(witchRestored.ActiveWitchCount == 2,
+                    "Restore the global activated witch count from the profile save");
+
+                Require(witchRestored.ApplyStatueVisit("20261025", "witch", 11, 2801, "witch-daily-1",
+                    -1f, new[] { 28500 }, new[] { new OfflineItemStack { ItemId = 110, Count = 2 } }, 100).IsApplied,
+                    "Commit a witch visit, item reward and next-battle effects atomically");
+                Require(witchRestored.ApplyStatueVisit("20261025", "hero", 10, 9002, "hero-daily-1",
+                    0f, new[] { 28501 }, Array.Empty<OfflineItemStack>(), 100).Status == ProgressionResultStatus.NotReady,
+                    "A witch visit consumes the shared daily hero and witch quota");
+                var statueRestored = OfflineMainlineProgressSession.Open(slots, slot, catalog, readDemonBattleLayer);
+                Require(statueRestored.HasVisitedStatueOn("20261025")
+                    && statueRestored.Save.Player.PendingStatueBattleEffects.Count == 1
+                    && statueRestored.Save.Player.PendingStatueBattleEffects[0].HpPercentChange == -1f
+                    && statueRestored.Save.Player.PendingStatueBattleEffects[0].StatusEffectClassIds.SequenceEqual(new[] { 28500 })
+                    && statueRestored.InventoryCount(110) == 2,
+                    "Quit and reload retain the daily quota, item reward and unapplied battle effects");
+                Require(statueRestored.ApplyStatueVisit("20261025", "witch", 11, 2801, "witch-daily-1",
+                    -1f, new[] { 28500 }, new[] { new OfflineItemStack { ItemId = 110, Count = 2 } }, 100).Status
+                    == ProgressionResultStatus.Unchanged && statueRestored.InventoryCount(110) == 2,
+                    "Replayed statue receipts cannot grant rewards twice");
+                Require(statueRestored.ClearPendingStatueBattleEffects("battle-end-1").IsApplied
+                    && statueRestored.HasVisitedStatueOn("20261025")
+                    && statueRestored.Save.Player.PendingStatueBattleEffects.Count == 0,
+                    "Battle end clears effects while keeping the shared daily quota");
+                Require(statueRestored.ApplyStatueVisit("20261026", "hero", 10, 9002, "hero-daily-2",
+                    0f, new[] { 28501 }, Array.Empty<OfflineItemStack>(), 100).IsApplied,
+                    "A new day permits another shared statue visit");
 
                 Require(restored.ApplyInventoryTransaction("inventory-units", save =>
                 {
@@ -87,7 +176,7 @@ namespace Zjcs.Editor.Progression
                     && restored.Save.Player.InventoryRandomState == 42,
                     "Roll back cancelled item and random mutations");
 
-                Debug.Log("Offline mainline progress validation passed: tasks 1000/1005, battle replay, region progress, rewards and save reload.");
+                Debug.Log("Offline mainline progress validation passed: tasks 1000/1005/1070, fixed rewards and save reload, cross-map witch activation count, deduplication and reload.");
             }
             finally
             {

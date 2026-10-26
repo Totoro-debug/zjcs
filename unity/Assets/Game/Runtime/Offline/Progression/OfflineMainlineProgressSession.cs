@@ -81,6 +81,10 @@ namespace Zjcs.Offline.Progression
         public List<OfflineProfessionLevel> ProfessionLevels = new List<OfflineProfessionLevel>();
         public OfflineHomeShopProgress HomeShop = new OfflineHomeShopProgress();
         public List<string> AppliedCharacterEventIds = new List<string>();
+        public string StatueVisitDate = string.Empty;
+        public int StatueVisitMapClassId;
+        public int StatueVisitPlacementId;
+        public string StatueVisitKind = string.Empty;
         public List<OfflineStatueBattleEffect> PendingStatueBattleEffects = new List<OfflineStatueBattleEffect>();
     }
 
@@ -256,12 +260,14 @@ namespace Zjcs.Offline.Progression
 
         private readonly string savePath;
         private readonly OfficialMainlineTaskCatalog catalog;
+        private readonly Func<int, int> demonBattleClearedLayer;
 
         private OfflineMainlineProgressSession(string savePath, OfficialMainlineTaskCatalog catalog,
-            OfflineMainlineSave save, SaveReadStatus readStatus)
+            OfflineMainlineSave save, SaveReadStatus readStatus, Func<int, int> demonBattleClearedLayer)
         {
             this.savePath = savePath;
             this.catalog = catalog;
+            this.demonBattleClearedLayer = demonBattleClearedLayer;
             Save = save;
             ReadStatus = readStatus;
         }
@@ -322,7 +328,7 @@ namespace Zjcs.Offline.Progression
         }
 
         public static OfflineMainlineProgressSession Open(ProfileSlotCatalog slots, string slotId,
-            OfficialMainlineTaskCatalog catalog)
+            OfficialMainlineTaskCatalog catalog, Func<int, int> demonBattleClearedLayer = null)
         {
             if (slots == null) throw new ArgumentNullException(nameof(slots));
             if (catalog == null) throw new ArgumentNullException(nameof(catalog));
@@ -337,7 +343,7 @@ namespace Zjcs.Offline.Progression
                 save.CreatedAtUnixSeconds = createdAt;
                 LocalJsonSaveFile.Write(path, JsonUtility.ToJson(save, true), IsValidSaveJson);
             }
-            return new OfflineMainlineProgressSession(path, catalog, save, result.Status);
+            return new OfflineMainlineProgressSession(path, catalog, save, result.Status, demonBattleClearedLayer);
         }
 
         public static OfflineMainlineProgressSession OpenForCommerce(ProfileSlotCatalog slots, string slotId)
@@ -351,7 +357,7 @@ namespace Zjcs.Offline.Progression
             if (result.Json == null)
                 throw new FileNotFoundException("The selected profile has no character progress save.", path);
             OfflineMainlineSave save = ParseSave(result.Json);
-            return new OfflineMainlineProgressSession(path, null, save, result.Status);
+            return new OfflineMainlineProgressSession(path, null, save, result.Status, null);
         }
 
         public static OfflineMainlineProgressSession OpenCharacter(ProfileSlotCatalog slots, string slotId)
@@ -368,7 +374,7 @@ namespace Zjcs.Offline.Progression
                 save.CreatedAtUnixSeconds = createdAt;
                 LocalJsonSaveFile.Write(path, JsonUtility.ToJson(save, true), IsValidSaveJson);
             }
-            return new OfflineMainlineProgressSession(path, null, save, result.Status);
+            return new OfflineMainlineProgressSession(path, null, save, result.Status, null);
         }
 
         /// <summary>
@@ -508,23 +514,147 @@ namespace Zjcs.Offline.Progression
             return Commit(next, Result(ProgressionResultStatus.Applied));
         }
 
+        public bool HasVisitedStatueOn(string localDate) =>
+            !string.IsNullOrWhiteSpace(localDate) && Save.Player.StatueVisitDate == localDate;
+
+        public ProgressionResult RecordStatueVisit(string localDate, string kind, int mapClassId,
+            int placementId, string eventId)
+        {
+            if (!DateTime.TryParseExact(localDate, "yyyyMMdd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out _) || string.IsNullOrWhiteSpace(kind) || kind.Length > 64
+                || mapClassId <= 0 || placementId <= 0 || string.IsNullOrWhiteSpace(eventId)
+                || eventId.Length > 160)
+                return Result(ProgressionResultStatus.InvalidState, message: "A statue visit date, type and receipt are required.");
+            Reload();
+            if (HasVisitedStatueOn(localDate))
+                return Result(ProgressionResultStatus.NotReady, message: "A statue has already been visited today.");
+            return ApplyInventoryTransaction(eventId, save =>
+            {
+                save.Player.StatueVisitDate = localDate;
+                save.Player.StatueVisitKind = kind;
+                save.Player.StatueVisitMapClassId = mapClassId;
+                save.Player.StatueVisitPlacementId = placementId;
+            });
+        }
+
+        public ProgressionResult ApplyWitchActivation(int mapClassId, int placementId, string eventId,
+            float hpPercentChange, IReadOnlyList<int> statusEffectClassIds,
+            IReadOnlyList<OfflineItemStack> awards, long acquiredAtUnixSeconds)
+        {
+            if (placementId <= 0 || !Save.World.Maps.Any(value => value.MapClassId == mapClassId)
+                || string.IsNullOrWhiteSpace(eventId) || eventId.Length > 160
+                || float.IsNaN(hpPercentChange) || float.IsInfinity(hpPercentChange)
+                || hpPercentChange < -1f || hpPercentChange > 1f || acquiredAtUnixSeconds < 0
+                || statusEffectClassIds == null || awards == null)
+                return Result(ProgressionResultStatus.InvalidState, message: "Witch activation effects are malformed.");
+            Reload();
+            if (Save.Player.AppliedInventoryEventIds.Contains(eventId)
+                || Save.World.AppliedEventIds.Contains(eventId)
+                || Save.World.ActivatedWitches.Any(value => value.MapClassId == mapClassId
+                    && value.PlacementId == placementId))
+                return Result(ProgressionResultStatus.Unchanged);
+            if (statusEffectClassIds.Any(value => value <= 0)
+                || statusEffectClassIds.Distinct().Count() != statusEffectClassIds.Count
+                || awards.Any(value => value == null || value.ItemId <= 0 || value.Count <= 0))
+                return Result(ProgressionResultStatus.InvalidState, message: "Witch activation rewards are malformed.");
+
+            return ApplyInventoryTransaction(eventId, save =>
+            {
+                save.World.ActivatedWitches.Add(new OfflineMapEntityKey
+                    { MapClassId = mapClassId, PlacementId = placementId });
+                save.World.AppliedEventIds.Add(eventId);
+                if (hpPercentChange != 0f || statusEffectClassIds.Count > 0)
+                {
+                    save.Player.PendingStatueBattleEffects.Add(new OfflineStatueBattleEffect
+                    {
+                        EventId = eventId,
+                        HpPercentChange = hpPercentChange,
+                        StatusEffectClassIds = statusEffectClassIds.ToList()
+                    });
+                }
+                foreach (OfflineItemStack award in awards)
+                {
+                    InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
+                        award.ItemId, award.Count, acquiredAtUnixSeconds);
+                    if (!granted.IsApplied) throw new InvalidOperationException("Witch reward item could not be granted: " + award.ItemId);
+                }
+            });
+        }
+
+        /// <summary>One shared hero/witch daily visit, rewards and next-battle effects in one save transaction.</summary>
+        public ProgressionResult ApplyStatueVisit(string localDate, string kind, int mapClassId,
+            int placementId, string eventId, float hpPercentChange, IReadOnlyList<int> statusEffectClassIds,
+            IReadOnlyList<OfflineItemStack> awards, long acquiredAtUnixSeconds)
+        {
+            if (!DateTime.TryParseExact(localDate, "yyyyMMdd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out _) || string.IsNullOrWhiteSpace(kind) || kind.Length > 64
+                || mapClassId <= 0 || placementId <= 0 || string.IsNullOrWhiteSpace(eventId)
+                || eventId.Length > 160 || float.IsNaN(hpPercentChange) || float.IsInfinity(hpPercentChange)
+                || hpPercentChange < -1f || hpPercentChange > 1f || acquiredAtUnixSeconds < 0
+                || statusEffectClassIds == null || awards == null
+                || statusEffectClassIds.Any(value => value <= 0)
+                || statusEffectClassIds.Distinct().Count() != statusEffectClassIds.Count
+                || awards.Any(value => value == null || value.ItemId <= 0 || value.Count <= 0))
+                return Result(ProgressionResultStatus.InvalidState, message: "Statue visit effects are malformed.");
+            Reload();
+            if (Save.Player.AppliedInventoryEventIds.Contains(eventId))
+                return Result(ProgressionResultStatus.Unchanged);
+            if (HasVisitedStatueOn(localDate))
+                return Result(ProgressionResultStatus.NotReady, message: "A hero or witch statue has already been visited today.");
+            return ApplyInventoryTransaction(eventId, save =>
+            {
+                save.Player.StatueVisitDate = localDate;
+                save.Player.StatueVisitKind = kind;
+                save.Player.StatueVisitMapClassId = mapClassId;
+                save.Player.StatueVisitPlacementId = placementId;
+                if (hpPercentChange != 0f || statusEffectClassIds.Count > 0)
+                    save.Player.PendingStatueBattleEffects.Add(new OfflineStatueBattleEffect
+                    {
+                        EventId = eventId, HpPercentChange = hpPercentChange,
+                        StatusEffectClassIds = statusEffectClassIds.ToList()
+                    });
+                foreach (OfflineItemStack award in awards)
+                {
+                    InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
+                        award.ItemId, award.Count, acquiredAtUnixSeconds);
+                    if (!granted.IsApplied)
+                        throw new InvalidOperationException("Statue reward item could not be granted: " + award.ItemId);
+                }
+            });
+        }
+
         public ProgressionResult RecordChestOpened(int chestId, string eventId)
         {
-            if (chestId < 0 || string.IsNullOrWhiteSpace(eventId))
-                return Result(ProgressionResultStatus.InvalidState, message: "A real chest ID and receipt are required.");
+            return RecordChestOpened(chestId, 1, eventId);
+        }
+
+        public ProgressionResult RecordChestOpened(int chestId, int count, string eventId)
+        {
+            if (chestId < 0 || count <= 0 || string.IsNullOrWhiteSpace(eventId) || eventId.Length > 256)
+                return Result(ProgressionResultStatus.InvalidState, message: "A real chest ID, count and receipt are required.");
             if (Save.World.AppliedEventIds.Contains(eventId)) return Result(ProgressionResultStatus.Unchanged);
             OfflineMainlineSave next = Clone(Save);
-            OfflineChestCount entry = next.World.OpenChestCounts.FirstOrDefault(value => value.ChestId == chestId);
+            if (!TryRecordChestOpened(next.World, chestId, count, eventId))
+                return Result(ProgressionResultStatus.InvalidState, message: "Chest count could not be recorded.");
+            return Commit(next, Result(ProgressionResultStatus.Applied));
+        }
+
+        private static bool TryRecordChestOpened(OfflineWorldProgress world, int chestId, int count, string eventId)
+        {
+            if (world == null || world.OpenChestCounts == null || world.AppliedEventIds == null
+                || chestId < 0 || count <= 0 || string.IsNullOrWhiteSpace(eventId)
+                || world.AppliedEventIds.Contains(eventId)) return false;
+            OfflineChestCount entry = world.OpenChestCounts.FirstOrDefault(value => value.ChestId == chestId);
+            long nextCount = (long)(entry == null ? 0 : entry.Count) + count;
+            if (nextCount > int.MaxValue) return false;
             if (entry == null)
             {
                 entry = new OfflineChestCount { ChestId = chestId };
-                next.World.OpenChestCounts.Add(entry);
+                world.OpenChestCounts.Add(entry);
             }
-            if (entry.Count == int.MaxValue)
-                return Result(ProgressionResultStatus.InvalidState, message: "Chest count is exhausted.");
-            entry.Count++;
-            next.World.AppliedEventIds.Add(eventId);
-            return Commit(next, Result(ProgressionResultStatus.Applied));
+            entry.Count = (int)nextCount;
+            world.AppliedEventIds.Add(eventId);
+            return true;
         }
 
         public ProgressionResult SetPlayerProgress(int level, int rank, int subRank, int maxProfessionRank,
@@ -652,6 +782,7 @@ namespace Zjcs.Offline.Progression
                     current = target = 1;
                     break;
                 case "TaskCompleteCondition":
+                case "TaskSubmitCondition":
                     int[] taskIds = condition.taskClassIds ?? Array.Empty<int>();
                     target = taskIds.Length;
                     current = taskIds.Count(Save.Tasks.ClaimedMainlineTaskIds.Contains);
@@ -697,6 +828,18 @@ namespace Zjcs.Offline.Progression
                     OfflineChestCount chest = Save.World.OpenChestCounts.FirstOrDefault(value =>
                         value.ChestId == condition.chestId);
                     current = Math.Min(target, chest == null ? 0 : chest.Count);
+                    break;
+                case "DemonBattleLayerPassCondition":
+                    if (condition.entryIndex < 1 || condition.entryIndex > 4 || condition.targetLayer < 0
+                        || demonBattleClearedLayer == null)
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "DemonBattleLayerPassCondition:Unavailable");
+                    int clearedLayer = demonBattleClearedLayer(condition.entryIndex);
+                    if (clearedLayer < 0)
+                        return Result(ProgressionResultStatus.Unsupported,
+                            unsupportedCondition: "DemonBattleLayerPassCondition:InvalidProgress");
+                    target = condition.targetLayer + 1L;
+                    current = Math.Min(condition.targetLayer, clearedLayer) + 1L;
                     break;
                 default:
                     return Result(ProgressionResultStatus.Unsupported,
@@ -828,15 +971,34 @@ namespace Zjcs.Offline.Progression
 
         public ProgressionResult ApplyInventoryTransaction(string eventId, Action<OfflineMainlineSave> mutation)
         {
+            return ApplyInventoryTransactionCore(eventId, mutation, null, 0);
+        }
+
+        public ProgressionResult ApplyInventoryTransaction(string eventId, Action<OfflineMainlineSave> mutation,
+            int openedChestId, int openedChestCount)
+        {
+            return ApplyInventoryTransactionCore(eventId, mutation, openedChestId, openedChestCount);
+        }
+
+        private ProgressionResult ApplyInventoryTransactionCore(string eventId,
+            Action<OfflineMainlineSave> mutation, int? openedChestId, int openedChestCount)
+        {
             if (string.IsNullOrWhiteSpace(eventId) || eventId.Length > 160 || mutation == null)
                 return Result(ProgressionResultStatus.InvalidState, message: "Inventory transaction identity and mutation are required.");
+            if (openedChestId.HasValue && (openedChestId.Value < 0 || openedChestCount <= 0))
+                return Result(ProgressionResultStatus.InvalidState, message: "Chest identity and count are invalid.");
             if (Save.Player.AppliedInventoryEventIds.Contains(eventId))
+                return Result(ProgressionResultStatus.Unchanged);
+            if (openedChestId.HasValue && Save.World.AppliedEventIds.Contains(eventId))
                 return Result(ProgressionResultStatus.Unchanged);
 
             OfflineMainlineSave next = Clone(Save);
             try
             {
                 mutation(next);
+                if (openedChestId.HasValue && !TryRecordChestOpened(next.World,
+                    openedChestId.Value, openedChestCount, eventId))
+                    throw new InvalidOperationException("Chest count could not be recorded.");
                 next.Player.AppliedInventoryEventIds.Add(eventId);
                 if (!Validate(next))
                     return Result(ProgressionResultStatus.InvalidState, message: "Inventory transaction produced an invalid player save.");
@@ -856,7 +1018,7 @@ namespace Zjcs.Offline.Progression
             return result;
         }
 
-        private static ConditionEvaluation Evaluate(OfficialTaskCondition condition, OfflineMainlineSave save, int depth)
+        private ConditionEvaluation Evaluate(OfficialTaskCondition condition, OfflineMainlineSave save, int depth)
         {
             if (condition == null) return ConditionEvaluation.Met(true);
             if (depth > 20) return ConditionEvaluation.Unsupported("ConditionDepth");
@@ -866,6 +1028,7 @@ namespace Zjcs.Offline.Progression
                 case "AlwaysCondition":
                     return ConditionEvaluation.Met(true);
                 case "TaskCompleteCondition":
+                case "TaskSubmitCondition":
                     return ConditionEvaluation.Met(condition.taskClassIds != null
                         && condition.taskClassIds.All(save.Tasks.ClaimedMainlineTaskIds.Contains));
                 case "MapGameTotalCountCondition":
@@ -894,6 +1057,15 @@ namespace Zjcs.Offline.Progression
                 case "TotalOpenChestCondition":
                     OfflineChestCount chest = save.World.OpenChestCounts.FirstOrDefault(value => value.ChestId == condition.chestId);
                     return ConditionEvaluation.Met((chest == null ? 0 : chest.Count) >= condition.count);
+                case "DemonBattleLayerPassCondition":
+                    if (condition.entryIndex < 1 || condition.entryIndex > 4 || condition.targetLayer < 0)
+                        return ConditionEvaluation.Unsupported("DemonBattleLayerPassCondition:InvalidTarget");
+                    if (demonBattleClearedLayer == null)
+                        return ConditionEvaluation.Unsupported("DemonBattleLayerPassCondition:ProgressUnavailable");
+                    int clearedLayer = demonBattleClearedLayer(condition.entryIndex);
+                    return clearedLayer < 0
+                        ? ConditionEvaluation.Unsupported("DemonBattleLayerPassCondition:InvalidProgress")
+                        : ConditionEvaluation.Met(clearedLayer >= condition.targetLayer);
                 default:
                     return ConditionEvaluation.Unsupported(condition.type ?? "<missing-type>");
             }
@@ -964,6 +1136,8 @@ namespace Zjcs.Offline.Progression
                 || save.Player.Stories == null || save.Player.Stories.Count > 100000
                 || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
+                || save.Player.StatueVisitDate == null || save.Player.StatueVisitKind == null
+                || save.Player.StatueVisitKind.Length > 64
                 || save.Player.PendingStatueBattleEffects == null
                 || save.Player.PendingStatueBattleEffects.Count > 10000
                 || save.Player.CommerceStateJson == null || save.Player.CommerceStateJson.Length > 2_000_000
@@ -976,7 +1150,9 @@ namespace Zjcs.Offline.Progression
                 || save.World.OpenChestCounts.Count > 10000 || save.World.AppliedEventIds.Count > 200000
                 || save.Tasks.ClaimedMainlineTaskIds.Count > 10000)
                 return false;
-
+            if (save.Player.StatueVisitDate.Length > 0
+                && !DateTime.TryParseExact(save.Player.StatueVisitDate, "yyyyMMdd",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out _)) return false;
             var statueEffectIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (OfflineStatueBattleEffect effect in save.Player.PendingStatueBattleEffects)
             {
@@ -1085,6 +1261,8 @@ namespace Zjcs.Offline.Progression
                 save.Player.ProfessionLevels = new List<OfflineProfessionLevel>();
             if (save.Player.HomeShop == null) save.Player.HomeShop = new OfflineHomeShopProgress();
             OfflineHomeShopProgress.Normalize(save.Player.HomeShop);
+            if (save.Player.StatueVisitDate == null) save.Player.StatueVisitDate = string.Empty;
+            if (save.Player.StatueVisitKind == null) save.Player.StatueVisitKind = string.Empty;
             if (save.Player.PendingStatueBattleEffects == null)
                 save.Player.PendingStatueBattleEffects = new List<OfflineStatueBattleEffect>();
             foreach (OfflineStatueBattleEffect effect in save.Player.PendingStatueBattleEffects)

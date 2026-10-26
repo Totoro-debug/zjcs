@@ -59,6 +59,7 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<int, Map10RuntimeFixedReward> fixedRewards = new Dictionary<int, Map10RuntimeFixedReward>();
         private readonly Dictionary<int, Map10RuntimeEntityTemplate> entityTemplates =
             new Dictionary<int, Map10RuntimeEntityTemplate>();
+        private Map11RuntimeWitchInfo[] witchInfos = Array.Empty<Map11RuntimeWitchInfo>();
         private OfficialWorldMapSession session;
         private OfflineMainlineProgressSession progressionSave;
         private OfflineCharacterProgressionService progression;
@@ -140,12 +141,12 @@ namespace Zjcs.Presentation.World
 
         public static int ResolveHomeReturnMap(OfflineMainlineSave save)
         {
-            if (save?.World == null) throw new ArgumentNullException(nameof(save));
-            // Player.GetLastActiveWorldMapClassId chooses the highest normal
-            // map Order in WorldMapRegionProgressDict. Pinned Map10/11 orders
-            // are 1/2; a merely unlocked map has no region progress entry yet.
-            return save.World.Maps.Any(value => value.MapClassId == 11) ? 11 : 10;
+            if (save == null) throw new ArgumentNullException(nameof(save));
+            return HasClaimedMap11Unlock(save) ? 11 : 10;
         }
+
+        private static bool HasClaimedMap11Unlock(OfflineMainlineSave save) =>
+            save?.Tasks?.ClaimedMainlineTaskIds?.Contains(1040) == true;
 
         public void Begin(string selectedSlotId, string savesRoot, Transform targetUiParent,
             GameObject characterModel, string displayName, Action onClose)
@@ -212,6 +213,7 @@ namespace Zjcs.Presentation.World
                 if (worldFunctions != null) CloseNativeWorldFunctions();
                 else if (fullMiniMapPanel != null) CloseNativeFullMiniMap();
                 else if (quickBuyDialog != null) quickBuyDialog.Cancel();
+                else if (witchDialog != null) RequestWitchDialogClose();
                 else if (dialogueWaiting) RequestDialogueAdvance();
                 else if (storyRunning) { }
                 else if (battleController != null) LeaveBattle();
@@ -230,7 +232,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
 
-            if (worldFunctions != null || fullMiniMapPanel != null || storyRunning || goddessDialog != null) return;
+            if (worldFunctions != null || fullMiniMapPanel != null || (storyRunning && battleController == null) || goddessDialog != null || witchDialog != null) return;
 
             if (battleController != null)
             {
@@ -261,6 +263,8 @@ namespace Zjcs.Presentation.World
                 }
                 return;
             }
+
+            if (TryStartWitchSpawnBattle()) return;
 
             if (movementPath != null)
             {
@@ -303,8 +307,11 @@ namespace Zjcs.Presentation.World
             Map10RuntimeBattleData battles = JsonUtility.FromJson<Map10RuntimeBattleData>(battleData.text);
             Map10RuntimeStoryData storyDataValue = JsonUtility.FromJson<Map10RuntimeStoryData>(storyData.text);
             puzzleRules = storyDataValue?.puzzleRules;
+            witchInfos = storyDataValue?.witchInfos ?? Array.Empty<Map11RuntimeWitchInfo>();
+            witchResults = storyDataValue?.witchResultEffects ?? Array.Empty<Map11RuntimeWitchResult>();
+            witchPeriodicAwards = storyDataValue?.witchPeriodicityAwards ?? Array.Empty<Map11RuntimePeriodicityAward>();
             quickBuys = storyDataValue?.quickBuys ?? Array.Empty<Map11RuntimeQuickBuy>();
-            int expectedStages = mapClassId == 10 ? 21 : 129;
+            int expectedStages = mapClassId == 10 ? 21 : 130;
             int expectedStories = mapClassId == 10 ? 9 : 44;
             if (battles == null || battles.manifest != "854_156383" || battles.mapClassId != mapClassId
                 || battles.stages == null || battles.monsterRosters == null || battles.battleScenes == null
@@ -318,7 +325,8 @@ namespace Zjcs.Presentation.World
                 || storyDataValue.playables == null
                 || (mapClassId == 11 && (storyDataValue.fixedRewards == null
                     || storyDataValue.mainlineTasks == null || storyDataValue.mainlineTasks.Length != 24
-                    || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 110)))
+                    || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 110
+                    || storyDataValue.witchInfos == null || storyDataValue.witchInfos.Length != 14)))
                 throw new InvalidDataException("Official Map" + mapClassId + " runtime data does not match the pinned source.");
 
             foreach (Map10RuntimeStage value in battles.stages) stages.Add(value.Id, value);
@@ -488,7 +496,11 @@ namespace Zjcs.Presentation.World
         private void InitializeMap()
         {
             var slots = new ProfileSlotCatalog(persistentDataPath);
-            progressionSave = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            progressionSave = mapClassId == 11
+                ? OfflineMainlineProgressSession.Open(slots, slotId, OfficialMainlineTaskCatalog.LoadDefault())
+                : OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            if (mapClassId == 11 && !HasClaimedMap11Unlock(progressionSave.Save))
+                throw new InvalidOperationException("完成并领取 Map10 主线任务 1040 后才能进入森之国。");
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
@@ -555,6 +567,7 @@ namespace Zjcs.Presentation.World
             ValidateBattleEntityStageBindings();
             ValidateEntityLockGroups();
             InitializePuzzles();
+            RecoverWitchStates();
 
             uiCatalog = OfficialMap10UiCatalog.LoadDefault();
             ui = new OfficialMap10UiRenderer(uiCatalog);
@@ -876,6 +889,11 @@ namespace Zjcs.Presentation.World
         private void Interact(Map10RuntimeEntity entity)
         {
             if (localSave.completedEntityPlacements.Contains(entity.PlacementId)) return;
+            if (mapClassId == 11 && entity.EntityClassId == 6620)
+            {
+                InteractWitch(entity);
+                return;
+            }
             if (mapClassId == 11 && entity.TypeId == 202)
             {
                 ShowGoddessDialog(entity);
@@ -1111,6 +1129,18 @@ namespace Zjcs.Presentation.World
                             // used by EvaluateStoryValue for this node's ActiveCount output.
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "WaitWindowOpenedNode":
+                            if (activeStory.key != "WitchStory2" || storyContextEntity == null
+                                || storyContextEntity.EntityClassId != 6620)
+                                throw new InvalidDataException("Unsupported official window-open wait in Map" + mapClassId + ".");
+                            WaitForWitchPreviewOpen(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            return;
+                        case "WaitWindowClosedNode":
+                            if (activeStory.key != "WitchStory2" || storyContextEntity == null
+                                || storyContextEntity.EntityClassId != 6620)
+                                throw new InvalidDataException("Unsupported official window-close wait in Map" + mapClassId + ".");
+                            WaitForWitchPreviewClose(() => RunStoryGraph(StoryNext(node, "Exit")));
+                            return;
                         case "ActivityPuzzleCompleteNode":
                             // This node queries the separate timed puzzle activity,
                             // not a mainline map lock. No such activity is active here.
@@ -2185,7 +2215,13 @@ namespace Zjcs.Presentation.World
                 }
                 bool oneTimeStage = !stages.TryGetValue(checkpoint.StageId, out Map10RuntimeStage stage)
                     || stage.Repeat >= 0 || entity.PeriodicityGroupIds.Length > 0;
-                if (oneTimeStage)
+                if (entity.EntityClassId == 6620)
+                {
+                    entity.State = 1;
+                    entityView.SetEntityState(entity.PlacementId, 1);
+                    witchSpawnPending = null;
+                }
+                else if (oneTimeStage)
                 {
                     if (!localSave.completedStages.Contains(checkpoint.StageId))
                         localSave.completedStages = localSave.completedStages.Concat(new[] { checkpoint.StageId }).ToArray();
@@ -3070,6 +3106,7 @@ namespace Zjcs.Presentation.World
             playerHeadTexture = null;
             DisposeMapAudio();
             CloseGoddessDialog();
+            CloseWitchDialog();
             // Dispose the modal without running its story continuation while the map closes.
             quickBuyDialog?.Abandon();
             if (quickBuyCanvas != null) Destroy(quickBuyCanvas);

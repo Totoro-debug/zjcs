@@ -12,6 +12,11 @@
       "repeatActivation": "Keep the existing record without increasing the count.",
       "reason": "User confirmed the WorldWitchTouchUI all-map count for the missing server query."
     },
+    "witchStageResults": {
+      "selection": "Use the pinned WitchInfo row matching the all-map activation count before success.",
+      "effects": "Apply every listed StageResult component after successful stage completion in the configured order.",
+      "reason": "User confirmed all original configured witch-touch results should apply."
+    },
     "missingStateTargets": [
       {
         "placementId": 413,
@@ -90,8 +95,8 @@
     },
     "battles": {
       "path": "unity/Assets/Official/World/Map/11/map11-battles.json",
-      "sha256": "e4074ce5e25cd4be187c9a72cb784d4e42a1655a93fa10376282a959ac0b0741",
-      "sourceManifestSha256": "e3fa2437856fc281bf2779796bfd1db4ab106c819a6f2c89591f292fa0fbdc32"
+      "sha256": "1d73c0ce6db75a047d03de0be27833a8683f989437e26909d5db76261c9d371d",
+      "sourceManifestSha256": "6dbb6a8a8b7f87874ca9196dfc8068d01579f5a1be168e3e8a865c8df2306193"
     },
     "adventure": {
       "path": "assets/official/adventure.json",
@@ -149,22 +154,37 @@
       "raw_sha256": "d699145888e0d1e5788b42a6a35bc7650e177ba8ebc2c6c032e83f9434dc736a",
       "object": "Assets/Config/Luban/quick_buy.g.bytes",
       "payload_sha256": "ff181d541883a5a0d111e208d54630506869e30556e0223f248f7029903a0a65"
+    },
+    "witchRewardRules": {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "7169546492845704538",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "object": "Assets/Config/Luban/reward_rule.g.bytes",
+      "payload_sha256": "5eb7ad8009e635218394748946c5d04d15bdd32c9312d8a5753511ba56c971af"
     }
   },
   "outputs": {
     "battle-runtime.json": {
       "path": "D:/Desktop/zjcs/unity/Assets/Official/World/Map/11/Resources/Map11/battle-runtime.json",
-      "sha256": "6ae5ab958022798ac9d1f3f5d012bea9977e10c2f68a640d58d3b1b6843649e3",
-      "stageCount": 129,
-      "rosterCount": 129,
+      "sha256": "00b289f7a78f55b7a91e82e3c99a431d1601ecbc773d8af338fb552db3afb0ed",
+      "stageCount": 130,
+      "rosterCount": 130,
       "sceneCount": 17
     },
     "stories.json": {
       "path": "D:/Desktop/zjcs/unity/Assets/Official/World/Map/11/Resources/Map11/stories.json",
-      "sha256": "29341a137d8c54b228a25fae1ca0767f27a643ba027ada49843c1c0fff2821e6",
+      "sha256": "2e6810d52c510cb96b46e2c811dcf021004a0148ab1f220fc514f9ec3e631017",
       "storyCount": 44,
       "nodeCount": 666,
       "entityTemplateCount": 110,
+      "witchInfoCount": 14,
       "logicTagCount": 35,
       "mapTalkCount": 50,
       "subgraphCount": 4,

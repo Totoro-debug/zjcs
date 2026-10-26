@@ -10,13 +10,17 @@
 
 ## 完整还原部分
 
-[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取固定版本 `854_156383` 的主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。当前目录只包含本地状态有依据且奖励可本地处理的 11 个主线目标（1000、1005～1050）及 15 条奖励记录；目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，其哈希和官方输入记录见 `assets/reference/task/source-manifest.json`。
+[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取固定版本 `854_156383` 的主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。当前目录包含 1000～1050 的 11 项既有目标，以及森之国 1045～1160 的 24 项地图目标，共 33 项；目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，其哈希和官方输入记录见 `assets/reference/task/source-manifest.json`。
 
-`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
+`OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数。`OfficialWishAcceptance.Run` 已验证十连抽计数、重复回执／无效请求、任务 1040 条件及存档冷读，不代表完整前序主线已跑通。`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
-主城 UI 恢复固定版官方 `TaskPanel` 和 `TaskPanelListItemProgress` 的层级与 sprites：`StreamingAssets/Home/Tasks/task-panels.json` 及其 `sprites/`。来源、prefab path ID、转换和哈希记录见 `assets/reference/task/source-manifest.json`；资源转换脚本为 [`prepare_unity_home_tasks.py`](../../scripts/prepare_unity_home_tasks.py)。[`HomeHudView.Tasks.cs`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tasks.cs) 提供 `OpenTaskPanel(progress, navigate)`、`BuildPinnedTask(progress, navigate)` 与 `RefreshTasks()`；导航回调接收完整任务定义，仅对地图目标显示跳转，地图 10 目标进入已接入大陆，地图 11 明确提示未开放；职业与宝箱条件不显示离线端无法执行的跳转。主线目标按 session 当前可用状态追踪，领奖回写现有本地事务。没有服务端刷新／实例状态的委托、日常、周常和成就页仅显示未开放提示，不生成任务目标。
+任务目录还携带固定版 `npc_friendship_level` 的 10,000 条等级门槛。领取带 `NpcFriendshipReward` 的主线任务时，在领奖存档副本内累加 NPC 好感经验，并按当前 `SubRankLimit` 更新等级；门槛目录、奖励扣发和任务领取同由本地事务提交，失败不会留下部分奖励。
 
-编辑器校验入口为 `Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run`。主线 bundle 已按 `prepare_unity_bundle_inputs.py` 核对固定版 CAB 闭包：Unity `2022.3.57f1`、Android 目标、26 个外部 CAB 依赖、86 个序列化文件。`python scripts/check_unity_project.py` 通过（28,310 个 GUID）；这只验证项目元数据和本地引用，不验证 C# 编译或 Windows 渲染。任务入口和主城 HUD 接线已落地；本轮未运行 Unity Editor，因此 C# 导入／编译、Play Mode 输入命中、奖励状态恢复和实际渲染仍待验证，详见[工程页](unity-project.md)。
+主城 UI 恢复固定版官方 `TaskPanel` 和 `TaskPanelListItemProgress` 的层级与 sprites：`StreamingAssets/Home/Tasks/task-panels.json` 及其 `sprites/`。来源、prefab path ID、转换和哈希记录见 `assets/reference/task/source-manifest.json`；资源转换脚本为 [`prepare_unity_home_tasks.py`](../../scripts/prepare_unity_home_tasks.py)。[`HomeHudView.Tasks.cs`](../../unity/Assets/Game/Runtime/Presentation/Home/HomeHudView.Tasks.cs) 提供 `OpenTaskPanel(progress, navigate)`、`BuildPinnedTask(progress, navigate)` 与 `RefreshTasks()`；导航回调接收完整任务定义，仅对地图目标显示跳转，地图 10 目标进入已接入大陆，地图 11 在领取 Map10 主线任务 1040 前明确提示未开放；职业与宝箱条件不显示离线端无法执行的跳转。主线目标按 session 当前可用状态追踪，领奖回写现有本地事务。没有服务端刷新／实例状态的委托、日常、周常和成就页仅显示未开放提示，不生成任务目标。
+
+森之国主线目标使用现有地图进度、女神激活、实体标签和塔进度存档；任务 1070 的 `DemonBattleLayerPassCondition` 按官方共享条件检查第 1 入口已通关层数，UI 按官方客户端将当前层及目标层各加 1 显示，并跳转到幻想阶梯入口。其他地图目标的跳转仍受对应地图正式入口接线限制。
+
+编辑器校验入口为 `Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run`。主线 bundle 已按 `prepare_unity_bundle_inputs.py` 核对固定版 CAB 闭包：Unity `2022.3.57f1`、Android 目标、26 个外部 CAB 依赖、86 个序列化文件。`python scripts/check_unity_project.py` 通过（39,824 个 GUID）；`OfflineMainlineProgressValidation.Run` 在 Unity `2022.3.57f1c2` 实际通过，覆盖任务 1000／1005／1070 奖励、条件和存档冷读，以及跨地图魔女累计、去重和冷读；`ProjectTools.Validate` 也通过。上述检查不验证主城 HUD 的真实输入、画面和完整路线，详见[工程页](unity-project.md)。
 
 ## 自定义实现
 
@@ -34,8 +38,8 @@
 
 ## 尚未实现
 
-- `Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run` 尚未在本轮 Unity Editor 执行；静态 GUID 检查不验证 Resources 装载与 C# 运行。
-- 主线当前只覆盖目录中 11 个有本地规则依据的目标；地图 10 的区域进度、战斗回执、剧情次数／状态和首次手动 NPC 交互有角色存档写入，其他地图与未接入事件不得推定完成。
-- 地图 11 任务目标、职业目标跳转、宝箱条件从主城发起跳转仍未接；当前导航不再把所有任务错误地送到地图 10。
-- 完整主线路线、任务奖励表现、失败恢复及冷读验证；任务面板的实际输入、画面与存档恢复尚未 Play Mode 实测。
+- 当前目录有 11 个既有目标和森之国 24 个目标；地图 10 的区域进度、战斗回执、剧情次数／状态和首次手动 NPC 交互有角色存档写入，地图 11 只接入文档列明的地区、女神、实体标签、塔通关条件及固定奖励，其他地图与未接入事件不得推定完成。
+- 地图 11 主线数据与本地条件、奖励事务已接线；地图 11 目标从主城跳转仍待正式大陆入口接通。职业目标跳转、宝箱条件及完整任务路线仍未验收。
+- 森之国正式入口要求先完成并领取 Map10 主线任务 1040；固定版该任务要求成功开启 10 次 `chestId=6000` 普通祈愿宝箱。计数已接入本地祈愿成功事务，地图内的 `EntityClassId=6000` 放置实体不是该计数来源。完整前序任务路线、新档累计 10 次祈愿的实际操作及领奖后的进入流程仍未完成 Play Mode 验收；运行时会继续检查任务实际领取记录。
+- 完整主线路线与任务奖励表现仍未验收；任务面板的实际输入、画面和任务领取后的主城 UI 恢复尚未 Play Mode 实测。
 - 非主线任务面板、委托、每日／每周任务与成就系统。

@@ -148,6 +148,7 @@ namespace Zjcs.Editor
             yield return new WaitForSecondsRealtime(.4f);
             Require(music == null, "Original Stop event releases the local audio object after its fade");
             Debug.Log("Map11 scripted Play Mode passed: original option layout and sprites; gift/free reset/paid solve; quick-buy cancel/success; fixed currency shortage and confirmed return. No native mouse or keyboard input was used. Output: " + Root);
+            yield return VerifyStatues(canvas);
             SessionState.SetInt(Key + ".result", 0);
             EditorApplication.isPlaying = false;
         }
@@ -225,9 +226,13 @@ namespace Zjcs.Editor
             Require(source.isPlaying && source.clip.name == first.Substring(first.LastIndexOf('/') + 1)
                 && Mathf.Abs(source.volume - .4f) < .001f, "Actual dialogue starts its original voice at the current voice volume");
             Invoke("AdvanceDialogue");
-            Require(source.clip == null, "Next dialogue immediately stops the previous voice before loading");
-            yield return new WaitForSecondsRealtime(.4f);
+            // TalkDialog switches content and voice at the portrait animation's
+            // original half-way event. A cached clip can also load synchronously.
             string second = catalog.events.Single(value => value.eventKey == story.dialogueGroups[0].Lines[1].VoiceEventKey).clip;
+            Require(Field<bool>("dialogueContentSwitchWaiting") || source.clip == null
+                || source.clip.name == second.Substring(second.LastIndexOf('/') + 1),
+                "Voice replacement waits only for the original content-switch event");
+            yield return new WaitForSecondsRealtime(.4f);
             Require(source.isPlaying && source.clip.name == second.Substring(second.LastIndexOf('/') + 1),
                 "Next dialogue plays the next original voice");
 

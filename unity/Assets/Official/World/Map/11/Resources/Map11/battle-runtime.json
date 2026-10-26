@@ -1,7 +1,7 @@
 {
   "manifest": "854_156383",
   "mapClassId": 11,
-  "sourceSha256": "e4074ce5e25cd4be187c9a72cb784d4e42a1655a93fa10376282a959ac0b0741",
+  "sourceSha256": "1d73c0ce6db75a047d03de0be27833a8683f989437e26909d5db76261c9d371d",
   "stages": [
     {
       "AllowHosting": false,
@@ -7058,6 +7058,63 @@
       "WaveArrayCatalogs": null,
       "WaveArrayIds": null,
       "WaveMonsterIds": null
+    },
+    {
+      "AllowHosting": false,
+      "AwardUsePlayerLevelAndSubRank": true,
+      "Awards": [],
+      "Background": false,
+      "CanFastforward": false,
+      "CanMopUp": false,
+      "ChangeCameraMode": true,
+      "DefMonsterBreakAwayFromFightViewRange": 0,
+      "DefMonsterViewRange": 0,
+      "DismissTeamWhenLeaveOrEnd": false,
+      "GameId": 1000,
+      "Icon": null,
+      "Id": 20001,
+      "IsPlayerRoundLimit": false,
+      "IsReduceStatusEffect": true,
+      "JoinInMiddle": false,
+      "LeaveInPlaying": false,
+      "LeaveInPreparing": false,
+      "Level": 1.0,
+      "MaxPlayerAmount": 0,
+      "MaxRound": 15,
+      "MonsterAwardGroupId": 2,
+      "MonsterGroupNo": 0,
+      "MonsterLevelAdd": 0,
+      "NeedEndTransition": false,
+      "PlayerRoundLimit": 0,
+      "PreStage": 0,
+      "Repeat": -1,
+      "Reset": 0,
+      "ShowEndPanel": false,
+      "ShowMainPanelDelay": 0.0,
+      "SkipPrepareStatus": true,
+      "Status": 0,
+      "SubRank": 1,
+      "SupportTeam": false,
+      "SwitchSkillPlan": true,
+      "TeamChangePosRange": {
+        "X": 3,
+        "Y": 3
+      },
+      "TimeType": 0,
+      "Type": 1,
+      "UseCureMedicine": true,
+      "UsePlayerHp": true,
+      "UserStart": false,
+      "WaveArrayCatalogs": null,
+      "WaveArrayIds": [
+        1600
+      ],
+      "WaveMonsterIds": [
+        [
+          3217,
+          3215
+        ]
+      ]
     },
     {
       "AllowHosting": false,
@@ -131503,6 +131560,596 @@
       "StageId": 9912,
       "SubRank": 1,
       "Waves": []
+    },
+    {
+      "GameId": 1000,
+      "Level": 1.0,
+      "MaxRound": 15,
+      "MonsterGroupNo": 0,
+      "StageId": 20001,
+      "SubRank": 1,
+      "Waves": [
+        {
+          "ArrayId": 1600,
+          "Index": 0,
+          "Origin": {
+            "X": 11,
+            "Y": 9
+          },
+          "Units": [
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 8,
+                "Y": 11
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 8,
+                "Y": 13
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 8,
+                "Y": 15
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 10,
+                "Y": 12
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 12,
+                "Y": 13
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 12,
+                "Y": 17
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 14,
+                "Y": 12
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 14,
+                "Y": 14
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16390,
+                  "ItemId": 14067,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16400,
+                  "ItemId": 14068,
+                  "Rank": 1,
+                  "Slot": 1
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 1,
+              "FormationGroupIndex": 0,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3217,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15019
+              ],
+              "Position": {
+                "X": 14,
+                "Y": 16
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16380,
+                  "ItemId": 14080,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16510,
+                  "ItemId": 14081,
+                  "Rank": 3,
+                  "Slot": 1
+                },
+                {
+                  "EntityId": 16520,
+                  "ItemId": 14082,
+                  "Rank": 3,
+                  "Slot": 2
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 2,
+              "FormationGroupIndex": 1,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3215,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15017
+              ],
+              "Position": {
+                "X": 10,
+                "Y": 14
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16380,
+                  "ItemId": 14080,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16510,
+                  "ItemId": 14081,
+                  "Rank": 3,
+                  "Slot": 1
+                },
+                {
+                  "EntityId": 16520,
+                  "ItemId": 14082,
+                  "Rank": 3,
+                  "Slot": 2
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 2,
+              "FormationGroupIndex": 1,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3215,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15017
+              ],
+              "Position": {
+                "X": 10,
+                "Y": 16
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            },
+            {
+              "ActiveSkills": [
+                {
+                  "EntityId": 16380,
+                  "ItemId": 14080,
+                  "Rank": 1,
+                  "Slot": 0
+                },
+                {
+                  "EntityId": 16510,
+                  "ItemId": 14081,
+                  "Rank": 3,
+                  "Slot": 1
+                },
+                {
+                  "EntityId": 16520,
+                  "ItemId": 14082,
+                  "Rank": 3,
+                  "Slot": 2
+                }
+              ],
+              "DeactivePassiveSkills": [],
+              "Faction": 127,
+              "FlipX": false,
+              "FormationGroupId": 2,
+              "FormationGroupIndex": 1,
+              "HpPliesId": 0,
+              "Level": 1.0,
+              "LevelOffset": 0.0,
+              "MonsterGroupNo": 0,
+              "MonsterId": 3215,
+              "MonsterType": 1,
+              "PassiveSkills": [
+                15017
+              ],
+              "Position": {
+                "X": 12,
+                "Y": 15
+              },
+              "Properties": [],
+              "ResilienceInfo": {
+                "DisappearSkillId": 0,
+                "DisappearStatusIds": [],
+                "ResetRound": 0,
+                "SkillAtkPercent": 0,
+                "SkillMaxHpPercent": 0
+              },
+              "Rotation": 1,
+              "SubRank": 1,
+              "ViewGroup": 0,
+              "WaveIndex": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "GameId": 1000,

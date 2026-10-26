@@ -1,4 +1,4 @@
-"""Extract official Map10 monster portrait sprites and build their runtime catalog.
+"""Extract official Map10/Map11 monster portrait sprites and build their runtime catalog.
 
 Sources are the pinned ``map4countries`` and ``mapsp`` no-atlas head-icon bundles. The importer
 preserves the original sprite PNG and metadata; the catalog maps the official battle-rules Monster
@@ -11,6 +11,7 @@ import io
 import json
 import re
 import sys
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,11 +25,13 @@ APK_SHA256 = "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
 BUNDLES = (
     "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
     "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+    "defaultpackage_assets_image_itemicon_gameheadicon_monster_maptherion_noatlas.bundle",
 )
 INDEX = ROOT / ".tools/source-packages/extracted/bundle-index.json"
 RECEIPTS = ROOT / ".tools/source-packages/extracted/bundle-sources.json"
 RULES = ROOT / "unity/Assets/Official/Combat/battle-rules.json"
 MAP_DATA = ROOT / "unity/Assets/Official/World/Map/10/Resources/Map10/battle-runtime.json"
+MAP11_DATA = ROOT / "unity/Assets/Official/World/Map/11/Resources/Map11/battle-runtime.json"
 OUTPUT_DIR = ROOT / "unity/Assets/Official/Combat/MonsterPortraits"
 SCRIPT = ROOT / "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterPortraitCatalog.cs"
 ASSET = ROOT / "unity/Assets/Game/Resources/Combat/OfficialBattleMonsterPortraitCatalog.asset"
@@ -52,20 +55,33 @@ def source_record(bundle: str, indexes: dict, receipts: dict) -> dict:
     actual_md5 = hashlib.md5(path.read_bytes()).hexdigest()
     if not expected_md5 or actual_md5 != expected_md5 or not isinstance(record, dict):
         raise ValueError("Monster portrait bundle does not match the pinned index: " + bundle)
-    if record.get("origin") != "apk_zip" or record.get("apk_sha256") != APK_SHA256:
-        raise ValueError("Monster portrait bundle is not from the pinned APK: " + bundle)
+    if record.get("origin") == "apk_zip":
+        if record.get("apk_sha256") != APK_SHA256:
+            raise ValueError("Monster portrait bundle is not from the pinned APK: " + bundle)
+    elif record.get("origin") == "official_cdn":
+        # Only reuse a cached cloud payload whose bytes also match the pinned
+        # APK manifest, after proving it is not physically packaged in the APK.
+        with zipfile.ZipFile(ROOT / ".tools/source-packages/zjcs_M509085.apk") as apk:
+            if any(expected_md5 in name or bundle in name for name in apk.namelist()):
+                raise ValueError("Use the packaged APK monster portrait bundle first: " + bundle)
+        if record.get("source_manifest") != "854_156383" or record.get("bundle_sha256") != sha(path.read_bytes()):
+            raise ValueError("Cloud portrait bytes do not match the pinned source receipt: " + bundle)
+    else:
+        raise ValueError("Unknown monster portrait bundle source: " + bundle)
     if record.get("bundle_hash") != expected_md5:
         raise ValueError("Monster portrait bundle receipt differs from the pinned index: " + bundle)
     return {"bundle": bundle, "bundle_md5": actual_md5, "bundle_sha256": sha(path.read_bytes()),
-            "apk_sha256": APK_SHA256, "apk_entry": record.get("path")}
+            "origin": record["origin"], "apk_sha256": APK_SHA256, "apk_entry": record.get("path"),
+            "source_manifest": "854_156383", "cached_manifest": record.get("manifest"), "url": record.get("url")}
 
 
 def map10_icon_ids() -> list[int]:
     rules = json.loads(RULES.read_text(encoding="utf-8"))
-    battle = json.loads(MAP_DATA.read_text(encoding="utf-8"))
+    battles = [json.loads(path.read_text(encoding="utf-8")) for path in (MAP_DATA, MAP11_DATA)]
     monster_by_id = {int(row["Id"]): int(row.get("IconId", 0))
                      for row in rules["tables"]["monster"] if int(row.get("Id", 0)) > 0}
     ids = {monster_by_id[int(unit["MonsterId"])]
+           for battle in battles
            for roster in battle["monsterRosters"]
            for wave in roster["Waves"]
            for unit in wave["Units"]
@@ -92,9 +108,13 @@ def extract_sprites(icon_ids: list[int], sources: list[dict]) -> dict[int, bytes
             stream = io.BytesIO()
             sprite.image.save(stream, format="PNG")
             result[icon_id] = stream.getvalue()
+            source.setdefault("sprites", []).append({
+                "iconId": icon_id, "object": name, "pathId": str(obj.path_id),
+                "spriteObjectSha256": sha(obj.get_raw_data()),
+            })
     missing = sorted(set(icon_ids) - set(result))
     if missing:
-        raise ValueError("Official Map10 monster portraits are missing IconIds: " + str(missing))
+        raise ValueError("Official Map10/Map11 monster portraits are missing IconIds: " + str(missing))
     return result
 
 
@@ -198,26 +218,33 @@ def main() -> None:
         target.write_bytes(png)
         meta.write_bytes(sprite_meta(target, guid, sprite_id))
         bindings.append({"iconId": icon_id, "guid": guid})
-        image_records.append({"path": target.relative_to(ROOT).as_posix(), "sha256": sha(png), "guid": guid})
+        image_records.append({"path": target.relative_to(ROOT).as_posix(), "sha256": sha(png),
+                              "metaSha256": sha(meta.read_bytes()), "guid": guid})
     asset_bytes = asset_yaml(script_guid, bindings)
     asset_guid = md5("zjcs-official:" + ASSET.relative_to(ROOT).as_posix())
     asset_meta = Path(str(ASSET) + ".meta")
     ASSET.parent.mkdir(parents=True, exist_ok=True)
     if ASSET.is_file() and ASSET.read_bytes() != asset_bytes:
-        raise ValueError("Refusing to overwrite changed portrait catalog asset: " + str(ASSET))
+        previous = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        if sha(ASSET.read_bytes().replace(b"\r\n", b"\n")) != previous["catalog"]["sha256"]:
+            raise ValueError("Refusing to overwrite changed portrait catalog asset: " + str(ASSET))
     ASSET.write_bytes(asset_bytes)
     if asset_meta.is_file() and not asset_meta.read_text(encoding="utf-8").startswith("fileFormatVersion: 2\nguid: " + asset_guid):
         raise ValueError("Portrait catalog asset meta has a different GUID")
     if not asset_meta.exists():
         asset_meta.write_text("fileFormatVersion: 2\nguid: " + asset_guid + "\nNativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: 11400000\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n", encoding="utf-8")
     manifest = {
-        "format": 1, "manifest": "854_156383", "operation": "Extract official no-atlas monster head Sprite PNGs for Map10 Monster.IconId.",
+        "format": 1, "manifest": "854_156383", "operation": "Extract official no-atlas monster head Sprite PNGs for Map10/Map11 Monster.IconId.",
+        "mapInputs": [{"path": path.relative_to(ROOT).as_posix(), "sha256": sha(path.read_bytes())}
+                      for path in (MAP_DATA, MAP11_DATA)],
+        "rulesSha256": sha(RULES.read_bytes()),
+        "generatorSha256": sha(Path(__file__).read_bytes()),
         "bundles": source_records, "monsterIconIds": icon_ids, "images": image_records,
         "catalog": {"path": ASSET.relative_to(ROOT).as_posix(), "sha256": sha(asset_bytes), "guid": asset_guid},
     }
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
-    print("Map10 monster portraits:", len(bindings), "of", len(icon_ids), "IconIds")
+    print("Map10/Map11 monster portraits:", len(bindings), "of", len(icon_ids), "IconIds")
     print("Catalog SHA256:", sha(asset_bytes))
 
 

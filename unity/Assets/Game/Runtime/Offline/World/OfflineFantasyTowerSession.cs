@@ -72,6 +72,19 @@ namespace Zjcs.Offline.World
 
         public IReadOnlyList<FantasyTowerEntrySave> Entries => save.entries;
 
+        public static int ReadClearedLayer(string path, int entryIndex)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !IsTowerEntry(entryIndex))
+                throw new ArgumentException("A valid tower save path and entry are required.");
+            SaveReadResult read = LocalJsonSaveFile.Read(path, IsValid);
+            if (read.Status == SaveReadStatus.Corrupt)
+                throw new InvalidDataException("Fantasy tower progress and its backup are invalid.");
+            if (read.Json == null) return 0;
+            FantasyTowerSave data = JsonUtility.FromJson<FantasyTowerSave>(read.Json);
+            Normalize(data);
+            return data.entries.FirstOrDefault(value => value.entryIndex == entryIndex)?.clearedLayer ?? 0;
+        }
+
         public static OfflineFantasyTowerSession Open(ProfileSlotCatalog slots, string slotId)
         {
             if (slots == null || !slots.Contains(slotId))

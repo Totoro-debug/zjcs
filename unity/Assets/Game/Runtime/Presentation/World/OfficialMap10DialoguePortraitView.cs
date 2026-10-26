@@ -29,6 +29,7 @@ namespace Zjcs.Presentation.World
         private readonly bool[] slotHasLeft = new bool[2];
         private readonly string[] switchAnimations = new string[2];
         private bool disposed;
+        private int speakerVersion;
 
         public OfficialMap10DialoguePortraitView(OfficialMap10UiRenderer ui, string panelKey = "TalkDialog", int mapClassId = 10)
         {
@@ -100,6 +101,11 @@ namespace Zjcs.Presentation.World
         public void SetSpeaker(Map10RuntimeDialogRole role, string faceType, Action onContentSwitch = null)
         {
             if (disposed) throw new ObjectDisposedException(nameof(OfficialMap10DialoguePortraitView));
+            int requestedVersion = ++speakerVersion;
+            Action switchContent = () =>
+            {
+                if (!disposed && requestedVersion == speakerVersion) onContentSwitch?.Invoke();
+            };
             if (role != null && voiceOverIds.Contains(role.RoleId))
             {
                 foreach (int side in new[] { 0, 1 })
@@ -107,8 +113,8 @@ namespace Zjcs.Presentation.World
                     slotAnimations[side]?.Play(speakerStyles[side].moveOutAnimation);
                     slotHasLeft[side] = true;
                 }
-                if (currentSide == 1 && boardAnimation != null) SwitchBoard(false, onContentSwitch);
-                else onContentSwitch?.Invoke();
+                if (currentSide == 1 && boardAnimation != null) SwitchBoard(false, switchContent);
+                else switchContent();
                 currentSide = -1;
                 currentPortraitPath = null;
                 return;
@@ -124,13 +130,13 @@ namespace Zjcs.Presentation.World
                     if (slotHasLeft[currentSide]) slotAnimations[currentSide]?.Play(speakerStyles[currentSide].moveInAnimation);
                     slots[currentSide].SetPortrait(portrait, currentSide == 1);
                     slots[currentSide].SetColorImmediate(ToColor(speakerStyles[currentSide].light));
-                    onContentSwitch?.Invoke();
+                    switchContent();
                 }
                 else
                 {
                     int previousSide = currentSide;
                     currentSide = 1 - currentSide;
-                    SwitchBoard(previousSide == 0, onContentSwitch);
+                    SwitchBoard(previousSide == 0, switchContent);
                     characterSlots[currentSide]?.SetAsLastSibling();
                     slotAnimations[previousSide]?.Play(speakerStyles[previousSide].darkAnimation);
                     slots[previousSide].Transition(ToColor(speakerStyles[previousSide].dark),
@@ -138,6 +144,7 @@ namespace Zjcs.Presentation.World
                     int target = currentSide;
                     void UpdatePortrait()
                     {
+                        if (disposed || requestedVersion != speakerVersion) return;
                         slots[target].SetPortrait(portrait, target == 1);
                         slots[target].SetExpression(portrait, faceType);
                         slots[target].SetColorImmediate(ToColor(speakerStyles[target].dark));
@@ -157,7 +164,7 @@ namespace Zjcs.Presentation.World
                 }
                 currentPortraitPath = role.PortraitPath;
             }
-            else onContentSwitch?.Invoke();
+            else switchContent();
             slotHasLeft[currentSide] = false;
             slotPortraitPaths[currentSide] = role.PortraitPath;
             if (slots[currentSide].IsPortrait(portrait.portraitPath)) slots[currentSide].SetExpression(portrait, faceType);
@@ -180,6 +187,7 @@ namespace Zjcs.Presentation.World
         public void Clear()
         {
             if (disposed) return;
+            speakerVersion++;
             slots[0]?.Clear();
             slots[1]?.Clear();
             currentPortraitPath = null;
