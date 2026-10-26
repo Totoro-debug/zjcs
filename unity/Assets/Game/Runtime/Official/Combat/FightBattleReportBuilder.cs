@@ -32,6 +32,11 @@ namespace Zjcs.Combat.Official
         public int SkillItemId;
         public int Casts;
         public int Hits;
+        public bool HasDamageHitCounts;
+        public int DamageHits;
+        public int DamageTargets;
+        public float AvgDamageCount;
+        public float AvgDamageCountPerTarget;
         public long Damage;
         public long AdditionalAttributedDamage;
         public long Heal;
@@ -132,6 +137,13 @@ namespace Zjcs.Combat.Official
                     SkillItemId = skill.SkillItemId,
                     Casts = skill.Casts,
                     Hits = skill.Hits,
+                    HasDamageHitCounts = skill.HasDamageHitCounts,
+                    DamageHits = skill.DamageHits,
+                    DamageTargets = skill.DamageTargets,
+                    AvgDamageCount = skill.HasDamageHitCounts && skill.Casts > 0
+                        ? (float)skill.DamageHits / skill.Casts : 0f,
+                    AvgDamageCountPerTarget = skill.HasDamageHitCounts && skill.DamageTargets > 0
+                        ? (float)skill.DamageHits / skill.DamageTargets : 0f,
                     Damage = skill.Damage,
                     AdditionalAttributedDamage = skill.AdditionalAttributedDamage,
                     Heal = skill.Heal

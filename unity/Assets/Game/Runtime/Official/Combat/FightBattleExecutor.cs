@@ -409,6 +409,7 @@ namespace Zjcs.Combat.Official
             FightDamageFalloff.BeginCast(skill, ref checkpoint.FalloffSerial);
             IReadOnlyList<FightBattleHitDefinition> hits = FightBattleHitCollector.CollectAll(skill);
             var randomTargetGroups = new Dictionary<int, RandomTargetGroupState>();
+            var damageHitTargets = new HashSet<int>();
 
             foreach (FightBattleHitDefinition hit in hits)
             {
@@ -576,7 +577,7 @@ namespace Zjcs.Combat.Official
                         MaxHp = target.MaxHp
                     };
                     damageEvents.Add(damage);
-                    checkpoint.Statistics.RecordHit(damage);
+                    checkpoint.Statistics.RecordHit(damage, damageHitTargets);
                     FightStatusAccumulatedDamageRuntime.RecordHit(target, damage);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();

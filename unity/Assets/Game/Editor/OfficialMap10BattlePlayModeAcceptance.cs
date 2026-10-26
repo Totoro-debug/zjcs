@@ -529,6 +529,9 @@ namespace Zjcs.Editor
                     yield return null;
                 yield return null; // Allow deferred destruction of the temporary renderer group.
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_STATISTICS") == "1")
+                    Combat.OfficialBattleReportStatisticsAcceptance.Verify(
+                        (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
                 Require(controllerField.GetValue(runtime) == null && worldTerrain.activeSelf,
                     "The battle did not restore its suspended world roots.");
                 Require(Mathf.Approximately(Camera.main.orthographicSize, worldCameraSize),

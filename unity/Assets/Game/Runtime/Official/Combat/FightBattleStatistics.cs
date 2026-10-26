@@ -71,6 +71,10 @@ namespace Zjcs.Combat.Official
         public int SkillItemId;
         public int Casts;
         public int Hits;
+        // Old checkpoints have no per-cast target history. Keep their averages explicitly unknown.
+        public bool HasDamageHitCounts;
+        public int DamageHits;
+        public int DamageTargets;
         public long Damage;
         public long AdditionalAttributedDamage;
         public long Heal;
@@ -104,7 +108,8 @@ namespace Zjcs.Combat.Official
             {
                 UnitId = unitId,
                 SkillEntityId = skillEntityId,
-                SkillItemId = skillItemId
+                SkillItemId = skillItemId,
+                HasDamageHitCounts = true
             };
             Skills.Add(created);
             return created;
@@ -128,9 +133,9 @@ namespace Zjcs.Combat.Official
             skill.AdditionalAttributedDamage = checked(skill.AdditionalAttributedDamage + amount);
         }
 
-        public void RecordHit(FightBattleDamageEvent damage)
+        public void RecordHit(FightBattleDamageEvent damage, ISet<int> castDamageTargets = null)
         {
-            if (damage == null) return;
+            if (damage == null || damage.IsSkillCost) return;
             FightBattleUnitStatistics source = Unit(damage.SourceId);
             FightBattleUnitStatistics target = Unit(damage.TargetId);
             source.Hits++;
@@ -138,6 +143,15 @@ namespace Zjcs.Combat.Official
             FightBattleSkillStatistics skill = Skill(damage.SourceId, damage.SkillEntityId,
                 damage.SkillItemId);
             skill.Hits++;
+            // User-confirmed server gap: immunity and full shielding are damage hits; dodge is not.
+            // Each ExecuteSkill invocation owns its target set, including recursive/replayed skills.
+            if (!damage.IsCure && !damage.Dodge && !damage.Blinding && damage.DamageType != 0)
+            {
+                skill.DamageHits = checked(skill.DamageHits + 1);
+                if (castDamageTargets == null) skill.HasDamageHitCounts = false;
+                else if (castDamageTargets.Add(damage.TargetId))
+                    skill.DamageTargets = checked(skill.DamageTargets + 1);
+            }
             long amount = Math.Abs(damage.Damage);
             if (damage.IsCure)
             {

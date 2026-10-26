@@ -1,0 +1,31 @@
+{
+  "manifest": "854_156383",
+  "generator_sha256": "e4c58c76e9d6343aaf68494be371e9ed595b01f29bb0c8034d3bcc73621f4a9c",
+  "official_code": {
+    "common-source/Common/PlayerFightSkillReport.cs": "43609f9643e847bf82e63a9ea3a1e4479777c8066f4ca759c1027bc9649ceef5",
+    "common-source/Common/FightReportDamageStats.cs": "94f6b9a9827532cb7deb6e444617fe46fa538545ef5c108d52e79200bcdfc3d6",
+    "common-source/Common/FightReportComponent.cs": "a8a2934af40c0f22d2d732dfe6b03cd37720b6c518edc770ffc94acd52c00aac",
+    "common-source/Common/BattleReportCollector.cs": "c189952228f10889dd9d181cc08b88ac0b1baf443559fb1e0f33138e3352ebe7",
+    "client-source/FightEndReportSkillTabViewItem.cs": "b436b7bf2dd11ea7d7b5648e72fbf368799cd6fd604407c32dfebdc1d19a47d6",
+    "client-source/FightEndReportSkillTabView.cs": "4251961836c91777bfa6fdc4ca5ae41c25ab0aac97be8d81385aaa54e3c9df18",
+    "client-source/CharacterDamageUIManager.cs": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
+  },
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs": "491cb4a5d744975892509baa407d91c1b8fc22e30f2a6e27b96f6a7e82020b2b",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs": "3790a8cf9aff5129064db48c502730059fa27bb52ee4b138352e6e139d64b0f8",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "a2b6a6916d8b2f02b433620b76cd18a3d5f50f3c33d31a72cf026495a05022b0",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "db27d24ce77f2206ebf7bbb8de80f2f52e791f639d97ca542e607c2c140b3b3d",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "646b5c1b931770417a6e3f2ff67c11caf37c454b7deacb9e997ca439d3d2b0ed",
+    "scripts/test_battle_report_averages.ps1": "e47076af75dda60fd45b5906b929f3196db8f46a62ea145056e1ffeaf9674127"
+  },
+  "evidence": "The client consumes AvgDamageCount and AvgDamageCountPerTarget; shared PlayerFightSkillReport merges supplied values by cast-weighted averages. BattleReportCollector and FightReportComponent contain no single-battle counter implementation.",
+  "user_confirmed": {
+    "numerator": "H: damage hits, including immunity with zero damage and full shield absorption; excluding dodge.",
+    "denominators": "C: casts; T: sum of distinct damage-hit targets within each cast. Average hit count H/C; average segments H/T.",
+    "example": "10 casts, 2 targets and 3 segments each: H=60, T=20, averages 6 and 3.",
+    "rounding": "User example: 18 hits / 10 casts = 1.8, displayed as 2. Presentation formatting is still pending."
+  },
+  "implementation": "Each ExecuteSkill invocation owns its target set, so same-skill recursive replay starts another denominator. Healing, HP-cost records, original blinding/miss and no-damage actions do not enter damage-hit counters. Extra mark attribution creates no additional hit.",
+  "persistence": "Serialize raw counts and HasDamageHitCounts. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits, which includes healing and misses.",
+  "pending": "Original report table layout, row binding, display rounding, production entry, shield/status attribution and complete report fields remain incomplete."
+}
