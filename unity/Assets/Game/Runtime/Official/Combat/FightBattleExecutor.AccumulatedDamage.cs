@@ -41,8 +41,19 @@ namespace Zjcs.Combat.Official
                         triggerDepth++;
                         try
                         {
+                            int firstDamage = damageEvents.Count;
                             ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
                                 out float delay, owner);
+                            long hpDamage = 0;
+                            for (int i = firstDamage; i < damageEvents.Count; i++)
+                            {
+                                FightBattleDamageEvent hit = damageEvents[i];
+                                if (hit.SourceId == source.Id && hit.TargetId == owner.Id
+                                    && hit.SkillEntityId == skill.EntityId && !hit.IsCure && !hit.IsSkillCost)
+                                    hpDamage = checked(hpDamage + Math.Max(0L, hit.BeforeHp - hit.AfterHp));
+                            }
+                            FightStatusAccumulatedDamageRuntime.RecordAdditionalDamage(status, hpDamage,
+                                checkpoint.Statistics);
                             lastDelay = Math.Max(lastDelay, delay);
                             duration = Math.Max(duration, ResolveDuration(skill, delay));
                             float action = ResolveActionDuration(skill, delay);

@@ -72,6 +72,45 @@ namespace Zjcs.Combat.Official
             }
         }
 
+        public static void RecordAdditionalDamage(FightBattleStatusState status, long actualHpDamage,
+            FightBattleStatistics statistics)
+        {
+            FightBattleStatusAccumulatedDamage accumulator = status?.AccumulatedDamage;
+            if (statistics == null || actualHpDamage <= 0 || accumulator == null
+                || !accumulator.TriggerDamageAddToDamageSource || accumulator.HpDamage <= 0) return;
+            var weights = new List<long>();
+            foreach (FightBattleDamageContribution contribution in accumulator.Contributions)
+                weights.Add(contribution.HpDamage);
+            var shares = new List<long>();
+            DistributeLongProportional(actualHpDamage, weights, accumulator.HpDamage, ref shares);
+            for (int i = 0; i < shares.Count; i++)
+            {
+                FightBattleDamageContribution source = accumulator.Contributions[i];
+                statistics.RecordAdditionalDamage(source.SourceId, source.SkillEntityId,
+                    source.SkillItemId, shares[i]);
+            }
+        }
+
+        // Direct port of Common.FightStatusUtilsHandler.DistributeLongProportional.
+        // The final source receives the integer remainder; Math.Round uses its original default mode.
+        public static void DistributeLongProportional(long total, List<long> weights,
+            long totalWeight, ref List<long> result)
+        {
+            result.Clear();
+            int count = weights.Count;
+            if (count == 0) return;
+            if (count == 1) { result.Add(total); return; }
+            long allocated = 0L;
+            for (int i = 0; i < count - 1; i++)
+            {
+                if (totalWeight == 0L) { result.Add(0L); continue; }
+                long share = (long)Math.Round((double)total * weights[i] / totalWeight);
+                result.Add(share);
+                allocated += share;
+            }
+            result.Add(total - allocated);
+        }
+
         public static long CustomDamage(FightBattleStatusState status)
         {
             FightBattleStatusAccumulatedDamage accumulator = status?.AccumulatedDamage;

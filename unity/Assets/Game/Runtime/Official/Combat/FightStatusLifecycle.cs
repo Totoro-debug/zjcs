@@ -162,6 +162,7 @@ namespace Zjcs.Combat.Official
                 ScalePropWhenChangeStacked = template.ScalePropWhenChangeStacked,
                 ApplyIgnoreResilience = template.ApplyIgnoreResilience,
                 ForbiddenOnApplicatorDie = template.ForbiddenOnApplicatorDie,
+                AiMoreHit = template.AiMoreHit,
                 FollowRoundUpdateTimingOnGlobalRound = template.FollowRoundUpdateTimingOnGlobalRound,
                 IsFixedProp = template.IsFixedProp,
                 StackCount = template.StackCount,

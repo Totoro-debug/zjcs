@@ -23,7 +23,7 @@ def build():
     versions = []
     for version in ('854_156383', '871_156598'):
         apk = Apk(manifest=version)
-        found, sources = {}, []
+        found, sources, status_ai = {}, [], None
         for path, pointer in apk.container('config_ec'):
             if path.rsplit('/', 1)[-1] not in ('FightSkill_part157.g.bytes', 'FightSkill_part703.g.bytes'):
                 continue
@@ -40,14 +40,19 @@ def build():
                 if identity not in WANTED:
                     continue
                 for typ, value in components:
+                    if identity == 24062 and typ.removeprefix('Common.') == 'FightStatusComponent':
+                        decoded = Formats().component(typ, value)
+                        if decoded != payload['entities']['24062']['FightStatusComponent']:
+                            raise ValueError('Official status/AI configuration differs from runtime: '+version)
+                        status_ai = decoded['AI']
                     if typ.removeprefix('Common.') == WANTED[identity]:
                         decoded = Formats().component(typ, value)
                         if decoded != payload['entities'][str(identity)][WANTED[identity]]:
                             raise ValueError(f'Official {version} configuration differs from runtime: {identity}')
                         found[str(identity)] = {'parent': parent, 'component': WANTED[identity], 'value': decoded}
-        if len(found) != len(WANTED):
+        if len(found) != len(WANTED) or status_ai != {'MoreHit': True}:
             raise ValueError('Incomplete official accumulated-damage dependency chain: ' + version)
-        versions.append({'manifest': version, 'inputs': sources, 'entities': found})
+        versions.append({'manifest': version, 'inputs': sources, 'entities': found, 'status_ai': status_ai})
     text_path = ROOT / 'unity/Assets/Official/Combat/battle-texts.json'
     texts = json.loads(text_path.read_text('utf8'))
     description = next(row for row in texts['texts'] if row['key'] == 'entry_24062_desc')
@@ -56,14 +61,24 @@ def build():
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs',
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusTriggerSkillCfg.cs',
         '.tools/source-packages/current/871_156598/official-code/common-source/Common/HitDamageType.cs',
-        '.tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs']
+        '.tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs',
+        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusUtilsHandler.cs',
+        '.tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAiCfg.cs']
     receipt = {'config_manifest': '854_156383', 'code_manifest': '871_156598',
                'language_manifest': texts['language_manifest'], 'versions': versions,
                'runtime_config_identical_in_both_versions': True,
                'description': description,
                'inputs': [{'path': path, 'sha256': sha(ROOT / path)} for path in source_paths],
                'generator_sha256': sha(__file__),
-               'scope': 'Accumulate actual HP loss excluding true damage, invoke configured custom-damage skill at status end. Server execution and source-statistics allocation are not present in these inputs.'}
+               'runtime': [{'path': 'unity/Assets/Game/Runtime/Official/Combat/'+name,
+                            'sha256': sha(ROOT/'unity/Assets/Game/Runtime/Official/Combat'/name)} for name in (
+                   'FightStatusAccumulatedDamageRuntime.cs','FightBattleExecutor.AccumulatedDamage.cs',
+                   'FightBattleStatistics.cs','FightBattleReportBuilder.cs','FightBattleTargeting.cs','FightBattleExecutor.cs',
+                   'FightOfficialCombatCatalog.cs','FightStatusLifecycle.cs','FightBattleState.cs')],
+               'confirmed_offline_rules': {
+                   'additional_source_credit': 'Allocate triggered actual HP loss proportionally to original actual HP contributions by source and skill; retain the independent mark hit. Exclude shield and overkill. Use the original DistributeLongProportional rounding/remainder helper.',
+                   'more_hit_priority': 'Retain eligible targets and forced taunt/confusion constraints; prefer MoreHit marked attack targets before existing coverage/distance priorities.'},
+               'scope': 'Official configuration, descriptions and the integer distribution helper are available. The server allocation and MoreHit comparator are absent; their wiring follows the user-confirmed offline rules.'}
     target = ROOT / 'assets/reference/battle-rules/accumulated-damage-source-manifest.json'
     target.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode('utf8'))
     print('Verified official 24062 -> 13148 -> 13149 in both manifests; runtime configuration is identical.')

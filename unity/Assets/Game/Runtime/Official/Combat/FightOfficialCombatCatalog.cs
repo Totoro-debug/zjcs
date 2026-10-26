@@ -833,6 +833,14 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public bool StatusMoreHit(int classId)
+        {
+            if (!entities.TryGetValue(classId, out Dictionary<string, object> components)) return false;
+            Dictionary<string, object> status = Component(components, "FightStatusComponent");
+            Dictionary<string, object> ai = status == null ? null : Component(status, "AI");
+            return ai != null && Bool(ai, "MoreHit");
+        }
+
         public FightBattleStatusState CreateStatus(int classId, int ownerId, int creatorId,
             int instanceId = 0, int rootSkillId = 0, int applyingSkillItemId = 0,
             int sourceSkillRank = 1, int sourceSkillLevel = 1, int sourceSubRank = 0,
@@ -902,6 +910,7 @@ namespace Zjcs.Combat.Official
                 ScalePropWhenChangeStacked = Bool(status, "ScalePropWhenChangeStacked"),
                 ApplyIgnoreResilience = Bool(status, "ApplyIgnoreResilience"),
                 ForbiddenOnApplicatorDie = Bool(status, "ForbiddenOnApplicatorDie"),
+                AiMoreHit = Component(status, "AI") != null && Bool(Component(status, "AI"), "MoreHit"),
                 FollowRoundUpdateTimingOnGlobalRound = Bool(status,
                     "FollowRoundUpdateTimingOnGlobalRound"),
                 IsFixedProp = Bool(status, "IsFixedProp"),

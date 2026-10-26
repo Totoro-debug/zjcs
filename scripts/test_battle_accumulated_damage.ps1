@@ -60,7 +60,7 @@ function Restore($checkpoint) {
 
 $owner = New-Unit 2 2 100
 $mark = New-Mark $owner
-Require ($mark.AccumulatedDamage.RulesSupported -and $mark.AccumulatedDamage.SkillEntityId -eq 13148 -and
+Require ($mark.AiMoreHit -and $mark.AccumulatedDamage.RulesSupported -and $mark.AccumulatedDamage.SkillEntityId -eq 13148 -and
     $mark.AccumulatedDamage.AccumulationDamagePer -eq 3000 -and
     $mark.AccumulatedDamage.HitDamageTypes.Count -eq 7) 'Official accumulated-damage configuration was not assembled'
 Record $owner 1 90001 60
@@ -84,6 +84,9 @@ $saved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
 $restoredMark = $saved.Units[1].Statuses[0]
 Require ($restoredMark.AccumulatedDamage.HpDamage -eq 100 -and
     $restoredMark.AccumulatedDamage.Contributions[1].HpDamage -eq 40) 'Accumulated damage/source contributions did not survive persistence'
+$saved.Units[1].Statuses[0].AiMoreHit = $false
+$legacyRunner = Restore $saved
+Require ($saved.Units[1].Statuses[0].AiMoreHit) 'An older checkpoint did not recover MoreHit from official status configuration'
 $result = $runner.Step(0, 1)
 $replayed = (Restore $saved).Step(0, 1)
 Require ($result.Event.ActorId -eq 2 -and $result.Event.DamageEvents.Count -eq 1 -and
@@ -92,6 +95,15 @@ Require ($result.Event.ActorId -eq 2 -and $result.Event.DamageEvents.Count -eq 1
     $result.Event.DamageEvents[0].Damage -eq -30 -and $owner.Statuses.Count -eq 0) 'Mark expiration did not cast its official skill exactly once'
 Require ($replayed.Event.DamageEvents[0].Damage -eq -30 -and
     $replayed.Checkpoint.RandomSeed -eq $result.Checkpoint.RandomSeed) 'Restored accumulated damage diverged'
+$stats = $runner.State.Statistics
+Require ($stats.Skill(1, 90001, 90101).Damage -eq 18 -and $stats.Skill(3, 90002, 90102).Damage -eq 12 -and
+    $stats.Skill(1, 13148, 0).Damage -eq 30 -and $stats.Unit(2).DamageTaken -eq 30 -and
+    $stats.Unit(1).AdditionalAttributedDamage -eq 18 -and $stats.Unit(3).AdditionalAttributedDamage -eq 12 -and
+    $stats.Skill(1, 90001, 90101).Hits -eq 0 -and $stats.Unit(2).HitsTaken -eq 1) 'Source allocation lost the 60/40 weights, independent mark event or counted another hit'
+Require ($replayed.Checkpoint.Statistics.Skill(3, 90002, 90102).Damage -eq 12) 'Restored mark lost source attribution'
+$statsSaved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($runner.State))
+Require ($statsSaved.Statistics.Unit(3).AdditionalAttributedDamage -eq 12) 'Additional statistics did not survive persistence'
 $duplicate = $runner.Step(0, 1)
 Require ($duplicate.Event.DamageEvents.Count -eq 1 -and $runner.State.DamageEventSerial -eq 1 -and
     $owner.Hp -eq 970) 'A duplicate step request executed the mark explosion again'
@@ -107,6 +119,7 @@ $shielded.Statuses.Add($shield)
 $shieldResult = (Begin (New-Checkpoint $shielded)).Step(0, 1)
 Require ($shieldResult.Event.DamageEvents[0].Damage -eq 0 -and
     $shieldResult.Event.DamageEvents[0].ShieldDamage -eq 30 -and $shielded.Hp -eq 1000) 'Mark explosion bypassed the configured shield handling'
+Require ($shieldResult.Checkpoint.Statistics.Unit(1).AdditionalAttributedDamage -eq 0) 'Shield absorption was added to source life-damage attribution'
 
 $replacement = New-Unit 2 2 100
 $replacementRunner = Begin (New-Checkpoint $replacement)
@@ -131,6 +144,7 @@ Record $overkill 1 90001 100
 $overkill.Hp = 10
 $overkillResult = (Begin (New-Checkpoint $overkill)).Step(0, 1)
 Require ($overkillResult.Event.DamageEvents[0].Damage -eq -10 -and $overkill.Hp -eq 0) 'Mark damage exceeded the remaining life during settlement'
+Require ($overkillResult.Checkpoint.Statistics.Skill(1, 90001, 90101).AdditionalAttributedDamage -eq 10) 'Overkill inflated source attribution'
 
 # Accumulate a real executor hit before the owner's end event, rather than seeding the counter.
 $hitOwner = New-Unit 2 2 100
@@ -154,4 +168,20 @@ Require ($hitStep.Event.ActorId -eq 1 -and $hitStep.Event.DamageEvents.Count -eq
 $endStep = $hitRunner.Step(0, 2)
 Require ($endStep.Event.ActorId -eq 2 -and $endStep.Event.DamageEvents.Count -eq 1 -and
     $endStep.Event.DamageEvents[0].Damage -eq -18 -and $hitOwner.Hp -eq 922) 'The accumulated real hit did not become one 30% end explosion'
+# Original integer allocator rounds the earlier source and assigns the exact remainder to the last.
+$rounded = New-Unit 2 2 100
+$roundedMark = New-Mark $rounded
+Record $rounded 1 91001 50
+Record $rounded 3 91002 50
+$rounded.Hp = 5
+$roundedResult = (Begin (New-Checkpoint $rounded)).Step(0, 1)
+Require ($roundedResult.Checkpoint.Statistics.Skill(1, 91001, 91101).AdditionalAttributedDamage -eq 2 -and
+    $roundedResult.Checkpoint.Statistics.Skill(3, 91002, 91102).AdditionalAttributedDamage -eq 3) 'Official midpoint rounding or final remainder changed'
+$disabled = New-Unit 2 2 100
+$disabledMark = New-Mark $disabled
+$disabledMark.AccumulatedDamage.TriggerDamageAddToDamageSource = $false
+Record $disabled 1 90001 100
+$disabledResult = (Begin (New-Checkpoint $disabled)).Step(0, 1)
+Require ($disabledResult.Checkpoint.Statistics.Unit(1).AdditionalAttributedDamage -eq 0 -and
+    $disabledResult.Event.DamageEvents.Count -eq 1) 'Disabled source-credit flag changed damage or added credit'
 Write-Host 'Accumulated-damage checks passed: official chain, actual HP/type/source filters, expiry/replacement, shield/overkill, deep copies and checkpoint replay.'

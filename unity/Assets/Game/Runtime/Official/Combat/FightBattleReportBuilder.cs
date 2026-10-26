@@ -18,6 +18,7 @@ namespace Zjcs.Combat.Official
         public int Hits;
         public int HitsTaken;
         public long DamageDealt;
+        public long AdditionalAttributedDamage;
         public long DamageTaken;
         public long HealDealt;
         public long HealTaken;
@@ -32,6 +33,7 @@ namespace Zjcs.Combat.Official
         public int Casts;
         public int Hits;
         public long Damage;
+        public long AdditionalAttributedDamage;
         public long Heal;
     }
 
@@ -105,6 +107,7 @@ namespace Zjcs.Combat.Official
                     Hits = stats == null ? 0 : stats.Hits,
                     HitsTaken = stats == null ? 0 : stats.HitsTaken,
                     DamageDealt = stats == null ? 0 : stats.DamageDealt,
+                    AdditionalAttributedDamage = stats == null ? 0 : stats.AdditionalAttributedDamage,
                     DamageTaken = stats == null ? 0 : stats.DamageTaken,
                     HealDealt = stats == null ? 0 : stats.HealDealt,
                     HealTaken = stats == null ? 0 : stats.HealTaken
@@ -130,6 +133,7 @@ namespace Zjcs.Combat.Official
                     Casts = skill.Casts,
                     Hits = skill.Hits,
                     Damage = skill.Damage,
+                    AdditionalAttributedDamage = skill.AdditionalAttributedDamage,
                     Heal = skill.Heal
                 });
             }

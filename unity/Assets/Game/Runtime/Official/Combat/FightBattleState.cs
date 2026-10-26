@@ -121,6 +121,7 @@ namespace Zjcs.Combat.Official
         public bool ScalePropWhenChangeStacked;
         public bool ApplyIgnoreResilience;
         public bool ForbiddenOnApplicatorDie;
+        public bool AiMoreHit;
         public bool FollowRoundUpdateTimingOnGlobalRound;
         public bool IsFixedProp;
         public int StackCount = 1;

@@ -227,7 +227,9 @@ namespace Zjcs.Editor
                     .CreateStatus(24062, owner.Id, 1, 1);
                 mark.AccumulatedDamage.HpDamage = 100;
                 mark.AccumulatedDamage.Contributions.Add(new Zjcs.Combat.Official.FightBattleDamageContribution
-                    { SourceId = 1, SkillEntityId = 10011, HpDamage = 100 });
+                    { SourceId = 1, SkillEntityId = 10011, HpDamage = 60 });
+                mark.AccumulatedDamage.Contributions.Add(new Zjcs.Combat.Official.FightBattleDamageContribution
+                    { SourceId = 1, SkillEntityId = 10012, HpDamage = 40 });
                 owner.EndedAccumulatedDamageStatuses.Add(mark);
             }
             Debug.Log("Battle scene: stage=" + sceneController.Checkpoint.StageId
@@ -412,9 +414,17 @@ namespace Zjcs.Editor
             Require(checkpointField("Counter") >= 1, "Battle did not execute its first step.");
             Require(checkpointField("DamageEventSerial") >= 1, "Battle did not record damage during the first steps.");
             if (accumulatedDamageTest)
-                Require(((Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint()).Receipts.SelectMany(value => value.Event.DamageEvents)
+            {
+                var state = (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint();
+                Require(state.Receipts.SelectMany(value => value.Event.DamageEvents)
                     .Any(value => value.SkillEntityId == 13148 && value.HitEntityId == 13149 && value.Damage == -30),
                     "The restored accumulated-damage status did not execute through the real battle presentation.");
+                Require(state.Statistics.Skill(1, 10011, 0).AdditionalAttributedDamage == 18
+                    && state.Statistics.Skill(1, 10012, 0).AdditionalAttributedDamage == 12
+                    && state.Statistics.Skill(1, 13148, 0).Damage == 30,
+                    "The real battle loop did not retain the mark hit and add proportional source credit.");
+                Debug.Log("Accumulated-damage Play Mode passed: independent 30 HP hit, additional source skill credit 18/12.");
+            }
             Require(active() || (bool)checkpoint().GetType().GetField("Finished").GetValue(checkpoint()),
                 "Battle left Play without a final result. Phase=" + phaseProperty.GetValue(controller));
 

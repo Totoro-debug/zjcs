@@ -61,4 +61,47 @@ $far.Properties[0].Value = 1
 $prioritySelectedFar = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $priority)
 Assert-Range ($prioritySelectedFar[0].Id -eq 3) 'AI priority property was overridden by the range order'
 
+# Approved MoreHit precedence retains eligibility, control and the original tie breakers.
+$mark = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+$mark.AiMoreHit = $true
+$far.Statuses.Add($mark)
+$ordered.AiPriorityTypes.Add(4)
+$marked = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $ordered)
+Assert-Range ($marked[0].Id -eq 3) 'Marked target did not precede the original distance priority'
+$taunted = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 2, $false, $false, $ordered)
+Assert-Range ($taunted[0].Id -eq 2) 'MoreHit overrode the forced taunt source'
+$blocked = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $true, $false, $ordered)
+Assert-Range ($blocked.Count -eq 0) 'MoreHit bypassed confusion release restrictions'
+$far.Targetable = $false
+$ineligible = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $ordered)
+Assert-Range ($ineligible[0].Id -eq 2) 'MoreHit made an untargetable unit selectable'
+$far.Targetable = $true
+$nearMark = [Zjcs.Combat.Official.FightBattleStatusState]::new(); $nearMark.AiMoreHit = $true
+$near.Statuses.Add($nearMark)
+$tied = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $ordered)
+Assert-Range ($tied[0].Id -eq 2) 'Equal marked targets lost their original distance ordering'
+$near.Statuses.Clear(); $far.Statuses.Clear()
+$ally = New-Unit 5 1 1 0 100 10; $ally.Statuses.Add($mark)
+$confusionUnits = [Zjcs.Combat.Official.FightBattleUnitState[]]@($actor, $near, $far, $ally)
+$confusedTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $confusionUnits, 1, 0, $true, $true, $ordered)
+Assert-Range ($confusedTargets[0].Id -eq 5) 'Eligible confused attacks ignored a marked ally'
+# Coverage would favor the near pair, but the confirmed marked-target priority wins first.
+$coverageSkill = New-Skill @(@(1, 0), @(2, 0), @(3, 0))
+$coverageSkill.AiPriorityTypes.Add(1)
+$scopeHit = [Zjcs.Combat.Official.FightBattleHitDefinition]::new()
+$scopeHit.Anchor = 0; $scopeHit.TargetMode = 1
+$scopeHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(0, 0))
+$scopeHit.Scope.Add([Zjcs.Combat.Official.FightGridPoint]::new(1, 0))
+$coverageSkill.Hits.Add($scopeHit)
+$withoutMark = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $coverageSkill)
+$outside.Statuses.Add($mark)
+$withMark = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $coverageSkill)
+Assert-Range ($withoutMark[0].Id -eq 2 -and $withMark[0].Id -eq 4) 'Marked target did not precede larger hit coverage'
+$outside.Statuses.Clear()
+$checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
+$far.Turn.Id = $far.Id; $far.Turn.Hp = $far.Hp
+$far.Statuses.Add($mark); $checkpoint.StageId = 1; $checkpoint.RandomSeed = 7; $checkpoint.MaxRound = 15; $checkpoint.Units.Add($far)
+$saved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+    [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($checkpoint))
+Assert-Range ($saved.Units[0].Statuses[0].AiMoreHit) 'MoreHit flag did not survive persistence'
 Write-Output 'Battle range-order targeting checks passed: near-to-far order, configured index order, in-range preference and AI priority precedence.'

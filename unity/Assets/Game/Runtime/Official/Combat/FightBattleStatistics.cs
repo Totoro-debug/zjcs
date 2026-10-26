@@ -46,6 +46,7 @@ namespace Zjcs.Combat.Official
         public int Hits;
         public int HitsTaken;
         public long DamageDealt;
+        public long AdditionalAttributedDamage;
         public long DamageAndShieldDamageDealt;
         public long DamageTaken;
         public long HealDealt;
@@ -61,6 +62,7 @@ namespace Zjcs.Combat.Official
         public int Casts;
         public int Hits;
         public long Damage;
+        public long AdditionalAttributedDamage;
         public long Heal;
     }
 
@@ -102,6 +104,18 @@ namespace Zjcs.Combat.Official
         {
             Unit(unitId).Casts++;
             Skill(unitId, skillEntityId, skillItemId).Casts++;
+        }
+
+        // Additional source credit is statistical only: it creates no second hit, HP loss or shield loss.
+        public void RecordAdditionalDamage(int sourceId, int skillEntityId, int skillItemId, long amount)
+        {
+            FightBattleUnitStatistics source = Unit(sourceId);
+            FightBattleSkillStatistics skill = Skill(sourceId, skillEntityId, skillItemId);
+            source.DamageDealt = checked(source.DamageDealt + amount);
+            source.DamageAndShieldDamageDealt = checked(source.DamageAndShieldDamageDealt + amount);
+            source.AdditionalAttributedDamage = checked(source.AdditionalAttributedDamage + amount);
+            skill.Damage = checked(skill.Damage + amount);
+            skill.AdditionalAttributedDamage = checked(skill.AdditionalAttributedDamage + amount);
         }
 
         public void RecordHit(FightBattleDamageEvent damage)

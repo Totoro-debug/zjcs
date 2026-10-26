@@ -577,6 +577,12 @@ namespace Zjcs.Combat.Official
             IReadOnlyList<FightBattleUnitState> units,
             IReadOnlyDictionary<int, double> randomPriorities = null)
         {
+            // Confirmed offline order: eligibility/control constraints first (at the caller),
+            // then hostile marked targets, then the original skill priorities and tie breakers.
+            bool attackAllies = skill != null && (skill.TargetType == 1 || skill.TargetType == 4);
+            bool leftMarked = (left.Side != actor.Side || attackAllies) && HasMoreHitStatus(left);
+            bool rightMarked = (right.Side != actor.Side || attackAllies) && HasMoreHitStatus(right);
+            if (leftMarked != rightMarked) return leftMarked ? -1 : 1;
             IReadOnlyList<int> priorities = PriorityTypes(skill);
             for (int i = 0; i < priorities.Count; i++)
             {
@@ -598,6 +604,14 @@ namespace Zjcs.Combat.Official
                 else if (rightIndex >= 0) return 1;
             }
             return Compare(left, right, skill);
+        }
+
+        private static bool HasMoreHitStatus(FightBattleUnitState unit)
+        {
+            if (unit.Statuses == null) return false;
+            foreach (FightBattleStatusState status in unit.Statuses)
+                if (status != null && status.AiMoreHit) return true;
+            return false;
         }
 
         private static IReadOnlyList<int> PriorityTypes(FightBattleSkillDefinition skill)

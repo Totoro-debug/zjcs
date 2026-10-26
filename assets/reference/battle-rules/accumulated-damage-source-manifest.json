@@ -212,6 +212,9 @@
             "TriggerDamageAddToDamageSource": true
           }
         }
+      },
+      "status_ai": {
+        "MoreHit": true
       }
     },
     {
@@ -419,6 +422,9 @@
             "TriggerDamageAddToDamageSource": true
           }
         }
+      },
+      "status_ai": {
+        "MoreHit": true
       }
     }
   ],
@@ -451,8 +457,58 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultType.cs",
       "sha256": "916ee63a1c4d71e365a4638d774764ed7f3903acbb480f627899e925f5fa72d4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusUtilsHandler.cs",
+      "sha256": "7ac28ba04c74cf5908f4014f41505282e28168857dc73d75d1b2093469d09421"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAiCfg.cs",
+      "sha256": "ec20e05fdbefe4347942476732955971d3933ae279e6b3de871e533cde491db1"
     }
   ],
-  "generator_sha256": "2e47c423b1ac0fc1356c853f6ad3c6085615f7da7aeda54b80d0b96ccef1d8f2",
-  "scope": "Accumulate actual HP loss excluding true damage, invoke configured custom-damage skill at status end. Server execution and source-statistics allocation are not present in these inputs."
+  "generator_sha256": "681cccc97f50bca3fbefaed97b268eec58df4a99424c7f3d43b96659351bb7de",
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusAccumulatedDamageRuntime.cs",
+      "sha256": "3b0e23ad5d1aac16ab42d259c8be37aca582f9c5f9b5fcfb17fb076f6b68e733"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.AccumulatedDamage.cs",
+      "sha256": "b55aced7483d92d53facbe7ca961f380532c4156a4e4160a5ab39a659f1751e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
+      "sha256": "a20942d7580e9c6fcfa9821860014d262cebf756be0f6464aa0d0fbac7c69c62"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs",
+      "sha256": "aabd8af85974e0d5370a44cafb3efd991ad871e1075627bf654da5501fa6aea7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs",
+      "sha256": "c1b60402bde3dd0a48b274ba7e5fe61ed33b0b064d4e5642ad72c4d5516f2ed3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "3ff039e5a65ed786fdb99f1620a85fce00ffc30f8618e5c4b6e70d5b0530c904"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
+      "sha256": "f38d0a5663a7ec8ebb98d878f12ce2e7a4b4c4c28d0289ed8524e0206a270c5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
+      "sha256": "c5637de648a3689cb63aed144e14c6b9d4f423b182e3a06e001b7d605d1b7df4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
+      "sha256": "6f76ad1220c85154064a94b44963dbb7c477e6b3d9ead012da44d0cf19b9a3df"
+    }
+  ],
+  "confirmed_offline_rules": {
+    "additional_source_credit": "Allocate triggered actual HP loss proportionally to original actual HP contributions by source and skill; retain the independent mark hit. Exclude shield and overkill. Use the original DistributeLongProportional rounding/remainder helper.",
+    "more_hit_priority": "Retain eligible targets and forced taunt/confusion constraints; prefer MoreHit marked attack targets before existing coverage/distance priorities."
+  },
+  "scope": "Official configuration, descriptions and the integer distribution helper are available. The server allocation and MoreHit comparator are absent; their wiring follows the user-confirmed offline rules."
 }

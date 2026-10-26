@@ -54,6 +54,10 @@ namespace Zjcs.Combat.Official
                 ApplyMonsterInfo(unit);
                 InitializeUnitResilience(unit);
                 ApplySkillAiPriorities(unit);
+                if (statusCatalog != null && unit.Statuses != null)
+                    foreach (FightBattleStatusState status in unit.Statuses)
+                        if (status != null && statusCatalog.ContainsEntity(status.ClassId))
+                            status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
                 SynchronizeTurn(unit);
