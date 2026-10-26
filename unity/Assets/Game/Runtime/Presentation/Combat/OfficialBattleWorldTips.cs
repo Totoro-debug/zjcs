@@ -39,7 +39,7 @@ namespace Zjcs.Presentation.Combat
                 var asset=Resources.Load<TextAsset>("Combat/world-tips");
                 if (asset==null) throw new InvalidOperationException("Original world damage tips are missing.");
                 var data=JsonUtility.FromJson<BattleWorldTipData>(asset.text);
-                if (data==null || data.manifest!="854_156383" || data.bindings==null || data.bindings.Length!=5
+                if (data==null || data.manifest!="854_156383" || data.bindings==null || data.bindings.Length!=6
                     || data.replaySkills==null || data.replaySkills.Length!=1906)
                     throw new FormatException("Original world damage tip bindings changed.");
                 current=data;

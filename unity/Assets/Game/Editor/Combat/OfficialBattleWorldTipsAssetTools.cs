@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
 using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor.Combat
@@ -37,6 +38,17 @@ namespace Zjcs.Editor.Combat
                 }
                 sprite.OverrideGeometry(entry.vertices.Select(v=>v.Value).ToArray(),entry.triangles);
                 EditorUtility.SetDirty(sprite);
+            }
+            foreach(var group in data.bindings.SelectMany(binding=>binding.texts.Select(text=>new {binding,text})).GroupBy(v=>v.text.font))
+            {
+                var font=AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(Root+group.Key+".asset");
+                if (font==null) throw new InvalidDataException("Original world tip font is missing: "+group.Key);
+                string words=string.Concat(group.SelectMany(v=>v.binding.prefab.nodes).Select(v=>v.text_value))
+                    +string.Concat(group.SelectMany(v=>v.binding.prefab.actions??Array.Empty<BattleHudCustomActionText>()).Select(v=>v.text));
+                if (!font.TryAddCharacters(words,out string missing))
+                    throw new InvalidDataException("Original source font lacks world tip characters: "+missing);
+                EditorUtility.SetDirty(font);
+                foreach(var atlas in font.atlasTextures) EditorUtility.SetDirty(atlas);
             }
             AssetDatabase.SaveAssets();
             Debug.Log("Original world tip Sprite assets imported: "+data.spriteAssets.Length+" original textures, pivots, geometry and borders.");

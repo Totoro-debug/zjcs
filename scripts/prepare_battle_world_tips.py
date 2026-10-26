@@ -121,7 +121,7 @@ def build():
     def ptr(value,owner):
         return record(PPtr(**value,assetsfile=owner.assets_file).deref()) if value['m_PathID'] else None
 
-    for typ in [4,8,9,10,12]:
+    for typ in [4,8,9,10,11,12]:
         original=source['prefabs'][settings['EffectUIPoolPresents'][typ]['EffectUIPrefabProxy']['mAssetGuid']]
         localize_hud_node(original['root'],lambda key:values.get(xxhash.xxh64_intdigest(key.encode())))
         rows=[];normalize_world_float_node(original['root'],-1,rows)
@@ -213,7 +213,7 @@ def build():
                     if any(cfg[k] for k in ['linearDodge','useVertexColor','RealtimeUpdate','outline2','underlay','glow','gray']):
                         raise ValueError('Recover this original TMP effect branch before binding')
                     effects[path]=dict(dilate=cfg['dilate'],outline=bool(cfg['outline']),width=cfg['outlineWidth'],color=list(cfg['outlineColor'].values()))
-                elif kind in ['CharacterDamageUI','DamageFloatSize']:
+                elif kind in ['CharacterDamageUI','DamageFloatSize','DamageCustomActionUI']:
                     behaviours.append((kind,c,schemas.read(record(c))))
                 elif kind=='GameSceneObjectOrderLayer':
                     raw=record(c).get_raw_data()
@@ -250,6 +250,20 @@ def build():
         prefab=dict(effectType=typ,rootName=original['root']['name'],nodes=rows,textPath=tip_path,
             showTime=cfg['mShowTime'],height=cfg['mHeight'],sceneOffset=list(cfg['mSceneOffset'].values()),
             cameraScale=size,sortingOrderStart=orders[0])
+        if typ==11:
+            _,action_owner,action_config=next(v for v in behaviours if v[0]=='DamageCustomActionUI')
+            icon=ptr(action_config['mIcon'],action_owner)
+            if icon is None:raise ValueError('Original custom-action icon reference is absent')
+            prefab['iconPath']=paths[(icon.assets_file.name,icon.path_id)]
+            enum_path=ROOT/'.tools/source-packages/official-code/common-source/Common/EStatusCustomAction.cs'
+            names=re.findall(r'^\s*(None|Immunity|Unflinching|CDModify),?\s*$',enum_path.read_text(encoding='utf-8'),re.M)
+            if names!=['None','Immunity','Unflinching','CDModify']:raise ValueError('Original custom action enum changed')
+            prefab['actions']=[]
+            for value,name in enumerate(names):
+                key='EStatusCustomAction.'+name
+                text=values.get(xxhash.xxh64_intdigest(key.encode()))
+                if text:prefab['actions'].append(dict(action=value,key=key,text=text))
+            if len(prefab['actions'])!=3:raise ValueError('Original custom action localized words are incomplete')
         bindings.append(dict(key='damage_'+original['root']['name'].removesuffix('_Scene'),prefab=prefab,texts=texts,sprites=sprite_bindings))
     # Reuse the verified native extraction, then recover the records its old nonempty-playable filter omitted.
     catalog_path=ROOT/'assets/official/battle-animation/catalog.json'
@@ -289,9 +303,9 @@ def build():
             ('871_156598',ROOT/'.tools/source-packages/current/871_156598/official-code')]:
         receipt['official_code'].append(dict(manifest=version,files=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p))
             for p in [directory/n for n in ['client-source/CharacterDamageUI.cs','client-source/CharacterDamageUIManager.cs',
-                'client-source/DamageFloatSize.cs','client-source/MyFightSkill.cs','framework-firstpass-source/MultiLanguageText.cs',
+                'client-source/DamageFloatSize.cs','client-source/DamageCustomActionUI.cs','client-source/MyFightSkill.cs','framework-firstpass-source/MultiLanguageText.cs',
                 'common-source/Common/FightDisperseModification.cs','common-source/Common/FightRoleFightComponent.cs',
-                'common-source/Common/FightSkillReplayModification.cs','common-source/Common/EReplaySkillType.cs']]]))
+                'common-source/Common/FightSkillReplayModification.cs','common-source/Common/EReplaySkillType.cs','common-source/Common/EStatusCustomAction.cs']]]))
     save(RECEIPT,receipt)
     refresh_runtime()
     print('Restored original world tip types:',[v['prefab']['effectType'] for v in bindings])

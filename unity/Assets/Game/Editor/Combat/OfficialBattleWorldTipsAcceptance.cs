@@ -26,7 +26,7 @@ namespace Zjcs.Editor.Combat
                     null,(tr,unit)=>{},OfficialBattleHudCatalog.LoadDefault(),hud.transform);
                 var checkpoint=new FightBattleCheckpoint();
                 checkpoint.Units.Add(new FightBattleUnitState {Id=2,X=1,Y=1,Hp=100,MaxHp=100});
-                int[] types={4,8,9,10,12};string[] words={"免疫","回避","未命中","重置冷却","驱散"};
+                int[] types={4,8,9,10,11,12};string[] words={"免疫","回避","未命中","重置冷却","减少冷却","驱散"};
                 for(int i=0;i<types.Length;i++)
                 {
                     foreach(var old in root.GetComponentsInChildren<OfficialBattleDamageFloat>(true))
@@ -35,6 +35,7 @@ namespace Zjcs.Editor.Combat
                     var hit=new FightBattleDamageEvent {TargetId=2,ElementType=101,
                         Immunity=types[i]==4,Dodge=types[i]==8,Blinding=types[i]==9};
                     if (types[i]==10) step.SkillCasts.Add(new FightBattleSkillCastEvent {ActorId=2,SkillEntityId=13220,IsReplay=true});
+                    else if (types[i]==11) step.StatusCustomActions.Add(new FightBattleStatusCustomActionEvent {UnitId=2,Action=3});
                     else if (types[i]==12) step.DispersedUnitIds.Add(2);
                     else step.DamageEvents.Add(hit);
                     scene.ShowDamageFloats(step,checkpoint,OfficialBattleDamageColors.Load());
@@ -62,6 +63,7 @@ namespace Zjcs.Editor.Combat
                             && Mathf.Abs(text.color.b-expected.b)<.001f,"Tip RGB no longer follows original damage color selection.");
                     }
                     if (types[i]==10) VerifyReplayNative(view,text);
+                    if (types[i]==11) VerifyCustomActionNative(view,3);
                     VerifyPixels(view,text,types[i]);
                 }
                 foreach(var old in root.GetComponentsInChildren<OfficialBattleDamageFloat>(true))UnityEngine.Object.DestroyImmediate(old.gameObject);
@@ -75,7 +77,19 @@ namespace Zjcs.Editor.Combat
                 hiddenStep.SkillCasts.Add(new FightBattleSkillCastEvent {ActorId=2,SkillEntityId=13220,IsReplay=true,ReplayType=2});
                 scene.ShowDamageFloats(hiddenStep,checkpoint,OfficialBattleDamageColors.Load());
                 Require(root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single().EffectType==10,"ExtraWithTip replay lost its original tip.");
-                Debug.Log("Original world tips passed: five native prefabs, original words/font/material/outline, animation, damage color, replay flags and actual raster pixels.");
+                foreach(int action in new[] {1,2})
+                {
+                    foreach(var old in root.GetComponentsInChildren<OfficialBattleDamageFloat>(true)) UnityEngine.Object.DestroyImmediate(old.gameObject);
+                    var step=new FightBattleStepEvent();
+                    step.StatusCustomActions.Add(new FightBattleStatusCustomActionEvent {UnitId=2,Action=action});
+                    scene.ShowDamageFloats(step,checkpoint,OfficialBattleDamageColors.Load());
+                    var view=root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single();
+                    var text=view.GetComponentsInChildren<TextMeshPro>(true).Single();
+                    Require(text.text==(action==1?"状态免疫":"霸体"),"Original custom action localization differs.");
+                    VerifyCustomActionNative(view,action);scene.Tick(.12f);text.ForceMeshUpdate();
+                    VerifyPixels(view,text,110+action);
+                }
+                Debug.Log("Original world tips passed: six native prefabs, all three custom actions, original words/font/material/outline, animation, damage color, replay flags and actual raster pixels.");
             }
             finally
             {
@@ -83,6 +97,18 @@ namespace Zjcs.Editor.Combat
                 UnityEngine.Object.DestroyImmediate(root);
                 ShaderUtil.allowAsyncCompilation=previousAsync;
             }
+        }
+
+        private static void VerifyCustomActionNative(OfficialBattleDamageFloat view,int action)
+        {
+            var icon=view.GetComponentsInChildren<SpriteRenderer>(true).Single();
+            Require(view.EffectType==11 && icon.gameObject.activeSelf==(action==3)
+                && icon.sprite.name=="Sprite_1a727abd2fbb3047" && icon.sortingOrder==3
+                && icon.sharedMaterial.shader.name=="Zjcs/Combat/WorldSpriteUnlit",
+                "Original custom action arrow visibility, Sprite, material or sorting differs.");
+            var binding=OfficialBattleWorldTips.Find("damage_BattleCustomDamageFloatEffect");
+            Require(binding.prefab.nodes.Any(v=>v.animations.Any(a=>a.name=="GameCanvas_FlyText_Immunity_Scene"
+                && a.tracks.Length==6)),"Original custom action animation is incomplete.");
         }
 
         private static void VerifyReplayNative(OfficialBattleDamageFloat view,TextMeshPro text)
@@ -126,19 +152,34 @@ namespace Zjcs.Editor.Combat
 
         public sealed class Probe
         {
-            private int counter,targetId,type;
+            private int counter,targetId,type,customAction;
             private string word;
             private bool verified;
             public string Observation {get;private set;}
 
             public static Probe Install(OfficialBattleRuntimeController controller)
             {
-                Run(); // All five native visuals also render inside Play Mode with controlled result flags.
+                Run(); // All six native visuals also render inside Play Mode with controlled result flags.
                 string mode=Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP_MODE");
                 bool blind=mode=="blind",replay=mode=="replay",disperse=mode=="disperse";
+                bool customCd=mode=="customcd",unflinching=mode=="unflinching";
                 var checkpoint=controller.Checkpoint;
                 var assets=OfficialCombatAssetCatalog.LoadDefault();var formula=assets.LoadDamageFormula();
                 var player=checkpoint.Units.Single(v=>v.Id==1);
+                if (customCd)
+                {
+                    var status=assets.Load().CreateStatus(60801,player.Id,player.Id,++checkpoint.StatusInstanceSerial);
+                    FightStatusLifecycle.Apply(player,status,player.SkillState.Round,checkpoint.StatusInstanceSerial,
+                        new FightRandomStream(checkpoint.RandomSeed));
+                }
+                if (unflinching)
+                {
+                    // The fixed-position fixture's NPC attacks the player; attach the status to the unit that actually loses HP.
+                    var status=assets.Load().CreateStatus(25275,player.Id,player.Id,++checkpoint.StatusInstanceSerial);
+                    status.UnflinchingOnDamageRate=1f;player.Statuses.Add(status);
+                    var attacker=checkpoint.Units.First(v=>v.MonsterId>0);
+                    player.X=attacker.X-1;player.Y=attacker.Y;
+                }
                 if (replay || disperse)
                 {
                     var rules=assets.Load();
@@ -172,8 +213,8 @@ namespace Zjcs.Editor.Combat
                 foreach(var unit in checkpoint.Units)
                 {
                     unit.Hp=unit.MaxHp=unit.Turn.Hp=20000;set(unit,"MaxHp",20000);
-                    if (disperse) { unit.MoveDist=0;set(unit,"MoveDist",0); }
-                    set(unit,"DodgePercent",!blind && !replay && !disperse && unit.MonsterId>0?10000:0);
+                    if (disperse || customCd || unflinching) { unit.MoveDist=0;set(unit,"MoveDist",0); }
+                    set(unit,"DodgePercent",!blind && !replay && !disperse && !customCd && !unflinching && unit.MonsterId>0?10000:0);
                     set(unit,"BlindingPercent",blind && unit.Id==1?10000:0);
                 }
                 foreach(var skill in player.Skills)
@@ -191,6 +232,12 @@ namespace Zjcs.Editor.Combat
                         return new Probe {counter=control.Counter,targetId=1,type=10,word="重置冷却"};
                     if (disperse && step.Event.DispersedUnitIds.Count>0)
                         return new Probe {counter=control.Counter,targetId=step.Event.DispersedUnitIds[0],type=12,word="驱散"};
+                    if (customCd || unflinching)
+                    {
+                        var action=step.Event.StatusCustomActions.FirstOrDefault(v=>v.Action==(customCd?3:2));
+                        if (action!=null)return new Probe {counter=control.Counter,targetId=action.UnitId,type=11,
+                            word=customCd?"减少冷却":"霸体",customAction=action.Action};
+                    }
                     var hit=step.Event.DamageEvents.FirstOrDefault(v=>v.SourceId==1 && (blind?v.Blinding:v.Dodge));
                     if(hit!=null)return new Probe {counter=control.Counter,targetId=hit.TargetId,type=blind?9:8,word=blind?"未命中":"回避"};
                 }
@@ -208,6 +255,13 @@ namespace Zjcs.Editor.Combat
                     Require(hit.Damage==0 && hit.ShieldDamage==0 && hit.BeforeHp==hit.AfterHp,"Avoided hit changed HP or shield.");
                 }
                 else if (type==10) Require(step.SkillCasts.Any(v=>v.ActorId==1 && v.IsReplay),"Live replay receipt is absent.");
+                else if (type==11)
+                {
+                    Require(step.StatusCustomActions.Any(v=>v.UnitId==targetId && v.Action==customAction),"Live custom action receipt is absent.");
+                    var restored=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
+                    Require(restored.Receipts.Single(v=>v.Counter==counter).Event.StatusCustomActions
+                        .Any(v=>v.UnitId==targetId && v.Action==customAction),"Custom action receipt did not persist.");
+                }
                 else
                 {
                     Require(step.DispersedUnitIds.Contains(targetId),"Live disperse receipt is absent.");
@@ -222,6 +276,7 @@ namespace Zjcs.Editor.Combat
                 OfficialBattleDamageDisplayAcceptance.Probe.VerifyCameraPixels(text.renderer);
                 verified=true;
                 if (type==10) VerifyReplayNative(view,text);
+                if (type==11) VerifyCustomActionNative(view,customAction);
                 Debug.Log("World-tip Play Mode passed: result type="+type+", word="+word+", native world prefab and original outlined font; receipt verified.");
                 return true;
             }

@@ -230,41 +230,10 @@ namespace Zjcs.Presentation.Combat
             if (action == null) return;
             FightBattleUnitState target = FindUnit(checkpoint, action.UnitId);
             if (target == null) return;
-            BattleCustomActionWorldRuntimeData prefab = hudCatalog.LoadCustomActionWorldRuntime();
-            string text = prefab.TextForAction(action.Action);
-            if (string.IsNullOrEmpty(text)) return;
-
-            var renderer = new OfficialBattleHudRenderer(hudCatalog);
-            GameObject instance = renderer.CreateWorldFloat(prefab, root, out Dictionary<string, GameObject> nodes);
-            if (!nodes.TryGetValue(prefab.textPath, out GameObject labelObject))
-                throw new InvalidOperationException("Official custom action float text binding is missing.");
-            TMP_Text label = labelObject.GetComponent<TMP_Text>();
-            if (label == null) throw new InvalidOperationException("Official custom action float TMP text is missing.");
-            label.text = text;
-            if (!nodes.TryGetValue(prefab.iconPath, out GameObject iconObject))
-                throw new InvalidOperationException("Official custom action float icon binding is missing.");
-            iconObject.SetActive(action.Action == 3);
-
-            Vector3 offset = new Vector3(prefab.sceneOffset[0], prefab.sceneOffset[1], prefab.sceneOffset[2]);
-            Vector3 world = gridToWorld(new FightGridPoint(target.X, target.Y)) + offset;
-            instance.transform.position = world;
-            if (Camera.main != null) instance.transform.rotation = Camera.main.transform.rotation;
-            if (Camera.main != null && Camera.main.orthographic)
-            {
-                float scale = Camera.main.orthographicSize / prefab.cameraScale;
-                instance.transform.localScale = new Vector3(scale, scale, scale);
-            }
-            SortingGroup sortingGroup = instance.AddComponent<SortingGroup>();
-            sortingGroup.sortingOrder = prefab.sortingOrderStart + instance.transform.GetSiblingIndex();
-
-            OfficialBattleHudAnimationPlayer animations = renderer.InitializeWorldAnimations(
-                prefab.nodes, instance, nodes, useManualTick: true);
-            var floatView = instance.AddComponent<OfficialBattleDamageFloat>();
-            floatView.InitializeOfficial(prefab.effectType, label, null, animations,
-                prefab.showTime, false, true, target.Id, prefab.height, world,
-                null, Camera.main, null, prefab.cameraScale, prefab.sortingOrderStart);
-            activeDamageFloats.Add(floatView);
-            RefreshDamageFloatStack(target.Id);
+            var binding=OfficialBattleWorldTips.Find("damage_BattleCustomDamageFloatEffect");
+            if (binding==null) throw new InvalidOperationException("Original custom action world binding is missing.");
+            if (string.IsNullOrEmpty(binding.prefab.TextForAction(action.Action))) return;
+            SpawnWorldTip(new PendingDamageFloat {Target=target},binding,action.Action);
         }
 
         private static long AbsoluteDamage(long value) => value == long.MinValue ? long.MaxValue : Math.Abs(value);
@@ -415,7 +384,7 @@ namespace Zjcs.Presentation.Combat
             return view;
         }
 
-        private OfficialBattleDamageFloat SpawnWorldTip(PendingDamageFloat pending,BattleWorldTipBinding binding)
+        private OfficialBattleDamageFloat SpawnWorldTip(PendingDamageFloat pending,BattleWorldTipBinding binding,int customAction=0)
         {
             var prefab=binding.prefab;
             var renderer=new OfficialBattleHudRenderer(hudCatalog);
@@ -435,6 +404,12 @@ namespace Zjcs.Presentation.Combat
                 sprite.tileMode=(SpriteTileMode)source.tileMode;
                 sprite.size=new Vector2(source.size[0],source.size[1]);
                 sprite.sortingOrder=source.order;
+            }
+            if (prefab.effectType==11)
+            {
+                nodes[prefab.textPath].GetComponent<TMP_Text>().text=prefab.TextForAction(customAction);
+                // DamageCustomActionUI.ShouldShowIcon: only EStatusCustomAction.CDModify.
+                nodes[prefab.iconPath].SetActive(customAction==3);
             }
             Vector3 world=gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y))
                 +new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);

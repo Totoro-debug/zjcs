@@ -2039,6 +2039,537 @@
       ]
     },
     {
+      "key": "damage_BattleCustomDamageFloatEffect",
+      "prefab": {
+        "effectType": 11,
+        "rootName": "BattleCustomDamageFloatEffect_Scene",
+        "nodes": [
+          {
+            "name": "BattleCustomDamageFloatEffect_Scene",
+            "path": "/BattleCustomDamageFloatEffect_Scene",
+            "parentIndex": -1,
+            "active": true,
+            "uses_rect_transform": false,
+            "local_position": [
+              -0.11699999868869781,
+              -0.2639999985694885,
+              0.0
+            ],
+            "anchored_position": [
+              0.0,
+              0.0
+            ],
+            "size_delta": [
+              0.0,
+              0.0
+            ],
+            "pivot": [
+              0.5,
+              0.5
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "rotation": 0.0,
+            "has_text": false,
+            "text_value": "",
+            "text_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "text_font_size": 0.0,
+            "text_horizontal": 0,
+            "text_vertical": 0,
+            "text_word_wrap": false,
+            "text_overflow": 0,
+            "has_sprite_renderer": false,
+            "image_sprite_file": "",
+            "image_sprite_width": 0,
+            "image_sprite_height": 0,
+            "image_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "image_order": 0,
+            "animation_play_automatically": false,
+            "default_animation": "",
+            "animations": []
+          },
+          {
+            "name": "GoLayout",
+            "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout",
+            "parentIndex": 0,
+            "active": true,
+            "uses_rect_transform": false,
+            "local_position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "anchored_position": [
+              0.0,
+              0.0
+            ],
+            "size_delta": [
+              0.0,
+              0.0
+            ],
+            "pivot": [
+              0.5,
+              0.5
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "rotation": 0.0,
+            "has_text": false,
+            "text_value": "",
+            "text_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "text_font_size": 0.0,
+            "text_horizontal": 0,
+            "text_vertical": 0,
+            "text_word_wrap": false,
+            "text_overflow": 0,
+            "has_sprite_renderer": false,
+            "image_sprite_file": "",
+            "image_sprite_width": 0,
+            "image_sprite_height": 0,
+            "image_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "image_order": 0,
+            "animation_play_automatically": false,
+            "default_animation": "",
+            "animations": []
+          },
+          {
+            "name": "Ani",
+            "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani",
+            "parentIndex": 1,
+            "active": true,
+            "uses_rect_transform": false,
+            "local_position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "anchored_position": [
+              0.0,
+              0.0
+            ],
+            "size_delta": [
+              0.0,
+              0.0
+            ],
+            "pivot": [
+              0.5,
+              0.5
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "rotation": -0.0,
+            "has_text": false,
+            "text_value": "",
+            "text_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "text_font_size": 0.0,
+            "text_horizontal": 0,
+            "text_vertical": 0,
+            "text_word_wrap": false,
+            "text_overflow": 0,
+            "has_sprite_renderer": false,
+            "image_sprite_file": "",
+            "image_sprite_width": 0,
+            "image_sprite_height": 0,
+            "image_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "image_order": 0,
+            "animation_play_automatically": true,
+            "default_animation": "GameCanvas_FlyText_Immunity_Scene",
+            "animations": [
+              {
+                "name": "GameCanvas_FlyText_Immunity_Scene",
+                "owner": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani",
+                "duration": 1.0,
+                "loop": true,
+                "tracks": [
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani",
+                    "property": "scale.x",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.7369141578674316,
+                        "in_tangent": 0.0,
+                        "out_tangent": 3.669912815093994
+                      },
+                      {
+                        "time": 0.1666666716337204,
+                        "value": 1.0,
+                        "in_tangent": -6.351663595083323e-08,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  },
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani",
+                    "property": "scale.y",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.7369141578674316,
+                        "in_tangent": 0.0,
+                        "out_tangent": 3.7949182987213135
+                      },
+                      {
+                        "time": 0.1666666716337204,
+                        "value": 1.0,
+                        "in_tangent": 2.340714555515433e-08,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  },
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani",
+                    "property": "scale.z",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.7369141578674316,
+                        "in_tangent": 0.0,
+                        "out_tangent": 3.865709066390991
+                      },
+                      {
+                        "time": 0.1666666716337204,
+                        "value": 1.0,
+                        "in_tangent": -2.90264853042288e-07,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  },
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+                    "property": "m_fontColor.a",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.0,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      },
+                      {
+                        "time": 0.05000000074505806,
+                        "value": 1.0,
+                        "in_tangent": -1.7881393716834282e-06,
+                        "out_tangent": 0.0
+                      },
+                      {
+                        "time": 0.6666666865348816,
+                        "value": 1.0,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      },
+                      {
+                        "time": 1.0,
+                        "value": 0.0,
+                        "in_tangent": 1.9868183542826046e-07,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  },
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+                    "property": "m_AnchoredPosition.x",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.0,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      },
+                      {
+                        "time": 1.0,
+                        "value": 0.09839999675750732,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  },
+                  {
+                    "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+                    "property": "m_AnchoredPosition.y",
+                    "keys": [
+                      {
+                        "time": 0,
+                        "value": 0.0,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      },
+                      {
+                        "time": 1.0,
+                        "value": 0.07050000131130219,
+                        "in_tangent": 0.0,
+                        "out_tangent": 0.0
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "NumberText",
+            "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+            "parentIndex": 2,
+            "active": true,
+            "uses_rect_transform": true,
+            "local_position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "anchored_position": [
+              0.0,
+              0.0
+            ],
+            "size_delta": [
+              10.0,
+              10.0
+            ],
+            "pivot": [
+              0.5,
+              0.5
+            ],
+            "scale": [
+              0.05999999865889549,
+              0.05999999865889549,
+              0.0
+            ],
+            "rotation": -0.0,
+            "has_text": true,
+            "text_value": "\u514d\u75ab",
+            "text_color": [
+              1.0,
+              1.0,
+              1.0,
+              0.0
+            ],
+            "text_font_size": 36.0,
+            "text_horizontal": 2,
+            "text_vertical": 512,
+            "text_word_wrap": true,
+            "text_overflow": 0,
+            "has_sprite_renderer": false,
+            "image_sprite_file": "",
+            "image_sprite_width": 0,
+            "image_sprite_height": 0,
+            "image_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "image_order": 0,
+            "animation_play_automatically": false,
+            "default_animation": "",
+            "animations": [],
+            "anchor_min": [
+              0.5,
+              0.5
+            ],
+            "anchor_max": [
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "name": "Icon",
+            "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText/Icon",
+            "parentIndex": 3,
+            "active": false,
+            "uses_rect_transform": false,
+            "local_position": [
+              -6.5,
+              0.0,
+              0.0
+            ],
+            "anchored_position": [
+              0.0,
+              0.0
+            ],
+            "size_delta": [
+              0.0,
+              0.0
+            ],
+            "pivot": [
+              0.5,
+              0.5
+            ],
+            "scale": [
+              10.0,
+              10.0,
+              0.0
+            ],
+            "rotation": -0.0,
+            "has_text": false,
+            "text_value": "",
+            "text_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "text_font_size": 0.0,
+            "text_horizontal": 0,
+            "text_vertical": 0,
+            "text_word_wrap": false,
+            "text_overflow": 0,
+            "has_sprite_renderer": true,
+            "image_sprite_file": "res://assets/official/battle-hud/sprites/ImgArrow-676497dfd9.png",
+            "image_sprite_width": 28,
+            "image_sprite_height": 23,
+            "image_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "image_order": 3,
+            "animation_play_automatically": false,
+            "default_animation": "",
+            "animations": []
+          }
+        ],
+        "textPath": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+        "showTime": 1.0,
+        "height": 0.2680000066757202,
+        "sceneOffset": [
+          0.0,
+          0.25999999046325684,
+          0.0
+        ],
+        "cameraScale": 5.0,
+        "sortingOrderStart": 21000,
+        "iconPath": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText/Icon",
+        "actions": [
+          {
+            "action": 1,
+            "key": "EStatusCustomAction.Immunity",
+            "text": "\u72b6\u6001\u514d\u75ab"
+          },
+          {
+            "action": 2,
+            "key": "EStatusCustomAction.Unflinching",
+            "text": "\u9738\u4f53"
+          },
+          {
+            "action": 3,
+            "key": "EStatusCustomAction.CDModify",
+            "text": "\u51cf\u5c11\u51b7\u5374"
+          }
+        ]
+      },
+      "texts": [
+        {
+          "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 0,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "enableGradient": false,
+          "gradient": {
+            "topLeft": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "topRight": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "bottomLeft": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "bottomRight": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "width": 4.0,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ]
+          }
+        }
+      ],
+      "sprites": [
+        {
+          "path": "/BattleCustomDamageFloatEffect_Scene/GoLayout/Ani/NumberText/Icon",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_1a727abd2fbb3047",
+          "order": 3,
+          "drawMode": 0,
+          "tileMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
       "key": "damage_FightDisperseDamageFloatEffect",
       "prefab": {
         "effectType": 12,
