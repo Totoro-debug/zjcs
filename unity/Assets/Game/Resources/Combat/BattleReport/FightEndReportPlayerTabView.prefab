@@ -369,16 +369,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 1724804207875695}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0dff90f5d4b931b00a308db1745417d, type: 3}
+  m_Script: {fileID: 11500000, guid: 163a3f8effa97cfe560457984d4b3fa0, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7529411911964417, g: 0.7490196228027344, b: 0.3921568691730499, a: 0.12156862765550613}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 0aaa28cc62655772be6ac5599a222302, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1.0
+  m_mirrorType: 0
+  mReversed: 0
 --- !u!224 &224002669891404536
 RectTransform:
   serializedVersion: 2
@@ -431,13 +444,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 技能效果数据
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 1ca459b6ac59fa9488274903b5111782, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: c3c11c6941ef4b24893f12e283da3141, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32: {rgba: 4294967295}
+  m_fontColor: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+  m_enableVertexGradient: 1
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+    topRight: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+    bottomLeft: {r: 0.7921568751335144, g: 0.8274509906768799, b: 0.6313725709915161, a: 1.0}
+    bottomRight: {r: 0.7921568751335144, g: 0.8274509906768799, b: 0.6313725709915161, a: 1.0}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor: {rgba: 4294967295}
+  m_fontSize: 70.0
+  m_fontSizeBase: 70.0
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 30.0
+  m_fontSizeMax: 70.0
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0.0
+  m_wordSpacing: 0.0
+  m_lineSpacing: -26.0
+  m_lineSpacingMax: 0.0
+  m_paragraphSpacing: 0.0
+  m_charWidthMaxAdj: 0.0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4000000059604645
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0.0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
 --- !u!224 &224632457200066912
 RectTransform:
   serializedVersion: 2
@@ -478,13 +557,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9921568632125854, g: 1.0, b: 0.9607843160629272, a: 0.21176470816135406}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 85054d8252f75e359bca25cceea3e351, type: 2}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!224 &224969106005120503
 RectTransform:
   serializedVersion: 2
@@ -530,13 +620,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.12941177189350128, g: 0.12941177189350128, b: 0.12941177189350128, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: e6588e84c5b45f349be71996d49ebec0, type: 2}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!114 &114711914853252429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,13 +704,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 0fb8976de1a058bba7598b6482ee8037, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!114 &114371939378208658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -670,13 +782,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 844cf3a3922254738ac86ad0473a58cc, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!224 &224733206282342372
 RectTransform:
   serializedVersion: 2
@@ -717,13 +840,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 7ff7e047f0025da086f67f6262e840aa, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!224 &224672306508523268
 RectTransform:
   serializedVersion: 2
@@ -764,13 +898,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 10a72e941a145c7da8147861587058f5, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!224 &224900271049623953
 RectTransform:
   serializedVersion: 2
@@ -811,13 +956,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: null
   m_EditorClassIdentifier: null
+  m_Material: {fileID: 0}
+  m_Color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
   m_RaycastTarget: 0
-  m_RaycastPadding:
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+  m_RaycastPadding: {x: 0.0, y: 0.0, z: 0.0, w: 0.0}
   m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 56814ddb4842565a9cb2c5790cc6e936, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1.0
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 1
+  m_PixelsPerUnitMultiplier: 1.0
 --- !u!224 &224220653531496868
 RectTransform:
   serializedVersion: 2

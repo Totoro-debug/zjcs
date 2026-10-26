@@ -1,0 +1,344 @@
+{
+  "manifest": "854_156383",
+  "textures": [
+    {
+      "key": "Texture_53995e743aa5f4d7",
+      "width": 2048,
+      "height": 2048,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_c5d935d014bf898a",
+      "width": 1024,
+      "height": 1024,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_abfdfb57b8d0b00b",
+      "width": 132,
+      "height": 132,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_14a16783d1a966cc",
+      "width": 143,
+      "height": 143,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_98d37e85437c3d78",
+      "width": 128,
+      "height": 128,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_6295b4a24c869d3c",
+      "width": 0,
+      "height": 0,
+      "filter": 1,
+      "wrapU": 0,
+      "wrapV": 0,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_08bed3d34131c6f4",
+      "width": 64,
+      "height": 64,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 16,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_3589dcca2105add6",
+      "width": 2048,
+      "height": 1024,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    }
+  ],
+  "fonts": [
+    {
+      "key": "Font_330c55d759bc3487",
+      "name": "MPLUSRounded1c-Medium SDF",
+      "sourcePath": "Assets/Official/Combat/BattleReport/Graphics/MPLUSRounded1c-Medium.ttf",
+      "sourceSha256": "da78fd5423404a9cc05184d93917056c3c9d087afe56dd7c099dafa9fa8bb3b1",
+      "pointSize": 40,
+      "width": 1024,
+      "height": 1024,
+      "padding": 4,
+      "renderMode": 4165,
+      "population": 1,
+      "multiAtlas": true,
+      "clearOnBuild": true,
+      "atlasTextures": [
+        "Texture_6295b4a24c869d3c"
+      ],
+      "fontJson": "{\"m_FaceInfo\":{\"m_FaceIndex\":0,\"m_FamilyName\":\"Rounded Mplus 1c\",\"m_StyleName\":\"Medium\",\"m_PointSize\":40,\"m_Scale\":1.0,\"m_UnitsPerEM\":1000,\"m_LineHeight\":49.70000076293945,\"m_AscentLine\":40.0,\"m_CapLine\":30.0,\"m_MeanLine\":21.0,\"m_Baseline\":0.0,\"m_DescentLine\":-12.800000190734863,\"m_SuperscriptOffset\":43.0,\"m_SuperscriptSize\":0.5,\"m_SubscriptOffset\":-12.800000190734863,\"m_SubscriptSize\":0.5,\"m_UnderlineOffset\":-6.0,\"m_UnderlineThickness\":2.0,\"m_StrikethroughOffset\":8.399999618530273,\"m_StrikethroughThickness\":2.0,\"m_TabWidth\":11.0},\"m_GlyphTable\":[],\"m_CharacterTable\":[],\"m_UsedGlyphRects\":[],\"m_FreeGlyphRects\":[{\"m_X\":0,\"m_Y\":0,\"m_Width\":1023,\"m_Height\":1023}],\"m_FontFeatureTable\":{\"m_GlyphPairAdjustmentRecords\":[]},\"normalStyle\":0.5,\"normalSpacingOffset\":-5.800000190734863,\"boldStyle\":1.2000000476837158,\"boldSpacing\":7.0,\"italicStyle\":20,\"tabSize\":10}",
+      "material": "Material_e021ffe2d5a92264",
+      "warmCharacters": "02{}"
+    }
+  ],
+  "materials": [
+    {
+      "key": "Material_e021ffe2d5a92264",
+      "name": "MPLUSRounded1c-Medium Atlas Material",
+      "shader": "Zjcs/Combat/WorldTextMeshPro",
+      "queue": -1,
+      "keywords": [],
+      "floats": [
+        {
+          "name": "_ColorMask",
+          "value": 15.0
+        },
+        {
+          "name": "_CullMode",
+          "value": 0.0
+        },
+        {
+          "name": "_FaceDilate",
+          "value": 0.0
+        },
+        {
+          "name": "_GlowInner",
+          "value": 0.05000000074505806
+        },
+        {
+          "name": "_GlowOffset",
+          "value": 0.0
+        },
+        {
+          "name": "_GlowOuter",
+          "value": 0.05000000074505806
+        },
+        {
+          "name": "_GlowPower",
+          "value": 0.75
+        },
+        {
+          "name": "_GradientScale",
+          "value": 5.0
+        },
+        {
+          "name": "_MaskSoftnessX",
+          "value": 0.0
+        },
+        {
+          "name": "_MaskSoftnessY",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineSoftness",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineWidth",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineWidth2",
+          "value": 0.0
+        },
+        {
+          "name": "_PerspectiveFilter",
+          "value": 0.875
+        },
+        {
+          "name": "_ScaleRatioA",
+          "value": 0.800000011920929
+        },
+        {
+          "name": "_ScaleRatioB",
+          "value": 0.5600000023841858
+        },
+        {
+          "name": "_ScaleRatioC",
+          "value": 0.5600000023841858
+        },
+        {
+          "name": "_ScaleX",
+          "value": 1.0
+        },
+        {
+          "name": "_ScaleY",
+          "value": 1.0
+        },
+        {
+          "name": "_ShaderFlags",
+          "value": 0.0
+        },
+        {
+          "name": "_Sharpness",
+          "value": 0.0
+        },
+        {
+          "name": "_SrcAlphaMode",
+          "value": 1.0
+        },
+        {
+          "name": "_Stencil",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilComp",
+          "value": 8.0
+        },
+        {
+          "name": "_StencilOp",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilReadMask",
+          "value": 255.0
+        },
+        {
+          "name": "_StencilWriteMask",
+          "value": 255.0
+        },
+        {
+          "name": "_TextureHeight",
+          "value": 1024.0
+        },
+        {
+          "name": "_TextureWidth",
+          "value": 1024.0
+        },
+        {
+          "name": "_UnderlayDilate",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlayOffsetX",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlayOffsetY",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlaySoftness",
+          "value": 0.0
+        },
+        {
+          "name": "_VertexOffsetX",
+          "value": 0.0
+        },
+        {
+          "name": "_VertexOffsetY",
+          "value": 0.0
+        },
+        {
+          "name": "_WeightBold",
+          "value": 1.2000000476837158
+        },
+        {
+          "name": "_WeightNormal",
+          "value": 0.5
+        }
+      ],
+      "colors": [
+        {
+          "name": "_ClipRect",
+          "rgba": [
+            -32767.0,
+            -32767.0,
+            32767.0,
+            32767.0
+          ]
+        },
+        {
+          "name": "_FaceColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_GlowColor",
+          "rgba": [
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "name": "_OutlineColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_OutlineColor2",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_UnderlayColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "name": "_MainTex",
+          "texture": "Texture_6295b4a24c869d3c",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  ]
+}

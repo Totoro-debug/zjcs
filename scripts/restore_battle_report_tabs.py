@@ -63,6 +63,8 @@ def build(source_root, ugui, netstandard):
     tmp.generator.load_dll((netstandard.parents[3] / 'MonoBleedingEdge/lib/mono/4.5/mscorlib.dll').read_bytes())
     prior_path = ROOT / RECEIPT
     prior = json.loads(prior_path.read_bytes()) if prior_path.exists() else None
+    graphics_path = ROOT / 'assets/reference/battle-hud/report-graphics-source-manifest.json'
+    graphics = json.loads(graphics_path.read_bytes()) if graphics_path.exists() else None
     baseline = json.loads((ROOT / 'assets/reference/battle-hud/report-panels-source-manifest.json').read_bytes())
     by_name = {Path(row['path']).name: row for row in baseline['runtime_prefabs']}
     guids = {name: metadata(ROOT / SCRIPT_PATH / ('World' + name + '.cs')) for name in TAB_CLASSES}
@@ -78,7 +80,9 @@ def build(source_root, ugui, netstandard):
         target = ROOT / record['path']
         raw = target.read_bytes()
         expected = next((r['sha256'] for r in prior['outputs'] if r['path'] == record['path']), None) if prior else None
-        if digest(raw) not in {record['sha256'], expected} and digest(raw.replace(b'\r\n', b'\n')) not in {record['sha256'], expected}:
+        graphic_output = next((r['sha256'] for r in graphics['outputs'] if r['path'] == record['path']), None) if graphics else None
+        allowed = {record['sha256'], expected, graphic_output}
+        if digest(raw) not in allowed and digest(raw.replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Changed runtime report prefab: ' + str(target))
         # Always rebuild from the unmodified native export, with the existing UGUI/TMP adaptation.
         export = source_root / '.tools/assetripper-1.3.14/temp/battle-report-ui-ripper/ExportedProject/Assets' / record['source']
@@ -209,6 +213,13 @@ if __name__ == '__main__':
     parser.add_argument('--source-root', type=Path, default=ROOT)
     parser.add_argument('--ugui', type=Path, default=ROOT / 'unity/Library/ScriptAssemblies/UnityEngine.UI.dll')
     parser.add_argument('--netstandard', type=Path, default=Path('D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll'))
+    parser.add_argument('--refresh-runtime', action='store_true', help='Refresh code hashes without rebuilding the earlier prefab phase.')
     args = parser.parse_args()
-    result = build(args.source_root, args.ugui, args.netstandard)
+    if args.refresh_runtime:
+        result = json.loads((ROOT / RECEIPT).read_bytes())
+        result['runtime'] = {path: digest((ROOT / path).read_bytes()) for path in result['runtime']}
+        result['generator_sha256'] = digest(Path(__file__).read_bytes())
+        write(ROOT / RECEIPT, (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode())
+    else:
+        result = build(args.source_root, args.ugui, args.netstandard)
     print(json.dumps({'prefabs': len(result['outputs']), 'components': len(result['bindings'])}))

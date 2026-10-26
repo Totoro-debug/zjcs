@@ -311,7 +311,9 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 世界飘字位置按两版 `CharacterDamageUI.UpdateAttach／UpdateOffset` 及 `CharacterDamageUIManager.UpdateDamageUIOffset` 接线：创建时读取实际实体视图的位置并加原 `mSceneOffset`，加入同目标堆叠时重新读取实体位置、按原高度和间距推高旧提示；保留只在这些调用点更新锚点的原行为。延迟数字在实际创建时读取移动插值位置，世界提示根节点的本地Z归零。`DamageFloatSize` 保留101执行顺序、镜头引用／尺寸变化检测和 `orthographicSize／mSize` 缩放，暂停时仍由 `LateUpdate` 更新尺寸，动画寿命继续沿战斗时钟。没有实体视图的既有格网回退，以及实体销毁、命中调度和完整镜头控制仍未据此补全。Play Mode 的实际附着视图样本覆盖移动中创建、旧提示保持位置、新提示入队后重排、延迟数字按插值位置出现、本地Z与暂停时尺寸更新；移动进13220技能范围并重放的实际战斗样本，经 `StepCompleted` 只读观察确认提示创建位置等于当时的玩家实体位置，实际相机中文字贡献740像素。模拟就绪、入口收展、两种窗口宽度、暂停恢复与结算返回通过，已查看战斗、缩放及返回画面；静态检查通过（41,036个GUID）。Unity导入／编译和隔离集成树的 `Zjcs.Editor.ProjectTools.Validate` 通过，六类世界提示及既有数字、元素反馈回归仍通过。
 
-战报资源先恢复分页控件及其依赖：从固定854 APK／同哈希官方缓存读取7份原 prefab 中536个组件，迁移 `TabItem／TabGroup／TabAnimatorTransition` 的31个组件字段及客户端行为，接回原分组顺序、默认页、互斥、重复点击抑制和原 Animator Controller；标准布局、裁切、Graphic 输入标志及2处 SafeArea 复用原字段和已有 Windows 适配。PPtr 使用 Unity 行内序列化，保留原层级、组件顺序、Transform 和动画依赖。转换与原对象／代码哈希见[分页来源](../../assets/reference/battle-hud/report-tabs-source-manifest.json)，入口为 `restore_battle_report_tabs.py`、`WorldTab*` 和 `OfficialBattleReportTabAcceptance`。Play Mode 在原个人／全员面板及独立技能页的5个分页组完成16次模拟指针点击、默认页、选中互斥、回调顺序、重复点击、提交输入及原切换动画检查；普通战斗的就绪、入口收展、缩放和结算返回回归通过。已查看运行画面：旧导出还遗漏 Image／TMP 的原图、字体和部分自定义组件字段，画面仍有空白块；这些原视觉、分页对应的数据行和生产入口均尚未接通，不能据控件检查称战报可用或视觉还原。隔离集成树的静态检查（26,397个GUID）、Unity导入／编译及完整 `Zjcs.Editor.ProjectTools.Validate` 通过。
+战报已从固定854 APK／同哈希官方缓存恢复7份原 prefab 的536个组件字段基础，迁移 `TabItem／TabGroup／TabAnimatorTransition` 的31个分页组件行为，保留原分组、默认页、互斥、重复点击抑制、回调顺序、层级、Transform、标准布局、裁切、SafeArea 和 Animator Controller，见[分页来源](../../assets/reference/battle-hud/report-tabs-source-manifest.json)。在此基础上恢复279个 Image／MirrorImage／TMP 的完整图形字段，接回36个原 Sprite、原图集、颜色、九宫格／填充参数和两套本地字体；复用同原始对象哈希的 FZY4K 字体／材质，按官方配置的长度／MD5提取 MPLUS 原字体并恢复其动态 atlas。原生 Sprite 的顶点、三角形和图集位置逐项核对；修正旧导出缩掉的完整尺寸、轴心和裁剪偏移，保留原留白。APK 内置 Knob 直接从完整原生 typetree 序列化。图集经官方压缩纹理解码，校验两种解码器最大单通道差1，最终 PNG 使用固定 UnityPy 解码结果；原生资产引用使用 Unity 的 type 2，图片／脚本导入引用用 type 3。转换、原对象及输入输出哈希见[图形来源](../../assets/reference/battle-hud/report-graphics-source-manifest.json)，入口为 `restore_battle_report_graphics.py`、`OfficialBattleReportGraphicsAssetTools` 和 `OfficialBattleReportGraphicsAcceptance`。图形来源清单覆盖更新后的运行 prefab 哈希；分页清单保留前一转换阶段的输出。
+
+Play Mode 已验证279个实际图形引用／颜色／填充字段、36个原生 Sprite 的完整尺寸／轴心／边框／顶点、两套本地动态字体和原 shader；原个人／全员面板及独立技能页的5个分页组完成16次模拟指针点击、默认页、互斥、回调顺序、重复点击、提交输入及切换动画检查。普通战斗的就绪、入口收展、缩放、结算返回回归通过，已实际查看个人面板和技能页运行画面，原图及中文可见。静态检查、Unity 导入／编译和 `ProjectTools.Validate` 通过。表格自定义布局／控件、数据行、回合参数替换和正式战后入口仍未接通，画面仍存在表头裁切与空数据区域，不能称战报完整可用或视觉完全还原。
 
 ## 自定义实现
 
@@ -319,7 +321,7 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 以下区分“缺少服务端执行代码后的本地补足”和“离线运行所需的技术适配”。它们已在现有执行器中使用，但不能据官方配置或测试通过称为官方完整规则；新增差异仍须取得证据或用户确认。
 
-战后技能统计的两项平均数已取得用户确认，尚待接入：逐技能累计伤害命中数为 H、释放次数为 C，各次释放命中的不同目标数之和为 T；“平均命中”取 H/C，“平均段数”取 H/T。例如10次释放，每次2目标、每目标3段，H=60、T=20，分别为6和3；18次命中／10次释放的1.8按用户示例显示取整为2。客户端只消费服务器的 `AvgDamageCount／AvgDamageCountPerTarget`，单场计算代码缺失；这些公式属于确认后的本地规则，未写成已经迁移的官方算法。
+战后技能统计的两项平均数已取得用户确认，尚待接入：逐技能累计伤害命中数为 H、释放次数为 C，各次释放命中的不同目标数之和为 T；“平均命中”取 H/C，“平均段数”取 H/T。例如10次释放，每次2目标、每目标3段，H=60、T=20，分别为6和3；18次命中／10次释放的1.8按用户示例显示取整为2。客户端只消费服务器的 `AvgDamageCount／AvgDamageCountPerTarget`，单场计算代码缺失；这些公式属于确认后的本地规则，未写成已经迁移的官方算法。 用户进一步确认：闪避不命中且不造成伤害；免疫仍算命中但伤害为0；完全由护盾吸收仍算命中，伤害扣减护盾。平均数的命中次数及当次目标去重按此口径接入，仍未完成实现。
 
 ### 因服务端代码缺失采用的本地规则
 
