@@ -425,6 +425,24 @@ def build():
         sprites[sprite["file"]] = sprite
         minimap_marks.append({"name": row["Name"], "sprite": sprite["file"], "description": row["Description"],
                               "showOnEntry": row["ShowOnFilterEntry"]})
+    world_table = apk.asset("config_luban_map", "/map.g.bytes")
+    world_rows = Constructors().table(world_table.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapInfo")
+    world_row = next(row for row in world_rows if row["ClassId"] == 11)
+    minimap_settings = apk.asset("scriptableconfig_modules_mapcommon", "/MiniMapSettings.asset")
+    settings = schemas.read(minimap_settings)
+    tab_sprites = {obj.read().m_Name: obj for obj in apk.objects("defaultpackage_assets_image_ui_minimap.bundle")
+                   if obj.type.name == "Sprite"}
+    minimap_tabs = []
+    # Preserve MapInfo parser order and the official shared tab group. Only maps
+    # with a migrated local asset provider can be browsed in this release.
+    for row in world_rows:
+        if row["ClassId"] not in (10, 11) or row["MiniMapSwitchTabGroup"] != world_row["MiniMapSwitchTabGroup"]:
+            continue
+        sprite = support_exporter.add_sprite(tab_sprites[row["MiniMapIcon"].rsplit("/", 1)[-1]])
+        sprites[sprite["file"]] = sprite
+        minimap_tabs.append({"mapClassId": row["ClassId"], "group": row["MiniMapSwitchTabGroup"],
+            "sprite": sprite["file"], "settings": next(setting for setting in settings["Settings"]
+                if setting["MinimapConfigId"] == row["MinimapConfigId"])})
     for icon in item_icons:
         sprites.setdefault(icon["sprite"], icon.pop("metadata"))
         sprites.setdefault(icon["qualitySprite"], icon.pop("qualityMetadata"))
@@ -505,7 +523,7 @@ def build():
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28500, 28501, 28502, 28503, 28504, 28505,
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
     keys.extend("region_11_" + str(i) for i in range(77))
-    keys.extend(("map_pos_info", "Mainland_11"))
+    keys.extend(("map_pos_info", "Mainland_11", "Mainland_10"))
     keys.extend(row["description"] for row in minimap_marks)
     keys.extend("task_" + str(i) + suffix for i in range(1000, 1161, 5) for suffix in ("_title", "_progress", "_desc"))
     keys.extend(("confirmation", "confirm", "cancel", "GachaPanel.ReplaceRaffleTicket",
@@ -551,11 +569,6 @@ def build():
     colors_object = apk.asset("scriptableconfig_modules_systemsetting", "/GlobalColors.asset")
     colors = schemas.read(colors_object)
     common, common_sources = extract_common(apk, OUTPUT)
-    minimap_settings = apk.asset("scriptableconfig_modules_mapcommon", "/MiniMapSettings.asset")
-    settings = schemas.read(minimap_settings)
-    world_table = apk.asset("config_luban_map", "/map.g.bytes")
-    world_row = next(row for row in Constructors().table(
-        world_table.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapInfo") if row["ClassId"] == 11)
     minimap_setting = next(row for row in settings["Settings"] if row["MinimapConfigId"] == world_row["MinimapConfigId"])
     portrait_settings = apk.asset("scriptableconfig_modules_playerportrait", "/PlayerPortraitSettings.asset")
     head_settings = next(row for row in schemas.read(portrait_settings)["mPhotographyParameters"] if row["MyTypes"] == [0])
@@ -575,6 +588,7 @@ def build():
                "recommendCombatRatingIndex": game_settings["RecommendCombatRatingIndex"],
                "suppressUnlockRank": game_settings["SuppressUnlockRank"], "combatRatingColors": rating_colors,
                "minimapSettings": minimap_setting,
+               "minimapTabs": minimap_tabs,
                "minimapCharacter": marker_nodes, "minimapMarks": minimap_marks,
                "minimapMarkPrefabs": mark_prefabs, "minimapMarkBindings": mark_bindings,
                "headPortraitSettings": head_settings,

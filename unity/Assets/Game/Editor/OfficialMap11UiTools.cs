@@ -105,6 +105,8 @@ namespace Zjcs.Editor
             items.quality = sprites[data.itemQualitySprite];
             items.miniMapMarkNames = data.minimapMarks.Select(value => value.name).ToArray();
             items.miniMapMarkSprites = data.minimapMarks.Select(value => sprites[value.sprite]).ToArray();
+            items.miniMapTabIds = data.minimapTabs.Select(value => value.mapClassId).ToArray();
+            items.miniMapTabSprites = data.minimapTabs.Select(value => sprites[value.sprite]).ToArray();
             EditorUtility.SetDirty(items);
             GameObject host = new GameObject("Map11PrefabRestoration", typeof(RectTransform));
             try

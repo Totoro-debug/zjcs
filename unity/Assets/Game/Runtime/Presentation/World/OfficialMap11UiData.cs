@@ -19,6 +19,7 @@ namespace Zjcs.Presentation.World
         public OfficialMap11GuidPrefab[] guidPrefabs;
         public string itemQualitySprite;
         public OfficialMap11MiniMapSettings minimapSettings;
+        public OfficialMap11MiniMapTab[] minimapTabs;
         public OfficialMap11PortraitSettings headPortraitSettings;
         public OfficialMap11TopBarItem[] topBarItems;
         public OfficialMap11SceneNode[] minimapCharacter;
@@ -72,6 +73,12 @@ namespace Zjcs.Presentation.World
         public OfficialMap11MiniMapCameraSetting CameraControllerSetting;
     }
     [Serializable] public sealed class OfficialMap11MiniMapCameraSetting { public float MinCameraOrthographicSize, MaxCameraOrthographicSize; }
+    [Serializable] public sealed class OfficialMap11MiniMapTab
+    {
+        public int mapClassId, group;
+        public string sprite;
+        public OfficialMap11MiniMapSettings settings;
+    }
 
     [Serializable] public sealed class OfficialMap11ItemIcon { public int itemId; public string sprite, qualitySprite; }
     [Serializable] public sealed class OfficialMap11GuidPrefab { public string guid, key; }

@@ -51,6 +51,8 @@ namespace Zjcs.Editor
             Invoke("ToggleExpandedMinimap");
             yield return new WaitForSecondsRealtime(.5f);
             Require(Field<GameObject>("fullMiniMapPanel") != null, "Official full minimap prefab opens");
+            var tabs = Field<IDictionary>("nativeMiniMapTabs");
+            Require(tabs.Count == 1 && tabs.Contains(11) && !tabs.Contains(10), "Unvisited maps have no native tab");
             yield return CaptureStatueFrame("ui-minimap-full");
             Invoke("SetMiniMapFilterExpanded", true);
             yield return null;
@@ -69,6 +71,33 @@ namespace Zjcs.Editor
             filterItems = Field<IDictionary>("miniMapFilterItems");
             ((GameObject)filterItems["MiniMapGoddess"]).GetComponentInChildren<Button>(true).onClick.Invoke();
             Invoke("CloseNativeFullMiniMap");
+            var progress = Field<Zjcs.Offline.Progression.OfflineMainlineProgressSession>("progressionSave");
+            progress.InitializeMap(10, new[] { 0, 1, 2, 3, 4 }); // Explicit visited-map fixture.
+            int mapCount = progress.Save.World.Maps.Count;
+            Vector3 avatarPosition = Field<GameObject>("avatar").transform.position;
+            Invoke("ToggleExpandedMinimap");
+            yield return null;
+            tabs = Field<IDictionary>("nativeMiniMapTabs");
+            Require(tabs.Count == 2 && tabs.Contains(10), "Visited maps in the official group acquire native tabs");
+            ((GameObject)tabs[10]).GetComponent<Button>().onClick.Invoke();
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(Field<int>("fullMiniMapClassId") == 10 && Field<GameObject>("browsedMiniMapGeometry").activeInHierarchy
+                && !Field<GameObject>("currentMiniMapGeometry").activeSelf && !Field<GameObject>("nativeMiniMapCharacter").activeSelf,
+                "Native tab switches geometry and hides current-map character");
+            Require(Field<GameObject>("avatar").transform.position == avatarPosition && progress.Save.World.Maps.Count == mapCount,
+                "Browsing never teleports the character or adds map records");
+            Capture("ui-minimap-map10");
+            yield return new WaitForEndOfFrame();
+            yield return null;
+            ((GameObject)tabs[11]).GetComponent<Button>().onClick.Invoke();
+            yield return null;
+            Require(Field<int>("fullMiniMapClassId") == 11 && Field<GameObject>("currentMiniMapGeometry").activeSelf,
+                "Native tab returns to the current map");
+            ((GameObject)tabs[10]).GetComponent<Button>().onClick.Invoke();
+            Invoke("CloseNativeFullMiniMap");
+            yield return null;
+            Require(Field<GameObject>("browsedMiniMapGeometry") == null && Field<GameObject>("currentMiniMapGeometry").activeSelf
+                && Field<GameObject>("nativeMiniMapCharacter").activeSelf, "Closing another map restores the circular map scene");
             Invoke("OpenNativeWorldFunctions");
             yield return null;
             yield return CaptureStatueFrame("ui-functions");

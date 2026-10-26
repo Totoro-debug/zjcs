@@ -131185,6 +131185,56 @@
     "MinimapConfigId": 2,
     "ShowMapSwitch": 1
   },
+  "minimapTabs": [
+    {
+      "group": 1,
+      "mapClassId": 10,
+      "settings": {
+        "BoundExtendSize": 4.0,
+        "CameraControllerSetting": {
+          "MaxCameraOrthographicSize": 40.0,
+          "MinCameraOrthographicSize": 20.0
+        },
+        "DescSetting": {
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          },
+          "ZoomThreshold": 0.5
+        },
+        "MarkZoomThreshold": 0.10000000149011612,
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "MinimapConfigDesc": "初始岛级地图",
+        "MinimapConfigId": 1,
+        "ShowMapSwitch": 1
+      },
+      "sprite": "res://unity/Assets/Official/World/Map/11/UI/Sprites/ImgMapSwitch_0-a49e58daf0.png"
+    },
+    {
+      "group": 1,
+      "mapClassId": 11,
+      "settings": {
+        "BoundExtendSize": 4.0,
+        "CameraControllerSetting": {
+          "MaxCameraOrthographicSize": 60.0,
+          "MinCameraOrthographicSize": 20.0
+        },
+        "DescSetting": {
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          },
+          "ZoomThreshold": 0.30000001192092896
+        },
+        "MarkZoomThreshold": 0.10000000149011612,
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "MinimapConfigDesc": "标准国度地图",
+        "MinimapConfigId": 2,
+        "ShowMapSwitch": 1
+      },
+      "sprite": "res://unity/Assets/Official/World/Map/11/UI/Sprites/ImgMapSwitch_1-f2ee1eb357.png"
+    }
+  ],
   "panels": [
     {
       "key": "GoddessTouchDialog",
@@ -355913,6 +355963,25 @@
         0.0,
         0.0
       ],
+      "file": "ImgMapSwitch_0-a49e58daf0.png",
+      "height": 124,
+      "pivot": [
+        62.0,
+        62.0
+      ],
+      "pixelsPerUnit": 100.0,
+      "sha256": "a49e58daf0daf584c556772d003bdf55226e5003fb212ac84c916345c05215ef",
+      "unityAssetPath": "Assets/Official/World/Map/11/UI/Sprites/ImgMapSwitch_0-a49e58daf0.png",
+      "uri": "res://unity/Assets/Official/World/Map/11/UI/Sprites/ImgMapSwitch_0-a49e58daf0.png",
+      "width": 124
+    },
+    {
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "file": "ImgMapSwitch_1-f2ee1eb357.png",
       "height": 124,
       "pivot": [
@@ -357559,6 +357628,10 @@
     {
       "key": "ItemInfoDialog.Limit.QuickBuyConditionNotMet",
       "value": "商店未解锁，无法购买"
+    },
+    {
+      "key": "Mainland_10",
+      "value": "初始岛"
     },
     {
       "key": "Mainland_11",

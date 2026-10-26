@@ -50,7 +50,7 @@ namespace Zjcs.Presentation.World
                     nativeMiniMapMarks.Add(entity.PlacementId, mark);
                 }
                 bool selected = !miniMapFilters.TryGetValue(binding.key, out bool filter) || filter;
-                mark.Root.SetActive(active && selected);
+                mark.Root.SetActive(active && selected && (fullMiniMapPanel == null || fullMiniMapClassId == mapClassId));
                 foreach (var support in mark.Supports)
                 {
                     if (support.type == "MiniMapActiveSwitcherSupport") ApplyMiniMapMarkState(mark, support.fields, completed ? 1 : 0);
@@ -90,11 +90,11 @@ namespace Zjcs.Presentation.World
                     Vector3 scale = mark.OriginalScales[index];
                     if (fullMiniMapCamera != null)
                     {
-                        var camera = miniMapUiData.minimapSettings.CameraControllerSetting;
+                        var camera = FullMiniMapSettings.CameraControllerSetting;
                         float rate = (fullMiniMapCamera.orthographicSize - camera.MinCameraOrthographicSize)
                             / (camera.MaxCameraOrthographicSize - camera.MinCameraOrthographicSize);
-                        float threshold = miniMapUiData.minimapSettings.MarkZoomThreshold > 0
-                            ? miniMapUiData.minimapSettings.MarkZoomThreshold : support.fields.mDefaultZoomThreshold;
+                        float threshold = FullMiniMapSettings.MarkZoomThreshold > 0
+                            ? FullMiniMapSettings.MarkZoomThreshold : support.fields.mDefaultZoomThreshold;
                         if (threshold > 0 && rate > 0 && rate <= 1)
                         {
                             float size = Mathf.Lerp(camera.MinCameraOrthographicSize, camera.MaxCameraOrthographicSize, threshold);

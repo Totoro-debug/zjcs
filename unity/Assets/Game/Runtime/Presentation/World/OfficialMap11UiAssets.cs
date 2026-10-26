@@ -11,6 +11,15 @@ namespace Zjcs.Presentation.World
         public Sprite quality;
         public string[] miniMapMarkNames;
         public Sprite[] miniMapMarkSprites;
+        public int[] miniMapTabIds;
+        public Sprite[] miniMapTabSprites;
+        public Sprite MiniMapTab(int mapClassId)
+        {
+            int index = Array.IndexOf(miniMapTabIds, mapClassId);
+            if (index < 0 || miniMapTabSprites[index] == null)
+                throw new InvalidOperationException("Unbound official minimap tab: " + mapClassId);
+            return miniMapTabSprites[index];
+        }
         public Sprite MiniMapMark(string name)
         {
             int index = Array.IndexOf(miniMapMarkNames, name);

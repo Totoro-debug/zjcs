@@ -101,18 +101,12 @@ namespace Zjcs.Presentation.World
             fullMiniMapInput = Find(controller.myInput).gameObject.AddComponent<Zjcs.Official.WorldUI.WorldMiniMapTouchInput>();
             fullMiniMapInput.Data = input.dragSettings;
             fullMiniMapInput.Data.Target = fullMiniMapCamera.transform;
-            var renderers = minimapCamera.transform.parent.GetComponentsInChildren<Renderer>().Where(value =>
-                !value.transform.IsChildOf(nativeMiniMapCharacter.transform)).ToArray();
-            Bounds bounds = renderers[0].bounds;
-            foreach (var renderer in renderers.Skip(1)) bounds.Encapsulate(renderer.bounds);
-            bounds.Expand(miniMapUiData.minimapSettings.BoundExtendSize * 2f);
-            fullMiniMapInput.Data.BorderBounds = bounds;
             Slider slider = Find(fields.Slider).GetComponent<Slider>();
             slider.interactable = true;
-            float minimum = miniMapUiData.minimapSettings.CameraControllerSetting.MinCameraOrthographicSize;
-            float maximum = miniMapUiData.minimapSettings.CameraControllerSetting.MaxCameraOrthographicSize;
             void Zoom(float value)
             {
+                float minimum = FullMiniMapSettings.CameraControllerSetting.MinCameraOrthographicSize;
+                float maximum = FullMiniMapSettings.CameraControllerSetting.MaxCameraOrthographicSize;
                 fullMiniMapCamera.orthographicSize = Mathf.Clamp(value, minimum, maximum);
                 slider.SetValueWithoutNotify((fullMiniMapCamera.orthographicSize - minimum) / (maximum - minimum));
                 fullMiniMapInput.SetScreenOffsetScale(fullMiniMapCamera);
@@ -121,22 +115,13 @@ namespace Zjcs.Presentation.World
                         fullMiniMapCamera.orthographicSize * 2, 0)));
                 RefreshNativeMiniMapMarkScale();
             }
-            slider.onValueChanged.AddListener(value => Zoom(Mathf.Lerp(minimum, maximum, value)));
+            fullMiniMapZoom = Zoom;
+            slider.onValueChanged.AddListener(value => Zoom(Mathf.Lerp(
+                FullMiniMapSettings.CameraControllerSetting.MinCameraOrthographicSize,
+                FullMiniMapSettings.CameraControllerSetting.MaxCameraOrthographicSize, value)));
             fullMiniMapInput.Zoom = factor => Zoom(fullMiniMapCamera.orthographicSize + factor * controller.ScaleFactor);
-            Zoom((minimum + maximum) / 2);
-            // MiniMapSwitchTabItem.Init / OnMiniMapChange. Map11's tab uses the
-            // original ImgMapSwitch_1 sprite already referenced by this prefab.
-            var tab = miniMapUiData.components.Single(value => value.panel == "MiniMapFullScreenPanel"
-                && value.type == "MiniMapSwitchTabItem");
-            Find(tab.fields.MapNameText).GetComponent<TMP_Text>().text = miniMapUiData.texts.Single(value => value.key == "Mainland_11").value;
-            foreach (var reference in tab.fields.references.RefIds)
-            {
-                var rows = reference.data.mStateGameObjectData?.GoConfig;
-                if (rows == null) continue;
-                var active = rows.Where(value => value.State.mValue == 1).SelectMany(value => value.GameObjects).ToArray();
-                foreach (string path in rows.SelectMany(value => value.GameObjects).Distinct())
-                    Find(path).gameObject.SetActive(active.Contains(path));
-            }
+            InitializeNativeMiniMapTabs();
+            SwitchNativeFullMiniMap(mapClassId);
             foreach (var reference in fields.references.RefIds)
             {
                 var rows = reference.data.mStateGameObjectData?.GoConfig;
@@ -158,6 +143,7 @@ namespace Zjcs.Presentation.World
             fullMiniMapPanel = null;
             fullMiniMapCamera = null;
             fullMiniMapInput = null;
+            RestoreCurrentNativeMiniMap();
             RefreshNativeMiniMapMarkScale();
             if (wasOpen) ui?.SetPanelActive("WorldCanvas", true);
         }
