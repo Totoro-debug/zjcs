@@ -1,0 +1,175 @@
+{
+  "format": 1,
+  "inputs": {
+    "battle_rules": {
+      "path": "assets/official/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803",
+      "source_manifest": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+      "source_manifest_sha256": "4794e1977e7ab4b0361743502601446d247384d7a6f1b2b338b8ffa62281a778"
+    },
+    "battle_scenes": {
+      "path": "assets/official/battle-stages.json",
+      "sha256": "457b48bdc5928abeb15a60e3310ff2503abdba5be8a664a51035241427775389",
+      "source_manifest": "assets/reference/official-map/battle-stages-source-manifest.json",
+      "source_manifest_sha256": "ef80c216825aac15a6977d573c4a9671b477b318a447aec46ec324d3b352fd7b"
+    },
+    "general_rules": {
+      "path": "assets/official/rules.json",
+      "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256",
+      "source_manifest": "assets/reference/official-city/source-manifest.json",
+      "source_manifest_sha256": "e80fab8a7c9754fe6429b186f55976e02c9c0f660ca0aba28e4b9490f48eb5bf"
+    },
+    "map12_definition": {
+      "path": "unity/Assets/Official/World/Map/12/map12.json",
+      "sha256": "920df541ee38423643d3f374fef56e4a6750a3fe15a93dacf3f6ecbbe31917b7",
+      "source_manifest": "unity/Assets/Official/World/Map/12/source-manifest.json",
+      "source_manifest_sha256": "1dabc00d2eb294ed4fa89a425c993e5f3f9aab5f3d99410999ca354a88169e98"
+    },
+    "map12_placements": {
+      "apk_entry": "assets/yoo/DefaultPackage/a730493e99b88886f8295cb90dd85e17.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+      "bundle_hash": "a730493e99b88886f8295cb90dd85e17",
+      "manifest": "854_156383",
+      "object": "Assets/Config/MapInfoWrap/mapinfowrap_12.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "6536184600444106648",
+      "payload_sha256": "7b2b5f8ddb98ae97e8d3dfb4746294423dc6fd7973bd6a117414c800f1cb8312",
+      "payload_size": 87771,
+      "raw_sha256": "10a055f85540878247223738773f44f0a282dc4a1d08dec795837a42a563fd5b",
+      "raw_size": 87796
+    },
+    "map12_stage_index": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "object": "Assets/Config/Luban/map_stage.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "5113261809570519870",
+      "payload_sha256": "19f88adb9e7a03234ce67e1752a8ebd7e2a86fbdff98c88b9516507786e11ced",
+      "payload_size": 253,
+      "raw_sha256": "f79800e950d460aae1dca4727d760ab8a81934c387d54f601790b30c2835ea6e",
+      "raw_size": 276
+    },
+    "monster_array_table": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "object": "Assets/Config/Luban/stage_monster_array.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "-7935355260723495236",
+      "payload_sha256": "d55afa7dc69899f769ec78e6050f4b3e575b6591f41cedaffc1068444aea3f96",
+      "payload_size": 68916,
+      "raw_sha256": "db7f73922dd2ee729dd8cebb566032c85594071e2743b111149128cf5bb6232b",
+      "raw_size": 68948
+    },
+    "official_formula_sources": {
+      "BattleFormulaHandler.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs",
+        "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+      },
+      "Formula.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/Formula.cs",
+        "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+      },
+      "LevelPropBinaryReader.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/LevelPropBinaryReader.cs",
+        "sha256": "36050a9a6c01fe4d255cf3966831036c22b67fcf4c232ada943fd002c69d752f"
+      },
+      "LevelPropParser.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/LevelPropParser.cs",
+        "sha256": "ff101b07975b5f195a9fb88a4e35a89a9ca84a19e0475c4db3416f841530abd8"
+      },
+      "PropType.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/PropType.cs",
+        "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+      },
+      "RolePropGroupInfo.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/RolePropGroupInfo.cs",
+        "sha256": "cabcee2a87ab7cf9b0ef8954c32192760e0009faa40d210b8badaf64ae24a455"
+      },
+      "SkillInfoParser.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/SkillInfoParser.cs",
+        "sha256": "0cce246f80ada0ddb672576926aff3a219b3850fa78f7a2e1783abbdd464609a"
+      },
+      "StageMonsterArrayInfoParser.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/StageMonsterArrayInfoParser.cs",
+        "sha256": "1b2ba7edac5a281bdf8fc08977d347d96c2b2e7a7aac4b9504340c8579ee99b7"
+      },
+      "TbSkillInfo.cs": {
+        "path": ".tools/source-packages/official-code/common-source/Common/TbSkillInfo.cs",
+        "sha256": "b2322998e0b8972434132a2d9f744e3a3a8f63c3ab244c1d982b8f47d75521f8"
+      }
+    },
+    "skill_rules": {
+      "path": "assets/official/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8",
+      "source_manifest": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+      "source_manifest_sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+    },
+    "skill_table": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "object": "Assets/Config/Luban/skill.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "1398458758611605706",
+      "payload_sha256": "92022550203bf6cbed636467419435a3c01fa950b4143f51f85c5fe4b30437ea",
+      "payload_size": 96388,
+      "raw_sha256": "27f041751daea8994dbbf992b7b9d048d8ca2de2fe472c326a8891af60e72457",
+      "raw_size": 96404
+    },
+    "stage_monster_array_parser": {
+      "path": ".tools/source-packages/official-code/common-source/Common/StageMonsterArrayInfoParser.cs",
+      "sha256": "1b2ba7edac5a281bdf8fc08977d347d96c2b2e7a7aac4b9504340c8579ee99b7"
+    },
+    "stage_table": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "object": "Assets/Config/Luban/stage.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "-1310591482892603796",
+      "payload_sha256": "d56c2ea8bec33594060ddd18f16e6095b3ee5b33f0a3b0f17e6480befe207667",
+      "payload_size": 884519,
+      "raw_sha256": "36da81d0065c3a0ce54bb2031fb8581011fa1abaeb42c0745c67e8617fbb9f34",
+      "raw_size": 884536
+    },
+    "witch_spawn_group": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "object": "Assets/Config/Luban/Map/map_entity_group.g.bytes",
+      "origin": "apk_zip",
+      "path_id": "434733637500167800",
+      "payload_sha256": "b853c2182e5264d7897f94ad66d2d105358108d1724cb7fdc9dfd3c9537a49d3",
+      "payload_size": 27425,
+      "raw_sha256": "a86d0ee6ecfa0c0b9b7c7da8b45fde2d606ef810164d8425236f619910924d33",
+      "raw_size": 27456
+    }
+  },
+  "manifest": "854_156383",
+  "mapClassId": 12,
+  "operation": "Read original Luban stage, formation and skill tables; preserve battle grids; expand official GroupId formations and calculate monster properties using CalcMonsterBattleProps.",
+  "output": {
+    "path": "Assets/Official/World/Map/12/map12-battles.json",
+    "sha256": "07b5b481782651fedeea0e5d862728c9b254cb5f7c89187c91d233477668e33e",
+    "size": 6350168
+  }
+}

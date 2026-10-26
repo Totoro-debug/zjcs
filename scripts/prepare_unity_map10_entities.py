@@ -352,8 +352,8 @@ def spine_payload(map_id: int, model_path: str, entity_class_id: int, index: int
 
 
 def build(output: Path | None = None, map_id: int = 10) -> dict:
-    if map_id not in (10, 11):
-        raise ValueError("Only Maps 10 and 11 have pinned entity source manifests")
+    if map_id not in (10, 11, 12):
+        raise ValueError("Only Maps 10, 11 and 12 have pinned entity source manifests")
     map_root = ROOT / "unity/Assets/Official/World/Map" / str(map_id)
     output = Path(output or map_root).resolve()
     map_data_path = map_root / f"map{map_id}.json"
@@ -468,7 +468,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
     }] if map_id == 10 else []
     exploration_path = ROOT / 'unity/Assets/Game/Resources/World/Mainline/exploration.json'
     exploration_placements = [dict(Id=0, EntityId=row['entityClassId'], StoryOnly=True)
-        for row in json.loads(exploration_path.read_text(encoding='utf-8'))['entities']] if map_id == 11 else []
+        for row in json.loads(exploration_path.read_text(encoding='utf-8'))['entities']] if map_id in (11, 12) else []
     for placement in sorted(placements["Entities"] + story_placements + exploration_placements, key=lambda row: int(row["Id"])):
         entity_class_id = int(placement["EntityId"])
         model_path = placement.get("StoryModelPath") or resolve_display_path(
@@ -575,7 +575,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
                 if not isinstance(rules, list):
                     raise ValueError("Map10 entity interaction rules are invalid: " + model_path + ":" + str(interaction_state))
             state_bindings = []
-            if map_id == 11:
+            if map_id in (11, 12):
                 for state, variant in sorted((model.get("states") or {}).items(), key=lambda pair: int(pair[0])):
                     state_spines = variant.get("skeleton_instances") or []
                     if state_spines and state_spines != skeleton_instances:
@@ -651,7 +651,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
             },
             "map_model_source_manifest": source_digest(MODEL_SOURCE_MANIFEST),
             "map_extra_model_source_manifest": source_digest(EXTRA_MODEL_SOURCE_MANIFEST),
-            **({"world_exploration": source_digest(exploration_path)} if map_id == 11 else {}),
+            **({"world_exploration": source_digest(exploration_path)} if map_id in (11, 12) else {}),
             "map_spine_source_manifest": source_digest(SPINE_SOURCE_MANIFEST),
             "map_story_actor_source_manifest": source_digest(STORY_ACTOR_SOURCE_MANIFEST),
             **({"battle_data": source_digest(BATTLE_DATA),
@@ -724,7 +724,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--map-id", type=int, choices=(10, 11), default=10)
+    parser.add_argument("--map-id", type=int, choices=(10, 11, 12), default=10)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     output = (args.output or ROOT / "unity/Assets/Official/World/Map" / str(args.map_id)).resolve()

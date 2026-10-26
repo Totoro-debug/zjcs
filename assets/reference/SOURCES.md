@@ -1724,3 +1724,6 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 存档选择界面：`scripts/prepare_official_save_selection.py` 复用启动页提取工具，从固定854官方 APK 恢复 `PlanesListPanel`、列表内嵌 `PlanesRoleItem` 与原启动模糊遮罩，共131个对象、37张 Sprite、16个原动画片段；保留原层级、锚点、TMP字体／描边、Sprite几何、RawImage UV、页签 Animator 与窗口显示曲线。角色头像复用原外观网格、摄影参数及待机姿势；本地槽位替代在线位面提供者。APK、bundle／CAB／对象、官方代码及载荷哈希见 [source-manifest.json](save-selection/source-manifest.json)，Unity原生转换、资源目录和显式绑定哈希见 [native-source-manifest.json](save-selection/native-source-manifest.json)。提取均来自APK及严格同哈希缓存，没有混入其他版本；新增素材未生成完整备份快照。实际验证范围见[设置、拍照与本地存档](../../docs/features/settings-and-save.md)。
 
 主线地图七类公共模块的原实现 Git 来源、官方客户端代码、模块输出及探寻页签原动画绑定见 [mainline-modules-source-manifest.json](official-map/mainline-modules-source-manifest.json)。沿用854固定版与既有官方载荷；仅拆分状态／生命周期和恢复四份原页签动画的名称及 prefab 引用，没有新增绘制素材。
+
+
+山之国 map-12：`prepare_unity_map12.py` 按 `871_156598` 解码当前程序集、99区／2591实体／原始剧情／模板与92张配置，复用旧转换前严格比对对应记录及有效剧情端口。129个实际美术 bundle 校验长度、MD5和SHA-256，变化的 shader bundle 中7个引用对象核对原始对象SHA-256；没有混用不一致版本。新增26725块原 Ground Tilemap／56批次及原实体、剧情、战斗、小地图载荷，显式绑定原生地图目录与 prefab。来源见 [当前解码清单](official-map/map12-source-manifest.json)、[转换清单](official-map/map12-unity-source-manifest.json)、[剧情载荷](official-map/map12-runtime-source-manifest.json)和[战斗载荷](official-map/map12-battles-source-manifest.json)。仅为来源与载荷接入，完整玩法及 Windows 交付仍见[所属页](../../docs/maps/map-12.md)缺项；新增素材尚未生成完整备份快照。

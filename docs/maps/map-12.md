@@ -12,15 +12,23 @@
 
 ## 完整还原部分
 
-尚无本图在 Unity 完整运行并验收的结论。共享地图 DTO、导航／进度规则以及保留的转换数据不能计作本图已还原。
+已按 `official-source.json` 选择的 `871_156598` 程序集解码山之国：280×210 导航、99区／105 area、2591个放置实体、148份所需 EC 模板、92张配置表及65份原剧情图。当前云端与旧提取的对应地图、配置和有效剧情端口逐项比对，全部一致才复用旧转换；保留端口执行顺序及原始节点，不能用相似文件替代。129个实际美术 bundle 完成索引长度／MD5／SHA-256校验；更新过的 shader bundle 中7个被引用对象另核对原始对象 SHA-256。
+
+Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实体 prefab：18683个原地形批次、原 Ground Tilemap 的26725块瓦片／56批次、139种实体显示／249个运行静态批次／42份 Spine 帧数据，以及123个原小地图批次。原生地图目录登记12，运行仍未开放山之国完整游玩入口。资源导出不是本图完整还原结论。
+
+剧情载荷保留49个入口与17个递归子图、22项1165～1270主线任务、11处终端的完整原始参数；战斗载荷保留155关／858项实体绑定／17个场景。放置202的未消费 `LoStageBehStageComponent.StageIds=[2000]` 保留在源数据中；其原 EC 模板没有对应行为消费者，故不把缺失的2000伪造为可执行战斗。
+
+`prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用及终端原清单5项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Play Mode 使用 Direct3D12 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
 
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
-九组机关的开发求解只在复制状态寻找合法路径；缺有限MovableRect时用原区域约束开发搜索范围，生产碰撞、推动规则和奖励不变。九组机关原生点击在450×800通过584项、在720×1280对关键8702终端通过85项；公共怪物／食材刷新以本地时钟及保存代次替代服务器。
+历史验证中的九组机关开发求解只在复制状态寻找合法路径；缺有限MovableRect时用原区域约束开发搜索范围，生产碰撞、推动规则和奖励不变。九组机关原生点击在450×800通过584项、在720×1280对关键8702终端通过85项；这些历史点击结果不代表当前 Unity 验收通过。公共怪物／食材刷新以本地时钟及保存代次替代服务器。
 
-固定 APK 客户端与 Common 程序集提供 `MapPuzzleTerminalDataHuarongDao`／`PushBox`、`ResetPuzzle`／`AutoPuzzle` 调用与原费用，但未取得服务端执行体。按用户明确确认，华容道重置恢复原 `NeedRemoveLoEntityIds` 与 `BoxLoEntityIds` 清单的箱子／障碍，将角色移回终端旁可站立格；自动解谜消耗原物品325×1，华容道只移除 `NeedRemoveLoEntityIds`，推箱只解除 `LockLoEntityIds`。奖励仍须实际交互或战斗领取，原领取记录保留，不能重复发放。六处终端的原对话、费用、逐项作用范围、实际领奖，以及重置和支付的保存失败回滚／冷读恢复仍须接入 Unity 并验证。
+固定 APK 客户端与 Common 程序集提供 `MapPuzzleTerminalDataHuarongDao`／`PushBox`、`ResetPuzzle`／`AutoPuzzle` 调用与原费用，但未取得服务端执行体。按用户明确确认，华容道重置恢复原 `NeedRemoveLoEntityIds` 与 `BoxLoEntityIds` 清单的箱子／障碍，将角色移回终端旁可站立格；自动解谜消耗原物品325×1，华容道只移除 `NeedRemoveLoEntityIds`，推箱只解除 `LockLoEntityIds`。奖励仍须实际交互或战斗领取，原领取记录保留，不能重复发放。其中华容道／推箱共六处终端的原对话、费用、逐项作用范围、实际领奖，以及重置和支付的保存失败回滚／冷读恢复仍须接入 Unity 并验证。
+
+推动成功后角色跟进到箱子原格，按本次用户确认迁移。客户端 `MyStageResultEntityPushed.CanMoveToNextPos` 及共享 `StageResultEntityPushedComponent.GetTargetPosNextPosAndDir` 提供目标格、方向、可站立格与 `MovableRect` 约束；服务端推动执行体未取得，跟进位置属于已确认的单机差异，不能标作官方服务端代码。
 
 ## 尚未实现
 
@@ -33,12 +41,8 @@
 
 ### 依据与代码定位
 
-以下为官方来源、既有规则与回归参考；
-
-、
-
-、
-
-、[adventure.json](../../assets/official/adventure.json)
-
-[12.json](../../assets/official/regions/12.json)、
+- [当前程序集、配置、剧情与模板来源](../../assets/reference/official-map/map12-source-manifest.json)、[资源转换与哈希](../../assets/reference/official-map/map12-unity-source-manifest.json)。
+- [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)。
+- [剧情／任务／机关载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗来源](../../assets/reference/official-map/map12-battles-source-manifest.json)。
+- [原区域](../../assets/official/regions/12.json)、[原配置](../../assets/official/adventure.json)、[Unity 地图定义](../../unity/Assets/Official/World/Map/12/map12.json)。
+- [转换入口](../../scripts/prepare_unity_map12.py)、[当前来源解码](../../scripts/prepare_unity_map12_sources.py)、[Unity 导入](../../unity/Assets/Game/Editor/OfficialMap12Tools.cs)、[场景渲染检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs)。

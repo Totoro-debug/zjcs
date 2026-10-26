@@ -199,6 +199,11 @@ def build_story_node(name, node_id, source, playable_scenes, option_keys):
         option_keys.update((name, int(option_id)) for option_id in source.get("Options", []))
     playable_scene = playable_scenes.get(playable_guid, {})
     duration = float(playable_scene.get("duration", 0))
+    # PlayPlayableNode.DoRun applies SetAutoStopCountDown(PlayableDura)
+    # after starting the prefab. A finite node countdown also stops an
+    # otherwise indefinite animator (e.g. mountain playable_npc_idle).
+    if float(source.get("PlayableDura", -1)) > 0:
+        duration = float(source["PlayableDura"])
     wait_playable = bool(source.get("IsWaitPlayableStop", False))
     if playable_guid and (not math.isfinite(duration) or (wait_playable and duration <= 0)):
         raise ValueError("Map11 story playable duration is invalid for its wait policy: " + playable_guid)

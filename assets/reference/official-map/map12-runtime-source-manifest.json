@@ -1,0 +1,125 @@
+{
+  "manifest": "854_156383",
+  "mapClassId": 12,
+  "operation": "Preserve original EC component order, raw story nodes and ports, recursive subgraphs, dialogue roles, fixed rewards and all eleven puzzle terminal payloads. No server decisions are synthesized.",
+  "inputs": [
+    {
+      "path": "assets/official/adventure.json",
+      "sha256": "a6820d65b7498af98f242ab797c24f5dc92646b0638f09da8331c793a0340b4e"
+    },
+    {
+      "path": "assets/official/map-entities.json",
+      "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510"
+    },
+    {
+      "path": "assets/reference/official-map/entities-source-manifest.json",
+      "sha256": "3ff0762ff880aa975e7c9f8c1df0551cab02c76b52b36c59342a2a89aa8a6ea1"
+    },
+    {
+      "path": "assets/official/map-playables.json",
+      "sha256": "17b5e324d78ab3cf3d846c1efe7cfb26acdcdd28f13092ffed3843e797980cfc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12.json",
+      "sha256": "920df541ee38423643d3f374fef56e4a6750a3fe15a93dacf3f6ecbbe31917b7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/source-manifest.json",
+      "sha256": "1dabc00d2eb294ed4fa89a425c993e5f3f9aab5f3d99410999ca354a88169e98"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-entities.json",
+      "sha256": "31afc82ac1b25dc4317661c5761d8410e697a856629f83d1d40cd0fbb1f8091c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/entity-source-manifest.json",
+      "sha256": "367f990c47babee963b7bd7688dc2eb9085f53fe1d7e32949297bd546a938f93"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-battles.json",
+      "sha256": "07b5b481782651fedeea0e5d862728c9b254cb5f7c89187c91d233477668e33e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/battle-source-manifest.json",
+      "sha256": "d9cdbfd8659d1b3418135fcc4b9ecc9d2eb8eb6be888cfc3e861a5374d005250"
+    }
+  ],
+  "officialTables": [
+    {
+      "bundle": "defaultpackage_assets_config_luban_dialog.bundle",
+      "bundle_hash": "cc48a2130d3e62f6e57a055ecb02734e",
+      "path_id": "-7830826545954998254",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/cc48a2130d3e62f6e57a055ecb02734e.bundle",
+      "raw_size": 5754,
+      "raw_sha256": "49220d32853c833bf6d9a261f60469093548d34aa7528fd03acc8e6bbda67484",
+      "path": "Assets/Config/Luban/Dialog/dialog_role.g.bytes",
+      "payload_sha256": "17fc1e8c41473daea75b04ca34e5a03049773058af417b6e561148b4fdccf81e"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "2135504609496173008",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "path": "Assets/Config/Luban/conditions.g.bytes",
+      "payload_sha256": "aba8a59f771f2c85de408832683ba4acbd1042f0a116a18cc21ca019cf740c54"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "-7898873451773041390",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "path": "Assets/Config/Luban/quick_buy.g.bytes",
+      "payload_sha256": "ff181d541883a5a0d111e208d54630506869e30556e0223f248f7029903a0a65"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "path_id": "7169546492845704538",
+      "origin": "apk_zip",
+      "manifest": "854_156383",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "raw_size": 2075461,
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "path": "Assets/Config/Luban/reward_rule.g.bytes",
+      "payload_sha256": "5eb7ad8009e635218394748946c5d04d15bdd32c9312d8a5753511ba56c971af"
+    }
+  ],
+  "outputs": {
+    "stories.json": {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/stories.json",
+      "sha256": "2e540f7d8416e8f028f5dfa9235bdd037948a0a5121c4734fc65abc8f1df4023"
+    },
+    "battle-runtime.json": {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/battle-runtime.json",
+      "sha256": "7df29d173d8c68588a02df9d6d8fb2586d23ba086a02c4a4c89bdcb71a9dc99a"
+    }
+  },
+  "counts": {
+    "stages": 155,
+    "bindings": 858,
+    "stories": 49,
+    "subgraphs": 17,
+    "nodes": 1017,
+    "roles": 15,
+    "terminals": 11,
+    "tasks": 22
+  }
+}

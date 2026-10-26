@@ -78,19 +78,24 @@ def map_stage_ids(map_id: int, placements: dict, map_stage_rows: list[dict], exp
     return stage_ids
 
 
-def map11_component_stage_bindings(definition: dict) -> list[dict]:
-    if (definition.get("ClassId") != 11 or not isinstance(definition.get("Entities"), list)
+def map11_component_stage_bindings(definition: dict, map_id: int = 11) -> list[dict]:
+    expected_count = {11: 1803, 12: 2591}[map_id]
+    if (definition.get("ClassId") != map_id or not isinstance(definition.get("Entities"), list)
             or not isinstance(definition.get("EntityComponents"), list)
-            or len(definition["Entities"]) != 1803
-            or len(definition["EntityComponents"]) != 1803):
+            or len(definition["Entities"]) != expected_count
+            or len(definition["EntityComponents"]) != expected_count):
         raise ValueError("Pinned Map11 definition is missing its 1,803 entity component bindings")
 
     placement_ids = {int(placement["Id"]) for placement in definition["Entities"]}
     component_ids = [int(component.get("EntityId", 0)) for component in definition["EntityComponents"]]
-    if len(placement_ids) != 1803 or len(set(component_ids)) != 1803 or set(component_ids) != placement_ids:
+    if len(placement_ids) != expected_count or len(set(component_ids)) != expected_count or set(component_ids) != placement_ids:
         raise ValueError("Map11 entity components do not map one-to-one to placements")
 
     bindings = []
+    templates = None
+    if map_id == 12:
+        placement_classes = {int(row["Id"]): int(row["EntityId"]) for row in definition["Entities"]}
+        templates = json.loads((ROOT / "assets/official/map-entities.json").read_text(encoding="utf-8"))["templates"]
     for component_record in sorted(definition["EntityComponents"], key=lambda row: int(row["EntityId"])):
         placement_id = int(component_record["EntityId"])
         try:
@@ -104,6 +109,13 @@ def map11_component_stage_bindings(definition: dict) -> list[dict]:
             component = components.get(component_name)
             if not isinstance(component, dict):
                 continue
+            # Lo data may remain serialized after an entity stopped using that
+            # behaviour. 6024, for example, has touch/exit behaviours, not a
+            # StageBehStageComponent; its unused 2000 is not a battle request.
+            if templates is not None and component_name == "LoStageBehStageComponent":
+                template = templates[str(placement_classes[placement_id])]
+                if not any(name.startswith("StageBehStage") for name in template):
+                    continue
             stage_ids = component.get("StageIds") or []
             if component.get("StageId", 0):
                 stage_ids = list(stage_ids) + [component["StageId"]]
@@ -449,8 +461,8 @@ def existing_output_hashes(payload_path: Path, manifest_path: Path, map_id: int 
 
 
 def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) -> dict:
-    if map_id not in (10, 11):
-        raise ValueError("Only Maps 10 and 11 have pinned battle placement sources")
+    if map_id not in (10, 11, 12):
+        raise ValueError("Only Maps 10, 11 and 12 have pinned battle placement sources")
     apk = apk or Apk()
     output = Path(output or (ROOT / "unity/Assets/Official/World/Map" / str(map_id))).resolve()
     constructors = Constructors()
@@ -463,15 +475,17 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
 
     component_stage_bindings = []
     map11_definition_source = None
-    if map_id == 11:
-        definition_bytes = MAP11_DEFINITION_PATH.read_bytes()
-        definition_manifest_bytes = MAP11_DEFINITION_MANIFEST_PATH.read_bytes()
+    if map_id in (11, 12):
+        definition_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/map{map_id}.json"
+        definition_manifest_path = definition_path.parent / "source-manifest.json"
+        definition_bytes = definition_path.read_bytes()
+        definition_manifest_bytes = definition_manifest_path.read_bytes()
         definition_manifest = json.loads(definition_manifest_bytes.decode("utf-8"))
-        if (definition_manifest.get("mapClassId") != 11
+        if (definition_manifest.get("mapClassId") != map_id
                 or definition_manifest.get("output", {}).get("sha256") != sha256(definition_bytes)):
             raise ValueError("Pinned Map11 definition differs from its source manifest")
         definition = json.loads(definition_bytes.decode("utf-8"))
-        component_stage_bindings = map11_component_stage_bindings(definition)
+        component_stage_bindings = map11_component_stage_bindings(definition, map_id)
         component_stage_ids = {
             int(stage_id)
             for binding in component_stage_bindings
@@ -479,18 +493,18 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
             for stage_id in component["StageIds"]
         }
         map11_definition_source = {
-            "path": MAP11_DEFINITION_PATH.relative_to(ROOT).as_posix(),
+            "path": definition_path.relative_to(ROOT).as_posix(),
             "sha256": sha256(definition_bytes),
-            "source_manifest": MAP11_DEFINITION_MANIFEST_PATH.relative_to(ROOT).as_posix(),
+            "source_manifest": definition_manifest_path.relative_to(ROOT).as_posix(),
             "source_manifest_sha256": sha256(definition_manifest_bytes),
         }
 
     map_stage_obj = apk.asset(MAP_STAGE_TABLE[0], MAP_STAGE_TABLE[1])
     map_stage_bytes = text_asset_bytes(map_stage_obj)
     map_stage_rows = constructors.table(map_stage_bytes, MAP_STAGE_TABLE[2])
-    stage_count = {10: 82, 11: 1803}[map_id]
+    stage_count = {10: 82, 11: 1803, 12: 2591}[map_id]
     stage_ids = map_stage_ids(map_id, placements, map_stage_rows, stage_count)
-    if map_id == 11:
+    if map_id in (11, 12):
         stage_ids.update(component_stage_ids)
         group_path = "Assets/Config/Luban/Map/map_entity_group.g.bytes"
         group_obj = apk.asset("config_luban_map", group_path)
@@ -546,7 +560,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
     arrays, scenes = collect_battle_data(stage_rows, all_arrays, all_scenes)
     rosters = collect_monster_rosters(stage_rows, all_arrays, scenes, combat_rules, general_rules,
                                       skill_rows, skill_rules["entities"], property_ids,
-                                      allow_unused_monster_ids=map_id == 11)
+                                      allow_unused_monster_ids=map_id in (11, 12))
 
     parser_hash = sha256(PARSER_SOURCE_PATH.read_bytes())
     scene_manifest_hash = sha256(BATTLE_SCENES_MANIFEST_PATH.read_bytes())
@@ -567,7 +581,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
         "monsterArrays": arrays,
         "battleScenes": scenes,
         "monsterRosters": rosters,
-        **({"entityStageBindings": component_stage_bindings} if map_id == 11 else {}),
+        **({"entityStageBindings": component_stage_bindings} if map_id in (11, 12) else {}),
         "formationOrder": "StageMonsterArrayInfoParser.PostParse sorts Monsters by GroupId",
         "rosterRules": "StageMonsterArrayInfoParser.GenerateMonsters repeats each monster id for every position in its contiguous GroupId; MonsterGroupNo comes from StageInfo.",
     }
@@ -587,8 +601,8 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
             },
             f"map{map_id}_placements": placements_source,
             f"map{map_id}_stage_index": map_stage_source,
-            **({"map11_definition": map11_definition_source} if map_id == 11 else {}),
-            **({"witch_spawn_group": witch_group_source} if map_id == 11 else {}),
+            **({f"map{map_id}_definition": map11_definition_source} if map_id in (11, 12) else {}),
+            **({"witch_spawn_group": witch_group_source} if map_id in (11, 12) else {}),
             "battle_scenes": {
                 "path": BATTLE_SCENES_PATH.relative_to(ROOT).as_posix(),
                 "sha256": sha256(scene_payload),
@@ -631,7 +645,7 @@ def build(apk: Apk | None = None, output: Path | None = None, map_id: int = 10) 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--map-id", type=int, choices=(10, 11), default=10)
+    parser.add_argument("--map-id", type=int, choices=(10, 11, 12), default=10)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     output = args.output or ROOT / "unity/Assets/Official/World/Map" / str(args.map_id)

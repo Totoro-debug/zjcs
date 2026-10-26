@@ -1,0 +1,134 @@
+using System;
+using System.Collections;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Zjcs.Offline.World;
+using Zjcs.Presentation.World;
+
+namespace Zjcs.Editor
+{
+    // Payload rendering check. Complete map interactions have a separate scope.
+    public static class OfficialMap12PlayModeAcceptance
+    {
+        private const string Key = "Zjcs.Map12.SourceRendering";
+        private static bool started;
+
+        public static void Run()
+        {
+            try
+            {
+                OfficialMap12Tools.ImportAndValidate();
+                ProjectTools.Validate();
+                SessionState.SetBool(Key, true);
+                SessionState.SetInt(Key + ".result", 1);
+                SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
+                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                Hook();
+                EditorApplication.isPlaying = true;
+            }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        [InitializeOnLoadMethod]
+        private static void Restore() { if (SessionState.GetBool(Key, false)) Hook(); }
+
+        private static void Hook()
+        {
+            started = false;
+            EditorApplication.update -= Tick;
+            EditorApplication.update += Tick;
+            EditorApplication.playModeStateChanged -= ModeChanged;
+            EditorApplication.playModeStateChanged += ModeChanged;
+        }
+
+        private static void ModeChanged(PlayModeStateChange state)
+        {
+            if (state != PlayModeStateChange.EnteredEditMode || !SessionState.GetBool(Key, false)) return;
+            SessionState.SetBool(Key, false);
+            EditorApplication.update -= Tick;
+            EditorApplication.playModeStateChanged -= ModeChanged;
+            EditorApplication.Exit(SessionState.GetInt(Key + ".result", 1));
+        }
+
+        private static void Tick()
+        {
+            if (EditorApplication.timeSinceStartup > SessionState.GetFloat(Key + ".deadline", 0))
+            {
+                Debug.LogError("Map12 source rendering timed out.");
+                EditorApplication.isPlaying = false;
+                return;
+            }
+            if (started || !EditorApplication.isPlaying || EditorApplication.isCompiling) return;
+            started = true;
+            new GameObject("Map12SourceRenderingRunner").AddComponent<Runner>().StartCoroutine(Verify());
+        }
+
+        private static IEnumerator Verify()
+        {
+            IEnumerator steps = VerifySteps();
+            while (true)
+            {
+                object current;
+                try { if (!steps.MoveNext()) break; current = steps.Current; }
+                catch (Exception error) { Debug.LogException(error); EditorApplication.isPlaying = false; yield break; }
+                yield return current;
+            }
+            SessionState.SetInt(Key + ".result", 0);
+            Debug.Log("Map12 source Play Mode rendering passed. Gameplay, UI, puzzles and save recovery are not covered.");
+            EditorApplication.isPlaying = false;
+        }
+
+        private static IEnumerator VerifySteps()
+        {
+            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
+                throw new InvalidOperationException("Map12 graphics must run with Direct3D12.");
+            var session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 12);
+            var terrain = UnityEngine.Object.Instantiate(session.Assets.GroundPrefab);
+            var camera = new GameObject("Map12SourceCamera").AddComponent<Camera>();
+            camera.orthographic = true;
+            camera.orthographicSize = 10;
+            camera.nearClipPlane = 0.1f;
+            camera.farClipPlane = 200;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = Color.black;
+            var origin = session.Definition.Navigation.Origin;
+            var entityRoot = new GameObject("Map12SourceEntities");
+            var entities = entityRoot.AddComponent<OfficialMap10EntityView>();
+            entities.Initialize(entityRoot.transform, new Vector2(origin.X, origin.Y), camera, 12, "Map12/Entities/native-catalog");
+            yield return null;
+            if (terrain.GetComponentsInChildren<OfficialMap10TerrainView>().Sum(view => view.BatchCount) != 18683 + 56
+                || entities.EntityCount != 2591)
+                throw new InvalidDataException("Map12 terrain/base ground/entity runtime counts differ from source.");
+            var frame = new RenderTexture(450, 800, 24, RenderTextureFormat.ARGB32);
+            frame.Create();
+            camera.targetTexture = frame;
+            camera.aspect = 450f / 800f;
+            string output = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.tools/map12-source-render-session"));
+            Directory.CreateDirectory(output);
+            foreach (int id in new[] { 101, 746, 202 })
+            {
+                var entity = session.Definition.Entities.Single(value => value.Id == id);
+                camera.transform.position = new Vector3(origin.X + entity.Grid[0], origin.Y + entity.Grid[1], -100);
+                yield return null;
+                camera.Render();
+                var previous = RenderTexture.active;
+                RenderTexture.active = frame;
+                var image = new Texture2D(frame.width, frame.height, TextureFormat.RGB24, false);
+                image.ReadPixels(new Rect(0, 0, frame.width, frame.height), 0, 0);
+                image.Apply();
+                File.WriteAllBytes(Path.Combine(output, id + ".png"), image.EncodeToPNG());
+                RenderTexture.active = previous;
+                UnityEngine.Object.Destroy(image);
+            }
+            camera.targetTexture = null;
+            frame.Release();
+            UnityEngine.Object.Destroy(frame);
+        }
+
+        private sealed class Runner : MonoBehaviour { }
+    }
+}

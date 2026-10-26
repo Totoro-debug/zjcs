@@ -22,8 +22,14 @@ def write(path,raw):
 def encoded(obj):return (json.dumps(obj,ensure_ascii=False,sort_keys=True,indent=2)+'\n').encode('utf-8')
 def matrix(value):return np.array([[getattr(value,f'e{r}{c}') for c in range(4)] for r in range(4)])
 
-def build():
-    apk=Apk();apk.load(BUNDLE)
+def build(map_id=11):
+    if map_id not in (11, 12):raise ValueError('Only maps 11 and 12 are supported')
+    OUTPUT=ROOT/f'unity/Assets/Official/World/Map/{map_id}'
+    REL=f'Resources/Map{map_id}/BaseGround'
+    BUNDLE=f'defaultpackage_assets_partition_mapground_{map_id}_mapground_{map_id}_bare.bundle'
+    apk=Apk.current() if map_id==12 else Apk()
+    code_root=ROOT/f'.tools/source-packages/current/{apk.version}/official-code' if map_id==12 else ROOT/'.tools/source-packages/official-code'
+    apk.load(BUNDLE)
     sources=[o for o in apk.env.objects if o.type.name=='Tilemap' and o.read().m_GameObject.read().m_Name=='Ground']
     if len(sources)!=1:raise ValueError('Expected one native base Ground Tilemap')
     source=sources[0];tilemap=source.read();go=tilemap.m_GameObject.read()
@@ -45,7 +51,9 @@ def build():
         vertices=np.array(h.m_Vertices)
         stream=io.BytesIO();image=sprite.image;image.save(stream,format='PNG');raw=stream.getvalue()
         name='BaseGround-'+sha(raw)[:16]+'.png';path=OUTPUT/REL/name
-        write(path,raw);write(Path(str(path)+'.meta'),texture_meta(REL+'/'+name))
+        write(path,raw)
+        metadata=Path(str(path)+'.meta')
+        if map_id!=12 or not metadata.exists():write(metadata,texture_meta(REL+'/'+name,map_id))
         ppu=sprite.m_PixelsToUnits;rect=sprite.m_Rect;pivot=sprite.m_Pivot
         uv=[[float(v[0]*ppu/rect.width+pivot.x),float(v[1]*ppu/rect.height+pivot.y)] for v in vertices]
         indices=[i for sub in h.get_triangles() for triangle in sub for i in triangle]
@@ -77,14 +85,14 @@ def build():
         output.extend(raw);output.extend(struct.pack('<I',len(b['positions'])//2))
         for key,fmt in [('positions','f'),('uvs','f'),('colors','f')]:output.extend(struct.pack('<'+str(len(b[key]))+fmt,*b[key]))
         output.extend(struct.pack('<I',len(b['indices'])));output.extend(struct.pack('<'+str(len(b['indices']))+'I',*b['indices']))
-    path=OUTPUT/REL/'geometry.bytes';write(path,bytes(output));write(Path(str(path)+'.meta'),text_meta(REL+'/geometry.bytes'))
-    receipt={'manifest':apk.version,'mapClassId':11,'tilemap':apk.provenance(source),'renderer':apk.provenance(renderer),
+    path=OUTPUT/REL/'geometry.bytes';write(path,bytes(output));write(Path(str(path)+'.meta'),text_meta(REL+'/geometry.bytes',map_id))
+    receipt={'manifest':apk.version,'mapClassId':map_id,'tilemap':apk.provenance(source),'renderer':apk.provenance(renderer),
              'material':apk.provenance(mat),'shader':apk.provenance(shader),'hierarchy':transforms,
              'tileCount':len(tilemap.m_Tiles),'batchCount':len(batches),'sprites':resources,
              'geometry':{'path':REL+'/geometry.bytes','sha256':sha(output)},
              'operation':'Read native Sprite polygon vertices; apply original tile matrix, orientation, anchor and colors in unchanged Unity world coordinates.',
              'limitations':['Existing region renderer material adaptation does not yet restore original URP lighting. This geometry receipt is not a complete rendering claim.']}
-    path=OUTPUT/'base-ground-source-manifest.json';write(path,encoded(receipt));write(Path(str(path)+'.meta'),text_meta('base-ground-source-manifest.json'))
+    path=OUTPUT/'base-ground-source-manifest.json';write(path,encoded(receipt));write(Path(str(path)+'.meta'),text_meta('base-ground-source-manifest.json',map_id))
     player=apk.asset('defaultpackage_assets_prefabs_ecentity_mapworld_worldmapcharacter.bundle','/3001.prefab')
     def child(root,name):
         tr=next(c.component.read() for c in root.read().m_Component if c.component.type.name=='Transform')
@@ -102,20 +110,20 @@ def build():
     adaptor=next(c.component.deref() for c in controller.read().m_Component if c.component.type.name=='MonoBehaviour'
                  and c.component.deref().read(check_read=False).m_Script.read().m_ClassName=='OrthographicCameraResolutionAdaptor')
     camera=next(c.component.deref() for c in child(camera_root,'Main Camera').read().m_Component if c.component.type.name=='Camera')
-    adapter_fields=ScriptSchemas().read(adaptor)
+    adapter_fields=ScriptSchemas(code_root=code_root).read(adaptor)
     view.update(cameraSafeExtents=adapter_fields['mySafeArea']['m_Extent'],
                 cameraAdaptPriority=adapter_fields['mAdapterPriority'],
                 cameraDefaultSize=camera.read().orthographic_size,
                 cameraNear=camera.read().near_clip_plane,cameraFar=camera.read().far_clip_plane)
-    path=OUTPUT/REL/'player-view.json';raw=encoded(view);write(path,raw);write(Path(str(path)+'.meta'),text_meta(REL+'/player-view.json'))
+    path=OUTPUT/REL/'player-view.json';raw=encoded(view);write(path,raw);write(Path(str(path)+'.meta'),text_meta(REL+'/player-view.json',map_id))
     receipt['playerView']={'root':apk.provenance(player),'model':apk.provenance(model),'renderer':apk.provenance(renderer),
                           'transform':apk.provenance(transform),'offset':apk.provenance(offset),'sha256':sha(raw)}
     receipt['cameraView']={'root':apk.provenance(camera_root),'camera':apk.provenance(camera),'resolutionAdaptor':apk.provenance(adaptor),
                           'code':[]}
     for name in ('WorldCameraBaseController','OrthographicCameraResolutionAdaptor'):
-        p=ROOT/f'.tools/source-packages/official-code/client-source/{name}.cs'
+        p=code_root/f'client-source/{name}.cs'
         receipt['cameraView']['code'].append({'path':p.relative_to(ROOT).as_posix(),'sha256':sha(p.read_bytes())})
     path=OUTPUT/'base-ground-source-manifest.json';write(path,encoded(receipt))
-    write(Path(str(OUTPUT/REL)+'.meta'),folder_meta(REL))
-    print(f'Native Map11 base ground: {len(tilemap.m_Tiles)} tiles, {len(batches)} batches, {len(sprites)} source sprites; {sha(output)}')
+    write(Path(str(OUTPUT/REL)+'.meta'),folder_meta(REL,map_id))
+    print(f'Native Map{map_id} base ground: {len(tilemap.m_Tiles)} tiles, {len(batches)} batches, {len(sprites)} source sprites; {sha(output)}')
 if __name__=='__main__':build()

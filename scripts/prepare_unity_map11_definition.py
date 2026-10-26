@@ -23,8 +23,8 @@ def encoded(value):
     return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
-def write_meta(path, relative, folder=False):
-    guid = hashlib.md5(("zjcs-official:Assets/Official/World/Map/11/" + relative).encode("utf-8")).hexdigest()
+def write_meta(path, relative, folder=False, map_id=11):
+    guid = hashlib.md5((f"zjcs-official:Assets/Official/World/Map/{map_id}/" + relative).encode("utf-8")).hexdigest()
     if folder:
         body = "folderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n"
     else:
@@ -41,7 +41,13 @@ def selected(rows, map_id, keys=("ClassId", "MapClassId", "MapClass")):
     return [row for row in rows if any(row.get(key) == map_id for key in keys)]
 
 
-def build():
+def build(map_id=11):
+    if map_id not in (11, 12):
+        raise ValueError("Only provenance-checked maps 11 and 12 are supported")
+    OUTPUT = ROOT / f"unity/Assets/Official/World/Map/{map_id}"
+    REGION = ROOT / f"assets/official/regions/{map_id}.json"
+    ENTITY_COMPONENTS = ROOT / f"assets/official/regions/{map_id}-entities.json"
+    MATERIALS = ROOT / f"assets/reference/official-map/materials-{map_id}-source-manifest.json"
     adventure_bytes = ADVENTURE.read_bytes()
     region_bytes = REGION.read_bytes()
     entity_components_bytes = ENTITY_COMPONENTS.read_bytes()
@@ -53,27 +59,27 @@ def build():
     map10 = json.loads(MAP10_DEFINITION.read_text(encoding="utf-8"))
     apk = Apk()
 
-    if materials.get("manifest") != "854_156383" or materials.get("map") != 11 or region_data.get("id") != 11:
+    if materials.get("manifest") != "854_156383" or materials.get("map") != map_id or region_data.get("id") != map_id:
         raise ValueError("Map11 inputs do not match the pinned original package")
-    map_rows = selected(tables["Map/map"], 11)
-    region_rows = selected(tables["Map/map_region"], 11)
-    area_rows = selected(tables["Map/map_area"], 11)
-    world_rows = selected(tables["Map/map_world"], 11)
-    logic_tags = selected(tables["Map/map_logic_entity_tag"], 11)
+    map_rows = selected(tables["Map/map"], map_id)
+    region_rows = selected(tables["Map/map_region"], map_id)
+    area_rows = selected(tables["Map/map_area"], map_id)
+    world_rows = selected(tables["Map/map_world"], map_id)
+    logic_tags = selected(tables["Map/map_logic_entity_tag"], map_id)
     entity_classes = {item["entity"] for item in region_data["placement"]["entities"]}
     entity_parameters = [row for row in tables["Map/entity_extend_parameter"]
                         if row["EntityClassId"] in entity_classes]
     entity_displays = [row for row in tables["Map/entity_map_display"]
-                       if row["EntityClassId"] in entity_classes and row["MapClassId"] in (0, 11)]
+                       if row["EntityClassId"] in entity_classes and row["MapClassId"] in (0, map_id)]
     entity_ui_displays = [row for row in tables["Map/entity_map_ui_display"]
-                          if row["EntityClassId"] in entity_classes and row["MapClassId"] in (0, 11)]
+                          if row["EntityClassId"] in entity_classes and row["MapClassId"] in (0, map_id)]
     entity_stage_actions = [row for row in tables["Map/map_entity_stage_action"]
                             if row["EntityClassId"] in entity_classes]
-    region_bgm = selected(tables["Map/map_region_bgm"], 11)
-    map_stages = selected(tables["map_stage"], 11)
-    if len(map_rows) != 1 or len(region_rows) != 77 or len(world_rows) != 1:
+    region_bgm = selected(tables["Map/map_region_bgm"], map_id)
+    map_stages = selected(tables["map_stage"], map_id)
+    if len(map_rows) != 1 or len(region_rows) != {11: 77, 12: 99}[map_id] or len(world_rows) != 1:
         raise ValueError("Official Map11 map, region, or world table rows are incomplete")
-    if len(region_data.get("placement", {}).get("entities", [])) != 1803:
+    if len(region_data.get("placement", {}).get("entities", [])) != {11: 1803, 12: 2591}[map_id]:
         raise ValueError("Map11 placement count differs from its converted official source")
     placement_ids = {str(item["id"]) for item in region_data["placement"]["entities"]}
     if placement_ids != set(entity_components):
@@ -132,9 +138,9 @@ def build():
 
     source_inputs = [
         {"path": "assets/official/adventure.json", "sha256": sha256(adventure_bytes)},
-        {"path": "assets/official/regions/11.json", "sha256": sha256(region_bytes)},
-        {"path": "assets/official/regions/11-entities.json", "sha256": sha256(entity_components_bytes)},
-        {"path": "assets/reference/official-map/materials-11-source-manifest.json", "sha256": sha256(materials_bytes)},
+        {"path": f"assets/official/regions/{map_id}.json", "sha256": sha256(region_bytes)},
+        {"path": f"assets/official/regions/{map_id}-entities.json", "sha256": sha256(entity_components_bytes)},
+        {"path": f"assets/reference/official-map/materials-{map_id}-source-manifest.json", "sha256": sha256(materials_bytes)},
         {"bundle": apk.provenance(condition_object)["bundle"],
          "path": "Assets/Config/Luban/conditions.g.bytes",
          "pathId": apk.provenance(condition_object)["path_id"], "sha256": sha256(condition_bytes)},
@@ -142,11 +148,11 @@ def build():
     source_inputs_json = json.dumps(source_inputs, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     inputs_hash = sha256(source_inputs_json.encode("utf-8"))
     definition = {
-        "ClassId": 11, "MapGroupId": map_info["MapGroupId"], "MapTagId": map_info["MapTagId"],
+        "ClassId": map_id, "MapGroupId": map_info["MapGroupId"], "MapTagId": map_info["MapTagId"],
         "MapBgmId": map_info["MapBgmId"], "NextMapClassId": map_info["NextMapClassId"],
-        "OriginalGroundPrefab": "Assets/Prefabs/Map/Map_11/MapGround_11.prefab",
-        "OriginalMiniMapPrefab": "Assets/Prefabs/Map/Map_11/MiniMap/MiniMap_11.prefab",
-        "SourceManifest": "Assets/Official/World/Map/11/source-manifest.json",
+        "OriginalGroundPrefab": f"Assets/Prefabs/Map/Map_{map_id}/MapGround_{map_id}.prefab",
+        "OriginalMiniMapPrefab": f"Assets/Prefabs/Map/Map_{map_id}/MiniMap/MiniMap_{map_id}.prefab",
+        "SourceManifest": f"Assets/Official/World/Map/{map_id}/source-manifest.json",
         "SourceManifestSha256": inputs_hash,
         "CharacterMover": mover,
         "MaxRegionProgress": [{"Region": int(key), "Value": value}
@@ -168,27 +174,27 @@ def build():
     }
     definition_bytes = encoded(definition)
     manifest = {
-        "format": 1, "mapClassId": 11, "sourceInputsJson": source_inputs_json,
+        "format": 1, "mapClassId": map_id, "sourceInputsJson": source_inputs_json,
         "sourceInputsSha256": inputs_hash,
-        "output": {"path": "map11.json", "size": len(definition_bytes), "sha256": sha256(definition_bytes)},
+        "output": {"path": f"map{map_id}.json", "size": len(definition_bytes), "sha256": sha256(definition_bytes)},
         "inputs": source_inputs,
     }
     OUTPUT.mkdir(parents=True, exist_ok=True)
     previous_manifest_path = OUTPUT / "source-manifest.json"
     previous_manifest = json.loads(previous_manifest_path.read_text(encoding="utf-8")) \
         if previous_manifest_path.is_file() else None
-    previous_definition_path = OUTPUT / "map11.json"
-    previous_definition_verified = previous_manifest is not None and previous_manifest.get("mapClassId") == 11 \
+    previous_definition_path = OUTPUT / f"map{map_id}.json"
+    previous_definition_verified = previous_manifest is not None and previous_manifest.get("mapClassId") == map_id \
         and previous_manifest.get("output", {}).get("sha256") == sha256(previous_definition_path.read_bytes())
-    for name, payload in (("map11.json", definition_bytes), ("source-manifest.json", encoded(manifest))):
+    for name, payload in ((f"map{map_id}.json", definition_bytes), ("source-manifest.json", encoded(manifest))):
         target = OUTPUT / name
         if target.exists() and target.read_bytes() != payload and not previous_definition_verified:
             raise ValueError("Refusing to overwrite changed Map11 Unity data: " + str(target))
         if not target.exists() or target.read_bytes() != payload:
             target.write_bytes(payload)
-        write_meta(target, name)
-    write_meta(OUTPUT, "", folder=True)
-    print(f"Map11 definition: {len(region_rows)} regions, {len(area_rows)} areas, {len(entities)} entities")
+        write_meta(target, name, map_id=map_id)
+    write_meta(OUTPUT, "", folder=True, map_id=map_id)
+    print(f"Map{map_id} definition: {len(region_rows)} regions, {len(area_rows)} areas, {len(entities)} entities")
 
 
 if __name__ == "__main__":
