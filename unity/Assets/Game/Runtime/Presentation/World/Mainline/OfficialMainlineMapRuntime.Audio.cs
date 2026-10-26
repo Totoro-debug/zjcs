@@ -12,14 +12,14 @@ namespace Zjcs.Presentation.World
 
         private void InitializeMapAudio()
         {
-            if (mapClassId != 11) return;
-            var musicObject = new GameObject("OfficialMap11Bgm");
+            if (mapClassId != 11 && mapClassId != 12) return;
+            var musicObject = new GameObject("OfficialMap" + mapClassId + "Bgm");
             mapMusic = musicObject.AddComponent<OfficialMap11MusicPlayer>();
-            mapMusic.Initialize(() => MapMusicVolume?.Invoke() ?? 1f);
-            var voiceObject = new GameObject("OfficialMap11DialogueVoice");
+            mapMusic.Initialize(() => MapMusicVolume?.Invoke() ?? 1f, mapClassId);
+            var voiceObject = new GameObject("OfficialMap" + mapClassId + "DialogueVoice");
             voiceObject.transform.SetParent(transform, false);
             mapVoice = voiceObject.AddComponent<OfficialMap11StoryAudioPlayer>();
-            mapVoice.Initialize(() => MapVoiceVolume?.Invoke() ?? 1f);
+            mapVoice.Initialize(() => MapVoiceVolume?.Invoke() ?? 1f, mapClassId);
         }
 
         private void DisposeMapAudio()

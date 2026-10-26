@@ -65,7 +65,7 @@ namespace Zjcs.Editor
         }
 
         private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
-            bool verifyDialogueInput = false)
+            bool verifyDialogueInput = false, bool verifyAudio = false)
         {
             try
             {
@@ -75,6 +75,7 @@ namespace Zjcs.Editor
                 SessionState.SetBool(Key + ".ui", verifyUi);
                 SessionState.SetBool(Key + ".runtime", verifyRuntime);
                 SessionState.SetBool(Key + ".dialogueInput", verifyDialogueInput);
+                SessionState.SetBool(Key + ".audio", verifyAudio);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);

@@ -59,6 +59,8 @@ namespace Zjcs.Editor
                 .InitializeWardrobe("map12-runtime-fixture-wardrobe");
             GameObject avatar = CharacterCreationNativeModelFactory.CreateWorldModel(slot, root, out string name);
             map12Runtime = new GameObject("Map12Runtime").AddComponent<OfficialMainlineMapRuntime>();
+            map12Runtime.MapMusicVolume = () => 0f;
+            map12Runtime.MapVoiceVolume = () => 0f;
             map12Runtime.Begin(12, slot, root, canvas.transform, avatar, name, null);
             yield return new WaitForSecondsRealtime(1);
             if (!RuntimeField<MapGridPoint>("currentGrid").Equals(new MapGridPoint(248, 32)))
@@ -67,6 +69,14 @@ namespace Zjcs.Editor
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
+
+            if (UnityEditor.SessionState.GetBool(Key + ".audio", false))
+            {
+                IEnumerator audio = VerifyRuntimeAudioSteps();
+                while (audio.MoveNext()) yield return audio.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
 
             if (UnityEditor.SessionState.GetBool(Key + ".runtimeSpatial", false))
             {

@@ -25,7 +25,16 @@ namespace Zjcs.Editor
         // This mode never invokes the native pointer helper or claims input acceptance.
         public static void RunBackground()
         {
+            SessionState.SetBool(Key + ".audioOnly", false);
             SessionState.SetBool(Key + ".ui", false);
+            try { SessionState.SetBool(Key + ".background", true); RunCore(); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        public static void RunAudioRegression()
+        {
+            SessionState.SetBool(Key + ".ui", false);
+            SessionState.SetBool(Key + ".audioOnly", true);
             try { SessionState.SetBool(Key + ".background", true); RunCore(); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
@@ -35,6 +44,15 @@ namespace Zjcs.Editor
             yield return new WaitForSecondsRealtime(1);
             yield return VerifyMapMusic();
             yield return VerifyDialogueAudio();
+            if (SessionState.GetBool(Key + ".audioOnly", false))
+            {
+                Invoke("CloseMap");
+                yield return null;
+                SessionState.SetInt(Key + ".result", 0);
+                Debug.Log("Map11 audio regression passed: existing BGM and 207 dialogue voice checks.");
+                EditorApplication.isPlaying = false;
+                yield break;
+            }
             var save = Field<OfflineMainlineProgressSession>("progressionSave");
             foreach (var region in save.Save.World.Maps.Single(value => value.MapClassId == 11).Regions.ToArray())
                 save.SetMapRegionProgress(11, region.Region, 10000);

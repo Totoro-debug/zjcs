@@ -1,0 +1,86 @@
+{
+  "generator": {
+    "path": "scripts/prepare_unity_map12_audio.py",
+    "sha256": "b7cf1506bd3b2278a291fb842680b84de9f64f673021e91f3137b2e2990a3c2e"
+  },
+  "inputs": {
+    "apkCheckedFirst": {
+      "entry": "assets/yoo/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile",
+      "packaged": false
+    },
+    "audioIndex": {
+      "path": "assets/official/map-audio.json",
+      "sha256": "0a37c49eee982c2dbe569fab17b82fbe922b015b3ac5f4d6c220634265c453fa"
+    },
+    "audioManifest": {
+      "path": "assets/reference/official-map/audio-source-manifest.json",
+      "sha256": "896dd183ddb45cd5ea655cebd8e7c50cc4e5e2850b6f321aa6026f565d9acfc1"
+    },
+    "code": [
+      {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapBgmHandler.cs",
+        "sha256": "6fdd179891844767fba50941feeaf22f429fbc63894511db5ea04a24fdcecb2f"
+      },
+      {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/BgmManager.cs",
+        "sha256": "27529fefe3b83f7064f505a3f830e3f7ff881d07a3de0274f9578f5d9dc37253"
+      }
+    ],
+    "config": {
+      "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+      "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
+    },
+    "media": {
+      "bank": "wwisebnk_assets_wwisedata_android_map_bgm_01_pck.rawfile",
+      "bytes": 1798388,
+      "file": "res://assets/official/map-audio/664663381.ogg",
+      "input_sha256": "fb26dc7267c65c8f587ad543e53ba18ec87b86bd71e0f54ee2d2892c002ec405",
+      "language_id": 0,
+      "media_id": 664663381,
+      "offset": 3323489,
+      "operation": "Original Wwise Vorbis decoded with vgmstream; PCM encoded to local Vorbis with libsndfile",
+      "sha256": "a369e7b1b3091bd425211c88e32f8e93911c3b2855eb8e92655e5cead7b8ca40",
+      "source": {
+        "bundle_hash": "79a0238a1353c8a40ced36aa26769b00",
+        "manifest": "854_156383",
+        "origin": "official_cdn",
+        "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+        "size": 9600789,
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile"
+      }
+    },
+    "package": {
+      "name": "wwisebnk_assets_wwisedata_android_map_bgm_01_pck.rawfile",
+      "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+      "source": {
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "sha256": "ae36d9fd2aa9192fff3520ccc96b88b83c7f86ae09496bd440751657013e1fa9",
+        "size": 9600789,
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/79a0238a1353c8a40ced36aa26769b00.rawfile"
+      }
+    },
+    "selectedSourceReceipt": {
+      "path": "assets/reference/official-map/map12-source-manifest.json",
+      "sha256": "2ab3d830767e5d157b3f689e93679a1716a3c44e0dbc07af36622df90f747eda"
+    },
+    "sound": {
+      "loopCount": 0,
+      "mediaId": 664663381
+    }
+  },
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Reuse verified original Wwise Vorbis conversion; Unity native AudioClip with original loop and Sine event fades.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Audio/Map12Bgm.ogg",
+      "sha256": "a369e7b1b3091bd425211c88e32f8e93911c3b2855eb8e92655e5cead7b8ca40"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Audio/bgm.json",
+      "sha256": "11a80830466fd90e4533a6daa5eb3b4a2c41dd83ad3fdbcca970a5df72f2b216"
+    }
+  ]
+}

@@ -29,14 +29,18 @@ namespace Zjcs.Presentation.World
         private Coroutine transition;
         private float envelope;
         private bool paused, released;
+        private int audioMapClassId;
 
-        public void Initialize(Func<float> volume)
+        public void Initialize(Func<float> volume, int mapClassId = 11)
         {
             if (source != null) throw new InvalidOperationException("Map11 music is already initialized.");
-            TextAsset mapping = Resources.Load<TextAsset>("Map11/Audio/bgm");
+            if (mapClassId != 11 && mapClassId != 12) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            audioMapClassId = mapClassId;
+            string map = "Map" + mapClassId;
+            TextAsset mapping = Resources.Load<TextAsset>(map + "/Audio/bgm");
             config = mapping == null ? null : JsonUtility.FromJson<Config>(mapping.text);
-            if (config == null || config.manifest != "854_156383" || config.mapClassId != 11
-                || config.bgmId != 11 || !config.loop || config.clip != "Map11/Audio/Map11Bgm"
+            if (config == null || config.manifest != (mapClassId == 12 ? "871_156598" : "854_156383") || config.mapClassId != mapClassId
+                || config.bgmId != mapClassId || !config.loop || config.clip != map + "/Audio/" + map + "Bgm"
                 || !Valid(config.play, "Play", 1027) || !Valid(config.stop, "Stop", 258)
                 || !Valid(config.pause, "Pause", 514) || !Valid(config.resume, "Resume", 770))
                 throw new InvalidDataException("Map11 original music event mapping is invalid.");
@@ -50,8 +54,8 @@ namespace Zjcs.Presentation.World
             StartCoroutine(Load());
         }
 
-        private static bool Valid(Event value, string suffix, int actionType) =>
-            value != null && value.eventKey == "Map_11_" + suffix && value.actionType == actionType
+        private bool Valid(Event value, string suffix, int actionType) =>
+            value != null && value.eventKey == "Map_" + audioMapClassId + "_" + suffix && value.actionType == actionType
             && value.transitionMs >= 0 && value.fadeCurve == 1;
 
         private IEnumerator Load()
