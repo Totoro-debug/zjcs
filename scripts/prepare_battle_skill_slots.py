@@ -119,7 +119,7 @@ def build(output_root=ROOT):
                    'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs',
                    'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs')},
                'operation': 'Restore the original four serialized slots in order and apply each original StateGameObjectConfig. Preserve absent state 7 in the inline prefab; do not append replacement cards or invent a disabled overlay binding.',
-               'remaining': 'Item quality, pet icons/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings.'}
+               'remaining': 'Item quality is restored by the separate skill-quality catalog. Pet icons/energy, skill detail input, and complete skill action lifecycle callbacks are not completed by these slot bindings.'}
     receipt_path.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode())
     sidecar = output.with_name('battle-skill-slots-source-manifest.json')
     sidecar.write_bytes((json.dumps({'manifest': receipt['manifest'], 'output_sha256': receipt['output_sha256']})+'\n').encode())

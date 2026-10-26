@@ -196,6 +196,7 @@ namespace Zjcs.Presentation.Combat
                 Sprite icon = skillIcon(skill.ItemId);
                 if (icon == null) throw new InvalidOperationException("Official battle skill icon is not bound for item " + skill.ItemId);
                 card.Icon.sprite = icon;
+                OfficialBattleSkillQualityCatalog.Load().Apply(card.QualityImg, skill.ItemId);
                 FightSkillSlotState slotState = FindSlot(player.SkillState, index);
                 if (skill.ProfessionAvailability == FightSkillProfessionAvailability.Mismatch)
                     card.SetUIState(WorldGameSkillIcon.State.ProfessionLimit);

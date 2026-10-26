@@ -15,6 +15,7 @@ namespace Zjcs.Editor.Combat
         [MenuItem("Zjcs/Combat/Validate Original Skill Slots")]
         public static void Run()
         {
+            OfficialBattleSkillQualityAcceptance.Run();
             var canvas = new GameObject("BattleSkillSlotFixture", typeof(RectTransform), typeof(Canvas));
             canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             try
@@ -96,6 +97,7 @@ namespace Zjcs.Editor.Combat
 
         public static void VerifyActual(GameObject root, FightBattleCheckpoint checkpoint)
         {
+            OfficialBattleSkillQualityAcceptance.VerifyActual(root, checkpoint);
             BattleSkillSlotData data = OfficialBattleSkillSlotBindings.Load();
             var player = checkpoint.Units.Single(unit => unit.Id == 1);
             // The isolated combat profile starts without any owned pet.

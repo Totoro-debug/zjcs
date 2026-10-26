@@ -81,3 +81,17 @@ unity/Assets/Game/Editor/Combat/OfficialBattleHudMaterialTools.cs text eol=lf
 unity/Assets/Official/Combat/HudMaterials/** -text
 unity/Assets/Game/Resources/Combat/OfficialBattleMonsterPortraitCatalog.asset text eol=lf
 unity/Assets/Official/Combat/MonsterPortraits/*.png.meta -text
+
+# Skill-slot and quality receipts hash these generated/adapted LF bytes.
+scripts/prepare_battle_skill_slots.py text eol=lf
+scripts/prepare_battle_skill_quality.py text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillQuality*.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs text eol=lf
+unity/Assets/Game/Resources/Combat/battle-skill-*.json* text eol=lf
+unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset* text eol=lf
+assets/reference/battle-hud/skill-*-source-manifest.json text eol=lf
+unity/Assets/Official/Combat/SkillQualities/** -text
+unity/Assets/Official/Combat/SkillQualities.meta -text

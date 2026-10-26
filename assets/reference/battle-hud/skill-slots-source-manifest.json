@@ -2,7 +2,7 @@
   "manifest": "854_156383",
   "output": "unity/Assets/Game/Resources/Combat/battle-skill-slots.json",
   "output_sha256": "55fddbd736f1684da9a38d953978c09129297acfa38ce58556f9aeb4ecae9b36",
-  "generator_sha256": "5b74498aa75966a310214fcd280ec7c0338cab736577ba5129911aade8480073",
+  "generator_sha256": "d2ef18a862f6f846137e0df60ffc2d55296893ae3c8177fcb75f480daef8b8e2",
   "runtime_prefab_sha256": "a8a0d36b8cda8798fbd0f3489b96c0fda8c4b7f8edd4d16bc7ac6e77c3da284e",
   "pet_unlock_input": {
     "path": "assets/official/rules.json",
@@ -925,9 +925,9 @@
   "runtime": {
     "unity/Assets/Game/Runtime/Official/WorldUI/WorldGameSkillIcon.cs": "9a23407008f6a3b802eee1f83f1e6da0411cd4895a373cec2c2f26e4aaf684dd",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSkillSlotBindings.cs": "081c19824b78b64cb841f69b2d98ff9cce4e3c694f50a1e8b4129b42c5ec8953",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "9fa6666f355ef69113ea7fcb58bad1c0df13ff47438cca8aee22999864f895a3",
-    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs": "78dfa0b77cb6d8ebbcb7dc04b5e19a84d74af4e1b3c72ab8ab4c11964270bd13"
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs": "807314be115607109164f825e4bfbb8fe0883682d9b3c11ac5abaddd779ae9f9",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleRuntimeController.cs": "1f43deb6823e6e6a91c1e7ede36eb67e2c58c7739cb70418549b5121879c1fde"
   },
   "operation": "Restore the original four serialized slots in order and apply each original StateGameObjectConfig. Preserve absent state 7 in the inline prefab; do not append replacement cards or invent a disabled overlay binding.",
-  "remaining": "Item quality, pet icons/energy, skill detail input, and skill action lifecycle callbacks are not completed by these bindings."
+  "remaining": "Item quality is restored by the separate skill-quality catalog. Pet icons/energy, skill detail input, and complete skill action lifecycle callbacks are not completed by these slot bindings."
 }
