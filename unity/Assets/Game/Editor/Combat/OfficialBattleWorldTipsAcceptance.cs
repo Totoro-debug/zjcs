@@ -89,6 +89,7 @@ namespace Zjcs.Editor.Combat
                     VerifyCustomActionNative(view,action);scene.Tick(.12f);text.ForceMeshUpdate();
                     VerifyPixels(view,text,110+action);
                 }
+                if (Application.isPlaying) VerifyWorldAnchors();
                 Debug.Log("Original world tips passed: six native prefabs, all three custom actions, original words/font/material/outline, animation, damage color, replay flags and actual raster pixels.");
             }
             finally
@@ -96,6 +97,68 @@ namespace Zjcs.Editor.Combat
                 scene?.Dispose();
                 UnityEngine.Object.DestroyImmediate(root);
                 ShaderUtil.allowAsyncCompilation=previousAsync;
+            }
+        }
+
+        private static void VerifyWorldAnchors()
+        {
+            var root=new GameObject("WorldTipAnchorFixture");
+            var source=new GameObject("FixtureEntityModel");source.transform.SetParent(root.transform,false);
+            OfficialBattleSceneView scene=null;
+            Camera camera=Camera.main;float oldSize=camera.orthographicSize;
+            try
+            {
+                root.transform.position=new Vector3(0,0,3);
+                var mapper=new OfficialBattleGridMapper(root.transform,new FightBattleGrid {Width=4,Height=4});
+                scene=new OfficialBattleSceneView(OfficialBattleModelCatalog.LoadDefault(),root.transform,_=>null,
+                    mapper,(_,__)=>null,(_,__)=>{},OfficialBattleHudCatalog.LoadDefault(),root.transform);
+                var checkpoint=new FightBattleCheckpoint();
+                var unit=new FightBattleUnitState {Id=1,CharacterType=1,Hp=100,MaxHp=100};checkpoint.Units.Add(unit);
+                scene.Refresh(checkpoint);scene.AttachUnitTransform(1,source.transform);
+                Transform body=root.transform.Find("Battle attached unit 3100");
+                Require(body!=null,"The anchor fixture did not attach through the real scene view.");
+                var movement=new FightBattleStepEvent {ActorId=1};
+                var path=new FightBattleMovementEvent {UnitId=1,MoveDuration=.5f};
+                path.Path.Add(new FightGridPoint(0,0));path.Path.Add(new FightGridPoint(1,0));path.Path.Add(new FightGridPoint(2,0));
+                movement.Movements.Add(path);unit.X=2;scene.Refresh(checkpoint,movement);
+                var firstStep=new FightBattleStepEvent();firstStep.DispersedUnitIds.Add(1);
+                scene.ShowDamageFloats(firstStep,checkpoint,OfficialBattleDamageColors.Load());
+                var first=root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single();
+                Vector3 firstPosition=first.transform.position;
+                Require(Mathf.Abs(firstPosition.x-body.position.x)<.0001f && Mathf.Abs(first.transform.localPosition.z)<.0001f,
+                    "A new world tip used the final grid or retained local Z.");
+                scene.Tick(.25f);
+                Require(Mathf.Abs(body.position.x-firstPosition.x)>.01f
+                    && (first.transform.position-firstPosition).sqrMagnitude<.000001f,
+                    "An existing world tip followed movement without an original offset update.");
+                scene.ShowDamageFloats(firstStep,checkpoint,OfficialBattleDamageColors.Load());
+                var tips=root.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
+                var newest=tips.Single(v=>v!=first);
+                float spacing=OfficialBattleDamageColors.Load().Spacing.y;
+                Require(Mathf.Abs(first.transform.position.x-body.position.x)<.0001f
+                    && Mathf.Abs(newest.transform.position.x-body.position.x)<.0001f
+                    && Mathf.Abs(first.transform.position.y-newest.transform.position.y-newest.StackHeight-spacing)<.0001f,
+                    "Adding a world tip did not re-anchor older tips at the entity's current position.");
+                camera.orthographicSize=2.5f;float alpha=newest.GetComponentInChildren<TextMeshPro>().color.a;
+                newest.Tick(0f);
+                Require((newest.transform.localScale-Vector3.one*.5f).sqrMagnitude<.000001f
+                    && Mathf.Approximately(newest.GetComponentInChildren<TextMeshPro>().color.a,alpha),
+                    "A paused world tip failed to resize independently of its animation clock.");
+                var delayed=new FightBattleStepEvent();
+                delayed.DamageEvents.Add(new FightBattleDamageEvent {SourceId=2,TargetId=1,Damage=-10,Delay=.2f});
+                scene.ShowDamageFloats(delayed,checkpoint,OfficialBattleDamageColors.Load());
+                Require(root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length==2,"A delayed number appeared early.");
+                scene.Tick(.2f);
+                var number=root.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Single(v=>v.EffectType==0);
+                Require(Mathf.Abs(number.transform.position.x-body.position.x)<.0001f
+                    && Mathf.Abs(body.position.x-mapper.GridToWorld(new FightGridPoint(2,0)).x)>.01f
+                    && Mathf.Abs(number.transform.localPosition.z)<.0001f,
+                    "A delayed world number did not anchor at its entity's interpolated position.");
+                Debug.Log("Original world float anchors passed: real attachment/movement, creation and stacking offsets, delayed numeric anchor, local Z and paused camera scale.");
+            }
+            finally
+            {
+                camera.orthographicSize=oldSize;scene?.Dispose();UnityEngine.Object.DestroyImmediate(root);
             }
         }
 
@@ -154,14 +217,15 @@ namespace Zjcs.Editor.Combat
         {
             private int counter,targetId,type,customAction;
             private string word;
-            private bool verified;
+            private bool verified,requiresMovement,birthAnchorObserved;
             public string Observation {get;private set;}
 
             public static Probe Install(OfficialBattleRuntimeController controller)
             {
                 Run(); // All six native visuals also render inside Play Mode with controlled result flags.
                 string mode=Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP_MODE");
-                bool blind=mode=="blind",replay=mode=="replay",disperse=mode=="disperse";
+                bool movingReplay=mode=="replay-moving";
+                bool blind=mode=="blind",replay=mode=="replay" || movingReplay,disperse=mode=="disperse";
                 bool customCd=mode=="customcd",unflinching=mode=="unflinching";
                 var checkpoint=controller.Checkpoint;
                 var assets=OfficialCombatAssetCatalog.LoadDefault();var formula=assets.LoadDamageFormula();
@@ -184,7 +248,7 @@ namespace Zjcs.Editor.Combat
                 {
                     var rules=assets.Load();
                     var target=checkpoint.Units.First(v=>v.MonsterId>0);
-                    player.X=target.X-1;player.Y=target.Y;
+                    player.X=target.X-(movingReplay?3:1);player.Y=target.Y;
                     player.Skills[0]=rules.CreateSkill(replay?13220:12940,0,player.Skills[0].ItemId,1,1,3,player.Properties);
                     if (replay)
                     {
@@ -214,6 +278,7 @@ namespace Zjcs.Editor.Combat
                 {
                     unit.Hp=unit.MaxHp=unit.Turn.Hp=20000;set(unit,"MaxHp",20000);
                     if (disperse || customCd || unflinching) { unit.MoveDist=0;set(unit,"MoveDist",0); }
+                    if (movingReplay) { unit.MoveDist=unit.Id==1?2:0;set(unit,"MoveDist",unit.MoveDist); }
                     set(unit,"DodgePercent",!blind && !replay && !disperse && !customCd && !unflinching && unit.MonsterId>0?10000:0);
                     set(unit,"BlindingPercent",blind && unit.Id==1?10000:0);
                 }
@@ -229,7 +294,12 @@ namespace Zjcs.Editor.Combat
                 {
                     var step=runner.Step(control.Sequence,control.Counter+1);
                     if (replay && step.Event.SkillCasts.Any(v=>v.ActorId==1 && v.IsReplay))
-                        return new Probe {counter=control.Counter,targetId=1,type=10,word="重置冷却"};
+                    {
+                        if (movingReplay) Require(step.Event.Movements.Any(v=>v.UnitId==1 && v.Path.Count>1),"The replay fixture did not move into skill range.");
+                        var probe=new Probe {counter=control.Counter,targetId=1,type=10,word="重置冷却",requiresMovement=movingReplay};
+                        if (movingReplay) controller.StepCompleted+=result=>probe.ObserveBirth(result);
+                        return probe;
+                    }
                     if (disperse && step.Event.DispersedUnitIds.Count>0)
                         return new Probe {counter=control.Counter,targetId=step.Event.DispersedUnitIds[0],type=12,word="驱散"};
                     if (customCd || unflinching)
@@ -244,6 +314,21 @@ namespace Zjcs.Editor.Combat
                 throw new BuildFailedException("The battle fixture did not produce the requested world tip: "+mode+".");
             }
 
+            private void ObserveBirth(FightBattleExecutionResult result)
+            {
+                if (result.Checkpoint.Counter!=counter) return;
+                var view=UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
+                    .Single(v=>v.TargetId==targetId && v.EffectType==type);
+                Transform body=view.transform.parent.Find("Battle attached unit 3100");
+                var prefab=OfficialBattleWorldTips.Find("damage_FightResetSkillCDFloatEffect").prefab;
+                Require(body!=null && Mathf.Abs(view.transform.position.x-body.position.x-prefab.sceneOffset[0])<.0001f
+                    && Mathf.Abs(view.transform.position.y-body.position.y-prefab.sceneOffset[1]-view.StackOffset.y)<.0001f
+                    && Mathf.Abs(view.transform.localPosition.z)<.0001f,
+                    "The moving replay tip did not initialize from the actual attached player transform.");
+                birthAnchorObserved=true;
+                Debug.Log("Moving world tip birth anchor passed: real StepCompleted observation matches current attached entity position.");
+            }
+
             public bool TryVerify(FightBattleCheckpoint checkpoint)
             {
                 if(verified)return true;
@@ -254,7 +339,12 @@ namespace Zjcs.Editor.Combat
                     var hit=step.DamageEvents.First(v=>v.SourceId==1 && v.TargetId==targetId && (type==9?v.Blinding:v.Dodge));
                     Require(hit.Damage==0 && hit.ShieldDamage==0 && hit.BeforeHp==hit.AfterHp,"Avoided hit changed HP or shield.");
                 }
-                else if (type==10) Require(step.SkillCasts.Any(v=>v.ActorId==1 && v.IsReplay),"Live replay receipt is absent.");
+                else if (type==10)
+                {
+                    Require(step.SkillCasts.Any(v=>v.ActorId==1 && v.IsReplay),"Live replay receipt is absent.");
+                    if (requiresMovement) Require(birthAnchorObserved && step.Movements.Any(v=>v.UnitId==targetId && v.Path.Count>1),
+                        "The live moving replay tip was not observed at its entity's current position.");
+                }
                 else if (type==11)
                 {
                     Require(step.StatusCustomActions.Any(v=>v.UnitId==targetId && v.Action==customAction),"Live custom action receipt is absent.");
@@ -265,6 +355,7 @@ namespace Zjcs.Editor.Combat
                 else
                 {
                     Require(step.DispersedUnitIds.Contains(targetId),"Live disperse receipt is absent.");
+
                     var restored=FightBattleCheckpointSerializer.Load(FightBattleCheckpointSerializer.Save(checkpoint));
                     Require(restored.Receipts.Single(v=>v.Counter==counter).Event.DispersedUnitIds.Contains(targetId),"Disperse receipt did not persist.");
                 }

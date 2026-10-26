@@ -7,6 +7,7 @@ namespace Zjcs.Presentation.Combat
     /// <summary>
     /// One official battle damage prefab with a simulation-ticked lifetime and animation.
     /// </summary>
+    [DefaultExecutionOrder(101)]
     public sealed class OfficialBattleDamageFloat : MonoBehaviour
     {
         public const float Duration = 0.9f;
@@ -20,6 +21,10 @@ namespace Zjcs.Presentation.Combat
         private RectTransform rectTransform;
         private Vector3 start;
         private Vector3 worldAnchor;
+        private Transform attachedEntity;
+        private Vector3 attachedSceneOffset;
+        private Camera scaleCamera;
+        private float lastOrthographicSize=-1f;
         private Vector2 anchoredStart;
         private RectTransform screenSpaceParent;
         private Camera projectionCamera;
@@ -69,7 +74,7 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleHudAnimationPlayer animations, float showTime, bool isScreenSpace,
             bool usesOfficialAnimation, int targetId, float stackHeight, Vector3 anchorWorld,
             RectTransform screenParent, Camera worldCamera, Camera canvasCamera, float worldCameraScale = 0f,
-            int worldSortingOrderStart = 0)
+            int worldSortingOrderStart = 0, Transform entityTransform = null, Vector3 sceneOffset = default(Vector3))
         {
             EffectType = effectType;
             primaryLabel = text;
@@ -86,6 +91,8 @@ namespace Zjcs.Presentation.Combat
             TargetId = targetId;
             StackHeight = stackHeight;
             worldAnchor = anchorWorld;
+            attachedEntity = entityTransform;
+            attachedSceneOffset = sceneOffset;
             screenSpaceParent = screenParent;
             projectionCamera = worldCamera;
             eventCamera = canvasCamera;
@@ -99,6 +106,8 @@ namespace Zjcs.Presentation.Combat
         public void SetStackOffset(Vector3 offset)
         {
             StackOffset = offset;
+            // CharacterDamageUI.UpdateOffset reads its cached entity transform only on this call.
+            if (attachedEntity!=null) worldAnchor=attachedEntity.position+attachedSceneOffset;
             Vector3 anchor = worldAnchor + offset;
             float progress = Mathf.Clamp01(elapsed / duration);
             if (screenSpace && rectTransform != null && screenSpaceParent != null
@@ -118,19 +127,19 @@ namespace Zjcs.Presentation.Combat
             start = anchor;
             transform.position = start + (!hasOfficialAnimation
                 ? Vector3.up * (Rise * progress) : Vector3.zero);
+            if (cameraScale>0f)
+            {
+                Vector3 local=transform.localPosition;local.z=0f;transform.localPosition=local;
+            }
         }
 
         public void Tick(float deltaTime)
         {
+            RefreshCameraScale();
             if (deltaTime <= 0f) return;
             elapsed += deltaTime;
             animationPlayer?.Tick(deltaTime);
             RefreshSortingOrder();
-            if (cameraScale > 0f && Camera.main != null && Camera.main.orthographic)
-            {
-                float scale = Camera.main.orthographicSize / cameraScale;
-                transform.localScale = new Vector3(scale, scale, scale);
-            }
             if (!hasOfficialAnimation)
             {
                 float progress = Mathf.Clamp01(elapsed / duration);
@@ -157,6 +166,19 @@ namespace Zjcs.Presentation.Combat
         private void Update()
         {
             if (!manualTick) Tick(Time.deltaTime);
+        }
+
+        // DamageFloatSize.LateUpdate runs independently of scaled battle time.
+        private void LateUpdate() => RefreshCameraScale();
+
+        private void RefreshCameraScale()
+        {
+            if (cameraScale<=0f) return;
+            Camera current=Camera.main;
+            if (current!=scaleCamera) { scaleCamera=current;lastOrthographicSize=-1f; }
+            if (scaleCamera==null || Mathf.Approximately(scaleCamera.orthographicSize,lastOrthographicSize)) return;
+            lastOrthographicSize=scaleCamera.orthographicSize;
+            transform.localScale=Vector3.one*(lastOrthographicSize/cameraScale);
         }
 
         private void RefreshSortingOrder()

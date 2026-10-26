@@ -37,6 +37,7 @@ def refresh_runtime():
     receipt=json.loads(RECEIPT.read_bytes())
     names=[
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleWorldTips.cs',
+        'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageFloat.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleElementFeedback.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleElementFeedbackCatalog.cs',
         'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs',
@@ -60,6 +61,7 @@ def refresh_runtime():
         for output in [path,Path(str(path)+'.meta')]:
             if output.exists():receipt['native_sprites'].append(dict(path=output.relative_to(ROOT).as_posix(),sha256=sha(output)))
     receipt['disperse_notification']='User-confirmed local wiring: emit once when one disperse operation removes at least one status. Probability failure or no removable status emits nothing. This supplies the missing server call to FightDisperseModification, not a recovered server implementation.'
+    receipt['anchor_binding']='Port CharacterDamageUI.UpdateAttach/UpdateOffset and CharacterDamageUIManager.UpdateDamageUIOffset: sample the actual entity transform when creating or stacking a float; flatten local Z. DamageFloatSize retains execution order 101, camera reference/size caching, and LateUpdate scaling independently of scaled animation time. Existing no-view grid fallback and full entity/event scheduling are still incomplete.'
     save(RECEIPT,receipt)
     for name in ['damage-display','damage-visibility','element-feedback','world-damage','element-confrontation']:
         path=ROOT/'assets/reference'/('battle-rules' if name=='element-confrontation' else 'battle-hud')/(name+'-source-manifest.json')

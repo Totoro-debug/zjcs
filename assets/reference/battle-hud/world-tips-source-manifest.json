@@ -1856,7 +1856,7 @@
   ],
   "world_source_sha256": "5c9a4daa0c4c9722df2ecbcbbe735749de491f423c2aef24d5010bfcd886bdf4",
   "rules_sha256": "d74c2d5507e7ced171f486b0124d5ea93808137676e7b491d0b51fb78466d0c2",
-  "generator_sha256": "276b9d64737dbc6fb9f707ca2315a6a8963c5f2d0ee5d963c4f5c76b8fd052ab",
+  "generator_sha256": "a903a330e603cf3eb19cb7473c4facadb18b1b8682198ced6eaebaf4183dbc07",
   "shared_assets": [
     {
       "path": "unity/Assets/Official/Combat/ElementFeedback/Resources/Combat/ElementFeedback/Font_993fe9f48bba80bc.asset",
@@ -2070,6 +2070,10 @@
       "sha256": "d385ceb34fade059eabc2f4dcf3fdc5da3fc2ca1f4148ede00945e7d216eec21"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageFloat.cs",
+      "sha256": "13ddc66aeddc02e67e68a697c1aa5d7b9f50e2a9aca5c75ae53b0cfb2627b677"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleElementFeedback.cs",
       "sha256": "e99a6d8c8a18a471011a556bd999e18af7ed73c34ce0b0e0a8af2892c6c1250d"
     },
@@ -2083,7 +2087,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "sha256": "650ce531695682c642e4c1aa556af2fe2fce9e99e046e940578c07e7a81f233e"
+      "sha256": "d4e784b33c81db0c4e0a8147fd9588d92b3c973c30427f096e8a221dc0207cd8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
@@ -2099,7 +2103,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleWorldTipsAcceptance.cs",
-      "sha256": "d7f9b7abca1877eb3791ef4fd51fa6fdaa236582ed3a9095205761e94ae40966"
+      "sha256": "73538c4df1284cbc7e76561c60f77b587668820f445b30f63d9324b9b0e6c176"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs",
@@ -2133,5 +2137,6 @@
       "sha256": "d785fd64dd68bdca7e83efda3c4f1ea7cfd6cd4abfa741dd72f8cf90c998297c"
     }
   ],
-  "disperse_notification": "User-confirmed local wiring: emit once when one disperse operation removes at least one status. Probability failure or no removable status emits nothing. This supplies the missing server call to FightDisperseModification, not a recovered server implementation."
+  "disperse_notification": "User-confirmed local wiring: emit once when one disperse operation removes at least one status. Probability failure or no removable status emits nothing. This supplies the missing server call to FightDisperseModification, not a recovered server implementation.",
+  "anchor_binding": "Port CharacterDamageUI.UpdateAttach/UpdateOffset and CharacterDamageUIManager.UpdateDamageUIOffset: sample the actual entity transform when creating or stacking a float; flatten local Z. DamageFloatSize retains execution order 101, camera reference/size caching, and LateUpdate scaling independently of scaled animation time. Existing no-view grid fallback and full entity/event scheduling are still incomplete."
 }

@@ -336,8 +336,9 @@ namespace Zjcs.Presentation.Combat
         {
             var renderer = new OfficialBattleHudRenderer(hudCatalog);
             GameObject instance = renderer.CreateWorldFloat(prefab, root, out var nodes);
-            Vector3 world = gridToWorld(new FightGridPoint(pending.Target.X, pending.Target.Y))
-                + new Vector3(prefab.sceneOffset[0], prefab.sceneOffset[1], prefab.sceneOffset[2]);
+            Vector3 sceneOffset=new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);
+            Transform entity=Body(pending.Target.Id);
+            Vector3 world=(entity!=null?entity.position:gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y)))+sceneOffset;
             instance.transform.position = world;
             if (Camera.main != null)
             {
@@ -378,7 +379,7 @@ namespace Zjcs.Presentation.Combat
             var view = instance.AddComponent<OfficialBattleDamageFloat>();
             view.InitializeOfficial(prefab.effectType, null, null, animations, prefab.showTime, false,
                 true, pending.Target.Id, prefab.height, world, null, Camera.main, null,
-                prefab.cameraScale, prefab.sortingOrderStart);
+                prefab.cameraScale, prefab.sortingOrderStart,entity,sceneOffset);
             activeDamageFloats.Add(view);
             RefreshDamageFloatStack(pending.Target.Id);
             return view;
@@ -411,8 +412,9 @@ namespace Zjcs.Presentation.Combat
                 // DamageCustomActionUI.ShouldShowIcon: only EStatusCustomAction.CDModify.
                 nodes[prefab.iconPath].SetActive(customAction==3);
             }
-            Vector3 world=gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y))
-                +new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);
+            Vector3 sceneOffset=new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);
+            Transform entity=Body(pending.Target.Id);
+            Vector3 world=(entity!=null?entity.position:gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y)))+sceneOffset;
             instance.transform.position=world;
             if (Camera.main!=null)
             {
@@ -425,7 +427,7 @@ namespace Zjcs.Presentation.Combat
             var view=instance.AddComponent<OfficialBattleDamageFloat>();
             view.InitializeOfficial(prefab.effectType,nodes[prefab.textPath].GetComponent<TMP_Text>(),null,
                 animations,prefab.showTime,false,true,pending.Target.Id,prefab.height,world,null,Camera.main,null,
-                prefab.cameraScale,prefab.sortingOrderStart);
+                prefab.cameraScale,prefab.sortingOrderStart,entity,sceneOffset);
             activeDamageFloats.Add(view);
             RefreshDamageFloatStack(pending.Target.Id);
             return view;
