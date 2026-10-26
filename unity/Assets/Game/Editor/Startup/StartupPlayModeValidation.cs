@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zjcs.Offline.Startup;
+using Zjcs.Presentation.CharacterCreation;
 using Object = UnityEngine.Object;
 
 namespace Zjcs.Editor.Startup
@@ -125,13 +126,18 @@ namespace Zjcs.Editor.Startup
                     yield return null;
                     yield return new WaitForEndOfFrame(); Capture("loading-bar");
                 }
-                while (GameObject.Find("CharacterCreationCanvas") == null) yield return null;
-                yield return null;
+                OfficialSaveSelectionView selector = null;
+                while (selector == null || !selector.IsReady) { selector = FindObjectOfType<OfficialSaveSelectionView>(); yield return null; }
                 yield return new WaitForEndOfFrame(); Capture(pass == 0 ? "save-selector" : "restart-save-selector");
                 Require(FindObjectOfType<OfflineStartupFlow>() == null, "Startup canvases were not released before local input.");
                 if (pass == 0)
                 {
-                    Button create = Resources.FindObjectsOfTypeAll<Button>().First(b => b.gameObject.activeInHierarchy && b.GetComponentInChildren<TMP_Text>()?.text == "新建存档");
+                    if (!selector.Panel.CreateButton.gameObject.activeInHierarchy)
+                    {
+                        Click(selector.Panel.transform.Find("BgDialog1 (1)/Content/TabGroup/TabGroup/TabGroup/GiftMailDialogTabGroupItem").gameObject);
+                        yield return new WaitForSecondsRealtime(.4f);
+                    }
+                    Button create = selector.Panel.CreateButton;
                     Click(create.gameObject);
                     yield return new WaitForSecondsRealtime(2f);
                     string saves = Path.Combine(Application.persistentDataPath, "saves");
@@ -142,7 +148,7 @@ namespace Zjcs.Editor.Startup
                 }
                 else
                 {
-                    Require(Resources.FindObjectsOfTypeAll<TMP_Text>().Any(t => t.gameObject.activeInHierarchy && t.text.StartsWith("新角色 · ")),
+                    Require(selector.Panel.RoleItemSlot.Find("SaveSlot_slot-1") != null,
                         "Cold startup did not restore the isolated draft entry.");
                     SessionState.SetInt(Key + "Pass", 2);
                     Debug.Log("Startup cold restart validation passed: original splash/local loading to save selector and isolated draft recovery.");

@@ -95,7 +95,7 @@ namespace Zjcs.Presentation.CharacterCreation
             try
             {
                 assets = CharacterCreationAssetCatalog.LoadDefault();
-                service = CharacterCreationOfflineService.OpenDefault(Application.persistentDataPath);
+                service = CharacterCreationOfflineService.OpenDefault(SaveSelectionProbe.ProfileRoot);
                 font = assets.OfficialFont as TMP_FontAsset;
                 if (font == null) throw new InvalidOperationException("The fixed-version official TMP font is not bound.");
                 EnsureEventSystem();
@@ -161,74 +161,13 @@ namespace Zjcs.Presentation.CharacterCreation
             if (!PersistDraft()) return;
             DisposeFirstStoryHome();
             ClearScreen();
-            screen = CreateScreen("选择存档");
-            status = AddText(screen.transform, message ?? string.Empty, 22, new Color32(244, 205, 135, 255),
-                new Vector2(0.08f, 0.76f), new Vector2(0.92f, 0.83f), TextAlignmentOptions.Center);
-
-            RectTransform listRect = CreateRect(screen.transform, "SaveSlots", new Vector2(0.09f, 0.2f),
-                new Vector2(0.91f, 0.73f));
-            Image listImage = listRect.gameObject.AddComponent<Image>();
-            listImage.color = new Color32(21, 29, 34, 225);
-            ScrollRect scroll = listRect.gameObject.AddComponent<ScrollRect>();
-            scroll.horizontal = false;
-            scroll.vertical = true;
-            scroll.movementType = ScrollRect.MovementType.Clamped;
-
-            RectTransform viewport = CreateRect(listRect, "Viewport", Vector2.zero, Vector2.one);
-            viewport.offsetMin = new Vector2(12, 12);
-            viewport.offsetMax = new Vector2(-12, -12);
-            Image viewportImage = viewport.gameObject.AddComponent<Image>();
-            viewportImage.color = new Color(1, 1, 1, 0.01f);
-            Mask mask = viewport.gameObject.AddComponent<Mask>();
-            mask.showMaskGraphic = false;
-            scroll.viewport = viewport;
-
-            RectTransform content = CreateRect(viewport, "Content", new Vector2(0, 1), new Vector2(1, 1));
-            content.pivot = new Vector2(0.5f, 1);
-            VerticalLayoutGroup layout = content.gameObject.AddComponent<VerticalLayoutGroup>();
-            layout.spacing = 10;
-            layout.childControlWidth = true;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = false;
-            ContentSizeFitter fitter = content.gameObject.AddComponent<ContentSizeFitter>();
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            scroll.content = content;
-
-            IReadOnlyList<string> slots = service.GetSlotIds();
-            foreach (string id in slots)
-            {
-                bool created;
-                int weapon;
-                string characterName;
-                try
-                {
-                    created = service.HasCharacter(id);
-                    weapon = created ? service.GetInitialWeaponType(id) : 0;
-                    characterName = created ? service.GetCharacterName(id) : string.Empty;
-                }
-                catch (Exception)
-                {
-                    AddButton(content, "存档损坏 · " + id, 22, OpenSlot(id), new Color32(88, 57, 56, 255), 86);
-                    continue;
-                }
-
-                if (!created && service.GetDraftStatus(id) == SaveReadStatus.Corrupt)
-                {
-                    AddButton(content, "草稿损坏 · 保留损坏副本并重新开始 · " + id, 20,
-                        () => RecoverCorruptDraft(id), new Color32(88, 57, 56, 255), 86);
-                    continue;
-                }
-
-                string label = created
-                    ? weapon == 0 ? "继续创建 · " + characterName : "继续冒险 · " + characterName
-                    : "新角色 · " + SlotLabel(id);
-                AddButton(content, label, 24, OpenSlot(id), new Color32(55, 66, 67, 255), 86);
-            }
-
-            Button create = AddButton(screen.transform, "新建存档", 28, CreateSlot,
-                new Color32(122, 86, 46, 255), 78);
-            Place(create.GetComponent<RectTransform>(), new Vector2(0.16f, 0.07f), new Vector2(0.84f, 0.16f));
+            canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080, 1920);
+            canvas.GetComponent<CanvasScaler>().screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            screen = new GameObject("Screen_选择存档", typeof(RectTransform));
+            screen.transform.SetParent(canvas.transform, false);
+            Place(screen.GetComponent<RectTransform>(), Vector2.zero, Vector2.one);
+            screen.AddComponent<OfficialSaveSelectionView>().Initialize(service, CreateSlot, OpenSlot,
+                RecoverCorruptDraft, message);
         }
 
         private void BeginOpening()
@@ -246,6 +185,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 if (!PersistDraft()) return;
                 draft = null;
                 slotId = service.CreateSlot();
+                ProfileSelectionPreference.Write(SaveSelectionProbe.ProfileRoot, slotId);
                 draft = service.OpenDraft(slotId);
                 BeginOpening();
             }
@@ -281,7 +221,9 @@ namespace Zjcs.Presentation.CharacterCreation
                     if (!PersistDraft()) return;
                     draft = null;
                     slotId = id;
-                    if (!service.HasCharacter(id))
+                    bool hasCharacter = service.HasCharacter(id);
+                    ProfileSelectionPreference.Write(SaveSelectionProbe.ProfileRoot, slotId);
+                    if (!hasCharacter)
                     {
                         draft = service.OpenDraft(id);
                         BeginOpening();
@@ -298,7 +240,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 catch (Exception error)
                 {
                     Debug.LogException(error, this);
-                    ShowSlots(error.Message);
+                    ShowSlots("存档无法读取，原文件已保留。请选择其他存档。");
                 }
             };
         }
@@ -1354,7 +1296,7 @@ namespace Zjcs.Presentation.CharacterCreation
             try
             {
                 homeRuntime = Zjcs.Presentation.Home.HomeFeatureRuntime.Begin(slotId,
-                    Application.persistentDataPath, canvas.transform, OnHomeClosed, OpenInitialIslandFromHome);
+                    SaveSelectionProbe.ProfileRoot, canvas.transform, OnHomeClosed, OpenInitialIslandFromHome);
                 if (screen != null) screen.SetActive(false);
             }
             catch (Exception error)
@@ -1398,16 +1340,16 @@ namespace Zjcs.Presentation.CharacterCreation
             GameObject model = null;
             try
             {
-                var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+                var slots = new ProfileSlotCatalog(SaveSelectionProbe.ProfileRoot);
                 OfflineMainlineProgressSession progress = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
                 int mapClassId = OfficialMainlineMapRuntime.ResolveHomeReturnMap(progress.Save);
                 model = CharacterCreationNativeModelFactory.CreateWorldModel(slotId,
-                    Application.persistentDataPath, out string name);
+                    SaveSelectionProbe.ProfileRoot, out string name);
                 runtimeObject = new GameObject("Map" + mapClassId + "GameRuntime");
                 OfficialMainlineMapRuntime runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
                 runtime.MapMusicVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.MusicVolume;
                 runtime.MapVoiceVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.VoiceVolume;
-                runtime.Begin(mapClassId, slotId, Application.persistentDataPath, canvas.transform, model, name,
+                runtime.Begin(mapClassId, slotId, SaveSelectionProbe.ProfileRoot, canvas.transform, model, name,
                     () => { if (screen != null) screen.SetActive(true); });
                 if (screen != null) screen.SetActive(false);
             }
@@ -1524,6 +1466,7 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void ClearScreen()
         {
+            if (canvas != null) canvas.GetComponent<CanvasScaler>().screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             CloseOfficialConfirmation();
             malePreview?.Dispose();
             femalePreview?.Dispose();

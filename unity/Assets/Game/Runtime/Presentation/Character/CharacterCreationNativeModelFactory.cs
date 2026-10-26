@@ -85,7 +85,9 @@ namespace Zjcs.Presentation.CharacterCreation
             WardrobeResolution appearanceOverride, bool requireWorldEntry, out string characterName)
         {
             var slots = new ProfileSlotCatalog(persistentDataPath);
-            OfflineMainlineProgressSession session = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
+            OfflineMainlineProgressSession session = requireWorldEntry
+                ? OfflineMainlineProgressSession.OpenCharacter(slots, slotId)
+                : OfflineMainlineProgressSession.InspectCharacter(slots, slotId);
             if (!session.Save.Player.CharacterCreated || requireWorldEntry && session.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map10.");
 

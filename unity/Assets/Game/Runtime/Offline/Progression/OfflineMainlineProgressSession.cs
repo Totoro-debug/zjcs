@@ -364,6 +364,17 @@ namespace Zjcs.Offline.Progression
 
         public static OfflineMainlineProgressSession OpenCharacter(ProfileSlotCatalog slots, string slotId)
         {
+            return ReadCharacter(slots, slotId, true);
+        }
+
+        // Browsing profiles and rendering portraits must not write or advance a save.
+        public static OfflineMainlineProgressSession InspectCharacter(ProfileSlotCatalog slots, string slotId)
+        {
+            return ReadCharacter(slots, slotId, false);
+        }
+
+        private static OfflineMainlineProgressSession ReadCharacter(ProfileSlotCatalog slots, string slotId, bool persistCreationTime)
+        {
             if (slots == null) throw new ArgumentNullException(nameof(slots));
             string path = slots.GetProgressPath(slotId);
             SaveReadResult result = LocalJsonSaveFile.Read(path, IsValidSaveJson);
@@ -371,7 +382,7 @@ namespace Zjcs.Offline.Progression
                 throw new InvalidDataException("The selected profile progress save is corrupt.");
             OfflineMainlineSave save = result.Json == null ? new OfflineMainlineSave() : ParseSave(result.Json);
             long createdAt = slots.GetCreatedAtUnixSeconds(slotId);
-            if (save.CreatedAtUnixSeconds == 0 && createdAt > 0)
+            if (persistCreationTime && save.CreatedAtUnixSeconds == 0 && createdAt > 0)
             {
                 save.CreatedAtUnixSeconds = createdAt;
                 LocalJsonSaveFile.Write(path, JsonUtility.ToJson(save, true), IsValidSaveJson);

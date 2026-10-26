@@ -22,7 +22,7 @@ from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
 ART = ROOT / 'unity/Assets/Official/Startup'
 REF = ROOT / 'assets/reference/startup'
 SUPPORTED = set(('Canvas CanvasScaler GraphicRaycaster RectMask2D CanvasGroup '
-                 'Image SlicedFilledImage MirrorImage NoDrawingRayCast TextMeshProUGUI '
+                 'Image RawImage GridLayoutGroup SlicedFilledImage MirrorImage NoDrawingRayCast TextMeshProUGUI '
                  'ContentSizeFitter AspectRatioFitter Slider Button LayoutElement '
                  'HorizontalLayoutGroup VerticalLayoutGroup ScrollRect Mask '
                  'LaunchPanel LaunchUIRoot AgeTipGo AgeTipsDialog').split())
@@ -37,13 +37,18 @@ def write(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
 
 
-def build():
+def build(save_selection=False):
+    global ART, REF
+    if save_selection:
+        ART = ROOT / 'unity/Assets/Official/SaveSelection'
+        REF = ROOT / 'assets/reference/save-selection'
     source = OfficialSource('854_156383')
     with source.apk.open('rb') as stream:
         if hashlib.file_digest(stream, 'sha256').hexdigest() != source.apk_sha256:
             raise ValueError('Pinned APK SHA256 differs')
     archive = zipfile.ZipFile(source.apk)
-    env = UnityPy.Environment()
+    apk = Apk('854_156383', reuse_current_cache=True) if save_selection else None
+    env = apk.env if apk else UnityPy.Environment()
     provenance, inputs, containers = {}, [], {}
     # APK lookup precedes any cloud lookup. All required Boot/Launch payloads
     # and their CAB dependency closure are packaged in this APK.
@@ -62,6 +67,9 @@ def build():
                     containers.update(asset.container)
     used = set()
     def record(obj):
+        if obj.assets_file.name not in provenance:
+            original = apk.provenance(obj)
+            provenance[obj.assets_file.name] = dict(original, cab=obj.assets_file.name)
         row = provenance[obj.assets_file.name]
         used.add(row['bundle'])
         return dict(cab=obj.assets_file.name, path_id=str(obj.path_id), bundle=row['bundle'],
@@ -142,6 +150,13 @@ def build():
 
     refs, reference_ids, objects, components = [], {}, {}, []
     sprites, animations, localized = [], [], set()
+    chinese_font = None
+    chinese_material = None
+    if save_selection:
+        # MultiLanguageFontService selects FZY4K for zh_CN, replacing the
+        # Japanese font serialized in the shared login prefab.
+        chinese_font = env.get_cab('CAB-c7171e4ae284692301501070c8b48eb0').objects[-1054575886599457342]
+        chinese_material = PPtr(**font_schemas.read(chinese_font)['material'], assetsfile=chinese_font.assets_file).deref()
     def ref(obj):
         if obj is None:
             return {'instanceID': 0}
@@ -168,6 +183,8 @@ def build():
         return value
 
     roots, nodes = [], []
+    special = []
+    embedded = []
     def walk(obj, parent=-1):
         go = obj.read()
         parts = [c.component.deref() for c in go.m_Component]
@@ -185,6 +202,14 @@ def build():
                 continue
             cls = c.read(check_read=False).m_Script.read().m_ClassName if c.type.name == 'MonoBehaviour' else c.type.name
             record(c)
+            if save_selection and cls == 'LoopVerticalScrollRect':
+                cfg = schemas.read(c)
+                embedded.append(PPtr(**cfg['DefaultPrefabSource']['Prefab'], assetsfile=c.assets_file).deref())
+                cfg = {k: v for k, v in cfg.items() if k.startswith('m_') and k not in ['m_GameObject', 'm_Script', 'm_Name']}
+                node['components'].append(dict(id=ref(c)['instanceID'], type='ScrollRect', json=json.dumps(convert(cfg, c)), source=record(c)))
+                continue
+            if save_selection and cls in ['PlanesListPanel', 'PlanesInfoItemWithRoleInfo', 'PlayerInfoUI', 'HeadCharacterPortrait', 'BgDialogElement', 'PopupWindow']:
+                special.append(dict(node=index, type=cls, fields=schemas.read(c), source=record(c)))
             if cls not in SUPPORTED:
                 # Kept as provenance; online service/DI components are bound by
                 # the offline host after native prefab restoration.
@@ -192,8 +217,13 @@ def build():
                     components.append((node, c, cls))
                 elif cls in ['LanguageRegionImage', 'MultiLanguageText', 'TMPEffect', 'SafeArea', 'CanvasWidthAdjuster']:
                     components.append((node, c, cls))
+                elif save_selection and cls == 'PopupWindow':
+                    components.append((node, c, cls))
                 continue
             data = schemas.read(c) if c.type.name == 'MonoBehaviour' else c.read_typetree()
+            if save_selection and cls == 'TextMeshProUGUI':
+                data['m_fontAsset'] = {'m_FileID': 0, 'm_PathID': 0}
+                data['m_sharedMaterial'] = {'m_FileID': 0, 'm_PathID': 0}
             if c.type.name == 'MonoBehaviour':
                 script = c.read(check_read=False).m_Script.read()
                 schema_key = script.m_AssemblyName + ':' + (script.m_Namespace + '.' if script.m_Namespace else '') + script.m_ClassName
@@ -210,23 +240,58 @@ def build():
                 data['m_Enabled'] = bool(data['m_Enabled'])
             cfg = dict(id=ref(c)['instanceID'], type=cls, json='', source=record(c))
             cfg['json'] = json.dumps(convert(data, c), ensure_ascii=False)
+            if save_selection and cls == 'TextMeshProUGUI':
+                converted = json.loads(cfg['json'])
+                converted['m_fontAsset'] = ref(chinese_font)
+                converted['m_sharedMaterial'] = ref(chinese_material)
+                cfg['json'] = json.dumps(converted, ensure_ascii=False)
             node['components'].append(cfg)
         for child in tr.read().m_Children:
             walk(child.read().m_GameObject.deref(), index)
         return index
 
-    for name in ['BootSplash', 'ThemeCanvas', 'LaunchRoot', 'AgeTipsDialog']:
+    if save_selection:
+        containers.update(apk.container('prefabs_ui_login'))
+    for name in (['PlanesListPanel'] if save_selection else ['BootSplash', 'ThemeCanvas', 'LaunchRoot', 'AgeTipsDialog']):
         obj = asset('/' + name + '.prefab')
         if name == 'LaunchRoot':
             obj = next(p.read().m_GameObject.deref() for p in obj.read().m_Component[0].component.read().m_Children
                        if p.read().m_GameObject.read().m_Name == 'LaunchCanvas')
         roots.append(dict(name=name, node=walk(obj)))
 
+    if save_selection:
+        role = next(obj for obj in embedded if obj.read().m_Name == 'PlanesRoleItem')
+        roots.append(dict(name='PlanesRoleItem', node=walk(role)))
+        launch_root = asset('/LaunchRoot.prefab')
+        def find_go(obj, name):
+            if obj.read().m_Name == name: return obj
+            for child in obj.read().m_Component[0].component.read().m_Children:
+                found = find_go(child.read().m_GameObject.deref(), name)
+                if found: return found
+        roots.append(dict(name='BlurMask', node=walk(find_go(launch_root, 'BlurMask'))))
+        # The tabbed dialog's background is selected by an original GUID proxy.
+        manifest_entry = next(n for n in archive.namelist() if 'PackageManifest_DefaultPackage_' in n and n.endswith('.bytes'))
+        guids = {m[2].decode(): m[1].decode() for m in re.finditer(rb'(Assets/[^\x00-\x1f]+?)\x20\x00([a-f0-9]{32})', archive.read(manifest_entry))}
+        for item in special:
+            if item['type'] != 'PlanesListPanel': continue
+            for config in item['fields']['references']['RefIds']:
+                if config['type']['class'] != 'StateSpriteAssetProxyConfig': continue
+                for renderer in config['data']['mStateProxyData']['SpriteRendererConfigs']:
+                    value = next(v['Value'] for v in renderer['Proxy']['mSerializeBuffer'] if v['Key']['mValue'] == 1)
+                    path = guids[value['mAssetGuid']]
+                    key = 'defaultpackage_' + path.replace('/', '_').lower()
+                    bundle = max((b for b in apk.index if key.startswith(b.removesuffix('.bundle'))), key=len)
+                    obj = next(p.deref() for pth, p in apk.container(bundle) if pth.lower() == path.lower())
+                    target = PPtr(**renderer['Img'], assetsfile=objects[nodes[item['node']]['id']].assets_file).deref()
+                    target_go = target.read(check_read=False).m_GameObject.path_id
+                    node = next(n for n in nodes if n['source']['path_id'] == str(target_go))
+                    node['language_sprite_id'] = ref(obj)['instanceID']
+
     for node, obj, cls in components:
         if cls == 'MultiLanguageText':
             cfg = schemas.read(obj)
             node['text_key'] = cfg['myKey']
-            if cfg['m_Enabled'] and '{' not in cfg['myKey']:
+            if cfg['m_Enabled'] and cfg['myKey'] and '{' not in cfg['myKey']:
                 localized.add(cfg['myKey'])
         elif cls == 'LanguageRegionImage':
             cfg = schemas.read(obj)
@@ -243,8 +308,11 @@ def build():
         elif cls in ['SafeArea', 'CanvasWidthAdjuster']:
             node[cls] = json.dumps(convert({k: v for k, v in schemas.read(obj).items()
                                            if k not in ['m_GameObject', 'm_Script', 'm_Name']}, obj))
-        elif cls in ['Animation', 'Animator']:
-            if cls == 'Animation':
+        elif cls in ['Animation', 'Animator', 'PopupWindow']:
+            if cls == 'PopupWindow':
+                cfg = schemas.read(obj)
+                clips = [PPtr(**cfg[k], assetsfile=obj.assets_file) for k in ['mShowClip', 'mHideClip']]
+            elif cls == 'Animation':
                 clips = obj.read().m_Animations
             else:
                 controller = obj.read().m_Controller
@@ -258,17 +326,27 @@ def build():
                     def clip(value, root_path, root):
                         return value.read().m_Name
                 graph = animator(ControllerReader(), controller, dict(path=node['name']))
-                original_controller = controller.deref().read_typetree()
+                controller_obj = controller.deref()
+                overrides = {}
+                while controller_obj.type.name == 'AnimatorOverrideController':
+                    override = controller_obj.read()
+                    for pair in override.m_Clips:
+                        if pair.m_OverrideClip.path_id:
+                            overrides[pair.m_OriginalClip.path_id] = pair.m_OverrideClip
+                    controller_obj = override.m_Controller.deref()
+                    record(controller_obj)
+                original_controller = controller_obj.read_typetree()
                 names = dict(original_controller['m_TOS'])
                 parameters = original_controller['m_Controller']['m_Values']['data']['m_ValueArray']
-                if any(p['m_Type'] != 9 for p in parameters):
+                if any(p['m_Type'] not in [4, 9] for p in parameters):
                     raise ValueError('Unexpected original startup animator parameter type')
                 graph['parameters'] = [names[p['m_ID']] for p in parameters]
+                graph['parameter_types'] = [p['m_Type'] for p in parameters]
                 layer = original_controller['m_Controller']['m_LayerArray'][0]['data']
                 graph['layer'] = names[layer['m_Binding']]
                 graph['weight'] = layer['m_DefaultWeight']
                 node['animator'] = json.dumps(graph)
-                clips = controller.read().m_AnimationClips
+                clips = [overrides.get(p.path_id, p) for p in controller_obj.read().m_AnimationClips]
             def tree(i):
                 n = nodes[i]
                 return dict(name=n['name'], path=n['name'] if n['parent'] < 0 else path(i),
@@ -300,9 +378,9 @@ def build():
                         prop = track['property'].replace('scale.', 'm_LocalScale.').replace('position.', 'm_LocalPosition.')
                         tracks.append(dict(path=relative, property=prop, keys=track['keys']))
                 for track in tracks:
-                    track['keys'] = [dict(time=k[0], value=k[1], inSlope=k[2] if math.isfinite(k[2]) else 0,
-                                          outSlope=k[3] if math.isfinite(k[3]) else 0,
-                                          step=not math.isfinite(k[2]) or not math.isfinite(k[3])) for k in track['keys']]
+                    track['keys'] = [dict(time=k[0], value=k[1], inSlope=k[2] if k[2] is not None and math.isfinite(k[2]) else 0,
+                                          outSlope=k[3] if k[3] is not None and math.isfinite(k[3]) else 0,
+                                          step=k[2] is None or k[3] is None or not math.isfinite(k[2]) or not math.isfinite(k[3])) for k in track['keys']]
                 animations.append(dict(node=nodes.index(node), name=clip.m_Name, tracks=tracks, source=record(ptr.deref())))
 
     localized.update(['Game_Initializing', 'YooAsset_Init'])
@@ -319,6 +397,11 @@ def build():
                     cfg = json.loads(component['json']); cfg['m_text'] = texts[key]
                     component['json'] = json.dumps(cfg, ensure_ascii=False)
 
+    default_portrait_id = 0
+    if save_selection:
+        portrait_settings = apk.asset('scriptableconfig_modules_playerportrait', '/PlayerPortraitSettings.asset')
+        record(portrait_settings)
+        default_portrait_id = ref(PPtr(**schemas.read(portrait_settings)['mDefaultPortrait'], assetsfile=portrait_settings.assets_file).deref())['instanceID']
     # Resolve every referenced external object, including language config PPtrs.
     for row in refs:
         obj = objects[row['id']]
@@ -385,15 +468,29 @@ def build():
                        wrapU=settings.m_WrapU, wrapV=settings.m_WrapV, aniso=settings.m_Aniso,
                        bias=settings.m_MipBias)
 
-    result = dict(manifest=source.version, roots=roots, nodes=nodes, refs=refs, animations=animations,
+    if save_selection:
+        portrait_settings = apk.asset('scriptableconfig_modules_playerportrait', '/PlayerPortraitSettings.asset')
+        record(portrait_settings)
+        head = next(row for row in schemas.read(portrait_settings)['mPhotographyParameters'] if row['MyTypes'] == [0])
+        studio = apk.asset('prefabs_appearance_portrait', '/CharacterPortraitStudio.prefab')
+        record(studio)
+        camera = next(c for c in apk.objects('prefabs_appearance_portrait') if c.type.name == 'Camera')
+        record(camera)
+        camera_fields = camera.read_typetree()
+        request = next(s for s in special if s['type'] == 'HeadCharacterPortrait')['fields']['mRequestor']
+        write(ART / 'head-photography.json', dict(manifest=source.version, width=head['TextureWidth'], height=head['TextureHeight'],
+              size=head['Size'], offset=[head['mOffset'][a] for a in 'xyz'], depth=head['mDepthBuffer'],
+              captureParticles=bool(head['mCaptureParticle']), excludes=head['mExcludeSkinTypes'],
+              animation=request['mAnimationName'], near=camera_fields['near clip plane'], far=camera_fields['far clip plane']))
+    result = dict(manifest=source.version, roots=roots, nodes=nodes, refs=refs, animations=animations, special=special, default_portrait_id=default_portrait_id,
                   texts=[dict(key=k, value=v) for k, v in sorted(texts.items())])
-    write(ART / 'startup-ui.json', result)
+    write(ART / ('save-selection-ui.json' if save_selection else 'startup-ui.json'), result)
     inputs = [row for row in provenance.values() if row['bundle'] in used]
     inputs = list({row['bundle']: row for row in inputs}.values())
     effect_evidence = json.loads((REF.parent / 'battle-hud/element-feedback-source-manifest.json').read_text(encoding='utf8'))
     receipt = dict(manifest=source.version, apk_sha256=source.apk_sha256,
                    source_unity='2022.3.57f1', target_unity='2022.3.57f1c2',
-                   operation='Deserialize original BootSplash, ThemeCanvas, LaunchRoot/LaunchCanvas and AgeTipsDialog; restore native components with exact PPtr bindings; decode original sprites and animation curves.',
+                   operation=('Recover APK PlanesListPanel and embedded PlanesRoleItem, original UGUI fields, sprite proxy, TMP and role state bindings; replace online providers with local profiles.' if save_selection else 'Deserialize original BootSplash, ThemeCanvas, LaunchRoot/LaunchCanvas and AgeTipsDialog; restore native components with exact PPtr bindings; decode original sprites and animation curves.'),
                    inputs=inputs, language_sources=language_sources,
                    code_sources=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
                        ROOT / '.tools/source-packages/official-code/launch-source/LaunchPanel.cs',
@@ -410,6 +507,19 @@ def build():
                        ROOT / 'unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs']],
                    outputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes()))
                             for p in sorted(ART.rglob('*')) if p.is_file() and p.suffix != '.meta' and p.name != 'source-manifest.json'])
+    if save_selection:
+        receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
+            ROOT / '.tools/source-packages/official-code/client-source' / (name + '.cs') for name in [
+                'PlanesListPanel', 'PlanesRoleListContent', 'PlanesInfoItemBase', 'PlanesInfoItemWithRoleInfo',
+                'PlayerInfoUI', 'PlayerPortraitSettings', 'HeadCharacterPortrait', 'HeadCharacterPortraitBuilder',
+                'UnityEngine.UI.Ext/TabAnimatorTransition']])
+        receipt['converters'].append(dict(path='scripts/prepare_official_save_selection.py',
+                                         sha256=digest((ROOT / 'scripts/prepare_official_save_selection.py').read_bytes())))
+        receipt['code_sources'].extend(dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p.read_bytes())) for p in [
+            ROOT / '.tools/source-packages/official-code/client-source/BgDialogElement.cs',
+            ROOT / '.tools/source-packages/official-code/framework-firstpass-source/WindowBlurMask.cs',
+            ROOT / '.tools/source-packages/official-code/framework-firstpass-source/MultiLanguageFontService.cs'])
+        receipt['operation'] += ' Chinese font follows MultiLanguageFontService; native role head photography and launch blur mask are recovered from the same APK.'
     write(REF / 'source-manifest.json', receipt)
     write(ART / 'source-manifest.json', receipt)
     print('Restored', len(nodes), 'nodes,', len(sprites), 'sprites,', len(animations), 'animations')

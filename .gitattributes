@@ -199,3 +199,18 @@ unity/Assets/Official/Combat/BattleReport/Graphics/*.mat text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics/*.json text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics/*.meta text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics.meta text eol=lf
+
+# Save selector conversion and native asset receipts preserve exact bytes.
+unity/Assets/Official/SaveSelection.meta -text
+unity/Assets/Official/SaveSelection/** -text
+unity/Assets/Game/Resources/SaveSelection.meta -text
+unity/Assets/Game/Resources/SaveSelection/** -text
+assets/reference/save-selection/** -text
+scripts/prepare_official_save_selection.py -text
+scripts/record_save_selection_native_sources.py -text
+unity/Assets/Game/Runtime/Presentation/CharacterCreation/OfficialSaveSelectionView.cs* -text
+unity/Assets/Game/Runtime/Presentation/CharacterCreation/SaveSelectionProbe.cs* -text
+unity/Assets/Game/Runtime/Presentation/CharacterCreation/CharacterCreationFlowController.cs -text
+unity/Assets/Game/Runtime/Offline/State/ProfileSelectionPreference.cs* -text
+unity/Assets/Game/Runtime/Offline/Progression/OfflineMainlineProgressSession.cs -text
+unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs -text

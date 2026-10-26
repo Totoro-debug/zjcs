@@ -59,8 +59,8 @@ namespace Zjcs.Offline.Startup
             yield return new WaitForEndOfFrame(); Capture("age");
             Click(FindButton("CommonBtn_12"));
             yield return null; yield return new WaitForEndOfFrame(); Capture("loading-bar");
-            while (GameObject.Find("CharacterCreationCanvas") == null) yield return null;
-            yield return null; yield return new WaitForEndOfFrame(); Capture("save-selector");
+            while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
+            yield return new WaitForSecondsRealtime(.5f); yield return new WaitForEndOfFrame(); Capture("save-selector");
             Require(FindObjectOfType<OfflineStartupFlow>() == null, "Player retained the startup input layer.");
             File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"pointer\":\"EventSystem raycast/down/up/click\",\"saveWrites\":false}");
             Debug.Log("Startup Windows Player validation passed: original splash/local progress, simulated age dialog open/close, local save-selector handoff.");

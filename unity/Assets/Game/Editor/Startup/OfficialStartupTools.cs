@@ -17,9 +17,8 @@ namespace Zjcs.Editor.Startup
 {
     public static class OfficialStartupTools
     {
-        private const string Art = "Assets/Official/Startup";
-        private const string Output = "Assets/Game/Resources/Startup";
-        [Serializable] private sealed class Data { public string manifest; public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; }
+        private static string Output = "Assets/Game/Resources/Startup";
+        [Serializable] private sealed class Data { public string manifest; public Root[] roots; public Node[] nodes; public Ref[] refs; public Clip[] animations; public Text[] texts; public int default_portrait_id; }
         [Serializable] private sealed class Root { public string name; public int node; }
         [Serializable] private sealed class Node { public string name, transform_json, SafeArea, CanvasWidthAdjuster, text_effect, animator; public bool active, rect; public int parent, id, transform_id, layer, language_sprite_id; public Part[] components; }
         [Serializable] private sealed class Part { public int id; public string type, json; }
@@ -33,13 +32,18 @@ namespace Zjcs.Editor.Startup
         private static readonly Regex References = new Regex("\\\"instanceID\\\"\\s*:\\s*(\\d+)");
         private static readonly Regex ObjectFields = new Regex("\\\"([^\\\"]+)\\\"\\s*:\\s*\\{\\s*\\\"instanceID\\\"\\s*:\\s*(\\d+)\\s*\\}");
 
-        public static void Restore()
+        public static void Restore() => RestoreNative(false);
+        public static void RestoreSaveSelection() => RestoreNative(true);
+
+        private static void RestoreNative(bool saveSelection)
         {
+            string Art = saveSelection ? "Assets/Official/SaveSelection" : "Assets/Official/Startup";
+            Output = saveSelection ? "Assets/Game/Resources/SaveSelection" : "Assets/Game/Resources/Startup";
             Directory.CreateDirectory(Output);
             Directory.CreateDirectory(Output + "/Materials");
             Directory.CreateDirectory(Output + "/Sprites");
             AssetDatabase.Refresh();
-            Data data = JsonUtility.FromJson<Data>(File.ReadAllText(Art + "/startup-ui.json"));
+            Data data = JsonUtility.FromJson<Data>(File.ReadAllText(Art + (saveSelection ? "/save-selection-ui.json" : "/startup-ui.json")));
             if (data.manifest != "854_156383") throw new InvalidOperationException("Startup APK version differs.");
             var bindings = new Dictionary<int, Object>();
             foreach (Ref row in data.refs.Where(r => r.kind == "Sprite" || r.kind == "Texture2D"))
@@ -139,7 +143,7 @@ namespace Zjcs.Editor.Startup
                 font.ReadFontAssetDefinition();
                 if (font.atlasPopulationMode == AtlasPopulationMode.Dynamic)
                 {
-                    font.TryAddCharacters(string.Concat(data.texts.Select(x => x.value)) + "854.156383 · 离线版本地资源加载失败，请检查游戏文件。启动", out string missing);
+                    font.TryAddCharacters(string.Concat(data.texts.Select(x => x.value)) + "854.156383 · 离线版本地资源加载失败，请检查游戏文件。启动选择存档已有存档新建存档存档暂无存档点击新建存档开启冒险继续创建继续冒险新角色草稿损坏保留损坏副本并重新开始可读取无法读取返回", out string missing);
                     if (!string.IsNullOrEmpty(missing)) throw new InvalidDataException("Original startup font lacks: " + missing);
                 }
                 bindings[row.id] = font;
@@ -207,6 +211,11 @@ namespace Zjcs.Editor.Startup
                         group.blocksRaycasts = fields.m_BlocksRaycasts; group.ignoreParentGroups = fields.m_IgnoreParentGroups;
                     }
                     else JsonUtility.FromJsonOverwrite(Remap(part.json), target);
+                    if (target is RawImage rawImage)
+                    {
+                        RectFields uv = JsonUtility.FromJson<RawImageFields>(part.json).m_UVRect;
+                        rawImage.uvRect = new Rect(uv.x, uv.y, uv.width, uv.height);
+                    }
                     var serialized = new SerializedObject(parts[part.id]);
                     foreach (Match field in ObjectFields.Matches(part.json))
                     {
@@ -251,9 +260,12 @@ namespace Zjcs.Editor.Startup
                 var clip = new AnimationClip { name = source.name, legacy = legacy, frameRate = 60 };
                 foreach (Track track in source.tracks)
                 {
+                    GameObject target = string.IsNullOrEmpty(track.path) ? objects[source.node] : objects[source.node].transform.Find(track.path)?.gameObject;
                     Type type = track.property == "m_IsActive" ? typeof(GameObject)
                         : track.property == "m_Alpha" ? typeof(CanvasGroup)
-                        : track.property.StartsWith("m_Color") ? typeof(Image) : typeof(Transform);
+                        : track.property.StartsWith("m_fontColor") ? typeof(TextMeshProUGUI)
+                        : track.property.StartsWith("m_Color") ? (target != null && target.GetComponent<TMP_Text>() != null ? typeof(TextMeshProUGUI) : typeof(Image))
+                        : track.property.StartsWith("m_SizeDelta") ? typeof(RectTransform) : typeof(Transform);
                     var curve = new AnimationCurve(track.keys.Select(k => new Keyframe(k.time, k.value,
                         k.step ? float.PositiveInfinity : k.inSlope, k.step ? float.PositiveInfinity : k.outSlope)).ToArray());
                     clip.SetCurve(track.path, type, track.property, curve);
@@ -274,21 +286,43 @@ namespace Zjcs.Editor.Startup
             for (int i = 0; i < objects.Length; i++)
                 if (!string.IsNullOrEmpty(data.nodes[i].animator)) RestoreAnimator(objects[i], i, data.nodes[i].animator, clips);
             for (int i = 0; i < objects.Length; i++) objects[i].SetActive(data.nodes[i].active);
-            var catalog = AssetDatabase.LoadAssetAtPath<OfficialStartupAssets>(Output + "/OfficialStartupAssets.asset");
-            if (catalog == null) { catalog = ScriptableObject.CreateInstance<OfficialStartupAssets>(); AssetDatabase.CreateAsset(catalog, Output + "/OfficialStartupAssets.asset"); }
+            OfficialStartupAssets catalog = null;
+            OfficialSaveSelectionAssets saveAssets = null;
+            if (saveSelection)
+            {
+                saveAssets = AssetDatabase.LoadAssetAtPath<OfficialSaveSelectionAssets>(Output + "/OfficialSaveSelectionAssets.asset");
+                if (saveAssets == null) { saveAssets = ScriptableObject.CreateInstance<OfficialSaveSelectionAssets>(); AssetDatabase.CreateAsset(saveAssets, Output + "/OfficialSaveSelectionAssets.asset"); }
+            }
+            else
+            {
+                catalog = AssetDatabase.LoadAssetAtPath<OfficialStartupAssets>(Output + "/OfficialStartupAssets.asset");
+                if (catalog == null) { catalog = ScriptableObject.CreateInstance<OfficialStartupAssets>(); AssetDatabase.CreateAsset(catalog, Output + "/OfficialStartupAssets.asset"); }
+            }
             foreach (Root root in data.roots)
             {
                 GameObject prefab = PrefabUtility.SaveAsPrefabAsset(objects[root.node], Output + "/" + root.name + ".prefab");
                 if (prefab == null) throw new InvalidDataException("Original startup prefab could not be saved: " + root.name);
-                if (root.name == "BootSplash") catalog.bootSplash = prefab;
+                if (saveSelection && root.name == "PlanesListPanel") saveAssets.panel = prefab;
+                else if (saveSelection && root.name == "PlanesRoleItem") saveAssets.roleItem = prefab;
+                else if (saveSelection) saveAssets.blurMask = prefab;
+                else if (root.name == "BootSplash") catalog.bootSplash = prefab;
                 else if (root.name == "ThemeCanvas") catalog.themeCanvas = prefab;
                 else if (root.name == "LaunchRoot") catalog.launchCanvas = prefab;
                 else catalog.ageTipsDialog = prefab;
                 Object.DestroyImmediate(objects[root.node]);
             }
-            catalog.resourceStatus = data.texts.Single(t => t.key == "YooAsset_Init").value;
-            catalog.initializationStatus = data.texts.Single(t => t.key == "Game_Initializing").value;
-            EditorUtility.SetDirty(catalog);
+            if (catalog != null)
+            {
+                catalog.resourceStatus = data.texts.Single(t => t.key == "YooAsset_Init").value;
+                catalog.initializationStatus = data.texts.Single(t => t.key == "Game_Initializing").value;
+                EditorUtility.SetDirty(catalog);
+            }
+            if (saveAssets != null)
+            {
+                saveAssets.photography = AssetDatabase.LoadAssetAtPath<TextAsset>(Art + "/head-photography.json");
+                saveAssets.defaultPortrait = (Sprite)bindings[data.default_portrait_id];
+                EditorUtility.SetDirty(saveAssets);
+            }
             AssetDatabase.SaveAssets();
             Debug.Log("Official startup native prefab restoration passed: " + objects.Length + " original nodes.");
         }
@@ -299,7 +333,7 @@ namespace Zjcs.Editor.Startup
             public Quaternion m_LocalRotation;
             public Vector2 m_AnchorMin, m_AnchorMax, m_Pivot, m_SizeDelta, m_AnchoredPosition;
         }
-        [Serializable] private sealed class Controller { public string name, layer; public string[] parameters; public float weight; public Machine[] machines; }
+        [Serializable] private sealed class Controller { public string name, layer; public string[] parameters; public int[] parameter_types; public float weight; public Machine[] machines; }
         [Serializable] private sealed class Machine { public int @default; public State[] states; public Transition[] any; }
         [Serializable] private sealed class State { public string name, clip; public float speed; public Transition[] transitions; }
         [Serializable] private sealed class Transition { public int destination; public float duration, exit_time; public bool @fixed, has_exit; public Condition[] conditions; }
@@ -318,10 +352,12 @@ namespace Zjcs.Editor.Startup
             AssetDatabase.AddObjectToAsset(sm, controller);
             controller.layers = new[] { new AnimatorControllerLayer { name = source.layer, defaultWeight = source.weight, stateMachine = sm } };
             controller.parameters = Array.Empty<AnimatorControllerParameter>();
+            for (int p = 0; p < source.parameters.Length; p++)
+                controller.AddParameter(source.parameters[p], source.parameter_types != null && source.parameter_types[p] == 4 ? AnimatorControllerParameterType.Bool : AnimatorControllerParameterType.Trigger);
             var transitions = machine.any.Concat(machine.states.SelectMany(s => s.transitions)).ToArray();
             foreach (Condition condition in transitions.SelectMany(t => t.conditions))
             {
-                if (condition.mode != (int)AnimatorConditionMode.If) throw new InvalidDataException("Unexpected original button condition.");
+                if (condition.mode != (int)AnimatorConditionMode.If && condition.mode != (int)AnimatorConditionMode.IfNot) throw new InvalidDataException("Unexpected original button condition.");
                 if (!controller.parameters.Any(p => p.name == condition.parameter)) controller.AddParameter(condition.parameter, AnimatorControllerParameterType.Trigger);
             }
             foreach (string parameter in source.parameters)
@@ -356,6 +392,8 @@ namespace Zjcs.Editor.Startup
             public float m_Alpha;
             public bool m_Interactable, m_BlocksRaycasts, m_IgnoreParentGroups;
         }
+        [Serializable] private sealed class RawImageFields { public RectFields m_UVRect; }
+        [Serializable] private sealed class RectFields { public float x, y, width, height; }
         private static Type TypeFor(string name)
         {
             Type startup = typeof(Zjcs.Official.Startup.LaunchPanel).Assembly.GetType("Zjcs.Official.Startup." + name);

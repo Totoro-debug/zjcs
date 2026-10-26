@@ -2,15 +2,27 @@
 
 [总索引](../README.md)
 
-状态：未完成
+状态：未完成（启动存档页已转换为官方位面选择界面；设置完整表现、离线收益和拍照尚未完成）
 
 ## 功能简介
 
-启动进入本地存档选择页，可以新建角色、继续已有旅程或恢复未完成的创角；主城功能菜单已接官方设置窗口。角色切换、损坏存档恢复、离线收益和拍照仍属未完成范围。
+启动进入本地存档选择页，使用原版“选择位面”的面板、页签和角色卡片，可以新建角色、选择已有旅程或恢复未完成的创角；主城功能菜单已接官方设置窗口。完整角色切换、损坏存档恢复、离线收益和拍照仍属未完成范围。
 
 以上为 Unity / C# 的目标范围，尚未完整接入和验收。
 
 ## 完整还原部分
+
+### 启动存档选择界面
+
+直接提取固定 `854_156383` 官方 APK 的 `defaultpackage_assets_prefabs_ui_login.bundle`，恢复 `PlanesListPanel` 和其滚动列表内嵌的 `PlanesRoleItem`，并复用同包版本启动页的模糊遮罩；共131个原始对象、37张 Sprite、16个动画片段。原黑色标题、双页签、白色列表、绿色选中卡片、头像边框、战力图标、“最近”标签、底部状态图例与原锚点／九宫格／字体／材质保持原绑定。页签沿用原 Animator 状态与转换，显示沿用 `PopupWindow` 的原 `UIDialog_Show` 曲线；背景按 `WindowBlurMask` 的四层模糊流程捕获实际启动主题。未用截图充当交互界面。
+
+迁移官方 `PlanesListPanel.InitShow / OnTabItemChange`、`PlanesInfoItemBase.Init`、`PlanesInfoItemWithRoleInfo.InitRoleInfo` 的视图分支，由本地槽位替代联网角色列表。已创建角色显示真实姓名、等级与当前属性计算的战力；头像复用原模型外观、染色、骨骼网格及 `PlayerPortraitSettings` 的100×120头照摄影、排除部位和 `home/idle_01` 姿势。未创建的槽位使用原默认头像，标注“继续创建”。损坏的主档使用原灰色状态标记；点击显示中文错误并保留文件。空列表和新建页复用原 `EmptyTip` 与原按钮。
+
+加载入口是 `Resources/SaveSelection/OfficialSaveSelectionAssets`，原始转换载荷在 `unity/Assets/Official/SaveSelection/`，Unity 原生 prefab、字体、材质、Sprite 与动画在 `unity/Assets/Game/Resources/SaveSelection/`。提取入口为 `scripts/prepare_official_save_selection.py`，原生恢复入口为 `Zjcs.Editor.Startup.OfficialStartupTools.RestoreSaveSelection`，运行适配为 `OfficialSaveSelectionView`。APK／CAB／对象／代码来源及输入输出哈希见[源清单](../../assets/reference/save-selection/source-manifest.json)和[原生绑定清单](../../assets/reference/save-selection/native-source-manifest.json)。本批素材尚未加入完整备份快照。
+
+Unity 2022.3.57f1c2、DX12 Play Mode 已验证15槽列表、男女原生头像、页签动画、鼠标滚轮、已有角色入口、损坏主档提示与新建独立草稿。交互使用 EventSystem 射线命中和模拟按下／抬起／点击，确认无控件遮挡；列表浏览前后所有隔离存档文件 SHA256 一致。已查看450×800、675×1200、900×800和360×1000运行截图并检查面板处于窗口内。静态检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。复验入口为 `Zjcs.Editor.Startup.SaveSelectionPlayModeValidation.Run`，需指定环境变量 `ZJCS_SAVE_SELECTION_PROBE_OUTPUT` 为独立临时目录；Windows Player 使用 `--zjcs-validate-saves <临时目录>`，再次启动同目录执行冷启动回读检查。验证数据与用户存档隔离。
+
+### 设置与存档基础
 
 已有 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 的槽位发现／创建和 [LocalJsonSaveFile](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs) 的临时写入、备份、损坏原字节保留与恢复代码。主城设置入口使用官方 `SettingsDialog` 控件树、30 张固定版 Sprite 和点击音效；[HomeSettingsProfile](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs) 按角色槽保存音量、帧率和数值显示，写入失败时维持旧设置。设置页目前接通 30／60 帧、总／音乐／音效／语音滑杆和完整／简略显示；消息推送及单机不适用控件隐藏，游戏页语言控件固定为当前中文。
 
@@ -21,6 +33,8 @@
 Windows 采用竖屏等比缩放、中文和多个独立本地角色存档，移除推送、联网登录、账号、社交、振动和网络预下载。
 
 ### 多存档与角色切换
+
+原“选择位面／角色列表／可创角色”转换为“选择存档／已有存档／新建存档”；原服务器名称位置显示本地槽号，状态图例改为“可读取／无法读取”。最近选择的槽位在独立 `profile-selection.txt` 中原子保存，重开列表时置顶并选中。新增 `InspectCharacter` 只读路径，列表及头像预览不写回旧存档的创建时间，也不结算离线收益。Windows 鼠标滚轮灵敏度设为50，保留原滚动布局与拖动。列表使用原1080×1920参考尺寸并等比缩放，宽窗保持竖屏面板。新建和选择后接续已有开场／创角／初始武器及角色完成页，不改变这些后续页面的表现。
 
 本地目录替代服务器／角色身份；每槽保存独立进度、草稿、库存、设置、随机状态及地图／战斗检查点。列表浏览不结算收益；进入时才处理该档时间。切换前保存，失败保留原会话。
 
@@ -34,9 +48,9 @@ Windows 采用竖屏等比缩放、中文和多个独立本地角色存档，移
 
 ## 尚未实现
 
-- 启动存档选择、新建和角色切换、完整角色数据保存／恢复、实际进入时离线收益及主城拍照。
+- 完整游戏内角色切换、所有功能角色数据保存／恢复、实际进入时离线收益及主城拍照。启动列表的新建、选择和草稿入口已接通，不据此声称后续全游戏流程完成。
 - 设置页的 URP 分辨率缩放、Bloom、其他画质组和主城背景音乐尚未接入；当前 Unity 包清单没有 URP，现有设置页隐藏这些未接线选项。
-- 恢复启动存档与拍照使用的官方 Unity 代码、配置、prefab、资源和调用关系，完成对应本地流程与界面接线。
+- 存档面板原按钮／窗口音效尚未接入；拍照功能的完整官方 Unity 代码、配置、prefab、资源和调用关系仍须恢复。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
 
 ### 待迁移的规则与表现
