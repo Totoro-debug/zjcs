@@ -14,21 +14,7 @@ namespace Zjcs.Presentation.Combat
             binding = OfficialBattleElementFeedbackCatalog.Find(effectType);
             if (binding == null) return null;
             string resource = OfficialBattleElementFeedbackCatalog.ResourceRoot;
-            foreach (var source in binding.texts)
-            {
-                var text = nodes[source.path].GetComponent<TextMeshPro>();
-                text.font = Required<TMP_FontAsset>(resource+source.font);
-                text.fontSharedMaterial = Required<Material>(resource+source.material);
-                text.fontSize = source.size;
-                text.fontStyle = (FontStyles)source.style;
-                text.fontWeight = (FontWeight)source.weight;
-                text.characterSpacing = source.characterSpacing;
-                text.wordSpacing = source.wordSpacing;
-                text.lineSpacing = source.lineSpacing;
-                text.margin = new Vector4(source.margin[0],source.margin[1],source.margin[2],source.margin[3]);
-                text.renderer.sortingOrder = source.order;
-                if (source.effect != null) ApplyTextEffect(text,source.effect);
-            }
+            foreach (var source in binding.texts) BindText(source,nodes);
             foreach (var source in binding.materials)
             {
                 var renderer = nodes[source.path].GetComponent<SpriteRenderer>();
@@ -68,6 +54,24 @@ namespace Zjcs.Presentation.Combat
                     throw new InvalidOperationException("Original element transition is missing: "+trigger);
                 },refreshDescribe);
             return view;
+        }
+
+        public static TextMeshPro BindText(BattleElementTextBinding source, Dictionary<string,GameObject> nodes)
+        {
+            string resource=OfficialBattleElementFeedbackCatalog.ResourceRoot;
+            var text=nodes[source.path].GetComponent<TextMeshPro>();
+            text.font=Required<TMP_FontAsset>(resource+source.font);
+            text.fontSharedMaterial=Required<Material>(resource+source.material);
+            text.fontSize=source.size;
+            text.fontStyle=(FontStyles)source.style;
+            text.fontWeight=(FontWeight)source.weight;
+            text.characterSpacing=source.characterSpacing;
+            text.wordSpacing=source.wordSpacing;
+            text.lineSpacing=source.lineSpacing;
+            text.margin=new Vector4(source.margin[0],source.margin[1],source.margin[2],source.margin[3]);
+            text.renderer.sortingOrder=source.order;
+            if (source.effect!=null) ApplyTextEffect(text,source.effect);
+            return text;
         }
 
         private static void ApplyTextEffect(TMP_Text text, BattleElementTextEffect effect)

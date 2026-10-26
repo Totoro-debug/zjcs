@@ -286,6 +286,8 @@ namespace Zjcs.Presentation.Combat
 
         private OfficialBattleDamageFloat SpawnOfficialDamageFloat(PendingDamageFloat pending)
         {
+            var tip=OfficialBattleWorldTips.Find(pending.PrefabKey);
+            if (tip!=null) return SpawnWorldTip(pending,tip);
             BattleHudPrefab prefab = hudCatalog.FindPrefab(pending.PrefabKey);
             if (prefab == null || prefab.root == null || prefab.damageUi == null)
                 throw new InvalidOperationException("Official battle damage float is missing: " + pending.PrefabKey);
@@ -400,6 +402,36 @@ namespace Zjcs.Presentation.Combat
             view.InitializeOfficial(prefab.effectType, null, null, animations, prefab.showTime, false,
                 true, pending.Target.Id, prefab.height, world, null, Camera.main, null,
                 prefab.cameraScale, prefab.sortingOrderStart);
+            activeDamageFloats.Add(view);
+            RefreshDamageFloatStack(pending.Target.Id);
+            return view;
+        }
+
+        private OfficialBattleDamageFloat SpawnWorldTip(PendingDamageFloat pending,BattleWorldTipBinding binding)
+        {
+            var prefab=binding.prefab;
+            var renderer=new OfficialBattleHudRenderer(hudCatalog);
+            GameObject instance=renderer.CreateWorldFloat(prefab,root,out var nodes);
+            foreach (var source in binding.texts)
+            {
+                var text=OfficialBattleElementFeedback.BindText(source,nodes);
+                text.color=pending.Color.linear;
+            }
+            Vector3 world=gridToWorld(new FightGridPoint(pending.Target.X,pending.Target.Y))
+                +new Vector3(prefab.sceneOffset[0],prefab.sceneOffset[1],prefab.sceneOffset[2]);
+            instance.transform.position=world;
+            if (Camera.main!=null)
+            {
+                instance.transform.rotation=Camera.main.transform.rotation;
+                if (Camera.main.orthographic) instance.transform.localScale=Vector3.one*(Camera.main.orthographicSize/prefab.cameraScale);
+            }
+            var sorting=instance.AddComponent<SortingGroup>();
+            sorting.sortingOrder=prefab.sortingOrderStart+instance.transform.GetSiblingIndex();
+            var animations=renderer.InitializeWorldAnimations(prefab.nodes,instance,nodes,useManualTick:true);
+            var view=instance.AddComponent<OfficialBattleDamageFloat>();
+            view.InitializeOfficial(prefab.effectType,nodes[prefab.textPath].GetComponent<TMP_Text>(),null,
+                animations,prefab.showTime,false,true,pending.Target.Id,prefab.height,world,null,Camera.main,null,
+                prefab.cameraScale,prefab.sortingOrderStart);
             activeDamageFloats.Add(view);
             RefreshDamageFloatStack(pending.Target.Id);
             return view;

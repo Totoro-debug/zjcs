@@ -235,7 +235,7 @@ Unity 已校验三处运行绑定、全部声明属性、纹理尺寸／哈希�
 
 魔印承伤加成使用已取得的 `FightStatusDamageProcessComponent`：仅对状态施加者本人造成的伤害生效，按用户补证先乘百分比、再加固定值，位于扣盾前。`FightStatusCreatorDamageBoostRuntime` 读取状态独立属性231／235，不合并到持有者全局属性，避免影响其他角色或重复计入公式。属性仍由官方等级、阶级、缺省补齐和系数计算；一阶一级得到231=2000（20%）、235=4789，因此100点基础伤害变为4909。无伤害动作、治疗、闪避、免疫及致盲不因固定值产生额外伤害，召唤物不继承此项来源资格。状态移除后停止加成，旧检查点按官方配置恢复组件。其他自定义伤害阶段和过滤组合未据此补全。
 
-伤害飘字现按两版 `CharacterDamageUIManager.MyBattle_OnDamage` 的 `DamageValue－ShieldValue` 显示，数字按 `FightDamageSettings.EffectUIPoolPresents` 的 GUID 接回7类实际使用的世界空间 `*_Combine_Scene` prefab，恢复5套官方位图字体的原 atlas、字形 UV／字宽，以及 TextMesh、颜色、层级、动画、相机缩放和堆叠高度，见[世界空间数字来源](../../assets/reference/battle-hud/world-damage-source-manifest.json)。原 SortingGroup 第21层及脚本起始序号1000，沿已迁移场景几何的 `层索引×1000＋序号` 方式映射为22000，避免数字落在环境之后；既有自定义动作提示使用同一映射。`FightDamageComponentImplement.CalcDamageValue` 的原始数值与实际 HP 差分别保留，详见[显示数值来源](../../assets/reference/battle-hud/damage-display-source-manifest.json)。全额护盾命中显示吸收前数值；溢出伤害和过量治疗不以实际 HP 差截短。统计及魔印贡献继续按实际 HP 变化计算。新检查点保存原始数值及存在标记，旧检查点只回退到已存 HP 差与盾量，不补造历史溢出值。零值／隐藏开关、来源合并和精确命中时序仍未完整恢复；元素文字及动效见下文。
+伤害飘字现按两版 `CharacterDamageUIManager.MyBattle_OnDamage` 的 `DamageValue－ShieldValue` 显示，数字按 `FightDamageSettings.EffectUIPoolPresents` 的 GUID 接回7类实际使用的世界空间 `*_Combine_Scene` prefab，恢复5套官方位图字体的原 atlas、字形 UV／字宽，以及 TextMesh、颜色、层级、动画、相机缩放和堆叠高度，见[世界空间数字来源](../../assets/reference/battle-hud/world-damage-source-manifest.json)。原 SortingGroup 第21层及脚本起始序号1000，沿已迁移场景几何的 `层索引×1000＋序号` 方式映射为22000，避免数字落在环境之后；既有自定义动作提示使用同一映射。`FightDamageComponentImplement.CalcDamageValue` 的原始数值与实际 HP 差分别保留，详见[显示数值来源](../../assets/reference/battle-hud/damage-display-source-manifest.json)。全额护盾命中显示吸收前数值；溢出伤害和过量治疗不以实际 HP 差截短。统计及魔印贡献继续按实际 HP 变化计算。新检查点保存原始数值及存在标记，旧检查点只回退到已存 HP 差与盾量，不补造历史溢出值。零值／隐藏开关已按下文恢复；来源合并和精确命中时序仍未完整恢复，元素文字及动效见下文。
 
 数字专项覆盖全额／部分护盾、溢出伤害、过量治疗、实际 HP 统计、新旧检查点；7类数字共10个受控样本均绑定原字体与 atlas，并检查实际渲染像素。实际 Play Mode 经模拟指针开始战斗，全额护盾命中飘出121，护盾吸收121且生命扣除0；实际战斗相机启停该数字产生1131个变化像素，已查看运行截图，确认数字位于场景之前。该样本继续通过技能栏缩放、入口收展及结算返回，不将数值／资源修复视为完整飘字演出已完成。
 
@@ -283,9 +283,17 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 受控检查覆盖24种呈现输入，包括全部隐藏配置、延迟隐藏、元素／盾量放行、3933过滤及模板优先、零／正治疗值、混合标记、深渊和耗血；另检查七类过滤、提示与颜色不同的优先级。规则回归核对隐藏事件仍实际扣血、配置ID随检查点恢复、旧回执不虚构ID。隔离存档的 Play Mode 通过模拟指针检查就绪、入口收展、675×1200／450×800缩放和完整结算返回；同次三条命中分别为隐藏后仍扣121生命、关闭零值提示和显示原版零字形，实际相机中零字形贡献533个像素，回执保存／恢复保留三种伤害配置身份。已查看战斗及返回画面；静态检查、Unity 导入／编译和 `ProjectTools.Validate` 通过。此项不代表剩余飘字种类的原生资源、合并／来源和完整调度已经恢复，通用战斗 Windows 整项交付仍待完成。
 
+### 原版免疫、回避和未命中提示
+
+`FightDamageSettings.EffectUIPoolPresents` 的4／8／9三类已接回实际 `BattleImmunityDamageFloatEffect_Scene`、`FightDodgeDamageFloatEffect_Scene`、`FightBlindingDamageFloatEffect_Scene`。固定854 APK 的原节点层级、RectTransform、世界空间 TMP、字体／材质引用、描边、排序、相机缩放、场景偏移、1秒动画及0.268堆叠高度均从实际对象恢复；原文分别为“免疫／回避／未命中”，没有以近似文案替代。三类共享既有原 FZY4K 字体和世界 TMP shader，字形缓存由已核实的官方 TTF 生成。原显示颜色和隐藏／零值筛选继续独立执行，没有为此改动伤害公式。
+
+提取入口为 [prepare_battle_world_tips.py](../../scripts/prepare_battle_world_tips.py)，载荷为 `Resources/Combat/world-tips.json`；`OfficialBattleWorldTips`、`OfficialBattleElementFeedback.BindText` 和 `OfficialBattleSceneView.SpawnWorldTip` 显式绑定原资源。[来源清单](../../assets/reference/battle-hud/world-tips-source-manifest.json)记录原 bundle／对象、语言、两版客户端、共享资产及运行代码哈希。这里复用客户端的结果消费，没有补造普通免疫的服务器判定。
+
+三类均完成受控实际渲染，并在 Play Mode 内再次验证原文字、36号字体、描边、动画和颜色，分别产生1443／1550／1904个可见像素。实际战斗通过共享公式分别产生回避和致盲结果，核对生命／护盾均不变，原世界提示在实际相机中可见；使用模拟指针完成就绪、入口收展、两种竖屏尺寸检查和结算返回，已查看运行画面。40,966项静态元数据、Unity 导入／编译及 `ProjectTools.Validate` 通过，同时复验24种显示条件、36种元素输入及破韧优先级。普通免疫仅验证受控结果的表现，不据此声明其完整触发规则已恢复。重放、驱散提示和完整来源／调度仍待迁移。
+
 ## 自定义实现
 
-英雄／魔女雕像采用已确认的单机规则：每日访问次数共享，待生效状态与 HP 修正持久化至角色存档，下一场任意战斗入场时应用，战斗结束后清除；`-100%` HP 修正至少保留 1 点生命。原状态 ID、属性和战斗状态绑定沿官方配置，访问结算及 Map11 接线见[森之国](../maps/map-11.md)。英雄雕像实际访问界面仍待所属地图接入。
+外部玩法可以传入待生效状态与 HP 修正，下一场战斗入场时应用、结束后清除；已确认的单机边界是 `-100%` HP 修正至少保留1点生命。状态 ID、属性和战斗状态绑定沿官方配置，外部访问条件、次数和持久化由所属功能页维护。
 
 以下区分“缺少服务端执行代码后的本地补足”和“离线运行所需的技术适配”。它们已在现有执行器中使用，但不能据官方配置或测试通过称为官方完整规则；新增差异仍须取得证据或用户确认。
 
@@ -351,6 +359,6 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 | 分类 | 简要结论 |
 | --- | --- |
-| 已完整实现的规则子项 | 已取得共享公式的迁移、HP 上下限与实际差值、基础队列／CD／状态生命周期子集、检查点序列化已有实现及对应回归；7类原数字资源／显示数值、6类元素文字、背景、材质和动画，以及原命中隐藏／零值过滤子项已接入，通用战斗整项仍未完成。 |
+| 已完整实现的规则子项 | 已取得共享公式的迁移、HP 上下限与实际差值、基础队列／CD／状态生命周期子集、检查点序列化已有实现及对应回归；7类原数字资源／显示数值、6类元素文字、背景、材质和动画、3类原免疫／回避／未命中提示，以及原命中隐藏／零值过滤子项已接入，通用战斗整项仍未完成。 |
 | 缺服务器代码后的自定义 | 本地回合循环、AI／随机命中、部分资格／概率／状态触发／位移／减伤／CD／破韧接线及局部胜负，按已确认单机方案或明确标出的近似执行。 |
 | 仍待实现 | 组队准备与拖拽、逐事件调度、剩余状态／召唤／胜负、完整 HUD／战报／控件、原版角色／Playable／特效／音频，以及 Play Mode 和 Windows 完整运行验证。 |

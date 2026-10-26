@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using TMPro;
@@ -337,6 +338,7 @@ namespace Zjcs.Editor.Combat
                 ValidateDamageFloatDelay(catalog);
                 OfficialBattleDamageDisplayAcceptance.Run();
                 OfficialBattleDamageVisibilityAcceptance.Run();
+                OfficialBattleWorldTipsAcceptance.Run();
                 OfficialBattleElementFeedbackAcceptance.Run();
                 Debug.Log("Official battle HUD renderer validated: 30 prefab trees, " + images + " images, " + texts
                     + " texts, " + buttons + " buttons, " + layouts + " layout groups, " + fitters + " fitters, "
@@ -509,7 +511,9 @@ namespace Zjcs.Editor.Combat
                 foreach (OfficialBattleDamageFloat value in floats) types.Add(value.EffectType);
                 if (!types.Contains(6) || !types.Contains(4) || !types.Contains(8) || !types.Contains(9))
                     throw new BuildFailedException("Official damage float type mapping omitted a critical, immunity, dodge, or blinding prefab.");
-                if (hudParent.GetComponentsInChildren<TMP_Text>(true).Length == 0)
+                if (!floats.Any(value=>new[] {4,8,9}.Contains(value.EffectType)
+                        && value.name.EndsWith("_Scene",StringComparison.Ordinal)
+                        && value.GetComponentsInChildren<TMP_Text>(true).Length>0))
                     throw new BuildFailedException("Official damage float prefabs did not render TMP content.");
 
                 BattleHudPrefab resetPrefab = hudCatalog.FindPrefab("damage_FightResetSkillCDFloatEffect");

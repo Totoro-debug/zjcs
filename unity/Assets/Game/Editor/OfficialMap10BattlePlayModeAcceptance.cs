@@ -230,6 +230,9 @@ namespace Zjcs.Editor
             Combat.OfficialBattleDamageVisibilityAcceptance.Probe damageVisibilityTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_VISIBILITY") == "1")
                 damageVisibilityTest = Combat.OfficialBattleDamageVisibilityAcceptance.Probe.Install(sceneController);
+            Combat.OfficialBattleWorldTipsAcceptance.Probe worldTipTest=null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP")=="1")
+                worldTipTest=Combat.OfficialBattleWorldTipsAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
             if (accumulatedDamageTest)
             {
@@ -479,6 +482,17 @@ namespace Zjcs.Editor
                 Require(displayed,"The original zero-damage filter did not render correctly. "+damageVisibilityTest.Observation);
                 sceneController.SetPaused(true);
                 yield return Capture("damage-visibility.png");
+                sceneController.SetPaused(false);
+            }
+            if(worldTipTest!=null)
+            {
+                float displayDeadline=Time.realtimeSinceStartup+8f;
+                bool displayed;
+                while(!(displayed=worldTipTest.TryVerify(sceneController.Checkpoint))
+                    && Time.realtimeSinceStartup<displayDeadline)yield return null;
+                Require(displayed,"The original world tip did not render through the live battle loop. "+worldTipTest.Observation);
+                sceneController.SetPaused(true);
+                yield return Capture("world-tip.png");
                 sceneController.SetPaused(false);
             }
             if (accumulatedDamageTest)

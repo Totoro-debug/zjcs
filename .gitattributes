@@ -166,3 +166,9 @@ unity/Assets/Game/Editor/Startup.meta -text
 unity/Assets/Game/Editor/Startup/** -text
 scripts/prepare_official_startup.py -text
 scripts/record_startup_native_sources.py -text
+
+scripts/prepare_battle_world_tips.py text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleWorldTips.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleWorldTipsAcceptance.cs text eol=lf
+unity/Assets/Game/Resources/Combat/world-tips.json text eol=lf
+assets/reference/battle-hud/world-tips-source-manifest.json text eol=lf
