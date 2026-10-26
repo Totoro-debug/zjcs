@@ -85,6 +85,25 @@ namespace Zjcs.Presentation.Combat
                     rect.sizeDelta = Vector(source.size_delta, Vector2.zero);
                     rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
                 }
+                if (!string.IsNullOrEmpty(source.bitmap_font))
+                {
+                    var text = gameObject.AddComponent<TextMesh>();
+                    text.font = Resources.Load<Font>("Combat/Numbers/" + source.bitmap_font);
+                    if (text.font == null) throw new InvalidOperationException("Official bitmap font is missing: " + source.bitmap_font);
+                    text.characterSize = source.bitmap_character_size;
+                    text.fontSize = source.bitmap_font_size;
+                    text.fontStyle = (FontStyle)source.bitmap_style;
+                    text.anchor = (TextAnchor)source.bitmap_anchor;
+                    text.alignment = (TextAlignment)source.bitmap_alignment;
+                    text.lineSpacing = source.bitmap_line_spacing;
+                    text.tabSize = source.bitmap_tab_size;
+                    text.richText = source.bitmap_rich_text;
+                    text.color = ColorValue(source.bitmap_color, Color.white);
+                    text.text = string.Empty;
+                    var meshRenderer = text.GetComponent<MeshRenderer>();
+                    meshRenderer.sharedMaterial = text.font.material;
+                    meshRenderer.sortingOrder = source.bitmap_sorting_order;
+                }
                 if (source.has_text)
                 {
                     if (catalog.Font == null)
@@ -132,7 +151,7 @@ namespace Zjcs.Presentation.Combat
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             var player = instance.AddComponent<OfficialBattleHudAnimationPlayer>();
             player.Initialize(sourceNodes, worldNodes, useManualTick);
-            player.PlayDefaultAnimations();
+            player.PlayDefaultAnimations(activeNodesOnly: true);
             return player;
         }
 

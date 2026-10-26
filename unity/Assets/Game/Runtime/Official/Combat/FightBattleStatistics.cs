@@ -35,6 +35,10 @@ namespace Zjcs.Combat.Official
         public bool TrueDamage;
         public bool BreakResilience;
         public long Damage;
+        // Original DamageResultParameter.DamageValue, before HP/overheal clamping.
+        public bool HasDamageValue;
+        public long DamageValue;
+        public long ShieldAddFinalDamageValue => (HasDamageValue ? DamageValue : Damage) - ShieldDamage;
         public long AbsoluteDamage;
         public long ShieldDamage;
         public long BeforeHp;

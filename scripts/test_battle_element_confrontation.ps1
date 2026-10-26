@@ -29,6 +29,8 @@ function New-Fixture([int]$statusId, [int]$element, [long]$shield=0, [bool]$cure
     $skill.Range.Add([Zjcs.Combat.Official.FightGridPoint]::new(1,0))
     $hit=[Zjcs.Combat.Official.FightBattleHitDefinition]@{EntityId=90002;ActionType=4;DamageType=2}
     if($cure){
+        $source.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$formula.PropertyId('BaseCureAdd');Value=10000})
+        $target.Properties.Add([Zjcs.Combat.Official.FightPropertyValue]@{Id=$formula.PropertyId('BaseBeCureAdd');Value=10000})
         $skill.SkillType=3; $skill.HasCustomCure=$true; $skill.CustomCure=100
         $skill.TargetType=2; $hit.ActionType=5; $target.Side=1; $target.Hp=9900
         $enemy=[Zjcs.Combat.Official.FightBattleUnitState]@{Id=3;Side=2;X=7;Y=7;Hp=10000;MaxHp=10000;Level=1;SubRank=1;CharacterType=1}
@@ -72,11 +74,28 @@ $step=$f.Runner.Step(0,1)
 Require ($step.Event.DamageEvents[0].Damage -eq -100) 'A removed element status still affected damage'
 $f=New-Fixture 25051 101 0 $true
 $step=$f.Runner.Step(0,1)
-Require ($step.Event.DamageEvents.Count -gt 0 -and $step.Event.DamageEvents[0].IsCure -and -not $step.Event.DamageEvents[0].IsElementAffect -and $step.Event.DamageEvents[0].ElementConfrontation -eq 0) 'Incoming element resistance affected healing'
+Require ($step.Event.DamageEvents.Count -gt 0 -and $step.Event.DamageEvents[0].IsCure -and $step.Event.DamageEvents[0].Damage -eq 100 -and -not $step.Event.DamageEvents[0].IsElementAffect -and $step.Event.DamageEvents[0].ElementConfrontation -eq 0) 'Incoming element resistance affected healing'
+foreach($ids in @(@(25051,25052),@(25052,25051))){
+    $f=New-Fixture $ids[0] 101
+    $f.Target.Statuses.Add($catalog.CreateStatus($ids[1],2,2,2))
+    $step=$f.Runner.Step(0,1);$hit=$step.Event.DamageEvents[0]
+    Require ($hit.Damage -eq -96 -and $hit.IsElementAffect -and -not $hit.ElementConfrontationUnresolved) '20% resistance and 20% weakness must multiply to 96%, regardless of status order'
+    $saved=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load([Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($step.Checkpoint))
+    $replay=[Zjcs.Combat.Official.FightBattleExecutor]::Restore($saved,$formula,[Zjcs.Combat.Official.FightDamageSettlement]::new(),$catalog).Step(0,1)
+    Require ($replay.Replayed -and $saved.Units[1].Hp -eq 9904 -and $saved.Receipts[0].Event.DamageEvents[0].ElementConfrontation -eq $hit.ElementConfrontation) 'Aggregated resistance was lost or applied again after checkpoint replay'
+}
 $f=New-Fixture 25051 101
-$f.Target.Statuses.Add($catalog.CreateStatus(25052,2,2,2))
-$value=[float]99
-Require (-not $catalog.TryResolveElementConfrontation($f.Target,101,[ref]$value) -and $value -eq 0) 'The missing multi-status server rule was guessed'
+$f.Target.Statuses.Add($catalog.CreateStatus(25051,2,2,2))
 $step=$f.Runner.Step(0,1)
-Require ($step.Event.DamageEvents[0].ElementConfrontationUnresolved -and -not $step.Event.DamageEvents[0].IsElementAffect) 'The unresolved overlap was reported as restored'
-Write-Output 'Battle element-confrontation checks passed: all 20 official entries, pre-shield reduction, elemental immunity, nonmatching/removal/healing, explicit unresolved overlap, saved result and replay idempotency.'
+Require ($step.Event.DamageEvents[0].Damage -eq -64) 'Two separate 20% resistance states must multiply to 64% damage'
+$f=New-Fixture 25052 101
+$f.Target.Statuses.Add($catalog.CreateStatus(25057,2,2,2))
+$step=$f.Runner.Step(0,1)
+Require ($step.Event.DamageEvents[0].Damage -eq -156) '20% and 30% weakness states must multiply to 156% damage'
+foreach($ids in @(@(25051,25052,25056),@(25056,25052,25051),@(25052,25056,25051))){
+    $f=New-Fixture 0 101 50
+    foreach($id in $ids){$f.Target.Statuses.Add($catalog.CreateStatus($id,2,2,$f.Target.Statuses.Count+2))}
+    $step=$f.Runner.Step(0,1);$hit=$step.Event.DamageEvents[0]
+    Require ($hit.Damage -eq 0 -and $hit.ShieldDamage -eq 0 -and $hit.ElementConfrontation -eq 1 -and $hit.IsElementAffect -and -not $hit.ElementConfrontationUnresolved -and $f.Target.Statuses[0].ShieldRemainValue -eq 50) 'Element immunity must override simultaneous resistance and weakness without consuming shield'
+}
+Write-Output 'Battle element-confrontation checks passed: all 20 original entries, confirmed multiplicative overlap and immunity priority, pre-shield ordering, nonmatching/removal/healing, saved results and replay idempotency.'

@@ -335,6 +335,7 @@ namespace Zjcs.Editor.Combat
                     UnityEngine.Object.DestroyImmediate(root);
                 }
                 ValidateDamageFloatDelay(catalog);
+                OfficialBattleDamageDisplayAcceptance.Run();
                 Debug.Log("Official battle HUD renderer validated: 30 prefab trees, " + images + " images, " + texts
                     + " texts, " + buttons + " buttons, " + layouts + " layout groups, " + fitters + " fitters, "
                     + elements + " layout elements, and " + scrolls + " scroll views.");
@@ -381,6 +382,7 @@ namespace Zjcs.Editor.Combat
             var sceneRoot = new GameObject("BattleDamageFloatTimingValidation");
             var hudParent = new GameObject("BattleDamageFloatCanvasParent", typeof(RectTransform));
             OfficialBattleNativeAnimationLibrary models = OfficialBattleNativeAnimationLibrary.LoadDefault();
+            hudParent.transform.SetParent(sceneRoot.transform, false);
             OfficialBattleSceneView scene = null;
             try
             {
@@ -416,20 +418,20 @@ namespace Zjcs.Editor.Combat
                     Delay = 0.25f
                 });
                 scene.ShowDamageFloats(stepEvent, checkpoint, OfficialBattleDamageColors.Load());
-                if (hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length != 0)
+                if (sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length != 0)
                     throw new BuildFailedException("Battle damage float appeared before its configured hit delay.");
                 scene.Tick(0.2f);
-                if (hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length != 0)
+                if (sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true).Length != 0)
                     throw new BuildFailedException("Battle damage float appeared before the configured hit delay elapsed.");
                 scene.Tick(0.06f);
-                OfficialBattleDamageFloat[] floats = hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
+                OfficialBattleDamageFloat[] floats = sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
                 if (floats.Length != 1 || floats[0].EffectType != 0)
                     throw new BuildFailedException("Official normal damage float did not appear after its configured hit delay.");
                 BattleHudPrefab normalDamagePrefab = hudCatalog.FindPrefab("damage_BattleDamageFloatEffect");
                 if (normalDamagePrefab == null || normalDamagePrefab.damageUi == null)
                     throw new BuildFailedException("Official normal damage float binding is missing.");
                 Transform normalDamageNumber = FindPrefabPath(floats[0].transform,
-                    normalDamagePrefab.damageUi.numberPath);
+                    hudCatalog.FindWorldDamage(0).numberPath);
                 if (normalDamageNumber == null
                     || floats[0].GetComponent<OfficialBattleHudAnimationPlayer>() == null)
                     throw new BuildFailedException("Official normal damage float animation was not initialized.");
@@ -441,8 +443,12 @@ namespace Zjcs.Editor.Combat
                     || OfficialBattleSceneView.FormatBattleNumber(100000000) != "1\u4ebf")
                     throw new BuildFailedException("Official Chinese battle damage number formatting differs from the client formatter.");
 
-                BattleHudDamageFloatBinding markerBinding = normalDamagePrefab == null
-                    ? null : normalDamagePrefab.damageUi;
+                var configuredDamage = hudCatalog.FindWorldDamage(0);
+                BattleHudDamageFloatBinding markerBinding = configuredDamage == null ? null : new BattleHudDamageFloatBinding
+                {
+                    type = configuredDamage.effectType, trueDamagePath = configuredDamage.truePath,
+                    breakResiliencePath = configuredDamage.breakPath
+                };
                 if (markerBinding == null || string.IsNullOrEmpty(markerBinding.trueDamagePath)
                     || string.IsNullOrEmpty(markerBinding.breakResiliencePath))
                     throw new BuildFailedException("Official normal damage float marker paths are missing.");
@@ -460,7 +466,7 @@ namespace Zjcs.Editor.Combat
                     BreakResilience = true
                 });
                 scene.ShowDamageFloats(markerEvents, checkpoint, OfficialBattleDamageColors.Load());
-                floats = hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
+                floats = sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
                 int trueDamageMarkers = 0;
                 int breakResilienceMarkers = 0;
                 foreach (OfficialBattleDamageFloat value in floats)
@@ -496,7 +502,7 @@ namespace Zjcs.Editor.Combat
                 specialEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = 0, Blinding = true });
                 specialEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = -12345, Critical = true, ElementType = 200 });
                 scene.ShowDamageFloats(specialEvents, checkpoint, OfficialBattleDamageColors.Load());
-                floats = hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
+                floats = sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
                 var types = new System.Collections.Generic.HashSet<int>();
                 foreach (OfficialBattleDamageFloat value in floats) types.Add(value.EffectType);
                 if (!types.Contains(6) || !types.Contains(4) || !types.Contains(8) || !types.Contains(9))
@@ -515,7 +521,7 @@ namespace Zjcs.Editor.Combat
                     IsReplay = true
                 });
                 scene.ShowDamageFloats(replayEvents, checkpoint, OfficialBattleDamageColors.Load());
-                floats = hudParent.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
+                floats = sceneRoot.GetComponentsInChildren<OfficialBattleDamageFloat>(true);
                 OfficialBattleDamageFloat resetFloat = null;
                 foreach (OfficialBattleDamageFloat value in floats)
                     if (value.EffectType == 10) { resetFloat = value; break; }
@@ -573,7 +579,7 @@ namespace Zjcs.Editor.Combat
                             customActionPrefab.height + stackColors.Spacing.y)
                         || !Mathf.Approximately(stackFloats[0].StackOffset.y,
                             customActionPrefab.height + stackColors.Spacing.y
-                            + normalDamagePrefab.damageUi.height + stackColors.Spacing.y))
+                            + configuredDamage.height + stackColors.Spacing.y))
                         throw new BuildFailedException("Same-target damage floats did not stack by official height and spacing.");
                     stackScene.Tick(0.06f);
                     if (customActionText.color.a < 0.9f

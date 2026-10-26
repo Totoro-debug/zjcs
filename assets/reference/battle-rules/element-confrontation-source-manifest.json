@@ -1259,19 +1259,19 @@
     "path": "unity/Assets/Official/Combat/battle-rules.json",
     "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
   },
-  "generator_sha256": "98358b1af7fec194752769c6f30dfc31751135c5bf85126833a1a0a6a12290df",
+  "generator_sha256": "51717cfba6e5afa7bea5f71328bc16f9b3a944a24405719d4c44db7709a93a1c",
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.ElementConfrontation.cs",
-      "sha256": "0b79d24446b94eb9689409890089d6f2ad59c895fc26a4dd8740d8b7892f4900"
+      "sha256": "0f2b427fb7b794d8034bb03391b7858dc4edb2a3c4ea52283e108b7740bbd6d9"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "a45b022def1159e69831255f9b9ad07b7ff848888b67aba991ada2e54a63153c"
+      "sha256": "4db8da531dd8fbf2ef7603327829ccda7398761a04767544989017cf132afa3a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
-      "sha256": "c342e14fe386c182019a45140730c08d76ab3850655d8afe9700b351551cd885"
+      "sha256": "d851217121a6d177c1eb1aa6bab39a5b21a27aa433c03e475201462356934ec7"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.cs",
@@ -1283,13 +1283,17 @@
     },
     {
       "path": "scripts/test_battle_element_confrontation.ps1",
-      "sha256": "32bc0e3f1b547714e796bf968b545fae6cd7bafbf106373439cf87269ba69ad9"
+      "sha256": "2995c2d3fa80d6124a23915363cadda6ae311baedac9955808adefddf4501c7b"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs",
-      "sha256": "83949bd915eeb8d615b25a08ded1e85dc6c6e356528ac6c3de0f378a8be680a3"
+      "sha256": "3cd0c65e9d940ee649dd9b581712ac26edb1147a37f9b1ef15a7162d96c3aa79"
     }
   ],
-  "operation": "For one matching incoming-element status, supply its original float Value to the existing shared damage formula. Preserve the original 1-Value operation, integer conversion, pre-shield settlement, result fields and checkpoint replay. Do not merge matching statuses without a confirmed rule.",
-  "evidence_boundary": "The component configurations and shared formula are recovered. The server status-to-damage binding is absent; single-status wiring follows those explicit inputs. Multiple matching statuses retain the previous neutral input and set ElementConfrontationUnresolved; their combination, direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work."
+  "operation": "Supply the original float Value for a single matching status. For multiple statuses, follow the user-confirmed offline rule: an elemental-immunity entry wins; otherwise multiply the 1-Value damage factors, then pass their combined value to the existing formula. Preserve integer conversion, pre-shield settlement, result fields and checkpoint replay.",
+  "confirmed_offline_rules": {
+    "immunity_priority": "A matching elemental-immunity state completely prevents damage of that element, including simultaneous weakness states. Do not consume shield.",
+    "other_states": "Multiply the damage factors of matching statuses: final factor = product(1-Value). Preserve the configured single-entry float and the existing formula truncation. This confirmation does not specify scaling per status stack."
+  },
+  "evidence_boundary": "The original component configurations and shared formula are recovered. The server binding and state combiner are absent; their local wiring and aggregation follow the user-confirmed rule. Historical unresolved receipts retain their original record. Direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work."
 }

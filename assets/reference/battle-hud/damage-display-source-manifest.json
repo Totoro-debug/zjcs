@@ -1,0 +1,101 @@
+{
+  "official_code": [
+    {
+      "manifest": "854_156383",
+      "files": [
+        {
+          "path": ".tools/source-packages/official-code/client-source/CharacterDamageUIManager.cs",
+          "sha256": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
+        },
+        {
+          "path": ".tools/source-packages/official-code/client-source/CharacterDamageUI.cs",
+          "sha256": "d328a4a655e12de7b030bd69fff92008d8221699424cb4af4f68348232e7850c"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/DamageResultParameter.cs",
+          "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+        },
+        {
+          "path": ".tools/source-packages/official-code/common-source/Common/FightDamageComponentImplement.cs",
+          "sha256": "19ccdea699e765707483dbe8ba57a42c7018a364a4f7f631b7885d9706df3b8c"
+        }
+      ]
+    },
+    {
+      "manifest": "871_156598",
+      "files": [
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterDamageUIManager.cs",
+          "sha256": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterDamageUI.cs",
+          "sha256": "d328a4a655e12de7b030bd69fff92008d8221699424cb4af4f68348232e7850c"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageResultParameter.cs",
+          "sha256": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671"
+        },
+        {
+          "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightDamageComponentImplement.cs",
+          "sha256": "19ccdea699e765707483dbe8ba57a42c7018a364a4f7f631b7885d9706df3b8c"
+        }
+      ]
+    }
+  ],
+  "original_prefabs": {
+    "manifest": "854_156383",
+    "source_path": "assets/reference/battle-hud/source-manifest.json",
+    "source_sha256": "01962eb1dbfbebe32f4b161fdb57775827de9de6c3aa151b220052b79f42b485",
+    "runtime_path": "unity/Assets/Official/Combat/Numbers/Resources/Combat/Numbers/world-damage.json",
+    "runtime_sha256": "b85baa866b79d33b0cc89fc9cda0e5ff59e27de776ab49ef792453a251220b00",
+    "world_source_path": "assets/reference/battle-hud/world-damage-source-manifest.json",
+    "world_source_sha256": "dba2df5cd534078a9000b80064533b78919a9a7e315af0e2ac717600288a9f9c"
+  },
+  "generator_sha256": "aa772f4a49dbab97d17e51847d652031bc13df22a3c6b58c710a9830c3aaf70c",
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
+      "sha256": "4db8da531dd8fbf2ef7603327829ccda7398761a04767544989017cf132afa3a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
+      "sha256": "d851217121a6d177c1eb1aa6bab39a5b21a27aa433c03e475201462356934ec7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
+      "sha256": "8665ce0bb9b4eb15b79c1e6bedaac9dce95a71aa6c3545f601f850319baa7f6c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleDamageDisplayAcceptance.cs",
+      "sha256": "429960d55fefb6e6acdefec1626c2f0ba7b3f41d4a4e2979c2239f524a656a05"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs",
+      "sha256": "c6657c3afbdaa3e75d3b39274bc30f10d2c0d8188a5424ae994fb6f937883ed9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs",
+      "sha256": "0f52a52d47920c20b106d79f9b6579157fd72747f61705428b76d94de4c90d14"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs",
+      "sha256": "30b03588b987b781a74a5eec547f76d1813f3a4946b8c5164aaa12f6254b1bf4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs",
+      "sha256": "414eb4b076032343ec8ab3eb06e9ec8b467c1ae676e0c7c06bebe1bd5ccd6566"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Combat/OfficialBattleWorldDamageAssetTools.cs",
+      "sha256": "382127c434e649c502e224295de40dc01cbd5d084b0dc937169ddb2b06f4002d"
+    },
+    {
+      "path": "scripts/test_battle_damage_display.ps1",
+      "sha256": "910d3d2b6e6477996aaab65d973dc0c922bb875712ee492db9b5b8729040be79"
+    }
+  ],
+  "operation": "Preserve the original DamageResultParameter.DamageValue separately from RealDamageValue. CharacterDamageUIManager displays DamageValue minus ShieldValue, including full shield absorption, overkill and overhealing; actual HP changes remain the basis of local statistics and magic-mark contribution. Reuse the original number prefabs and animation/format/color paths.",
+  "legacy_checkpoints": "Absent HasDamageValue retains the previously saved actual HP change and available shield amount. Historical overkill/overheal cannot be reconstructed and is not fabricated.",
+  "remaining": "Full zero-value/hide-damage filters, elemental indicators, status damage distinctions and complete per-event timing are not restored by the numeric display fix."
+}

@@ -103,6 +103,11 @@ namespace Zjcs.Presentation.Combat
 
     [Serializable] public sealed class BattleHudNode
     {
+        public string bitmap_font;
+        public float bitmap_character_size, bitmap_line_spacing, bitmap_tab_size;
+        public int bitmap_font_size, bitmap_style, bitmap_anchor, bitmap_alignment, bitmap_sorting_order;
+        public bool bitmap_rich_text;
+        public float[] bitmap_color;
         public string name, path, localization_key;
         public int parentIndex = -1;
         public string[] scripts;
@@ -256,6 +261,7 @@ namespace Zjcs.Presentation.Combat
 
     [Serializable] public sealed class BattleCustomActionWorldRuntimeData
     {
+        public string numberPath, breakPath, truePath;
         public string manifest, sourceSha256, sourceBundle, sourceBundleHash, sourcePathId;
         public string rootName, iconPath, textPath;
         public int effectType, sortingOrderStart;
@@ -279,6 +285,18 @@ namespace Zjcs.Presentation.Combat
         public string key, text;
     }
 
+    [Serializable] public sealed class BattleWorldDamageData
+    {
+        public string manifest;
+        public BattleCustomActionWorldRuntimeData[] prefabs;
+        public BattleWorldSortingLayer[] sortingLayers;
+    }
+
+    [Serializable] public sealed class BattleWorldSortingLayer
+    {
+        public int effectType, layerIndex, layerId, orderStart;
+    }
+
     [CreateAssetMenu(menuName = "Zjcs/Combat/Official Battle HUD Catalog")]
     public sealed class OfficialBattleHudCatalog : ScriptableObject
     {
@@ -296,12 +314,28 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private TMPro.TMP_FontAsset font;
         private BattleHudCatalogData data;
         private BattleCustomActionWorldRuntimeData customActionWorldRuntime;
+        private BattleWorldDamageData worldDamageData;
         private BattleUnitBarRuntimeData unitBarData;
         private BattleStatusIconData statusIconData;
         private Dictionary<int, BattleUnitBarBinding> unitBarsByEntity;
         private Dictionary<int, BattleStatusDisplay> statusDisplaysById;
 
         public TMPro.TMP_FontAsset Font => font;
+
+        public BattleCustomActionWorldRuntimeData FindWorldDamage(int effectType)
+        {
+            if (worldDamageData == null)
+            {
+                TextAsset asset = Resources.Load<TextAsset>("Combat/Numbers/world-damage");
+                if (asset == null) throw new InvalidOperationException("Configured official world damage assets are missing.");
+                worldDamageData = JsonUtility.FromJson<BattleWorldDamageData>(asset.text);
+                if (worldDamageData.manifest != "854_156383" || worldDamageData.prefabs == null)
+                    throw new FormatException("Unpinned world damage assets.");
+            }
+            foreach (var prefab in worldDamageData.prefabs)
+                if (prefab.effectType == effectType) return prefab;
+            return null;
+        }
 
         public static OfficialBattleHudCatalog LoadDefault()
         {
@@ -371,6 +405,12 @@ namespace Zjcs.Presentation.Combat
                 || runtime.TextForAction(3) != "减少冷却")
                 throw new FormatException("Official custom action world float data is incomplete or changed.");
             customActionWorldRuntime = runtime;
+            // Environment geometry already maps native sorting layers into one ordered range.
+            // World UI must use that same mapping rather than falling behind the environment.
+            FindWorldDamage(runtime.effectType);
+            foreach (var layer in worldDamageData.sortingLayers)
+                if (layer.effectType == runtime.effectType)
+                    runtime.sortingOrderStart = layer.layerIndex * 1000 + layer.orderStart;
             return customActionWorldRuntime;
         }
 

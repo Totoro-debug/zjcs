@@ -47,6 +47,8 @@ namespace Zjcs.Editor.Combat
                 "Element fixture already has another resistance state.");
             target.Statuses.Add(assets.Load().CreateStatus(25051, target.Id, target.Id,
                 ++checkpoint.StatusInstanceSerial));
+            target.Statuses.Add(assets.Load().CreateStatus(25052, target.Id, target.Id,
+                ++checkpoint.StatusInstanceSerial));
             return probe;
         }
 
@@ -57,11 +59,11 @@ namespace Zjcs.Editor.Combat
             var hit = checkpoint.Receipts.Single(receipt => receipt.Counter == counter).Event.DamageEvents
                 .Single(value => value.SourceId == baseline.SourceId && value.TargetId == baseline.TargetId
                     && value.SkillEntityId == baseline.SkillEntityId && value.HitEntityId == baseline.HitEntityId);
-            Require(hit.IsElementAffect && hit.ElementConfrontation == 0.2f
+            Require(hit.IsElementAffect && Mathf.Approximately(hit.ElementConfrontation, 0.04f)
                 && !hit.ElementConfrontationUnresolved && hit.Damage < 0 && hit.Damage > baseline.Damage
                 && hit.BeforeHp - hit.AfterHp == -hit.Damage,
                 "The live battle did not bind the original elemental status to actual HP settlement.");
-            Debug.Log("Element-confrontation Play Mode passed: original state 25051, incoming element 101, value="
+            Debug.Log("Element-confrontation Play Mode passed: confirmed multiplication of original states 25051 and 25052, incoming element 101, value="
                 + hit.ElementConfrontation + ", baseline HP loss=" + -baseline.Damage + ", actual HP loss="
                 + -hit.Damage + ", counter=" + counter + ".");
         }

@@ -563,6 +563,8 @@ namespace Zjcs.Combat.Official
                         TrueDamage = hit.TrueDamage,
                         BreakResilience = hit.BreakResilience,
                         Damage = resolved.Settlement == null ? 0 : resolved.Settlement.RealDamageValue,
+                        HasDamageValue = resolved.Settlement != null,
+                        DamageValue = resolved.Settlement == null ? 0 : resolved.Settlement.DamageValue,
                         ShieldDamage = resolved.ShieldDamage,
                         AbsoluteDamage = resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
                         BeforeHp = beforeHp,

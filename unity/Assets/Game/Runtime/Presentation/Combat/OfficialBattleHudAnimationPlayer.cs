@@ -65,11 +65,13 @@ namespace Zjcs.Presentation.Combat
             }
         }
 
-        public void PlayDefaultAnimations()
+        public void PlayDefaultAnimations(bool activeNodesOnly = false)
         {
             foreach (KeyValuePair<string, BattleHudNode> entry in animationSourceNodes)
             {
                 if (entry.Value == null || !entry.Value.animation_play_automatically) continue;
+                if (activeNodesOnly && (!targets.TryGetValue(entry.Key, out GameObject target)
+                    || !target.activeInHierarchy)) continue;
                 string defaultAnimation = entry.Value == null ? null : entry.Value.default_animation;
                 if (!string.IsNullOrEmpty(defaultAnimation)) Play(entry.Key, defaultAnimation);
             }
@@ -255,6 +257,13 @@ namespace Zjcs.Presentation.Combat
                 Color color = sprite.color;
                 SetChannel(ref color, channel, value);
                 sprite.color = color;
+            }
+            TextMesh bitmap = target.GetComponent<TextMesh>();
+            if (bitmap != null)
+            {
+                Color color = bitmap.color;
+                SetChannel(ref color, channel, value);
+                bitmap.color = color;
             }
         }
 

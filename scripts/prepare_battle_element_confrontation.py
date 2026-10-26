@@ -72,8 +72,11 @@ def build(output_root=ROOT):
         'runtime_config': {'path': payload_path.relative_to(ROOT).as_posix(), 'sha256': sha(payload_path)},
         'generator_sha256': sha(__file__),
         'runtime': [{'path': path, 'sha256': sha(output_root/path)} for path in runtime],
-        'operation': 'For one matching incoming-element status, supply its original float Value to the existing shared damage formula. Preserve the original 1-Value operation, integer conversion, pre-shield settlement, result fields and checkpoint replay. Do not merge matching statuses without a confirmed rule.',
-        'evidence_boundary': 'The component configurations and shared formula are recovered. The server status-to-damage binding is absent; single-status wiring follows those explicit inputs. Multiple matching statuses retain the previous neutral input and set ElementConfrontationUnresolved; their combination, direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work.'}
+        'operation': 'Supply the original float Value for a single matching status. For multiple statuses, follow the user-confirmed offline rule: an elemental-immunity entry wins; otherwise multiply the 1-Value damage factors, then pass their combined value to the existing formula. Preserve integer conversion, pre-shield settlement, result fields and checkpoint replay.',
+        'confirmed_offline_rules': {
+            'immunity_priority': 'A matching elemental-immunity state completely prevents damage of that element, including simultaneous weakness states. Do not consume shield.',
+            'other_states': 'Multiply the damage factors of matching statuses: final factor = product(1-Value). Preserve the configured single-entry float and the existing formula truncation. This confirmation does not specify scaling per status stack.'},
+        'evidence_boundary': 'The original component configurations and shared formula are recovered. The server binding and state combiner are absent; their local wiring and aggregation follow the user-confirmed rule. Historical unresolved receipts retain their original record. Direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work.'}
     target = output_root/'assets/reference/battle-rules/element-confrontation-source-manifest.json'
     target.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2)+'\n').encode())
     print('Verified ten elemental-resistance statuses / twenty entries in both official versions.')

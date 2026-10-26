@@ -224,6 +224,9 @@ namespace Zjcs.Editor
             Combat.OfficialBattleElementConfrontationAcceptance elementTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ELEMENT_CONFRONTATION") == "1")
                 elementTest = Combat.OfficialBattleElementConfrontationAcceptance.Install(sceneController);
+            Combat.OfficialBattleDamageDisplayAcceptance.Probe damageDisplayTest = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_DISPLAY") == "1")
+                damageDisplayTest = Combat.OfficialBattleDamageDisplayAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
             if (accumulatedDamageTest)
             {
@@ -355,7 +358,8 @@ namespace Zjcs.Editor
                 yield return VerifyQuickChat(quickChat, quickChatPanel);
                 Require(checkpointField("Counter") == heldCounter,
                     "The UI fixture advanced the battle while its controller loop was held.");
-                runtime.enabled = true;
+                // Keep the battle held through all layout captures. A short battle can
+                // finish and destroy the HUD while the Game view is being resized.
             }
             var skillBindings = Zjcs.Presentation.Combat.OfficialBattleSkillSlotBindings.Load();
             Transform mainHud = all.First(value => value.name == "FightMainPanel");
@@ -363,10 +367,10 @@ namespace Zjcs.Editor
             if (SessionState.GetBool(RealInputKey, false))
             {
                 yield return Combat.BattleGameViewInput.ResizePortrait(300f);
-            Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+                Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
                 yield return Capture("skill-slots-small.png");
                 yield return Combat.BattleGameViewInput.ResizePortrait(450f);
-            Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
+                Combat.OfficialBattleSkillSlotAcceptance.VerifyActual(mainHud.gameObject, sceneController.Checkpoint);
             }
             string iconPath = skillBindings.slots[0].icon;
             Image skillImage = mainHud.Find(iconPath.Substring("/FightMainPanel/".Length))?.GetComponent<Image>();
@@ -417,6 +421,7 @@ namespace Zjcs.Editor
             Require(!(bool)pausedProperty.GetValue(controller), "Battle did not resume.");
 
             if (SessionState.GetBool(RealInputKey, false)) yield return Capture("playing.png");
+            if (SessionState.GetBool(RealInputKey, false) || damageDisplayTest != null) runtime.enabled = true;
 
             float deadline = Time.realtimeSinceStartup + 60f;
             while (Time.realtimeSinceStartup < deadline)
@@ -442,6 +447,18 @@ namespace Zjcs.Editor
                     && Time.realtimeSinceStartup < deadline) yield return null;
                 elementTest.Verify(sceneController.Checkpoint);
                 yield return Capture("element-confrontation.png");
+            }
+            if (damageDisplayTest != null)
+            {
+                float displayDeadline = Time.realtimeSinceStartup + 5f;
+                bool displayed;
+                while (!(displayed = damageDisplayTest.TryVerify(sceneController.Checkpoint))
+                    && Time.realtimeSinceStartup < displayDeadline) yield return null;
+                Require(displayed, "The shield-only number did not render through the actual battle loop. "
+                    + damageDisplayTest.Observation);
+                sceneController.SetPaused(true);
+                yield return Capture("damage-display.png");
+                sceneController.SetPaused(false);
             }
             if (accumulatedDamageTest)
             {

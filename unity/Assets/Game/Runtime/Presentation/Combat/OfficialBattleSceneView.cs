@@ -168,7 +168,8 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent.DamageEvents != null)
                 foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
                 {
-                    if (damage == null || damage.Damage == 0 && !damage.Dodge && !damage.Immunity && !damage.Blinding) continue;
+                    if (damage == null || damage.ShieldAddFinalDamageValue == 0
+                        && !damage.Dodge && !damage.Immunity && !damage.Blinding) continue;
                     FightBattleUnitState target = FindUnit(checkpoint, damage.TargetId);
                     if (target == null) continue;
                     string prefabKey = DamagePrefabKey(damage);
@@ -186,11 +187,12 @@ namespace Zjcs.Presentation.Combat
                         else SpawnOfficialDamageFloat(pending);
                         continue;
                     }
-                    if (font == null || damage.Damage == 0 || damage.Dodge || damage.Immunity || damage.Blinding) continue;
+                    if (font == null || damage.ShieldAddFinalDamageValue == 0
+                        || damage.Dodge || damage.Immunity || damage.Blinding) continue;
                     Vector3 position = gridToWorld(new FightGridPoint(target.X, target.Y))
                         + new Vector3(colors.Spacing.x, 1.2f + colors.Spacing.y, colors.Spacing.z);
                     OfficialBattleDamageFloat.Spawn(damageRoot, font,
-                        FormatBattleNumber(AbsoluteDamage(damage.Damage)), tint, position);
+                        FormatBattleNumber(AbsoluteDamage(damage.ShieldAddFinalDamageValue)), tint, position);
                 }
 
             if (hudCatalog == null) return;
@@ -283,6 +285,8 @@ namespace Zjcs.Presentation.Combat
             BattleHudPrefab prefab = hudCatalog.FindPrefab(pending.PrefabKey);
             if (prefab == null || prefab.root == null || prefab.damageUi == null)
                 throw new InvalidOperationException("Official battle damage float is missing: " + pending.PrefabKey);
+            var configured = hudCatalog.FindWorldDamage(prefab.damageUi.type);
+            if (configured != null) return SpawnWorldDamageFloat(pending, configured);
             var renderer = new OfficialBattleHudRenderer(hudCatalog);
             GameObject instance = renderer.Create(pending.PrefabKey, damageRoot);
             OfficialBattleHudAnimationPlayer animations = renderer.InitializeAnimations(
@@ -292,7 +296,7 @@ namespace Zjcs.Presentation.Combat
             Transform number = FindPrefabPath(instance.transform, binding.numberPath);
             if (number != null)
                 foreach (TMP_Text label in number.GetComponentsInChildren<TMP_Text>(true))
-                    label.text = FormatBattleNumber(AbsoluteDamage(pending.Damage == null ? 0 : pending.Damage.Damage));
+                    label.text = FormatBattleNumber(AbsoluteDamage(pending.Damage == null ? 0 : pending.Damage.ShieldAddFinalDamageValue));
 
             Transform trueDamage = FindPrefabPath(instance.transform, binding.trueDamagePath);
             Transform breakResilience = FindPrefabPath(instance.transform, binding.breakResiliencePath);
@@ -342,6 +346,46 @@ namespace Zjcs.Presentation.Combat
             activeDamageFloats.Add(floatView);
             RefreshDamageFloatStack(pending.Target.Id);
             return floatView;
+        }
+
+        private OfficialBattleDamageFloat SpawnWorldDamageFloat(PendingDamageFloat pending,
+            BattleCustomActionWorldRuntimeData prefab)
+        {
+            var renderer = new OfficialBattleHudRenderer(hudCatalog);
+            GameObject instance = renderer.CreateWorldFloat(prefab, root, out var nodes);
+            var animations = renderer.InitializeWorldAnimations(prefab.nodes, instance, nodes, useManualTick: true);
+            TextMesh number = nodes[prefab.numberPath].GetComponent<TextMesh>();
+            if (number == null) throw new InvalidOperationException("Original TextMesh number binding is missing.");
+            number.text = FormatBattleNumber(AbsoluteDamage(pending.Damage.ShieldAddFinalDamageValue));
+            Color tint = prefab.effectType >= 5 && prefab.effectType <= 7 ? Color.white : pending.Color.linear;
+            tint.a = number.color.a;
+            number.color = tint;
+            bool isBreak = pending.Damage.BreakResilience;
+            bool isTrue = pending.Damage.TrueDamage && !isBreak;
+            if (!string.IsNullOrEmpty(prefab.breakPath)) nodes[prefab.breakPath].SetActive(isBreak);
+            if (!string.IsNullOrEmpty(prefab.truePath)) nodes[prefab.truePath].SetActive(isTrue);
+            if (isTrue && !string.IsNullOrEmpty(prefab.truePath))
+                foreach (var label in nodes[prefab.truePath].GetComponentsInChildren<TMP_Text>(true))
+                    label.color = pending.Color.linear;
+            Vector3 world = gridToWorld(new FightGridPoint(pending.Target.X, pending.Target.Y))
+                + new Vector3(prefab.sceneOffset[0], prefab.sceneOffset[1], prefab.sceneOffset[2]);
+            instance.transform.position = world;
+            if (Camera.main != null)
+            {
+                instance.transform.rotation = Camera.main.transform.rotation;
+                if (Camera.main.orthographic)
+                    instance.transform.localScale = Vector3.one * (Camera.main.orthographicSize / prefab.cameraScale);
+            }
+            var sorting = instance.GetComponent<SortingGroup>();
+            if (sorting == null) sorting = instance.AddComponent<SortingGroup>();
+            sorting.sortingOrder = prefab.sortingOrderStart + instance.transform.GetSiblingIndex();
+            var view = instance.AddComponent<OfficialBattleDamageFloat>();
+            view.InitializeOfficial(prefab.effectType, null, null, animations, prefab.showTime, false,
+                true, pending.Target.Id, prefab.height, world, null, Camera.main, null,
+                prefab.cameraScale, prefab.sortingOrderStart);
+            activeDamageFloats.Add(view);
+            RefreshDamageFloatStack(pending.Target.Id);
+            return view;
         }
 
         private void RefreshDamageFloatStack(int targetId)

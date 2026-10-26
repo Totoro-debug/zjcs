@@ -6,16 +6,17 @@ namespace Zjcs.Combat.Official
     public sealed partial class FightOfficialCombatCatalog
     {
         /// <summary>
-        /// Restores a single incoming-element entry from FightStatusDamageElementComponent.
-        /// The server combiner is absent: multiple matching statuses remain unresolved instead
-        /// of inventing an additive or multiplicative rule. Nonmatching entries do not conflict.
+        /// Reads the original incoming-element entries. The absent server combiner follows
+        /// the confirmed offline rule: immunity takes priority; otherwise multiply damage
+        /// factors. Keep the exact configured float for a single matching entry.
         /// </summary>
         public bool TryResolveElementConfrontation(FightBattleUnitState target, int elementType,
             out float value)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));
             value = 0f;
-            bool found = false;
+            int count = 0;
+            float multiplier = 1f;
             foreach (FightBattleStatusState status in target.Statuses)
             {
                 if (status == null || !entities.TryGetValue(status.ClassId,
@@ -27,15 +28,18 @@ namespace Zjcs.Combat.Official
                 {
                     var entry = Object(raw, "element confrontation entry");
                     if (Int(entry, "ElementType") != elementType) continue;
-                    if (found)
+                    float entryValue = Float(entry, "Value", 0f);
+                    if (entryValue == 1f)
                     {
-                        value = 0f;
-                        return false;
+                        value = 1f;
+                        return true;
                     }
-                    value = Float(entry, "Value", 0f);
-                    found = true;
+                    value = entryValue;
+                    multiplier *= 1f - entryValue;
+                    count++;
                 }
             }
+            if (count > 1) value = 1f - multiplier;
             return true;
         }
     }

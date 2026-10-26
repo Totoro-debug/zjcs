@@ -104,3 +104,22 @@ unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs text eol=lf
 assets/reference/battle-rules/element-confrontation-source-manifest.json text eol=lf
+
+# Original damage-display evidence and adapted source hashes.
+scripts/prepare_battle_damage_display.py text eol=lf
+scripts/test_battle_damage_display.ps1 text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleDamageDisplayAcceptance.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs text eol=lf
+assets/reference/battle-hud/damage-display-source-manifest.json text eol=lf
+
+scripts/prepare_battle_world_damage.py text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudAnimationPlayer.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleWorldDamageAssetTools.cs text eol=lf
+unity/Assets/Official/Combat/Numbers/**/*.json text eol=lf
+unity/Assets/Official/Combat/Numbers/**/*.fontsettings text eol=lf
+unity/Assets/Official/Combat/Numbers/**/*.mat text eol=lf
+unity/Assets/Official/Combat/Numbers/**/*.meta text eol=lf
+assets/reference/battle-hud/world-damage-source-manifest.json text eol=lf
