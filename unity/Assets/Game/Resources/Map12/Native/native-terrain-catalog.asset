@@ -1,0 +1,389 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f715a104a399b4cb62a7eb627ed35b, type: 3}
+  m_Name: native-terrain-catalog
+  m_EditorClassIdentifier: 
+  Bindings:
+  - OfficialPath: Assets/MonoBehaviour/partition_data
+    Asset: {fileID: 11400000, guid: 53c9a6ab098b839f91ffc10854bb47f1, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-1
+    Asset: {fileID: 11400000, guid: 9f8ba8f8b25909e53a8ba6ad9d23734d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-2
+    Asset: {fileID: 11400000, guid: 529d83f6852eeae462f879ce6ff2d938, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-3
+    Asset: {fileID: 11400000, guid: b9159d5bbe41cce1b91ad461cf165dd9, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-4
+    Asset: {fileID: 11400000, guid: ffc0593317a6b6693fdb2332b973d583, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-5
+    Asset: {fileID: 11400000, guid: 9d67fb4d8b467d23585f669c4a9b3f3a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_-6
+    Asset: {fileID: 11400000, guid: d19f7384db31c0a407420b1947e8876e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_0
+    Asset: {fileID: 11400000, guid: 94ae42f1292320d179ac89c6987e3504, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_1
+    Asset: {fileID: 11400000, guid: 863bc7d52fbb97cad66a92d70bd6c6f9, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_2
+    Asset: {fileID: 11400000, guid: 0241a1dbb3675170aa146c7c9eac829b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_3
+    Asset: {fileID: 11400000, guid: 43ff54abd872496c683ad9a071d4573a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_4
+    Asset: {fileID: 11400000, guid: 741ee3c55acfba47948b6226dc25309e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-1_5
+    Asset: {fileID: 11400000, guid: bbeb0ca8f623e8fb6b982fc2ff84d11e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-1
+    Asset: {fileID: 11400000, guid: 8420889d32e07436cfba2c668fb1a998, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-2
+    Asset: {fileID: 11400000, guid: 83bcdea74943c28856fb15d671bac524, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-3
+    Asset: {fileID: 11400000, guid: 511259e0423511e8a0211cf5064b55cb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-4
+    Asset: {fileID: 11400000, guid: fb3c3ef4d896e70297ce26e16d8740ae, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-5
+    Asset: {fileID: 11400000, guid: 865de392c1a3b4242e73c82c2042c5e4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_-6
+    Asset: {fileID: 11400000, guid: ffcae31c61010973b56d4855c5fe800c, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_0
+    Asset: {fileID: 11400000, guid: 37841cc0a6156f12e1cc88c367773dd1, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_1
+    Asset: {fileID: 11400000, guid: e518157566b8a90e0582d32ed75eac52, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_2
+    Asset: {fileID: 11400000, guid: 4611ad9f06f1c14168700994c0673592, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_3
+    Asset: {fileID: 11400000, guid: 0eeb9219c9bd90b039ded01ba867aeb4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-2_4
+    Asset: {fileID: 11400000, guid: f86e792fbf557b968676e7f2da495aa7, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-1
+    Asset: {fileID: 11400000, guid: 596b8ad1c7f3b44409e9e4a9d064b238, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-2
+    Asset: {fileID: 11400000, guid: dec1e41532c81dd7b4ecc6e4bcf301c2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-3
+    Asset: {fileID: 11400000, guid: cfb572f63407e82bace4c60e4850961d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-4
+    Asset: {fileID: 11400000, guid: d31164c3fc820b0307ef805e37ac095b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-5
+    Asset: {fileID: 11400000, guid: e361f8fab36d04dad1b2029c9121c783, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_-6
+    Asset: {fileID: 11400000, guid: c15ed273d76a53c094881adde420e122, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_0
+    Asset: {fileID: 11400000, guid: 512cdbedabae0638758e1c10efd5c12f, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_1
+    Asset: {fileID: 11400000, guid: 29675779d235cb05537bfc9d81e6ec5d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_2
+    Asset: {fileID: 11400000, guid: f05ccd54fe4821153385c37180e9d19e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_3
+    Asset: {fileID: 11400000, guid: bea27e11ebe7f88240df4f5950403374, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-3_4
+    Asset: {fileID: 11400000, guid: f33b9bced2cd08dfa4781032784660eb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-1
+    Asset: {fileID: 11400000, guid: 5d8d36bcfb67f246b99f70c2252221e4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-2
+    Asset: {fileID: 11400000, guid: 59bca90dbae7ce10c924c4d2f18d4735, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-3
+    Asset: {fileID: 11400000, guid: a03b275f409d797c0627a94979336ddc, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-4
+    Asset: {fileID: 11400000, guid: c1344ae24285d94e70b53485fe7ffa10, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-5
+    Asset: {fileID: 11400000, guid: 55dfb71c090a15f9c012da65ff8b9cf4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_-6
+    Asset: {fileID: 11400000, guid: 4a3a028854116387bf727538cc3c1616, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_0
+    Asset: {fileID: 11400000, guid: 994c91227d8da302ccb8545b4b38e382, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_1
+    Asset: {fileID: 11400000, guid: 917d9ac7a7c557b7734023e5d2143196, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_2
+    Asset: {fileID: 11400000, guid: 31886404912fcb7d1619daab95efcefb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_3
+    Asset: {fileID: 11400000, guid: ef9fe1fb2aa89e9e2622fd1b146543e5, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-4_4
+    Asset: {fileID: 11400000, guid: e3b45c9f2c5b4768d2e36e5828b71d61, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-1
+    Asset: {fileID: 11400000, guid: 8e2944c0a325735af54aa081ed9f425d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-2
+    Asset: {fileID: 11400000, guid: 36218315fdfdc1e03959ce9aa61f1355, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-3
+    Asset: {fileID: 11400000, guid: 0e06cab361ee9a6b36edf79f95c414ca, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-4
+    Asset: {fileID: 11400000, guid: 0fca4c0cc0041ea147bc697b2d282daf, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-5
+    Asset: {fileID: 11400000, guid: 63987202321574f82dff23a9292040f0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_-6
+    Asset: {fileID: 11400000, guid: 05cbd303c4d6f3dd8a63e7f615b1b530, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_0
+    Asset: {fileID: 11400000, guid: bb7b135f221cecf3909d2b50f0504bd2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_1
+    Asset: {fileID: 11400000, guid: 7cd08323d49b0e29944ceb518e3d4b46, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_2
+    Asset: {fileID: 11400000, guid: 6f7ddf5a8e9ee3c751318fb5f26e7f76, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-5_3
+    Asset: {fileID: 11400000, guid: 020ced84003caa158010704bbb36efd4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_-1
+    Asset: {fileID: 11400000, guid: c780224a7f3aa4ee6c09c25f653d25bb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_-2
+    Asset: {fileID: 11400000, guid: 88f22eaa6b3c4a2548b566968fecb4b2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_-3
+    Asset: {fileID: 11400000, guid: 4025f2b15928ffbf515f34b045198a16, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_-4
+    Asset: {fileID: 11400000, guid: 4c1dc10e537a54662bbb8bed2265e745, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_0
+    Asset: {fileID: 11400000, guid: 9807c2358b0c0366df30632552398c27, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_1
+    Asset: {fileID: 11400000, guid: 18fdcab61d91633c13f1bccf6ce6e03d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_2
+    Asset: {fileID: 11400000, guid: 8fe8fef86d44c20c389cff1aab4dda95, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-6_3
+    Asset: {fileID: 11400000, guid: 745d946d2766270904a58b66dd428048, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_-1
+    Asset: {fileID: 11400000, guid: 6cea521d6dbc6709ec61dcef38eeae81, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_-2
+    Asset: {fileID: 11400000, guid: d26333726373f34eed2ecf528f1f4505, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_-3
+    Asset: {fileID: 11400000, guid: af3215c09ed23bf12f968e0184bc7737, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_-4
+    Asset: {fileID: 11400000, guid: 36bb7ab16c0efad536e47dd6666f9f64, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_0
+    Asset: {fileID: 11400000, guid: 762df436b56117cfac884f1f00281612, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_1
+    Asset: {fileID: 11400000, guid: ce826f0a77dde20f9b9d102814d14375, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-7_2
+    Asset: {fileID: 11400000, guid: 079c0e530a51cfcbcc77a24772cb601a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_-1
+    Asset: {fileID: 11400000, guid: a1682df6855e5f519e9484b396d4b872, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_-2
+    Asset: {fileID: 11400000, guid: fa81c8eb7903a2ca93f9c93e4cfb16e2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_-3
+    Asset: {fileID: 11400000, guid: 8449c2bc9fed0acdd62a7c479e7efca0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_-4
+    Asset: {fileID: 11400000, guid: abc9e8802d447716bc86aadcc9d4ec99, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_0
+    Asset: {fileID: 11400000, guid: 82c42ae117ecf2418bc350fd6e0990c6, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_1
+    Asset: {fileID: 11400000, guid: 61a7ba91522d4cd3650d7277b5b1640e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-8_2
+    Asset: {fileID: 11400000, guid: 66b05bbf48765a03f6140c0885093cc7, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-9_-1
+    Asset: {fileID: 11400000, guid: 3fc4636793e5d035fad0c66361c83b63, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-9_0
+    Asset: {fileID: 11400000, guid: fc715165c413c1b158f1d5515de1b177, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/-9_1
+    Asset: {fileID: 11400000, guid: dfd376abc13c94d1aa70443495a5c674, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-1
+    Asset: {fileID: 11400000, guid: 54472f42ee964955e6a2bf5d52bc03c4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-2
+    Asset: {fileID: 11400000, guid: 13099d529c14a84cbea0d735c70235b1, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-3
+    Asset: {fileID: 11400000, guid: 86305b1540d900317f1a71f511100e78, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-4
+    Asset: {fileID: 11400000, guid: 5046f381b7fd42ef979368e28f2fe9e5, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-5
+    Asset: {fileID: 11400000, guid: 264c1e6ab904a2f4916101b227016f40, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-6
+    Asset: {fileID: 11400000, guid: 68837a361ae6cbe97dfb4f7d5d2fc33d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-7
+    Asset: {fileID: 11400000, guid: e5f44bc1b57539b2a48989957574272a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_-8
+    Asset: {fileID: 11400000, guid: 929c4401fb64b16cbf2301b6aadaba81, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_0
+    Asset: {fileID: 11400000, guid: 0b057479acd7b17b39efb10971bfb7e4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_1
+    Asset: {fileID: 11400000, guid: 995ccb805aa92417dfb3ffa09a823498, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_2
+    Asset: {fileID: 11400000, guid: 6635169c3b8ed14d212875194f5a9eda, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_3
+    Asset: {fileID: 11400000, guid: 8474a90d39ae7dba929f2f316872011d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_4
+    Asset: {fileID: 11400000, guid: ea804734f9de1e4c8ccbdd4544d48035, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_5
+    Asset: {fileID: 11400000, guid: 2955f9221c534d421e73b5946b88b3f8, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/0_6
+    Asset: {fileID: 11400000, guid: a43421b4b67e0f0fc2c853ab98647ccd, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-1
+    Asset: {fileID: 11400000, guid: 0a8cb52145bac622b0dfb4050b803235, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-2
+    Asset: {fileID: 11400000, guid: 496cf5a114c03355561318ee5f9f5505, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-3
+    Asset: {fileID: 11400000, guid: 58564406356a5c6215eb8f50d2b0da32, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-4
+    Asset: {fileID: 11400000, guid: 6fbba3dfb6492a3b8c8409036667db2b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-5
+    Asset: {fileID: 11400000, guid: 53eb7ccc6fb61ddecd97051f24f0cf1a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-6
+    Asset: {fileID: 11400000, guid: 301cd11864489042520bbc3242db5af8, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-7
+    Asset: {fileID: 11400000, guid: 7b79ee85818e0d1b264f5287b63862bf, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_-8
+    Asset: {fileID: 11400000, guid: e48bf41c712241e28942bdc4efb38ba2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_0
+    Asset: {fileID: 11400000, guid: 3761961b54b53f95435761e8e4551f3b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_1
+    Asset: {fileID: 11400000, guid: 0607660f60d1cc8626af6c843cc0449a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_2
+    Asset: {fileID: 11400000, guid: 4e26e6c1e55917a76a3843c8d612cc9b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_3
+    Asset: {fileID: 11400000, guid: 1f12781bab4d9cb3577edc0063492937, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_4
+    Asset: {fileID: 11400000, guid: b0f75be8b21a0c2ce8eef9174504ac83, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_5
+    Asset: {fileID: 11400000, guid: 66efb4f490928518213ea12e747fb23c, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/1_6
+    Asset: {fileID: 11400000, guid: 8ba3e34cf3034273535753beef7ff9b8, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-1
+    Asset: {fileID: 11400000, guid: 056de9514ed6bfead6c64716973c05a0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-2
+    Asset: {fileID: 11400000, guid: 3edbd11e0a67e89db01328127ba0d4f2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-3
+    Asset: {fileID: 11400000, guid: e9d46840f79c7106ef198d52d3cba504, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-4
+    Asset: {fileID: 11400000, guid: 756837696525a811ab0ead7a99c485a6, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-5
+    Asset: {fileID: 11400000, guid: b8e67bd7fc4cdd1de9551bc9921a3204, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-6
+    Asset: {fileID: 11400000, guid: 02ffa82b5b038f07c649d4cb6ec59796, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_-7
+    Asset: {fileID: 11400000, guid: b92bb077232458828e992edc8bcd86b7, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_0
+    Asset: {fileID: 11400000, guid: 9493b416a6bb3fb62e87489d025939fb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_1
+    Asset: {fileID: 11400000, guid: b2664f6952381073bc1065e0d870a374, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_2
+    Asset: {fileID: 11400000, guid: 7c91357f349ac780829c29fe0d2051ab, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_3
+    Asset: {fileID: 11400000, guid: 889340f8cbddf5c470befb22ca7c158c, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_4
+    Asset: {fileID: 11400000, guid: 19987438e488a244b6f6f4d554459fac, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/2_5
+    Asset: {fileID: 11400000, guid: b7871a8fccf5d7d8a5b430dd8a611e10, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-1
+    Asset: {fileID: 11400000, guid: 2044c798435056e636c9ef9b767da7fe, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-2
+    Asset: {fileID: 11400000, guid: 156a8cdbea1b667289ff1bce1beadeb2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-3
+    Asset: {fileID: 11400000, guid: 0340005030e03a46e26f4f45836e4fbe, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-4
+    Asset: {fileID: 11400000, guid: de96365d0d8d66b541731cbb00af20c1, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-5
+    Asset: {fileID: 11400000, guid: 8227b3f420dff8238067393851c8d6a3, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-6
+    Asset: {fileID: 11400000, guid: b8a2ecad03ce9d6478301fd730d265d4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_-7
+    Asset: {fileID: 11400000, guid: 26254cf830cc71a7db32d692db597381, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_0
+    Asset: {fileID: 11400000, guid: 145a29009ac80978418a52097dab283d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_1
+    Asset: {fileID: 11400000, guid: a29a12c4df6a1566db384a90b5550bd0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_2
+    Asset: {fileID: 11400000, guid: 98e0f0f70a9f2521fd4cc0718f87833e, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_3
+    Asset: {fileID: 11400000, guid: 21a9bdc1db9bf542e66da5b6c12f98dd, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_4
+    Asset: {fileID: 11400000, guid: a4b60c2545a042cd0b65c888944d7afb, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/3_5
+    Asset: {fileID: 11400000, guid: ffed0b3cc59837b7f7a89a564f0035f6, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-1
+    Asset: {fileID: 11400000, guid: f4f5231821e8ebb0eed7afff308f85fe, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-2
+    Asset: {fileID: 11400000, guid: b55b9dacbd58fc3ee4e2081219c843f5, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-3
+    Asset: {fileID: 11400000, guid: 49eb5a7e9d3b7acec6157751e10350e4, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-4
+    Asset: {fileID: 11400000, guid: 36d12b199221c615417a16b6badd959d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-5
+    Asset: {fileID: 11400000, guid: bfaaae575a9593d3fd5a15c5ac7bb264, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-6
+    Asset: {fileID: 11400000, guid: 7f67d482d45ed2ccb884c46235b4f061, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_-7
+    Asset: {fileID: 11400000, guid: 1dc52446603a4a280a74da312bbbfb96, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_0
+    Asset: {fileID: 11400000, guid: 250b7933e0f49f1a081846ba0236cfe0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_1
+    Asset: {fileID: 11400000, guid: 9b3841617f0775fe7557aea1078e72c7, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_2
+    Asset: {fileID: 11400000, guid: b57ff700c77477244e1c9b14c27a3419, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_3
+    Asset: {fileID: 11400000, guid: 549d862de8ac0543136a2ac0ecb02a5a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_4
+    Asset: {fileID: 11400000, guid: a276620783d691342812ba392549e9e6, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/4_5
+    Asset: {fileID: 11400000, guid: db94465851975a7ab8e96010e1631665, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-1
+    Asset: {fileID: 11400000, guid: 14eb2115887fd1c4fcd13cfaea945045, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-2
+    Asset: {fileID: 11400000, guid: 6b7c8bf4440b67ead1d5e42ce5d6dd2f, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-3
+    Asset: {fileID: 11400000, guid: beb4e834e40c231edd5fd84813f6a122, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-4
+    Asset: {fileID: 11400000, guid: 27b6c1f3d7ddfdb1bf4228eb00bb47f7, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-5
+    Asset: {fileID: 11400000, guid: b60863dc046b86e154da91d18abb2003, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-6
+    Asset: {fileID: 11400000, guid: 8ef98dbd34a3f5b731197cd2e3ebba41, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_-7
+    Asset: {fileID: 11400000, guid: 3bb9556a8e10de25c1832c827c73ae80, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_0
+    Asset: {fileID: 11400000, guid: 652aff23fc10a73428bbfc6ff22e3200, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_1
+    Asset: {fileID: 11400000, guid: bd4bb887df196da87b92a3920d4ccc4d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_2
+    Asset: {fileID: 11400000, guid: 5e0c00e0e00bf9bcee38ee2bd23cfeb1, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/5_3
+    Asset: {fileID: 11400000, guid: 86d29a0084a60eadb4f64033ab0571a6, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-1
+    Asset: {fileID: 11400000, guid: ae4d3c82e47d0b0fb03c31b2dfb580dc, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-2
+    Asset: {fileID: 11400000, guid: e449ba0834d27878c8a870a7399d43d2, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-3
+    Asset: {fileID: 11400000, guid: 0a2cba15cd6b78cfc0c84d41f56fb4bf, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-4
+    Asset: {fileID: 11400000, guid: ee4c715affdf9b5220a0f46bcd6dc2fa, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-5
+    Asset: {fileID: 11400000, guid: bae5c051a3e4799f792630626282a324, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-6
+    Asset: {fileID: 11400000, guid: 3e9a7591d0fae172fd54736f7302022b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_-7
+    Asset: {fileID: 11400000, guid: c3e88352f99bd9c91563a0528ee2c406, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_0
+    Asset: {fileID: 11400000, guid: 2b2f3e9d3fc119c503b6737477525ac5, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/6_1
+    Asset: {fileID: 11400000, guid: a8dcba52d61fca06ff60b476617c6f51, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-1
+    Asset: {fileID: 11400000, guid: 3e09a83ea0220d9bafcb43d068655479, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-2
+    Asset: {fileID: 11400000, guid: bfd81529139cdcc5916748d6458dc829, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-3
+    Asset: {fileID: 11400000, guid: b01e4008dbc7935ff21579e79a12f2c0, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-4
+    Asset: {fileID: 11400000, guid: 51743c903eae334f3714d4765570245d, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-5
+    Asset: {fileID: 11400000, guid: cfe23bc095f9a492253c662cec56ef48, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-6
+    Asset: {fileID: 11400000, guid: cf465ba154c9db176f710eff76f5e536, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_-7
+    Asset: {fileID: 11400000, guid: 08d5c1f0f24b723f30d5f49a175f4404, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_0
+    Asset: {fileID: 11400000, guid: 94c3d00ebf9710d88af751cdfcf94238, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/7_1
+    Asset: {fileID: 11400000, guid: ec6778009ac6eccebebd10ccf2f24055, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-2
+    Asset: {fileID: 11400000, guid: 309b66c88cd1d61a0b6c10a0ea47db3a, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-3
+    Asset: {fileID: 11400000, guid: 0d9eb530e9d69bc378d1f2c77be95ea8, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-4
+    Asset: {fileID: 11400000, guid: bf9a09214f9c6524e2a589cf64fa6a0b, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-5
+    Asset: {fileID: 11400000, guid: 48715164bc7e948df99bfe4b8ffb1e28, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-6
+    Asset: {fileID: 11400000, guid: 1fbe162e9df7a8697fa39f046ee9cb9c, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_-7
+    Asset: {fileID: 11400000, guid: e5f0c077ee2eff6213890bf18a535d86, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/8_0
+    Asset: {fileID: 11400000, guid: e2776f5f7f5cea2316a9ea9073e32d36, type: 2}
+  - OfficialPath: Assets/Partition/MapGround_12/Chunks/9_-3
+    Asset: {fileID: 11400000, guid: ba92d5d7a3b73d280d646dd46237fd50, type: 2}

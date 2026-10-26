@@ -376,3 +376,9 @@ unity/Assets/Official/World/Map/13/NativeFlagScene.meta -text
 scripts/prepare_unity_map13_flags.py text eol=lf
 scripts/generate_map13_flag_reference.py text eol=lf
 scripts/prepare_unity_map13_flag_scene.py text eol=lf
+scripts/prepare_unity_map12_native_terrain.py -text
+unity/Assets/Official/World/Map/12/NativeTerrain/** -text
+unity/Assets/Official/World/Map/12/NativeTerrain.meta -text
+unity/Assets/Game/Editor/OfficialMap12TerrainTools.cs -text
+unity/Assets/Game/Resources/Map12/Native/** -text
+unity/Assets/Game/Resources/Map12/Native.meta -text

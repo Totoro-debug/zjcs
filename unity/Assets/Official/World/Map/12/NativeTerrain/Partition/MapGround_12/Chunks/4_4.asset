@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: 4_4
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: 4
+    y: 4
+  Bounds:
+    m_Position:
+      x: 56
+      y: 56
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: Highland
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 156
+      TileIndex: 0
+    HasOffset: 1
+    MatrixIndexes: 0000
+  - Name: GroundRug1_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 182
+      TileIndex: 1
+    - Index: 183
+      TileIndex: 1
+    HasOffset: 1
+    MatrixIndexes: 01000200
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 7
+      TileIndex: 2
+    - Index: 8
+      TileIndex: 3
+    - Index: 21
+      TileIndex: 3
+    - Index: 22
+      TileIndex: 4
+    - Index: 23
+      TileIndex: 5
+    - Index: 24
+      TileIndex: 3
+    HasOffset: 1
+    MatrixIndexes: 030003000400040004000400
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 11
+      TileIndex: 6
+    - Index: 25
+      TileIndex: 7
+    - Index: 144
+      TileIndex: 8
+    - Index: 158
+      TileIndex: 6
+    - Index: 172
+      TileIndex: 6
+    - Index: 186
+      TileIndex: 6
+    HasOffset: 1
+    MatrixIndexes: 050006000700080009000a00
+  Matrices:
+  - e00: 0.57
+    e01: 0
+    e02: 0
+    e03: 0.22857144
+    e10: 0
+    e11: 0.61
+    e12: 0
+    e13: 0.112767875
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0.36
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0.46
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 56
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 57
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 56.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 57.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1.3
+    e12: 0
+    e13: -0.051
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 65.949
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 67.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 68.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 69.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: 1ddb74f7977edcad7d857c14777bedf7, type: 2}
+  - {fileID: 11400000, guid: b1e04d524cddce98982c44c6c085db27, type: 2}
+  - {fileID: 11400000, guid: 831758b2687c7d505827af9d4dc3aaf8, type: 2}
+  - {fileID: 11400000, guid: dc74476e69b8a832bfae199bcbe33cea, type: 2}
+  - {fileID: 11400000, guid: ae512fef5ce02c9d8144c2d1229285c2, type: 2}
+  - {fileID: 11400000, guid: f6f41e3c6be74d226e2d23567b1e5575, type: 2}
+  - {fileID: 11400000, guid: 96f0baa12095bf6bd3650084103fe1da, type: 2}
+  - {fileID: 11400000, guid: aae4f9c010d7f051666917d3a1a65c7b, type: 2}
+  - {fileID: 11400000, guid: 58a6a30ca4708d88b43f1c46e1474620, type: 2}

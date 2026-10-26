@@ -1,0 +1,202 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: 7_1
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: 7
+    y: 1
+  Bounds:
+    m_Position:
+      x: 98
+      y: 14
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: GroundRug_Oasis02
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 0
+    - Index: 1
+      TileIndex: 0
+    - Index: 2
+      TileIndex: 0
+    - Index: 3
+      TileIndex: 0
+    - Index: 4
+      TileIndex: 0
+    - Index: 5
+      TileIndex: 1
+    HasOffset: 1
+    MatrixIndexes: 00000000000000000000ffff
+  - Name: UnderObject02
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 2
+    - Index: 1
+      TileIndex: 2
+    - Index: 2
+      TileIndex: 2
+    - Index: 3
+      TileIndex: 2
+    - Index: 4
+      TileIndex: 2
+    - Index: 5
+      TileIndex: 2
+    - Index: 6
+      TileIndex: 3
+    - Index: 14
+      TileIndex: 3
+    - Index: 15
+      TileIndex: 3
+    - Index: 16
+      TileIndex: 3
+    - Index: 17
+      TileIndex: 3
+    - Index: 18
+      TileIndex: 3
+    - Index: 19
+      TileIndex: 3
+    HasOffset: 1
+    MatrixIndexes: 0100010001000100010001000200030003000300030003000300
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 5
+      TileIndex: 4
+    HasOffset: 1
+    MatrixIndexes: 0400
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 6
+      TileIndex: 5
+    HasOffset: 1
+    MatrixIndexes: 0500
+  Matrices:
+  - e00: 5.9604645E-08
+    e01: -0.99999994
+    e02: 0
+    e03: 1
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.03
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.03
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: -1
+    e01: 0
+    e02: -8.742278E-08
+    e03: 0.35
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.2
+    e20: 8.742278E-08
+    e21: 0
+    e22: -1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: 0.99999994
+    e02: 0
+    e03: -0.2
+    e10: -0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.35
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 14
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 14.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: 5ec68b4ca32757434b6adb7ae40a46a6, type: 2}
+  - {fileID: 11400000, guid: fc8d96f768c1fae2e3f6048450f632be, type: 2}
+  - {fileID: 11400000, guid: 158bc19bf4b2e8cdbfdaa090359cbffc, type: 2}
+  - {fileID: 11400000, guid: 217c5b1cc246a3b5c3d4a29ddba9d9c0, type: 2}
+  - {fileID: 11400000, guid: 52e169fbd748760539a7d35c550e1777, type: 2}
+  - {fileID: 11400000, guid: aae4f9c010d7f051666917d3a1a65c7b, type: 2}

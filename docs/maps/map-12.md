@@ -30,6 +30,8 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存已生成原地形／场景／Water配置资产；当前仍是转换输入及中间产物，尚未替换运行场景或证明 Windows 表现。
 
+`NativeTerrain/` 已恢复186个原 chunk、747个 Tile、739个 Sprite、11张原 ASTC 贴图及原 PartitionData，共1684个原生资产；按原线性／sRGB编码解压，保持尺寸、网格、UV、枢轴、采样与引用。`OfficialMap12TerrainTools` 验证实际 MonoScript、逐槽 Tile GUID／对象 ID、Sprite 网格和贴图导入参数，显式绑定 `Map12/Native/native-terrain-catalog`。`-6_0` 的第63个 Tile 槽在原始对象中即为空，精确保留，不补图；其他槽须绑定到对应原资产。`OfficialMap12PartitionAcceptance` 在 DX12 Play Mode 对全部186个 chunk 验证本地异步句柄、激活／隐藏、清除／重载／移除和加载未完成时移除，核对2060处带偏移的 Tilemap 数据及实际矩阵。复用同一871来源的官方 Partition 实现和本地资源适配，现有类型名中的 Map13 不代表使用泽之国配置。该夹具只验证分块生命周期与瓦片状态，尚未证明本图原场景层级、原材质渲染、界面或正常路线；当前运行地图仍使用前述转换地形。
+
 `prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用、终端原清单及原生坐标及默认生成标记共7项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Map10立绘素材测试的1项在共享 `adventure.json` 输入哈希处失败（实际 `a6820d65…`，原收据 `84b92c87…`）；该测试不调用本次生成器，本次未改该输入或原收据；原边界、表情和对话样式测试通过。Play Mode 使用 Direct3D12 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
 
 ## 自定义实现
@@ -65,6 +67,7 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 - [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)、[官方界面原对象与转换](../../unity/Assets/Official/World/Map/12/UI/source-manifest.json)、[原生界面加载绑定及哈希](../../assets/reference/official-map/map12-ui-native-source-manifest.json)。
 - [剧情／任务／机关载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗来源](../../assets/reference/official-map/map12-battles-source-manifest.json)。
 - [原剧情空间绑定](../../assets/reference/official-map/map12-story-spatial-source-manifest.json)、[原生场景转换输入](../../assets/reference/official-map/map12-native-input-source-manifest.json)。
+- [原生地形转换](../../assets/reference/official-map/map12-native-terrain-source-manifest.json)、[Unity 导入与本地目录绑定](../../assets/reference/official-map/map12-native-terrain-binding-source-manifest.json)。
 - [原区域](../../assets/official/regions/12.json)、[原配置](../../assets/official/adventure.json)、[Unity 地图定义](../../unity/Assets/Official/World/Map/12/map12.json)。
 - [转换入口](../../scripts/prepare_unity_map12.py)、[当前来源解码](../../scripts/prepare_unity_map12_sources.py)、[Unity 导入](../../unity/Assets/Game/Editor/OfficialMap12Tools.cs)、[场景渲染检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs)。
 - [机关状态](../../unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleSession.cs)、[推动适配](../../unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleMovement.cs)、[原摆放推动验证](../../unity/Assets/Game/Editor/OfficialMap12PuzzleValidation.cs)。
