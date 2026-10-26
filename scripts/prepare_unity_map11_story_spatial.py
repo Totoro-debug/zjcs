@@ -18,9 +18,35 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def build():
-    entities_path = ROOT / "unity/Assets/Official/World/Map/11/map11-entities.json"
-    stories_path = OUTPUT.parent / "stories.json"
+def foreign_map_subgraphs(stories, map_id):
+    """Prove foreign-only calls from paired original Selector inputs/outputs."""
+    references = {}
+    for graph in stories["stories"] + stories["subgraphs"]:
+        nodes = {node["id"]: node for node in graph["nodes"]}
+        def connections(node, port):
+            return next((p["connections"] for p in node["ports"] if p["name"] == port), [])
+        for node in nodes.values():
+            if node["type"] != "SubgraphRunNode":
+                continue
+            calls = references.setdefault(node["subgraphName"], [])
+            entry = connections(node, "Entry")
+            guard_map = None
+            if len(entry) == 1 and entry[0]["port"].startswith("Outs "):
+                selector = nodes[entry[0]["nodeId"]]
+                if selector["type"] == "SelectorNode":
+                    guard = connections(selector, "Ins " + entry[0]["port"].split(" ")[1])
+                    if len(guard) == 1 and nodes[guard[0]["nodeId"]]["type"] == "IsInTargetMapNode":
+                        guard_map = json.loads(nodes[guard[0]["nodeId"]]["sourceJson"])["MapClassId"]
+            calls.append(guard_map)
+    return {name: maps for name, maps in references.items()
+            if maps and all(value is not None and value != map_id for value in maps)}
+
+
+def build(map_id=11):
+    output = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/story-spatial.json"
+    manifest_path = ROOT / f"assets/reference/official-map/map{map_id}-story-spatial-source-manifest.json"
+    entities_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/map{map_id}-entities.json"
+    stories_path = output.parent / "stories.json"
     entities = json.loads(entities_path.read_bytes())["entities"]
     stories = json.loads(stories_path.read_bytes())
     classes = {value["entityClassId"] for value in entities}
@@ -28,7 +54,10 @@ def build():
                    for node in story["nodes"] if node["type"].startswith("AddMap") and node["entityClassId"] > 0)
     # The original player prefabs carry the same StoryTalk bit as NPCs.
     classes.update((3001, 3002))
-    apk, schemas = Apk(), ScriptSchemas()
+    apk = Apk.current() if map_id == 12 else Apk()
+    current_code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    code_root = current_code / "client-source" if map_id == 12 else ROOT / ".tools/source-packages/official-code/client-source"
+    schemas = ScriptSchemas(code_root=current_code) if map_id == 12 else ScriptSchemas()
     index_object = next(pointer.deref() for path, pointer in apk.container("config_ec")
                         if path.endswith("/index.g.txt"))
     index = json.loads(index_object.read().m_Script)
@@ -63,38 +92,42 @@ def build():
                     record["RegisterKeys"].append(key)
         records.append(record)
         sources.append(source)
-    if len(records) != 113 or any(not next(value for value in records if value["EntityClassId"] == player)["TagType"] & 1
+    if len(records) != len(classes) or (map_id == 11 and len(records) != 113) or any(not next(value for value in records if value["EntityClassId"] == player)["TagType"] & 1
                                   for player in (3001, 3002)):
-        raise ValueError("Pinned Map11 story prefab closure changed: " + str(len(records)))
-    settings_path = ROOT / "assets/reference/official-map/map11-dialogue-source-manifest.json"
+        raise ValueError(f"Pinned Map{map_id} story prefab closure changed: " + str(len(records)))
+    settings_path = ROOT / f"assets/reference/official-map/map{map_id}-dialogue-source-manifest.json"
     settings = json.loads(settings_path.read_bytes())["inputs"]["storySettings"]["fields"]
-    keys = {node["registerKey"] for story in stories["stories"] + stories["subgraphs"]
+    foreign = foreign_map_subgraphs(stories, map_id) if map_id == 12 else {}
+    keys = {node["registerKey"] for story in stories["stories"] + stories["subgraphs"] if story["key"] not in foreign
             for node in story["nodes"] if node["type"] == "GetPosAroundStoryObjectNode"}
     registrations = {key for record in records for key in record["RegisterKeys"]}
     if not keys <= registrations:
-        raise ValueError("Unresolved original Map11 story registration: " + repr(keys - registrations))
-    payload = {"manifest": apk.version, "mapClassId": 11,
+        raise ValueError(f"Unresolved original Map{map_id} story registration: " + repr(keys - registrations))
+    payload = {"manifest": apk.version, "mapClassId": map_id,
                "PlayerArroundRangeSize": settings["PlayerArroundRangeSize"],
                "PlayerTalkDistException": settings["PlayerTalkDistException"],
                "GetEntityPosOffset": settings["GetEntityPosOffset"], "Entities": records}
     previous = {}
-    if MANIFEST.exists():
-        previous[MANIFEST.resolve()] = digest(MANIFEST.read_bytes())
-        for value in json.loads(MANIFEST.read_bytes())["outputs"]:
+    if manifest_path.exists():
+        previous[manifest_path.resolve()] = digest(manifest_path.read_bytes())
+        for value in json.loads(manifest_path.read_bytes())["outputs"]:
             target = ROOT / value["path"]
             if digest(target.read_bytes()) != value["sha256"]:
                 raise ValueError("Changed spatial binding output: " + str(target))
             previous[target.resolve()] = value["sha256"]
     raw = json_bytes(payload)
-    write_generated(OUTPUT, raw, previous)
-    write_meta(OUTPUT, "TextScriptImporter")
-    meta = OUTPUT.with_name(OUTPUT.name + ".meta")
+    write_generated(output, raw, previous)
+    write_meta(output, "TextScriptImporter")
+    meta = output.with_name(output.name + ".meta")
     meta.write_text("\n".join(line.rstrip() for line in meta.read_text(encoding="utf-8").splitlines()) + "\n",
                     encoding="utf-8")
-    code_root = ROOT / ".tools/source-packages/official-code/client-source"
     code = [code_root / name for name in ("StoryUtils.cs", "GetEntityBaseNode.cs", "GetEntityPosNode.cs", "GetPosAroundStoryObjectNode.cs",
             "MapEntityTag.cs", "EMapEntityTagType.cs", "StoryNodeRegister.cs", "Common/MyEntityIndexHandler.cs")]
-    manifest = {"manifest": apk.version, "mapClassId": 11,
+    if map_id == 12:
+        code += [code_root / name for name in ("IsInTargetMapNode.cs", "WaitMapInitedNode.cs", "SelectorNode.cs")]
+        code += [code_root / "MapInputSupportHandlerBase.cs",
+                 current_code / "common-source/Common/WorldStageComponent.cs"]
+    manifest = {"manifest": apk.version, "mapClassId": map_id,
                 "inputs": {"entitiesSha256": digest(entities_path.read_bytes()),
                            "storiesSha256": digest(stories_path.read_bytes()),
                            "storySettingsManifestSha256": digest(settings_path.read_bytes()),
@@ -102,9 +135,14 @@ def build():
                            "code": [{"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path.read_bytes())}
                                     for path in code]},
                 "operation": "Read original EC index and prefabs, root StoryTalk tags, root story registrations and StorySettings; no inferred tags.",
-                "outputs": [{"path": OUTPUT.relative_to(ROOT).as_posix(), "sha256": digest(raw)}]}
-    write_generated(MANIFEST, json_bytes(manifest), previous)
-    print(f"Map11 story spatial: {len(records)} original entity prefabs, tags and registrations.")
+                "outputs": [{"path": output.relative_to(ROOT).as_posix(), "sha256": digest(raw)}]}
+    if map_id == 12:
+        manifest["foreignMapSubgraphs"] = foreign
+        manifest["requiredLocalRegisterKeys"] = sorted(keys)
+        manifest["generator"] = {"path": Path(__file__).relative_to(ROOT).as_posix(),
+                                 "sha256": digest(Path(__file__).read_bytes())}
+    write_generated(manifest_path, json_bytes(manifest), previous)
+    print(f"Map{map_id} story spatial: {len(records)} original entity prefabs, tags and registrations.")
 
 
 if __name__ == "__main__":

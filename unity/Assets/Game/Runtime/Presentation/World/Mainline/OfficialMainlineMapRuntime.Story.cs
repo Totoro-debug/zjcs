@@ -133,6 +133,13 @@ namespace Zjcs.Presentation.World
                         case "FinishStoryConditionNode":
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "WaitMapInitedNode":
+                            // Begin finishes map/view binding before story input is
+                            // enabled, so the original Initialized wait is satisfied.
+                            if (session == null || entityView == null || avatar == null)
+                                throw new InvalidOperationException("Official story started before map initialization.");
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "FinishStoryNode":
                             if (FinishStoryFrame(out nodeId)) return;
                             continue;
@@ -373,7 +380,7 @@ namespace Zjcs.Presentation.World
                 return new Vector2(cameraNode.moveTargetX, cameraNode.moveTargetY);
             if (targetNode.type == "GetPosAroundStoryObjectNode")
             {
-                if (mapClassId == 11)
+                if (MapProfile.HasNativeUi)
                     return ResolveRegisteredStoryPoint(targetNode.registerKey)
                         + new Vector2(targetNode.offsetX, targetNode.offsetY);
                 Map10RuntimeEntity registered = targetNode.registerKey == "Fangjianbei"
@@ -392,7 +399,7 @@ namespace Zjcs.Presentation.World
                 return new Vector2(navigation.currentGrid.X + targetNode.offsetX, navigation.currentGrid.Y + targetNode.offsetY);
             if (targetNode.selectGetType == 6)
             {
-                if (mapClassId == 11)
+                if (MapProfile.HasNativeUi)
                     return ResolveStoryTalkCenter() + new Vector2(targetNode.offsetX, targetNode.offsetY);
                 GameObject storyNpc = storyEntities.OrderBy(value => value.Key).Select(value => value.Value)
                     .LastOrDefault(value => value != null);
@@ -600,7 +607,7 @@ namespace Zjcs.Presentation.World
         {
             mapVoice?.StopVoice();
             Action completed = invokeCompletion ? storyFinished : null;
-            if (!invokeCompletion && mapClassId == 11 && !string.IsNullOrEmpty(activeStoryRootKey)
+            if (!invokeCompletion && MapProfile.HasNativeUi && !string.IsNullOrEmpty(activeStoryRootKey)
                 && progressionSave.StoryStatus(activeStoryRootKey) == 1)
                 SetStoryStatus(activeStoryRootKey, 0);
             SetStoryWorldUiHidden(false);

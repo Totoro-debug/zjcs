@@ -68,6 +68,14 @@ namespace Zjcs.Editor
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
 
+            if (UnityEditor.SessionState.GetBool(Key + ".runtimeSpatial", false))
+            {
+                IEnumerator spatial = VerifySpatialSteps(root, slot, canvas.transform, output);
+                while (spatial.MoveNext()) yield return spatial.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
             if (UnityEditor.SessionState.GetBool(Key + ".runtimeTerminals", false))
             {
                 IEnumerator terminals = VerifyTerminalSteps(root, slot, canvas.transform, output);

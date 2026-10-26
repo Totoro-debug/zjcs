@@ -101,6 +101,8 @@ def build():
     runtime()
     from prepare_unity_map11_dialog_assets import build as dialogue
     dialogue(12)
+    from prepare_unity_map11_story_spatial import build as story_spatial
+    story_spatial(12)
     from prepare_unity_map12_ui import build as ui
     ui()
     from prepare_mainline_fog import build as fog
@@ -113,9 +115,13 @@ def build():
     manifests += [ROOT / "assets/reference/official-map/map12-coordinate-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-runtime-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-dialogue-source-manifest.json",
+                  ROOT / "assets/reference/official-map/map12-story-spatial-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-region-lights-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-light-meshes-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-source-manifest.json"]
+    native_inputs = ROOT / "assets/reference/official-map/map12-native-input-source-manifest.json"
+    if native_inputs.is_file():
+        manifests.append(native_inputs)
     files = sorted(p for p in OUTPUT.rglob("*") if p.is_file() and p.suffix in (".json", ".bytes", ".png", ".asset"))
     result = dict(format=1, mapClassId=12, manifest=source["manifest"],
         operation="Decode selected official assemblies/configs/stories; reuse historical conversions only after matching mountain records, complete art bundles or unchanged objects; restore Unity coordinates with current native mesh checks.",

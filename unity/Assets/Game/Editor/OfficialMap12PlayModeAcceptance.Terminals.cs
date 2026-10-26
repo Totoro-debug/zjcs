@@ -142,6 +142,16 @@ namespace Zjcs.Editor
             MapGridPoint stand = new[] { new MapGridPoint(location.X, location.Y - 1),
                 new MapGridPoint(location.X - 1, location.Y), new MapGridPoint(location.X, location.Y + 1),
                 new MapGridPoint(location.X + 1, location.Y) }.First(RuntimeField<OfficialWorldMapSession>("session").Movement.IsFit);
+            if (id == 746)
+            {
+                // Exercise the actual movement-to-interaction path as well as an
+                // already adjacent click; do not call the terminal callback.
+                var offsets = new[] { new MapGridPoint(0, -1), new MapGridPoint(-1, 0),
+                    new MapGridPoint(0, 1), new MapGridPoint(1, 0) };
+                stand = offsets.Select(offset => stand + offset).First(point =>
+                    Math.Abs(point.X - location.X) + Math.Abs(point.Y - location.Y) == 2
+                    && RuntimeField<OfficialWorldMapSession>("session").Movement.IsFit(point));
+            }
             RuntimeCall("SetAvatarPosition", stand);
             IEnumerator input = ClickTerminalMapEntity(id);
             while (input.MoveNext()) yield return input.Current;

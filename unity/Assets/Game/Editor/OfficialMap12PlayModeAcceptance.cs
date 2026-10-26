@@ -23,12 +23,14 @@ namespace Zjcs.Editor
         public static void RunRuntime()
         {
             SessionState.SetBool(Key + ".runtimeTerminals", false);
+            SessionState.SetBool(Key + ".runtimeSpatial", false);
             SessionState.SetBool(Key + ".runtimeDialogue", false);
             RunCore(false, false, 12, true);
         }
         public static void RunRuntimeDialogue()
         {
             SessionState.SetBool(Key + ".runtimeTerminals", false);
+            SessionState.SetBool(Key + ".runtimeSpatial", false);
             SessionState.SetBool(Key + ".runtimeDialogue", true);
             RunCore(false, false, 12, true);
         }
@@ -38,9 +40,16 @@ namespace Zjcs.Editor
             {
                 OfficialMap12PuzzleValidation.Validate();
                 SessionState.SetBool(Key + ".runtimeTerminals", true);
+                SessionState.SetBool(Key + ".runtimeSpatial", false);
                 RunCore(false, false, 12, true);
             }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+        public static void RunRuntimeSpatial()
+        {
+            SessionState.SetBool(Key + ".runtimeTerminals", false);
+            SessionState.SetBool(Key + ".runtimeSpatial", true);
+            RunCore(false, false, 12, true);
         }
         public static void RunDialogueInput() => RunCore(false, false, 12, false, true);
         public static void RunDialogueInputMap11() => RunCore(false, false, 11, false, true);

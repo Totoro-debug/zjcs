@@ -366,6 +366,9 @@ scripts/prepare_unity_map13_pipeline_textures.py text eol=lf
 scripts/prepare_unity_map13_native_pipeline.py text eol=lf
 
 # Preserve Map13 original flag conversion and shrine payload bytes.
+scripts/prepare_unity_map11_story_spatial.py -text
+scripts/prepare_unity_map12_story_spatial.py -text
+scripts/prepare_unity_map12_native.py -text
 unity/Assets/Official/World/Map/13/NativeFlags/** -text
 unity/Assets/Official/World/Map/13/NativeFlags.meta -text
 unity/Assets/Official/World/Map/13/NativeFlagScene/** -text

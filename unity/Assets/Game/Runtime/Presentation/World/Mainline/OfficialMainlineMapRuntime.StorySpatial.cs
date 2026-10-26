@@ -32,27 +32,28 @@ namespace Zjcs.Presentation.World
 
         private void InitializeStorySpatial()
         {
-            if (mapClassId != 11) return;
-            TextAsset source = Resources.Load<TextAsset>("Map11/story-spatial");
+            if (!MapProfile.HasNativeUi) return;
+            TextAsset source = Resources.Load<TextAsset>(MapResource("story-spatial"));
             storySpatial = source == null ? null : JsonUtility.FromJson<StorySpatialPayload>(source.text);
-            if (storySpatial == null || storySpatial.manifest != "854_156383" || storySpatial.mapClassId != 11
-                || storySpatial.Entities == null || storySpatial.Entities.Length != 113
+            if (storySpatial == null || storySpatial.manifest != (mapClassId == 12 ? "871_156598" : "854_156383")
+                || storySpatial.mapClassId != mapClassId
+                || storySpatial.Entities == null || storySpatial.Entities.Length != (mapClassId == 12 ? 138 : 113)
                 || storySpatial.PlayerArroundRangeSize == null || storySpatial.PlayerArroundRangeSize.X <= 0
                 || storySpatial.PlayerArroundRangeSize.Y <= 0 || storySpatial.PlayerTalkDistException <= 0)
-                throw new InvalidDataException("Original Map11 story spatial bindings are malformed.");
+                throw new InvalidDataException("Original Map" + mapClassId + " story spatial bindings are malformed.");
             storySpatialEntities.Clear();
             foreach (StorySpatialEntity entity in storySpatial.Entities)
             {
                 if (entity == null || entity.EntityClassId <= 0 || entity.RegisterKeys == null
                     || storySpatialEntities.ContainsKey(entity.EntityClassId))
-                    throw new InvalidDataException("Original Map11 story entity binding is malformed.");
+                    throw new InvalidDataException("Original Map" + mapClassId + " story entity binding is malformed.");
                 storySpatialEntities.Add(entity.EntityClassId, entity);
             }
             // This source closure covers the pinned map placements and story
             // additions. Exploration instances have their own prefab bindings.
             if (mapEntities.Values.Any(entity => entity.PlacementId < 1000000000
                 && !storySpatialEntities.ContainsKey(entity.EntityClassId)))
-                throw new InvalidDataException("Map11 entity has no original story prefab binding.");
+                throw new InvalidDataException("Map" + mapClassId + " entity has no original story prefab binding.");
         }
 
         private Vector2 ResolveRegisteredStoryPoint(string key)

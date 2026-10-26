@@ -8,6 +8,7 @@ from prepare_unity_map10_battle_data import map11_component_stage_bindings
 from prepare_unity_map11_runtime_data import build_story_node
 from prepare_unity_map12_runtime_data import parse_terminal
 from prepare_unity_map12_sources import verify_legacy_equivalence
+from prepare_unity_map11_story_spatial import foreign_map_subgraphs
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -121,6 +122,29 @@ class MountainSourceTests(unittest.TestCase):
                 self.assertTrue(support["SupportSpawnInMap"])
                 self.assertTrue(support["BlockDefaultSpawn"])
                 self.assertFalse(rules[target]["InitiallySpawned"], str(target))
+
+    def test_story_spatial_uses_native_tags_and_proven_foreign_branches(self):
+        base = "unity/Assets/Official/World/Map/12/Resources/Map12/"
+        runtime = load(base + "stories.json")
+        spatial = load(base + "story-spatial.json")
+        self.assertEqual(spatial["manifest"], "871_156598")
+        self.assertEqual(len(spatial["Entities"]), 138)
+        foreign = foreign_map_subgraphs(runtime, 12)
+        self.assertIn("WorldTreeDungeonActive", foreign)
+        self.assertNotIn("IronMountDungeonActive", foreign)
+        keys = {node["registerKey"] for story in runtime["stories"] + runtime["subgraphs"]
+                if story["key"] not in foreign for node in story["nodes"]
+                if node["type"] == "GetPosAroundStoryObjectNode"}
+        self.assertEqual(keys, {"MountLift", "IronMount"})
+        self.assertTrue(keys <= {key for row in spatial["Entities"] for key in row["RegisterKeys"]})
+        for player in (3001, 3002):
+            self.assertTrue(next(row for row in spatial["Entities"] if row["EntityClassId"] == player)["TagType"] & 1)
+        changed = copy.deepcopy(runtime)
+        graph = next(row for row in changed["stories"] + changed["subgraphs"] if row["key"] == "DungeonActive")
+        node = next(row for row in graph["nodes"] if row["type"] == "IsInTargetMapNode"
+                    and json.loads(row["sourceJson"])["MapClassId"] == 11)
+        data = json.loads(node["sourceJson"]); data["MapClassId"] = 12; node["sourceJson"] = json.dumps(data)
+        self.assertNotIn("WorldTreeDungeonActive", foreign_map_subgraphs(changed, 12))
 
 
 if __name__ == "__main__":

@@ -81,7 +81,11 @@ namespace Zjcs.Presentation.World
             public void StartMovement(MapGridPoint target, Map10RuntimeEntity interact)
             {
                 if (movementPath != null || host.battleController != null) return;
-                if (host.mapClassId == 12 && interact != null && Manhattan(currentGrid, target) <= 1)
+                bool originalRange = host.mapClassId == 12 && interact != null;
+                Func<MapGridPoint, bool> canInteract = interact == null ? null
+                    : originalRange ? point => InOriginalInteractionRange(interact, point)
+                    : point => Manhattan(point, target) <= 1;
+                if (originalRange && canInteract(currentGrid))
                 {
                     host.Interact(interact);
                     return;
@@ -90,11 +94,11 @@ namespace Zjcs.Presentation.World
                 {
                     Start = currentGrid,
                     End = target,
-                    PreciseTarget = interact == null,
+                    PreciseTarget = interact == null || originalRange,
                     // The official world character (3001/3002) occupies its own grid cell.
                     BodyOffsets = new[] { new MapGridPoint(0, 0) },
-                    PreferDistance = interact == null ? 0 : 1,
-                    CanEnd = interact == null ? null : point => Manhattan(point, target) <= 1
+                    PreferDistance = interact == null || originalRange ? 0 : 1,
+                    CanEnd = canInteract
                 });
                 if (path == null)
                 {
@@ -103,7 +107,7 @@ namespace Zjcs.Presentation.World
                 }
                 if (path.Count == 0)
                 {
-                    if (interact != null && Manhattan(currentGrid, target) <= 1) host.Interact(interact);
+                    if (canInteract != null && canInteract(currentGrid)) host.Interact(interact);
                     if (currentGrid.Equals(target))
                     {
                         Action complete = movementCompletion;
@@ -172,10 +176,19 @@ namespace Zjcs.Presentation.World
                 if (host.mapClassId != 12) host.SaveLocalProgress();
                 Map10RuntimeEntity selected = pendingInteraction;
                 pendingInteraction = null;
-                if (selected != null) host.Interact(selected);
+                if (selected != null && (host.mapClassId != 12 || InOriginalInteractionRange(selected, currentGrid)))
+                    host.Interact(selected);
                 Action complete = movementCompletion;
                 movementCompletion = null;
                 complete?.Invoke();
+            }
+
+            private bool InOriginalInteractionRange(Map10RuntimeEntity entity, MapGridPoint point)
+            {
+                // WorldStageComponent.InInteractiveRange uses the configured offsets from GridTransform.Pos.
+                OfficialWorldStageRule stage = host.puzzleRules.FirstOrDefault(value => value.PlacementId == entity.PlacementId)?.Stage;
+                return stage != null && stage.InteractiveRange.Any(offset =>
+                    point.X == entity.Grid.X + offset.X && point.Y == entity.Grid.Y + offset.Y);
             }
 
             private void StartMovementToCurrentGrid()

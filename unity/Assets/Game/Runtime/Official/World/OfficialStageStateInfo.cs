@@ -29,11 +29,19 @@ namespace Zjcs.Official.World
     }
 
     [Serializable]
+    public sealed class OfficialStageInteractionOffset
+    {
+        public int X, Y;
+    }
+
+    [Serializable]
     public sealed class OfficialWorldStageRule
     {
         public bool DestroyOnEnd;
         public bool AutoNextState;
         public int StageWorldType;
         public List<OfficialStageStateInfo> StateInfos = new List<OfficialStageStateInfo>();
+        public List<OfficialStageInteractionOffset> InteractiveRange = new List<OfficialStageInteractionOffset>();
+        public bool InteractionFirst;
     }
 }
