@@ -1,0 +1,820 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: 6_-2
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: 6
+    y: -2
+  Bounds:
+    m_Position:
+      x: 84
+      y: -28
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: GroundRug_Shoal_Soil
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 126
+      TileIndex: 0
+    - Index: 140
+      TileIndex: 1
+    HasOffset: 0
+    MatrixIndexes: ffffffff
+  - Name: Groundrug_Shoal_Grass01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 126
+      TileIndex: 2
+    - Index: 127
+      TileIndex: 3
+    - Index: 140
+      TileIndex: 4
+    - Index: 141
+      TileIndex: 5
+    - Index: 154
+      TileIndex: 4
+    - Index: 155
+      TileIndex: 4
+    - Index: 156
+      TileIndex: 3
+    - Index: 168
+      TileIndex: 6
+    - Index: 169
+      TileIndex: 6
+    - Index: 170
+      TileIndex: 7
+    HasOffset: 1
+    MatrixIndexes: ffffffffffffffffffffffffffff00000000ffff
+  - Name: Groundrug_Shoal_Grass01_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 112
+      TileIndex: 8
+    - Index: 126
+      TileIndex: 8
+    - Index: 127
+      TileIndex: 8
+    HasOffset: 1
+    MatrixIndexes: 010002000300
+  - Name: Groundrug_Shoal_Grass02
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 140
+      TileIndex: 9
+    - Index: 141
+      TileIndex: 10
+    - Index: 154
+      TileIndex: 11
+    - Index: 155
+      TileIndex: 11
+    - Index: 156
+      TileIndex: 10
+    - Index: 168
+      TileIndex: 12
+    - Index: 169
+      TileIndex: 12
+    - Index: 170
+      TileIndex: 13
+    HasOffset: 1
+    MatrixIndexes: ffffffffffffffffffff00000000ffff
+  - Name: Groundrug_Shoal_Grass02_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 141
+      TileIndex: 14
+    HasOffset: 1
+    MatrixIndexes: 0400
+  - Name: Highland
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 84
+      TileIndex: 15
+    - Index: 98
+      TileIndex: 16
+    - Index: 99
+      TileIndex: 17
+    HasOffset: 0
+    MatrixIndexes: ffffffffffff
+  - Name: UnderObject_Soft
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 140
+      TileIndex: 18
+    HasOffset: 1
+    MatrixIndexes: 0500
+  - Name: UnderObject
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 140
+      TileIndex: 19
+    - Index: 142
+      TileIndex: 20
+    - Index: 154
+      TileIndex: 21
+    - Index: 155
+      TileIndex: 22
+    - Index: 156
+      TileIndex: 22
+    - Index: 157
+      TileIndex: 20
+    HasOffset: 1
+    MatrixIndexes: 060007000800090009000a00
+  - Name: UnderObeject01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 168
+      TileIndex: 22
+    - Index: 169
+      TileIndex: 22
+    - Index: 170
+      TileIndex: 22
+    - Index: 171
+      TileIndex: 20
+    - Index: 184
+      TileIndex: 20
+    HasOffset: 1
+    MatrixIndexes: 0900090009000a000b00
+  - Name: Water_Object_Under
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 70
+      TileIndex: 23
+    HasOffset: 1
+    MatrixIndexes: 0c00
+  - Name: Water_Object_WaterMask
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 70
+      TileIndex: 24
+    HasOffset: 1
+    MatrixIndexes: 0c00
+  - Name: Water_Object_Above
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 70
+      TileIndex: 23
+    HasOffset: 1
+    MatrixIndexes: 0c00
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 114
+      TileIndex: 25
+    - Index: 141
+      TileIndex: 25
+    - Index: 154
+      TileIndex: 25
+    - Index: 155
+      TileIndex: 26
+    - Index: 169
+      TileIndex: 25
+    HasOffset: 1
+    MatrixIndexes: 0d000e000f000f001000
+  - Name: GroundRug_Decoration
+    CellSize:
+      x: 0.2
+      y: 0.2
+    Tiles:
+    - Index: 3296
+      TileIndex: 27
+    HasOffset: 0
+    MatrixIndexes: ffff
+  - Name: UnderObject_Decoration01
+    CellSize:
+      x: 0.2
+      y: 0.2
+    Tiles:
+    - Index: 2731
+      TileIndex: 28
+    - Index: 3155
+      TileIndex: 29
+    - Index: 3222
+      TileIndex: 29
+    - Index: 3224
+      TileIndex: 30
+    - Index: 3297
+      TileIndex: 29
+    - Index: 3433
+      TileIndex: 31
+    - Index: 3502
+      TileIndex: 32
+    - Index: 3640
+      TileIndex: 31
+    - Index: 3710
+      TileIndex: 32
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffffffffffffffffffffffff
+  - Name: UnderObejct_Decoration02
+    CellSize:
+      x: 0.2
+      y: 0.2
+    Tiles:
+    - Index: 2102
+      TileIndex: 33
+    - Index: 2382
+      TileIndex: 33
+    - Index: 2870
+      TileIndex: 34
+    - Index: 3364
+      TileIndex: 35
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffff
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 36
+    - Index: 56
+      TileIndex: 37
+    - Index: 70
+      TileIndex: 36
+    - Index: 101
+      TileIndex: 38
+    - Index: 114
+      TileIndex: 39
+    - Index: 115
+      TileIndex: 40
+    - Index: 128
+      TileIndex: 40
+    - Index: 142
+      TileIndex: 41
+    - Index: 143
+      TileIndex: 38
+    - Index: 156
+      TileIndex: 42
+    - Index: 157
+      TileIndex: 39
+    - Index: 168
+      TileIndex: 42
+    - Index: 171
+      TileIndex: 40
+    HasOffset: 1
+    MatrixIndexes: 1100120013001400150016001700180019001a001b001c001d00
+  Matrices:
+  - e00: 5.9604645E-08
+    e01: 0.99999994
+    e02: 0
+    e03: 0
+    e10: -0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 1
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0.47
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: -0.75
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: -0.23
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0.29
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: -0.64
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: -0.52
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 2
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 2
+    e12: 0
+    e13: 0.29
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0.19
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: -0.99999994
+    e02: 0
+    e03: 1.3
+    e10: 0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.7
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.08
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.09
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.06
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: -1
+    e01: 0
+    e02: -8.742278E-08
+    e03: 0.3
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.2
+    e20: 8.742278E-08
+    e21: 0
+    e22: -1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 5.9604645E-08
+    e01: -0.99999994
+    e02: -8.742278E-08
+    e03: 1.3
+    e10: -0.99999994
+    e11: 5.9604645E-08
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 8.742278E-08
+    e22: -0.9999999
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -23
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -20
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -18
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -17
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -16
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.7
+    e01: 0
+    e02: 0
+    e03: -0.38
+    e10: 0
+    e11: 0.8
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -27.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.8
+    e01: 0
+    e02: 0
+    e03: 0.49
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -23.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.7
+    e01: 0
+    e02: 0
+    e03: 0.5
+    e10: 0
+    e11: 0.8
+    e12: 0
+    e13: 0.01
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -22.99
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.13
+    e10: 0
+    e11: 1.3
+    e12: 0
+    e13: -0.052
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -21.052
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 0.629
+    e12: 0
+    e13: 1.25
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -18.75
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -19.7
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.85
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -18.15
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.7
+    e01: 0
+    e02: 0
+    e03: -0.2
+    e10: 0
+    e11: 0.9
+    e12: 0
+    e13: -0.2
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -18.2
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.13
+    e10: 0
+    e11: 1.3
+    e12: 0
+    e13: -0.052
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -18.052
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.8
+    e01: 0
+    e02: 0
+    e03: 0.3
+    e10: 0
+    e11: 0.65
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -17
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.301
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -16.699
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.8
+    e01: 0
+    e02: 0
+    e03: 0.3
+    e10: 0
+    e11: 0.65
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -16
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: -15.7
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: 80d52504df92f828ddbca983b94f0a12, type: 2}
+  - {fileID: 11400000, guid: e49845a694ef89e49c45150c6bbf9d71, type: 2}
+  - {fileID: 11400000, guid: b95097d368b32e6c6571c0431f3ef54f, type: 2}
+  - {fileID: 11400000, guid: 8a363924bea90cc2dda0c13851eed166, type: 2}
+  - {fileID: 11400000, guid: 09a530ef4ceab9d437eb8d08de89a6f1, type: 2}
+  - {fileID: 11400000, guid: 8b910b3bafa04ca93696d6e9b312ab81, type: 2}
+  - {fileID: 11400000, guid: 00526aa087f5c58c5dd2868038ad5da0, type: 2}
+  - {fileID: 11400000, guid: d0d3a3afd30b9420bdb6831e31e0e4ad, type: 2}
+  - {fileID: 11400000, guid: 7008033029947eb72339d499313c9225, type: 2}
+  - {fileID: 11400000, guid: b00abc49312e4f5dfd0591aa8afdb8af, type: 2}
+  - {fileID: 11400000, guid: 74ab76c598eeee609b0a181bf62c2f36, type: 2}
+  - {fileID: 11400000, guid: 84a13282ee172419290d5accd540a2b1, type: 2}
+  - {fileID: 11400000, guid: 446cd7e80544146453b963efca4d4ea4, type: 2}
+  - {fileID: 11400000, guid: 47c3d338c3969986fd101f70d68d21a8, type: 2}
+  - {fileID: 11400000, guid: db58eea2440db41ec7d0dbb97f5c42db, type: 2}
+  - {fileID: 11400000, guid: 431e7ba4f93d0476cdec90f8e3a49391, type: 2}
+  - {fileID: 11400000, guid: 78e1838a8534298266fea6ba11a06332, type: 2}
+  - {fileID: 11400000, guid: 6a7345e14cd17a791d408348b089c955, type: 2}
+  - {fileID: 11400000, guid: 3f2a82a0e1c5e894189c08a96d2048b9, type: 2}
+  - {fileID: 11400000, guid: 6e0626bd5132429a998ddfa063e11947, type: 2}
+  - {fileID: 11400000, guid: f606e2e2c2cda539365316f6faf60fb0, type: 2}
+  - {fileID: 11400000, guid: 6b683194fb6a81367de42e1d6ae58f55, type: 2}
+  - {fileID: 11400000, guid: 81f0b16c5396c714186c07da8e853d5d, type: 2}
+  - {fileID: 11400000, guid: a17e92d4f918af77b0eddb5108d0729f, type: 2}
+  - {fileID: 11400000, guid: 110fbb4e1d87aba6f1a0ba6fe1166e42, type: 2}
+  - {fileID: 11400000, guid: 17301eb6b7f688ff0811bc65af1d718a, type: 2}
+  - {fileID: 11400000, guid: fc4143d4091560d0c22e17f2fcef43a6, type: 2}
+  - {fileID: 11400000, guid: ac1d9d60b49d6c893a5ebc3485fef02b, type: 2}
+  - {fileID: 11400000, guid: c3138450e226ab356d29fe20cb7cde83, type: 2}
+  - {fileID: 11400000, guid: 79e842bb5ae81ebeca3ca711b99604a7, type: 2}
+  - {fileID: 11400000, guid: 5affcf915e944d2284c554b216354fef, type: 2}
+  - {fileID: 11400000, guid: 2fcec7fddb1fcfadeb67fe575a0cb564, type: 2}
+  - {fileID: 11400000, guid: 463de288b82a00468c520c3eb87c09dd, type: 2}
+  - {fileID: 11400000, guid: 29897b83fd5a26fad889842d9b12e640, type: 2}
+  - {fileID: 11400000, guid: 792db74524a0747d20ebc42b37736342, type: 2}
+  - {fileID: 11400000, guid: 0dad9c858e9816fba3feb8cd568c98a3, type: 2}
+  - {fileID: 11400000, guid: bd8cf929196513ffb383d6a6d597c9d3, type: 2}
+  - {fileID: 11400000, guid: a4d71fb2818413fda858f233d692d404, type: 2}
+  - {fileID: 11400000, guid: be8a87b21b158665dfe3f3e57cdb1e2a, type: 2}
+  - {fileID: 11400000, guid: 04232c50dcc9c013c01b5cbbcfde2d76, type: 2}
+  - {fileID: 11400000, guid: 103468cc0070fcbfac80b9ed66bc8204, type: 2}
+  - {fileID: 11400000, guid: 033aa3fd28b470f6365f0bfb7e49efe5, type: 2}
+  - {fileID: 11400000, guid: b04a2d35c64252333aad8553b1687845, type: 2}

@@ -1,0 +1,216 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55386bceb3c80b1a25400e7802f9bc1e, type: 3}
+  m_Name: -2_3
+  m_EditorClassIdentifier:
+  IsPartial: 0
+  Pos:
+    x: -2
+    y: 3
+  Bounds:
+    m_Position:
+      x: -28
+      y: 42
+      z: 0
+    m_Size:
+      x: 14
+      y: 14
+      z: 1
+  TilemapDatas:
+  - Name: Groundrug_Shoal_Grass01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 0
+    - Index: 1
+      TileIndex: 1
+    - Index: 14
+      TileIndex: 0
+    - Index: 15
+      TileIndex: 2
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffff
+  - Name: Groundrug_Shoal_Grass02
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 3
+    - Index: 1
+      TileIndex: 4
+    - Index: 14
+      TileIndex: 3
+    - Index: 15
+      TileIndex: 5
+    HasOffset: 0
+    MatrixIndexes: ffffffffffffffff
+  - Name: UnderObject
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 6
+    - Index: 1
+      TileIndex: 6
+    - Index: 2
+      TileIndex: 7
+    HasOffset: 1
+    MatrixIndexes: 000000000100
+  - Name: UnderObeject01
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 14
+      TileIndex: 6
+    - Index: 15
+      TileIndex: 6
+    - Index: 16
+      TileIndex: 7
+    HasOffset: 1
+    MatrixIndexes: 000000000100
+  - Name: Object
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 15
+      TileIndex: 8
+    HasOffset: 1
+    MatrixIndexes: 0200
+  - Name: Shadow
+    CellSize:
+      x: 1
+      y: 1
+    Tiles:
+    - Index: 0
+      TileIndex: 9
+    - Index: 2
+      TileIndex: 10
+    - Index: 16
+      TileIndex: 11
+    HasOffset: 1
+    MatrixIndexes: 030004000500
+  Matrices:
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.09
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.06
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: -1
+    e01: 0
+    e02: -8.742278E-08
+    e03: 0.3
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: -0.2
+    e20: 8.742278E-08
+    e21: 0
+    e22: -1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 43
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 0.8
+    e01: 0
+    e02: 0
+    e03: 0.3
+    e10: 0
+    e11: 0.65
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 42
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.301
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 42.301
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  - e00: 1
+    e01: 0
+    e02: 0
+    e03: -0.1
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0.3
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 43.3
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  Tiles:
+  - {fileID: 11400000, guid: 09a530ef4ceab9d437eb8d08de89a6f1, type: 2}
+  - {fileID: 11400000, guid: 8b910b3bafa04ca93696d6e9b312ab81, type: 2}
+  - {fileID: 11400000, guid: d0d3a3afd30b9420bdb6831e31e0e4ad, type: 2}
+  - {fileID: 11400000, guid: 84a13282ee172419290d5accd540a2b1, type: 2}
+  - {fileID: 11400000, guid: ea1f39cc0315c43c020bd5b032887561, type: 2}
+  - {fileID: 11400000, guid: 47c3d338c3969986fd101f70d68d21a8, type: 2}
+  - {fileID: 11400000, guid: 81f0b16c5396c714186c07da8e853d5d, type: 2}
+  - {fileID: 11400000, guid: f606e2e2c2cda539365316f6faf60fb0, type: 2}
+  - {fileID: 11400000, guid: c220f2cf59989d3ff50c22fcf850ec48, type: 2}
+  - {fileID: 11400000, guid: b04a2d35c64252333aad8553b1687845, type: 2}
+  - {fileID: 11400000, guid: 04232c50dcc9c013c01b5cbbcfde2d76, type: 2}
+  - {fileID: 11400000, guid: 103468cc0070fcbfac80b9ed66bc8204, type: 2}

@@ -264,3 +264,16 @@ unity/Assets/Game/Runtime/Official/World/NativeWater* text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeWater/** text eol=lf
 scripts/prepare_unity_map13_water_shaders.py text eol=lf
 unity/Assets/Game/Editor/OfficialMap13WaterShaderTools.cs* text eol=lf
+
+# Preserve Map13 native asset bytes and Unity-normalized metadata hashes.
+unity/Assets/Official/World/Map/13/NativeTerrain/** -text
+unity/Assets/Official/World/Map/13/NativeTerrain.meta -text
+unity/Assets/Game/Resources/Map13/Native/** -text
+unity/Assets/Game/Resources/Map13/Native.meta -text
+scripts/prepare_unity_map13_terrain_components.py text eol=lf
+scripts/prepare_unity_map13_native_terrain.py text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeTerrain/** text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeTerrain.meta text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13/** text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap13.meta text eol=lf
+unity/Assets/Game/Editor/OfficialMap13TerrainTools.cs* text eol=lf
