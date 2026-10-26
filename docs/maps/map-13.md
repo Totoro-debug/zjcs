@@ -66,7 +66,10 @@
 - 同源隔离内置屏 Linear／DX12 Play Mode 验证原地区描边参数、颜色无额外线性转换、CRC 复用／隔离、剩余引用保留、最后引用销毁、真实组件禁用／重启／Update、outline2 关闭变更、五种阴影角度、自动字号事件与字号恢复；完整销毁后缓存与参考材质字典均为空，期间无错误日志。原参数文字实际渲染截图已查看；使用独立字体／材质／图集副本，不改用户存档。主工程 DX12 导入／编译、来源检查和全局 `ProjectTools.Validate` 通过，静态检查通过。该批验证尚未覆盖在 Canvas graphics 重建期间设置 material-dirty 的分支、原地区标签层级、世界状态与正式交互；完整引擎 TMP 的执行等价性仍未证明。
 
 - 从当前官方 Framework／Framework.FirstPass 迁移 21 份文字、服务、接口、状态与颜色代理源码；保留状态共用节点的成员判断、先关后开与配置顺序、原无动作 Clear、语言注册／变化刷新／销毁注销、文本处理与格式化顺序、换字体事件与特效重建、颜色代理的原 `.linear` 转换。仅替换命名空间、依赖注入入口和日志；原多语言服务的停用后仍注册行为保留。另从固定 APK 的全部 8 个 AOT 方法与元数据恢复可选 TMPColorGradient，保留键间距、独立 alpha、每行范围、旋转后顶点位置和逐字符四角处理，不额外复制 Gradient mode。
-- 同源隔离内置屏 Linear／DX12 Play Mode 验证共用节点的真实启停回调次序、枚举／整数／布尔状态及无匹配状态、语言变化／停用更新／销毁注销、处理器先后、格式化与事件、换字体后原特效重建、双行 24 个可见顶点的渐变颜色、四角线性颜色代理；真实相机文字截图已查看，期间无错误日志。字体／图集使用独立副本，未接触用户存档。主工程 DX12 导入／编译、来源核对及全局 `ProjectTools.Validate` 通过，静态检查通过。此为基础组件夹具，原 88 份标签 prefab、正式语言数据提供者、地区／时间／玩家状态与鼠标交互尚未绑定。
+- 同源隔离内置屏 Linear／DX12 Play Mode 验证共用节点的真实启停回调次序、枚举／整数／布尔状态及无匹配状态、语言变化／停用更新／销毁注销、处理器先后、格式化与事件、换字体后原特效重建、双行 24 个可见顶点的渐变颜色、四角线性颜色代理；真实相机文字截图已查看，期间无错误日志。字体／图集使用独立副本，未接触用户存档。主工程 DX12 导入／编译、来源核对及全局 `ProjectTools.Validate` 通过，静态检查通过。此为基础组件夹具，原 88 份标签 prefab、地区／时间／玩家状态与鼠标交互尚未绑定；原二进制语言提供者已在下述独立组件中验证。
+
+- 原二进制本地化服务、读取器、XXHash64、语言管理器、十种文化的数字／文本／日期格式器及参数分支直接迁移自当前官方代码。按官方启动与游戏提供者顺序，显式绑定两份完整原中文 rawfile：启动 108 条／5,532 字节，游戏 100,100 条／5,293,307 字节；原路径、文件字节及索引保持不变，随 StreamingAssets/Map13/NativeText 离线交付。只替换资源句柄、注入和日志；缺失键、替换器、UTF8 查找、缓冲扩展、语言重载及释放顺序保持原实现。
+- 同源隔离内置屏 Linear／DX12 Play Mode 通过 18 个独立哈希向量、长文本缓冲、106 个地区名与 14 个时间键、中文万／亿数值及倒计时边界、重载与全部文件句柄释放；真实 MultiLanguageText 接入原二进制服务并渲染“泽之国一”，实际画面已查看。十种原文化实现完成构造核验，实际文本载荷仅包含当前官方中文。主工程导入／编译、全局 ProjectTools.Validate 及静态检查通过。正式世界标签／状态和全局设置存档尚未绑定，不代表整图或其他语言已经完成。
 
 ## 自定义实现
 
@@ -111,3 +114,5 @@
 - [原文字特效恢复](../../scripts/prepare_unity_map13_text_effects.py)、[C# 重建模板](../../scripts/map13_tmp_effect_runtime.cs)、[代码来源](../../assets/reference/official-map/map13-text-effects-code-source-manifest.json)和[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13TextEffectAcceptance.cs)记录 30 个原方法、字面量／常量／元数据、访问边界和验证范围。代码入口为 `Runtime/Official/World/NativeText/`；`Source/native-text-effects.json` 保存原代码证据，不代表全套 TMP 引擎已恢复。新增来源载荷未进入完整快照。
 
 - [地区标签基础代码迁移](../../scripts/prepare_unity_map13_label_core.py)、[原渐变重建模板](../../scripts/map13_tmp_gradient_runtime.cs)、[代码来源](../../assets/reference/official-map/map13-label-core-code-source-manifest.json)及[Play Mode 检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LabelCoreAcceptance.cs)记录 21 份官方源码、8 个原生方法、输入输出与验证哈希。代码位于 `Runtime/Official/World/NativeLabelUI/`，可选渐变原方法证据位于 `Source/native-text-gradient.json`；新增来源载荷未进入完整素材快照。
+
+- [原二进制语言迁移](../../scripts/prepare_unity_map13_language.py)、[来源与字节哈希](../../assets/reference/official-map/map13-language-code-source-manifest.json)及[运行检查](../../unity/Assets/Game/Editor/Map13/OfficialMap13LanguageAcceptance.cs)记录原提供者、57 份源码、完整中文文件和实际验证；本地文件接口位于 Runtime/Offline/World/NativeLabelResources/。新增载荷未进入完整素材快照。

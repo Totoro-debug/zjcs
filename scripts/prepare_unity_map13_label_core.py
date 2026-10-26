@@ -96,7 +96,7 @@ def build():
             render="Each line firstCharacterIndex through lastCharacterIndex inclusive; every character and all four vertices, including invisible characters; rotate the vertex and InverseLerp against original unrotated line min/max; write Color32 from Gradient.Evaluate."))))
     meta(evidence)
     path = DEST / (NAMESPACE + ".asmdef")
-    write(path, encode(dict(name=NAMESPACE, references=["Unity.ugui", "Unity.TextMeshPro", "Zjcs.Official.World.NativeText"], autoReferenced=True)))
+    write(path, encode(dict(name=NAMESPACE, references=["Unity.ugui", "Unity.TextMeshPro", "Zjcs.Official.World.NativeText", "Zjcs.Offline.World.NativeLabelResources"], autoReferenced=True)))
     import_meta(path, "AssemblyDefinitionImporter"); outputs.append(path)
     for folder in [DEST, DEST / "Common", DEST / "Framework"]: import_meta(folder, "DefaultImporter", folder=True)
     receipt = dict(format=1, mapClassId=13, manifest=source.version, assemblies=assemblies, inputs=inputs,

@@ -283,13 +283,13 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Zjcs.Official.World.NativeLabelUI.asmdef",
-      "sha256": "430d159b65b97004ad9afa9d1db55a0831f7586e9e3a8595a3bdaee243eb6ff0",
+      "sha256": "d7b33eca3441dfde03ae43dde180ace39425294837e15d33b9773238dcafa0d9",
       "meta_sha256": "9c3bd12151efb0406bc7f884bf5f54697685c3110124cfe67d02bc767880cfc0"
     }
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_label_core.py",
-    "sha256": "18b682f6a6a986da10a1be00fb7f31435611a9a812ba2267f67ad6d2e493dfb8"
+    "sha256": "5521c8485ab829e79cd8d5952d2e61106dfd57989e49c35175e58d1f2cd33265"
   },
   "templates": [
     {
@@ -304,7 +304,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map13/Zjcs.Editor.Map13.asmdef",
-      "sha256": "4683e74b23a69949d0fa0291ade863dd5c2c7f4ff72454749ef8fbb919c7291d"
+      "sha256": "fbf300c85336e51a4b6dfc612a4a0dfdcf592136960013f3664df267e67ff10c"
     }
   ],
   "operation": "Copy selected official text/service/interfaces, color proxy and state code into an isolated namespace. Replace DI with explicit pre-Awake binding; replace unavailable logging only, preserving catch/return/iteration/order and all branches. Preserve fields, shared GameObject membership and source no-op Clear; reconstruct all eight original AOT gradient methods and metadata fields.",

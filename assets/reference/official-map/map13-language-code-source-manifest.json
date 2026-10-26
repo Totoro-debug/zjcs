@@ -1,0 +1,628 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Launch.dll",
+      "sha256": "68dcdbe26255391564719e0942f0a614a83b15ff6793263233563c635dd9161c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ArgBase.cs",
+      "sha256": "2b9db6ee8a642caff2e1e80ce8eacaf7035347f3a5f45db7c3dd128d244ed73a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageManager.cs",
+      "sha256": "810a743c9275bee3cdc627c2d116541ff0d59368842a3901271e511a2f94f262"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageCulture.cs",
+      "sha256": "430e942b596ed249a60cf63564829e17866563d0f30c6fae0fb97e7b17de1723"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LanguageCultureResolver.cs",
+      "sha256": "e8e23818f739daeeeaea31720704f38b562708aa1328eb52fa981fb425d41c8b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberFormatHelper.cs",
+      "sha256": "6f99c3f60df79d5914bbdb2ed92247d7ace8a68f4870b9349e123227f5c2e4cb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTextFormatHelper.cs",
+      "sha256": "36849d4dcb3b833da9e9fad143f65d7de4b74a90370f19245db67dc00e0649c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+      "sha256": "4c531fc89d49f77f3cebc6f7bbd6e0fa2246a35c0d2abbcdb7441dadb7e83913"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureNumberArg.cs",
+      "sha256": "8043c8111ef9f31811c0a45e8df73b7dad1fe8b50ef035c6e7a35bd27f222029"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTextArg.cs",
+      "sha256": "9a0143adace2b5e83dc5250ebbd70c8832fca242aab264dcbccbc80832ffb1c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureCustomTextArg.cs",
+      "sha256": "3d60135a76a9370185d82b778b473e7e123c5142f1e1cea7d8d2fec0b932b49e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureDateTimeArg.cs",
+      "sha256": "d2ce74a7a42da6ee869a0286dc8da6e5d0b8ce84bc7cceb625f81d02e6422fcf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ECultureNumberArgFormatType.cs",
+      "sha256": "99fabcb7d4eea69f6762063d308d526d2776110d63f0ddcfdf81cb35527bc259"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ETimeSpanFormatType.cs",
+      "sha256": "c15e05c30ab59f7a3ac76710c761b2ac12ecb2caa7c23ff4e5f250b2c48879d8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/EDateTimeDisplayType.cs",
+      "sha256": "3528f341a29841e422da384981137b9ca2fa2755c2b4d9a98085212abafc4ef1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ICultureDateFormatter.cs",
+      "sha256": "557595bb5c9aebb07d02455943f61da56f0c5329b4271a69f7441bb2cca5d229"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ICultureTextFormatter.cs",
+      "sha256": "511ae8228ce12abe6f5c7d1a706b18ffbbcc2c33c171e09f75e98c8ec944ba4f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ICultureNumberFormatter.cs",
+      "sha256": "a4d3024cd8dafafbde0c9da36a202f645c269319aa02f41580e57a224ded9d22"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureDateFormatterBase.cs",
+      "sha256": "0514877456159aed11e91962f0450dd19ff302316a3199198f068957db5d843f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTextFormatterBase.cs",
+      "sha256": "eaae319a79019209822107b9dd6bfbcb00667ec14c5b37291352909e29f3daca"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureNumberFormatterBase.cs",
+      "sha256": "f4171f14d149db5645c824ab0dcad8d04d4fae8f32c3d2d150cb5dd4f005e205"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ITextReader.cs",
+      "sha256": "5ce7f213f7868181c1b38aa8bda698b8ec73cba073ca0d939e8b441b007ec815"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LocalizationBinaryTextService.cs",
+      "sha256": "9ae6b50108b77d4a25babb57f7f2388340f2f0f12af9056e6d6cdd0a2837b72f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_CN.cs",
+      "sha256": "08e4c5e5a60e19e7e4594b1a139060190420beff8d884f80498ccbea51000b5f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_DE.cs",
+      "sha256": "99c323a624b7975b301fc0cd363fc24bf5585fb3747999d2bfa201894458e08c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_EN.cs",
+      "sha256": "1345aa3d821f4c56c2a5bad95188a169f44d452643298c6925a12fd0fb0df2ad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_ES.cs",
+      "sha256": "60601f27714f92476fd0096ac04344fe05255cd3936f544d196a511e11fe9825"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_FR.cs",
+      "sha256": "02a43a8d346b4d032f32d1e9bc59c01d586ba31943774fd078b6097acd21ebbd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_JA.cs",
+      "sha256": "909b225cea218878b776e8ce22c78bd530071916608c1045d3664ac8afb710b3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_KO.cs",
+      "sha256": "bd8bf3c064838e5e951018e9862802d883d044b9aad370f18a2225e406ee9c0d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_PT.cs",
+      "sha256": "9aa46ce3f801a28ccf2d4414d5acb72997104a7878cef705676988649400b1dc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_RU.cs",
+      "sha256": "cb9ea1b4684490c99b3af0b9c507010fedc4d130c2eec320fd280f537d9bd897"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/DateCultureFormatter_TW.cs",
+      "sha256": "dec4a36d0de02aee41f8a8a783e207cc04be1dbac7372a7c2ae19da6c9ab2464"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_CN.cs",
+      "sha256": "3c5870f569f080235521c2885a4125a74321b10ee84cd9ee2ce53d2ab4bc417d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_DE.cs",
+      "sha256": "469619cba0ee84af3c5ce84bfec3055d4d08cb7870ebccb9ccfd0c589cf9a0a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_EN.cs",
+      "sha256": "4f14271dc10b8f3de35656f81ed3fbba78c2e18fae8478fa5c740b2027d43d8d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_ES.cs",
+      "sha256": "5460cb7468f174fe265201aad948303b7f1295bb633928e87f17305ed90cea1e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_FR.cs",
+      "sha256": "a003e85639f85df7c1fee7b41210828d23ecda3962d84f06f0cdea49c62c6b0a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_JA.cs",
+      "sha256": "11707c75119db098044dd25de08a61a9fd78357392b1fb42edfde69d0473bb5a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_KO.cs",
+      "sha256": "082f6bef7fe20152432d99aae6a044dc449431e0c0eb423f7ad52e88b3d1fe95"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_PT.cs",
+      "sha256": "d115cd1f7ae48983ba4e6643cb6003e35030017fadc0c3e92bf1d35555d258d2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_RU.cs",
+      "sha256": "d03fa1ab91a52f764eabbfbd4e02d7fec22a2c7d376118da3d05cbf85b7079d0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/NumberCultureFormatter_TW.cs",
+      "sha256": "cabe25667b15597fe5ac5d290454e99ebdbdd9394b9f9cc819ee443a922e5178"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_CN.cs",
+      "sha256": "898beb38446541046f9ece1c907bbc259887e1c8a19349668c86590abae05ee7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_DE.cs",
+      "sha256": "922ec78cfd7a8946c921d1d1cbd800d8bca1bacf1f2745c0ad58488c9e216d73"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_EN.cs",
+      "sha256": "25fbb70087229340247cb690f38dec4040f66f11f52a3e6d9701ba0ccd1610e4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_ES.cs",
+      "sha256": "1846fa3f31c621dda5bd75e1fdf2de66d2b12e05043571ba14a58b8164e29fac"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_FR.cs",
+      "sha256": "20d303500a97b36fea15def2f23b8c0f43b3268128445cc8682b58510e91639c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_JA.cs",
+      "sha256": "33c3715414c2e849afef9740da98f672060868d80c7191c90ae5bf95481f3075"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_KO.cs",
+      "sha256": "5d3588f7e723e348639b326e1a072f30b8f56a2a8f6ddefbe3d3bd2a98b1cf73"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_PT.cs",
+      "sha256": "ac6070ee4f85ddab5e76ba42065a7d0ff1ba304814d15a0c10a19c6326c54a53"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_RU.cs",
+      "sha256": "e60aa3c0df2bd7e9f883eab0ca9ed10a6845afbe51befe31a2b10f4083289407"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/TextCultureFormatter_TW.cs",
+      "sha256": "da29cc9260b2e2fb5411072d93a529c1ee9ea7c8d190678721847796e4f7b9f0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/XXHash64.cs",
+      "sha256": "55d1e6026386b7921521eced3c180268e4ebd7a5c3cc3b5a4460c360ed7d880e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/LocalizationBinaryFileReader.cs",
+      "sha256": "9ee68049d8fa381012f3af2e9e9701af8105f5bab569665b658c03a64d605d89"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/LaunchLanguageBinaryTextDataProvider.cs",
+      "sha256": "c5fbaf33848fb15cd9723494b654208be972743790c1540c4d37e2f025800e69"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/GameLanguageBinaryTextDataProvider.cs",
+      "sha256": "2f5a86dbb1396cbe236d14300bde3ae097329726afca30d1ceec47c9d92f46df"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LocalizationTextService.cs",
+      "sha256": "50baa188520901708fd5f5927092c3c7a7c470e7a983453d0c2dd6195d8e56fe",
+      "extracted_method": "GetMissingKeyText"
+    }
+  ],
+  "callers": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/LaunchContainerInstaller.cs",
+      "sha256": "029650fb6be757a487edb36c663380f25ee9ecc49ce2d1d81e159a7f84e77e96"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/GameInitializer.cs",
+      "sha256": "57e972d39acfb9f16c9ffeb71ba59544ab6a0a2bb557a2ac44bb8da8f08ec475"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/Common/ConfigConst.cs",
+      "sha256": "a12c1392935686b7c10288db4e335e8f7718305a8c74bb6e25b89d39558a7e5f"
+    }
+  ],
+  "rawfiles": [
+    {
+      "name": "launch",
+      "location": "Assets/Launch/Config/Binary/Language/zh_CN/text.g.bytes",
+      "path": "unity/Assets/StreamingAssets/Map13/NativeText/launch-zh_CN.bytes",
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "bytes": 5532,
+      "md5": "a373f2acc39aeb5c4560f1456879b997",
+      "entries": 108,
+      "source": {
+        "origin": "apk_zip",
+        "apk_entry": "assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
+      },
+      "bundle": "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile"
+    },
+    {
+      "name": "game",
+      "location": "Assets/Config/Binary/Language/zh_CN/text.g.bytes",
+      "path": "unity/Assets/StreamingAssets/Map13/NativeText/game-zh_CN.bytes",
+      "sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24",
+      "bytes": 5293307,
+      "md5": "02c0651354843a70513ee448be3350f9",
+      "entries": 100100,
+      "source": {
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/WwiseBnk/02c0651354843a70513ee448be3350f9.rawfile",
+        "manifest": "871_156598",
+        "size": 5293307,
+        "sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24"
+      },
+      "bundle": "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ArgBase.cs",
+      "sha256": "90f015c8d537d6c17b886db2eb612a085f128f00c90770654ad1547612296682",
+      "meta_sha256": "61846c5f16ff6f6b135ed854f88fdb1a5471888a28ff1bdc125592664fea1fcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureCustomTextArg.cs",
+      "sha256": "074e1e7683a53a78e2ac0526c3461a5eac827ea8b5c9cd41121d43eeff1628e4",
+      "meta_sha256": "def914f3161c7b78838537ea7fcfb2dfd8f49623bcec409d89670a7d4825aaf6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureDateFormatterBase.cs",
+      "sha256": "2479b2a9f12a4e81e296e1b5b0bb168498ca5fce2eaeecfa473196b6386c2ff1",
+      "meta_sha256": "bdbb91c09fcc7879f2b1deb63faa34294a809c0c2e78d29980f71872c4947e85"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureDateTimeArg.cs",
+      "sha256": "31f74a7e9a04b860c56c713d59ee80a43ff8aae317affa567356705a7d65b147",
+      "meta_sha256": "3317ca29faf7675da7d762cdf766fab127cfb582f3746590928a452749086547"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureNumberArg.cs",
+      "sha256": "c937e9a9b39a689008feb396e76b704a9ee69b03ba7e617444b40012ef1ed580",
+      "meta_sha256": "d93cba3b7eaec54f1d2ffcc07b9790b466d2b8030ebdd8aebd4d9eba9e1dc870"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureNumberFormatterBase.cs",
+      "sha256": "7a58ab52c8ad3f8bf75243dc8c92cc3c6b729968368482ba545777a8f7029423",
+      "meta_sha256": "f4e4506e0496125625d6b874476b198fa78c4cfde0706ed68856251ed12bbce1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTextArg.cs",
+      "sha256": "ba3a21054467957c205a36a2efc1fa7ed2c3f9ea2e88632fdb7df20cec57b8d0",
+      "meta_sha256": "fb826362c9782f32178ef1bff86f184856dd9886e91f16a09eaa4d7577b91c33"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTextFormatHelper.cs",
+      "sha256": "20b1d7c84abae4127ecff139b775044d4db644fda5513e288de9336dc361a37b",
+      "meta_sha256": "ddfc0078e10c4dbf53cca21ee4976961a2c46d648fe82ae043c88aeb166b8623"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTextFormatterBase.cs",
+      "sha256": "844842b935b84990a22c7b9142d6c2a17f00e431e7e464e0835f22398b5a9fbd",
+      "meta_sha256": "c7c3d26782bb2271289844e38eb63e4446fe08cb0717f8857d1291ee48682e97"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/CultureTimeSpanArg.cs",
+      "sha256": "cb779d8404570aca765c1db36860c79b722ab5ae291639cd7621c481da482762",
+      "meta_sha256": "555f11767bb9e60345c0ab227e857878bceafd20f2aa9dc04aeb1eb445c82080"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_CN.cs",
+      "sha256": "96502afb8993af377ee37ed5631a1fdeb32d56c7a38bcf2c3164993e013cb016",
+      "meta_sha256": "718bd33bdab79f350066933b47cff7bb3b9fc69cfeed3079703ef104e585d26f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_DE.cs",
+      "sha256": "c571a24ece6a08b1c9c9e8160fd5ee5f3cb408ae693b53304f8958218ae58dab",
+      "meta_sha256": "12ffd21615d1becf4d1da368a877aa0f01807d8a07dcb5709986243307585f69"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_EN.cs",
+      "sha256": "d3e5dbdce47d845ef124cec66cae8fe1cd26f81f54a0fe036dcf7ef453220fcd",
+      "meta_sha256": "d020aa7c4eb687a7680cd5dbc2275528d7e80db72438b340c5d21b4918963abe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_ES.cs",
+      "sha256": "5355ad130e9aa9da10c96ec78a40fe238a652da8b451d3018be404580cf1bf29",
+      "meta_sha256": "109fef5f6db742b53f041287cf7ea1e4dff3660b4595d7ef1f4658aafc570f6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_FR.cs",
+      "sha256": "82bb6b5a3cf87a569522f26ad83ecd42c013678b1d86ff0ec051545961e1316d",
+      "meta_sha256": "a2572be0cf5c439c446438b8fe73db70406207c26aee52c96e8c9a2fe51c11a6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_JA.cs",
+      "sha256": "26298d48c6a550cc338e393ccc76b073400728ab58973f7146fd5e5e4379f3ba",
+      "meta_sha256": "394558e5885f90f4377df1a98c8b3733629224c3fdd7d0bffe03f0ce58f3766b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_KO.cs",
+      "sha256": "ca14af9a7c50fc4a578a1d223b9ea89b83f406fa34c37d9edaf390a4c14b5b58",
+      "meta_sha256": "4fe2db0eee15f08e769bb95568db3b97e1d13c32e61f128fe096bef8d9bf0e68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_PT.cs",
+      "sha256": "5c293585407c4589aa6902a0a72603f4044e58783c9bb9e3678ac0f6c8d2dd31",
+      "meta_sha256": "34fd3cb33a120cb8e53d11298dda4436b581e78c4d371d81519f9055ad74c1f9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_RU.cs",
+      "sha256": "e838b63c8be5fa2d3ec56b5f09ded25916fef6115a8daf3a61a5afe629228ba9",
+      "meta_sha256": "91042c57c2b5b8c3bac6b65a8f664c0feabed225cb5ba817712fb915f9d1f70d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/DateCultureFormatter_TW.cs",
+      "sha256": "8a83515b3803c0ce95d5b2612ffeeace06630bd30029ad54d9f6b30e567e7cc5",
+      "meta_sha256": "6016fb73f884647c31c130c0435283e5632fe57e5a67a4b99eacdb227c67499a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ECultureNumberArgFormatType.cs",
+      "sha256": "4a7472bfd25748205531843a7bd8fe9205bf82b7bc9b0d2426599d05e809f071",
+      "meta_sha256": "0117532395b9c9064d0fc15c08378610acbcebeb3679e6847d72a17cd987ed0b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/EDateTimeDisplayType.cs",
+      "sha256": "4de238bbcb5abc5bf7f647fd9cb5146060c32024bc536216f8fb6cf5bcfce8ac",
+      "meta_sha256": "b6dd0d847c71c5016814f8d72902a578af1869472c29060093165f62731b8f64"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ETimeSpanFormatType.cs",
+      "sha256": "a7eb2aabec41435ebd735298e140f467cd8f93c7c994cfa43fb60fbe30709cee",
+      "meta_sha256": "1cdf3e9c38a2118a0d7b6df7829c79d926bdf4050694846280bd05704c4d93ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ICultureDateFormatter.cs",
+      "sha256": "d71b8dc9d46ee2b684735f4514d8e7227a809ee9d7ac26b19e30c2ee320e7c19",
+      "meta_sha256": "77225e7f5b59a72777c0253ff18f6bd772397cf304c8b6e3267e277cbb8705f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ICultureNumberFormatter.cs",
+      "sha256": "3e5b865de12c129fe0ca45ce7fd2ecae39c0467aa4793ab960dc4bcef7fa5f1e",
+      "meta_sha256": "c8f5eb467a74278979c116bf22a961cb7b2c01af2cd64509ad1f81dad4fb8434"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ICultureTextFormatter.cs",
+      "sha256": "48403ded27e5326ffcb51e9d0b80e529e2655b0843caf350e50233e73eecc9e8",
+      "meta_sha256": "c72c85f6a85cdf8a3ffbaacfd9c58869c09c6d52ab0d9399b09a031675b7ef9c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/ITextReader.cs",
+      "sha256": "ddaa0400462e7c24d371b255c97afa7e65cd739b613600e6ac4709e20e0c635a",
+      "meta_sha256": "f88410308c8895beca87da8634b71bf7732eedc6863472bf6fad00ea31a8813f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LanguageCulture.cs",
+      "sha256": "3defefdbffd59dac06eb587f0da0ace2b86a7f178005674430843130f0e4ebce",
+      "meta_sha256": "08971ae379b1025ea3b2a66d0a250044cbe6da6f3420a7834180451da390d558"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LanguageCultureResolver.cs",
+      "sha256": "1ecd30187764ce3976b3acdf4e0584886c7853c014ff0832fcdac3fa540d872d",
+      "meta_sha256": "bf3d2e388b0a72f650f0491bdb60c1332c0c03bce59bf742f47e2e90f52ba635"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LanguageManager.cs",
+      "sha256": "249f8027c8f456eead39a02f704cb8618dc9fb8eed9700d968be7216376beb1a",
+      "meta_sha256": "fa66d0c8a620d86c173e0127b61ba6498aceb06497b94bbea9ea8285e4a490fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LocalizationBinaryTextService.cs",
+      "sha256": "87f659ca09b9048cb8829b1b26b64471c133e909b1d3f9d87086b8bc389a4b9a",
+      "meta_sha256": "a5b5a9feeace4bdf7674ed26613d1829692d82e8d73672d9faa7f48e8f506d7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/LocalizationTextService.cs",
+      "sha256": "5e52eab7e11935eb18dbb2b6dc481d4d52ee68fb715f5fe976b5d6f73b8863f6",
+      "meta_sha256": "e6b75ec48dca1333abf123f12284b31a2d0e0a3ef8fd6fe8ccb4dd6deedecf57"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_CN.cs",
+      "sha256": "70d30c5b8a9785762d739955c3e7c7c4ac5cac7fffcc11c602359e3f71e29f35",
+      "meta_sha256": "78362a12ed8e33c8a80f997976118bdf36db89b01fb6e52e2c0f26102831c38c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_DE.cs",
+      "sha256": "7c821d96ddda7d8af4003e82c369512d25461934c5adf7e55b0e12349e54aae9",
+      "meta_sha256": "3780196861d6d0fadbe10a1ca2afce3ed8724cb746c72edd284b9429d2fb527b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_EN.cs",
+      "sha256": "f899598dd15edacf9b918e0a179b0eb25cd21aa1d356f1e586be5fc9cc33413f",
+      "meta_sha256": "33568b04189ed4f8b8e2089a69c3b9b5f0610b980b03a5cbfdd4a0063a2eda56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_ES.cs",
+      "sha256": "8589699ab9578e796853deddc8090c6f9bafba5b2ccb710d0f25243f7b0bcc7d",
+      "meta_sha256": "bcfd3f64c0f6370d170af500981e3b9044c43e0906240b36b48ebd999497c514"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_FR.cs",
+      "sha256": "afda8e319decfc1e14e61908ce65418c7072c24a9a3f9952653a8ad2128066d0",
+      "meta_sha256": "a38584f655a5ddba79870c8b382bb1370c197c3490e6489281edf6f75d2293cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_JA.cs",
+      "sha256": "e5e2b9320f4b19397ae86885705c23d6d769e5ca4195a2aad636da05f770618f",
+      "meta_sha256": "06c7ee8aa84e86b4622596fe4a962f23acac253ad259d32e38a7e10d88502016"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_KO.cs",
+      "sha256": "50931603c2b4425c54130bb04aa57ccc9d7b25e0a9eab425679abefcd38a7593",
+      "meta_sha256": "3fdb58969efe89a77739e34e03d92b67c365bc1468faafb6c82c2899a1b95e7f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_PT.cs",
+      "sha256": "88397f66ae713ab2a360c49ffea053b5a8377f6b57ccb4c07e0f6e3d68c9e41f",
+      "meta_sha256": "1a5ed4ea6d5dd677196e51fa9cce6dd92d5c981848457483bbd1a2c51cce5517"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_RU.cs",
+      "sha256": "4c953b6b245a7cafd777ddc6746a8f51cac3d60c789645b48565c3b23eb4bd5b",
+      "meta_sha256": "12c1a23c8ba16bb78fc1a484befffaaa31405149590653a9ce7bb125f7e48988"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberCultureFormatter_TW.cs",
+      "sha256": "5301b54c6c5be79834fbfef0e4e3ed5c79569e1e04ff57fb946629823e2a14cf",
+      "meta_sha256": "75ab5356eb0c7c5594afea427c105ff43a26aba1b627d347aad89046f0641e0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/NumberFormatHelper.cs",
+      "sha256": "ad59e3a7c5129aebcba6247febe8815466c2ae47af72e75feb441722eee1bdd6",
+      "meta_sha256": "7c667b629e62ac0fd8d77828cb6878251fb6cc3209e00ef3d31c2fae6c0345fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_CN.cs",
+      "sha256": "6f0682b5e6cf37f95669c86a20eea7fbc17ef170580d706c8fe940bb88f202a7",
+      "meta_sha256": "fc60f19e5233900e2e587315d1becf6a08d76e2e925a61d6640e392a02c83640"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_DE.cs",
+      "sha256": "aee376470fce45e321b23aa86196ec5b8335b5627d6161208efb49fb0b5018f0",
+      "meta_sha256": "977aa47f1662f46ae10b2b2080f7c2cd9f3a9c472ad7c82d45bb733cb20bf314"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_EN.cs",
+      "sha256": "514d563bfb98e1c6a05051a604a54c7a3d6595495a291b36fff4c7fae3fdfcf5",
+      "meta_sha256": "7e221438b5bce33cf3126a1fbde557cc679702b4a206dd944fa04ade1fa51c5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_ES.cs",
+      "sha256": "dff891625dc79ad527e380417e457b2f2f83b0a3bbfa0c1657f68d7e1477e333",
+      "meta_sha256": "c1dddfcfee3f3af5812a40dffd4c44c12bc9bd3d3d8f5abfc0e08328a4fa3a87"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_FR.cs",
+      "sha256": "1d2f81549e9f4e4934b4ee8c304bbf798cd09973260a1acac2ff96133941dd99",
+      "meta_sha256": "677d40a6cccc16a5305a56b11df12059a6231089444c1810ca20ce7d5d281e2c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_JA.cs",
+      "sha256": "d6b3a5ee03d0c2c8763b7af66594575dafe2877e1d61bd533ca2936befe5cefe",
+      "meta_sha256": "bf3bf18a8e9ca8ae035e7fe520ef0bde98f0d5794eb877aaa9c79a384f2180cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_KO.cs",
+      "sha256": "1a654712ee9d147ae1ca4984fd06459050adee79755934d5eae9afb2076320f2",
+      "meta_sha256": "c78a2567ed208d221b53d1eb5c905d564189e4a933cf4b361982d4a8555247a4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_PT.cs",
+      "sha256": "afe177580b0c1a6f73cb22135ebe4ccae983c9f76ea22ff61976af1ca9ef6985",
+      "meta_sha256": "d17fd2ab941359a20679e46d766eeea0e0774c7566c5c7dfd547f336a027d8e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_RU.cs",
+      "sha256": "4f7d21ee1e348375a85c56e155230359011d665c696f78535134aaa35d7a1818",
+      "meta_sha256": "aa7452658f702c7b2cb1e3e6d4b16de6a1ddcdb5e4ede8327b92dac5259e0ede"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/Framework/TextCultureFormatter_TW.cs",
+      "sha256": "e6653610c8709969f593482fd32f4feaf8d5caad9f412be337bc4639e3d044d7",
+      "meta_sha256": "c4c4bb092a44acc03ad6c09a69dbb80198752021ab569f52b70c225e9527ebd1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/GameLanguageBinaryTextDataProvider.cs",
+      "sha256": "edac911b619b6668037ecabcee95465d5f69dfe181e7bcb65859fdce1c906103",
+      "meta_sha256": "38ea36b8c890f4ac235868eed949339962e3f5072697bc6924a4d9869c22e076"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/LaunchLanguageBinaryTextDataProvider.cs",
+      "sha256": "f3cde805a87002a5599a401319125f14f2444502bc860fec4f2768c100cd24a4",
+      "meta_sha256": "23339a958cf87dad0b5a62dda0eddaccf56653e2d4828eb1cde87496abf74a70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/LocalizationBinaryFileReader.cs",
+      "sha256": "3e1369f131d21850432279870fbf15f4c74955d3906a9319201f0dea0a475687",
+      "meta_sha256": "1e1a0d247cc8e531f2c9b78e2438cfe0107b773d817fa36a7b2f9ff90fad9f7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/XXHash64.cs",
+      "sha256": "93cd29d1fd7feb4985608ab3292451ed70ccd88d0dbaf9d69992583fb434b4a5",
+      "meta_sha256": "9a0bea72e797802f18d081e00af1fe83b7bb730b720a8564f8a1b5482b51ff31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeLabelResources/LocalLanguageFiles.cs",
+      "sha256": "2cf010600582ee06fd541efbb5083a50b485c7a4ce486139258d3d2ab0e5b216",
+      "meta_sha256": "e04f237ff8a3cd81873fd9f4c90fcc19c5a550bc94ea7ec0233013786ba374d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeLabelResources/Zjcs.Offline.World.NativeLabelResources.asmdef",
+      "sha256": "a63668f333f519d0d5d7432550eec94ca3a91b7b786a618708113ec2c7c19808",
+      "meta_sha256": "b9d6bae6013dec3e0980cf6c40498c5ad73937836c6d4b48e86adf5286f2271c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-label-language.json",
+      "sha256": "e88c4db3b476f650024c1dc9f05b26f9637b5dc7990e17816f03f4d681c87d06",
+      "meta_sha256": "53f14cb56f4a04272bb2384a28df12e65a519243d78a0e8c0b68c5fc96ac7f13"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Map13/NativeText/game-zh_CN.bytes",
+      "sha256": "7e8be8308de8c611097b37b116c697510827379b1d6f7aca99949d1e05832f24",
+      "meta_sha256": "5bb0bb14eba41706a51bc3e984d9eb61cd05cd976669a3c97e8925ca69380a2d"
+    },
+    {
+      "path": "unity/Assets/StreamingAssets/Map13/NativeText/launch-zh_CN.bytes",
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "meta_sha256": "fc9ac15a484d9e301ee3c46e8847c260e2d255cecd4a58611637b461f2be8878"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_language.py",
+    "sha256": "995592ba181c1bb93475a35f981e8d8341fb6eee9f16cdd82c8e9d1a251e2a80"
+  },
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Map13/OfficialMap13LanguageAcceptance.cs",
+      "sha256": "e392a9f8b17eb7b3fa8abf4a6d054b66538bd8a41d3bbe7bd3cb0e671ba8ba07"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13/Zjcs.Editor.Map13.asmdef",
+      "sha256": "fbf300c85336e51a4b6dfc612a4a0dfdcf592136960013f3664df267e67ff10c"
+    }
+  ],
+  "operation": "Port original binary localization service/reader, original XXHash64, manager, all ten supported culture number/text/date formatters and culture argument branches. Preserve provider order, duplicate index overwrite, UTF8/length/buffer/seek/disposal, raw missing-key return, replacement and language reload order. Replace logging and raw-file handle type only; explicit local leases bind byte-identical packaged current rawfiles to original locations. Extract the pure original GetMissingKeyText function used by the binary service; CSV loading is outside this binary path.",
+  "limitations": [
+    "Formal map label/world services and global settings persistence remain unbound. This payload binds the selected official Chinese release files; other-language files are not claimed packaged."
+  ]
+}
