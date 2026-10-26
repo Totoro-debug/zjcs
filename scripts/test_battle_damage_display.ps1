@@ -66,4 +66,13 @@ foreach($hp in @(9990)){
 }
 $legacyHit=[Zjcs.Combat.Official.FightBattleDamageEvent]@{Damage=-30;ShieldDamage=70}
 Require ($legacyHit.ShieldAddFinalDamageValue -eq -100) 'Old hit records lost available shield display information'
+$f=New-Fixture 0 0
+$f.Hit.DamageId=10152
+$step=$f.Runner.Step(0,1);$hit=$step.Event.DamageEvents[0]
+Require ($hit.DamageEntityId -eq 10152 -and $hit.Damage -eq -100 -and $f.Target.Hp -eq 9900) 'Hidden presentation config changed settlement, or original prefab identity was lost'
+$saved=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($step.Checkpoint)
+$restored=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($saved)
+Require ($restored.Receipts[0].Event.DamageEvents[0].DamageEntityId -eq 10152) 'Saved replay lost the original damage prefab identity'
+$legacy=[Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load($saved.Replace('"DamageEntityId":10152,',''))
+Require ($legacy.Receipts[0].Event.DamageEvents[0].DamageEntityId -eq 0) 'Legacy replay fabricated a prefab identity from the runtime damage serial'
 Write-Output 'Battle damage display passed: shield-only/mixed hits, unclamped overkill/overheal, actual HP statistics, saved raw/real values and legacy fallback.'

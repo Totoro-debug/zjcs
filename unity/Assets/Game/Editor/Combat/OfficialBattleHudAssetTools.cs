@@ -336,6 +336,7 @@ namespace Zjcs.Editor.Combat
                 }
                 ValidateDamageFloatDelay(catalog);
                 OfficialBattleDamageDisplayAcceptance.Run();
+                OfficialBattleDamageVisibilityAcceptance.Run();
                 OfficialBattleElementFeedbackAcceptance.Run();
                 Debug.Log("Official battle HUD renderer validated: 30 prefab trees, " + images + " images, " + texts
                     + " texts, " + buttons + " buttons, " + layouts + " layout groups, " + fitters + " fitters, "
@@ -415,7 +416,7 @@ namespace Zjcs.Editor.Combat
                 stepEvent.DamageEvents.Add(new FightBattleDamageEvent
                 {
                     TargetId = 2,
-                    Damage = 5,
+                    Damage = -5,
                     Delay = 0.25f
                 });
                 scene.ShowDamageFloats(stepEvent, checkpoint, OfficialBattleDamageColors.Load());
@@ -457,13 +458,13 @@ namespace Zjcs.Editor.Combat
                 markerEvents.DamageEvents.Add(new FightBattleDamageEvent
                 {
                     TargetId = 2,
-                    Damage = 40,
+                    Damage = -40,
                     TrueDamage = true
                 });
                 markerEvents.DamageEvents.Add(new FightBattleDamageEvent
                 {
                     TargetId = 2,
-                    Damage = 35,
+                    Damage = -35,
                     BreakResilience = true
                 });
                 scene.ShowDamageFloats(markerEvents, checkpoint, OfficialBattleDamageColors.Load());
@@ -549,8 +550,8 @@ namespace Zjcs.Editor.Combat
                         stackRoot.transform, null, stackMapper, null, (transform, unit) => { },
                         hudCatalog, stackHud.transform, models);
                     var stackEvents = new FightBattleStepEvent();
-                    stackEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = 21 });
-                    stackEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = 13 });
+                    stackEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = -21 });
+                    stackEvents.DamageEvents.Add(new FightBattleDamageEvent { TargetId = 2, Damage = -13 });
                     stackEvents.StatusCustomActions.Add(new FightBattleStatusCustomActionEvent
                     {
                         UnitId = 2,

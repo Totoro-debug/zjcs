@@ -22,6 +22,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Action<Transform, FightBattleUnitState> orientUnit;
         private readonly OfficialBattleHudCatalog hudCatalog;
         private readonly OfficialBattleSkillPlayableCatalog skillPlayableCatalog;
+        private readonly OfficialBattleDamageVisibilityCatalog damageVisibility;
         private readonly Transform damageRoot;
         private readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         private readonly Dictionary<int, Transform> attachedTransforms = new Dictionary<int, Transform>();
@@ -132,6 +133,7 @@ namespace Zjcs.Presentation.Combat
             this.animationGroupResolver = animationGroupResolver;
             this.orientUnit = orientUnit ?? ((_, __) => { });
             this.hudCatalog = hudCatalog;
+            damageVisibility = OfficialBattleDamageVisibilityCatalog.Load();
             damageRoot = hudParent != null ? hudParent : root;
         }
 
@@ -168,10 +170,10 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent.DamageEvents != null)
                 foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
                 {
-                    if (damage == null || damage.ShieldAddFinalDamageValue == 0 && !damage.IsElementAffect
-                        && !damage.Dodge && !damage.Immunity && !damage.Blinding) continue;
+                    if (damage == null) continue;
                     FightBattleUnitState target = FindUnit(checkpoint, damage.TargetId);
                     if (target == null) continue;
+                    if (!damageVisibility.CanShow(damage, target)) continue;
                     string prefabKey = DamagePrefabKey(damage);
                     Color tint = colors.Resolve(damage, damage.ElementType);
                     if (hudCatalog != null && hudCatalog.Font != null)
@@ -268,10 +270,12 @@ namespace Zjcs.Presentation.Combat
 
         private static string DamagePrefabKey(FightBattleDamageEvent damage)
         {
+            // GetEffectUITypeByDamage tests the raw signed result before type flags.
+            if ((damage.HasDamageValue ? damage.DamageValue : damage.Damage) > 0)
+                return "damage_BattleCureFloatEffect";
             if (damage.Immunity) return "damage_BattleImmunityDamageFloatEffect";
             if (damage.Dodge) return "damage_FightDodgeDamageFloatEffect";
             if (damage.Blinding) return "damage_FightBlindingDamageFloatEffect";
-            if (damage.IsCure) return "damage_BattleCureFloatEffect";
             if (damage.ElementType == 200)
                 return damage.Critical ? "damage_AbyssCritDamageFloatEffect"
                     : damage.Block ? "damage_AbyssBlockDamageFloatEffect" : "damage_AbyssDamageFloatEffect";

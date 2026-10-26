@@ -72,14 +72,11 @@ namespace Zjcs.Presentation.Combat
             if (damage.IsSkillCost)
                 return ToColor(Settings == null ? null : Settings.skillCost);
             if (damage.IsCure)
-                return ToColor(Settings == null
-                    ? null : (damage.SkillEntityId == 0 ? Settings.statusCure : Settings.cure));
-            if (damage.Blinding || damage.Immunity || damage.Dodge)
-                return ToColor(Settings == null ? null : Settings.defaultColor);
+                return ToColor(Settings == null ? null : Settings.cure);
             if (elements.TryGetValue(element, out OfficialDamageColorVariants variant))
             {
-                if (damage.Critical) return ToColor(variant.crit);
                 if (damage.Block) return ToColor(variant.block);
+                if (damage.Critical) return ToColor(variant.crit);
                 return ToColor(variant.normal);
             }
             return ToColor(Settings == null ? null : Settings.defaultColor);

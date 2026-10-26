@@ -546,6 +546,7 @@ namespace Zjcs.Combat.Official
                         SkillEntityId = skill.EntityId,
                         SkillItemId = skill.ItemId,
                         HitEntityId = hit.EntityId,
+                        DamageEntityId = hit.DamageId,
                         DamageType = hit.DamageType,
                         ElementType = skill == null ? 0 : skill.ElementType,
                         ElementConfrontation = elementConfrontation,

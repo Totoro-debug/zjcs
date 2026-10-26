@@ -227,6 +227,9 @@ namespace Zjcs.Editor
             Combat.OfficialBattleDamageDisplayAcceptance.Probe damageDisplayTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_DISPLAY") == "1")
                 damageDisplayTest = Combat.OfficialBattleDamageDisplayAcceptance.Probe.Install(sceneController);
+            Combat.OfficialBattleDamageVisibilityAcceptance.Probe damageVisibilityTest = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_VISIBILITY") == "1")
+                damageVisibilityTest = Combat.OfficialBattleDamageVisibilityAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
             if (accumulatedDamageTest)
             {
@@ -465,6 +468,17 @@ namespace Zjcs.Editor
                     + damageDisplayTest.Observation);
                 sceneController.SetPaused(true);
                 yield return Capture("damage-display.png");
+                sceneController.SetPaused(false);
+            }
+            if (damageVisibilityTest != null)
+            {
+                float displayDeadline=Time.realtimeSinceStartup+8f;
+                bool displayed;
+                while (!(displayed=damageVisibilityTest.TryVerify(sceneController.Checkpoint))
+                    && Time.realtimeSinceStartup<displayDeadline) yield return null;
+                Require(displayed,"The original zero-damage filter did not render correctly. "+damageVisibilityTest.Observation);
+                sceneController.SetPaused(true);
+                yield return Capture("damage-visibility.png");
                 sceneController.SetPaused(false);
             }
             if (accumulatedDamageTest)

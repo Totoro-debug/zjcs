@@ -141,3 +141,13 @@ unity/Assets/Game/Runtime/Presentation/Combat/Shaders/World*.shader* text eol=lf
 unity/Assets/Official/Combat/ElementFeedback/** -text
 unity/Assets/Official/Combat/ElementFeedback.meta -text
 assets/reference/battle-hud/element-feedback-source-manifest.json text eol=lf
+
+# Original damage-display configuration and source-backed visibility ports.
+scripts/prepare_battle_damage_visibility.py text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/CharacterDamageUIManager.cs text eol=lf
+unity/Assets/Game/Runtime/Official/Combat/CustomDamageUITypeFilter.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageVisibilityCatalog.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageColors.cs text eol=lf
+unity/Assets/Game/Editor/Combat/OfficialBattleDamageVisibilityAcceptance.cs text eol=lf
+unity/Assets/Game/Resources/Combat/damage-visibility.json text eol=lf
+assets/reference/battle-hud/damage-visibility-source-manifest.json text eol=lf

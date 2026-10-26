@@ -16,6 +16,8 @@ namespace Zjcs.Combat.Official
         public int SkillEntityId;
         public int SkillItemId;
         public int HitEntityId;
+        // Original FightHitBaseComponentInfo.DamageId; DamageId above is the runtime serial.
+        public int DamageEntityId;
         public int DamageType;
         public int ElementType;
         public float ElementConfrontation;

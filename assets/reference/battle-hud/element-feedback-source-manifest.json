@@ -4387,7 +4387,7 @@
   "native_image_sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b",
   "metadata_sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4",
   "native_outline": "TMPEffect.DoSetup normalizes outlineWidth by faceInfo.pointSize / fontSize / atlasPadding and clamps to [0,1]. Its callback enables OUTLINE_ON and writes the original outline color without linear conversion. Only the active single-outline branch of these six prefabs is ported; other active effect branches are rejected.",
-  "generator_sha256": "46f73fcfd7040027da06238d3d8e89bf66c32080fa7f18777c240063662a5709",
+  "generator_sha256": "3947c7548f7f073d823dce0f6ea3adcd1aa7c625b9f8e97f357ce0d1422a0be1",
   "shader_generator_sha256": "60c4e3822d7e3974c1563442d3e77f34f049f0c35dbac7e0f607276b94f20d79",
   "world_source_sha256": "3437f79ab4c834c86d25ca7be77be4f2abb9581c42a8c5419769dfb179f0e191",
   "shaders": [
@@ -9116,7 +9116,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "sha256": "1a2b1717687e39b8ea68b181251a6887fc34a6e30b63f90062e5fe8c3af8234d"
+      "sha256": "c07e672c331a8dceb01c33aa8311852df31c0f2e6ef57276ff9e2b589383ca53"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs",
@@ -9140,9 +9140,9 @@
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs",
-      "sha256": "14107370501435c9da8796dbf9ac40e0bc99b47cb2f0731e25e75e547fdc931e"
+      "sha256": "c7ffec1ca95eeca33b9cd65cba83b1ddbf39266ca8f9ad8106f19d9aca9c659a"
     }
   ],
   "operation": "Recover and explicitly bind the six configured world element-feedback prefabs: original ElementConfrontationUI references/language keys, zero-duration Animator transitions and curves, native TMP font data/streaming TTF, single-outline effect, sprites/nine-slice/background autosizing, materials and selected original GLES programs translated to desktop HLSL. CharacterDamageUI retains break/element/true-damage precedence and hides the number on elemental immunity.",
-  "remaining": "This binding does not complete every floating-text kind, merge/source rule, zero/hide-damage filter, timing dependency, audio or general TMPEffect branches."
+  "remaining": "Floating-text kinds, merge/source rules, timing dependencies, audio and general TMPEffect branches remain incomplete. Original zero/hide filters are recorded separately in damage-visibility-source-manifest.json."
 }

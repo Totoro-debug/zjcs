@@ -296,7 +296,7 @@ def build():
         outputs=[dict(path=p.relative_to(ROOT).as_posix(),sha256=sha(p)) for p in sorted(OUT.iterdir()) if p.is_file()],
         runtime=[dict(path=p,sha256=sha(ROOT/p)) for p in runtime_paths],
         operation='Recover and explicitly bind the six configured world element-feedback prefabs: original ElementConfrontationUI references/language keys, zero-duration Animator transitions and curves, native TMP font data/streaming TTF, single-outline effect, sprites/nine-slice/background autosizing, materials and selected original GLES programs translated to desktop HLSL. CharacterDamageUI retains break/element/true-damage precedence and hides the number on elemental immunity.',
-        remaining='This binding does not complete every floating-text kind, merge/source rule, zero/hide-damage filter, timing dependency, audio or general TMPEffect branches.')
+        remaining='Floating-text kinds, merge/source rules, timing dependencies, audio and general TMPEffect branches remain incomplete. Original zero/hide filters are recorded separately in damage-visibility-source-manifest.json.')
     (ROOT/'assets/reference/battle-hud/element-feedback-source-manifest.json').write_bytes((json.dumps(receipt,ensure_ascii=True,indent=2,default=lambda value:value.hex() if isinstance(value,bytes) else str(value))+'\n').encode())
     print('Recovered element feedback:',len(bindings),'prefabs,',len(fonts),'fonts,',len(materials),'materials.')
 

@@ -1682,3 +1682,7 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至57份原面板。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
 
 `assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体及17条条件。运行时显式加载 `Resources/World/Mainline/interactions.json` 与英雄属性，探寻配置尚未接入可玩流程。英雄原演出、奖励粒子、命运探寻和区域雾仍未完成，验证范围见[公共模块](../../docs/features/mainline-map-modules.md)，不以资源提取代替完成结论。
+
+## 战斗飘字显示条件
+
+`scripts/prepare_battle_damage_visibility.py` 核对固定854 APK／对应已缓存官方依赖的实际对象，扫描3,708个技能和角色 bundle，严格读取1,367组 `MyFightDamage` 显示开关及551个角色 prefab 根组件。当前规则引用的1,331个伤害实体均已绑定；3组隐藏、318组关闭零值，怪物3933的原 `CustomDamageUITypeFilter` 仅过滤零伤害免疫。两版客户端的隐藏／元素／非零／过滤／零值分支、提示类型与颜色顺序保持可核对来源；运行回执分别保存伤害 prefab 身份和运行序号，旧回执不推造身份。输出 `Resources/Combat/damage-visibility.json`、输入对象／bundle／配置和代码哈希见 [来源清单](battle-hud/damage-visibility-source-manifest.json)，接线和验证边界见[战斗执行](../../docs/features/battle-execution.md)。本次没有新增美术素材快照。

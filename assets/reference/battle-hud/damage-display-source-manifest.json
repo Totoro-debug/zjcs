@@ -52,19 +52,19 @@
     "world_source_path": "assets/reference/battle-hud/world-damage-source-manifest.json",
     "world_source_sha256": "b55df339a64d124e5474a45cedb1ad12b65da041a30b2f18218547344221eda5"
   },
-  "generator_sha256": "421884e4a2bf5909ed1f98c4f66827045652e11c3a730345f64cc4e641b4df51",
+  "generator_sha256": "97c9bdde526ef0c474194bd4ff40aaa914f4716ae0c261c800e88e5abf52bc56",
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "4db8da531dd8fbf2ef7603327829ccda7398761a04767544989017cf132afa3a"
+      "sha256": "6aa53263dbf54fe83326f36242e78063469f90ebe542741b18665f26af1887ed"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
-      "sha256": "d851217121a6d177c1eb1aa6bab39a5b21a27aa433c03e475201462356934ec7"
+      "sha256": "da5886ec823fd1b5d403afb5e7e251bb52994d796a8b19cc62398e4f9c64fa43"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs",
-      "sha256": "1a2b1717687e39b8ea68b181251a6887fc34a6e30b63f90062e5fe8c3af8234d"
+      "sha256": "c07e672c331a8dceb01c33aa8311852df31c0f2e6ef57276ff9e2b589383ca53"
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleDamageDisplayAcceptance.cs",
@@ -72,7 +72,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs",
-      "sha256": "ae22ee504e0cf003d5ff22a8ffd5ef66bb996e56f881dd374dc38000245e1a76"
+      "sha256": "4622edc0165138fc34cd64e4c4b4b8ea28ce8b403cffb5a32f7dc9049970c99a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs",
@@ -92,10 +92,10 @@
     },
     {
       "path": "scripts/test_battle_damage_display.ps1",
-      "sha256": "910d3d2b6e6477996aaab65d973dc0c922bb875712ee492db9b5b8729040be79"
+      "sha256": "686689c478826a9ef0d79e67c102828997d32e5e4b7fe7f87ee2572de5570ac0"
     }
   ],
   "operation": "Preserve the original DamageResultParameter.DamageValue separately from RealDamageValue. CharacterDamageUIManager displays DamageValue minus ShieldValue, including full shield absorption, overkill and overhealing; actual HP changes remain the basis of local statistics and magic-mark contribution. Reuse the original number prefabs and animation/format/color paths.",
   "legacy_checkpoints": "Absent HasDamageValue retains the previously saved actual HP change and available shield amount. Historical overkill/overheal cannot be reconstructed and is not fabricated.",
-  "remaining": "Full zero-value/hide-damage filters, status damage distinctions and complete per-event timing remain incomplete. The separate element-feedback-source-manifest.json records the restored element labels and animations."
+  "remaining": "Status-specific display distinctions and complete per-event timing remain incomplete. See damage-visibility-source-manifest.json for restored zero/hide filters and element-feedback-source-manifest.json for element labels and animations."
 }

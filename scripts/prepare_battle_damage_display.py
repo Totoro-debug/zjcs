@@ -54,7 +54,7 @@ def build(source_root=ROOT, output_root=ROOT):
         'runtime': [{'path': name, 'sha256': sha(output_root/name)} for name in runtime],
         'operation': 'Preserve the original DamageResultParameter.DamageValue separately from RealDamageValue. CharacterDamageUIManager displays DamageValue minus ShieldValue, including full shield absorption, overkill and overhealing; actual HP changes remain the basis of local statistics and magic-mark contribution. Reuse the original number prefabs and animation/format/color paths.',
         'legacy_checkpoints': 'Absent HasDamageValue retains the previously saved actual HP change and available shield amount. Historical overkill/overheal cannot be reconstructed and is not fabricated.',
-        'remaining': 'Full zero-value/hide-damage filters, status damage distinctions and complete per-event timing remain incomplete. The separate element-feedback-source-manifest.json records the restored element labels and animations.'}
+        'remaining': 'Status-specific display distinctions and complete per-event timing remain incomplete. See damage-visibility-source-manifest.json for restored zero/hide filters and element-feedback-source-manifest.json for element labels and animations.'}
     target = output_root/'assets/reference/battle-hud/damage-display-source-manifest.json'
     target.write_bytes((json.dumps(receipt, ensure_ascii=False, indent=2)+'\n').encode())
     print('Verified original display damage, shield subtraction and actual HP settlement in both code versions.')
