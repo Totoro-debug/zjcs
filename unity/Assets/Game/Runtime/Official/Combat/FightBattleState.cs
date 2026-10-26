@@ -122,6 +122,7 @@ namespace Zjcs.Combat.Official
         public bool ApplyIgnoreResilience;
         public bool ForbiddenOnApplicatorDie;
         public bool AiMoreHit;
+        public bool HasCreatorDamageBoost;
         public bool FollowRoundUpdateTimingOnGlobalRound;
         public bool IsFixedProp;
         public int StackCount = 1;

@@ -215,6 +215,39 @@
       },
       "status_ai": {
         "MoreHit": true
+      },
+      "damage_process": {
+        "StatusReplacePropertyValues": [],
+        "Target": 2,
+        "ProcessPhase": 0,
+        "DamageType": 1,
+        "SourceActionTypes": [],
+        "ReducePercentPropType": 0,
+        "AddPercentPropType": 231,
+        "TriggerOnlyDamageFromApplicator": true,
+        "UseHitEventToApplicator": true,
+        "TriggerOnlyDamageFromCreatorAndSummons": false,
+        "CheckSourceIsEnemy": false
+      },
+      "status_end": {
+        "StatusReplacePropertyValues": [],
+        "NotStatusMutex": false,
+        "StatusTriggerSkillCfgs": [],
+        "StatusTriggerStatusCfgs": [],
+        "RemoveApplyEntity": false,
+        "AutoRemove": {
+          "ResetTimerWhenInvoke": false,
+          "Duration": -1.0,
+          "MaxCount": -1,
+          "RemoveStatusCfgs": [],
+          "RemoveTarget": 0
+        },
+        "ForbiddenStatus": {
+          "Target": 0,
+          "StatusEntityClassId": 0,
+          "Forbidden": false
+        },
+        "CheckApplyAlive": false
       }
     },
     {
@@ -425,6 +458,39 @@
       },
       "status_ai": {
         "MoreHit": true
+      },
+      "damage_process": {
+        "StatusReplacePropertyValues": [],
+        "Target": 2,
+        "ProcessPhase": 0,
+        "DamageType": 1,
+        "SourceActionTypes": [],
+        "ReducePercentPropType": 0,
+        "AddPercentPropType": 231,
+        "TriggerOnlyDamageFromApplicator": true,
+        "UseHitEventToApplicator": true,
+        "TriggerOnlyDamageFromCreatorAndSummons": false,
+        "CheckSourceIsEnemy": false
+      },
+      "status_end": {
+        "StatusReplacePropertyValues": [],
+        "NotStatusMutex": false,
+        "StatusTriggerSkillCfgs": [],
+        "StatusTriggerStatusCfgs": [],
+        "RemoveApplyEntity": false,
+        "AutoRemove": {
+          "ResetTimerWhenInvoke": false,
+          "Duration": -1.0,
+          "MaxCount": -1,
+          "RemoveStatusCfgs": [],
+          "RemoveTarget": 0
+        },
+        "ForbiddenStatus": {
+          "Target": 0,
+          "StatusEntityClassId": 0,
+          "Forbidden": false
+        },
+        "CheckApplyAlive": false
       }
     }
   ],
@@ -441,6 +507,10 @@
     {
       "path": "unity/Assets/Official/Combat/battle-texts.json",
       "sha256": "5d31a50c8260d6e16edbe503168dcffd4ebb8e222b3757fbf5829b598ff0c7e9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8"
     },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAccDmgAndCastCustomDamageComponentInfo.cs",
@@ -465,9 +535,29 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusAiCfg.cs",
       "sha256": "ec20e05fdbefe4347942476732955971d3933ae279e6b3de871e533cde491db1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightStatusDamageProcessComponentInfo.cs",
+      "sha256": "0e8140db86d71ad5bfef0b830809401eaa3c0aa1320f76a918c761759d534c9e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StatusEndComponentInfo.cs",
+      "sha256": "d2e6bc5feb33cd17310b757ef0fce1ad6259d6a373707e82385d5f53c18e5732"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StatusTriggerTarget.cs",
+      "sha256": "820889e1c2ece988f8a08843ff9b1801e46a624a208cb6c64e4ec3d4971fe652"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DamageProcessPhase.cs",
+      "sha256": "c7670a30c83c2805eb22666cf83eb4e2d35c21954965ddbf80c7cd54d299a1de"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
     }
   ],
-  "generator_sha256": "681cccc97f50bca3fbefaed97b268eec58df4a99424c7f3d43b96659351bb7de",
+  "generator_sha256": "1bf791df9c96f003b966e0c1466d5d19781bfda9348edee03b66100da198f13a",
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusAccumulatedDamageRuntime.cs",
@@ -475,7 +565,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.AccumulatedDamage.cs",
-      "sha256": "b55aced7483d92d53facbe7ca961f380532c4156a4e4160a5ab39a659f1751e1"
+      "sha256": "d892b6ed9c4b5148994742477eec97ad695b2acb1667e337d6bf51207399298e"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs",
@@ -487,28 +577,63 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleTargeting.cs",
-      "sha256": "c1b60402bde3dd0a48b274ba7e5fe61ed33b0b064d4e5642ad72c4d5516f2ed3"
+      "sha256": "c5d73a1bbf2e30dc7732b51d7f22756b3de2b06dc330212ae2d1667bed40c2c8"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs",
-      "sha256": "3ff039e5a65ed786fdb99f1620a85fce00ffc30f8618e5c4b6e70d5b0530c904"
+      "sha256": "0a96e51353a882eb499ca216db3ee5ba7f054d35d43fda458223d72f8c905a58"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.cs",
-      "sha256": "f38d0a5663a7ec8ebb98d878f12ce2e7a4b4c4c28d0289ed8524e0206a270c5e"
+      "sha256": "ce104333eb39d85e55c7389d99d46a4fecfee525a2c3263123d54c397b75bc3a"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs",
-      "sha256": "c5637de648a3689cb63aed144e14c6b9d4f423b182e3a06e001b7d605d1b7df4"
+      "sha256": "25f59eaf79f3757b20757ae1eb3bdedace91a5b6fd7756506650b448de18a362"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs",
-      "sha256": "6f76ad1220c85154064a94b44963dbb7c477e6b3d9ead012da44d0cf19b9a3df"
+      "sha256": "586a29b5ccc480ac0d77cdda5c11f29138d551250280af70bff99364957d34dc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusCreatorDamageBoostRuntime.cs",
+      "sha256": "0009eaf68b390f338384abd7d3eae2525d4a8c93d9f48c81788ca0890a2d9503"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs",
+      "sha256": "4c066aef5a0693361c2571329ee5f02ce98ca3bda06c7e2200157ecc547a01cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs",
+      "sha256": "debd16a5cfb92cece29aed7a897867c2509d70a70fecd1a7d8b60815a3a4997d"
     }
   ],
+  "status_property_inputs": {
+    "entity_prop": {
+      "PvpPropScale": 10000,
+      "RankPropId": 3000,
+      "SubRankPropId": 0,
+      "AffectedBySkillRank": true,
+      "PropFactors": {
+        "231": 5000,
+        "235": 3505
+      },
+      "GroupLevelPropId": 6,
+      "EntityId": 24062
+    },
+    "rank_level_example": {
+      "rank": 1,
+      "level": 1,
+      "sub_rank": 1,
+      "percent_231": 2000,
+      "fixed_235": 4789
+    }
+  },
   "confirmed_offline_rules": {
+    "dead_creator_expiration": "If the mark creator has died while the battle continues and the marked target remains alive, expiration still triggers the original damage chain and retains the original creator attribution. Do not revive the creator or admit ordinary dead-unit attacks.",
+    "creator_damage_boost": "For damage from the mark creator, multiply pre-shield damage by one plus resolved status property 231, then directly add fixed property 235. Other actors and creator summons do not receive the bonus; healing is unchanged.",
     "additional_source_credit": "Allocate triggered actual HP loss proportionally to original actual HP contributions by source and skill; retain the independent mark hit. Exclude shield and overkill. Use the original DistributeLongProportional rounding/remainder helper.",
     "more_hit_priority": "Retain eligible targets and forced taunt/confusion constraints; prefer MoreHit marked attack targets before existing coverage/distance priorities."
   },
-  "scope": "Official configuration, descriptions and the integer distribution helper are available. The server allocation and MoreHit comparator are absent; their wiring follows the user-confirmed offline rules."
+  "scope": "Official configuration, descriptions and the integer distribution helper are available. The server allocation, MoreHit comparator and damage-process hook are absent; their wiring follows the user-confirmed offline rules."
 }

@@ -833,6 +833,19 @@ namespace Zjcs.Combat.Official
             return result;
         }
 
+        public bool StatusHasCreatorDamageBoost(int classId)
+        {
+            if (classId != 24062 || !entities.TryGetValue(classId,
+                out Dictionary<string, object> components)) return false;
+            Dictionary<string, object> cfg = Component(components, "FightStatusDamageProcessComponent");
+            return cfg != null && Int(cfg, "Target") == 2 && Int(cfg, "ProcessPhase") == 0
+                && Int(cfg, "DamageType") == 1 && ArrayCount(cfg, "SourceActionTypes") == 0
+                && Int(cfg, "ReducePercentPropType") == 0 && Int(cfg, "AddPercentPropType") == 231
+                && Bool(cfg, "TriggerOnlyDamageFromApplicator") && Bool(cfg, "UseHitEventToApplicator")
+                && !Bool(cfg, "TriggerOnlyDamageFromCreatorAndSummons") && !Bool(cfg, "CheckSourceIsEnemy")
+                && ArrayCount(cfg, "StatusReplacePropertyValues") == 0;
+        }
+
         public bool StatusMoreHit(int classId)
         {
             if (!entities.TryGetValue(classId, out Dictionary<string, object> components)) return false;
@@ -911,6 +924,7 @@ namespace Zjcs.Combat.Official
                 ApplyIgnoreResilience = Bool(status, "ApplyIgnoreResilience"),
                 ForbiddenOnApplicatorDie = Bool(status, "ForbiddenOnApplicatorDie"),
                 AiMoreHit = Component(status, "AI") != null && Bool(Component(status, "AI"), "MoreHit"),
+                HasCreatorDamageBoost = StatusHasCreatorDamageBoost(classId),
                 FollowRoundUpdateTimingOnGlobalRound = Bool(status,
                     "FollowRoundUpdateTimingOnGlobalRound"),
                 IsFixedProp = Bool(status, "IsFixedProp"),

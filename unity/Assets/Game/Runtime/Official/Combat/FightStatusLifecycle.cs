@@ -163,6 +163,7 @@ namespace Zjcs.Combat.Official
                 ApplyIgnoreResilience = template.ApplyIgnoreResilience,
                 ForbiddenOnApplicatorDie = template.ForbiddenOnApplicatorDie,
                 AiMoreHit = template.AiMoreHit,
+                HasCreatorDamageBoost = template.HasCreatorDamageBoost,
                 FollowRoundUpdateTimingOnGlobalRound = template.FollowRoundUpdateTimingOnGlobalRound,
                 IsFixedProp = template.IsFixedProp,
                 StackCount = template.StackCount,

@@ -184,4 +184,36 @@ Record $disabled 1 90001 100
 $disabledResult = (Begin (New-Checkpoint $disabled)).Step(0, 1)
 Require ($disabledResult.Checkpoint.Statistics.Unit(1).AdditionalAttributedDamage -eq 0 -and
     $disabledResult.Event.DamageEvents.Count -eq 1) 'Disabled source-credit flag changed damage or added credit'
-Write-Host 'Accumulated-damage checks passed: official chain, actual HP/type/source filters, expiry/replacement, shield/overkill, deep copies and checkpoint replay.'
+# A dead creator stays a damage/statistics source; ordinary dead-unit casts remain forbidden.
+foreach ($shieldValue in @(0, 10, 40)) {
+    $deadOwner = New-Unit 2 2 100
+    $deadMark = New-Mark $deadOwner
+    $deadMark.CreatorId = 3
+    Record $deadOwner 3 92001 100
+    if ($shieldValue -gt 0) {
+        $shield = [Zjcs.Combat.Official.FightBattleStatusState]::new()
+        $shield.ClassId = 99998; $shield.InstanceId = 2; $shield.DurationRound = -1
+        $shield.ShieldKind = [Zjcs.Combat.Official.FightBattleShieldKind]::Persistent
+        $shield.ShieldValue = $shieldValue; $shield.ShieldRemainValue = $shieldValue; $shield.ShieldInitialized = $true
+        $deadOwner.Statuses.Add($shield)
+    }
+    $deadCheckpoint = New-Checkpoint $deadOwner
+    $deadCreator = New-Unit 3 1 1
+    $deadCreator.Hp = 0; $deadCreator.Turn.Hp = 0; $deadCreator.Ended = $true; $deadCreator.Targetable = $false
+    $deadCheckpoint.Units.Add($deadCreator)
+    $deadRunner = Begin $deadCheckpoint
+    $deadSaved = [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Load(
+        [Zjcs.Combat.Official.FightBattleCheckpointSerializer]::Save($deadCheckpoint))
+    $deadRestored = Restore $deadSaved
+    $deadResult = $deadRunner.Step(0, 1)
+    $deadReplay = $deadRestored.Step(0, 1)
+    $loss = [Math]::Max(0, 30 - $shieldValue)
+    $deadHit = $deadResult.Event.DamageEvents | Where-Object SkillEntityId -eq 13148 | Select-Object -First 1
+    Require ($null -ne $deadHit -and $deadHit.SourceId -eq 3 -and $deadHit.Damage -eq -$loss -and
+        $deadOwner.Hp -eq (1000 - $loss) -and $deadCreator.Hp -eq 0 -and $deadCreator.Turn.Hp -eq 0 -and
+        $deadResult.Checkpoint.Statistics.Skill(3, 92001, 92101).AdditionalAttributedDamage -eq $loss -and
+        $deadResult.Checkpoint.Statistics.Skill(3, 13148, 0).Damage -eq $loss) 'Dead creator lost mark expiration, shield settlement or original source attribution'
+    Require ($deadReplay.Event.DamageEvents[0].Damage -eq -$loss -and $deadSaved.Units[2].Hp -eq 0 -and
+        $deadRunner.Step(0, 1).Replayed -and $deadOwner.Hp -eq (1000 - $loss)) 'Dead-creator checkpoint replay changed damage, revived the source or settled twice'
+}
+Write-Host 'Accumulated-damage checks passed: official chain, actual HP/type/source filters, expiry/replacement, shield/overkill, dead-creator attribution, deep copies and checkpoint replay.'

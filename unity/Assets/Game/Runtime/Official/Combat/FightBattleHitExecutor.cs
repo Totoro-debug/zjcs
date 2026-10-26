@@ -29,12 +29,12 @@ namespace Zjcs.Combat.Official
             FightBattleUnitState actor, FightBattleUnitState target,
             FightBattleSkillDefinition skill, FightBattleHitDefinition hit,
             int stageType, bool isPvp, double elementConfrontation = 0.0,
-            List<int> processedFalloffStatuses = null)
+            List<int> processedFalloffStatuses = null, bool allowDeadSource = false)
         {
             if (actor == null) throw new ArgumentNullException(nameof(actor));
             if (target == null) throw new ArgumentNullException(nameof(target));
             if (hit == null) throw new ArgumentNullException(nameof(hit));
-            if (actor.Hp <= 0 || target.Hp <= 0)
+            if ((!allowDeadSource && actor.Hp <= 0) || target.Hp <= 0)
                 throw new InvalidOperationException("Fight hit source and target must be alive.");
 
             Dictionary<int, long> sourceProps = Properties(actor.Properties);
@@ -79,6 +79,7 @@ namespace Zjcs.Combat.Official
                 direct = (long)(direct / Math.Max(1.0 + reduction, 0.1));
                 direct = FightDamageFalloff.Apply(random, actor, target, skill, hit,
                     direct, processedFalloffStatuses);
+                direct = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, direct, formula);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills);
                 result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = direct };
@@ -135,6 +136,8 @@ namespace Zjcs.Combat.Official
                 if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
                     damage = FightDamageFalloff.Apply(random, actor, target, skill, hit, damage,
                         processedFalloffStatuses);
+                if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
+                    damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills);
                 result.Formula.Damage = damage;

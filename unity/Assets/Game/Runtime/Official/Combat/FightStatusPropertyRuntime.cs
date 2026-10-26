@@ -26,8 +26,8 @@ namespace Zjcs.Combat.Official
             {
                 if (status == null) continue;
                 EnsurePropertyDefinition(status, catalog);
-                if ((status.HasPropertyComponent || status.ShieldKind != FightBattleShieldKind.None)
-                    && status.ResolvedProperties == null)
+                if ((status.HasPropertyComponent || status.ShieldKind != FightBattleShieldKind.None
+                    || status.HasCreatorDamageBoost) && status.ResolvedProperties == null)
                     status.ResolvedProperties = ToValues(Resolve(status, unit, units, properties,
                         catalog, formula));
                 FightBattleShieldRuntime.Initialize(status, status.ResolvedProperties,
@@ -79,6 +79,7 @@ namespace Zjcs.Combat.Official
                 status.ApplyingSkillItemId, status.SourceSkillRank, status.SourceSkillLevel,
                 status.SourceSubRank, status.SourceProperties);
             status.HasPropertyComponent = definition.HasPropertyComponent;
+            status.HasCreatorDamageBoost = definition.HasCreatorDamageBoost;
             status.PropertyTransitions = definition.PropertyTransitions;
             if (status.SourceProperties == null)
                 status.SourceProperties = definition.SourceProperties;

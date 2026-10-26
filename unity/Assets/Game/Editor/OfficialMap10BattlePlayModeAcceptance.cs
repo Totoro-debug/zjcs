@@ -218,6 +218,9 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
+                damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
             if (accumulatedDamageTest)
             {
@@ -413,6 +416,13 @@ namespace Zjcs.Editor
             Require(checkpoint() != null, "Battle checkpoint is missing after the battle started.");
             Require(checkpointField("Counter") >= 1, "Battle did not execute its first step.");
             Require(checkpointField("DamageEventSerial") >= 1, "Battle did not record damage during the first steps.");
+            if (damageProcessTest != null)
+            {
+                while (active() && !damageProcessTest.HasExecuted(sceneController.Checkpoint)
+                    && Time.realtimeSinceStartup < deadline) yield return null;
+                damageProcessTest.Verify(sceneController.Checkpoint);
+                yield return Capture("damage-process.png");
+            }
             if (accumulatedDamageTest)
             {
                 var state = (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint();
@@ -431,7 +441,7 @@ namespace Zjcs.Editor
             Debug.Log("Map10 battle acceptance passed: battle reached Play, counter=" + checkpointField("Counter")
                 + ", damage events=" + checkpointField("DamageEventSerial")
                 + ", skill icons and timeline bound, round text and speed controls work.");
-            if (SessionState.GetBool(RealInputKey, false))
+            if (SessionState.GetBool(RealInputKey, false) || damageProcessTest != null)
             {
                 float endDeadline = Time.realtimeSinceStartup + 120f;
                 while (controllerField.GetValue(runtime) != null && Time.realtimeSinceStartup < endDeadline)
@@ -486,7 +496,9 @@ namespace Zjcs.Editor
             Require(!controller.Expanded && !panel.gameObject.activeSelf && panel.localScale == Vector3.zero,
                 "A real click outside the official self rectangles did not fold quick chat.");
             yield return Capture("quick-chat-folded.png");
-            Debug.Log("Battle quick-chat real input passed: default Folded, expand/fold buttons, animation events and outside-click dismissal.");
+            Debug.Log("Battle quick-chat "
+                + (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED") == "1" ? "simulated pointer" : "real")
+                + " input passed: default Folded, expand/fold buttons, animation events and outside-click dismissal.");
         }
 
         private static void VerifyTimelinePortraits(object checkpoint)

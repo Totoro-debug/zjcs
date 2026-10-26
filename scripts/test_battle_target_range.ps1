@@ -97,6 +97,9 @@ $withoutMark = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $unit
 $outside.Statuses.Add($mark)
 $withMark = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 1, 0, $false, $false, $coverageSkill)
 Assert-Range ($withoutMark[0].Id -eq 2 -and $withMark[0].Id -eq 4) 'Marked target did not precede larger hit coverage'
+$heal = New-Skill @(@(1, 0), @(2, 0), @(3, 0)); $heal.TargetType=4; $heal.SkillType=3; $heal.AiPriorityTypes.Add(2)
+$healingTargets = [Zjcs.Combat.Official.FightBattleTargeting]::Select($actor, $units, 4, 0, $false, $false, $heal)
+Assert-Range ($healingTargets[0].Id -eq 3) 'An attack-target mark overrode healing HP priorities'
 $outside.Statuses.Clear()
 $checkpoint = [Zjcs.Combat.Official.FightBattleCheckpoint]::new()
 $far.Turn.Id = $far.Id; $far.Turn.Hp = $far.Hp

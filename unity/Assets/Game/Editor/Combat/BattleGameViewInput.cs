@@ -70,6 +70,48 @@ namespace Zjcs.Editor.Combat
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = point }, hits);
             Debug.Log("Battle input raycast: " + string.Join(", ", hits.ConvertAll(hit => hit.gameObject.name)));
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED") == "1")
+            {
+                // User-authorized simulated input: raycast the actual hierarchy and dispatch
+                // pointer events through Unity's Button handlers, never invoke onClick directly.
+                var pointer = new PointerEventData(EventSystem.current)
+                {
+                    position = point, button = PointerEventData.InputButton.Left,
+                    pointerId = -1, clickCount = 1, eligibleForClick = true,
+                    pressPosition = point, pointerCurrentRaycast = hits.Count > 0 ? hits[0] : default
+                };
+                GameObject target = hits.Count > 0 ? hits[0].gameObject : null;
+                if (target != null)
+                {
+                    ExecuteEvents.ExecuteHierarchy(target, pointer, ExecuteEvents.pointerEnterHandler);
+                    pointer.pointerPress = ExecuteEvents.ExecuteHierarchy(target, pointer, ExecuteEvents.pointerDownHandler)
+                        ?? ExecuteEvents.GetEventHandler<IPointerClickHandler>(target);
+                    pointer.rawPointerPress = target;
+                    pointer.pointerPressRaycast = pointer.pointerCurrentRaycast;
+                }
+                foreach (var panel in UnityEngine.Object.FindObjectsOfType<Zjcs.Official.WorldUI.WorldFunctionEntrysPanelBase>())
+                {
+                    Canvas canvas = panel.GetComponentInParent<Canvas>();
+                    panel.HandleGlobalPointerDown(point,
+                        canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null,
+                        false); // This fixture has no open Panel/Dialog.
+                }
+                yield return new WaitForSecondsRealtime(0.12f);
+                if (pointer.pointerPress != null)
+                {
+                    ExecuteEvents.Execute(pointer.pointerPress, pointer, ExecuteEvents.pointerUpHandler);
+                    var releaseHits = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(pointer, releaseHits);
+                    GameObject released = releaseHits.Count > 0
+                        ? ExecuteEvents.GetEventHandler<IPointerClickHandler>(releaseHits[0].gameObject) : null;
+                    if (pointer.pointerPress == released)
+                        ExecuteEvents.Execute(pointer.pointerPress, pointer, ExecuteEvents.pointerClickHandler);
+                }
+                Debug.Log("Battle simulated pointer click: " + label + " target=" + point
+                    + " press=" + pointer.pointerPress?.name);
+                yield return new WaitForSecondsRealtime(0.12f);
+                yield break;
+            }
             Rect area = gameView.position;
             // A free-aspect Game view has no letterboxing. The toolbar is outside the render area.
             const float toolbar = 21f;

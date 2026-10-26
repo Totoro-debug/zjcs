@@ -57,7 +57,10 @@ namespace Zjcs.Combat.Official
                 if (statusCatalog != null && unit.Statuses != null)
                     foreach (FightBattleStatusState status in unit.Statuses)
                         if (status != null && statusCatalog.ContainsEntity(status.ClassId))
+                        {
                             status.AiMoreHit = statusCatalog.StatusMoreHit(status.ClassId);
+                            status.HasCreatorDamageBoost = statusCatalog.StatusHasCreatorDamageBoost(status.ClassId);
+                        }
                 units.Add(unit);
                 unitById.Add(unit.Id, unit);
                 SynchronizeTurn(unit);
@@ -362,17 +365,18 @@ namespace Zjcs.Combat.Official
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
-            out float lastDelay, FightBattleUnitState targetPosition = null)
+            out float lastDelay, FightBattleUnitState targetPosition = null, bool allowDeadSource = false)
         {
             ExecuteSkill(actor, skill, targets, casts, damageEvents, movements, out lastDelay,
-                out _, out _, targetPosition);
+                out _, out _, targetPosition, allowDeadSource);
         }
 
         private void ExecuteSkill(FightBattleUnitState actor, FightBattleSkillDefinition skill,
             List<FightBattleUnitState> targets, List<FightBattleSkillCastEvent> casts,
             List<FightBattleDamageEvent> damageEvents, List<FightBattleMovementEvent> movements,
             out float lastDelay, out float statusTriggerDuration,
-            out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null)
+            out float statusTriggerActionDuration, FightBattleUnitState targetPosition = null,
+            bool allowDeadSource = false)
         {
             lastDelay = 0f;
             statusTriggerDuration = 0f;
@@ -520,7 +524,7 @@ namespace Zjcs.Combat.Official
                     {
                         resolved = hitExecutor.Apply(random, damageId, actor, target,
                             skill, hit, checkpoint.StageType, checkpoint.IsPvp, 0.0,
-                            new List<int>());
+                            new List<int>(), allowDeadSource);
                     }
                     finally
                     {

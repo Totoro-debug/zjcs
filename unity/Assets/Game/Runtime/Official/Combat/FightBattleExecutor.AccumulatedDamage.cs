@@ -23,7 +23,8 @@ namespace Zjcs.Combat.Official
                         owner.EndedAccumulatedDamageStatuses.RemoveAt(0);
                         if (status.AccumulatedDamage == null || !status.AccumulatedDamage.RulesSupported
                             || !unitById.TryGetValue(status.CreatorId, out FightBattleUnitState source)
-                            || !FightBattleTargeting.IsSelectable(source) || !FightBattleTargeting.IsSelectable(owner)) continue;
+                            || (source.Hp > 0 && !FightBattleTargeting.IsSelectable(source))
+                            || !FightBattleTargeting.IsSelectable(owner)) continue;
                         int rank = Math.Max(1, status.SourceSkillRank);
                         int level = Math.Max(1, status.SourceSkillLevel);
                         int subRank = Math.Max(1, status.SourceSubRank);
@@ -43,7 +44,7 @@ namespace Zjcs.Combat.Official
                         {
                             int firstDamage = damageEvents.Count;
                             ExecuteSkill(source, skill, targets, casts, damageEvents, movements,
-                                out float delay, owner);
+                                out float delay, owner, allowDeadSource: source.Hp <= 0);
                             long hpDamage = 0;
                             for (int i = firstDamage; i < damageEvents.Count; i++)
                             {
