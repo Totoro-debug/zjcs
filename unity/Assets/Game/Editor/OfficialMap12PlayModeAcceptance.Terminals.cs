@@ -23,6 +23,10 @@ namespace Zjcs.Editor
                 int[] boxes = terminal.TerminalBoxIds.Concat(terminal.TerminalLockIds.SelectMany(lockId =>
                     puzzle.Rules.Single(value => value.PlacementId == lockId).PushBoxIds)).Distinct().ToArray();
                 int[] restored = terminal.TerminalRemoveIds.Concat(boxes).Distinct().ToArray();
+                foreach (int reward in terminal.TerminalLockIds.SelectMany(lockId =>
+                    puzzle.Rules.Single(value => value.PlacementId == lockId).SpawnIds))
+                    if (puzzle.IsSpawned(reward))
+                        throw new InvalidDataException("Deferred puzzle reward spawned before its unlock: " + reward);
                 var session = RuntimeField<OfficialWorldMapSession>("session");
                 bool moved = false;
                 foreach (int box in boxes)
@@ -91,7 +95,11 @@ namespace Zjcs.Editor
                 foreach (int retained in terminal.TerminalBoxIds.Except(terminal.TerminalRemoveIds))
                     if (!puzzle.IsSpawned(retained)) throw new InvalidDataException("Auto-solve removed a box outside NeedRemove: " + retained);
                 foreach (int lockId in terminal.TerminalLockIds)
+                {
                     if (!puzzle.IsUnlocked(lockId)) throw new InvalidDataException("Auto-solve did not unlock the designated lock: " + lockId);
+                    foreach (int reward in puzzle.Rules.Single(value => value.PlacementId == lockId).SpawnIds)
+                        if (!puzzle.IsSpawned(reward)) throw new InvalidDataException("Original unlock did not spawn its reward: " + reward);
+                }
                 ScreenCapture.CaptureScreenshot(Path.Combine(output, "terminal-solved-" + id + ".png"));
                 yield return new WaitForSecondsRealtime(.3f);
                 cold = ColdLoadTerminalRuntime(root, slot, canvas);

@@ -34,8 +34,13 @@ namespace Zjcs.Editor
         }
         public static void RunRuntimeTerminals()
         {
-            SessionState.SetBool(Key + ".runtimeTerminals", true);
-            RunCore(false, false, 12, true);
+            try
+            {
+                OfficialMap12PuzzleValidation.Validate();
+                SessionState.SetBool(Key + ".runtimeTerminals", true);
+                RunCore(false, false, 12, true);
+            }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
         public static void RunDialogueInput() => RunCore(false, false, 12, false, true);
         public static void RunDialogueInputMap11() => RunCore(false, false, 11, false, true);

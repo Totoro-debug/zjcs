@@ -56,10 +56,15 @@ def puzzle_rules(definition, catalog, templates, mover_rows):
         mover = template.get("GridMoverComponent", {})
         ground_types = movers.get(mover.get("WalkableGroundTypeKey"), [])
         pushed = local.get("LoStageResultEntityPushedComponent", {})
+        # Common.LoEntityComponentSpawnInfo.BlockDefaultSpawnInMap(Private)
+        # is independent of WorldActiveable.Active. Deferred Lo-spawn results
+        # must not exist until their original result 234 executes.
+        support = local["LoEntityComponent"]["SpanwInfo"]["PrivateMapSupportData"]
         result.append({
             "PlacementId": entity["placementId"], "EntityClassId": entity["entityClassId"],
             "InitialState": entity["state"], "GridX": entity["grid"][0], "GridY": entity["grid"][1],
-            "InitiallySpawned": entity["active"], "LockType": entity["lockType"],
+            "InitiallySpawned": entity["active"] and support["SupportSpawnInMap"]
+                and not support["BlockDefaultSpawn"], "LockType": entity["lockType"],
             "LockConditions": conditions,
             "PushBoxDetectorIds": params.get("LoOverlapDetectorEntityIds", []),
             "PushBoxIds": params.get("LoBoxEntityIds", []),
@@ -244,7 +249,8 @@ def build():
     current_code = ROOT / ".tools/source-packages/current/871_156598/official-code"
     puzzle_code = [current_code / folder / (name + ".cs") for folder, names in (
         ("common-source/Common", ("StageResultEntityPushedComponent", "GridMoverComponent", "GridGroundComponent",
-            "GridTransformComponent", "MyMath", "EntityLockPushBox", "MapPuzzleTerminalDataHuarongDao")),
+            "GridTransformComponent", "MyMath", "EntityLockPushBox", "MapPuzzleTerminalDataHuarongDao",
+            "LoEntityComponentSpawnInfo")),
         ("client-source", ("ECStageResultEntityPushedView", "MyStageResultEntityPushed",
             "MapInputSupportHandlerBase", "WorldStageInput"))) for name in names]
     access_code = [current_code / "common-source/Common" / "StoryStatusCondition.cs"]

@@ -112,6 +112,16 @@ class MountainSourceTests(unittest.TestCase):
                 self.assertEqual(rule["PushBoxDetectorIds"], params["LoOverlapDetectorEntityIds"])
                 self.assertEqual(rule["PushBoxIds"], params["LoBoxEntityIds"])
 
+    def test_deferred_reward_spawn_preserves_original_default_spawn_block(self):
+        runtime = load("unity/Assets/Official/World/Map/12/Resources/Map12/stories.json")
+        rules = {row["PlacementId"]: row for row in runtime["puzzleRules"]}
+        for lock_id in (1401, 4602, 6305, 8702):
+            for target in rules[lock_id]["SpawnIds"]:
+                support = self.source["entities"][str(target)]["LoEntityComponent"]["SpanwInfo"]["PrivateMapSupportData"]
+                self.assertTrue(support["SupportSpawnInMap"])
+                self.assertTrue(support["BlockDefaultSpawn"])
+                self.assertFalse(rules[target]["InitiallySpawned"], str(target))
+
 
 if __name__ == "__main__":
     unittest.main()
