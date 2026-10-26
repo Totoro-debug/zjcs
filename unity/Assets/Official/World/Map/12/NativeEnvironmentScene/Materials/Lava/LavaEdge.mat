@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LavaEdge
+  m_Shader: {fileID: 4800000, guid: 953f7022aad09aeff70e50c4b298132f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _MainTex:
+        m_Texture: {fileID: 2800000, guid: ed5bff001151b20f3023f954403e30dc, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 54e32d624d1ec9d9036fef1cfd01eda5, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _DisturbStrength: 0.35
+      _EnableExternalAlpha: 0
+      _Fluctuation: 0.05
+      _LightAtten: 0
+      _MainTile: 1
+      _MoveDir: 0
+      _MoveSpeed: -0.15
+      _NoiseSpeed: 0.3
+      _NoiseTile: 1
+      _Start: 0.75
+      _Test: 0.82
+    m_Colors:
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _Flip: {r: 1, g: 1, b: 1, a: 1}
+      _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

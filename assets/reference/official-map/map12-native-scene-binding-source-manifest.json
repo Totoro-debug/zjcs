@@ -1,0 +1,773 @@
+{
+    "mapClassId": 12,
+    "manifest": "871_156598",
+    "imported": [
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Materials/Water12.mat",
+            "sha256": "5f090cdd2720825bd51b55f971450368d62042292eace83a687c2e5cde9490b5",
+            "meta_sha256": "b469f7d0fe20f073cadb6edddcf6b150f9338b557a34b0c6cb6062dd5a28f87d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Materials/WaterMask.mat",
+            "sha256": "ae73765584b174cb21c3d804b474c144358e53f6b2fae86e0c7fa090f455a0db",
+            "meta_sha256": "a30a6f911d3e587696be3e2a91243963fe7680b19d828703bb278a38371cb6a7"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/default_water_mask.asset",
+            "sha256": "2e3d6703fd9cdb12e3ac859ef98ed0086a0c9cf73281c3c92cd146417e277b2c",
+            "meta_sha256": "121e07a1eb06717a4fb74293b84ddb379c3c13335e742cde8faf74e43406a634"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/default_water_mask.texture.asset",
+            "sha256": "9ea2d5995ac4feb20412b2488c5fcf05ed47c2dd43358b7aaef120dade463d60",
+            "meta_sha256": "7260f6a621f38d6ce94f2f18e4285df2aa6fe3b8b241fd09ea40ad13c38900d5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/default_water_mask_0.asset",
+            "sha256": "c60756715348fc9b17f8cf14858d06d9537b7523db16a5ccd3e004a3db87e95f",
+            "meta_sha256": "4fac456742c9bd64008b3bb1c7bc1a8ef84223a254b97733ecd576ae53a51c26"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/IntersectionNoise.texture.asset",
+            "sha256": "c8e4383ab30c256c6a8bf31034ec2ffc7333195f761088e1795956ac5148a945",
+            "meta_sha256": "68563596a36d0c2398ea50fa411cbf63af7149feeb52e14c071ac407f0b01c87"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/Normal.texture.asset",
+            "sha256": "d62cf535f441507f93e885432df6c58a58c64ed6c409e4d28a3fd5ebab005292",
+            "meta_sha256": "ed8d8e1f30a9b5bb4b6bab11caeecc35463f7f2750fb2735e4d57ab97bab6376"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/SWS_Caustics.texture.asset",
+            "sha256": "f5249abdaac9f2bc4d5afff1db90d8faa1e0eedf9a2af3af5070d0636ce951b2",
+            "meta_sha256": "e9d778c6f35b16d51ce9a80f95902ef801b3250fd331217ca6824f7c29cfa0a0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Effect/CustomWater/Textures/SWS_Foam1.texture.asset",
+            "sha256": "eb9e884d8e574ba5c431755c8ea3127fbbc22758506fc5aad76f05ff95de3528",
+            "meta_sha256": "840825d857bb5be7acb4fe5573e3213e3bc686dc36af2835246b980d8e12b729"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_cliff08.asset",
+            "sha256": "76c56b70b9b70e59cb970bbf1a0827c78b1619a423366bf23e12449d5910b828",
+            "meta_sha256": "dab0f82143f7cef25137bd1e1879029d3177cb46e1292f87bdd334a740ea8374"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Cliff08_0.asset",
+            "sha256": "d38c2c0b9d9650dd8b2556bac3ad4e90ff09037aacbe078017e7cb9a6992fd8d",
+            "meta_sha256": "d58a3bafdb79fbee229ab9a53062eacb536df82a8c1f2a1569f2a62b03391e58"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_cliff15_mask.asset",
+            "sha256": "fb840081da518b1699ea6f98c231a619f630f9dacb313c09fee084d125af4c7f",
+            "meta_sha256": "7778567ac1520f6c47320997c2f19c51a500f0c0287ec0f5c177d4fe691ee29c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_cliff15_mask_0.asset",
+            "sha256": "d4d6d045013242c38830c07468270819b8078706a7a2bacb94b76ae9dc74a84b",
+            "meta_sha256": "948ee5d0b5f11416a921318f0eeab865609978c9592b1898ca919432f0f336bb"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance01_mask.asset",
+            "sha256": "afd8b7b87b418f5734f6d92898339a6d062f5b99a6aa66d58bb4ae4679916815",
+            "meta_sha256": "cca9040b8ee2f8b539e5a11bad0b9b1b2242d8e01f35e03ad0953cf9cfd6a8af"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance01_mask_0.asset",
+            "sha256": "8035788ce7bda38036042b5da6d35cd16b50343441818bdeec10078ea846354f",
+            "meta_sha256": "b285b3e49ce0c3a783028d8f2839ac082a839227d1e87d9e614c1ff258c30f6a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance08_mask.asset",
+            "sha256": "f236576e1c5a560dce81c7536bd53fad0a42b7d6bda9f732f76c6639013ca648",
+            "meta_sha256": "616e63204942940c0d7939bc0fe60d5fa92f39dfdecf78a0d474ed641bb3622a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance08_mask_0.asset",
+            "sha256": "2ac6cc494b7621d19be17a2578fe3eea2e586e64b72a4b590101fe35c2bc14ff",
+            "meta_sha256": "daec0476d732bcd9c9d568805fe306841f96c8a0ebdc125e225d46dafbf7c2d0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance09_mask.asset",
+            "sha256": "f0e0e4124c3d12da3b0476aded10ab021757fef4f125bc6b0cda863890f20a02",
+            "meta_sha256": "ff88df84a31b6e136389174ef8fd5f51148c0b2d8e0bd72a296dc66f87d8984b"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_entrance09_mask_0.asset",
+            "sha256": "79984bae1a0bdb44de959ab9c16a305cb60a88db0aa29d6e2eba5c3dc2df79b1",
+            "meta_sha256": "191147952c6803ac0f20e9b935b2ea34bfb51afb5f239ab744d99820c5979fc6"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highcorner06_mask.asset",
+            "sha256": "b0b4d362019c68396e3a924f674f9282ca9543a697e2c1bc6da0befe05500cea",
+            "meta_sha256": "e68473e89351633178d2d8c69bcd44b846a64a20ff08ad4c534bf5a26e4fa7a7"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highcorner06_mask_0.asset",
+            "sha256": "7eb069da814d1c723b1562686bd13ba618a258bef252087ef56f645c2ed34f7b",
+            "meta_sha256": "074256b471caccbab3b8e09df874e01b4e5445a5bb95269067345c7547d9b60c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highcorner08_mask.asset",
+            "sha256": "7105341e57df608ddc48847ec277d1a838821cc989c36a882a5f8814978f22ec",
+            "meta_sha256": "d2238ef5936fe010c409a73b01f40f5b7727035fb81698840ba5bd1ebf1c1dd5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highcorner08_mask_0.asset",
+            "sha256": "88430567587ad3e5d8d555d7edeb88227f673fc0bf5541a862ade9cac1465fdf",
+            "meta_sha256": "1b265cf3e54b4965c4dc46735912009298c0831e7f4fe2fc141aa2c72aefcae1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_highcorner09.asset",
+            "sha256": "4656f61671f52aecb4a08853577874dab6ae59728e8a8093e58a9bb9976961e4",
+            "meta_sha256": "cc3ee4ed27fbd62130626c33020cf6abbc2e79e9bc7077a048dba36bedbf3eef"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highcorner09_0.asset",
+            "sha256": "09cc299383c7448c083e857d2206f10fc7b7f69869156801a98c8ee1f036bcb4",
+            "meta_sha256": "233a954c575791622d8afe995616a3ce7db201cfa54fc6a3cb6af17d41025b43"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_highcorner11.asset",
+            "sha256": "39f47330c7e6364a53fefc631d2f2d3179c8a52d63e579f2318b691be49c297c",
+            "meta_sha256": "20e343b827d6bb6338fc7a3cdc9e870194cfd0395358a3dffedd4c34b41c8322"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_highcorner11_0.asset",
+            "sha256": "6fdfc1380419f685e9173c86ce2a67cff302e3ab907302a8050d6a21c0bc7c20",
+            "meta_sha256": "898c93f87d48c96332bbee20fe943a1c11b4829e2260e61da374f76e9327eab8"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland05_mask.asset",
+            "sha256": "a7c806937fcf47ef4f1b52f6965bbaa9a9a7a2173a3e78a61f4b1fa965f2f977",
+            "meta_sha256": "a700c5cf46701635822a45075056ac275d344b13f13100d42b20b74ddb12c55d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland05_mask_0.asset",
+            "sha256": "71f77676fc268c1d18623f831d9a12cf4fb31c8e9dfdd2098a9ff7c9feed28a3",
+            "meta_sha256": "3be9efff1855978f32107beb8d98a7eb7cb37ab5eb3eb2fe2598b99fcfd4e004"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland07_mask.asset",
+            "sha256": "b413228e45d51002f94ad2412771e532a4f5bcfe6be9e1c856888f83a0151873",
+            "meta_sha256": "142079dae609d544082ba7ebe10746eea36235924d389da469e7c4d88875ae4f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland07_mask_0.asset",
+            "sha256": "7b9a184e03b6c07656d7fcb70432f867503805d628f7187f11d6fcf6d74d8965",
+            "meta_sha256": "04978c8ac03b10cf8b68094652a92779629a231c5689b429e9543d1abba5ada1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland12_mask.asset",
+            "sha256": "4d79a1aa25c0fae6dc06966eb94d9e1d443b4738b1a24c55b73ad0a4f1fbafec",
+            "meta_sha256": "fa7e3245119e425c1c0ba1782addcbe621359d2cc6c25664457594ef40cd0c0e"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland12_mask_0.asset",
+            "sha256": "4db7b484d82287bceaa0c712e0f8ecbf96d180f85119910ed84cd48b25cb01f5",
+            "meta_sha256": "580cea89ea721bad15e1bf2a051ae1fb5999805b8970a0850678b12d37a20661"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland17_mask.asset",
+            "sha256": "f5614b5fa6f5ad4b44b09728eb7750d1b6e2efd6029085708fb0c2be9afcb66f",
+            "meta_sha256": "f2cc3bd10f43772b75eafc1f7a970ef52155f5373ace52848dd1835def1a43f7"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Highland17_mask_0.asset",
+            "sha256": "2f0dfd012e1c51cb6f8e39538e75fa595db5c26c35f2fd521bf299eeb792c67b",
+            "meta_sha256": "176463d9f7897e7514682cb90dce49c35186c8aabe799de6c0054180fc7e6ae5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore01.asset",
+            "sha256": "15fd65ec22fd59aca59c522e8f4d8811c28624513b23606f96ab7a69b6196ca7",
+            "meta_sha256": "7c953d795b861daeb243e39770b7d1b736edacf672bee5765dabe332214d373c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore01_0.asset",
+            "sha256": "819feab4e25ad89e2ddcad509f7db8b246c8b02d698f7f5ab2d99d0c0eaa0504",
+            "meta_sha256": "5afa7a3b2fbebe60c26c166fb7ddb9d2763ba94350efdd1432b463a9513d463a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore01_mask.asset",
+            "sha256": "d5997f09dbbe1cc50e1d92bee1cb24cd4c4e3c24334673179b96eae595026488",
+            "meta_sha256": "fc095d593816f1ba74f94c061a20330e4145913556a53ff20c079ff7ed6cd615"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore01_mask_0.asset",
+            "sha256": "d6159bdd9759f4d070c636b18dd2e005972588b6fa05c6a27adfacc9ca42e30b",
+            "meta_sha256": "f5177a02363fa2cb122e8098a7389157629ccd06e3b191bae3f7f5da5dd888ad"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore02.asset",
+            "sha256": "aaec0f16628516801357e0da1f402d996258a437c5d62344bc3566ac4273fd6a",
+            "meta_sha256": "67a4d4a966d00d65a9735421a46c795632b75515c1923bc641a447e0aa17ad82"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore02_0.asset",
+            "sha256": "1641b91995fe7437c476e9e3c4d147f22707840651c76d2122e9bc651e5c9ded",
+            "meta_sha256": "d57af11695d2fd1d957b1c174ed51cdddd668c929a2386bf1ae0129b18d919df"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore02_mask.asset",
+            "sha256": "86d8240b3f57825d6f36012ec39b129d77f1da0993398c8f1454ff87491bb4a2",
+            "meta_sha256": "b13fcdfd3967fbe89c8c0e07166e69197ba00c21a104fa9e834a6a9f3ff1a6ce"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore02_mask_0.asset",
+            "sha256": "d14b820e65c1a8bc155cc1ffdbb418eb69fd7370ed6a2e5012fbb99b62932e1e",
+            "meta_sha256": "86627ab0139219fc05f7d87246f4d68970c9702296ea657f8638c07be4adc9d4"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore03.asset",
+            "sha256": "d00a2306189e638dbd36eb83ea7b369713cfa19fb410574f5c12cd3d9aa45583",
+            "meta_sha256": "16798fb2bce6abb6fc47c128be3b6644bdb10f97c0c6511b229d724bf6666a7c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore03_0.asset",
+            "sha256": "6ed81d0c5a0b4c149c79e3efa8358f951f1d8df22b0c5bdace7be583d06b5ca5",
+            "meta_sha256": "86bcedbefd11fb499a8701a6078a12e57563ecd500e102538fe9d6ce8b09e581"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore03_mask.asset",
+            "sha256": "aef91ee800f5714ba3583058da73c1fc3fabfe61bcef7afa116fa2c988d32730",
+            "meta_sha256": "f6e684b4cf42db4b98996eb051b78a78cf6637929e04dc8e25857c739aee4966"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore03_mask_0.asset",
+            "sha256": "f3c5f59919fcd9534be1904d00a00bb5d27a8599865f2a3e3a9e2cda99bfd23c",
+            "meta_sha256": "691ba36058e43b5ab211c6367613f26fd71536efb3ffdbd7b28f8023537531b6"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore04.asset",
+            "sha256": "c868cf33f9c8ef8c78bacf5428755e6a71e5ec5c0e0adcd2c82cf8a95061bc7f",
+            "meta_sha256": "112ded3fbb28344c5360804237c37f83b8325ca9b9ff70d4dbc87e08c9e8a8c0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore04_0.asset",
+            "sha256": "969362c9ce5db17d1ccf329d7b8f1b3df5a3b3ab41daf3849e2d3f55dd1a44c6",
+            "meta_sha256": "5b5e7c29fb118640ae96bbbfd635e0e049e9e886628920e63f7a462803ef2d9d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore04_mask.asset",
+            "sha256": "f27eb3072732b2975ffbb2d5b2946314ddaeb6be13c6aa20827d52a3723bce30",
+            "meta_sha256": "138a6e8ec40f72ac08705d8ae40fb79e3e71f34ce9ae9fbcabc37bb3dd0ff602"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore04_mask_0.asset",
+            "sha256": "2b717000e9c8aa576bc114e78fc511920fc432699a69496004bafa83eee3828f",
+            "meta_sha256": "480ef452d64393e46b1df706a76da1d470dde51f004b730ac705e168927507a6"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore05.asset",
+            "sha256": "ab9cbe496a7440328205fbbfd0e9345e8be9c4cf8611ccd349fc95f885d5156f",
+            "meta_sha256": "0b2e29c435c27a4a87ae943eb0f86aa48ad49375ea5844bf65a025adbe3fd698"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore05_0.asset",
+            "sha256": "71b54f3ab1d0c6ba8f1165b0d55bb4c33729d3cefd5e5b82e536e28be4c55e24",
+            "meta_sha256": "e8d879ecd42ba4755f8ee0ca5a4874afdc6b388a133e17e013b21f02aac2e4f6"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore05_mask.asset",
+            "sha256": "b123e203b801ff642f6de2679f37bf969e732cbbd1db2cbbe9c3b74a31941cc1",
+            "meta_sha256": "071f3528496cb3daa32f5672fba402dd95bd9b66bbd46ddbd3289328bd456567"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore05_mask_0.asset",
+            "sha256": "2a3e72ccd182973333f57554c5cb8135e7f13851734ad14f6c9954304f59fc92",
+            "meta_sha256": "1a8d031b47cc951730c280b6d25196fe8e156194a1f19ae091996da196776dc6"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore06.asset",
+            "sha256": "f80506fa2131f0e22d167aecbd1444667532352e042dea36933e22a3de97688b",
+            "meta_sha256": "714a44c4a5388b6aabb6c157edfc492eef7ffa018406fb37e634cc01313a19cd"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore06_0.asset",
+            "sha256": "ee51575f1b3fbf238d315d6f48ac87fd12262494510033630a8ce07a9b057332",
+            "meta_sha256": "7f0e45f92c94fc9641b15dda60a62dfbaf9d4212de660bfdcf6e11000a740ff7"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore06_mask.asset",
+            "sha256": "8916286842bc893f6723611fec008a25323d86b1ef0bb01a090e098f5218df64",
+            "meta_sha256": "604272784dacadfcbdefd3239ec2b171d9b9afc4322f3e61875db66cbb703959"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_shore06_mask_0.asset",
+            "sha256": "2a5bd7d19596bfa4d3c70ac495a64137fefa161e1620c0321f77c809ef94fd1c",
+            "meta_sha256": "ab1a3594996b3cc4da6367f183735ac0eed5d39f68f0ac6c9045f15d9732aa90"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water01_mask_S.asset",
+            "sha256": "4eb937474ec0055388484b4d3137aaa6a103d289d836f81b9fc3c4052a33a981",
+            "meta_sha256": "3c545a953aa7c89610184c4240b54567df97ea912f08ea62ffde3bddb0f8c87f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water02_mask_s.asset",
+            "sha256": "990734c4f7c473eefd611792da512136518ef0570997211a2a1f938dbf7754e6",
+            "meta_sha256": "dd28eb90aab70b3190d779fe02210aee94e102da21870ca8be749cff4557a9bb"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water03_mask_s.asset",
+            "sha256": "ba7d0870c9177763cf6571711654b01f66c91f7e537b7fbd496ab5b258165d9a",
+            "meta_sha256": "83f9642d4cefcc72de6b4afe85ea965108145518ae53a8ae7c0746026d27ad34"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water04_mask_S.asset",
+            "sha256": "78633172c151297ad06d5649d6ad7b1b6602221c048f2ae60e312a4bd5e5f4e1",
+            "meta_sha256": "ad44370b40200af0c15c7e6a61e788f7a54554ab099848d94deb59b421665932"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water05_mask_S.asset",
+            "sha256": "84764db2b331f641bfe48e0f8145719ba801810dfae0476276e34af1395a6ac2",
+            "meta_sha256": "629acec0f8e615b8a6e09e1917c1d68392895ad90560a6f2ea53449797737452"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water05_mask_s_0.asset",
+            "sha256": "2d13bf1bd9f84faaf93ecdf236327da59addcf4f3cf2646192ff66e74011482f",
+            "meta_sha256": "2f0af0e1b696b88ecc95e6494e8a1c9b966671e199f0c84660f14857174a5711"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water06_mask_S.asset",
+            "sha256": "88932cd2c3954d80574526738e500f06c97622c3f9b15756b1ca3a48e35535e6",
+            "meta_sha256": "e02ecfd738fc659083e02a7e2194cae0213fabc56237ed8d997d7a63aa5a752b"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water06_mask_s_0.asset",
+            "sha256": "0d5269d78d1720152f9bb8f732ba02b7ceefbabc3e20d368b8353467fc1962a3",
+            "meta_sha256": "d3cf37245a9e57215415156574e3ae236251d966cbdb4b474a07484ce253517a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water07_mask_s.asset",
+            "sha256": "68cbe67ca1146a8527adf5bfac5bfb43c90af2ea651cb09c83255ba1880ede27",
+            "meta_sha256": "4cfb4a3b421d0b6e1baa3e9642287064fa36814ab16e5a6ce21d03e22d5ff781"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water07_mask_S_0.asset",
+            "sha256": "248ed71d3fcaf26e49fbb2c506b42f06ff4b40a71ce7d08d25c8438e037ca344",
+            "meta_sha256": "604c28b3d5b71119b12e8f012bfdf8a6bad3736ad785b5c5660c0f7ca8839ad3"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water08_mask_S.asset",
+            "sha256": "e990c18000093e5518c3a989af0c9004012cf9326899787755d9ef0f664a41c9",
+            "meta_sha256": "e48a81864b43c3d234cba7907f398ae9670d4fca733e81c9bfa483850dced903"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water09_mask_S.asset",
+            "sha256": "efafe27880bc6ac0f5b00126fef3a477b14313aa4d7f45cb3943c2a1c136b8dd",
+            "meta_sha256": "f049bc49f3262f1dcb073fe25967a619bb09a3ecfdde6ad7fd69e0984b40364a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water10_mask_S.asset",
+            "sha256": "dde455b34503f97ecb59b8582c33e112ea01527b5e77b79ac257acb752f097b3",
+            "meta_sha256": "5155a23c6d201e9b9a3a2b004be6766457ff461d8f7af7fb23ca29e678b98dad"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water11_mask_s.asset",
+            "sha256": "033032f050bb8b3ed44582ecdb212e341b80d7932086573280939b58550ca179",
+            "meta_sha256": "fca42039f65b2763022dc03d5f1ce3d772ae9249c077b93a415b24d9459ae6f0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water11_mask_S_0.asset",
+            "sha256": "b71d1da998f17eceb4c874f8e6831dcbf7d3c097988b5553531078eb5d31e031",
+            "meta_sha256": "99e96df78cfc10abfb8ecc27b11ad30062494e68f36a4e55b04611bb142fe954"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water12_mask_s.asset",
+            "sha256": "fbcf2404f7c2db505c36852a0d05aa342fef9be0b42ceca8cfd58247ba40685f",
+            "meta_sha256": "f5f5c04b06f683eb0f26f255b28e6838d620fa6a796e2b34dc0d00f128ffb133"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water12_mask_S_0.asset",
+            "sha256": "b9c0561598cf99eba8954b875e713cc7b5bf279bcbe63f9ce6b8cf39b457d6dc",
+            "meta_sha256": "bea097f1a74d7871871c08233eca374a50bd33ec07cea4d47291d45e0c3d8f89"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water13_mask_s.asset",
+            "sha256": "c1826abb53a910bc9fd48faa632c316e13e69ee8453be07f6a241ffe7f7d8aa3",
+            "meta_sha256": "262df3bcc3a2be4137e4363675737eb32aa54f61fad002d7eb84c0f317f18861"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water13_mask_S_0.asset",
+            "sha256": "f6a44896ba7aacd6d16e8c908ef2e6ae6a3ebc7b6f759464b516890c055abd08",
+            "meta_sha256": "f29d225f35f8182f2f6dd4a929f8c10cfeb12ae083d1075f868e82853b7c0e1a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water14_mask_S.asset",
+            "sha256": "7cfa57939b14a61a3316a4f4d2d7cfc4e2e79c43854c20d23cb74e17d9dab7a3",
+            "meta_sha256": "1abbba4171fb1dd12912cb2b26bd8079a47716f02f6af430c331ad5e4253f2cf"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water14_mask_s_0.asset",
+            "sha256": "3a7f7385c80fa123601ced039409c17dfa2ceef9c52564148848983301db8197",
+            "meta_sha256": "7ba752a128424dae952280388d2375270ba6e4a5919663d2bc5aa756a4caed8f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water16_mask_S.asset",
+            "sha256": "d2705a48bae33d318b45626d287ea2b65b629c3b2d6346d88baab91aa7345ba2",
+            "meta_sha256": "5b4b203075c84ee19770cb7f7bcad48d1bb91b0df230eeab564721baea4397f3"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water16_mask_s_0.asset",
+            "sha256": "9ada98ad96ac4cf38f5ecd974456a5c2b78a8a21899a163b4de4911744d82dbb",
+            "meta_sha256": "2e7e2a94b99ecc799f6c14a0442a1c43dfdfa6c4876aaf632c953e39d49f1e07"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/ground_Water_mask_s.asset",
+            "sha256": "78f124f5590cc2d0945c1ca7d0f89144340356a21a93796cd36dcb641c84c7bb",
+            "meta_sha256": "defc823bd21766d5356329c6c2f39c9c4484ee95967b86cfcd2adb2a8e319bc9"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Atlas/Ground_water_mask_S_0.asset",
+            "sha256": "885af857ac0f8e8d761aaf64f826ddd897136b2b6b916d23a59d07ce4da4d886",
+            "meta_sha256": "01e53b7dba6f9108b061c6db59c38a36b6b3d6334e19c7bc148f84d650a827c3"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/Ground12_Manual_mask_atlas.texture.asset",
+            "sha256": "e552ed1fce6fc212d6328880838cb61f08dede2d0dca229be8d19e73fe3cec41",
+            "meta_sha256": "926e7e1dd33b1df240824dff5bda79557b1204de2d58ca037908d171c9876af9"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance02_1_mask.asset",
+            "sha256": "c1f10162e5ab189704f4444b94b0456f493badc824fb5c7d1229d4035cd80c04",
+            "meta_sha256": "65d2ef5d48915d6cbf9342e10a326e7606b587c44c44c70c3e03425d37065a10"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance02_mask.asset",
+            "sha256": "f8713e96fb36599dec3739d84612b47021302ddca0d4948024a7be90c936337b",
+            "meta_sha256": "3d8c215a9472b0f1b96db8f6931f52846b0463cf988b6f664cc91be0dc3f200c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance06_1_mask.asset",
+            "sha256": "4ab37318895db8b311d33bc014f86d3608e2fa8e15d72f73822f27516d8add36",
+            "meta_sha256": "86dd4c286a9ef7381505080c2d9231b48d43709cd0574b7637cb599fb4d42939"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance06_mask.asset",
+            "sha256": "1cd4c2bdcff5dcd35ac992cd140fc08f1829649a0e182a960c298bc6a0c59a1a",
+            "meta_sha256": "3bff6b2f501dcc65e611df42fd0a9a37dc177d50e8be1a452c76bb1fa274727f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance07_1_mask.asset",
+            "sha256": "0458412c3ff068d545a48f7461769e25333e256925aa6249bf1f707fd8bc5f40",
+            "meta_sha256": "fd396309f7c3340add0c25bb487a185ab4a880c9849ecfcc99ef0faeeb8fe7cf"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_entrance07_mask.asset",
+            "sha256": "11b9550be377f3e3f78f4af518018645c4652c45f01b2f4ab138a0e538b20e32",
+            "meta_sha256": "1ce7ce871cbddec6c2fa555fc827bbed5ba09de35a1e36e60ca36d42a6ee4a32"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland10_mask.asset",
+            "sha256": "2485dbb243f15ad247f397a1af7b8f1b5de5f48ec86951710b70948c28877dbd",
+            "meta_sha256": "ea926d88b7fd2a00d553698fe9e55e8780cb36a5dc2e061ed756d0094856e270"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland11_mask.asset",
+            "sha256": "1f761b24b8e989892a214c94063db1da2ad7afff59bb730866c4ff329c6139d0",
+            "meta_sha256": "dca21824a39324d120c172dc1c02a3e7ca0c9b68ba1d5a260c3a41b47bd13c9f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland15_1_mask.asset",
+            "sha256": "c96902263301caa211c75cc283a536d044a48d92f21e6ece11ae02aa08362134",
+            "meta_sha256": "244ed31cd3d0716be8cbbc605768737516cf7884abee0491443719faf183bc87"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland15_mask.asset",
+            "sha256": "4bc6b05c2b013c4b34bff913099a8b3ad052138b93b504049d7e7812af99dcba",
+            "meta_sha256": "1c49c8031607323a7887085d1cd7eb5fbafaab05feb19b5bc5cb9dbb4f812fb5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland16_1_mask.asset",
+            "sha256": "7e7a093e483f8dc6827627899038cc1f556f039e96c94f6a12b27b9150efcd0d",
+            "meta_sha256": "ddd2910f9fe15c38f6d22589a84a54281f362849155542c3c1bed86c701517ac"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/ground_Highland16_mask.asset",
+            "sha256": "9e1a82d9053377137265f7a8041afa5dafe2af8b4c33b3d63581cfd0d1e1d08c",
+            "meta_sha256": "dbc28b1b71dfaae8b6b0b5672772f1afd3629a41912888fe6a3523084a818c94"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance02_1_mask.asset",
+            "sha256": "c244bba177e9619486791dcf44cf5e93770151e78434ac3921e9348b460cc08b",
+            "meta_sha256": "b197601909b794a49e3fd59251bed16216488f0a1c8fa3eeba120bf91277a29f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance02_mask.asset",
+            "sha256": "d33118983544ce9e7c5fc746cdb927bda22d4f9fa0239a8c87638227ba7ebba0",
+            "meta_sha256": "fd5cff6dc7ddb7a0e6e5573f490df15cf96d42259b20cc7a8d103db3a263e8e5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance06_1_mask.asset",
+            "sha256": "98e3fef21bd9eff8d9b8ab03ae26bbe6254a4887d56b8ef703649d4eaf1844b9",
+            "meta_sha256": "d4a083bcf65380bbcad8b5526466cf68e3e0ec428059e21408d610fc605db796"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance06_mask.asset",
+            "sha256": "2c0e01959d77bfd3dfd5f6a998bc26e4235a7ff4a8f7c22c0033fe8f610b20ec",
+            "meta_sha256": "ada35568a87247c6c9a5f8342696bb37636c39be41077fe0085075377f3e70e0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance07_1_mask.asset",
+            "sha256": "9a2f4921b11d0a7bd5193f1fa95856dbeda5fca98c91d6338b7ee31f1728f414",
+            "meta_sha256": "911065c10a4b2f63836f7d8be0882bc774100b5e881c7e67018adf2ec1d720cf"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_entrance07_mask.asset",
+            "sha256": "94af5c3010b7c4ad340f379ba69a101e1a005ab71d5ee70b6d176309c25aa19e",
+            "meta_sha256": "835db1a5ec736ca53f7490cc89d53301f7fe5a214453795ee10cbae228ccdbd9"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland10_mask.asset",
+            "sha256": "d5be926c0b1c316323a0a25aa20f2355b378420d9bc3003610557bf69eab9068",
+            "meta_sha256": "6cc5d04972223ed4089f2efb7798244d206868c3bd51ae647e8403f6d3e58a70"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland11_mask.asset",
+            "sha256": "74738ddeb10350e6075b9622d0b2b3ba693451268c7e83701e18620f78f53184",
+            "meta_sha256": "1185540c546681c44e0096f8c2ed3c387645ba1ee12203fa84dde87a2b1796b1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland15_1_mask.asset",
+            "sha256": "55375eb41c5bada3d4dbb578ab3d479ae796f9b4c05006ff8b4657151e506c3f",
+            "meta_sha256": "231931abab64d6dfb83a12510be09be85752c5f8d8543b6ad88bec4c89043e5f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland15_mask.asset",
+            "sha256": "d40f3cf4ad5fd8ca69d764f1faf9f52e5933a3e6dbbca1af6fde2112a8ae4eaa",
+            "meta_sha256": "dab596ff609e8ad70b6fda413f6ed54d7a76b1879adb0d00ff427c3597993b26"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland16_1_mask.asset",
+            "sha256": "9c761bbbcd79bc8cc66b5a10ed5aae03828d540d830277365f7aadd460263408",
+            "meta_sha256": "600a3fd3f53c63369831cdf97bb8da995a9a258abec02be7532056c73a094e15"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Image/MapScence/Map12/Ground12/Ground12_Manual/MaskTile/ground_Highland16_mask.asset",
+            "sha256": "481a7e424f45b8933e6fbfcdeeebb371b20bed300587dbec628584d930ab1664",
+            "meta_sha256": "eeb6653d4752e42f8f4b75230a44bd53ebc2cfe31f873555d734659dfaa43507"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Material/Lava02.mat",
+            "sha256": "cbdd95345acad8ae4c89fdf1a2a6ad9cb1c77ebf35abb7d1224dc44900dd5e38",
+            "meta_sha256": "da02216c2b911bb5ded4c13c5415406aafb3291b21f2a41b49ccc9362c48a06a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Material/Lava03.mat",
+            "sha256": "278c74c8021d78ac9754bf019917dfd4e48e2d9a2d5affe8b24aaed9c3d7fdb8",
+            "meta_sha256": "f18087f97e2bd46d634170a2788767a70e16cec6c004a261e7666b646c5cb495"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Materials/Lava/Lava.mat",
+            "sha256": "0bd266e06eeee00b2df7e8983c8744e121d94a41faba9b70678576da16f0e209",
+            "meta_sha256": "07971a51f2c82a5a4203bacc38e48f8bbd3a6c6eefb6ccd610c496841920169a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Materials/WaterAutoGenerate/Ground12_Manual_atlas_abovewater.mat",
+            "sha256": "13a23756cbc2bc9bb9733ec466d19c968f20daad113f922b7af07f63bf3157aa",
+            "meta_sha256": "409a37f86bd5def832521bcd92fd5f2c032c1168d8552c1a32adb48e2e499aaf"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Materials/WaterAutoGenerate/Ground12_Manual_atlas_underwater.mat",
+            "sha256": "0dd946a11e4979a6bfac48a9e364c54f02c35da7b8a52caa0b434d1a9d28defd",
+            "meta_sha256": "f6840351bd9e80c395f68b757c0cb55a093e2713e692591c5a94d083896858d2"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-1_y-1.asset",
+            "sha256": "b9d98a78c1d032730256ed1c17d63ed3f80a197cb2d1eea084cdf680dc2d35e5",
+            "meta_sha256": "05beaf987da3c2cf910457c86654dee587d496aba496db8c00f0c26647b8caf1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-1_y-3.asset",
+            "sha256": "c6563344f04db5f269af02293e45e250fb3c946df0c9907218573618b7be2ac4",
+            "meta_sha256": "b0cf5493f33933c9c6ddb2a9cfcfab9ce065309cdcd4a12a3b6221a225d1e149"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-1_y1.asset",
+            "sha256": "bbc439e8e40ab38b7c6019e40aad3563041302c30a4c3501483a24c9d18a75ea",
+            "meta_sha256": "c0031bf109e1e40cb815184448e01c192a2c5856c1dc9275692c26cc15545dd5"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-1_y2.asset",
+            "sha256": "ac7e9872a268f3883b102619fe8a5115cfe4deceaba6a6ca40e2de2ec6fb98ff",
+            "meta_sha256": "9ec38b2996140b09181b7a5186568186eb35a4d88e682e8c5a6a81a6c498b533"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-2_y-2.asset",
+            "sha256": "679241ab260b68658f0fbd45513af5f03eed63225cfa4cb9c0c49ee2605caa82",
+            "meta_sha256": "c1dc0ffd4ad1ca213de2dc00e2105649fe0187f45ed6971ce5d017d562366842"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-2_y-3.asset",
+            "sha256": "c4a7278e82706e0cd679f4b754f6281a709bbfc9a8610feeeb9c4aa02cd9c8c1",
+            "meta_sha256": "b22b75d6ca27c1ff66c0babcf27d1a6a749363e7d5a9cfb4e1a69db66d11da28"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-2_y1.asset",
+            "sha256": "6cf5a7c72e60390357c5948526b3afa81e2a0e553156b3d3df62948e82629306",
+            "meta_sha256": "0bfa2c9a729f7aad0d5b2c2a0c6f885611e607b9fb037fc5706e3adcae9e0d06"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-2_y2.asset",
+            "sha256": "f87d218e4b4922e16fe902901b66465092e863c230bab9794e4e4743a3653487",
+            "meta_sha256": "64cc3b16740ac6132f7a264f9085170eb066664522b7659088e2e06431ba6f07"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-3_y-2.asset",
+            "sha256": "ff7c22a1e3002745e0476a1928a302db9dbf525a8a7a19fa885d710e4e281609",
+            "meta_sha256": "539dcf86115a0726104ec0ccab904b27b451bbca5641dfaaae4a3f451d9dbdc1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-3_y-3.asset",
+            "sha256": "55c90085fa1d146aacf547ec3b8dcfcb66fd71a2c82c2bbef0fbd17064b148dd",
+            "meta_sha256": "d91ccbcc1f2ebb55e6869bdcf831da7878c9c1ec076f5a65dbb6d1b99f8ad0a3"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-3_y1.asset",
+            "sha256": "be3f3aaa9397e887b4525cad39dbe8eeecda02ed132e98be5b8aab9910c8018c",
+            "meta_sha256": "8745851e41dc3af1dfae6f9dab6b0861f8ec0cd93b13691476f9312f67033f20"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-4_y-1.asset",
+            "sha256": "4450dba0a92904cd8b81239d4163574cd1074e15c9349ba567231bcf48de7f09",
+            "meta_sha256": "5d39a6ff51756a0e0eb5ec4cb78df3d8def01067ceace22c69dbc50c81424cc2"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-4_y-2.asset",
+            "sha256": "6356c4e9e10203524b4f5ae82350da2f3b4882f7f0989522e744647c20bd538d",
+            "meta_sha256": "72052ebb2820c3d2eef7ceb42f497caa4d9e024a8a073bb8fa065939e5ccaf0c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-4_y0.asset",
+            "sha256": "d3af8da45e1d371e7f916b60cf95eeb2902e3d3e450a8664f6f155a07f8afaae",
+            "meta_sha256": "d67aee00f8d96201d56929e64e86e8fc4078a6da964befa9058a6d200659c4f0"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x-4_y1.asset",
+            "sha256": "488117473d8d1cdcb53a20979a4d34bd705bdf21dbc6730dce6ca4ad0d297acf",
+            "meta_sha256": "cfa070dcad7249b26035561ec4904fe227156c743170eb064fd616d67b84e25b"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y-1.asset",
+            "sha256": "6ad88d72122024b2b517a755502e87aacb15f48ff8865fe0bd4dbee9d2caf06d",
+            "meta_sha256": "9bae77cc5307f33824584bda26ea11f6fec748ca3aaaaa9a8b2e69e748301cd2"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y-2.asset",
+            "sha256": "b47275ac5c8528c8495818ab607997ae58ac7c136b2273be52f36faf77561397",
+            "meta_sha256": "112f583d5f32c5828db39e574d60d723e2a9cec9024e6f377a109eb20b12d309"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y-3.asset",
+            "sha256": "6be8910b7094ceccdac004419d4eae0f01095243afca09cd721ca13b6a10683b",
+            "meta_sha256": "b524195b2ddba1a55c71350bd4a1f528958ac68edd6730d1f8773e60eb08749c"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y-4.asset",
+            "sha256": "e04a82ce082656bced4e6ba22b505d3cf71690fc06a05a8c93e0e3a1adcb33d3",
+            "meta_sha256": "3671c04394436af1744045df0575ebdf4d408fe98c7ca1e7145c6632df8ec58d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y1.asset",
+            "sha256": "0520464ccabc1c32bdc16f1138b15f74c130fc66dbbc05925b81f47069c4ba9a",
+            "meta_sha256": "9ea30a3a81aef4a902dc352cfcbfc817ff6ff43867de49fe17ce322b5a2c572e"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x0_y2.asset",
+            "sha256": "f9e99708fc30caf150131d7ec28c1ca3535671f885cb83f03744ad47637b14e9",
+            "meta_sha256": "ef6f8528b745cfaa92959acfcc8a6372a1aaae07aed2bcb0032ac1e7fb53cd19"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x1_y-2.asset",
+            "sha256": "fd3908332e2384b799207a5b9a61954da7ee9f484b2e6f4a1519094ce4273017",
+            "meta_sha256": "2bf6f7513f26480d8c5b0287a7414482e0ed04b8acf5bb123e66a4d02560498d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x1_y-3.asset",
+            "sha256": "973fc3400dd3f6416f4a8b6857716f7aa15c6d01b0293ca49c7e3a804eb17c44",
+            "meta_sha256": "15e146485c2eab08c1ef007723bf75b5f63c686ed89c39a2f55a172f5bd5156a"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x1_y0.asset",
+            "sha256": "271e6b74bdf9765c81c656a1a4c9c961774ebdc7dcb3075485c698431f2873a3",
+            "meta_sha256": "d75c049966e62cce928450a6fe4f1591c37e55e8ecf490dc36940b6804e75e36"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x1_y1.asset",
+            "sha256": "f9bb43d04bbfc9dab99e1918e9c8e793d1b8be2a12bc771161e2b830255f05e6",
+            "meta_sha256": "ff6e374dbb49faac375017901831052ee00554ee1c65187d997881ff8d5b4f33"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x1_y2.asset",
+            "sha256": "a2d12bd8520e661e78644ceb8aae8441c7ccfb5de8535b4c1cb6bac5a12b4074",
+            "meta_sha256": "c984cebbe7ebbba997042307891303e466278e83f214e5a12de4d71b1c40b011"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x2_y-1.asset",
+            "sha256": "170314632dd050f48eaa589d46f6184c38c25759403989d1f8a3e0c5b0d997b3",
+            "meta_sha256": "f3ca110001c949311f8ad30b2ff7e255eb584c65b22a2a41e4094a1dc9ebbba1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x2_y-3.asset",
+            "sha256": "d72a53606dc49692e4eeaa826d6b6723116b22f59953f053d3ed6b2609ff1222",
+            "meta_sha256": "d010262e4620c9f6106cc34f6651036d1098b0bf1e90b65a4d5455baefb1195e"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x2_y0.asset",
+            "sha256": "f0c391232aabab0d1401c0c3a217c225b2a683ca885fdbb84f0cc6271cbf03f4",
+            "meta_sha256": "9f5fc718bab680fe3c5aef5ef94710d69f39d4ad0be00dc5526c359c692ce865"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x2_y1.asset",
+            "sha256": "685fee20a556d47f173fd90768be5d76591e56846c4d9adff7c544292ce36a22",
+            "meta_sha256": "60d1bc3e5bb42d20e1c09eefe204e19c9aa54cd3bc280b4c9e0665b8ee43274d"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x3_y-1.asset",
+            "sha256": "eb2351801b0ce44bc95c427fd26852af98ee44876f023952348dbe6b976a1bdf",
+            "meta_sha256": "40861ecfda66cee834fa6471aa9b558189d9a716444be6a6df4ef36f0a403f28"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x3_y-2.asset",
+            "sha256": "f209d2055105c401cb4bb11ea85a7f42ca521ad48af3f193f7023f2e051768df",
+            "meta_sha256": "bb88575231a0883b5b1afba9725dac4bcb0b94ae445ef0be4ed6f8c6376e2f98"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x3_y-3.asset",
+            "sha256": "80d6ebf9e3c59a9177a1e3bddcfe71091a2dc1618221aa357438807b0fa880a1",
+            "meta_sha256": "d66efe51697cfb5eb51ef109722efbea0bb29b1b9b24ea1cd9d9c6ad70bfe1df"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Mesh/Sea_WaterMesh_x3_y0.asset",
+            "sha256": "9b0e6fa8d153de691c068b715e2360136c212fa7d93b1b7f482bcaca31f087f6",
+            "meta_sha256": "f362a656814006656845318a897d4950b5e1c13610e37970d619e98e8237d8c1"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Lit-Default.mat",
+            "sha256": "b61b6ed7a34321dde277790b046d44cfe94b23d1e621b67b6b6f8f1cdee2dc95",
+            "meta_sha256": "b32c0402e760b1ce46a2350855171dfeeb64fc491c55730a6354a8b399c8df4f"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Partition/MapGround_12/MapGround_12_bare.prefab",
+            "sha256": "3e32bb79370108d049fb7db231e7bf15597c43588cea6a7e0c3411971ac46f8a",
+            "meta_sha256": "79541bcbb99734a9057dc21abe1f0da79ec77c14832b027fcba6f4f42f629ca2"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Texture2D/sactx-0-1024x1024-ASTC 6x6-Ground12_Atlas_mask-674875dd.texture.asset",
+            "sha256": "57349fb6d0fad6b7ff818d362b291c6db57a4edcbc78433ce8b71b1494259015",
+            "meta_sha256": "a28b5e15015c8d26820f7cf60df4fa8dd0270abe46b86e44d971ddb815d1ec90"
+        },
+        {
+            "path": "unity/Assets/Official/World/Map/12/NativeScene/Textures/Lava.texture.asset",
+            "sha256": "03c1cb3836d4d9876441bd4e3859b3adca32db67e0f7bbeb890ef41ceb910c86",
+            "meta_sha256": "0ab87843c135120dd815e91d43c2502678842a72cfe4eec6dce00bca0241a8cd"
+        }
+    ],
+    "catalog": {
+        "path": "unity/Assets/Game/Resources/Map12/Native/native-scene-catalog.asset",
+        "sha256": "6d957016ede7dd946d6f3f4b960bef7d25a3291da34cbd007462bdb0ae6643e8",
+        "meta_sha256": "0b9d01371a52c00399fdc6f5bf288765e4db02a049bd5e7ff67d5806018bcbe7"
+    },
+    "converter_receipt_sha256": "bc01b3afb8e8e425f9b04c1fb767497e5697f92a1830fea4879751c137023f44",
+    "validator_sha256": "fa27be7869fad0436cd105129dcb80aaccad45a803b326e06e873b7f8acd07dd"
+}

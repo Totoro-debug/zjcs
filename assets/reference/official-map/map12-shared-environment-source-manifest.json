@@ -1,0 +1,733 @@
+{
+  "environment_data": "unity/Assets/Game/Resources/Map13/Native/map-env-data.asset",
+  "format": 1,
+  "generator": {
+    "path": "scripts/prepare_unity_map12_shared_environment.py",
+    "sha256": "ac620aca0e1395f762ca2664faa0a109e51c5905a6adb745323b1e1cb02e1b29"
+  },
+  "global_objects": [
+    {
+      "object_sha256": "002c4ef66eca61da3e9d7d011c88202f92d259d85ff4ae69b154fb5f91538b67",
+      "source": {
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "22207",
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+        "raw_size": 3554552
+      }
+    },
+    {
+      "object_sha256": "5c2f08b064c43df72ab3484d8f6e23676841a2fdfa291a724ba873ccc71b1332",
+      "source": {
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "22208",
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+        "raw_size": 3554552
+      }
+    },
+    {
+      "object_sha256": "5a3a9d5fb4ae791883d130e05e1714d71c1c8a1aca863dafa30b097a82235b46",
+      "source": {
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "22209",
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+        "raw_size": 3554552
+      }
+    },
+    {
+      "object_sha256": "5b741b4749a1c897a69d130f9de84f0d3b01e8e5a94cb24410ae6a196d599b44",
+      "source": {
+        "apk_entry": "assets/bin/Data/data.unity3d",
+        "bundle": "assets/bin/Data/data.unity3d",
+        "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+        "manifest": "854_156383",
+        "origin": "apk_zip",
+        "path_id": "22211",
+        "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+        "raw_size": 3554552
+      }
+    },
+    {
+      "object_sha256": "00072f5ca286fcf2fde108bfe455054dfd05893b951d04126d4d81d0ed764ac2",
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_modules_mapenv.bundle",
+        "bundle_hash": "260d46b7810d381a42e0faba4349495a",
+        "bundle_sha256": "62c67dfe90a7f451c8183649727828fcae5d69f472a5aca89db039b1361909c4",
+        "bundle_size": 518,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-2877798477585184983",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/260d46b7810d381a42e0faba4349495a.bundle"
+      }
+    }
+  ],
+  "limitations": [
+    "This proof is not rendered map or gameplay validation."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Reuse only global APK renderer/pipeline settings and current shared environment implementation. Reverify actual original objects, assemblies, source code, native assets and explicit resource catalogs. No Map13 partition, navigation, region or gameplay data is used.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-render-pipeline.json",
+      "sha256": "d61fd8547f47bb89e545824cd65b96f8d0ba59834f2359751b25315050cd0d76"
+    },
+    {
+      "meta_sha256": "84416916a1feb3e699621856dad42e48a832e7f37c6d18d1153c301dfe7ddad4",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Renderer2D.asset",
+      "sha256": "6e8ba0f1ce2e4ed6d669f4b5b07430e2f71e6865f1965ea3d21f0d48e98bbc82"
+    },
+    {
+      "meta_sha256": "dcd1ddbe40ca1a92cc7b38b2245de833c6ad0b663b4073ab6d07dd7020d523dd",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Simple2DRenderer.asset",
+      "sha256": "6473f802e20ef09f09b3526e3de623b22118823ff40ff0a2cddb9f43d8f6c975"
+    },
+    {
+      "meta_sha256": "51769c1cdf693bd3897d9afea99d7c20f8450cd64942b5e27a0d0a2e9b7c3dde",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/UniversalRenderPipeline.asset",
+      "sha256": "990c2eca4474f1ce840c32bdc733223fec3228c18c220a276e494a863d20e4e3"
+    },
+    {
+      "meta_sha256": "0e310f4a4baa305d5d8dc43d44bd4af2d027a6ee7ffe7861f8ebf80023724585",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/PostProcessData.asset",
+      "sha256": "bc79b6a407e4db1ea26f9e75fc3873b0db511c99140d52e45ed457638a6254db"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/StopNaN.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/StopNaN.shader",
+      "path_id": 51,
+      "sha256": "a75d879192529b740e2cbe9399c4ed1e049b1b1a88d9d8300a0896046f85749d"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/SubpixelMorphologicalAntialiasing.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/SubpixelMorphologicalAntialiasing.shader",
+      "path_id": 61,
+      "sha256": "375f245bd343736897014f5da727e5a201d4acffb35f1f6da237c6e95144a866"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/GaussianDepthOfField.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/GaussianDepthOfField.shader",
+      "path_id": 59,
+      "sha256": "513ccc2d619e0502ffe2d7f1b8a2f547985b8a1503380ba287fbbf594b95415c"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/BokehDepthOfField.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 1,
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Pipeline/OriginalBokehDepthOfField.shader",
+      "path_id": 54,
+      "sha256": "5f279391de23c6db845ab3c5b18f83a46210580bd21267f9efbc688f0bada480"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/CameraMotionBlur.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/CameraMotionBlur.shader",
+      "path_id": 53,
+      "sha256": "cdeeb0fa44d76d783df854f35c7812fe67a3efda62edce5b10a3dae0fe0da12b"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/PaniniProjection.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/PaniniProjection.shader",
+      "path_id": 68,
+      "sha256": "1183e236b0a58dd0dd217826119466eafe10609a9da69272dda2f3d62c23be49"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderLdr.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderLdr.shader",
+      "path_id": 62,
+      "sha256": "2dffad1cd43fbd903fa1bf6722124e3f848edb8236af5747a050eb56d143420c"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderHdr.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LutBuilderHdr.shader",
+      "path_id": 81,
+      "sha256": "490010388e9ddf4ae80520a1ea9c8f9cf01467e7d5efdebed2761c5f05f14d0a"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Bloom.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/Bloom.shader",
+      "path_id": 60,
+      "sha256": "d03921c41befca1f98b904c3ec2585fa10226aa6965831bc17b4a048c3161d43"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/TemporalAA.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/TemporalAA.shader",
+      "path_id": 52,
+      "sha256": "abea5138079861414497b28f4490616b3ef31e171a128db8ebfc4e3c830e2e5c"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/ScalingSetup.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/ScalingSetup.shader",
+      "path_id": 80,
+      "sha256": "ee3adb8ac4a63ea09b846df52b5bd9fa26429e4c54cee7f54d8c16420436fadb"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/UberPost.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/UberPost.shader",
+      "path_id": 79,
+      "sha256": "483cf46eedd1f3226fd5ad43bd4c51aa7f8ffe3858803483cbc6f2de8c4b418b"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/FinalPost.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 1,
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Pipeline/OriginalFinalPost.shader",
+      "path_id": 70,
+      "sha256": "9b0479ec4fbcedee0dcc713794a5acab5a3ac1ff961c1653eaa9f3bb7f555a45"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/BlitHDROverlay.shader",
+      "executable_equivalent": false,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/BlitHDROverlay.shader",
+      "path_id": 69,
+      "sha256": "54a35f1ba15f29cf5ce3d393c432e6e84e7bc3395a08f7803f7e9ed60d634689"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/HDRDebugView.shader",
+      "executable_equivalent": false,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/HDRDebugView.shader",
+      "path_id": 58,
+      "sha256": "223732224ee90ec7e26fc8a1761a3cbaf6acb260a7740ae2f9c048a727e06d02"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LensFlareDataDriven.shader",
+      "executable_equivalent": false,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/LensFlareDataDriven.shader",
+      "path_id": 63,
+      "sha256": "40886feace7696e81237c96738f3e290847aeccbc8320c41ef264e9425747715"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/EdgeAdaptiveSpatialUpsampling.shader",
+      "executable_equivalent": false,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing/EdgeAdaptiveSpatialUpsampling.shader",
+      "path_id": 57,
+      "sha256": "39dcddf530f643634de08c692ed020e245d23b835e2b4cf696b033bc0ef1b5be"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Shape-Volumetric.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Shape-Volumetric.shader",
+      "path_id": 65,
+      "sha256": "8a89e9b1a7ed44c4eede445b40e7b69bc96a0a47f68d931d94dc5b6fa320d7f0"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point.shader",
+      "path_id": 77,
+      "sha256": "55aa11148efed9770fe2723c87123d3d01594f3595f683d5fc4387561a584e18"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point-Volumetric.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Light2D-Point-Volumetric.shader",
+      "path_id": 71,
+      "sha256": "00ad27c7ad029ab5f85259d670b560e1e359e726fcab5d4ce44611334268e55e"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlit.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlit.shader",
+      "path_id": 66,
+      "sha256": "00f324fc5b358d6d172bf31d919eabce575e2dffe08cced1e53d5a50ad57640d"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlitColorAndDepth.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/CoreBlitColorAndDepth.shader",
+      "path_id": 74,
+      "sha256": "98ec3a4073d017c3b653e95f2327a90c8d8655ca4ced66d943e53901b00e79de"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/Sampling.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/Sampling.shader",
+      "path_id": 50,
+      "sha256": "9c2790b927dbc9a27795580cb0d8d3a5608bf0b2771ca609ec4d30fe81aac0c3"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Projected.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Projected.shader",
+      "path_id": 72,
+      "sha256": "df5d28596446dedf6e3fa45f7101cb83fd27e02227453603169531194896c24b"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Shadow-Sprite.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Shadow-Sprite.shader",
+      "path_id": 56,
+      "sha256": "90b4f27bfa139cd7552ae69c398621e862200e129667a23125a77db3ccaaa25d"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Sprite.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Sprite.shader",
+      "path_id": 76,
+      "sha256": "dbb864a55f2ce4eaa640e2ca0040d8e796a03f6ca3948bf0330567df08830201"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Geometry.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/2D/Shadow2D-Unshadow-Geometry.shader",
+      "path_id": 64,
+      "sha256": "881d24d9f9c47f3e9a8f27690cefda849c186d4409419ed1e912c32520404ec1"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader",
+      "path_id": 78,
+      "sha256": "04a9964d0260d1f175c19afec1fe3d7a625cc31d710f6707d93ef81c083fdbe4"
+    },
+    {
+      "baseline_path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/DebugReplacement.shader",
+      "executable_equivalent": true,
+      "original_subshader_index": 0,
+      "path": "unity/Packages/com.unity.render-pipelines.universal/Shaders/Debug/DebugReplacement.shader",
+      "path_id": 73,
+      "sha256": "b9509c00cf949c892eba9aafd2b60d5b5962908c0c59669a2dd7e865d7349a6c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-pipeline-bindings.json",
+      "sha256": "4a12b31f658a5e58a0d0ce83718f32e29159c769bc750ed2a56631446fe008ed"
+    },
+    {
+      "meta_sha256": "26418507fb7b3f4a7affc7891f3adb19cfc76be4f2c69172e9aacae66299cb4d",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/3-LDR_LLL1_9.texture.asset",
+      "sha256": "c6c7677fc164ee6bc572f1ba3437e3840371ef83ae8a9b8b9cf9a078ba54c0ba"
+    },
+    {
+      "meta_sha256": "362cd6a03cae0974b50a20dc021d0e57d53687716d519c0b59c18e06e9175041",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/4-Medium01.texture.asset",
+      "sha256": "2a4ca69a85906298cabb763826744587d84f3169a802a2e8345c5e6c62fdda61"
+    },
+    {
+      "meta_sha256": "2b09e1dc82256bb8d50ac6893f86cff5cdadcbf1eb1a616e1c71bd189d385ce8",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/5-LDR_LLL1_23.texture.asset",
+      "sha256": "d086afd0e92d96ddcbb26ec51a29999122a19225cb3a7f1e7b657180b04e0273"
+    },
+    {
+      "meta_sha256": "44b3550d32fc1c103c5d27f75c6ee6fb47c6b214a8b859dc16be70d4feb309d7",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/6-LDR_LLL1_2.texture.asset",
+      "sha256": "48d261da5c4c0db03ac96c022f9e85e4c7ea872ff597cc8cf60f22fe195fe40e"
+    },
+    {
+      "meta_sha256": "54b93691a327fcf0fccbfced3f32e5b4dda698669002938440884acad46a9652",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/7-LDR_LLL1_17.texture.asset",
+      "sha256": "ab46a99c6006ed4720a603fd7471c535e10dae29725383ee79768d71bda6642d"
+    },
+    {
+      "meta_sha256": "511ceeb64226122dbc6915cec9a3fc3adedd233dffdc5fbd8cec78d26f880e99",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/8-LDR_LLL1_31.texture.asset",
+      "sha256": "042ac5492d1d67f8c228d0ef1749ff946350931d459bc9e29b0fb61482fd2974"
+    },
+    {
+      "meta_sha256": "2a495d54f2a47ee77c249a9fb3e642ab56f1b58f59fa2ae8fce7ceb575129ce1",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/9-LDR_LLL1_25.texture.asset",
+      "sha256": "17368ea892f9435b5577b664c5b76111b161c414cb59b4cf146684d6d17230e4"
+    },
+    {
+      "meta_sha256": "933f7a90552aea469b905e854fd54a31c23ef5c95792d0a534bb8e3ea6f9a0b4",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/10-LDR_LLL1_4.texture.asset",
+      "sha256": "15d5d097b41405802cf8115eb3954817de5690f15a12e6d676c8c153851dd83e"
+    },
+    {
+      "meta_sha256": "113fbdf7694a4f5558fd49668d81d7e5093ffa89fa2e07d23598d5dcff7f65ae",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/11-LDR_LLL1_6.texture.asset",
+      "sha256": "a93552eaca0f7677bca61c36c43cfe037e6ea8301b04cca7a880cf3027f7bd5d"
+    },
+    {
+      "meta_sha256": "ef63c9de8406f5b4deb1672d27221d3a21154325321338fd708838cf77a5dcf1",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/12-LDR_LLL1_14.texture.asset",
+      "sha256": "3aab3504e0df18d77650a642312fd8548ce41a91c41a6a7254f640fb875465fa"
+    },
+    {
+      "meta_sha256": "a4b2515aab3c12405233c424cea2c2fd9f73d26fd15effe35d28ea586c7c481f",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/13-LDR_LLL1_15.texture.asset",
+      "sha256": "08f8da09cfb728f02b8bf1ce07bf4bd6058f51d72055f3b00de3c59ecd34fffc"
+    },
+    {
+      "meta_sha256": "c0764044f8cf0749b3f1b00290cd68ae4bb9a43e9eee953589c8fd1023b62143",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/14-Medium05.texture.asset",
+      "sha256": "0e3d5116d7f7b6870bc094c0c11debfe74ce576df4f19405c724d1f1fe84de0c"
+    },
+    {
+      "meta_sha256": "795efc60eeb4c6597ebdf6e4bc80dd3bc0f0e8486e4985cc64981c68159bf845",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/15-SearchTex.texture.asset",
+      "sha256": "f168c84a1d522e8b31152650c95835b6767f791ec93a5dfa12b0bc0e5e5d34d8"
+    },
+    {
+      "meta_sha256": "0036ee83c96227d2385510ef2518bafcc060c8221c026f9e7c2c1575dc7e1190",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/16-FalloffLookupTexture.texture.asset",
+      "sha256": "ab094cdd0bb44f5c9d423cacad34801357e00dc200425161d2b46c653fe74c54"
+    },
+    {
+      "meta_sha256": "ed639df3e09d92c87c51cdf17ac2d03b1964ecf7fc7d1aedcd6ab46e2e836578",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/17-Large02.texture.asset",
+      "sha256": "60c576aaecb2fa72bbb24dd59246581e3220275685675971e122089af32a9718"
+    },
+    {
+      "meta_sha256": "6c75ba0222ee29ea0c748e47ca0c128b60c1379cabe870c35e27cbcebc279eae",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/18-Thin01.texture.asset",
+      "sha256": "3bfede8d03af2fb43d7d519f43c6313b15975c220330c37c5373ed3924b72f1c"
+    },
+    {
+      "meta_sha256": "19dc9371d8815337abad518b9e5c9395fae5ed7af1946fa41b9ab5a246cd95bf",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/19-LDR_LLL1_3.texture.asset",
+      "sha256": "ab0b8cbf804f67f684d138bb885c9e0bd34d80a97338c1b3d7c88c6707bffde7"
+    },
+    {
+      "meta_sha256": "ea993de3b59c408ff509fb65b95c957473147a0a08003da58cb185acf565061a",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/20-LDR_LLL1_0.texture.asset",
+      "sha256": "7872d86882803e0d89d66ab8259ee9846c0aab7c86297a09528e14232fb8ecab"
+    },
+    {
+      "meta_sha256": "1be236caade96f2cdadd0768ccdcf74c97082ae883427c4e0e7bf20850bab7ec",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/21-LDR_LLL1_30.texture.asset",
+      "sha256": "6c18296e9e919f4a9a0259bfd27c60b7c78a7e85b42c639b5d8b72d936da46df"
+    },
+    {
+      "meta_sha256": "a0663d14300a0e5f0d9ff03c73a2f146f7f013462356d97d24494bd98a5b5b17",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/22-LDR_LLL1_10.texture.asset",
+      "sha256": "a130ed610e18f9e9c8310c02e14e67a7659380fbb73482aa57094d5a29ad56c6"
+    },
+    {
+      "meta_sha256": "a68b4516851d0d91938454a42c9afb4bf7be092a90a1f64bd92187701f896910",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/23-Medium03.texture.asset",
+      "sha256": "2837fb352a1d96b5ff40526f0b44fffd7f2bab758af05ed0cd5122c01b14b5a9"
+    },
+    {
+      "meta_sha256": "02d8204ef2ddea85c112948e7b86d4a84fcea7c6afb11ec103bfd7a186e2c199",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/24-LDR_LLL1_16.texture.asset",
+      "sha256": "1ecce1de2818229997d8e481aa57a7b04d31a8b02796478768082232e6797a69"
+    },
+    {
+      "meta_sha256": "7cb1e730c6f053b12f619d1beca8e1b0eff43e2bf694a727f6b00c37c1560bc0",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/25-LDR_LLL1_24.texture.asset",
+      "sha256": "b443d5222684f0c526ffd27b3b865c9b62962ad79574c443fe8932386b7a87f4"
+    },
+    {
+      "meta_sha256": "96440ce4406c9fb504079a5f4c9140bd4e0176252e52e698ebbe16779124a812",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/26-Medium06.texture.asset",
+      "sha256": "703e19d105b3f01b4c202c928b50d81838371c04f3c4e924fb882928838649df"
+    },
+    {
+      "meta_sha256": "a1abe586d910b78d24dee0e8eb425eb15fdc2078296bde11b7c677652099c04a",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/27-Medium04.texture.asset",
+      "sha256": "dfa79d51bd3ee7b335f66c794d161c0d1acca71f0d22777d8ae1bf7d2cfc615b"
+    },
+    {
+      "meta_sha256": "784d87157352b2e900c2a069dd3945e926b5a1e415e1251f8b2e01cf4676ddd2",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/28-LDR_LLL1_12.texture.asset",
+      "sha256": "559bcdcd88fa272c3f6873e3ead15c3bac6f7bf3e564e3979adb5de156ea95d9"
+    },
+    {
+      "meta_sha256": "f6834660381e215830b14766587844313a289d22c0ff7861d8b4e318eac0689c",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/29-LDR_LLL1_7.texture.asset",
+      "sha256": "a4ec9f6739044cf012c4ad1abce59420b463f69960a31d4d8851946c281a5d06"
+    },
+    {
+      "meta_sha256": "3d4bd85b562aaaaf7e7dbf96cfe6eb76ec84a089663c6e154a87d07122ca871e",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/30-LDR_LLL1_27.texture.asset",
+      "sha256": "e457dc4df972214027db3d1b711ddcdbaabe0224f246b04e0ede3f545ccec479"
+    },
+    {
+      "meta_sha256": "f3bb2cd058b1c1c670450a3965e90d0aae8b9e9cc82ea0a6f15eea941933d6e7",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/31-LDR_LLL1_20.texture.asset",
+      "sha256": "fa77924b5c43bf0232aed925dcbd4d7a199ff06d1a500a254c73988143772e0b"
+    },
+    {
+      "meta_sha256": "30c645fefe70c6cc25c6e765d9132886e2b37de199112b266f1c5c4563f15e19",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/32-LDR_LLL1_26.texture.asset",
+      "sha256": "8d2dac051bdef5cc23a15c09cc9992cc3669e954976b06b1d4edadeded86f73b"
+    },
+    {
+      "meta_sha256": "53ec5d55b2a29dfd933d384b05ca4689daa8e1f74b3bc20725e7c76f660d5b1b",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/33-AreaTex.texture.asset",
+      "sha256": "ad05b1cdff26d9dab4d1f94a2dfb6e8dbd26b0a20f8492226731c7ebcee56047"
+    },
+    {
+      "meta_sha256": "efbfc6e3a22675e85f09ffba47eb1deac5af8d0f2220b4a3691d8bf367df2628",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/34-LDR_LLL1_18.texture.asset",
+      "sha256": "76df50096069546383a9eed19c26d51029776a07df9d02d7c78d517727ee56ca"
+    },
+    {
+      "meta_sha256": "e1ef9be318ac978256dc82219bc4cb2cdf2047f191794f9219ce0c8aeb094973",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/35-LDR_LLL1_19.texture.asset",
+      "sha256": "74aadfc9b5b1fb95ccfd9a908af85cb34e604e69313158a3244b992e846b3186"
+    },
+    {
+      "meta_sha256": "b067371a9c6e3675034439fc875f46a473c98e886bad384b4e9832712674c003",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/36-LDR_LLL1_1.texture.asset",
+      "sha256": "718f062148549dd1842597f222f1dc2bc6485c1576eea0ad242876f9060b8eca"
+    },
+    {
+      "meta_sha256": "0502ff21d353f0b52aac872ede45b3bd0b7cc957781e209cfd4908ad0d871065",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/37-LDR_LLL1_13.texture.asset",
+      "sha256": "82fc6049b0eb7706de3c47ba9902b5e3d23bcfacf820d2d619d1db9fca31ef45"
+    },
+    {
+      "meta_sha256": "f9e99e5e68e416782ca0958a075dd58804e199af69b042dc6406d33ad6e151ea",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/38-LDR_LLL1_21.texture.asset",
+      "sha256": "88c80fdd1be5b51bc22b321abe0c6006c6f97cb5c06ba6c4d48e0fc9d0de4f73"
+    },
+    {
+      "meta_sha256": "d74e0bb6295eda91a1d048537c2912a7f7044adb5f60a894e516af90611c7744",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/39-Thin02.texture.asset",
+      "sha256": "2942b414701b3721952beea0b1da74bdaf0acad9c3eff3a8b5410a6aa8b38212"
+    },
+    {
+      "meta_sha256": "e0be408e8f6bd8a55ad4362086a76ead3ee9f599cb8d9ed61a431884b2ae8208",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/40-LDR_LLL1_0.texture.asset",
+      "sha256": "fe49a466a804d638192b467690ca7fff6d76b44f3239013f9fd8eebaad9510c5"
+    },
+    {
+      "meta_sha256": "3d3054067e637a543512e0630497edb11807a7122ccfb296dd89a8574fde539b",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/41-LDR_LLL1_5.texture.asset",
+      "sha256": "be82430a24a2bfd01e95747593a38cb4fd127112cf09c2562c7f4bc0fb692c5f"
+    },
+    {
+      "meta_sha256": "4f466ea5fcea71f3ee84d011ca3afdf731c154f9c6e96866d764e729fae44d21",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/42-LDR_LLL1_8.texture.asset",
+      "sha256": "21ee3fda5af801f8a83a1ffcdcedc70cdfb05871f15c9b6f66c8fa54683ed3ea"
+    },
+    {
+      "meta_sha256": "b85b6e191259e6211ef89813101522394b02e0d06327f9afa2d93f41e5047ff0",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/43-Medium02.texture.asset",
+      "sha256": "3ebf45ab498c1b45161b85ad711f22acae09e54e9ca6de6c02d9a468df37a890"
+    },
+    {
+      "meta_sha256": "d2b95f7867b8876a077cc66c1cb00b8976c0fb95de9dca4c2231f80dfc7a0c76",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/44-LDR_LLL1_22.texture.asset",
+      "sha256": "6f384d9e937a5d353d7c2f5a86d68b10c89f66dca910aa64000f282c865509db"
+    },
+    {
+      "meta_sha256": "90f526cec8046fa4ea8576a0046e343ebc49432168a666a9057c5fd0fee008bc",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/45-BayerMatrix.texture.asset",
+      "sha256": "2b6ee228e41338cd244408a7f75dc6331a10d40590f5088d2b62fa746f4f9fa9"
+    },
+    {
+      "meta_sha256": "2c7c627b0ea3e69e2097efda0ee59d300f64edcdfa1ba8cd86af7553480ddfb0",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/46-LDR_LLL1_29.texture.asset",
+      "sha256": "bc36d63671320a95710292ff81583a09781029b40aa8631249eed90caca0c315"
+    },
+    {
+      "meta_sha256": "85c2fc7753f73ae53aba02a9bed1a97807fa05420d6653134702b2d67646a29d",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/47-LDR_LLL1_11.texture.asset",
+      "sha256": "98441971ed5183ec0747eb063dde9aef0466704e0c461d240d01e98e3fc65145"
+    },
+    {
+      "meta_sha256": "5f06e6bfca9e27e91b25ec7f54a06ae73f81dc14a4d0423ea97e6dc986018d53",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/48-Large01.texture.asset",
+      "sha256": "25c165c9fa761f5f68feadbf94ffd940b9620e19df72e459117dd0add11be507"
+    },
+    {
+      "meta_sha256": "e54f0b519dff032c848f27844ac802014b645e42bd2e20e8874cf5975907793b",
+      "path": "unity/Assets/Official/World/Map/13/NativePipeline/Textures/49-LDR_LLL1_28.texture.asset",
+      "sha256": "890b92b3caac15fdbb315f4d4c96c8fcd34447b21e4e68bb119810e99f3a40fa"
+    },
+    {
+      "meta_sha256": "dc326d5fb7672812a151784ff07229aa288b5e7c0dc2c5627aa055f68905fd27",
+      "path": "unity/Assets/Game/Resources/Map13/Native/native-render-pipeline-catalog.asset",
+      "sha256": "0dfda5eb527085a148fc7ac133a28386e1147e726344f24b43aae84acc213c3e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/DayNightState.cs",
+      "sha256": "5a276af755c25514bfda75ab28f8f2f05637fba602dfcc73b1b87b86fd564b79"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEnvData.cs",
+      "sha256": "77b4c7d432cb03569ead5f39106eed1a57aa68997106994d5afbc7a077d3a4a4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEnvObject.cs",
+      "sha256": "e71575dbab7c78ec80406b4a2802746e2f8a1807abf8bba184ace9077e5f4608"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapGroundRoot.cs",
+      "sha256": "9af3e752d004dd69bb8f1fce0e4f90bcb6aebf5f2879519e7f08a7040b287864"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEffect.cs",
+      "sha256": "8d89317909afdfe764f2d578d2f45288586aa786689a3ecbcb8ff439d297c900"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapLight.cs",
+      "sha256": "2a69bba544a5ca952b221978f3bd88961393f6b8f4604d061e91bce379ec244f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionLight.cs",
+      "sha256": "9eff4f2c5657afb1efad4549eead158ff0aaf6c526348e42927191e954621bf6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/RegionLightHub.cs",
+      "sha256": "719c58372cbdcbee32926371af7579985d4f08dde09295f45e976951cdfc1b1f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEnvEffect.cs",
+      "sha256": "d9b1aaa710400edb6908f0f1a526abcb47c39e7a639912109b4b21c05fd49223"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/FollowSceneActiveSelfController.cs",
+      "sha256": "13cf1151a6da2ad624317e03b145673adf47be76fe9d6e97d7ffb397f9aea423"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CullingGroupWrapper.cs",
+      "sha256": "96494d31631412c8d729feabd357d19d0828f2674ea2d369a94801bd7388afe7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldMapEditorManager.cs",
+      "sha256": "76cfc988271f827a79fcc3f9a77ac284d8617eee7ede0e8b2228f718662ad0a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/DayNightState.cs",
+      "sha256": "884bbacde7c6503e750e5a070c88c29096c08daff0916bd4d75dc3edefd5205a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEnvData.cs",
+      "sha256": "9469e5e55248aa632ad5e5ccb9ca1091b1479f99edf046d90d01d847323cffed"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEnvObject.cs",
+      "sha256": "a6cf83f37ff4e71d847571c74af64e9430aecfbb32e272493222336785988589"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapGroundRoot.cs",
+      "sha256": "7552a6283d75796691dcdd53d80cb717ef7a5e6a0bedb996f343d02d7641a126"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEffect.cs",
+      "sha256": "a6a41ff73953be2a1a6301b779b4099756e42a11bdae1d3671c2d6388c6cbb35"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapLight.cs",
+      "sha256": "dfe2a77fa78dd097b3b9960cc47dc61c054dd85cfb3a54b53f4f60198732119b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapRegionLight.cs",
+      "sha256": "1e48797a960d623e8fa12e0786f31419fba118efd8a1f25f528c62f30cf2d3b6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/RegionLightHub.cs",
+      "sha256": "caa9c8bcc441220e52d1c020fcb7ef1edaeb7e8d06e3fdb2dd9bf89f3ddfe506"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/MapEnvEffect.cs",
+      "sha256": "11fa4b36c1bf106beef0fb30a2bf4762f1cfc7cb23f06530d85254a959e2ec8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/FollowSceneActiveSelfController.cs",
+      "sha256": "892351b0d8ef6338ead9c97f0ae31180d117f697af8c691e54de7bf7b01479db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/CullingGroupWrapper.cs",
+      "sha256": "8413b70d58f6c69fb2386aa30e9a8a939dc34f7c9513fb46966d90356e412c8b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/WorldMapEditorManager.cs",
+      "sha256": "1f992d217c91eb852a575b55e10a3a84f5774dd3c989c141ee81dabd9ed71e11"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeEnvironment/Zjcs.Offline.World.NativeEnvironment.asmdef",
+      "sha256": "ba874c76a1d0e936dab60ab657e4d6f6fc66046b828c9adb49b92d4e00badf2c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeEnvironment/Zjcs.Official.World.NativeEnvironment.asmdef",
+      "sha256": "7f0a5caa24191cda76c8158982fc4157f6a0d4c4c6a70344b35906cd87b8f89f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeEnvironment/EnvironmentServices.cs",
+      "sha256": "fd729055e23e555d52b01b294c1a65cf7d73272b3e59474c85f4f30e42036181"
+    },
+    {
+      "meta_sha256": "9f075094bf3a50baeb841b9a6a70587fa3371eb96687c0a3d16416f40c65d0c0",
+      "path": "unity/Assets/Official/World/Map/13/Source/native-environment-config.json",
+      "sha256": "c4d878473559227f037a51de914ef3ef58d2d0c700f879a081bd1cf45b57c171"
+    },
+    {
+      "meta_sha256": "f85446b11b6f763b1c20368b5e2bf93f6235aeea4f2a03794dbafdb28cf348c4",
+      "path": "unity/Assets/Game/Resources/Map13/Native/map-env-data.asset",
+      "sha256": "1907858b8aeeff5c6c5b6061f0e9a728c3caee3aa4e55c4f89d09b2c823a2a70"
+    }
+  ],
+  "pipeline_catalog": "unity/Assets/Game/Resources/Map13/Native/native-render-pipeline-catalog.asset",
+  "receipts": [
+    {
+      "path": "assets/reference/official-map/map13-render-config-source-manifest.json",
+      "sha256": "b2028d9374d8bd3c4b0f5d1d6a50ccccfdf073149175e44f674fe0fbf8596de5"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-pipeline-source-manifest.json",
+      "sha256": "25bdea43a7141052dc91291139bf036184a8ea2012a8786f83320c89f9146152"
+    },
+    {
+      "path": "assets/reference/official-map/map13-pipeline-textures-source-manifest.json",
+      "sha256": "a3b4d3c6963934ae40221fbed49b993711cabba54a6471602ceefeb56b681fa5"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-pipeline-binding-source-manifest.json",
+      "sha256": "9814ae907d667369eb80d43992cb5c9ada5ec7df3e164e04fe6ff3838d00870d"
+    },
+    {
+      "path": "assets/reference/official-map/map13-environment-code-source-manifest.json",
+      "sha256": "d604132a3b801db66c9d660d7c4b2b28eceda5cc03ab57bdb8b5963182d98671"
+    },
+    {
+      "path": "assets/reference/official-map/map13-environment-binding-source-manifest.json",
+      "sha256": "200cdd1a3380a6a40993b080c1a1143146f176d5c5e4bc76b57d298a65c4f9a3"
+    }
+  ]
+}

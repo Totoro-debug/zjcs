@@ -1,0 +1,67 @@
+{
+  "converters": [
+    {
+      "path": "scripts/prepare_unity_map12_environment_shader.py",
+      "sha256": "244e16b910fcfb52e0db1f75af2034d35748c7cce48acb93f4136912834fc350"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_water_shaders.py",
+      "sha256": "da5022fd9f2fb6502e3e629c1c5acf5c5ce158bfc6ceba52f809b5bd5b1052a8"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_pipeline_shaders.py",
+      "sha256": "b933bffcbe13126a6e2221f9bec098204ba5e78981c0e16138ebbd73cc1b5097"
+    },
+    {
+      "path": "scripts/prepare_battle_hud_materials.py",
+      "sha256": "10f0b09a274ea14ffd090b80d0395c633e32e8be18d8a224eb749009163c8f1b"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "object_sha256": "d3c2012e0b14650261a5129301d44b1f11daa6f67435019decf40a8771648fe7",
+      "programs": [
+        {
+          "index": 2,
+          "keywords": [
+            "USE_SHAPE_LIGHT_TYPE_0"
+          ],
+          "pass_index": 0,
+          "path": "unity/Assets/Official/World/Map/12/Source/Shaders/LavaEdge-p0-2.glsl.txt",
+          "sha256": "f91f0b57a1fdc362916a51fba2947ae2ff87fa69e49a5cfef3b66731a2f00e5a"
+        },
+        {
+          "index": 3,
+          "keywords": [],
+          "pass_index": 0,
+          "path": "unity/Assets/Official/World/Map/12/Source/Shaders/LavaEdge-p0-3.glsl.txt",
+          "sha256": "3314926d59638bd2818a940afe1c1e0dd5ddf46889611ede8f69f20c563c80a0"
+        }
+      ],
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+        "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+        "bundle_size": 853119,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-3483279849471182630",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle"
+      }
+    }
+  ],
+  "limitations": [
+    "Windows compilation and native prefab runtime rendering remain required."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Mechanically translate every original environment noise shader pass and GLES variant, preserving material properties, arithmetic order, inputs, tags, blend/depth/cull/color state and original source programs.",
+  "outputs": [
+    {
+      "original_shader": "Sprites/LavaEdge",
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/LavaEdge.shader",
+      "sha256": "06fbf32ecad5edc797e02c8213e75870d21e156a6b55a8bf5b27c7cba6c15ad8"
+    }
+  ]
+}
