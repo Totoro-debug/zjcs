@@ -15,11 +15,15 @@
 
 ## 官方来源与转换
 
-当前默认输入由根目录 `official-source.json` 选择：官网当前 APK 仍为 `854_156383`，完整热更新为 `871_156598`（资源目录 `202610211330871`）。按所选清单优先读取 APK 内同哈希文件，再读该版本已校验的 CDN 缓存；保留真实版本、URL、bundle / 对象名及输入输出哈希。原版重建显式选择 `--manifest 854_156383`，适用的 `864_156496` 同名包仍按独立记录核验，不可伪装成原版本补包。
+当前默认输入由根目录 `official-source.json` 选择：保留的 APK 为 `854_156383`，唯一保留的云端缓存为 `871_156598`（资源目录 `202610211330871`）。按所选清单优先读取 APK 内同哈希文件，再读该版本已校验的 CDN 缓存；保留真实版本、URL、bundle / 对象名及输入输出哈希。`854_156383` 的云端缓存及 `864_156496` 的185个同名补充包已按用户要求移入 Windows 回收站，历史来源记录保留，不能将新版文件改名冒充旧版。
 
-`activate_official_source.py` 校验后更新原始提取视图，旧提取视图及旧索引保留在 `.tools/source-packages/history/854_156383/`，所有版本原始缓存均保留。该步骤不修改 Unity 已转换素材；模块只有完成重新转换、加载绑定与实际运行验证，才更新为新版已接入。来源及现状以 [SOURCES.md](../assets/reference/SOURCES.md) 和各模块来源清单为准。
+`activate_official_source.py` 校验后更新原始提取视图。当前 `extracted/`、`Boot/`、`Launch/`、`HybridCLR/`、`WwiseBnk/` 五个目录全部为 `871_156598`，合计20,999项；原始清单、APK内2,440项以及提取文件的大小、MD5、来源SHA256均已逐项核验，云端18,559项也全部通过校验。旧版提取视图和索引 `.tools/source-packages/history/854_156383/`、旧骨骼对照缓存 `current/854_156383/` 一并移入回收站。用户已明确此次只清理缓存及旧提取副本，保留现有 Unity 转换成品；本次未改动游戏载荷、绑定或存档，不将原始提取核验视为新的 Play Mode 或 Windows Player 验证。来源及现状以 [SOURCES.md](../assets/reference/SOURCES.md) 和各模块来源清单为准。
 
-角色已接入素材的新版转换使用 `convert_official_skeletons.py`、`refresh_current_character_meshes.py` 和 `refresh_current_native_prefabs.py`：独立读取官方骨骼及拆分动画，先核对骨骼、约束、影响采样顶点的动画通道和附件几何，再更新创角／人物网格包及 92 个男体原生 prefab 的三角形索引。未变化的采样顶点与两条实际原生动画保留；这不代表新增动作已经接入。原始二进制、独立解码结果、旧网格包和旧 prefab 均保存在 `.tools/source-packages/`，转换输入输出哈希见 `assets/reference/character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json`。男女模型重新导出保留原 `.meta` 与 GUID。
+后续提取和依赖准备使用当前版本；读取API使用 `Apk.current()` 或 `Apk(manifest=None)`。既有 `Apk()` 仍保留历史版本语义，不能把它视为新版入口；旧云端及旧对照缓存已不在工作区，依赖它们的历史重建／两版比较须先迁移读取入口或显式恢复对应原始输入，不能修改预期哈希绕过检查。`official-source.json` 中旧版配置仅保留版本与哈希凭据，并标记 `cloud_cache_retained: false`。
+
+清理后以当前UI入口和地图10小地图检查CAB依赖，279个bundle来源及序列化文件全部通过。`python -B scripts/check_unity_project.py` 已执行，但共享工作区有21个Unity文件缺少稳定 `.meta`，涉及世界探索C#文件及地图11图像，因此未通过；这些文件由其他正在进行的修改引入，本次未修改其载荷或元数据，不能将缓存核验通过写成项目静态检查通过。
+
+角色已接入素材的新版转换使用 `convert_official_skeletons.py`、`refresh_current_character_meshes.py` 和 `refresh_current_native_prefabs.py`：独立读取官方骨骼及拆分动画，先核对骨骼、约束、影响采样顶点的动画通道和附件几何，再更新创角／人物网格包及 92 个男体原生 prefab 的三角形索引。未变化的采样顶点与两条实际原生动画保留；这不代表新增动作已经接入。新版原始二进制和独立解码结果、按哈希保存的旧网格包与旧prefab仍保存在 `.tools/source-packages/`，旧版骨骼对照目录已移入回收站；转换输入输出哈希见 `assets/reference/character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json`。男女模型重新导出保留原 `.meta` 与 GUID。
 
 `verify_current_native_prefab_bindings.py` 另外核对原生 prefab 的网格名称、顶点布局、三角形与逐通道数值；92 个男体变体共 654 个网格通过核对，其中 51 个仅有不超过 `1e-6` 的浮点舍入差异。再次生成导致文件编号变化时，保留前次凭据及已核验的中间输出哈希，由 `current_conversion_state.py` 和 `sync_current_output_inventories.py` 沿转换链核验实际绑定；不将其他生成工具的动画输出归入本转换器。
 
@@ -72,11 +76,11 @@ rg -n 'map_11|furniture|目标资源名' .tools/source-packages/cloud-research/b
 
 编辑器路径从 [`unity-tools.json`](../unity-tools.json) 读取，当前为 `D:/Tool/Unity/Editor/Unity.exe`、`2022.3.57f1c2`。Hub 可选，离线转换不要求安装 Android Build Support；只有需要构建／运行 Android 对照程序时才单独考虑对应模块。Windows Build Support 用于 Windows 构建，不能修复 Android 包内的 shader 或缺失 CAB。项目当前的 [`Packages/manifest.json`](../unity/Packages/manifest.json) 不代表 URP、UGUI、TMP、Wwise 等依赖已经恢复，须按模块核对原程序集和组件版本；角色 Spine 内容按[原生动画迁移决策](#spine-角色动画迁移决策)转换与适配，不要求恢复官方 Spine runtime。
 
-必要时按需提取或补下载原版本文件：
+必要时按需提取当前版本文件或复核完整缓存：
 
 ```powershell
 python -B scripts/fetch_official_assets.py --extract 'prefabs_map_map_11(_minimap)?\.bundle$'
-python -B scripts/fetch_official_cloud_assets.py --extract '目标 bundle 名称正则'
+python -B scripts/fetch_official_runtime_assets.py --verify-cache 202610211330871
 ```
 
 提取主包不自动收集全部依赖；未命中名称、`Not packaged or cached`、哈希失败各有不同含义。不要以“索引中存在”代替实际文件核验，也不要把新版包改名填入原版本缓存。
@@ -116,7 +120,7 @@ python -B scripts/prepare_unity_bundle_inputs.py `
 
 这是**转换输入准备工具**，不是所有资源的一键 Windows 转换器。闭包按整个 bundle 收集，可能包括目标对象未使用的依赖；脚本不会自行删除或忽略这些引用。确需缩小范围时，从目标对象的 PPtr、原调用和动态加载关系建立对象级闭包，并将每项取舍写入所属模块的转换工具及来源清单，不能直接忽略 `MISSING`。
 
-缺包时先复核索引和原版本缓存，再查 [`missing-resource-classification.json`](../assets/reference/official-map/missing-resource-classification.json)；依赖名为 CAB 时可核对独立新版包实际包含的 CAB。已有 [`official_counterpart_assets.py`](../scripts/official_counterpart_assets.py) 的 `CounterpartAssets` 供模块转换器显式核验和解析同 CAB 的新版候选，统一准备工具保持原版本范围。CAB 同名只是候选依据，仍须验证对象、字段、依赖、平台与本模块用途，单独记录真实版本和输入哈希，保留原版本缺项。找不到或无法判断兼容时按“缺失与不确定内容”报告检索范围并询问处理，继续不依赖该缺项的工作。
+依赖检查使用当前 `871_156598` 索引、原始缓存及提取目录，依赖名为 CAB 时核对当前包实际包含的 CAB。旧 [`missing-resource-classification.json`](../assets/reference/official-map/missing-resource-classification.json) 及 `CounterpartAssets` 仅保留历史对应关系和实现，不能继续读取已移除的 `864_156496` 同名包缓存。需要继续迁移该类资源时从当前完整缓存按原对象、字段、依赖和平台重新核验，单独记录真实输入哈希；不能改名或改哈希冒充旧文件。找不到或无法判断兼容时按“缺失与不确定内容”报告检索范围并询问处理，继续不依赖该缺项的工作。
 
 ### 3. 按资产类型恢复 Unity 原生文件
 

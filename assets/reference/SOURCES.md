@@ -6,7 +6,9 @@
 
 当前默认输入由根目录 `official-source.json` 固定：原生 APK 为 `854_156383`，当前热更新五包为 `871_156598`，资源目录版本为 `202610211330871`。官网接口仍指向同一个 `zjcs_M509085.apk`；服务端大小、MD5 与包尾均匹配本地 APK，不能把热更新版本记成新安装包。原始云端文件全部保存在 `.tools/source-packages/cloud/runtime/202610211330871/`，ADB 模拟器原始缓存继续保留。
 
-`python -B scripts/activate_official_source.py` 完整验证 APK 与云端文件后，更新五包提取视图及资源索引；当前共 20,999 项，云端 18,559 项无缺项。旧提取视图与旧索引保存在 `.tools/source-packages/history/854_156383/`，原 APK、旧 CDN 缓存及新版原始缓存均保留。`fetch_official_assets.py`、`official_manifest.py`、`prepare_unity_bundle_inputs.py` 默认选择当前版本，历史重建显式传入 `--manifest 854_156383`。读取 API 用 `Apk.current()` 或 `Apk(manifest=None)` 选择当前输入；既有 `Apk()` 暂保留历史版本，避免尚未迁移的转换器错误标注新旧来源。
+`python -B scripts/activate_official_source.py` 完整验证 APK 与云端文件后，更新五包提取视图及资源索引；当前共 20,999 项，云端 18,559 项无缺项。按用户最新要求，仅保留 APK 和 `871_156598` 云端缓存；旧 CDN 缓存 `cloud/854_156383/`、185个历史同名包 `cloud-research/missing-counterparts/`、旧提取视图与索引 `history/854_156383/`、旧骨骼对照缓存 `current/854_156383/` 已移入 Windows 回收站。永久删除命令被本机执行策略拦截，采用可恢复清理，工作区内不再保留这些目录。历史来源凭据和既有 Unity 转换成品保留，未强制重写载荷或存档。
+
+当前 `extracted/`、`Boot/`、`Launch/`、`HybridCLR/`、`WwiseBnk/` 已逐文件核对所选清单、大小、MD5及提取来源SHA256，共20,999项，失败和额外旧包均为0；APK提供的2,440项也通过清单校验。`fetch_official_assets.py`、`official_manifest.py`、`prepare_unity_bundle_inputs.py` 默认选择当前版本；读取API用 `Apk.current()` 或 `Apk(manifest=None)`。既有 `Apk()` 仍是历史版入口，旧缓存删除后不能用于完整云端重建；需要历史输入的比较工具必须先迁移或显式恢复原输入，不能冒用新版哈希。本次验证范围为原始缓存和提取层，未修改 Unity 成品，未新增 Play Mode 或 Windows Player 验证。
 
 原始输入切换与本次既有 Unity 素材的重新转换、绑定复核已经完成；未变化的输出逐字节保留，发生变化的输出及替换前字节分别记录。现有模块来源清单保留其真实转换版本，原版布局依据不会统一改名成新版。当前来源凭据见 [热更新原始来源](official-map/runtime-cloud-source-manifest.json)。实际运行范围见素材管理及所属功能页，不能据此声明整游戏完成。
 
@@ -50,7 +52,7 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 运行时使用固定 `854_156383` APK／校验 CDN 的角色、家园、界面、区域地形、模型、动画、粒子和音频。大陆已接入区域探索、主线解释器与地图活动，古遗物、炼金炉、伙伴和幻兽专用界面也已落地。当前功能与剩余边界统一见 [功能索引](../../docs/README.md)；本页后续按日期保留的“缺包／未接入”和数量是当时阶段记录。
 
-原版本 185 个缺项仍保留。新版 `864_156496` 同名包中适用的同 CAB 对象，已经用于场景粒子、UI 粒子和音乐节舞台依赖，分别登记于 [场景粒子新版凭据](official-map/particle-counterparts-source-manifest.json)、[UI 粒子新版凭据](official-map/ui-particle-counterparts-source-manifest.json) 及 [舞台来源](official-map/music-stage-source-manifest.json)。仅按独立哈希和依赖核验使用，不覆盖原版本缓存。
+原版本185个缺项及 `864_156496` 同名包仅保留历史来源记录，原缓存已移入回收站。曾用于场景粒子、UI粒子和音乐节舞台依赖的转换来源分别登记于 [场景粒子新版凭据](official-map/particle-counterparts-source-manifest.json)、[UI粒子新版凭据](official-map/ui-particle-counterparts-source-manifest.json) 及 [舞台来源](official-map/music-stage-source-manifest.json)。现有转换成品按用户要求保留，其实际历史版本不改写为新版；后续重新提取使用当前完整缓存并重新登记输入。
 
 当前资源总数以生成的全局清单和本次核查为准；旧阶段统计不能相加。官方原包、有效缓存、转换依赖与历史来源保留；已完成的临时提交／导出快照和过期日志可清理。
 
@@ -66,9 +68,9 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 固定 APK 的五个清单共 20,994 个文件，ZIP 内 2,572 个，缺失 18,422 个（2,473,539,303 字节）。已下载并按原清单大小 / MD5 校验取得 18,237 个（2,473,076,062 字节），同时记录 SHA256 与实际来源 URL。九个地区的原始地形包均已补齐；这些文件来自官方 CDN，不能记成 APK ZIP 内提取。剩余 185 个文件共 463,241 字节，在配置公开的三个资源目录及两个 CDN 域名均返回 404，继续登记原版本待补齐。完整依据、缓存凭据哈希及缺项见 [云端调查记录](official-map/cloud-discovery.json)。
 
-另已下载官方 manifest `864_156496` 的 185 个同名包，保存在 `.tools/source-packages/cloud-research/missing-counterparts/{MD5}.bundle`。文件对应关系、独立哈希、URL 与内部资源路径见 [缺项用途核对](official-map/missing-resource-classification.json)，定位时使用 `counterpart_md5`。按新版内容推断，涉及 174 个通用特效包、9 个地图特效包、1 个活动 UI 特效包和 1 个活动小游戏配置包。早期仅用于核对；现在已有部分依赖独立转换并接入，见本页当前状态。其余包仍须核对内容、依赖和真实版本后使用。新版文件不能混入原版本缓存或记成原版本补齐。
+历史调查另取得官方 manifest `864_156496` 的185个同名包，原位置为 `.tools/source-packages/cloud-research/missing-counterparts/{MD5}.bundle`，现已移入回收站。文件对应关系、独立哈希、URL与内部资源路径继续保存在 [缺项用途核对](official-map/missing-resource-classification.json)。按该版内容推断，涉及174个通用特效包、9个地图特效包、1个活动UI特效包和1个活动小游戏配置包；已有转换产物保留真实来源，后续资源从当前 `871_156598` 完整缓存提取。
 
-使用 `python scripts/official_manifest.py --verify-packaged` 重建完整资源索引并验证 APK 内文件；`python scripts/fetch_official_cloud_assets.py` 补齐 / 复核缺失文件。缓存位于 `.tools/source-packages/cloud/854_156383/`，`receipts.jsonl` 逐项保存 URL、大小、MD5、SHA256，`download-report.json` 保存失败文件及所有请求结果。提取命令优先读取 APK ZIP，再读取已校验且有来源凭据的云端缓存；`official_apk.py` 也支持离线读取该缓存及 CAB 引用。
+当前使用 `python -B scripts/official_manifest.py --verify-packaged` 重建所选资源索引并验证APK内文件，使用 `python -B scripts/fetch_official_runtime_assets.py --verify-cache 202610211330871` 离线复核完整云端缓存。原 `cloud/854_156383/` 已移入回收站，不再作为提取输入；当前缓存的 `receipts.jsonl` 逐项保存URL、大小、MD5、SHA256及真实下载来源，提取命令优先读取APK内同哈希条目，再读取新版已校验缓存。
 
 ### ADB 客户端热更新与全量云端缓存
 
@@ -78,7 +80,7 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 
 新版原始缓存独立位于 `.tools/source-packages/cloud/runtime/202610211330871/`，包含五包原清单、`inventory.json`、`receipts.jsonl` 与下载结果。复用文件保留真实旧版来源 URL、原下载时间及 `source_manifest`，新下载文件保存当前官方 URL；完整输入、清单哈希与 ADB 观察依据见 [客户端热更新来源清单](official-map/runtime-cloud-source-manifest.json)。这些记录说明原始资源已取得；固定 `854_156383` 的 185 个旧哈希缺项、既有提取入口及 Unity 运行资源版本保持各自来源状态，新版的转换、兼容性与加载绑定仍须按素材流程逐项处理。原始缓存不在转换素材 ZIP 快照内。
 
-按用户要求长期保留原始下载缓存，供后续解压、转换与来源核对：固定 APK、`cloud/854_156383/`、`cloud/runtime/202610211330871/`、历史新版同名包、五包原清单及逐文件来源凭据均保存在 `.tools/source-packages/`；模拟器完整下载数据保存在 `.tools/official-android-probe/avd/zjcs-official-probe.avd/` 的持久磁盘中，原始清单调查缓存也保留。日常临时产物清理不得删除这些原始输入。尚未建立仓库外备份或原始缓存快照，不将本地保留表述为已备份。
+按用户最新要求，长期保留固定APK、`cloud/runtime/202610211330871/`、五包新版原清单、逐文件来源凭据及新版提取目录；旧版云端、同名补充包与旧提取／骨骼对照目录按本页顶部列出的范围移入回收站。模拟器完整下载数据继续保存在 `.tools/official-android-probe/avd/zjcs-official-probe.avd/` 的持久磁盘中；历史转换来源记录、按哈希保存的转换凭据及既有Unity成品保持原样。日常临时清理不得删除新版原始输入。尚未建立仓库外原始缓存备份，不将本地保留表述为已备份。
 
 本页索引：[官方来源与缺失补充](#官方素材来源与缺失补充) · [提取约定](#提取与整理) · [男性角色重建](#已完成男性角色原始资源) · [场景与界面重建](#场景与界面的完整重建) · [旧素材替换](#现存旧素材的-apk-替换清单) · [历史整理](#已完成的整理记录)
 
@@ -115,8 +117,8 @@ Git 保留本页、`LEGACY_SOURCES.md` 及代码目录中的提取／转换工�
 | SHA256 | `ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9` |
 | manifest | `854_156383` |
 | 官方 CDN 补充入口 | [110001_Main.dis](https://zhangjcsupdate.leiting.com/zhangjcs/version/release/110001_Main.dis)，仅接受固定 manifest 中相同大小及 MD5 的文件 |
-| CDN 本地缓存及逐文件凭据 | `.tools/source-packages/cloud/854_156383/`、`receipts.jsonl` |
-| 新版官方同名包缓存 | `.tools/source-packages/cloud-research/missing-counterparts/`，manifest `864_156496`；对应关系与凭据见 [缺项用途核对](official-map/missing-resource-classification.json) |
+| 当前云端缓存及逐文件凭据 | `.tools/source-packages/cloud/runtime/202610211330871/`、`receipts.jsonl`；旧 `854_156383` 缓存已移入回收站 |
+| 历史官方同名包 | 原 `.tools/source-packages/cloud-research/missing-counterparts/`，manifest `864_156496`，缓存已移入回收站；对应关系与凭据保留于 [缺项用途核对](official-map/missing-resource-classification.json) |
 | 本地缓存元数据 | `.tools/source-packages/source.json` |
 | 已落地角色资源及哈希 | [male-remodel/source-manifest.json](male-remodel/source-manifest.json) |
 
