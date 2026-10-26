@@ -15,6 +15,7 @@ namespace Zjcs.Editor.Combat
     public static class BattleGameViewInput
     {
         private static EditorWindow gameView;
+        private static bool Simulated => Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED") == "1";
 
         public static void Focus()
         {
@@ -29,8 +30,9 @@ namespace Zjcs.Editor.Combat
             gameView.position = new Rect(80, 60, 450, 821);
             type.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic
                 | BindingFlags.Instance)?.SetValue(gameView, 0);
-            gameView.Focus();
+            if (!Simulated) gameView.Focus();
             gameView.Repaint();
+            if (Simulated) return;
             uint pid = (uint)System.Diagnostics.Process.GetCurrentProcess().Id;
             EnumWindows((handle, _) =>
             {
@@ -49,7 +51,7 @@ namespace Zjcs.Editor.Combat
         {
             if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
             gameView.position = new Rect(80, 60, width, width * 16f / 9f + 21f);
-            gameView.Focus();
+            if (!Simulated) gameView.Focus();
             gameView.Repaint();
             yield return new WaitForSecondsRealtime(0.5f);
             Canvas.ForceUpdateCanvases();
@@ -60,7 +62,7 @@ namespace Zjcs.Editor.Combat
             if (button == null || !button.isActiveAndEnabled || !button.IsInteractable())
                 throw new InvalidOperationException("The battle input target is not interactable.");
             if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
-            gameView.Focus();
+            if (!Simulated) gameView.Focus();
             yield return null;
             Canvas.ForceUpdateCanvases();
             RectTransform rect = (RectTransform)button.transform;
@@ -76,12 +78,12 @@ namespace Zjcs.Editor.Combat
             if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
             if (point.x <= 2f || point.y <= 2f || point.x >= Screen.width - 2f || point.y >= Screen.height - 2f)
                 throw new InvalidOperationException("The real input target is outside the interior of the Game view: " + point);
-            gameView.Focus();
+            if (!Simulated) gameView.Focus();
             yield return null;
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = point }, hits);
             Debug.Log("Battle input raycast: " + string.Join(", ", hits.ConvertAll(hit => hit.gameObject.name)));
-            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED") == "1")
+            if (Simulated)
             {
                 // User-authorized simulated input: raycast the actual hierarchy and dispatch
                 // pointer events through Unity's Button handlers, never invoke onClick directly.

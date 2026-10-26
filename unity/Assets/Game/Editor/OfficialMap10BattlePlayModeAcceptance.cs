@@ -47,6 +47,9 @@ namespace Zjcs.Editor
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before running the battle acceptance.");
 
+            // Renderer.isVisible needs a rendered Game view before the first scene assertion.
+            if (realInput) Combat.BattleGameViewInput.Focus();
+
             AssetDatabase.ImportAsset("Assets/Game/Resources/Combat/skill-playables.json",
                 ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
             Require(AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Game/Resources/Combat/skill-playables.json") != null,

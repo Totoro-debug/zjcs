@@ -36,6 +36,16 @@ Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_inte
 
 ## 自定义实现
 
+Windows 渲染后端按用户要求固定为 DX12（Direct3D12），关闭自动图形 API，仅配置 `Direct3D12`。这属于 Windows 平台适配；迁移依据的官方 Android APK 在 `data.unity3d/globalgamemanagers` 的 `BuildSettings.m_GraphicsAPIs` 为 `[11]`，对应 `OpenGLES3`，不能将此编号解释为 DX11。官方材质、shader 和画面参数继续按原版恢复。
+
+[`WindowsGraphicsSettings.cs`](../../unity/Assets/Game/Editor/WindowsGraphicsSettings.cs) 提供配置与验证入口，并在 Windows 构建前检查项目图形 API 及编辑器实际设备，防止用其他后端或无图形模式代替 DX12 验证。`unity.ps1 open`／`initialize` 显式传入 `-force-d3d12`；初始化先配置 DX12，再调用 `ProjectTools.Configure`。自定义 Unity 验证命令也传入 `-force-d3d12`，继续使用内置屏定位工具。Player 使用打包的 DX12 配置，正常启动不依赖额外命令行参数。
+
+显式 `--zjcs-validate-startup <输出目录>` 诊断由 [`WindowsGraphicsValidation.cs`](../../unity/Assets/Game/Runtime/Offline/Startup/WindowsGraphicsValidation.cs) 在场景加载前核对实际 DX12 设备并启用后台运行，使现有启动验证可以在内置屏、不抢占前台的情况下执行截图和模拟指针。该行为仅在传入诊断参数时启用。
+
+DX12 的 Unity 导入／编译、`ProjectTools.Validate`、Map10 战斗模拟指针回归和开场战斗视觉回归已通过；已查看地图、战斗 HUD、技能／状态特效与伤害数字的实际运行截图。战斗验证先创建 Game 窗口，再检查 `Renderer.isVisible`，避免未产生渲染帧时误判怪物不可见；模拟指针分支跳过系统前台激活与真实鼠标操作。Windows Player 构建成功，无 C# 或 shader 编译错误。设备日志为 `NVIDIA GeForce RTX 5060 Laptop GPU / Direct3D 12 [level 12.1]`；这验证 DX12 兼容性，不构成与 D3D11 的性能对比或完整游戏验收。
+
+共享工作区静态 metadata 检查通过（41,192 个 GUID）。导出的 Player 不带 `-force-d3d12` 启动，已确认默认使用 DX12；原版适龄弹窗通过实际 EventSystem 射线命中及按下／抬起／点击事件完成开关，并进入存档选择。实际查看了弹窗与存档入口截图，原有 7 个用户数据文件的 SHA256 保持不变。窗口须在启动验证首帧前显示于内置屏；隐藏窗口中仅有逻辑通过或黑色截图不计为画面验证。桌面目录继续交付当前工作区测试版，完整游戏及逐功能源码一致发布的缺项保留。
+
 本地单机规则沿用已确认的离线处理范围；外观、界面、动画、音效及流程以可恢复的官方 Unity 内容为准。其他功能页中记录的旧引擎实现不能据此视为 Unity 已接入。
 
 存档选择属于离线启动适配，已有用户存档不用于测试；本次新建的测试槽在验证后清理。本次应用户要求导出包含其他会话未提交迁移代码与资源的当前工作区测试版；独立构建修复单独提交，保留其他会话未提交内容。这份测试导出不计为与已提交源码完整对应的逐功能完成发布。

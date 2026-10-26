@@ -43,7 +43,7 @@
 - 功能／地图须接通玩法、官方界面与美术、本地状态和存档，并完成相关实际运行验证；规则核心、资源目录、空框架或静态检查通过不能代替完整成果。
 - 按影响范围运行规则测试、静态检查 `python -B scripts/check_unity_project.py`、Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate`。游戏功能、地图、界面、动画或资源绑定变动须在 Play Mode 实际运行受影响流程。
 - 交互验证使用模拟鼠标点击，不要求操作系统真实鼠标输入；涉及键盘／拖拽时模拟对应输入。核对遮挡、渲染画面、状态变化和涉及的存档恢复；直接调用业务回调只证明对应逻辑。画面检查须查看实际运行画面或运行时截图，不使用 `-nographics`。发现失败先修复再重跑，如实区分已执行、未执行与阻塞项。
-- 用户使用外接屏玩游戏；启动 Unity 编辑器或带窗口的 Unity 验证时，必须定位到电脑内置屏，不能按系统主屏或固定屏幕编号定位。打开工程用 `& ./scripts/unity.ps1 open`；带自定义验证参数时，先 `. ./scripts/unity_internal_display.ps1`，再调用 `Start-UnityOnInternalDisplay -Editor <编辑器路径> -ArgumentList <原有参数数组>`。隔离 worktree 验证也使用仓库根目录的这份启动工具。不得切换系统主屏、抢占前台或操作真实鼠标；保留 D3D11 渲染与截图验证。
+- 用户使用外接屏玩游戏；启动 Unity 编辑器或带窗口的 Unity 验证时，必须定位到电脑内置屏，不能按系统主屏或固定屏幕编号定位。打开工程用 `& ./scripts/unity.ps1 open`；带自定义验证参数时，先 `. ./scripts/unity_internal_display.ps1`，再调用 `Start-UnityOnInternalDisplay -Editor <编辑器路径> -ArgumentList <原有参数数组>`，参数包含 `-force-d3d12`。隔离 worktree 验证也使用仓库根目录的这份启动工具。不得切换系统主屏、抢占前台或操作真实鼠标；Windows 编辑器与 Player 使用 DX12（Direct3D12）渲染并保留截图验证。
 - 本机已通过用户登录启动项启用 `UnityInternalDisplay` 定位守护，补充覆盖直接启动 `Unity.exe -projectPath D:/Desktop/zjcs/...` 的既有会话与隔离 worktree。配置与脚本在 `%LOCALAPPDATA%/UnityInternalDisplay/`，运行状态见其中 `status.json`；不要停用或绕开该守护。它只匹配本仓库下的 Unity 工程，按内置屏硬件标识定位窗口，不改变系统主屏。
 - 每次修改或完成功能／地图，都必须同步更新相应文档，完成相关检查后进行 commit。代码、素材接入与文档在同次提交中保持一致，不能只改实现而不更新文档。
 - `docs/README.md` 是唯一总索引；功能维护 `docs/features/` 下所属页，地图维护 `docs/maps/map-ID.md`。状态或范围变化同步索引，共享规则在所属页维护并由其他页引用。
