@@ -1,0 +1,80 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/CustomWater.dll",
+    "sha256": "2079df13caa06ae56758042d7c3f844be32e649c3d035deb20c4c7a94862252f"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "decompiler": {
+    "url": "https://api.nuget.org/v3-flatcontainer/ilspycmd/11.1.0.9782/ilspycmd.11.1.0.9782.nupkg",
+    "sha256": "74c07facaf1850c78a779fc509031f756e1c0de24b1a536f3363d7ef81ce001f",
+    "integrity": "ZIP CRC verified; package SHA256 recorded. Optional sha512 endpoint returned 404.",
+    "entry": "ilspycmd.dll",
+    "arguments": [
+      "-p",
+      "CustomWater.dll",
+      "-r",
+      "managed/decoded",
+      "-r",
+      "UnityEngine"
+    ]
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/WaterController.cs",
+      "sha256": "d5713cc7a1658bc81e6466b24890c08dbc93f9747938470bcb7022a36d9d6761"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/PartialSubmersion.cs",
+      "sha256": "3e5cdfb4c88775e700783f37ace3bbd7ed5757fae2c457d8d4c2d157b447826c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/SeaRendererReplacement.cs",
+      "sha256": "4ee9a01a80b1e376d2cc435c790ef8493233a8ab41f47815b8d33ed113543df3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/customwater-source/FordingSpriteRenderer.cs",
+      "sha256": "d38c26b3c6d3b0448b5c53613bed35b258a05f7bf78b887ac281e04a1ef4bc37"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/WaterController.cs",
+      "sha256": "e71867866473ee4ae57e2279c465653d7d5097f59e8bce341fece2358b322aa8",
+      "original_class": "WaterController"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/PartialSubmersion.cs",
+      "sha256": "3d497b9e94959af7feaf805a50abeb513dba191899f1d2da38932b04aed3036f",
+      "original_class": "PartialSubmersion"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/SeaRendererReplacement.cs",
+      "sha256": "2424ac689dbe40e350689e4282a0bf3ffd5310684efe97026059d53a4ccae27a",
+      "original_class": "SeaRendererReplacement"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/FordingSpriteRenderer.cs",
+      "sha256": "a37724c54cf37b8d6fa0395686454c4b3802b6c64c4368686f7e2fc1d58ccc45",
+      "original_class": "FordingSpriteRenderer"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Zjcs.Official.World.NativeWater.asmdef",
+      "sha256": "f9c1a9663d70b8b4f4d2fdfa177caee0065fe1884b9fc89d7ed437dd6df2b62c"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_water_components.py",
+    "sha256": "f56b97a958abc460b58a2a44f39f396f7bd34cacbf8f6e1fec303f3fa95c0141"
+  },
+  "adaptation": "Only enclose original decompiled source in the Zjcs.Official.World.NativeWater namespace; no numerical, state, callback or execution-order changes.",
+  "limitations": [
+    "WaterMaskRenderer requires original rendering pipeline/shader restoration and is not included yet.",
+    "Native prefab script and texture bindings, complete scene rendering and Play Mode verification remain required."
+  ]
+}
