@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -146,10 +147,74 @@ namespace Zjcs.Presentation.Commerce
 
             foreach (CommerceUiNode child in source.children ?? Array.Empty<CommerceUiNode>())
                 CreateNode(child, gameObject.transform, bind);
+            bool hasAnimationTracks = false;
+            foreach (CommerceUiAnimation definition in source.animations ?? Array.Empty<CommerceUiAnimation>())
+                if (definition != null && definition.tracks != null && definition.tracks.Length > 0)
+                {
+                    hasAnimationTracks = true;
+                    break;
+                }
+            if (hasAnimationTracks) CreateAnimations(gameObject, source.animations);
             if (source.has_scroll && source.scroll != null) CreateScroll(source.scroll, gameObject);
             if (Array.IndexOf(source.scripts ?? Array.Empty<string>(), "Slider") >= 0)
                 CreateSlider(gameObject);
             return gameObject;
+        }
+
+        private static void CreateAnimations(GameObject owner, CommerceUiAnimation[] definitions)
+        {
+            Animation animation = owner.GetComponent<Animation>();
+            if (animation == null) animation = owner.AddComponent<Animation>();
+            CommerceUiAnimationEventReceiver receiver = owner.GetComponent<CommerceUiAnimationEventReceiver>()
+                ?? owner.AddComponent<CommerceUiAnimationEventReceiver>();
+            foreach (CommerceUiAnimation definition in definitions)
+            {
+                if (definition == null || string.IsNullOrEmpty(definition.name)
+                    || definition.tracks == null || definition.tracks.Length == 0) continue;
+                var clip = new AnimationClip
+                {
+                    name = definition.name,
+                    legacy = true,
+                    frameRate = 60f,
+                    wrapMode = definition.loop ? WrapMode.Loop : WrapMode.Default
+                };
+                foreach (CommerceUiAnimationTrack track in definition.tracks)
+                {
+                    if (track?.keys == null || track.keys.Length == 0 || string.IsNullOrEmpty(track.path)) continue;
+                    string path = track.path;
+                    string ownerPath = definition.owner ?? string.Empty;
+                    if (path.StartsWith(ownerPath + "/", StringComparison.Ordinal))
+                        path = path.Substring(ownerPath.Length + 1);
+                    var keys = new Keyframe[track.keys.Length];
+                    for (int index = 0; index < track.keys.Length; index++)
+                    {
+                        CommerceUiAnimationKey value = track.keys[index];
+                        keys[index] = new Keyframe(value.time, value.value, value.inTangent, value.outTangent);
+                    }
+                    AnimationCurve curve = new AnimationCurve(keys);
+                    if (track.property == "m_Alpha")
+                    {
+                        Transform target = FindDescendant(owner.transform, path);
+                        if (target != null && target.GetComponent<CanvasGroup>() == null)
+                            target.gameObject.AddComponent<CanvasGroup>();
+                        clip.SetCurve(path, typeof(CanvasGroup), "m_Alpha", curve);
+                    }
+                    else if (track.property == "scale.x" || track.property == "scale.y")
+                        clip.SetCurve(path, typeof(Transform),
+                            track.property == "scale.x" ? "m_LocalScale.x" : "m_LocalScale.y", curve);
+                }
+                foreach (CommerceUiAnimationEvent animationEvent in definition.events ?? Array.Empty<CommerceUiAnimationEvent>())
+                    if (animationEvent != null && !string.IsNullOrEmpty(animationEvent.functionName))
+                        clip.AddEvent(new AnimationEvent
+                        {
+                            time = animationEvent.time,
+                            functionName = animationEvent.functionName
+                        });
+                clip.EnsureQuaternionContinuity();
+                animation.AddClip(clip, definition.name);
+                if (definition.events != null && definition.events.Length > 0) receiver.enabled = true;
+            }
+            animation.playAutomatically = false;
         }
 
         private Image CreateImage(CommerceUiImage source, GameObject gameObject)
@@ -342,6 +407,13 @@ namespace Zjcs.Presentation.Commerce
 
         private static Color ColorValue(float[] values, Color fallback) =>
             values != null && values.Length >= 4 ? new Color(values[0], values[1], values[2], values[3]) : fallback;
+    }
+
+    public sealed class CommerceUiAnimationEventReceiver : MonoBehaviour
+    {
+        public Action<string> OnEvent;
+
+        public void SwitchItem() => OnEvent?.Invoke("SwitchItem");
     }
 }
 

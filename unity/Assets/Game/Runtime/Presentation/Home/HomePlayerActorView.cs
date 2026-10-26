@@ -29,6 +29,8 @@ namespace Zjcs.Presentation.Home
         private readonly CharacterCreationMeshFramePlayer animation;
         private bool disposed;
 
+        public Transform Transform => actor == null ? null : actor.transform;
+
         public HomePlayerActorView(HomeSceneView scene, string runtimePath, OfflineWardrobeProgress wardrobe,
             OfflineCharacterProgressionService progression, CharacterCreationAssetCatalog creationAssets,
             CharacterCreationOfflineService creationService)

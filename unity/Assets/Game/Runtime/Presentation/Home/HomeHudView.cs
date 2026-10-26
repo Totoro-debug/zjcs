@@ -407,17 +407,17 @@ namespace Zjcs.Presentation.Home
                 OpenCharacterPage();
                 return;
             }
+            if (selectedTab == 1)
+            {
+                OpenTravelNotes();
+                return;
+            }
             if (characterRoot != null) characterRoot.SetActive(false);
             if (selectedTab == 4)
             {
                 if (!host.EnterMainland())
                 {
                     selectedTab = 2;
-            if (selectedTab == 1)
-            {
-                OpenTravelNotes();
-                return;
-            }
                     ApplyTabVisuals();
                 }
                 return;
@@ -746,9 +746,10 @@ namespace Zjcs.Presentation.Home
 
         public void Tick()
         {
+            host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
             TickPetIntroduction();
             TickTreasureGachaPreview();
-            host.SetFantasyTowerBackgroundExecution(AnyModalOpen);
+            TickNpcTravel();
             if (noticeDeadline > 0f && Time.unscaledTime >= noticeDeadline)
             {
                 noticeDeadline = 0f;
@@ -758,8 +759,18 @@ namespace Zjcs.Presentation.Home
         }
 
         public bool TryHandleBack()
-            TickNpcTravel();
         {
+            if (NpcTravelModalOpen)
+            {
+                CloseNpcTravelPages();
+                return true;
+            }
+            if (DungeonModalOpen)
+            {
+                if (IsDailyDungeonBattleActive) { Notify("战斗中无法关闭副本界面"); return true; }
+                CloseDungeonPages();
+                return true;
+            }
             if (astrologicalOverlayRoot != null) { CloseAstrologicalOverlay(); return true; }
             if (activeDialog != null) { CloseDialog(); return true; }
             if (homeSkin != null && homeSkin.IsOpen) { homeSkin.Close(); return true; }
@@ -767,11 +778,6 @@ namespace Zjcs.Presentation.Home
             if (inventoryRoot != null && inventoryRoot.activeSelf)
             {
                 inventoryRuntime?.Close();
-                return true;
-            }
-            if (NpcTravelModalOpen)
-            {
-                CloseNpcTravelPages();
                 return true;
             }
             if (characterRoot != null && characterRoot.activeSelf) { CloseCharacterPage(); return true; }

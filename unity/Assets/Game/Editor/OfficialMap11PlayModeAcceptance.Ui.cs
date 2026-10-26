@@ -34,6 +34,13 @@ namespace Zjcs.Editor
             return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
         }
 
+        private static IEnumerator CaptureUiFrame(string name)
+        {
+            Capture(name);
+            yield return new WaitForEndOfFrame();
+            yield return null;
+        }
+
         private static IEnumerator VerifyUiPresentation()
         {
             yield return new WaitForSecondsRealtime(1);
@@ -43,7 +50,7 @@ namespace Zjcs.Editor
             Transform inlineFunctions = hud.transform.Find("Content/Content/WorldPanel/Anim/Right/FunctionEntryGroup/FunctionEntryFunc/Content/Panel");
             Require(Mathf.Approximately(inlineFunctions.localScale.x, 0) && Mathf.Approximately(inlineFunctions.localScale.y, 0),
                 "Original folded Animator pose hides the unused inline panel");
-            yield return CaptureStatueFrame("ui-hud");
+            yield return CaptureUiFrame("ui-hud");
             string result = "HUD rect=" + hudRect + "; scale=" + hud.transform.lossyScale;
             Debug.Log("Map11 UI geometry: " + result);
             Require(hudRect.width >= Screen.width * .99f && hudRect.height >= Screen.height * .99f,
@@ -53,10 +60,10 @@ namespace Zjcs.Editor
             Require(Field<GameObject>("fullMiniMapPanel") != null, "Official full minimap prefab opens");
             var tabs = Field<IDictionary>("nativeMiniMapTabs");
             Require(tabs.Count == 1 && tabs.Contains(11) && !tabs.Contains(10), "Unvisited maps have no native tab");
-            yield return CaptureStatueFrame("ui-minimap-full");
+            yield return CaptureUiFrame("ui-minimap-full");
             Invoke("SetMiniMapFilterExpanded", true);
             yield return null;
-            yield return CaptureStatueFrame("ui-minimap-filter");
+            yield return CaptureUiFrame("ui-minimap-filter");
             var filters = Field<IDictionary>("miniMapFilters");
             bool selected = (bool)filters["MiniMapGoddess"];
             var filterItems = Field<IDictionary>("miniMapFilterItems");
@@ -134,7 +141,7 @@ namespace Zjcs.Editor
             Invoke("RefreshEntityActivity");
             Invoke("OpenNativeWorldFunctions");
             yield return null;
-            yield return CaptureStatueFrame("ui-functions");
+            yield return CaptureUiFrame("ui-functions");
             Invoke("CloseNativeWorldFunctions");
             var entities = Field<IDictionary>("mapEntities");
             Invoke("Interact", entities[2307]);
@@ -146,11 +153,11 @@ namespace Zjcs.Editor
             Require(writer != null && writer.IsPlaying, "Official dialogue reveals characters over time");
             Invoke("RequestDialogueAdvance");
             Require(!writer.IsPlaying && !Field<bool>("dialogueAdvanceRequested"), "First click finishes typing and preserves the current line");
-            yield return CaptureStatueFrame("ui-dialogue");
+            yield return CaptureUiFrame("ui-dialogue");
             Require(contentRect.width >= Screen.width * .99f && Math.Abs(contentRect.yMin) <= 2,
                 "Official dialogue SafeArea must span the viewport from the bottom: " + contentRect);
             yield return AdvanceScriptedDialogue();
-            yield return CaptureStatueFrame("ui-options");
+            yield return CaptureUiFrame("ui-options");
             Rect textRect = ScreenRect(renderer.Find("OptionTalkDialog",
                 "/OptionTalkDialog/Content/CharacterAndTalkContent/TalkContent/TalkText"));
             Require(textRect.xMin >= -2 && textRect.xMax <= Screen.width + 2 && textRect.yMax < Screen.height * .3f,
@@ -173,7 +180,7 @@ namespace Zjcs.Editor
             var rightMask = renderer.Find("OptionTalkDialog", "/OptionTalkDialog/Content/CharacterAndTalkContent/CharacterGroup/RightCharacter/Mask")
                 .GetComponent<RectMask2D>();
             Require(!rightMask.enabled, "Original disabled right-portrait mask must remain disabled");
-            yield return CaptureStatueFrame("ui-dialogue-two-speakers");
+            yield return CaptureUiFrame("ui-dialogue-two-speakers");
             Debug.Log("Map11 UI presentation validation passed. Scripted callbacks and rendered frames; no native input. Output: " + Root);
             Invoke("DisposeRuntime");
             SessionState.SetInt(Key + ".result", 0);

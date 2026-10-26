@@ -300,8 +300,8 @@ namespace Zjcs.Presentation.Commerce
             CommerceAccumulatedAward previous = runtime.Catalog.Data.accumulatedAwards
                 .FirstOrDefault(value => value.level == award.level - 1);
             float previousThreshold = previous == null ? 0f : previous.threshold;
-            float progress = award.threshold <= previousThreshold ? 1f : Mathf.Clamp01(
-                (runtime.Session.State.AccumulatedValue - previousThreshold) / (award.threshold - previousThreshold));
+            float progress = award.threshold <= previousThreshold ? 1f : Mathf.Clamp01((float)
+                ((runtime.Session.State.AccumulatedValue - previousThreshold) / (award.threshold - previousThreshold)));
             string activePath = lineRight ? "AwardContent/DownRightLineGo/ActiveDownRighttLineImg"
                 : "AwardContent/DownLeftLineGo/ActiveDownLeftLineImg";
             string inactivePath = lineRight ? "AwardContent/DownRightLineGo/InactiveDownRighttLineImg"

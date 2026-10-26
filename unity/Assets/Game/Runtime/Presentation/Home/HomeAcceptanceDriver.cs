@@ -813,6 +813,34 @@ namespace Zjcs.Presentation.Home
             ok &= Ui(() => Assert(shop != null && shop.SelectPage(1) && shop.CurrentPageIndex == 1,
                 "the second official shop tab opens the treasury"), "open treasury");
             yield return null;
+            ok &= Ui(() =>
+            {
+                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> shelf = shopService.GetTreasuryShelf();
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem purchase = shelf.FirstOrDefault(value =>
+                    value.Goods.currency_id == 2 && value.Goods.original_price > 0
+                    && value.RemainingInventory != 0
+                    && (long)(value.Goods.original_price * value.PriceOff) > 0);
+                Assert(purchase != null, "treasury has an available paid star-currency item");
+                GameObject row = GameObject.Find("ShopGoodsItem_" + purchase.Goods.goods_id);
+                Button buy = row == null ? null : row.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(value => value.gameObject.name == "BuyBtn");
+                Assert(buy != null && buy.interactable, "treasury item purchase button is enabled");
+                long starsBefore = runtime.ItemCount(2);
+                long itemBefore = runtime.ItemCount(purchase.Goods.item_id);
+                long scoreBefore = runtime.Profile.Save.Player.HomeShop.ShopScore;
+                buy.onClick.Invoke();
+                Assert(runtime.ItemCount(2) < starsBefore
+                    && runtime.ItemCount(purchase.Goods.item_id) >= itemBefore + purchase.Goods.item_count
+                    && runtime.Profile.Save.Player.HomeShop.ShopScore > scoreBefore,
+                    "treasury purchase spends stars, grants the item and increases gift score");
+                runtime.Profile.Reload();
+                Zjcs.Offline.Progression.OfflineHomeShopShelfItem savedPurchase = shopService.GetTreasuryShelf()
+                    .First(value => value.SlotIndex == purchase.SlotIndex);
+                Assert(savedPurchase.Goods.goods_id == purchase.Goods.goods_id && savedPurchase.BoughtCount == 1,
+                    "treasury purchase and shelf stock survive profile reload");
+                log.Add("PASS treasury: purchase settlement and reloaded stock");
+            }, "buy treasury item");
+            yield return null;
             yield return Capture("home-shop-treasury.png");
             ok &= Ui(() =>
             {
@@ -855,34 +883,6 @@ namespace Zjcs.Presentation.Home
         }
 
         private bool Ui(Action action, string name)
-            ok &= Ui(() =>
-            {
-                IReadOnlyList<Zjcs.Offline.Progression.OfflineHomeShopShelfItem> shelf = shopService.GetTreasuryShelf();
-                Zjcs.Offline.Progression.OfflineHomeShopShelfItem purchase = shelf.FirstOrDefault(value =>
-                    value.Goods.currency_id == 2 && value.Goods.original_price > 0
-                    && value.RemainingInventory != 0
-                    && (long)(value.Goods.original_price * value.PriceOff) > 0);
-                Assert(purchase != null, "treasury has an available paid star-currency item");
-                GameObject row = GameObject.Find("ShopGoodsItem_" + purchase.Goods.goods_id);
-                Button buy = row == null ? null : row.GetComponentsInChildren<Button>(true)
-                    .FirstOrDefault(value => value.gameObject.name == "BuyBtn");
-                Assert(buy != null && buy.interactable, "treasury item purchase button is enabled");
-                long starsBefore = runtime.ItemCount(2);
-                long itemBefore = runtime.ItemCount(purchase.Goods.item_id);
-                long scoreBefore = runtime.Profile.Save.Player.HomeShop.ShopScore;
-                buy.onClick.Invoke();
-                Assert(runtime.ItemCount(2) < starsBefore
-                    && runtime.ItemCount(purchase.Goods.item_id) >= itemBefore + purchase.Goods.item_count
-                    && runtime.Profile.Save.Player.HomeShop.ShopScore > scoreBefore,
-                    "treasury purchase spends stars, grants the item and increases gift score");
-                runtime.Profile.Reload();
-                Zjcs.Offline.Progression.OfflineHomeShopShelfItem savedPurchase = shopService.GetTreasuryShelf()
-                    .First(value => value.SlotIndex == purchase.SlotIndex);
-                Assert(savedPurchase.Goods.goods_id == purchase.Goods.goods_id && savedPurchase.BoughtCount == 1,
-                    "treasury purchase and shelf stock survive profile reload");
-                log.Add("PASS treasury: purchase settlement and reloaded stock");
-            }, "buy treasury item");
-            yield return null;
         {
             try
             {
@@ -922,6 +922,8 @@ namespace Zjcs.Presentation.Home
                 completed(false);
                 yield break;
             }
+            yield return null;
+            yield return null;
 
             HomeUiRenderer renderer = PrivateField<HomeUiRenderer>(shop, "panelRenderer");
             const string treasuryTabPath = "/HomeShopPanel/BgPanel1/Content/BottomGo/TabBottom/TabGroup/HomeShopPanelTabBottomBtn (1)";
@@ -943,8 +945,6 @@ namespace Zjcs.Presentation.Home
             while (shop.CurrentPageIndex != 1 && Time.realtimeSinceStartup < deadline)
                 yield return null;
             if (shop.CurrentPageIndex != 1)
-            yield return null;
-            yield return null;
             {
                 log.Add("FAIL real-input: mouse click did not open the treasury page");
                 completed(false);

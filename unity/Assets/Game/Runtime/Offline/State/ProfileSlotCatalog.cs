@@ -12,6 +12,7 @@ namespace Zjcs.Offline.State
         private const string ProgressFileName = "city-save.json";
         private const string DraftFileName = "character-draft.json";
         private const string CommerceFileName = "commerce-save.json";
+        private const string HomeFileName = "home-save.json";
         private const string CreationTimeFileName = "profile-created-at-unix-seconds";
         private static readonly object CreationLock = new object();
         private readonly string persistentRoot;
@@ -123,6 +124,11 @@ namespace Zjcs.Offline.State
         public string GetCommercePath(string slotId)
         {
             return Path.Combine(GetSlotDirectory(slotId), CommerceFileName);
+        }
+
+        public string GetHomePath(string slotId)
+        {
+            return Path.Combine(GetSlotDirectory(slotId), HomeFileName);
         }
 
         public long GetCreatedAtUnixSeconds(string slotId)

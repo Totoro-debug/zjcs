@@ -68,6 +68,29 @@ namespace Zjcs.Offline.Commerce
             return session;
         }
 
+        public static IReadOnlyDictionary<int, long> ActivePeriodicProperties(
+            OfficialCommerceCatalogView catalog, OfflineCommerceState state)
+        {
+            var properties = new Dictionary<int, long>();
+            if (catalog?.Data?.periodicCards == null || state?.Bought == null) return properties;
+            foreach (CommercePeriodicCard card in catalog.Data.periodicCards)
+            {
+                if (card?.extraProps == null || ReadCounter(state.Bought, "periodic-expiry:" + card.id) <= state.Day)
+                    continue;
+                foreach (CommerceExtraProp prop in card.extraProps)
+                    if (prop != null && prop.propId > 0 && prop.value != 0)
+                        properties[prop.propId] = properties.TryGetValue(prop.propId, out long current)
+                            ? checked(current + prop.value) : prop.value;
+            }
+            return properties;
+        }
+
+        private static long ReadCounter(List<CommerceCounter> counters, string key)
+        {
+            CommerceCounter counter = counters.FirstOrDefault(value => value.Key == key);
+            return counter == null ? 0L : counter.Count;
+        }
+
         /// <summary>
         /// Advances the local day checkpoint and mirrors the main profile inventory into the
         /// commerce state. Returns false when the resulting state could not be saved.
@@ -143,6 +166,7 @@ namespace Zjcs.Offline.Commerce
                     ApplyDelta(mainline.Player, delta);
                     var final = candidate.Clone();
                     final.Inventory = ToAmounts(mainline.Player.Inventory);
+                    SyncPeriodicCharacterProperties(mainline.Player.CharacterProperties, final);
                     mainline.Player.CommerceStateJson = JsonUtility.ToJson(new OfflineCommerceSave { State = final });
                     persisted = final;
                 });
@@ -155,6 +179,38 @@ namespace Zjcs.Offline.Commerce
             catch
             {
                 return false;
+            }
+        }
+
+        public bool UpdateState(Action<OfflineCommerceState> mutation)
+        {
+            if (mutation == null) return false;
+            OfflineCommerceState candidate = State.Clone();
+            try { mutation(candidate); }
+            catch { return false; }
+            if (!PersistState(candidate, false)) return false;
+            State = candidate;
+            return true;
+        }
+
+        private static void SyncPeriodicCharacterProperties(OfflineCharacterPropertyProgress properties,
+            OfflineCommerceState commerce)
+        {
+            OfflineCharacterPropertyProgress.Normalize(properties);
+            properties.PeriodicCards.Clear();
+            const string prefix = "periodic-expiry:";
+            foreach (CommerceCounter counter in commerce.Bought)
+            {
+                if (counter == null || !counter.Key.StartsWith(prefix, StringComparison.Ordinal)
+                    || !int.TryParse(counter.Key.Substring(prefix.Length), NumberStyles.None,
+                        CultureInfo.InvariantCulture, out int cardId)
+                    || cardId <= 0 || counter.Count <= commerce.Day) continue;
+                long expiresAt = new DateTimeOffset(DayZero.AddDays(counter.Count)).ToUnixTimeSeconds();
+                properties.PeriodicCards.Add(new OfflinePeriodicCard
+                {
+                    CardId = cardId,
+                    ExpiresAtUnixSeconds = expiresAt
+                });
             }
         }
 
@@ -246,6 +302,7 @@ namespace Zjcs.Offline.Commerce
                 case "daily": return Daily(request.Id, request.GroupId, false, state);
                 case "all": return Daily(request.Id, request.GroupId, true, state);
                 case "weekly": return Weekly(request.Id, request.GroupId, state);
+                case "periodic": return Periodic(request.Id, state);
                 default: return null;
             }
         }
@@ -258,6 +315,71 @@ namespace Zjcs.Offline.Commerce
         public CommerceOffer Direct(int id)
         {
             return Direct(id, session.State);
+        }
+
+        public CommerceOffer Periodic(int id) => Periodic(id, session.State);
+
+        private CommerceOffer Periodic(int id, OfflineCommerceState state)
+        {
+            CommercePeriodicCard row = (catalog.Data.periodicCards ?? Array.Empty<CommercePeriodicCard>())
+                .FirstOrDefault(value => value.id == id);
+            if (row == null) return null;
+            CommerceMoneyCost cost = catalog.MoneyCost(row.moneyCostId);
+            if (cost == null) return null;
+            long expiry = Counter(state.Bought, "periodic-expiry:" + id);
+            int purchased = (int)Math.Min(int.MaxValue, Counter(state.Bought, "periodic-buy:" + id));
+            return new CommerceOffer
+            {
+                Kind = "periodic", Id = id, GroupId = 0, MoneyCostId = row.moneyCostId,
+                VoucherCost = cost.voucherCost, Limit = int.MaxValue, Bought = purchased,
+                Period = state.Day, PurchaseKey = "periodic-buy:" + id,
+                Rewards = ToDictionary(row.fixedAward), AccumulatedValue = cost.startValue,
+                First = purchased == 0, GreatValuePercent = row.discount,
+            };
+        }
+
+        public int PeriodicExpiryDay(int id) => (int)Math.Min(int.MaxValue,
+            Counter(session.State.Bought, "periodic-expiry:" + id));
+
+        public bool PeriodicHasNewMark(int id)
+        {
+            bool active = PeriodicExpiryDay(id) > session.State.Day;
+            bool hasRecord = session.State.Bought.Any(value => value.Key == "periodic-seen:" + id);
+            long lastView = Counter(session.State.Bought, "periodic-seen:" + id);
+            return !active && (!hasRecord || lastView > 0);
+        }
+
+        public bool HasPeriodicCardNotice() => (catalog.Data.periodicCards ?? Array.Empty<CommercePeriodicCard>())
+            .Any(card => PeriodicHasNewMark(card.id) || PeriodicCanClaim(card.id));
+
+        public bool RecordPeriodicCardsSeen()
+        {
+            return session.UpdateState(candidate =>
+            {
+                foreach (CommercePeriodicCard card in catalog.Data.periodicCards ?? Array.Empty<CommercePeriodicCard>())
+                {
+                    long active = Counter(candidate.Bought, "periodic-expiry:" + card.id) > candidate.Day ? 1L : 0L;
+                    SetCounter(candidate.Bought, "periodic-seen:" + card.id, active);
+                }
+            });
+        }
+
+        public bool PeriodicCanClaim(int id) => PeriodicExpiryDay(id) > session.State.Day
+            && Counter(session.State.Bought, "periodic-claim:" + id + ":" + session.State.Day) == 0;
+
+        public CommerceTransactionResult ClaimPeriodic(int id)
+        {
+            CommercePeriodicCard row = (catalog.Data.periodicCards ?? Array.Empty<CommercePeriodicCard>())
+                .FirstOrDefault(value => value.id == id);
+            if (row == null || !PeriodicCanClaim(id))
+                return new CommerceTransactionResult(CommerceTransactionCode.SoldOut, "周期卡已过期或今日奖励已领取。");
+            Dictionary<int, long> rewards = ToDictionary(row.periodicAward);
+            return OfflineCommerceTransaction.Mutate(session.State, candidate =>
+            {
+                foreach (KeyValuePair<int, long> reward in rewards)
+                    SetAmount(candidate, reward.Key, checked(Amount(candidate, reward.Key) + reward.Value));
+                SetCounter(candidate.Bought, "periodic-claim:" + id + ":" + candidate.Day, 1);
+            }, rewards, "每日奖励已领取。", session.Persist);
         }
 
         private CommerceOffer Direct(int id, OfflineCommerceState state)
@@ -426,8 +548,39 @@ namespace Zjcs.Offline.Commerce
                 ExpectedRewards = new Dictionary<int, long>(offer.Rewards),
                 PaymentMethod = paymentMethod
             };
+            if (offer.Kind == "periodic")
+                return PurchasePeriodic(offer, paymentMethod);
             return OfflineCommerceTransaction.Purchase(session.State, request, voucherItemId,
                 Quote, session.Persist);
+        }
+
+        private CommerceTransactionResult PurchasePeriodic(CommerceOffer offer, CommercePaymentMethod method)
+        {
+            CommercePeriodicCard row = catalog.Data.periodicCards.FirstOrDefault(value => value.id == offer.Id);
+            CommerceMoneyCost cost = row == null ? null : catalog.MoneyCost(row.moneyCostId);
+            if (row == null || cost == null || offer.Period != session.State.Day
+                || offer.Bought != Counter(session.State.Bought, "periodic-buy:" + offer.Id)
+                || method != OfflineCommerceTransaction.PaymentMethod(offer, voucherItemId, session.State)
+                || method == CommercePaymentMethod.Voucher && (cost.voucherCost <= 0
+                    || Amount(session.State, voucherItemId) < cost.voucherCost))
+                return new CommerceTransactionResult(CommerceTransactionCode.StaleQuote, "周期卡状态已变化，请重新确认。");
+            var rewards = new Dictionary<int, long>(offer.Rewards);
+            return OfflineCommerceTransaction.Mutate(session.State, candidate =>
+            {
+                if (method == CommercePaymentMethod.Voucher)
+                    SetAmount(candidate, voucherItemId, Amount(candidate, voucherItemId) - cost.voucherCost);
+                long oldExpiry = Counter(candidate.Bought, "periodic-expiry:" + offer.Id);
+                long start = Math.Max(oldExpiry, candidate.Day);
+                long expiry = Math.Min(candidate.Day + 179L, checked(start + row.durationDays));
+                if (expiry <= start) throw new InvalidOperationException("周期卡续期已达到时长上限。");
+                SetCounter(candidate.Bought, "periodic-expiry:" + offer.Id, expiry);
+                SetCounter(candidate.Bought, "periodic-buy:" + offer.Id, offer.Bought + 1);
+                foreach (KeyValuePair<int, long> reward in rewards)
+                    SetAmount(candidate, reward.Key, checked(Amount(candidate, reward.Key) + reward.Value));
+                string key = row.moneyCostId.ToString(CultureInfo.InvariantCulture);
+                SetCounter(candidate.PaidOrders, key, Counter(candidate.PaidOrders, key) + 1);
+                candidate.AccumulatedValue += cost.startValue;
+            }, rewards, "周期卡已激活，立即奖励已入库。", session.Persist);
         }
 
         public CommerceTransactionResult Purchase(string kind, int id, int groupId,
@@ -591,6 +744,14 @@ namespace Zjcs.Offline.Commerce
         public bool HasAvailableAccumulatedAward()
         {
             return CurrentAccumulatedAwards().Any(value => CanClaimAccumulated(value.level));
+        }
+
+        public int FirstUnclaimedAccumulatedLevel()
+        {
+            foreach (CommerceAccumulatedAward award in catalog.Data.accumulatedAwards.OrderBy(value => value.level))
+                if (!HasClaimedAccumulated(award.level)) return award.level;
+            return catalog.Data.accumulatedAwards.Length == 0 ? 0
+                : catalog.Data.accumulatedAwards.Max(value => value.level);
         }
 
         public IReadOnlyList<CommerceAccumulatedAward> CurrentAccumulatedAwards()

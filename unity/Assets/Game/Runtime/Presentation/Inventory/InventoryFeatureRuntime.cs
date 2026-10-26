@@ -19,10 +19,15 @@ namespace Zjcs.Presentation.Inventory
 
         public void OpenProfile(string selectedSlotId)
         {
+            OpenProfile(selectedSlotId, Application.persistentDataPath);
+        }
+
+        public void OpenProfile(string selectedSlotId, string savesRoot)
+        {
             if (!ProfileSlotCatalog.TryParseSlotId(selectedSlotId))
                 throw new ArgumentException("A selected profile slot is required.", nameof(selectedSlotId));
 
-            var slots = new ProfileSlotCatalog(Application.persistentDataPath);
+            var slots = new ProfileSlotCatalog(string.IsNullOrEmpty(savesRoot) ? Application.persistentDataPath : savesRoot);
             if (!slots.Contains(selectedSlotId))
                 throw new InvalidOperationException("The selected profile slot no longer exists.");
 

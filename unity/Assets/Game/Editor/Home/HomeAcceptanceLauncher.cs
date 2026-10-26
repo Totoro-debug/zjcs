@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.Skills;
 using Zjcs.Offline.State;
 
 namespace Zjcs.Editor.Home
@@ -18,20 +19,20 @@ namespace Zjcs.Editor.Home
     /// </summary>
     public static class HomeAcceptanceLauncher
     {
-        private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
         private static bool autoRefreshSuspended;
 
+        private static string Root => Environment.GetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT")
             ?? Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance");
 
         public static void Run()
         {
             try
             {
-                string runId = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-" + Guid.NewGuid().ToString("N");
                 AssetDatabase.DisallowAutoRefresh();
                 autoRefreshSuspended = true;
                 EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
                 EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+                string runId = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-" + Guid.NewGuid().ToString("N");
                 Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_ROOT",
                     Path.Combine(Path.GetTempPath(), "zjcs-home-acceptance-" + runId));
                 Environment.SetEnvironmentVariable("ZJCS_HOME_ACCEPTANCE_OUTPUT",
@@ -44,13 +45,12 @@ namespace Zjcs.Editor.Home
             }
             catch (Exception error)
             {
-                Debug.LogError("[HomeAcceptance] launcher failed: " + error);
                 RestoreAssetRefresh();
+                Debug.LogError("[HomeAcceptance] launcher failed: " + error);
                 EditorApplication.Exit(1);
             }
         }
 
-        private static void ConfigurePortraitGameView(int width = 450, int height = 800)
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.EnteredEditMode) RestoreAssetRefresh();
@@ -64,6 +64,7 @@ namespace Zjcs.Editor.Home
             AssetDatabase.AllowAutoRefresh();
         }
 
+        private static void ConfigurePortraitGameView(int width = 450, int height = 800)
         {
             Assembly editor = typeof(EditorWindow).Assembly;
             Type sizesType = editor.GetType("UnityEditor.GameViewSizes");
@@ -118,19 +119,44 @@ namespace Zjcs.Editor.Home
             var slots = new ProfileSlotCatalog(Root);
             string slotId = slots.CreateSlot();
             OfflineMainlineProgressSession session = OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
-            ProgressionResult result = session.ApplyCharacterMutation(player =>
+            void Apply(string step, Action<OfflinePlayerProgress> mutation)
+            {
+                ProgressionResult result = session.ApplyCharacterMutation(mutation,
+                    "acceptance:character:" + slotId + ":" + step);
+                if (result.Status != ProgressionResultStatus.Applied
+                    && result.Status != ProgressionResultStatus.Unchanged
+                    && result.Status != ProgressionResultStatus.Ready)
+                    throw new InvalidOperationException("The acceptance profile " + step + " could not be created: "
+                        + result.Status + ". " + result.Message + ". " + DescribeValidation(session.Save));
+            }
+            Apply("identity", player =>
             {
                 player.CharacterName = "验收角色";
                 player.CharacterCreated = true;
                 player.InitialWeaponType = 200;
+            });
+            Apply("progression", player =>
+            {
                 player.Experience = 100000;
                 player.Level = 20;
                 player.SubRank = 3;
                 player.Rank = 1;
                 player.MaxProfessionRank = 1;
                 player.Wardrobe.Profession = 1;
+            });
+            Apply("crystal", player =>
+            {
                 if (player.Inventory == null) player.Inventory = new System.Collections.Generic.List<OfflineItemStack>();
-                player.Inventory.Add(new OfflineItemStack { ItemId = 120, Count = 5 });
+                OfflineItemStack crystal = player.Inventory.FirstOrDefault(value => value.ItemId == 120);
+                if (crystal == null)
+                {
+                    crystal = new OfflineItemStack { ItemId = 120 };
+                    player.Inventory.Add(crystal);
+                }
+                crystal.Count = checked(crystal.Count + 5);
+            });
+            Apply("gold", player =>
+            {
                 OfflineItemStack gold = player.Inventory.FirstOrDefault(value => value.ItemId == 1);
                 if (gold == null)
                 {
@@ -138,16 +164,69 @@ namespace Zjcs.Editor.Home
                     player.Inventory.Add(gold);
                 }
                 gold.Count = Math.Max(gold.Count, 10000000);
+            });
+            Apply("unlocked-maps", player =>
+            {
                 if (player.UnlockedMapClassIds == null)
                     player.UnlockedMapClassIds = new System.Collections.Generic.List<int>();
                 foreach (int mapId in new[] { 11, 12, 13, 14, 17 })
                     if (!player.UnlockedMapClassIds.Contains(mapId)) player.UnlockedMapClassIds.Add(mapId);
-            }, "acceptance:character:" + slotId);
-            if (result.Status != ProgressionResultStatus.Applied
-                && result.Status != ProgressionResultStatus.Unchanged
-                && result.Status != ProgressionResultStatus.Ready)
-                throw new InvalidOperationException("The acceptance profile could not be created: " + result.Status);
+            });
             Debug.Log("[HomeAcceptance] profile " + slotId + " ready at " + Root);
+        }
+
+        private static string DescribeValidation(OfflineMainlineSave source)
+        {
+            OfflineMainlineSave save = JsonUtility.FromJson<OfflineMainlineSave>(JsonUtility.ToJson(source));
+            Type sessionType = typeof(OfflineMainlineProgressSession);
+            sessionType.GetMethod("Normalize", BindingFlags.Static | BindingFlags.NonPublic)
+                .Invoke(null, new object[] { save });
+            OfflinePlayerProgress player = save.Player;
+            player.CharacterName = "验收角色";
+            player.CharacterCreated = true;
+            player.InitialWeaponType = 200;
+            bool Invoke(string name, params object[] args) => (bool)sessionType.GetMethod(name,
+                BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, args);
+            return "validation components: wishes=" + OfflineWishProgress.IsValid(player.Wishes)
+                + ", treasure=" + OfflineTreasureGachaProgress.IsValid(player.TreasureGacha)
+                + ", petGacha=" + OfflinePetGachaProgress.IsValid(player.PetGacha)
+                + ", fruitTree=" + OfflineFruitTreeProgress.IsValid(player.FruitTree)
+                + ", gathering=" + OfflineMaterialGatheringProgress.IsValid(player.MaterialGathering)
+                + ", skills=" + OfflineSkillProgression.IsValid(player.Skills)
+                + ", pets=" + OfflinePetProgress.IsValid(player.Pets, player.Skills)
+                + ", characterProperties=" + OfflineCharacterPropertyProgress.IsValid(player.CharacterProperties)
+                + "[season=" + player.CharacterProperties.SeasonId
+                + ", treasureRank=" + player.CharacterProperties.TreasurePlaneRank
+                + ", astrologicalCost=" + player.CharacterProperties.AstrologicalCost
+                + ", library=" + player.CharacterProperties.LegionLibraryLevel
+                + ", buildings=" + string.Join(";", player.CharacterProperties.LegionBuildingLevels
+                    .Select(value => value == null ? "null" : value.BuildingId + ":" + value.Level))
+                + ", upgrade=" + (player.CharacterProperties.LegionBuildingUpgrade == null ? "null"
+                    : player.CharacterProperties.LegionBuildingUpgrade.BuildingId + ":"
+                        + player.CharacterProperties.LegionBuildingUpgrade.HangUpType + ":"
+                        + player.CharacterProperties.LegionBuildingUpgrade.TargetLevel + ":"
+                        + player.CharacterProperties.LegionBuildingUpgrade.Progress + "/"
+                        + player.CharacterProperties.LegionBuildingUpgrade.RequiredProgress + ":"
+                        + player.CharacterProperties.LegionBuildingUpgrade.LastProgressUnixSeconds + ":"
+                        + player.CharacterProperties.LegionBuildingUpgrade.ProgressRemainder)
+                + ", cooking=" + string.Join(";", player.CharacterProperties.CookingUses
+                    .Select(value => value == null ? "null" : value.CookingId + ":" + value.UseTimes))
+                + ", extra=" + player.CharacterProperties.ExtraProperties.Count
+                + ", friendships=" + player.CharacterProperties.NpcFriendships.Count
+                + ", talentTrees=" + player.CharacterProperties.NpcTalentTrees.Count
+                + ", treasures=" + player.CharacterProperties.Treasures.Count
+                + ", elements=" + player.CharacterProperties.TreasureElementLevels.Count
+                + ", periodic=" + player.CharacterProperties.PeriodicCards.Count
+                + ", mapSkills=" + player.CharacterProperties.LegionMapSkills.Count
+                + ", cabinet=" + player.CharacterProperties.EquipCabinetScores.Count + "]"
+                + ", npcTravel=" + OfflineNpcTravelProgress.IsValid(player.NpcTravel)
+                + ", homeShop=" + OfflineHomeShopProgress.IsValid(player.HomeShop)
+                + ", wardrobe=" + Invoke("ValidateWardrobe", player.Wardrobe, player.Inventory)
+                + ", equipment=" + Invoke("ValidateEquipment",
+                    player.GetType().GetField("Equipment").GetValue(player))
+                + ", inventoryCount=" + player.Inventory.Count
+                + ", mapIds=" + string.Join(",", player.UnlockedMapClassIds ?? new System.Collections.Generic.List<int>())
+                + ", overall=" + Invoke("Validate", save);
         }
     }
 }
