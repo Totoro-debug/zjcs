@@ -79,7 +79,9 @@ namespace Zjcs.Presentation.CharacterCreation
             if (Array.IndexOf(Environment.GetCommandLineArgs(), OfficialMainlineMapModuleProbe.Argument) >= 0) return;
 #endif
             if (FindObjectOfType<CharacterCreationFlowController>() != null) return;
-            new GameObject("CharacterCreationFlow").AddComponent<CharacterCreationFlowController>();
+            if (FindObjectOfType<Zjcs.Offline.Startup.OfflineStartupFlow>() != null) return;
+            new GameObject("OfficialStartup").AddComponent<Zjcs.Offline.Startup.OfflineStartupFlow>().Begin(
+                () => new GameObject("CharacterCreationFlow").AddComponent<CharacterCreationFlowController>());
         }
 
         private void Awake()

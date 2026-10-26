@@ -1686,3 +1686,7 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 ## 战斗飘字显示条件
 
 `scripts/prepare_battle_damage_visibility.py` 核对固定854 APK／对应已缓存官方依赖的实际对象，扫描3,708个技能和角色 bundle，严格读取1,367组 `MyFightDamage` 显示开关及551个角色 prefab 根组件。当前规则引用的1,331个伤害实体均已绑定；3组隐藏、318组关闭零值，怪物3933的原 `CustomDamageUITypeFilter` 仅过滤零伤害免疫。两版客户端的隐藏／元素／非零／过滤／零值分支、提示类型与颜色顺序保持可核对来源；运行回执分别保存伤害 prefab 身份和运行序号，旧回执不推造身份。输出 `Resources/Combat/damage-visibility.json`、输入对象／bundle／配置和代码哈希见 [来源清单](battle-hud/damage-visibility-source-manifest.json)，接线和验证边界见[战斗执行](../../docs/features/battle-execution.md)。本次没有新增美术素材快照。
+
+## 登录前启动画面
+
+`scripts/prepare_official_startup.py` 优先核对官方 APK 的 Boot／Launch 包内清单、实际载荷、CAB 和 PPtr，所需资源均在固定 `854_156383` APK 中，无需混用云端版本。恢复 BootSplash、ThemeCanvas、LaunchRoot/LaunchCanvas 和 AgeTipsDialog 的 80 个对象、24 张 Sprite、原字体／材质、启动曲线及按钮 Animator；字体额外字段、流式字体配置长度／MD5、原顶点／三角形和 TMP 裁剪／描边程序均核实后转换。Windows 使用 Unity 原生 prefab、Sprite、字体、HLSL 和显式 `Startup/OfficialStartupAssets` 引用。输入对象、代码／APK／bundle／字体与输出哈希见[原始来源](startup/source-manifest.json)，导入后的资源和运行绑定见[原生来源](startup/native-source-manifest.json)，实际流程与发布边界见[功能页](../../docs/features/startup.md)。新增载荷未生成完整素材快照。

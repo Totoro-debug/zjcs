@@ -151,3 +151,18 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageColors.cs text
 unity/Assets/Game/Editor/Combat/OfficialBattleDamageVisibilityAcceptance.cs text eol=lf
 unity/Assets/Game/Resources/Combat/damage-visibility.json text eol=lf
 assets/reference/battle-hud/damage-visibility-source-manifest.json text eol=lf
+
+# Startup migration sources and native bindings retain their recorded bytes.
+assets/reference/startup/** -text
+unity/Assets/Official/Startup.meta -text
+unity/Assets/Official/Startup/** -text
+unity/Assets/Game/Resources/Startup.meta -text
+unity/Assets/Game/Resources/Startup/** -text
+unity/Assets/Game/Runtime/Official/Startup.meta -text
+unity/Assets/Game/Runtime/Official/Startup/** -text
+unity/Assets/Game/Runtime/Offline/Startup.meta -text
+unity/Assets/Game/Runtime/Offline/Startup/** -text
+unity/Assets/Game/Editor/Startup.meta -text
+unity/Assets/Game/Editor/Startup/** -text
+scripts/prepare_official_startup.py -text
+scripts/record_startup_native_sources.py -text

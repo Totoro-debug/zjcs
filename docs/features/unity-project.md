@@ -12,6 +12,8 @@ Unity 工程位于 [`unity/`](../../unity/)，目标为 Windows 10/11 离线桌�
 
 Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗口、文本序列化、可见 `.meta` 和 `Bootstrap.unity` 构建场景。工程已有官方战斗规则载荷、Map10 原始数据、部分规则运行时和编辑器校验入口，详见[战斗规则](battle-execution.md)及[世界地图](world-map.md)。
 
+默认启动先恢复并播放官方 `BootSplash`，随后显示原版 `ThemeCanvas`／`LaunchPanel` 和本地资源进度条，再进入现有存档入口。适龄提示使用原可交互弹窗，启动阶段不请求网络；素材、字体、动画与本地加载的实际验证范围见[登录前启动画面](startup.md)。
+
 `ProjectTools.Configure` 配置工程设置；`ProjectTools.Validate` 检查编辑器版本、启动场景、窗口设置，并调用战斗目录、HUD 与 Map10 校验。`Zjcs.Editor.ProjectTools.BuildWindowsGame` 是游戏测试构建入口，输出 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该文件，工作目录为同名文件夹。`BuildFrameworkWindows` 只构建空启动框架，不能替代游戏构建。代码位于 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs)。
 
 仓库根目录的 [`unity-tools.json`](../../unity-tools.json) 记录固定版本编辑器安装路径及工程路径；当前编辑器位于 `D:/Tool/Unity/Editor/Unity.exe`，实际文件版本为 `2022.3.57f1c2`。Unity Hub 为可选项，本机未安装。项目工具 [`unity.ps1`](../../scripts/unity.ps1) 提供 `info`、`open` 与 `initialize` 命令，并在启动前核对编辑器文件版本。运行 `& .\scripts/unity.ps1 info` 检查环境，`& .\scripts/unity.ps1 open` 启动工程，`& .\scripts/unity.ps1 initialize` 执行 `ProjectTools.Configure`。
