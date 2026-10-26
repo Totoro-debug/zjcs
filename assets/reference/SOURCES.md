@@ -813,6 +813,8 @@ Map11 实体转换保留 105 类模型中的 24 类状态模型、64 份状态�
 
 `prepare_map11_stone_states.py` 从原6503 prefab、Animator、Spine及附着轨道重建close／middle／open与各自loop；按原中断规则和normalized entry mix采样64组12fps本地网格动画。输出及原对象来源见 `official-map/stone-11-source-manifest.json`。`prepare_map11_logic_views.py` 核对五包清单、原实体显示表与模板，确认6533的413／3210／6105是原定义的逻辑节点，没有对应显示Prefab；`official-map/logic-11-source-manifest.json` 记录检索范围与原对象，不为这些节点绘制假素材。
 
+`prepare_battle_stele.py` 将 APK 固定版本 `854_156383` 的 `stage_battle_stele`、`game_settings` 转换为 `assets/official/battle-stele.json`：65 条关卡记录，每条保留 4 档战力阈值，推荐索引为 2。该文件与其他官方配置转换结果集中存放；迁移仅变更路径，9,390 字节及 SHA256 `f3d6f8bc7ea42f115e07a98c87ab4ebac01c618c02b7bbac81dd267dfff0c239` 保持不变。官方表输入哈希、bundle／对象身份和输出路径见 `official-map/battle-stele-source-manifest.json`；地图 11／12／13 的来源清单同步引用新路径，运行时载荷和加载绑定不变。已从原 APK 隔离重建并逐字节比对该表，复核三张地图的战碑数据、推荐索引及原中文字段；Unity 静态元数据检查通过。隔离验证按来源哈希读取 APK 原语言，保留现有地图载荷的后续增量。此次未生成完整素材快照。
+
 `prepare_map11_dialogs.py` 从原 `stage_battle_stele` 表选择900／901／902／925／926／927，并按XXHash64读取原两份中文语言二进制的17个名称／说明／界面键，输出 `assets/official/map11-dialogs.json`。原关卡表、语言来源及哈希见 `official-map/dialogs-11-source-manifest.json`；界面复用原BattleSteleWorldStageDialog和已转换官方敌人模型。
 
 `register_map_assets.py --map11` 仅登记上述独立来源收据验证的输出，保留其余模块绑定与历史来源；不以当前文件哈希覆盖未核对的预期值。既有位阶教学中文增量另由 `--localization` 逐键核对两份原语言输入后登记，中央来源保留旧摘要和原增量链。资源进入显式本地加载清单及匹配素材包，旧APK／CDN预期哈希和原版本185个缺项保留。

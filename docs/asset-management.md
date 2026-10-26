@@ -10,6 +10,7 @@
 - `unity/Assets/Official/` 保存独立管理的官方素材载荷，不在 Git 中；不得向该目录写入手写代码。
 - Unity 的 `Library/`、`Temp/`、`Obj/`、`Logs/`、`UserSettings/` 与 IDE 生成文件不提交、不进入素材快照。
 - `.tools/` 保存 APK、CDN 缓存、提取工具、开发依赖和素材快照；不提交且不进入 Windows 导出。
+- `assets/official/` 保存独立管理的官方配置转换结果；战斗碑表位于 `assets/official/battle-stele.json`，由 `prepare_battle_stele.py` 生成，供地图转换脚本读取。该目录不纳入 Git，素材备份以实际生成的快照为准。
 - `assets/reference/` 只保存来源记录和必要参照。运行时素材必须由 Unity 工程打包并随游戏交付。
 - 原始 AssetBundle 与编译 shader 不默认视为 Windows 可用资源；须恢复、转换、绑定并验证目标平台表现。
 

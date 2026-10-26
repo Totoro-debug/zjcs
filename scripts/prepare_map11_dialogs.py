@@ -16,7 +16,7 @@ def digest(path):
 def build(destination,mid=11,stages=STAGES):
     source_path = ROOT / 'assets/reference/official-map/battle-stele-source-manifest.json'
     source = json.loads(source_path.read_text(encoding='utf8'))
-    table_path = ROOT / 'data/battle-stele.json'
+    table_path = ROOT / 'assets/official/battle-stele.json'
     if source['version'] != '854_156383' or digest(table_path) != source['output']['sha256']:
         raise ValueError('Pinned battle-stele table differs from its original conversion receipt')
     table = json.loads(table_path.read_text(encoding='utf8'))
@@ -39,7 +39,7 @@ def build(destination,mid=11,stages=STAGES):
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     record = dict(manifest='854_156383', table_source=source['tables']['stage_battle_stele'],
-                  table_conversion=dict(path='data/battle-stele.json', sha256=digest(table_path)),
+                  table_conversion=dict(path='assets/official/battle-stele.json', sha256=digest(table_path)),
                   localization_inputs={path:dict(sha256=sha, source=receipt['inputs'][Path(path).name]['source']) for path, sha in inputs.items()},
                   outputs={relative:digest(target)}, resources={},
                   operation='Select requested original stage_battle_stele rows; XXHash64 original zh_CN strings; existing official UI sprites reused, no drawing')

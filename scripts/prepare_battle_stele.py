@@ -79,7 +79,7 @@ def verify_bundle(apk: Apk) -> dict:
 
 def write_package_manifest(output_dir: Path, entrypoint: Path) -> None:
     files = [
-        output_dir / "data/battle-stele.json",
+        output_dir / "assets/official/battle-stele.json",
         output_dir / "assets/reference/official-map/battle-stele-source-manifest.json",
     ]
     readme = output_dir / "README.md"
@@ -134,7 +134,7 @@ def build(output_dir: Path, make_package_manifest: bool = False) -> tuple[dict, 
         "recommend_index": recommend_index,
         "rows": rows,
     }
-    data_path = output_dir / "data/battle-stele.json"
+    data_path = output_dir / "assets/official/battle-stele.json"
     data_bytes = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     data_path.parent.mkdir(parents=True, exist_ok=True)
     data_path.write_bytes(data_bytes)
@@ -177,7 +177,7 @@ def build(output_dir: Path, make_package_manifest: bool = False) -> tuple[dict, 
         "official_constructor_sources": [file_record(path, WORKSPACE) for path in constructor_paths],
         "official_code_generation_manifest": code_manifest,
         "output": {
-            "data_path": "data/battle-stele.json",
+            "data_path": "assets/official/battle-stele.json",
             "provenance_path": "assets/reference/official-map/battle-stele-source-manifest.json",
             "bytes": len(data_bytes),
             "sha256": sha256(data_bytes),
@@ -209,7 +209,7 @@ def main() -> None:
     output_dir = args.output_dir.resolve()
     payload, source = build(output_dir, args.write_package_manifest)
     print(
-        f"Generated {output_dir / 'data/battle-stele.json'} and "
+        f"Generated {output_dir / 'assets/official/battle-stele.json'} and "
         f"{output_dir / 'assets/reference/official-map/battle-stele-source-manifest.json'}: "
         f"{len(payload['rows'])} rows, recommend_index={payload['recommend_index']}, "
         f"raw_sha256={source['tables'][STAGE_TABLE]['raw_sha256']}"
