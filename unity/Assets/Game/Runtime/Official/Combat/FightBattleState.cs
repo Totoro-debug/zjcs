@@ -61,12 +61,22 @@ namespace Zjcs.Combat.Official
         public FightSkillAgentState SkillState = new FightSkillAgentState();
         public FightTurnUnit Turn = new FightTurnUnit();
         public List<FightBattleStatusState> Statuses = new List<FightBattleStatusState>();
+        public List<FightBattleStatusApplicationEvent> PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
         public List<FightBattleStatusState> EndedAccumulatedDamageStatuses = new List<FightBattleStatusState>();
         public List<FightBattleFalloffCounter> FalloffCounts = new List<FightBattleFalloffCounter>();
         public List<FightGridPoint> BodyOffsets = new List<FightGridPoint>
         {
             new FightGridPoint(0, 0)
         };
+    }
+
+    [Serializable]
+    public sealed class FightBattleStatusApplicationEvent
+    {
+        public int CreatorId;
+        public int RootSkillId;
+        public int ApplyingSkillItemId;
+        public int StatusType;
     }
 
     [Serializable]

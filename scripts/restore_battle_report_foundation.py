@@ -243,6 +243,10 @@ def record_runtime():
             allowed.update(row['sha256'] for row in scroll['outputs'] if row['path'] == entry['path'])
         if dropdown:
             allowed.update(row['sha256'] for row in dropdown['outputs'] if row['path'] == entry['path'])
+        for successor in ['report-text-source-manifest.json', 'report-skill-row-source-manifest.json']:
+            text_receipt = ROOT / 'assets/reference/battle-hud' / successor
+            if text_receipt.exists():
+                allowed.update(row['sha256'] for row in json.loads(text_receipt.read_bytes())['outputs'] if row['path'] == entry['path'])
         if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Report foundation prefab changed: ' + entry['path'])
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())

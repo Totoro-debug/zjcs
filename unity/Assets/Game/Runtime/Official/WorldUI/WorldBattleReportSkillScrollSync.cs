@@ -9,7 +9,11 @@ namespace Zjcs.Official.WorldUI
     {
         [SerializeField] private ScrollRect mTitleScrollRect;
         [SerializeField] private LoopVerticalScrollRect mItemScrollRect;
+        [SerializeField] private WorldStateSwitcher<bool> mGMStateSwitcher;
         private bool initialized;
+
+        // Original FightEndReportSkillTabView.Refresh applies the same GM state to its headers.
+        public void SetGMState(bool gm) => mGMStateSwitcher.SetState(gm);
 
         public void Initialize()
         {

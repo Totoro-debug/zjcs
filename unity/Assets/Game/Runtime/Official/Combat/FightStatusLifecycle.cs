@@ -155,6 +155,7 @@ namespace Zjcs.Combat.Official
                     if (existing.IsAddDurationRound) ExtendDurationOnStack(existing, round);
                     else if (existing.IsResetDurationWhenStack) ResetDurationOnStack(existing, round);
                     FightStatusCooldownRuntime.Invoke(unit, existing, random);
+                    RecordApplication(unit, template);
                     return existing;
                 }
                 if (existing.ActionBehOfSameStatus == BehaviourDiscard) return existing;
@@ -306,7 +307,25 @@ namespace Zjcs.Combat.Official
             unit.Statuses.Add(applied);
             if (applied.HasBackToLifeComponent) unit.Hp = 1;
             FightStatusCooldownRuntime.Invoke(unit, applied, random);
+            RecordApplication(unit, template);
             return applied;
+        }
+
+        // Keep accepted applications separate from active instances: refresh/stack applications
+        // count once each, including several applications before the next property rebuild.
+        // Use the incoming source, which can differ from the existing instance's original creator.
+        private static void RecordApplication(FightBattleUnitState unit, FightBattleStatusState template)
+        {
+            if (template.StatusType < 1 || template.StatusType > 3) return;
+            if (unit.PendingStatusApplications == null)
+                unit.PendingStatusApplications = new List<FightBattleStatusApplicationEvent>();
+            unit.PendingStatusApplications.Add(new FightBattleStatusApplicationEvent
+            {
+                CreatorId = template.CreatorId,
+                RootSkillId = template.RootSkillId,
+                ApplyingSkillItemId = template.ApplyingSkillItemId,
+                StatusType = template.StatusType
+            });
         }
 
         /// <summary>

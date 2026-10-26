@@ -93,6 +93,10 @@ def build(source_root, ugui, netstandard):
             allowed.update(x['sha256'] for x in scroll['outputs'] if x['path'] == record['path'])
         if dropdown:
             allowed.update(x['sha256'] for x in dropdown['outputs'] if x['path'] == record['path'])
+        for successor in ['report-text-source-manifest.json', 'report-skill-row-source-manifest.json']:
+            text_receipt = ROOT / 'assets/reference/battle-hud' / successor
+            if text_receipt.exists():
+                allowed.update(row['sha256'] for row in json.loads(text_receipt.read_bytes())['outputs'] if row['path'] == record['path'])
         if digest(raw) not in allowed and digest(raw.replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Changed runtime report prefab: ' + str(target))
         # Always rebuild from the unmodified native export, with the existing UGUI/TMP adaptation.

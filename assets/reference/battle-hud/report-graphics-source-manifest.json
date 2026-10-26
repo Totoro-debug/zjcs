@@ -1,7 +1,7 @@
 {
   "format": 1,
   "manifest": "854_156383",
-  "generator_sha256": "34cbf2a8f6ee3a931133ceecb4a0cf31be264f039c93426bc1d936c3fdccbe12",
+  "generator_sha256": "65e782c67381d76f0d236e14dc92671cdb244a92b956da7aa20127326047e035",
   "inputs": [
     {
       "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
@@ -4434,7 +4434,7 @@
       "meta_sha256": "e7156dc00b6a205320ad264e20af141a7573f4206f464006b528a5b2bcfa91fd",
       "bytes": 8411278,
       "validation_cache": {
-        "sha256": "3a95aa278004b503b402f8a9d69252fcfb14cbc65be26b312a4f95a1f6304858",
+        "sha256": "b00502bf3dda28f363a86a3cb71082b2d153a259a788ec4843224ae1d6fd7b4c",
         "changed_fields": [
           "MonoBehaviour.m_CharacterTable",
           "MonoBehaviour.m_FreeGlyphRects",
@@ -31966,7 +31966,18 @@
     {
       "path": "unity/Assets/Official/Combat/BattleReport/Graphics/Font_330c55d759bc3487.asset",
       "sha256": "00100e298d4e0fcc44aa4fdf79509986c49000fde1ebb6d5f4d3c1bf318729ab",
-      "bytes": 2104782
+      "bytes": 2104782,
+      "validation_cache": {
+        "sha256": "ac985c2a2bad38de79a1b5b8a5db5bcd9e463866f0dc4cbdee8ba1270013180b",
+        "changed_fields": [
+          "MonoBehaviour.m_CharacterTable",
+          "MonoBehaviour.m_FreeGlyphRects",
+          "MonoBehaviour.m_GlyphTable",
+          "MonoBehaviour.m_UsedGlyphRects",
+          "Texture2D._typelessdata"
+        ],
+        "scope": "Editor-generated glyph/atlas cache and serialization whitespace; excluded from the committed source payload hash."
+      }
     },
     {
       "path": "unity/Assets/Official/Combat/BattleReport/Graphics/Font_330c55d759bc3487.asset.meta",
@@ -32441,8 +32452,8 @@
   ],
   "runtime": {
     "unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAssetTools.cs": "2273bb122af1ce0c07656034bf0b07fe05a718562133282e46acc1d2be808959",
-    "unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAcceptance.cs": "3ecd5e347c8f659a4b6ee36128896bd57c3028e9cf44f6425da86a06afcf8085",
-    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "355603e31d1233fa5c8c84e8d3374aefb60a4c1ad47c7115d74c10de91f257bd",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAcceptance.cs": "0b0d4473b3d4905c69e9f2654aeeed4a3950a1af2acd1f1f15be3f236a09b10e",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "b6f7f50d3b3d8c0ccd41d0ad1b922f7f80380b79e242840e01b0af206b5d316d",
     "scripts/battle_report_font_receipt.py": "822e44001928f7eebb02f27d61b6658f1a5725659e84d73d4a782e37bc9fb6d3"
   },
   "mirror_code": {

@@ -18,6 +18,8 @@ def build(source_root):
             'common-source/Common/FightReportDamageStats.cs',
             'common-source/Common/FightReportComponent.cs',
             'common-source/Common/BattleReportCollector.cs',
+            'common-source/Common/StatusType.cs',
+            'common-source/Common/FightReportStatusStats.cs',
             'client-source/FightEndReportSkillTabViewItem.cs',
             'client-source/FightEndReportSkillTabView.cs',
             'client-source/CharacterDamageUIManager.cs']
@@ -26,7 +28,10 @@ def build(source_root):
                 'FightBattleState', 'FightStatusLifecycle', 'FightStatusPropertyRuntime']]
     runtime += ['unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs',
                 'unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs',
-                'scripts/test_battle_report_averages.ps1', 'scripts/test_battle_report_shields.ps1']
+                'scripts/test_battle_report_averages.ps1', 'scripts/test_battle_report_shields.ps1',
+                'scripts/test_battle_report_cures.ps1',
+                'scripts/test_battle_report_status_counts.ps1',
+                'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportSkillRowBinder.cs']
     record = dict(manifest='854_156383', generator_sha256=sha(Path(__file__)),
                   official_code={p: sha(official / p) for p in code},
                   runtime={p: sha(ROOT / p) for p in runtime},
@@ -34,14 +39,18 @@ def build(source_root):
                   user_confirmed=dict(numerator='H: damage hits, including immunity with zero damage and full shield absorption; excluding dodge.',
                                       denominators='C: casts; T: sum of distinct damage-hit targets within each cast. Average hit count H/C; average segments H/T.',
                                       example='10 casts, 2 targets and 3 segments each: H=60, T=20, averages 6 and 3.',
-                                      rounding='User example: 18 hits / 10 casts = 1.8, displayed as 2. Presentation formatting is still pending.',
+                                      rounding='User example: 18 hits / 10 casts = 1.8, displayed as 2. The original row adapter uses Mathf.RoundToInt for display and retains raw ratios.',
+                                      damage_count='DamageCount equals the confirmed damage-hit count, including immunity/full shielding and excluding dodge.',
+                                      cure_count='CureCount counts landed cure-target hits, including full HP with zero effective healing.',
+                                      status_counts='Each target accepted application counts once: new, stack and refresh count one, multiple stacks still one, discard and probability failure zero. Buff=1; Debuff=2 and AbnormalDebuff=3 both count as debuffs; None=0 excluded.',
                                       shield='Effective shield is the numeric shield successfully added to targets, not later damage absorption.',
                                       distributions='Each skill effective damage/healing/shield divided by the sum of the corresponding effective values across all skills of that caster.',
                                       hp_ratios='Each skill effective healing/shield divided by the caster maximum HP.'),
                   implementation='Each ExecuteSkill invocation owns its target set, so same-skill recursive replay starts another denominator. Healing, HP-cost records, original blinding/miss and no-damage actions do not enter damage-hit counters. Extra mark attribution creates no additional hit.',
                   shield_implementation='A new numeric-shield lifecycle instance is pending until the original property rebuild initializes its configured/custom shield value. Attribute that successful grant to CreatorId/RootSkillId/ApplyingSkillItemId exactly once. Existing discard/stack updates and restored shields do not manufacture grants. Shield consumption never reduces granted statistics.',
-                  persistence='Serialize raw counts, HasDamageHitCounts, HasShieldGrantCounts and pending shield-grant bits. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits or remaining shields. An incomplete caster shield history also marks its distribution denominator unavailable.',
-                  pending='Original report row binding, display rounding, production entry, full passive/status source mapping, status counts and complete report fields remain incomplete.')
+                  status_implementation='The common lifecycle journals each accepted application using its incoming creator/root skill/item, independent of the active instance. The executor drains pending records once after property rebuild. This preserves refreshes, multiple applications and statuses removed before aggregation; records without a root skill remain explicit unit-level unattributed counts, never a fabricated skill 0. Unattributed caster applications mark per-skill totals unavailable while retaining recorded lower bounds.',
+                  persistence='Serialize raw counts, HasDamageHitCounts, HasCureHitCounts, HasStatusApplicationCounts, HasShieldGrantCounts, pending status applications and pending shield-grant bits. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits, active statuses or remaining shields. An incomplete caster shield history also marks its distribution denominator unavailable.',
+                  pending='The original numeric row has a reusable binding adapter; production entry, icon/detail providers, full passive/status source mapping and complete report fields remain incomplete.')
     path = ROOT / 'assets/reference/battle-rules/report-statistics-source-manifest.json'
     temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
     try:

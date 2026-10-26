@@ -45,7 +45,7 @@ namespace Zjcs.Editor.Combat
                 root.name = asset.name;
                 try
                 {
-                    yield return null;
+                    // Compare the original serialized seed before MultiLanguageText.Start refreshes it.
                     var nodes = new Dictionary<string, Transform>();
                     Index(root.transform, "", nodes);
                     foreach (Binding binding in panel)
@@ -78,6 +78,7 @@ namespace Zjcs.Editor.Combat
                         else throw new InvalidDataException("Unexpected original graphic: " + binding.path);
                         graphics++;
                     }
+                    yield return null;
                 }
                 finally { UnityEngine.Object.DestroyImmediate(root); }
             }

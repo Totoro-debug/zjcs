@@ -1408,6 +1408,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: null
   mTitleScrollRect: {fileID: 114571878917323452}
   mItemScrollRect: {fileID: 114358105479016104}
+  mGMStateSwitcher:
+    mStateConfigs:
+    - rid: 8140112727386357861
+    mOwner: {fileID: 1709254077376921}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8140112727386357861
+      type:
+        class: WorldStateGameObjectConfig
+        ns: Zjcs.Official.WorldUI
+        asm: Zjcs.Official.WorldUI
+      data:
+        mStateGameObjectData:
+          GoConfig:
+          - State:
+              mValue: 1
+            GameObjects:
+            - {fileID: 1977153420339851}
+            - {fileID: 1336590748365959}
+            - {fileID: 1256069497284392}
 --- !u!114 &114026196548002408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1573,9 +1594,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618682377417806}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_title
 --- !u!114 &114574304967836189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2162,9 +2184,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1709867586078768}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_count
 --- !u!224 &224085275382694935
 RectTransform:
   serializedVersion: 2
@@ -2287,9 +2310,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1044625135789424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_avg_damage_count
 --- !u!224 &224770005084341472
 RectTransform:
   serializedVersion: 2
@@ -2412,9 +2436,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589667821646929}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_buff_count
 --- !u!224 &224150646884989824
 RectTransform:
   serializedVersion: 2
@@ -2537,9 +2562,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1372920208702427}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_debuff_count
 --- !u!224 &224533803739292891
 RectTransform:
   serializedVersion: 2
@@ -2662,9 +2688,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1025901758691103}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_damage
 --- !u!224 &224690175861776792
 RectTransform:
   serializedVersion: 2
@@ -2787,9 +2814,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1985305603660343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_shield
 --- !u!224 &224617365563186364
 RectTransform:
   serializedVersion: 2
@@ -2912,9 +2940,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1705390221481576}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_cure
 --- !u!224 &224328299215684997
 RectTransform:
   serializedVersion: 2
@@ -3037,9 +3066,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1977153420339851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_avg_hit_count
 --- !u!224 &224450391854282655
 RectTransform:
   serializedVersion: 2
@@ -3162,9 +3192,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1336590748365959}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_cure_per
 --- !u!224 &224561126880652180
 RectTransform:
   serializedVersion: 2
@@ -3287,9 +3318,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1256069497284392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_shield_per
 --- !u!224 &224091882994760266
 RectTransform:
   serializedVersion: 2
@@ -3412,9 +3444,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1161607090078389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_damage_count
 --- !u!224 &224570723408815475
 RectTransform:
   serializedVersion: 2
@@ -3537,9 +3570,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1002669891404536}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_battle_end_skill_report_cure_count
 --- !u!224 &224695600491528212
 RectTransform:
   serializedVersion: 2
@@ -4347,9 +4381,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1918264173551851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: CharacterPanel.Title
 --- !u!114 &114181586030114204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4758,9 +4793,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1371939378208658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ''
 --- !u!224 &224016852445014956
 RectTransform:
   serializedVersion: 2
@@ -5073,9 +5109,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1217368724061974}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_new_mark_text
 --- !u!114 &114689224686120706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5639,9 +5676,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1518489005915545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_pet
 --- !u!114 &114960577952585462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6050,9 +6088,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1967328832014496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ''
 --- !u!224 &224964675957374274
 RectTransform:
   serializedVersion: 2
@@ -6365,9 +6404,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1833703512093738}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_new_mark_text
 --- !u!114 &114349979204078785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6931,9 +6971,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000955326284023}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_pet
 --- !u!114 &114952320105404285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7342,9 +7383,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1581786255902400}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ''
 --- !u!224 &224290791091168379
 RectTransform:
   serializedVersion: 2
@@ -7657,9 +7699,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1215879266689626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af3f11a55794eeb92472fe769e4bfc1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 231cab3c6fd951b7a2d14633a5465cbf, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  myKey: ui_new_mark_text
 --- !u!114 &114799881864385010
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -231,6 +231,8 @@ namespace Zjcs.Editor
                 yield return Combat.OfficialBattleReportFoundationAcceptance.Run();
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_DROPDOWN") == "1")
                 yield return Combat.OfficialBattleReportDropdownAcceptance.Run();
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_TEXTS") == "1")
+                yield return Combat.OfficialBattleReportTextAcceptance.Run();
             Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
                 damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);
@@ -537,6 +539,9 @@ namespace Zjcs.Editor
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_STATISTICS") == "1")
                     Combat.OfficialBattleReportStatisticsAcceptance.Verify(
+                        (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SKILL_ROW") == "1")
+                    yield return Combat.OfficialBattleReportSkillRowAcceptance.Run(
                         (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
                 Require(controllerField.GetValue(runtime) == null && worldTerrain.activeSelf,
                     "The battle did not restore its suspended world roots.");

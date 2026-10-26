@@ -55,7 +55,7 @@ namespace Zjcs.Official.WorldUI
                 OnFontChanged?.Invoke();
             }
             if (string.IsNullOrEmpty(myKey)) return;
-            string text = Localize != null ? Localize(myKey) : myKey;
+            string text = Localize != null ? Localize(myKey) : WorldBattleReportTextService.GetText(myKey);
             if (mArgs == null || mArgs.Length == 0) SetLanguageText(GetRawKeyValueProcessed(text));
             else
             {

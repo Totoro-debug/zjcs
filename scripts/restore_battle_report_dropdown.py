@@ -295,7 +295,12 @@ def record_runtime():
     from battle_report_font_receipt import font_payload_record
     data = json.loads(RECEIPT.read_bytes())
     for entry in data['outputs']:
-        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) != entry['sha256']:
+        allowed = {entry['sha256']}
+        for successor in ['report-text-source-manifest.json', 'report-skill-row-source-manifest.json']:
+            text_receipt = ROOT / 'assets/reference/battle-hud' / successor
+            if text_receipt.exists():
+                allowed.update(row['sha256'] for row in json.loads(text_receipt.read_bytes())['outputs'] if row['path'] == entry['path'])
+        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Dropdown prefab changed: ' + entry['path'])
         entry['meta_sha256'] = sha((ROOT / (entry['path'] + '.meta')).read_bytes())
     data['generator_sha256'] = sha(Path(__file__).read_bytes())

@@ -25,6 +25,10 @@ namespace Zjcs.Combat.Official
         public long ShieldGranted;
         public long ShieldReceived;
         public long UnattributedShieldGranted;
+        public int BuffApplications;
+        public int DebuffApplications;
+        public int UnattributedBuffApplications;
+        public int UnattributedDebuffApplications;
     }
 
     [Serializable]
@@ -38,6 +42,11 @@ namespace Zjcs.Combat.Official
         public bool HasDamageHitCounts;
         public int DamageHits;
         public int DamageTargets;
+        public bool HasCureHitCounts;
+        public int CureHits;
+        public bool HasStatusApplicationCounts;
+        public int BuffApplications;
+        public int DebuffApplications;
         public float AvgDamageCount;
         public float AvgDamageCountPerTarget;
         public long Damage;
@@ -130,7 +139,11 @@ namespace Zjcs.Combat.Official
                     HealTaken = stats == null ? 0 : stats.HealTaken,
                     ShieldGranted = stats == null ? 0 : stats.ShieldGranted,
                     ShieldReceived = stats == null ? 0 : stats.ShieldReceived,
-                    UnattributedShieldGranted = stats == null ? 0 : stats.UnattributedShieldGranted
+                    UnattributedShieldGranted = stats == null ? 0 : stats.UnattributedShieldGranted,
+                    BuffApplications = stats == null ? 0 : stats.BuffApplications,
+                    DebuffApplications = stats == null ? 0 : stats.DebuffApplications,
+                    UnattributedBuffApplications = stats == null ? 0 : stats.UnattributedBuffApplications,
+                    UnattributedDebuffApplications = stats == null ? 0 : stats.UnattributedDebuffApplications
                 };
                 if (unit.Id == 1)
                 {
@@ -156,6 +169,11 @@ namespace Zjcs.Combat.Official
                     HasDamageHitCounts = skill.HasDamageHitCounts,
                     DamageHits = skill.DamageHits,
                     DamageTargets = skill.DamageTargets,
+                    HasCureHitCounts = skill.HasCureHitCounts,
+                    CureHits = skill.CureHits,
+                    HasStatusApplicationCounts = skill.HasStatusApplicationCounts,
+                    BuffApplications = skill.BuffApplications,
+                    DebuffApplications = skill.DebuffApplications,
                     AvgDamageCount = skill.HasDamageHitCounts && skill.Casts > 0
                         ? (float)skill.DamageHits / skill.Casts : 0f,
                     AvgDamageCountPerTarget = skill.HasDamageHitCounts && skill.DamageTargets > 0
@@ -171,6 +189,12 @@ namespace Zjcs.Combat.Official
             {
                 long damage = 0, heal = 0, shield = 0;
                 FightBattleReportUnit source = report.Unit(skill.UnitId);
+                // Unattributed applications could belong to any skill of this caster. Keep the
+                // recorded lower bounds, but do not present them as complete per-skill totals.
+                foreach (FightBattleUnitStatistics candidate in statistics.Units)
+                    if (candidate != null && candidate.UnitId == skill.UnitId)
+                        skill.HasStatusApplicationCounts &= candidate.UnattributedBuffApplications == 0
+                            && candidate.UnattributedDebuffApplications == 0;
                 bool completeShield = source == null || source.UnattributedShieldGranted == 0;
                 foreach (FightBattleReportSkill candidate in report.Skills)
                 {

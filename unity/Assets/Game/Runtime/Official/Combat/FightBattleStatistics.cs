@@ -64,6 +64,10 @@ namespace Zjcs.Combat.Official
         public long ShieldGranted;
         public long ShieldReceived;
         public long UnattributedShieldGranted;
+        public int BuffApplications;
+        public int DebuffApplications;
+        public int UnattributedBuffApplications;
+        public int UnattributedDebuffApplications;
     }
 
     [Serializable]
@@ -78,6 +82,11 @@ namespace Zjcs.Combat.Official
         public bool HasDamageHitCounts;
         public int DamageHits;
         public int DamageTargets;
+        public bool HasCureHitCounts;
+        public int CureHits;
+        public bool HasStatusApplicationCounts;
+        public int BuffApplications;
+        public int DebuffApplications;
         public long Damage;
         public long AdditionalAttributedDamage;
         public long Heal;
@@ -115,6 +124,8 @@ namespace Zjcs.Combat.Official
                 SkillEntityId = skillEntityId,
                 SkillItemId = skillItemId,
                 HasDamageHitCounts = true,
+                HasCureHitCounts = true,
+                HasStatusApplicationCounts = true,
                 HasShieldGrantCounts = true
             };
             Skills.Add(created);
@@ -125,6 +136,35 @@ namespace Zjcs.Combat.Official
         {
             Unit(unitId).Casts++;
             Skill(unitId, skillEntityId, skillItemId).Casts++;
+        }
+
+        public void RecordPendingStatusApplications(IReadOnlyList<FightBattleUnitState> units)
+        {
+            if (units == null) return;
+            foreach (FightBattleUnitState owner in units)
+            {
+                if (owner == null || owner.PendingStatusApplications == null) continue;
+                foreach (FightBattleStatusApplicationEvent application in owner.PendingStatusApplications)
+                {
+                    if (application == null || application.CreatorId <= 0
+                        || application.StatusType < 1 || application.StatusType > 3) continue;
+                    bool buff = application.StatusType == 1;
+                    FightBattleUnitStatistics source = Unit(application.CreatorId);
+                    if (buff) source.BuffApplications = checked(source.BuffApplications + 1);
+                    else source.DebuffApplications = checked(source.DebuffApplications + 1);
+                    if (application.RootSkillId <= 0)
+                    {
+                        if (buff) source.UnattributedBuffApplications = checked(source.UnattributedBuffApplications + 1);
+                        else source.UnattributedDebuffApplications = checked(source.UnattributedDebuffApplications + 1);
+                        continue;
+                    }
+                    FightBattleSkillStatistics skill = Skill(application.CreatorId,
+                        application.RootSkillId, application.ApplyingSkillItemId);
+                    if (buff) skill.BuffApplications = checked(skill.BuffApplications + 1);
+                    else skill.DebuffApplications = checked(skill.DebuffApplications + 1);
+                }
+                owner.PendingStatusApplications.Clear();
+            }
         }
 
         // The confirmed report value is successfully added shield, independent of later absorption.
@@ -193,6 +233,8 @@ namespace Zjcs.Combat.Official
             long amount = Math.Abs(damage.Damage);
             if (damage.IsCure)
             {
+                // A landed cure counts even when full HP clamps its actual healing to zero.
+                if (!damage.Dodge && !damage.Blinding) skill.CureHits = checked(skill.CureHits + 1);
                 source.HealDealt += amount;
                 target.HealTaken += amount;
                 skill.Heal += amount;

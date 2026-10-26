@@ -1,39 +1,48 @@
 {
   "manifest": "854_156383",
-  "generator_sha256": "8a9ad33215e8e15ed09a9f44c5d958faffc6772026ece098f91bc560ca5cf89f",
+  "generator_sha256": "fb6490ad691da91b246d7769c3c2079d8e6d0f4e3f5353cc4507a33af87ca5f7",
   "official_code": {
     "common-source/Common/PlayerFightSkillReport.cs": "43609f9643e847bf82e63a9ea3a1e4479777c8066f4ca759c1027bc9649ceef5",
     "common-source/Common/FightReportDamageStats.cs": "94f6b9a9827532cb7deb6e444617fe46fa538545ef5c108d52e79200bcdfc3d6",
     "common-source/Common/FightReportComponent.cs": "a8a2934af40c0f22d2d732dfe6b03cd37720b6c518edc770ffc94acd52c00aac",
     "common-source/Common/BattleReportCollector.cs": "c189952228f10889dd9d181cc08b88ac0b1baf443559fb1e0f33138e3352ebe7",
+    "common-source/Common/StatusType.cs": "f6aba15573f43a58a9c05456b072403609786cbea404b36ed260a1f9063cc7a0",
+    "common-source/Common/FightReportStatusStats.cs": "d8353cb3221b47f4a64bb8ae3a71ad4cd9fb78276ec459bba7b4b2ef03b7c9d9",
     "client-source/FightEndReportSkillTabViewItem.cs": "b436b7bf2dd11ea7d7b5648e72fbf368799cd6fd604407c32dfebdc1d19a47d6",
     "client-source/FightEndReportSkillTabView.cs": "4251961836c91777bfa6fdc4ca5ae41c25ab0aac97be8d81385aaa54e3c9df18",
     "client-source/CharacterDamageUIManager.cs": "f7a12d43771a2436519444a053964fb2b2879c572e0555a08f2e7db545f59910"
   },
   "runtime": {
-    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs": "12ca11304732eee81ab7dc1f17fc10ecb1251031f20daf95b5d696a754035d9a",
-    "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs": "2df5875c74f8b34e777502423a6685b7822c5781e3a902339e041e6d3b826526",
-    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "74627ff21e4bf70d8b2806be230d723ee2a4fe9bf7114fd9b4704a43cce13184",
-    "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs": "56c363bffbe5dba2ef30b5aed2a2774f799d6a053f31c4ab9ce5e845f7809a89",
-    "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs": "82ac2bfba9e409401573e24378df20ab975b5eba62885861331e13c5945ab00a",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs": "eb1fe1718272ffc09970af382949d0660e891a9f6a613f2cde2bf9a8a09baf79",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs": "2fb9480cf990c4ea94ea028cd517d6785ac4aff57f18f59255325f3efd388579",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "68907043aaf19022cc15d20f2893461eef766b9d2a877f010e70087a29cbc293",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs": "6f7e0639b9d08b9478afdd4e57ffafcfbe33771c3d705c9bba838da0b10ed6f9",
+    "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs": "7d4dfae80a5fb1dcb925dec2480e31da4aacfa473b30db9674c654539349e9fa",
     "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs": "5e718c327c9af8f9bc3e742bc60a81c91f5f025a49c2a22eae2a4124703e2ee3",
-    "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "1ce4beff59d82f2b10fa79ffc92c73e34bc0c74d3892d9e2644e92b093cef341",
-    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "355603e31d1233fa5c8c84e8d3374aefb60a4c1ad47c7115d74c10de91f257bd",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "77d2923e091c80d11ef9a93ad99a65dabaa0b69871bd7b9843271fd881db4ee6",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "b6f7f50d3b3d8c0ccd41d0ad1b922f7f80380b79e242840e01b0af206b5d316d",
     "scripts/test_battle_report_averages.ps1": "e47076af75dda60fd45b5906b929f3196db8f46a62ea145056e1ffeaf9674127",
-    "scripts/test_battle_report_shields.ps1": "f64002547ca97b2f64c7658bc6392762e50a75c3f637462c9a31544fe8d1279b"
+    "scripts/test_battle_report_shields.ps1": "f64002547ca97b2f64c7658bc6392762e50a75c3f637462c9a31544fe8d1279b",
+    "scripts/test_battle_report_cures.ps1": "355b5e4c64ff9c7c45eaafeaeacc56695fcf797bf1c4066501a1ea134158dd8a",
+    "scripts/test_battle_report_status_counts.ps1": "cd886c04118fe3d0895f45d8d16be8b2a8c8e117cc1c0fea525291d37e9b79a0",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportSkillRowBinder.cs": "449d923c4b7fa1588ca9771bf75bbdcd87aaa4ade9fd93cf02f47b9a3d0c481a"
   },
   "evidence": "The client consumes AvgDamageCount and AvgDamageCountPerTarget; shared PlayerFightSkillReport merges supplied values by cast-weighted averages. BattleReportCollector and FightReportComponent contain no single-battle counter implementation.",
   "user_confirmed": {
     "numerator": "H: damage hits, including immunity with zero damage and full shield absorption; excluding dodge.",
     "denominators": "C: casts; T: sum of distinct damage-hit targets within each cast. Average hit count H/C; average segments H/T.",
     "example": "10 casts, 2 targets and 3 segments each: H=60, T=20, averages 6 and 3.",
-    "rounding": "User example: 18 hits / 10 casts = 1.8, displayed as 2. Presentation formatting is still pending.",
+    "rounding": "User example: 18 hits / 10 casts = 1.8, displayed as 2. The original row adapter uses Mathf.RoundToInt for display and retains raw ratios.",
+    "damage_count": "DamageCount equals the confirmed damage-hit count, including immunity/full shielding and excluding dodge.",
+    "cure_count": "CureCount counts landed cure-target hits, including full HP with zero effective healing.",
+    "status_counts": "Each target accepted application counts once: new, stack and refresh count one, multiple stacks still one, discard and probability failure zero. Buff=1; Debuff=2 and AbnormalDebuff=3 both count as debuffs; None=0 excluded.",
     "shield": "Effective shield is the numeric shield successfully added to targets, not later damage absorption.",
     "distributions": "Each skill effective damage/healing/shield divided by the sum of the corresponding effective values across all skills of that caster.",
     "hp_ratios": "Each skill effective healing/shield divided by the caster maximum HP."
   },
   "implementation": "Each ExecuteSkill invocation owns its target set, so same-skill recursive replay starts another denominator. Healing, HP-cost records, original blinding/miss and no-damage actions do not enter damage-hit counters. Extra mark attribution creates no additional hit.",
   "shield_implementation": "A new numeric-shield lifecycle instance is pending until the original property rebuild initializes its configured/custom shield value. Attribute that successful grant to CreatorId/RootSkillId/ApplyingSkillItemId exactly once. Existing discard/stack updates and restored shields do not manufacture grants. Shield consumption never reduces granted statistics.",
-  "persistence": "Serialize raw counts, HasDamageHitCounts, HasShieldGrantCounts and pending shield-grant bits. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits or remaining shields. An incomplete caster shield history also marks its distribution denominator unavailable.",
-  "pending": "Original report row binding, display rounding, production entry, full passive/status source mapping, status counts and complete report fields remain incomplete."
+  "status_implementation": "The common lifecycle journals each accepted application using its incoming creator/root skill/item, independent of the active instance. The executor drains pending records once after property rebuild. This preserves refreshes, multiple applications and statuses removed before aggregation; records without a root skill remain explicit unit-level unattributed counts, never a fabricated skill 0. Unattributed caster applications mark per-skill totals unavailable while retaining recorded lower bounds.",
+  "persistence": "Serialize raw counts, HasDamageHitCounts, HasCureHitCounts, HasStatusApplicationCounts, HasShieldGrantCounts, pending status applications and pending shield-grant bits. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits, active statuses or remaining shields. An incomplete caster shield history also marks its distribution denominator unavailable.",
+  "pending": "The original numeric row has a reusable binding adapter; production entry, icon/detail providers, full passive/status source mapping and complete report fields remain incomplete."
 }

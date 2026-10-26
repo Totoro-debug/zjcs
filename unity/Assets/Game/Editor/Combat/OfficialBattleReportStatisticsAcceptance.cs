@@ -20,6 +20,11 @@ namespace Zjcs.Editor.Combat
                 StatusId = 24174, TargetType = 1, Chance = 1f, AffectedByProp = false,
                 CustomShieldValue = 250
             });
+            foreach (int id in new[] { 16553, 24012, 24010 })
+                applications.Add(new FightBattleStatusApplication
+                {
+                    StatusId = id, TargetType = 1, Chance = 1f, AffectedByProp = false
+                });
         }
 
         public static void Verify(FightBattleCheckpoint checkpoint)
@@ -36,6 +41,10 @@ namespace Zjcs.Editor.Combat
                         && !hit.IsSkillCost && !hit.IsCure && !hit.Dodge && !hit.Blinding && hit.DamageType != 0).ToArray();
                 Require(row.HasDamageHitCounts && row.DamageHits == events.Length,
                     "Report damage-hit numerator differs from resolved battle events: " + row.SkillEntityId);
+                int cureHits = checkpoint.Receipts.SelectMany(receipt => receipt.Event.DamageEvents)
+                    .Count(hit => hit.SourceId == row.UnitId && hit.SkillEntityId == row.SkillEntityId
+                        && hit.IsCure && !hit.IsSkillCost && !hit.Dodge && !hit.Blinding);
+                Require(row.HasCureHitCounts && row.CureHits == cureHits, "Report cure-hit count differs from landed cure events.");
                 int targets = 0;
                 bool unambiguous = true;
                 foreach (FightBattleStepReceipt receipt in checkpoint.Receipts)
@@ -53,6 +62,9 @@ namespace Zjcs.Editor.Combat
                 FightBattleReportSkill saved = savedReport.Skills.First(value => value.UnitId == row.UnitId && value.SkillEntityId == row.SkillEntityId);
                 Require(saved.HasDamageHitCounts && saved.DamageHits == row.DamageHits
                     && saved.DamageTargets == row.DamageTargets && saved.AvgDamageCount == row.AvgDamageCount
+                    && saved.HasCureHitCounts && saved.CureHits == row.CureHits
+                    && saved.HasStatusApplicationCounts && saved.BuffApplications == row.BuffApplications
+                    && saved.DebuffApplications == row.DebuffApplications
                     && saved.AvgDamageCountPerTarget == row.AvgDamageCountPerTarget
                     && saved.HasShieldGrantCounts == row.HasShieldGrantCounts && saved.ShieldGranted == row.ShieldGranted
                     && saved.DamagePer == row.DamagePer && saved.HealPer == row.HealPer && saved.ShieldPer == row.ShieldPer
@@ -77,6 +89,9 @@ namespace Zjcs.Editor.Combat
                 long shield = report.Skills.Where(value => value.UnitId == 1).Sum(value => value.ShieldGranted);
                 Require(shield >= 250 && report.Unit(1).ShieldGranted == shield && report.TotalShieldGranted >= shield,
                     "Live battle did not attribute the successful original-component shield fixture.");
+                Require(report.Skills.Where(value => value.UnitId == 1).Sum(value => value.BuffApplications) > 0
+                    && report.Skills.Where(value => value.UnitId == 1).Sum(value => value.DebuffApplications) >= 2,
+                    "Live battle did not count accepted original Buff/Debuff/AbnormalDebuff applications.");
                 Debug.Log("Battle report shield grants passed in Play Mode: " + shield
                     + " successfully added shield, per-caster distributions, caster HP ratios and Unity checkpoint persistence.");
             }

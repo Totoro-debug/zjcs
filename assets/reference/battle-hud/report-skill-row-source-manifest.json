@@ -1,0 +1,625 @@
+{
+  "format": 1,
+  "manifest": "854_156383",
+  "generator_sha256": "eb4fb6c280da1446b6d23be8dd7b8104cb61bac11ee3c7c605a85dab83bd8427",
+  "official_code": {
+    "client-source/FightEndReportSkillTabViewItem.cs": "b436b7bf2dd11ea7d7b5648e72fbf368799cd6fd604407c32dfebdc1d19a47d6",
+    "client-source/FightEndReportSkillTabView.cs": "4251961836c91777bfa6fdc4ca5ae41c25ab0aac97be8d81385aaa54e3c9df18",
+    "common-source/Common/PlayerFightSkillReport.cs": "43609f9643e847bf82e63a9ea3a1e4479777c8066f4ca759c1027bc9649ceef5",
+    "framework-firstpass-source/Framework/NumberFormatHelper.cs": "6f99c3f60df79d5914bbdb2ed92247d7ace8a68f4870b9349e123227f5c2e4cb",
+    "framework-firstpass-source/Framework/CultureNumberFormatterBase.cs": "f4171f14d149db5645c824ab0dcad8d04d4fae8f32c3d2d150cb5dd4f005e205",
+    "framework-firstpass-source/Framework/NumberCultureFormatter_CN.cs": "3c5870f569f080235521c2885a4125a74321b10ee84cd9ee2ce53d2ab4bc417d"
+  },
+  "binding": {
+    "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabViewItem.prefab",
+    "path": "/FightEndReportSkillTabViewItem",
+    "file_id": "114017697238300914",
+    "original_path_id": "-8135646838055551068",
+    "object_sha256": "08068a87bbfabb7f8584c0ddbbaa0a8c19f52a47a4d3f92ac384b5bf87901903",
+    "fields": {
+      "mSkillSlot": {
+        "fileID": 224386943702330414
+      },
+      "mCountText": {
+        "fileID": 114841364053301648
+      },
+      "mAvgDmgCountText": {
+        "fileID": 114919942235722503
+      },
+      "mAvgDmgCountPerTargetText": {
+        "fileID": 114533803739292891
+      },
+      "mRealDamageText": {
+        "fileID": 114149520701623706
+      },
+      "mRealDamagePerSlider": {
+        "fileID": 114571718729274231
+      },
+      "mRealCureText": {
+        "fileID": 114150646884989824
+      },
+      "mRealCurePerSlider": {
+        "fileID": 114264357844037074
+      },
+      "mRealCureMaxHpPerText": {
+        "fileID": 114690175861776792
+      },
+      "mRealShieldText": {
+        "fileID": 114356319167443197
+      },
+      "mRealShieldPerSlider": {
+        "fileID": 114630643969539439
+      },
+      "mRealShieldMaxHpPerText": {
+        "fileID": 114617365563186364
+      },
+      "mApplyBuffStatusCountText": {
+        "fileID": 114719342369648492
+      },
+      "mApplyDebuffStatusCountText": {
+        "fileID": 114801075752484240
+      },
+      "mNormalTextColor": {
+        "r": 0.886274516582489,
+        "g": 0.886274516582489,
+        "b": 0.886274516582489,
+        "a": 1.0
+      },
+      "mZeroTextColor": {
+        "r": 0.6549019813537598,
+        "g": 0.6549019813537598,
+        "b": 0.6549019813537598,
+        "a": 1.0
+      },
+      "mDamageCountText": {
+        "fileID": 114328299215684997
+      },
+      "mCureCountText": {
+        "fileID": 114450391854282655
+      },
+      "mGMStateSwitcher": {
+        "mStateConfigs": [
+          {
+            "rid": 7501184544638500871
+          }
+        ],
+        "mOwner": {
+          "fileID": 1709254077376921
+        }
+      },
+      "references": {
+        "version": 2,
+        "RefIds": [
+          {
+            "rid": 7501184544638500871,
+            "type": {
+              "class": "WorldStateGameObjectConfig",
+              "ns": "Zjcs.Official.WorldUI",
+              "asm": "Zjcs.Official.WorldUI"
+            },
+            "data": {
+              "mStateGameObjectData": {
+                "GoConfig": [
+                  {
+                    "State": {
+                      "mValue": 1
+                    },
+                    "GameObjects": [
+                      {
+                        "fileID": 1711914853252429
+                      },
+                      {
+                        "fileID": 1918264173551851
+                      },
+                      {
+                        "fileID": 1587397909062814
+                      },
+                      {
+                        "fileID": 1875609422105747
+                      },
+                      {
+                        "fileID": 1371939378208658
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "checks": [
+      {
+        "path": "mSkillSlot",
+        "kind": "reference",
+        "reference": {
+          "fileID": 224386943702330414
+        }
+      },
+      {
+        "path": "mCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114841364053301648
+        }
+      },
+      {
+        "path": "mAvgDmgCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114919942235722503
+        }
+      },
+      {
+        "path": "mAvgDmgCountPerTargetText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114533803739292891
+        }
+      },
+      {
+        "path": "mRealDamageText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114149520701623706
+        }
+      },
+      {
+        "path": "mRealDamagePerSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114571718729274231
+        }
+      },
+      {
+        "path": "mRealCureText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114150646884989824
+        }
+      },
+      {
+        "path": "mRealCurePerSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114264357844037074
+        }
+      },
+      {
+        "path": "mRealCureMaxHpPerText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114690175861776792
+        }
+      },
+      {
+        "path": "mRealShieldText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114356319167443197
+        }
+      },
+      {
+        "path": "mRealShieldPerSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114630643969539439
+        }
+      },
+      {
+        "path": "mRealShieldMaxHpPerText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114617365563186364
+        }
+      },
+      {
+        "path": "mApplyBuffStatusCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114719342369648492
+        }
+      },
+      {
+        "path": "mApplyDebuffStatusCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114801075752484240
+        }
+      },
+      {
+        "path": "mNormalTextColor.r",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "mNormalTextColor.g",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "mNormalTextColor.b",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "mNormalTextColor.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "mZeroTextColor.r",
+        "kind": "number",
+        "number": 0.6549019813537598
+      },
+      {
+        "path": "mZeroTextColor.g",
+        "kind": "number",
+        "number": 0.6549019813537598
+      },
+      {
+        "path": "mZeroTextColor.b",
+        "kind": "number",
+        "number": 0.6549019813537598
+      },
+      {
+        "path": "mZeroTextColor.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "mDamageCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114328299215684997
+        }
+      },
+      {
+        "path": "mCureCountText",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114450391854282655
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs",
+        "kind": "array",
+        "count": 1
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0]",
+        "kind": "managed",
+        "text": "Zjcs.Official.WorldUI Zjcs.Official.WorldUI.WorldStateGameObjectConfig"
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig",
+        "kind": "array",
+        "count": 1
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].State.mValue",
+        "kind": "number",
+        "number": 1
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects",
+        "kind": "array",
+        "count": 5
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects.Array.data[0]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1711914853252429
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects.Array.data[1]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1918264173551851
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects.Array.data[2]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1587397909062814
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects.Array.data[3]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1875609422105747
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mStateConfigs.Array.data[0].mStateGameObjectData.GoConfig.Array.data[0].GameObjects.Array.data[4]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1371939378208658
+        }
+      },
+      {
+        "path": "mGMStateSwitcher.mOwner",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1709254077376921
+        }
+      }
+    ],
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportskilltabviewitem.bundle",
+      "bundle_hash": "3695e783ed515d4e7f57600cf3d1d86e",
+      "path_id": "-8135646838055551068",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3695e783ed515d4e7f57600cf3d1d86e.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 6063,
+      "bundle_sha256": "62ef00250427e8348fcb2271e39ac473a86de18ca67b733c6e2e5fa884c6e967"
+    }
+  },
+  "header_bindings": [
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndAllPlayerReportPanel.prefab",
+      "path": "/FightEndAllPlayerReportPanel/Content/MiddleGo/FightEndReportSkillTabView",
+      "fields": {
+        "mGMStateSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 8140112727386357861
+            }
+          ],
+          "mOwner": {
+            "fileID": 1470112387431263
+          }
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 8140112727386357861,
+              "type": {
+                "class": "WorldStateGameObjectConfig",
+                "ns": "Zjcs.Official.WorldUI",
+                "asm": "Zjcs.Official.WorldUI"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "fileID": 1217368724061974
+                        },
+                        {
+                          "fileID": 1089843903986396
+                        },
+                        {
+                          "fileID": 1672306508523268
+                        },
+                        {
+                          "fileID": 1808113985169905
+                        },
+                        {
+                          "fileID": 1060945828524476
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "original_path_id": "2131268210946344617",
+      "object_sha256": "74fac87aa75e637eeed0878c091e679728f48b239358ee84fd571e64a022b0f9",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendallplayerreportpanel.bundle",
+        "bundle_hash": "d1116e4bd9fe89f80a4cd28c6bdf9f15",
+        "path_id": "2131268210946344617",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d1116e4bd9fe89f80a4cd28c6bdf9f15.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 28536,
+        "bundle_sha256": "cff2583e5e8fd2dc5b920e0175202589759052d747bceee7a33f82d6340f5ec5"
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPanel.prefab",
+      "path": "/FightEndReportPanel/Content/MiddleGo/FightEndReportSkillTabView",
+      "fields": {
+        "mGMStateSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 8140112727386357861
+            }
+          ],
+          "mOwner": {
+            "fileID": 1002669891404536
+          }
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 8140112727386357861,
+              "type": {
+                "class": "WorldStateGameObjectConfig",
+                "ns": "Zjcs.Official.WorldUI",
+                "asm": "Zjcs.Official.WorldUI"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "fileID": 1017697238300914
+                        },
+                        {
+                          "fileID": 1733206282342372
+                        },
+                        {
+                          "fileID": 1217368724061974
+                        },
+                        {
+                          "fileID": 1089843903986396
+                        },
+                        {
+                          "fileID": 1672306508523268
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "original_path_id": "-5066114166948339034",
+      "object_sha256": "ed8b66c955bcd699449184bd0ac586d927da76476b58847b8eb8334f116ea41a",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportpanel.bundle",
+        "bundle_hash": "9b96851b16bb76746f044f141a36570a",
+        "path_id": "-5066114166948339034",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/9b96851b16bb76746f044f141a36570a.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 22288,
+        "bundle_sha256": "893c404eda7a038aa3b2f9036cd4128c6c7a0e5aeb75825e7ef0b9e7d928c791"
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabView.prefab",
+      "path": "/FightEndReportSkillTabView",
+      "fields": {
+        "mGMStateSwitcher": {
+          "mStateConfigs": [
+            {
+              "rid": 8140112727386357861
+            }
+          ],
+          "mOwner": {
+            "fileID": 1709254077376921
+          }
+        },
+        "references": {
+          "version": 2,
+          "RefIds": [
+            {
+              "rid": 8140112727386357861,
+              "type": {
+                "class": "WorldStateGameObjectConfig",
+                "ns": "Zjcs.Official.WorldUI",
+                "asm": "Zjcs.Official.WorldUI"
+              },
+              "data": {
+                "mStateGameObjectData": {
+                  "GoConfig": [
+                    {
+                      "State": {
+                        "mValue": 1
+                      },
+                      "GameObjects": [
+                        {
+                          "fileID": 1977153420339851
+                        },
+                        {
+                          "fileID": 1336590748365959
+                        },
+                        {
+                          "fileID": 1256069497284392
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "original_path_id": "-873967528594785948",
+      "object_sha256": "69e94b03159963e35094a089d1ec139d4c3684dfc3cfe25b737636be5b5f5c20",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportskilltabview.bundle",
+        "bundle_hash": "1b63b439e39307c4f792622e7a39c43b",
+        "path_id": "-873967528594785948",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1b63b439e39307c4f792622e7a39c43b.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 13534,
+        "bundle_sha256": "0657a6c7b571626d851707d25bd6ea49555a13678474b9392db1d7002bd2eac7"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabViewItem.prefab",
+      "sha256": "4737151f43c580793f579ed7ee3f9cd6c7820551c0bbf96b4ca29ecf2567fb70",
+      "bytes": 102856
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndAllPlayerReportPanel.prefab",
+      "sha256": "c40e73f9fd76968ec980d850db358e03c5a07924dfa22d5a300028544372e606",
+      "bytes": 539060
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPanel.prefab",
+      "sha256": "201dd91256bfb421efde2f914fdd2850d96d8559e83fe2d7284b1a3576db7240",
+      "bytes": 407987
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportSkillTabView.prefab",
+      "sha256": "834046a64afe9c5c6abd1e919a17537c6b67b8d6cd4dbe2b28f7e95c0afc0cdd",
+      "bytes": 235402
+    }
+  ],
+  "copied_number_methods": [
+    "Divide",
+    "TruncateBySignificantDigits",
+    "ApplyDecimalSeparator",
+    "ComposeFormattedNumber",
+    "FormatStandardSignificantPercent"
+  ],
+  "adaptations": [
+    "Original numeric Refresh order, fields, local references, GM state and zero colors; icon/detail providers remain pending.",
+    "User-confirmed average integer display uses Mathf.RoundToInt; raw checkpoint ratios remain unchanged.",
+    "Missing counters/history are blank and are never populated using unconfirmed counter aliases or estimated zeros."
+  ],
+  "user_confirmed": [
+    "DamageCount equals confirmed damage-hit count, including immunity/full shielding and excluding dodge.",
+    "CureCount counts landed cure-target hits, including full HP with zero effective healing.",
+    "Each target accepted status application counts once; stack/refresh counts once, multiple stacks still once, discard/probability failure zero. Debuff includes Debuff and AbnormalDebuff."
+  ],
+  "pending": [
+    "Original item icon manager, report snapshots/detail popup, formal report window/provider and full passive root-source mapping."
+  ],
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillRow.cs": "20493172dc5d01912105bb1e24040ae93b9810496e1b86d3c2c578c92e205cdd",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillRow.cs.meta": "a4af7f2e3667ef8d15f5e25fd34ae77b3aa35faf70d27b82cd69d3f89dedc3aa",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportNumberFormat.cs": "91ebfabdb890db2a88e9cf4f18c1c56bddefb146515431bd927060e19a013ffb",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportNumberFormat.cs.meta": "9c196b10d8fd3aa55df47d4821e81e84829e8ba0b129c6f2a37f765f1bba29e1",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportSkillRowBinder.cs": "449d923c4b7fa1588ca9771bf75bbdcd87aaa4ade9fd93cf02f47b9a3d0c481a",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportSkillRowBinder.cs.meta": "1691657e4b25d42454460b2ba3545553c80ad9bf91d532c9c12bbedb6ecfb7c9",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportSkillRowAcceptance.cs": "be5a1a3b1a31a77df3b1f6cc0dc9c28bd2e2b41778c036b90f4216a8383b5551",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportSkillRowAcceptance.cs.meta": "6f78ab5c2a5a46e2e4038915384a053687cf059ec961b10daa88155f2eae220d",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "b6f7f50d3b3d8c0ccd41d0ad1b922f7f80380b79e242840e01b0af206b5d316d",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportSkillScrollSync.cs": "691712bc419a74ad92571a1e7caeaee8a69f6ec1f3c2681bf49cd880a492c651"
+  }
+}
