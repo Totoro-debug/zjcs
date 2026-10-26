@@ -24,6 +24,61 @@ namespace Zjcs.Editor
             OfficialMap11Tools.ImportAndValidate();
         }
 
+        [MenuItem("Zjcs/World/Map11/Restore Sprite Metadata")]
+        public static void RestoreSpriteMetadata()
+        {
+            AssetDatabase.Refresh();
+            var data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(SourceRoot + "/map11-ui.json"));
+            if (data == null || data.mapClassId != 11 || data.sprites == null || data.sprites.Length == 0)
+                throw new InvalidDataException("Official Map11 sprite source records are missing.");
+            Dictionary<string, Sprite> sprites = ImportSprites(data.sprites);
+            Debug.Log("Map11 Sprite metadata restored and validated: " + sprites.Count + " official sprites.");
+        }
+
+        private static Dictionary<string, Sprite> ImportSprites(OfficialMap10UiSpriteRecord[] records)
+        {
+            var sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+            foreach (OfficialMap10UiSpriteRecord record in records)
+            {
+                using (SHA256 hash = SHA256.Create())
+                    if (BitConverter.ToString(hash.ComputeHash(File.ReadAllBytes(record.unityAssetPath)))
+                        .Replace("-", "").ToLowerInvariant() != record.sha256)
+                        throw new InvalidDataException("Map11 UI sprite differs from its official source: " + record.uri);
+                var importer = AssetImporter.GetAtPath(record.unityAssetPath) as TextureImporter;
+                if (importer == null)
+                {
+                    AssetDatabase.ImportAsset(record.unityAssetPath, ImportAssetOptions.ForceSynchronousImport);
+                    importer = AssetImporter.GetAtPath(record.unityAssetPath) as TextureImporter;
+                }
+                if (importer == null) throw new InvalidDataException("Official Map11 sprite has no texture importer: " + record.unityAssetPath);
+                string previousSettings = EditorJsonUtility.ToJson(importer);
+                importer.textureType = TextureImporterType.Sprite;
+                importer.textureShape = TextureImporterShape.Texture2D;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.spritePixelsPerUnit = record.pixelsPerUnit;
+                importer.spriteBorder = new Vector4(record.border[0], record.border[1], record.border[2], record.border[3]);
+                importer.spritePivot = new Vector2(record.pivot[0] / record.width, record.pivot[1] / record.height);
+                var settings = new TextureImporterSettings();
+                importer.ReadTextureSettings(settings);
+                settings.spriteAlignment = (int)SpriteAlignment.Custom;
+                importer.SetTextureSettings(settings);
+                importer.mipmapEnabled = false;
+                importer.npotScale = TextureImporterNPOTScale.None;
+                importer.wrapMode = TextureWrapMode.Clamp;
+                importer.filterMode = FilterMode.Bilinear;
+                importer.alphaIsTransparency = true;
+                importer.textureCompression = TextureImporterCompression.Uncompressed;
+                if (EditorJsonUtility.ToJson(importer) != previousSettings) importer.SaveAndReimport();
+                Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(record.unityAssetPath);
+                if (sprite == null || sprite.rect.width != record.width || sprite.rect.height != record.height)
+                    throw new InvalidDataException("Official Map11 sprite did not import at its source dimensions: " + record.unityAssetPath
+                        + "; expected=" + record.width + "x" + record.height + "; actual="
+                        + (sprite == null ? "null" : sprite.rect.width + "x" + sprite.rect.height));
+                sprites.Add(record.uri, sprite);
+            }
+            return sprites;
+        }
+
         [MenuItem("Zjcs/World/Map11/Restore Goddess Prefabs")]
         public static void Import()
         {
@@ -61,36 +116,7 @@ namespace Zjcs.Editor
             colorShift.SetFloat("_StencilWriteMask", 255);
             colorShift.SetFloat("_UseUIAlphaClip", 0);
             EditorUtility.SetDirty(colorShift);
-            var sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
-            foreach (OfficialMap10UiSpriteRecord record in data.sprites)
-            {
-                using (SHA256 hash = SHA256.Create())
-                    if (BitConverter.ToString(hash.ComputeHash(File.ReadAllBytes(record.unityAssetPath)))
-                        .Replace("-", "").ToLowerInvariant() != record.sha256)
-                        throw new InvalidDataException("Map11 UI sprite differs from its official source: " + record.uri);
-                var importer = (TextureImporter)AssetImporter.GetAtPath(record.unityAssetPath);
-                if (importer == null)
-                {
-                    AssetDatabase.ImportAsset(record.unityAssetPath, ImportAssetOptions.ForceSynchronousImport);
-                    importer = AssetImporter.GetAtPath(record.unityAssetPath) as TextureImporter;
-                }
-                if (importer == null) throw new InvalidDataException("Official Map11 sprite has no texture importer: " + record.unityAssetPath);
-                string previousSettings = EditorJsonUtility.ToJson(importer);
-                importer.textureType = TextureImporterType.Sprite;
-                importer.spriteImportMode = SpriteImportMode.Single;
-                importer.spritePixelsPerUnit = record.pixelsPerUnit;
-                importer.spriteBorder = new Vector4(record.border[0], record.border[1], record.border[2], record.border[3]);
-                importer.spritePivot = new Vector2(record.pivot[0] / record.width, record.pivot[1] / record.height);
-                var settings = new TextureImporterSettings();
-                importer.ReadTextureSettings(settings);
-                settings.spriteAlignment = (int)SpriteAlignment.Custom;
-                importer.SetTextureSettings(settings);
-                importer.mipmapEnabled = false;
-                importer.alphaIsTransparency = true;
-                importer.textureCompression = TextureImporterCompression.Uncompressed;
-                if (EditorJsonUtility.ToJson(importer) != previousSettings) importer.SaveAndReimport();
-                sprites.Add(record.uri, AssetDatabase.LoadAssetAtPath<Sprite>(record.unityAssetPath));
-            }
+            Dictionary<string, Sprite> sprites = ImportSprites(data.sprites);
             RestoreMiniMapCharacter(data, sprites);
             string itemAssetsPath = ResourceRoot + "/DynamicItems.asset";
             OfficialMap11UiAssets items = AssetDatabase.LoadAssetAtPath<OfficialMap11UiAssets>(itemAssetsPath);

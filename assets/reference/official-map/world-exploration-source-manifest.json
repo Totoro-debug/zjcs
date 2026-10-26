@@ -1,9 +1,22 @@
 {
   "converter": {
     "path": "scripts/prepare_unity_world_exploration.py",
-    "sha256": "1eadee31bf975dff26b736e05d768cf0f7ffdbe6b4ec86ae9b62264a7067edfd"
+    "sha256": "ce7301e46995b77de7d1b72f0df75dd155b789c028b766ddcdc217354904ae92"
   },
   "inputs": {
+    "activity": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-4725866928932379679",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "f4153f0ad82396a8d300b30868f5bd6da7a8fca2fa70aee5cc44c9677bbdc9f2"
+    },
     "conditions": {
       "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
       "apk_manifest": "854_156383",
@@ -16,6 +29,31 @@
       "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
       "raw_size": 2075461,
       "sha256": "aba8a59f771f2c85de408832683ba4acbd1042f0a116a18cc21ca019cf740c54"
+    },
+    "displayCatalog": {
+      "path": "assets/official/map-models/catalog.json",
+      "sha256": "095fdc8775c86545a2e6c7cbbe10ef57998c2876e05bea764e0d5bb94d0ee1e0"
+    },
+    "displayTable": {
+      "path": "assets/official/adventure.json",
+      "sha256": "a6820d65b7498af98f242ab797c24f5dc92646b0638f09da8331c793a0340b4e"
+    },
+    "entityTemplates": {
+      "path": "assets/official/map-entities.json",
+      "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510"
+    },
+    "entity_extend_parameter": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-957009542101312328",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "2809170f354e26bd1aa975138ef2f4d5fd8f2cfcf2519fdb69c069ba62ec888f"
     },
     "explore_entity_group": {
       "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
@@ -43,6 +81,32 @@
       "raw_size": 2075461,
       "sha256": "3ef5ab00293e7b851019b1eadb4c871e4611c8586fe9f177febcf711a1b4466b"
     },
+    "fixed_reward": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-8225714882639404604",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "5b4d59aadecc669e6c3a7b8a21752ef90f8aafa4bd70013ecf9f0ee393af5949"
+    },
+    "function_limit": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-5263075563552482356",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "af17b5993ed2558e19a2493a12c6153bacb6424c623c4cc2d89ae38754b14366"
+    },
     "game_settings": {
       "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
       "apk_manifest": "854_156383",
@@ -55,6 +119,32 @@
       "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
       "raw_size": 2075461,
       "sha256": "8832aa02061ada1c2dad9cc190fbe6fe54a25be1e30596513b9f8c1a1ef22b27"
+    },
+    "item": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "3644532119292667704",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "a317a104405d25b63d1ec8c6f63397001f8cc6f2329a04034c2a49be4a18934d"
+    },
+    "level_number": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-5102505721400995906",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
     },
     "map_entity_group": {
       "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
@@ -81,11 +171,76 @@
       "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
       "raw_size": 2075461,
       "sha256": "c7543733084f9322d3e6879117f24dd05a44df88e8fd98316671aebacf0c38af"
+    },
+    "player_map_level": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "2225063726890065925",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "a2d0f043de9e88c900413c0a4f03036ef0a633cc8ff999a0b96afdb2ec5c4ad6"
+    },
+    "profession_base": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-5402877092816210485",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "92eba63835e3300821811c21bb9fc5cbdeb36699e12bbeb9f0c0e1dab79170a5"
+    },
+    "random_reward": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "3530266630744679519",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
+    },
+    "reward_rule": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "7169546492845704538",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "5eb7ad8009e635218394748946c5d04d15bdd32c9312d8a5753511ba56c971af"
+    },
+    "treasure_gacha": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "2668533331533088631",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "cd1d8081faa13fa6bfbea464aad16dfd073bc1bbae9ccf6dfe92d81f7ae9ec9a"
     }
   },
   "manifest": "854_156383",
   "output": {
     "path": "unity/Assets/Game/Resources/World/Mainline/exploration.json",
-    "sha256": "3cc1aee764702e103a3887dcc01d8f109bf6f682a1cde1faadf99f4465920d1e"
+    "sha256": "367331f4139177fe615755098f0fe42b0f87f2f207c9ccea44fb47b6997e6d82"
   }
 }

@@ -14,6 +14,8 @@
 
 地图公共能力统一由 `OfficialMainlineMapRuntime` 调用，模块边界、共享规则与未接入项见[主线地图公共模块](../features/mainline-map-modules.md)。按地图 ID 装载本图资源，沿用本图存档与回执。
 
+UI素材目录的385张Sprite已核对PNG的SHA256、稳定GUID、原尺寸、PPU、枢轴和边框，其中18份仅含GUID的 `.meta` 已补全。`OfficialMap11UiTools.RestoreSpriteMetadata` 复用原Sprite转换步骤，可独立修复导入设置；明确使用Texture2D、Single Sprite、无mipmap／NPOT缩放、Clamp、Bilinear和无压缩Alpha，避免不完整元数据将图片识别为Cube纹理。Unity `2022.3.57f1c2` 实际导入及Sprite对象／尺寸校验通过，现有PNG、prefab、目录绑定和GUID均保留。输入清单、转换工具及18份元数据的前后哈希见 `assets/reference/official-map/map11-sprite-metadata-source-manifest.json`；该项验证范围为元数据与Editor导入。
+
 本图 UI 已从固定版本官方 prefab、程序集和资源绑定恢复为 37 份原生 panel、325 张 Sprite。`WorldCanvas` 保持官方根 Canvas、CanvasScaler、SafeArea、原始坐标和层级，修复 HUD 缩放与布局；头像使用官方角色模型、相机参数和排除皮肤列表生成，生命、等级、战力、货币／体力和固定任务内容接到本地状态。人物对话恢复原底板、左右立绘、说话人位置、明暗切换、选项、逐字显示及动画半程事件；首次点击补全当前句，之后才推进。右侧立绘的原 `RectMask2D` 为禁用状态，现按序列化状态还原，避免人物被错误裁掉。对话与选项期间按原流程隐藏地图 HUD。功能入口使用官方 `FunctionEntryDialog`，迁移 `GridLayoutGroupJSZX` 的间距、排列和自定义行数算法，恢复原按钮排列；没有本地服务器时钟区域或提示记录时使用官方关闭状态。功能入口和快捷消息恢复原 Animator 默认片段的初始状态，修复未收起的内嵌面板残留。首购 HUD 改为原 `FirstPayBtn` prefab，由原纵向布局定位，不再借用累计星值图标或手写坐标；仍沿用现有首购可见性业务查询。
 
 小地图恢复原圆形遮罩材质、人物标记、地区名／坐标／探索度、全屏面板、缩放、拖拽边界与分类筛选。37 份原生标记 prefab 按官方实体／地图／区域／标签优先级绑定到 1,707 个放置点；标记偏移使用官方身体格中心，缩放与完成状态按原配置处理。`MiniMapWorldStageSwitcherSupport` 直接消费原世界阶段状态，传送点、战场、副本与圣兽标记按各自序列化状态切换，避免未激活／已激活图标叠加。筛选保存至所属档案的 `minimap-filter.json`，关闭、清空内存后重开可冷读恢复。跨地图页签沿 `MiniMapFullScreenPanel`／`MiniMapSwitchTabItem`，按官方 `MapInfo` 顺序筛选同组、已有访问记录且已迁移的 Map10／Map11；使用原 `ImgMapSwitch_0`／`_1`、标题、选中态及各图缩放参数。浏览其他地图不创建访问记录或移动角色，隐藏当前图角色和标记；关闭后恢复当前图。其他地图的离线实体标记、标记点击／详情、公共地区资源点提供器仍未完整接入，不能据此认定完整小地图功能已完成。

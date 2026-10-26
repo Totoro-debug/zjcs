@@ -67,7 +67,7 @@ Unity 工程已接入官方登录前启动画面和本地资源进度条，加�
 | [Unity 工程与启动流程](features/unity-project.md) | 未完成 | 当前工作区 Windows 测试版已导出并启动；已查存档入口、新建开场和重启列表显示，完整迁移及全流程验收未完成 |
 | [虚空裂隙与混沌侵袭](features/weekly-challenges.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
 | [技能祈愿、材料购买与兑换](features/wishes.md) | 未完成 | 本地抽取／保底／存档、官方界面及商店流程已接入；规则通过，独立 Editor 祈愿画面已验证，家园真实输入与连续演出仍待验收 |
-| [命运果实探寻](features/world-exploration.md) | 未完成 | 待恢复官方内容、接通本地流程并运行验证 |
+| [命运果实探寻](features/world-exploration.md) | 未完成 | 本地生成、保底、奖励事务及存档验证已接入；原界面、动态实体完整交互及 Player 待完成 |
 | [世界地图](features/world-map.md) | 未完成 | 地图 DTO、导航、寻路与进度规则 |
 
 ## 地图验收

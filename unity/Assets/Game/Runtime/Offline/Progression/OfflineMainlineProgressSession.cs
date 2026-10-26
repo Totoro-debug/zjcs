@@ -195,6 +195,7 @@ namespace Zjcs.Offline.Progression
         public List<OfflineChestCount> OpenChestCounts = new List<OfflineChestCount>();
         public List<string> AppliedEventIds = new List<string>();
         public List<OfflineMapInteractionState> MapInteractions = new List<OfflineMapInteractionState>();
+        public OfflineWorldExplorationProgress Exploration = new OfflineWorldExplorationProgress();
     }
 
     [Serializable]
@@ -1063,6 +1064,7 @@ namespace Zjcs.Offline.Progression
                 if (stage == null || stage.StageId <= 0 || stage.Count < 0 || !stageIds.Add(stage.StageId)) return false;
             if (!UniqueStrings(save.World.CompletedEntityTags) || !UniqueStrings(save.World.AppliedEventIds)) return false;
             var interactionKeys = new HashSet<string>(StringComparer.Ordinal);
+            if (!ValidateExploration(save.World.Exploration)) return false;
             foreach (OfflineMapInteractionState interaction in save.World.MapInteractions)
                 if (interaction == null || interaction.MapClassId <= 0 || interaction.PlacementId <= 0
                     || interaction.Generation < 0 || interaction.Attempt < 0 || interaction.AvailableAt < 0
@@ -1156,6 +1158,10 @@ namespace Zjcs.Offline.Progression
             if (save.World.OpenChestCounts == null) save.World.OpenChestCounts = new List<OfflineChestCount>();
             if (save.World.AppliedEventIds == null) save.World.AppliedEventIds = new List<string>();
             if (save.World.MapInteractions == null) save.World.MapInteractions = new List<OfflineMapInteractionState>();
+            NormalizeExploration(save.World);
+            if (!save.Player.AppliedInventoryEventIds.Contains("fixed_award:5")
+                && save.Player.AppliedInventoryEventIds.Any(value => value.EndsWith(":fixed-reward:5:0", StringComparison.Ordinal)))
+                save.Player.AppliedInventoryEventIds.Add("fixed_award:5");
             foreach (OfflineMapInteractionState interaction in save.World.MapInteractions)
                 if (interaction != null && interaction.BattleEventId == null) interaction.BattleEventId = string.Empty;
             if (save.Tasks.ClaimedMainlineTaskIds == null) save.Tasks.ClaimedMainlineTaskIds = new List<int>();

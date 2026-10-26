@@ -12,7 +12,11 @@
 
 ## 完整还原部分
 
-尚无本功能在 Unity 完整接入并运行验收的结论。原代码、配置、已转换素材和旧引擎测试仅是迁移依据，不作为本功能已还原的证据。
+已接入 Unity 本地规则层：原个人与区域条件、7种令牌、65条实体组变体、原权重与保底记录、首次组51、生成实体的等级／阶位与额外奖励数据、原费用、每日上限、累计产出限制、持续时间和180天历史。动态实体、随机、费用、记录与首次固定奖励以同一存档事务保存；重复请求不重抽，整批失败全部回滚。
+
+原触碰奖励实体按配置读取奖励规则、条件、等级与阶位倍率，以及随机奖励包。探寻来源免体力；奖励只在领取时入包，宝箱开启计数与领取记录同时保存。协力宝箱的本地单人奖励结算保留原完成状态及 `DestroyOnEnd=false`，开启后直至原有效期届满才移除。该结算层已经接通，原交互动画和实际鼠标开启流程仍待验证。
+
+隔离 Unity 编辑器验证已覆盖个人条件、首次令牌限制、首次引导与全局一次奖励、重复请求、批量失败回滚、冷启动恢复、原实体等级、同时满足多个保底、协力宝箱累计上限20、五分钟实体过期、180天历史清理、旧剧情奖励记录兼容，以及奖励失败完整回滚、宝箱重复领取和协力宝箱开启状态。`python -B scripts/check_unity_project.py` 与隔离 Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 已通过。尚无完整界面、Play Mode 交互或 Windows Player 发布结论。
 
 ## 自定义实现
 
@@ -22,15 +26,17 @@
 
 实体落在同Area最近的可通行、允许地表、未占用格，范围使用原 `RefreshDistance`／`ExploreEntityMaxDist`。`LastMapRefreshOnly` 替换前一同组结果，保留原数量上限、持续时间和180天历史，过期按本地时间清理。
 
+实体组54「协力宝箱」7050沿用户确认方案，保留原概率、累计产出上限20次、原奖励和有效期，改为本地玩家独自完成原交互；原客户端的两人要求不再作为本地开启条件。此差异尚待运行流程接入与验证。
+
 固定 APK 客户端、Common 程序集及原探寻／固定奖励表已核对；服务端 `OperPlayerWorldExplore` 执行体未取得，无法证实引导奖励的发放时机。用户明确确认：首次成功命运探寻发放原 `WorldExploreGuideFixedRewardId=5` 的物品56“命运果实·原初”×1，全局只发一次；沿用 `fixed_award:5` 领取记录，跨地图或原剧情入口均不重复。奖励不按既有探寻次数追溯补发。奖励、费用、随机、实体和领取记录一并保存，失败全部回滚。
 
-小宝箱8200的原 `StageResultAwardComponent.AwardInfos` 引用奖励规则711，固定版本 `reward_rule` 无该编号，内容无法确定。用户明确确认跳过711，其余原奖励规则710／713／714／716／717照常执行；没有编造额外奖励。715未被现行实体模板、山之国覆盖或探寻配置引用。跨地图一次领取、奖励不按既有探寻次数追溯发放、失败回滚及小宝箱规则保留；相关流程仍须接入 Unity 并验证。
+原奖励表缺少小宝箱8200的711、大宝箱8201的721／722、稀有宝箱8202的732／735、传说宝箱8203的742／745。用户明确确认沿用客户端 `RewardRuleInfoParser.GetRewardDropInfosByRuleList` 跳过空引用的行为，其余原奖励保留；没有编造额外奖励。8200仍执行710／713／714／716／717，715未被现行实体模板、山之国覆盖或探寻配置引用。
 
 ## 尚未实现
 
-- 命运果实115的原个人条件、区域候选、概率／保底、实体落点、历史、原奖励与跨地图一次性引导奖励。
-- 恢复官方 Unity 代码、配置、prefab、资源与调用关系，完成本地事务、实际入口和界面接线。
-- 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
+- 完成原确认框、令牌选择、概率、详情、历史分页与 HUD 的实际入口、资源绑定及点击验证。
+- 完成生成实体的地图显示、碰撞／寻路与小地图绑定，以及宝箱、战斗、副本、商店和活动实体的完整交互。
+- 恢复原动作、MyPlayable、粒子及音效，完成 Play Mode 正常操作、画面与存档恢复，并构建、运行和发布 Windows Player。
 
 ### 待迁移的规则与表现
 
@@ -44,8 +50,8 @@
 
 ### 依据与代码定位
 
-固定 `854_156383` APK 的 `explore_token_group`、`explore_entity_group`、`map_entity_group`、`map_explore_limit`、`conditions` 和 `game_settings` 已由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`。7种令牌、65条实体组变体、17条递归条件及每表原字节哈希见 `assets/reference/official-map/world-exploration-source-manifest.json`。官方8份探寻 prefab 及令牌／实体组图标已纳入 Map11 原生 UI 载荷；尚未绑定可操作探寻入口。
+固定 APK 原规则由 `scripts/prepare_unity_world_exploration.py` 重新解码，输出 `Resources/World/Mainline/exploration.json`；包含7种令牌、65条实体组变体、28种完整实体模板、68条递归条件、奖励规则、随机奖励包、宝物选择器、等级映射及每表原字节哈希。来源见 `assets/reference/official-map/world-exploration-source-manifest.json`；规则入口为 `OfficialWorldExplorationCatalog`、`OfflineWorldExplorationService` 及 `OfflineMainlineProgressSession.Exploration`，隔离验证入口为 `Zjcs.Editor.Progression.OfflineWorldExplorationValidation.Run`。`JsonUtility` 对原始 JSON 空对象引用的处理已逐字段校正，避免将原空条件误当成未迁移的条件。
+
+原始 APK 保留，旧版云端目录按用户要求清理；如需重建，显式启用 `Apk(reuse_current_cache=True)`，直接读取当前871缓存中大小／MD5符合旧清单且SHA256符合真实下载凭据的同哈希文件，保留真实来源版本和URL。此选项不会恢复旧缓存，也不会以新版同名变化资源填充旧输入。
 
 共享保底依据为 `Common.StandardRandomGroup`、`RandomObj` 和 `PlayerExploreRecordDataWrap.RecordResult`。命中累计、连续未中计数及保底冲突需按这些实现迁移；组54的20次限制是累计产出次数，不能改成场上实体上限。
-
-

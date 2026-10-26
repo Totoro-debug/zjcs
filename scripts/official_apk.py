@@ -32,7 +32,7 @@ def canonical_bundle_name(record, index):
 class Apk:
     # Existing module rebuilders reproduce their recorded historical inputs.
     # Current source commands pass manifest=None or use Apk.current().
-    def __init__(self, manifest='854_156383'):
+    def __init__(self, manifest='854_156383', *, reuse_current_cache=False):
         from official_source import OfficialSource
         self.source = OfficialSource(manifest)
         self.version = self.source.version
@@ -47,13 +47,27 @@ class Apk:
         self.bundle_records = {b['name']: b for b in self.bundles}
         self.index = {b['name']: b['hash'] for b in self.bundles}
         self.cloud = CloudCache(self.source.cloud_path, self.version)
+        cloud_bundles = self.bundles
+        if reuse_current_cache and not self.source.profile.get('cloud_cache_retained', True):
+            # Explicit historical reproduction may read identical retained bytes.
+            # CloudCache.read still verifies the requested old MD5/size plus the
+            # retained receipt's SHA256; changed bundles are never substituted.
+            current = OfficialSource()
+            self.cloud = CloudCache(current.cloud_path, current.version)
+            cloud_bundles = current.manifest('DefaultPackage', self.archive)['bundles']
         self.available = set(self.archive.namelist())
         self.env = UnityPy.Environment()
         self.loaded = {}
         self.missing = set()
         self.cabs = json.loads(self.source.cab_path.read_text()) if self.source.cab_path.exists() else self.index_cabs()
         self.cabs = {k.lower(): v for k, v in self.cabs.items()}
-        self.cabs.update({k: v for k, v in self.cloud.index_cabs(self.bundles).items() if k not in self.cabs})
+        cloud_cabs = self.cloud.index_cabs(cloud_bundles)
+        if cloud_bundles is self.bundles:
+            self.cabs.update({k: v for k, v in cloud_cabs.items() if k not in self.cabs})
+        else:
+            expected_hashes = {value['hash']: value['name'] for value in self.bundles}
+            self.cabs.update({k: dict(v, bundle=expected_hashes[v['hash']]) for k, v in cloud_cabs.items()
+                              if k not in self.cabs and v['hash'] in expected_hashes})
         original = self.env.find_file
 
         def resolve(name, *args, **kwargs):

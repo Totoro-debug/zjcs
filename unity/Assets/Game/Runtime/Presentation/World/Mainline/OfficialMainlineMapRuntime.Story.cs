@@ -498,7 +498,8 @@ namespace Zjcs.Presentation.World
         }
 
         private string FixedStoryRewardReceipt(int rewardId, int claimIndex) =>
-            MapReceiptPrefix + slotId + ":fixed-reward:" + rewardId + ":" + claimIndex;
+            rewardId == 5 && claimIndex == 0 ? "fixed_award:5"
+                : MapReceiptPrefix + slotId + ":fixed-reward:" + rewardId + ":" + claimIndex;
 
         private bool CheckStoryMapEntityState(Map10RuntimeStoryNode node)
         {
