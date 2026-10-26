@@ -790,6 +790,10 @@
     {
       "path": "assets/reference/battle-hud/timeline-particles-source-manifest.json",
       "sha256": "33264f50e62e2313d1ecb77d01563847ef268a2773e479e558e57d579de6fa1b"
+    },
+    {
+      "path": "assets/reference/battle-hud/npc-portraits-source-manifest.json",
+      "sha256": "fcbbea64bb159b207046f9a68d7e3cd80702be26949f6a2e00463387b1b2243b"
     }
   ],
   "official_code": [
@@ -825,7 +829,11 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneTimelineView.cs",
-      "sha256": "ddc0e792ca4cd8fdb2ec1ca8add31dc8b2a218bddf7414cfde5f654a8129e217"
+      "sha256": "5edb71d76d7674a952f65343292955858ce457150f66bcf8c7102ce9efa66465"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleNpcPortraitCatalog.cs",
+      "sha256": "de1a840c36a06e6fd8ead3505f75578681ecd1f8acefd9554c1dcbfbf15b3198"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleTimelineLifetime.cs",
@@ -858,7 +866,7 @@
       "sha256": "907e105a0e53018a519308e51930a1f45843e58688452d9e38c1d58c9524faf7"
     }
   ],
-  "generator_sha256": "3534e670e4038797bfd92971d650e28a4c6213b8bde74b83f44efa86743cee0c",
+  "generator_sha256": "a3485f99a9b531d640556dad7fd016a4c4e0b2feecb08fce273be3ead9ccb63c",
   "output": "unity/Assets/Official/Combat/Timeline/Resources/Combat/battle-timeline.json",
   "output_sha256": "49483c87105dfd3d25f2998b4bf4c4734eb9aeb00bb81d3e0e4c8708a380a744",
   "textures": [

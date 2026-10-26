@@ -301,6 +301,8 @@ namespace Zjcs.Editor
             // mouse input exercises the HUD. UI/Animator updates remain live.
             if (SessionState.GetBool(RealInputKey, false)) runtime.enabled = false;
 
+            yield return Combat.OfficialBattleTimelinePortraitAcceptance.VerifyNpcInPlayMode();
+
             if (phaseProperty.GetValue(controller).ToString() == "Preparing")
             {
                 long counter = checkpointField("Counter");

@@ -268,6 +268,7 @@ namespace Zjcs.Editor.Combat
             OfficialBattleFunctionEntryTools.Validate();
             OfficialBattleHudSpriteTools.Validate();
             OfficialBattleTimelineTools.Validate();
+            OfficialBattleNpcPortraitTools.Validate();
             OfficialBattleHudCatalog catalog = OfficialBattleHudCatalog.LoadDefault();
             ValidateStatusIconBindings(catalog);
             TMP_FontAsset font = catalog.Font;

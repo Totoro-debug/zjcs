@@ -1,110 +1,133 @@
 using System;
 using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Zjcs.Combat.Official;
+using Zjcs.Official.WorldUI;
 using Zjcs.Presentation.Combat;
 
 namespace Zjcs.Editor.Combat
 {
     public static class OfficialBattleTimelinePortraitAcceptance
     {
+        private sealed class Fixture : IDisposable
+        {
+            private readonly GameObject canvas;
+            private readonly Texture2D temporaryTexture;
+            private readonly Sprite temporarySprite;
+            private readonly OfficialBattleSceneTimelineView timeline;
+
+            public Fixture(Sprite playerPortrait = null)
+            {
+                if (playerPortrait == null)
+                {
+                    temporaryTexture = new Texture2D(4, 4);
+                    temporarySprite = Sprite.Create(temporaryTexture, new Rect(0, 0, 4, 4), Vector2.one * .5f);
+                    playerPortrait = temporarySprite;
+                }
+                canvas = new GameObject("BattleTimelinePortraitAcceptance", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+                canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+                var scaler = canvas.GetComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(1080, 1920);
+                scaler.matchWidthOrHeight = 1;
+                var prior = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>(true);
+                var view = new OfficialBattleHudView(OfficialBattleHudCatalog.LoadDefault());
+                view.Mount(canvas.transform);
+                foreach (Graphic graphic in canvas.GetComponentsInChildren<Graphic>(true)) graphic.enabled = false;
+                timeline = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>(true).Except(prior).Single();
+                var checkpoint = new FightBattleCheckpoint();
+                AddUnit(checkpoint, 1, 0, 0);
+                AddUnit(checkpoint, 2, 3206, 0);
+                AddUnit(checkpoint, 3, 0, 8401);
+                AddUnit(checkpoint, 4, 0, 8411);
+                AddUnit(checkpoint, 5, 0, 11001);
+                OfficialBattleMonsterPortraitCatalog monsters = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+                OfficialBattleNpcPortraitCatalog npcs = OfficialBattleNpcPortraitCatalog.Load();
+                // The official NPC branch resolves NpcInfo.Icon independently of player/monster callbacks.
+                view.RefreshTimeline(checkpoint, unit => unit.MonsterId > 0 ? monsters.Find(unit.MonsterId) : playerPortrait, null, false);
+                Transform player = Card(1).Find("IconGo/PlayerHeadETC2Go/HeadImg");
+                if (player.GetComponent<WorldCircleSpriteRenderer>().Sprite != playerPortrait)
+                    throw new InvalidOperationException("Player circle did not bind its resolved head texture.");
+                if (Card(2).Find("IconGo/MonsterIconImg").GetComponent<SpriteRenderer>().sprite.name != "G_3206")
+                    throw new InvalidOperationException("Monster IconId 3206 did not bind G_3206.");
+                foreach (int id in new[] { 3, 4, 5 })
+                {
+                    Transform card = Card(id);
+                    Transform node = card.Find("IconGo/NpcIconGO/NpcIconImg");
+                    int npcId = checkpoint.Units.Single(u => u.Id == id).NpcClassId;
+                    var circle = node.GetComponent<WorldCircleSpriteRenderer>();
+                    var block = new MaterialPropertyBlock();
+                    node.GetComponent<MeshRenderer>().GetPropertyBlock(block);
+                    if (!node.gameObject.activeInHierarchy || circle.Sprite != npcs.Find(npcId)
+                        || block.GetTexture("_MainTex") != circle.Sprite.texture
+                        || node.GetComponent<MeshFilter>().sharedMesh.vertexCount != 33
+                        || card.Find("IconGo/PlayerHeadETC2Go").gameObject.activeSelf
+                        || card.Find("IconGo/MonsterIconImg").gameObject.activeSelf)
+                        throw new InvalidOperationException("NPC class " + npcId + " did not bind its separate original circular portrait.");
+                }
+            }
+
+            private Transform Card(int id) => timeline.transform.Find("Slot/GameRoundCharacterItem_" + id);
+            public void Dispose()
+            {
+                Remove(timeline == null ? null : timeline.gameObject);
+                Remove(canvas); Remove(temporarySprite); Remove(temporaryTexture);
+            }
+        }
+
         [MenuItem("Zjcs/Combat/Validate Timeline Portrait Binding")]
         public static void Run()
         {
-            OfficialBattleHudCatalog hud = OfficialBattleHudCatalog.LoadDefault();
-            OfficialBattleMonsterPortraitCatalog portraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
-            if (portraits == null) throw new InvalidOperationException("Monster portrait catalog is missing.");
+            OfficialBattleNpcPortraitTools.Validate();
+            using (var fixture = new Fixture()) { }
+            Debug.Log("Battle timeline portrait binding passed: player, G_3206 and NPC 8401/8411/11001.");
+        }
 
-            Assembly combat = Assembly.Load("Zjcs.Combat.Official");
-            Type checkpointType = combat.GetType("Zjcs.Combat.Official.FightBattleCheckpoint", true);
-            Type unitType = combat.GetType("Zjcs.Combat.Official.FightBattleUnitState", true);
-            Type entryType = combat.GetType("Zjcs.Combat.Official.FightTurnEntry", true);
-            var playerTexture = new Texture2D(4, 4);
-            Sprite playerFallback = Sprite.Create(playerTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
-            var canvas = new GameObject("BattleTimelinePortraitAcceptance", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        public static IEnumerator VerifyNpcInPlayMode()
+        {
+            var existing = UnityEngine.Object.FindObjectsOfType<OfficialBattleSceneTimelineView>();
+            Sprite portrait = existing.SelectMany(v => v.GetComponentsInChildren<WorldCircleSpriteRenderer>())
+                .First(c => c.name == "HeadImg").Sprite;
+            foreach (var view in existing) view.gameObject.SetActive(false);
             try
             {
-                var view = new OfficialBattleHudView(hud);
-                view.Mount(canvas.transform);
-                object checkpoint = Activator.CreateInstance(checkpointType);
-                AddUnit(checkpoint, checkpointType, unitType, 1, 0, 1);
-                AddUnit(checkpoint, checkpointType, unitType, 2, 3206, 2);
-
-                object timeline = checkpointType.GetField("Timeline").GetValue(checkpoint);
-                IList entries = (IList)timeline.GetType().GetField("Entries").GetValue(timeline);
-                entries.Add(CreateEntry(entryType, 1, 0));
-                entries.Add(CreateEntry(entryType, 2, 1));
-
-                Type resolverType = typeof(Func<,>).MakeGenericType(unitType, typeof(Sprite));
-                Func<object, Sprite> resolve = unit =>
+                using (var fixture = new Fixture(portrait))
                 {
-                    int monsterId = Convert.ToInt32(unitType.GetField("MonsterId").GetValue(unit));
-                    return monsterId > 0 ? portraits.Find(monsterId) : playerFallback;
-                };
-                ParameterExpression argument = Expression.Parameter(unitType, "unit");
-                Delegate portraitResolver = Expression.Lambda(resolverType,
-                    Expression.Invoke(Expression.Constant(resolve), Expression.Convert(argument, typeof(object))), argument).Compile();
-                typeof(OfficialBattleHudView).GetMethod("RefreshTimeline", BindingFlags.Instance | BindingFlags.Public)
-                    .Invoke(view, new object[] { checkpoint, portraitResolver, null, false, null });
-
-                Transform[] nodes = UnityEngine.Object.FindObjectsOfType<Transform>(true);
-                Transform player = Find(nodes, "GameRoundCharacterItem_1");
-                Transform monster = Find(nodes, "GameRoundCharacterItem_2");
-                var properties = new MaterialPropertyBlock();
-                player.Find("IconGo/PlayerHeadETC2Go/HeadImg").GetComponent<MeshRenderer>().GetPropertyBlock(properties);
-                if (properties.GetTexture("_MainTex") != playerTexture)
-                    throw new InvalidOperationException("Player circular mesh did not bind the resolved portrait texture.");
-                SpriteRenderer monsterImage = monster.Find("IconGo/MonsterIconImg").GetComponent<SpriteRenderer>();
-                if (monsterImage.sprite == null || monsterImage.sprite.name != "G_3206")
-                    throw new InvalidOperationException("Monster IconId 3206 did not bind G_3206.");
-
-                Debug.Log("Battle timeline portrait binding passed: player node and G_3206 monster Sprite.");
+                    yield return new WaitForSecondsRealtime(.5f);
+                    string output = Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_OUTPUT");
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        Directory.CreateDirectory(output);
+                        ScreenCapture.CaptureScreenshot(Path.Combine(output, "timeline-npcs.png"));
+                    }
+                    yield return new WaitForSecondsRealtime(.3f);
+                }
+                yield return null;
+                Debug.Log("NPC timeline portrait Play Mode verification passed: three original NPC icons, circular meshes and exclusive branches.");
             }
             finally
             {
-                UnityEngine.Object.DestroyImmediate(canvas);
-                UnityEngine.Object.DestroyImmediate(playerFallback);
-                UnityEngine.Object.DestroyImmediate(playerTexture);
+                foreach (var view in existing) if (view != null) view.gameObject.SetActive(true);
             }
         }
 
-        private static void AddUnit(object checkpoint, Type checkpointType, Type unitType, int id, int monsterId, int side)
+        private static void AddUnit(FightBattleCheckpoint checkpoint, int id, int monsterId, int npcClassId)
         {
-            object unit = Activator.CreateInstance(unitType);
-            Set(unit, unitType, "Id", id);
-            Set(unit, unitType, "MonsterId", monsterId);
-            Set(unit, unitType, "Side", side);
-            Set(unit, unitType, "Hp", 1L);
-            Set(unit, unitType, "MaxHp", 1L);
-            object turn = unitType.GetField("Turn").GetValue(unit);
-            Set(turn, turn.GetType(), "Id", id);
-            Set(turn, turn.GetType(), "Hp", 1L);
-            Set(turn, turn.GetType(), "Speed", 100);
-            ((IList)checkpointType.GetField("Units").GetValue(checkpoint)).Add(unit);
+            var unit = new FightBattleUnitState { Id = id, MonsterId = monsterId, NpcClassId = npcClassId, Side = 1, Hp = 1, MaxHp = 1 };
+            unit.Turn.Id = id; unit.Turn.Hp = 1; unit.Turn.Speed = 100; unit.Turn.IntervalTicks = 10000;
+            checkpoint.Units.Add(unit);
+            checkpoint.Timeline.Entries.Add(new FightTurnEntry { Id = id, Next = (id - 1) * 2500 });
         }
 
-        private static object CreateEntry(Type entryType, int id, long next)
+        private static void Remove(UnityEngine.Object value)
         {
-            object entry = Activator.CreateInstance(entryType);
-            Set(entry, entryType, "Id", id);
-            Set(entry, entryType, "Next", next);
-            return entry;
+            if (value == null) return;
+            if (Application.isPlaying) UnityEngine.Object.Destroy(value);
+            else UnityEngine.Object.DestroyImmediate(value);
         }
-
-        private static void Set(object target, Type type, string name, object value)
-        {
-            type.GetField(name).SetValue(target, value);
-        }
-
-        private static Transform Find(Transform[] nodes, string name)
-        {
-            foreach (Transform node in nodes)
-                if (node.name == name) return node;
-            return null;
-        }
-
     }
 }

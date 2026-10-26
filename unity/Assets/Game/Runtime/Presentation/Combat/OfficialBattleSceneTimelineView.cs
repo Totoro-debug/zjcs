@@ -87,7 +87,8 @@ namespace Zjcs.Presentation.Combat
                     root.name = "GameRoundCharacterItem_" + unit.Id;
                     card = new Card { Root = root, Animator = root.GetComponent<Animator>() };
                     cards.Add(unit.Id, card);
-                    BindPortrait(root, unit, portrait(unit), faction?.Invoke(unit));
+                    BindPortrait(root, unit, unit.NpcClassId > 0 ? OfficialBattleNpcPortraitCatalog.Load().Find(unit.NpcClassId)
+                        : portrait(unit), faction?.Invoke(unit));
                     card.Animator.Rebind(); card.Animator.Update(0);
                 }
                 bool acting = i == 0;
