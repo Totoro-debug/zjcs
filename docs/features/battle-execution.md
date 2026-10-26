@@ -315,9 +315,11 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 
 Play Mode 已验证279个实际图形引用／颜色／填充字段、36个原生 Sprite 的完整尺寸／轴心／边框／顶点、两套本地动态字体和原 shader；原个人／全员面板及独立技能页的5个分页组完成16次模拟指针点击、默认页、互斥、回调顺序、重复点击、提交输入及切换动画检查。普通战斗的就绪、入口收展、缩放、结算返回回归通过，已实际查看个人面板和技能页运行画面，原图及中文可见。静态检查、Unity 导入／编译和 `ProjectTools.Validate` 通过。表格布局与滚动的恢复见下文；数据行、回合参数替换和正式战后入口仍未接通，不能称战报完整可用或视觉完全还原。
 
-战报另已恢复117个布局／缩放／滚动／标准控件的原字段：20个 `LayoutElementClamper`、65个 `MaintainGlobalScaleUI`、4个原自定义 Grid、1个原自定义横向布局、6个 ScrollRect、3个 LoopVerticalScrollRect、9个 Button、8个 Slider 和1个 Mask。前三份新增迁移代码保留原限宽、优先级、根 Canvas 缩放补偿与父节点变化顺序；Grid、LoopScroll 及标准 UGUI 复用已有迁移／引擎实现，明确绑定原内容区、视口和行 prefab。严格读取采用原客户端／Framework／LoopScroll 程序集及当前引擎完整字段，原对象和输出哈希见[战报布局来源](../../assets/reference/battle-hud/report-foundation-source-manifest.json)。Play Mode 核对1223个实际序列化字段、原列宽130／间距30及真实对象引用，并以30行的独立控件样本验证原生行池与模拟列表拖拽；样本未填造战报数值，已查看原列标题与仍为 `{0}` 的行占位画面。分页16次模拟点击、图形279项、普通战斗统计和结算返回回归通过，静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过。表头跟随列表的原方法另已迁移，见下文；全员玩家下拉框的另一个 LoopScroll 依赖 APK 公共包内的 `DropdownItem`，已定位，须连同 `UIDropdown` 提供者继续迁移。其余图形／角色组件、真实数据行和正式窗口入口仍未完成。
+战报另已恢复117个布局／缩放／滚动／标准控件的原字段：20个 `LayoutElementClamper`、65个 `MaintainGlobalScaleUI`、4个原自定义 Grid、1个原自定义横向布局、6个 ScrollRect、3个 LoopVerticalScrollRect、9个 Button、8个 Slider 和1个 Mask。前三份新增迁移代码保留原限宽、优先级、根 Canvas 缩放补偿与父节点变化顺序；Grid、LoopScroll 及标准 UGUI 复用已有迁移／引擎实现，明确绑定原内容区、视口和行 prefab。严格读取采用原客户端／Framework／LoopScroll 程序集及当前引擎完整字段，原对象和输出哈希见[战报布局来源](../../assets/reference/battle-hud/report-foundation-source-manifest.json)。Play Mode 核对1223个实际序列化字段、原列宽130／间距30及真实对象引用，并以30行的独立控件样本验证原生行池与模拟列表拖拽；样本未填造战报数值，已查看原列标题与仍为 `{0}` 的行占位画面。分页16次模拟点击、图形279项、普通战斗统计和结算返回回归通过，静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过。表头跟随列表的原方法另已迁移，见下文；全员玩家下拉框的另一个 LoopScroll 依赖 APK 公共包内的 `DropdownItem`，控件依赖现已接入，见下文。其余图形／角色组件、真实数据行和正式窗口入口仍未完成。
 
-战报技能表另已接入原 `FightEndReportSkillTabView` 的横向滚动限制、归一化复位与表头同步方法：列表横坐标约束在负溢出宽度到0之间，表头按列表滚动比例乘以自身溢出宽度跟随；列表无横向溢出时表头归零。保留原 Canvas／内容布局／标题布局的强制刷新顺序，表头自身横向拖拽关闭。`WorldBattleReportSkillScrollSync.Initialize` 仅适配原 `UIBase.OnEnableAndInited` 中的滚动订阅生命周期，未迁移其数据提供者。3处原始绑定与对象哈希见[战报同步滚动来源](../../assets/reference/battle-hud/report-scroll-source-manifest.json)。Play Mode 经实际射线与模拟拖拽验证表头比例跟随，并覆盖两端越界限制；117项／1223字段与普通战斗统计、结算返回回归通过，已查看运行画面。静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过；真实战报窗口、玩家下拉框和数据行仍未完成。
+战报技能表另已接入原 `FightEndReportSkillTabView` 的横向滚动限制、归一化复位与表头同步方法：列表横坐标约束在负溢出宽度到0之间，表头按列表滚动比例乘以自身溢出宽度跟随；列表无横向溢出时表头归零。保留原 Canvas／内容布局／标题布局的强制刷新顺序，表头自身横向拖拽关闭。`WorldBattleReportSkillScrollSync.Initialize` 仅适配原 `UIBase.OnEnableAndInited` 中的滚动订阅生命周期，未迁移其数据提供者。3处原始绑定与对象哈希见[战报同步滚动来源](../../assets/reference/battle-hud/report-scroll-source-manifest.json)。Play Mode 经实际射线与模拟拖拽验证表头比例跟随，并覆盖两端越界限制；117项／1223字段与普通战斗统计、结算返回回归通过，已查看运行画面。静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过；真实战报窗口、玩家下拉框数据和统计行仍未完成。
+
+战报玩家选择控件已接入原 `UIDropdown／DropdownItem`、所需 `StateSwitcher` 对象显隐／颜色分支及 `MultiLanguageText` 键值／格式处理分支。恢复28个组件、343个原字段和引用；从 APK 公共包定位 `DropdownItem` 原对象3171787996812696172，复用现有原 Sprite／字体／材质共3项，逐项核对三组 RectTransform 的原始变换，保留原面板中的五个预览行及原生行池。3份原动画与控制器保持原值，原对象、程序集源码、managed-reference 类型适配和后续输出哈希见[战报下拉框来源](../../assets/reference/battle-hud/report-dropdown-source-manifest.json)。Play Mode 使用六条独立控件样本强制覆盖预览行复用及公共行创建，8次模拟点击验证开关、选择、标题、事件顺序、外部点按收起和关闭后重启保留选择；另检查公共行两档原颜色、完整开关动画的箭头／列表终态，已查看展开、收起和战斗返回画面。静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过。样本不代表真实玩家或战报数据；语言／字体／效果服务、正式窗口全局输入路由、Wwise 按钮音效及真实玩家数据仍未完成，未发布完整战斗 Windows 版本。
 
 ## 自定义实现
 
@@ -368,6 +370,8 @@ Play Mode 已验证279个实际图形引用／颜色／填充字段、36个原�
 本地执行器代替运行时网络裁决；随机种子／随机流、步骤序号、重复请求回执和版本化检查点保证本地重放一致。执行与表现分别由 `FightBattleExecutor` 和 `OfficialBattleRuntimeController` 等承担，不将本地序列化当作官方录像格式。战斗结果通过调用方接口交接，外部奖励、任务与进度的事务规则由所属页维护。
 
 动画数据转换为 Unity 原生播放，保留官方贴图、骨骼、网格和已取得动作；缺映射时保留当前动作、缺省战术移动时长和局部资源解析回退属于适配边界。模型目录或 prefab 树恢复不等于原版完整画面；具体方案遵循[Spine 原生迁移决策](../asset-management.md#spine-角色动画迁移决策)。`FightStatusDamageModification.Run` 在本项目暂不使用，未定位原调用点；这不表示官方已弃用该机制。
+
+字体来源清单另区分已提交的原始载荷与 Play Mode 自动生成的 TMP 动态字形缓存。缓存核对仅允许新增字形／字符、图集空闲／占用矩形和像素变化，原种子字形与字体参数必须保持一致；验证缓存单列哈希，不作为已提交素材载荷，也不覆盖其他会话的字体改动。
 
 ## 尚未实现
 

@@ -15,7 +15,7 @@
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs": "3790a8cf9aff5129064db48c502730059fa27bb52ee4b138352e6e139d64b0f8",
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "a2b6a6916d8b2f02b433620b76cd18a3d5f50f3c33d31a72cf026495a05022b0",
     "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "db27d24ce77f2206ebf7bbb8de80f2f52e791f639d97ca542e607c2c140b3b3d",
-    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "e44aeca1069072cba2be073965a43f7ae702be8e4aed8620146ee0d8eb64de5d",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "f3620defc4a4ede501adb22901d630fcd13a39357f6a1acfa20ac62a8f5757b9",
     "scripts/test_battle_report_averages.ps1": "e47076af75dda60fd45b5906b929f3196db8f46a62ea145056e1ffeaf9674127"
   },
   "evidence": "The client consumes AvgDamageCount and AvgDamageCountPerTarget; shared PlayerFightSkillReport merges supplied values by cast-weighted averages. BattleReportCollector and FightReportComponent contain no single-battle counter implementation.",

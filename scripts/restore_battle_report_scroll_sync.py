@@ -130,8 +130,13 @@ def build(source_root):
 
 def record_runtime():
     data = json.loads(RECEIPT.read_bytes())
+    dropdown_path = ROOT / 'assets/reference/battle-hud/report-dropdown-source-manifest.json'
+    dropdown = json.loads(dropdown_path.read_bytes()) if dropdown_path.exists() else None
     for entry in data['outputs']:
-        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) != entry['sha256']:
+        allowed = {entry['sha256']}
+        if dropdown:
+            allowed.update(row['sha256'] for row in dropdown['outputs'] if row['path'] == entry['path'])
+        if sha((ROOT / entry['path']).read_bytes().replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Report scroll prefab changed: ' + entry['path'])
     data['generator_sha256'] = sha(Path(__file__).read_bytes())
     data['runtime'] = {path: sha((ROOT / path).read_bytes()) for path in [CODE, CODE + '.meta',

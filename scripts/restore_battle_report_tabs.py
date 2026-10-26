@@ -69,6 +69,8 @@ def build(source_root, ugui, netstandard):
     foundation = json.loads(foundation_path.read_bytes()) if foundation_path.exists() else None
     scroll_path = ROOT / 'assets/reference/battle-hud/report-scroll-source-manifest.json'
     scroll = json.loads(scroll_path.read_bytes()) if scroll_path.exists() else None
+    dropdown_path = ROOT / 'assets/reference/battle-hud/report-dropdown-source-manifest.json'
+    dropdown = json.loads(dropdown_path.read_bytes()) if dropdown_path.exists() else None
     baseline = json.loads((ROOT / 'assets/reference/battle-hud/report-panels-source-manifest.json').read_bytes())
     by_name = {Path(row['path']).name: row for row in baseline['runtime_prefabs']}
     guids = {name: metadata(ROOT / SCRIPT_PATH / ('World' + name + '.cs')) for name in TAB_CLASSES}
@@ -89,6 +91,8 @@ def build(source_root, ugui, netstandard):
         allowed = {record['sha256'], expected, graphic_output, foundation_output}
         if scroll:
             allowed.update(x['sha256'] for x in scroll['outputs'] if x['path'] == record['path'])
+        if dropdown:
+            allowed.update(x['sha256'] for x in dropdown['outputs'] if x['path'] == record['path'])
         if digest(raw) not in allowed and digest(raw.replace(b'\r\n', b'\n')) not in allowed:
             raise ValueError('Changed runtime report prefab: ' + str(target))
         # Always rebuild from the unmodified native export, with the existing UGUI/TMP adaptation.

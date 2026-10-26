@@ -360,22 +360,35 @@ def build(source_root, bind=False):
 
 
 def record_native(source_root):
+    from battle_report_font_receipt import font_payload_record
     receipt = json.loads(RECEIPT.read_bytes())
     foundation_path = ROOT / 'assets/reference/battle-hud/report-foundation-source-manifest.json'
     foundation = json.loads(foundation_path.read_bytes()) if foundation_path.exists() else None
     scroll_path = ROOT / 'assets/reference/battle-hud/report-scroll-source-manifest.json'
     scroll = json.loads(scroll_path.read_bytes()) if scroll_path.exists() else None
+    dropdown_path = ROOT / 'assets/reference/battle-hud/report-dropdown-source-manifest.json'
+    dropdown = json.loads(dropdown_path.read_bytes()) if dropdown_path.exists() else None
     for entry in receipt['outputs']:
         expected = {entry['sha256']}
         if foundation:
             expected.update(x['sha256'] for x in foundation['outputs'] if x['path'] == entry['path'])
         if scroll:
             expected.update(x['sha256'] for x in scroll['outputs'] if x['path'] == entry['path'])
+        if dropdown:
+            expected.update(x['sha256'] for x in dropdown['outputs'] if x['path'] == entry['path'])
         if sha((ROOT / entry['path']).read_bytes()) not in expected:
             raise ValueError('Report prefab changed after source binding: ' + entry['path'])
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
     receipt['native_assets'] = [dict(path=p.relative_to(ROOT).as_posix(), sha256=sha(p.read_bytes()), bytes=p.stat().st_size)
                                 for p in sorted([p for p in OUT.rglob('*') if p.is_file()] + [OUT.with_name(OUT.name + '.meta')])]
+    for entry in receipt['native_assets']:
+        font = font_payload_record(ROOT / entry['path'], ROOT)
+        if font:
+            entry.update(font)
+    for entry in receipt['reused'].values():
+        font = font_payload_record(ROOT / entry['path'], ROOT)
+        if font:
+            entry.update(font)
     paths = ['unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAssetTools.cs',
              'unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAcceptance.cs',
              'unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs']
@@ -386,6 +399,7 @@ def record_native(source_root):
                                   path=migrated, canonical_lf_sha256=sha((ROOT / migrated).read_bytes().replace(b'\r\n', b'\n')))
     receipt['source_scripts'] = {p: sha((source_root / p).read_bytes()) for p in
                                 ['scripts/official_apk.py', 'scripts/official_unity_schema.py', 'scripts/prepare_battle_world_shaders.py']}
+    receipt['runtime']['scripts/battle_report_font_receipt.py'] = sha((ROOT / 'scripts/battle_report_font_receipt.py').read_bytes())
     receipt['adaptations'] = [
         'Read original UGUI/TMP fields with strict byte-consumption schemas; restore references by verified object identity.',
         'Native .asset/.mat PPtrs use Unity type 2, imported textures/scripts type 3; preserve original inherited field order.',

@@ -1,7 +1,7 @@
 {
   "format": 1,
   "manifest": "854_156383",
-  "generator_sha256": "c89f8594de0bc36976298ee3745131c33e6d01bb815f236247dd3aaebbe182a1",
+  "generator_sha256": "34cbf2a8f6ee3a931133ceecb4a0cf31be264f039c93426bc1d936c3fdccbe12",
   "inputs": [
     {
       "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
@@ -4431,7 +4431,19 @@
     "Font_993fe9f48bba80bc": {
       "path": "unity/Assets/Official/Combat/ElementFeedback/Resources/Combat/ElementFeedback/Font_993fe9f48bba80bc.asset",
       "sha256": "9500d27b670d844e7148ae01c9bd2361a8bb7e2ffaf7f83eb78b8d0c036de119",
-      "meta_sha256": "e7156dc00b6a205320ad264e20af141a7573f4206f464006b528a5b2bcfa91fd"
+      "meta_sha256": "e7156dc00b6a205320ad264e20af141a7573f4206f464006b528a5b2bcfa91fd",
+      "bytes": 8411278,
+      "validation_cache": {
+        "sha256": "3a95aa278004b503b402f8a9d69252fcfb14cbc65be26b312a4f95a1f6304858",
+        "changed_fields": [
+          "MonoBehaviour.m_CharacterTable",
+          "MonoBehaviour.m_FreeGlyphRects",
+          "MonoBehaviour.m_GlyphTable",
+          "MonoBehaviour.m_UsedGlyphRects",
+          "Texture2D._typelessdata"
+        ],
+        "scope": "Editor-generated glyph/atlas cache and serialization whitespace; excluded from the committed source payload hash."
+      }
     },
     "Material_57b7f2adeb457a8f": {
       "path": "unity/Assets/Official/Combat/ElementFeedback/Resources/Combat/ElementFeedback/Material_57b7f2adeb457a8f.mat",
@@ -32430,7 +32442,8 @@
   "runtime": {
     "unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAssetTools.cs": "2273bb122af1ce0c07656034bf0b07fe05a718562133282e46acc1d2be808959",
     "unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphicsAcceptance.cs": "3ecd5e347c8f659a4b6ee36128896bd57c3028e9cf44f6425da86a06afcf8085",
-    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "e44aeca1069072cba2be073965a43f7ae702be8e4aed8620146ee0d8eb64de5d"
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "f3620defc4a4ede501adb22901d630fcd13a39357f6a1acfa20ac62a8f5757b9",
+    "scripts/battle_report_font_receipt.py": "822e44001928f7eebb02f27d61b6658f1a5725659e84d73d4a782e37bc9fb6d3"
   },
   "mirror_code": {
     "original": ".tools/source-packages/official-code/framework-firstpass-source/MirrorImage.cs",

@@ -16,8 +16,8 @@ namespace Zjcs.Editor.Combat
     {
         [Serializable] private sealed class Receipt { public Binding[] bindings; }
         [Serializable] private sealed class Binding { public string prefab, path, kind; public Check[] checks; }
-        [Serializable] private sealed class Check { public string path, kind, text; public double number; public int count; public Reference reference; }
-        [Serializable] private sealed class Reference { public long fileID; public string guid; }
+        [Serializable] internal sealed class Check { public string path, kind, text; public double number; public int count; public Reference reference; }
+        [Serializable] internal sealed class Reference { public long fileID; public string guid; }
         [Serializable] private sealed class ScrollReceipt { public ScrollBinding[] bindings; }
         [Serializable] private sealed class ScrollBinding { public string prefab, path; public ScrollFields fields; }
         [Serializable] private sealed class ScrollFields { public Reference mTitleScrollRect, mItemScrollRect; }
@@ -151,8 +151,9 @@ namespace Zjcs.Editor.Combat
             finally { UnityEngine.Object.DestroyImmediate(canvasRoot); }
         }
 
-        private static void Match(SerializedProperty property, Check check, Dictionary<long, UnityEngine.Object> localReferences)
+        internal static void Match(SerializedProperty property, Check check, Dictionary<long, UnityEngine.Object> localReferences)
         {
+            Require(property != null, "Original serialized field missing: " + check.path);
             string name = property.propertyPath;
             if (check.kind == "reference")
             {
@@ -170,15 +171,18 @@ namespace Zjcs.Editor.Combat
             }
             else if (check.kind == "array") Require(property.isArray && property.arraySize == check.count, "Original array differs: " + name);
             else if (check.kind == "string") Require(property.stringValue == check.text, "Original text field differs: " + name);
+            else if (check.kind == "managed") Require(property.propertyType == SerializedPropertyType.ManagedReference
+                && property.managedReferenceFullTypename == check.text, "Original managed state configuration differs: " + name);
             else
             {
                 double actual = property.propertyType == SerializedPropertyType.Boolean ? (property.boolValue ? 1 : 0)
-                    : property.propertyType == SerializedPropertyType.Float ? property.doubleValue : property.intValue;
+                    : property.propertyType == SerializedPropertyType.Float ? property.doubleValue
+                    : property.propertyType == SerializedPropertyType.Integer ? property.longValue : property.intValue;
                 Require(Math.Abs(actual - check.number) < 0.0001, "Original field differs: " + name + ", actual=" + actual + ", expected=" + check.number);
             }
         }
 
-        private static void MapReferences(Transform source, Transform clone, Dictionary<long, UnityEngine.Object> result)
+        internal static void MapReferences(Transform source, Transform clone, Dictionary<long, UnityEngine.Object> result)
         {
             if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(source.gameObject, out _, out long goId)) result[goId] = clone.gameObject;
             Component[] originals = source.GetComponents<Component>(), copies = clone.GetComponents<Component>();
@@ -211,7 +215,7 @@ namespace Zjcs.Editor.Combat
             ExecuteEvents.Execute(target, pointer, ExecuteEvents.endDragHandler);
         }
 
-        private static void Index(Transform node, string parent, Dictionary<string, Transform> result)
+        internal static void Index(Transform node, string parent, Dictionary<string, Transform> result)
         {
             string name = node.name;
             int repeated = 0;
