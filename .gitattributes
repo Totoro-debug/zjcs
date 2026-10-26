@@ -401,3 +401,11 @@ unity/Assets/Official/World/Map/12/Source/Shaders.meta -text
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeSceneTools.cs -text
 unity/Assets/Game/Editor/Map12/OfficialMap12EnvironmentSceneTools.cs -text
 unity/Assets/Game/Editor/Map12/OfficialMap12EnvironmentSceneAcceptance.cs -text
+
+# Preserve original Map13 world-label font and text programs.
+unity/Assets/Official/World/Map/13/NativeText/** -text
+unity/Assets/Official/World/Map/13/NativeText.meta -text
+scripts/prepare_unity_map13_text_shader.py text eol=lf
+scripts/prepare_unity_map13_text_font.py text eol=lf
+unity/Assets/Official/World/Map/13/Source/Text/** -text
+unity/Assets/Official/World/Map/13/Source/Text.meta -text
