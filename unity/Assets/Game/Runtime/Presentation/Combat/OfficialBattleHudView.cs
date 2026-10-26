@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Combat.Official;
+using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.Combat
 {
@@ -47,9 +48,7 @@ namespace Zjcs.Presentation.Combat
         private const string RoundTitlePath = "/FightMainPanel/Content/Top/FixedContent/RoundTitle";
         private const string RoundHintAnimation = "UIGameTop_GameProgress_Hint";
         private const int RoundCountDown = 5;
-        private const string SkillSlotsPath = "/FightMainPanel/Content/Bottom/Anim/SkillListContent/BgSlot";
         private readonly OfficialBattleHudRenderer renderer;
-        private readonly OfficialBattleHudRenderer skillRenderer;
         private readonly OfficialBattleHudRenderer speedRenderer;
         private readonly OfficialBattleHudRenderer bossRenderer;
         private readonly OfficialBattleHudCatalog resolvedCatalog;
@@ -72,7 +71,7 @@ namespace Zjcs.Presentation.Combat
         private readonly List<GameObject> stageStatusItems = new List<GameObject>();
         private readonly List<int> stageStatusIds = new List<int>();
         private readonly List<GameObject> stageStatusDialogItems = new List<GameObject>();
-        private readonly Dictionary<int, GameObject> skillCards = new Dictionary<int, GameObject>();
+        private WorldGameSkillIcon[] skillSlots;
         private GameObject root;
         private OfficialBattleHudAnimationPlayer mainAnimationPlayer;
         private GameObject stageStatusDialogRoot;
@@ -89,7 +88,6 @@ namespace Zjcs.Presentation.Combat
             OfficialBattleHudCatalog resolved = catalog ?? OfficialBattleHudCatalog.LoadDefault();
             resolvedCatalog = resolved;
             renderer = new OfficialBattleHudRenderer(resolved);
-            skillRenderer = new OfficialBattleHudRenderer(resolved);
             speedRenderer = new OfficialBattleHudRenderer(resolved);
             bossRenderer = new OfficialBattleHudRenderer(resolved);
             statusRenderer = new OfficialBattleHudRenderer(resolved);
@@ -107,6 +105,7 @@ namespace Zjcs.Presentation.Combat
                 else button.onClick.AddListener(() => ControlClicked?.Invoke(path));
             });
             mainAnimationPlayer = renderer.InitializeAnimations("main", root);
+            skillSlots = OfficialBattleSkillSlotBindings.Mount(renderer);
             OfficialBattleFunctionEntryBindings.Mount(renderer,
                 () => stageStatusDialogRoot != null && stageStatusDialogRoot.activeInHierarchy);
             sceneTimeline = OfficialBattleSceneTimelineView.Mount(root);
@@ -162,74 +161,37 @@ namespace Zjcs.Presentation.Combat
         {
             if (checkpoint == null) throw new ArgumentNullException(nameof(checkpoint));
             if (skillIcon == null) throw new ArgumentNullException(nameof(skillIcon));
-            if (root == null) throw new InvalidOperationException("Mount the official battle HUD before refreshing skill slots.");
-
-            GameObject slotObject = renderer.Find(SkillSlotsPath);
-            if (slotObject == null) throw new InvalidOperationException("Official battle skill slot container is missing.");
-            var placeholders = new List<RectTransform>();
-            foreach (Transform child in slotObject.transform)
-                if (child.name.StartsWith("GameSkillIconItemDebug", StringComparison.Ordinal))
-                    placeholders.Add(child as RectTransform);
-
+            if (skillSlots == null) throw new InvalidOperationException("Mount the official battle HUD before refreshing skill slots.");
             FightBattleUnitState player = null;
             foreach (FightBattleUnitState unit in checkpoint.Units)
                 if (unit.Id == 1) { player = unit; break; }
             if (player == null) throw new InvalidOperationException("Battle HUD cannot find the main player unit.");
 
             var cooldowns = new FightSkillState(player.SkillState);
-            var visible = new HashSet<int>();
-            for (int i = 0; i < player.Skills.Count; i++)
+            // FightMainPanelSkillUI.RefreshView iterates the serialized SkillIcons list, including
+            // empty slots. Reuse those objects so their original layout/animations remain bound.
+            for (int index = 0; index < skillSlots.Length; index++)
             {
-                FightBattleSkillDefinition skill = player.Skills[i];
-                if (skill == null || skill.Slot < 0 || skill.Slot >= placeholders.Count) continue;
-                visible.Add(skill.Slot);
-                if (!skillCards.TryGetValue(skill.Slot, out GameObject card))
+                FightBattleSkillDefinition skill = null;
+                foreach (FightBattleSkillDefinition candidate in player.Skills)
+                    if (candidate != null && candidate.Slot == index) { skill = candidate; break; }
+                WorldGameSkillIcon card = skillSlots[index];
+                if (skill == null)
                 {
-                    RectTransform placeholder = placeholders[skill.Slot];
-                    card = skillRenderer.Create("skill", slotObject.transform);
-                    card.name = "GameSkillIconItem_" + skill.Slot;
-                    CopyLayout((RectTransform)card.transform, placeholder);
-                    placeholder.gameObject.SetActive(false);
-                    foreach (Button button in card.GetComponentsInChildren<Button>(true)) button.interactable = false;
-                    skillCards.Add(skill.Slot, card);
+                    card.SetUIState(WorldGameSkillIcon.State.None);
+                    continue;
                 }
-
                 Sprite icon = skillIcon(skill.ItemId);
                 if (icon == null) throw new InvalidOperationException("Official battle skill icon is not bound for item " + skill.ItemId);
-                Transform iconNode = card.transform.Find("Content/Bg/Anim/Icon/SkillIconImg");
-                Image iconImage = iconNode == null ? null : iconNode.GetComponent<Image>();
-                if (iconImage == null) throw new InvalidOperationException("Official battle skill icon image is missing.");
-                iconImage.sprite = icon;
-
-                long leftCooldown = cooldowns.LeftCooldown(skill.Slot);
-                Transform cooldown = card.transform.Find("Content/Bg/Anim/cd");
-                TMP_Text cooldownText = cooldown == null ? null : cooldown.Find("Text")?.GetComponent<TMP_Text>();
-                if (cooldownText == null) throw new InvalidOperationException("Official battle skill cooldown label is missing.");
-                FightSkillSlotState slotState = FindSlot(player.SkillState, skill.Slot);
-                bool professionMismatch = skill.ProfessionAvailability == FightSkillProfessionAvailability.Mismatch;
-                bool limitedState = !professionMismatch && skill.LimitedTimes >= 0 && slotState != null
-                    && slotState.ReleasedTimes >= skill.LimitedTimes;
-                cooldown.gameObject.SetActive(!professionMismatch && !limitedState && leftCooldown > 0);
-                cooldownText.text = leftCooldown.ToString();
-
-                Transform limitedNode = card.transform.Find("Content/Bg/Anim/LimitedTimes");
-                if (limitedNode != null)
-                    limitedNode.gameObject.SetActive(limitedState);
-                Transform professionMismatchNode = card.transform.Find("Content/Bg/Anim/ProfessionMismatch");
-                if (professionMismatchNode != null)
-                    professionMismatchNode.gameObject.SetActive(professionMismatch);
-                Transform playing = card.transform.Find("Content/Bg/Anim/Playing");
-                if (playing != null)
-                    playing.gameObject.SetActive(stepEvent != null && stepEvent.ActorId == player.Id
-                        && HasCast(stepEvent, skill.Slot));
-                card.SetActive(true);
-            }
-
-            for (int i = 0; i < placeholders.Count; i++)
-            {
-                bool hasSkill = visible.Contains(i);
-                placeholders[i].gameObject.SetActive(!hasSkill);
-                if (skillCards.TryGetValue(i, out GameObject card)) card.SetActive(hasSkill);
+                card.Icon.sprite = icon;
+                FightSkillSlotState slotState = FindSlot(player.SkillState, index);
+                if (skill.ProfessionAvailability == FightSkillProfessionAvailability.Mismatch)
+                    card.SetUIState(WorldGameSkillIcon.State.ProfessionLimit);
+                else if (skill.LimitedTimes >= 0 && slotState != null && slotState.ReleasedTimes >= skill.LimitedTimes)
+                    card.SetUIState(WorldGameSkillIcon.State.LimitedTimes);
+                else card.SetSkillCd(cooldowns.LeftCooldown(index));
+                if (stepEvent != null && stepEvent.ActorId == player.Id && HasCast(stepEvent, index))
+                    card.SetUIState(WorldGameSkillIcon.State.Applied);
             }
         }
 
@@ -777,15 +739,6 @@ namespace Zjcs.Presentation.Combat
         private const string FactionPlayerIcon = "res://assets/official/battle-hud/sprites/ImgWe-8447ae550c.png";
         private const string FactionEnemyIcon = "res://assets/official/battle-hud/sprites/ImgEnemy-db0a1794e6.png";
 
-        private static void CopyLayout(RectTransform target, RectTransform source)
-        {
-            target.anchorMin = source.anchorMin;
-            target.anchorMax = source.anchorMax;
-            target.anchoredPosition = source.anchoredPosition;
-            target.sizeDelta = source.sizeDelta;
-            target.pivot = source.pivot;
-            target.localScale = source.localScale;
-            target.localRotation = source.localRotation;
-        }
+
     }
 }
