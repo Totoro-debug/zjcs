@@ -1676,3 +1676,9 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 - 战斗世界空间数字：`scripts/prepare_battle_world_damage.py` 从固定854官方配置的 GUID 定位7个数字型 `DamageScene/*_Combine_Scene` prefab，复用已核实的 `world-ui.json` 层级及动画，并重新读取原 Transform、TextMesh、DamageNumberUI、CharacterDamageUI、DamageFloatSize、SortingGroup、Font、Material、Texture 对象。输出5套原位图字体与7个层级的显式本地绑定，[来源清单](battle-hud/world-damage-source-manifest.json) 记录 APK／缓存来源和输入输出哈希；Windows 材质复用已有 `UI/GameDamage` 程序转换。未更换为普通字体或新布局；纯提示型飘字和合并逻辑仍待完整迁移。
 
 - 战斗元素反馈：`scripts/prepare_battle_element_feedback.py` 从固定854官方6个数字型世界 prefab 重新读取 `ElementConfrontationUI`、文本／背景引用、Animator、原生 TMP 字体、流式字体配置、Sprite／贴图／材质，复用经长度／MD5核实的原 FZY4K TTF；`scripts/prepare_battle_world_shaders.py` 将选定原 GLES 程序逐支转换为 Windows HLSL。复用两版官方文本／显示分支与背景自适应算法，原描边换算依据 APK 恢复的 `TMPEffect.DoSetup`／回调和 `get_atlasPadding` ARM64 指令，方法地址、元数据索引、字节哈希、输入对象及输出／运行绑定见[元素反馈来源](battle-hud/element-feedback-source-manifest.json)。仅覆盖这6类飘字的实际单描边分支，未声明完整 TMPEffect；数字源码提取同时保留原 RectTransform 的轴心／锚点，避免旧默认轴心造成文字与数字重叠。
+
+## 主线公共交互的 Unity 载荷
+
+固定 `854_156383` APK 优先提取；英雄、探寻和奖励 UI 的原面板／对象、sprite、动画及返回对象池事件由 `prepare_unity_map11_ui.py` 保留至57份原面板。奖励列表 `UIImgAdd` 的 `UI/EffectAdditive` shader 来自 APK `defaultpackage_unityshaders.bundle`（解码包 SHA256 `f6cc2ad49028110a87744a116bc2fd193af9d8e2f2e7e452b7d90c0bc934dabe`），使用既有 GLES→HLSL 转换并保留四种裁剪变体及原材质参数；输出和源码见 Map11 UI 来源清单。
+
+`assets/reference/official-map/mainline-interactions-source-manifest.json` 记录620类实体扩展参数、英雄410等级属性、Map10／11地区等级、刷新间隔与体力点奖励的官方输入；`world-exploration-source-manifest.json` 记录7种令牌、65条实体组变体及17条条件。运行时显式加载 `Resources/World/Mainline/interactions.json` 与英雄属性，探寻配置尚未接入可玩流程。英雄原演出、奖励粒子、命运探寻和区域雾仍未完成，验证范围见[公共模块](../../docs/features/mainline-map-modules.md)，不以资源提取代替完成结论。

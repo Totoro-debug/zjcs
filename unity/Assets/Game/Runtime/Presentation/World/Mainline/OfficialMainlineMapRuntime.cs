@@ -207,6 +207,7 @@ namespace Zjcs.Presentation.World
         private void Update()
         {
             if (session == null || closed) return;
+            RefreshStaminaPoints();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
             optionDialoguePortraits?.Tick(Time.unscaledDeltaTime);
             UpdateMiniMapFilter();
@@ -369,6 +370,7 @@ namespace Zjcs.Presentation.World
             ValidateEntityLockGroups();
             InitializePuzzles();
             RecoverWitchStates();
+            RecoverHeroStates();
 
             uiCatalog = OfficialMap10UiCatalog.LoadDefault();
             ui = new OfficialWorldUiRenderer(uiCatalog);

@@ -1,0 +1,323 @@
+{
+  "converter": {
+    "path": "scripts/prepare_mainline_interactions.py",
+    "sha256": "2070383662372b04fa98d1e93c35e7d7842713d8682f5cc45336ce8e50603151"
+  },
+  "inputs": {
+    "entity_extend_parameter": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-957009542101312328",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "2809170f354e26bd1aa975138ef2f4d5fd8f2cfcf2519fdb69c069ba62ec888f"
+    },
+    "heroActivationPlayable": {
+      "bundle": "defaultpackage_share_cc05b7ce420f0ac799b892c22638bb45.bundle",
+      "bundle_hash": "54e12309e268e2b8521474195aea61b0",
+      "bundle_sha256": "70452360e0008ac2cd79fdfb4e62894711edbd328426af41d68a453dd538c984",
+      "bundle_size": 16954,
+      "manifest": "854_156383",
+      "name": "player_herostatue_playable_Active1",
+      "origin": "official_cdn",
+      "path_id": "3446542580744323314",
+      "sha256": "76b53e38ff264930a3f49fd865aec92ec3d23ebf09f22e317faab2f32be0cc06",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/54e12309e268e2b8521474195aea61b0.bundle"
+    },
+    "heroLevelProps": {
+      "decoder": "LevelPropBinaryReader indexed signed-varint rows",
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_level_prop_g_bytes.rawfile",
+      "sha256": "1b8e2cf7029ba8a80750f54aa35658878166d1bfbe2e206317473b43f6af3f1f"
+    },
+    "level_number": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-5102505721400995906",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c"
+    },
+    "map_area": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-4744098287204192872",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "7668f1c00f88a11af5f8146e4a24a8e88840fe9216642628ba1d3d6a785b0548"
+    },
+    "map_periodicity_random_award_interaction": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-3461417643786305391",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "045e4e2b98c2e0c694c1910f1623b05051211e8719c9af65af4ea1f42606188c"
+    },
+    "map_region": {
+      "apk_entry": "assets/yoo/DefaultPackage/71fe29d82df52227b7bfa2a6e52afe14.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban_map.bundle",
+      "bundle_hash": "71fe29d82df52227b7bfa2a6e52afe14",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-475710695530452369",
+      "raw_sha256": "f9aa7b11a62eb45142b5e1aa2e84284cddcfd4160d3bd88491db76ca91786f5d",
+      "raw_size": 196724,
+      "sha256": "1b2ba4d093ba1dbcd63b69b0147fe91feab118f5b5d5748d3247daeff7680ce8"
+    },
+    "previewDialogSettings": {
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_mapcommon.bundle",
+      "bundle_hash": "3d89e3440676b995cef6b1b9c95817bb",
+      "bundle_sha256": "13cdeb94363b8eea5bb6bd8a3c9a8a901821756200de5381856d03d38b93ccc7",
+      "bundle_size": 108179,
+      "manifest": "854_156383",
+      "origin": "official_cdn",
+      "path_id": "8812036968276346204",
+      "sha256": "a2d773cdb795aee6291561b1b05b6a3f5aefbff2f415e4b93dc99ede9c099de4",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3d89e3440676b995cef6b1b9c95817bb.bundle"
+    },
+    "random_reward": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "3530266630744679519",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a"
+    },
+    "reward_rule": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "7169546492845704538",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "5eb7ad8009e635218394748946c5d04d15bdd32c9312d8a5753511ba56c971af"
+    },
+    "stage": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "-1310591482892603796",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "d56c2ea8bec33594060ddd18f16e6095b3ee5b33f0a3b0f17e6480befe207667"
+    },
+    "status_effect": {
+      "apk_entry": "assets/yoo/DefaultPackage/e0b314ac00f9a6425dac35792b472695.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e0b314ac00f9a6425dac35792b472695",
+      "manifest": "854_156383",
+      "origin": "apk_zip",
+      "path_id": "5894786187494288708",
+      "raw_sha256": "ae576b818b12c2ee43d1fe428a65a8e71875e2c99563ae334d4d54aa635c603b",
+      "raw_size": 2075461,
+      "sha256": "3c00aa7ab4206b6f369438e60d1d106839c08d2b4f3d92a62a02908edaa28bda"
+    }
+  },
+  "manifest": "854_156383",
+  "operation": "Preserve EC result type/index, ordered random weights, native cost items and region levels.",
+  "output": {
+    "path": "unity/Assets/Game/Resources/World/Mainline/interactions.json",
+    "sha256": "2179d477bd7a86e4fc6c5e32c3e4113859013aaa22bddf1be98def0d99aaad26"
+  },
+  "schemas": {
+    "Assembly-CSharp:WorldStageInteractionPreviewDialogSetting": [
+      {
+        "flags": 0,
+        "level": 0,
+        "name": "Base",
+        "type": "WorldStageInteractionPreviewDialogSetting"
+      },
+      {
+        "flags": 16384,
+        "level": 1,
+        "name": "m_GameObject",
+        "type": "PPtr<GameObject>"
+      },
+      {
+        "flags": 0,
+        "level": 2,
+        "name": "m_FileID",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 2,
+        "name": "m_PathID",
+        "type": "SInt64"
+      },
+      {
+        "flags": 16384,
+        "level": 1,
+        "name": "m_Enabled",
+        "type": "UInt8"
+      },
+      {
+        "flags": 16384,
+        "level": 1,
+        "name": "m_Script",
+        "type": "PPtr<MonoScript>"
+      },
+      {
+        "flags": 0,
+        "level": 2,
+        "name": "m_FileID",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 2,
+        "name": "m_PathID",
+        "type": "SInt64"
+      },
+      {
+        "flags": 16384,
+        "level": 1,
+        "name": "m_Name",
+        "type": "string"
+      },
+      {
+        "flags": 0,
+        "level": 1,
+        "name": "mPreviewDialogConfigs",
+        "type": "vector"
+      },
+      {
+        "flags": 16384,
+        "level": 2,
+        "name": "Array",
+        "type": "Array"
+      },
+      {
+        "flags": 0,
+        "level": 3,
+        "name": "size",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 3,
+        "name": "data",
+        "type": "PreviewDialogInfo"
+      },
+      {
+        "flags": 0,
+        "level": 4,
+        "name": "ClassId",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 4,
+        "name": "DialogPath",
+        "type": "string"
+      },
+      {
+        "flags": 16384,
+        "level": 5,
+        "name": "Array",
+        "type": "Array"
+      },
+      {
+        "flags": 0,
+        "level": 6,
+        "name": "size",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 6,
+        "name": "data",
+        "type": "char"
+      },
+      {
+        "flags": 0,
+        "level": 1,
+        "name": "mPreviewPlayableConfigs",
+        "type": "vector"
+      },
+      {
+        "flags": 16384,
+        "level": 2,
+        "name": "Array",
+        "type": "Array"
+      },
+      {
+        "flags": 0,
+        "level": 3,
+        "name": "size",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 3,
+        "name": "data",
+        "type": "PreviewPlayableInfo"
+      },
+      {
+        "flags": 0,
+        "level": 4,
+        "name": "ClassId",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 4,
+        "name": "Playable",
+        "type": "PPtr<$GameObject>"
+      },
+      {
+        "flags": 0,
+        "level": 5,
+        "name": "m_FileID",
+        "type": "int"
+      },
+      {
+        "flags": 0,
+        "level": 5,
+        "name": "m_PathID",
+        "type": "SInt64"
+      }
+    ]
+  },
+  "templates": {
+    "path": "assets/official/map-entities.json",
+    "sha256": "78f1eeac9a8379128049fdd020223f71e73fdd43ba1a8bf5cdc62abe3735a510"
+  }
+}

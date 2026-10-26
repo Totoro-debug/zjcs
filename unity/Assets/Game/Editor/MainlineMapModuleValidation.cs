@@ -17,8 +17,27 @@ namespace Zjcs.Editor
 
         public static void Run()
         {
+            OfficialMap11UiTools.Import();
             ProjectTools.Validate();
             Zjcs.Editor.Progression.OfflineMainlineProgressValidation.Run();
+            Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
+            StartPlayMode();
+        }
+
+        public static void RunPlayMode()
+        {
+            OfficialMap11UiTools.Import();
+            RunLoadedPlayMode();
+        }
+
+        public static void RunLoadedPlayMode()
+        {
+            Zjcs.Editor.Progression.OfflineMapStaminaValidation.Run();
+            StartPlayMode();
+        }
+
+        private static void StartPlayMode()
+        {
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, OfficialMainlineMapModuleProbe.Argument);
             if (index < 0 || index + 1 >= args.Length)

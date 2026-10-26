@@ -26,8 +26,9 @@ class Map11NativeUiSchemas(ScriptSchemas):
 
 
 class Map11SupportUi(CookingConverter):
-    def __init__(self, apk, schemas):
+    def __init__(self, apk, schemas, sprite_root=None):
         self.apk, self.schemas = apk, schemas
+        self.sprite_root = sprite_root or ROOT / "unity/Assets/Official/World/Map/11/UI/Sprites"
         self.sprite_outputs = {}
         self.resources = {}
         editor = Path("D:/Tool/Unity/Editor/Data")
@@ -56,14 +57,14 @@ class Map11SupportUi(CookingConverter):
                 kind = script.m_ClassName
                 if kind == "TextMeshProUGUI":
                     fields = self.text_mesh_pro_fields(obj)
-                elif kind in SCHEMA_CLASSES or kind == "MirrorImage":
-                    schema = self.ui_schemas if script.m_AssemblyName.removesuffix(".dll") == "UnityEngine.UI" else self.schemas
+                elif kind in SCHEMA_CLASSES or kind in ("MirrorImage", "ClampingScrollRect"):
+                    schema = self.ui_schemas if script.m_AssemblyName.removesuffix(".dll") == "UnityEngine.UI" or kind == "ClampingScrollRect" else self.schemas
                     fields = schema.read(obj)
                     if schema is self.ui_schemas:
                         self.native_components.append((kind, game_object.object_reader.path_id, fields))
             elif kind == "CanvasGroup":
                 fields = obj.read_typetree()
-            components.append(("Image" if kind == "MirrorImage" else kind, obj, fields))
+            components.append(("Image" if kind == "MirrorImage" else "ScrollRect" if kind == "ClampingScrollRect" else kind, obj, fields))
         return transform, components
 
     def add_sprite(self, obj):
@@ -77,7 +78,7 @@ class Map11SupportUi(CookingConverter):
         raw = stream.getvalue()
         digest = hashlib.sha256(raw).hexdigest()
         name = safe_name(sprite.m_Name) + "-" + digest[:10] + ".png"
-        path = ROOT / "unity/Assets/Official/World/Map/11/UI/Sprites" / name
+        path = self.sprite_root / name
         write_generated(path, raw)
         uri = "res://" + path.relative_to(ROOT).as_posix()
         record = {"file": uri, "width": image.width, "height": image.height,
@@ -96,8 +97,9 @@ def load_support_ui(apk, schemas):
     icon = PPtr(**fields["DefPrefab"], assetsfile=config.assets_file).deref()
     item_object = apk.asset("config_luban", "Assets/Config/Luban/item.g.bytes")
     item_payload = item_object.read().m_Script.encode("utf-8", "surrogateescape")
-    item_rows = [row for row in Constructors().table(item_payload, "TbItemInfo") if row["ClassId"] in (2, 3, 57, 110, 115, 118, 325)]
-    if len(item_rows) != 7 or any(row["ItemType"] in fields["TypeList"]
+    item_ids = (1, 2, 3, 56, 57, 110, 115, 118, 325, 2011, 2012, 2013, 2014, 2015, 2016, 41300, 41400, 42200)
+    item_rows = [row for row in Constructors().table(item_payload, "TbItemInfo") if row["ClassId"] in item_ids]
+    if len(item_rows) != len(item_ids) or any(row["ItemType"] in fields["TypeList"]
                                 or row["ClassId"] in fields["IdList"] for row in item_rows):
         raise ValueError("Map11 quick-buy and witch rewards must use their pinned default item icon.")
     award_config = apk.asset("scriptableconfig_modules_itemicon", "/ItemAwardIconManagerConfig.asset")
@@ -133,7 +135,16 @@ def load_support_ui(apk, schemas):
     for name in ("MarkUIFilterEntryItem", "MiniMapMarkFilterItem"):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_map_minimap_filter.bundle"
     prefabs[award_icon.read().m_Name] = apk.provenance(award_icon)["bundle"]
+    for name in ("ExploreConfirmDialog", "ExploreDetailDialog", "ExploreHistoryItem", "ExploreProbabilityItem",
+                 "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog", "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem"):
+        prefabs[name] = "defaultpackage_assets_prefabs_ui_map_explore.bundle"
+    for name in ("AwardListPanel", "AwardListPanelItem"):
+        prefabs[name] = "defaultpackage_assets_prefabs_ui_award.bundle"
     for name in ("PreviewContentGroup", "WorldStageInteractionAwardPreview",
+                 "WorldTouchDialogWithPreview", "WorldTouchDialogPeriodicityInteraction",
+                 "WorldTouchDialogNegativePeriodicityInteraction", "WorldStageInteractionPreviewDialogHeroStatue",
+                 "WorldStageInteractionResultAwardExtraPropPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
+                 "6570_11_DialogIcon", "6571_11_DialogIcon", "6572_11_DialogIcon", "6573_11_DialogIcon",
                  "WorldStageInteractionResultAwardStatusEffectPreview", "WorldStageInteractionResultAwardStatusEffectPreviewItem",
                  "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview"):
         prefabs[name] = "defaultpackage_assets_prefabs_ui_worldmap.bundle"

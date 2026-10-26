@@ -16,13 +16,16 @@ namespace Zjcs.Presentation.World
     {
         private readonly OfficialMap11UiData data;
         private readonly string uiRoot;
+        private readonly int entityClassId;
         public GameObject Root { get; }
         public string Key { get; }
 
-        public OfficialMap11WitchWindow(string key, Transform parent, OfficialMap11UiData data, string uiRoot = "Map11/UI/")
+        public OfficialMap11WitchWindow(string key, Transform parent, OfficialMap11UiData data,
+            string uiRoot = "Map11/UI/", int entityClassId = 6620)
         {
             this.data = data;
             this.uiRoot = uiRoot ?? throw new ArgumentNullException(nameof(uiRoot));
+            this.entityClassId = entityClassId;
             Key = key;
             GameObject prefab = Resources.Load<GameObject>(uiRoot + key);
             if (prefab == null) throw new InvalidDataException("Unbound official witch prefab: " + key);
@@ -31,6 +34,7 @@ namespace Zjcs.Presentation.World
         }
 
         public string Text(string key) => data.texts.Single(value => value.key == key).value;
+        public string TextOrKey(string key) => data.texts.FirstOrDefault(value => value.key == key)?.value ?? key;
         public OfficialMap11UiComponent Source(string type) => data.components.Single(value => value.panel == Key && value.type == type);
 
         public Transform Find(string path)
@@ -102,7 +106,7 @@ namespace Zjcs.Presentation.World
                 {
                     string guid = mappings.Single(item => item.Key == result.ComponentType).Value.mAssetGuid;
                     string prefab = data.guidPrefabs.Single(item => item.guid == guid).key;
-                    var preview = new OfficialMap11WitchWindow(prefab, Find(content.fields.mContentRoot), data);
+                    var preview = new OfficialMap11WitchWindow(prefab, Find(content.fields.mContentRoot), data, uiRoot, entityClassId);
                     preview.Result(result);
                 }
             }
@@ -112,7 +116,7 @@ namespace Zjcs.Presentation.World
         public void EntityIcon()
         {
             Transform slot = Find(Source("WorldDialogEntityContent").fields.mIconSlot.mPreviewSlot);
-            GameObject prefab = Resources.Load<GameObject>(uiRoot + "6620_11_DialogIcon");
+            GameObject prefab = Resources.Load<GameObject>(uiRoot + entityClassId + "_11_DialogIcon");
             if (prefab == null) throw new InvalidDataException("Official witch dialog icon is missing.");
             UnityEngine.Object.Instantiate(prefab, slot, false);
         }
@@ -126,7 +130,7 @@ namespace Zjcs.Presentation.World
                     OfficialMap11UiAssets assets = Resources.Load<OfficialMap11UiAssets>(uiRoot + "DynamicItems");
                     foreach (Map10RuntimeAwardItem award in result.AwardItems)
                     {
-                        var wrapper = new OfficialMap11WitchWindow("ItemAwardIcon", awards, data);
+                        var wrapper = new OfficialMap11WitchWindow("ItemAwardIcon", awards, data, uiRoot, entityClassId);
                         wrapper.State(wrapper.Source("ItemAwardIcon"), 0);
                         WorldItemIcon icon = UnityEngine.Object.Instantiate(Resources.Load<GameObject>(uiRoot + "ItemIconDefault"),
                             wrapper.Find(wrapper.Source("ItemAwardIcon").fields.Anchor), false).GetComponent<WorldItemIcon>();
@@ -146,11 +150,24 @@ namespace Zjcs.Presentation.World
                     Transform parent = Find(Source("WorldStageInteractionResultAwardStatusEffectPreview").fields.mRectTransform);
                     foreach (Map11RuntimeStatueStatus status in result.StatusEffects)
                     {
-                        var item = new OfficialMap11WitchWindow("WorldStageInteractionResultAwardStatusEffectPreviewItem", parent, data);
+                        var item = new OfficialMap11WitchWindow("WorldStageInteractionResultAwardStatusEffectPreviewItem", parent, data, uiRoot, entityClassId);
                         OfficialMap11UiComponent source = item.Source("WorldStageInteractionResultAwardStatusEffectPreviewItem");
                         item.State(source, status.EffectType);
                         item.SetText(source.fields.mEntryText, string.Format(CultureInfo.CurrentCulture,
                             Text("ui_get_buff_desc"), Text("entry_" + status.EntryId + "_name"), Text("entry_" + status.EntryId + "_desc")));
+                    }
+                    break;
+                case 238:
+                    Transform props = Find(Source("WorldStageInteractionResultAwardExtraPropPreview").fields.mRectTransform);
+                    foreach (OfficialMainlineExtraProp prop in result.ExtraProps)
+                    {
+                        var item = new OfficialMap11WitchWindow("WorldStageInteractionResultAwardExtraPropPreviewItem", props, data, uiRoot, entityClassId);
+                        string property = prop.PropType == 1 ? "Attack" : prop.PropType == 2 ? "Defence"
+                            : prop.PropType == 3 ? "MaxHp" : prop.PropType == 4 ? "Speed"
+                            : throw new InvalidDataException("Unbound hero property name: " + prop.PropType);
+                        item.SetText(item.Source("WorldStageInteractionResultAwardExtraPropPreviewItem").fields.mExtraPropItemText,
+                            string.Format(CultureInfo.CurrentCulture, Text("ui_item_add_prop_effect_text"),
+                                Text("PropType." + property), Zjcs.Offline.Progression.OfficialPropFormat.Compact(prop.Value)));
                     }
                     break;
                 case 245:

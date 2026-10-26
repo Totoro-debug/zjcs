@@ -26,6 +26,20 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
+            if (IsStaminaPoint(entity))
+            {
+                if (entity.EntityClassId == 5011)
+                {
+                    if (StaminaCanStart(entity)) ShowStageDialog(entity, null);
+                }
+                else CollectStaminaPoint(entity);
+                return;
+            }
+            if (entity.TypeId == 223)
+            {
+                InteractHero(entity);
+                return;
+            }
             if (localSave.completedEntityPlacements.Contains(entity.PlacementId)) return;
             if (mapClassId == 11 && entity.EntityClassId == 6620)
             {
@@ -191,10 +205,18 @@ namespace Zjcs.Presentation.World
                 if (mapLogicTags.TryGetValue(entity.PlacementId, out Map10RuntimeLogicTag tag))
                     state = localSave.mapLogicStates.FirstOrDefault(value => value != null && value.Tag == tag.Tag)?.State ?? state;
                 if (goddessActivated) state = 1;
+                if (entity.TypeId == 223) state = IsPublicRegion(entity.Region) ? 2 : HeroActivated(entity) ? 1 : 0;
                 entityView.SetEntityState(entity.PlacementId, state);
                 bool spawned = puzzles != null && puzzles.Contains(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
+                if (IsStaminaPoint(entity))
+                {
+                    var placement = StaminaPlacement(entity);
+                    bool[] flags = IsPublicRegion(entity.Region) ? placement.Public : placement.Private;
+                    spawned = flags != null && flags.Length > 0 && flags[0]
+                        && Stamina.Available(mapClassId, entity.PlacementId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                }
                 bool active = (spawned || goddess) && IsRegionAccessible(entity.Region)
-                    && !localSave.completedEntityPlacements.Contains(entity.PlacementId)
+                    && (entity.TypeId == 223 || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
             }

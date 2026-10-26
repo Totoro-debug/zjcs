@@ -105,7 +105,7 @@ namespace Zjcs.Presentation.World
             if (!battleScenes.TryGetValue(stage.GameId, out Map10RuntimeBattleScene scene))
                 throw new InvalidDataException("Official Map10 battle scene is missing for GameId " + stage.GameId);
             bool periodicGroupAlreadyUsed = entity.PeriodicityGroupIds.Any(localSave.completedPeriodicityGroups.Contains);
-            if ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed)
+            if (!IsStaminaPoint(entity) && ((stage.Repeat >= 0 && localSave.completedStages.Contains(stageId)) || periodicGroupAlreadyUsed))
             {
                 CompleteEntity(entity);
                 completed?.Invoke();
@@ -121,6 +121,17 @@ namespace Zjcs.Presentation.World
             FightBattleCheckpoint resume = null)
         {
             FightBattleCheckpoint checkpoint = resume ?? BuildCheckpoint(entity, stage, roster, scene);
+            if (IsStaminaPoint(entity))
+            {
+                long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                ProgressionResult cost = Stamina.StartBattle(mapClassId, entity.PlacementId, StaminaCosts(entity), now);
+                if (cost.Status != ProgressionResultStatus.Applied && cost.Status != ProgressionResultStatus.Unchanged)
+                {
+                    if (cost.Status == ProgressionResultStatus.InvalidState) StaminaCanStart(entity);
+                    return;
+                }
+                RefreshWorldTopBar();
+            }
             if (checkpoint.StageType == 0) checkpoint.StageType = stage.Type;
             FightBattleUnitState mainPlayer = checkpoint.Units.FirstOrDefault(value => value.Id == 1);
             Map10RuntimeFactionInfo playerFaction = scene.FightComponent.FactionInfoList.First(value => value.Faction == 0);
@@ -569,6 +580,7 @@ namespace Zjcs.Presentation.World
             bool storyBattle = callback != null;
             FightBattleOutcome outcome = checkpoint.Outcome;
             bool won = outcome != null && outcome.Won;
+            FinishStaminaBattle(entity, won);
             if (entity != null)
             {
                 if (localSave.battleResults == null) localSave.battleResults = Array.Empty<Map10RuntimeBattleResult>();
@@ -615,7 +627,7 @@ namespace Zjcs.Presentation.World
                     entityView.SetEntityState(entity.PlacementId, 1);
                     witchSpawnPending = null;
                 }
-                else if (oneTimeStage)
+                else if (oneTimeStage && !IsStaminaPoint(entity))
                 {
                     if (!localSave.completedStages.Contains(checkpoint.StageId))
                         localSave.completedStages = localSave.completedStages.Concat(new[] { checkpoint.StageId }).ToArray();
@@ -643,6 +655,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
             battleController.EndBattle();
+            FinishStaminaBattle(pendingInteraction, false);
             ClearActiveBattle();
             Action callback = DestroyBattleSession();
             SaveLocalProgress();
@@ -652,6 +665,7 @@ namespace Zjcs.Presentation.World
         private void AbortBattle()
         {
             if (battleController == null) return;
+            FinishStaminaBattle(pendingInteraction, false);
             ClearActiveBattle();
             DestroyBattleSession();
             SaveLocalProgress();

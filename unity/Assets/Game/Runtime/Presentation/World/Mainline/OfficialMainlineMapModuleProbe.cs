@@ -55,7 +55,7 @@ namespace Zjcs.Presentation.World
             probe.output = Path.GetFullPath(outputDirectory);
             probe.root = Path.Combine(probe.output, "isolated-profile");
             probe.completed = onCompleted;
-            probe.deadline = Time.realtimeSinceStartup + 120f;
+            probe.deadline = Time.realtimeSinceStartup + 180f;
             Directory.CreateDirectory(probe.output);
             probe.StartCoroutine(probe.Guarded(probe.Verify()));
         }
@@ -63,7 +63,7 @@ namespace Zjcs.Presentation.World
         private void Update()
         {
             if (finished || Time.realtimeSinceStartup < deadline) return;
-            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 120 second deadline.");
+            File.WriteAllText(Path.Combine(output, "failed.txt"), "Shared map probe exceeded its 180 second deadline.");
             Complete(false);
         }
 
@@ -90,7 +90,7 @@ namespace Zjcs.Presentation.World
                 else yield return next;
             }
             File.WriteAllText(Path.Combine(output, "passed.txt"),
-                "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, statue transactions and cold save reload passed.");
+                "Map10/11 shared runtime: region conditions, pointer navigation, HUD, minimap tabs/filter, goddess activation, hero UI/permanent rewards/daily effects, stamina gathering/award animation/respawn and cold save reload passed.");
             Debug.Log("Shared mainline map modules passed: " + output);
             Complete(true);
         }
@@ -151,7 +151,12 @@ namespace Zjcs.Presentation.World
                 Require(Field<OfficialWorldUiRenderer>("ui").Find("WorldCanvas", "/WorldCanvas").activeInHierarchy, "Map HUD mounted");
                 yield return VerifyPointerMovement(session);
                 yield return Capture("map-" + id + "-hud");
-                if (id == 11) yield return VerifyNativeUi();
+                if (id == 11)
+                {
+                    yield return VerifyNativeUi();
+                    yield return VerifyHeroStatues();
+                    yield return VerifyStaminaGathering();
+                }
                 MapGridPoint position = Field<MapGridPoint>("currentGrid");
                 Invoke("SaveLocalProgress");
                 Destroy(runtime.gameObject);
@@ -159,7 +164,7 @@ namespace Zjcs.Presentation.World
                 Open(id, canvas.transform);
                 Require(Field<MapGridPoint>("currentGrid").Equals(position), "Map position survives a cold runtime reload");
                 if (id == 11)
-                    Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 1,
+                    Require(Field<OfflineMainlineProgressSession>("progressionSave").Save.World.ActivatedGoddessRegions.Count == 3,
                         "Goddess activation survives a cold reload");
                 Destroy(runtime.gameObject);
                 yield return null;
@@ -170,7 +175,7 @@ namespace Zjcs.Presentation.World
             Require(progress.ApplyStatueVisit("20261025", "hero", 10, 9002, "probe-hero", 0f, Array.Empty<int>(),
                 Array.Empty<OfflineItemStack>(), 1).Status == ProgressionResultStatus.NotReady, "Hero and witch share one daily visit");
             progress = OfflineMainlineProgressSession.OpenCharacter(slots, slot);
-            Require(progress.HasVisitedStatueOn("20261025") && progress.Save.Player.PendingStatueBattleEffects.Count == 1,
+            Require(progress.HasVisitedStatueOn("20261025") && progress.Save.Player.PendingStatueBattleEffects.Count == 3,
                 "Daily visit and battle effects survive cold reload");
             Destroy(canvas);
         }
@@ -253,6 +258,83 @@ namespace Zjcs.Presentation.World
             Require(progress.Save.World.ActivatedGoddessRegions.Count == 1, "Pointer activates the original goddess stage");
         }
 
+        private IEnumerator VerifyHeroStatues()
+        {
+            var entities = Field<IDictionary>("mapEntities");
+            object hero = entities[1401];
+            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            Invoke("InteractHero", hero);
+            yield return new WaitForSecondsRealtime(.5f);
+            var window = Field<OfficialMap11WitchWindow>("witchDialog");
+            yield return Capture("map-11-hero-touch");
+            yield return Click(window.Find(window.Source("StageUIWithPreview").fields.myTouchBtn).GetComponent<Button>());
+            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            yield return new WaitForSecondsRealtime(1);
+            var previewText = window.Root.GetComponentsInChildren<TMPro.TMP_Text>().Single(value => value.text == "生命+170");
+            Require(previewText.rectTransform.rect.height > 0 && previewText.isActiveAndEnabled,
+                "Native hero property preview has visible layout");
+            yield return Capture("map-11-hero-first-reward");
+            yield return Click(window.Find(window.Source("WorldStageInteractionPreviewDialog").fields.mCloseBtn).GetComponent<Button>());
+            Require(progress.Save.Player.CharacterProperties.ExtraProperties.Count(value => value.SourceId == "hero-activation:11:1401") == 1,
+                "Hero activation atomically grants its permanent original property");
+            Invoke("InteractHero", hero);
+            Require(Field<OfficialMap11WitchWindow>("witchDialog") == null, "Private completed hero waits for its region to become public");
+            progress.SetMapRegionProgress(11, 12, 10000);
+            Require(progress.RecordGoddessActivated(11, 12, "probe-public-hero-region").IsApplied, "Public hero fixture");
+            Invoke("InteractHero", hero);
+            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            yield return new WaitForSecondsRealtime(.5f);
+            yield return Capture("map-11-hero-daily");
+            yield return Click(window.Find(window.Source("PeriodicityInteractionStageUI").fields.mInteractionBtn).GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(4.6f);
+            window = Field<OfficialMap11WitchWindow>("witchDialog");
+            yield return Capture("map-11-hero-daily-reward");
+            yield return Click(window.Find(window.Source("WorldStageInteractionPreviewDialog").fields.mCloseBtn).GetComponent<Button>());
+            Require(progress.HasVisitedStatueOn(DateTime.Now.ToString("yyyyMMdd")), "Hero daily visit is durable");
+            var cold = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
+            Require(cold.Save.Player.CharacterProperties.ExtraProperties.Count(value => value.SourceId == "hero-activation:11:1401") == 1,
+                "Hero permanent property restores exactly once");
+        }
+
+        private IEnumerator VerifyStaminaGathering()
+        {
+            var progress = Field<OfflineMainlineProgressSession>("progressionSave");
+            progress.SetMapRegionProgress(11, 0, 10000);
+            Require(progress.RecordGoddessActivated(11, 0, "probe-public-stamina-region").IsApplied, "Public resource region fixture");
+            Require(progress.ApplyInventoryTransaction("probe-map-stamina", save =>
+            {
+                if (!OfflineInventoryOperations.Grant(save.Player, 57, 20, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
+                    throw new InvalidOperationException("Stamina fixture failed.");
+            }).IsApplied, "Isolated gather stamina fixture");
+            Invoke("RefreshEntityActivity");
+            object entity = Field<IDictionary>("mapEntities")[115];
+            var grid = (MapGridPoint)entity.GetType().GetField("Grid").GetValue(entity);
+            var session = Field<OfficialWorldMapSession>("session");
+            MapGridPoint adjacent = new[] { new MapGridPoint(1, 0), new MapGridPoint(-1, 0), new MapGridPoint(0, 1), new MapGridPoint(0, -1) }
+                .Select(value => grid + value).First(value => session.Movement.IsFit(value));
+            Invoke("SetAvatarPosition", adjacent);
+            yield return new WaitForSecondsRealtime(1);
+            var view = runtime.GetComponentInChildren<OfficialMap10EntityView>();
+            var node = view.FindEntityObject(115);
+            Require(node.activeInHierarchy, "Public resource point is visible");
+            Vector3 point = node.GetComponentsInChildren<Collider2D>().First(value => value.enabled).bounds.center;
+            var camera = Field<Camera>("worldCamera");
+            Require(Hits(camera.WorldToScreenPoint(point)).Count == 0, "Resource pointer is exposed to world picking");
+            long gold = progress.InventoryCount(1), stamina = progress.InventoryCount(57);
+            worldPress = point;
+            float timeout = Time.realtimeSinceStartup + 3;
+            while (progress.InventoryCount(57) == stamina && Time.realtimeSinceStartup < timeout) yield return null;
+            Require(progress.InventoryCount(57) == stamina - 5 && progress.InventoryCount(1) > gold
+                && !node.activeInHierarchy, "Simulated map click spends five stamina, grants gold and hides the point");
+            yield return new WaitForSecondsRealtime(.65f);
+            Require(FindObjectOfType<OfficialMapAwardList>() != null, "The original animated award list is mounted");
+            yield return Capture("map-11-stamina-gold-award");
+            timeout = Time.realtimeSinceStartup + 4;
+            while (!node.activeInHierarchy && Time.realtimeSinceStartup < timeout) yield return null;
+            Require(node.activeInHierarchy && progress.InventoryCount(57) == stamina - 5, "The point returns after its native three second interval");
+            yield return Capture("map-11-stamina-respawn");
+        }
+
         private static List<RaycastResult> Hits(Vector2 position)
         {
             var hits = new List<RaycastResult>();
@@ -267,6 +349,20 @@ namespace Zjcs.Presentation.World
             Vector2 position = RectTransformUtility.WorldToScreenPoint(null, ((RectTransform)button.transform).TransformPoint(((RectTransform)button.transform).rect.center));
             var hits = Hits(position);
             GameObject target = hits.Count > 0 ? ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) : null;
+            if (target != button.gameObject)
+            {
+                // Full-screen close buttons are intentionally covered by the native
+                // scroll viewport. Click an exposed point inside their own rectangle.
+                RectTransform rect = (RectTransform)button.transform;
+                foreach (Vector2 sample in new[] { new Vector2(.5f, .08f), new Vector2(.08f, .5f), new Vector2(.92f, .5f), new Vector2(.5f, .92f) })
+                {
+                    position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(
+                        rect.rect.min + Vector2.Scale(rect.rect.size, sample)));
+                    hits = Hits(position);
+                    target = hits.Count > 0 ? ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) : null;
+                    if (target == button.gameObject) break;
+                }
+            }
             Require(target == button.gameObject, "Original button receives the topmost raycast at " + button.name);
             var pointer = new PointerEventData(EventSystem.current) { position = position, button = PointerEventData.InputButton.Left };
             ExecuteEvents.Execute(target, pointer, ExecuteEvents.pointerDownHandler);

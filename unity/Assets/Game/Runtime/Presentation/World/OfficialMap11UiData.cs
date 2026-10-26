@@ -18,6 +18,7 @@ namespace Zjcs.Presentation.World
         public OfficialMap11ItemIcon[] itemIcons;
         public OfficialMap11GuidPrefab[] guidPrefabs;
         public string itemQualitySprite;
+        public string mapBackgroundSprite;
         public OfficialMap11MiniMapSettings minimapSettings;
         public OfficialMap11MiniMapTab[] minimapTabs;
         public OfficialMap11PortraitSettings headPortraitSettings;
@@ -113,6 +114,8 @@ namespace Zjcs.Presentation.World
 
     [Serializable] public sealed class OfficialMap11UiComponentFields
     {
+        public float m_Alpha;
+        public bool m_Interactable, m_BlocksRaycasts, m_IgnoreParentGroups;
         public OfficialMap11UiMaterial material;
         public string maskTexture;
         public string sprite, m_FillRect, m_HandleRect, mSlider;
@@ -179,6 +182,16 @@ namespace Zjcs.Presentation.World
         public OfficialMap11IconSlot mIconSlot;
         public string mCloseBtn, mTitleText, mDescContentText, mContentRoot, mInteractionBtn, mPeriodicityInteractionTips;
         public string mRectTransform, mEntryText, mModifyHpPercentDescText, mSpawnEntityDesc, mAwardContent, Anchor;
+        public string myTouchBtn, myBtnText, myFuncDescText, mDialogContent, mExtraPropItemText;
+        public string myStageIcon, myBgIcon;
+        public string mItemNameText, mLightImage, mParticle;
+        public string mOutputAdditionItemNameText, mOutputAdditionItemCountText, mExtraContentSlot;
+        public float mIntervalTime;
+        public int mItemType, mIsHideQualityImg;
+        public OfficialAwardListConfigDictionary mAwardListPanelItemConfigDict;
+        public bool mClampWidth, mClampHeight, mClampContentMove;
+        public UnityEngine.Vector2 mClampWidthRange, mClampHeightRange;
+        public string m_Content, m_Viewport;
         public string mItemIconSlot;
         public OfficialMap11PreviewGroup[] mWorldStageInteractionPreviewGroups;
         public OfficialMap11PreviewAssets mStagePreviewAssetGuidProxy;
@@ -199,12 +212,27 @@ namespace Zjcs.Presentation.World
         public int m_ChildScaleWidth, m_ChildScaleHeight, m_ReverseArrangement;
     }
     [Serializable] public sealed class OfficialMap11GridSettings { public UGUIJszx.GridLayoutSetting[] settings; }
+    [Serializable] public sealed class OfficialAwardListConfigDictionary { public OfficialAwardListConfigEntry[] mSerializeBuffer; }
+    [Serializable] public sealed class OfficialAwardListConfigEntry { public int Key; public OfficialAwardListConfig Value; }
+    [Serializable] public sealed class OfficialAwardListConfig
+    {
+        public OfficialMap11AssetGuid AssetGuidProxy;
+        public string Path;
+        public float DelayCloseTime;
+    }
     [Serializable] public sealed class OfficialMap11PortraitRequestor { public string mRawImage, mAnimationName; }
     [Serializable] public sealed class OfficialMap11IconProxy { public string mImage; }
     [Serializable] public sealed class OfficialMap11IconSlot { public string mPreviewSlot; }
     [Serializable] public sealed class OfficialMap11Padding { public int m_Left, m_Right, m_Top, m_Bottom; }
 
-    [Serializable] public sealed class OfficialMap11UiMaterial { public string name, shader; }
+    [Serializable] public sealed class OfficialMap11UiMaterial
+    {
+        public string name, shader;
+        public OfficialMap11MaterialFloat[] floats;
+        public OfficialMap11MaterialColor[] colors;
+    }
+    [Serializable] public sealed class OfficialMap11MaterialFloat { public string name; public float value; }
+    [Serializable] public sealed class OfficialMap11MaterialColor { public string name; public float[] value; }
     [Serializable] public sealed class OfficialMap11UiClip
     {
         public string field, name;

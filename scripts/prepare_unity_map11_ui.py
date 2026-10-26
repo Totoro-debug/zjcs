@@ -51,22 +51,37 @@ def write_ui_payload(path, content, known):
         temporary.unlink(missing_ok=True)
 
 
-def build():
-    source_path = ROOT / "assets/official/map-ui.json"
-    manifest_path = ROOT / "assets/reference/official-map/ui-source-manifest.json"
-    raw = source_path.read_bytes()
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest["manifest"] != VERSION or manifest["output_sha256"] != sha256(raw):
-        raise ValueError("Official map UI differs from the pinned source manifest")
-    source = json.loads(raw)
-    apk, schemas = Apk(), ScriptSchemas()
-    panels, components, sprites, shader_programs = [], [], {}, {}
-    extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = load_support_ui(apk, schemas)
-    source.update(extra_trees)
-    manifest["prefabs"].update(extra_sources)
-    manifest["resources"].update(extra_resources)
-    panel_keys = PANELS + ICONS + ("WorldCanvas",) + tuple(extra_trees)
+def animation_record(apk, animation, tree):
+    native = animation.read_typetree()
+    if native["m_Legacy"]:
+        tracks, unknown = [], []
+        for curve in native["m_FloatCurves"]:
+            path = tree["path"] + ("/" + curve["path"] if curve["path"] else "")
+            tracks.append({"path": path, "property": curve["attribute"], "keys": [
+                [k["time"], k["value"], k["inSlope"], k["outSlope"]] for k in curve["curve"]["m_Curve"]]})
+        for field, prefix, axes in (("m_PositionCurves", "position.", "xyz"), ("m_ScaleCurves", "scale.", "xyz"),
+                                     ("m_EulerCurves", "rotation.", "xyz"), ("m_RotationCurves", "quaternion.", "xyzw")):
+            for curve in native[field]:
+                path = tree["path"] + ("/" + curve["path"] if curve["path"] else "")
+                for axis in axes:
+                    tracks.append({"path": path, "property": prefix + axis, "keys": [
+                        [k["time"], k["value"][axis], k["inSlope"][axis], k["outSlope"][axis]] for k in curve["curve"]["m_Curve"]]})
+        if native["m_PPtrCurves"] or native["m_CompressedRotationCurves"]:
+            raise ValueError("Unconverted native dialogue animation channels")
+        duration = max((k[0] for t in tracks for k in t["keys"]), default=0)
+        loop = native["m_WrapMode"] == 2
+    else:
+        tracks, duration, loop, unknown = mecanim_tracks(animation, tree)
+    for track in tracks:
+        track["keyframes"] = [dict(zip(("time", "value", "inTangent", "outTangent"),
+            [values[0], values[1], values[2] or 0, values[3] or 0])) for values in track["keys"]]
+    return {"name": animation.read().m_Name, "duration": duration, "loop": loop,
+            "tracks": tracks, "unknown": unknown, "events": native["m_Events"], "source": apk.provenance(animation)}
 
+
+def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT):
+    """Restore official panel geometry, serialized component bindings and clips."""
+    panels, components, sprites, shader_programs = [], [], {}, {}
     for key in panel_keys:
         root = apk.asset(manifest["prefabs"][key]["bundle"], "/" + key + ".prefab")
         paths, behaviours, native_animations = {}, [], []
@@ -87,10 +102,15 @@ def build():
                         visit(child.read().m_GameObject.deref(), path)
                 elif component.type.name == "MonoBehaviour":
                     behaviours.append(component)
-                elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog")
+                elif component.type.name in ("Animation", "Animator") and (key in ("TalkDialog", "OptionTalkDialog", "AwardListPanel", "AwardListPanelItem")
                         or key == "WorldCanvas" and component.type.name == "Animator"
                         and go.m_Name in ("FunctionEntryFunc", "FunctionEntryPhoto", "FunctionEntryChatQuick")):
                     native_animations.append(component)
+                elif component.type.name == "CanvasGroup":
+                    native = component.read_typetree()
+                    components.append({"panel": key, "path": path, "type": "CanvasGroup",
+                                       "fields": {k: native[k] for k in ("m_Enabled", "m_Alpha", "m_Interactable", "m_BlocksRaycasts", "m_IgnoreParentGroups")},
+                                       "source": apk.provenance(component)})
                 elif component.type.name == "Canvas":
                     native = component.read_typetree()
                     components.append({"panel": key, "path": path, "type": "Canvas",
@@ -106,32 +126,6 @@ def build():
 
         visit(root)
 
-        def animation_record(animation, tree):
-            native = animation.read_typetree()
-            if native["m_Legacy"]:
-                tracks, unknown = [], []
-                for curve in native["m_FloatCurves"]:
-                    path = tree["path"] + ("/" + curve["path"] if curve["path"] else "")
-                    tracks.append({"path": path, "property": curve["attribute"], "keys": [
-                        [k["time"], k["value"], k["inSlope"], k["outSlope"]] for k in curve["curve"]["m_Curve"]]})
-                for field, prefix, axes in (("m_PositionCurves", "position.", "xyz"), ("m_ScaleCurves", "scale.", "xyz"),
-                                             ("m_EulerCurves", "rotation.", "xyz"), ("m_RotationCurves", "quaternion.", "xyzw")):
-                    for curve in native[field]:
-                        path = tree["path"] + ("/" + curve["path"] if curve["path"] else "")
-                        for axis in axes:
-                            tracks.append({"path": path, "property": prefix + axis, "keys": [
-                                [k["time"], k["value"][axis], k["inSlope"][axis], k["outSlope"][axis]] for k in curve["curve"]["m_Curve"]]})
-                if native["m_PPtrCurves"] or native["m_CompressedRotationCurves"]:
-                    raise ValueError("Unconverted native dialogue animation channels")
-                duration = max((k[0] for t in tracks for k in t["keys"]), default=0)
-                loop = native["m_WrapMode"] == 2
-            else:
-                tracks, duration, loop, unknown = mecanim_tracks(animation, tree)
-            for track in tracks:
-                track["keyframes"] = [dict(zip(("time", "value", "inTangent", "outTangent"),
-                    [values[0], values[1], values[2] or 0, values[3] or 0])) for values in track["keys"]]
-            return {"name": animation.read().m_Name, "duration": duration, "loop": loop,
-                    "tracks": tracks, "unknown": unknown, "events": native["m_Events"], "source": apk.provenance(animation)}
 
         flat_source = flatten_nodes(source[key])
         def subtree(node, path):
@@ -167,7 +161,7 @@ def build():
                     refs = [refs[leaves[0]["m_ClipID"]]]
                     default_name = refs[0].read().m_Name
                     controller_source = apk.provenance(controller.deref())
-            clips = [animation_record(ref.deref(), subtree(source[key], location)) for ref in refs if ref.m_PathID]
+            clips = [animation_record(apk, ref.deref(), subtree(source[key], location)) for ref in refs if ref.m_PathID]
             components.append({"panel": key, "path": location, "type": "NativeAnimatorInitialState" if initial_state else "Native" + component.type.name,
                                "fields": {"clips": clips, "defaultClip": default_name, "playAutomatically": auto_play,
                                           "controllerSource": controller_source},
@@ -198,7 +192,7 @@ def build():
                 stream = io.BytesIO()
                 mask.read().image.save(stream, format="PNG")
                 raw_mask = stream.getvalue()
-                mask_path = OUTPUT / "Sprites" / ("MiniMapUIMask-" + sha256(raw_mask)[:10] + ".png")
+                mask_path = output_root / "Sprites" / ("MiniMapUIMask-" + sha256(raw_mask)[:10] + ".png")
                 write_generated(mask_path, raw_mask)
                 uri = "res://" + mask_path.relative_to(ROOT).as_posix()
                 image = mask.read().image
@@ -233,11 +227,24 @@ def build():
                         material = PPtr(m_FileID=material_file, m_PathID=material_id, assetsfile=obj.assets_file).deref()
                         mat = material.read()
                         fields["material"] = {"name": mat.m_Name, "shader": mat.m_Shader.read().m_ParsedForm.m_Name,
-                                              "source": apk.provenance(material)}
+                                              "source": apk.provenance(material),
+                                              "floats": [{"name": name, "value": value} for name, value in mat.m_SavedProperties.m_Floats],
+                                              "colors": [{"name": name, "value": [getattr(value, axis) for axis in "rgba"]}
+                                                         for name, value in mat.m_SavedProperties.m_Colors]}
                         shader = mat.m_Shader.deref()
                         if fields["material"]["shader"] == "UI/ColorShift":
                             shader_programs["UI/ColorShift"] = {"source": apk.provenance(shader), "programs": gles_programs(shader.read(), True),
                                                                 "material": material.read_typetree()}
+                        if fields["material"]["shader"] == "UI/EffectAdditive":
+                            from prepare_battle_hud_materials import shader_text
+                            _, native, _ = shader_text(shader.read(), mat.m_ValidKeywords)
+                            native = native.replace('"Zjcs/Combat/HudEffectAdditive"', '"Zjcs/Official/UI/EffectAdditive"')
+                            shader_path = ROOT / "unity/Assets/Game/Runtime/Presentation/World/Shaders/EffectAdditive.shader"
+                            shader_path.parent.mkdir(parents=True, exist_ok=True)
+                            shader_path.write_text(native, encoding="utf-8", newline="\n")
+                            shader_programs["UI/EffectAdditive"] = {"source": apk.provenance(shader),
+                                "programs": gles_programs(shader.read(), True), "material": material.read_typetree(),
+                                "desktopPath": shader_path.relative_to(ROOT).as_posix(), "desktopSha256": sha256(shader_path.read_bytes())}
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": fields, "source": apk.provenance(obj)})
             elif script.m_ClassName == "PopupWindow":
@@ -298,7 +305,7 @@ def build():
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": fields,
                                    "source": apk.provenance(obj)})
-            elif script.m_ClassName == "WorldStageInteractionPreviewContentLayoutElement":
+            elif script.m_ClassName in ("WorldStageInteractionPreviewContentLayoutElement", "ClampingScrollRect"):
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(ui_schemas.read(obj), obj),
                                    "source": apk.provenance(obj)})
@@ -313,7 +320,13 @@ def build():
                                       "WorldStageInteractionPreviewContentLayoutElement",
                                       "WorldStageInteractionResultAwardStatusEffectPreview", "WorldStageInteractionResultAwardStatusEffectPreviewItem",
                                       "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview",
-                                      "WorldStageInteractionAwardPreview", "ItemAwardIcon", "MiniMapMaskedUILoader",
+                                      "WorldStageInteractionAwardPreview", "WorldStageInteractionResultAwardExtraPropPreview",
+                                      "StageTouchUI", "StageUIWithPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
+                                      "ExploreConfirmDialog", "ExploreDetailDialog", "ExploreHistoryContent", "ExploreProbabilityContent",
+                                      "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreHistoryItem", "ExploreProbabilityItem",
+                                      "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog", "TurnPageUI", "RuleDialog",
+                                      "AwardListPanel", "AwardListPanelItem", "AwardListPanelNormalPath", "AwardListPanelSinglePath", "AwardListPanelBasePath",
+                                      "ItemAwardIcon", "MiniMapMaskedUILoader",
                                       "MiniMapMaskedUI", "AreaInfoUI", "TalkDialog", "OptionTalkDialogPanel",
                                       "TalkDialogCharacter", "TalkDialogContentSwitch", "GraphicCapsuleMeshClipper",
                                       "HeadCharacterPortrait", "PlayerExpSlider", "PlayerHpSlider", "PublicPlayerInfoUI",
@@ -365,6 +378,29 @@ def build():
                 sprites.setdefault(sprite["file"], sprite)
             stack.extend(node.get("children", []))
 
+    return panels, components, sprites, shader_programs
+
+
+def build():
+    source_path = ROOT / "assets/official/map-ui.json"
+    manifest_path = ROOT / "assets/reference/official-map/ui-source-manifest.json"
+    raw = source_path.read_bytes()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest["manifest"] != VERSION or manifest["output_sha256"] != sha256(raw):
+        raise ValueError("Official map UI differs from the pinned source manifest")
+    source = json.loads(raw)
+    apk, schemas = Apk(), ScriptSchemas(assembly_overrides={
+        "Coffee.UIParticle": ROOT / ".tools/home-particle-schema/Coffee.UIParticle.dll"})
+    panels, components, sprites, shader_programs = [], [], {}, {}
+    extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = load_support_ui(apk, schemas)
+    source.update(extra_trees)
+    manifest["prefabs"].update(extra_sources)
+    manifest["resources"].update(extra_resources)
+    panel_keys = PANELS + ICONS + ("WorldCanvas",) + tuple(extra_trees)
+
+    panels, components, sprites, shader_programs = extract_panels(
+        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw)
+
     # Native world-space player marker used by MiniMapCharacterManager. Its
     # SpriteRenderers and loop clip are independent of the UGUI panel hierarchy.
     marker_root = apk.asset("defaultpackage_assets_prefabs_map_common_minimap.bundle", "/MinimapCharacter.prefab")
@@ -405,14 +441,14 @@ def build():
     marker_visit(marker_root)
     for path, component in marker_animations:
         native = component.read_typetree()
-        clips = [animation_record(PPtr(**ref, assetsfile=component.assets_file).deref(), {"path": path})
+        clips = [animation_record(apk, PPtr(**ref, assetsfile=component.assets_file).deref(), {"path": path})
                  for ref in native["m_Animations"] if ref["m_PathID"]]
         components.append({"panel": "MinimapCharacter", "path": path, "type": "NativeAnimation",
                            "fields": {"clips": clips, "playAutomatically": bool(native["m_PlayAutomatically"])},
                            "source": apk.provenance(component)})
 
     mark_prefabs, mark_bindings, mark_components, mark_sources, mark_inputs = extract_marks(
-        apk, schemas, support_exporter, animation_record, sprites)
+        apk, schemas, support_exporter, lambda animation, tree: animation_record(apk, animation, tree), sprites)
     components.extend(mark_components)
     marks_object = apk.asset("config_luban", "/minimap_marks.g.bytes")
     mark_rows = Constructors().table(marks_object.read().m_Script.encode("utf-8", "surrogateescape"), "TbMiniMapMarkInfo")
@@ -447,6 +483,10 @@ def build():
         sprites.setdefault(icon["sprite"], icon.pop("metadata"))
         sprites.setdefault(icon["qualitySprite"], icon.pop("qualityMetadata"))
     sprites.setdefault(quality_sprite["file"], quality_sprite)
+    background_object = next(obj.deref() for path, obj in apk.container("defaultpackage_assets_image_ui_itemnotes.bundle")
+                             if path.endswith("/map_11_stage_bg.png") and obj.type.name == "Sprite")
+    background_sprite = support_exporter.add_sprite(background_object)
+    sprites[background_sprite["file"]] = background_sprite
     manifest["resources"].update(support_exporter.resources)
     records = []
     for uri, metadata in sorted(sprites.items()):
@@ -524,12 +564,24 @@ def build():
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
     keys.extend("region_11_" + str(i) for i in range(77))
     keys.extend(("map_pos_info", "Mainland_11", "Mainland_10"))
+    keys.extend("entity_" + str(i) + suffix for i in range(6570, 6574)
+                for suffix in ("_name", "_desc", "_entitytouchtitle", "_entitytouchdesc", "_funcdesc"))
+    keys.extend(("ui_witch_visit_btn_text", "ui_modify_cure_Hp", "PropType.MaxHp", "PropType.Attack", "PropType.Defence", "PropType.Speed"))
+    keys.extend(("explore_confirm", "explore_none_token_tip", "explore_use_token_in_invalid_area_tip", "ui_award_list_tip"))
+    keys.extend("item_" + str(row["itemId"]) + "_name" for row in item_icons)
+    keys.extend("explore_token_group_rule_" + suffix + "_" + str(i)
+                for i in (0, 2011, 2012, 2013, 2014, 2015, 2016) for suffix in ("title", "content"))
+    keys.extend("entry_" + str(i) + "_" + suffix for i in (28600, 28601, 28602, 28603, 28610, 28611,
+                28612, 28613, 28620, 28621, 28622, 28623) for suffix in ("name", "desc"))
+    keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
+                for i in range(100, 103) for suffix in ("title", "desc"))
     keys.extend(row["description"] for row in minimap_marks)
     keys.extend("task_" + str(i) + suffix for i in range(1000, 1161, 5) for suffix in ("_title", "_progress", "_desc"))
     keys.extend(("confirmation", "confirm", "cancel", "GachaPanel.ReplaceRaffleTicket",
                  "ItemInfoDialog.Limit.QuickBuyConditionNotMet", "ui_ItemIcon_count_key",
                  "common_format_args1", "ui_common_item_not_enough", "item_325_name", "item_2_name", "item_3_name",
-                 "UI_Pay_ChangeTitle", "UI_Pay_Exchange_Diamond_Confirm"))
+                 "UI_Pay_ChangeTitle", "UI_Pay_Exchange_Diamond_Confirm", "item_57_name", "item_41300_name",
+                 "item_41400_name", "item_42200_name"))
     wanted = {xxhash.xxh64_intdigest(key.encode()): key for key in keys}
     texts = {}
     for record in language_inputs.values():
@@ -548,7 +600,11 @@ def build():
     required = set(keys[:9])
     required.update(node["localization_key"] for panel in panels for node in panel["nodes"] if node["localization_key"])
     # MultiLanguageText also accepts these literal format strings in the pinned prefabs.
-    for literal in ("{0}", "{0}/{1}", "{0}<color=#E5A23D>+{1}</color>"):
+    # Numeric prefab samples are literal MultiLanguageText keys. The detail
+    # dialog's unused sample title is replaced by map_entity_group_explore_name
+    # in its original Init method; retain the native missing-key fallback.
+    for literal in ("{0}", "{0}/{1}", "{0}<color=#E5A23D>+{1}</color>",
+                    "1.", "-1", "+1", "+10", "+100", "-10", "-100", "ui_map_explore_reward_title"):
         if literal in required:
             texts[literal] = literal
     if not required.issubset(texts):
@@ -594,7 +650,7 @@ def build():
                "headPortraitSettings": head_settings,
                "topBarItems": item_settings,
                "commonSpriteAsset": common,
-               "itemQualitySprite": quality_sprite["file"],
+               "itemQualitySprite": quality_sprite["file"], "mapBackgroundSprite": background_sprite["file"],
                "itemIcons": item_icons,
                "guidPrefabs": guid_prefabs,
                "enoughColor": [colors["EnoughColor"][channel] for channel in "rgba"],

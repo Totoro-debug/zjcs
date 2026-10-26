@@ -215,6 +215,7 @@ namespace Zjcs.Presentation.World
         public float HpPercentChange;
         public Map10RuntimeAwardItem[] AwardItems;
         public Map11RuntimeStatueStatus[] StatusEffects;
+        public OfficialMainlineExtraProp[] ExtraProps;
         public int GroupId, SpawnEntityClassId, SpawnStageId, PlayerActionId, ActionId, AutoInteractionSubStateIndex;
     }
 

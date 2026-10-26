@@ -70,7 +70,7 @@ namespace Zjcs.Presentation.World
             ShowWitchVisit(entity);
         }
 
-        private OfficialMap11WitchWindow OpenWitchWindow(string key)
+        private OfficialMap11WitchWindow OpenWitchWindow(string key, int entityClassId = 6620)
         {
             GoddessText("entity_6620_name"); // Load and validate the same pinned UI catalog.
             witchDialog?.Destroy();
@@ -87,7 +87,7 @@ namespace Zjcs.Presentation.World
                 scaler.referenceResolution = new Vector2(1080, 1920);
                 scaler.matchWidthOrHeight = 0.5f;
             }
-            witchDialog = new OfficialMap11WitchWindow(key, witchCanvas.transform, goddessUiData, MapProfile.NativeUiRoot);
+            witchDialog = new OfficialMap11WitchWindow(key, witchCanvas.transform, goddessUiData, MapProfile.NativeUiRoot, entityClassId);
             return witchDialog;
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,34 @@ namespace Zjcs.Editor
                 data.components.Single(value => value.panel == key && value.type == kind).fields;
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key))
             {
+                if (source.type == "CanvasGroup")
+                {
+                    var group = Component<CanvasGroup>(source.path);
+                    if (group == null) group = require(source.path).gameObject.AddComponent<CanvasGroup>();
+                    group.alpha = source.fields.m_Alpha;
+                    group.interactable = source.fields.m_Interactable;
+                    group.blocksRaycasts = source.fields.m_BlocksRaycasts;
+                    group.ignoreParentGroups = source.fields.m_IgnoreParentGroups;
+                    group.enabled = source.fields.m_Enabled != 0;
+                }
+                if (source.type == "ClampingScrollRect")
+                {
+                    GameObject node = require(source.path).gameObject;
+                    ScrollRect old = node.GetComponent<ScrollRect>();
+                    string serialized = old == null ? null : UnityEditor.EditorJsonUtility.ToJson(old);
+                    if (old != null) UnityEngine.Object.DestroyImmediate(old);
+                    var scroll = node.AddComponent<WorldClampingScrollRect>();
+                    if (serialized != null) UnityEditor.EditorJsonUtility.FromJsonOverwrite(serialized, scroll);
+                    var f = source.fields;
+                    scroll.content = (RectTransform)require(f.m_Content);
+                    scroll.viewport = (RectTransform)require(f.m_Viewport);
+                    scroll.mClampWidth = f.mClampWidth;
+                    scroll.mClampHeight = f.mClampHeight;
+                    scroll.mClampContentMove = f.mClampContentMove;
+                    scroll.mClampWidthRange = f.mClampWidthRange;
+                    scroll.mClampHeightRange = f.mClampHeightRange;
+                    scroll.enabled = f.m_Enabled != 0;
+                }
                 if (source.type == "RectMask2D")
                     require(source.path).GetComponent<RectMask2D>().enabled = source.fields.m_Enabled != 0;
                 if (source.type == "Mask")
@@ -73,6 +102,28 @@ namespace Zjcs.Editor
                     material.SetTexture("_MaskTex", sprites[source.fields.maskTexture].texture);
                     UnityEditor.EditorUtility.SetDirty(material);
                     Component<RawImage>(source.path).material = material;
+                }
+                if (source.type == "Image" && source.fields.material?.shader == "UI/EffectAdditive")
+                {
+                    var original = source.fields.material;
+                    Shader shader = Shader.Find("Zjcs/Official/UI/EffectAdditive");
+                    if (shader == null || ShaderUtil.ShaderHasError(shader))
+                        throw new System.IO.InvalidDataException("Official reward additive shader failed to compile.");
+                    string path = ResourceRoot + "/" + original.name + ".mat";
+                    Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+                    if (material == null)
+                    {
+                        material = new Material(shader);
+                        AssetDatabase.CreateAsset(material, path);
+                    }
+                    material.shader = shader;
+                    foreach (var value in original.floats)
+                        if (material.HasProperty(value.name)) material.SetFloat(value.name, value.value);
+                    foreach (var value in original.colors)
+                        if (material.HasProperty(value.name)) material.SetColor(value.name,
+                            new Color(value.value[0], value.value[1], value.value[2], value.value[3]));
+                    EditorUtility.SetDirty(material);
+                    Component<Image>(source.path).material = material;
                 }
                 if (source.type == "Canvas")
                 {
@@ -213,7 +264,7 @@ namespace Zjcs.Editor
                 icon.myTextGo = require(f.myTextGo).gameObject;
                 icon.BottomGo = string.IsNullOrEmpty(f.BottomGo) ? null : require(f.BottomGo).gameObject;
                 icon.myBottomText = string.IsNullOrEmpty(f.myBottomText) ? null : Component<TMP_Text>(f.myBottomText);
-                icon.BgTransform = require(f.BgTransform);
+                icon.BgTransform = string.IsNullOrEmpty(f.BgTransform) ? null : require(f.BgTransform);
                 icon.ClearObjects = new[] { f.BottomGo, f.ItemIconAttachment, f.mFakeIcon, f.mProgress }
                     .Where(value => !string.IsNullOrEmpty(value)).Select(value => require(value).gameObject).ToArray();
             }

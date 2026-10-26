@@ -47,10 +47,15 @@ namespace Zjcs.Editor
                     AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(relative, target, property), curve);
                 }
                 var dialogueEvents = (record.events ?? Array.Empty<OfficialMap11UiAnimationEvent>())
-                    .Where(value => value.functionName == "OnTalkDialogContentSwitchHalf" || value.functionName == "OnSwitchAnimHalf").ToArray();
+                    .Where(value => value.functionName == "OnTalkDialogContentSwitchHalf" || value.functionName == "OnSwitchAnimHalf"
+                        || value.functionName == "ReturnPool").ToArray();
                 if (dialogueEvents.Length > 0)
                 {
-                    if (root.GetComponent<WorldDialogueAnimationEvents>() == null) root.AddComponent<WorldDialogueAnimationEvents>();
+                    if (dialogueEvents.Any(value => value.functionName == "ReturnPool"))
+                    {
+                        if (root.GetComponent<WorldAwardAnimationEvents>() == null) root.AddComponent<WorldAwardAnimationEvents>();
+                    }
+                    else if (root.GetComponent<WorldDialogueAnimationEvents>() == null) root.AddComponent<WorldDialogueAnimationEvents>();
                     AnimationUtility.SetAnimationEvents(clip, dialogueEvents.Select(value => new AnimationEvent
                     {
                         functionName = value.functionName, time = value.time, stringParameter = value.data,

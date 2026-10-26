@@ -30,7 +30,7 @@ namespace Zjcs.Editor
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map11-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
-            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 37)
+            if (data.manifest != "854_156383" || data.mapClassId != 11 || data.panels.Length != 57)
                 throw new InvalidDataException("Official Map11 goddess UI data is incomplete.");
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -103,6 +103,7 @@ namespace Zjcs.Editor
             items.itemSprites = data.itemIcons.Select(value => sprites[value.sprite]).ToArray();
             items.itemQualities = data.itemIcons.Select(value => sprites[value.qualitySprite]).ToArray();
             items.quality = sprites[data.itemQualitySprite];
+            items.mapBackground = sprites[data.mapBackgroundSprite];
             items.miniMapMarkNames = data.minimapMarks.Select(value => value.name).ToArray();
             items.miniMapMarkSprites = data.minimapMarks.Select(value => sprites[value.sprite]).ToArray();
             items.miniMapTabIds = data.minimapTabs.Select(value => value.mapClassId).ToArray();
@@ -159,10 +160,15 @@ namespace Zjcs.Editor
                                 bool scale = track.property.StartsWith("scale.", StringComparison.Ordinal);
                                 bool active = track.property == "m_IsActive";
                                 bool position = track.property.StartsWith("m_AnchoredPosition.", StringComparison.Ordinal);
-                                if (!scale && !active && !position && track.property != "m_Alpha")
+                                bool rotation = track.property.StartsWith("rotation.", StringComparison.Ordinal);
+                                bool color = track.property.StartsWith("m_Color.", StringComparison.Ordinal);
+                                if (!scale && !active && !position && !rotation && !color && track.property != "m_Alpha")
                                     throw new InvalidDataException("Unimplemented official popup curve: " + track.property);
                                 AnimationUtility.SetEditorCurve(clip, EditorCurveBinding.FloatCurve(relative,
-                                    scale ? typeof(Transform) : active ? typeof(GameObject) : position ? typeof(RectTransform) : typeof(CanvasGroup), scale ? "m_LocalScale." + track.property.Substring(6) : track.property),
+                                    scale || rotation ? typeof(Transform) : active ? typeof(GameObject) : position ? typeof(RectTransform)
+                                        : color ? Require(track.path).GetComponent<Graphic>().GetType() : typeof(CanvasGroup),
+                                    scale ? "m_LocalScale." + track.property.Substring(6)
+                                        : rotation ? "localEulerAnglesRaw." + track.property.Substring(9) : track.property),
                                     new AnimationCurve(track.keyframes.Select(key => new Keyframe(key.time, key.value, key.inTangent, key.outTangent)).ToArray()));
                             }
                             string clipPath = ResourceRoot + "/" + sourceClip.name + ".anim";
@@ -183,14 +189,15 @@ namespace Zjcs.Editor
                         || panel.key == "TaskPanelListItemProgress"
                         || panel.key == "WorldWitchTouchDialog"
                         || panel.key.StartsWith("WorldStageInteraction", StringComparison.Ordinal)
-                        || panel.key == "WorldTouchDialogWitchPeriodicityInteraction"
+                        || panel.key.StartsWith("WorldTouchDialog", StringComparison.Ordinal)
                         || panel.key == "WitchStoryCollectContent"
                         || panel.key == "WorldStageDialogWithWitchStoryCollect"
                         || panel.key == "StoryWitchBookDialog" || panel.key == "StoryBookDialog"
                         || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
-                        || panel.key == "ItemAwardIcon" || panel.key == "6620_11_DialogIcon"
+                        || panel.key == "ItemAwardIcon" || panel.key.EndsWith("_DialogIcon", StringComparison.Ordinal)
                         || panel.key == "FunctionEntryDialog" || panel.key == "MarkUIFilterEntryItem"
-                        || panel.key == "MiniMapMarkFilterItem" || panel.key == "FirstPayBtn")
+                        || panel.key == "MiniMapMarkFilterItem" || panel.key == "FirstPayBtn"
+                        || panel.key.StartsWith("Explore", StringComparison.Ordinal) || panel.key.StartsWith("AwardListPanel", StringComparison.Ordinal))
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)

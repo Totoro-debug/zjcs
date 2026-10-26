@@ -9,6 +9,7 @@ namespace Zjcs.Presentation.World
         public Sprite[] itemSprites;
         public Sprite[] itemQualities;
         public Sprite quality;
+        public Sprite mapBackground;
         public string[] miniMapMarkNames;
         public Sprite[] miniMapMarkSprites;
         public int[] miniMapTabIds;
