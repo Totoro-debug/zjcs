@@ -361,8 +361,13 @@ def build(source_root, bind=False):
 
 def record_native(source_root):
     receipt = json.loads(RECEIPT.read_bytes())
+    foundation_path = ROOT / 'assets/reference/battle-hud/report-foundation-source-manifest.json'
+    foundation = json.loads(foundation_path.read_bytes()) if foundation_path.exists() else None
     for entry in receipt['outputs']:
-        if sha((ROOT / entry['path']).read_bytes()) != entry['sha256']:
+        expected = {entry['sha256']}
+        if foundation:
+            expected.update(x['sha256'] for x in foundation['outputs'] if x['path'] == entry['path'])
+        if sha((ROOT / entry['path']).read_bytes()) not in expected:
             raise ValueError('Report prefab changed after source binding: ' + entry['path'])
     receipt['generator_sha256'] = sha(Path(__file__).read_bytes())
     receipt['native_assets'] = [dict(path=p.relative_to(ROOT).as_posix(), sha256=sha(p.read_bytes()), bytes=p.stat().st_size)

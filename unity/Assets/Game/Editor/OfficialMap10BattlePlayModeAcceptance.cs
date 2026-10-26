@@ -227,6 +227,8 @@ namespace Zjcs.Editor
                 yield return Combat.OfficialBattleReportTabAcceptance.Run();
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_GRAPHICS") == "1")
                 yield return Combat.OfficialBattleReportGraphicsAcceptance.Run();
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_FOUNDATION") == "1")
+                yield return Combat.OfficialBattleReportFoundationAcceptance.Run();
             Combat.OfficialBattleDamageProcessAcceptance damageProcessTest = null;
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_DAMAGE_PROCESS") == "1")
                 damageProcessTest = Combat.OfficialBattleDamageProcessAcceptance.Install(sceneController);

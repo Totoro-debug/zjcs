@@ -3925,9 +3925,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1336590748365959}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cbaf7f938a676aaf8fab3181b92a517, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  m_Content: {fileID: 224132299442727904}
+  m_Horizontal: 0
+  m_Vertical: 1
+  m_MovementType: 1
+  m_Elasticity: 0.10000000149011612
+  m_Inertia: 1
+  m_DecelerationRate: 0.13500000536441803
+  m_ScrollSensitivity: 1.0
+  m_Viewport: {fileID: 224995682140751655}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 2
+  m_VerticalScrollbarVisibility: 2
+  m_HorizontalScrollbarSpacing: -3.0
+  m_VerticalScrollbarSpacing: -3.0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &224995682140751655
 RectTransform:
   serializedVersion: 2
@@ -4492,9 +4510,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1302127217294661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cbaf7f938a676aaf8fab3181b92a517, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  m_Content: {fileID: 224450889307774998}
+  m_Horizontal: 1
+  m_Vertical: 0
+  m_MovementType: 2
+  m_Elasticity: 0.10000000149011612
+  m_Inertia: 1
+  m_DecelerationRate: 0.13500000536441803
+  m_ScrollSensitivity: 1.0
+  m_Viewport: {fileID: 224689224686120706}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 2
+  m_VerticalScrollbarVisibility: 2
+  m_HorizontalScrollbarSpacing: -3.0
+  m_VerticalScrollbarSpacing: -3.0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &224689224686120706
 RectTransform:
   serializedVersion: 2
@@ -4616,9 +4652,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1642988549198181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 436401cf70160760764777fe97b72a7d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: af97a7516d984cadb95b47ad35842c45, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  m_Padding: {m_Left: 170, m_Right: 20, m_Top: 0, m_Bottom: 0}
+  m_ChildAlignment: 3
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 130.0, y: 90.0}
+  m_Spacing: {x: 30.0, y: 0.0}
+  m_VerticalSpacingList: []
+  m_HorizontalSpacingList: []
+  m_gridLayoutSettings: {fileID: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!114 &114133854062310043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6241,9 +6288,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808113985169905}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 9209043607036019f5b633b9980a2359, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  totalCount: 0
+  reverseDirection: 0
+  reverseIndex: 0
+  m_Content: {fileID: 224382656168358062}
+  m_Horizontal: 1
+  m_Vertical: 1
+  m_MovementType: 2
+  m_Elasticity: 0.10000000149011612
+  m_Inertia: 1
+  m_DecelerationRate: 0.13500000536441803
+  m_ScrollSensitivity: 1.0
+  m_Viewport: {fileID: 224349979204078785}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0.0
+  m_VerticalScrollbarSpacing: 0.0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  DefaultPrefabSource:
+    Prefab: {fileID: 1709254077376921, guid: b97a9daf33f158caaf0cae70649d8c47, type: 3}
 --- !u!114 &114580109562975512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7092,9 +7162,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1919942235722503}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c889ef8734d79cf2753af8858e79ffe0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: af15cc145e0c5ce081a320cbc5d9d74d, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mMaxPreferredWidth: 230
+  mMaxPreferredHeight: 0
 --- !u!224 &224290791091168379
 RectTransform:
   serializedVersion: 2
@@ -7278,9 +7350,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1833703512093738}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224688331903957256
 RectTransform:
   serializedVersion: 2
@@ -7493,9 +7566,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1719342369648492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224904400124545405
 RectTransform:
   serializedVersion: 2
@@ -7563,9 +7637,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1726790013014859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224370081907136253
 RectTransform:
   serializedVersion: 2
@@ -7675,9 +7750,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1693329660128220}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224401109917237556
 RectTransform:
   serializedVersion: 2
@@ -7912,9 +7988,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1397768327470545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224249237965167194
 RectTransform:
   serializedVersion: 2
@@ -8377,9 +8454,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1722951815217645}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c889ef8734d79cf2753af8858e79ffe0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: af15cc145e0c5ce081a320cbc5d9d74d, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mMaxPreferredWidth: 230
+  mMaxPreferredHeight: 0
 --- !u!224 &224023566878023198
 RectTransform:
   serializedVersion: 2
@@ -8563,9 +8642,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1215879266689626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224505490946690937
 RectTransform:
   serializedVersion: 2
@@ -8778,9 +8858,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1043919389829319}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224151117949762783
 RectTransform:
   serializedVersion: 2
@@ -8848,9 +8929,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743393880019028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224729152026894248
 RectTransform:
   serializedVersion: 2
@@ -8960,9 +9042,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1026196548002408}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224855622808019284
 RectTransform:
   serializedVersion: 2
@@ -9197,9 +9280,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1384403120170545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224461198507368750
 RectTransform:
   serializedVersion: 2
@@ -9662,9 +9746,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1370222726513266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c889ef8734d79cf2753af8858e79ffe0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: af15cc145e0c5ce081a320cbc5d9d74d, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mMaxPreferredWidth: 230
+  mMaxPreferredHeight: 0
 --- !u!224 &224990702214508331
 RectTransform:
   serializedVersion: 2
@@ -9848,9 +9934,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1009931292380359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224966426351977976
 RectTransform:
   serializedVersion: 2
@@ -10063,9 +10150,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1799762105739359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224353340443629527
 RectTransform:
   serializedVersion: 2
@@ -10133,9 +10221,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1829625606037309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224108722078165427
 RectTransform:
   serializedVersion: 2
@@ -10245,9 +10334,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1552309709192268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224514281252195623
 RectTransform:
   serializedVersion: 2
@@ -10482,9 +10572,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1651560128206891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224514821051630474
 RectTransform:
   serializedVersion: 2
@@ -11414,9 +11505,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1085275382694935}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224942066236133985
 RectTransform:
   serializedVersion: 2
@@ -11629,9 +11721,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1194081240383615}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224703169052324433
 RectTransform:
   serializedVersion: 2
@@ -11699,9 +11792,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1354824845356902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224758405882409070
 RectTransform:
   serializedVersion: 2
@@ -11811,9 +11905,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1123703392571528}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224419535952149204
 RectTransform:
   serializedVersion: 2
@@ -12048,9 +12143,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1150646884989824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224901895415661471
 RectTransform:
   serializedVersion: 2
@@ -12647,9 +12743,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1007513189690300}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224964848804092803
 RectTransform:
   serializedVersion: 2
@@ -12862,9 +12959,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1969505138979683}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224457190560363646
 RectTransform:
   serializedVersion: 2
@@ -12932,9 +13030,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1190181876552715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224968898024499047
 RectTransform:
   serializedVersion: 2
@@ -13044,9 +13143,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1617365563186364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224837661440150219
 RectTransform:
   serializedVersion: 2
@@ -13281,9 +13381,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1611579644537198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599cc50dfb266ca795faba89270fe355, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: c3dab9a936d154c4939df9ec9adbf5fc, type: 3}
+  m_Name: null
+  m_EditorClassIdentifier: null
+  mFixedGlobalScale: {x: 1.0, y: 1.0, z: 1.0}
 --- !u!224 &224095919050787622
 RectTransform:
   serializedVersion: 2
@@ -13323,8 +13424,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: null
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 3
+  m_Colors:
+    m_NormalColor: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+    m_HighlightedColor: {r: 0.9607843160629272, g: 0.9607843160629272, b: 0.9607843160629272, a: 1.0}
+    m_PressedColor: {r: 0.7843137383460999, g: 0.7843137383460999, b: 0.7843137383460999, a: 1.0}
+    m_SelectedColor: {r: 0.9607843160629272, g: 0.9607843160629272, b: 0.9607843160629272, a: 1.0}
+    m_DisabledColor: {r: 0.7843137383460999, g: 0.7843137383460999, b: 0.7843137383460999, a: 0.501960813999176}
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers: {m_NormalTrigger: Normal, m_HighlightedTrigger: Highlighted, m_PressedTrigger: Pressed, m_SelectedTrigger: Selected, m_DisabledTrigger: Disabled}
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &114803920176354164
 MonoBehaviour:
   m_ObjectHideFlags: 0
