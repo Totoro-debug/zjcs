@@ -409,3 +409,9 @@ scripts/prepare_unity_map13_text_shader.py text eol=lf
 scripts/prepare_unity_map13_text_font.py text eol=lf
 unity/Assets/Official/World/Map/13/Source/Text/** -text
 unity/Assets/Official/World/Map/13/Source/Text.meta -text
+
+# Preserve reconstructed original Map13 TMP effect sources.
+scripts/prepare_unity_map13_text_effects.py text eol=lf
+scripts/map13_tmp_effect_runtime.cs text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeText/** -text
+unity/Assets/Game/Runtime/Official/World/NativeText.meta -text
