@@ -446,7 +446,14 @@ namespace Zjcs.Editor
                 while (active() && !elementTest.HasExecuted(sceneController.Checkpoint)
                     && Time.realtimeSinceStartup < deadline) yield return null;
                 elementTest.Verify(sceneController.Checkpoint);
+                float elementDeadline = Time.realtimeSinceStartup + 5f;
+                bool elementDisplayed;
+                while (!(elementDisplayed = elementTest.TryVerifyPresentation())
+                    && Time.realtimeSinceStartup < elementDeadline) yield return null;
+                Require(elementDisplayed,"Original element feedback did not render through the live battle loop.");
+                sceneController.SetPaused(true);
                 yield return Capture("element-confrontation.png");
+                sceneController.SetPaused(false);
             }
             if (damageDisplayTest != null)
             {

@@ -1259,7 +1259,7 @@
     "path": "unity/Assets/Official/Combat/battle-rules.json",
     "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803"
   },
-  "generator_sha256": "51717cfba6e5afa7bea5f71328bc16f9b3a944a24405719d4c44db7709a93a1c",
+  "generator_sha256": "5e08148bd6b28f503f952d13165a35df050d7025efe19cfab6edb216bfb838d6",
   "runtime": [
     {
       "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.ElementConfrontation.cs",
@@ -1287,7 +1287,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs",
-      "sha256": "3cd0c65e9d940ee649dd9b581712ac26edb1147a37f9b1ef15a7162d96c3aa79"
+      "sha256": "3a09d27424e7b85f8473f0e6f36fde9e8f7c421c3efadcba3deed5a4bf3b0af8"
     }
   ],
   "operation": "Supply the original float Value for a single matching status. For multiple statuses, follow the user-confirmed offline rule: an elemental-immunity entry wins; otherwise multiply the 1-Value damage factors, then pass their combined value to the existing formula. Preserve integer conversion, pre-shield settlement, result fields and checkpoint replay.",
@@ -1295,5 +1295,5 @@
     "immunity_priority": "A matching elemental-immunity state completely prevents damage of that element, including simultaneous weakness states. Do not consume shield.",
     "other_states": "Multiply the damage factors of matching statuses: final factor = product(1-Value). Preserve the configured single-entry float and the existing formula truncation. This confirmation does not specify scaling per status stack."
   },
-  "evidence_boundary": "The original component configurations and shared formula are recovered. The server binding and state combiner are absent; their local wiring and aggregation follow the user-confirmed rule. Historical unresolved receipts retain their original record. Direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. Elemental text, effects and animations remain separate UI work."
+  "evidence_boundary": "The original component configurations and shared formula are recovered. The server binding and state combiner are absent; their local wiring and aggregation follow the user-confirmed rule. Historical unresolved receipts retain their original record. Direct fixed damage, shield-consumption overrides and interactions with other custom hooks are not claimed as restored. The separate battle-hud/element-feedback-source-manifest.json records the restored six world element labels, materials and animation bindings."
 }

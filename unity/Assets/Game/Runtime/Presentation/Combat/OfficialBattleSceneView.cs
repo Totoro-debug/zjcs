@@ -168,7 +168,7 @@ namespace Zjcs.Presentation.Combat
             if (stepEvent.DamageEvents != null)
                 foreach (FightBattleDamageEvent damage in stepEvent.DamageEvents)
                 {
-                    if (damage == null || damage.ShieldAddFinalDamageValue == 0
+                    if (damage == null || damage.ShieldAddFinalDamageValue == 0 && !damage.IsElementAffect
                         && !damage.Dodge && !damage.Immunity && !damage.Blinding) continue;
                     FightBattleUnitState target = FindUnit(checkpoint, damage.TargetId);
                     if (target == null) continue;
@@ -353,20 +353,6 @@ namespace Zjcs.Presentation.Combat
         {
             var renderer = new OfficialBattleHudRenderer(hudCatalog);
             GameObject instance = renderer.CreateWorldFloat(prefab, root, out var nodes);
-            var animations = renderer.InitializeWorldAnimations(prefab.nodes, instance, nodes, useManualTick: true);
-            TextMesh number = nodes[prefab.numberPath].GetComponent<TextMesh>();
-            if (number == null) throw new InvalidOperationException("Original TextMesh number binding is missing.");
-            number.text = FormatBattleNumber(AbsoluteDamage(pending.Damage.ShieldAddFinalDamageValue));
-            Color tint = prefab.effectType >= 5 && prefab.effectType <= 7 ? Color.white : pending.Color.linear;
-            tint.a = number.color.a;
-            number.color = tint;
-            bool isBreak = pending.Damage.BreakResilience;
-            bool isTrue = pending.Damage.TrueDamage && !isBreak;
-            if (!string.IsNullOrEmpty(prefab.breakPath)) nodes[prefab.breakPath].SetActive(isBreak);
-            if (!string.IsNullOrEmpty(prefab.truePath)) nodes[prefab.truePath].SetActive(isTrue);
-            if (isTrue && !string.IsNullOrEmpty(prefab.truePath))
-                foreach (var label in nodes[prefab.truePath].GetComponentsInChildren<TMP_Text>(true))
-                    label.color = pending.Color.linear;
             Vector3 world = gridToWorld(new FightGridPoint(pending.Target.X, pending.Target.Y))
                 + new Vector3(prefab.sceneOffset[0], prefab.sceneOffset[1], prefab.sceneOffset[2]);
             instance.transform.position = world;
@@ -376,6 +362,33 @@ namespace Zjcs.Presentation.Combat
                 if (Camera.main.orthographic)
                     instance.transform.localScale = Vector3.one * (Camera.main.orthographicSize / prefab.cameraScale);
             }
+            var animations = renderer.InitializeWorldAnimations(prefab.nodes, instance, nodes, useManualTick: true);
+            var element = OfficialBattleElementFeedback.Bind(prefab.effectType,nodes,animations,out var elementBinding);
+            TextMesh number = nodes[prefab.numberPath].GetComponent<TextMesh>();
+            if (number == null) throw new InvalidOperationException("Original TextMesh number binding is missing.");
+            number.text = FormatBattleNumber(AbsoluteDamage(pending.Damage.ShieldAddFinalDamageValue));
+            Color tint = prefab.effectType >= 5 && prefab.effectType <= 7 ? Color.white : pending.Color.linear;
+            tint.a = number.color.a;
+            number.color = tint;
+            bool isBreak = pending.Damage.BreakResilience && !string.IsNullOrEmpty(prefab.breakPath);
+            bool isElement = false;
+            if (!isBreak && element != null)
+            {
+                element.Reset();
+                if (pending.Damage.IsElementAffect)
+                {
+                    element.SetContent(pending.Damage.ElementConfrontation,pending.Color);
+                    isElement = true;
+                    if (Mathf.Approximately(pending.Damage.ElementConfrontation,1f))
+                        OfficialBattleElementFeedback.HideImmuneNumbers(elementBinding,nodes);
+                }
+            }
+            bool isTrue = pending.Damage.TrueDamage && !isBreak && !isElement;
+            if (!string.IsNullOrEmpty(prefab.breakPath)) nodes[prefab.breakPath].SetActive(isBreak);
+            if (!string.IsNullOrEmpty(prefab.truePath)) nodes[prefab.truePath].SetActive(isTrue);
+            if (isTrue && !string.IsNullOrEmpty(prefab.truePath))
+                foreach (var label in nodes[prefab.truePath].GetComponentsInChildren<TMP_Text>(true))
+                    label.color = pending.Color.linear;
             var sorting = instance.GetComponent<SortingGroup>();
             if (sorting == null) sorting = instance.AddComponent<SortingGroup>();
             sorting.sortingOrder = prefab.sortingOrderStart + instance.transform.GetSiblingIndex();

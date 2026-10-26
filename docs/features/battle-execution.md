@@ -190,7 +190,7 @@ flowchart TD
 | HP、盾与 Boss 栏 | 已有世界 HP／盾／韧性／状态显示；Boss 最多两栏，接入多层 HP、护盾 Sprite／颜色、层数、官方平滑参数和韧性。当前 Boss 敌方视野以波次生成近似，名称／真实头像及完整条件仍待核对与运行验证。 |
 | 模型、场景与动作 | 已有官方怪物模型目录、原生采样网格动画及部分角色 Animator／clip 绑定，支持部分待机、路径移动、施放、受击／格挡、死亡及结束清理；战场基础／昼夜几何和贴图已有显式加载。完整复合外观、精确 Playable、相机、环境、材质和音频未完成。 |
 | 动画参数与映射 | 已接部分官方技能 Playable 的 Animator 参数、前置状态、层权重和 clip override；启用 `myEndResumeParam` 时按叠加栈恢复，但现有固定参数 cue 未启用该标志，恢复分支仅有通用测试。clip 覆盖按官方语义保留至 controller 释放；序列精确停止／中断和淡入淡出待接。无可用技能动作映射按已确认方案保留当前动作。 |
-| 飘字 | 已接普通／暴击／格挡／治疗／深渊、免疫／闪避／致盲、HP 消耗、重置 CD、CDModify、Unflinching，使用官方节点、字体、颜色、文案、可转换曲线及同目标堆叠参数。数字按原始伤害加吸收盾量显示，保留溢出伤害／过量治疗，实际 HP 另作统计；合并、状态来源、驱散、元素提示及完整时序仍缺。 |
+| 飘字 | 已接普通／暴击／格挡／治疗／深渊、免疫／闪避／致盲、HP 消耗、重置 CD、CDModify、Unflinching，使用官方节点、字体、颜色、文案、可转换曲线及同目标堆叠参数。数字按原始伤害加吸收盾量显示，保留溢出伤害／过量治疗，实际 HP 另作统计；已接6类数字飘字的元素抵抗／克制／免疫提示；合并、状态来源、驱散及完整时序仍缺。 |
 | 事件与战报数据 | 每次命中记录来源／目标／技能／命中身份、类型、延迟、盾量、绝对伤害和 HP 前后值；统计单位／技能的施放、命中、伤害和治疗，取实际 HP 差值。`FightBattleReportBuilder` 可生成数据，已提取报告资源仍未绑定成可操作战报。 |
 
 代码入口：[通用执行器](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs)、[状态触发](../../unity/Assets/Game/Runtime/Official/Combat/FightStatusTriggerRuntime.cs)、[阶段状态](../../unity/Assets/Game/Runtime/Official/Combat/FightStageStatusRuntime.cs)、[韧性接线](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.Resilience.cs)、[检查点](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleCheckpointSerializer.cs)、[统计报告](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs)、[场景表现](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs)、[HUD](../../unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudView.cs)。规则、资源与运行目录分别为 [Assets/Official/Combat](../../unity/Assets/Official/Combat/)、[Resources/Combat](../../unity/Assets/Game/Resources/Combat/)、[StreamingAssets/Combat](../../unity/Assets/StreamingAssets/Combat/)；来源与转换约束统一见[素材管理](../asset-management.md)。
@@ -235,13 +235,13 @@ Unity 已校验三处运行绑定、全部声明属性、纹理尺寸／哈希�
 
 魔印承伤加成使用已取得的 `FightStatusDamageProcessComponent`：仅对状态施加者本人造成的伤害生效，按用户补证先乘百分比、再加固定值，位于扣盾前。`FightStatusCreatorDamageBoostRuntime` 读取状态独立属性231／235，不合并到持有者全局属性，避免影响其他角色或重复计入公式。属性仍由官方等级、阶级、缺省补齐和系数计算；一阶一级得到231=2000（20%）、235=4789，因此100点基础伤害变为4909。无伤害动作、治疗、闪避、免疫及致盲不因固定值产生额外伤害，召唤物不继承此项来源资格。状态移除后停止加成，旧检查点按官方配置恢复组件。其他自定义伤害阶段和过滤组合未据此补全。
 
-伤害飘字现按两版 `CharacterDamageUIManager.MyBattle_OnDamage` 的 `DamageValue－ShieldValue` 显示，数字按 `FightDamageSettings.EffectUIPoolPresents` 的 GUID 接回7类实际使用的世界空间 `*_Combine_Scene` prefab，恢复5套官方位图字体的原 atlas、字形 UV／字宽，以及 TextMesh、颜色、层级、动画、相机缩放和堆叠高度，见[世界空间数字来源](../../assets/reference/battle-hud/world-damage-source-manifest.json)。原 SortingGroup 第21层及脚本起始序号1000，沿已迁移场景几何的 `层索引×1000＋序号` 方式映射为22000，避免数字落在环境之后；既有自定义动作提示使用同一映射。`FightDamageComponentImplement.CalcDamageValue` 的原始数值与实际 HP 差分别保留，详见[显示数值来源](../../assets/reference/battle-hud/damage-display-source-manifest.json)。全额护盾命中显示吸收前数值；溢出伤害和过量治疗不以实际 HP 差截短。统计及魔印贡献继续按实际 HP 变化计算。新检查点保存原始数值及存在标记，旧检查点只回退到已存 HP 差与盾量，不补造历史溢出值。零值／隐藏开关、元素提示、来源合并和精确命中时序仍未完整恢复。
+伤害飘字现按两版 `CharacterDamageUIManager.MyBattle_OnDamage` 的 `DamageValue－ShieldValue` 显示，数字按 `FightDamageSettings.EffectUIPoolPresents` 的 GUID 接回7类实际使用的世界空间 `*_Combine_Scene` prefab，恢复5套官方位图字体的原 atlas、字形 UV／字宽，以及 TextMesh、颜色、层级、动画、相机缩放和堆叠高度，见[世界空间数字来源](../../assets/reference/battle-hud/world-damage-source-manifest.json)。原 SortingGroup 第21层及脚本起始序号1000，沿已迁移场景几何的 `层索引×1000＋序号` 方式映射为22000，避免数字落在环境之后；既有自定义动作提示使用同一映射。`FightDamageComponentImplement.CalcDamageValue` 的原始数值与实际 HP 差分别保留，详见[显示数值来源](../../assets/reference/battle-hud/damage-display-source-manifest.json)。全额护盾命中显示吸收前数值；溢出伤害和过量治疗不以实际 HP 差截短。统计及魔印贡献继续按实际 HP 变化计算。新检查点保存原始数值及存在标记，旧检查点只回退到已存 HP 差与盾量，不补造历史溢出值。零值／隐藏开关、来源合并和精确命中时序仍未完整恢复；元素文字及动效见下文。
 
 数字专项覆盖全额／部分护盾、溢出伤害、过量治疗、实际 HP 统计、新旧检查点；7类数字共10个受控样本均绑定原字体与 atlas，并检查实际渲染像素。实际 Play Mode 经模拟指针开始战斗，全额护盾命中飘出121，护盾吸收121且生命扣除0；实际战斗相机启停该数字产生1131个变化像素，已查看运行截图，确认数字位于场景之前。该样本继续通过技能栏缩放、入口收展及结算返回，不将数值／资源修复视为完整飘字演出已完成。
 
 元素抗性状态25051—25060的20条配置已从854／871两版官方 `FightSkill_part753.g.bytes` 重新解码，状态、动作及 `FightStatusDamageElementComponent.ElementInfos` 均与固定854运行载荷一致，见[元素抗性来源](../../assets/reference/battle-rules/element-confrontation-source-manifest.json)。`TryResolveElementConfrontation` 对单个匹配状态保留原 float 值，交给已迁移的 `BattleFormulaHandler.Damage` 对应公式按“伤害×(1－值)”计算，再沿原整型转换、护盾与实际 HP 结算。多个状态命中同一元素时，按用户确认的本地规则先判断元素免疫；存在免疫即完全免疫，否则将各状态的伤害倍率乘算，即 `伤害×∏(1－Value)`。20%减伤与20%增伤合计96%，20%与30%增伤合计156%；免疫同时存在增伤时仍不扣生命或护盾。结果保存 `ElementConfrontation`／`IsElementAffect`，随检查点保留；元素免疫与命中类型免疫分别记录。服务端接线和合并器未取得，以上接线和聚合属于有配置依据、经用户确认的本地补足，不标作已取得的服务器实现；该确认不扩展为按状态层数重复乘算。旧回执的 `ElementConfrontationUnresolved` 继续保留历史结果，新步骤按确认规则计算。固定直伤、耗盾覆盖及其他伤害钩子的完整相互作用仍待取证。
 
-元素专项通过全部20条原值、扣盾前80→50盾／30生命、元素免疫不消耗护盾、无关元素／移除／100点治疗、不同顺序的96%乘算、64%减伤组合、156%增伤组合、免疫优先及保存恢复和重放幂等；97组公式与核心检查、伤害显示专项通过。实际 Play Mode 在隔离存档中经模拟指针就绪，单状态样本使同一命中由121变为97点生命伤害；双状态25051＋25052样本记录合成值0.03999996，按公式原 float 计算及整型转换得到117点实际生命伤害，未将已取整的基线121再次作为公式输入。两个流程均走通入口收展、结算返回及675×1200／450×800技能栏检查，已查看战斗和返回画面。静态元数据40,688项、Unity 导入／编译及 `ProjectTools.Validate` 检查通过；数字受控渲染覆盖7类原资源与10个数值样本。元素抗性文字／动效尚未接入，未声称完整元素表现或整套战斗 Windows 发布完成。
+元素专项通过全部20条原值、扣盾前80→50盾／30生命、元素免疫不消耗护盾、无关元素／移除／100点治疗、不同顺序的96%乘算、64%减伤组合、156%增伤组合、免疫优先及保存恢复和重放幂等；97组公式与核心检查、伤害显示专项通过。实际 Play Mode 在隔离存档中经模拟指针就绪，单状态样本使同一命中由121变为97点生命伤害；双状态25051＋25052样本记录合成值0.03999996，按公式原 float 计算及整型转换得到117点实际生命伤害，未将已取整的基线121再次作为公式输入。两个流程均走通入口收展、结算返回及675×1200／450×800技能栏检查，已查看战斗和返回画面。静态元数据40,827项、Unity 导入／编译及 `ProjectTools.Validate` 检查通过；数字受控渲染覆盖7类原资源与10个数值样本。元素抗性规则与文字／动效分别验证，未声称整套战斗 Windows 发布完成。
 
 战斗技能栏现直接使用 `FightMainPanelSkillUI.SkillIcons` 序列化的4个原槽，按引用顺序绑定，保留重复节点名称、Transform、布局和动画目标；移除向横向布局末尾追加替代卡片的做法。`WorldGameSkillIcon` 迁移官方状态枚举、`StateGameObjectConfig.SetState` 的关闭／开启顺序及冷却文字，`OfficialBattleSkillSlotBindings` 显式绑定图标、品质图、CD文字和各状态对象。空槽应用 None；已接冷却、次数耗尽、职业不符和施放状态，职业不符优先于次数／CD。主面板内嵌槽实际仅有状态0—6，独立卡有0—7，保留缺失状态关闭所有已配置对象的原行为，不自设禁用遮罩。两份原 prefab、组件／对象哈希及官方代码见[技能槽来源](../../assets/reference/battle-hud/skill-slots-source-manifest.json)。服务器禁用标记、完整开始／结束时序、准备阶段差异、宠物图标／能量及战报等原入口的技能详情仍待接通。原底栏 `ItemIconSkill` 所在节点没有 Button，`FightMainPanelSkillUI` 也未设置详情点击，不擅自新增底栏弹窗交互。专项循环验证原配置0—7（含未配置状态）、CD文字、职业／次数优先级、施放和移除后回到空槽，断言刷新不增加节点、不改变兄弟顺序。实际 Play Mode 确认原槽绑定与空槽 None，模拟就绪、入口收展、空白关闭和结算返回通过，并复验魔印4934点及阵亡归因；已查看准备和战斗画面。Unity 导入／编译、`ProjectTools.Validate` 与40,625项静态元数据检查通过。宠物槽按官方 `FunctionType.Pet=62` 的 `HasAnyPetCondition` 读取本地持有宠物数量：大于0显示宠物槽，技能列表 `offsetMax.x=0`；否则隐藏并取原 `mNoUnlockPetOffset=70`，保留纵向偏移。立即和延迟挂载均读取同一进度会话，不用编造等级条件。专项验证0／1只宠物及70／0／70切换、纵向值不变；实际模拟指针流程复验空宠物存档的隐藏和70偏移、结算返回及魔印4934／阵亡30归因，Unity 编译、项目验证通过。在675×1200和450×800两个竖屏尺寸下，四个原槽全部位于屏幕边界内，未解锁宠物槽隐藏，已查看对应运行画面。自动化独占单个 Game 视图，截图像素尺寸必须与输入／布局视口一致，避免多个 Game 视图共用场景时产生错误裁切。完整技能事件时序和宠物能量仍未完成。
 
@@ -264,6 +264,12 @@ Unity 已校验三处运行绑定、全部声明属性、纹理尺寸／哈希�
 已有97组公式与核心检查、38个战斗专项脚本、静态元数据检查，以及 Unity 2022.3.57f1c2 导入／编译和 `Zjcs.Editor.ProjectTools.Validate` 通过。单人准备的 Play Mode 使用 Windows SendInput 发送鼠标移动／按下／抬起，核对实际输入状态和射线命中，成功从准备进入 Play、首步 Counter=1、伤害事件=2，并检查官方技能图标、怪物行动头像、回合文字、倍率权限和暂停恢复。角色修复复验经正式创角接口分别生成男女隔离存档和实际模型，断言战斗待机有非空片段、头发／眼／眉／嘴均有激活的非零原生网格，继续执行到最终结果，确认场外根节点、镜头尺寸、复用角色父级／缩放／动画和排序恢复；实际查看准备、战斗和返回画面。`CharacterNativeGeometryValidation.Run` 对男女全部1360个附件检查非零／有限几何、有效旧 UV 一致性、加权骨骼运动及姿态恢复通过；格式解码的三个名称／路径回归通过。场地、怪物贴图、玩家比例、待机及头发／五官已修复；其余战斗动作与部分 HUD 仍有问题；空技能位另按原槽状态恢复，返回地图的完整画面亦未作为完成结论。检查点序列化有专项回归，实际退出重启恢复与 Windows Player 尚未覆盖。
 
 HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转换及绑定有独立回归。通用战斗尚未完成完整 Unity Play Mode 模拟输入、画面、状态和重启恢复验证，也没有与该完整功能对应的 Windows Player 完成发布。全工程编译与构建状态见[Unity 工程与启动流程](unity-project.md)，不在本页维护其他模块编译错误或地图运行记录。
+
+元素提示按854官方6个数字型世界 prefab 的 `ElementConfrontationUI` 恢复“抵抗／克制／免疫”：使用原文本键、`DiKangTrigger`／`KeZhiTrigger` 的零过渡 Animator 和实际动画曲线；两版代码的两个负值分支均显示“克制”，未把私有未调用的“大克”分支接成新规则。保留破韧、元素、真实伤害的原优先顺序；元素免疫仍显示文字，并隐藏数字、类型图、附加／序列和背景，零值元素事件也进入原元素分支。原 `DamageAutoSizeTextBack` 按文字世界尺寸、内边距和上下限调整九宫格背景，保留右侧锚边；重新读取原 RectTransform，修复旧转换遗漏右侧文字轴心造成与数字重叠的问题。克制的原 SpriteRenderer 标量材质绑定重新按实际 shader 属性与哈希解码，沿原曲线更新 `_SquenceRate`，材质实例随视图释放。显隐／射线开关保留离散阶跃，避免以连续插值提前关闭特效。
+
+资源从固定854 APK／对应已缓存官方依赖的实际对象取得：原动态 `FZY4K SDF - dynamic` 字体的 face／字形／atlas／参数、原流式字体配置及通过长度／MD5核对的 FZY4K TTF、3张原贴图、3个原 Sprite、4个材质和选定 GLES 程序，显式转换为 Windows HLSL 和本地 Unity 资产。原生 `TMPEffect.DoSetup` 与回调按已恢复 APK ARM64 指令核实，单描边归一化为 `Clamp01(宽度×原字号／文字字号／atlasPadding)`，描边色保留原值；不扩展为已恢复其他 TMP 特效。加载、导入及来源分别见 `OfficialBattleElementFeedback*`、`Official/WorldUI/ElementConfrontationUI.cs`／`DamageAutoSizeTextBack.cs` 和[元素反馈来源](../../assets/reference/battle-hud/element-feedback-source-manifest.json)。
+
+元素反馈的受控检查覆盖6类资源各6种输入（无元素、零值、抵抗、两档负值、免疫）及破韧优先，共37个样本；检查原字号／描边、右侧文字轴心、九宫格随文本扩展且锚边不动、免疫隐藏数字、真实伤害优先级、序列材质曲线变化和实际离屏渲染像素。编辑器检查显式采样原动画，实际 OnEnable 激活另由 Play Mode 验证：隔离存档通过模拟指针操作，抵抗117、克制146、免疫0分别与同一121基线对照，检查实际相机中原文字贡献像素，并查看战斗截图；不以离屏检查代替实际交互。三种流程均通过入口收展、675×1200／450×800缩放和结算返回，已查看战斗及返回画面；静态检查、Unity 导入／编译及 `ProjectTools.Validate` 通过。战斗专用测试环境跳过正常开场自动引导，使用自身场景与隔离存档。完整飘字种类、合并／来源和逐事件调度、其他 TMP 特效分支及 Windows 完整战斗交付仍未完成。
 
 ## 自定义实现
 
@@ -326,13 +332,13 @@ HUD 曾完成隔离导入和 prefab 组件树检查；部分素材／动画转�
 | 召唤与胜负（F06、F25） | 宠物／格子物件／智能物件／替身等非怪物召唤、完整继承、数量／寿命与来源死亡销毁、复活事件消费者；按结果组件和参与者标记恢复完整通用判定接口，缺服务器规则时再取证或确认。 |
 | HUD 与报告（F26—F32、F39、F43） | NPC 11015—11022的8张待定位头像、守护者／拟态头像及玩家动态缓存、名称与显示条件、时间轴完整事件调度、玩家目标／成员血条、Boss 真实视野／头像、单位状态详情／自定义数字／禁用态、技能详情／禁用来源及完整状态时序、品质7原加载／资源绑定、宠物图标／能量、准备提示与方案刷新、阶段动态说明。战报需绑定官方交互面板，补齐被动／状态归因、盾量／状态次数／占比及属性快照。 |
 | 公共控件（F33—F38） | 回放默认倍率与档位恢复、权限差异、快进条件／延时／防重／失败及本地快照消费、跟随／自由镜头、托管／背包入口、录像保存／回放／跳过的本地流程。观战／聊天等接口按所属页已确认离线方案接入，不自行新增联网或替代规则。 |
-| 画面、动画与声音（F40—F43） | 玩家／NPC／宠物／召唤物复合外观、全部原生动画和精确动作映射、生成／复活／召唤、Playable 停止／中断／淡入淡出、范围／弹道／挂点／层序、原相机控制和环境粒子／材质、材质／shader／纹理及 CAB 依赖；缺失飘字种类、合并条件、元素提示、Wwise音频与速度同步。未转换或加载失败不视为官方资源缺失。 |
+| 画面、动画与声音（F40—F43） | 玩家／NPC／宠物／召唤物复合外观、全部原生动画和精确动作映射、生成／复活／召唤、Playable 停止／中断／淡入淡出、范围／弹道／挂点／层序、原相机控制和环境粒子／材质、材质／shader／纹理及 CAB 依赖；缺失飘字种类、合并条件、剩余元素反馈接线、Wwise音频与速度同步。未转换或加载失败不视为官方资源缺失。 |
 | 运行与交付 | 完成相关规则回归、静态检查、Unity 导入／编译和 `Zjcs.Editor.ProjectTools.Validate`；在 Play Mode 用模拟鼠标／键盘检查完整流程、缩放／遮挡、画面／声音、状态和重启续战。功能完成时构建并真实运行 Windows Player，保护已有存档，按项目要求发布对应可执行版本。 |
 
 ### 实现概括
 
 | 分类 | 简要结论 |
 | --- | --- |
-| 已完整实现的规则子项 | 已取得共享公式的迁移、HP 上下限与实际差值、基础队列／CD／状态生命周期子集、检查点序列化已有实现及对应回归；通用战斗整项仍未完成。 |
+| 已完整实现的规则子项 | 已取得共享公式的迁移、HP 上下限与实际差值、基础队列／CD／状态生命周期子集、检查点序列化已有实现及对应回归；7类原数字资源／显示数值与6类元素文字、背景、材质和动画子项已接入，通用战斗整项仍未完成。 |
 | 缺服务器代码后的自定义 | 本地回合循环、AI／随机命中、部分资格／概率／状态触发／位移／减伤／CD／破韧接线及局部胜负，按已确认单机方案或明确标出的近似执行。 |
 | 仍待实现 | 组队准备与拖拽、逐事件调度、剩余状态／召唤／胜负、完整 HUD／战报／控件、原版角色／Playable／特效／音频，以及 Play Mode 和 Windows 完整运行验证。 |

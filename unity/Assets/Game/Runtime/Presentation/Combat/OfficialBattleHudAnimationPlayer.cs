@@ -35,6 +35,7 @@ namespace Zjcs.Presentation.Combat
         private readonly Dictionary<string, BattleHudNode> animationSourceNodes =
             new Dictionary<string, BattleHudNode>();
         private readonly Dictionary<Graphic, Material> materialInstances = new Dictionary<Graphic, Material>();
+        private readonly Dictionary<Renderer, Material> rendererMaterialInstances = new Dictionary<Renderer, Material>();
         private readonly List<Playback> playbacks = new List<Playback>();
         private bool manualTick;
 
@@ -115,9 +116,19 @@ namespace Zjcs.Presentation.Combat
 
         private void OnDestroy()
         {
+            foreach (Material material in rendererMaterialInstances.Values)
+                ReleaseMaterial(material);
+            rendererMaterialInstances.Clear();
             foreach (Material material in materialInstances.Values)
-                if (material != null) Destroy(material);
+                ReleaseMaterial(material);
             materialInstances.Clear();
+        }
+
+        private static void ReleaseMaterial(Material material)
+        {
+            if (material == null) return;
+            if (Application.isPlaying) Destroy(material);
+            else DestroyImmediate(material);
         }
 
         private void Sample(Playback playback, float time)
@@ -139,10 +150,14 @@ namespace Zjcs.Presentation.Combat
                     if (track == null || string.IsNullOrEmpty(track.path) || string.IsNullOrEmpty(track.property)
                         || track.keys == null || track.keys.Length == 0) continue;
                     var keys = new Keyframe[track.keys.Length];
+                    bool discrete = track.property == "m_IsActive" || track.property == "m_Enabled"
+                        || track.property == "m_BlocksRaycasts";
                     for (int i = 0; i < keys.Length; i++)
                     {
                         BattleHudAnimationKey key = track.keys[i];
-                        keys[i] = new Keyframe(key.time, key.value, key.in_tangent, key.out_tangent);
+                        keys[i] = new Keyframe(key.time, key.value,
+                            discrete ? float.PositiveInfinity : key.in_tangent,
+                            discrete ? float.PositiveInfinity : key.out_tangent);
                         endTime = Mathf.Max(endTime, key.time);
                     }
                     var curve = new AnimationCurve(keys)
@@ -270,7 +285,21 @@ namespace Zjcs.Presentation.Combat
         private void SetSequenceRate(GameObject target, float value)
         {
             Graphic graphic = target.GetComponent<Graphic>();
-            if (graphic == null) return;
+            if (graphic == null)
+            {
+                Renderer renderer = target.GetComponent<Renderer>();
+                if (renderer == null) return;
+                if (!rendererMaterialInstances.TryGetValue(renderer,out Material rendererMaterial))
+                {
+                    Material source = renderer.sharedMaterial;
+                    if (source == null || !source.HasProperty("_SquenceRate")) return;
+                    rendererMaterial = new Material(source);
+                    rendererMaterialInstances.Add(renderer,rendererMaterial);
+                    renderer.sharedMaterial = rendererMaterial;
+                }
+                rendererMaterial.SetFloat("_SquenceRate",value);
+                return;
+            }
             if (!materialInstances.TryGetValue(graphic, out Material instance))
             {
                 Material source = graphic.material;

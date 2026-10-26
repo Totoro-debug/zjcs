@@ -336,6 +336,7 @@ namespace Zjcs.Editor.Combat
                 }
                 ValidateDamageFloatDelay(catalog);
                 OfficialBattleDamageDisplayAcceptance.Run();
+                OfficialBattleElementFeedbackAcceptance.Run();
                 Debug.Log("Official battle HUD renderer validated: 30 prefab trees, " + images + " images, " + texts
                     + " texts, " + buttons + " buttons, " + layouts + " layout groups, " + fitters + " fitters, "
                     + elements + " layout elements, and " + scrolls + " scroll views.");

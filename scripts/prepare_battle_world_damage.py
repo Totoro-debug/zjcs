@@ -9,7 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from official_apk import Apk, ROOT
 from official_unity_schema import ScriptSchemas
 from UnityPy.classes.PPtr import PPtr
-from prepare_unity_battle_assets import normalize_world_float_node, localize_hud_node
+from prepare_unity_battle_assets import normalize_world_float_node, localize_hud_node, normalize_hud_animation
+from official_animation import mecanim_tracks
 
 OUT = ROOT/'unity/Assets/Official/Combat/Numbers/Resources/Combat/Numbers'
 
@@ -84,6 +85,13 @@ def build():
             row = by_path[path]
             row['local_position'] = [transform.m_LocalPosition.x,transform.m_LocalPosition.y,transform.m_LocalPosition.z]
             row['scale'] = [transform.m_LocalScale.x,transform.m_LocalScale.y,transform.m_LocalScale.z]
+            if tr.type.name == 'RectTransform':
+                row.update(uses_rect_transform=True,
+                    anchor_min=[transform.m_AnchorMin.x,transform.m_AnchorMin.y],
+                    anchor_max=[transform.m_AnchorMax.x,transform.m_AnchorMax.y],
+                    anchored_position=[transform.m_AnchoredPosition.x,transform.m_AnchoredPosition.y],
+                    size_delta=[transform.m_SizeDelta.x,transform.m_SizeDelta.y],
+                    pivot=[transform.m_Pivot.x,transform.m_Pivot.y])
             for c in components:
                 paths[(c.assets_file.name,c.path_id)] = path
                 if c.type.name=='TextMesh':
@@ -132,6 +140,26 @@ def build():
             raise ValueError('Configured damage effect type differs from prefab')
         _, number_owner, number_cfg = next(value for value in behaviours if value[0]=='DamageNumberUI')
         size = next(value[2]['mSize'] for value in behaviours if value[0]=='DamageFloatSize')
+        clip_sources = {}
+        def collect_clips(node):
+            for animation in node.get('animations', []):
+                clip_sources[(animation['owner'],animation['name'])] = (animation['source'],node)
+            for child in node.get('children', []):
+                collect_clips(child)
+        collect_clips(prefab['root'])
+        for row in rows:
+            for animation in row.get('animations', []):
+                if not animation['name'].startswith('ElementConfrontText_'):
+                    continue
+                source_clip, clip_root = clip_sources[(animation['owner'],animation['name'])]
+                clip = record(next(obj for obj in apk.objects(source_clip['bundle'])
+                    if obj.path_id==int(source_clip['path_id'])))
+                tracks, duration, loop, unknown = mecanim_tracks(clip,clip_root,
+                    scalar_material_property_names=('_SquenceRate',))
+                if unknown:
+                    raise ValueError('Unrestored original element animation bindings: '+str(unknown))
+                decoded = dict(animation,tracks=tracks,duration=duration,loop=loop,unconverted_bindings=unknown)
+                animation.update(normalize_hud_animation(decoded))
         prefabs.append(dict(effectType=effect_type, rootName=prefab['root']['name'], nodes=rows,
             numberPath=bound(number_cfg['mNumberText'],number_owner),
             breakPath=bound(cfg['mBreakResilienceGo'],owner), truePath=bound(cfg['mTrueDamageText'],owner),
@@ -142,7 +170,8 @@ def build():
     target.write_bytes((json.dumps(dict(manifest='854_156383', prefabs=prefabs,fonts=list(fonts.values()),sortingLayers=sorting_layers),ensure_ascii=True,indent=2)+'\n').encode())
     receipt = dict(manifest='854_156383', inputs=list(inputs.values()),
         world_source_sha256=digest(source_path), rules_sha256=digest(rules_path),
-        generator_sha256=digest(__file__), language_sources=language_sources, effect_types=[p['effectType'] for p in prefabs],
+        generator_sha256=digest(__file__), animation_decoder_sha256=digest(ROOT/'scripts/official_animation.py'),
+        language_sources=language_sources, effect_types=[p['effectType'] for p in prefabs],
         sorting_layers=sorting_layers,
         sorting_adapter='Use the existing scene-geometry mapping layerIndex*1000+sortingOrder. Keep the official layer ID/index and script order start in the receipt; numeric floats and the existing custom-action world float must participate in the same ordering as the restored environment.',
         outputs=[dict(path=p.relative_to(ROOT).as_posix(),sha256=digest(p)) for p in sorted(OUT.iterdir()) if p.suffix in ('.json','.png','.fontsettings','.mat','.meta')],

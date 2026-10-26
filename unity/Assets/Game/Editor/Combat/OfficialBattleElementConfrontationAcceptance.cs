@@ -11,6 +11,8 @@ namespace Zjcs.Editor.Combat
     {
         private int counter;
         private FightBattleDamageEvent baseline;
+        private float expectedValue;
+        private string expectedText;
 
         public static OfficialBattleElementConfrontationAcceptance Install(OfficialBattleRuntimeController controller)
         {
@@ -45,10 +47,12 @@ namespace Zjcs.Editor.Combat
                 "Element fixture has no unmodified player hit.");
             Require(!target.Statuses.Any(status => status.ClassId >= 25051 && status.ClassId <= 25060),
                 "Element fixture already has another resistance state.");
-            target.Statuses.Add(assets.Load().CreateStatus(25051, target.Id, target.Id,
-                ++checkpoint.StatusInstanceSerial));
-            target.Statuses.Add(assets.Load().CreateStatus(25052, target.Id, target.Id,
-                ++checkpoint.StatusInstanceSerial));
+            string mode = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ELEMENT_MODE");
+            int[] statuses = mode=="immune" ? new[] {25056} : mode=="weak" ? new[] {25052} : new[] {25051,25052};
+            foreach (int statusId in statuses)
+                target.Statuses.Add(assets.Load().CreateStatus(statusId,target.Id,target.Id,++checkpoint.StatusInstanceSerial));
+            probe.expectedValue = mode=="immune" ? 1f : mode=="weak" ? -0.2f : 0.04f;
+            probe.expectedText = mode=="immune" ? "免疫" : mode=="weak" ? "克制" : "抵抗";
             return probe;
         }
 
@@ -59,13 +63,32 @@ namespace Zjcs.Editor.Combat
             var hit = checkpoint.Receipts.Single(receipt => receipt.Counter == counter).Event.DamageEvents
                 .Single(value => value.SourceId == baseline.SourceId && value.TargetId == baseline.TargetId
                     && value.SkillEntityId == baseline.SkillEntityId && value.HitEntityId == baseline.HitEntityId);
-            Require(hit.IsElementAffect && Mathf.Approximately(hit.ElementConfrontation, 0.04f)
-                && !hit.ElementConfrontationUnresolved && hit.Damage < 0 && hit.Damage > baseline.Damage
+            bool damageMatches = expectedValue==1f ? hit.Damage==0 && hit.ShieldDamage==0
+                : expectedValue<0f ? hit.Damage<baseline.Damage : hit.Damage<0 && hit.Damage>baseline.Damage;
+            Require(hit.IsElementAffect && Mathf.Approximately(hit.ElementConfrontation, expectedValue)
+                && !hit.ElementConfrontationUnresolved && damageMatches
                 && hit.BeforeHp - hit.AfterHp == -hit.Damage,
                 "The live battle did not bind the original elemental status to actual HP settlement.");
-            Debug.Log("Element-confrontation Play Mode passed: confirmed multiplication of original states 25051 and 25052, incoming element 101, value="
+            Debug.Log("Element-confrontation Play Mode passed: "+expectedText+", incoming element 101, value="
                 + hit.ElementConfrontation + ", baseline HP loss=" + -baseline.Damage + ", actual HP loss="
                 + -hit.Damage + ", counter=" + counter + ".");
+        }
+
+        public bool TryVerifyPresentation()
+        {
+            var view = UnityEngine.Object.FindObjectsOfType<OfficialBattleDamageFloat>()
+                .FirstOrDefault(value=>value.TargetId==baseline.TargetId
+                    && value.GetComponentsInChildren<Zjcs.Official.WorldUI.ElementConfrontationUI>()
+                        .Any(element=>element.DescribeText.text==expectedText && element.DescribeText.color.a>0.05f
+                            && element.DescribeText.GetComponent<Renderer>().isVisible));
+            if(view==null)return false;
+            var label=view.GetComponentInChildren<Zjcs.Official.WorldUI.ElementConfrontationUI>().DescribeText;
+            if(expectedValue==1f)
+                Require(!view.GetComponentsInChildren<TextMesh>(true).Any(text=>text.gameObject.activeInHierarchy),
+                    "Live elemental immunity retained a zero damage number.");
+            OfficialBattleDamageDisplayAcceptance.Probe.VerifyCameraPixels(label.GetComponent<Renderer>());
+            Debug.Log("Original live element feedback passed: "+expectedText+", original font/outline/animation and battle-camera pixels.");
+            return true;
         }
 
         private static void Require(bool condition, string message)

@@ -1,0 +1,2356 @@
+{
+  "manifest": "854_156383",
+  "bindings": [
+    {
+      "effectType": 0,
+      "rootName": "BattleDamageFloatEffect_Combine_Scene",
+      "elementPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText"
+      ],
+      "hideRenderers": [],
+      "texts": [
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 1,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 6,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 7,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 0,
+          "drawMode": 1,
+          "size": [
+            1.0,
+            0.5
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 2,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 3,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 5,
+          "drawMode": 1,
+          "size": [
+            1.334999918937683,
+            0.6116666197776794
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/BattleDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    },
+    {
+      "effectType": 1,
+      "rootName": "BattleCritDamageFloatEffect_Combine_Scene",
+      "elementPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText",
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BgImg",
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BgImg/1"
+      ],
+      "hideRenderers": [
+        "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/Add"
+      ],
+      "texts": [
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 6,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 10,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 11,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 5,
+          "drawMode": 1,
+          "size": [
+            1.2542330026626587,
+            0.6271164417266846
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 7,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 8,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 9,
+          "drawMode": 1,
+          "size": [
+            1.7005643844604492,
+            0.7826690077781677
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.02199999988079071,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/BattleCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.02199999988079071,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    },
+    {
+      "effectType": 2,
+      "rootName": "BattleBlockDamageFloatEffect_Combine_Scene",
+      "elementPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText",
+        "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/IconImg"
+      ],
+      "hideRenderers": [],
+      "texts": [
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 2,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 7,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 8,
+          "style": 0,
+          "weight": 400,
+          "size": 32.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 1,
+          "drawMode": 1,
+          "size": [
+            1.492537260055542,
+            0.746268630027771
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 3,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 4,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 6,
+          "drawMode": 1,
+          "size": [
+            1.7323380708694458,
+            0.750895082950592
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/BattleBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    },
+    {
+      "effectType": 5,
+      "rootName": "AbyssDamageFloatEffect_Combine_Scene",
+      "elementPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText"
+      ],
+      "hideRenderers": [],
+      "texts": [
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 1,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 6,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 7,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 0,
+          "drawMode": 1,
+          "size": [
+            1.0,
+            0.6100667119026184
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 2,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 3,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 5,
+          "drawMode": 1,
+          "size": [
+            1.3333332538604736,
+            0.6100667119026184
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/AbyssDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    },
+    {
+      "effectType": 6,
+      "rootName": "AbyssCritDamageFloatEffect_Combine_Scene",
+      "elementPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText",
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BgImg",
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BgImg/1"
+      ],
+      "hideRenderers": [
+        "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/Add"
+      ],
+      "texts": [
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 6,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 10,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 11,
+          "style": 0,
+          "weight": 400,
+          "size": 36.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 5,
+          "drawMode": 1,
+          "size": [
+            1.2542330026626587,
+            0.6271164417266846
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 7,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 8,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 9,
+          "drawMode": 1,
+          "size": [
+            1.7005643844604492,
+            0.7826690077781677
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.02199999988079071,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/AbyssCritDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.02199999988079071,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    },
+    {
+      "effectType": 7,
+      "rootName": "AbyssBlockDamageFloatEffect_Combine_Scene",
+      "elementPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText",
+      "describePath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+      "bgPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+      "effectPaths": [
+        "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+        "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+        "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh"
+      ],
+      "hideObjects": [
+        "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/NumberText",
+        "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/IconImg"
+      ],
+      "hideRenderers": [],
+      "texts": [
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 2,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 7,
+          "style": 0,
+          "weight": 400,
+          "size": 46.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        },
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/TrueDamage",
+          "font": "Font_993fe9f48bba80bc",
+          "material": "Material_57b7f2adeb457a8f",
+          "order": 8,
+          "style": 0,
+          "weight": 400,
+          "size": 32.0,
+          "characterSpacing": 0.0,
+          "wordSpacing": 0.0,
+          "lineSpacing": 0.0,
+          "margin": [
+            0.0,
+            0.0,
+            -5.175593376159668,
+            0.0
+          ],
+          "effect": {
+            "dilate": 0.0,
+            "outline": true,
+            "color": [
+              0.13333334028720856,
+              0.13333334028720856,
+              0.13333334028720856,
+              1.0
+            ],
+            "width": 4.0
+          }
+        }
+      ],
+      "materials": [
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 1,
+          "drawMode": 1,
+          "size": [
+            1.492537260055542,
+            0.746268630027771
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Mesh",
+          "material": "Material_03d3d43eecfdb08f",
+          "sprite": "Sprite_ab0ba418a29e66a5",
+          "order": 3,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Image",
+          "material": "Material_3deb1ddddcf7dfbc",
+          "sprite": "Sprite_3b304bd55b9428e1",
+          "order": 4,
+          "drawMode": 0,
+          "size": [
+            1.0,
+            1.0
+          ],
+          "tileMode": 0
+        },
+        {
+          "path": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "material": "Material_f919b394d79d888b",
+          "sprite": "Sprite_e9f07f5f7e9b5f36",
+          "order": 6,
+          "drawMode": 1,
+          "size": [
+            1.7323380708694458,
+            0.750895082950592
+          ],
+          "tileMode": 0
+        }
+      ],
+      "keys": [
+        {
+          "key": "battle_element_confront_defense",
+          "text": "\u62b5\u6297"
+        },
+        {
+          "key": "battle_element_confront_weak",
+          "text": "\u514b\u5236"
+        },
+        {
+          "key": "battle_element_confront_strength",
+          "text": "\u5927\u514b"
+        },
+        {
+          "key": "game_damage_Immunity",
+          "text": "\u514d\u75ab"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger": "DiKangTrigger",
+          "clip": "ElementConfrontText_DiKang_Scene"
+        },
+        {
+          "trigger": "KeZhiTrigger",
+          "clip": "ElementConfrontText_KeZhi_Scene"
+        }
+      ],
+      "backgrounds": [
+        {
+          "backgroundPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Bg",
+          "textPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/ElementConfrontText/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        },
+        {
+          "backgroundPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Bg",
+          "textPath": "/AbyssBlockDamageFloatEffect_Combine_Scene/GoLayout/Ani/BreakResilience/Text",
+          "align": 1,
+          "paddingX": 0.019999999552965164,
+          "paddingY": -0.019999999552965164,
+          "minWidth": 0.30000001192092896,
+          "maxWidth": 0.0,
+          "minHeight": 0.15000000596046448,
+          "maxHeight": 0.0
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    {
+      "key": "Font_993fe9f48bba80bc",
+      "sourcePath": "Assets/Official/Commerce/Art/fonts/FZY4K.ttf",
+      "sourceSha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386",
+      "pointSize": 40,
+      "name": "FZY4K SDF - dynamic",
+      "faceInfo": {
+        "m_FaceIndex": 0,
+        "m_FamilyName": "FZCuYuan-M03",
+        "m_StyleName": "Regular",
+        "m_PointSize": 40,
+        "m_Scale": 1.0,
+        "m_UnitsPerEM": 1000,
+        "m_LineHeight": 49.560001373291016,
+        "m_AscentLine": 38.040000915527344,
+        "m_CapLine": 30.0,
+        "m_MeanLine": 23.0,
+        "m_Baseline": 0.0,
+        "m_DescentLine": -11.520000457763672,
+        "m_SuperscriptOffset": 38.040000915527344,
+        "m_SuperscriptSize": 0.5,
+        "m_SubscriptOffset": -11.520000457763672,
+        "m_SubscriptSize": 0.5,
+        "m_UnderlineOffset": -5.0,
+        "m_UnderlineThickness": 4.699999809265137,
+        "m_StrikethroughOffset": 15.829999923706055,
+        "m_StrikethroughThickness": 2.0,
+        "m_TabWidth": 11.0
+      },
+      "glyphs": [
+        {
+          "m_Index": 263,
+          "m_Metrics": {
+            "m_Width": 33.75,
+            "m_Height": 6.25,
+            "m_HorizontalBearingX": 3.125,
+            "m_HorizontalBearingY": 17.203125,
+            "m_HorizontalAdvance": 40.0
+          },
+          "m_GlyphRect": {
+            "m_X": 5,
+            "m_Y": 5,
+            "m_Width": 34,
+            "m_Height": 8
+          },
+          "m_Scale": 1.0,
+          "m_AtlasIndex": 0,
+          "m_ClassDefinitionType": 0
+        },
+        {
+          "m_Index": 64,
+          "m_Metrics": {
+            "m_Width": 22.078125,
+            "m_Height": 2.59375,
+            "m_HorizontalBearingX": -0.953125,
+            "m_HorizontalBearingY": -4.765625,
+            "m_HorizontalAdvance": 20.0
+          },
+          "m_GlyphRect": {
+            "m_X": 48,
+            "m_Y": 5,
+            "m_Width": 23,
+            "m_Height": 4
+          },
+          "m_Scale": 1.0,
+          "m_AtlasIndex": 0,
+          "m_ClassDefinitionType": 0
+        }
+      ],
+      "characters": [
+        {
+          "m_ElementType": 1,
+          "m_Unicode": 8230,
+          "m_GlyphIndex": 263,
+          "m_Scale": 1.0
+        },
+        {
+          "m_ElementType": 1,
+          "m_Unicode": 95,
+          "m_GlyphIndex": 64,
+          "m_Scale": 1.0
+        }
+      ],
+      "atlasTextures": [
+        "Texture_5100748872e5a73c"
+      ],
+      "width": 2048,
+      "height": 2048,
+      "padding": 4,
+      "renderMode": 4165,
+      "population": 1,
+      "multiAtlas": true,
+      "clearOnBuild": true,
+      "usedRects": [
+        {
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Width": 43,
+          "m_Height": 17
+        },
+        {
+          "m_X": 43,
+          "m_Y": 0,
+          "m_Width": 32,
+          "m_Height": 13
+        }
+      ],
+      "freeRects": [
+        {
+          "m_X": 0,
+          "m_Y": 17,
+          "m_Width": 2047,
+          "m_Height": 2030
+        },
+        {
+          "m_X": 43,
+          "m_Y": 13,
+          "m_Width": 2004,
+          "m_Height": 2034
+        },
+        {
+          "m_X": 75,
+          "m_Y": 0,
+          "m_Width": 1972,
+          "m_Height": 2047
+        }
+      ],
+      "normalStyle": 0.0,
+      "normalSpacing": 0.0,
+      "boldStyle": 0.75,
+      "boldSpacing": 7.0,
+      "italicStyle": 15,
+      "tabSize": 10,
+      "material": "Material_57b7f2adeb457a8f",
+      "fontJson": "{\"m_FaceInfo\":{\"m_FaceIndex\":0,\"m_FamilyName\":\"FZCuYuan-M03\",\"m_StyleName\":\"Regular\",\"m_PointSize\":40,\"m_Scale\":1.0,\"m_UnitsPerEM\":1000,\"m_LineHeight\":49.560001373291016,\"m_AscentLine\":38.040000915527344,\"m_CapLine\":30.0,\"m_MeanLine\":23.0,\"m_Baseline\":0.0,\"m_DescentLine\":-11.520000457763672,\"m_SuperscriptOffset\":38.040000915527344,\"m_SuperscriptSize\":0.5,\"m_SubscriptOffset\":-11.520000457763672,\"m_SubscriptSize\":0.5,\"m_UnderlineOffset\":-5.0,\"m_UnderlineThickness\":4.699999809265137,\"m_StrikethroughOffset\":15.829999923706055,\"m_StrikethroughThickness\":2.0,\"m_TabWidth\":11.0},\"m_GlyphTable\":[{\"m_Index\":263,\"m_Metrics\":{\"m_Width\":33.75,\"m_Height\":6.25,\"m_HorizontalBearingX\":3.125,\"m_HorizontalBearingY\":17.203125,\"m_HorizontalAdvance\":40.0},\"m_GlyphRect\":{\"m_X\":5,\"m_Y\":5,\"m_Width\":34,\"m_Height\":8},\"m_Scale\":1.0,\"m_AtlasIndex\":0,\"m_ClassDefinitionType\":0},{\"m_Index\":64,\"m_Metrics\":{\"m_Width\":22.078125,\"m_Height\":2.59375,\"m_HorizontalBearingX\":-0.953125,\"m_HorizontalBearingY\":-4.765625,\"m_HorizontalAdvance\":20.0},\"m_GlyphRect\":{\"m_X\":48,\"m_Y\":5,\"m_Width\":23,\"m_Height\":4},\"m_Scale\":1.0,\"m_AtlasIndex\":0,\"m_ClassDefinitionType\":0}],\"m_CharacterTable\":[{\"m_ElementType\":1,\"m_Unicode\":8230,\"m_GlyphIndex\":263,\"m_Scale\":1.0},{\"m_ElementType\":1,\"m_Unicode\":95,\"m_GlyphIndex\":64,\"m_Scale\":1.0}],\"m_UsedGlyphRects\":[{\"m_X\":0,\"m_Y\":0,\"m_Width\":43,\"m_Height\":17},{\"m_X\":43,\"m_Y\":0,\"m_Width\":32,\"m_Height\":13}],\"m_FreeGlyphRects\":[{\"m_X\":0,\"m_Y\":17,\"m_Width\":2047,\"m_Height\":2030},{\"m_X\":43,\"m_Y\":13,\"m_Width\":2004,\"m_Height\":2034},{\"m_X\":75,\"m_Y\":0,\"m_Width\":1972,\"m_Height\":2047}],\"m_FontFeatureTable\":{\"m_GlyphPairAdjustmentRecords\":[]},\"normalStyle\":0.0,\"normalSpacingOffset\":0.0,\"boldStyle\":0.75,\"boldSpacing\":7.0,\"italicStyle\":15,\"tabSize\":10}",
+      "warmCharacters": "0{}\u4f24\u514b\u514d\u5236\u5927\u5bb3\u6297\u62b5\u706d\u75ab\u7834\u95ee\u97e7"
+    }
+  ],
+  "materials": [
+    {
+      "key": "Material_f919b394d79d888b",
+      "name": "Sprite-Unlit-Default",
+      "shader": "Zjcs/Combat/WorldSpriteUnlit",
+      "queue": -1,
+      "keywords": [
+        "ETC1_EXTERNAL_ALPHA"
+      ],
+      "floats": [
+        {
+          "name": "PixelSnap",
+          "value": 0.0
+        },
+        {
+          "name": "_EnableExternalAlpha",
+          "value": 0.0
+        }
+      ],
+      "colors": [
+        {
+          "name": "_Color",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_Flip",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_RendererColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "name": "_AlphaTex",
+          "texture": "",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_MainTex",
+          "texture": "",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Material_57b7f2adeb457a8f",
+      "name": "FZY4K SDF Material",
+      "shader": "Zjcs/Combat/WorldTextMeshPro",
+      "queue": -1,
+      "keywords": [],
+      "floats": [
+        {
+          "name": "_Ambient",
+          "value": 0.5
+        },
+        {
+          "name": "_Bevel",
+          "value": 0.5
+        },
+        {
+          "name": "_BevelClamp",
+          "value": 0.0
+        },
+        {
+          "name": "_BevelOffset",
+          "value": 0.0
+        },
+        {
+          "name": "_BevelRoundness",
+          "value": 0.0
+        },
+        {
+          "name": "_BevelWidth",
+          "value": 0.0
+        },
+        {
+          "name": "_BumpFace",
+          "value": 0.0
+        },
+        {
+          "name": "_BumpOutline",
+          "value": 0.0
+        },
+        {
+          "name": "_ColorMask",
+          "value": 15.0
+        },
+        {
+          "name": "_CullMode",
+          "value": 0.0
+        },
+        {
+          "name": "_Diffuse",
+          "value": 0.5
+        },
+        {
+          "name": "_FaceDilate",
+          "value": 0.0
+        },
+        {
+          "name": "_FaceUVSpeedX",
+          "value": 0.0
+        },
+        {
+          "name": "_FaceUVSpeedY",
+          "value": 0.0
+        },
+        {
+          "name": "_GlowInner",
+          "value": 0.05000000074505806
+        },
+        {
+          "name": "_GlowOffset",
+          "value": 0.0
+        },
+        {
+          "name": "_GlowOuter",
+          "value": 0.05000000074505806
+        },
+        {
+          "name": "_GlowPower",
+          "value": 0.75
+        },
+        {
+          "name": "_GradientScale",
+          "value": 5.0
+        },
+        {
+          "name": "_LightAngle",
+          "value": 3.1415998935699463
+        },
+        {
+          "name": "_MaskSoftnessX",
+          "value": 0.0
+        },
+        {
+          "name": "_MaskSoftnessY",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineSoftness",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineUVSpeedX",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineUVSpeedY",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineWidth",
+          "value": 0.0
+        },
+        {
+          "name": "_OutlineWidth2",
+          "value": 0.0
+        },
+        {
+          "name": "_PerspectiveFilter",
+          "value": 0.875
+        },
+        {
+          "name": "_Reflectivity",
+          "value": 10.0
+        },
+        {
+          "name": "_ScaleRatioA",
+          "value": 0.800000011920929
+        },
+        {
+          "name": "_ScaleRatioB",
+          "value": 0.6499999761581421
+        },
+        {
+          "name": "_ScaleRatioC",
+          "value": 0.6499999761581421
+        },
+        {
+          "name": "_ScaleX",
+          "value": 1.0
+        },
+        {
+          "name": "_ScaleY",
+          "value": 1.0
+        },
+        {
+          "name": "_ShaderFlags",
+          "value": 0.0
+        },
+        {
+          "name": "_Sharpness",
+          "value": 0.0
+        },
+        {
+          "name": "_SpecularPower",
+          "value": 2.0
+        },
+        {
+          "name": "_SrcAlphaMode",
+          "value": 1.0
+        },
+        {
+          "name": "_Stencil",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilComp",
+          "value": 8.0
+        },
+        {
+          "name": "_StencilOp",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilReadMask",
+          "value": 255.0
+        },
+        {
+          "name": "_StencilWriteMask",
+          "value": 255.0
+        },
+        {
+          "name": "_TextureHeight",
+          "value": 2048.0
+        },
+        {
+          "name": "_TextureWidth",
+          "value": 2048.0
+        },
+        {
+          "name": "_UnderlayDilate",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlayOffsetX",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlayOffsetY",
+          "value": 0.0
+        },
+        {
+          "name": "_UnderlaySoftness",
+          "value": 0.0
+        },
+        {
+          "name": "_VertexOffsetX",
+          "value": 0.0
+        },
+        {
+          "name": "_VertexOffsetY",
+          "value": 0.0
+        },
+        {
+          "name": "_WeightBold",
+          "value": 0.75
+        },
+        {
+          "name": "_WeightNormal",
+          "value": 0.0
+        }
+      ],
+      "colors": [
+        {
+          "name": "_ClipRect",
+          "rgba": [
+            -32767.0,
+            -32767.0,
+            32767.0,
+            32767.0
+          ]
+        },
+        {
+          "name": "_EnvMatrixRotation",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_FaceColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_GlowColor",
+          "rgba": [
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "name": "_MaskCoord",
+          "rgba": [
+            0.0,
+            0.0,
+            32767.0,
+            32767.0
+          ]
+        },
+        {
+          "name": "_OutlineColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_OutlineColor2",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_ReflectFaceColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_ReflectOutlineColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_SpecularColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_UnderlayColor",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "name": "_MainTex",
+          "texture": "Texture_5100748872e5a73c",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Material_03d3d43eecfdb08f",
+      "name": "ElementConfrontText_DaKeScene",
+      "shader": "Zjcs/Combat/WorldSpriteSequence",
+      "queue": -1,
+      "keywords": [],
+      "floats": [
+        {
+          "name": "IsSqueueCycle",
+          "value": 0.0
+        },
+        {
+          "name": "_EnableExternalAlpha",
+          "value": 0.0
+        },
+        {
+          "name": "_Intensity",
+          "value": 1.0
+        },
+        {
+          "name": "_LightAtten",
+          "value": 1.0
+        },
+        {
+          "name": "_SequenceColumn",
+          "value": 3.0
+        },
+        {
+          "name": "_SequenceRow",
+          "value": 2.0
+        },
+        {
+          "name": "_SquenceRate",
+          "value": 0.0
+        },
+        {
+          "name": "_SquenceSpeed",
+          "value": 1.0
+        }
+      ],
+      "colors": [
+        {
+          "name": "_Color",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_Flip",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_RendererColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "name": "_MainTex",
+          "texture": "Texture_01203c820e107bfd",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "key": "Material_3deb1ddddcf7dfbc",
+      "name": "UIImgAdd",
+      "shader": "Zjcs/Combat/HudEffectAdditive",
+      "queue": -1,
+      "keywords": [],
+      "floats": [
+        {
+          "name": "IsSqueueRecycle",
+          "value": 1.0
+        },
+        {
+          "name": "_AnDissolve",
+          "value": -1.350000023841858
+        },
+        {
+          "name": "_BlendMode",
+          "value": 0.0
+        },
+        {
+          "name": "_Brightness",
+          "value": 2.0
+        },
+        {
+          "name": "_ColorMask",
+          "value": 15.0
+        },
+        {
+          "name": "_Contrast",
+          "value": 1.0
+        },
+        {
+          "name": "_DisSoftness",
+          "value": 0.48500001430511475
+        },
+        {
+          "name": "_DissolveMultX",
+          "value": 0.33000001311302185
+        },
+        {
+          "name": "_DissolveMultY",
+          "value": 0.0
+        },
+        {
+          "name": "_DstBlend",
+          "value": 1.0
+        },
+        {
+          "name": "_EdgeColor1Intensity",
+          "value": 1.0
+        },
+        {
+          "name": "_EdgeColor2Intensity",
+          "value": 1.0
+        },
+        {
+          "name": "_EdgeWidth",
+          "value": 0.5
+        },
+        {
+          "name": "_EnableExternalAlpha",
+          "value": 0.0
+        },
+        {
+          "name": "_Float2",
+          "value": 0.06199999898672104
+        },
+        {
+          "name": "_SquenceColumn",
+          "value": 5.0
+        },
+        {
+          "name": "_SquenceRate",
+          "value": 0.0
+        },
+        {
+          "name": "_SquenceRow",
+          "value": 5.0
+        },
+        {
+          "name": "_SquenceSpeed",
+          "value": 30.0
+        },
+        {
+          "name": "_SquenceTimes",
+          "value": 1.0
+        },
+        {
+          "name": "_SrcBlend",
+          "value": 1.0
+        },
+        {
+          "name": "_Stencil",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilComp",
+          "value": 8.0
+        },
+        {
+          "name": "_StencilOp",
+          "value": 0.0
+        },
+        {
+          "name": "_StencilReadMask",
+          "value": 255.0
+        },
+        {
+          "name": "_StencilWriteMask",
+          "value": 255.0
+        },
+        {
+          "name": "_UseUIAlphaClip",
+          "value": 0.0
+        }
+      ],
+      "colors": [
+        {
+          "name": "_BaseColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_Color",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_DissolvePanner",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_DissolveRotator",
+          "rgba": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_DistortSpeed",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_EdgeColor1",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_EdgeColor2",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_Flip",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_MainColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_MainPanner",
+          "rgba": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_MainSpeed",
+          "rgba": [
+            1.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_MaskDistortSpeed",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_MaskPivot",
+          "rgba": [
+            0.5,
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_MaskRotator",
+          "rgba": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_RendererColor",
+          "rgba": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "_Rotator",
+          "rgba": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "_Speed",
+          "rgba": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "name": "_MainTex",
+          "texture": "",
+          "scale": [
+            1.0,
+            1.0
+          ],
+          "offset": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "key": "Texture_cd9cbaa861506e25",
+      "width": 1024,
+      "height": 512,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    },
+    {
+      "key": "Texture_5100748872e5a73c",
+      "width": 2048,
+      "height": 2048,
+      "filter": 1,
+      "wrapU": 0,
+      "wrapV": 0,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": false
+    },
+    {
+      "key": "Texture_01203c820e107bfd",
+      "width": 512,
+      "height": 341,
+      "filter": 1,
+      "wrapU": 1,
+      "wrapV": 1,
+      "aniso": 1,
+      "bias": 0.0,
+      "sRGB": true
+    }
+  ],
+  "sprites": [
+    {
+      "key": "Sprite_e9f07f5f7e9b5f36",
+      "texture": "Texture_cd9cbaa861506e25",
+      "rect": {
+        "x": 198.0,
+        "y": 304.0,
+        "width": 28.0,
+        "height": 28.0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "border": [
+        12.0,
+        12.0,
+        12.0,
+        12.0
+      ],
+      "pixelsPerUnit": 100.0,
+      "vertices": [
+        {
+          "x": -0.14000000059604645,
+          "y": 0.14000000059604645
+        },
+        {
+          "x": 0.14000000059604645,
+          "y": 0.14000000059604645
+        },
+        {
+          "x": -0.14000000059604645,
+          "y": -0.14000000059604645
+        },
+        {
+          "x": 0.14000000059604645,
+          "y": -0.14000000059604645
+        }
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "key": "Sprite_ab0ba418a29e66a5",
+      "texture": "Texture_01203c820e107bfd",
+      "rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 512.0,
+        "height": 341.0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pixelsPerUnit": 100.0,
+      "vertices": [
+        {
+          "x": -2.559999942779541,
+          "y": 1.7050000429153442
+        },
+        {
+          "x": 2.559999942779541,
+          "y": 1.7050000429153442
+        },
+        {
+          "x": -2.559999942779541,
+          "y": -1.7050000429153442
+        },
+        {
+          "x": 2.559999942779541,
+          "y": -1.7050000429153442
+        }
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "key": "Sprite_3b304bd55b9428e1",
+      "texture": "Texture_cd9cbaa861506e25",
+      "rect": {
+        "x": 0.0,
+        "y": 304.0,
+        "width": 76.0,
+        "height": 76.0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "border": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pixelsPerUnit": 100.0,
+      "vertices": [
+        {
+          "x": -0.3799999952316284,
+          "y": 0.3799999952316284
+        },
+        {
+          "x": 0.3799999952316284,
+          "y": 0.3799999952316284
+        },
+        {
+          "x": -0.3799999952316284,
+          "y": -0.3799999952316284
+        },
+        {
+          "x": 0.3799999952316284,
+          "y": -0.3799999952316284
+        }
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        2,
+        1,
+        3
+      ]
+    }
+  ]
+}

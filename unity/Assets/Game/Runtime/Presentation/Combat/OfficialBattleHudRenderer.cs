@@ -81,6 +81,8 @@ namespace Zjcs.Presentation.Combat
                 if (source.uses_rect_transform)
                 {
                     RectTransform rect = (RectTransform)transform;
+                    rect.anchorMin = Vector(source.anchor_min, new Vector2(0.5f, 0.5f));
+                    rect.anchorMax = Vector(source.anchor_max, new Vector2(0.5f, 0.5f));
                     rect.anchoredPosition = Vector(source.anchored_position, Vector2.zero);
                     rect.sizeDelta = Vector(source.size_delta, Vector2.zero);
                     rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));

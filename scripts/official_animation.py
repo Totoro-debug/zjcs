@@ -16,7 +16,7 @@ PROPERTIES = [
 PROPERTY_HASHES = {zlib.crc32(p.encode()): p for p in PROPERTIES}
 
 
-def mecanim_tracks(obj, tree, property_names=(), vector_property_names=(), binding_paths=()):
+def mecanim_tracks(obj, tree, property_names=(), vector_property_names=(), binding_paths=(), scalar_material_property_names=()):
     data = obj.read_typetree()
     muscle = data['m_MuscleClip']
     duration = muscle['m_StopTime']
@@ -38,6 +38,8 @@ def mecanim_tracks(obj, tree, property_names=(), vector_property_names=(), bindi
     vector_property_hashes = {
         zlib.crc32(p.encode()) & 0x0fffffff: p for p in vector_property_names
     }
+    scalar_material_hashes = {zlib.crc32(p.encode()) & 0x0fffffff: 'material.'+p
+                             for p in scalar_material_property_names}
     for binding in data['m_ClipBindingConstant']['genericBindings']:
         path = paths.get(binding['path'])
         attribute = binding['attribute']
@@ -45,6 +47,8 @@ def mecanim_tracks(obj, tree, property_names=(), vector_property_names=(), bindi
         if binding['typeID'] == 4 and attribute in [1, 2, 3, 4]:
             names = {1: ['position.'+a for a in 'xyz'], 2: ['quaternion.'+a for a in 'xyzw'],
                      3: ['scale.'+a for a in 'xyz'], 4: ['rotation.'+a for a in 'xyz']}[attribute]
+        elif scalar_material_property_names and binding['typeID'] in (23, 212) and attribute >> 28 == 8:
+            names = [scalar_material_hashes.get(attribute & 0x0fffffff)]
         elif binding['typeID'] == 23 and 4 <= attribute >> 28 <= 7:
             vector = vector_property_hashes.get(attribute & 0x0fffffff)
             names = [vector + '.' + {4: 'r', 5: 'g', 6: 'b', 7: 'a'}[attribute >> 28]] if vector else [None]

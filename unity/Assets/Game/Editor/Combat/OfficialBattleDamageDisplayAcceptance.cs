@@ -128,7 +128,7 @@ namespace Zjcs.Editor.Combat
                 return true;
             }
 
-            private static void VerifyCameraPixels(Renderer number)
+            internal static void VerifyCameraPixels(Renderer number)
             {
                 Camera camera=Camera.main;
                 Require(camera!=null,"The live damage number has no battle camera.");
@@ -158,7 +158,7 @@ namespace Zjcs.Editor.Combat
                         +", layer="+number.gameObject.layer+", mask="+camera.cullingMask
                         +", screen="+camera.WorldToScreenPoint(number.bounds.center)
                         +", material="+number.sharedMaterial.name+", shader="+number.sharedMaterial.shader.name);
-                    Debug.Log("Original live damage number raster passed: "+changed+" actual battle-camera pixels.");
+                    Debug.Log("Original live damage feedback raster passed: "+changed+" actual battle-camera pixels.");
                 }
                 finally
                 {
