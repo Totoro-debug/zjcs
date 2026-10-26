@@ -95,6 +95,23 @@ class MountainSourceTests(unittest.TestCase):
         self.assertTrue(checks)
         self.assertTrue(all(r['mesh']['path_id'] and r['component']['path_id'] for r in checks))
 
+    def test_push_rules_preserve_current_masks_rects_and_designated_boxes(self):
+        runtime = load("unity/Assets/Official/World/Map/12/Resources/Map12/stories.json")
+        rules = {r["PlacementId"]: r for r in runtime["puzzleRules"]}
+        self.assertEqual({r["PlacementId"] for r in rules.values() if r["LockType"] == 6},
+                         {1401, 4602, 6305, 8702})
+        for rule in rules.values():
+            if rule["HasPushResult"]:
+                self.assertEqual(rule["MoveMask"], 1)
+                local = self.source["entities"][str(rule["PlacementId"])]["LoStageResultEntityPushedComponent"]
+                self.assertEqual(rule["MovableRect"], local["MovableRect"])
+                self.assertEqual(rule["Body"], self.source["templates"][str(rule["EntityClassId"])]["GridTransformComponent"]["BodyRangeInfos"])
+            if rule["LockType"] == 6:
+                component = self.source["entities"][str(rule["PlacementId"])]["LoEntityLockComponent"]
+                params = parse_terminal(component["Params"])
+                self.assertEqual(rule["PushBoxDetectorIds"], params["LoOverlapDetectorEntityIds"])
+                self.assertEqual(rule["PushBoxIds"], params["LoBoxEntityIds"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -34,8 +34,9 @@ def parse_terminal(params):
     return parsed
 
 
-def puzzle_rules(definition, catalog, templates):
+def puzzle_rules(definition, catalog, templates, mover_rows):
     components = {r["EntityId"]: json.loads(r["Json"]) for r in definition["EntityComponents"]}
+    movers = {r["Id"]: r["GroundTypes"] for r in mover_rows}
     result = []
     # Preserve every original entity's component ordering and original result
     # indices. The runtime selects the puzzle entities; conversion does not
@@ -50,11 +51,24 @@ def puzzle_rules(definition, catalog, templates):
                       for k, v in params.get("EntityStateDict", {}).items()]
         if not conditions and entity["lockType"] in (5, 7):
             conditions = [{"PlacementId": int(v), "State": 0} for v in entity["lockConditionEntityIds"]]
+        transform = template.get("GridTransformComponent", {})
+        grid = local.get("LoGridTransformComponent", {})
+        mover = template.get("GridMoverComponent", {})
+        ground_types = movers.get(mover.get("WalkableGroundTypeKey"), [])
+        pushed = local.get("LoStageResultEntityPushedComponent", {})
         result.append({
             "PlacementId": entity["placementId"], "EntityClassId": entity["entityClassId"],
             "InitialState": entity["state"], "GridX": entity["grid"][0], "GridY": entity["grid"][1],
             "InitiallySpawned": entity["active"], "LockType": entity["lockType"],
             "LockConditions": conditions,
+            "PushBoxDetectorIds": params.get("LoOverlapDetectorEntityIds", []),
+            "PushBoxIds": params.get("LoBoxEntityIds", []),
+            "HasPushResult": "StageResultEntityPushedComponent" in template,
+            "MoveMask": sum(1 << ground_type for ground_type in ground_types),
+            "MovableRect": pushed.get("MovableRect"),
+            "InitialDirection": grid.get("Dir", 0), "InitialFlipX": grid.get("FlipX", False),
+            "Body": transform.get("BodyRangeInfos", []),
+            "RealCenter": transform.get("RealCenter", [0, 0]),
             "ConditionEntityInactiveInUnlock": entity["conditionEntityInactiveInUnlock"],
             "ConditionEntityNeverDestroy": entity["conditionEntityNeverDestroy"],
             "TerminalLockIds": terminal_data.get("LockLoEntityIds", []),
@@ -74,7 +88,8 @@ def puzzle_rules(definition, catalog, templates):
         })
     ids = {r["PlacementId"] for r in result}
     for rule in result:
-        referenced = rule["SpawnIds"] + rule["TerminalLockIds"] + rule["TerminalRemoveIds"] + rule["TerminalBoxIds"]
+        referenced = (rule["SpawnIds"] + rule["TerminalLockIds"] + rule["TerminalRemoveIds"]
+                      + rule["TerminalBoxIds"] + rule["PushBoxDetectorIds"] + rule["PushBoxIds"])
         referenced += [r["PlacementId"] for r in rule["LockConditions"]]
         referenced += [r["LoEntId"] for group in rule["OtherStates"] for r in group.get("StageDatas", [])]
         if set(referenced) - ids:
@@ -201,7 +216,8 @@ def build():
         raise ValueError("Incomplete original mountain mainline task chain")
     story_runtime = dict(manifest="854_156383", mapClassId=12, sourceSha256=sha256(adventure_path),
         mapDefinitionSha256=sha256(MAP_ROOT / "map12.json"), entityCatalogSha256=sha256(MAP_ROOT / "map12-entities.json"),
-        entityTemplates=entity_templates, puzzleRules=puzzle_rules(definition, catalog, templates),
+        entityTemplates=entity_templates, puzzleRules=puzzle_rules(definition, catalog, templates,
+            json.loads((MAP_ROOT / "Source/tables.json").read_text(encoding="utf8"))["EC/entity_grid_mover"]),
         witchInfos=[{"ActiveCount": r["WitchActivedCount"], "StoryBookId": r["StoryBookId"],
             "IsNextState": r["IsNextState"], "StageResults": [{"ComponentType": int(k), "ComponentIndex": v}
             for k, v in r["StageResultComps"].items()]} for r in tables["witch"]],
@@ -223,10 +239,20 @@ def build():
         write_meta(path, "TextScriptImporter")
     inputs = [adventure_path, template_path, template_receipt_path, playable_path,
         MAP_ROOT / "map12.json", MAP_ROOT / "source-manifest.json", MAP_ROOT / "map12-entities.json",
-        MAP_ROOT / "entity-source-manifest.json", MAP_ROOT / "map12-battles.json", MAP_ROOT / "battle-source-manifest.json"]
+        MAP_ROOT / "entity-source-manifest.json", MAP_ROOT / "map12-battles.json", MAP_ROOT / "battle-source-manifest.json",
+        MAP_ROOT / "Source/tables.json"]
+    current_code = ROOT / ".tools/source-packages/current/871_156598/official-code"
+    puzzle_code = [current_code / folder / (name + ".cs") for folder, names in (
+        ("common-source/Common", ("StageResultEntityPushedComponent", "GridMoverComponent", "GridGroundComponent",
+            "GridTransformComponent", "MyMath", "EntityLockPushBox", "MapPuzzleTerminalDataHuarongDao")),
+        ("client-source", ("ECStageResultEntityPushedView", "MyStageResultEntityPushed"))) for name in names]
     write_json(REFERENCE, dict(manifest="854_156383", mapClassId=12,
         operation="Preserve original EC component order, raw story nodes and ports, recursive subgraphs, dialogue roles, fixed rewards and all eleven puzzle terminal payloads. No server decisions are synthesized.",
         inputs=[{"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)} for p in inputs],
+        puzzleClientCode=[{"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)} for p in puzzle_code],
+        confirmedOfflinePushRules={"playerAfterPush": "previous box cell",
+            "complete": "all listed detector cells occupied by listed boxes", "latchedUnlock": True,
+            "results": "execute original unlock spawn/state-update stage; rewards still require claiming"},
         officialTables=sources, outputs={p.name: {"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)}
             for p in (OUTPUT / "stories.json", OUTPUT / "battle-runtime.json")},
         counts=dict(stages=len(battles["stages"]), bindings=len(battles["entityStageBindings"]),

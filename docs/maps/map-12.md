@@ -30,6 +30,10 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 推动成功后角色跟进到箱子原格，按本次用户确认迁移。客户端 `MyStageResultEntityPushed.CanMoveToNextPos` 及共享 `StageResultEntityPushedComponent.GetTargetPosNextPosAndDir` 提供目标格、方向、可站立格与 `MovableRect` 约束；服务端推动执行体未取得，跟进位置属于已确认的单机差异，不能标作官方服务端代码。
 
+1401、4602、6305、8702四处 `EntityLockPushBox` 按用户确认，以全部 `LoOverlapDetectorEntityIds` 目标格被 `LoBoxEntityIds` 中指定箱子占据作为完成条件；完成后保持解锁，执行原 `EntityUnlockWorldStateCompleteComponent` 对应的生成实体／更新状态结果，奖励仍需实际领取。`OfflineMapPuzzleSession` 已保存独立的箱子坐标、解锁和生成状态，旧存档没有坐标时使用原放置坐标；返回的保存快照与会话状态相互独立。推动沿用官方 GroundType 位掩码、实体占位、自身原占位白名单与包含端点的 `MovableRect`，6511箱子使用当前配置的移动键2／掩码1。
+
+`OfficialMap12PuzzleValidation` 从四组原始摆放执行13／14／22／9次、共58次合法推动，逐次核对走到箱子旁、角色跟进和JSON冷读；四组解锁及原结果生成、锁存、六处重置、华容道两份不同作用清单与保存快照隔离通过。验证路径只在复制的网格状态中搜索，不进入游戏规则。Map11九组机关回归及 `ProjectTools.Validate` 通过。这是规则层验证，尚未接通山之国运行入口、原界面点击、扣券和保存失败恢复；不构成本图可游玩完成结论。
+
 ## 尚未实现
 
 恢复99区、57个Water2渲染器、七战斗碑、踏板／推箱／华容道、凤凰祭坛、命运探寻、1165～1270主线、小地图和剧情开雾；普通角色连续路线与高资格回访分别验证。
@@ -46,3 +50,4 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 - [剧情／任务／机关载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗来源](../../assets/reference/official-map/map12-battles-source-manifest.json)。
 - [原区域](../../assets/official/regions/12.json)、[原配置](../../assets/official/adventure.json)、[Unity 地图定义](../../unity/Assets/Official/World/Map/12/map12.json)。
 - [转换入口](../../scripts/prepare_unity_map12.py)、[当前来源解码](../../scripts/prepare_unity_map12_sources.py)、[Unity 导入](../../unity/Assets/Game/Editor/OfficialMap12Tools.cs)、[场景渲染检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs)。
+- [机关状态](../../unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleSession.cs)、[推动适配](../../unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleMovement.cs)、[原摆放推动验证](../../unity/Assets/Game/Editor/OfficialMap12PuzzleValidation.cs)。

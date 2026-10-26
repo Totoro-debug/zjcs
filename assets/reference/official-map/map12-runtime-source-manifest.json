@@ -42,8 +42,56 @@
     {
       "path": "unity/Assets/Official/World/Map/12/battle-source-manifest.json",
       "sha256": "d9cdbfd8659d1b3418135fcc4b9ecc9d2eb8eb6be888cfc3e861a5374d005250"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+      "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
     }
   ],
+  "puzzleClientCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultEntityPushedComponent.cs",
+      "sha256": "e4a52805cbc6e6673f18e52967b3a8a4075dd9c781b3ed6bae010dcaa5c2e804"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridMoverComponent.cs",
+      "sha256": "0482718b0260b2fcfb8d765615b1c334d22918d9fae5e180b3a9c0f0b20d29db"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridGroundComponent.cs",
+      "sha256": "ed9dfb597d9082f4a5a6aaa2d33698f70898c7d96b688dc2c96d6247b2e1b2da"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MyMath.cs",
+      "sha256": "795306c241422873365b1a1973f84694c494accb2e8c4a2e342e7c432afff5fe"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityLockPushBox.cs",
+      "sha256": "2d370c5d230f55676d7e9cbd28cad1236f0c54aa2ec8084e579e2c7264920b22"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPuzzleTerminalDataHuarongDao.cs",
+      "sha256": "241a4a16441ea2ade527b1ec13914e2baaa5c57821e11d38625b33acb726c5ad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECStageResultEntityPushedView.cs",
+      "sha256": "4055fab3d1eb7b235bff0ee9b1daf1a19b41dcbfdf0182179ffe1dc82740c963"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyStageResultEntityPushed.cs",
+      "sha256": "9d3d71288fb64539a0c0806981ced7be204d6cc652b17641365e1870dd768c05"
+    }
+  ],
+  "confirmedOfflinePushRules": {
+    "playerAfterPush": "previous box cell",
+    "complete": "all listed detector cells occupied by listed boxes",
+    "latchedUnlock": true,
+    "results": "execute original unlock spawn/state-update stage; rewards still require claiming"
+  },
   "officialTables": [
     {
       "bundle": "defaultpackage_assets_config_luban_dialog.bundle",
@@ -105,7 +153,7 @@
   "outputs": {
     "stories.json": {
       "path": "unity/Assets/Official/World/Map/12/Resources/Map12/stories.json",
-      "sha256": "2e540f7d8416e8f028f5dfa9235bdd037948a0a5121c4734fc65abc8f1df4023"
+      "sha256": "1a695aa3a48c441beb4fc89c75a20170acda66f8b0f91711f785dab8a1c3bbc8"
     },
     "battle-runtime.json": {
       "path": "unity/Assets/Official/World/Map/12/Resources/Map12/battle-runtime.json",
