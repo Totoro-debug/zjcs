@@ -14,6 +14,8 @@ Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗
 
 默认启动先恢复并播放官方 `BootSplash`，随后显示原版 `ThemeCanvas`／`LaunchPanel` 和本地资源进度条，再进入现有存档入口。适龄提示使用原可交互弹窗，启动阶段不请求网络；素材、字体、动画与本地加载的实际验证范围见[登录前启动画面](startup.md)。
 
+存档入口已将原 `PlanesListPanel`／`PlanesRoleItem` 转换为本地列表，保留官方卡片、头像、双页签与动画；DX12 Play Mode、实际 Windows Player 的模拟点击／滚轮、新建／续玩入口和草稿冷启动恢复通过。验证使用隔离存档，并已查看内置屏上可见 Player 的实际画面，9个用户数据文件哈希未改变。官方来源、具体测试边界及未完成部分见[设置、拍照与本地存档](settings-and-save.md)。
+
 `ProjectTools.Configure` 配置工程设置；`ProjectTools.Validate` 检查编辑器版本、启动场景、窗口设置，并调用战斗目录、HUD 与 Map10 校验。`Zjcs.Editor.ProjectTools.BuildWindowsGame` 是游戏测试构建入口，输出 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该文件，工作目录为同名文件夹。`BuildFrameworkWindows` 只构建空启动框架，不能替代游戏构建。代码位于 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs)。
 
 仓库根目录的 [`unity-tools.json`](../../unity-tools.json) 记录固定版本编辑器安装路径及工程路径；当前编辑器位于 `D:/Tool/Unity/Editor/Unity.exe`，实际文件版本为 `2022.3.57f1c2`。Unity Hub 为可选项，本机未安装。项目工具 [`unity.ps1`](../../scripts/unity.ps1) 提供 `info`、`open` 与 `initialize` 命令，并在启动前核对编辑器文件版本。运行 `& .\scripts/unity.ps1 info` 检查环境，`& .\scripts/unity.ps1 open` 启动工程，`& .\scripts/unity.ps1 initialize` 执行 `ProjectTools.Configure`。
@@ -36,6 +38,8 @@ Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_inte
 
 ## 自定义实现
 
+`Zjcs.Editor.Startup.SaveSelectionWindowsBuild.Run` 包装现有 `BuildWindowsGame`，显式使用本机已安装的 Windows Mono 支持，与既有桌面版本保持相同脚本后端并复用增量缓存；构建完成或失败后恢复工程原先的脚本后端设置。避免工程中的 IL2CPP 设置与仅安装 Mono 的编辑器及旧输出目录冲突。
+
 Windows 渲染后端按用户要求固定为 DX12（Direct3D12），关闭自动图形 API，仅配置 `Direct3D12`。这属于 Windows 平台适配；迁移依据的官方 Android APK 在 `data.unity3d/globalgamemanagers` 的 `BuildSettings.m_GraphicsAPIs` 为 `[11]`，对应 `OpenGLES3`，不能将此编号解释为 DX11。官方材质、shader 和画面参数继续按原版恢复。
 
 [`WindowsGraphicsSettings.cs`](../../unity/Assets/Game/Editor/WindowsGraphicsSettings.cs) 提供配置与验证入口，并在 Windows 构建前检查项目图形 API 及编辑器实际设备，防止用其他后端或无图形模式代替 DX12 验证。`unity.ps1 open`／`initialize` 显式传入 `-force-d3d12`；初始化先配置 DX12，再调用 `ProjectTools.Configure`。自定义 Unity 验证命令也传入 `-force-d3d12`，继续使用内置屏定位工具。Player 使用打包的 DX12 配置，正常启动不依赖额外命令行参数。
@@ -54,7 +58,7 @@ DX12 的 Unity 导入／编译、`ProjectTools.Validate`、Map10 战斗模拟指
 
 - 从完整创角到家园、地图、战斗与退出恢复的全流程真实输入验收。
 - 官方 UI、角色、地图、动画、音频、渲染管线及第三方运行依赖的恢复和绑定。
-- 存档列表续玩点击与已有完整角色档案的 Windows 冷启动回读验收。
+- 已有完整角色全部进度档案的 Windows 冷启动后进入家园、地图及后续状态回读验收；存档列表入口点击与独立草稿冷启动恢复已验证。
 - Map10 原始 prefab bundle 的 Unity 版本兼容性处理及编辑器验证。
 - 清除工程校验中的序列化深度与 Edit Mode 清理提示。
 - 对应完整已提交源码和素材的逐功能 Windows 发布；当前工作区测试导出不替代该要求。

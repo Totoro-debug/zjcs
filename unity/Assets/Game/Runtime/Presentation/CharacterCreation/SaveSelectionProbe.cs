@@ -215,8 +215,12 @@ namespace Zjcs.Presentation.CharacterCreation
         private void Capture(string name)
         {
             Texture2D texture = ScreenCapture.CaptureScreenshotAsTexture();
-            File.WriteAllBytes(Path.Combine(output, name + ".png"), texture.EncodeToPNG());
-            Destroy(texture);
+            try
+            {
+                Require(texture.GetPixels32().Any(p => p.r > 32 || p.g > 32 || p.b > 32), "Player screenshot is black; show the internal-display window before validation.");
+                File.WriteAllBytes(Path.Combine(output, name + ".png"), texture.EncodeToPNG());
+            }
+            finally { Destroy(texture); }
         }
         public static void RecordPortrait(string id, Texture2D texture)
         {

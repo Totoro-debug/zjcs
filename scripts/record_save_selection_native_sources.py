@@ -19,6 +19,7 @@ paths.extend(ROOT / path for path in [
     'scripts/record_save_selection_native_sources.py',
     'unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs',
     'unity/Assets/Game/Editor/Startup/SaveSelectionPlayModeValidation.cs',
+    'unity/Assets/Game/Editor/Startup/SaveSelectionWindowsBuild.cs',
     'unity/Assets/Game/Runtime/Official/Startup/PlanesListPanel.cs',
     'unity/Assets/Game/Runtime/Official/Startup/PlanesInfoItemWithRoleInfo.cs',
     'unity/Assets/Game/Runtime/Offline/Startup/OfficialSaveSelectionAssets.cs',
@@ -35,7 +36,7 @@ receipt = dict(
     source_receipt_sha256=sha(ROOT / 'assets/reference/save-selection/source-manifest.json'),
     resource_binding='SaveSelection/OfficialSaveSelectionAssets',
     shared_bindings=['Startup/OfficialStartupAssets.themeCanvas', 'World/Mainline/ScreenBlur',
-                     'Character/OfficialCharacterAssetCatalog', 'CharacterCreation/CharacterCreationAssets'],
+                     'Character/OfficialCharacterAssetCatalog', 'CharacterCreation/OfficialCharacterCreationAssetCatalog'],
     operation='Restore original PlanesListPanel, embedded role item and launch blur mask as native prefabs; '
               'retain original sprites, TMP font, anchors, UV, legacy dialog curves and tab Animator graphs; '
               'local slots supply row data, head photography and read/create actions.',

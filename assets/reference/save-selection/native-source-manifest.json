@@ -8,7 +8,7 @@
     "Startup/OfficialStartupAssets.themeCanvas",
     "World/Mainline/ScreenBlur",
     "Character/OfficialCharacterAssetCatalog",
-    "CharacterCreation/CharacterCreationAssets"
+    "CharacterCreation/OfficialCharacterCreationAssetCatalog"
   ],
   "operation": "Restore original PlanesListPanel, embedded role item and launch blur mask as native prefabs; retain original sprites, TMP font, anchors, UV, legacy dialog curves and tab Animator graphs; local slots supply row data, head photography and read/create actions.",
   "outputs": [
@@ -22,7 +22,7 @@
     },
     {
       "path": "scripts/record_save_selection_native_sources.py",
-      "sha256": "1036918a4087d99420e646802a6ad4ae29fd19d430035f10de13b7e78b76a678"
+      "sha256": "bb3454ab727eb3959a665d8a609e71b7290584461203b52c556abb82a2e1570d"
     },
     {
       "path": "unity/Assets/Game/Editor/Startup/OfficialStartupTools.cs",
@@ -31,6 +31,10 @@
     {
       "path": "unity/Assets/Game/Editor/Startup/SaveSelectionPlayModeValidation.cs",
       "sha256": "1b9bca4745f54705fed11ec0d54eb870dc0695a566f535884d17834acca48e15"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Startup/SaveSelectionWindowsBuild.cs",
+      "sha256": "6e36024e7254be6620ace567b2778560968b665cb6a32820fc34f2c138d26528"
     },
     {
       "path": "unity/Assets/Game/Resources/SaveSelection/0-UIDialog_Hide.anim",
@@ -778,7 +782,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/CharacterCreation/SaveSelectionProbe.cs",
-      "sha256": "369290742d91a41bb72d2d0f99f875f866afbac3cfdb637435464158561c29e6"
+      "sha256": "765a62373be4c5990e0e90421bdc107634aeee659616d82145822867a7ee8e02"
     },
     {
       "path": "unity/Assets/Official/SaveSelection/Fonts/320.png",

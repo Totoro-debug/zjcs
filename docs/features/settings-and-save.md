@@ -22,6 +22,8 @@
 
 Unity 2022.3.57f1c2、DX12 Play Mode 已验证15槽列表、男女原生头像、页签动画、鼠标滚轮、已有角色入口、损坏主档提示与新建独立草稿。交互使用 EventSystem 射线命中和模拟按下／抬起／点击，确认无控件遮挡；列表浏览前后所有隔离存档文件 SHA256 一致。已查看450×800、675×1200、900×800和360×1000运行截图并检查面板处于窗口内。静态检查、Unity 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。复验入口为 `Zjcs.Editor.Startup.SaveSelectionPlayModeValidation.Run`，需指定环境变量 `ZJCS_SAVE_SELECTION_PROBE_OUTPUT` 为独立临时目录；Windows Player 使用 `--zjcs-validate-saves <临时目录>`，再次启动同目录执行冷启动回读检查。验证数据与用户存档隔离。
 
+已构建并发布到 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式保持指向该入口。真实启动该 DX12 Player，在内置 BOE 屏显示主窗口且不抢占前台，查看列表、新建页、滚动和错误提示运行画面；模拟输入通过已有角色入口、新建草稿及损坏文件原字节保留检查。再次独立启动 Player，读回16槽列表、最后选择的槽16及草稿，并模拟点击继续创角。验证器拒绝黑色截图，隐藏窗口中的逻辑通过不计入画面结论。检查前后9个用户数据文件 SHA256 一致。此输出包含共享工作区既有未提交依赖，属于当前工作区测试版；本次存档界面代码、素材与本页已同步提交，完整游戏和仅含全部已提交依赖的独立重建仍见[工程页](unity-project.md)。
+
 ### 设置与存档基础
 
 已有 [ProfileSlotCatalog](../../unity/Assets/Game/Runtime/Offline/State/ProfileSlotCatalog.cs) 的槽位发现／创建和 [LocalJsonSaveFile](../../unity/Assets/Game/Runtime/Offline/State/LocalJsonSaveFile.cs) 的临时写入、备份、损坏原字节保留与恢复代码。主城设置入口使用官方 `SettingsDialog` 控件树、30 张固定版 Sprite 和点击音效；[HomeSettingsProfile](../../unity/Assets/Game/Runtime/Presentation/Home/HomeSettingsProfile.cs) 按角色槽保存音量、帧率和数值显示，写入失败时维持旧设置。设置页目前接通 30／60 帧、总／音乐／音效／语音滑杆和完整／简略显示；消息推送及单机不适用控件隐藏，游戏页语言控件固定为当前中文。
