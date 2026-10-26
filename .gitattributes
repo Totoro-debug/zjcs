@@ -340,3 +340,20 @@ unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Animation.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.MiniMap.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Sprites.cs -text
+
+# Preserve mountain dialogue/light payloads and converter receipt identities.
+assets/reference/official-map/map12*.json -text
+unity/Assets/Official/World/Map/12/**/*.json -text
+unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/** -text
+unity/Assets/Official/World/Map/12/Resources/Map12/Fog/** -text
+unity/Assets/Official/World/Map/12/Resources/Map12/dialogue-portraits.json* -text
+scripts/prepare_unity_map10_dialog_assets.py -text
+scripts/prepare_unity_map11_dialog_assets.py -text
+scripts/prepare_unity_map12_dialog_assets.py -text
+scripts/prepare_mainline_fog.py -text
+scripts/prepare_mainline_fog_meshes.py -text
+scripts/mainline_fog_mesh_tool.cs -text
+scripts/prepare_unity_map12.py -text
+scripts/prepare_unity_map12_runtime_data.py -text
+scripts/prepare_unity_map12_coordinates.py -text
+scripts/prepare_unity_mainline_tasks.py -text

@@ -394,7 +394,7 @@ namespace Zjcs.Presentation.World
                 hud.ui.SetText(panel, path + "TalkText", text);
                 hud.ui.SetText(panel, path + "NpcName/NpcNameText", role.RoleName);
                 mapVoice?.RefreshVoice(voice);
-                if (mapClassId != 11) return;
+                if (!MapProfile.HasNativeUi) return;
                 var node = hud.ui.Find(panel, path + "TalkText");
                 dialogueTypeWriter = node.GetComponent<WorldDialogueTypeWriter>() ?? node.AddComponent<WorldDialogueTypeWriter>();
                 var source = miniMap.miniMapUiData.components.Single(value => value.panel == panel

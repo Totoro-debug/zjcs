@@ -658,6 +658,8 @@ def build(map_id=11):
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28500, 28501, 28502, 28503, 28504, 28505,
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
     keys.extend(f"region_{map_id}_" + str(i) for i in range(77 if map_id == 11 else 99))
+    if map_id == 12:
+        keys.extend(f"region_{other}_{i}" for other, count in ((10, 2), (11, 77)) for i in range(count))
     keys.extend(["map_pos_info"] + [f"Mainland_{i}" for i in range(10, map_id + 1)])
     keys.extend("entity_" + str(i) + suffix for i in range(6570, 6574)
                 for suffix in ("_name", "_desc", "_entitytouchtitle", "_entitytouchdesc", "_funcdesc"))
@@ -684,7 +686,7 @@ def build(map_id=11):
     keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
                 for i in range(100, 103) for suffix in ("title", "desc"))
     keys.extend(row["description"] for row in minimap_marks)
-    keys.extend("task_" + str(i) + suffix for i in (range(1000, 1161, 5) if map_id == 11 else range(1165, 1271, 5)) for suffix in ("_title", "_progress", "_desc"))
+    keys.extend("task_" + str(i) + suffix for i in (range(1000, 1161, 5) if map_id == 11 else range(1000, 1271, 5)) for suffix in ("_title", "_progress", "_desc"))
     keys.extend(("confirmation", "confirm", "cancel", "GachaPanel.ReplaceRaffleTicket",
                  "ItemInfoDialog.Limit.QuickBuyConditionNotMet", "ui_ItemIcon_count_key",
                  "common_format_args1", "ui_common_item_not_enough", "item_325_name", "item_2_name", "item_3_name",

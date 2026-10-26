@@ -9,7 +9,10 @@ namespace Zjcs.Presentation.World
     {
         public WorldMapAssets Assets { get; }
         public OfficialMapDefinition Definition => Assets.Definition;
-        public OfficialMapGroundRules Movement { get; }
+        public OfficialMapGroundRules Movement { get; private set; }
+
+        internal void SetMovement(OfficialMapGroundRules movement) =>
+            Movement = movement ?? throw new ArgumentNullException(nameof(movement));
 
         private OfficialWorldMapSession(WorldMapAssets assets)
         {

@@ -19,7 +19,7 @@ namespace UnityEngine.Rendering.Universal
 
 namespace Zjcs.FogTool
 {
-    [Serializable] public sealed class Region { public int region; public Vector3[] shape; public float falloff; }
+    [Serializable] public sealed class Region { public int region; public Vector3[] shape; public float falloff; public string assetName; }
     [Serializable] public sealed class Regions { public Region[] regions; }
     public static class FogMeshGenerator
     {
@@ -34,7 +34,7 @@ namespace Zjcs.FogTool
                 var light = new Light2D();
                 LightUtility.GenerateShapeMesh(light, region.shape, region.falloff);
                 if (light.lightMesh.vertexCount == 0) throw new InvalidDataException("Empty native region " + region.region);
-                light.lightMesh.name = "LightRegion" + region.region;
+                light.lightMesh.name = string.IsNullOrEmpty(region.assetName) ? "LightRegion" + region.region : region.assetName;
                 string path = "Assets/FogGenerated/" + light.lightMesh.name + ".asset";
                 if (File.Exists(path)) AssetDatabase.DeleteAsset(path);
                 AssetDatabase.CreateAsset(light.lightMesh, path);

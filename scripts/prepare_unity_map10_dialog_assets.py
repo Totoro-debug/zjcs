@@ -144,7 +144,7 @@ def extract_sprite(apk: Apk, class_id: int, sprite_name: str, output_name: str,
         "pivot": vec(sprite.m_Pivot),
         "pixelsPerUnit": float(sprite.m_PixelsToUnits),
     }
-    source = dict(apk.provenance(sprite_obj), manifest=VERSION, object=source_path,
+    source = dict(apk.provenance(sprite_obj), manifest=apk.version, object=source_path,
                   raw_sha256=sha256(sprite_obj.get_raw_data()), output_sha256=sha256(payload))
     write_meta(output, "TextureImporter", info)
     return info, source
@@ -187,17 +187,18 @@ def extract_dialogue_icon(apk: Apk, sprite_name: str,
         "pivot": vec(sprite.m_Pivot),
         "pixelsPerUnit": float(sprite.m_PixelsToUnits),
     }
-    source = dict(apk.provenance(sprite_obj), manifest=VERSION, object=source_path,
+    source = dict(apk.provenance(sprite_obj), manifest=apk.version, object=source_path,
                   raw_sha256=sha256(sprite_obj.get_raw_data()), output_sha256=sha256(payload))
     write_meta(output, "TextureImporter", info)
     return info, source
 
 
 def extract_portrait(apk: Apk, schemas: ScriptSchemas, class_id: int, face_types: set[str],
-                     previous: dict[Path, str], sprite_resolver=None) -> tuple[dict, dict, list[dict]]:
+                     previous: dict[Path, str], sprite_resolver=None, preserve_unknown_faces=False,
+                     region_code=None) -> tuple[dict, dict, list[dict]]:
     path = f"Assets/Prefabs/UI/Portrait/Npc_Portrait_{class_id}.prefab"
     root_obj = apk.asset("prefabs_ui_portrait", f"Npc_Portrait_{class_id}.prefab")
-    source = dict(apk.provenance(root_obj), manifest=VERSION, object=path,
+    source = dict(apk.provenance(root_obj), manifest=apk.version, object=path,
                   raw_sha256=sha256(root_obj.get_raw_data()))
     root = root_obj.read(check_read=False)
     stack = [(root_obj, "")]
@@ -233,7 +234,7 @@ def extract_portrait(apk: Apk, schemas: ScriptSchemas, class_id: int, face_types
                 stack.append((child.deref().read(check_read=False).m_GameObject.deref(), object_path))
     if portrait_data is None or set(rects) != {"Main", "Face"}:
         raise ValueError("Official portrait prefab layout is incomplete: " + path)
-    source["portraitFaceComponent"] = dict(apk.provenance(portrait_component), manifest=VERSION,
+    source["portraitFaceComponent"] = dict(apk.provenance(portrait_component), manifest=apk.version,
         raw_sha256=sha256(portrait_component.get_raw_data()))
 
     expected_main_guid = {8402: "89baf3990fdb9bf44bac21ecb8f28350",
@@ -242,15 +243,30 @@ def extract_portrait(apk: Apk, schemas: ScriptSchemas, class_id: int, face_types
     if sprite_resolver is None and (not expected_main_guid or portrait_data["mPortraitMainProxy"]["mAssetGuid"] != expected_main_guid):
         raise ValueError("Pinned Map10 portrait main proxy GUID differs from the official binding")
     available_faces = {row["Type"]: row for row in portrait_data["mFacesProxy"]}
-    if not face_types.issubset(available_faces):
-        raise ValueError("Map10 story uses a portrait expression absent from its prefab: " + str(class_id))
+    unknown_faces = face_types - available_faces.keys()
+    if unknown_faces and not preserve_unknown_faces:
+        raise ValueError("Story expressions differ from native PortraitFace: " + str(class_id)
+            + "; requested=" + repr(sorted(face_types)) + "; available=" + repr(sorted(available_faces)))
 
     main_name = f"npc_portrait_{class_id}"
+    main_proxy = portrait_data["mPortraitMainProxy"]
+    if region_code is not None:
+        main_proxy = next((row["PortraitMainProxy"] for row in portrait_data.get("mRegionPortraitMainProxies", [])
+            if row["Region"] == region_code and (row.get("PortraitMainProxy") or {}).get("mAssetGuid")), main_proxy)
     main, main_source = extract_sprite(apk, class_id, "", main_name, previous) if sprite_resolver is None \
-        else sprite_resolver(portrait_data["mPortraitMainProxy"]["mAssetGuid"], main_name)
+        else sprite_resolver(main_proxy["mAssetGuid"], main_name)
+    def face_proxy(face, right):
+        if region_code is not None:
+            for row in face.get("RegionFaceSpriteProxies") or []:
+                if row["Region"] != region_code: continue
+                for key in (("FaceSpriteRightProxy", "FaceSpriteProxy") if right else ("FaceSpriteProxy",)):
+                    if (row.get(key) or {}).get("mAssetGuid"): return row[key]
+        if right and (face.get("FaceSpriteRightProxy") or {}).get("mAssetGuid"):
+            return face["FaceSpriteRightProxy"]
+        return face["FaceSpriteProxy"]
     face_outputs = []
-    for face in sorted(face_types):
-        proxy_guid = available_faces[face]["FaceSpriteProxy"]["mAssetGuid"]
+    for face in sorted(face_types & available_faces.keys()):
+        proxy_guid = face_proxy(available_faces[face], False)["mAssetGuid"]
         if not proxy_guid:
             raise ValueError("Map10 dialogue expression has no official Sprite proxy: " + face)
         name = f"npc_portrait_{class_id}_{face}"
@@ -258,12 +274,20 @@ def extract_portrait(apk: Apk, schemas: ScriptSchemas, class_id: int, face_types
             else sprite_resolver(proxy_guid, name)
         face_outputs.append({"type": face, **face_info})
         source.setdefault("sprites", {})[name] = face_source
+        right_guid = face_proxy(available_faces[face], True).get("mAssetGuid")
+        if right_guid and right_guid != proxy_guid and sprite_resolver is not None:
+            right, right_source = sprite_resolver(right_guid, name + "_right")
+            face_outputs[-1]["rightResource"] = right["resource"]
+            source["sprites"][name + "_right"] = right_source
+            face_outputs.append({"type": face, "rightOnly": True, **right})
     source.setdefault("sprites", {})[main_name] = main_source
     offsets = {row["Type"]: [float(row["Offset"]["x"]), float(row["Offset"]["y"])]
                for row in portrait_data.get("mFaceOffsets", [])}
     faces = []
     for face in face_outputs:
+        if face.get("rightOnly"): continue
         faces.append({"type": face["type"], "resource": face["resource"],
+                      **({"rightResource": face["rightResource"]} if face.get("rightResource") else {}),
                       "position": offsets.get(face["type"], vec(portrait_data["mFaceCommonOffset"])),
                       "nativeSize": [face["width"], face["height"]]})
     layout = {
@@ -277,6 +301,12 @@ def extract_portrait(apk: Apk, schemas: ScriptSchemas, class_id: int, face_types
                  "pivot": rects["Face"]["pivot"], "commonOffset": vec(portrait_data["mFaceCommonOffset"]),
                  "expressions": faces},
     }
+    if preserve_unknown_faces:
+        # PortraitFace.ChangeFace deliberately keeps its current face when
+        # FindFaceData returns null; this is not a missing exported texture.
+        layout["face"]["ignoredExpressions"] = sorted(unknown_faces)
+        source["nativePortraitFace"] = portrait_data
+        source["regionCode"] = region_code
     return layout, source, [main, *face_outputs]
 
 
@@ -287,7 +317,7 @@ def extract_speaker_style(apk: Apk, schemas: ScriptSchemas) -> tuple[dict, dict]
         raise ValueError("Expected one exact official TalkDialog prefab, found " + str(len(matches)))
     prefab_path, root = matches[0]
     colors = {}
-    source = dict(apk.provenance(root), manifest=VERSION, object=prefab_path,
+    source = dict(apk.provenance(root), manifest=apk.version, object=prefab_path,
                   raw_sha256=sha256(root.get_raw_data()))
     stack = [(root, "")]
     while stack:
@@ -321,7 +351,7 @@ def extract_speaker_style(apk: Apk, schemas: ScriptSchemas) -> tuple[dict, dict]
                     "switchAnimation": values["mAniSwitch"],
                 }
                 source["speakerComponents"] = source.get("speakerComponents", {})
-                source["speakerComponents"][side] = dict(apk.provenance(component), manifest=VERSION,
+                source["speakerComponents"][side] = dict(apk.provenance(component), manifest=apk.version,
                     raw_sha256=sha256(component.get_raw_data()))
         if transform is not None:
             for child in reversed(transform.m_Children):

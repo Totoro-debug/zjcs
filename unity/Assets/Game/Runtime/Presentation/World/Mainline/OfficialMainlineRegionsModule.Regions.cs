@@ -26,7 +26,7 @@ namespace Zjcs.Presentation.World
     {
         private sealed partial class OfficialMainlineRegionsModule
         {
-            public void RefreshRegionProgress()
+            public void RefreshRegionProgress(bool persist = true)
             {
                 var completed = new HashSet<int>(host.localSave.completedEntityPlacements);
                 var privateStates = (host.localSave.puzzleStates ?? Array.Empty<MapPuzzleEntityState>())
@@ -45,6 +45,7 @@ namespace Zjcs.Presentation.World
                         throw new InvalidDataException("Official Map10 region progress exceeds its pinned maximum: " + region.Key);
                     int fixedProgress = OfficialMapProgressCalculator.CalculateRegionProgress(
                         host.session.Definition, region.Key, region.Value);
+                    if (!persist) continue;
                     ProgressionResult result = host.progressionSave.SetMapRegionProgress(host.mapClassId, region.Key, fixedProgress);
                     if (result.Status == ProgressionResultStatus.InvalidState)
                         throw new InvalidOperationException(result.Message);
@@ -58,7 +59,7 @@ namespace Zjcs.Presentation.World
             }
 
             public bool IsRegionAccessible(int regionId) =>
-                regionPolicy.IsAccessible(regionId, regionPoints, host.GetStoryPlayCount);
+                regionPolicy.IsAccessible(regionId, regionPoints, host.GetStoryPlayCount, host.progressionSave.StoryStatus);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Zjcs.Presentation.World
                 map.name = "NativeMiniMap_10";
                 map.SetActive(true);
                 SetLayerRecursively(map, 30);
-                minimapTexture = new RenderTexture(256, 256, host.mapClassId == 11 ? 0 : 16, RenderTextureFormat.ARGB32)
+                minimapTexture = new RenderTexture(256, 256, host.MapProfile.HasNativeUi ? 0 : 16, RenderTextureFormat.ARGB32)
                 {
                     name = "Map10OfficialMinimap",
                     filterMode = FilterMode.Bilinear
@@ -52,7 +52,7 @@ namespace Zjcs.Presentation.World
                 minimapCamera.cullingMask = 1 << 30;
                 minimapCamera.targetTexture = minimapTexture;
                 minimapCamera.transform.position = new Vector3(0f, 0f, -50f);
-                if (host.mapClassId == 11)
+                if (host.MapProfile.HasNativeUi)
                 {
                     InitializeNativeMiniMap();
                     return;
@@ -72,7 +72,7 @@ namespace Zjcs.Presentation.World
 
             public void ToggleExpandedMinimap()
             {
-                if (host.mapClassId == 11) { ToggleNativeFullMiniMap(); return; }
+                if (host.MapProfile.HasNativeUi) { ToggleNativeFullMiniMap(); return; }
                 if (minimapImage == null) return;
                 RectTransform rect = minimapImage.rectTransform;
                 bool expanded = rect.sizeDelta.x < 400f;
@@ -84,7 +84,7 @@ namespace Zjcs.Presentation.World
 
             public void UpdateMinimapMarker()
             {
-                if (host.mapClassId == 11)
+                if (host.MapProfile.HasNativeUi)
                 {
                     RefreshNativeMiniMap();
                     return;

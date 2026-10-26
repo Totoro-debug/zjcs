@@ -10,6 +10,26 @@ namespace Zjcs.Offline.World
     {
         public MapGridPoint Position(int id) => new MapGridPoint(states[id].GridX, states[id].GridY);
 
+        // MapInputSupportHandlerBase.GetEntityInputByGrid and
+        // GridTransformComponent.IsBodyIgnoreClick use each original body cell.
+        public bool ContainsClickableBody(int id, MapGridPoint point)
+        {
+            MapPuzzleRule rule = rules[id];
+            return IsSpawned(id) && rule.Body.Any(body => !body.IgnoreClick
+                && BodyPosition(rule, Position(id), body).Equals(point));
+        }
+
+        // The map host owns ordinary quest entities. Mirror their current occupancy
+        // without applying puzzle stage transitions to those entities.
+        public void SynchronizeExternalEntity(int id, int state, bool spawned, MapGridPoint position)
+        {
+            MapPuzzleEntityState value = states[id];
+            value.State = state;
+            value.Spawned = spawned;
+            value.GridX = position.X;
+            value.GridY = position.Y;
+        }
+
         // StageResultEntityPushedComponent.GetTargetPosNextPosAndDir and
         // ECStageResultEntityPushedView.CanMoveToNextPos: cardinal adjacency,
         // GridMover.CanStand, then the inclusive Lo MovableRect. The player's

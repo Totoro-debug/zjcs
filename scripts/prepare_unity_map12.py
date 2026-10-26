@@ -99,15 +99,24 @@ def build():
     from prepare_unity_map12_coordinates import build as coordinates
     coordinates()
     runtime()
+    from prepare_unity_map11_dialog_assets import build as dialogue
+    dialogue(12)
     from prepare_unity_map12_ui import build as ui
     ui()
+    from prepare_mainline_fog import build as fog
+    from prepare_mainline_fog_meshes import build as fog_meshes
+    fog(12)
+    fog_meshes("D:/Tool/Unity/Editor/Unity.exe", map_id=12)
     manifests = [OUTPUT / name for name in ("source-manifest.json", "rendering-source-manifest.json",
         "entity-source-manifest.json", "minimap-source-manifest.json", "battle-source-manifest.json",
         "base-ground-source-manifest.json", "UI/source-manifest.json", "Source/ui-prefabs-source-manifest.json")]
     manifests += [ROOT / "assets/reference/official-map/map12-coordinate-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-runtime-source-manifest.json",
+                  ROOT / "assets/reference/official-map/map12-dialogue-source-manifest.json",
+                  ROOT / "assets/reference/official-map/map12-region-lights-source-manifest.json",
+                  ROOT / "assets/reference/official-map/map12-light-meshes-source-manifest.json",
                   ROOT / "assets/reference/official-map/map12-source-manifest.json"]
-    files = sorted(p for p in OUTPUT.rglob("*") if p.is_file() and p.suffix in (".json", ".bytes", ".png"))
+    files = sorted(p for p in OUTPUT.rglob("*") if p.is_file() and p.suffix in (".json", ".bytes", ".png", ".asset"))
     result = dict(format=1, mapClassId=12, manifest=source["manifest"],
         operation="Decode selected official assemblies/configs/stories; reuse historical conversions only after matching mountain records, complete art bundles or unchanged objects; restore Unity coordinates with current native mesh checks.",
         legacy_conversion_manifest="854_156383", legacy_reuse_checks=source["verified_legacy_equivalence"],

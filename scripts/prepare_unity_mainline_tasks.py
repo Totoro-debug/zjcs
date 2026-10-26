@@ -12,7 +12,9 @@ OUTPUT_DIR = ROOT / 'unity/Assets/Game/Resources/Official/Progression'
 OUTPUT_NAME = 'mainline-tasks.json'
 MANIFEST_NAME = 'mainline-tasks-source-manifest.json'
 EXPECTED_MANIFEST = '854_156383'
-SUPPORTED_TASK_IDS = (1000, 1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050) + tuple(range(1055, 1161, 5))
+SUPPORTED_TASK_IDS = tuple(range(1000, 1271, 5))
+MOUNTAIN_SOURCE = ROOT / 'unity/Assets/Official/World/Map/12/Source/tables.json'
+MOUNTAIN_MANIFEST = ROOT / 'assets/reference/official-map/map12-source-manifest.json'
 SUPPORTED_CONDITIONS = {
     'NoneCondition', 'AlwaysCondition', 'TaskCompleteCondition', 'TaskSubmitCondition',
     'MapGameTotalCountCondition', 'WorldMapProgressCondition',
@@ -73,6 +75,14 @@ def build():
 
     rules = json.loads(rules_bytes)
     all_task_rows = {int(row['ClassId']): row for row in rules.get('task', [])}
+    # Reuse historical conversion only after exact comparison with the selected
+    # mountain source. No current-version row is silently replaced by an old row.
+    mountain_bytes = MOUNTAIN_SOURCE.read_bytes()
+    mountain = json.loads(mountain_bytes)
+    current_tasks = {int(row['ClassId']): row for row in mountain['task']}
+    for task_id in range(1165, 1271, 5):
+        if current_tasks[task_id] != all_task_rows[task_id]:
+            raise ValueError(f'Selected mountain TaskInfo differs from historical conversion: {task_id}')
     task_rows = [all_task_rows[task_id] for task_id in SUPPORTED_TASK_IDS if task_id in all_task_rows]
     if len(task_rows) != len(SUPPORTED_TASK_IDS):
         missing = sorted(set(SUPPORTED_TASK_IDS) - set(all_task_rows))
@@ -157,6 +167,13 @@ def build():
         'source_rules_manifest_sha256': digest(RULES_MANIFEST.read_bytes()),
         'task_table': task_source,
         'npc_friendship_level_table': friendship_source,
+        'mountain_current_source': {
+            'path': MOUNTAIN_SOURCE.relative_to(ROOT).as_posix(),
+            'sha256': digest(mountain_bytes),
+            'manifest_path': MOUNTAIN_MANIFEST.relative_to(ROOT).as_posix(),
+            'manifest_sha256': digest(MOUNTAIN_MANIFEST.read_bytes()),
+            'verified_task_ids': list(range(1165, 1271, 5)),
+        },
         'tasks': len(tasks),
         'supported_task_ids': list(SUPPORTED_TASK_IDS),
         'scope': 'Only fixed-version mainline targets whose condition kinds and direct rewards are handled by OfflineMainlineProgressSession.',

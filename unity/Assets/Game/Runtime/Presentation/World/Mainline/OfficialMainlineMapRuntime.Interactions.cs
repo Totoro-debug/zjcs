@@ -26,6 +26,7 @@ namespace Zjcs.Presentation.World
     {
         private void Interact(Map10RuntimeEntity entity)
         {
+            if (TryPushPuzzleEntity(entity)) return;
             if (exploration.InteractExploreEntity(entity)) return;
             if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
             {
@@ -42,12 +43,12 @@ namespace Zjcs.Presentation.World
                 return;
             }
             if (localSave.completedEntityPlacements.Contains(entity.PlacementId)) return;
-            if (mapClassId == 11 && entity.EntityClassId == 6620)
+            if (MapProfile.HasNativeUi && entity.EntityClassId == 6620)
             {
                 statues.InteractWitch(entity);
                 return;
             }
-            if (mapClassId == 11 && entity.TypeId == 202)
+            if (MapProfile.HasNativeUi && entity.TypeId == 202)
             {
                 statues.ShowGoddessDialog(entity);
                 return;
@@ -60,9 +61,11 @@ namespace Zjcs.Presentation.World
             if (puzzles != null && entity.EntityClassId == 6503)
             {
                 if (!puzzles.InteractionEnabled(entity.PlacementId)) return;
-                puzzles.RunStage(entity.PlacementId, 0);
-                SynchronizePuzzleEntities();
-                SaveLocalProgress();
+                SavePuzzleMutation(() =>
+                {
+                    puzzles.RunStage(entity.PlacementId, 0);
+                    SynchronizePuzzleEntities();
+                });
                 return;
             }
             if (mapClassId == 10 && entity.PlacementId == 216 && !HasStory("FirstMeetChaos"))
@@ -198,7 +201,7 @@ namespace Zjcs.Presentation.World
             if (entityView == null || localSave == null) return;
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
-                bool goddess = mapClassId == 11 && entity.TypeId == 202;
+                bool goddess = MapProfile.HasNativeUi && entity.TypeId == 202;
                 bool goddessActivated = goddess
                     && progressionSave.Save.World.ActivatedGoddessRegions.Any(value =>
                     value.MapClassId == mapClassId && value.Region == entity.Region);
@@ -208,7 +211,7 @@ namespace Zjcs.Presentation.World
                 if (goddessActivated) state = 1;
                 if (entity.TypeId == 223) state = regions.IsPublicRegion(entity.Region) ? 2 : statues.HeroActivated(entity) ? 1 : 0;
                 entityView.SetEntityState(entity.PlacementId, state);
-                bool spawned = puzzles != null && puzzles.Contains(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
+                bool spawned = IsPuzzleEntity(entity.PlacementId) ? puzzles.IsSpawned(entity.PlacementId) : entity.Active;
                 if (OfficialMainlineStaminaModule.IsStaminaPoint(entity))
                 {
                     var placement = stamina.StaminaPlacement(entity);
@@ -221,7 +224,8 @@ namespace Zjcs.Presentation.World
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
             }
-            if (mapClassId == 11) miniMap.RefreshNativeMiniMapMarks();
+            SynchronizePuzzleGround();
+            if (MapProfile.HasNativeUi) miniMap.RefreshNativeMiniMapMarks();
         }
 
         private bool IsMapLogicEntityDestroyed(int placementId)

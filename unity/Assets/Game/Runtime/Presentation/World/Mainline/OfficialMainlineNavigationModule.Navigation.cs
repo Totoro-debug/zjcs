@@ -70,7 +70,7 @@ namespace Zjcs.Presentation.World
                     StartMovement(record.Grid, null);
                     return;
                 }
-                if (host.mapClassId == 11 && record.TypeId == 202 && host.statues.IsGoddessActivated(record))
+                if (host.MapProfile.HasNativeUi && record.TypeId == 202 && host.statues.IsGoddessActivated(record))
                 {
                     host.statues.ShowGoddessDialog(record);
                     return;
@@ -81,6 +81,11 @@ namespace Zjcs.Presentation.World
             public void StartMovement(MapGridPoint target, Map10RuntimeEntity interact)
             {
                 if (movementPath != null || host.battleController != null) return;
+                if (host.mapClassId == 12 && interact != null && Manhattan(currentGrid, target) <= 1)
+                {
+                    host.Interact(interact);
+                    return;
+                }
                 List<MapGridPoint> path = host.session.FindPath(new OfficialMapPathRequest
                 {
                     Start = currentGrid,
@@ -127,6 +132,25 @@ namespace Zjcs.Presentation.World
                 if (Vector2.Distance(host.avatar.transform.position, target) < 0.025f)
                 {
                     MapGridPoint previous = currentGrid;
+                    if (host.mapClassId == 12)
+                    {
+                        if (!host.SavePuzzleMutation(() =>
+                        {
+                            currentGrid = point;
+                            host.puzzles.CharacterMoved(currentGrid, previous);
+                            host.SynchronizePuzzleEntities();
+                        }))
+                        {
+                            movementPath = null;
+                            movementIndex = 0;
+                            pendingInteraction = null;
+                            movementCompletion = null;
+                            return;
+                        }
+                        movementIndex++;
+                        if (movementIndex >= movementPath.Count) FinishMovement();
+                        return;
+                    }
                     currentGrid = point;
                     if (host.puzzles != null)
                     {
@@ -145,7 +169,7 @@ namespace Zjcs.Presentation.World
                     currentGrid = movementPath[movementPath.Count - 1];
                 movementPath = null;
                 movementIndex = 0;
-                host.SaveLocalProgress();
+                if (host.mapClassId != 12) host.SaveLocalProgress();
                 Map10RuntimeEntity selected = pendingInteraction;
                 pendingInteraction = null;
                 if (selected != null) host.Interact(selected);

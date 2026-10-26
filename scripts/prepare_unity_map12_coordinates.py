@@ -29,8 +29,11 @@ def texture_imports(apk):
     for record in base['sprites']:
         records[Path(record['path']).name] = record['source']
     objects, imports = {}, []
-    # UI sprites have their own native Sprite settings and source receipt.
-    for path in sorted((DEST / 'Resources').rglob('*.png')):
+    # Dialogue and light lookup textures have independent native import receipts.
+    # Only these three source families use the world geometry import adapter.
+    paths = [path for directory in ('Textures', 'BaseGround', 'MiniMapTextures')
+             for path in (DEST / 'Resources/Map12' / directory).glob('*.png')]
+    for path in sorted(paths):
         record = records[path.name]
         if record.get('origin') == 'derived_official':
             record = record['source']

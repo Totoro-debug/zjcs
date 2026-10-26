@@ -35,6 +35,7 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class Light
         {
             public int node, order;
+            public bool day;
             public int[] layers;
             public float[] color;
             public float intensity, falloff, falloffIntensity, recessionBlurEdge;
@@ -44,12 +45,14 @@ namespace Zjcs.Presentation.World
             public int region;
             public Node[] nodes;
             public Light light;
+            public Light[] lights;
             public Key[] activationRadius;
             public float duration;
         }
         private sealed class View
         {
             public Region Source;
+            public Light Light;
             public Transform[] Nodes;
             public Mesh Mesh;
             public Material Material;
@@ -62,8 +65,9 @@ namespace Zjcs.Presentation.World
         private Func<int, bool> isPublic;
         private Data data;
         private CommandBuffer buffer;
-        public int ShadowCount => views.Count;
-        public int VisibleShadowCount => views.Count(v => !v.Public || v.UnlockAt >= 0 && Time.time - v.UnlockAt < v.Source.duration);
+        public int ShadowCount => views.Count(v => !v.Light.day);
+        public int DayLightCount => views.Count(v => v.Light.day);
+        public int VisibleShadowCount => views.Count(v => !v.Light.day && (!v.Public || v.UnlockAt >= 0 && Time.time - v.UnlockAt < v.Source.duration));
 
         public void Initialize(Camera camera, Transform terrain, Func<int, bool> publicRegion,
             OfficialMainlineMapProfile profile)
@@ -72,7 +76,8 @@ namespace Zjcs.Presentation.World
             isPublic = publicRegion ?? throw new ArgumentNullException(nameof(publicRegion));
             var source = Resources.Load<TextAsset>(profile.Resource("Fog/region-lights"));
             data = source == null ? null : JsonUtility.FromJson<Data>(source.text);
-            if (data?.manifest != "854_156383" || !profile.HasRegionFog || data.regions?.Length != profile.RegionShadowCount)
+            if (data?.manifest != (profile.MapClassId == 12 ? "871_156598" : "854_156383")
+                || !profile.HasRegionFog || data.regions?.Length != profile.RegionShadowCount)
                 throw new InvalidDataException("Native region shadows are unbound for Map" + profile.MapClassId);
             var template = Resources.Load<Material>("World/Mainline/RegionLight2D");
             var lit = Resources.Load<Material>("World/Mainline/RegionSpriteLit");
@@ -81,32 +86,35 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Native 2D light materials or falloff lookup are unbound.");
             foreach (var sourceRegion in data.regions)
             {
-                var view = new View { Source = sourceRegion, Public = isPublic(sourceRegion.region) };
-                view.Nodes = new Transform[sourceRegion.nodes.Length];
-                for (int i = 0; i < view.Nodes.Length; i++)
+                var nodes = new Transform[sourceRegion.nodes.Length];
+                for (int i = 0; i < nodes.Length; i++)
                 {
                     Node node = sourceRegion.nodes[i];
                     var target = new GameObject(node.name).transform;
-                    target.SetParent(node.parent < 0 ? transform : view.Nodes[node.parent], false);
+                    target.SetParent(node.parent < 0 ? transform : nodes[node.parent], false);
                     target.localPosition = node.position;
                     target.localRotation = node.rotation;
                     target.localScale = node.scale;
-                    view.Nodes[i] = target;
+                    nodes[i] = target;
                 }
-                view.Mesh = Resources.Load<Mesh>(profile.Resource("Fog/Meshes/LightRegion" + sourceRegion.region));
-                if (view.Mesh == null) throw new InvalidDataException("Native light mesh is unbound: " + sourceRegion.region);
-                view.Radius = new AnimationCurve(sourceRegion.activationRadius.Select(k => new Keyframe(k.time, k.value, k.inSlope, k.outSlope,
-                    k.inWeight, k.outWeight) { weightedMode = (WeightedMode)k.weightedMode }).ToArray());
-                view.Material = new Material(template);
-                Light light = sourceRegion.light;
-                view.Material.SetTexture("_FalloffLookup", falloff);
-                view.Material.SetFloat("_FalloffDistance", light.falloff);
-                view.Material.SetFloat("_FalloffIntensity", light.falloffIntensity);
-                view.Material.SetFloat("_InverseHDREmulationScale", 1 / data.rendering.hdr);
-                view.Material.SetFloat("_ShadowIntensity", 1); // Original region shadow has shadowEnabled=false.
-                view.Material.SetFloat("_RecessionBlurEdge", light.recessionBlurEdge);
-                view.Material.SetColor("_LightColor", new Color(light.color[0], light.color[1], light.color[2], light.color[3]) * light.intensity);
-                views.Add(view);
+                foreach (Light light in sourceRegion.lights ?? new[] { sourceRegion.light })
+                {
+                    var view = new View { Source = sourceRegion, Light = light, Nodes = nodes, Public = isPublic(sourceRegion.region) };
+                    string suffix = light.day ? "_" + light.node : "";
+                    view.Mesh = Resources.Load<Mesh>(profile.Resource("Fog/Meshes/LightRegion" + sourceRegion.region + suffix));
+                    if (view.Mesh == null) throw new InvalidDataException("Native light mesh is unbound: " + sourceRegion.region);
+                    view.Radius = new AnimationCurve(sourceRegion.activationRadius.Select(k => new Keyframe(k.time, k.value, k.inSlope, k.outSlope,
+                        k.inWeight, k.outWeight) { weightedMode = (WeightedMode)k.weightedMode }).ToArray());
+                    view.Material = new Material(template);
+                    view.Material.SetTexture("_FalloffLookup", falloff);
+                    view.Material.SetFloat("_FalloffDistance", light.falloff);
+                    view.Material.SetFloat("_FalloffIntensity", light.falloffIntensity);
+                    view.Material.SetFloat("_InverseHDREmulationScale", 1 / data.rendering.hdr);
+                    view.Material.SetFloat("_ShadowIntensity", 1); // Original region shadow has shadowEnabled=false.
+                    view.Material.SetFloat("_RecessionBlurEdge", light.recessionBlurEdge);
+                    view.Material.SetColor("_LightColor", new Color(light.color[0], light.color[1], light.color[2], light.color[3]) * light.intensity);
+                    views.Add(view);
+                }
             }
             foreach (var batch in terrain.GetComponentsInChildren<OfficialMap10TerrainView>()) batch.BindRegionLighting(lit);
             BindCamera(camera);
@@ -128,7 +136,7 @@ namespace Zjcs.Presentation.World
                 view.Public = value;
                 view.UnlockAt = value ? Time.time : -1;
                 view.Material.SetVector("_RecessionCenter", unlockPosition);
-                if (value) view.Material.EnableKeyword("USE_RECESSION");
+                if (value && !view.Light.day) view.Material.EnableKeyword("USE_RECESSION");
                 else view.Material.DisableKeyword("USE_RECESSION");
             }
         }
@@ -159,12 +167,12 @@ namespace Zjcs.Presentation.World
             var clear = new Color(global.color[0], global.color[1], global.color[2], global.color[3]) * (global.intensity / data.rendering.hdr);
             buffer.ClearRenderTarget(false, true, clear);
             buffer.SetViewProjectionMatrices(camera.worldToCameraMatrix, GL.GetGPUProjectionMatrix(camera.projectionMatrix, true));
-            foreach (View view in views.OrderBy(v => v.Source.light.order))
+            foreach (View view in views.OrderBy(v => v.Light.order))
             {
                 float elapsed = view.UnlockAt < 0 ? 0 : Time.time - view.UnlockAt;
-                if (view.Public && (view.UnlockAt < 0 || elapsed >= view.Source.duration)) continue;
-                if (view.UnlockAt >= 0) view.Material.SetFloat("_RecessionRadius", view.Radius.Evaluate(elapsed));
-                buffer.DrawMesh(view.Mesh, view.Nodes[view.Source.light.node].localToWorldMatrix, view.Material);
+                if (view.Light.day ? !view.Public : view.Public && (view.UnlockAt < 0 || elapsed >= view.Source.duration)) continue;
+                if (!view.Light.day && view.UnlockAt >= 0) view.Material.SetFloat("_RecessionRadius", view.Radius.Evaluate(elapsed));
+                buffer.DrawMesh(view.Mesh, view.Nodes[view.Light.node].localToWorldMatrix, view.Material);
             }
             buffer.SetGlobalTexture("_ShapeLightTexture0", texture);
             buffer.SetGlobalFloat("_HDREmulationScale", data.rendering.hdr);

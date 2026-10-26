@@ -245,11 +245,14 @@ def build():
     puzzle_code = [current_code / folder / (name + ".cs") for folder, names in (
         ("common-source/Common", ("StageResultEntityPushedComponent", "GridMoverComponent", "GridGroundComponent",
             "GridTransformComponent", "MyMath", "EntityLockPushBox", "MapPuzzleTerminalDataHuarongDao")),
-        ("client-source", ("ECStageResultEntityPushedView", "MyStageResultEntityPushed"))) for name in names]
+        ("client-source", ("ECStageResultEntityPushedView", "MyStageResultEntityPushed",
+            "MapInputSupportHandlerBase", "WorldStageInput"))) for name in names]
+    access_code = [current_code / "common-source/Common" / "StoryStatusCondition.cs"]
     write_json(REFERENCE, dict(manifest="854_156383", mapClassId=12,
         operation="Preserve original EC component order, raw story nodes and ports, recursive subgraphs, dialogue roles, fixed rewards and all eleven puzzle terminal payloads. No server decisions are synthesized.",
         inputs=[{"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)} for p in inputs],
         puzzleClientCode=[{"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)} for p in puzzle_code],
+        regionAccessCode=[{"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p)} for p in access_code],
         confirmedOfflinePushRules={"playerAfterPush": "previous box cell",
             "complete": "all listed detector cells occupied by listed boxes", "latchedUnlock": True,
             "results": "execute original unlock spawn/state-update stage; rewards still require claiming"},

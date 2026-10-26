@@ -10,7 +10,7 @@
 
 ## 完整还原部分
 
-[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取固定版本 `854_156383` 的主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。当前目录包含 1000～1050 的 11 项既有目标，以及森之国 1045～1160 的 24 项地图目标，共 33 项；目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，其哈希和官方输入记录见 `assets/reference/task/source-manifest.json`。
+[`OfficialMainlineTaskCatalog`](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialMainlineTaskCatalog.cs) 读取主线目录与来源清单，资源位于 `Resources/Official/Progression/mainline-tasks*.json`。目录由1000～1160的33项扩展到1000～1270的55项，增加山之国1165～1270的22项任务。既有转换保留 `854_156383` 来源；新增任务逐项核对选定 `871_156598` 的山之国原表，条件及奖励全部相同才复用转换。目录生成器为 [`prepare_unity_mainline_tasks.py`](../../scripts/prepare_unity_mainline_tasks.py)，目录、当前原表及比对结果的哈希见 `Resources/Official/Progression/mainline-tasks-source-manifest.json`；主城任务素材来源仍见 `assets/reference/task/source-manifest.json`。目录扩展不代表山之国完整主线路线已经验证。
 
 `OfflineMainlineProgressSession` 在本地角色槽中维护玩家成长、物品、地图与区域进度、战斗次数、实体标签、女神区域、宝箱、事件去重和已领取主线任务，并提供条件检查与领奖事务。成功祈愿抽取会将实际开启数量与奖励、消耗写入同一存档事务；重复回执不会重复增加宝箱计数。`OfficialWishAcceptance.Run` 已验证十连抽计数、重复回执／无效请求、任务 1040 条件及存档冷读，不代表完整前序主线已跑通。`TaskSubmitCondition` 依据已领取 ID 判定；`TaskCompleteCondition` 对已领取 ID 计完成，未领取任务仅在接取、展示（若有）和完成条件均由本地状态满足时计完成；不支持的条件会继续返回 `Unsupported`。保存由 `ProfileSlotCatalog` 和 `LocalJsonSaveFile` 提供。
 
@@ -38,7 +38,7 @@
 
 ## 尚未实现
 
-- 当前目录有 11 个既有目标和森之国 24 个目标；地图 10 的区域进度、战斗回执、剧情次数／状态和首次手动 NPC 交互有角色存档写入，地图 11 只接入文档列明的地区、女神、实体标签、塔通关条件及固定奖励，其他地图与未接入事件不得推定完成。
+- 当前目录含1000～1270共55项主线任务；山之国新增22项已接入目录和跨图任务文字，正式入口、完整任务路线、条件和领奖仍须按[山之国地图页](../maps/map-12.md)验证。地图10的区域进度、战斗回执、剧情次数／状态和首次手动NPC交互有角色存档写入，地图11只接入文档列明的地区、女神、实体标签、塔通关条件及固定奖励，未接入事件不得推定完成。
 - 地图 11 主线数据与本地条件、奖励事务已接线；地图 11 目标从主城跳转仍待正式大陆入口接通。职业目标跳转、宝箱条件及完整任务路线仍未验收。
 - 森之国正式入口要求先完成并领取 Map10 主线任务 1040；固定版该任务要求成功开启 10 次 `chestId=6000` 普通祈愿宝箱。计数已接入本地祈愿成功事务，地图内的 `EntityClassId=6000` 放置实体不是该计数来源。完整前序任务路线、新档累计 10 次祈愿的实际操作及领奖后的进入流程仍未完成 Play Mode 验收；运行时会继续检查任务实际领取记录。
 - 完整主线路线与任务奖励表现仍未验收；任务面板的实际输入、画面和任务领取后的主城 UI 恢复尚未 Play Mode 实测。

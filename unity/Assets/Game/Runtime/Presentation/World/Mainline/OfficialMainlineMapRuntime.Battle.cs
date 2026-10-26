@@ -694,7 +694,7 @@ namespace Zjcs.Presentation.World
 
         private void ValidateBattleEntityStageBindings()
         {
-            if (mapClassId != 11) return;
+            if (!MapProfile.HasNativeUi) return;
             foreach (Map10RuntimeBattleEntityStageBinding binding in battleEntityStageBindings.Values)
             {
                 if (!mapEntities.TryGetValue(binding.PlacementId, out Map10RuntimeEntity entity))

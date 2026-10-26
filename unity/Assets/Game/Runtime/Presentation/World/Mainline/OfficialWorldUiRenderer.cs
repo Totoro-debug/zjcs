@@ -18,6 +18,8 @@ namespace Zjcs.Presentation.World
         private Vector2 previousResolution;
         private CanvasScaler.ScreenMatchMode previousMatchMode;
         private float previousMatch;
+        private CanvasScaler.ScaleMode previousScaleMode;
+        private float previousReferencePixelsPerUnit, previousScaleFactor;
         private OfficialMap11UiData nativeData;
 
         public OfficialWorldUiRenderer(OfficialMap10UiCatalog catalog)
@@ -66,11 +68,19 @@ namespace Zjcs.Presentation.World
                 previousResolution = parentScaler.referenceResolution;
                 previousMatchMode = parentScaler.screenMatchMode;
                 previousMatch = parentScaler.matchWidthOrHeight;
+                previousScaleMode = parentScaler.uiScaleMode;
+                previousReferencePixelsPerUnit = parentScaler.referencePixelsPerUnit;
+                previousScaleFactor = parentScaler.scaleFactor;
+                parentScaler.uiScaleMode = (CanvasScaler.ScaleMode)original.scaleMode;
+                parentScaler.referencePixelsPerUnit = original.referencePixelsPerUnit;
+                parentScaler.scaleFactor = original.scaleFactor;
                 parentScaler.referenceResolution = new Vector2(original.referenceResolution[0], original.referenceResolution[1]);
                 parentScaler.screenMatchMode = (CanvasScaler.ScreenMatchMode)original.screenMatchMode;
                 parentScaler.matchWidthOrHeight = original.matchWidthOrHeight;
                 scaler.referenceResolution = parentScaler.referenceResolution;
                 scaler.screenMatchMode = parentScaler.screenMatchMode;
+                scaler.matchWidthOrHeight = parentScaler.matchWidthOrHeight;
+                scaler.referencePixelsPerUnit = parentScaler.referencePixelsPerUnit;
             }
 
             OfficialBattleHudCatalog battleHud = OfficialBattleHudCatalog.LoadDefault();
@@ -91,6 +101,7 @@ namespace Zjcs.Presentation.World
                     worldScaler.referenceResolution = scaler.referenceResolution;
                     worldScaler.screenMatchMode = scaler.screenMatchMode;
                     worldScaler.matchWidthOrHeight = scaler.matchWidthOrHeight;
+                    worldScaler.referencePixelsPerUnit = scaler.referencePixelsPerUnit;
                     if (restored.GetComponent<GraphicRaycaster>() == null) restored.AddComponent<GraphicRaycaster>();
                     UnityEngine.Object.DontDestroyOnLoad(restored);
                     nativePanels.Add(panel.key, restored);
@@ -223,6 +234,9 @@ namespace Zjcs.Presentation.World
                 parentScaler.referenceResolution = previousResolution;
                 parentScaler.screenMatchMode = previousMatchMode;
                 parentScaler.matchWidthOrHeight = previousMatch;
+                parentScaler.uiScaleMode = previousScaleMode;
+                parentScaler.referencePixelsPerUnit = previousReferencePixelsPerUnit;
+                parentScaler.scaleFactor = previousScaleFactor;
                 parentScaler = null;
             }
             if (canvasObject != null) UnityEngine.Object.Destroy(canvasObject);

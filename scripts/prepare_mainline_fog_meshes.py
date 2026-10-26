@@ -36,8 +36,14 @@ def download(url):
     return urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'zjcs-native-light-converter'})).read()
 
 
-def build(editor, prepare_only=False):
-    project = CACHE / 'native-fog-mesh-project/unity'
+def build(editor, prepare_only=False, map_id=11):
+    if map_id not in (11, 12): raise ValueError('Unsupported world light mesh source')
+    work = CACHE if map_id == 11 else ROOT / '.tools/map12-fog'
+    project = work / 'native-fog-mesh-project/unity'
+    destination = ROOT / f'unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/Fog/Meshes'
+    receipt = ROOT / f'assets/reference/official-map/map{map_id}-light-meshes-source-manifest.json'
+    mesh_input = work / 'fog-mesh-input.json'
+    expected = len(json.loads(mesh_input.read_bytes())['regions'])
     tool = project / 'Assets/FogMeshTool'
     tool.mkdir(parents=True, exist_ok=True)
     records = []
@@ -84,18 +90,23 @@ def build(editor, prepare_only=False):
     if prepare_only:
         print(project)
         return
-    log = CACHE/'native-fog-mesh-project/editor.log'
-    completed = subprocess.run([editor,'-batchmode','-projectPath',str(project),'-executeMethod',
-        'Zjcs.FogTool.FogMeshGenerator.Run','-fog-input',str(CACHE/'fog-mesh-input.json'),'-logFile',str(log)], check=False)
-    if completed.returncode or 'Native region light meshes generated: 73' not in log.read_text(encoding='utf-8'):
+    log = work/'native-fog-mesh-project/editor.log'
+    quote = lambda value: "'" + str(value).replace("'", "''") + "'"
+    arguments = ['-batchmode','-force-d3d12','-projectPath',str(project),'-executeMethod',
+        'Zjcs.FogTool.FogMeshGenerator.Run','-fog-input',str(mesh_input),'-logFile',str(log)]
+    command = '. ' + quote(ROOT/'scripts/unity_internal_display.ps1') + '\n'
+    command += '$fogProcess = Start-UnityOnInternalDisplay -Editor ' + quote(editor) + ' -ArgumentList @('
+    command += ','.join(map(quote, arguments)) + ')\n$fogProcess.WaitForExit()\nexit $fogProcess.ExitCode'
+    completed = subprocess.run(['pwsh','-NoProfile','-Command',command], check=False)
+    if completed.returncode or f'Native region light meshes generated: {expected}' not in log.read_text(encoding='utf-8'):
         raise RuntimeError('Native light mesh generation failed: '+str(log))
     paths = sorted((project/'Assets/FogGenerated').glob('*.asset'))
-    if len(paths) != 73:
+    if len(paths) != expected:
         raise ValueError('Native region mesh count differs from source')
-    DEST.mkdir(parents=True, exist_ok=True)
+    destination.mkdir(parents=True, exist_ok=True)
     outputs = []
     for path in paths:
-        target = DEST/path.name
+        target = destination/path.name
         shutil.copyfile(path, target)
         write_meta(target, 'NativeFormatImporter')
         meta = Path(str(target)+'.meta')
@@ -103,12 +114,12 @@ def build(editor, prepare_only=False):
         if 'mainObjectFileID' not in text:
             meta.write_text(text.replace('  externalObjects: {}','  externalObjects: {}\n  mainObjectFileID: 4300000'),encoding='utf-8',newline='\n')
         outputs.append(dict(path=target.relative_to(ROOT).as_posix(), sha256=sha256(target.read_bytes())))
-    write_meta(DEST, 'DefaultImporter')
-    RECEIPT.write_bytes(json_bytes(dict(manifest='854_156383', editor='2022.3.57f1c2', unityGraphics=records,
+    write_meta(destination, 'DefaultImporter')
+    receipt.write_bytes(json_bytes(dict(manifest='871_156598' if map_id == 12 else '854_156383', editor='2022.3.57f1c2', unityGraphics=records,
         mathematics=dict(url=MATH_URL,sha256=MATH_SHA),
-        shapeInput=dict(path='unity/Assets/Official/World/Map/11/Resources/Map11/Fog/region-lights.json',
-            sha256=sha256(DEST.parent.joinpath('region-lights.json').read_bytes())),
-        meshInputSha256=sha256(CACHE.joinpath('fog-mesh-input.json').read_bytes()),
+        shapeInput=dict(path=destination.parent.joinpath('region-lights.json').relative_to(ROOT).as_posix(),
+            sha256=sha256(destination.parent.joinpath('region-lights.json').read_bytes())),
+        meshInputSha256=sha256(mesh_input.read_bytes()),
         operation='Unmodified Unity LightUtility.GenerateShapeMesh, UTess and Clipper; original native shape, falloff and vertex colors.',
         converter=dict(path=Path(__file__).relative_to(ROOT).as_posix(),sha256=sha256(Path(__file__).read_bytes())),
         editorTool=dict(path=source.relative_to(ROOT).as_posix(),sha256=sha256(source.read_bytes())),outputs=outputs)))
@@ -119,5 +130,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--editor',default='D:/Tool/Unity/Editor/Unity.exe')
     parser.add_argument('--prepare-only',action='store_true')
+    parser.add_argument('--map-id',type=int,choices=(11,12),default=11)
     args = parser.parse_args()
-    build(args.editor,args.prepare_only)
+    build(args.editor,args.prepare_only,args.map_id)

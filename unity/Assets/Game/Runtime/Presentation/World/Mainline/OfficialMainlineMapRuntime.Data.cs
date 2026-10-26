@@ -44,6 +44,7 @@ namespace Zjcs.Presentation.World
                 || battles.stages == null || battles.monsterRosters == null || battles.battleScenes == null
                 || battles.stages.Length != expectedStages || battles.monsterRosters.Length != expectedStages
                 || (mapClassId == 11 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 591))
+                || (mapClassId == 12 && (battles.entityStageBindings == null || battles.entityStageBindings.Length != 858))
                 || storyDataValue == null || storyDataValue.manifest != "854_156383"
                 || storyDataValue.mapClassId != mapClassId || storyDataValue.stories == null
                 || storyDataValue.dialogRoles == null || storyDataValue.mapLogicTags == null
@@ -53,6 +54,10 @@ namespace Zjcs.Presentation.World
                 || (mapClassId == 11 && (storyDataValue.fixedRewards == null
                     || storyDataValue.mainlineTasks == null || storyDataValue.mainlineTasks.Length != 24
                     || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 110
+                    || storyDataValue.witchInfos == null || storyDataValue.witchInfos.Length != 14))
+                || (mapClassId == 12 && (storyDataValue.fixedRewards == null
+                    || storyDataValue.mainlineTasks == null || storyDataValue.mainlineTasks.Length != 22
+                    || storyDataValue.entityTemplates == null || storyDataValue.entityTemplates.Length != 135
                     || storyDataValue.witchInfos == null || storyDataValue.witchInfos.Length != 14)))
                 throw new InvalidDataException("Official Map" + mapClassId + " runtime data does not match the pinned source.");
 
@@ -86,7 +91,8 @@ namespace Zjcs.Presentation.World
                 stories.Add(value.key, value);
             }
             Map10RuntimeStory[] subgraphs = storyDataValue.subgraphs ?? Array.Empty<Map10RuntimeStory>();
-            if ((mapClassId == 10 && subgraphs.Length != 0) || (mapClassId == 11 && subgraphs.Length != 4))
+            if ((mapClassId == 10 && subgraphs.Length != 0) || (mapClassId == 11 && subgraphs.Length != 4)
+                || (mapClassId == 12 && subgraphs.Length != 17))
                 throw new InvalidDataException("Official Map" + mapClassId + " story subgraph closure is incomplete.");
             foreach (Map10RuntimeStory value in subgraphs)
             {
@@ -188,9 +194,14 @@ namespace Zjcs.Presentation.World
                 if (stories.Count != requiredStories.Length || requiredStories.Any(name => !stories.ContainsKey(name)))
                     throw new InvalidDataException("Official Map10 story payload is incomplete.");
             }
-            else if (stories.Count != expectedStories || !stories.ContainsKey("FirstMeetSenSen")
-                || !stories.ContainsKey("CureWorldTree") || !stories.ContainsKey("GriffonTogether"))
+            else if (mapClassId == 11 && (stories.Count != expectedStories || !stories.ContainsKey("FirstMeetSenSen")
+                || !stories.ContainsKey("CureWorldTree") || !stories.ContainsKey("GriffonTogether")))
                 throw new InvalidDataException("Official Map11 story payload is incomplete.");
+            else if (mapClassId == 12 && (stories.Count != expectedStories || !stories.ContainsKey("FirstMeetMete")
+                || !stories.ContainsKey("PhoenixPlaying") || !stories.ContainsKey("FangjianbeiActive_map12")
+                || !storySubgraphs.ContainsKey("FangjianbeiActive") || !storySubgraphs.ContainsKey("ChaosAfterBattle")
+                || fixedRewards.Count != 12))
+                throw new InvalidDataException("Official Map12 story support data is incomplete.");
             if (mapClassId == 11 && (!storySubgraphs.ContainsKey("FangjianbeiActive")
                 || !storySubgraphs.ContainsKey("GriffonTeamUp") || !storySubgraphs.ContainsKey("CombatAssistance")
                 || !storySubgraphs.ContainsKey("HolyMonsterActive") || fixedRewards.Count != 8))

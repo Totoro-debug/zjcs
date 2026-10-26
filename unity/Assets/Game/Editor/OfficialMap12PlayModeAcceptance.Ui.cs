@@ -220,7 +220,13 @@ namespace Zjcs.Editor
             GameObject hit = hits.FirstOrDefault().gameObject;
             if (hit == null || ExecuteEvents.GetEventHandler<IPointerClickHandler>(hit) != expected.gameObject)
                 throw new InvalidDataException("Original UI button is occluded or outside its hit rectangle: " + expected.name
-                    + " @ " + position + "; hits=" + string.Join(",", hits.Take(6).Select(h => h.gameObject.name)));
+                    + " @ " + position + "; hits=" + string.Join(",", hits.Take(6).Select(h => h.gameObject.name))
+                    + "; graphics=" + string.Join(",", expected.GetComponents<Graphic>().Select(g => g.GetType().Name
+                        + ":depth=" + g.depth + ":cull=" + g.canvasRenderer.cull + ":raycast=" + g.raycastTarget
+                        + ":canvas=" + g.canvas?.name + ":canvasMode=" + g.canvas?.renderMode
+                        + ":graphicCount=" + GraphicRegistry.GetGraphicsForCanvas(g.canvas).Count))
+                    + "; groups=" + string.Join(",", expected.GetComponentsInParent<CanvasGroup>().Select(g =>
+                        g.name + ":blocks=" + g.blocksRaycasts + ":alpha=" + g.alpha)));
             pointer.pointerCurrentRaycast = hits[0];
             pointer.pressPosition = position;
             pointer.pointerPressRaycast = hits[0];

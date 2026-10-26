@@ -125,6 +125,7 @@ namespace Zjcs.Presentation.World
         public static int ResolveHomeReturnMap(OfflineMainlineSave save)
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
+            if (save.Player?.UnlockedMapClassIds?.Contains(12) == true) return 12;
             return HasClaimedMap11Unlock(save) ? 11 : 10;
         }
 
@@ -153,7 +154,7 @@ namespace Zjcs.Presentation.World
             mapSavePath = Path.Combine(new ProfileSlotCatalog(persistentDataPath).GetSlotDirectory(slotId),
                 "map-" + mapClassId + "-save.json");
             uiParent = targetUiParent;
-            avatar = selectedMapClassId == 11 ? MountMap11Player(characterModel) : characterModel;
+            avatar = MapProfile.HasNativeUi ? MountMap11Player(characterModel) : characterModel;
             characterName = displayName ?? string.Empty;
             closeCallback = onClose;
             DontDestroyOnLoad(gameObject);
@@ -188,6 +189,7 @@ namespace Zjcs.Presentation.World
         private void Update()
         {
             if (session == null || closed) return;
+            FlushPuzzleRegionProgress();
             stamina.RefreshStaminaPoints();
             exploration.RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);
@@ -281,11 +283,13 @@ namespace Zjcs.Presentation.World
         private void InitializeMap()
         {
             var slots = new ProfileSlotCatalog(persistentDataPath);
-            progressionSave = mapClassId == 11
+            progressionSave = MapProfile.HasNativeUi
                 ? OfflineMainlineProgressSession.Open(slots, slotId, OfficialMainlineTaskCatalog.LoadDefault())
                 : OfflineMainlineProgressSession.OpenCharacter(slots, slotId);
             if (mapClassId == 11 && !HasClaimedMap11Unlock(progressionSave.Save))
                 throw new InvalidOperationException("完成并领取 Map10 主线任务 1040 后才能进入森之国。");
+            if (mapClassId == 12 && progressionSave.Save.Player.UnlockedMapClassIds?.Contains(12) != true)
+                throw new InvalidOperationException("激活森之国方尖碑后才能进入山之国。");
             if (!progressionSave.Save.Player.CharacterCreated || progressionSave.Save.Player.InitialWeaponType == 0)
                 throw new InvalidOperationException("Finish character creation and weapon selection before entering Map" + mapClassId + ".");
             OfficialCharacterAssetCatalog characterAssets = OfficialCharacterAssetCatalog.LoadDefault();
@@ -323,7 +327,7 @@ namespace Zjcs.Presentation.World
             entityObject.transform.SetParent(mapRoot, false);
             entityRoot = entityObject.transform;
             entityView = entityObject.AddComponent<OfficialMap10EntityView>();
-            string entityResource = MapResource("Entities/catalog");
+            string entityResource = MapResource(mapClassId == 12 ? "Entities/native-catalog" : "Entities/catalog");
             TextAsset entityData = Resources.Load<TextAsset>(entityResource);
             if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
@@ -337,7 +341,7 @@ namespace Zjcs.Presentation.World
                     || mapEntities.ContainsKey(info.PlacementId))
                     throw new InvalidDataException("Official Map" + mapClassId + " entity placement is malformed or duplicated.");
                 var entity = new Map10RuntimeEntity(info);
-                if (mapClassId == 11 && !entityTemplates.ContainsKey(info.EntityClassId))
+                if (MapProfile.HasNativeUi && !entityTemplates.ContainsKey(info.EntityClassId))
                     throw new InvalidDataException("Official Map11 EC entity template is missing: " + info.EntityClassId);
                 if (mapLogicTags.TryGetValue(info.PlacementId, out Map10RuntimeLogicTag tag))
                 {
@@ -347,7 +351,7 @@ namespace Zjcs.Presentation.World
                 }
                 mapEntities.Add(info.PlacementId, entity);
             }
-            if (mapClassId == 11) { exploration.ExploreService.Cleanup(OfficialMainlineExplorationModule.ExploreNow); exploration.SynchronizeExploreEntities(); }
+            if (MapProfile.HasNativeUi) { exploration.ExploreService.Cleanup(OfficialMainlineExplorationModule.ExploreNow); exploration.SynchronizeExploreEntities(); }
             InitializeMap11WorldMonsters();
             InitializeStorySpatial();
             ValidateBattleEntityStageBindings();
@@ -361,7 +365,7 @@ namespace Zjcs.Presentation.World
 
             avatar.transform.SetParent(mapRoot, false);
             avatar.name = "Map" + mapClassId + "Player_" + slotId;
-            if (localSaveCreated && mapClassId == 11)
+            if (localSaveCreated && MapProfile.HasNativeUi)
             {
                 int entryId = GetDefaultEntryId();
                 if (!mapEntities.TryGetValue(entryId, out Map10RuntimeEntity entry))
@@ -405,8 +409,8 @@ namespace Zjcs.Presentation.World
             worldCamera.orthographicSize = DefaultWorldCameraSize();
             worldCamera.clearFlags = CameraClearFlags.SolidColor;
             worldCamera.backgroundColor = new Color(0.08f, 0.12f, 0.12f, 1f);
-            worldCamera.nearClipPlane = mapClassId == 11 ? map11WorldViewSource.cameraNear : 0.1f;
-            worldCamera.farClipPlane = mapClassId == 11 ? map11WorldViewSource.cameraFar : 100f;
+            worldCamera.nearClipPlane = MapProfile.HasNativeUi ? map11WorldViewSource.cameraNear : 0.1f;
+            worldCamera.farClipPlane = MapProfile.HasNativeUi ? map11WorldViewSource.cameraFar : 100f;
             worldCamera.cullingMask &= ~(1 << 30);
             worldCamera.transform.position = avatar.transform.position + new Vector3(0f, 0f, -20f);
         }

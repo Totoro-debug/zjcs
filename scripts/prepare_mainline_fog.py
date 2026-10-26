@@ -5,6 +5,7 @@ import struct
 import re
 import math
 import shutil
+import argparse
 
 from official_apk import Apk
 from official_unity_schema import ScriptSchemas
@@ -109,23 +110,29 @@ def finite_curves(value):
     return "Constant" if isinstance(value, float) and not math.isfinite(value) else value
 
 
-def build():
-    apk, schemas, records, regions = Apk(), ScriptSchemas(), [], []
+def build(map_id=11):
+    if map_id not in (11, 12):
+        raise ValueError('Unsupported world fog source')
+    out = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/Fog/region-lights.json"
+    receipt = ROOT / f"assets/reference/official-map/map{map_id}-region-lights-source-manifest.json"
+    apk = Apk.current() if map_id == 12 else Apk()
+    code = ROOT / '.tools/source-packages/current' / apk.version / 'official-code' if map_id == 12 else None
+    schemas, records, regions = ScriptSchemas(code_root=code), [], []
 
     def record(obj):
         records.append(dict(apk.provenance(obj), objectSha256=sha256(obj.get_raw_data())))
         return obj
 
-    prefabs = sorted((int(match[1]), ptr.deref()) for path, ptr in apk.container("partition_mapground_11_extensions")
+    prefabs = sorted((int(match[1]), ptr.deref()) for path, ptr in apk.container(f"partition_mapground_{map_id}_extensions")
                      if (match := re.search(r"/LightRegion(\d+)\.prefab$", path)))
     for region, prefab in prefabs:
         root = record(prefab)
-        nodes, lights, clips = [], [], []
+        nodes, lights, clips, region_fields = [], [], [], {}
 
         def visit(obj, parent=-1):
             go = obj.read()
             transform = next(c.component.read() for c in go.m_Component if c.component.type.name in ("Transform", "RectTransform"))
-            node = dict(name=go.m_Name, parent=parent, active=bool(go.m_IsActive),
+            node = dict(name=go.m_Name, sourcePathId=str(obj.path_id), parent=parent, active=bool(go.m_IsActive),
                         position={k: getattr(transform.m_LocalPosition, k) for k in "xyz"},
                         rotation={k: getattr(transform.m_LocalRotation, k) for k in "xyzw"},
                         scale={k: getattr(transform.m_LocalScale, k) for k in "xyz"})
@@ -138,11 +145,13 @@ def build():
                     if kind == "Light2D":
                         light = decode_light(record(component).get_raw_data())
                         light["node"] = index
+                        light["sourcePathId"] = str(component.path_id)
                         lights.append(light)
                     elif kind == "MapRegionLight":
                         fields = schemas.read(record(component))
                         if fields["Region"] != region:
                             raise ValueError("Original region light identity mismatch")
+                        region_fields.update(fields)
                 elif component.type.name == "Animation":
                     player = record(component).read()
                     for ref in player.m_Animations:
@@ -157,16 +166,26 @@ def build():
                 visit(child.read().m_GameObject.deref(), index)
 
         visit(root)
-        if len(lights) != 1:
-            raise ValueError("Expected one native region shadow")
+        shadows = [light for light in lights if light["sourcePathId"] == str(region_fields["RegionShadow"]["m_PathID"])]
+        if len(shadows) != 1:
+            raise ValueError(f"Original RegionShadow reference is not uniquely bound: {region}")
+        day_node = next(i for i, node in enumerate(nodes)
+                        if node["sourcePathId"] == str(region_fields["DayNode"]["m_PathID"]))
+        for light in lights:
+            ancestor = light["node"]
+            while ancestor >= 0 and ancestor != day_node:
+                ancestor = nodes[ancestor]["parent"]
+            light["day"] = ancestor == day_node
+            if light is not shadows[0] and not light["day"]:
+                raise ValueError(f"Light is outside the original RegionShadow/DayNode bindings: {region}")
         radius = next(c for c in clips[0]["curves"] if c["attribute"] == "RecessionRadius")
         stop = next(c for c in clips[0]["curves"] if c["attribute"] == "m_IsActive" and c["path"] == "Night")
-        regions.append(dict(region=region, nodes=nodes, light=lights[0], clips=clips,
+        regions.append(dict(region=region, nodes=nodes, light=shadows[0], lights=lights, regionBinding=region_fields, clips=clips,
             activationRadius=radius["curve"]["m_Curve"], duration=stop["curve"]["m_Curve"][-1]["time"]))
-    apk.load("defaultpackage_assets_partition_mapground_11_mapground_11_bare.bundle")
+    apk.load(f"defaultpackage_assets_partition_mapground_{map_id}_mapground_{map_id}_bare.bundle")
     global_light = next(o for o in apk.env.objects if o.type.name == "MonoBehaviour"
         and o.read(check_read=False).m_GameObject.m_PathID
-        and o.read(check_read=False).m_GameObject.read().m_Name == "Light 2D Global"
+        and o.read(check_read=False).m_GameObject.read().m_Name == ("LightGlobal 2D" if map_id == 12 else "Light 2D Global")
         and o.read(check_read=False).m_Script.read().m_ClassName == "Light2D")
     apk.load_builtin("assets/bin/Data/data.unity3d")
     renderer = next(o for o in apk.env.objects if o.type.name == "MonoBehaviour"
@@ -177,31 +196,38 @@ def build():
     if lookup.read().m_Name != "FalloffLookupTexture":
         raise ValueError("Unexpected native light falloff texture")
     from prepare_unity_map11_rendering import texture_meta
-    texture = OUT.parent / "FalloffLookupTexture.png"
+    texture = out.parent / "FalloffLookupTexture.png"
     texture.parent.mkdir(parents=True, exist_ok=True)
     lookup.read().image.save(texture)
-    Path(str(texture)+".meta").write_bytes(texture_meta("Resources/Map11/Fog/FalloffLookupTexture.png").replace(b'wrapU: 0',b'wrapU: 1').replace(b'wrapV: 0',b'wrapV: 1').replace(b'wrapW: 0',b'wrapW: 1').replace(b'alphaIsTransparency: 1',b'alphaIsTransparency: 0'))
-    payload = finite_curves(dict(manifest="854_156383", mapClassId=11, regions=regions,
+    Path(str(texture)+".meta").write_bytes(texture_meta(f"Resources/Map{map_id}/Fog/FalloffLookupTexture.png").replace(b'wrapU: 0',b'wrapU: 1').replace(b'wrapV: 0',b'wrapV: 1').replace(b'wrapW: 0',b'wrapW: 1').replace(b'alphaIsTransparency: 1',b'alphaIsTransparency: 0'))
+    payload = finite_curves(dict(manifest=apk.version, mapClassId=map_id, regions=regions,
         rendering=rendering, globalLight=decode_light(record(global_light).get_raw_data(), 4)))
     known = {}
-    if RECEIPT.exists():
-        old = json.loads(RECEIPT.read_text(encoding="utf-8"))
-        known[OUT.resolve()] = old["output"]["sha256"]
-        known[RECEIPT.resolve()] = sha256(RECEIPT.read_bytes())
-    OUT.parent.mkdir(parents=True, exist_ok=True)
+    if receipt.exists():
+        old = json.loads(receipt.read_text(encoding="utf-8"))
+        known[out.resolve()] = old["output"]["sha256"]
+        known[receipt.resolve()] = sha256(receipt.read_bytes())
+    out.parent.mkdir(parents=True, exist_ok=True)
     raw = json_bytes(payload)
-    write_ui_payload(OUT, raw, known)
-    write_ui_payload(RECEIPT, json_bytes(dict(manifest=apk.version, inputs=records,
-        output=dict(path=OUT.relative_to(ROOT).as_posix(), sha256=sha256(raw)),
+    write_ui_payload(out, raw, known)
+    write_ui_payload(receipt, json_bytes(dict(manifest=apk.version, inputs=records,
+        clientCode=[dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes()))
+            for path in ((code / 'client-source' / (name + '.cs') for name in
+                ('MapRegionLight', 'MapEnvEffect', 'RegionLightHub')) if code else ())],
+        output=dict(path=out.relative_to(ROOT).as_posix(), sha256=sha256(raw)),
         falloffTexture=dict(path=texture.relative_to(ROOT).as_posix(), sha256=sha256(texture.read_bytes())),
         converter=dict(path=Path(__file__).relative_to(ROOT).as_posix(), sha256=sha256(Path(__file__).read_bytes())))), known)
-    write_meta(OUT, "TextScriptImporter")
-    write_meta(OUT.parent, "DefaultImporter")
-    tool = ROOT / ".tools/mainline-completion/fog-mesh-input.json"
-    tool.write_bytes(json_bytes(dict(regions=[dict(region=r["region"], shape=r["light"]["shape"], falloff=r["light"]["falloff"])
-                                           for r in regions])))
+    write_meta(out, "TextScriptImporter")
+    write_meta(out.parent, "DefaultImporter")
+    tool = ROOT / (".tools/mainline-completion/fog-mesh-input.json" if map_id == 11 else ".tools/map12-fog/fog-mesh-input.json")
+    tool.parent.mkdir(parents=True, exist_ok=True)
+    tool.write_bytes(json_bytes(dict(regions=[dict(region=r["region"], shape=light["shape"], falloff=light["falloff"],
+        assetName="LightRegion" + str(r["region"]) + ("" if light is r["light"] else "_" + str(light["node"])))
+        for r in regions for light in r["lights"]])))
     print("Native region shadows:", len(regions))
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--map-id', type=int, choices=(11, 12), default=11)
+    build(parser.parse_args().map_id)

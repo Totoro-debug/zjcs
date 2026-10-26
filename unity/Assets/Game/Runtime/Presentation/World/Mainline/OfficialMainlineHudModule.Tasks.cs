@@ -56,7 +56,7 @@ namespace Zjcs.Presentation.World
                 var goal = taskUiData.components.Single(value => value.panel == "TaskListItem" && value.type == "TaskGoal").fields;
                 var item = taskUiData.components.Single(value => value.panel == "TaskListItem" && value.type == "TaskConditionItem").fields;
                 TaskObject(pinnedTaskFields.myTaskTitle).GetComponent<TMP_Text>().text = TaskText("task_" + task.classId + "_title");
-                string region = condition.mapClassId == 11 ? TaskText("region_" + host.mapClassId + "_" + condition.region) : string.Empty;
+                string region = condition.type == "WorldMapProgressCondition" ? TaskText("region_" + condition.mapClassId + "_" + condition.region) : string.Empty;
                 TaskObject(item.mText).GetComponent<TMP_Text>().text = string.Format(CultureInfo.CurrentCulture,
                     TaskText("task_" + task.classId + "_progress"), region);
                 host.progressionSave.GetTaskProgress(condition, out long current, out long target);
@@ -72,7 +72,7 @@ namespace Zjcs.Presentation.World
                     progress.text = string.Format(CultureInfo.CurrentCulture, "{0}/{1}", count, target);
                 }
                 ApplyTaskState(pinnedTaskFields, pinnedTaskFields.mStateSwitcher, ready ? 1 : 0);
-                bool recommend = !ready && condition.type == "WorldMapProgressCondition"
+                bool recommend = !ready && condition.type == "WorldMapProgressCondition" && condition.mapClassId == host.mapClassId
                     && host.regions.regionConfigs.TryGetValue(condition.region, out var regionConfig)
                     && regionConfig.CombatRatingLevelValues != null && regionConfig.CombatRatingLevelValues.Length > taskUiData.recommendCombatRatingIndex
                     && regionConfig.CombatRatingLevelValues[taskUiData.recommendCombatRatingIndex] > 0;

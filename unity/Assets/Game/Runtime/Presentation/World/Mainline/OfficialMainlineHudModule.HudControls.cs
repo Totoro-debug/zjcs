@@ -42,7 +42,7 @@ namespace Zjcs.Presentation.World
                 else if (path.IndexOf("/FunctionEntryGroup/FunctionEntryFunc/", StringComparison.Ordinal) >= 0
                     && (path.EndsWith("/EntryBtnFolded", StringComparison.Ordinal)
                         || path.EndsWith("/EntryBtnExpanded", StringComparison.Ordinal)))
-                    button.onClick.AddListener(host.mapClassId == 11 ? OpenNativeWorldFunctions : OpenCommerceShop);
+                    button.onClick.AddListener(host.MapProfile.HasNativeUi ? OpenNativeWorldFunctions : OpenCommerceShop);
                 else if (path.IndexOf("BackBtn", StringComparison.OrdinalIgnoreCase) >= 0
                     || path.EndsWith("/ReturnHomeBtn", StringComparison.Ordinal))
                     button.onClick.AddListener(host.CloseMap);
@@ -82,7 +82,7 @@ namespace Zjcs.Presentation.World
 
             public void CreateCommerceHudEntries()
             {
-                if (host.mapClassId == 11) { CreateNativeFirstPayEntry(); return; }
+                if (host.MapProfile.HasNativeUi) { CreateNativeFirstPayEntry(); return; }
                 try
                 {
                     Transform container = ui.Find("WorldCanvas",
@@ -145,7 +145,7 @@ namespace Zjcs.Presentation.World
                 RefreshWorldTopBar();
                 RefreshPinnedWorldTask();
                 ui.SetText("WorldCanvas", "/WorldCanvas/Content/Content/WorldPanel/Anim/Left/PublicPlayerInfo/NameText", host.characterName);
-                if (host.mapClassId == 11)
+                if (host.MapProfile.HasNativeUi)
                     ui.Find("WorldCanvas", "/WorldCanvas").GetComponentInChildren<WorldPlayerCombatRatingText>(true)
                         .Refresh(host.progression.EvaluateProps(DateTimeOffset.UtcNow.ToUnixTimeSeconds()).CombatRating);
             }

@@ -73,7 +73,7 @@ namespace Zjcs.Presentation.World
             }
             public void SynchronizeExploreEntities()
             {
-                if (host.mapClassId != 11 || host.entityView == null) return;
+                if (!host.MapProfile.HasNativeUi || host.entityView == null) return;
                 var active = host.progressionSave.Save.World.Exploration.Entities.Where(v => v.MapClassId == host.mapClassId && v.Active(ExploreNow)).ToArray();
                 foreach (int id in host.mapEntities.Keys.Where(v => v >= 1000000000 && active.All(e => e.PlacementId != v)).ToArray())
                 {
@@ -116,14 +116,14 @@ namespace Zjcs.Presentation.World
             }
             public void RefreshExploration()
             {
-                if (host.mapClassId != 11 || host.hud.ui == null || ExploreNow <= explorationRefreshAt) return;
+                if (!host.MapProfile.HasNativeUi || host.hud.ui == null || ExploreNow <= explorationRefreshAt) return;
                 explorationRefreshAt = ExploreNow;
                 if (ExploreService.Cleanup(ExploreNow).IsApplied) { SynchronizeExploreEntities(); host.RefreshEntityActivity(); }
                 RefreshExploreHud();
             }
             private void RefreshExploreHud()
             {
-                if (host.mapClassId != 11 || host.NativeUi.Data == null || host.hud.ui == null) return;
+                if (!host.MapProfile.HasNativeUi || host.NativeUi.Data == null || host.hud.ui == null) return;
                 bool visible = ExploreService.CanExplore(ExploreContext());
                 foreach (var binding in host.NativeUi.Data.worldBindings.exploreButtons)
                 {

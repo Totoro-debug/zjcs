@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Zjcs.Offline.World;
 
 namespace Zjcs.Presentation.World
 {
@@ -43,6 +44,15 @@ namespace Zjcs.Presentation.World
             return entityObjects.TryGetValue(placementId, out GameObject entity) ? entity : null;
         }
 
+        public void SetEntityGrid(int placementId, MapGridPoint grid)
+        {
+            GameObject entity = FindEntityObject(placementId);
+            if (entity == null) return;
+            entity.transform.localPosition = new Vector3(mapOrigin.x + grid.X, mapOrigin.y + grid.Y, -grid.Y * 0.001f);
+            OfficialMap10EntityInfo info = entityInfos.Find(value => value.PlacementId == placementId);
+            if (info != null) { info.Grid[0] = grid.X; info.Grid[1] = grid.Y; }
+        }
+
         public void SetEntityState(int placementId, int state)
         {
             if (!entityStateObjects.TryGetValue(placementId, out Dictionary<int, GameObject> variants)) return;
@@ -58,6 +68,16 @@ namespace Zjcs.Presentation.World
             Vector3 screen = screenPosition;
             screen.z = Mathf.Abs(inputCamera.transform.position.z);
             Vector3 world = inputCamera.ScreenToWorldPoint(screen);
+            if (ContainsGridInput != null)
+            {
+                foreach (OfficialMap10EntityInfo info in entityInfos)
+                    if (entityObjects[info.PlacementId].activeInHierarchy && ContainsGridInput(info.PlacementId, world))
+                    {
+                        EntitySelected?.Invoke(info);
+                        return true;
+                    }
+                return false;
+            }
             foreach (KeyValuePair<Collider2D, OfficialMap10EntityInfo> target in hitTargets)
                 if (target.Key != null && target.Key.OverlapPoint(world))
                 {
@@ -66,6 +86,8 @@ namespace Zjcs.Presentation.World
                 }
             return false;
         }
+
+        public Func<int, Vector2, bool> ContainsGridInput { get; set; }
 
         private void OnDestroy()
         {

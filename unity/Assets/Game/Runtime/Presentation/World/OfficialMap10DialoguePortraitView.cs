@@ -40,7 +40,7 @@ namespace Zjcs.Presentation.World
             TextAsset dataAsset = Resources.Load<TextAsset>("Map" + mapClassId + "/dialogue-portraits");
             Map10RuntimeDialogPortraitData data = dataAsset == null ? null
                 : JsonUtility.FromJson<Map10RuntimeDialogPortraitData>(dataAsset.text);
-            if (data == null || data.manifest != "854_156383" || data.mapClassId != mapClassId
+            if (data == null || data.manifest != (mapClassId == 12 ? "871_156598" : "854_156383") || data.mapClassId != mapClassId
                 || data.portraits == null || data.speakerStyle == null
                 || data.speakerStyle.left == null || data.speakerStyle.right == null || data.icons == null)
                 throw new InvalidDataException("Official Map10 dialogue portrait data is missing or malformed.");
@@ -63,6 +63,7 @@ namespace Zjcs.Presentation.World
                         || expression.position == null || expression.position.Length != 2)
                         throw new InvalidDataException("Official Map10 dialogue expression is malformed.");
                     RequireSprite(expression.resource);
+                    if (!string.IsNullOrEmpty(expression.rightResource)) RequireSprite(expression.rightResource);
                 }
                 portraits.Add(portrait.portraitPath, portrait);
             }
@@ -74,17 +75,17 @@ namespace Zjcs.Presentation.World
             }
             if ((mapClassId == 10 && portraits.Count != 3) || (mapClassId == 11 && portraits.Count != 11)
                 || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8402")
-                || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8404")
-                || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8417"))
+                || (mapClassId == 12 ? portraits.Count != 8
+                    : !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8404") || !portraits.ContainsKey("UI/Portrait/Npc_Portrait_8417")))
                 throw new InvalidDataException("Official Map10 dialogue portrait bindings are incomplete.");
 
             Transform left = FindParent(ui, panelKey, LeftParentPath.Replace("TalkDialog", panelKey));
             Transform right = FindParent(ui, panelKey, RightParentPath.Replace("TalkDialog", panelKey));
             slots[0] = new PortraitSlot(CreatePortraitRoot(left, "Map10LeftPortrait"));
             slots[1] = new PortraitSlot(CreatePortraitRoot(right, "Map10RightPortrait"));
-            if (mapClassId == 11)
+            if (OfficialMainlineMapProfile.Get(mapClassId).HasNativeUi)
             {
-                var native = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map11/UI/catalog").text);
+                var native = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map" + mapClassId + "/UI/catalog").text);
                 var board = native.components.Single(value => value.panel == panelKey && value.type == "TalkDialogContentSwitch").fields;
                 boardAnimation = ui.Find(panelKey, board.mBattomBoardChangeAni).GetComponent<Animation>();
                 boardLeftToRight = board.mBattomBoardLeftToRight;
@@ -260,6 +261,7 @@ namespace Zjcs.Presentation.World
             private float duration;
             private bool transitioning;
             private string currentPortraitPath;
+            private bool onRight;
 
             public PortraitSlot(RectTransform root)
             {
@@ -271,6 +273,7 @@ namespace Zjcs.Presentation.World
 
             public void SetPortrait(Map10RuntimeDialogPortrait portrait, bool onRight)
             {
+                this.onRight = onRight;
                 if (currentPortraitPath != portrait.portraitPath)
                 {
                     root.name = portrait.portraitPath.Substring(portrait.portraitPath.LastIndexOf('/') + 1);
@@ -307,8 +310,12 @@ namespace Zjcs.Presentation.World
                 Map10RuntimeDialogExpression expression = portrait.face.expressions
                     .FirstOrDefault(value => value.type == faceType);
                 if (expression == null)
+                {
+                    if (portrait.face.ignoredExpressions?.Contains(faceType) == true) return;
                     throw new InvalidDataException("Official Map10 portrait expression is missing: " + faceType);
-                faceImage.sprite = RequireSprite(expression.resource);
+                }
+                faceImage.sprite = RequireSprite(onRight && !string.IsNullOrEmpty(expression.rightResource)
+                    ? expression.rightResource : expression.resource);
                 faceImage.rectTransform.anchoredPosition = ToVector2(expression.position);
                 faceImage.SetNativeSize();
                 faceImage.enabled = true;

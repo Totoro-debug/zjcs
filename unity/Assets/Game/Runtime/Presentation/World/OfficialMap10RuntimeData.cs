@@ -530,6 +530,7 @@ namespace Zjcs.Presentation.World
     [Serializable]
     public sealed class Map10RuntimeDialogPortraitFace
     {
+        public string[] ignoredExpressions;
         public string nodeName;
         public float[] position;
         public float[] nativeSize;
@@ -541,6 +542,7 @@ namespace Zjcs.Presentation.World
     [Serializable]
     public sealed class Map10RuntimeDialogExpression
     {
+        public string rightResource;
         public string type;
         public string resource;
         public float[] position;

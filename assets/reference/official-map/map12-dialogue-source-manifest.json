@@ -1,0 +1,3582 @@
+{
+  "implementation": [
+    {
+      "path": "scripts/prepare_unity_map11_dialog_assets.py",
+      "sha256": "fe507520ec649112aa4b211c879ede0257cf386141afa26efe70e3dc6f039d52"
+    },
+    {
+      "path": "scripts/prepare_unity_map10_dialog_assets.py",
+      "sha256": "31384b7b5e191743348f53fd1648558466598f48fe9ae2cbfec3210dcfc6985c"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_dialog_assets.py",
+      "sha256": "03076522dd03aa619d928f211210b56bb5fcdfd7b4799be66929bb885feb1f4e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PortraitFace.cs",
+      "sha256": "c4f2122e3904647ba05f395986e0bd281559c3da3a9340abdb7b717ae3872a37"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PortraitFaceData.cs",
+      "sha256": "20eb15e82c65aaac2581b3a06f63911ef54f2a3dcea1750291f7b89e9720b8c3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ServerInfoManager.cs",
+      "sha256": "9f55bb289e62ddacc5ea679166f14257c09d0a60792d891c5c666cc6ae564b81"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/Common/RegionCodeEnum.cs",
+      "sha256": "80f27e92de15af96d5dd7e36bc300563ecbc2e9ef045486841e03d8516d02253"
+    }
+  ],
+  "inputs": {
+    "packageManifest": {
+      "manifest": "871_156598",
+      "sha256": "0df9cba67811eb7465f62c8ffae64278566f4273cf5326b7e4e1a440f3324ed5"
+    },
+    "portraits": {
+      "UI/Portrait/Npc_Portrait_10005": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -12.099980354309082,
+            "y": 171.70010375976562
+          },
+          "mFaceOffsets": [],
+          "mFacesProxy": [],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": -6342533083757137696
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 71787023504191712
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 8233078129726402784
+            },
+            "mAssetGuid": "e133cf0066e39c543ba194e00ca182cd"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 8233078129726402784
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_10005.prefab",
+        "origin": "apk_zip",
+        "path_id": "8233078129726402784",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-8558664990561259296",
+          "raw_sha256": "087f9f768b52eb49a90953f8245809bce104b2b59ca90f7d2cacaeb6f2d4f153",
+          "raw_size": 76410
+        },
+        "raw_sha256": "623659de0b15320099f68fc38fdccef3b5281b54a223953798d44e75cfadf635",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_10005": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10005.bundle",
+            "bundle_hash": "a1feb1ed9ae33dffb50e981e283e9bd7",
+            "bundle_sha256": "555c4c2d4e9dbfe22bef1be0f7f0e4b27392d09592f05d27f38dd3ab453d4294",
+            "bundle_size": 64838,
+            "guid": "e133cf0066e39c543ba194e00ca182cd",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/10005/npc_portrait_10005.png",
+            "origin": "official_cdn",
+            "output_sha256": "32ea1f193fdd4c965256be796600f0fcac97629fa1086eb80c4cdb90b788940f",
+            "path_id": "5093642643292219046",
+            "raw_sha256": "0a794bcf032cbb3232638dd6b802659d76778d814d74f31794d164b16e22f4e8",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10005.bundle",
+              "bundle_hash": "a1feb1ed9ae33dffb50e981e283e9bd7",
+              "bundle_sha256": "555c4c2d4e9dbfe22bef1be0f7f0e4b27392d09592f05d27f38dd3ab453d4294",
+              "bundle_size": 64838,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "8737174443336722086",
+              "raw_sha256": "da2c48aa27fe10091f35d7e210b8a58a75b5f727f2e03ac9b42b458a4eaecb5b",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/a1feb1ed9ae33dffb50e981e283e9bd7.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/a1feb1ed9ae33dffb50e981e283e9bd7.bundle"
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_10609": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -12.099980354309082,
+            "y": 171.70010375976562
+          },
+          "mFaceOffsets": [],
+          "mFacesProxy": [],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": 1557170558955505580
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": -625281892446943316
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 5651498537069725612
+            },
+            "mAssetGuid": "59aa8247667be2a4fa8aa83d2cb99a7e"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 5651498537069725612
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_10609.prefab",
+        "origin": "apk_zip",
+        "path_id": "5651498537069725612",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "3820839533371475884",
+          "raw_sha256": "9706441ef9915ce964d29cc79545e67e9a3a93c7cb9de1bfad95f1744bc02f34",
+          "raw_size": 76410
+        },
+        "raw_sha256": "bd86ec8ddc152f79bdd4faa4ec96bd318089681c2e9950b647300e76dba73efe",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_10609": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10609.bundle",
+            "bundle_hash": "7979714443a258a74940ede0221b7878",
+            "bundle_sha256": "04ec79d709109b9cdce788c007dec74c1d68b074a1c51905849077abf341f7a5",
+            "bundle_size": 97622,
+            "guid": "59aa8247667be2a4fa8aa83d2cb99a7e",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/10609/npc_portrait_10609.png",
+            "origin": "official_cdn",
+            "output_sha256": "9f978a93bf32ea9030679bd0e60db6507365ce797febddd2dcad026ad8ed4271",
+            "path_id": "-1936187320381913818",
+            "raw_sha256": "ff9ceba314b0930f8eb9597154ffe2e4668b3d117ce7c7c2855ceb5629344812",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_10609.bundle",
+              "bundle_hash": "7979714443a258a74940ede0221b7878",
+              "bundle_sha256": "04ec79d709109b9cdce788c007dec74c1d68b074a1c51905849077abf341f7a5",
+              "bundle_size": 97622,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "5682113071095432486",
+              "raw_sha256": "ceebd620498861d7f9549154ec504cec9fe4e78b1b19a9b8760e41a00b219e71",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7979714443a258a74940ede0221b7878.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7979714443a258a74940ede0221b7878.bundle"
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8402": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -15.899999618530273,
+            "y": 164.5
+          },
+          "mFaceOffsets": [
+            {
+              "Offset": {
+                "x": -27.0,
+                "y": 192.1999969482422
+              },
+              "Type": "proud"
+            },
+            {
+              "Offset": {
+                "x": -13.899999618530273,
+                "y": 172.3000030517578
+              },
+              "Type": "sweat"
+            },
+            {
+              "Offset": {
+                "x": -21.100000381469727,
+                "y": 174.39999389648438
+              },
+              "Type": "angry"
+            },
+            {
+              "Offset": {
+                "x": -42.900001525878906,
+                "y": 178.5
+              },
+              "Type": "shock2"
+            },
+            {
+              "Offset": {
+                "x": -42.900001525878906,
+                "y": 178.5
+              },
+              "Type": "doubt"
+            },
+            {
+              "Offset": {
+                "x": -30.5,
+                "y": 175.8000030517578
+              },
+              "Type": "cold"
+            }
+          ],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "3221ea4e9e4bc2b4981d41ec08d3b322"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "adorkable"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "40079c749a29e514e8e415ac7979b8f3"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "angry"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "68c30d4b06d6a9542b4ac790c88a686f"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "dizzy"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "59e5ba22be779c64aaf64e58b58cf12b"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "expectation"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "3c2762da9a674cf40bc2aa2fffa4731f"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "happy"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "8d431c0a91974c74eaccfbe73387d670"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "shock"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "450389edbb0bf3e4b9d20c3fbaab4740"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "sweat"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "ce0038fc8142e2a4db489d677d170e07"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "think"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "03e554caf952d1b4b928b4c20b6aa357"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "worry"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "4382e777ca03ce348a22be7b0a86c72e"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "cry1"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "2d09c528940066a4db0ffcdd3557310d"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "cry3"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "bfc0da171c873334490e9ba42b5777de"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "baozi"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "841c04e5867ccd746ba8ac7fab7edfe5"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "pout"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "4e095bf0ab814da448cce1b800670439"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "shock2"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "fcaa33f62991a7d44bab2e6283e3f8eb"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "8094867e702dee941876e933214d4dd1"
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "doubt"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "7e7764b8321d6bc4ca461e672aa48549"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "expectation2"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -535029621041193221
+                },
+                "mAssetGuid": "07d493dbdf3715e4b9ea387833015321"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "cold"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": -2770524293110817029
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 845312377145466619
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": -535029621041193221
+            },
+            "mAssetGuid": "89baf3990fdb9bf44bac21ecb8f28350"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": -535029621041193221
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8402.prefab",
+        "origin": "apk_zip",
+        "path_id": "-535029621041193221",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-5201593850142318853",
+          "raw_sha256": "9e43f33aec73396f31889f17f30281ae574ac0bc47cd3776ce71c0f9bc5cae53",
+          "raw_size": 76410
+        },
+        "raw_sha256": "b492c360b507f2cdc17cf6b31f22b88c536f22cc430d83c6ef761442e487a160",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8402": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "89baf3990fdb9bf44bac21ecb8f28350",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402.png",
+            "origin": "apk_zip",
+            "output_sha256": "0f2b1c96a7540a02b16aa71591b7f6ffe3ff747786e4a53677b3766823683bf9",
+            "path_id": "451743026840601863",
+            "raw_sha256": "21add7314f365249084c333776de1fdbbdf5f3dcd35673cc72ceabca741bded4",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-4744691344904944377",
+              "raw_sha256": "f01e643c4a56971fd110d0c5a5ac0e76231b2a7df2c395f5dab8162604e119ad",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_adorkable": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "3221ea4e9e4bc2b4981d41ec08d3b322",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_adorkable.png",
+            "origin": "apk_zip",
+            "output_sha256": "d509ced1f3cd9b09533eeef8fa09144f5b78ac0ce4498a2421dd7d8e2af1e083",
+            "path_id": "-42972155266432433",
+            "raw_sha256": "429c6cce8440c496a1bfca89b5d2bf8d8bbc2005f0f24fa61fcf19fb0783fd8b",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "6394808124235743823",
+              "raw_sha256": "61b899efb435169368a05642d9de80b3d93b658b9e1f663cae23b2f2949356f6",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_angry": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "40079c749a29e514e8e415ac7979b8f3",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_angry.png",
+            "origin": "apk_zip",
+            "output_sha256": "b68383823713073f23c324a3427c3e6149e51d7f0779a6d9c9868cdf002ed57c",
+            "path_id": "4406614133042063988",
+            "raw_sha256": "9c2c512464889c3964cbed3b6ac4dda2fd35df72cde6dc0b26f701a98a644cce",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "1474368614810790516",
+              "raw_sha256": "f2cd9f1bac89f4ec28754441c596d595ef14dd0d37af0ccfb6f5450dd00400b6",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_baozi": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "bfc0da171c873334490e9ba42b5777de",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_baozi.png",
+            "origin": "apk_zip",
+            "output_sha256": "a8ce5e37b3caedbec7e202aad28fa78b309f383e7293ec1dcd0d2e3e44f2357c",
+            "path_id": "2981630433618237684",
+            "raw_sha256": "402847acf7371f6031fab1a939e80ee9a455feaf752195ace60fbc2a27ad8aec",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "107248366667045108",
+              "raw_sha256": "01977eacf800b36629696288d7edde3de58f01b24382e731c59a6333e6354842",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_cry1": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "4382e777ca03ce348a22be7b0a86c72e",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_cry1.png",
+            "origin": "apk_zip",
+            "output_sha256": "b4d4aa67aaf11edd08a4967ddcdde388ecea35b0ee04681f0a53a4f50a6ad24c",
+            "path_id": "-3568427352639827142",
+            "raw_sha256": "a66085696bcd4bf87d15d0e9201de0564b1d17da92e1900d9a66c21c1971bc8f",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-8057396880083938502",
+              "raw_sha256": "bcce38753d36e453066932cbf61821e85a9f2655f8eab21365b7750e0205180b",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_expectation": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "59e5ba22be779c64aaf64e58b58cf12b",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_expectation.png",
+            "origin": "apk_zip",
+            "output_sha256": "beb509cde81ac652674b81b067af9fe69b66b484254165681346659e674afe6c",
+            "path_id": "3380033980498088057",
+            "raw_sha256": "818b92ab6ead54f8a1c3d347135f69ac30799105bd9e1fbfc4642093e3d229a6",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-8801454804580462471",
+              "raw_sha256": "571d3d014fcb840257d54d09ca44427362acae7a1682ee7f5ef76eb467b7ff1f",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_happy": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "3c2762da9a674cf40bc2aa2fffa4731f",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_happy.png",
+            "origin": "apk_zip",
+            "output_sha256": "34575761683e09c0fa90606c2d5048d4cf4ed3e504c10e8371bb99ac4e605433",
+            "path_id": "6400393731692857063",
+            "raw_sha256": "1fcf9b98e45040b652198781dc9cfe3a1f6ae18065fdcce831280b63bedae215",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "328003438062503655",
+              "raw_sha256": "08e5c0fb1f22391849c5541e9346fbb0953cf79eaf77ac695f0da8185a89123a",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_shock": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "8d431c0a91974c74eaccfbe73387d670",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_shock.png",
+            "origin": "apk_zip",
+            "output_sha256": "7ac47b013e3e5f7334f53320be51a057140eecf1ff13859b01ba5dfdb179e693",
+            "path_id": "-4583980081589806808",
+            "raw_sha256": "9abc59985f6cfc762b652f4d4cd32eeb5675eaf9c47943b052ee86ad075b8a7a",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "3565906800420755752",
+              "raw_sha256": "b2531db6d838566117e8b0266b33bb860391266908c5d0314c70e9d96d860e6a",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_shock2": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "4e095bf0ab814da448cce1b800670439",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_shock2.png",
+            "origin": "apk_zip",
+            "output_sha256": "416d3e6e9922ed3b5d273638a480717d0552293a4fd12a6ab4cfa304180cc7b3",
+            "path_id": "1956961207522181852",
+            "raw_sha256": "5336f5585caa49eaaeb49543bb13454cafb47a0b9ffb459391242aa457cf9bfb",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-4743941682987384100",
+              "raw_sha256": "702541eae4892fdbc993f06950295426495c3ef90514eea9ffc70b5b8151ba4b",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8402_sweat": {
+            "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+            "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+            "guid": "450389edbb0bf3e4b9d20c3fbaab4740",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8402/npc_portrait_8402_sweat.png",
+            "origin": "apk_zip",
+            "output_sha256": "fb0e17b4b57d856f3b767cbc2152247cefd0c9d82c13be0b6ab19daa1d0d80d7",
+            "path_id": "-7562964009127830045",
+            "raw_sha256": "76fc1366186e2698bc37847af6c88457ba59a0ecb8184b08054c5ed4151aad4a",
+            "raw_size": 459491,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/419c27710250c16dbb9f34e03b0e24f6.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8402.bundle",
+              "bundle_hash": "419c27710250c16dbb9f34e03b0e24f6",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-9141763064694301213",
+              "raw_sha256": "7981dcd7362ad14a6953417138659a62f65af665e725ab4ba9136d6101109ee2",
+              "raw_size": 459491,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8421": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -17.799999237060547,
+            "y": 228.1999969482422
+          },
+          "mFaceOffsets": [],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5116894262355175795
+                },
+                "mAssetGuid": "67ece6b85a0d47340851283b9e915640"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5116894262355175795
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "embarrasseds"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5116894262355175795
+                },
+                "mAssetGuid": "bf93b4cdccfe5064f86ae959461b6cec"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5116894262355175795
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "happy"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": -277798741945931405
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 5580191069318359411
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 5116894262355175795
+            },
+            "mAssetGuid": "ad7d62f8bdce44c448891f995f3a272d"
+          },
+          "mRegionPortraitMainProxies": [
+            {
+              "PortraitMainProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5116894262355175795
+                },
+                "mAssetGuid": "54a1491fdf34a6944812d601255c56ff"
+              },
+              "Region": 0
+            }
+          ],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 5116894262355175795
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8421.prefab",
+        "origin": "apk_zip",
+        "path_id": "5116894262355175795",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "2907703824271026547",
+          "raw_sha256": "4d971189b8e2755d860bffce51fd378175fa933f116f59e0a73a7ade930c4002",
+          "raw_size": 76410
+        },
+        "raw_sha256": "85c47afafd274e585432790b0a8bc5dc82618f0b6d50df382b2363e5c90f6d2c",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8421": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+            "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+            "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+            "bundle_size": 1194303,
+            "guid": "54a1491fdf34a6944812d601255c56ff",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8421/npc_portrait_8421_cn.png",
+            "origin": "official_cdn",
+            "output_sha256": "4e551fc12d12200ad9ea3a7fbc4e3d193c7fc28d3fc92492840834444b856318",
+            "path_id": "4955824189074361558",
+            "raw_sha256": "f2c0cf8c34bcf58ab9d569a61b52ae7dce695e2f769d745739cb84c3f13474bf",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+              "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+              "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+              "bundle_size": 1194303,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-4139354416726422314",
+              "raw_sha256": "8539ca9dd788dcc2763fad773d705d7ed5bdbef0c077bcc9b134ab0ac0563930",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+          },
+          "npc_portrait_8421_embarrasseds": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+            "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+            "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+            "bundle_size": 1194303,
+            "guid": "67ece6b85a0d47340851283b9e915640",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8421/npc_portrait_8421_embarrasseds.png",
+            "origin": "official_cdn",
+            "output_sha256": "0d0f897db77cd7b84a9b6d8722356f778484af1f38bd749c8b3254d97664a520",
+            "path_id": "7181245100753307266",
+            "raw_sha256": "5870bd38fd1e82a6ca51083fed9456d4ec898bdbb31e8742775936ee25232273",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+              "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+              "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+              "bundle_size": 1194303,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "2495472431740634754",
+              "raw_sha256": "6983d4b19b6ed1105d3c9a4e3acbd5348f565618f7db598187353879aad0c1ff",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+          },
+          "npc_portrait_8421_happy": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+            "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+            "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+            "bundle_size": 1194303,
+            "guid": "bf93b4cdccfe5064f86ae959461b6cec",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8421/npc_portrait_8421_happy.png",
+            "origin": "official_cdn",
+            "output_sha256": "e465a24c2c12293289d635f94e5048a2f226e6c4411d007aa7749c0d35e5d64b",
+            "path_id": "6733488745594628733",
+            "raw_sha256": "265b24099088fb7638cf0d4fd99f7add094b2fa94980085431b21d88012c2488",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8421.bundle",
+              "bundle_hash": "825ebc031df4555dc46d0cb5da227e3b",
+              "bundle_sha256": "85ee7327505c8efa22e68393c48735773ab840f069a6bd0b9a45bce8dc6ee806",
+              "bundle_size": 1194303,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-605135161679795587",
+              "raw_sha256": "a66bf31ab2884cfbec4ca83ee92e4c5ab5bbee9f01daaa8a5cb52db231884d24",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/825ebc031df4555dc46d0cb5da227e3b.bundle"
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8422": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -15.300000190734863,
+            "y": 199.10000610351562
+          },
+          "mFaceOffsets": [
+            {
+              "Offset": {
+                "x": -34.400001525878906,
+                "y": 199.10000610351562
+              },
+              "Type": "confident"
+            },
+            {
+              "Offset": {
+                "x": -29.5,
+                "y": 199.10000610351562
+              },
+              "Type": "happy"
+            }
+          ],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 7491480915423919796
+                },
+                "mAssetGuid": "ef66da66435ae4a448b927ea6b2a4474"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "confident"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 7491480915423919796
+                },
+                "mAssetGuid": "526dac194a6c9b34192ada73450fd5c1"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "dizzy"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 7491480915423919796
+                },
+                "mAssetGuid": "44e50992eeed9d54594277c2435a14c8"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "happy"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": -8320849352673853772
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 878915492904959668
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 7491480915423919796
+            },
+            "mAssetGuid": "a0a47b1eef578c948abe2f44204ceee4"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 7491480915423919796
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8422.prefab",
+        "origin": "apk_zip",
+        "path_id": "7491480915423919796",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-6819010464483049804",
+          "raw_sha256": "c24baa9e68054e6b4a066c9f305089c983bda4c4c663f32f18a674abb2aa59d4",
+          "raw_size": 76410
+        },
+        "raw_sha256": "5be03654d348c8750ae6184829c25b3b2a4b67e5e75676f2c4383eef3ef39e74",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8422": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+            "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+            "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+            "bundle_size": 477696,
+            "guid": "a0a47b1eef578c948abe2f44204ceee4",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8422/npc_portrait_8422.png",
+            "origin": "official_cdn",
+            "output_sha256": "fe99645cf3c227bcd2a0da5f79bd6a11fbb024c2cf8402b86a2edd067f63951b",
+            "path_id": "-3053766002278482743",
+            "raw_sha256": "92d52b4574e55ea6d66c2947199a5ff42176bebc7760fb2b54813e3536dfa9a1",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+              "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+              "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+              "bundle_size": 477696,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "4584578170496072905",
+              "raw_sha256": "0177b34a5505b9eb5725a9fcb1c88b65e4c89be77b36c9e5857b79891b050925",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+          },
+          "npc_portrait_8422_confident": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+            "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+            "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+            "bundle_size": 477696,
+            "guid": "ef66da66435ae4a448b927ea6b2a4474",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8422/npc_portrait_8422_confident.png",
+            "origin": "official_cdn",
+            "output_sha256": "4f1332bb19d6be4ffe13a2c6f3a51498c4bc9b3a7a6436b50af90618362e2e0d",
+            "path_id": "4570581881564536486",
+            "raw_sha256": "ee533d9bd527f88fca62848172868f336b2e1e9fa173b40412121e328f62d061",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+              "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+              "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+              "bundle_size": 477696,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "1329420729614507686",
+              "raw_sha256": "202a27935e76a4eb5affb58bb831d3c153ae5570aeec54ba2dcbc00b271f7db5",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+          },
+          "npc_portrait_8422_dizzy": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+            "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+            "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+            "bundle_size": 477696,
+            "guid": "526dac194a6c9b34192ada73450fd5c1",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8422/npc_portrait_8422_dizzy.png",
+            "origin": "official_cdn",
+            "output_sha256": "ca89b408389c0415113a05fa697b9e4b19055f7c5a7c3870a3b532fcb33a8928",
+            "path_id": "-5539159537769239704",
+            "raw_sha256": "f77df1085a310a5b4faea23e436ab042c9758f92f57d6ae9baddaa817bc189b2",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+              "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+              "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+              "bundle_size": 477696,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "5398605026950720360",
+              "raw_sha256": "a1fe70f1d26de62c2a87b5c0449a3f83a0fc806a4fb4b1d9ccf2c2236065a826",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+          },
+          "npc_portrait_8422_happy": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+            "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+            "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+            "bundle_size": 477696,
+            "guid": "44e50992eeed9d54594277c2435a14c8",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8422/npc_portrait_8422_happy.png",
+            "origin": "official_cdn",
+            "output_sha256": "727c816d8114c41d13a74b123d56630fb513c4be38c2476e22b4dd58a7454ef1",
+            "path_id": "-1432545658221262311",
+            "raw_sha256": "9e7400091725a15f36c2512d16868ff3f8d86e6c5251f96a1b8ed8efef04e30f",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8422.bundle",
+              "bundle_hash": "6c3a84c40ff8d6dca8a44a5520a0465a",
+              "bundle_sha256": "98d169eb4c212ef792de623146f01045ab1092cd04cd2b8439728b318020da36",
+              "bundle_size": 477696,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "299686629230479897",
+              "raw_sha256": "5b05f154b8beed285b9d9341ad3283fad9251535673a6d7de53fe412530d5131",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/6c3a84c40ff8d6dca8a44a5520a0465a.bundle"
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8423": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -21.100000381469727,
+            "y": 217.3000030517578
+          },
+          "mFaceOffsets": [],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -1884013592899967689
+                },
+                "mAssetGuid": "caf25d88d946a1443843a4500c538d39"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "happy"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": -1884013592899967689
+                },
+                "mAssetGuid": "6b8cae8eb7ea6844c93ef5d3a125d041"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "speechless"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": 3411358314264110391
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 2961430724783416631
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": -1884013592899967689
+            },
+            "mAssetGuid": "967eb43b262da2c46bc0fb5e6cea0b1c"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": -1884013592899967689
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8423.prefab",
+        "origin": "apk_zip",
+        "path_id": "-1884013592899967689",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-2256065147400837833",
+          "raw_sha256": "5ff7bbd1ebf81d2c866ba221e0bfd5aafe9217b4edd5b2b8871285408075e898",
+          "raw_size": 76410
+        },
+        "raw_sha256": "8a619b1cb5c769cdd055b29ceffca801417deba761e22501c63b1c203030a5d3",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8423": {
+            "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+            "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+            "guid": "967eb43b262da2c46bc0fb5e6cea0b1c",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8423/npc_portrait_8423.png",
+            "origin": "apk_zip",
+            "output_sha256": "013389273ce92287f42284a1c2bb1981a03bec320ec6bac38ea662adf8cc31db",
+            "path_id": "423354382633266855",
+            "raw_sha256": "58b338191b9357f40b212b6fda2ace6563b44848fd60f12ecd611119dd43c460",
+            "raw_size": 508350,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+              "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-9149768990763913561",
+              "raw_sha256": "7cbcbdd467471e1dcf41cf4f110b8411816d0981304f129d647189850d1882ca",
+              "raw_size": 508350,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8423_happy": {
+            "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+            "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+            "guid": "caf25d88d946a1443843a4500c538d39",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8423/npc_portrait_8423_happy.png",
+            "origin": "apk_zip",
+            "output_sha256": "a4e07856ce280b21b7c5895dc6ad8adf895a2aae7f872d216692fdbd19c167f7",
+            "path_id": "6661657382856454442",
+            "raw_sha256": "b3b7e86f984ac23dc8cd895fdabfc5d3910ac2c859b633d9577124893c4a17cd",
+            "raw_size": 508350,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+              "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-5958951831195717334",
+              "raw_sha256": "ee59f23b5a216ca88debedfc640e151466347161c58f0eadcd5a6d9b7f22f5e4",
+              "raw_size": 508350,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          },
+          "npc_portrait_8423_speechless": {
+            "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+            "apk_manifest": "854_156383",
+            "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+            "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+            "guid": "6b8cae8eb7ea6844c93ef5d3a125d041",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8423/npc_portrait_8423_speechless.png",
+            "origin": "apk_zip",
+            "output_sha256": "fa13323adabd0afac3a6a96501d686662fdd453c69897c61a8a38280169d637b",
+            "path_id": "6649612768131359494",
+            "raw_sha256": "abbf7c56bd34db608545e13837047e1d66b5a5ebc47538ef510031929e13e003",
+            "raw_size": 508350,
+            "texture": {
+              "apk_entry": "assets/yoo/DefaultPackage/4f6816eb35ebd43332b178677a05e5c4.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8423.bundle",
+              "bundle_hash": "4f6816eb35ebd43332b178677a05e5c4",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-4584982473786711290",
+              "raw_sha256": "cad4a57fc05152ca51e5fa1f051fefff2f9486957e1eb55731041ec9d15108fc",
+              "raw_size": 508350,
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              }
+            }
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8424": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -1.7999999523162842,
+            "y": 194.10000610351562
+          },
+          "mFaceOffsets": [
+            {
+              "Offset": {
+                "x": -21.799999237060547,
+                "y": 194.10000610351562
+              },
+              "Type": "roast"
+            }
+          ],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5547717130829659211
+                },
+                "mAssetGuid": "dafa15f2eb0481c49b71d356e52f228c"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "roast"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5547717130829659211
+                },
+                "mAssetGuid": "41b75c41f0e6bcf4db2be7e07666a5ae"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "sigh"
+            },
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 5547717130829659211
+                },
+                "mAssetGuid": "3fa4c8ea904119243aeb8a53fcc361cb"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "speechless"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": 4474533176189353035
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": 6617304950318857291
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 5547717130829659211
+            },
+            "mAssetGuid": "2c9c7c15df6bccd428d8a61836f0abc9"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 5547717130829659211
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8424.prefab",
+        "origin": "apk_zip",
+        "path_id": "5547717130829659211",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-6322369215349228469",
+          "raw_sha256": "71fa6a30a57b6699e3d32f4d0643f092736b62b9b807bac63ceaadf0d9ad43d5",
+          "raw_size": 76410
+        },
+        "raw_sha256": "92f00d7491eaccb886df7f3aaadaeec2798d935d353d311cf6657654b667d403",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8424": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+            "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+            "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+            "bundle_size": 518456,
+            "guid": "2c9c7c15df6bccd428d8a61836f0abc9",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8424/npc_portrait_8424.png",
+            "origin": "official_cdn",
+            "output_sha256": "455799a48fa042dc6a75d44ebdb2cde46f27e6e18e8a92001771c5a4262dedde",
+            "path_id": "1116026509276802131",
+            "raw_sha256": "62b6cfb4bd99f83955842587e199c77c44cd4a311930a9b0ca5048668bde98ae",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+              "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+              "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+              "bundle_size": 518456,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-3501203045387998125",
+              "raw_sha256": "1487a9461faac5e6e812b2d4b9216e5cad76ff17773588a50f68feb037527a76",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+          },
+          "npc_portrait_8424_roast": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+            "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+            "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+            "bundle_size": 518456,
+            "guid": "dafa15f2eb0481c49b71d356e52f228c",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8424/npc_portrait_8424_roast.png",
+            "origin": "official_cdn",
+            "output_sha256": "4b49a5dc3e17f98a988bf0dc73d52ee306b1963fb1baae94bf524bee0ed34001",
+            "path_id": "-3782093134902422132",
+            "raw_sha256": "246f7223c6834900ce97d3d61703e5688352e23f02f440f8a2e773db6560026a",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+              "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+              "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+              "bundle_size": 518456,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "6232451890826417548",
+              "raw_sha256": "b77fa90f80e5351f1981838fa8c25858b62e190a3d2de1ddde881a62b9d62046",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+          },
+          "npc_portrait_8424_sigh": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+            "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+            "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+            "bundle_size": 518456,
+            "guid": "41b75c41f0e6bcf4db2be7e07666a5ae",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8424/npc_portrait_8424_sigh.png",
+            "origin": "official_cdn",
+            "output_sha256": "bbfab58ec0dee0cdf7eaf799482400e376c2c82e3efb8359f0930c42f7c4403a",
+            "path_id": "-6119803483125327984",
+            "raw_sha256": "178add64d26b54f4494bc2f0946ac735b528b9c87dd53a97df972ae0f6f47eb4",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+              "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+              "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+              "bundle_size": 518456,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-2385051956036774000",
+              "raw_sha256": "6678124383160733b4e78fbbca01d024ce93096871f1f91ef3470b51600a9d9f",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+          },
+          "npc_portrait_8424_speechless": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+            "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+            "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+            "bundle_size": 518456,
+            "guid": "3fa4c8ea904119243aeb8a53fcc361cb",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8424/npc_portrait_8424_speechless.png",
+            "origin": "official_cdn",
+            "output_sha256": "19c1a5a9593165f08fac7d22bc66765d676b3367c8a27fad4e32c5276589e895",
+            "path_id": "-834978027694225344",
+            "raw_sha256": "0495d0f139e2af0d4bd4cba84b4e4e47370b75b0ff89c2ed318955d9953718bf",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8424.bundle",
+              "bundle_hash": "31bed1b8cf9afeafc2264d884823a51a",
+              "bundle_sha256": "e455d94c98035671e6331fb734e2b58bc709f7a2c3b0ed1380fc860cccd2f392",
+              "bundle_size": 518456,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "2149741922743715904",
+              "raw_sha256": "233949a3e469fc1e6a7f6f1360b7d336bc3d26a4a9855b5038acfe43c25ae322",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/31bed1b8cf9afeafc2264d884823a51a.bundle"
+          }
+        }
+      },
+      "UI/Portrait/Npc_Portrait_8427": {
+        "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+        "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+        "manifest": "871_156598",
+        "nativePortraitFace": {
+          "mFaceCommonOffset": {
+            "x": -2.5,
+            "y": 233.10000610351562
+          },
+          "mFaceOffsets": [],
+          "mFacesProxy": [
+            {
+              "FaceSpriteProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 2145744623352619862
+                },
+                "mAssetGuid": "943090837d9861f46adf04f16e28b608"
+              },
+              "FaceSpriteRightProxy": {
+                "ContainerSource": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mAssetGuid": ""
+              },
+              "RegionFaceSpriteProxies": [],
+              "Type": "happy"
+            }
+          ],
+          "mNeedFlipOnRight": 1,
+          "mPortraitFaceImg": {
+            "m_FileID": 0,
+            "m_PathID": 6047179576918877014
+          },
+          "mPortraitMainImg": {
+            "m_FileID": 0,
+            "m_PathID": -3712118576137297066
+          },
+          "mPortraitMainProxy": {
+            "ContainerSource": {
+              "m_FileID": 0,
+              "m_PathID": 2145744623352619862
+            },
+            "mAssetGuid": "3326a7cad7155fa47bd8871bb7156bda"
+          },
+          "mRegionPortraitMainProxies": [],
+          "m_Enabled": 1,
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 2145744623352619862
+          },
+          "m_Name": "",
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 3546546428642512858
+          }
+        },
+        "object": "Assets/Prefabs/UI/Portrait/Npc_Portrait_8427.prefab",
+        "origin": "apk_zip",
+        "path_id": "2145744623352619862",
+        "portraitFaceComponent": {
+          "apk_entry": "assets/yoo/DefaultPackage/56f64a8f3bfa207fb1a0e10933886485.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_portrait.bundle",
+          "bundle_hash": "56f64a8f3bfa207fb1a0e10933886485",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "-7619316791755005098",
+          "raw_sha256": "8e1c7aa28e3f656421b1e901364d202b6d0635c641c26cbf59d33dc226a3cc1b",
+          "raw_size": 76410
+        },
+        "raw_sha256": "0df06e43cb28585dd098c9cc7856cb7e02c389fbe25c90c250f6524ae55bbc9a",
+        "raw_size": 76410,
+        "regionCode": 0,
+        "sprites": {
+          "npc_portrait_8427": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8427.bundle",
+            "bundle_hash": "257b17941f9ee82f583b5b48e6eda224",
+            "bundle_sha256": "eab149a5191fb675fee275da810471f6833a01986679766dfd04af5bf09d63c3",
+            "bundle_size": 593586,
+            "guid": "3326a7cad7155fa47bd8871bb7156bda",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8427/npc_portrait_8427.png",
+            "origin": "official_cdn",
+            "output_sha256": "718d5b2cff5693db4b8f026742367dd9cfe7af168a7b3e0b17cec3e80f0230e9",
+            "path_id": "7974231232801432032",
+            "raw_sha256": "5ee245038f30ca943464a937d40ab13275fb4b203e075d3f11240ec59d63ae5a",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8427.bundle",
+              "bundle_hash": "257b17941f9ee82f583b5b48e6eda224",
+              "bundle_sha256": "eab149a5191fb675fee275da810471f6833a01986679766dfd04af5bf09d63c3",
+              "bundle_size": 593586,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "5515152062259552736",
+              "raw_sha256": "e46d24f4f8dabb65643a2a2570844a1feb44a9b0924864760f81d8a3aea948a2",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/257b17941f9ee82f583b5b48e6eda224.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/257b17941f9ee82f583b5b48e6eda224.bundle"
+          },
+          "npc_portrait_8427_happy": {
+            "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8427.bundle",
+            "bundle_hash": "257b17941f9ee82f583b5b48e6eda224",
+            "bundle_sha256": "eab149a5191fb675fee275da810471f6833a01986679766dfd04af5bf09d63c3",
+            "bundle_size": 593586,
+            "guid": "943090837d9861f46adf04f16e28b608",
+            "manifest": "871_156598",
+            "object": "Assets/Image/UI/NPC/Npc_Individual/8427/npc_portrait_8427_happy.png",
+            "origin": "official_cdn",
+            "output_sha256": "ae2414693f107c25a91c14f526d35018d0f6bf3281ee9d91a9b0de7bf9ecc0e2",
+            "path_id": "-2809257142337283755",
+            "raw_sha256": "ee9f5210149e50fe59e894b1829c49f85d4c11ffe994fa75f4f4e1e07c00ed02",
+            "source_manifest": "854_156383",
+            "texture": {
+              "bundle": "defaultpackage_assets_image_ui_npc_npc_individual_8427.bundle",
+              "bundle_hash": "257b17941f9ee82f583b5b48e6eda224",
+              "bundle_sha256": "eab149a5191fb675fee275da810471f6833a01986679766dfd04af5bf09d63c3",
+              "bundle_size": 593586,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-7029412890799646379",
+              "raw_sha256": "99f3eafad7d19672b986f3d8b8fffd638b8e054e29c0df05a50a2dae6b5a50b6",
+              "settings": {
+                "aniso": 1,
+                "filterMode": 1,
+                "maxTextureSize": 2048,
+                "mipBias": 0.0,
+                "sRGBTexture": 1,
+                "wrapU": 1,
+                "wrapV": 1,
+                "wrapW": 1
+              },
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/257b17941f9ee82f583b5b48e6eda224.bundle"
+            },
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/257b17941f9ee82f583b5b48e6eda224.bundle"
+          }
+        }
+      }
+    },
+    "stories": {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/stories.json",
+      "sha256": "1a695aa3a48c441beb4fc89c75a20170acda66f8b0f91711f785dab8a1c3bbc8"
+    },
+    "storyManifestSha256": "e8202b3563cbebe6a87d0ae076bc5283aa8959798ad532a7dbfb2d71680d71f1",
+    "storySettings": {
+      "apk_entry": "assets/yoo/DefaultPackage/baa7f4cc03886126c33376430869910f.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_scriptableconfig_modules_story.bundle",
+      "bundle_hash": "baa7f4cc03886126c33376430869910f",
+      "fields": {
+        "AutoTriggerMapRelatedStoryIds": [
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary1-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary2-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary3-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary4-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary4-2"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary5-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary6-1"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary6-2"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary7"
+          },
+          {
+            "MapClassId": 95,
+            "StoryName": "1stAnniversary9-1"
+          },
+          {
+            "MapClassId": 92,
+            "StoryName": "MusicPartyBorn"
+          },
+          {
+            "MapClassId": 93,
+            "StoryName": "MusicTianYiBorn"
+          },
+          {
+            "MapClassId": 97,
+            "StoryName": "MusicTianYiBorn1"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival1-1"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival1-3"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival1-5"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival2-2"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival2-3"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival3-1"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival3-2"
+          },
+          {
+            "MapClassId": 96,
+            "StoryName": "springfestival4-2"
+          },
+          {
+            "MapClassId": 91,
+            "StoryName": "FirstMeetDemonKing"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "WorldExplore_world"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "TowerActiveReward"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "CureGuide"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "DragCameraGuide"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "EmptySlotWearEquip"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "EmptySlotWearSkill"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "FirstBattle"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "FirstGetTaskReward"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "MapTrack"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "WorldDieConfirm"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "ClickFangBei"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "PromotedZB"
+          },
+          {
+            "MapClassId": 10,
+            "StoryName": "UnlockMonument"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "FindGoddessTip"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "CombatAssistance"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "WorldTreeFinish"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "GriffonEndStory"
+          },
+          {
+            "MapClassId": 11,
+            "StoryName": "FangjianbeiActive_map11"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "IronMountActive"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "IronMountAfterBattle"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "IronMountEndActive"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "Earthquake"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "HelpParuFinish"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "HelpParuReturn"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "LavaRiverHurt"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "MeteFollow"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "PhoenixActive"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "PhoenixFinish"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "SecondEarthquake"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "FangjianbeiActive_map12"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "SmashStone"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "ZhuxianMount_Arrive"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "WaterShrineActive"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "WaterShrineAfterBattle"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FakeAdventurerAfterBattle"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FakeWeiYangAfterBattle"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "SomeoneCry"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "JvBeiFinish"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "JvBeiReturn"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FindSwordOfDaZe"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "NarakuFinish"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "NarakuUnlock"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "IntroduceHuangQuanGe"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "RepairedRankBridge"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FangjianbeiActive_map13"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FakeZhongMoAfterBattle"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "FirstArriveWater"
+          },
+          {
+            "MapClassId": 13,
+            "StoryName": "RescuedByWeiYang"
+          },
+          {
+            "MapClassId": 16,
+            "StoryName": "WhaleIslandFinish"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "DefeatHui"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "DragonDescend"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "SuiMoReturn"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "FengMoXiaFinish"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "FindHeroSword"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "FirstArriveDragon"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HuiAfterBattle"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HuiBeforeBattle"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HelpJiangWangFinish"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HelpWuJiFinish"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HuanTianDingBattle"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "HuanTianDingFinish"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "FindXianBook"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "JiangJunLingActive"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "JiangJunLingAfterBattle"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "BurntSuiMo"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "PickUpShieldOfHui"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "RepairTongTianTower"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "TongTianTowerActive2"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "TongTianTowerActive3"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "TongTianTowerEndActive"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "SuoYaoTowerAfterBattle"
+          },
+          {
+            "MapClassId": 14,
+            "StoryName": "SuoYaoTowerEnd"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "AfterArmageddon1"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "AfterArmageddon2"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SkyWingsLaunch"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "Armageddon-Astrid"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "Armageddon"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SovereignNestAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SovereignNestEnd"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "CrystalSpiralTreeAfterBattle"
+          },
+          {
+            "MapClassId": 42053,
+            "StoryName": "FeiLeCaptured1"
+          },
+          {
+            "MapClassId": 42053,
+            "StoryName": "FeiLeCaptured2"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "FirstMeetWeiLan"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "GirlWarningVoice1"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "FreyaDie2"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "FreyaDie3"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "HelpGrudeAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "IsnaCaptured"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "RescueIsnaBattle3"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "EternalGardenActive"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "EternalGardenAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "GirlChantVoice"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SeekFeiLe1"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SeekFeiLe2"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "WeiLanIntroduceFreya"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "GrudeMusterAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "IsnaMusterAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "ResistanceCaptured"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SilvaMuster1"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SilvaMuster2"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "OpheliaPuzzleFinish"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "OrderHallAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "RescueWeiLanAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "ResistanceCampFinish"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "FirstMeetSilviaEnd"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "SilviaFissureAfterBattle"
+          },
+          {
+            "MapClassId": 17,
+            "StoryName": "AbyssalFortressFinish"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "ArriveHarpady"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "BellTowerAfterBattle"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HelpLilyAfterBattle"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "LilyTriggerTrap"
+          },
+          {
+            "MapClassId": 42178,
+            "StoryName": "MagicalRabbitAppear"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HeadlessHorsemanAppear"
+          },
+          {
+            "MapClassId": 42171,
+            "StoryName": "EnterUndergroundFactory"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "LeaveUndergroundFactory"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct4-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct4-4"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct5-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct5-4"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct6-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct6-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct6-3"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-3"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-4"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-5"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-6"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-7"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-8"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct7-9"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct8-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct8-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct9-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct9-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct9-4"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct9-5"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct10-1"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct10-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct10-6"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct10-9"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct11-2"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct11-3"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct11-4"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct11-8"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct11-9"
+          },
+          {
+            "MapClassId": 42070,
+            "StoryName": "HarpadyAct13-4"
+          },
+          {
+            "MapClassId": 42077,
+            "StoryName": "HarpadyAct13-5"
+          },
+          {
+            "MapClassId": 42081,
+            "StoryName": "HarpadyAct13-6"
+          },
+          {
+            "MapClassId": 19,
+            "StoryName": "HarpadyAct13-7"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct1-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct1-4"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct2-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct2-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct2-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct2-4"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct2-5"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct3-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct3-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct4-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct4-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct5-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct5-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct5-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct5-7"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct6-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct6-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct6-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct6-7"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-5"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-7"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct7-9"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-2"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-3"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-4"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-5"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-8"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct8-9"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct9-1"
+          },
+          {
+            "MapClassId": 21,
+            "StoryName": "IgnisAct9-2"
+          },
+          {
+            "MapClassId": 42229,
+            "StoryName": "IgnisAct10-1"
+          },
+          {
+            "MapClassId": 42214,
+            "StoryName": "IgnisAct10-2"
+          },
+          {
+            "MapClassId": 22,
+            "StoryName": "IgnisAct10-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct2-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct2-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct2-5"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct2-7"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct3-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct3-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct4-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct4-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct4-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct5-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct5-1after"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct5-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct5-5"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct6-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct6-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct6-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct6-4"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct6-6"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct7-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct7-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct7-4"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct8-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct8-2"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct9-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct9-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct10-1"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct10-3"
+          },
+          {
+            "MapClassId": 23,
+            "StoryName": "AperixAct11-1"
+          },
+          {
+            "MapClassId": 42238,
+            "StoryName": "AperixAct14-1"
+          },
+          {
+            "MapClassId": 42238,
+            "StoryName": "AperixAct14-2"
+          },
+          {
+            "MapClassId": 42239,
+            "StoryName": "AperixAct14-3"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "ChallengeFinish"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "ChallengeRegionEnter"
+          },
+          {
+            "MapClassId": 12,
+            "StoryName": "GuideToNPC"
+          }
+        ],
+        "DialogNodeNpcAppearRange": 1,
+        "GetEntityPosOffset": {
+          "x": 0.0,
+          "y": -1.0
+        },
+        "IsDialogNodeNeedCameraMove": 1,
+        "IsTalkNeedCameraMove": 1,
+        "MonsterBodies": [
+          {
+            "BodyClassId": 5050,
+            "MonsterType": 1
+          },
+          {
+            "BodyClassId": 5051,
+            "MonsterType": 2
+          },
+          {
+            "BodyClassId": 5052,
+            "MonsterType": 3
+          },
+          {
+            "BodyClassId": 5053,
+            "MonsterType": 4
+          }
+        ],
+        "PerformanceStepStoryMap": [
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "初次抵达艾珀希",
+            "StoryName": "AperixAct2-1"
+          },
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "帮助凉选择搭档精灵",
+            "StoryName": "AperixAct2-2"
+          },
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "与金刚虫对战并遇到千夏",
+            "StoryName": "AperixAct2-3"
+          },
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "打败金刚虫后剧情",
+            "StoryName": "AperixAct2-5"
+          },
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "和凉一起挑战飓风之柱",
+            "StoryName": "AperixAct2-6"
+          },
+          {
+            "PerformanceName": "AperixChapter02",
+            "StepTag": "通过飓风之柱后前往海岸",
+            "StoryName": "AperixAct2-7"
+          },
+          {
+            "PerformanceName": "AperixChapter03",
+            "StepTag": "结识汐汐并挑战潮汐灵殿",
+            "StoryName": "AperixAct3-1"
+          },
+          {
+            "PerformanceName": "AperixChapter03",
+            "StepTag": "汐汐讲笑话并准备挑战潮汐灵殿",
+            "StoryName": "AperixAct3-2"
+          },
+          {
+            "PerformanceName": "AperixChapter03",
+            "StepTag": "通关潮汐灵殿后获得神明线索",
+            "StoryName": "AperixAct3-3"
+          },
+          {
+            "PerformanceName": "AperixChapter04",
+            "StepTag": "宝石中心遇袭&追击露希尔",
+            "StoryName": "AperixAct4-1"
+          },
+          {
+            "PerformanceName": "AperixChapter04",
+            "StepTag": "露希尔炸毁位阶门",
+            "StoryName": "AperixAct4-2"
+          },
+          {
+            "PerformanceName": "AperixChapter04",
+            "StepTag": "天成修复位阶门",
+            "StoryName": "AperixAct4-3"
+          },
+          {
+            "PerformanceName": "AperixChapter05",
+            "StepTag": "红玉击退露希尔并同行挑战焚晶之城",
+            "StoryName": "AperixAct5-1"
+          },
+          {
+            "PerformanceName": "AperixChapter05",
+            "StepTag": "准备挑战焚晶熔城",
+            "StoryName": "AperixAct5-2"
+          },
+          {
+            "PerformanceName": "AperixChapter05",
+            "StepTag": "发现BOSS房间异常",
+            "StoryName": "AperixAct5-3"
+          },
+          {
+            "PerformanceName": "AperixChapter05",
+            "StepTag": "调查精灵生命力被吸收",
+            "StoryName": "AperixAct5-4"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "发现同源黏液线索",
+            "StoryName": "AperixAct6-1"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "绯乐被机械兽抓走",
+            "StoryName": "AperixAct6-2"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "露希尔控制绯乐进入磐岩斗阵",
+            "StoryName": "AperixAct6-3"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "千夏借出岩精灵挑战磐岩斗阵",
+            "StoryName": "AperixAct6-4"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "在磐岩斗阵遭遇露希尔",
+            "StoryName": "AperixAct6-5"
+          },
+          {
+            "PerformanceName": "AperixChapter06",
+            "StepTag": "凉救场并抓住露希尔",
+            "StoryName": "AperixAct6-6"
+          },
+          {
+            "PerformanceName": "AperixChapter07",
+            "StepTag": "融合兽救走露希尔并暴露幕后线索",
+            "StoryName": "AperixAct7-1"
+          },
+          {
+            "PerformanceName": "AperixChapter07",
+            "StepTag": "竞技之门开启自由对决",
+            "StoryName": "AperixAct7-2"
+          },
+          {
+            "PerformanceName": "AperixChapter07",
+            "StepTag": "凉向冒险者发起挑战",
+            "StoryName": "AperixAct7-3"
+          },
+          {
+            "PerformanceName": "AperixChapter07",
+            "StepTag": "战胜凉后前往曙光圣庭",
+            "StoryName": "AperixAct7-4"
+          },
+          {
+            "PerformanceName": "AperixChapter08",
+            "StepTag": "通关曙光圣庭后发现阿卡多",
+            "StoryName": "AperixAct8-1"
+          },
+          {
+            "PerformanceName": "AperixChapter08",
+            "StepTag": "阿卡多击败红玉并吞噬火刃龙",
+            "StoryName": "AperixAct8-2"
+          },
+          {
+            "PerformanceName": "AperixChapter08",
+            "StepTag": "凉的稚风鸟被阿卡多吞噬",
+            "StoryName": "AperixAct8-3"
+          },
+          {
+            "PerformanceName": "AperixChapter09",
+            "StepTag": "阿卡多在幽蚀深渊前邀战",
+            "StoryName": "AperixAct9-1"
+          },
+          {
+            "PerformanceName": "AperixChapter09",
+            "StepTag": "幽蚀深渊战前遭遇阿卡多",
+            "StoryName": "AperixAct9-2"
+          },
+          {
+            "PerformanceName": "AperixChapter09",
+            "StepTag": "战胜阿卡多并遭遇机械绯乐",
+            "StoryName": "AperixAct9-3"
+          }
+        ],
+        "PlayerArroundRangeSize": {
+          "X": 2,
+          "Y": 3
+        },
+        "PlayerTalkDistException": 5.0,
+        "ScreenTextFadeOutDuration": 2.0,
+        "ScreenTextPlayInterval": 2.0,
+        "TalkBubblePlayablePath": "",
+        "TalkCameraMoveDuration": 0.6000000238418579,
+        "TalkCameraMoveXCurve": {
+          "m_Curve": [
+            {
+              "inSlope": 0.0,
+              "inWeight": 0.0,
+              "outSlope": 0.0,
+              "outWeight": 0.3333333432674408,
+              "time": 1.1444091796875e-05,
+              "value": 0.0,
+              "weightedMode": 0
+            },
+            {
+              "inSlope": 0.0,
+              "inWeight": 0.3333333432674408,
+              "outSlope": 0.0,
+              "outWeight": 0.0,
+              "time": 0.99981689453125,
+              "value": 0.0,
+              "weightedMode": 0
+            }
+          ],
+          "m_PostInfinity": 2,
+          "m_PreInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "TalkCameraMoveYCurve": {
+          "m_Curve": [
+            {
+              "inSlope": 0.0,
+              "inWeight": 0.0,
+              "outSlope": 0.0,
+              "outWeight": 0.0,
+              "time": 0.0,
+              "value": 0.0,
+              "weightedMode": 0
+            },
+            {
+              "inSlope": 0.0,
+              "inWeight": 0.0,
+              "outSlope": 0.0,
+              "outWeight": 0.0,
+              "time": 1.0,
+              "value": 1.0,
+              "weightedMode": 0
+            }
+          ],
+          "m_PostInfinity": 2,
+          "m_PreInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "TalkCameraViewOffset": {
+          "x": 0.0,
+          "y": -1.0,
+          "z": 0.0
+        },
+        "mDialogVoiceStopEventKey": "Voice_StopAll",
+        "mVoiceOverIds": [
+          100000
+        ],
+        "m_Enabled": 1,
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "m_Name": "StorySettings",
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2066546669878533610
+        }
+      },
+      "manifest": "871_156598",
+      "origin": "apk_zip",
+      "path_id": "5377815171367770602",
+      "raw_sha256": "53cefe69d5e551559d1bed2bfd6db96c61c455632d33251aed3bb8f80ef4c4ee",
+      "raw_size": 5418
+    },
+    "talkDialogPrefab": {
+      "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+      "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+      "manifest": "871_156598",
+      "object": "Assets/Prefabs/UI/Story/TalkDialog.prefab",
+      "origin": "apk_zip",
+      "path_id": "1925077335490280030",
+      "raw_sha256": "d33084d2e611934e298e3cd6ba17f79162b847194bfaacd13a913352b8f01ca6",
+      "raw_size": 126656,
+      "speakerComponents": {
+        "left": {
+          "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+          "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "3477304352990607966",
+          "raw_sha256": "55b7f12fb6e20a74a4b45ff9af9d759abf98717beb1062c8eba600a7d83181ac",
+          "raw_size": 126656
+        },
+        "right": {
+          "apk_entry": "assets/yoo/DefaultPackage/5473f9c47986ea5caafb199bd112f7fe.bundle",
+          "apk_manifest": "854_156383",
+          "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+          "bundle": "defaultpackage_assets_prefabs_ui_story.bundle",
+          "bundle_hash": "5473f9c47986ea5caafb199bd112f7fe",
+          "manifest": "871_156598",
+          "origin": "apk_zip",
+          "path_id": "5147106843377908318",
+          "raw_sha256": "3ee79e9100b701bdbabbbfca43bf0a80cd9c30c4c4ce78c5b6656354585520b1",
+          "raw_size": 126656
+        }
+      }
+    }
+  },
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_10005.png",
+      "sha256": "32ea1f193fdd4c965256be796600f0fcac97629fa1086eb80c4cdb90b788940f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_10609.png",
+      "sha256": "9f978a93bf32ea9030679bd0e60db6507365ce797febddd2dcad026ad8ed4271"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402.png",
+      "sha256": "0f2b1c96a7540a02b16aa71591b7f6ffe3ff747786e4a53677b3766823683bf9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_adorkable.png",
+      "sha256": "d509ced1f3cd9b09533eeef8fa09144f5b78ac0ce4498a2421dd7d8e2af1e083"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_angry.png",
+      "sha256": "b68383823713073f23c324a3427c3e6149e51d7f0779a6d9c9868cdf002ed57c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_baozi.png",
+      "sha256": "a8ce5e37b3caedbec7e202aad28fa78b309f383e7293ec1dcd0d2e3e44f2357c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_cry1.png",
+      "sha256": "b4d4aa67aaf11edd08a4967ddcdde388ecea35b0ee04681f0a53a4f50a6ad24c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_expectation.png",
+      "sha256": "beb509cde81ac652674b81b067af9fe69b66b484254165681346659e674afe6c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_happy.png",
+      "sha256": "34575761683e09c0fa90606c2d5048d4cf4ed3e504c10e8371bb99ac4e605433"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_shock.png",
+      "sha256": "7ac47b013e3e5f7334f53320be51a057140eecf1ff13859b01ba5dfdb179e693"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_shock2.png",
+      "sha256": "416d3e6e9922ed3b5d273638a480717d0552293a4fd12a6ab4cfa304180cc7b3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8402_sweat.png",
+      "sha256": "fb0e17b4b57d856f3b767cbc2152247cefd0c9d82c13be0b6ab19daa1d0d80d7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8421.png",
+      "sha256": "4e551fc12d12200ad9ea3a7fbc4e3d193c7fc28d3fc92492840834444b856318"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8421_embarrasseds.png",
+      "sha256": "0d0f897db77cd7b84a9b6d8722356f778484af1f38bd749c8b3254d97664a520"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8421_happy.png",
+      "sha256": "e465a24c2c12293289d635f94e5048a2f226e6c4411d007aa7749c0d35e5d64b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8422.png",
+      "sha256": "fe99645cf3c227bcd2a0da5f79bd6a11fbb024c2cf8402b86a2edd067f63951b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8422_confident.png",
+      "sha256": "4f1332bb19d6be4ffe13a2c6f3a51498c4bc9b3a7a6436b50af90618362e2e0d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8422_dizzy.png",
+      "sha256": "ca89b408389c0415113a05fa697b9e4b19055f7c5a7c3870a3b532fcb33a8928"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8422_happy.png",
+      "sha256": "727c816d8114c41d13a74b123d56630fb513c4be38c2476e22b4dd58a7454ef1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8423.png",
+      "sha256": "013389273ce92287f42284a1c2bb1981a03bec320ec6bac38ea662adf8cc31db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8423_happy.png",
+      "sha256": "a4e07856ce280b21b7c5895dc6ad8adf895a2aae7f872d216692fdbd19c167f7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8423_speechless.png",
+      "sha256": "fa13323adabd0afac3a6a96501d686662fdd453c69897c61a8a38280169d637b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8424.png",
+      "sha256": "455799a48fa042dc6a75d44ebdb2cde46f27e6e18e8a92001771c5a4262dedde"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8424_roast.png",
+      "sha256": "4b49a5dc3e17f98a988bf0dc73d52ee306b1963fb1baae94bf524bee0ed34001"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8424_sigh.png",
+      "sha256": "bbfab58ec0dee0cdf7eaf799482400e376c2c82e3efb8359f0930c42f7c4403a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8424_speechless.png",
+      "sha256": "19c1a5a9593165f08fac7d22bc66765d676b3367c8a27fad4e32c5276589e895"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8427.png",
+      "sha256": "718d5b2cff5693db4b8f026742367dd9cfe7af168a7b3e0b17cec3e80f0230e9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Dialogue/npc_portrait_8427_happy.png",
+      "sha256": "ae2414693f107c25a91c14f526d35018d0f6bf3281ee9d91a9b0de7bf9ecc0e2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/dialogue-portraits.json",
+      "sha256": "76f970747b904ed2b39bb847fb4a0334b68a8bef19ab70dfa36b6fed4053421a"
+    }
+  ],
+  "regionCode": 0,
+  "unknownExpressionBehavior": "Original PortraitFace.ChangeFace preserves the current face when FindFaceData returns null."
+}

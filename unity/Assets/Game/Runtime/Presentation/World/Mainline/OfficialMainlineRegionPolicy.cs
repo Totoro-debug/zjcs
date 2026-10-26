@@ -81,7 +81,8 @@ namespace Zjcs.Presentation.World
             }
         }
 
-        public bool IsAccessible(int regionId, IReadOnlyDictionary<int, int> regionPoints, Func<string, int> storyCount)
+        public bool IsAccessible(int regionId, IReadOnlyDictionary<int, int> regionPoints, Func<string, int> storyCount,
+            Func<string, int> storyStatus = null)
         {
             if (!regionConfigs.TryGetValue(regionId, out OfficialMainlineRegionConfig region))
                 throw new InvalidDataException("Map" + mapClassId + " entity references an unknown region: " + regionId);
@@ -90,6 +91,8 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Map" + mapClassId + " references an unknown access condition: " + region.AccessibleConditionId);
             if (condition.Type == "StoryCountCondition")
                 return Compare(storyCount(condition.StoryKey), condition.Op, condition.Count);
+            if (condition.Type == "StoryStatusCondition")
+                return (storyStatus ?? throw new InvalidDataException("Story status provider is required."))(condition.StoryKey) == condition.Status;
             if (condition.Type != "WorldMapProgressCondition" || condition.MapClassId != mapClassId
                 || condition.Progress != 10000)
                 throw new InvalidDataException("Unsupported official Map" + mapClassId + " access condition: " + region.AccessibleConditionId);
@@ -128,6 +131,7 @@ namespace Zjcs.Presentation.World
             public int Progress;
             public string StoryKey;
             public int Count;
+            public int Status;
             public string Op;
             public string Type => _type;
         }

@@ -20,13 +20,31 @@ namespace Zjcs.Editor
         public static void Run() => RunCore(false);
         public static void RunUi() => RunCore(true);
         public static void RunUiImported() => RunCore(true, false);
+        public static void RunRuntime()
+        {
+            SessionState.SetBool(Key + ".runtimeDialogue", false);
+            RunCore(false, false, 12, true);
+        }
+        public static void RunRuntimeDialogue()
+        {
+            SessionState.SetBool(Key + ".runtimeDialogue", true);
+            RunCore(false, false, 12, true);
+        }
+        public static void RunDialogueInput() => RunCore(false, false, 12, false, true);
+        public static void RunDialogueInputMap11() => RunCore(false, false, 11, false, true);
+        public static void ImportUiAndRunRuntime()
+        {
+            try { OfficialMap11UiTools.ImportForMap(12); RunRuntime(); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
         public static void RunUiMap11Regression()
         {
             try { OfficialMap11UiTools.ImportForMap(11); RunCore(true, false, 11); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
 
-        private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12)
+        private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
+            bool verifyDialogueInput = false)
         {
             try
             {
@@ -34,6 +52,8 @@ namespace Zjcs.Editor
                 if (verifyUi && import) OfficialMap11UiTools.ImportForMap(12);
                 ProjectTools.Validate();
                 SessionState.SetBool(Key + ".ui", verifyUi);
+                SessionState.SetBool(Key + ".runtime", verifyRuntime);
+                SessionState.SetBool(Key + ".dialogueInput", verifyDialogueInput);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);
@@ -90,7 +110,9 @@ namespace Zjcs.Editor
                 yield return current;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log(SessionState.GetBool(Key + ".ui", false)
+            Debug.Log(SessionState.GetBool(Key + ".dialogueInput", false) ? "Map" + SessionState.GetInt(Key + ".uiMap", 12) + " original dialogue raycast and simulated pointer input passed."
+                : SessionState.GetBool(Key + ".runtime", false) ? "Map12 runtime input and save checks passed. Complete map verification remains separate."
+                : SessionState.GetBool(Key + ".ui", false)
                 ? "Map" + SessionState.GetInt(Key + ".uiMap", 12) + " native UI Play Mode passed: two portrait scales, goddess icon states and simulated button input. Full map and persistence remain separate."
                 : "Map12 source Play Mode rendering passed. Gameplay, UI, puzzles and save recovery are not covered.");
             EditorApplication.isPlaying = false;
@@ -100,6 +122,18 @@ namespace Zjcs.Editor
         {
             if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
                 throw new InvalidOperationException("Map12 graphics must run with Direct3D12.");
+            if (SessionState.GetBool(Key + ".dialogueInput", false))
+            {
+                IEnumerator dialogueSteps = VerifyDialogueInputSteps();
+                while (dialogueSteps.MoveNext()) yield return dialogueSteps.Current;
+                yield break;
+            }
+            if (SessionState.GetBool(Key + ".runtime", false))
+            {
+                IEnumerator runtimeSteps = VerifyRuntimeSteps();
+                while (runtimeSteps.MoveNext()) yield return runtimeSteps.Current;
+                yield break;
+            }
             if (SessionState.GetBool(Key + ".ui", false))
             {
                 IEnumerator uiSteps = VerifyUiSteps();
