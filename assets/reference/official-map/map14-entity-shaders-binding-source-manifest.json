@@ -1,0 +1,334 @@
+{
+    "mapClassId": 14,
+    "original_pass_variants": 2208,
+    "compiled_stages": 4416,
+    "manifest": "871_156598",
+    "source_sha256": "c47110ae38c88f1c3c11fc4b2b7e12d1f5f0c2053c4bce8b3d71a6bf6fc3d872",
+    "validator_sha256": "95f94785d40cab49c3600fbbcf3797e467bd1ad8e33a351ffc03932bba1a793e",
+    "bindings": [
+        {
+            "original_shader": "Universal Render Pipeline/Spine/SkeletonDye-2D",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonDye2D_ffd6b8c6.shader",
+            "sha256": "a3aad5e2694ace9cdd9868b59952de26f5f3fe98707e4c101fb2935068d29d14",
+            "meta_sha256": "252672658f20d4690664f8cedb88214bed88fe6bc6c8d70938522240262a5a27",
+            "guid": "43ec8f73bde5e678743264dfc98a5027",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Spine/Skeleton-Lit-Atten",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSkeletonLitAtten_28ddc61f.shader",
+            "sha256": "683ceb0dfa92e35aa52dc227f2b58c065493c470f4927606dd6719d61f540f0e",
+            "meta_sha256": "5bb26f67ddf5259895891a85e6b1276cf8f308b281578d8ad542e8f6aae0a5c5",
+            "guid": "d441445382822af31385915a15070b50",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader",
+            "sha256": "e7b72cb4f5be7e8b2fc6980a5bb62c65365d78a2675b0c53debb4a4544b01191",
+            "meta_sha256": "189272f653c6a3a50668dd7b443dea919b3f7647f786589d63a28c0333f59849",
+            "guid": "7fff12d8581889a6a8b99eec0e12bbfe",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/TerrainLit.shader",
+            "sha256": "da972ea9c5afba02b43b8406ffc57713d6bda052406128f51b7bfc67cbde144b",
+            "meta_sha256": "721356881c20a9c8788ed0b1f9f5785fc13bf370c18683604a66b9e2783ff53e",
+            "guid": "d20dee2b0ac238ee7811048b64fcc2b2",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphicEffect",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicEffect_484d1990.shader",
+            "sha256": "bbdc63bff840d9a8c7cf3b339e6be50cd733b3068baf0aa0d92155ec7969ebeb",
+            "meta_sha256": "b81b63595c68b3854d2c88104ae43e09504529ba94177a41d151d0f652457cb3",
+            "guid": "01c83e9fd7ede8bc09722271bdb1b9fd",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Sprites/WaterMask",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMask.shader",
+            "sha256": "5fe271924f7aa01f5627f92f82bdd92276408479f1523cf2f91ded9e4f441122",
+            "meta_sha256": "32c308874853bc0fb048c67724813f4edf5e7e8663527961bf02960b6fe0208b",
+            "guid": "8b2a3764b961896554f6f5bfd75592b2",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-CustomWater2",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterSurface.shader",
+            "sha256": "3116f90e1d3901469a3b1e0c3cb5cb104f31bea445b1c5eb35d2d45b4721817d",
+            "meta_sha256": "c2bc5a0758b073ed64fc380ea163d0d93b6abe92151913419605d8b83a36af04",
+            "guid": "6056bfce819040ad97f44295028abb06",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Unlit/CustomWater",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterLegacy.shader",
+            "sha256": "eb426c62b66f4087e9257e91afae6a9d8ddd778dbe6b01b16feef87346764e4a",
+            "meta_sha256": "ec52a18579b28e3d5ed53600278d060eb65adb8669f9c3001439fd9c3b8ed9cb",
+            "guid": "2dcaffc516389351af9f79a1f469374b",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Sprites/WaterMaskOverwrite",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMaskOverwrite.shader",
+            "sha256": "da474e8063091648b08941a6050799e8f36ccf595f1f33360b401618b0763578",
+            "meta_sha256": "07be68975706fe1cc78f09ffd79391f835e13a661e70ee51db7ec55bc901f25d",
+            "guid": "96247b83ad99bd90b0641c86d0778781",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Effect/Noise_Mask_Pro",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader",
+            "sha256": "63bd6a58036ba0543e02137abe57c780864a004e3ff463547bf54f38d5932a4e",
+            "meta_sha256": "8b6f01cf73295fca97943b50b912763ade1db93f69a5f24904033767f3660d43",
+            "guid": "3d296eca22d090137525ad7cf6a159b6",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "UI/EffectDistort",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIEffectDistort_72c67609.shader",
+            "sha256": "3bf8432c92c63ab99d62b3611207119f3aeac171be0e470fac9d0c9092885507",
+            "meta_sha256": "bc4a26bba420f2f73883a872b0986084a383ff26eb598a8547323eec5e11a63b",
+            "guid": "d934f3259591aa59e6719a762a06d996",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Hidden/JSZX/TextMeshPro",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WorldText.shader",
+            "sha256": "b29a0d136e54e7072b0064278c3902166467b7ae1a4af400530e7049ea88eab6",
+            "meta_sha256": "c45b7698497cfab187da2ae56f231eb09ebd46d7e35ace76c6d0dc4dc537180b",
+            "guid": "e82bdf526f90515ef7be909a2bb66b19",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "UI/Default",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIDefault_aa7762d1.shader",
+            "sha256": "e837147dac022a00ff4ae4a902c2de06c6883c0b53cd2e290d8f2e8fb7156ec1",
+            "meta_sha256": "a08f5c6365315cd66b652ba77f444bcafddaa08803274ac57f8378666bb0e8f6",
+            "guid": "4b46abe8849767e7e75e4c7a62c1c899",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Atten",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitAtten_15542ddd.shader",
+            "sha256": "33c9c76e9e746fe9704135949c31f634e8b78745e1eb819f31152b32fc10f7d6",
+            "meta_sha256": "dc441db2e8f6ee435c7bdebf208d0149d829f6fec1f6f24d59579270a5ca1b2b",
+            "guid": "985677b7ccba8567bfca435dbcd3178f",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Misc",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitMisc_e2daabda.shader",
+            "sha256": "f0c3ec98f3bcbce404f0defcf87dbdcecd85989bbc671c27dc3fd1464cbd7aa1",
+            "meta_sha256": "eab0bc47b0c82607441c3d7f2727c051b6cb5f21a0e86dd1367526336aa36f24",
+            "guid": "35093a010b5fe8fbea0d8cc57e925831",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphicDye",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicDye_a2f0973c.shader",
+            "sha256": "62505f7466a86f078d725832aa0c9adf0b54c87e53abae222f9ee761a3350029",
+            "meta_sha256": "ad57b427dff7fee06120b86437f80e914678aac054351d30a094cf9de5a55b35",
+            "guid": "facd9c72b72312147ead8d45a4bc9ed8",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "UI/EffectSequeue",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIEffectSequeue_ff983b36.shader",
+            "sha256": "b0539b04eb801978b6979098b4289f60a37549aed959838b020acd4b42bce6fd",
+            "meta_sha256": "79114f1d00eb9771a73514e4260face5493e78f8931cba483df12e087eb7c45d",
+            "guid": "86bb1c043533ac53d3a25f9015480446",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/Skeleton",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeleton_ef302479.shader",
+            "sha256": "0b58201eb32be5b5afb4b6fc89b900ad7026c3ae65566d079bbd93f61531d617",
+            "meta_sha256": "97b571961ef019c317601e80975cea09f5bf07e6f7f4710ae06a351e8bddf7ed",
+            "guid": "ba7ff0413055033c3b93ef5977269c9c",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Sprites/Submersion",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Submersion.shader",
+            "sha256": "1bd590fb84f3b4747168436fb2b4bb01e0c3df223fb1fa636e3a9cef0c11df97",
+            "meta_sha256": "0033aab60ce64d0f87e6870e482214ab0c766a29b0053fe535b35c00ea02aa1a",
+            "guid": "60ad7520b62a056eb2684d2b9ad8095f",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/Lit",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineLit_cc454bf0.shader",
+            "sha256": "a46a75bbc213b74dc54894b442045b80f0e0c985b46a0867a1bca4af5005f73a",
+            "meta_sha256": "371d206f23136d09b007d145393aa754b62a23e27c7a62598337a2e29be2c9d7",
+            "guid": "c045fbb887ea8c4db3ff491b9ac0a059",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Movable-Sprite",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DMovableSprite_6fdb1321.shader",
+            "sha256": "6e1dc493c62aaa68510b47626fb03dca3ba9607d12a0825ccaafd2106aa9c07b",
+            "meta_sha256": "8d956325496d033c69bfbea8d30342fef29438e6dbb6c000efe45ad777801b09",
+            "guid": "01bcc1275e550d14668a8853a26d7694",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Mask",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteMask_b13d7dc4.shader",
+            "sha256": "5110b14563b6c01dc80902bb4234385d332d0d5e28e8a5a277e7636f0ddc7ce7",
+            "meta_sha256": "ce3e02e49afe18566251fc46e55ce9f22990c1c5f0d888a712ba203da8c0c318",
+            "guid": "5342357e36f2f354643805e3bfb0a2d8",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-ColorShift",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitColorShift_8de0c09e.shader",
+            "sha256": "7839c108ce346358667a5bca9b7edef6470f148fc5eb92b84d397a063596cf33",
+            "meta_sha256": "d30ffc3de90c9f7c08d8782e99b390167cf8bf0b2075d88f68e1e7e964ee58bd",
+            "guid": "901d9457266bb5214ec3e4fad320f615",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Sprites/DefaultZWrite",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefaultZWrite_a1002d66.shader",
+            "sha256": "25b89ddbc78dfa7e93c26a82176e1f04ac9ebe7bad315ea978c79f3c55f538ea",
+            "meta_sha256": "347f7564e519a99d3d77313151d88035ae1ed974d6ae5e8a286ac317c0676adf",
+            "guid": "704c6c41ffb275afd378a26265c8172a",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Fording",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitFording_e257809f.shader",
+            "sha256": "0c51755da1e00bc18e0f68fe2f7a4ef49ad630be35bce5301b262763519342ee",
+            "meta_sha256": "d666a655db12a812b06b1e7809c5bef57ec54b0811de46749ba2b41e1beeb8be",
+            "guid": "9ac3e12d69f38122094c5be9128ba319",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphicCustom",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicCustom_05649282.shader",
+            "sha256": "be5b9536ffab01919736a02ab8071ba4113cf49d55c29d856fee86cd05e3eb05",
+            "meta_sha256": "7507f1b6880b0bd67e99d506f34fe7e121dcccd07814b381e211b243693b5fe6",
+            "guid": "7a7da35309f937711f7f2c061d672d36",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Universal Render Pipeline/2D/Spine/Skeleton Lit",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSkeletonLit_e5da056a.shader",
+            "sha256": "ba26852c16162a00fbc18074c940888f1c9bebf343e67ca98f184e48a34d6ea4",
+            "meta_sha256": "16ccd6bafc7314dcd5d63f49dadf929f08e8e262d6f9a9763dd834ac4290c62b",
+            "guid": "ffd6e3da0506e33fd7b8e9e2b6b841ed",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "UI/EffectAdditive",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UIEffectAdditive_b771f309.shader",
+            "sha256": "ea2520d6a310ea3f673700dd1f04b10fb9d3e18fcf5f575ff3edcfd46694f031",
+            "meta_sha256": "2a95bca1f9344a203faaddd4c54e9b043dce87570171aabdb3048cfad4f4411f",
+            "guid": "7a3272341fa04a13e2a9303909509564",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphic Multiply",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicMultiply_468c8e33.shader",
+            "sha256": "0c3c2e8a35117b0ed9dd6d021fb1dcdb788523b3e53b10cb75f4d1bdec005c83",
+            "meta_sha256": "4bfdb58bdc615359763be4f406b052200b0ee86386ef70b1852a128c201b2b00",
+            "guid": "4f238f150cca750b03b65c922eb8d2cc",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphic Additive",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicAdditive_c468cd76.shader",
+            "sha256": "3b5bbfae2497495ee87d7fc2f9739c2e92b6b3f8fb6a6f7f5ef8051e8d2f1aaa",
+            "meta_sha256": "d37b7be87d83f9b40c15c2636df70180eb9a306bf117fa0bf3f06ccc55437411",
+            "guid": "635e59a8b6ab164a2c7754dca9206b1c",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Spine/SkeletonGraphic Screen",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeletonGraphicScreen_1eceae8b.shader",
+            "sha256": "2feb51f1df67cd43364152673788044bfd08cec9cbf2faaaab5a935b7269c9fc",
+            "meta_sha256": "c0360bd68f7c9cd02ddd5fc8fe18c8171ea33303952344e37f2283b3b7dfe89b",
+            "guid": "d12d7ea0545f0ea0f846abd3adc6e618",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Sprites/Default",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefault_b64456be.shader",
+            "sha256": "868e46bd4727ffc1bd2ebbc82fb7c4b78ea05ecfa8c05ce1c0e01bec908bd8e6",
+            "meta_sha256": "32731f9f96284b7416405ba9b48d4964c9e19d67916a021f9afd35e0f15b8186",
+            "guid": "d0a681abf0bb4e3ee79adc8aea8a551c",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Legacy Shaders/Particles/Alpha Blended Premultiply",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/LegacyShadersParticlesAlphaBlendedPremultiply_51c51311.shader",
+            "sha256": "53349621d3b7ccd6250348b3232649f8dc0b1e93af3840042957e4275219ca10",
+            "meta_sha256": "ece0f351168c42a275076a34d145854bd7298584f20383ed1e8f130ec8fb7c7e",
+            "guid": "88dd0f837eae0d690145acc8bc387926",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "Skybox/Procedural",
+            "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SkyboxProcedural_776bbedf.shader",
+            "sha256": "56cbe44d3934779312f8c31707c07c6ab4c6a885aedb44de06bfafe656ddc057",
+            "meta_sha256": "967e02d0f95ddd3779d74dfccc8a29113b3756765d47a9afcc090853883784ea",
+            "guid": "baf2dda562f59371a68bb58bb4d66963",
+            "file_id": 4800000,
+            "engine": false
+        },
+        {
+            "original_shader": "GUI/Text Shader",
+            "path": "Library/unity default resources",
+            "sha256": "",
+            "meta_sha256": "",
+            "guid": "0000000000000000e000000000000000",
+            "file_id": 10101,
+            "engine": true
+        },
+        {
+            "original_shader": "Hidden/FrameDebuggerRenderTargetDisplay",
+            "path": "Library/unity default resources",
+            "sha256": "",
+            "meta_sha256": "",
+            "guid": "0000000000000000e000000000000000",
+            "file_id": 10755,
+            "engine": true
+        }
+    ]
+}
