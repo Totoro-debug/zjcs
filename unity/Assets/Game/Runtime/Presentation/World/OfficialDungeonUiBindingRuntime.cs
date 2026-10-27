@@ -531,7 +531,8 @@ namespace Zjcs.Presentation.World
                 foreach (string part in path.Split('/')) node = node.GetChild(int.Parse(part));
             else if (names != null && names.Length == 1 && node.name == names[0] + "(Clone)")
                 node.name = names[0];
-            if (names == null || names.Length == 0 || node.name != names[names.Length - 1])
+            if (names == null) return node;
+            if (names.Length == 0 || node.name != names[names.Length - 1])
                 throw new InvalidDataException("Official dungeon UI hierarchy changed at " + path);
             if (names.Length > 1)
             {
