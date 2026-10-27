@@ -2,7 +2,7 @@
 
 [总索引](../README.md)
 
-状态：未完成。当前官方配置、原生地形、裸场景与机关规则已恢复并分项验证；完整分区、实体、正式玩法、界面、存档与 Windows 发布尚未完成。
+状态：未完成。当前官方配置、原生地形、389 个环境 prefab、两类蝴蝶动画与机关规则已恢复并分项验证；地区标签、实体、正式玩法、界面、存档与 Windows 发布尚未完成。
 
 ## 地图简介
 
@@ -23,6 +23,10 @@
 - 四个踏板原活动结果为传送：`3604→3609`、`4201→4205`、`4504→4506`、`4509→4512`，原 ActionId 为 `22081`。目标按原 `StageResultTransportComponent.TryGetTargetPos` 读取放置坐标再加 Offset，结果通过显式宿主回调交付；尚未接入正式角色移动和动作播放。没有传送宿主时明确报错，不忽略原结果。
 - `Map14/Native/puzzle-catalog` 显式绑定原规则与哈希、十二终端的 `325×1` 原费用。内置屏 DX12 Play Mode 通过七组火炮清障／重置范围、重复目标、状态与坐标保留，五组走格子原次数／来向、超次数不完成、手动条件、辅助、独立奖励状态保留、组间隔离、传送目标／动作参数、JSON 冷读及坏哈希拒绝；地图 11、12 的共享机关回归、全局校验与静态检查通过。该验证直接执行规则，没有模拟鼠标、正式地图路线、扣费、实际领奖或磁盘存档。
 
+- 全部 389 个非标签环境 prefab 已恢复原生层级与引用：新增 766 份资产、复用 22 份核验依赖，新增 59 张纹理。原全局环境配置、渲染管线及共享实现按当前 APK 对象与 113 份代码／资产载荷核对。`native-environment-scene-catalog` 与原加载器显式绑定全部路径，没有缺失脚本或未解析对象引用。
+- 139 个环境 prefab 中的 238 个蝴蝶实例保留原 Transform、材质、初始皮肤、动画与更新模式；两种原模型分别为 9／7 根骨骼、3／1 套皮肤、9／2 段动画。按已确认的免费原生方案，读取原骨骼、非加权网格／四边形、图集裁切和旋转、链接网格、仿射继承及绝对时间三次曲线，独立计算原生 Mesh；没有复制、翻译或运行 Spine runtime。两套原 GLES shader 保留全部程序及渲染状态，全部变体的顶点／片元阶段通过 Windows D3D 编译；实际 Play Mode 使用 DX12。
+- 完整环境隔离夹具在内置屏 DX12 Play Mode 通过公／私图原分区与环境回调，分别加载 135／238 个蝴蝶实例、注册 108 个地区光照；全部 240 个地形区块及 389 个环境路径经过加载、场景停用／恢复及清除／注销。71 张纹理的 432 个 mip GPU 回读与源字节一致。独立双精度原始数据参考与 C# 原生求值器核对 3,274 个姿态、68,618 个顶点，覆盖全部皮肤、动画、关键帧及曲线内部；这不是与 Spine runtime 的逐帧对照。已验证两种可见实例的真实 Update 时钟并查看近景及公／私图实际画面。夹具明确省略 97 个地区标签，使用隔离环境状态，不包含正式角色、实体交互或存档。
+
 ## 自定义实现
 
 以下为用户确认并已接入独立规则层的单机处理；正式地图宿主、菜单、背包交易和存档尚未接通。
@@ -33,7 +37,7 @@
 
 ## 尚未实现
 
-- 恢复全部环境分区、地区标签、实体 prefab、骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面。
+- 恢复地区标签、实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面。
 - 接通 111 区、2,961 个放置实体、8 块战斗碑、3 处遗迹、7 组火炮、5 组走格子及地图 15 原出口的正式入口、原条件、剧情、交互、战斗与奖励。不得以配置提取或地形夹具代替完整玩法。
 - 接通背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复；上述资源验证未模拟鼠标，也未覆盖正式业务或存档。
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
@@ -48,5 +52,8 @@
 - [地形转换](../../scripts/prepare_unity_map14_native_terrain.py)、[地形来源](../../assets/reference/official-map/map14-native-terrain-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-terrain-binding-source-manifest.json)。
 - [裸场景转换](../../scripts/prepare_unity_map14_native_scene.py)、[裸场景来源](../../assets/reference/official-map/map14-native-scene-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-scene-binding-source-manifest.json)。
 - [原 shader 转换](../../scripts/prepare_unity_map14_scene_shaders.py)、[shader 来源](../../assets/reference/official-map/map14-scene-shaders-source-manifest.json)、[导入检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14NativeSceneTools.cs)及[区块运行检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14PartitionAcceptance.cs)。共享原地形与环境代码位于 `Runtime/Official/World/NativeTerrain/`、`NativeEnvironment/`，本地加载边界位于 `Runtime/Offline/World/NativePartition/`。
+
+- [蝴蝶原生动画与 shader 转换](../../scripts/prepare_unity_map14_butterflies.py)、[来源](../../assets/reference/official-map/map14-native-butterflies-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map14-native-butterflies-binding-source-manifest.json)及[独立原始数据参考](../../scripts/map14_butterfly_reference.py)；运行边界为 `Runtime/Offline/World/NativeMap14/`。
+- [环境分区恢复](../../scripts/prepare_unity_map14_environment_scene.py)、[原生来源](../../assets/reference/official-map/map14-native-environment-scene-source-manifest.json)、[绑定](../../assets/reference/official-map/map14-native-environment-scene-binding-source-manifest.json)、[共享环境来源核对](../../assets/reference/official-map/map14-shared-environment-source-manifest.json)及[实际运行检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14EnvironmentSceneAcceptance.cs)。
 
 新增原生素材独立保存在 `Assets/Official/World/Map/14/`，尚未生成完整素材快照，不能声称已进入 `asset-pack` 备份。
