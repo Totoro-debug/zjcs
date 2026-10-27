@@ -63,6 +63,7 @@ def record_native_bindings():
     if (native / "catalog.json").read_bytes() != (source / "map12-ui.json").read_bytes():
         raise ValueError("Runtime UI catalog differs from selected source")
     inputs = [source / "source-manifest.json", source / "map12-ui.json"]
+    inputs.append(ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/chests.json")
     inputs += [ROOT / name for name in (
         "scripts/prepare_unity_map12_ui.py", "scripts/prepare_unity_map11_ui.py",
         "scripts/map11_support_ui.py", "scripts/map11_exploration_ui.py", "scripts/map11_minimap_ui.py",

@@ -70,6 +70,14 @@ namespace Zjcs.Editor
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
 
+            if (UnityEditor.SessionState.GetBool(Key + ".chests", false))
+            {
+                IEnumerator chests = VerifyRuntimeChestSteps(root, slot, canvas.transform, output);
+                while (chests.MoveNext()) yield return chests.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
             if (UnityEditor.SessionState.GetBool(Key + ".audio", false))
             {
                 IEnumerator audio = VerifyRuntimeAudioSteps();

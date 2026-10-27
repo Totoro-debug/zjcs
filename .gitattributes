@@ -448,3 +448,16 @@ unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef text eol=lf
 # Preserve exact Map13 region-label source payload bytes.
 unity/Assets/Official/World/Map/13/NativeRegionLabels/** -text
 unity/Assets/Official/World/Map/13/NativeRegionLabels.meta -text
+
+# Map12 placed chest source and local reward binding.
+scripts/prepare_unity_map12_chests.py text eol=lf
+scripts/map11_support_ui.py text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Chests.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Rewards.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Chests.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Chests.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf

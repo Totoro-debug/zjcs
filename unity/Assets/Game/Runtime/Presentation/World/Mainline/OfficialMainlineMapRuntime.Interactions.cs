@@ -58,6 +58,7 @@ namespace Zjcs.Presentation.World
                 hud.ShowOfficialNotice("前方有魔物阻挡");
                 return;
             }
+            if (TryCollectMap12Chest(entity)) return;
             if (puzzles != null && entity.EntityClassId == 6503)
             {
                 if (!puzzles.InteractionEnabled(entity.PlacementId)) return;
@@ -199,6 +200,7 @@ namespace Zjcs.Presentation.World
         private void RefreshEntityActivity()
         {
             if (entityView == null || localSave == null) return;
+            SynchronizeMap12ClaimedChests();
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
                 bool goddess = MapProfile.HasNativeUi && entity.TypeId == 202;

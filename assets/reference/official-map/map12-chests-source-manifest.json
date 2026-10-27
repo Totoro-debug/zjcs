@@ -1,0 +1,141 @@
+{
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Chests.cs",
+      "sha256": "19e76ca77af2ef50807cde0c2fdc3411bb1384690e959a02259ba71f2bdbbfa4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Rewards.cs",
+      "sha256": "52adc67507a881a61f994912a9342c426ee7c2f782282f546d3d7d2671717c1b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Chests.cs",
+      "sha256": "09b66c15a8da464679a59af4a516db8a850dadb856ac203f594b66838d2f66e5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Interactions.cs",
+      "sha256": "5c2cc4a9438a674978b2cc844a179a951dc05a7bb15fe5c8d0fc4c35ca76666c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Persistence.cs",
+      "sha256": "fa761fe7efd5a18d4be2972fa5729dae4e94a63f05c11b26d01c6d8621679e28"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "6f9ceb1951144db27599a4a29376c5a01a89c37ddc7201ded9d5409e16b62e1c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Chests.cs",
+      "sha256": "558394f014e6dea35e14f7fed6ae7827e21b38d7bdf08038bd1fbf6bc831b263"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs",
+      "sha256": "26d3cd5977c434af1fa35e328cfc935cf4c63dc3ebad4fce427c8dff99aef54f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs",
+      "sha256": "07ee05eeb9a46079c4f0b5deabada370162e4f50bece16f8671456b6ca152f79"
+    }
+  ],
+  "chests": 83,
+  "emptyRewardRuleIds": [
+    711,
+    721,
+    722,
+    732,
+    735,
+    742,
+    745
+  ],
+  "generator": "scripts/prepare_unity_map12_chests.py",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map12-source-manifest.json",
+      "sha256": "2ab3d830767e5d157b3f689e93679a1716a3c44e0dbc07af36622df90f747eda"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+      "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/entities.json",
+      "sha256": "aea214a11f02f23b522ecc7b99a58ac4a53bad3de758f801bdbbd711263190db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/templates.json",
+      "sha256": "fe5c8ece6925a1eb80dc1bfea8da8064398337fd44b147788a2d1ffa12c32f4e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-entities.json",
+      "sha256": "31afc82ac1b25dc4317661c5761d8410e697a856629f83d1d40cd0fbb1f8091c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/World/Mainline/exploration.json",
+      "sha256": "a379594cbfa6d295cabc982412b52fd253807861aab44071d8b99f2b2c9c7226"
+    },
+    {
+      "sha256": "dcc3a4302e5b2c71049880398a606e801291321e9ecccf72aa391ec99aa6341c",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-5102505721400995906",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "level_number"
+    },
+    {
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "3530266630744679519",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "random_reward"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldEntityLevelComponent.cs",
+      "sha256": "24093c29a3a98da73ae69bb8705fe314a5281886868b8b3603b1501513b02775"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LoLevelComponentInfo.cs",
+      "sha256": "2c976f84cdd9669a07c04cffa568d627f629f2e070b2c5c44be67dca2e6a0679"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultAwardComponent.cs",
+      "sha256": "98d46af6466eb397ef0f0ba36317f14b6e7bce5625d33e6bb646d45c4399a382"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultAwardComponentInfo.cs",
+      "sha256": "f67a777835bf0ba6ff26556a165d14f3a83cf255b3828a30d0679ebfdc5e0644"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LoStageSingleAwardInfo.cs",
+      "sha256": "841c2958564102df19999c218d683391ffd7c18c79000c78f977c022a2c6955f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/RewardRuleInfoParser.cs",
+      "sha256": "bea03202bc2f5a4c661789548d7bef5f3b3a98a0d8881c9b2d6dd78092ef474d"
+    }
+  ],
+  "manifest": "871_156598",
+  "offlineSubRankZero": "inherit placed chest region; nonzero uses explicit value",
+  "output": {
+    "path": "unity/Assets/Official/World/Map/12/Resources/Map12/chests.json",
+    "sha256": "f29620881ea5d5c96f4a11f4a971877937d691e88f7351559541816c7d1fe3ac"
+  },
+  "outputMeta": {
+    "path": "unity/Assets/Official/World/Map/12/Resources/Map12/chests.json.meta",
+    "sha256": "eca63841e95de756ed7a59b6b3e7ce7a0838554861c7ba7592ffc2006d4f7918"
+  },
+  "runtime": "OfflineWorldExplorationService.Map12Chests.cs",
+  "sharedRewardEquality": true
+}

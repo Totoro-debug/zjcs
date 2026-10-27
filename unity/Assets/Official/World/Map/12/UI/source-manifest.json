@@ -5,8 +5,8 @@
   "output": {
     "panels": 65,
     "path": "map12-ui.json",
-    "sha256": "7cc4d5585d754910f3e4fadd5b94d2e8fe7edbddd139578f1df0605ed8ee7578",
-    "sprites": 928
+    "sha256": "1f0b1944f2c0d28057aac9da9dfadcf2fe7322e2dd3e4548d07e2e1841c3d836",
+    "sprites": 929
   },
   "source": {
     "combatRatingConfig": {
@@ -1031,7 +1031,7 @@
       },
       {
         "path": "scripts/map11_support_ui.py",
-        "sha256": "5b7c9ad0e227a6cc96881c5074229b53fa8144f45de8ef3d458dbad0b3a1cbc8"
+        "sha256": "8402f6b43054e50f71ed5cd4570352aa90c9e2105c28b3e12c1c9381ee3328ee"
       }
     ],
     "globalColors": {
@@ -6732,6 +6732,12 @@
             "ItemType": 305,
             "Quality": 4,
             "RawIcon": "ItemIcon/Treasure/treasure_61916"
+          },
+          {
+            "ClassId": 61925,
+            "ItemType": 305,
+            "Quality": 4,
+            "RawIcon": "ItemIcon/Treasure/treasure_61925"
           },
           {
             "ClassId": 62013,
@@ -14605,7 +14611,7 @@
       }
     },
     "manifestPath": "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json",
-    "manifestSha256": "e8479e2efb22b84b1211ca5d5eb53b23866349f25e669cc3d986ec79b179d5eb",
+    "manifestSha256": "b07a2afee2392ae1c0d030c98693d6fa2b013d8927ca0c09d74e7c45c2d3c442",
     "minimapCharacter": {
       "bundle": "defaultpackage_assets_prefabs_map_common_minimap.bundle",
       "bundle_hash": "bb60a35b88da8f691fb1cb43566589ad",
@@ -67865,6 +67871,19 @@
         "raw_sha256": "40a0e4387a79ddcf286dbcaa3b0356f4158a6ec7406d3338b55dd6610d1a2d33",
         "raw_size": 1626606,
         "sha256": "f1f2daa86f630d623a41b7de08155910ca73022e09281adb371704da6ed87d56"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/treasure_61925-9adc0bd257.png": {
+        "apk_entry": "assets/yoo/DefaultPackage/5af533bd04a305494da485bda651f78e.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_treasure_map12_noatlas.bundle",
+        "bundle_hash": "5af533bd04a305494da485bda651f78e",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7155885686196380107",
+        "raw_sha256": "40a0e4387a79ddcf286dbcaa3b0356f4158a6ec7406d3338b55dd6610d1a2d33",
+        "raw_size": 1626606,
+        "sha256": "9adc0bd2575e2fd852478c42d99298f92b9238d09eca198c85b2c1f2bf13e288"
       },
       "res://unity/Assets/Official/World/Map/12/UI/Sprites/treasure_62013-142da51986.png": {
         "apk_entry": "assets/yoo/DefaultPackage/5af533bd04a305494da485bda651f78e.bundle",

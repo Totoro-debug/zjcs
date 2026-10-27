@@ -111,9 +111,17 @@ def load_support_ui(apk, schemas, map_id=11, code_root=None):
     region_obj = apk.asset("config_luban_map", "/map_region.g.bytes")
     regions = constructors.table(region_obj.read().m_Script.encode("utf-8", "surrogateescape"), "TbMapRegionInfo")
     drop_items = {item for row in regions if row["ClassId"] == map_id for item in row["DropItems"]}
+    placed_chest_items = set()
+    if map_id == 12:
+        # Placed Lo-award overrides are not part of exploration's entity-group
+        # closure (6401 appends rule 782). Preserve their original item icons too.
+        chests = json.loads((ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/chests.json").read_bytes())
+        if chests["manifest"] != apk.version:
+            raise ValueError("Placed chest UI source version differs")
+        placed_chest_items = {item for rule in chests["rewards"]["rewardRules"] for item in rule["IdList"]}
     # Treasure-gacha tables span every mainland. Their selector intersects the
     # active region's DropItems; retain all common rewards and this map's union.
-    item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ItemType"] in (100, 101) or row["ClassId"] in exploration_ids
+    item_rows = [row for row in all_items if row["ClassId"] in item_ids or row["ClassId"] in placed_chest_items or row["ItemType"] in (100, 101) or row["ClassId"] in exploration_ids
                  and (row["ItemType"] != 305 or row["ClassId"] in drop_items)]
     def template(item):
         if item["ClassId"] in fields["IdList"]:

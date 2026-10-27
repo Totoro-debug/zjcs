@@ -190,6 +190,7 @@ namespace Zjcs.Presentation.World
         {
             if (session == null || closed) return;
             FlushPuzzleRegionProgress();
+            FlushMap12ChestProgress();
             stamina.RefreshStaminaPoints();
             exploration.RefreshExploration();
             dialoguePortraits?.Tick(Time.unscaledDeltaTime);

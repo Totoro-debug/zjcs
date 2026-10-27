@@ -110,9 +110,10 @@ namespace Zjcs.Offline.Progression
             if (!transaction.IsApplied) output.Clear();
             return transaction;
         }
-        private void GrantRule(OfflineMainlineSave save, int id, OfflineExploreContext context, long now, Dictionary<int, long> output)
+        private void GrantRule(OfflineMainlineSave save, int id, OfflineExploreContext context, long now, Dictionary<int, long> output,
+            IReadOnlyList<OfficialExploreRewardRule> rules = null)
         {
-            var rule = Data.rewardRules.Where(v => v.Id == id).OrderBy(v => v.Order == -1 ? int.MaxValue : v.Order)
+            var rule = (rules ?? Data.rewardRules).Where(v => v.Id == id).OrderBy(v => v.Order == -1 ? int.MaxValue : v.Order)
                 .FirstOrDefault(v => IsMet(v.Condition, context, save));
             // Native RewardRuleInfoParser.Get returns null for empty references.
             // The seven pinned empty references have explicit user approval.
