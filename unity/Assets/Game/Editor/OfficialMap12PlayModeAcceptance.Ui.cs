@@ -206,7 +206,9 @@ namespace Zjcs.Editor
         private static void SimulateUiClick(Button expected, Camera camera)
         {
             Canvas.ForceUpdateCanvases();
-            var rect = (RectTransform)expected.transform;
+            var rect = expected.targetGraphic == null
+                ? (RectTransform)expected.transform
+                : (RectTransform)expected.targetGraphic.transform;
             var corners = new Vector3[4];
             rect.GetWorldCorners(corners);
             Vector2 minimum = RectTransformUtility.WorldToScreenPoint(camera, corners[0]);
@@ -225,6 +227,13 @@ namespace Zjcs.Editor
                         + ":depth=" + g.depth + ":cull=" + g.canvasRenderer.cull + ":raycast=" + g.raycastTarget
                         + ":canvas=" + g.canvas?.name + ":canvasMode=" + g.canvas?.renderMode
                         + ":graphicCount=" + GraphicRegistry.GetGraphicsForCanvas(g.canvas).Count))
+                    + "; target=" + (expected.targetGraphic == null ? "none" : expected.targetGraphic.name
+                        + ":center=" + expected.targetGraphic.rectTransform.TransformPoint(expected.targetGraphic.rectTransform.rect.center)
+                        + ":corners=" + string.Join("/", Corners(expected.targetGraphic.rectTransform))
+                        + ":canvas=" + expected.targetGraphic.canvas?.name + ":mode=" + expected.targetGraphic.canvas?.renderMode
+                        + ":root=" + expected.targetGraphic.canvas?.rootCanvas?.name + ":rootRect="
+                        + (expected.targetGraphic.canvas?.rootCanvas == null ? "none" : expected.targetGraphic.canvas.rootCanvas.GetComponent<RectTransform>().rect.ToString())
+                        + ":scale=" + expected.targetGraphic.canvas?.scaleFactor)
                     + "; groups=" + string.Join(",", expected.GetComponentsInParent<CanvasGroup>().Select(g =>
                         g.name + ":blocks=" + g.blocksRaycasts + ":alpha=" + g.alpha)));
             pointer.pointerCurrentRaycast = hits[0];
@@ -234,6 +243,13 @@ namespace Zjcs.Editor
             pointer.pointerPress = pressed;
             ExecuteEvents.Execute(pressed, pointer, ExecuteEvents.pointerUpHandler);
             ExecuteEvents.Execute(pressed, pointer, ExecuteEvents.pointerClickHandler);
+        }
+
+        private static Vector3[] Corners(RectTransform rect)
+        {
+            var corners = new Vector3[4];
+            rect.GetWorldCorners(corners);
+            return corners;
         }
 
         private static void CaptureUi(Camera camera, Camera uiCamera, RenderTexture frame, string output, string name)

@@ -320,7 +320,14 @@ namespace Zjcs.Offline.World
         }
 
         public static OfflineDailyDungeonSession Open(ProfileSlotCatalog slots, string slotId,
-            DailyDungeonRuntimeData catalog = null)
+            DailyDungeonRuntimeData catalog = null) => OpenCore(slots, slotId, catalog, true);
+
+        // A private story route does not run the public dungeon's daily counter reset.
+        public static OfflineDailyDungeonSession OpenPrivateMap(ProfileSlotCatalog slots, string slotId,
+            DailyDungeonRuntimeData catalog = null) => OpenCore(slots, slotId, catalog, false);
+
+        private static OfflineDailyDungeonSession OpenCore(ProfileSlotCatalog slots, string slotId,
+            DailyDungeonRuntimeData catalog, bool resetDailyEntries)
         {
             if (slots == null || !slots.Contains(slotId))
                 throw new ArgumentException("A valid profile slot is required.", nameof(slotId));
@@ -334,7 +341,7 @@ namespace Zjcs.Offline.World
                 : JsonUtility.FromJson<DailyDungeonSave>(read.Json);
             Normalize(state);
             var session = new OfflineDailyDungeonSession(path, catalog, state);
-            session.ResetDailyEntries(DateTime.Now);
+            if (resetDailyEntries) session.ResetDailyEntries(DateTime.Now);
             return session;
         }
 
