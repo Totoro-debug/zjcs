@@ -2,7 +2,7 @@
   "bindings": {
     "meta_sha256": "edd247e4d1a84032754c9e7611ac3a39bce64403851cd87a5403a44e186d721c",
     "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
-    "sha256": "3b4bdabe875441ef383a685cd5d643e42b99ded673882f3f0738f00f8580b792"
+    "sha256": "d966191c2537316ea0a95e373a8ebf98782df403c6b2341b90a721f4bafbcaf4"
   },
   "code_sources": [
     {
@@ -52,6 +52,14 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/SafeArea.cs",
       "sha256": "1aabb4bc2a5745bb3f532a323acad7a13918c439f015dfd751c9341327121509"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/PopupWindow.cs",
+      "sha256": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/WindowMaskType.cs",
+      "sha256": "0c75a88f7b3c296db59cfc279ec21b3da284f212e599e7e91ff5b847882b8baf"
     },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/DailyDungeonGradeItem.cs",
@@ -269,7 +277,7 @@
       "sha256": "886c7589207188b1f0541a9a53008611aa4d4ca99f8fb921d328ad605edb2017"
     }
   },
-  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; decode original atlas pixels and preserve pivot, border and PPU.",
+  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; decode original atlas pixels and preserve pivot, border and PPU.",
   "prefabs": [
     {
       "image_count": 160,

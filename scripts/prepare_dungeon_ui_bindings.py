@@ -91,6 +91,90 @@ def sprite_binding(sprite_cache, assets_file, file_id, path_id):
     }
 
 
+def private_popup_binding(apk, schemas, reader, root, path):
+    """Reuse the native common clips only after checking the selected source curves."""
+    import math
+    import yaml
+    from UnityPy.classes.PPtr import PPtr
+    from official_animation import mecanim_tracks
+
+    fields = schemas.read(reader)
+    if path:
+        raise ValueError("Private popup must remain on its original prefab root")
+    receipt_path = ROOT / "assets/reference/official-map/map12-ui-native-source-manifest.json"
+    receipt = json.loads(receipt_path.read_bytes())
+    if receipt["manifest"] != VERSION or receipt["mapClassId"] != 12:
+        raise ValueError("Private popup animation receipt uses another source version")
+    outputs = {row["path"]: row for row in receipt["outputs"]}
+    def tree(game_object, relative=""):
+        transform = next(pair.component.read() for pair in game_object.m_Component
+                         if pair.component.type.name in ("RectTransform", "Transform"))
+        return dict(name=game_object.m_Name, path=relative, children=[tree(child.read().m_GameObject.read(),
+            relative + ("/" if relative else "") + child.read().m_GameObject.read().m_Name)
+            for child in transform.m_Children])
+    hierarchy = tree(root)
+    clips = []
+    for field in ("mShowClip", "mHideClip", "mLoopClip"):
+        pointer = fields[field]
+        if not pointer["m_PathID"]:
+            continue
+        obj = PPtr(**pointer, assetsfile=reader.assets_file).deref()
+        name = obj.read().m_Name
+        if (field, name) not in (("mShowClip", "UIDialogCommon_Show"), ("mHideClip", "UIDialogCommon_Hide")):
+            raise ValueError("Unverified private popup native clip: " + name)
+        native_path = "unity/Assets/Game/Resources/Map12/UI/" + name + ".anim"
+        payload = (ROOT / native_path).read_bytes()
+        meta_path = native_path + ".meta"
+        meta_payload = (ROOT / meta_path).read_bytes()
+        if sha256(payload) != outputs[native_path]["sha256"] or sha256(meta_payload) != outputs[meta_path]["sha256"]:
+            raise ValueError("Private popup native animation changed after conversion: " + name)
+        source_tracks, duration, loop, unknown = mecanim_tracks(obj, hierarchy)
+        if loop or any(row["reason"] != "target_absent" or row["property"] is None for row in unknown):
+            raise ValueError("Private popup animation has unsupported source channels: " + name)
+        if obj.read_typetree()["m_Events"]:
+            raise ValueError("Private popup source animation has unhandled events: " + name)
+        native = yaml.safe_load("\n".join(line for line in payload.decode("utf8").splitlines()
+                                        if not line.startswith(("%", "---"))))["AnimationClip"]
+        if native["m_Name"] != name or native["m_Legacy"] or native["m_Events"] or native["m_AnimationClipSettings"]["m_LoopTime"]:
+            raise ValueError("Private popup native playback settings differ: " + name)
+        expected = {}
+        for track in source_tracks:
+            prop = track["property"]
+            prop = "m_LocalScale." + prop[6:] if prop.startswith("scale.") else prop
+            expected[(track["path"] or "", prop)] = track["keys"]
+        if any(native[group] for group in ("m_RotationCurves", "m_CompressedRotationCurves", "m_EulerCurves", "m_PositionCurves", "m_PPtrCurves")):
+            raise ValueError("Private popup native animation has extra runtime curves: " + name)
+        actual = {}
+        for row in native["m_ScaleCurves"]:
+            for axis in "xyz":
+                actual[(row["path"] or "", "m_LocalScale." + axis)] = [[key["time"], key["value"][axis],
+                    key["inSlope"][axis], key["outSlope"][axis]] for key in row["curve"]["m_Curve"]]
+        for row in native["m_FloatCurves"]:
+            if row["attribute"] != "m_Alpha" or row["classID"] != 225 or row["script"]["fileID"]:
+                raise ValueError("Private popup native animation scalar binding differs: " + name)
+            actual[(row["path"] or "", row["attribute"])] = [[key["time"], key["value"], key["inSlope"], key["outSlope"]]
+                for key in row["curve"]["m_Curve"]]
+        if set(expected) != set(actual):
+            raise ValueError("Private popup native animation target set differs: " + name)
+        for key, source_keys in expected.items():
+            if len(source_keys) != len(actual[key]) or any(not math.isclose(a, b, rel_tol=2e-6, abs_tol=2e-6)
+                    for source_key, native_key in zip(source_keys, actual[key]) for a, b in zip(source_key, native_key)):
+                raise ValueError("Private popup native animation curve differs: " + name + " " + str(key))
+        if not math.isclose(native["m_AnimationClipSettings"]["m_StopTime"], duration, abs_tol=2e-6):
+            raise ValueError("Private popup native animation duration differs: " + name)
+        clips.append(dict(field=field, name=name, resource="Map12/UI/" + name,
+            duration=duration, loop=loop, source=apk.provenance(obj), object_raw_sha256=sha256(obj.get_raw_data()),
+            native=dict(path=native_path, sha256=sha256(payload), meta_sha256=sha256(meta_payload)),
+            curve_count=len(source_tracks), absent_source_channels=unknown))
+    if len(clips) != 2:
+        raise ValueError("Private popup must keep its original show and hide clips")
+    return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips,
+        maskType=fields["mMaskType"], windowType=fields["mWindowType"], fullScreen=bool(fields["mFullScreen"]),
+        closeByClickMask=bool(fields["mCloseByClickMask"]), autoCloseWhenContainerDisable=bool(fields["mAutoCloseWhenContainerDisable"]),
+        isDuplicate=bool(fields["mIsDuplicate"]),
+        native_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())))
+
+
 def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
     from prepare_character_creation_opening import decode_image, decode_text
 
@@ -109,6 +193,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
     private_detail = None
     private_dialog = None
     private_unlock = None
+    popup = None
     grade_grids = []
     room_animation = None
     vote_animation = None
@@ -212,6 +297,8 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                 fields = schemas.read(reader)
                 grade_item = {name: reference_path(fields[field]) for name, field in (
                     ("image", "Image"), ("fill", "FillImage"), ("text", "GradeText"))}
+            elif script == "PopupWindow" and key == "DailyDungeonDialogPrivateMap":
+                popup = private_popup_binding(apk, schemas, reader, prefab.read(), path_key)
             elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonDialogPrivateMap"):
                 raw = reader.get_raw_data()
                 if len(raw) < 232: raise ValueError("Truncated official route Button")
@@ -369,7 +456,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
         room_view["animation"] = room_animation
         room_view["voteAnimation"] = vote_animation
     return {"name": key, "transforms": transforms, "safeAreas": safe_areas, "layouts": layouts, "scrolls": scrolls,
-            "roomView": room_view, "roomButton": room_button, "buttons": buttons,
+            "roomView": room_view, "roomButton": room_button, "buttons": buttons, "popup": popup,
             "routeWindow": route_window, "gradeItem": grade_item, "privateDetail": private_detail, "privateDialog": private_dialog, "privateUnlock": private_unlock, "gradeGrids": grade_grids, "localizations": localizations, "images": images, "texts": texts}, apk.provenance(prefab)
 
 
@@ -556,7 +643,7 @@ def build():
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
         "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/LayoutElementClamper.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
-        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "client-source/DailyDungeonGradeItem.cs",
+        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/WindowMaskType.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",
         "common-source/Common/BattleResultGradeType.cs", "framework-firstpass-source/MultiLanguageText.cs",
         "framework-source/StateGameObjectConfig.cs", "framework-source/StateGameObjectData.cs",
@@ -565,7 +652,7 @@ def build():
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),
         sha256=sha256((CODE / path).read_bytes())) for path in code_paths]
     receipt = {"manifest": VERSION, "code_sources": code_sources,
-        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
+        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
         "path": BINDINGS.relative_to(ROOT).as_posix(), "sha256": sha256(encoded),
         "meta_sha256": sha256(meta.read_bytes())},
         "prefabs": sources, "sprites": sprite_outputs, "route_settings": settings_source,

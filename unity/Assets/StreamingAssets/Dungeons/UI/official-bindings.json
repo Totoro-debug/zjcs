@@ -8936,6 +8936,7 @@
       "layouts": [],
       "localizations": [],
       "name": "TravelNotesPanel",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -51810,6 +51811,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonEntryPanel",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -99681,6 +99683,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonEntryPanelItem",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -103945,6 +103948,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonConfirmEnterPanel",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -116921,6 +116925,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonDialog",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -157980,6 +157985,177 @@
         }
       ],
       "name": "DailyDungeonDialogPrivateMap",
+      "popup": {
+        "autoCloseWhenContainerDisable": false,
+        "clips": [
+          {
+            "absent_source_channels": [
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.x",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.y",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.z",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.x",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.y",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.z",
+                "reason": "target_absent",
+                "type": 4
+              }
+            ],
+            "curve_count": 4,
+            "duration": 0.23333333432674408,
+            "field": "mShowClip",
+            "loop": false,
+            "name": "UIDialogCommon_Show",
+            "native": {
+              "meta_sha256": "de2c1339750616246f85eee58473af92321f67cbb93f967e96572a71f9d75377",
+              "path": "unity/Assets/Game/Resources/Map12/UI/UIDialogCommon_Show.anim",
+              "sha256": "b2f458797430d7b06bbcb76162096aa4278a72d23c59693e59b57a660b415a0f"
+            },
+            "object_raw_sha256": "c5a11966def5e12db57ed764567361c4dd4e7ec6aa95c1e04ca31184447c5a78",
+            "resource": "Map12/UI/UIDialogCommon_Show",
+            "source": {
+              "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_animation_ui.bundle",
+              "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "9117691801936652234",
+              "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+              "raw_size": 7330
+            }
+          },
+          {
+            "absent_source_channels": [
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.x",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.y",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 3199729268,
+                "property": "scale.z",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.x",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.y",
+                "reason": "target_absent",
+                "type": 4
+              },
+              {
+                "attribute_hash": 3,
+                "path": null,
+                "path_hash": 829950261,
+                "property": "scale.z",
+                "reason": "target_absent",
+                "type": 4
+              }
+            ],
+            "curve_count": 4,
+            "duration": 0.11666666716337204,
+            "field": "mHideClip",
+            "loop": false,
+            "name": "UIDialogCommon_Hide",
+            "native": {
+              "meta_sha256": "8654291dce983470781a0e8b5f1c14627bf29ccf74a853a53cab6730c509e8e4",
+              "path": "unity/Assets/Game/Resources/Map12/UI/UIDialogCommon_Hide.anim",
+              "sha256": "edf5565f556066bf9173a8f3c1f64cd6c528dfaa8934dffd16a9a195ad3ea7ae"
+            },
+            "object_raw_sha256": "1379106b103335ff0aed136fe8825070a447c44ead34da4f343800484541aa14",
+            "resource": "Map12/UI/UIDialogCommon_Hide",
+            "source": {
+              "apk_entry": "assets/yoo/DefaultPackage/e64ddd2905926d89597e6ebd4f0178fd.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_assets_animation_ui.bundle",
+              "bundle_hash": "e64ddd2905926d89597e6ebd4f0178fd",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "8479375179708917281",
+              "raw_sha256": "1c77e30ceb3f2e0120d428888f2a51f0b7dcc6edfcdc034615a2588061ce48ff",
+              "raw_size": 7330
+            }
+          }
+        ],
+        "closeByClickMask": true,
+        "enabled": true,
+        "fullScreen": false,
+        "isDuplicate": false,
+        "maskType": 3,
+        "native_source_receipt": {
+          "path": "assets/reference/official-map/map12-ui-native-source-manifest.json",
+          "sha256": "03e0c1e385e3e5c277b55a1c0b7aa7effbca404a7646a6bf545b62cd627eac59"
+        },
+        "objects": [
+          "DailyDungeonDialogPrivateMap"
+        ],
+        "path": "",
+        "windowType": 2
+      },
       "privateDetail": {
         "description": "0/0/4/0/3",
         "gradeRange": "0/0/4/0/4/3/1",
@@ -186259,6 +186435,7 @@
         }
       ],
       "name": "DailyDungeonBigMapDialog",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -194336,6 +194513,7 @@
         }
       ],
       "name": "DailyDungeonGradeItem",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -195739,6 +195917,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonBigMapRoomItem",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -199616,6 +199795,7 @@
       "layouts": [],
       "localizations": [],
       "name": "DailyDungeonRoomItem",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,
@@ -222819,6 +222999,7 @@
       "layouts": [],
       "localizations": [],
       "name": "ArenaPanel",
+      "popup": null,
       "privateDetail": null,
       "privateDialog": null,
       "privateUnlock": null,

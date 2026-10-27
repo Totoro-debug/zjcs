@@ -13,10 +13,14 @@ namespace Zjcs.Presentation.World
     {
         [Serializable] private sealed class Document { public string manifest; public Prefab[] prefabs; public RouteStyles routeStyles; }
         [Serializable] private sealed class Prefab
-        { public string name; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
+        { public string name; public PopupBinding popup; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
           public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog; public PrivateUnlockBinding privateUnlock;
           public LocalizationBinding[] localizations;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
+        [Serializable] private sealed class PopupBinding
+        { public string path; public string[] objects; public bool enabled; public PopupClipBinding[] clips; }
+        [Serializable] private sealed class PopupClipBinding
+        { public string field, name, resource; public float duration; public bool loop; }
         [Serializable] private sealed class LayoutBinding
         {
             public string path, type; public string[] objects; public bool enabled;
@@ -108,6 +112,29 @@ namespace Zjcs.Presentation.World
         private static Document cachedDocument;
         private static readonly Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
 
+        private static void RestorePopup(GameObject root, PopupBinding binding)
+        {
+            if (binding == null) return;
+            Transform target = Find(root.transform, binding.path, binding.objects);
+            var popup = target.GetComponent<WorldPopupWindow>() ?? target.gameObject.AddComponent<WorldPopupWindow>();
+            popup.mShowClip = popup.mHideClip = popup.mLoopClip = null;
+            foreach (PopupClipBinding source in binding.clips)
+            {
+                AnimationClip clip = Resources.Load<AnimationClip>(source.resource);
+                if (clip == null || clip.name != source.name || clip.isLooping != source.loop
+                    || !Mathf.Approximately(clip.length, source.duration))
+                    throw new InvalidDataException("Original private dungeon popup animation is missing or mismatched: " + source.resource);
+                switch (source.field)
+                {
+                    case "mShowClip": popup.mShowClip = clip; break;
+                    case "mHideClip": popup.mHideClip = clip; break;
+                    case "mLoopClip": popup.mLoopClip = clip; break;
+                    default: throw new InvalidDataException("Unsupported original popup clip field: " + source.field);
+                }
+            }
+            popup.enabled = binding.enabled;
+        }
+
         public static void Apply(GameObject root, string prefabName)
         {
             string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
@@ -118,6 +145,7 @@ namespace Zjcs.Presentation.World
             if (binding?.transforms == null || binding.images == null || binding.texts == null)
                 throw new InvalidDataException("Official dungeon UI bindings are incomplete: " + prefabName);
 
+            RestorePopup(root, binding.popup);
             foreach (TransformBinding item in binding.transforms)
             {
                 Transform node = Find(root.transform, item.path, item.objects);
