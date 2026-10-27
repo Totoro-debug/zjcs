@@ -54,6 +54,9 @@ namespace Zjcs.Combat.Official
                 target.Resilience + change));
             if (target.Resilience > 0) return;
 
+            if (actor.Side != target.Side)
+                checkpoint.Statistics.RecordResilienceBreak(actor.Id);
+
             FightBattleResilienceInfo info = statusCatalog == null ? null
                 : statusCatalog.MonsterResilienceInfo(target.MonsterId,
                     target.MonsterGroupNo);

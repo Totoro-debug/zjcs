@@ -17,6 +17,8 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private TextAsset rulesSourceManifest;
         [SerializeField] private TextAsset monsterHpPlies;
         [SerializeField] private TextAsset monsterHpPliesSourceManifest;
+        [SerializeField] private TextAsset reportScoreSettings;
+        [SerializeField] private TextAsset reportScoreSettingsSourceManifest;
 
         public static OfficialCombatAssetCatalog LoadDefault()
         {
@@ -66,9 +68,22 @@ namespace Zjcs.Presentation.Combat
             return loadedSkillItems;
         }
 
+        public FightBattleReportScoreSettings LoadReportScoreSettings()
+        {
+            if (loadedReportScoreSettings != null) return loadedReportScoreSettings;
+            if (reportScoreSettings == null)
+                throw new InvalidOperationException("Official report score settings TextAsset is not bound.");
+            FightOfficialCombatSourceManifest source = ReadManifest(reportScoreSettingsSourceManifest,
+                "report-score-settings.json");
+            loadedReportScoreSettings = FightBattleReportScoreSettings.Load(reportScoreSettings.text,
+                source.OutputSha256, source.Manifest);
+            return loadedReportScoreSettings;
+        }
+
         private FightOfficialCombatCatalog loadedCatalog;
         private FightDamageFormula loadedFormula;
         private FightOfficialSkillItemCatalog loadedSkillItems;
+        private FightBattleReportScoreSettings loadedReportScoreSettings;
         private FightOfficialNpcAssistanceCatalog loadedNpcAssistance;
 
         public FightOfficialNpcAssistanceCatalog LoadNpcAssistance()

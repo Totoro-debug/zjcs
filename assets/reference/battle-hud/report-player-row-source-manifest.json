@@ -1,0 +1,1122 @@
+{
+  "format": 1,
+  "manifest": "854_156383",
+  "official_code": {
+    "client-source/FightEndReportPlayerTabViewItem.cs": "242b2a350596bbcbb1ac0398f99447721cd5cd69ad940a84aad6820c54b07174",
+    "client-source/FightEndReportPlayerTabView.cs": "ab995be357ff40a031c9feb234339d1aff404246381847b78ea31a52161cbafa",
+    "client-source/FightReportUIUtils.cs": "7702e839dedc2a1a6ebe9d7fa7fc7a4bd5672a474c34b202373f373150a1d248",
+    "client-source/PlayerIcon.cs": "f14ad18cd7c4941ae7d1fa9c7205ed0e772abc44349ae2599b767ff3b723a373",
+    "common-source/Common/FightReportData.cs": "5bec8cff56fea79608024b939493dc1c65ebd4549e96217433b8d310e94dc862",
+    "common-source/Common/FightRoleNormalReport.cs": "46c49f0a6058d9ecbd258ed1748a112e1486da4ad0676f41281d6acb19879957"
+  },
+  "binding": {
+    "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+    "path": "/FightEndReportPlayerTabViewItem",
+    "file_id": "114733206282342372",
+    "original_path_id": "6728189547918964467",
+    "object_sha256": "6d663f4b454e263c80f3777c0f26e7510d687b118d31a9cb16d64ae8e8ed79a4",
+    "fields": {
+      "PlayerIcon": {
+        "fileID": 114220653531496868
+      },
+      "MyselfStateSwitcher": {
+        "mStateConfigs": [
+          {
+            "rid": 8695751038326276305
+          }
+        ],
+        "mOwner": {
+          "fileID": 1709254077376921
+        }
+      },
+      "DamageSlider": {
+        "fileID": 114123703392571528
+      },
+      "DamageValue": {
+        "fileID": 114194081240383615
+      },
+      "BeDamageSlider": {
+        "fileID": 114969505138979683
+      },
+      "BeDamageValue": {
+        "fileID": 114785330607447594
+      },
+      "CureSlider": {
+        "fileID": 114386943702330414
+      },
+      "CureValue": {
+        "fileID": 114132862189046193
+      },
+      "ApplyStatusSlider": {
+        "fileID": 114011164340880974
+      },
+      "ApplyStatusValue": {
+        "fileID": 114592460329389196
+      },
+      "references": {
+        "version": 2,
+        "RefIds": [
+          {
+            "rid": 8695751038326276305,
+            "type": {
+              "class": "WorldStateUIColorConfig",
+              "ns": "Zjcs.Official.WorldUI",
+              "asm": "Zjcs.Official.WorldUI"
+            },
+            "data": {
+              "mStateColorData": {
+                "GraphicConfigs": [
+                  {
+                    "Graphics": [
+                      {
+                        "fileID": 114703931505913403
+                      }
+                    ],
+                    "Color": {
+                      "mSerializeBuffer": [
+                        {
+                          "Key": {
+                            "mValue": 1
+                          },
+                          "Value": {
+                            "r": 0.7960785031318665,
+                            "g": 0.8117647767066956,
+                            "b": 0.3803921937942505,
+                            "a": 1.0
+                          }
+                        },
+                        {
+                          "Key": {
+                            "mValue": 0
+                          },
+                          "Value": {
+                            "r": 0.886274516582489,
+                            "g": 0.886274516582489,
+                            "b": 0.886274516582489,
+                            "a": 1.0
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "Graphics": [
+                      {
+                        "fileID": 114393105877652414
+                      }
+                    ],
+                    "Color": {
+                      "mSerializeBuffer": [
+                        {
+                          "Key": {
+                            "mValue": 1
+                          },
+                          "Value": {
+                            "r": 0.7960785031318665,
+                            "g": 0.8117647767066956,
+                            "b": 0.3803921937942505,
+                            "a": 1.0
+                          }
+                        },
+                        {
+                          "Key": {
+                            "mValue": 0
+                          },
+                          "Value": {
+                            "r": 0.13333334028720856,
+                            "g": 0.13333334028720856,
+                            "b": 0.13333334028720856,
+                            "a": 1.0
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "checks": [
+      {
+        "path": "PlayerIcon",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114220653531496868
+        }
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs",
+        "kind": "array",
+        "count": 1
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0]",
+        "kind": "managed",
+        "text": "Zjcs.Official.WorldUI Zjcs.Official.WorldUI.WorldStateUIColorConfig"
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs",
+        "kind": "array",
+        "count": 2
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Graphics",
+        "kind": "array",
+        "count": 1
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Graphics.Array.data[0]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114703931505913403
+        }
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer",
+        "kind": "array",
+        "count": 2
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[0].Key.mValue",
+        "kind": "number",
+        "number": 1
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[0].Value.r",
+        "kind": "number",
+        "number": 0.7960785031318665
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[0].Value.g",
+        "kind": "number",
+        "number": 0.8117647767066956
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[0].Value.b",
+        "kind": "number",
+        "number": 0.3803921937942505
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[0].Value.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[1].Key.mValue",
+        "kind": "number",
+        "number": 0
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[1].Value.r",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[1].Value.g",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[1].Value.b",
+        "kind": "number",
+        "number": 0.886274516582489
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[0].Color.mSerializeBuffer.Array.data[1].Value.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Graphics",
+        "kind": "array",
+        "count": 1
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Graphics.Array.data[0]",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114393105877652414
+        }
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer",
+        "kind": "array",
+        "count": 2
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[0].Key.mValue",
+        "kind": "number",
+        "number": 1
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[0].Value.r",
+        "kind": "number",
+        "number": 0.7960785031318665
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[0].Value.g",
+        "kind": "number",
+        "number": 0.8117647767066956
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[0].Value.b",
+        "kind": "number",
+        "number": 0.3803921937942505
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[0].Value.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[1].Key.mValue",
+        "kind": "number",
+        "number": 0
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[1].Value.r",
+        "kind": "number",
+        "number": 0.13333334028720856
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[1].Value.g",
+        "kind": "number",
+        "number": 0.13333334028720856
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[1].Value.b",
+        "kind": "number",
+        "number": 0.13333334028720856
+      },
+      {
+        "path": "MyselfStateSwitcher.mStateConfigs.Array.data[0].mStateColorData.GraphicConfigs.Array.data[1].Color.mSerializeBuffer.Array.data[1].Value.a",
+        "kind": "number",
+        "number": 1.0
+      },
+      {
+        "path": "MyselfStateSwitcher.mOwner",
+        "kind": "reference",
+        "reference": {
+          "fileID": 1709254077376921
+        }
+      },
+      {
+        "path": "DamageSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114123703392571528
+        }
+      },
+      {
+        "path": "DamageValue",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114194081240383615
+        }
+      },
+      {
+        "path": "BeDamageSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114969505138979683
+        }
+      },
+      {
+        "path": "BeDamageValue",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114785330607447594
+        }
+      },
+      {
+        "path": "CureSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114386943702330414
+        }
+      },
+      {
+        "path": "CureValue",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114132862189046193
+        }
+      },
+      {
+        "path": "ApplyStatusSlider",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114011164340880974
+        }
+      },
+      {
+        "path": "ApplyStatusValue",
+        "kind": "reference",
+        "reference": {
+          "fileID": 114592460329389196
+        }
+      }
+    ],
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabviewitem.bundle",
+      "bundle_hash": "53c606d2472f09268ae3ae98f11bd658",
+      "path_id": "6728189547918964467",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/53c606d2472f09268ae3ae98f11bd658.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 9092,
+      "bundle_sha256": "7c79c754d8e9739d76a25729403b6fb8798ab1fdca17362bff4f39f8d7ea85a5"
+    }
+  },
+  "fills": [
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "path": "/FightEndReportPlayerTabViewItem/BattleData/State/Slider/Fill",
+      "file_id": "114291632710222552",
+      "fields": {
+        "m_Material": {
+          "fileID": 0
+        },
+        "m_Color": {
+          "r": 0.7137255072593689,
+          "g": 0.49803921580314636,
+          "b": 0.9372549057006836,
+          "a": 1.0
+        },
+        "m_RaycastTarget": 1,
+        "m_RaycastPadding": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_Maskable": 1,
+        "m_OnCullStateChanged": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        },
+        "m_Sprite": {
+          "fileID": 21300000,
+          "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+          "type": 2
+        },
+        "m_Type": 3,
+        "m_PreserveAspect": 0,
+        "m_FillCenter": 1,
+        "m_FillMethod": 0,
+        "m_FillAmount": 0.5,
+        "m_FillClockwise": 1,
+        "m_FillOrigin": 0,
+        "m_UseSpriteMesh": 0,
+        "m_PixelsPerUnitMultiplier": 1.0
+      },
+      "checks": [
+        {
+          "path": "m_Material",
+          "kind": "reference",
+          "reference": {
+            "fileID": 0
+          }
+        },
+        {
+          "path": "m_Color.r",
+          "kind": "number",
+          "number": 0.7137255072593689
+        },
+        {
+          "path": "m_Color.g",
+          "kind": "number",
+          "number": 0.49803921580314636
+        },
+        {
+          "path": "m_Color.b",
+          "kind": "number",
+          "number": 0.9372549057006836
+        },
+        {
+          "path": "m_Color.a",
+          "kind": "number",
+          "number": 1.0
+        },
+        {
+          "path": "m_RaycastTarget",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_RaycastPadding.x",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.y",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.z",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.w",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_Maskable",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_OnCullStateChanged.m_PersistentCalls.m_Calls",
+          "kind": "array",
+          "count": 0
+        },
+        {
+          "path": "m_Sprite",
+          "kind": "reference",
+          "reference": {
+            "fileID": 21300000,
+            "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+            "type": 2
+          }
+        },
+        {
+          "path": "m_Type",
+          "kind": "number",
+          "number": 3
+        },
+        {
+          "path": "m_PreserveAspect",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillCenter",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillMethod",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillAmount",
+          "kind": "number",
+          "number": 0.5
+        },
+        {
+          "path": "m_FillClockwise",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillOrigin",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_UseSpriteMesh",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_PixelsPerUnitMultiplier",
+          "kind": "number",
+          "number": 1.0
+        }
+      ],
+      "original_path_id": "-4150272571735230733",
+      "object_sha256": "bf954e33c6d326910be1311a3f034e966d0d439a7f532d2479bd3e198c775614",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabviewitem.bundle",
+        "bundle_hash": "53c606d2472f09268ae3ae98f11bd658",
+        "path_id": "-4150272571735230733",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/53c606d2472f09268ae3ae98f11bd658.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 9092,
+        "bundle_sha256": "7c79c754d8e9739d76a25729403b6fb8798ab1fdca17362bff4f39f8d7ea85a5"
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "path": "/FightEndReportPlayerTabViewItem/BattleData/BeDamage/Slider/Fill",
+      "file_id": "114408345039935966",
+      "fields": {
+        "m_Material": {
+          "fileID": 0
+        },
+        "m_Color": {
+          "r": 0.4588235318660736,
+          "g": 0.6666666865348816,
+          "b": 0.9176470637321472,
+          "a": 1.0
+        },
+        "m_RaycastTarget": 1,
+        "m_RaycastPadding": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_Maskable": 1,
+        "m_OnCullStateChanged": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        },
+        "m_Sprite": {
+          "fileID": 21300000,
+          "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+          "type": 2
+        },
+        "m_Type": 3,
+        "m_PreserveAspect": 0,
+        "m_FillCenter": 1,
+        "m_FillMethod": 0,
+        "m_FillAmount": 0.5,
+        "m_FillClockwise": 1,
+        "m_FillOrigin": 0,
+        "m_UseSpriteMesh": 0,
+        "m_PixelsPerUnitMultiplier": 1.0
+      },
+      "checks": [
+        {
+          "path": "m_Material",
+          "kind": "reference",
+          "reference": {
+            "fileID": 0
+          }
+        },
+        {
+          "path": "m_Color.r",
+          "kind": "number",
+          "number": 0.4588235318660736
+        },
+        {
+          "path": "m_Color.g",
+          "kind": "number",
+          "number": 0.6666666865348816
+        },
+        {
+          "path": "m_Color.b",
+          "kind": "number",
+          "number": 0.9176470637321472
+        },
+        {
+          "path": "m_Color.a",
+          "kind": "number",
+          "number": 1.0
+        },
+        {
+          "path": "m_RaycastTarget",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_RaycastPadding.x",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.y",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.z",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.w",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_Maskable",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_OnCullStateChanged.m_PersistentCalls.m_Calls",
+          "kind": "array",
+          "count": 0
+        },
+        {
+          "path": "m_Sprite",
+          "kind": "reference",
+          "reference": {
+            "fileID": 21300000,
+            "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+            "type": 2
+          }
+        },
+        {
+          "path": "m_Type",
+          "kind": "number",
+          "number": 3
+        },
+        {
+          "path": "m_PreserveAspect",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillCenter",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillMethod",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillAmount",
+          "kind": "number",
+          "number": 0.5
+        },
+        {
+          "path": "m_FillClockwise",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillOrigin",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_UseSpriteMesh",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_PixelsPerUnitMultiplier",
+          "kind": "number",
+          "number": 1.0
+        }
+      ],
+      "original_path_id": "2047484873923081971",
+      "object_sha256": "28612621b75c37b7add950b755d008706c1f5cf48f3b4468f72faad0dee0986c",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabviewitem.bundle",
+        "bundle_hash": "53c606d2472f09268ae3ae98f11bd658",
+        "path_id": "2047484873923081971",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/53c606d2472f09268ae3ae98f11bd658.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 9092,
+        "bundle_sha256": "7c79c754d8e9739d76a25729403b6fb8798ab1fdca17362bff4f39f8d7ea85a5"
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "path": "/FightEndReportPlayerTabViewItem/BattleData/Damage/Slider/Fill",
+      "file_id": "114167524263268962",
+      "fields": {
+        "m_Material": {
+          "fileID": 0
+        },
+        "m_Color": {
+          "r": 0.8549019694328308,
+          "g": 0.47843137383461,
+          "b": 0.3137255012989044,
+          "a": 1.0
+        },
+        "m_RaycastTarget": 1,
+        "m_RaycastPadding": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_Maskable": 1,
+        "m_OnCullStateChanged": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        },
+        "m_Sprite": {
+          "fileID": 21300000,
+          "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+          "type": 2
+        },
+        "m_Type": 3,
+        "m_PreserveAspect": 0,
+        "m_FillCenter": 1,
+        "m_FillMethod": 0,
+        "m_FillAmount": 0.5,
+        "m_FillClockwise": 1,
+        "m_FillOrigin": 0,
+        "m_UseSpriteMesh": 0,
+        "m_PixelsPerUnitMultiplier": 1.0
+      },
+      "checks": [
+        {
+          "path": "m_Material",
+          "kind": "reference",
+          "reference": {
+            "fileID": 0
+          }
+        },
+        {
+          "path": "m_Color.r",
+          "kind": "number",
+          "number": 0.8549019694328308
+        },
+        {
+          "path": "m_Color.g",
+          "kind": "number",
+          "number": 0.47843137383461
+        },
+        {
+          "path": "m_Color.b",
+          "kind": "number",
+          "number": 0.3137255012989044
+        },
+        {
+          "path": "m_Color.a",
+          "kind": "number",
+          "number": 1.0
+        },
+        {
+          "path": "m_RaycastTarget",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_RaycastPadding.x",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.y",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.z",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.w",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_Maskable",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_OnCullStateChanged.m_PersistentCalls.m_Calls",
+          "kind": "array",
+          "count": 0
+        },
+        {
+          "path": "m_Sprite",
+          "kind": "reference",
+          "reference": {
+            "fileID": 21300000,
+            "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+            "type": 2
+          }
+        },
+        {
+          "path": "m_Type",
+          "kind": "number",
+          "number": 3
+        },
+        {
+          "path": "m_PreserveAspect",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillCenter",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillMethod",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillAmount",
+          "kind": "number",
+          "number": 0.5
+        },
+        {
+          "path": "m_FillClockwise",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillOrigin",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_UseSpriteMesh",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_PixelsPerUnitMultiplier",
+          "kind": "number",
+          "number": 1.0
+        }
+      ],
+      "original_path_id": "3119532510169511667",
+      "object_sha256": "76b63cb756f1cb69a754b8388071129ffd7e6e04ab2e926fd4010d698013fc84",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabviewitem.bundle",
+        "bundle_hash": "53c606d2472f09268ae3ae98f11bd658",
+        "path_id": "3119532510169511667",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/53c606d2472f09268ae3ae98f11bd658.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 9092,
+        "bundle_sha256": "7c79c754d8e9739d76a25729403b6fb8798ab1fdca17362bff4f39f8d7ea85a5"
+      }
+    },
+    {
+      "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "path": "/FightEndReportPlayerTabViewItem/BattleData/Cure/Slider/Fill",
+      "file_id": "114528911807818478",
+      "fields": {
+        "m_Material": {
+          "fileID": 0
+        },
+        "m_Color": {
+          "r": 0.6509804129600525,
+          "g": 0.6666666865348816,
+          "b": 0.21568627655506134,
+          "a": 1.0
+        },
+        "m_RaycastTarget": 1,
+        "m_RaycastPadding": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "m_Maskable": 1,
+        "m_OnCullStateChanged": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        },
+        "m_Sprite": {
+          "fileID": 21300000,
+          "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+          "type": 2
+        },
+        "m_Type": 3,
+        "m_PreserveAspect": 0,
+        "m_FillCenter": 1,
+        "m_FillMethod": 0,
+        "m_FillAmount": 0.5,
+        "m_FillClockwise": 1,
+        "m_FillOrigin": 0,
+        "m_UseSpriteMesh": 0,
+        "m_PixelsPerUnitMultiplier": 1.0
+      },
+      "checks": [
+        {
+          "path": "m_Material",
+          "kind": "reference",
+          "reference": {
+            "fileID": 0
+          }
+        },
+        {
+          "path": "m_Color.r",
+          "kind": "number",
+          "number": 0.6509804129600525
+        },
+        {
+          "path": "m_Color.g",
+          "kind": "number",
+          "number": 0.6666666865348816
+        },
+        {
+          "path": "m_Color.b",
+          "kind": "number",
+          "number": 0.21568627655506134
+        },
+        {
+          "path": "m_Color.a",
+          "kind": "number",
+          "number": 1.0
+        },
+        {
+          "path": "m_RaycastTarget",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_RaycastPadding.x",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.y",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.z",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_RaycastPadding.w",
+          "kind": "number",
+          "number": 0.0
+        },
+        {
+          "path": "m_Maskable",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_OnCullStateChanged.m_PersistentCalls.m_Calls",
+          "kind": "array",
+          "count": 0
+        },
+        {
+          "path": "m_Sprite",
+          "kind": "reference",
+          "reference": {
+            "fileID": 21300000,
+            "guid": "c15162a99ae85fab9d4c368e14b94ca0",
+            "type": 2
+          }
+        },
+        {
+          "path": "m_Type",
+          "kind": "number",
+          "number": 3
+        },
+        {
+          "path": "m_PreserveAspect",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillCenter",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillMethod",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_FillAmount",
+          "kind": "number",
+          "number": 0.5
+        },
+        {
+          "path": "m_FillClockwise",
+          "kind": "number",
+          "number": 1
+        },
+        {
+          "path": "m_FillOrigin",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_UseSpriteMesh",
+          "kind": "number",
+          "number": 0
+        },
+        {
+          "path": "m_PixelsPerUnitMultiplier",
+          "kind": "number",
+          "number": 1.0
+        }
+      ],
+      "original_path_id": "5963591440549721843",
+      "object_sha256": "d84c49c9ba8c6eeb2f3a98d466bbaa47649df2c56ee74d3f2af953503f0ba267",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabviewitem.bundle",
+        "bundle_hash": "53c606d2472f09268ae3ae98f11bd658",
+        "path_id": "5963591440549721843",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/53c606d2472f09268ae3ae98f11bd658.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 9092,
+        "bundle_sha256": "7c79c754d8e9739d76a25729403b6fb8798ab1fdca17362bff4f39f8d7ea85a5"
+      }
+    }
+  ],
+  "reused": {
+    "unity/Assets/Official/Combat/BattleReport/Graphics/Sprite_6c4d5397efb75cd9.asset": {
+      "sha256": "567c5a1d3ca55cbe2513edc10513183e8ec9b506b96822ccf4788209a7f80960",
+      "meta_sha256": "0e3a97d5e0c6eca4bb1a2cbf591675c478e0b9ef38371b3a10a68c30f6545c94",
+      "original_sha256": "6c4d5397efb75cd9006603f01aa3f6229daef5d533b551de98b6344ea4ec2812",
+      "source": {
+        "bundle": "defaultpackage_assets_image_ui_common.bundle",
+        "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+        "path_id": "6955965337288539060",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/56625bf3a050a757882ec6e93d9fdeaa.bundle",
+        "raw_size": 1344739,
+        "raw_sha256": "73b84ad1d8fe9fef4861b5c02e10e4566301e3da3e18430f704e00dc303867c1"
+      }
+    }
+  },
+  "sliced_code": {
+    "original_sha256": "731443346f17466545343156653d4b9b65246599cffd0aaec2b99ff6a3005571",
+    "path": "unity/Assets/Game/Runtime/Official/WorldUI/SlicedFilledImage.cs",
+    "canonical_lf_sha256": "6c0eb54c4cec589eab5da79461843a2c682e8e3e30bd5e82b5591eab51567546"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabViewItem.prefab",
+      "sha256": "14923b00ab6320045e569748076dc666d432110fcd0d0b528d276ed7198b4222",
+      "bytes": 100281
+    }
+  ],
+  "adaptations": [
+    "Original player-row refresh order, self state, four values, three-category sums and four team-ratio sliders.",
+    "Unknown historical values remain blank; an unknown team denominator clears its slider.",
+    "The original PlayerIcon reference is retained as a Component adapter endpoint; its portrait/detail implementation remains pending."
+  ],
+  "pending": [
+    "Production player/pet/summon report grouping, player portrait/detail provider, formal report-window entry."
+  ],
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerRow.cs": "b227c09de3493871af572f2e594fe0b743c5aa4e8a5b08781350a8b83315d67b",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerRow.cs.meta": "a7cecc8dc6aa00807b85d2460b65aecb1158941b08d22878983594b6a7990685",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinder.cs": "dfcf2acbdd2e539aa75b5e740825adccce5beb9edec76abec85d5dccecceb9d5",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinder.cs.meta": "a494d978b0647cf23f7fb4670192c4fc60e3fc94cb7a2c5f3b882d07b5df44b6",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs": "5e4b967e61c2afd1b064af67ea9c09b2d8883380c7fbda5627ff9595135ce935",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs.meta": "e3fb5212c2570c24878ede38be694dbd38318891d22992600775e3099ee2c32e",
+    "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "3453bc083d0fd3958e8bafc706e65807531ebd20e6a40da2dce135f649e3599b"
+  },
+  "generator_sha256": "c85ddba9cac06cf2bc222e821dff4a5525078aee57bf38774d9d354249426ef9"
+}

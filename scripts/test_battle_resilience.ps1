@@ -108,6 +108,7 @@ for ($counter = 1; $counter -le 30; $counter++) {
     if ($monster.Resilience -eq 0) { $breakStep = $step; $breakCounter = $counter; break }
 }
 Assert-Resilience ($null -ne $breakStep) 'Configured break hit did not empty the resilience bar.'
+Assert-Resilience ($checkpoint.Statistics.Unit(1).BreakResilienceCount -eq 1 -and $checkpoint.Statistics.Unit(2).BreakResilienceCount -eq 0) 'Successful enemy break was not attributed once to its breaker.'
 Assert-Resilience (($monster.Statuses | Where-Object { $_.ClassId -eq 24278 }).Count -eq 1) `
     'Resilience break did not apply status 24278.'
 Assert-Resilience (($breakStep.Event.SkillCasts | Where-Object {
@@ -129,5 +130,7 @@ for ($counter = $currentCounter + 1; $counter -le 100 -and $monster.SkillState.R
 Assert-Resilience ($monster.SkillState.Round -ge 2) 'Monster did not complete two personal rounds.'
 Assert-Resilience ($monster.Resilience -eq $monster.MaxResilience -and $monster.BrokenRound -eq -1) `
     'Resilience did not restore after two personal rounds.'
+
+Assert-Resilience ($checkpoint.Statistics.Unit(1).BreakResilienceCount -eq 1) 'Resetting resilience counted an extra break.'
 
 Write-Output 'Battle resilience checks passed: pinned group config, property-6 initialization, break hit, status and skill trigger, damage cap, and personal-round reset.'

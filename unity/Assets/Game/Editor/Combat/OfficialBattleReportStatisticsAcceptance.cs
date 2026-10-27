@@ -22,6 +22,19 @@ namespace Zjcs.Editor.Combat
                 skill.SubRank, player.Properties));
         }
 
+        public static void InstallPlayerCountersFixture(Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
+        {
+            var player = controller.Checkpoint.Units.First(value => value.Id == 1);
+            var skill = player.Skills.First(value => value.Hits.Count > 0 || value.HitGraphEntities.Any(hit => hit.HasFixedDamage));
+            if (skill.Hits.Count > 0) skill.Hits[0].BreakResilience = true;
+            else skill.HitGraphEntities.First(hit => hit.HasFixedDamage).BreakResilience = true;
+            foreach (var enemy in controller.Checkpoint.Units.Where(value => value.Side != player.Side))
+            {
+                enemy.MaxResilience = 1;
+                enemy.Resilience = 1;
+            }
+        }
+
         public static void InstallShieldFixture(Zjcs.Presentation.Combat.OfficialBattleRuntimeController controller)
         {
             var player = controller.Checkpoint.Units.First(value => value.Id == 1);
@@ -97,6 +110,42 @@ namespace Zjcs.Editor.Combat
                 totalHits += row.DamageHits;
             }
             Require(totalHits > 0, "Completed battle did not exercise report damage-hit counting.");
+            var scores = Zjcs.Presentation.Combat.OfficialCombatAssetCatalog.LoadDefault().LoadReportScoreSettings();
+            Require(scores.BreakResilienceScoreFactor == 1
+                && scores.GetApplyStatusScore(0, new Dictionary<int, int> { { 1, 1 }, { 2, 1 }, { 3, 1 } }) == 20
+                && scores.GetApplyStatusScore(7, null) == 0,
+                "Installed original report settings, status weights or null branch changed.");
+            Debug.Log("Original report score configuration passed in Play Mode: explicit TextAsset/manifest binding, 5/5/10 status weights and original null branch. User-confirmed successful-break counter and status subtypes are available.");
+            foreach (var unit in report.Units)
+            {
+                var saved = savedReport.Unit(unit.UnitId);
+                long absolute = checkpoint.Receipts.SelectMany(receipt => receipt.Event.DamageEvents)
+                    .Where(hit => hit.TargetId == unit.UnitId && !hit.IsSkillCost && !hit.IsCure
+                        && !hit.Dodge && !hit.Blinding && hit.DamageType != 0)
+                    .Sum(hit => Math.Abs(hit.AbsoluteDamage));
+                Require(unit.HasAbsoluteDamageTaken && unit.AbsoluteDamageTaken == absolute
+                    && saved.HasAbsoluteDamageTaken && saved.AbsoluteDamageTaken == absolute,
+                    "Live/saved player absolute damage differs from original resolved values.");
+                Require(unit.HasBreakResilienceCount && saved.HasBreakResilienceCount
+                    && saved.BreakResilienceCount == unit.BreakResilienceCount
+                    && unit.HasStatusTypeCounts && saved.HasStatusTypeCounts
+                    && saved.OrdinaryDebuffApplications == unit.OrdinaryDebuffApplications
+                    && saved.AbnormalDebuffApplications == unit.AbnormalDebuffApplications
+                    && unit.DebuffApplications == unit.OrdinaryDebuffApplications + unit.AbnormalDebuffApplications,
+                    "Unity serialization lost successful breaks or player score status subtypes.");
+                Require(scores.TryGetApplyStatusScore(unit, out long score)
+                    && score == unit.BuffApplications * 5L + unit.OrdinaryDebuffApplications * 5L
+                        + unit.AbnormalDebuffApplications * 10L + unit.BreakResilienceCount,
+                    "Player status score differs from accepted applications and successful breaks.");
+            }
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_PLAYERS") == "1")
+            {
+                Require(report.Unit(1).BreakResilienceCount > 0
+                    && report.Unit(1).OrdinaryDebuffApplications > 0
+                    && report.Unit(1).AbnormalDebuffApplications > 0,
+                    "Live fixture did not exercise successful enemy breaks and both debuff types.");
+                Debug.Log("Player report counters passed in Play Mode: original absolute damage, successful enemy breaks, separate status types, original 5/5/10/1 scoring and Unity checkpoint persistence.");
+            }
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SOURCES") == "1")
             {
                 var child = checkpoint.Units.SelectMany(value => value.Statuses)

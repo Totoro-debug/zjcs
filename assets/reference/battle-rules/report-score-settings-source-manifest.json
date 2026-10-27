@@ -1,0 +1,80 @@
+{
+  "manifest": "854_156383",
+  "source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_fight.bundle",
+    "bundle_hash": "5d9d9996fe22bcca8f9d3bee08280c8c",
+    "path_id": "-8095793369706998440",
+    "origin": "apk_zip",
+    "manifest": "854_156383",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "apk_entry": "assets/yoo/DefaultPackage/5d9d9996fe22bcca8f9d3bee08280c8c.bundle",
+    "raw_size": 18680,
+    "raw_sha256": "384d180984ccd1a80d534ad13476ff37551df7fa40c61b0cf738eac958be7ce4"
+  },
+  "object_sha256": "0a5fb09f4a312602cd0c6e4d798c15f9017923b8393b164f2bfb39361b7c45ec",
+  "source_field": "FightSettings.ReportSetting",
+  "original_fields": {
+    "BreakResilienceScoreFactor": 1,
+    "ApplyStatusScore": [
+      {
+        "StageType": 0,
+        "Score": 0
+      },
+      {
+        "StageType": 1,
+        "Score": 5
+      },
+      {
+        "StageType": 2,
+        "Score": 5
+      },
+      {
+        "StageType": 3,
+        "Score": 10
+      }
+    ],
+    "ReportAllPlayerStages": [
+      4,
+      500,
+      28,
+      44,
+      45,
+      46,
+      47,
+      34,
+      600
+    ]
+  },
+  "official_code": {
+    "FightSettings.cs": "13af0e273eab51e135b626ce4afdc4ad3a708d40e705d212a1d4a37499b89da5",
+    "FightReportSetting.cs": "8bae5ccda20694015fadd1d5fd80978b2415971b05f96c6e4d346bd00606d3fe",
+    "FightReportUIUtils.cs": "7702e839dedc2a1a6ebe9d7fa7fc7a4bd5672a474c34b202373f373150a1d248",
+    "FightEndReportPlayerTabViewItem.cs": "242b2a350596bbcbb1ac0398f99447721cd5cd69ad940a84aad6820c54b07174",
+    "FightEndReportPlayerTabView.cs": "ab995be357ff40a031c9feb234339d1aff404246381847b78ea31a52161cbafa"
+  },
+  "output": "unity/Assets/Official/Combat/report-score-settings.json",
+  "output_sha256": "3289a98bf3c214e47e92f04369861d14c81111c4623d1ecd5430dcf607d8ad83",
+  "outputs": {
+    "unity/Assets/Official/Combat/report-score-settings.json": "3289a98bf3c214e47e92f04369861d14c81111c4623d1ecd5430dcf607d8ad83",
+    "unity/Assets/Official/Combat/report-score-settings.json.meta": "1eacb7d6ddcce311597e43974dbc2038bbd5b7a531dcbda9db1b720f16ada2a6",
+    "unity/Assets/Official/Combat/report-score-settings-source-manifest.json": "d5085da098a9b67878f94cbe752e47ce44e66b2f3736e1c993465995b43f940c",
+    "unity/Assets/Official/Combat/report-score-settings-source-manifest.json.meta": "77e7f91f3f2d623ee8f94805f2dcf6095da2b610927f06425609cf3707de5bb1",
+    "unity/Assets/Game/Resources/Combat/OfficialCombatAssetCatalog.asset": "974d65c7129e897d5948fb677b3fbd87149a854b55422ffcf81b7c74717caf7d"
+  },
+  "implementation": "Preserve the original ordered status-score list, unknown-type zero, null-dictionary early return and original multiplication order. Feed successful enemy break counts and accepted Buff/ordinary Debuff/AbnormalDebuff application counts; legacy missing histories remain unavailable.",
+  "pending": "Formal player report data grouping, portrait/provider binding and the complete player-row runtime flow remain pending.",
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportScoreSettings.cs": "c80d0efe2cb2976d000caa609d3760a4bde721a53f5495ced845f106e1ed1d02",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportScoreSettings.cs.meta": "64f103f3097e5e857eb425d319092f9f59705c6ff11bfb4dd86530ea56c007f5",
+    "scripts/test_battle_report_scores.ps1": "f312befbfa10307855273955f729552e9e74a80d2557abbcd53956cb075b25f7",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialCombatAssetCatalog.cs": "d698f15cde57b08de2d968a70cdb1150b6bd6a64636db40fddbf7e0a53395675",
+    "unity/Assets/Game/Resources/Combat/OfficialCombatAssetCatalog.asset": "974d65c7129e897d5948fb677b3fbd87149a854b55422ffcf81b7c74717caf7d",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "0ffe2c15d131579b09421ca90cf64db420fda853a36fab351262aec8c5e96427"
+  },
+  "generator_sha256": "866eab08b7716bb865d1a33a6d35d5b6a2e55c782a04cdc0f6255c86633027a8",
+  "user_confirmed": {
+    "received_damage": "BeAbsoluteDamage includes shield absorption, HP overflow and damage negated by defence/reduction.",
+    "break_resilience": "BreakResilience counts successful enemy breaks, not resilience points removed."
+  }
+}

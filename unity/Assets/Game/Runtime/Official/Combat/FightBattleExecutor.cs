@@ -318,6 +318,7 @@ namespace Zjcs.Combat.Official
         {
             foreach (FightBattleUnitState unit in units)
             {
+                checkpoint.Statistics.Unit(unit.Id);
                 new FightSkillState(unit.SkillState).Initialize(unit.SkillCooldownChangeAtStart);
                 foreach (FightBattleStatusState status in unit.Statuses)
                 {
@@ -571,6 +572,7 @@ namespace Zjcs.Combat.Official
                         HasDamageValue = resolved.Settlement != null,
                         DamageValue = resolved.Settlement == null ? 0 : resolved.Settlement.DamageValue,
                         ShieldDamage = resolved.ShieldDamage,
+                        HasAbsoluteDamage = resolved.Formula != null,
                         AbsoluteDamage = resolved.Formula == null ? 0 : resolved.Formula.AbsoluteDamage,
                         BeforeHp = beforeHp,
                         AfterHp = target.Hp,
@@ -652,6 +654,7 @@ namespace Zjcs.Combat.Official
                 units.Add(summon);
                 unitById.Add(summon.Id, summon);
                 checkpoint.Units.Add(summon);
+                checkpoint.Statistics.Unit(summon.Id);
                 turns.RegisterUnit(summon.Turn, hit.SummonImmediateRound);
                 if (currentStepSpawnedUnitIds != null)
                     currentStepSpawnedUnitIds.Add(summon.Id);

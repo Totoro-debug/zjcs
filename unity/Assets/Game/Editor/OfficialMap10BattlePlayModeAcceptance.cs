@@ -250,6 +250,8 @@ namespace Zjcs.Editor
                 Combat.OfficialBattleReportStatisticsAcceptance.InstallShieldFixture(sceneController);
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SOURCES") == "1")
                 Combat.OfficialBattleReportStatisticsAcceptance.InstallSourceFixture(sceneController);
+            if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_PLAYERS") == "1")
+                Combat.OfficialBattleReportStatisticsAcceptance.InstallPlayerCountersFixture(sceneController);
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_WORLD_TIP")=="1")
                 worldTipTest=Combat.OfficialBattleWorldTipsAcceptance.Probe.Install(sceneController);
             bool accumulatedDamageTest = Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_ACCUMULATED") == "1";
@@ -541,6 +543,9 @@ namespace Zjcs.Editor
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_STATISTICS") == "1")
                     Combat.OfficialBattleReportStatisticsAcceptance.Verify(
+                        (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
+                if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_PLAYER_ROW") == "1")
+                    yield return Combat.OfficialBattleReportPlayerRowAcceptance.Run(
                         (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_SKILL_ROW") == "1")
                     yield return Combat.OfficialBattleReportSkillRowAcceptance.Run(

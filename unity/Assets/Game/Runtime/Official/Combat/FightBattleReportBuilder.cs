@@ -20,6 +20,13 @@ namespace Zjcs.Combat.Official
         public long DamageDealt;
         public long AdditionalAttributedDamage;
         public long DamageTaken;
+        public bool HasAbsoluteDamageTaken;
+        public long AbsoluteDamageTaken;
+        public bool HasBreakResilienceCount;
+        public int BreakResilienceCount;
+        public bool HasStatusTypeCounts;
+        public int OrdinaryDebuffApplications;
+        public int AbnormalDebuffApplications;
         public long HealDealt;
         public long HealTaken;
         public long ShieldGranted;
@@ -135,6 +142,13 @@ namespace Zjcs.Combat.Official
                     DamageDealt = stats == null ? 0 : stats.DamageDealt,
                     AdditionalAttributedDamage = stats == null ? 0 : stats.AdditionalAttributedDamage,
                     DamageTaken = stats == null ? 0 : stats.DamageTaken,
+                    HasAbsoluteDamageTaken = stats != null && stats.HasAbsoluteDamageTaken,
+                    AbsoluteDamageTaken = stats == null ? 0 : stats.AbsoluteDamageTaken,
+                    HasBreakResilienceCount = stats != null && stats.HasBreakResilienceCount,
+                    BreakResilienceCount = stats == null ? 0 : stats.BreakResilienceCount,
+                    HasStatusTypeCounts = stats != null && stats.HasStatusTypeCounts,
+                    OrdinaryDebuffApplications = stats == null ? 0 : stats.OrdinaryDebuffApplications,
+                    AbnormalDebuffApplications = stats == null ? 0 : stats.AbnormalDebuffApplications,
                     HealDealt = stats == null ? 0 : stats.HealDealt,
                     HealTaken = stats == null ? 0 : stats.HealTaken,
                     ShieldGranted = stats == null ? 0 : stats.ShieldGranted,

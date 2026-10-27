@@ -41,6 +41,7 @@ namespace Zjcs.Combat.Official
         public bool HasDamageValue;
         public long DamageValue;
         public long ShieldAddFinalDamageValue => (HasDamageValue ? DamageValue : Damage) - ShieldDamage;
+        public bool HasAbsoluteDamage;
         public long AbsoluteDamage;
         public long ShieldDamage;
         public long BeforeHp;
@@ -59,6 +60,14 @@ namespace Zjcs.Combat.Official
         public long AdditionalAttributedDamage;
         public long DamageAndShieldDamageDealt;
         public long DamageTaken;
+        // Original BeAbsoluteDamage is separate from actual HP loss. Old saves lack its history.
+        public bool HasAbsoluteDamageTaken;
+        public long AbsoluteDamageTaken;
+        public bool HasBreakResilienceCount;
+        public int BreakResilienceCount;
+        public bool HasStatusTypeCounts;
+        public int OrdinaryDebuffApplications;
+        public int AbnormalDebuffApplications;
         public long HealDealt;
         public long HealTaken;
         public long ShieldGranted;
@@ -108,7 +117,13 @@ namespace Zjcs.Combat.Official
         {
             foreach (FightBattleUnitStatistics value in Units)
                 if (value != null && value.UnitId == unitId) return value;
-            var created = new FightBattleUnitStatistics { UnitId = unitId };
+            var created = new FightBattleUnitStatistics
+            {
+                UnitId = unitId,
+                HasAbsoluteDamageTaken = true,
+                HasBreakResilienceCount = true,
+                HasStatusTypeCounts = true
+            };
             Units.Add(created);
             return created;
         }
@@ -138,6 +153,13 @@ namespace Zjcs.Combat.Official
             Skill(unitId, skillEntityId, skillItemId).Casts++;
         }
 
+        // User-confirmed BreakResilience means successful enemy breaks, not resilience points.
+        public void RecordResilienceBreak(int unitId)
+        {
+            FightBattleUnitStatistics source = Unit(unitId);
+            source.BreakResilienceCount = checked(source.BreakResilienceCount + 1);
+        }
+
         public void RecordPendingStatusApplications(IReadOnlyList<FightBattleUnitState> units)
         {
             if (units == null) return;
@@ -152,6 +174,10 @@ namespace Zjcs.Combat.Official
                     FightBattleUnitStatistics source = Unit(application.CreatorId);
                     if (buff) source.BuffApplications = checked(source.BuffApplications + 1);
                     else source.DebuffApplications = checked(source.DebuffApplications + 1);
+                    if (application.StatusType == 2)
+                        source.OrdinaryDebuffApplications = checked(source.OrdinaryDebuffApplications + 1);
+                    else if (application.StatusType == 3)
+                        source.AbnormalDebuffApplications = checked(source.AbnormalDebuffApplications + 1);
                     if (application.RootSkillId <= 0)
                     {
                         if (buff) source.UnattributedBuffApplications = checked(source.UnattributedBuffApplications + 1);
@@ -227,6 +253,10 @@ namespace Zjcs.Combat.Official
             if (!damage.IsCure && !damage.Dodge && !damage.Blinding && damage.DamageType != 0)
             {
                 skill.DamageHits = checked(skill.DamageHits + 1);
+                if (damage.HasAbsoluteDamage)
+                    target.AbsoluteDamageTaken = checked(target.AbsoluteDamageTaken + Math.Abs(damage.AbsoluteDamage));
+                else if (!damage.Immunity)
+                    target.HasAbsoluteDamageTaken = false;
                 if (castDamageTargets == null) skill.HasDamageHitCounts = false;
                 else if (castDamageTargets.Add(damage.TargetId))
                     skill.DamageTargets = checked(skill.DamageTargets + 1);
