@@ -211,6 +211,7 @@ namespace Zjcs.Presentation.World
                 else if (battleController != null) LeaveBattle();
                 else if (statues.goddessDialog != null) statues.goddessDialog.Close();
                 else if (selectedStageEntity != null) CloseStageDialog();
+                else if (map12BuildingDialog != null) CloseMap12BuildingDialog();
                 else CloseMap();
             }
 
@@ -484,8 +485,10 @@ namespace Zjcs.Presentation.World
         private void SetStoryProgress(string name, int count, int status)
         {
             if (string.IsNullOrWhiteSpace(name)) return;
-            ProgressionResult result = progressionSave.SetStoryProgress(name, count, status,
-                MapReceiptPrefix + slotId + ":story:" + name + ":" + count + ":" + status);
+            // A story can revisit the same count/status after cancellation or a
+            // selector branch. The session already skips an unchanged value;
+            // a permanent event ID for the value would suppress later changes.
+            ProgressionResult result = progressionSave.SetStoryProgress(name, count, status);
             if (result.Status == ProgressionResultStatus.InvalidState)
                 throw new InvalidOperationException(result.Message);
             Map10RuntimeStoryCount current = localSave.storyPlayCounts
@@ -510,6 +513,8 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
+            map12BuildingDialog = null;
             nativeMap12World?.Dispose();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();

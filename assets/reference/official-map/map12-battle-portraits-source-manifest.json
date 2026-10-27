@@ -1,0 +1,1715 @@
+{
+  "inputs": [
+    {
+      "bytes": 4935,
+      "path": "scripts/prepare_unity_map12_battle_portraits.py",
+      "sha256": "8ccff0c16159fe5a4644eac43bbca871409b9a5cd2bc0302d592bbb08e2a4a30"
+    },
+    {
+      "bytes": 6437942,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/battle-runtime.json",
+      "sha256": "7df29d173d8c68588a02df9d6d8fb2586d23ba086a02c4a4c89bdcb71a9dc99a"
+    },
+    {
+      "bytes": 18259905,
+      "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+      "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
+    },
+    {
+      "bytes": 1938,
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleMonsterPortraitCatalog.cs",
+      "sha256": "32cb33ee67272c6b2acd83cc6049ba3c864080fcdcee4430da036112943463f3"
+    },
+    {
+      "bytes": 11940,
+      "path": "scripts/prepare_unity_battle_monster_portraits.py",
+      "sha256": "f19026c21affea10ccb180ad73cc79693d70e4bf0988d6c012f4434f0bed3bcb"
+    }
+  ],
+  "manifest": "871_156598",
+  "operation": "APK-first current source Sprite extraction for all Map12 monster IconIds; explicit per-map native catalog.",
+  "outputs": [
+    {
+      "bytes": 9679,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3202.png",
+      "sha256": "baa3df40ce2607a1eebfa3c71acdb59befd2b86f13c57572759d4cd32b4f51d5"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3202.png.meta",
+      "sha256": "9640a8fb59acdaa45d2dc4f22825d79e128bfe5666180568418b52cfdd96d151"
+    },
+    {
+      "bytes": 9582,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3203.png",
+      "sha256": "cb003e04ddd9cf58b38a35ad8984424263d25f68970abbe42230946c5f61894e"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3203.png.meta",
+      "sha256": "76049eff0b0bd8de907191b3ef78a989fa64fc99a21452d71322ac448a705beb"
+    },
+    {
+      "bytes": 12860,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3206.png",
+      "sha256": "6324b02206899796b90d7a743774847046e8e8ac26a8c75107772590d27a0c40"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3206.png.meta",
+      "sha256": "fecbf693e37e4f51e2369a9a13d4045d6970a64ebfd913519fe512033fd05f6a"
+    },
+    {
+      "bytes": 22029,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3207.png",
+      "sha256": "7e48fdd1ec45858e5b81cc672cf0a9aee1e7df8a108ca35c5b0f540eb212d9ca"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3207.png.meta",
+      "sha256": "2634199c810b3e624da24f94806c7df2c5cb007a91c8e0892a330911d5ef9e6f"
+    },
+    {
+      "bytes": 10343,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3208.png",
+      "sha256": "ba4c47f787fe7cd2b765e178079df9df86863b7c33f1f7f0bd225ec7683f429d"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3208.png.meta",
+      "sha256": "efc510f037c93e8c27d051ea958c6f296d88e1eac4f9a92cd9c7f9bb9a97ef12"
+    },
+    {
+      "bytes": 10472,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3209.png",
+      "sha256": "ab8a0028f1acf89872a164d9dc0e86f340b1fb0ec254dba3481a0bfd88a133b4"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3209.png.meta",
+      "sha256": "9c57e18e24e6cb1c631598b6d92caa3e061393cc1f05501754bbe0d53b1dd459"
+    },
+    {
+      "bytes": 11897,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3210.png",
+      "sha256": "f229994b667a4e99f912d747402f182d84549bb0a1ced65002f09c30b90226b4"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3210.png.meta",
+      "sha256": "f6402a50f1c97c042cdc7c2c969b763bcb3cd300c9637111947a21609e98ed1d"
+    },
+    {
+      "bytes": 12948,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3211.png",
+      "sha256": "531f26714c1caf35c7cdf5f4533de037194357896567a9cf5cd8036fd5bf9fa4"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3211.png.meta",
+      "sha256": "5693e848076c116eb9107f0d865a216a2bc60ca54045ddc2925661e86835c4ad"
+    },
+    {
+      "bytes": 13651,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3216.png",
+      "sha256": "f7038831eb1e11d61fe5bc1e362318ae34f5a48efec721ac4a35662c9c5f23e6"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3216.png.meta",
+      "sha256": "618bb70f15428816703c41c880c7a9a4bcacb5055ed7ec67e1d3bbdd7dab7e78"
+    },
+    {
+      "bytes": 15289,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3219.png",
+      "sha256": "09ebe9685401fe2dac70b6fc2dc80e0a46847fc77f19fc8c2cc6b3878b3096a8"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3219.png.meta",
+      "sha256": "8691fc40f44eb37b48403cdb9cfeeca307e5e756925a418d56cb618183e147eb"
+    },
+    {
+      "bytes": 20822,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3220.png",
+      "sha256": "a3a22304e632fb50fb01f63c1f6bfe86ead4394e9e77d773ab9dc70e32f20168"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3220.png.meta",
+      "sha256": "56889ed54194a83f7859a668081b34f846e31aa49e0b31d225abf022b001f09d"
+    },
+    {
+      "bytes": 21751,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3221.png",
+      "sha256": "c91df7df311c292bb15ceaf1c133f6bfd0bb098f02f5b31a4d72e904ceb31456"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3221.png.meta",
+      "sha256": "294f854d322d066257bbce6053fdbc052c41438f59e02921b8966a6bafff3402"
+    },
+    {
+      "bytes": 19325,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3222.png",
+      "sha256": "b8cf7250a7242ca2579bab10df31ce30a08ac6822705d9249fcc6bbf244c7806"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3222.png.meta",
+      "sha256": "2006ee873ad15eb96d0df40873a6e896fced5c39b08760b175c96692ff304821"
+    },
+    {
+      "bytes": 17273,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3223.png",
+      "sha256": "1f8e6223cb79e8ad997d3e98ca1e6ea58759515b87812e6d81f9855141128257"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3223.png.meta",
+      "sha256": "f04be8a8cd234657aa156cf056431ea51443dc6f60912805cff4e29629fe0a32"
+    },
+    {
+      "bytes": 20759,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3224.png",
+      "sha256": "3ba314493bbfd868d45e82ebf51da9d3738663b35131f5cbaca2df2b89eda2e7"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3224.png.meta",
+      "sha256": "19477873bcf69cf74cf3cb35ad86079da410bc025c316812b8a620327385468c"
+    },
+    {
+      "bytes": 18647,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3225.png",
+      "sha256": "5a7d9ee44275bcaac3f5bf5226a79700edd381cb7057e819dbcf11962435fe6b"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3225.png.meta",
+      "sha256": "d4c4851a1a5ecf0b27b228acf07c4a7d644fb46122310821a83c60fac9135c93"
+    },
+    {
+      "bytes": 13989,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3226.png",
+      "sha256": "55a6f1e5c4701c9a4b93098db3e3480ad9da56c99dc6dc3f53fe0c8ac00ac642"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3226.png.meta",
+      "sha256": "b383a68e12c122d4d9a6f9abe1aba1ca161ef205710344a6509b284d070dbffe"
+    },
+    {
+      "bytes": 22830,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3227.png",
+      "sha256": "508dff0aa1f743f2e21666c1034841b75301be813f49202580beee03772506bb"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3227.png.meta",
+      "sha256": "c9949c03dadd161bfce1a6f608c51818cf8229f2d34b75cb8c9a4efa47cfb4d4"
+    },
+    {
+      "bytes": 17173,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3229.png",
+      "sha256": "130f37f9c3f8e56bad4504d702570c4fa74e76ee75702c579c85d682f6e4597a"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3229.png.meta",
+      "sha256": "a68d3ae190877242ac8583062341b031a4241da6ed9f4348e22192224f4afbe5"
+    },
+    {
+      "bytes": 21219,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3256.png",
+      "sha256": "ee12c30f0fcb9df5b0ad6ef7d2d520894b14dada4ee74fa494e5303f0810d8b5"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3256.png.meta",
+      "sha256": "006573941bcf6bd4bae8b133e83bdd61312f4649a2219f8d3dba7c0dea545003"
+    },
+    {
+      "bytes": 22142,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3257.png",
+      "sha256": "3651cb5fd654ca72374e027c9f4e8219cbd293326dd802281ac55ac113ac9a4f"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3257.png.meta",
+      "sha256": "84583a6ae4ee8674c333fd52f5c6c6a21fed0b2b0e5a1e7fd28eb357f64d30eb"
+    },
+    {
+      "bytes": 17214,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3258.png",
+      "sha256": "5d9b02658660a60d3322c5cac720cf9bb5e342b2d5fd6e39fe353f8ecd182f61"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3258.png.meta",
+      "sha256": "1509159183fe4379ea15265bfd86cbc1a3e4d86c03b047dd14e2de9e794d3b70"
+    },
+    {
+      "bytes": 21603,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3259.png",
+      "sha256": "09adeec0946c33c05ff6a2985ca4d4cd520ac6f0d7732e1602be10649dc70e1b"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3259.png.meta",
+      "sha256": "f19f9822feb1d4bf51dd28583cecce78741d8a5612436edf14f24d747bac5bf8"
+    },
+    {
+      "bytes": 21039,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3260.png",
+      "sha256": "f50a3b48afcd9ace4bbb5fae24cf61fca75e19d5ed795946a2cc692db48e2c2a"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3260.png.meta",
+      "sha256": "fb7e6ab3a0c6f05ae34587bac56482f4ab2a47dc22eb5b014d29a575fe849685"
+    },
+    {
+      "bytes": 13776,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3402.png",
+      "sha256": "5cfb19f396c602387b5018cd033e47d800d9e9efad09117a0e5bd6ef6fad83ae"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3402.png.meta",
+      "sha256": "af9ece9d38467502874be06521ab59adef3b1058a9d152235a438c6c16066a2f"
+    },
+    {
+      "bytes": 13126,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3406.png",
+      "sha256": "6c5eb1fc8a2c0921e330ed7ca7ab6adf1ffc94e4ca2111cc4b0d9098efd2b291"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3406.png.meta",
+      "sha256": "71a7954d95c25b6592d52c464637997282355e81f961c2b42a802f6870ad7716"
+    },
+    {
+      "bytes": 19082,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3411.png",
+      "sha256": "d303cb89341966f43b14199e5bf1de30c100151a73b034af9243076af6467009"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3411.png.meta",
+      "sha256": "e78fcd8b7a833b5cfe841041a70d5d2d5e35199a9ce305163670f491e485420a"
+    },
+    {
+      "bytes": 20204,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3421.png",
+      "sha256": "770d1d7ba7a9265cd7ebffd3876a5c5dab7ccc5e1c768e573e4252dc7a0b882b"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3421.png.meta",
+      "sha256": "2b9a0df2c4ae53a23b2868ad100c3d8186de67481c8c3769d55cd5944a914eb9"
+    },
+    {
+      "bytes": 20266,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3422.png",
+      "sha256": "145f91b11621867f17a8204b0d6c52d336959c0435ca4147e6ab514681308e72"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3422.png.meta",
+      "sha256": "87f8c1464e2b27e73e3a16a4c73c0a2751bc3023116d50153683bd2c2f0c2cac"
+    },
+    {
+      "bytes": 19177,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3424.png",
+      "sha256": "6c899baf8d7d52e11ed0ec789c29cd816735b41fc810df90cc53a4dd39b95bdc"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3424.png.meta",
+      "sha256": "452a9ec6b037b30a3baa8fbc8d996895398b79ff4874cc5939881c1a9852e25c"
+    },
+    {
+      "bytes": 10522,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3425.png",
+      "sha256": "02af59b7df483bfc1d7a470b133d97d0652322d4614e359d5a201d446918c463"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3425.png.meta",
+      "sha256": "4e46e46867c07319153abc286bbb0b6f827c320d18640e8d49b364237a544f1c"
+    },
+    {
+      "bytes": 21198,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3426.png",
+      "sha256": "d9ff7e5ec67f4996f7667e59a333dc57a232cbe0cb1468332da54013208c03d0"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3426.png.meta",
+      "sha256": "99c4c96bacf749b14bb13b92991735fc21f3cc29bd4b24cb78f424079b2b9e79"
+    },
+    {
+      "bytes": 24954,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3427.png",
+      "sha256": "40d09c7603238578a4c0ef29cdf17dd8777add5937383e287d0d38dd967bebd6"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3427.png.meta",
+      "sha256": "5af37626dc9876401df04935416f8220887027249778b5793f693c791d2856cf"
+    },
+    {
+      "bytes": 25662,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3428.png",
+      "sha256": "b3872f92bfab179a82eb58de0254fffaec837c5bd566e1f2608bcd6ce3840f09"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3428.png.meta",
+      "sha256": "48181ae8bfbd80beff8182b0fc2d3457c25f635551a9475892973f1e1cf756f6"
+    },
+    {
+      "bytes": 16963,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3451.png",
+      "sha256": "fe7ee75d736bab7c2fa4c8746bc718e47142979414180dd14b7f0077f906f0dd"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3451.png.meta",
+      "sha256": "013baa2168786e4cd8830d50165c2d12a63d4ebe898128b7a68e0e995593134a"
+    },
+    {
+      "bytes": 25366,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3611.png",
+      "sha256": "3cd09a8f39f332e32aa1c2c85a14a409fbd80b843c27349c2cf56a7e3d72a9b2"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3611.png.meta",
+      "sha256": "71b92326fe0a3b7a182cfe0d0dacfc402e75bbbfa713ad04cfdebea074283d94"
+    },
+    {
+      "bytes": 13806,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3612.png",
+      "sha256": "276da1e1f9c275a0375727043582f2fb4a3a8ece67e1d8aea86e5d45ca4f4571"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3612.png.meta",
+      "sha256": "009fc10623b128515bd1240a1a5f6281b725dcefa8f90184ce8d31e42d5e3a6c"
+    },
+    {
+      "bytes": 23039,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3613.png",
+      "sha256": "d3e741da3e8e8fd927b959e5775b125206bdfdb886494fdcbc73c1b5fa117daa"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3613.png.meta",
+      "sha256": "65849db2c1b9c64a04febebff0aae120202b933a2767bdb374764dfe111e4005"
+    },
+    {
+      "bytes": 21710,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3615.png",
+      "sha256": "11cf2dc26e445f73f91b702f2d6182aad6f9f083732f488ea4a84e3b08037e49"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3615.png.meta",
+      "sha256": "1e3e6d8d80a594e05cf20c69e2d9a3e25ca2d7ee132291647e6eb68b86f9cd71"
+    },
+    {
+      "bytes": 16065,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3291.png",
+      "sha256": "d89999abaf41968ea5a3063c8dd005ba3c26e43c499aa0d369592aee127c216a"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3291.png.meta",
+      "sha256": "b9eefcee1b8f781c8c2331b2a7d893673527bac56a652e96c9ba5e1c1864308e"
+    },
+    {
+      "bytes": 17886,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3481.png",
+      "sha256": "37121dd84ed426617e9faea74ddd6289117c76a8290208e09ae67b9fe8ec0416"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3481.png.meta",
+      "sha256": "a0b687e5aa5c0b7e863775ad258e1cd513d7ab111b6108923bf8f1a2bc5bdef0"
+    },
+    {
+      "bytes": 18438,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3491.png",
+      "sha256": "5fc43e38a51a0188f99583d14a09d18fe40d585a103e6f4306c5dfaafbba734d"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3491.png.meta",
+      "sha256": "bdddf0e099a9dcdb42981e7cd7f994bb2e4a3d91deceb5a4b308bf3ad4a64293"
+    },
+    {
+      "bytes": 20178,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3652.png",
+      "sha256": "dce3dc64690886acb2cd11bfb75493a2dbf397cfff05519cd2eb812caccc21b4"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3652.png.meta",
+      "sha256": "54d47cfd59c0eea2d1a044276f7ade3c4704942daed1767628a6e678c399a7c5"
+    },
+    {
+      "bytes": 16676,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3704.png",
+      "sha256": "00c70d5c582f641009a81fa0585411525b773578a1738a9d8102dcce35c24c90"
+    },
+    {
+      "bytes": 1136,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/MonsterPortraits/G_3704.png.meta",
+      "sha256": "2d5901396726d90724c4961be850d82070637a1e1fca3ba60ac865f26befdbd0"
+    },
+    {
+      "bytes": 4705,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/monster-portraits.asset",
+      "sha256": "64d387a83177c440f79dbf2bc0389651d0958008cedac7f789d0321f1adfc317"
+    },
+    {
+      "bytes": 158,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/monster-portraits.asset.meta",
+      "sha256": "35c43c57c279dd0e3c384a80e9bce96321696244f1ed33f40ca795daa383edb3"
+    }
+  ],
+  "sprites": [
+    {
+      "iconId": 3202,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-5439825146894196734",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "f81714279380b9b927cdbb9fb4126807f3e148e0c46f0b9e772dc83c0d0df2ec",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-6027380402309668862",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3203,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1169807068144872781",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "45bea39f3e12fd2db90e1c2541216095b1c05e1d0a15c2fec9731d18f579e072",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8637908313940372813",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3206,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8160080923568042455",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "b45bfe13ff06531405b2465a68b11dad6a3ace6f58e915f706b02134f03aef0c",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4862912933647879721",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3207,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-3285967184867222347",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "4031843c9989b5ee809c4462261b2da46afc15bc35f8f04d8602fe559873bf73",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "7313761335043234997",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3208,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7419312120097217202",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "c88fecf3fbc8b08cafc12c51f04e7fb94c73f9bf2ac78c23c4b15d3d50a5b6f8",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6802421883680056654",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3209,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4816288516853867747",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "9ba45199f530c7913d7d35fb3225450d5aabcc16195c0e6a6d8132e67bc72e35",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-3723759182375298275",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3210,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "733717051010257867",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "31b4f865efab246673710bcad3caae772160527d32466b82cdb65bd970e05118",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-6787168292390235189",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3211,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6985398410689151008",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "579fb7c087aa1014d3a9cb83a2c26bddcbccb569eecd35e0d0be33edd2b6d3d9",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-3693919160994004960",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3216,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6962902234857890753",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "ac2b5e256610b3505fbc3612d9f55a38168c133d36ba415d2d374ecc7a3732a6",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4217783899430675393",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3219,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3928432991114406968",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "04eded045197ec1b885e304383cc2c2bff6e8d2f5ce8508749624901f172bc34",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3444961284310215736",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3220,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5683260200486983611",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "6e7cfa9c53bf95dc4c2251103a9a9d7f8eabc37308b78b5d0b4e84ece83acdfe",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8330712772019595333",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3221,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8776242519638662784",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "0739e2c5521858cfa36f45bb8bcac0822188166fea1e968a8adfdabfb6af381c",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-3609585763713408640",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3222,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4260639906715283455",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "30462fedb17ae9c2f994131cf6552f4e283a382455f700c20e723664b9c9af62",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1691264938857517057",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3223,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-1874133510823714292",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "8bd1e324931d42a1875cac5e6bb10ac0489e2b880bcef9dfc3126009e8d2ca46",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1242695570730541580",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3224,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "2021457058589257695",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "193ae0c26776bba038b1683b584626aa297f2ca81a16758e1e52fec6b4d79972",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4716699567168016417",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3225,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-2716702545280634524",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "ff988e5b8808273f074ba8a224cbaa695bd8efc8343b81c14f1bbd6938c16ff1",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3580142828492484964",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3226,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-489755171104241811",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "8e7667026aa786e267d64eaf783354bdb466f0c7383190d67b65c4aea601516e",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8309076258173667181",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3227,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3519911971971298782",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "e61471c6170124caf88fb9b4015768136dc3b230c3dee9560be59cf614f42c66",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4350865640142108126",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3229,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4949883590021478240",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "978fc9b512be5e56f3faca79fc7c33264258f3feb0a29d749c20db6f769bf0be",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "9127132444048623776",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3256,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3254924368644740861",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "d8cd9ca4e0d33c95f4217748341157bcf819697c9ea81ffa53ca36dba7f159fd",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-2797306066800404739",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3257,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8143017536812680280",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "68676a52816b9bc00fe648232c7ec262dd555fa3882916ae4c280611ee04cf9d",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5328354272193676376",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3258,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3426989922509376773",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "43504fb1fbcae95ccbab21bb0ed2e1c32bf29fa5ad1abb2e5956fe2c9e436233",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7126027670256366331",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3259,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1294309854230553447",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "2144cda8bd6a65d00deecd376bdaaa45dd967a4a64d70afd4490243361f332ea",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8101179722577290087",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3260,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-504392459145297473",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "10ab41aef3123a3d2f7821db893852b45824bbe2842e56181bf9d4b3470b7000",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "7954984795431453119",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3402,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-2563668989218466744",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "5afeb2f1dcbcc91c2e8e4b93a56296a8af8c8f987e21251e32de6aabefb8269c",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7391337433621212088",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3406,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1521005128356729869",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "2faa8ae6beb284dd34755b1bc50761a55839be2edb29ef8fc79888dd0e03919d",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "83360082687431693",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3411,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8269756820316414004",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "c2d2850cc6fab9c3341f60fec0050e96a1069574d64bfaff060b9ae80f887c67",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8717441316719697868",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3421,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8364943941546502296",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "07d10b1f7be6c4968612e3641f1e9ba0e8f6b7182e40ac8be17b7ae00b8f5bf7",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8672608766167181464",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3422,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3142772695621392066",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "43a37c524818c40cda015a3fe73688c35dcc7a717e16685a5506a36e1aa4b2eb",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3206977752270853826",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3424,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8185308731095335919",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "38809c42e42c42be77d3be0cef53ae2d51ef5a4e21929f951a6198c306f782be",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4050043912259060719",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3425,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-2551689094401478768",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "86e51638bc3575637889660d6b31da0e69c9b41ff49c44972c5c5ebf736391e9",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-1582487010494959728",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3426,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6511535166248694853",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "8038f02d108754d14922e112b88b59f11483334671ec25752dfa8c87c7812de8",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-5547257543117392827",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3427,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "9105079461644813082",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "9f3cb9e023d34cab1149536230c22fbffe8f95b0107e443adf711ff2368f15f5",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5074509718170059546",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3428,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "2299319568534442413",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "6b5bda6d501c3328d19f950fc594f8b6d80a4ef7d9365d6ce2fee32e585e41ee",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4101728105850564179",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3451,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-8256227454015564218",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "389a4cb61a46a429616b33a719e254c5242a27c414759d53e8d6428ca73defce",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3593793617655043654",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3611,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5208773935267359348",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "54e3616204fe08c1d9fb140531fe47095690ef43d305a54356d7ff5a55c3a6b9",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5067250211041880692",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3612,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-1179270748968947915",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "539f20ef9f5083e6cf482d9b49fa88f4f9ebf75516a66bf09224d8a860350f7c",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "676438316080983861",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3613,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8142150560831303291",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "e4fdb03807628cbad4083b6f520d9555d9c345c06fe522b2ed457a57df8b1910",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "9083061983993785979",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3615,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-939451907538484995",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      },
+      "spriteObjectSha256": "535c8fa1ac709b1bf5abef93e4c728b86a36e38b42b236190e6044ccf4262786",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/0479892d6d89bf17fd2e592af3f03a49.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_map4countries_noatlas.bundle",
+        "bundle_hash": "0479892d6d89bf17fd2e592af3f03a49",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-237008459121753859",
+        "raw_sha256": "b07fe5bd436a230d6c31f8a88a07e6f3cd3cbcee95ebf1aee56cbd763020c10e",
+        "raw_size": 993057
+      }
+    },
+    {
+      "iconId": 3291,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8286828222220225155",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      },
+      "spriteObjectSha256": "47033b31f62f059f377f97b30603bf9a6bc7dc39a3a4a6b272493826a95b86c3",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "523147875137374851",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      }
+    },
+    {
+      "iconId": 3481,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-5638343135605754728",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      },
+      "spriteObjectSha256": "ddf3285a3a03f0e20603b8b24bc058452b14d1a9481c42fdd297f0b214af1de8",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "1021241106811122840",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      }
+    },
+    {
+      "iconId": 3491,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "5730332375060274177",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      },
+      "spriteObjectSha256": "4b885822c780f2913a5baaa65589e48a6e154de56a53cf84b514b99ae9b99a3f",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-329738000487654399",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      }
+    },
+    {
+      "iconId": 3652,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "7844099585894603791",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      },
+      "spriteObjectSha256": "ea64ad85fe3a8ecfae3ed4bd73d9c48dd8549ec1e04874aa7446bfa0bd190092",
+      "textureSource": {
+        "apk_entry": "assets/yoo/DefaultPackage/2683984d4e613c8eb9411bc16ea483cb.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_mapsp_noatlas.bundle",
+        "bundle_hash": "2683984d4e613c8eb9411bc16ea483cb",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-5471792568909341681",
+        "raw_sha256": "7b71fe37fd62f6255aaa3c42a4bccf181426cbfe0d1a230067e2e192b2e486e2",
+        "raw_size": 83928
+      }
+    },
+    {
+      "iconId": 3704,
+      "source": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_maptherion_noatlas.bundle",
+        "bundle_hash": "735124c8a8db27ba8846a5a6770c7f89",
+        "bundle_sha256": "933bd8b252ec9949d39d28057deca746f830fb5b0f0e5ad9ddcfb5580dd18c07",
+        "bundle_size": 47910,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "1641459666546087976",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/735124c8a8db27ba8846a5a6770c7f89.bundle"
+      },
+      "spriteObjectSha256": "7cbdfffa0394a6a314eb4fc4c3c38176f774d329be0cba15881f88c31a9a066f",
+      "textureSource": {
+        "bundle": "defaultpackage_assets_image_itemicon_gameheadicon_monster_maptherion_noatlas.bundle",
+        "bundle_hash": "735124c8a8db27ba8846a5a6770c7f89",
+        "bundle_sha256": "933bd8b252ec9949d39d28057deca746f830fb5b0f0e5ad9ddcfb5580dd18c07",
+        "bundle_size": 47910,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-8274576565973002200",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/735124c8a8db27ba8846a5a6770c7f89.bundle"
+      }
+    }
+  ]
+}

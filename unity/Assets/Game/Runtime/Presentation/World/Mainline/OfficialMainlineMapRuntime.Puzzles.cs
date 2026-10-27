@@ -28,6 +28,7 @@ namespace Zjcs.Presentation.World
                 || value.HasPushResult || value.HasOverlapDetector || value.LockType > 1
                 || value.EntityClassId == 6503).Select(value => value.PlacementId));
             if (mapClassId == 11) puzzleEntityIds.UnionWith(puzzleRules.Select(value => value.PlacementId));
+            if (mapClassId == 12) puzzleEntityIds.UnionWith(new[] { 503, 3501 });
             bool added;
             do
             {

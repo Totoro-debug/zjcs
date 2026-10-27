@@ -465,7 +465,7 @@ def build(output: Path | None = None, map_id: int = 10) -> dict:
         "EntityId": 8402,
         "StoryOnly": True,
         "StoryModelPath": "Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view",
-    }] if map_id == 10 else []
+    }] if map_id in (10, 12) else []
     exploration_path = ROOT / 'unity/Assets/Game/Resources/World/Mainline/exploration.json'
     exploration_placements = [dict(Id=0, EntityId=row['entityClassId'], StoryOnly=True)
         for row in json.loads(exploration_path.read_text(encoding='utf-8'))['entities']] if map_id in (11, 12) else []

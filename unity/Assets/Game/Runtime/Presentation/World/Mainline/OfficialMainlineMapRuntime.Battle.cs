@@ -157,7 +157,9 @@ namespace Zjcs.Presentation.World
             Sprite fallbackPortrait = hud.uiCatalog.FindSprite("res://assets/official/sprites/C_none-fa3e084e40.png");
             if (fallbackPortrait == null) throw new InvalidOperationException("Official Map10 fallback battle portrait is missing.");
             OfficialCombatSkillIconCatalog skillIcons = OfficialCombatSkillIconCatalog.TryLoadDefault();
-            OfficialBattleMonsterPortraitCatalog monsterPortraits = OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
+            OfficialBattleMonsterPortraitCatalog monsterPortraits = mapClassId == 12
+                ? Resources.Load<OfficialBattleMonsterPortraitCatalog>(MapResource("monster-portraits"))
+                : OfficialBattleMonsterPortraitCatalog.TryLoadDefault();
             Func<int, Sprite> skillIconResolver = itemId =>
             {
                 Sprite icon = skillIcons == null ? null : skillIcons.Find(itemId);
@@ -353,17 +355,27 @@ namespace Zjcs.Presentation.World
             AssemblePlayerSkills(combatCatalog, skillItems, player);
 
             int nextUnitId = 2;
+            bool mountLift = mapClassId == 12 && entity?.PlacementId == 3501 && stage.Id == 102;
+            OfficialMap12Building building = null;
+            (int level, int subRank) buildingLevel = default;
+            if (mountLift)
+            {
+                LoadMap12BuildingOperations();
+                building = map12Buildings.Buildings.Single(v => v.PlacementId == entity.PlacementId);
+                buildingLevel = Map12BuildingLevel(building);
+            }
             foreach (Map10RuntimeWave sourceWave in roster.Waves.OrderBy(value => value.Index))
             {
                 var wave = new FightBattleWaveState { Index = sourceWave.Index, Spawned = sourceWave.Index == 0 };
                 foreach (Map10RuntimeMonster source in sourceWave.Units)
                 {
-                    int monsterLevel = stage.AwardUsePlayerLevelAndSubRank
+                    int monsterLevel = mountLift ? Mathf.RoundToInt(buildingLevel.level + building.StageLevelAdd + source.LevelOffset)
+                        : stage.AwardUsePlayerLevelAndSubRank
                         ? Mathf.RoundToInt(progression.Player.Level + source.LevelOffset)
                         : Mathf.RoundToInt(source.Level);
-                    int monsterSubRank = stage.AwardUsePlayerLevelAndSubRank
+                    int monsterSubRank = mountLift ? buildingLevel.subRank : stage.AwardUsePlayerLevelAndSubRank
                         ? progression.Player.SubRank : source.SubRank;
-                    Dictionary<int, long> properties = stage.AwardUsePlayerLevelAndSubRank
+                    Dictionary<int, long> properties = mountLift || stage.AwardUsePlayerLevelAndSubRank
                         ? new Dictionary<int, long>(combatCatalog.CalculateMonsterProps(source.MonsterId,
                             source.MonsterGroupNo, monsterLevel, monsterSubRank))
                         : source.Properties.ToDictionary(value => value.Id, value => value.Value);
@@ -381,7 +393,7 @@ namespace Zjcs.Presentation.World
                         MonsterType = source.MonsterType,
                         MaxHpPlies = combatCatalog.MonsterHpPliesFor(source.MonsterId,
                             source.MonsterGroupNo, monsterLevel),
-                        Level = Mathf.RoundToInt(source.Level),
+                        Level = mountLift ? monsterLevel : Mathf.RoundToInt(source.Level),
                         SubRank = monsterSubRank,
                         Wave = sourceWave.Index,
                         X = source.Position.X,
@@ -596,6 +608,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
             bool won = outcome != null && outcome.Won;
+            if (!SettleMap12MountLiftBattle(entity, checkpoint.StageId, won)) return;
             stamina.FinishStaminaBattle(entity, won);
             if (entity != null)
             {

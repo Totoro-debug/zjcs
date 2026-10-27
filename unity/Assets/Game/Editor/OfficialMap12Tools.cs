@@ -144,7 +144,7 @@ namespace Zjcs.Editor
             var source = Resources.Load<TextAsset>("Map12/Entities/native-catalog");
             int count = OfficialMap10EntityView.ValidateCatalog(source, 12,
                 out int models, out int batches, out int spines, out int textures);
-            if (count != 2591 || models != 139 || spines != 42)
+            if (count != 2591 || models != 140 || spines != 43)
                 throw new InvalidDataException("Map12 entity catalog does not match its source.");
             Debug.Log($"Map12 resources passed: 99 regions, {count} entities, {models} displays, "
                 + $"{batches} entity batches, {spines} Spine instances, {textures} textures. "

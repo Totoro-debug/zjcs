@@ -17,6 +17,8 @@ namespace Zjcs.Official.WorldUI
         private IWorldTextProcessor mRawKeyValueProcessor, mLocalizedTextProcessor;
         private TMP_Text mCacheText;
         public static Func<string, string> Localize { get; set; }
+        // The map supplies the same language service for this window's lifetime.
+        [NonSerialized] public Func<string, string> Localizer;
         public static Func<TMP_FontAsset> LanguageFont { get; set; }
         private TMP_Text CacheText => mCacheText != null ? mCacheText : (mCacheText = GetComponent<TMP_Text>());
         public string Text => CacheText.text;
@@ -55,7 +57,8 @@ namespace Zjcs.Official.WorldUI
                 OnFontChanged?.Invoke();
             }
             if (string.IsNullOrEmpty(myKey)) return;
-            string text = Localize != null ? Localize(myKey) : WorldBattleReportTextService.GetText(myKey);
+            var language = Localizer ?? Localize;
+            string text = language != null ? language(myKey) : WorldBattleReportTextService.GetText(myKey);
             if (mArgs == null || mArgs.Length == 0) SetLanguageText(GetRawKeyValueProcessed(text));
             else
             {

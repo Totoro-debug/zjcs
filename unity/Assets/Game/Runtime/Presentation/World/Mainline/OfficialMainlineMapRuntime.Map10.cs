@@ -59,7 +59,8 @@ namespace Zjcs.Presentation.World
                 {
                     Start = navigation.currentGrid,
                     End = candidate,
-                    PreciseTarget = true
+                    PreciseTarget = true,
+                    BodyOffsets = new[] { new MapGridPoint(0, 0) }
                 });
                 if (path != null && path.Count > 0) return candidate;
             }

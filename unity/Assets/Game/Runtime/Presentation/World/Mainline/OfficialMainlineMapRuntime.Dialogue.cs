@@ -24,13 +24,14 @@ namespace Zjcs.Presentation.World
 {
     public sealed partial class OfficialMainlineMapRuntime
     {
-        private void PlayMapTalkDialog(Map10RuntimeMapTalkEntry talk, Map10RuntimeEntity entity)
+        private void PlayMapTalkDialog(Map10RuntimeMapTalkEntry talk, Map10RuntimeEntity entity,
+            Action completed = null, bool offerStage = true)
         {
             if (talk == null || !nativeDialogs.TryGetValue(talk.DialogId, out activeNativeDialog))
                 throw new InvalidDataException("Official Map10 native dialog is missing: " + (talk == null ? 0 : talk.DialogId));
             nativeDialogContext = entity;
-            nativeDialogCompletion = entity != null && entity.StageIds.Any(value => value > 0)
-                ? () => ShowStageDialog(entity, null) : null;
+            nativeDialogCompletion = completed ?? (offerStage && entity != null && entity.StageIds.Any(value => value > 0)
+                ? (Action)(() => ShowStageDialog(entity, null)) : null);
             nativeDialogNpc = null;
             nativeDialogActive = true;
             dialogueWaiting = true;

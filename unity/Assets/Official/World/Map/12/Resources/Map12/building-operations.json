@@ -1,9 +1,12 @@
 {
   "Buildings": [
     {
+      "Absolute": false,
       "CanInteractAfterMove": true,
       "CompleteState": 2,
+      "EndTipKey": "entity_6103_end_tip",
       "EntityClassId": 6103,
+      "Level": 0,
       "Operations": [
         {
           "ConditionIds": [
@@ -97,7 +100,13 @@
         }
       ],
       "PlacementId": 503,
+      "PrivateLevelType": 1,
       "PublicDefaultState": 3,
+      "PublicLevelType": 2,
+      "RegionLevel": 43,
+      "RegionSubRank": 5,
+      "StageLevelAdd": 0.0,
+      "StageWorldType": 212,
       "States": [
         {
           "OperationId": 6876388655424602113
@@ -111,12 +120,16 @@
         {
           "OperationId": 6876388676264001547
         }
-      ]
+      ],
+      "SubRank": 0
     },
     {
+      "Absolute": false,
       "CanInteractAfterMove": true,
       "CompleteState": 1,
+      "EndTipKey": "entity_6302_end_tip",
       "EntityClassId": 6302,
+      "Level": 0,
       "Operations": [
         {
           "ConditionIds": [
@@ -181,7 +194,13 @@
         }
       ],
       "PlacementId": 3501,
+      "PrivateLevelType": 1,
       "PublicDefaultState": 2,
+      "PublicLevelType": 2,
+      "RegionLevel": 50,
+      "RegionSubRank": 6,
+      "StageLevelAdd": 0.0,
+      "StageWorldType": 203,
       "States": [
         {
           "OperationId": 6876388828660892106
@@ -192,7 +211,8 @@
         {
           "OperationId": 3769242457019777106
         }
-      ]
+      ],
+      "SubRank": 0
     }
   ],
   "Conditions": [
@@ -242,6 +262,165 @@
         "StoryKey": "MountLiftBeforeBattle",
         "_type": "StoryCountCondition"
       }
+    }
+  ],
+  "MountLiftAwards": [
+    {
+      "Condition": null,
+      "CountList": [
+        600.0
+      ],
+      "Id": 570,
+      "IdList": [
+        1
+      ],
+      "IndexMininum": [],
+      "LevelCountId": null,
+      "Order": -1,
+      "Percent": 1.0,
+      "RecordSharedId": null,
+      "SubRankCountId": [
+        6
+      ],
+      "WeightList": [
+        100
+      ]
+    },
+    {
+      "Condition": null,
+      "CountList": [
+        1.0
+      ],
+      "Id": 571,
+      "IdList": [
+        110
+      ],
+      "IndexMininum": [],
+      "LevelCountId": null,
+      "Order": -1,
+      "Percent": 1.0,
+      "RecordSharedId": null,
+      "SubRankCountId": null,
+      "WeightList": [
+        100
+      ]
+    }
+  ],
+  "RewardItems": [
+    {
+      "AgioAmount": 0,
+      "AgioItemId": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "CanOverlap": true,
+      "CanRepeat": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ClassId": 1,
+      "Effects": null,
+      "ElementType": 0,
+      "IconEffect": "",
+      "IsShowGained": false,
+      "ItemType": 1,
+      "ItemUseEffectType": 0,
+      "LimitRank": 1,
+      "Name": "罗拉",
+      "Price": {},
+      "Quality": 1,
+      "Rank": -1,
+      "RawIcon": "ItemIcon/Money/Money_1",
+      "RecycleGroupCount": 1,
+      "RecycleReward": null,
+      "RedDotType": 0,
+      "ShowInBag": false,
+      "ShowPieceIcon": false,
+      "ShowPlayerItemCount": true,
+      "ShowUseDetail": false
+    },
+    {
+      "AgioAmount": 0,
+      "AgioItemId": 0,
+      "AgioRuleIdList": null,
+      "CanDrop": false,
+      "CanDropWhenExist": true,
+      "CanOverlap": true,
+      "CanRepeat": true,
+      "CanUse": false,
+      "CanUseInBatches": false,
+      "ClassId": 110,
+      "Effects": null,
+      "ElementType": 0,
+      "IconEffect": "",
+      "IsShowGained": false,
+      "ItemType": 412,
+      "ItemUseEffectType": 0,
+      "LimitRank": 1,
+      "Name": "星之愿",
+      "Price": {
+        "2": 100.0
+      },
+      "Quality": 4,
+      "Rank": -1,
+      "RawIcon": "ItemIcon/Other/item_110",
+      "RecycleGroupCount": 1,
+      "RecycleReward": null,
+      "RedDotType": 0,
+      "ShowInBag": true,
+      "ShowPieceIcon": false,
+      "ShowPlayerItemCount": true,
+      "ShowUseDetail": false
+    }
+  ],
+  "RewardNumbers": [
+    {
+      "Id": 6,
+      "Nums": [
+        1.0,
+        1.0,
+        1.6,
+        2.1,
+        2.65,
+        3.35,
+        4.15,
+        4.95,
+        5.75,
+        6.65,
+        7.7,
+        10.0,
+        10.8,
+        11.8,
+        19.0,
+        19.5,
+        20.0,
+        40.0,
+        42.5,
+        45.0,
+        70.0,
+        75.0,
+        80.0,
+        100.0,
+        110.0,
+        120.0
+      ]
+    }
+  ],
+  "Texts": [
+    {
+      "key": "entity_6103_end_tip",
+      "value": "前方传来危险的气息，激活女神像后可进入"
+    },
+    {
+      "key": "entity_6302_end_tip",
+      "value": "魔能邃渊中的怪物已被暂时击退……"
+    },
+    {
+      "key": "entity_DailyDungeon_end_tip",
+      "value": "日常副本将在解锁赐福之地后开启"
+    },
+    {
+      "key": "entity_DreamLand_end_tip",
+      "value": "建筑里的怪物已被击退，现在空无一物"
     }
   ],
   "manifest": "871_156598",

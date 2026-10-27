@@ -84244,6 +84244,12 @@
       "sha256": "def7ca3c8fff010a868a9c3286fa1d89412358c94e1d9da31dd36ded31f0b054",
       "source": "assets/official/map-models/dee0963ec0065994-state-1.geom"
     },
+    "dfc13d6b3f1fec3d": {
+      "batchCount": 2,
+      "path": "Resources/Map12/EntityGeometry/dfc13d6b3f1fec3d.geom.bytes",
+      "sha256": "f2cfafa72be6b00fc81d9eaa9b4ccfeab4a4bce5a5851cca342c3dafc0b4c77f",
+      "source": "assets/official/map-models/dfc13d6b3f1fec3d.geom"
+    },
     "e11151b26bd70098": {
       "batchCount": 1,
       "path": "Resources/Map12/EntityGeometry/e11151b26bd70098.geom.bytes",
@@ -84406,6 +84412,21 @@
     8213
   ],
   "models": [
+    {
+      "geometryBatchCount": 2,
+      "geometryResource": "Map12/EntityGeometry/dfc13d6b3f1fec3d.geom",
+      "interactionsJson": "{\"0\":[{\"match\":84021701,\"operation\":{\"data\":{\"StoryEndOperation\":{\"InteractionOperation\":{}},\"mNpcTalkScenario\":1},\"type\":\"ECWorldStageInteractionOperationOnlyStory\"}},{\"match\":-1,\"operation\":{\"data\":{\"StoryEndOperation\":{\"InteractionOperation\":{}},\"mNpcTalkScenario\":1},\"type\":\"ECWorldStageInteractionOperationOnlyStory\"}}]}",
+      "modelId": "dfc13d6b3f1fec3d",
+      "modelPath": "Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view",
+      "monsterSlotsJson": "[]",
+      "overlapDisplay": false,
+      "spines": [
+        {
+          "key": "8402-0",
+          "resource": "Map12/Spines/8402-0"
+        }
+      ]
+    },
     {
       "geometryBatchCount": 5,
       "geometryResource": "Map12/EntityGeometry/57b34aebebfd43c1.geom",
@@ -86893,6 +86914,19 @@
         "sha256": "c357aee19edd3c50e427d7f3be0fd33860fb58cf9b1ba805e50d004f230a095c"
       }
     },
+    "8402-0": {
+      "page": "npc_8402.png",
+      "path": "Resources/Map12/Spines/8402-0.json",
+      "sha256": "1b2010b02819a3064884083032a4e08b201c097b1abea035e56e46d52e01e507",
+      "source": "assets/official/map-models/spines/e97833bdb9c749daa860.json",
+      "sourceSha256": "42c56b6682a8b93823cf23c718391bf4f2860de70af92e78e66e37d7ddbb13e8",
+      "textureSha256": "fa1a94b3eaf2a92424c2a8bc2634a1c3185927d0951c1056028d278dde45f118",
+      "textureUri": "res://assets/official/sprites/npc_8402-8796899571.png",
+      "verifiedSource": {
+        "path": "assets/official/map-models/spines/e97833bdb9c749daa860.json",
+        "sha256": "42c56b6682a8b93823cf23c718391bf4f2860de70af92e78e66e37d7ddbb13e8"
+      }
+    },
     "8411-0": {
       "page": "npc_8411.png",
       "path": "Resources/Map12/Spines/8411-0.json",
@@ -87416,6 +87450,8 @@
     "res://assets/official/sprites/monster_3652_placeholder-65774a7938.png",
     "res://assets/official/sprites/monster_3704-8bd1785447.png",
     "res://assets/official/sprites/monster_3704_placeholder-f572789f9e.png",
+    "res://assets/official/sprites/npc_8402-8796899571.png",
+    "res://assets/official/sprites/npc_8402_placeholder-5fb17d5ecd.png",
     "res://assets/official/sprites/npc_8411-8fc21b6860.png",
     "res://assets/official/sprites/npc_8416-fe1ccdffbf.png",
     "res://assets/official/sprites/npc_8421-0d7e3ac0c9.png",

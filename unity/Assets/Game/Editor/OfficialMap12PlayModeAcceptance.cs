@@ -66,7 +66,7 @@ namespace Zjcs.Editor
 
         private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
             bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false, bool verifyNativeWorld = false,
-            bool verifyBuildingUi = false)
+            bool verifyBuildingUi = false, bool verifyBuildingPrelude = false, bool verifyBuildingBattle = false)
         {
             try
             {
@@ -83,10 +83,12 @@ namespace Zjcs.Editor
                 SessionState.SetBool(Key + ".chests", verifyChests);
                 SessionState.SetBool(Key + ".nativeWorld", verifyNativeWorld);
                 SessionState.SetBool(Key + ".buildingUi", verifyBuildingUi);
+                SessionState.SetBool(Key + ".buildingPrelude", verifyBuildingPrelude);
+                SessionState.SetBool(Key + ".buildingBattle", verifyBuildingBattle);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);
-                SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + 300);
+                SessionState.SetFloat(Key + ".deadline", (float)EditorApplication.timeSinceStartup + (verifyBuildingBattle ? 600 : 300));
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                 Hook();
                 EditorApplication.isPlaying = true;

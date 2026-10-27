@@ -15,6 +15,8 @@ namespace Zjcs.Editor
 {
     public static partial class OfficialMap12PlayModeAcceptance
     {
+        public static void RunBuildingUi() => RunCore(false, false, verifyBuildingUi: true);
+
         public static void ImportAndRunBuildingUi()
         {
             try
@@ -98,6 +100,12 @@ namespace Zjcs.Editor
             foreach (Canvas boot in UnityEngine.Object.FindObjectsOfType<Canvas>().Where(c => c.isRootCanvas && c.name.StartsWith("BootSplash")))
                 UnityEngine.Object.Destroy(boot.gameObject);
             var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>("Map12/UI/catalog").text);
+            var operations = JsonUtility.FromJson<OfficialMap12BuildingData>(Resources.Load<TextAsset>("Map12/building-operations").text);
+            var preview = operations.MountLiftRewardPreview(50, 6);
+            if (preview.Count != 2 || preview[1] != 2490 || preview[110] != 1
+                || operations.MountLiftRewardPreview(50, 0)[1] != 600
+                || operations.MountLiftRewardPreview(50, 100)[1] != 72000)
+                throw new InvalidDataException("Original stage-102 fixed reward scale/endpoint clamp changed.");
             var previousLocalize = WorldMultiLanguageText.Localize;
             WorldMultiLanguageText.Localize = key => data.texts.FirstOrDefault(v => v.key == key)?.value ?? key;
             if (EventSystem.current == null) new GameObject("Map12BuildingSimulatedInput", typeof(EventSystem));
@@ -125,11 +133,20 @@ namespace Zjcs.Editor
                     Background = AssetDatabase.LoadAssetAtPath<Sprite>(data.sprites.Single(v => v.uri.Contains("/map_12_stage_bg-")).unityAssetPath),
                     Level = 1, IsActive = () => true,
                     StartStage = index => events.Add("stage:" + index),
-                    ShowRewardPreview = slot => events.Add("reward-slot:" + slot.childCount),
+                    ShowRewardPreview = slot =>
+                    {
+                        events.Add("reward-slot:" + slot.childCount);
+                        OfficialMap12BuildingRewardView.Populate(slot, operations, 50, 6,
+                            Resources.Load<OfficialMap11UiAssets>("Map12/UI/DynamicItems"), "Map12/UI/", WorldMultiLanguageText.Localize);
+                    },
                     Close = () => { events.Add("close"); root.GetComponent<WorldPopupWindow>().Hide(() => UnityEngine.Object.Destroy(root)); }
                 };
-                // Fixture checks original bindings and input; reward evaluation is a separate runtime flow.
+                // Explicit preview arguments exercise the source formula. The
+                // map's entity-level provider is verified by the runtime flow.
                 dialog.Init(context);
+                var rewardIcons = root.GetComponent<WorldCommonStageUI>().myAwardSlot.GetComponentsInChildren<WorldItemIcon>();
+                if (rewardIcons.Length != 2 || rewardIcons[0].myText.text != "2490" || rewardIcons[1].myText.text != "1")
+                    throw new InvalidDataException("Original money/item preview order and counts were not bound.");
                 var graphics = root.GetComponentsInChildren<NativeMap12BuildingGraphic>(true);
                 if (graphics.Length != 3 || graphics.Sum(v => v.setupMesh.vertexCount) != 144
                     || graphics.Any(v => v.canvasRenderer.cull || v.atlas.mipmapCount < 1))

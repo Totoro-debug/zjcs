@@ -14,7 +14,7 @@
 
 已按 `official-source.json` 选择的 `871_156598` 程序集解码山之国：280×210 导航、99区／105 area、2591个放置实体、148份所需 EC 模板、92张配置表及65份原剧情图。当前云端与旧提取的对应地图、配置和有效剧情端口逐项比对，全部一致才复用旧转换；保留端口执行顺序及原始节点，不能用相似文件替代。129个实际美术 bundle 完成索引长度／MD5／SHA-256校验；更新过的 shader bundle 中7个被引用对象另核对原始对象 SHA-256。
 
-Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实体 prefab：18683个原地形批次、原 Ground Tilemap 的26725块瓦片／56批次、139种实体显示／249个运行静态批次／42份 Spine 帧数据，以及123个原小地图批次。原生地图目录登记12，运行仍未开放山之国完整游玩入口。资源导出不是本图完整还原结论。
+Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实体 prefab：18683个原地形批次、原 Ground Tilemap 的26725块瓦片／56批次、140种实体显示／43份 Spine 帧数据，以及123个原小地图批次。原生地图目录登记12，运行仍未开放山之国完整游玩入口。资源导出不是本图完整还原结论。
 
 剧情载荷保留49个入口与17个递归子图、22项1165～1270主线任务、11处终端的完整原始参数；战斗载荷保留155关／858项实体绑定／17个场景。放置202的未消费 `LoStageBehStageComponent.StageIds=[2000]` 保留在源数据中；其原 EC 模板没有对应行为消费者，故不把缺失的2000伪造为可执行战斗。
 
@@ -26,11 +26,11 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 区域光载荷保留原98组 `RegionShadow`、共111个 Light2D（含13个 Day 节点）、原形状、falloff、颜色、强度、排序及原开雾动画；使用固定版本 Unity 原 `LightUtility`／UTess／Clipper 生成111份原生网格。`RegionLight2D` 和 `RegionSpriteLit` 负责本地显式绑定。入口画面已实际查看；连续开雾、昼夜分支、水面与全部场景材质仍须整体验证，不能以网格导出代替完整表现。
 
-剧情空间从当前官方138份 EC prefab 恢复原 `MapEntityTag`、`StoryNodeRegister` 与 `StorySettings`。`DungeonActive` 原 Selector 的输入／输出逐对证明六个其他地图子图不可在本图选中，原图仍完整保留；山之国使用 `MountLift`／`IronMount` 注册点。`RunRuntimeSpatial` 在 DX12 Play Mode 直接执行原剧情图夹具，核对升降台1.5格偏移、机神山本图分支、原6秒／9秒等待、镜头恢复及剧情状态／次数冷读，并查看两处实际截图。该夹具直接启动剧情，只证明图执行与画面，不证明建筑输入；两图 `MaxCount=-1`，不添加单次播放限制。8项来源专项测试、六终端回归（含746从范围外走近）、58次指针推动及Map11原立绘／透明按钮输入回归通过。原建筑点击应经显示 prefab 中的 `ECWorldStageView` 交互链：升降台先打开 `WorldFantasyLadderDialog`，窗口操作才启动预览；机神山先判断4102／4103等原条件。此链尚未接入，不能把点击建筑直接播放预览当作官方行为。
+剧情空间从当前官方138份 EC prefab 恢复原 `MapEntityTag`、`StoryNodeRegister` 与 `StorySettings`。`DungeonActive` 原 Selector 的输入／输出逐对证明六个其他地图子图不可在本图选中，原图仍完整保留；山之国使用 `MountLift`／`IronMount` 注册点。`RunRuntimeSpatial` 在 DX12 Play Mode 直接执行原剧情图夹具，核对升降台1.5格偏移、机神山本图分支、原6秒／9秒等待、镜头恢复及剧情状态／次数冷读，并查看两处实际截图。该夹具直接启动剧情，只证明图执行与画面，不证明建筑输入；两图 `MaxCount=-1`，不添加单次播放限制。8项来源专项测试、六终端回归（含746从范围外走近）、58次指针推动及Map11原立绘／透明按钮输入回归通过。原建筑点击应经显示 prefab 中的 `ECWorldStageView` 交互链：升降台先打开 `WorldFantasyLadderDialog`，窗口操作才启动预览；机神山先判断4102／4103等原条件。当前已接通两处未满足前置条件时的原剧情分支；就绪后的窗口、关卡结算与完整建筑状态链仍未接通，不能把点击建筑直接播放预览当作官方行为。
 
-机神山6103与魔能邃渊6302的显示 prefab 已从当前官方 `ECViewDriver` 严格解码，保留7种状态、5项条件和原64位 managed-reference ID；运行投影采用平铺节点表，避免 Unity JsonUtility 的递归深度截断。`WorldStageInteractionOperation` 迁移条件、同步顺序、激活检查、剧情重入保护、完成回调和首个匹配窗口点击分支；32种条件组合夹具通过。顺序操作中的剧情异步启动后仍立即执行后续点击，不改成等待剧情结束。来源和代码见[建筑操作链](../../assets/reference/official-map/map12-building-operations-source-manifest.json)。这仍是独立操作图夹具，尚未接入正式地图的建筑点击、关卡结算或状态存档。
+机神山6103与魔能邃渊6302的显示 prefab 已从当前官方 `ECViewDriver` 严格解码，保留7种状态、5项条件和原64位 managed-reference ID；运行投影采用平铺节点表，避免 Unity JsonUtility 的递归深度截断。`WorldStageInteractionOperation` 迁移条件、同步顺序、激活检查、剧情重入保护、完成回调和首个匹配窗口点击分支；32种条件组合夹具通过。顺序操作中的剧情异步启动后仍立即执行后续点击，不改成等待剧情结束。来源和代码见[建筑操作链](../../assets/reference/official-map/map12-building-operations-source-manifest.json)。正式地图已按相同原操作图判断未满足前置条件的建筑分支。`RunBuildingPrelude` 在内置屏 DX12 以实际地图指针打开魔能邃渊指引，并模拟原 NextBtn 和机神山两项原对话选项，核对原剧情完成次数／状态、NPC移除及冷读。4103～4105的状态条件逐一验证0／1／2再回到1，修正以状态值作为永久事务凭据造成重复状态无法保存的问题。机神山引用的公共8402模型、原贴图／骨骼／网格已从官方来源补齐，模型闭包专项测试通过；NPC精确朝向、选位及完整 Playable 表现仍待迁移。建筑对话中的中文文本已绑定原语言表。魔能邃渊实际地图指针→原窗口→关卡102准备流程已运行，并检查全部七个怪物的50级／6阶位及原属性公式。`RunBuildingBattleRetry` 在内置屏 DX12 以真实地图指针和原建筑窗口启动 Stage102 战斗，验证实际胜利、档案锁定导致奖励提交回滚、解除锁后重试、2490金币和物品110×1精确到账、完成标志与推箱状态冷读及重复结算防护。此验证角色的方向型技能 AI 尚未定案，且以区域／故事前置状态启动，不能代表普通角色完整路线。
 
-原 `WorldFantasyLadderDialog`、6103／6302图标 prefab、`StageDialog`、`StageTouchUI`、`WorldCommonStageUI` 和两份原窗口点击组件已恢复序列化引用，保留原空 Touch 按钮与首个窗口处理器绑定。6302的三个原 SkeletonGraphic 起始动画均为空，按原骨骼初始姿态、区域裁剪／旋转及权重独立转换144个顶点为 Unity 原生网格，保留完整贴图 mip、材质参数及6份原 shader 程序；未使用 Spine runtime 或历史采样帧。`NativeMap12BuildingGraphic` 按实际网格边界执行原遮罩裁剪，避免100×100 RectTransform 将延伸网格整体裁掉。`ImportAndRunBuildingUi` 在内置屏 DX12 通过450×800／720×1280原窗口、三份网格实际可见像素、模拟射线点击及“开始关卡→关闭→窗口点击”顺序，并查看两幅实际运行画面。夹具的关卡与奖励提供者仅记录调用，奖励区域为空；实际奖励预览、战斗、建筑状态／冷读与6103未启用的 SkeletonGraphic仍未完成。来源见[建筑预览资源](../../assets/reference/official-map/map12-building-preview-source-manifest.json)。
+原 `WorldFantasyLadderDialog`、6103／6302图标 prefab、`StageDialog`、`StageTouchUI`、`WorldCommonStageUI` 和两份原窗口点击组件已恢复序列化引用，保留原空 Touch 按钮与首个窗口处理器绑定。6302的三个原 SkeletonGraphic 起始动画均为空，按原骨骼初始姿态、区域裁剪／旋转及权重独立转换144个顶点为 Unity 原生网格，保留完整贴图 mip、材质参数及6份原 shader 程序；未使用 Spine runtime 或历史采样帧。`NativeMap12BuildingGraphic` 按实际网格边界执行原遮罩裁剪，避免100×100 RectTransform 将延伸网格整体裁掉。`ImportAndRunBuildingUi` 在内置屏 DX12 通过450×800／720×1280原窗口、三份网格实际可见像素、模拟射线点击及“开始关卡→关闭→窗口点击”顺序，并查看两幅实际运行画面。奖励槽现已使用原 ItemIcon 与当前原奖励570／571，迁移原浮点曲线乘算、整数截断、聚合和排序；显式等级50／阶位6的公式夹具显示金币2490与物品110×1，低／高阶位边界及双尺寸模拟输入通过。另从当前官方APK补取山之国全部44种实际战斗头像，按原纹理色彩空间、Sprite枢轴和采样参数显式绑定到Map12关卡图鉴；转换／输入／输出哈希见[战斗头像来源](../../assets/reference/official-map/map12-battle-portraits-source-manifest.json)。6103专用 `DailyDungeonDialogPrivateMap` 和组件已核实其本地数据、私人战斗与运行入口仍未绑定。来源见[建筑预览资源](../../assets/reference/official-map/map12-building-preview-source-manifest.json)。
 
 原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存用于后续原生地形／场景／Water资产恢复，正式运行绑定与实际验证范围见下文。
 
@@ -49,6 +49,10 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 `prepare_unity_map12.py` 可重新提取并转换以上载荷；`OfficialMap12Tools.ImportAndValidate` 已完成 Unity 2022.3.57f1c2 导入／编译。来源等价、剧情倒计时、未消费战斗引用、终端原清单及原生坐标及默认生成标记共7项专项测试通过；Map11战斗提取2项回归通过。Map11实体旧测试期望161批次而 HEAD 本身生成171，属于既有断言差异。Map10立绘素材测试的1项在共享 `adventure.json` 输入哈希处失败（实际 `a6820d65…`，原收据 `84b92c87…`）；该测试不调用本次生成器，本次未改该输入或原收据；原边界、表情和对话样式测试通过。Play Mode 使用 Direct3D12 实际加载18683+56地形批次与2591实体，已查看入口101、华容道746和建筑202三处450×800运行截图。逐个核对当前官方 prefab 后移除56份会被 Spine 组件覆盖的重复预览网格，恢复旧导出向下的Y／V坐标；骨骼本身Y保持原值。贴图按原图尺寸、过滤、wrap和颜色空间导入，不再默认缩放非方形图集。建筑／箱子的白块已修复，瀑布等原特效 shader 仍显示白片，水／熔岩／光照和完整动画尚未还原。这次检查只覆盖场景载荷，未覆盖玩家输入、官方界面、机关结算和存档，不代表本图可玩或完成。
 
 ## 自定义实现
+
+魔能邃渊102的服务端生成战斗等级执行体未取得；按用户确认，建筑相对等级为原区域等级加 Lo.Level，Lo.SubRank=0继承区域阶位，非0使用显式配置；怪物等级使用建筑实体等级加原 StageBehStageComponent、Lo 组件、关卡及阵型位置偏移，阶位使用建筑实体阶位，保留原怪物属性公式。此处基准为50／6，不使用关卡表静态1／1。
+
+山之国关卡102的方向型技能施法朝向也未能由服务端 AI 确定；相关命中格旋转由客户端源码证明，目标选择后的施法朝向仍待用户确认。等级／属性验证不代表战斗胜负 AI 已还原。
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
@@ -74,6 +78,8 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 ## 尚未实现
 
+6103原状态3通过 `DailyDungeonDialog` 打开普通难度面板，状态1在条件满足后打开专用 `DailyDungeonDialogPrivateMap`；原 StageBehaviour 指定副本121／难度50。离线副本目录已包含副本121的18格路线及原房间／战斗定义。地图内专用面板、私人入口与现有离线路线战斗 UI 的运行绑定仍未完成。
+
 恢复99区、57个Water2渲染器、七战斗碑、踏板／推箱／华容道、凤凰祭坛、命运探寻、1165～1270主线、小地图和剧情开雾；普通角色连续路线与高资格回访分别验证。
 
 按原地图配置恢复场景、区域、导航、放置实体、原条件、交互、战斗、奖励和出口；原 prefab、骨骼、材质、粒子、动画及音频需在 Unity / Windows 逐项恢复并绑定。
@@ -87,6 +93,7 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 - [当前程序集、配置、剧情与模板来源](../../assets/reference/official-map/map12-source-manifest.json)、[资源转换与哈希](../../assets/reference/official-map/map12-unity-source-manifest.json)。
 - [原坐标、网格组件与贴图导入适配](../../assets/reference/official-map/map12-coordinate-source-manifest.json)、[官方界面原对象与转换](../../unity/Assets/Official/World/Map/12/UI/source-manifest.json)、[原生界面加载绑定及哈希](../../assets/reference/official-map/map12-ui-native-source-manifest.json)。
+- [建筑操作与原窗口图形](../../assets/reference/official-map/map12-building-operations-source-manifest.json)、[建筑原生预览](../../assets/reference/official-map/map12-building-preview-source-manifest.json)、[山之国战斗头像](../../assets/reference/official-map/map12-battle-portraits-source-manifest.json)。
 - [剧情／任务／机关载荷来源](../../assets/reference/official-map/map12-runtime-source-manifest.json)、[战斗来源](../../assets/reference/official-map/map12-battles-source-manifest.json)。
 - [原剧情空间绑定](../../assets/reference/official-map/map12-story-spatial-source-manifest.json)、[原生场景转换输入](../../assets/reference/official-map/map12-native-input-source-manifest.json)。
 - [原生地形转换](../../assets/reference/official-map/map12-native-terrain-source-manifest.json)、[Unity 导入与本地目录绑定](../../assets/reference/official-map/map12-native-terrain-binding-source-manifest.json)。

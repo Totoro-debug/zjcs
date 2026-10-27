@@ -59,6 +59,7 @@ namespace Zjcs.Presentation.World
                 return;
             }
             if (TryCollectMap12Chest(entity)) return;
+            if (TryMap12BuildingInteraction(entity)) return;
             if (puzzles != null && entity.EntityClassId == 6503)
             {
                 if (!puzzles.InteractionEnabled(entity.PlacementId)) return;
@@ -201,6 +202,7 @@ namespace Zjcs.Presentation.World
         {
             if (entityView == null || localSave == null) return;
             SynchronizeMap12ClaimedChests();
+            SynchronizeMap12BuildingCompletions();
             foreach (Map10RuntimeEntity entity in mapEntities.Values)
             {
                 bool goddess = MapProfile.HasNativeUi && entity.TypeId == 202;

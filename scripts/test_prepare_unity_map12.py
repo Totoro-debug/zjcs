@@ -40,6 +40,21 @@ class MountainSourceTests(unittest.TestCase):
             verify_legacy_equivalence(values["navigation"], values["placement"],
                 values["entities"], values["templates"], values["tables"], changed)
 
+    def test_story_created_npcs_have_packaged_display_models(self):
+        from prepare_unity_map10_entities import select_display_path
+        stories = load("unity/Assets/Official/World/Map/12/Resources/Map12/stories.json")
+        source_models = load("assets/official/map-models/catalog.json")["models"]
+        packaged = load("unity/Assets/Official/World/Map/12/Resources/Map12/Entities/catalog.json")
+        bound = {row["modelPath"] for row in packaged["models"]}
+        created = {node["entityClassId"] for story in stories["stories"] + stories["subgraphs"]
+                   for node in story["nodes"] if node["type"] in
+                   ("AddMapExclusiveNpcAroundPlayerNode", "AddMapExclusiveNpcAtPosNode")
+                   and node["entityClassId"] > 0}
+        self.assertIn(8402, created)
+        for identity in created:
+            with self.subTest(entityClassId=identity):
+                self.assertIn(select_display_path(identity, list(source_models), 12), bound)
+
     def test_node_countdown_stops_indefinite_npc_idle(self):
         graph = self.source["stories"]["FirstMeetMete"]["nodes"]
         node = graph["20"]

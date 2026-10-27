@@ -47,6 +47,15 @@ namespace Zjcs.Editor
             save.Player.Level = 20;
             save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[20];
             save.Player.Rank = save.Player.SubRank = save.Player.SeasonRank = 1;
+            if (UnityEditor.SessionState.GetBool(Key + ".buildingBattle", false))
+            {
+                // A qualified isolated character; combat still uses the original
+                // property pipeline, skills, AI, damage and outcome rules.
+                save.Player.Level = 90;
+                save.Player.Experience = OfficialCharacterAssetCatalog.LoadDefault().Load().CumulativeLevelExperience[90];
+                save.Player.SubRank = 12;
+                save.Player.InitialWeaponType = 201;
+            }
             save.Player.Wardrobe.Profession = 1;
             save.Player.UnlockedMapClassIds.AddRange(new[] { 11, 12 });
             if (UnityEditor.SessionState.GetBool(Key + ".runtimeTerminals", false))
@@ -91,6 +100,22 @@ namespace Zjcs.Editor
             {
                 IEnumerator audio = VerifyRuntimeAudioSteps();
                 while (audio.MoveNext()) yield return audio.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
+            if (UnityEditor.SessionState.GetBool(Key + ".buildingPrelude", false))
+            {
+                IEnumerator building = VerifyBuildingPreludeSteps(root, slot, canvas.transform, output);
+                while (building.MoveNext()) yield return building.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
+
+            if (UnityEditor.SessionState.GetBool(Key + ".buildingBattle", false))
+            {
+                IEnumerator building = VerifyBuildingBattleSteps(root, slot, canvas.transform, output);
+                while (building.MoveNext()) yield return building.Current;
                 RuntimeCall("CloseMap");
                 yield break;
             }

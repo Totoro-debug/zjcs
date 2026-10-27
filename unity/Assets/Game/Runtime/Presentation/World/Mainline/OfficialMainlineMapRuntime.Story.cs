@@ -72,6 +72,8 @@ namespace Zjcs.Presentation.World
                     && IsMapTalkConditionMet(part));
             if (condition._type == "StoryCountCondition")
                 return Compare(GetStoryPlayCount(condition.StoryKey), condition.Op, condition.Count);
+            if (condition._type == "StoryStatusCondition")
+                return progressionSave != null && progressionSave.StoryStatus(condition.StoryKey) == condition.Status;
             if (condition._type == "StagePassCondition")
                 return progressionSave.StageWinCount(condition.StageId) > 0
                     || localSave.completedStages.Contains(condition.StageId);
@@ -223,6 +225,13 @@ namespace Zjcs.Presentation.World
                             AddStoryEntity(node, new Vector2(nearPlayer.X, nearPlayer.Y));
                             nodeId = StoryNext(node, "Exit");
                             continue;
+                        case "RemoveMapExclusiveNpcNode":
+                            var removals = JsonUtility.FromJson<StoryNpcRemovalFields>(node.sourceJson);
+                            if (removals.RemoveEntities.Any(v => v.StoryPlayableSelect.Type != 0))
+                                throw new InvalidDataException("Original NPC removal playable must be bound before this story can run.");
+                            RemoveStoryEntities(node.removeEntityClassIds);
+                            nodeId = StoryNext(node, "Exit");
+                            continue;
                         case "MapEntityMoveNode":
                             int entityNodeId = StoryNext(node, "OperateEntity");
                             if (!storyEntities.TryGetValue(entityNodeId, out GameObject movingEntity))
@@ -358,6 +367,10 @@ namespace Zjcs.Presentation.World
             storyEntities[node.id] = entity;
             storyEntityClasses[node.id] = node.entityClassId;
         }
+
+        [Serializable] private sealed class StoryNpcRemovalFields { public StoryNpcRemoval[] RemoveEntities; }
+        [Serializable] private sealed class StoryNpcRemoval { public StoryNpcRemovalPlayable StoryPlayableSelect; }
+        [Serializable] private sealed class StoryNpcRemovalPlayable { public int Type; }
 
         private void RemoveStoryEntities(int[] classIds)
         {

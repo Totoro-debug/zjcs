@@ -5,6 +5,33 @@
     {
       "action": "omit serialized mesh overwritten by native Spine component",
       "component": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldnpc.bundle",
+        "bundle_hash": "b24c65bfaf7e97ffd8b8d3156c740c86",
+        "bundle_sha256": "3cd968eacd88e1c5c7972de6a11d6f493cf2e96f9fbeaf7324da21bca39b2b6c",
+        "bundle_size": 841951,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "1968332433733406279",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b24c65bfaf7e97ffd8b8d3156c740c86.bundle"
+      },
+      "mesh": {
+        "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldnpc.bundle",
+        "bundle_hash": "b24c65bfaf7e97ffd8b8d3156c740c86",
+        "bundle_sha256": "3cd968eacd88e1c5c7972de6a11d6f493cf2e96f9fbeaf7324da21bca39b2b6c",
+        "bundle_size": 841951,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-4447833882709963193",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/b24c65bfaf7e97ffd8b8d3156c740c86.bundle"
+      },
+      "model": "Map/Common/EntityDisplaysWorldNPC/WorldNPC_Common/8402_view",
+      "node": "NpcModel_8402"
+    },
+    {
+      "action": "omit serialized mesh overwritten by native Spine component",
+      "component": {
         "bundle": "defaultpackage_assets_prefabs_map_common_entitydisplaysworldbonusexplore.bundle",
         "bundle_hash": "84df53fcb4cf9f732a5f7cfcd3a39aa4",
         "bundle_sha256": "b5e8295cfcb2ff67d1a93c5968cf71c7e1edfda41e025437046082e3deb1235a",
@@ -1516,10 +1543,10 @@
     }
   ],
   "normalizedByteColorMeshes": 0,
-  "omittedBakedSpineMeshes": 56,
+  "omittedBakedSpineMeshes": 57,
   "operation": "Convert historical downward Y and top-origin V to Unity; native bone Y stays unchanged. Exclude only baked meshes matched to their current official Spine components. Normalize only verified UNorm8 vertex colors.",
   "outputs": {
-    "unity/Assets/Official/World/Map/12/Resources/Map12/Entities/native-catalog.json": "47bf07548cbe2d230e7b0b1d50d5dbe20be910c226abd110fbbc121064c4ef4b",
+    "unity/Assets/Official/World/Map/12/Resources/Map12/Entities/native-catalog.json": "a373b33ef359aba59d0198fe746c56298b7e6fa28669938b1fb9df911fa3d653",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/018a55aaf6574de4.geom.bytes": "d13473a564141ba77568eb34a2bd1d907c5b9a24018c7e93ea4e0688e0249d05",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/01bff26c7b2288d0.geom.bytes": "81a9a6501810c2733c8c80eef22021db2f581c5ec8c66345a13bc65689e7f072",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/05182fc01ddce540-state-0.geom.bytes": "1b543812c8dc5994f4431b2717703b064cb84cd9e09b8b99225fa427dfd53436",
@@ -1660,6 +1687,7 @@
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/dee0963ec0065994-state--1.geom.bytes": "a9ea908d665b334c98a39fb05afd7b128ea1585ad163a3da824740be321d33e3",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/dee0963ec0065994-state-0.geom.bytes": "a9ea908d665b334c98a39fb05afd7b128ea1585ad163a3da824740be321d33e3",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/dee0963ec0065994-state-1.geom.bytes": "a9ea908d665b334c98a39fb05afd7b128ea1585ad163a3da824740be321d33e3",
+    "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/dfc13d6b3f1fec3d.geom.bytes": "e7b0f3c1013f2274d7d94e1ae0bd032d0d6342e72c8fc58d0aeed915e4221c2a",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/e11151b26bd70098.geom.bytes": "a1669afef0877ea0d49994bdcc05b148b3bc875383bc08fd56eb6deeb5adc493",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/e14cba91de9b4d82.geom.bytes": "76ae38b6267843b8580e8c300ba7b29efbf5f4f7ec02b934b1a83a5b1e2256a2",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeGeometry/e2d8c29497b9d9fb.geom.bytes": "150bf8837994fb9ac9af1f6c06b91a47170b92d2c7207c85e168f86300952296",
@@ -1698,6 +1726,7 @@
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8203-0.json": "0f35b281b863b74756846e8cc05617f733ab0fcfffe9de32f5413236a2dc34f3",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8363-0.json": "fe5414fb518bb233b094e5c6059c84c6ecb62ce87e2e2144a804d6cc3e368489",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8380-0.json": "cb1b78e026da3a301a3b617c1c9f5392014f0503d890cbf73273519c178e2c8a",
+    "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8402-0.json": "d21bde4882979be16c88d9542111f5c035f6d7bfd47d5dd93fb6be929ef793b9",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8411-0.json": "de4bb172b8d8f87dd7768576d3a369949aa80503687eae3117887e8a6f54f341",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8416-0.json": "db6e6ed41ad377d7561b986f1914856deab140b268ee8ce6366056ab61136b3a",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8421-0.json": "344ee69b97a00a058842b4509b95ee41908744c7ea05af2c808b028acf2eb7e2",
@@ -1721,7 +1750,7 @@
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8622-1.json": "3e26b1e8842f61ff5dc3290496159b3f65da2053f74fcb983d34884e544d4e78",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8638-0.json": "41b4c4571a956c7aa03969bae667332c5e233bc702380e9ea56ec8cacd0e3d8b",
     "unity/Assets/Official/World/Map/12/Resources/Map12/NativeSpines/8638-1.json": "d162abe4415c667ca2fc2271451424628ef46c1774dded3f0203c02dd63b29f8",
-    "unity/Assets/Official/World/Map/12/map12-native-entities.json": "47bf07548cbe2d230e7b0b1d50d5dbe20be910c226abd110fbbc121064c4ef4b",
+    "unity/Assets/Official/World/Map/12/map12-native-entities.json": "a373b33ef359aba59d0198fe746c56298b7e6fa28669938b1fb9df911fa3d653",
     "unity/Assets/Official/World/Map/12/map12-native.geom.bytes": "b17f29f52a78e62ce3a128a28a2991532076911437d7e24a83eaf5fb8a8212a3"
   },
   "textureImports": [
@@ -13970,6 +13999,72 @@
       "width": 47,
       "wrapU": 1,
       "wrapV": 1
+    },
+    {
+      "filter": 1,
+      "height": 264,
+      "path": "Assets/Official/World/Map/12/Resources/Map12/Textures/npc_8402-8796899571.png",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/530e053d161dcedfc4c78711bebf921d.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_atlas_map_9.bundle",
+        "bundle_hash": "530e053d161dcedfc4c78711bebf921d",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6286583073319067821",
+        "raw_sha256": "a7b06bd294ca42571ef5bf3d8c0622173ada71ab09112d4f818191ee697c8714",
+        "raw_size": 1691533
+      },
+      "srgb": true,
+      "texture": {
+        "apk_entry": "assets/yoo/DefaultPackage/530e053d161dcedfc4c78711bebf921d.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_atlas_map_9.bundle",
+        "bundle_hash": "530e053d161dcedfc4c78711bebf921d",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6286583073319067821",
+        "raw_sha256": "a7b06bd294ca42571ef5bf3d8c0622173ada71ab09112d4f818191ee697c8714",
+        "raw_size": 1691533
+      },
+      "width": 2048,
+      "wrapU": 0,
+      "wrapV": 0
+    },
+    {
+      "filter": 1,
+      "height": 16,
+      "path": "Assets/Official/World/Map/12/Resources/Map12/Textures/npc_8402_placeholder-5fb17d5ecd.png",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/4499ae7cff9109be5d8e65e280ee40e4.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_atlas_default.bundle",
+        "bundle_hash": "4499ae7cff9109be5d8e65e280ee40e4",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4600181493637082898",
+        "raw_sha256": "e89ad8b5fd0b97f72a6926f9464e4a0d93979efc10134e6df0585ddb0b30dd45",
+        "raw_size": 2166021
+      },
+      "srgb": true,
+      "texture": {
+        "apk_entry": "assets/yoo/DefaultPackage/4499ae7cff9109be5d8e65e280ee40e4.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_atlas_default.bundle",
+        "bundle_hash": "4499ae7cff9109be5d8e65e280ee40e4",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4600181493637082898",
+        "raw_sha256": "e89ad8b5fd0b97f72a6926f9464e4a0d93979efc10134e6df0585ddb0b30dd45",
+        "raw_size": 2166021
+      },
+      "width": 128,
+      "wrapU": 0,
+      "wrapV": 0
     },
     {
       "filter": 1,
