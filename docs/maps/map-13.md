@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+- 实体闭包的 1,824 份原材质已严格解码，保留全部属性、关键字、渲染队列、纹理变换和非空引用；每份经交付 JSON 冷读后重新序列化，全部原始字节一致。按原 CAB／对象 ID 核对 5,105 处非空引用、38 个实际 shader 对象／系列和 1,478 个纹理对象，没有未解析引用。原始 unity default resources 使用 APK 文件名恢复外部引用，字体 shader 10101 与原 GUI/Text Shader 对象相符，不采用转换器生成材质推测绑定。来源和输出哈希已核验；主工程内置屏 DX12 导入／编译、全局校验及 55,140 个 GUID 静态检查通过。此处为原字段恢复，尚未导入实体 Windows 材质／纹理或验证实体画面、输入与存档。
+
 - 当前官方程序集、客户端与共享反编译代码已核验，按原 formatter、构造器和 schema 解码导航、放置、163 个模板／动作、93 张相关表、88 份客户端剧情图及对应服务端配置记录。保留组件、条件、结果与剧情连接顺序；配置记录不视为服务端执行代码。对白采用当前 Luban `dialog` 表，保留原顺序、角色、表情、配音键与原中文键，不使用旧版 CSV 补缺。
 - 当前版导航会话直接绑定 240×240 原始网格、111 个 area 映射、2,690 份放置／组件、106 个地区进度上限与 889 条配置，不引用旧地图投影；实体显示和关卡配置使用完整原匹配键，不合并同类实体的不同分支。五份原 AStar 类型仅改命名空间和导入，复用已迁移的官方 Pos2d，保留方向／同分顺序、MaxStep=65 的边界、最近点回退、初始身体白名单、FirstStepPosList 和自定义终点。显式绑定为 `Resources/Map13/Native/navigation-catalog`；原数据、输入与代码哈希均核验。
 - 导航适配根据水路当前生成状态、位置和 Body 覆盖实时构造占格；玩家原掩码为 65，浮台按原配置键 8 的掩码 126 检查整段路径，并保留自身原占格白名单。其他实体的生成／身体覆盖、跨格阻挡及临时阻挡由正式世界宿主显式提供，本模块不推断任务生成规则。同源隔离内置屏 DX12 Play Mode 验证全部 57,600 格、11,520 个当前水路占格下可站立格、坐标往返与负数截断边界；原初始状态的十条首段为 8 条移动／2 条受阻且不改状态。全部十浮台另在明确的独立占格夹具完成整段往返、载人路径、外部阻挡原子回滚及 JSON 冷读。共享 MapGridPoint 补充 Serializable，修复 Unity JsonUtility 丢失浮台坐标／路径的问题；原纯 C# 水路规则复测通过。主工程导入／编译与全局校验通过。该验证直接运行导航规则，没有模拟鼠标、正式角色移动、终端交易或磁盘存档。
@@ -53,6 +55,8 @@
 - 内置屏 DX12 的实际流程和模拟鼠标命中验证、正式运行画面、Windows 构建／Player 启动与存档恢复；通过后发布 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完整成果的发布版本。
 
 官方来源、代码／资源入口与实际验证：
+
+- [材质恢复](../../scripts/prepare_unity_map13_entity_materials.py)及[材质来源](../../assets/reference/official-map/map13-native-entity-materials-source-manifest.json)。原字段为 Source/native-entity-materials.json，包含原 shader 与纹理对象引用；Windows 导入与绑定仍待完成。
 
 - [当前导航数据与原寻路迁移](../../scripts/prepare_unity_map13_navigation.py)、[导航来源](../../assets/reference/official-map/map13-navigation-source-manifest.json)、[显式绑定](../../assets/reference/official-map/map13-navigation-binding-source-manifest.json)、[导航会话](../../unity/Assets/Game/Runtime/Offline/World/Map13Navigation/OfflineMap13NavigationSession.cs)及[导航 Play Mode 规则检查](../../unity/Assets/Game/Editor/Map13Navigation/OfficialMap13NavigationAcceptance.cs)。完整当前数据为 `Assets/Official/World/Map/13/map13.json`，原 AStar 入口位于 `Runtime/Official/World/Map13Navigation/`。
 - [原配置](../../scripts/prepare_unity_map13_sources.py)、[来源](../../assets/reference/official-map/map13-source-manifest.json)、[水路模块](../../unity/Assets/Game/Runtime/Offline/World/OfflineMap13WaterSession.cs)、[水路来源](../../assets/reference/official-map/map13-water-source-manifest.json)及[规则测试](../../scripts/test_map13_water.ps1)。原解码载荷位于 `Assets/Official/World/Map/13/Source/`，水路规则为 `Resources/Map13/water-rules.json`。
