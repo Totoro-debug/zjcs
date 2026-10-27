@@ -1,0 +1,190 @@
+#ifdef VERTEX
+#version 300 es
+
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec4 _ScreenParams;
+uniform 	vec4 hlslcc_mtx4x4glstate_matrix_projection[4];
+uniform 	vec4 hlslcc_mtx4x4unity_MatrixVP[4];
+uniform 	mediump vec4 _ClipRect;
+uniform 	float _UIMaskSoftnessX;
+uniform 	float _UIMaskSoftnessY;
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+UNITY_BINDING(0) uniform UnityPerDraw {
+#endif
+	UNITY_UNIFORM vec4                hlslcc_mtx4x4unity_ObjectToWorld[4];
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXhlslcc_mtx4x4unity_WorldToObject[4];
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_LODFade;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_WorldTransformParams;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_RenderingLayer;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_LightData;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_LightIndices[2];
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_ProbesOcclusion;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SpecCube0_HDR;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SpecCube1_HDR;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube0_BoxMax;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube0_BoxMin;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube0_ProbePosition;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube1_BoxMax;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube1_BoxMin;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_SpecCube1_ProbePosition;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_LightmapST;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_DynamicLightmapST;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHAr;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHAg;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHAb;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHBr;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHBg;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHBb;
+	UNITY_UNIFORM mediump vec4 Xhlslcc_UnusedXunity_SHC;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_RendererBounds_Min;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_RendererBounds_Max;
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXhlslcc_mtx4x4unity_MatrixPreviousM[4];
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXhlslcc_mtx4x4unity_MatrixPreviousMI[4];
+	UNITY_UNIFORM vec4 Xhlslcc_UnusedXunity_MotionVectorsParams;
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+};
+#endif
+in highp vec4 in_POSITION0;
+in highp vec2 in_TEXCOORD0;
+in highp vec4 in_COLOR0;
+out highp vec2 vs_TEXCOORD0;
+out highp vec4 vs_COLOR0;
+out highp vec4 vs_TEXCOORD1;
+out mediump vec4 vs_TEXCOORD2;
+vec4 u_xlat0;
+vec4 u_xlat1;
+mediump vec4 u_xlat16_1;
+vec2 u_xlat2;
+vec2 u_xlat7;
+void main()
+{
+    u_xlat0.xyz = in_POSITION0.yyy * hlslcc_mtx4x4unity_ObjectToWorld[1].xyz;
+    u_xlat0.xyz = hlslcc_mtx4x4unity_ObjectToWorld[0].xyz * in_POSITION0.xxx + u_xlat0.xyz;
+    u_xlat0.xyz = hlslcc_mtx4x4unity_ObjectToWorld[2].xyz * in_POSITION0.zzz + u_xlat0.xyz;
+    u_xlat0.xyz = u_xlat0.xyz + hlslcc_mtx4x4unity_ObjectToWorld[3].xyz;
+    u_xlat1 = u_xlat0.yyyy * hlslcc_mtx4x4unity_MatrixVP[1];
+    u_xlat1 = hlslcc_mtx4x4unity_MatrixVP[0] * u_xlat0.xxxx + u_xlat1;
+    u_xlat1 = hlslcc_mtx4x4unity_MatrixVP[2] * u_xlat0.zzzz + u_xlat1;
+    vs_TEXCOORD1.xyz = u_xlat0.xyz;
+    u_xlat0 = u_xlat1 + hlslcc_mtx4x4unity_MatrixVP[3];
+    gl_Position = u_xlat0;
+    vs_TEXCOORD0.xy = in_TEXCOORD0.xy;
+    vs_COLOR0 = in_COLOR0;
+    vs_TEXCOORD1.w = 0.0;
+    u_xlat7.x = _ScreenParams.x * hlslcc_mtx4x4glstate_matrix_projection[0].x;
+    u_xlat7.y = _ScreenParams.y * hlslcc_mtx4x4glstate_matrix_projection[1].y;
+    u_xlat0.xy = u_xlat0.ww / abs(u_xlat7.xy);
+    u_xlat0.xy = vec2(_UIMaskSoftnessX, _UIMaskSoftnessY) * vec2(0.25, 0.25) + abs(u_xlat0.xy);
+    u_xlat0.zw = vec2(0.25, 0.25) / u_xlat0.xy;
+    u_xlat16_1 = max(_ClipRect, vec4(-2e+10, -2e+10, -2e+10, -2e+10));
+    u_xlat16_1 = min(u_xlat16_1, vec4(2e+10, 2e+10, 2e+10, 2e+10));
+    u_xlat2.xy = in_POSITION0.xy * vec2(2.0, 2.0) + (-u_xlat16_1.xy);
+    u_xlat0.xy = (-u_xlat16_1.zw) + u_xlat2.xy;
+    vs_TEXCOORD2 = u_xlat0;
+    return;
+}
+
+#endif
+#ifdef FRAGMENT
+#version 300 es
+
+precision highp float;
+precision highp int;
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
+#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
+#if UNITY_SUPPORTS_UNIFORM_LOCATION
+#define UNITY_LOCATION(x) layout(location = x)
+#define UNITY_BINDING(x) layout(binding = x, std140)
+#else
+#define UNITY_LOCATION(x)
+#define UNITY_BINDING(x) layout(std140)
+#endif
+uniform 	vec2 _GlobalMipBias;
+uniform 	vec4 _Time;
+uniform 	mediump vec4 _MainTex_ST;
+uniform 	mediump float _Brightness;
+uniform 	mediump vec2 _MainPanner;
+uniform 	mediump vec4 _MainColor;
+uniform 	mediump float _Contrast;
+uniform 	int _SquenceRow;
+uniform 	int _SquenceColumn;
+uniform 	mediump float _SquenceRate;
+uniform 	mediump vec2 _Rotator;
+UNITY_LOCATION(0) uniform mediump sampler2D _MainTex;
+in highp vec2 vs_TEXCOORD0;
+in highp vec4 vs_COLOR0;
+layout(location = 0) out mediump vec4 SV_Target0;
+mediump vec4 u_xlat16_0;
+mediump vec3 u_xlat16_1;
+vec2 u_xlat2;
+int u_xlati2;
+mediump vec3 u_xlat16_3;
+mediump vec3 u_xlat16_5;
+vec3 u_xlat6;
+bool u_xlatb6;
+mediump float u_xlat16_8;
+int u_xlati10;
+mediump float u_xlat16_12;
+void main()
+{
+    u_xlat16_0.xy = vs_TEXCOORD0.xy + vec2(-0.5, -0.5);
+    u_xlat16_8 = u_xlat16_0.y * _Rotator.y;
+    u_xlat16_1.x = u_xlat16_0.x * _Rotator.x + (-u_xlat16_8);
+    u_xlat16_1.y = dot(u_xlat16_0.yx, _Rotator.xy);
+    u_xlat16_0.xy = u_xlat16_1.xy + vec2(0.5, 0.5);
+    u_xlat16_8 = max(_SquenceRate, 0.0);
+    u_xlat16_8 = min(u_xlat16_8, 0.999000013);
+    u_xlati2 = _SquenceColumn * _SquenceRow;
+    u_xlat16_12 = float(u_xlati2);
+    u_xlat16_1.x = u_xlat16_12 * u_xlat16_8;
+    u_xlat2.xy = vec2(ivec2(_SquenceColumn, _SquenceRow));
+    u_xlat2.xy = vec2(1.0, 1.0) / u_xlat2.xy;
+    u_xlat16_1.x = u_xlat16_1.x * u_xlat2.x;
+    u_xlat16_1.x = floor(u_xlat16_1.x);
+    u_xlati10 = int(u_xlat16_1.x);
+    u_xlati10 = u_xlati10 * _SquenceColumn;
+    u_xlat16_5.x = float(u_xlati10);
+    u_xlat16_8 = u_xlat16_8 * u_xlat16_12 + (-u_xlat16_5.x);
+    u_xlat16_8 = trunc(u_xlat16_8);
+    u_xlat16_3.x = u_xlat2.x * u_xlat16_8;
+    u_xlat16_8 = (-u_xlat2.y) + 1.0;
+    u_xlat16_3.y = (-u_xlat16_1.x) * u_xlat2.y + u_xlat16_8;
+    u_xlat2.xy = u_xlat16_0.xy * u_xlat2.xy + u_xlat16_3.xy;
+    u_xlat2.xy = vec2(_MainPanner.x, _MainPanner.y) * _Time.yy + u_xlat2.xy;
+    u_xlat2.xy = u_xlat2.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+    u_xlat16_0 = texture(_MainTex, u_xlat2.xy, _GlobalMipBias.x);
+    u_xlat16_1.x = u_xlat16_0.w * _MainColor.w;
+    u_xlat16_5.xyz = log2(abs(u_xlat16_0.xyz));
+    u_xlat16_5.xyz = u_xlat16_5.xyz * vec3(_Contrast);
+    u_xlat16_5.xyz = exp2(u_xlat16_5.xyz);
+    u_xlat16_3.x = u_xlat16_1.x * vs_COLOR0.w + -0.00100000005;
+    u_xlat2.x = u_xlat16_1.x * vs_COLOR0.w;
+    u_xlatb6 = u_xlat16_3.x<0.0;
+    if(u_xlatb6){discard;}
+    u_xlat16_3.xyz = vec3(_Brightness) * _MainColor.xyz;
+    u_xlat16_1.xyz = u_xlat16_5.xyz * u_xlat16_3.xyz;
+    u_xlat6.xyz = u_xlat16_1.xyz * vs_COLOR0.xyz;
+    SV_Target0.xyz = u_xlat2.xxx * u_xlat6.xyz;
+    SV_Target0.w = u_xlat2.x;
+    return;
+}
+
+#endif

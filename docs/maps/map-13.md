@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+- 实体材质关联的 28 个新增 shader 已从原 GLES 程序转换，另 8 个既有 shader 按原对象与输出哈希复用。新增 40 个 pass 中，39 个含 1,543 组原始程序，全部 3,086 个 Windows 顶点／片元阶段编译通过；原 Lit 的 GBuffer 已被官方剥离，保留原 pass 状态且不借用其他 pass 程序。保留属性、原 LOD、全局／局部关键字、KeywordEnum 互斥选择、原包每个 pass 恒定启用的关键字、矩阵列运算、数组、混合／深度／模板和原程序顺序。Windows 适配使用 Unity 已有的逐绘制矩阵、球谐与反射探针绑定，恢复原抖动常量数组和原坐标／深度语义。独立同源内置屏 DX12 Play Mode 直接绘制原 shader 网格，四组骨骼预乘色／正反缩放与位置、UI 全部 16,384 像素的柔边裁剪／alpha 取整，以及抖动 0／0.5／1 的覆盖 0／2,048／4,096 像素检查通过，实际 GPU 回读图片已查看。主工程导入／编译、全局校验及 57,765 个 GUID 静态检查通过。两份 APK 引擎 shader 的 Windows 绑定、完整 fallback 依赖、实体材质／纹理和正式运行仍待接入；这些检查没有模拟地图鼠标交互或存档。
+
 - 实体闭包的 1,824 份原材质已严格解码，保留全部属性、关键字、渲染队列、纹理变换和非空引用；每份经交付 JSON 冷读后重新序列化，全部原始字节一致。按原 CAB／对象 ID 核对 5,105 处非空引用、38 个实际 shader 对象／系列和 1,478 个纹理对象，没有未解析引用。原始 unity default resources 使用 APK 文件名恢复外部引用，字体 shader 10101 与原 GUI/Text Shader 对象相符，不采用转换器生成材质推测绑定。来源和输出哈希已核验；主工程内置屏 DX12 导入／编译、全局校验及 55,140 个 GUID 静态检查通过。此处为原字段恢复，尚未导入实体 Windows 材质／纹理或验证实体画面、输入与存档。
 
 - 当前官方程序集、客户端与共享反编译代码已核验，按原 formatter、构造器和 schema 解码导航、放置、163 个模板／动作、93 张相关表、88 份客户端剧情图及对应服务端配置记录。保留组件、条件、结果与剧情连接顺序；配置记录不视为服务端执行代码。对白采用当前 Luban `dialog` 表，保留原顺序、角色、表情、配音键与原中文键，不使用旧版 CSV 补缺。
@@ -55,6 +57,8 @@
 - 内置屏 DX12 的实际流程和模拟鼠标命中验证、正式运行画面、Windows 构建／Player 启动与存档恢复；通过后发布 `D:/Desktop/杖剑传说/杖剑传说.exe`。目前没有包含本图完整成果的发布版本。
 
 官方来源、代码／资源入口与实际验证：
+
+- [实体 shader 转换](../../scripts/prepare_unity_map13_entity_shaders.py)、[shader 来源](../../assets/reference/official-map/map13-entity-shaders-source-manifest.json)、[Windows 编译检查](../../unity/Assets/Game/Editor/Map13EntityShaders/OfficialMap13EntityShaderTools.cs)及[DX12 Play Mode GPU 检查](../../unity/Assets/Game/Editor/Map13EntityShaders/OfficialMap13EntityShaderGpuAcceptance.cs)。新增代码位于 Runtime/Official/World/NativeMap13Entities/Shaders/，原程序位于 Source/EntityShaders/；完整 fallback 与原生实体资源目录仍待绑定。
 
 - [材质恢复](../../scripts/prepare_unity_map13_entity_materials.py)及[材质来源](../../assets/reference/official-map/map13-native-entity-materials-source-manifest.json)。原字段为 Source/native-entity-materials.json，包含原 shader 与纹理对象引用；Windows 导入与绑定仍待完成。
 
