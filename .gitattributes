@@ -95,7 +95,6 @@ unity/Assets/Game/Resources/Combat/OfficialBattleSkillQualityCatalog.asset* text
 assets/reference/battle-hud/skill-*-source-manifest.json text eol=lf
 unity/Assets/Official/Combat/SkillQualities/** -text
 unity/Assets/Official/Combat/SkillQualities.meta -text
-
 # Elemental-status evidence hashes the adapted source bytes.
 scripts/prepare_battle_element_confrontation.py text eol=lf
 scripts/test_battle_element_confrontation.ps1 text eol=lf
@@ -104,15 +103,12 @@ unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleElementConfrontationAcceptance.cs text eol=lf
 assets/reference/battle-rules/element-confrontation-source-manifest.json text eol=lf
-
 # Original damage-display evidence and adapted source hashes.
 scripts/prepare_battle_damage_display.py text eol=lf
 scripts/test_battle_damage_display.ps1 text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleSceneView.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleDamageDisplayAcceptance.cs text eol=lf
-unity/Assets/Game/Editor/Combat/OfficialBattleHudAssetTools.cs text eol=lf
 assets/reference/battle-hud/damage-display-source-manifest.json text eol=lf
-
 scripts/prepare_battle_world_damage.py text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudCatalog.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs text eol=lf
@@ -123,12 +119,10 @@ unity/Assets/Official/Combat/Numbers/**/*.fontsettings text eol=lf
 unity/Assets/Official/Combat/Numbers/**/*.mat text eol=lf
 unity/Assets/Official/Combat/Numbers/**/*.meta text eol=lf
 assets/reference/battle-hud/world-damage-source-manifest.json text eol=lf
-
 # Element-feedback source receipts pin code, translated programs and native payload bytes.
 scripts/official_animation.py text eol=lf
 scripts/prepare_battle_element_feedback.py text eol=lf
 scripts/prepare_battle_world_shaders.py text eol=lf
-scripts/prepare_battle_hud_materials.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightDamageFormula.cs text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/FightBattleHitExecutor.cs text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/ElementConfrontationUI.cs text eol=lf
@@ -141,7 +135,6 @@ unity/Assets/Game/Runtime/Presentation/Combat/Shaders/World*.shader* text eol=lf
 unity/Assets/Official/Combat/ElementFeedback/** -text
 unity/Assets/Official/Combat/ElementFeedback.meta -text
 assets/reference/battle-hud/element-feedback-source-manifest.json text eol=lf
-
 # Original damage-display configuration and source-backed visibility ports.
 scripts/prepare_battle_damage_visibility.py text eol=lf
 unity/Assets/Game/Runtime/Official/Combat/CharacterDamageUIManager.cs text eol=lf
@@ -151,7 +144,6 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleDamageColors.cs text
 unity/Assets/Game/Editor/Combat/OfficialBattleDamageVisibilityAcceptance.cs text eol=lf
 unity/Assets/Game/Resources/Combat/damage-visibility.json text eol=lf
 assets/reference/battle-hud/damage-visibility-source-manifest.json text eol=lf
-
 # Startup migration sources and native bindings retain their recorded bytes.
 assets/reference/startup/** -text
 unity/Assets/Official/Startup.meta -text
@@ -166,7 +158,6 @@ unity/Assets/Game/Editor/Startup.meta -text
 unity/Assets/Game/Editor/Startup/** -text
 scripts/prepare_official_startup.py -text
 scripts/record_startup_native_sources.py -text
-
 scripts/prepare_battle_world_tips.py text eol=lf
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleWorldTips.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleWorldTipsAcceptance.cs text eol=lf
@@ -189,7 +180,6 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldTab*.cs text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldTab*.cs.meta text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportTabAcceptance.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportTabAcceptance.cs.meta text eol=lf
-
 scripts/restore_battle_report_graphics.py text eol=lf
 assets/reference/battle-hud/report-graphics-source-manifest.json text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportGraphics*.cs text eol=lf
@@ -199,7 +189,6 @@ unity/Assets/Official/Combat/BattleReport/Graphics/*.mat text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics/*.json text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics/*.meta text eol=lf
 unity/Assets/Official/Combat/BattleReport/Graphics.meta text eol=lf
-
 # Save selector conversion and native asset receipts preserve exact bytes.
 unity/Assets/Official/SaveSelection.meta -text
 unity/Assets/Official/SaveSelection/** -text
@@ -279,7 +268,6 @@ unity/Assets/Official/Combat/report-score-settings-source-manifest.json text eol
 unity/Assets/Official/Combat/report-score-settings-source-manifest.json.meta text eol=lf
 assets/reference/battle-rules/report-score-settings-source-manifest.json text eol=lf
 scripts/test_battle_report_players.ps1 text eol=lf
-
 scripts/restore_battle_report_player_row.py text eol=lf
 assets/reference/battle-hud/report-player-row-source-manifest.json text eol=lf
 unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerRow.cs text eol=lf
@@ -288,7 +276,6 @@ unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinde
 unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinder.cs.meta text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs text eol=lf
 unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs.meta text eol=lf
-
 scripts/restore_battle_report_player_view.py text eol=lf
 scripts/test_battle_report_grouping.ps1 text eol=lf
 assets/reference/battle-hud/report-player-view-source-manifest.json text eol=lf
@@ -331,7 +318,6 @@ unity/Assets/Game/Runtime/Official/World/NativeWater* text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeWater/** text eol=lf
 scripts/prepare_unity_map13_water_shaders.py text eol=lf
 unity/Assets/Game/Editor/OfficialMap13WaterShaderTools.cs* text eol=lf
-
 # Preserve Map13 native asset bytes and Unity-normalized metadata hashes.
 unity/Assets/Official/World/Map/13/NativeTerrain/** -text
 unity/Assets/Official/World/Map/13/NativeTerrain.meta -text
@@ -344,13 +330,11 @@ unity/Assets/Game/Runtime/Official/World/NativeTerrain.meta text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13/** text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap13.meta text eol=lf
 unity/Assets/Game/Editor/OfficialMap13TerrainTools.cs* text eol=lf
-
 scripts/prepare_unity_map13_partition.py text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativePartition* text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativePartition/** text eol=lf
 unity/Assets/Game/Editor/Map13* text eol=lf
 unity/Assets/Game/Editor/Map13/** text eol=lf
-
 # Preserve the mountain UI native assets and receipt input bytes.
 unity/Assets/Game/Resources/Map12/** -text
 unity/Assets/Game/Resources/Map12.meta -text
@@ -367,7 +351,6 @@ unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Animation.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.MiniMap.cs -text
 unity/Assets/Game/Editor/OfficialMap11UiTools.Sprites.cs -text
-
 # Preserve mountain dialogue/light payloads and converter receipt identities.
 assets/reference/official-map/map12*.json -text
 unity/Assets/Official/World/Map/12/**/*.json -text
@@ -384,14 +367,12 @@ scripts/prepare_unity_map12.py -text
 scripts/prepare_unity_map12_runtime_data.py -text
 scripts/prepare_unity_map12_coordinates.py -text
 scripts/prepare_unity_mainline_tasks.py -text
-
 # Preserve original native Map13 render pipeline and reproducible converters.
 unity/Assets/Official/World/Map/13/NativePipeline/** -text
 unity/Assets/Official/World/Map/13/NativePipeline.meta -text
 scripts/prepare_unity_map13_pipeline_baseline.py text eol=lf
 scripts/prepare_unity_map13_pipeline_textures.py text eol=lf
 scripts/prepare_unity_map13_native_pipeline.py text eol=lf
-
 # Preserve Map13 original flag conversion and shrine payload bytes.
 scripts/prepare_unity_map11_story_spatial.py -text
 scripts/prepare_unity_map12_story_spatial.py -text
@@ -409,7 +390,6 @@ unity/Assets/Official/World/Map/12/NativeTerrain.meta -text
 unity/Assets/Game/Editor/OfficialMap12TerrainTools.cs -text
 unity/Assets/Game/Resources/Map12/Native/** -text
 unity/Assets/Game/Resources/Map12/Native.meta -text
-
 # Preserve original Map13 non-label partition payloads.
 unity/Assets/Official/World/Map/13/NativeEnvironmentScene/** -text
 unity/Assets/Official/World/Map/13/NativeEnvironmentScene.meta -text
@@ -428,7 +408,6 @@ unity/Assets/Official/World/Map/12/Source/Shaders.meta -text
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeSceneTools.cs -text
 unity/Assets/Game/Editor/Map12/OfficialMap12EnvironmentSceneTools.cs -text
 unity/Assets/Game/Editor/Map12/OfficialMap12EnvironmentSceneAcceptance.cs -text
-
 # Preserve original Map13 world-label font and text programs.
 unity/Assets/Official/World/Map/13/NativeText/** -text
 unity/Assets/Official/World/Map/13/NativeText.meta -text
@@ -436,7 +415,6 @@ scripts/prepare_unity_map13_text_shader.py text eol=lf
 scripts/prepare_unity_map13_text_font.py text eol=lf
 unity/Assets/Official/World/Map/13/Source/Text/** -text
 unity/Assets/Official/World/Map/13/Source/Text.meta -text
-
 # Preserve reconstructed original Map13 TMP effect sources.
 scripts/prepare_unity_map13_text_effects.py text eol=lf
 scripts/map13_tmp_effect_runtime.cs text eol=lf
@@ -455,7 +433,6 @@ unity/Assets/Game/Editor/OfficialMap12AudioTools.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap11MusicPlayer.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap11StoryAudioPlayer.cs.meta text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Audio.cs.meta text eol=lf
-
 # Preserve original Map12 region-label payloads and migrated component hashes.
 scripts/prepare_unity_map12_label_components.py text eol=lf
 scripts/prepare_unity_map12_region_labels.py text eol=lf
@@ -471,11 +448,9 @@ unity/Assets/Game/Editor/Map12/OfficialMap12LabelAcceptance.cs text eol=lf
 unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels/** -text
 unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels.meta -text
 unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef text eol=lf
-
 # Preserve exact Map13 region-label source payload bytes.
 unity/Assets/Official/World/Map/13/NativeRegionLabels/** -text
 unity/Assets/Official/World/Map/13/NativeRegionLabels.meta -text
-
 # Map12 placed chest source and local reward binding.
 scripts/prepare_unity_map12_chests.py text eol=lf
 scripts/map11_support_ui.py text eol=lf
@@ -488,17 +463,12 @@ unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Chests.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf
-
 # Map12 production native world and exact local bindings.
 scripts/prepare_unity_map12_native_world.py text eol=lf
-scripts/prepare_unity_map13_environment_shader.py text eol=lf
-scripts/prepare_unity_map13_partition.py text eol=lf
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldTools.cs text eol=lf
-unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.NativeWorld.cs text eol=lf
 unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLoader.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs text eol=lf
-unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs text eol=lf
@@ -513,8 +483,6 @@ unity/Assets/Game/Resources/Map12/Native/world-assets.asset.meta -text
 unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs text eol=lf
 unity/Assets/Game/Runtime/Presentation/World/OfficialMap10MonsterView.cs text eol=lf
-unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf
-unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs text eol=lf
 unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs text eol=lf
 scripts/prepare_unity_map11_base_ground.py text eol=lf
 scripts/prepare_unity_map13_entity_inputs.py text eol=lf
@@ -524,7 +492,6 @@ scripts/map13_entity_dynamic_textures.py text eol=lf
 scripts/prepare_unity_map13_water_entity_inputs.py text eol=lf
 scripts/prepare_unity_map13_water_entity_export.py text eol=lf
 scripts/official_native_yaml_verification.py text eol=lf
-
 # Original mountain building operations and native dialog geometry.
 scripts/prepare_unity_map12_building_operations.py text eol=lf
 scripts/prepare_unity_map12_building_preview.py text eol=lf
@@ -570,3 +537,4 @@ unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity
 unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity.meta text eol=lf
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/** -text
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders.meta -text
+unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip filter=lfs diff=lfs merge=lfs -text
