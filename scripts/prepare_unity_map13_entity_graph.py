@@ -138,6 +138,10 @@ def build():
             input=receipt["inputs"][info["input_index"]]["output"], payload_sha256=sha(raw), references=edges)
         if "m_Name" in fields:
             record["name"] = fields["m_Name"]
+        elif info["type"] not in ("MonoBehaviour", "Shader"):
+            name = obj.peek_name()
+            if name:
+                record["name"] = name
         if info["type"] == "Shader":
             form = fields["m_ParsedForm"]
             record.update(name=form["m_Name"], fallback=form["m_FallbackName"])

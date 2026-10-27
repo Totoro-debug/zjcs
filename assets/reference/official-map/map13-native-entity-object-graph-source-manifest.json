@@ -5778,7 +5778,7 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map13_entity_graph.py",
-      "sha256": "9e6608aa1fb1e9099a578d90e77994505f804389941d452b10d260fb66e4b713"
+      "sha256": "427d0f85f214636e2e6da549ad8a40b500b760377fb07d5bedb170f2e00fd089"
     },
     {
       "path": "scripts/prepare_unity_map13_entity_materials.py",
@@ -5792,7 +5792,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
-      "sha256": "4e64436922b4b9a018fd0d8815687fef32974cfe8f1924d6f87b88802b1e41f6"
+      "sha256": "9b2becd2ecee8795bc9f300a8fd860fa114b02f5f32747db525f543ed6d79dd4"
     }
   ],
   "operation": "Follow every nonzero native PPtr from the 335 byte-verified prefab roots, resolving CAB and object ID across the complete verified bundle inventory. Use original managed fields, traverse serialized map pairs as well as arrays, and add original on-demand appearance texture GUID edges only for reachable loader components. Reject unresolved references and ambiguous targets; retain cycles without repeated traversal.",
