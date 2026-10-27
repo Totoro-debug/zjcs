@@ -1,0 +1,1202 @@
+[
+  {
+    "EntityClassId": 6103,
+    "fields": {
+      "mECViews": [
+        {
+          "rid": 6993617687673831616
+        },
+        {
+          "rid": 6993617687673831617
+        },
+        {
+          "rid": 6993617687673831641
+        },
+        {
+          "rid": 8887979446731014223
+        },
+        {
+          "rid": 7749467100143419646
+        },
+        {
+          "rid": 2466209302440051005
+        },
+        {
+          "rid": 6876388992500891680
+        }
+      ],
+      "m_Enabled": 1,
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -2689745933341735976
+      },
+      "m_Name": "",
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 2491674463829926342
+      },
+      "references": {
+        "RefIds": [
+          {
+            "rid": -2,
+            "type": {
+              "asm": "",
+              "class": "",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mLight": {
+                "m_FileID": 0,
+                "m_PathID": 5052479313135682520
+              }
+            },
+            "rid": 2466209302440051005,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECRegionLightView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {},
+            "rid": 3508805805308379373,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationClick",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mConditionIds": [
+                4102
+              ],
+              "mMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388674619310103
+                }
+              },
+              "mNeedAllMeet": 0,
+              "mNoMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388655424602120
+                }
+              }
+            },
+            "rid": 6876388655424602113,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationCondition",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "StoryEndOperation": {
+                "InteractionOperation": {
+                  "rid": -2
+                }
+              },
+              "mNpcTalkScenario": 3
+            },
+            "rid": 6876388655424602120,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationOnlyStory",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mConditionIds": [
+                4103
+              ],
+              "mMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388674619310107
+                }
+              },
+              "mNeedAllMeet": 0,
+              "mNoMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388674619310110
+                }
+              }
+            },
+            "rid": 6876388674619310103,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationCondition",
+              "ns": ""
+            }
+          },
+          {
+            "data": {},
+            "rid": 6876388674619310107,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationClick",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mOperDatas": [
+                {
+                  "InteractionOperation": {
+                    "rid": 6876388674619310112
+                  }
+                },
+                {
+                  "InteractionOperation": {
+                    "rid": 3508805805308379373
+                  }
+                }
+              ]
+            },
+            "rid": 6876388674619310110,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationSequence",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "StoryEndOperation": {
+                "InteractionOperation": {
+                  "rid": -2
+                }
+              },
+              "mNpcTalkScenario": 1
+            },
+            "rid": 6876388674619310112,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationOnlyStory",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mConditionIds": [
+                4103,
+                4104,
+                4105
+              ],
+              "mMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388676264001541
+                }
+              },
+              "mNeedAllMeet": 0,
+              "mNoMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388676264001544
+                }
+              }
+            },
+            "rid": 6876388676264001537,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationCondition",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "DailyDungeon/DailyDungeonDialogPrivateMap"
+            },
+            "rid": 6876388676264001541,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "StoryEndOperation": {
+                "InteractionOperation": {
+                  "rid": -2
+                }
+              },
+              "mNpcTalkScenario": 3
+            },
+            "rid": 6876388676264001544,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationOnlyStory",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "DailyDungeon/DailyDungeonDialog"
+            },
+            "rid": 6876388676264001547,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "WorldMap/StageEndTipUI"
+            },
+            "rid": 6876388676264001549,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mLoadedPrefabSlot": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mTipdotLinker": {
+                "m_FileID": 0,
+                "m_PathID": -2401526580050574376
+              },
+              "mTipdotLinkerPrefabGuidProxy": {
+                "mAssetGuid": ""
+              }
+            },
+            "rid": 6876388992500891680,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECTipdotLinkerView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "Configs": {
+                "Values": [
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 7029233389689783256
+                    },
+                    "BoneName": "6103_view"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -1661051606539222056
+                    },
+                    "BoneName": "Model"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 3467904782835139544
+                    },
+                    "BoneName": "Lupai"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 5674756881959044056
+                    },
+                    "BoneName": "stone"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 14553945189860312
+                    },
+                    "BoneName": "icon"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -2016780389499255848
+                    },
+                    "BoneName": "Spine Mecanim GameObject (map_jiShenShan_B_1)"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -5106192124312665128
+                    },
+                    "BoneName": "shadow"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -1146506072637684776
+                    },
+                    "BoneName": "UI"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -6505128645337005096
+                    },
+                    "BoneName": "Reddot"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -4670283943488240680
+                    },
+                    "BoneName": "MapSceneBlueCountTipdotLinker"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 1451796491759207384
+                    },
+                    "BoneName": "Light"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -8749495783549549608
+                    },
+                    "BoneName": "CommonEffectSlot"
+                  }
+                ]
+              }
+            },
+            "rid": 6993617687673831616,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECAttachAgentView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "EntityIcon": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StageSwitcher": {
+                "mOwner": {
+                  "m_FileID": 0,
+                  "m_PathID": -2689745933341735976
+                },
+                "mStateConfigs": [
+                  {
+                    "rid": 6993617687673831625
+                  }
+                ]
+              },
+              "mCanInteractAfterMove": 1,
+              "mWorldStageCfgProviderData": {
+                "ECWorldStageCfgProvider": {
+                  "rid": 7749467079195754931
+                }
+              }
+            },
+            "rid": 6993617687673831617,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mStateGameObjectData": {
+                "GoConfig": [
+                  {
+                    "GameObjects": [
+                      {
+                        "m_FileID": 0,
+                        "m_PathID": -9031029241805585448
+                      }
+                    ],
+                    "State": {
+                      "mValue": 0
+                    }
+                  },
+                  {
+                    "GameObjects": [
+                      {
+                        "m_FileID": 0,
+                        "m_PathID": -9031029241805585448
+                      }
+                    ],
+                    "State": {
+                      "mValue": 1
+                    }
+                  }
+                ]
+              }
+            },
+            "rid": 6993617687673831625,
+            "type": {
+              "asm": "Framework",
+              "class": "StateGameObjectConfig",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mAnimator": {
+                "m_FileID": 0,
+                "m_PathID": -429405028212194344
+              }
+            },
+            "rid": 6993617687673831641,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECAnimatorView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mStateCfgs": [
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 6876388655424602113
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                },
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 6876388676264001537
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 61,
+                    "m_PathID": 5969934303135468121
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                },
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 6876388676264001549
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 61,
+                    "m_PathID": 5969934303135468121
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                },
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 6876388676264001547
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 61,
+                    "m_PathID": 5969934303135468121
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                }
+              ]
+            },
+            "rid": 7749467079195754931,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageCfgNormalProvider",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mAppearPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mECPlayableHandlers": [
+                {
+                  "Handler": {
+                    "rid": 7749467110574129232
+                  }
+                }
+              ],
+              "mIsIgnoreFadeOut": 0,
+              "mLoopPlayable": {
+                "m_FileID": 61,
+                "m_PathID": -7269766646237623503
+              }
+            },
+            "rid": 7749467100143419646,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECPlayableSupporterView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mIsNotCutOffInStartPlayable": 0
+            },
+            "rid": 7749467110574129232,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECPlayableWorldStageHandler",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClientOverrideEntityDimensionBounds": [
+                {
+                  "X": -1,
+                  "Y": 0
+                },
+                {
+                  "X": 1,
+                  "Y": 2
+                }
+              ],
+              "mFlipTransform": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mOffsetZ": 0.0,
+              "mOffsetZPerX": 0.0010000000474974513,
+              "mSetZ": 1,
+              "mUpdatePosImmediately": 0
+            },
+            "rid": 8887979446731014223,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECGridTransformView",
+              "ns": ""
+            }
+          }
+        ],
+        "version": 2
+      }
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldbuilding.bundle",
+      "bundle_hash": "26a79480091cc5a25d85a675f2ae1580",
+      "bundle_sha256": "b41b2b885b44521eb3bb9d8b8d3f4509dc2e0e781b5d333529fe987c4d9b4272",
+      "bundle_size": 385089,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path_id": "-2274291643885075496",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/26a79480091cc5a25d85a675f2ae1580.bundle"
+    }
+  },
+  {
+    "EntityClassId": 6302,
+    "fields": {
+      "mECViews": [
+        {
+          "rid": 6993617709494960396
+        },
+        {
+          "rid": 6993617709494960397
+        },
+        {
+          "rid": 6993617709494960405
+        },
+        {
+          "rid": 6993618048258932931
+        },
+        {
+          "rid": 8887979446731014225
+        },
+        {
+          "rid": 7749467100143419648
+        },
+        {
+          "rid": 2466209302440051007
+        },
+        {
+          "rid": 6876389078926098879
+        }
+      ],
+      "m_Enabled": 1,
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -3451825422210067042
+      },
+      "m_Name": "",
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 2491674463829926342
+      },
+      "references": {
+        "RefIds": [
+          {
+            "rid": -2,
+            "type": {
+              "asm": "",
+              "class": "",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mLight": {
+                "m_FileID": 0,
+                "m_PathID": 4465912563540465054
+              }
+            },
+            "rid": 2466209302440051007,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECRegionLightView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [
+                {
+                  "OperationData": {
+                    "InteractionOperation": {
+                      "rid": -2
+                    }
+                  },
+                  "Type": 0
+                }
+              ],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "WorldMap/StageEndTipUI"
+            },
+            "rid": 3769242457019777102,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [
+                {
+                  "OperationData": {
+                    "InteractionOperation": {
+                      "rid": -2
+                    }
+                  },
+                  "Type": 0
+                }
+              ],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "DemonBattlefield/StageDemonBattlefieldDialog"
+            },
+            "rid": 3769242457019777106,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mConditionIds": [
+                4106
+              ],
+              "mMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388828660892107
+                }
+              },
+              "mNeedAllMeet": 0,
+              "mNoMeetConditionOper": {
+                "InteractionOperation": {
+                  "rid": 6876388828660892109
+                }
+              }
+            },
+            "rid": 6876388828660892106,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationCondition",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClickDatas": [
+                {
+                  "OperationData": {
+                    "InteractionOperation": {
+                      "rid": 6876388828660892108
+                    }
+                  },
+                  "Type": 0
+                }
+              ],
+              "mIsReport": 0,
+              "mSDKEventPanelId": 0,
+              "mWindowName": "WorldMap/WorldFantasyLadderDialog"
+            },
+            "rid": 6876388828660892107,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationWindow",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "StoryEndOperation": {
+                "InteractionOperation": {
+                  "rid": -2
+                }
+              },
+              "mNpcTalkScenario": 1
+            },
+            "rid": 6876388828660892108,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationOnlyStory",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "StoryEndOperation": {
+                "InteractionOperation": {
+                  "rid": -2
+                }
+              },
+              "mNpcTalkScenario": 6
+            },
+            "rid": 6876388828660892109,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageInteractionOperationOnlyStory",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mLoadedPrefabSlot": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mTipdotLinker": {
+                "m_FileID": 0,
+                "m_PathID": 558408113256830366
+              },
+              "mTipdotLinkerPrefabGuidProxy": {
+                "mAssetGuid": ""
+              }
+            },
+            "rid": 6876389078926098879,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECTipdotLinkerView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "Configs": {
+                "Values": [
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 1184988635409782174
+                    },
+                    "BoneName": "6302_view"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -6272282146092968546
+                    },
+                    "BoneName": "Model"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 9162770708492293534
+                    },
+                    "BoneName": "Part3"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 3123063803465012638
+                    },
+                    "BoneName": "Part2"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 3884216816522532254
+                    },
+                    "BoneName": "Bone02"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -7627261051918903906
+                    },
+                    "BoneName": "Bone03"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -1918330132893035106
+                    },
+                    "BoneName": "Part1"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -1792948522624051810
+                    },
+                    "BoneName": "Bone01"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 6338675220086691230
+                    },
+                    "BoneName": "Pingtai"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -5673247838077348450
+                    },
+                    "BoneName": "UI"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 3937537832565642654
+                    },
+                    "BoneName": "DotSlot"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -5388933289176296034
+                    },
+                    "BoneName": "MapSceneCommonTipdotLinker"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 574907490747782558
+                    },
+                    "BoneName": "Content"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 6384528794891031966
+                    },
+                    "BoneName": "CommonEffectSlot"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": 9033654751412655518
+                    },
+                    "BoneName": "Light"
+                  },
+                  {
+                    "Bone": {
+                      "m_FileID": 0,
+                      "m_PathID": -6232496897810393698
+                    },
+                    "BoneName": "Light01"
+                  }
+                ]
+              }
+            },
+            "rid": 6993617709494960396,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECAttachAgentView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "EntityIcon": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "StageSwitcher": {
+                "mOwner": {
+                  "m_FileID": 0,
+                  "m_PathID": -3451825422210067042
+                },
+                "mStateConfigs": [
+                  {
+                    "rid": 6993617709494960401
+                  }
+                ]
+              },
+              "mCanInteractAfterMove": 1,
+              "mWorldStageCfgProviderData": {
+                "ECWorldStageCfgProvider": {
+                  "rid": 7749467079195754936
+                }
+              }
+            },
+            "rid": 6993617709494960397,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mStateGameObjectData": {
+                "GoConfig": [
+                  {
+                    "GameObjects": [
+                      {
+                        "m_FileID": 0,
+                        "m_PathID": 5170018356465472926
+                      }
+                    ],
+                    "State": {
+                      "mValue": 0
+                    }
+                  }
+                ]
+              }
+            },
+            "rid": 6993617709494960401,
+            "type": {
+              "asm": "Framework",
+              "class": "StateGameObjectConfig",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mActivedChildren": [
+                {
+                  "m_FileID": 0,
+                  "m_PathID": 5392627667784013214
+                },
+                {
+                  "m_FileID": 0,
+                  "m_PathID": -3852937328703531618
+                },
+                {
+                  "m_FileID": 0,
+                  "m_PathID": -7526342893072116322
+                },
+                {
+                  "m_FileID": 0,
+                  "m_PathID": -1670076298306873954
+                }
+              ],
+              "mEnabledChildren": []
+            },
+            "rid": 6993617709494960405,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECVisibleControlerNormalView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mRadarEffectSlot": {
+                "m_FileID": 0,
+                "m_PathID": 6384528794891031966
+              },
+              "mRadarTipPrefab": {
+                "m_FileID": 66,
+                "m_PathID": 5603993812614540572
+              }
+            },
+            "rid": 6993618048258932931,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECMapControllerEntityRadarSupportView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mStateCfgs": [
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 6876388828660892106
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 61,
+                    "m_PathID": -5116643663574724338
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                },
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 3769242457019777102
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                },
+                {
+                  "InteractionOperation": {
+                    "InteractionOperation": {
+                      "rid": 3769242457019777106
+                    }
+                  },
+                  "myLoopPlayable": {
+                    "m_FileID": 61,
+                    "m_PathID": -5116643663574724338
+                  },
+                  "myStartPlayable": {
+                    "m_FileID": 0,
+                    "m_PathID": 0
+                  },
+                  "myUIName": ""
+                }
+              ]
+            },
+            "rid": 7749467079195754936,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECWorldStageCfgNormalProvider",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mAppearPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mECPlayableHandlers": [
+                {
+                  "Handler": {
+                    "rid": 7749467110574129234
+                  }
+                }
+              ],
+              "mIsIgnoreFadeOut": 0,
+              "mLoopPlayable": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              }
+            },
+            "rid": 7749467100143419648,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECPlayableSupporterView",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mIsNotCutOffInStartPlayable": 0
+            },
+            "rid": 7749467110574129234,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECPlayableWorldStageHandler",
+              "ns": ""
+            }
+          },
+          {
+            "data": {
+              "mClientOverrideEntityDimensionBounds": [
+                {
+                  "X": -1,
+                  "Y": 1
+                },
+                {
+                  "X": 1,
+                  "Y": 3
+                }
+              ],
+              "mFlipTransform": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "mOffsetZ": 0.0,
+              "mOffsetZPerX": 0.0010000000474974513,
+              "mSetZ": 1,
+              "mUpdatePosImmediately": 0
+            },
+            "rid": 8887979446731014225,
+            "type": {
+              "asm": "Assembly-CSharp",
+              "class": "ECGridTransformView",
+              "ns": ""
+            }
+          }
+        ],
+        "version": 2
+      }
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldbuilding.bundle",
+      "bundle_hash": "26a79480091cc5a25d85a675f2ae1580",
+      "bundle_sha256": "b41b2b885b44521eb3bb9d8b8d3f4509dc2e0e781b5d333529fe987c4d9b4272",
+      "bundle_size": 385089,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path_id": "-78795527405136482",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/26a79480091cc5a25d85a675f2ae1580.bundle"
+    }
+  }
+]

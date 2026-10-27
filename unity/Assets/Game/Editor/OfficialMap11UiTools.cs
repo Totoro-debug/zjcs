@@ -83,21 +83,21 @@ namespace Zjcs.Editor
         [MenuItem("Zjcs/World/Map11/Restore Goddess Prefabs")]
         public static void Import() => ImportForMap(11);
 
-        public static void ImportForMap(int mapClassId)
+        public static void ImportForMap(int mapClassId, string[] panelKeys = null)
         {
             if (mapClassId != 11 && mapClassId != 12) throw new ArgumentOutOfRangeException(nameof(mapClassId));
             int previous = activeMapId;
-            try { activeMapId = mapClassId; ImportNative(); }
+            try { activeMapId = mapClassId; ImportNative(panelKeys); }
             finally { activeMapId = previous; }
         }
 
-        private static void ImportNative()
+        private static void ImportNative(string[] panelKeys)
         {
             AssetDatabase.Refresh();
             string path = SourceRoot + "/map" + activeMapId + "-ui.json";
             OfficialMap11UiData data = JsonUtility.FromJson<OfficialMap11UiData>(File.ReadAllText(path));
             if (data.manifest != (activeMapId == 11 ? "854_156383" : "871_156598")
-                || data.mapClassId != activeMapId || data.panels.Length != 65)
+                || data.mapClassId != activeMapId || data.panels.Length != (activeMapId == 12 ? 68 : 65))
                 throw new InvalidDataException("Official map UI data is incomplete: " + activeMapId);
             Directory.CreateDirectory(ResourceRoot);
             string catalogPath = ResourceRoot + "/catalog.json";
@@ -160,6 +160,7 @@ namespace Zjcs.Editor
                 // Restore the dynamically loaded icon prefabs before binding their dialog references.
                 foreach (OfficialMap10UiPanel panel in data.panels.OrderBy(value => value.key.EndsWith("_DialogIcon") ? 0 : 1))
                 {
+                    if (panelKeys != null && !panelKeys.Contains(panel.key)) continue;
                     var renderer = new OfficialBattleHudRenderer(OfficialBattleHudCatalog.LoadDefault(),
                         uri => sprites.TryGetValue(uri, out Sprite sprite) ? sprite : null);
                     GameObject root = renderer.CreateSubtree(panel.BuildRoot(), host.transform);
@@ -249,6 +250,7 @@ namespace Zjcs.Editor
                         || panel.key.StartsWith("WorldTouchDialog", StringComparison.Ordinal)
                         || panel.key == "WitchStoryCollectContent"
                         || panel.key == "WorldStageDialogWithWitchStoryCollect"
+                        || panel.key == "WorldFantasyLadderDialog"
                         || panel.key == "StoryWitchBookDialog" || panel.key == "StoryBookDialog"
                         || panel.key == "OpenStoryBookItem" || panel.key == "PreviewContentGroup"
                         || panel.key == "ItemAwardIcon"
@@ -258,6 +260,7 @@ namespace Zjcs.Editor
                         || panel.key.StartsWith("LostGoddessResult", StringComparison.Ordinal))
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
+                        if (panel.key == "WorldFantasyLadderDialog") BindStagePrefab(panel.key, data, Require);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)
                             throw new InvalidOperationException("Could not save restored official witch UI hierarchy: " + panel.key);
                         UnityEngine.Object.DestroyImmediate(root);
@@ -306,6 +309,7 @@ namespace Zjcs.Editor
                     if (panel.key.EndsWith("_DialogIcon"))
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
+                        if (activeMapId == 12 && panel.key == "6302_DialogIcon") OfficialMap12BuildingPreviewTools.Bind(Require);
                         foreach (OfficialMap11UiIconBinding iconBinding in data.iconBindings.Where(value => value.key == panel.key))
                         {
                             GoddessDialogIcon icon = Require(iconBinding.path).gameObject.AddComponent<GoddessDialogIcon>();

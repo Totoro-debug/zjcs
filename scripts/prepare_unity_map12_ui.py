@@ -18,7 +18,8 @@ def prepare_context():
     extra_trees, extra_sources, extra_resources, _, _, _, _, exporter = support
     source, prefabs = dict(extra_trees), dict(extra_sources)
     for key in ("GoddessTouchDialog", "LostGoddessTouchDialog", "6010_12_DialogIcon",
-                "6011_12_DialogIcon", "6620_12_DialogIcon", "WorldCanvas"):
+                "6011_12_DialogIcon", "6620_12_DialogIcon", "WorldCanvas",
+                "WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon"):
         bundle = "prefabs_ui_map_world" if key == "WorldCanvas" else "prefabs_ui_worldmap"
         native, _ = exporter.object_tree(key, bundle)
         nodes = native["nodes"]
@@ -28,6 +29,9 @@ def prepare_context():
             nodes[node["parentIndex"]]["children"].append(node)
         source[key] = nodes[0]
         prefabs[key] = dict(native["source"], path=native["source_path"])
+        if key in ("WorldFantasyLadderDialog", "6103_DialogIcon", "6302_DialogIcon"):
+            extra_trees[key] = nodes[0]
+            extra_sources[key] = prefabs[key]
     base = ROOT / "unity/Assets/Official/World/Map/12/Source"
     path = base / "ui-prefabs.json"
     receipt_path = base / "ui-prefabs-source-manifest.json"
@@ -69,6 +73,10 @@ def record_native_bindings():
         "scripts/map11_support_ui.py", "scripts/map11_exploration_ui.py", "scripts/map11_minimap_ui.py",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs",
+        "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs",
+        "unity/Assets/Game/Editor/OfficialMap12BuildingPreviewTools.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/NativeMap12BuildingGraphic.cs",
+        "unity/Assets/Official/World/Map/12/Source/BuildingPreview/preview.json",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Animation.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.MiniMap.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Sprites.cs")]

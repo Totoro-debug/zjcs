@@ -381,7 +381,8 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                       "WorldStageInteractionResultAwardStatusEffectPreview", "WorldStageInteractionResultAwardStatusEffectPreviewItem",
                                       "WorldStageInteractionResultModifyHpPercentPreview", "WorldStageInteractionResultSpawnEntityPreview",
                                       "WorldStageInteractionAwardPreview", "WorldStageInteractionResultAwardExtraPropPreview",
-                                      "StageTouchUI", "StageUIWithPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
+                                      "StageTouchUI", "WorldCommonStageUI", "WorldStageOperationWindowClickUi",
+                                      "StageUIWithPreview", "WorldStageInteractionResultAwardExtraPropPreviewItem",
                                       "ExploreConfirmDialog", "ExploreDetailDialog", "ExploreHistoryContent", "ExploreProbabilityContent",
                                       "ExploreSelectTokenDialog", "ExploreSelectTokenDialogItem", "ExploreHistoryItem", "ExploreProbabilityItem",
                                       "ExploreRewardItem", "ExploreRewardPreviewItemDetailDialog", "TurnPageUI", "TurnPageBtn", "RuleDialog", "RuleTipNumer", "TipInfo", "ItemDetailDialog", "PopupWindow", "TMPColorGradient", "LoopVerticalScrollRect",
@@ -660,6 +661,9 @@ def build(map_id=11):
     keys.extend(f"region_{map_id}_" + str(i) for i in range(77 if map_id == 11 else 99))
     if map_id == 12:
         keys.extend(f"region_{other}_{i}" for other, count in ((10, 2), (11, 77)) for i in range(count))
+        keys.extend("entity_" + str(identity) + suffix for identity in (6103, 6302)
+                    for suffix in ("_name", "_desc", "_funcdesc"))
+        keys.extend(("ui_challenge_text", "ui_drop_preview_text"))
     keys.extend(["map_pos_info"] + [f"Mainland_{i}" for i in range(10, map_id + 1)])
     keys.extend("entity_" + str(i) + suffix for i in range(6570, 6574)
                 for suffix in ("_name", "_desc", "_entitytouchtitle", "_entitytouchdesc", "_funcdesc"))

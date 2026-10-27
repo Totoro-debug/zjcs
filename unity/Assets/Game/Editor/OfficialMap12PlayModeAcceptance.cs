@@ -65,7 +65,8 @@ namespace Zjcs.Editor
         }
 
         private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
-            bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false, bool verifyNativeWorld = false)
+            bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false, bool verifyNativeWorld = false,
+            bool verifyBuildingUi = false)
         {
             try
             {
@@ -81,6 +82,7 @@ namespace Zjcs.Editor
                 SessionState.SetBool(Key + ".audio", verifyAudio);
                 SessionState.SetBool(Key + ".chests", verifyChests);
                 SessionState.SetBool(Key + ".nativeWorld", verifyNativeWorld);
+                SessionState.SetBool(Key + ".buildingUi", verifyBuildingUi);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);
@@ -149,6 +151,12 @@ namespace Zjcs.Editor
         {
             if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
                 throw new InvalidOperationException("Map12 graphics must run with Direct3D12.");
+            if (SessionState.GetBool(Key + ".buildingUi", false))
+            {
+                IEnumerator buildingSteps = VerifyBuildingUiSteps();
+                while (buildingSteps.MoveNext()) yield return buildingSteps.Current;
+                yield break;
+            }
             if (SessionState.GetBool(Key + ".dialogueInput", false))
             {
                 IEnumerator dialogueSteps = VerifyDialogueInputSteps();

@@ -1,0 +1,249 @@
+{
+  "Buildings": [
+    {
+      "CanInteractAfterMove": true,
+      "CompleteState": 2,
+      "EntityClassId": 6103,
+      "Operations": [
+        {
+          "ConditionIds": [
+            4102
+          ],
+          "Id": 6876388655424602113,
+          "MeetId": 6876388674619310103,
+          "NeedAllMeet": false,
+          "NoMeetId": 6876388655424602120,
+          "Type": "ECWorldStageInteractionOperationCondition"
+        },
+        {
+          "ConditionIds": [
+            4103
+          ],
+          "Id": 6876388674619310103,
+          "MeetId": 6876388674619310107,
+          "NeedAllMeet": false,
+          "NoMeetId": 6876388674619310110,
+          "Type": "ECWorldStageInteractionOperationCondition"
+        },
+        {
+          "Id": 6876388674619310107,
+          "Type": "ECWorldStageInteractionOperationClick"
+        },
+        {
+          "Id": 6876388674619310110,
+          "OperationIds": [
+            6876388674619310112,
+            3508805805308379373
+          ],
+          "Type": "ECWorldStageInteractionOperationSequence"
+        },
+        {
+          "EndOperationId": -2,
+          "Id": 6876388674619310112,
+          "Scenario": 1,
+          "Type": "ECWorldStageInteractionOperationOnlyStory"
+        },
+        {
+          "Id": 3508805805308379373,
+          "Type": "ECWorldStageInteractionOperationClick"
+        },
+        {
+          "EndOperationId": -2,
+          "Id": 6876388655424602120,
+          "Scenario": 3,
+          "Type": "ECWorldStageInteractionOperationOnlyStory"
+        },
+        {
+          "ConditionIds": [
+            4103,
+            4104,
+            4105
+          ],
+          "Id": 6876388676264001537,
+          "MeetId": 6876388676264001541,
+          "NeedAllMeet": false,
+          "NoMeetId": 6876388676264001544,
+          "Type": "ECWorldStageInteractionOperationCondition"
+        },
+        {
+          "Clicks": [],
+          "Id": 6876388676264001541,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "DailyDungeon/DailyDungeonDialogPrivateMap"
+        },
+        {
+          "EndOperationId": -2,
+          "Id": 6876388676264001544,
+          "Scenario": 3,
+          "Type": "ECWorldStageInteractionOperationOnlyStory"
+        },
+        {
+          "Clicks": [],
+          "Id": 6876388676264001549,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "WorldMap/StageEndTipUI"
+        },
+        {
+          "Clicks": [],
+          "Id": 6876388676264001547,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "DailyDungeon/DailyDungeonDialog"
+        }
+      ],
+      "PlacementId": 503,
+      "PublicDefaultState": 3,
+      "States": [
+        {
+          "OperationId": 6876388655424602113
+        },
+        {
+          "OperationId": 6876388676264001537
+        },
+        {
+          "OperationId": 6876388676264001549
+        },
+        {
+          "OperationId": 6876388676264001547
+        }
+      ]
+    },
+    {
+      "CanInteractAfterMove": true,
+      "CompleteState": 1,
+      "EntityClassId": 6302,
+      "Operations": [
+        {
+          "ConditionIds": [
+            4106
+          ],
+          "Id": 6876388828660892106,
+          "MeetId": 6876388828660892107,
+          "NeedAllMeet": false,
+          "NoMeetId": 6876388828660892109,
+          "Type": "ECWorldStageInteractionOperationCondition"
+        },
+        {
+          "Clicks": [
+            {
+              "OperationId": 6876388828660892108,
+              "Type": 0
+            }
+          ],
+          "Id": 6876388828660892107,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "WorldMap/WorldFantasyLadderDialog"
+        },
+        {
+          "EndOperationId": -2,
+          "Id": 6876388828660892108,
+          "Scenario": 1,
+          "Type": "ECWorldStageInteractionOperationOnlyStory"
+        },
+        {
+          "EndOperationId": -2,
+          "Id": 6876388828660892109,
+          "Scenario": 6,
+          "Type": "ECWorldStageInteractionOperationOnlyStory"
+        },
+        {
+          "Clicks": [
+            {
+              "OperationId": -2,
+              "Type": 0
+            }
+          ],
+          "Id": 3769242457019777102,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "WorldMap/StageEndTipUI"
+        },
+        {
+          "Clicks": [
+            {
+              "OperationId": -2,
+              "Type": 0
+            }
+          ],
+          "Id": 3769242457019777106,
+          "IsReport": false,
+          "PanelId": 0,
+          "Type": "ECWorldStageInteractionOperationWindow",
+          "WindowName": "DemonBattlefield/StageDemonBattlefieldDialog"
+        }
+      ],
+      "PlacementId": 3501,
+      "PublicDefaultState": 2,
+      "States": [
+        {
+          "OperationId": 6876388828660892106
+        },
+        {
+          "OperationId": 3769242457019777102
+        },
+        {
+          "OperationId": 3769242457019777106
+        }
+      ]
+    }
+  ],
+  "Conditions": [
+    {
+      "ClassId": 4102,
+      "Condition": {
+        "Count": 1,
+        "Jumpable": null,
+        "Op": ">=",
+        "StoryKey": "IronMountBeforeBattle",
+        "_type": "StoryCountCondition"
+      }
+    },
+    {
+      "ClassId": 4103,
+      "Condition": {
+        "Jumpable": null,
+        "Status": 1,
+        "StoryKey": "IronMountActive",
+        "_type": "StoryStatusCondition"
+      }
+    },
+    {
+      "ClassId": 4104,
+      "Condition": {
+        "Jumpable": null,
+        "Status": 1,
+        "StoryKey": "IronMountReturn",
+        "_type": "StoryStatusCondition"
+      }
+    },
+    {
+      "ClassId": 4105,
+      "Condition": {
+        "Jumpable": null,
+        "Status": 1,
+        "StoryKey": "IronMountBattle",
+        "_type": "StoryStatusCondition"
+      }
+    },
+    {
+      "ClassId": 4106,
+      "Condition": {
+        "Count": 1,
+        "Jumpable": null,
+        "Op": ">=",
+        "StoryKey": "MountLiftBeforeBattle",
+        "_type": "StoryCountCondition"
+      }
+    }
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12
+}

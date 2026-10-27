@@ -3,10 +3,10 @@
   "mapClassId": 12,
   "operation": "Preserve official prefab nodes, sprites, fields and managed StateSwitcher references; restore native Unity prefabs with explicit component bindings.",
   "output": {
-    "panels": 65,
+    "panels": 68,
     "path": "map12-ui.json",
-    "sha256": "1f0b1944f2c0d28057aac9da9dfadcf2fe7322e2dd3e4548d07e2e1841c3d836",
-    "sprites": 929
+    "sha256": "18d24da3bbd1fc86eca73fd242f15eb0b7bbcaa74c83e4e136a24e42a93482e1",
+    "sprites": 934
   },
   "source": {
     "combatRatingConfig": {
@@ -14611,7 +14611,7 @@
       }
     },
     "manifestPath": "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json",
-    "manifestSha256": "b07a2afee2392ae1c0d030c98693d6fa2b013d8927ca0c09d74e7c45c2d3c442",
+    "manifestSha256": "ddca5b3e6097202d7c6ba819c1b27bbc37beca16bcd9186c2a978cedd2933282",
     "minimapCharacter": {
       "bundle": "defaultpackage_assets_prefabs_map_common_minimap.bundle",
       "bundle_hash": "bb60a35b88da8f691fb1cb43566589ad",
@@ -22483,6 +22483,30 @@
         "source_manifest": "854_156383",
         "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
       },
+      "6103_DialogIcon": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path": "Assets/Prefabs/UI/WorldMap/WorldStageDialogIcon/Common/6103_DialogIcon.prefab",
+        "path_id": "-3686760242459675553",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+      },
+      "6302_DialogIcon": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path": "Assets/Prefabs/UI/WorldMap/WorldStageDialogIcon/Common/6302_DialogIcon.prefab",
+        "path_id": "-599144586898988585",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+      },
       "6570_12_DialogIcon": {
         "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
         "bundle_hash": "d9407811f279c9152607a68853fe492b",
@@ -23047,6 +23071,18 @@
         "path": "Assets/Prefabs/UI/Map/World/WorldCanvas.prefab",
         "path_id": "3681283045889155442",
         "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/cfe1a92533edad0112b1ba72ef259cd7.bundle"
+      },
+      "WorldFantasyLadderDialog": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path": "Assets/Prefabs/UI/WorldMap/WorldFantasyLadderDialog.prefab",
+        "path_id": "-4336101944104898890",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
       },
       "WorldStageDialogWithWitchStoryCollect": {
         "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
@@ -49940,6 +49976,152 @@
           "type": "ReferencedObjectData"
         }
       ],
+      "Assembly-CSharp:WorldCommonStageUI": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "WorldCommonStageUI"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "myBattleBtn",
+          "type": "PPtr<$Button>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "myAwardSlot",
+          "type": "PPtr<$Transform>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "myLevelText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "ReWardDescText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mLayerText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        }
+      ],
       "Assembly-CSharp:WorldDialogEntityContent": [
         {
           "flags": 0,
@@ -51902,6 +52084,110 @@
         {
           "flags": 0,
           "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        }
+      ],
+      "Assembly-CSharp:WorldStageOperationWindowClickUi": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "WorldStageOperationWindowClickUi"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mDatas",
+          "type": "vector"
+        },
+        {
+          "flags": 16384,
+          "level": 2,
+          "name": "Array",
+          "type": "Array"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "size",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 3,
+          "name": "data",
+          "type": "WorldStageUiClickData"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "ClickType",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 4,
+          "name": "Button",
+          "type": "PPtr<$Button>"
+        },
+        {
+          "flags": 0,
+          "level": 5,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 5,
           "name": "m_PathID",
           "type": "SInt64"
         }
@@ -56809,7 +57095,7 @@
         }
       ]
     },
-    "sha256": "1ccc497c13f7c74bac8a1c19594d5910ea125a4a3fce5d3077f77cfe0303f885",
+    "sha256": "517d4350a639ca9152ec555bfa72e767509f326df023bd28ebfe3e9c2bafac2e",
     "sprites": {
       "res://unity/Assets/Official/World/Map/12/UI/Sprites/6011_14-272473bd06.png": {
         "bundle": "defaultpackage_assets_image_mapentity_entity14_others.bundle",
@@ -61500,6 +61786,66 @@
         "sha256": "18dd80c52a8ad29bde54e53df8b5849164bc6c9f3a591027866fe6b96ae278cd",
         "source_manifest": "854_156383",
         "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/45da68691e0d6a6c509a7e0f35cfeeb2.bundle"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_OFF-a71e636a51.png": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity12_building_heromount_building_heromount_atlas.bundle",
+        "bundle_hash": "ae3a5a6a8cb33afba17b5f4b5b493a91",
+        "bundle_sha256": "cc77d2c1668e9964dcd559213ba788b4eef352da7abca9e5ba8021ecf4fff7f4",
+        "bundle_size": 298497,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "5315831983344099967",
+        "sha256": "a71e636a51f757a82885aa66a7a509f25a302de84f90ba15b72b5aa7a3838ec8",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ae3a5a6a8cb33afba17b5f4b5b493a91.bundle"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_ON-da97faf166.png": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity12_building_heromount_building_heromount_atlas.bundle",
+        "bundle_hash": "ae3a5a6a8cb33afba17b5f4b5b493a91",
+        "bundle_sha256": "cc77d2c1668e9964dcd559213ba788b4eef352da7abca9e5ba8021ecf4fff7f4",
+        "bundle_size": 298497,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-7968512302554370356",
+        "sha256": "da97faf166c4c10a87cc912e22d77b3fac7f9cd9a18aec3cb585b696e1a53891",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ae3a5a6a8cb33afba17b5f4b5b493a91.bundle"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_shadow-50aa46d546.png": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity12_building_heromount_building_heromount_atlas.bundle",
+        "bundle_hash": "ae3a5a6a8cb33afba17b5f4b5b493a91",
+        "bundle_sha256": "cc77d2c1668e9964dcd559213ba788b4eef352da7abca9e5ba8021ecf4fff7f4",
+        "bundle_size": 298497,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "7741022060851024088",
+        "sha256": "50aa46d5466784fb4b83a3269777c6971240e2a345b99356abc8567de86eb328",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ae3a5a6a8cb33afba17b5f4b5b493a91.bundle"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_sign-bbfc79009f.png": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity12_building_heromount_building_heromount_atlas.bundle",
+        "bundle_hash": "ae3a5a6a8cb33afba17b5f4b5b493a91",
+        "bundle_sha256": "cc77d2c1668e9964dcd559213ba788b4eef352da7abca9e5ba8021ecf4fff7f4",
+        "bundle_size": 298497,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "8240195733920440721",
+        "sha256": "bbfc79009f92e98d02ba9acc5bfb25e978e15c913bf992b7b250f1d1e5c4946c",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ae3a5a6a8cb33afba17b5f4b5b493a91.bundle"
+      },
+      "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_signboard-b86ea91a9d.png": {
+        "bundle": "defaultpackage_assets_image_mapentity_entity12_building_heromount_building_heromount_atlas.bundle",
+        "bundle_hash": "ae3a5a6a8cb33afba17b5f4b5b493a91",
+        "bundle_sha256": "cc77d2c1668e9964dcd559213ba788b4eef352da7abca9e5ba8021ecf4fff7f4",
+        "bundle_size": 298497,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "2389828971552912665",
+        "sha256": "b86ea91a9db2bb8e3e071b8cc22428ff8e8eb3a8d92f139a32daabbc3d3b3581",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/ae3a5a6a8cb33afba17b5f4b5b493a91.bundle"
       },
       "res://unity/Assets/Official/World/Map/12/UI/Sprites/building_statue_doushi_1-2dd0ca40c0.png": {
         "bundle": "defaultpackage_assets_image_mapentity_entity12_building_gameplay_building_herostatue.bundle",

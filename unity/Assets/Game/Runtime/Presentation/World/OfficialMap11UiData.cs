@@ -226,6 +226,8 @@ namespace Zjcs.Presentation.World
         public string mRectTransform, mEntryText, mModifyHpPercentDescText, mSpawnEntityDesc, mAwardContent, Anchor;
         public string myTouchBtn, myBtnText, myFuncDescText, mDialogContent, mExtraPropItemText;
         public string myStageIcon, myBgIcon;
+        public string mWorldDialogEntityContent, myBattleBtn, myAwardSlot, myLevelText, ReWardDescText, mLayerText;
+        public OfficialMap11StageClickData[] mDatas;
         public string mItemNameText, mLightImage, mParticle;
         public string mOutputAdditionItemNameText, mOutputAdditionItemCountText, mExtraContentSlot;
         public float mIntervalTime;
@@ -254,6 +256,7 @@ namespace Zjcs.Presentation.World
         public int m_ChildScaleWidth, m_ChildScaleHeight, m_ReverseArrangement;
     }
     [Serializable] public sealed class OfficialMap11GridSettings { public UGUIJszx.GridLayoutSetting[] settings; }
+    [Serializable] public sealed class OfficialMap11StageClickData { public int ClickType; public string Button; }
     [Serializable] public sealed class OfficialAwardListConfigDictionary { public OfficialAwardListConfigEntry[] mSerializeBuffer; }
     [Serializable] public sealed class OfficialAwardListConfigEntry { public int Key; public OfficialAwardListConfig Value; }
     [Serializable] public sealed class OfficialAwardListConfig

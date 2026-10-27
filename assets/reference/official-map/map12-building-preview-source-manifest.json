@@ -1,0 +1,553 @@
+{
+  "adapters": [
+    {
+      "bytes": 2415,
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12BuildingGraphic.cs",
+      "sha256": "3042c9bebe0574d74097e445c12e84cb0dbe19eedc99f75d5a2860f08508560e"
+    },
+    {
+      "bytes": 5639,
+      "path": "unity/Assets/Game/Editor/OfficialMap12BuildingPreviewTools.cs",
+      "sha256": "11279bfa4faf4291593333a21fc78f64bff6d8bb7aed8215ef51b58669e44c58"
+    },
+    {
+      "bytes": 12676,
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Buildings.cs",
+      "sha256": "14a85583522d8e70f893c6d549d4dfccd2b046b99b7149d6fcd39fa6046b2b6f"
+    }
+  ],
+  "inputs": [
+    {
+      "object_sha256": "0fa6f39ed2176cdb2c61530dde81b10933a155f0384ec7291761e7e87cd646a1",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "1451617002203226583",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+      }
+    },
+    {
+      "object_sha256": "02ef77b80edd63cd81fc5971b2f255a459c40df1f9a987b3eddfd19d809102d4",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_3.bundle",
+        "bundle_hash": "2ea24e17d69fbd163ead917dbc8a4890",
+        "bundle_sha256": "f99c8ec6548264e7a9c080f4fa98c98f183e533ee09d079cfc17d3ed0ce17766",
+        "bundle_size": 711432,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-468829057265966534",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ea24e17d69fbd163ead917dbc8a4890.bundle"
+      }
+    },
+    {
+      "raw_sha256": "26b18108ecc77cff4999ddb615733f55d57d2d377c2ee1dcef72ed818877320b",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_3.bundle",
+        "bundle_hash": "2ea24e17d69fbd163ead917dbc8a4890",
+        "bundle_sha256": "f99c8ec6548264e7a9c080f4fa98c98f183e533ee09d079cfc17d3ed0ce17766",
+        "bundle_size": 711432,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-3263543071543299760",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ea24e17d69fbd163ead917dbc8a4890.bundle"
+      }
+    },
+    {
+      "object_sha256": "8de4f5e9f15af471078d912f69340b4ae3d7f36e3e992052511287297d491a12",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_3.bundle",
+        "bundle_hash": "2ea24e17d69fbd163ead917dbc8a4890",
+        "bundle_sha256": "f99c8ec6548264e7a9c080f4fa98c98f183e533ee09d079cfc17d3ed0ce17766",
+        "bundle_size": 711432,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-7652911259361161321",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ea24e17d69fbd163ead917dbc8a4890.bundle"
+      }
+    },
+    {
+      "raw_sha256": "108088bccac9c8659fa336975d3870ba580bee1a0a537451eab6f7dfe8db76ef",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_3.bundle",
+        "bundle_hash": "2ea24e17d69fbd163ead917dbc8a4890",
+        "bundle_sha256": "f99c8ec6548264e7a9c080f4fa98c98f183e533ee09d079cfc17d3ed0ce17766",
+        "bundle_size": 711432,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-729994071356281757",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ea24e17d69fbd163ead917dbc8a4890.bundle"
+      }
+    },
+    {
+      "object_sha256": "821b39739b9540bbe747afbc51d618586d5881d51e6934243da0d584d3176a64",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_3.bundle",
+        "bundle_hash": "2ea24e17d69fbd163ead917dbc8a4890",
+        "bundle_sha256": "f99c8ec6548264e7a9c080f4fa98c98f183e533ee09d079cfc17d3ed0ce17766",
+        "bundle_size": 711432,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-5305627362326881519",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/2ea24e17d69fbd163ead917dbc8a4890.bundle"
+      }
+    },
+    {
+      "object_sha256": "8f2df3cc621ed91672724fc52c2c7fe3d600f78a7eed6cbee75508c3aaed1c91",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+        "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+        "bundle_size": 853119,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-2506585663452162707",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle"
+      },
+      "variants": [
+        [],
+        [
+          "_STRAIGHT_ALPHA_INPUT"
+        ],
+        [
+          "_CANVAS_GROUP_COMPATIBLE",
+          "_STRAIGHT_ALPHA_INPUT"
+        ],
+        [
+          "UNITY_UI_ALPHACLIP"
+        ],
+        [
+          "UNITY_UI_ALPHACLIP",
+          "_STRAIGHT_ALPHA_INPUT"
+        ],
+        [
+          "UNITY_UI_ALPHACLIP",
+          "_CANVAS_GROUP_COMPATIBLE",
+          "_STRAIGHT_ALPHA_INPUT"
+        ]
+      ]
+    },
+    {
+      "object_sha256": "cf51da2b35b9e3be98a079d9ddccbf764db2d7831fa613645113fad431dbc216",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bb7a71da421205a7f7aafffa3fcbc8f8.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_14e2382a0a1164d12f01277269347fd9.bundle",
+        "bundle_hash": "bb7a71da421205a7f7aafffa3fcbc8f8",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8388615825660391160",
+        "raw_sha256": "6445e15c64090b02cfd23e15d726b30dc0afff4c3253ae2f9ffc4c8125f1a4ac",
+        "raw_size": 1208
+      }
+    },
+    {
+      "object_sha256": "758f7de78f1ddcb4392410764723575f0eb0bec5d7f34f592ad56c5664b4f43f",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-918838795685748265",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+      }
+    },
+    {
+      "object_sha256": "91d813a57aa70aaf938de1d388f1f3dccbc41b709cf4604b94c47bd4f5af60b8",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_2.bundle",
+        "bundle_hash": "5687a2623f603a147ef913d0757058d6",
+        "bundle_sha256": "b17de11a5a56bfde1fc251efcca01e9d78620e159d2f234d12545ac7fcd731e5",
+        "bundle_size": 127634,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-4052270682531233610",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/5687a2623f603a147ef913d0757058d6.bundle"
+      }
+    },
+    {
+      "raw_sha256": "74f0d11de99b16af5fce246addb176a6d455cc90f773822cc9a9fbc28e606176",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_2.bundle",
+        "bundle_hash": "5687a2623f603a147ef913d0757058d6",
+        "bundle_sha256": "b17de11a5a56bfde1fc251efcca01e9d78620e159d2f234d12545ac7fcd731e5",
+        "bundle_size": 127634,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "2712889645707259187",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/5687a2623f603a147ef913d0757058d6.bundle"
+      }
+    },
+    {
+      "object_sha256": "5bc96e5cf0ec08f42e9e0521a0bd0fea857778e61221ae6e9ce4dec316a47f73",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_2.bundle",
+        "bundle_hash": "5687a2623f603a147ef913d0757058d6",
+        "bundle_sha256": "b17de11a5a56bfde1fc251efcca01e9d78620e159d2f234d12545ac7fcd731e5",
+        "bundle_size": 127634,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-5543656369302819394",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/5687a2623f603a147ef913d0757058d6.bundle"
+      }
+    },
+    {
+      "raw_sha256": "1944b9cdc92efec75462eb393b5bced04487c4058d8d81dcea6ed6c7dce5396b",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_2.bundle",
+        "bundle_hash": "5687a2623f603a147ef913d0757058d6",
+        "bundle_sha256": "b17de11a5a56bfde1fc251efcca01e9d78620e159d2f234d12545ac7fcd731e5",
+        "bundle_size": 127634,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-7794640013977845806",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/5687a2623f603a147ef913d0757058d6.bundle"
+      }
+    },
+    {
+      "object_sha256": "3850c5bf9f414d71b7c244b5ecb7f870ffc444389647f2725b31a6f59ada61f4",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_2.bundle",
+        "bundle_hash": "5687a2623f603a147ef913d0757058d6",
+        "bundle_sha256": "b17de11a5a56bfde1fc251efcca01e9d78620e159d2f234d12545ac7fcd731e5",
+        "bundle_size": 127634,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "2145560541356743587",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/5687a2623f603a147ef913d0757058d6.bundle"
+      }
+    },
+    {
+      "object_sha256": "cf51da2b35b9e3be98a079d9ddccbf764db2d7831fa613645113fad431dbc216",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bb7a71da421205a7f7aafffa3fcbc8f8.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_14e2382a0a1164d12f01277269347fd9.bundle",
+        "bundle_hash": "bb7a71da421205a7f7aafffa3fcbc8f8",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8388615825660391160",
+        "raw_sha256": "6445e15c64090b02cfd23e15d726b30dc0afff4c3253ae2f9ffc4c8125f1a4ac",
+        "raw_size": 1208
+      }
+    },
+    {
+      "object_sha256": "c5069467a3eb133b0dd2749200a12df9b63b8a8fda44689ae8f1b0756c619235",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_worldmap.bundle",
+        "bundle_hash": "d9407811f279c9152607a68853fe492b",
+        "bundle_sha256": "b89571df3f7eca7a6d9bf9f7d6f03af49b38191d4f3324fbd40559fe70f9916a",
+        "bundle_size": 1186915,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-2642240350213004841",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d9407811f279c9152607a68853fe492b.bundle"
+      }
+    },
+    {
+      "object_sha256": "9c9707ff77b84b588bb976d6dd063c0d507a04b873462ee0734bf3646b4cdca8",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_1.bundle",
+        "bundle_hash": "f1accb28578e52fbefce8c0051e1e12f",
+        "bundle_sha256": "94e06231d7404f8f4dabef046aa13f18e269f54b1c15a5b11a3212e356596165",
+        "bundle_size": 311824,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "5762320708375951153",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f1accb28578e52fbefce8c0051e1e12f.bundle"
+      }
+    },
+    {
+      "raw_sha256": "299d6f95830623fb9e4e2f1c0995a4d7032d2d3375d94e8e1979ac5d5dd88d38",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_1.bundle",
+        "bundle_hash": "f1accb28578e52fbefce8c0051e1e12f",
+        "bundle_sha256": "94e06231d7404f8f4dabef046aa13f18e269f54b1c15a5b11a3212e356596165",
+        "bundle_size": 311824,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "5190314102062138477",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f1accb28578e52fbefce8c0051e1e12f.bundle"
+      }
+    },
+    {
+      "object_sha256": "c7d7027482443aeb42de7f774fdcd42f540344a4ebf0eff9c6d64e1838b4d5be",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_1.bundle",
+        "bundle_hash": "f1accb28578e52fbefce8c0051e1e12f",
+        "bundle_sha256": "94e06231d7404f8f4dabef046aa13f18e269f54b1c15a5b11a3212e356596165",
+        "bundle_size": 311824,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-4276600313452477020",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f1accb28578e52fbefce8c0051e1e12f.bundle"
+      }
+    },
+    {
+      "raw_sha256": "980770dcc33327fdc1169945a89fea4da38e587412dbbcf289815430453231ed",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_1.bundle",
+        "bundle_hash": "f1accb28578e52fbefce8c0051e1e12f",
+        "bundle_sha256": "94e06231d7404f8f4dabef046aa13f18e269f54b1c15a5b11a3212e356596165",
+        "bundle_size": 311824,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "1920114588038508619",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f1accb28578e52fbefce8c0051e1e12f.bundle"
+      }
+    },
+    {
+      "object_sha256": "9468840bd5d367a1474a71e309f85674ba50b8d2af0883914fe082143f2eabf8",
+      "source": {
+        "bundle": "defaultpackage_assets_appearanceassets_map_map_shengjiangti_b_1.bundle",
+        "bundle_hash": "f1accb28578e52fbefce8c0051e1e12f",
+        "bundle_sha256": "94e06231d7404f8f4dabef046aa13f18e269f54b1c15a5b11a3212e356596165",
+        "bundle_size": 311824,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-2489884115033655776",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/f1accb28578e52fbefce8c0051e1e12f.bundle"
+      }
+    },
+    {
+      "object_sha256": "cf51da2b35b9e3be98a079d9ddccbf764db2d7831fa613645113fad431dbc216",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bb7a71da421205a7f7aafffa3fcbc8f8.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_14e2382a0a1164d12f01277269347fd9.bundle",
+        "bundle_hash": "bb7a71da421205a7f7aafffa3fcbc8f8",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8388615825660391160",
+        "raw_sha256": "6445e15c64090b02cfd23e15d726b30dc0afff4c3253ae2f9ffc4c8125f1a4ac",
+        "raw_size": 1208
+      }
+    }
+  ],
+  "limitations": [
+    "Only the three original 6302 dialog components with no selected animation are converted; this does not implement world-building animation or inactive 6103 SkeletonGraphic."
+  ],
+  "manifest": "871_156598",
+  "nativeBindings": [
+    {
+      "bytes": 1440,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.mat",
+      "sha256": "1b8169523ed75f28fd80ec7de93ca4fd5eb8e7ba89c351bd6b06002177ca7382"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.mat.meta",
+      "sha256": "6cb91a96ecc0960d24b88be6f58f78d94a0524bb60281486fdef4e3e0af3c0d6"
+    },
+    {
+      "bytes": 7286,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.mesh.asset",
+      "sha256": "984d6669f57e6494bf89f1c8ce72b56db88064c1a9d88afb320ae093760b6188"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.mesh.asset.meta",
+      "sha256": "6e0ac0b8563453e63cd8cca9c053bb13428e5b2ef23d11e62164baa9ae071107"
+    },
+    {
+      "bytes": 7147706,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.texture.asset",
+      "sha256": "41a219be992921992ddd88633ac01f2430d68cef7dcc0b0fa5daa745f1606366"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part1.texture.asset.meta",
+      "sha256": "b28d5a45d1b726337800e290b2d1e67aac2a4b4ea01a012546ca4106ac7b8548"
+    },
+    {
+      "bytes": 1440,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.mat",
+      "sha256": "b26fd4a3c13ee1c16b7e51fe3d8e232ab7aa5b62c60311da0362f41ce034b672"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.mat.meta",
+      "sha256": "f4518a4bc1c9460a47a9e891d162720cddac19f4860e523cce8a7e2b987fe332"
+    },
+    {
+      "bytes": 3730,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.mesh.asset",
+      "sha256": "d5009c171e54bd27625d089bb94375853f0f8893fe26e662d1adf88c7d3d5ed6"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.mesh.asset.meta",
+      "sha256": "29a9237c7e1fa933c77c313676607df83dbac8b250fea258900ba0752b2dd480"
+    },
+    {
+      "bytes": 2259770,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.texture.asset",
+      "sha256": "3d0357f5015f3ac8c5eeb6a0533dc61ab2735f4d47a669546b9ef830badef48e"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part2.texture.asset.meta",
+      "sha256": "7a21d2d998f61964e9261aaaaa402099e45de78aaa357500e82ae5428e838ceb"
+    },
+    {
+      "bytes": 1440,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.mat",
+      "sha256": "596d390300a76526962678bb1866f8ebe3226922f90521a1d7cacac9107056aa"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.mat.meta",
+      "sha256": "91a9b589ace49557092fb52390b1d4170a18c00f9f4b1285ea3a272794f969ac"
+    },
+    {
+      "bytes": 5920,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.mesh.asset",
+      "sha256": "1fc029f9bcb6936385e17b1e52e36df116d00d6746821d9739de608cdb292b08"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.mesh.asset.meta",
+      "sha256": "2cb6bc0a79bfaba3cf2639cb5de605ddea8a36037df9d7091d31758b26605729"
+    },
+    {
+      "bytes": 11715643,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.texture.asset",
+      "sha256": "e272c8a22a21b896664ab377c540cb6a38a3c61563bb510bb8c5efec5e53bbf9"
+    },
+    {
+      "bytes": 188,
+      "path": "unity/Assets/Official/World/Map/12/BuildingPreview/Part3.texture.asset.meta",
+      "sha256": "8cb654605c9937c557ebd5c64f1764863dd70bd04581b2eebe3d3d26b81d85f2"
+    },
+    {
+      "bytes": 9833,
+      "path": "unity/Assets/Game/Resources/Map12/UI/6302_DialogIcon.prefab",
+      "sha256": "5a00b3493f8163af11ac9d5687b3feac1fb7c5abeb79cdd575fd8c1a97c04144"
+    }
+  ],
+  "operation": "Decode original 4.2.28 setup bones, region trim/rotation and weighted meshes independently. Preserve empty startingAnimation, source hierarchy, complete texture mips and all six original shader programs. No Spine runtime or sampled frames used.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part3.rgba.bytes",
+      "sha256": "8bc80cfd065b1a906ecb17504a551617d1de4cc16cc938a851f626e9a7588e81"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part3.skeleton-source.txt",
+      "sha256": "7bb381b02385b923b9aef0ee3806393c10fb24c0e50769f3f8deeb2d1dbff38d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part3.atlas-source.txt",
+      "sha256": "108088bccac9c8659fa336975d3870ba580bee1a0a537451eab6f7dfe8db76ef"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map12/BuildingPreview.shader",
+      "sha256": "148902e6d83e75d60a598eb1ee49f31c59f9a5ac2dcd894638341f7f5a8d4c84"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-0.glsl.txt",
+      "sha256": "dc22e30a04096b14cc34225e04f5b2c335abc3fff76d1c67930f382b6c25e7ef"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-1.glsl.txt",
+      "sha256": "27bde92fb5183c53e13b95e05263d87b65751c4b12aeb9e95c52f2b0cb9e754b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-2.glsl.txt",
+      "sha256": "6f3723364b19f170ed0878465bf503a3ea5a380e0f55bc4d4b6e08974a4c7c8e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-3.glsl.txt",
+      "sha256": "359c4db76f2ae069fd385dca8c2e3ec02ca18e03bac1e6215a33e1af1dae2572"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-4.glsl.txt",
+      "sha256": "4a80b219044e2990301f544a307f84dd87b39894174232c9882a502f5cbc29f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/shader-5.glsl.txt",
+      "sha256": "1846d360d69b19c1b8b364b0d9c58ffa0dd8681fab5f0e8c2210756fb118feac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part2.rgba.bytes",
+      "sha256": "d27ff7efa786241b05130378688047f22f729498df292f2dc2aa465d24aef556"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part2.skeleton-source.txt",
+      "sha256": "b66e40206d005b5675c1b1e5e99a8920ceffc2c56c3c4041c94c42afa7944c63"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part2.atlas-source.txt",
+      "sha256": "1944b9cdc92efec75462eb393b5bced04487c4058d8d81dcea6ed6c7dce5396b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part1.rgba.bytes",
+      "sha256": "7245946841387fb36869b4b77c6a6399d71dd2a5b0dd6b78e19fbc04022007c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part1.skeleton-source.txt",
+      "sha256": "2d83a79632e47eec630c766576cd5ab2a81fcba401097d48b7b737e10f6eb8fd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/Part1.atlas-source.txt",
+      "sha256": "980770dcc33327fdc1169945a89fea4da38e587412dbbcf289815430453231ed"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/components.json",
+      "sha256": "740f0482aa3b112fa98e509bdd4d3a36b102c09a003acca99cbaf0a0f2778e73"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/preview.json",
+      "sha256": "5c67fa6c1f6721f3f1f3058f62050d2c4643d1c91a7b3fc7d04bf092d30e62d0"
+    }
+  ],
+  "reader": {
+    "license": "MIT",
+    "name": "SkelToJson",
+    "version": "1.0.1",
+    "wheel_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897"
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map12_building_preview.py",
+      "sha256": "003b6d240db119f94d43c6b002d599cf219311bc9605899dfbe0f07dd669e17b"
+    },
+    {
+      "path": "scripts/map13_native_schemas.py",
+      "sha256": "00f31381939832704474018723a821326c58c54dd10707d5531eaf858f1eafcd"
+    },
+    {
+      "path": "scripts/map13_entity_native_schemas.py",
+      "sha256": "f323250e276997295a5e5a62e9137c4c8ce45e421ca94511f40eaf0351462978"
+    },
+    {
+      "path": "scripts/convert_official_skeletons.py",
+      "sha256": "fd5396ce1b42ad3cea91180dfd6e99e336dc83be4e15b2390e99fdbf1a3ab779"
+    }
+  ]
+}

@@ -65,21 +65,24 @@
       "WorldStageInteractionResultAwardStatusEffectPreview",
       "WorldStageInteractionResultAwardStatusEffectPreviewItem",
       "WorldStageInteractionResultModifyHpPercentPreview",
-      "WorldStageInteractionResultSpawnEntityPreview"
+      "WorldStageInteractionResultSpawnEntityPreview",
+      "WorldFantasyLadderDialog",
+      "6103_DialogIcon",
+      "6302_DialogIcon"
     ],
     "resourceRoot": "Map12/UI/",
-    "sprites": 929
+    "sprites": 934
   },
   "inputs": [
     {
-      "bytes": 2002014,
+      "bytes": 2013232,
       "path": "unity/Assets/Official/World/Map/12/UI/source-manifest.json",
-      "sha256": "5b970f7f8c3679253fa33fa49df6d35909b1f31e39c986604daf7644c514b242"
+      "sha256": "3d3f2fedee17457babe9436351d0ae28b974b13300c0acad2c890a3f31c13058"
     },
     {
-      "bytes": 19635412,
+      "bytes": 20404604,
       "path": "unity/Assets/Official/World/Map/12/UI/map12-ui.json",
-      "sha256": "1f0b1944f2c0d28057aac9da9dfadcf2fe7322e2dd3e4548d07e2e1841c3d836"
+      "sha256": "18d24da3bbd1fc86eca73fd242f15eb0b7bbcaa74c83e4e136a24e42a93482e1"
     },
     {
       "bytes": 528158,
@@ -87,14 +90,14 @@
       "sha256": "f29620881ea5d5c96f4a11f4a971877937d691e88f7351559541816c7d1fe3ac"
     },
     {
-      "bytes": 5253,
+      "bytes": 5814,
       "path": "scripts/prepare_unity_map12_ui.py",
-      "sha256": "580b0f78497a9087615748a0e3d957586c41f1055cdc0b62fa1c83ef20cc2d46"
+      "sha256": "6870245b1273cd16bd993bf17d5b00f3cdcacba5fa5931e2cc1867ed578f21d6"
     },
     {
-      "bytes": 67407,
+      "bytes": 67721,
       "path": "scripts/prepare_unity_map11_ui.py",
-      "sha256": "57d18836621c6fe611672cb7a22e5e6e26d2debe207d61b87872fd66640a8fce"
+      "sha256": "90da9649fe7f7f91d2c1f3238fb73dfc64ccef20c0bfe89fedc52efa03dc6038"
     },
     {
       "bytes": 15087,
@@ -112,14 +115,34 @@
       "sha256": "e7dbbcb3d7728b8466852fb90be5f0deb66a8425d277772700732cba8e95e209"
     },
     {
-      "bytes": 27293,
+      "bytes": 27770,
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
-      "sha256": "679f410d8f5660defa50aac21c7416e91bd15a03862586524b9605824560156a"
+      "sha256": "ea322900de854528973b037fbe39f7ccb7b795f55718bb9bdaa8f01f096a96f7"
     },
     {
       "bytes": 23653,
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs",
       "sha256": "636cd5388fc8db05c6de627ab6d129176cfc85744cf31a73f0c6dc28c9554be4"
+    },
+    {
+      "bytes": 3432,
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs",
+      "sha256": "1f691e7403fc0d48f2e00425c62de51c38d66935427a992c86849050e77147d1"
+    },
+    {
+      "bytes": 5639,
+      "path": "unity/Assets/Game/Editor/OfficialMap12BuildingPreviewTools.cs",
+      "sha256": "11279bfa4faf4291593333a21fc78f64bff6d8bb7aed8215ef51b58669e44c58"
+    },
+    {
+      "bytes": 2415,
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12BuildingGraphic.cs",
+      "sha256": "3042c9bebe0574d74097e445c12e84cb0dbe19eedc99f75d5a2860f08508560e"
+    },
+    {
+      "bytes": 35419,
+      "path": "unity/Assets/Official/World/Map/12/Source/BuildingPreview/preview.json",
+      "sha256": "5c67fa6c1f6721f3f1f3058f62050d2c4643d1c91a7b3fc7d04bf092d30e62d0"
     },
     {
       "bytes": 6587,
@@ -164,6 +187,26 @@
       "bytes": 154,
       "path": "unity/Assets/Game/Resources/Map12/UI/6011_12_DialogIcon.prefab.meta",
       "sha256": "9b3d862c515f5c77dd78064b92db7281f85c0abe45c9328d293b76c1ceb01603"
+    },
+    {
+      "bytes": 14517,
+      "path": "unity/Assets/Game/Resources/Map12/UI/6103_DialogIcon.prefab",
+      "sha256": "f0a7d5deaf9aefb587d296820e37c1a2d609d98c40d85a3872d25fb50cdd42cc"
+    },
+    {
+      "bytes": 154,
+      "path": "unity/Assets/Game/Resources/Map12/UI/6103_DialogIcon.prefab.meta",
+      "sha256": "c8bd8e71d8a1fad0b552a01adb60fe5be5e40533f30e75bb971ba80e6f349011"
+    },
+    {
+      "bytes": 9833,
+      "path": "unity/Assets/Game/Resources/Map12/UI/6302_DialogIcon.prefab",
+      "sha256": "5a00b3493f8163af11ac9d5687b3feac1fb7c5abeb79cdd575fd8c1a97c04144"
+    },
+    {
+      "bytes": 154,
+      "path": "unity/Assets/Game/Resources/Map12/UI/6302_DialogIcon.prefab.meta",
+      "sha256": "2c66be3deb298e8f79b5785e603941576eb9973793df57cbdd9e431739885860"
     },
     {
       "bytes": 4364,
@@ -236,9 +279,9 @@
       "sha256": "3956fd51cd7a0446d8fe5a9f55f97c03742c398c42d2fa6900928ecb72bd515e"
     },
     {
-      "bytes": 19635412,
+      "bytes": 20404604,
       "path": "unity/Assets/Game/Resources/Map12/UI/catalog.json",
-      "sha256": "1f0b1944f2c0d28057aac9da9dfadcf2fe7322e2dd3e4548d07e2e1841c3d836"
+      "sha256": "18d24da3bbd1fc86eca73fd242f15eb0b7bbcaa74c83e4e136a24e42a93482e1"
     },
     {
       "bytes": 158,
@@ -1786,6 +1829,16 @@
       "sha256": "01bc18402757070639548adb6379118f611236256786e6dc9c11b9eb6ef9bb26"
     },
     {
+      "bytes": 376575,
+      "path": "unity/Assets/Game/Resources/Map12/UI/WorldFantasyLadderDialog.prefab",
+      "sha256": "6022e2ea2e68f793eb21547eb341bf23cec29704522d7dcfddff56e9d17fb996"
+    },
+    {
+      "bytes": 154,
+      "path": "unity/Assets/Game/Resources/Map12/UI/WorldFantasyLadderDialog.prefab.meta",
+      "sha256": "6016f3e827bf30cabea31e40c2588a8b30c5772488ada94af7dc176f7a99ec49"
+    },
+    {
       "bytes": 396462,
       "path": "unity/Assets/Game/Resources/Map12/UI/WorldStageDialogWithWitchStoryCollect.prefab",
       "sha256": "4d7742d3f5e5413769a4865ea1a4b10d6f1d5621e60020a7822754890cc9c6a3"
@@ -2194,6 +2247,31 @@
       "bytes": 2621,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_goddess2_ON-18dd80c52a.png.meta",
       "sha256": "1f8b41353989d9204c59dd43d38315caf029574f9a61167609742d1e001b570c"
+    },
+    {
+      "bytes": 2621,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_OFF-a71e636a51.png.meta",
+      "sha256": "78b68ff9503b264a1f6cb92da189cfbba475be1bf11a8b9309a5ebe393d04f74"
+    },
+    {
+      "bytes": 2621,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_ON-da97faf166.png.meta",
+      "sha256": "633b253b0f53351b8f5132339398b4b4a6a6ff145d97bb6bffc5a9915d632e58"
+    },
+    {
+      "bytes": 2621,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_shadow-50aa46d546.png.meta",
+      "sha256": "c70a855d9ab9f76180b7dd56c4f962408a0481587e8ee39906a4665ee43b816b"
+    },
+    {
+      "bytes": 2621,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_sign-bbfc79009f.png.meta",
+      "sha256": "dc02152646a9480a5b1e2f8a9ea4a90a7ec28378d30a28d6c180f71dd2bce3f0"
+    },
+    {
+      "bytes": 2619,
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/building_heromount_signboard-b86ea91a9d.png.meta",
+      "sha256": "fe5cce1345788c6665ef2e8859cc7234fba7f60a5e771a2dcba7d0e87a541f5f"
     },
     {
       "bytes": 2621,

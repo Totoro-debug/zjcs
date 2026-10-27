@@ -292,6 +292,7 @@ namespace Zjcs.Presentation.World
         public string StoryKey;
         public string Tag;
         public int Count;
+        public int Status;
         public int Rank;
         public int Profession;
         public int WeaponType;
