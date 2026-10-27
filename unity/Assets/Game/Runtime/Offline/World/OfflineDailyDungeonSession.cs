@@ -129,6 +129,8 @@ namespace Zjcs.Offline.World
         public int[] waveArrayIds;
         public int[] waveArrayCatalogs;
         public int[][] waveMonsterIds;
+        public int[] waveMonsterIdsFlat;
+        public int[] waveMonsterOffsets;
         public int monsterGroupNo;
         public int monsterLevelAdd;
         public int playerRoundLimit;
@@ -165,6 +167,8 @@ namespace Zjcs.Offline.World
     public sealed class DailyDungeonRuntimeBattleFaction
     {
         public int id;
+        public int[] entryPosition;
+        public int[] entryPositionsFlat;
         public int[][] entryPositions;
         public int[] entryDirections;
     }
@@ -282,6 +286,9 @@ namespace Zjcs.Offline.World
         public int grade;
         public List<int> clearedRoomIds = new List<int>();
         public string activeBattleCheckpoint = string.Empty;
+        public int lastBattleRoomId;
+        public int lastBattleOutcome;
+        public bool privateRouteComplete;
         public long startedAtUnixSeconds;
     }
 
@@ -477,6 +484,39 @@ namespace Zjcs.Offline.World
             DailyDungeonSave next = Clone(save);
             next.activeRun.clearedRoomIds.Add(roomId);
             next.activeRun.activeBattleCheckpoint = battleCheckpoint ?? string.Empty;
+            Persist(next);
+            return true;
+        }
+
+        public bool RecordPrivateBattleResult(int roomId, bool won)
+        {
+            DailyDungeonRunSave run = save.activeRun;
+            DailyDungeonRuntimeRoom room = run == null ? null : FindRoom(roomId);
+            DailyDungeonRuntimeStage stage = room == null ? null : FindStage(room.stageId);
+            bool hasEnemyWaves = stage != null && (stage.waveArrayIds?.Length > 0
+                || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true);
+            if (run == null || run.dungeonId != 121 || run.difficulty != 50
+                || run.currentRoomId != roomId || room == null || !hasEnemyWaves
+                || run.clearedRoomIds.Contains(roomId)) return false;
+            DailyDungeonSave next = Clone(save);
+            next.activeRun.lastBattleRoomId = roomId;
+            next.activeRun.lastBattleOutcome = won ? 1 : 2;
+            next.activeRun.activeBattleCheckpoint = string.Empty;
+            if (won) next.activeRun.clearedRoomIds.Add(roomId);
+            Persist(next);
+            return true;
+        }
+
+        public bool CompletePrivateRoute(int roomId)
+        {
+            DailyDungeonRunSave run = save.activeRun;
+            DailyDungeonRuntimeRoom room = run == null ? null : FindRoom(roomId);
+            if (run == null || run.dungeonId != 121 || run.difficulty != 50 || run.privateRouteComplete
+                || run.currentRoomId != roomId || room == null || room.type != 6
+                || room.nextRoomIds == null || room.nextRoomIds.Length != 0 || FindStage(room.stageId) != null
+                || run.lastBattleOutcome != 1 || !run.clearedRoomIds.Contains(run.lastBattleRoomId)) return false;
+            DailyDungeonSave next = Clone(save);
+            next.activeRun.privateRouteComplete = true;
             Persist(next);
             return true;
         }
@@ -704,7 +744,10 @@ namespace Zjcs.Offline.World
                     && (string.IsNullOrWhiteSpace(data.activeRun.id)
                     || data.activeRun.dungeonId <= 0 || data.activeRun.mapGroupId <= 0
                     || data.activeRun.currentRoomId <= 0 || data.activeRun.clearedRoomIds == null
-                    || data.activeRun.activeBattleCheckpoint == null)) return false;
+                    || data.activeRun.activeBattleCheckpoint == null
+                    || data.activeRun.lastBattleRoomId < 0 || data.activeRun.lastBattleOutcome < 0
+                    || data.activeRun.lastBattleOutcome > 2
+                    || (data.activeRun.lastBattleOutcome == 0) != (data.activeRun.lastBattleRoomId == 0))) return false;
                 if (data.unlocked.Any(value => value == null || value.dungeonId <= 0 || value.difficulty < 0)
                     || data.bestGrades.Any(value => value == null || value.dungeonId <= 0
                         || value.difficulty < 0 || value.grade < 0)) return false;
@@ -734,7 +777,9 @@ namespace Zjcs.Offline.World
             return run != null && string.IsNullOrEmpty(run.id) && run.dungeonId == 0
                 && run.difficulty == 0 && run.mapGroupId == 0 && run.currentRoomId == 0
                 && run.grade == 0 && (run.clearedRoomIds == null || run.clearedRoomIds.Count == 0)
-                && string.IsNullOrEmpty(run.activeBattleCheckpoint) && run.startedAtUnixSeconds == 0;
+                && !run.privateRouteComplete
+                && string.IsNullOrEmpty(run.activeBattleCheckpoint) && run.lastBattleRoomId == 0
+                && run.lastBattleOutcome == 0 && run.startedAtUnixSeconds == 0;
         }
     }
 }

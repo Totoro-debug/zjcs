@@ -194,6 +194,35 @@ namespace Zjcs.Editor
                 || session.Save.usedEntries != 0 || session.Save.purchasedEntries != 0
                 || !File.ReadAllBytes(profilePath).SequenceEqual(profileBefore))
                 throw new InvalidDataException("Private battle victory changed rewards/counts/profile or failed cold read.");
+            if (!session.ChooseNextRoom(12104) || !session.RecordPrivateBattleResult(12104, true)
+                || !session.ChooseNextRoom(12106) || !session.RecordRoomCleared(12106, string.Empty)
+                || !session.ChooseNextRoom(12107) || !session.RecordPrivateBattleResult(12107, true)
+                || !session.ChooseNextRoom(12108) || !session.CompletePrivateRoute(12108))
+                throw new InvalidDataException("Private Map12 official 12102 branch did not complete through terminal room 12108.");
+            session = Zjcs.Offline.World.OfflineDailyDungeonSession.Open(slots, settlementSlot);
+            run = session.ActiveRun;
+            if (!run.privateRouteComplete || run.currentRoomId != 12108 || session.Save.usedEntries != 0
+                || session.Save.purchasedEntries != 0 || !File.ReadAllBytes(profilePath).SequenceEqual(profileBefore))
+                throw new InvalidDataException("Private route completion changed character, rewards or public counts after cold read.");
+
+            string alternateSlot = slots.CreateSlot();
+            string alternatePath = slots.GetProgressPath(alternateSlot);
+            File.WriteAllText(alternatePath, JsonUtility.ToJson(new OfflineMainlineSave(), true));
+            var alternate = Zjcs.Offline.World.OfflineDailyDungeonSession.Open(slots, alternateSlot);
+            byte[] alternateProfile = File.ReadAllBytes(alternatePath);
+            if (!alternate.TryBegin(121, 50, null, null, null, 0,
+                    System.DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out error)
+                || !alternate.RecordRoomCleared(12101, string.Empty) || !alternate.ChooseNextRoom(12103)
+                || !alternate.RecordPrivateBattleResult(12103, true) || !alternate.ChooseNextRoom(12105)
+                || !alternate.RecordPrivateBattleResult(12105, true) || !alternate.ChooseNextRoom(12106)
+                || !alternate.RecordRoomCleared(12106, string.Empty) || !alternate.ChooseNextRoom(12107)
+                || !alternate.RecordPrivateBattleResult(12107, true) || !alternate.ChooseNextRoom(12108)
+                || !alternate.CompletePrivateRoute(12108))
+                throw new InvalidDataException("Private Map12 official 12103 branch did not complete through terminal room 12108.");
+            alternate = Zjcs.Offline.World.OfflineDailyDungeonSession.Open(slots, alternateSlot);
+            if (alternate.ActiveRun?.privateRouteComplete != true || alternate.Save.usedEntries != 0
+                || alternate.Save.purchasedEntries != 0 || !File.ReadAllBytes(alternatePath).SequenceEqual(alternateProfile))
+                throw new InvalidDataException("Alternate private route completion changed character, rewards or public counts.");
         }
 
         private static IEnumerator VerifyBuildingBattleSteps(string root, string slot, Transform canvas, string output)

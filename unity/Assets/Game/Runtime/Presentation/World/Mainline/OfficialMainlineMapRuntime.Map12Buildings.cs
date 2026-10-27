@@ -251,6 +251,7 @@ namespace Zjcs.Presentation.World
                     && room.surpriseRewards.Any(value => value.difficulty == run.difficulty
                         && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0));
                 Button button = item.GetComponent<Button>() ?? item.AddComponent<Button>();
+                button.interactable = !run.privateRouteComplete;
                 Image hitGraphic = FindChild(item.transform, "IconImg")?.GetComponent<Image>();
                 if (hitGraphic == null)
                     throw new InvalidOperationException("Official private dungeon room icon is missing its input graphic.");
@@ -266,12 +267,20 @@ namespace Zjcs.Presentation.World
             DailyDungeonRunSave run = map12PrivateDungeonSession?.ActiveRun;
             if (run == null || run.clearedRoomIds.Contains(roomId)) return;
             DailyDungeonRuntimeRoom room = map12PrivateDungeonSession.FindRoom(roomId);
+            if (room == null) return;
             DailyDungeonRuntimeStage stage = room == null
                 ? null : map12PrivateDungeonSession.FindStage(room.stageId);
-            if (stage == null) return;
             if (roomId != run.currentRoomId && !map12PrivateDungeonSession.ChooseNextRoom(roomId)) return;
-            if (stage.waveArrayIds?.Length > 0 || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true
-                || stage.waveMonsterOffsets?.LastOrDefault() > 0)
+            if (stage == null)
+            {
+                if (roomId == 12108 && map12PrivateDungeonSession.CompletePrivateRoute(roomId))
+                {
+                    RenderMap12PrivateDungeonRoute();
+                    hud.ShowOfficialNotice("路线完成");
+                }
+                return;
+            }
+            if (stage.waveArrayIds?.Length > 0 || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true)
             {
                 EnterMap12PrivateDungeonBattle(roomId);
                 return;
