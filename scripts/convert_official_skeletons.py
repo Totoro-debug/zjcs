@@ -46,6 +46,46 @@ def reader_type():
     converter.rf = lambda value, *args: value  # Keep every source float32 value.
 
     class LosslessReader(converter.SkelConverter):
+        def convert(self, data):
+            self._skin_membership = []
+            result = super().convert(data)
+            self._restore_skin_membership(result)
+            return result
+
+        def _restore_skin_membership(self, result):
+            # The binary format reader consumes these indices but omits them
+            # from JSON. They activate skin-required bones and constraints.
+            for skin, references in self._skin_membership:
+                for field, indices in references.items():
+                    definitions = result.get(field, [])
+                    if any(index < 0 or index >= len(definitions) for index in indices):
+                        raise ValueError("Skin references an absent " + field + " entry: " + skin["name"])
+                    if indices:
+                        skin[field] = [definitions[index]["name"] for index in indices]
+
+        def _read_skin(self, default_skin):
+            start = self.inp.index
+            skin = super()._read_skin(default_skin)
+            end = self.inp.index
+            if default_skin or skin is None:
+                return skin
+            try:
+                self.inp.index = start
+                name = self.inp.read_string()
+                if name != skin["name"]:
+                    raise ValueError("Skin header replay changed its name")
+                if self.nonessential:
+                    skin["color"] = format(self.inp.read_color_int() & 0xffffffff, "08x")
+                if self.is_43:
+                    raise ValueError("Review unified 4.3 skin constraints before conversion")
+                references = {field: [self.inp.read_varint(True)
+                                      for _ in range(self.inp.read_varint(True))]
+                              for field in ("bones", "ik", "transform", "path", "physics")}
+                self._skin_membership.append((skin, references))
+            finally:
+                self.inp.index = end
+            return skin
+
         def _read_attachment(self, attachment_name):
             # Upstream drops the binary name override when path equals that name.
             # Preserve it so a slot attachment key does not replace its image path.
@@ -98,13 +138,17 @@ def reader_type():
     return LosslessReader, BinaryInput
 
 
-def convert(manifest=None, sex='male', output=None):
+def convert(manifest=None, sex='male', output=None, *, model_bundle=None, skeleton_name=None):
     reader_class, binary_input = reader_type()
     apk = Apk(manifest=manifest)
-    destination = output or ROOT / '.tools/source-packages/current' / apk.source.version / 'skeletons' / sex
+    if (model_bundle is None) != (skeleton_name is None):
+        raise ValueError('Custom model bundle and skeleton name must be specified together')
+    identity = sex if model_bundle is None else skeleton_name.removesuffix('.skel')
+    destination = output or ROOT / '.tools/source-packages/current' / apk.source.version / 'skeletons' / identity
     destination.mkdir(parents=True, exist_ok=True)
     records = []
-    model = f'defaultpackage_assets_appearanceassets_character_model_{sex}_1.bundle'
+    model = model_bundle or f'defaultpackage_assets_appearanceassets_character_model_{sex}_1.bundle'
+    expected_name = skeleton_name or f'character_{sex}_1.skel'
     split = model.removesuffix('.bundle') + '_splitanimations.bundle'
 
     def text_asset(obj, prefix):
@@ -121,9 +165,9 @@ def convert(manifest=None, sex='male', output=None):
         return raw
 
     skeletons = [obj for obj in apk.objects(model) if obj.type.name == 'TextAsset'
-                 and obj.read().m_Name.lower() == f'character_{sex}_1.skel']
+                 and obj.read().m_Name.lower() == expected_name.lower()]
     if len(skeletons) != 1:
-        raise ValueError('Expected exactly one character skeleton: ' + model)
+        raise ValueError('Expected exactly one original skeleton: ' + model + '/' + expected_name)
     reader = reader_class()
     raw = text_asset(skeletons[0], 'raw')
     data = reader.convert(raw)
@@ -147,13 +191,16 @@ def convert(manifest=None, sex='male', output=None):
         records[-1]['animation'] = name
     payload = json.dumps(data, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf8')
     (destination / 'skeleton.json').write_bytes(payload)
-    source = {'manifest': apk.source.version, 'sex': sex, 'output_sha256': digest(payload),
+    source = {'manifest': apk.source.version, 'modelBundle': model, 'skeletonName': expected_name,
+              'output_sha256': digest(payload),
               'tool': {'name': 'SkelToJson', 'version': '1.0.1', 'wheel_sha256': WHEEL_SHA256,
                        'license': 'MIT', 'float_rounding': False,
-                       'correction': 'Absent IK setup mix flag decodes to zero; binary attachment name overrides are preserved.'},
+                       'correction': 'Absent IK setup mix flag decodes to zero; binary attachment name overrides and skin bone/constraint memberships are preserved.'},
               'converter_sha256': digest(Path(__file__).read_bytes()), 'inputs': records,
               'counts': {key: len(data.get(key, [])) for key in
                          ('bones', 'slots', 'skins', 'animations', 'ik', 'transform', 'path', 'physics')}}
+    if model_bundle is None:
+        source['sex'] = sex
     (destination / 'source-manifest.json').write_text(json.dumps(source, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     return source
 
@@ -163,5 +210,8 @@ if __name__ == '__main__':
     parser.add_argument('--manifest')
     parser.add_argument('--sex', choices=('male', 'female'), default='male')
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--model-bundle')
+    parser.add_argument('--skeleton-name')
     args = parser.parse_args()
-    print(json.dumps(convert(args.manifest, args.sex, args.output)['counts']))
+    print(json.dumps(convert(args.manifest, args.sex, args.output, model_bundle=args.model_bundle,
+                             skeleton_name=args.skeleton_name)['counts']))

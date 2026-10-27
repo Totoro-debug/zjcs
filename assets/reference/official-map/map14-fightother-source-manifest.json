@@ -1,0 +1,299 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Decode original NPC skeleton, every split animation, skin memberships and FightOther renderer/controller bindings into source caches. Native rendering remains unbound.",
+  "reader": {
+    "name": "SkelToJson",
+    "version": "1.0.1",
+    "license": "MIT",
+    "wheel_sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897"
+  },
+  "generators": [
+    {
+      "path": "scripts/prepare_unity_map14_fightother_sources.py",
+      "sha256": "3158183845f74812342a59c8affd7186bcddd645460256ef25f5154b35e5644d",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "scripts/convert_official_skeletons.py",
+      "sha256": "b93b36907c3c831eb7dd453fa6842742056c1c451e281b9b4ef9b0745a36e9a8",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "scripts/map13_native_schemas.py",
+      "sha256": "00f31381939832704474018723a821326c58c54dd10707d5531eaf858f1eafcd",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "5ec21a2e168115e596dfeac36ace6a786f08e2d05eb56e7b9760c6a3ccb15e58",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4651.bundle",
+      "bundle_hash": "fbf73409a2b70c0fbf50ea3d13e60c2d",
+      "path_id": "-3240851980344996322",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fbf73409a2b70c0fbf50ea3d13e60c2d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13230,
+      "bundle_sha256": "f9d800c35064940bd58f442ed26fd92357586e98b4d00518cdd67fe3db01d886",
+      "object_sha256": "b6cf806cff19aeb1b568ba249b0d852b1e7388404d59c7af10fac34e2bfd6ac0"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4651.bundle",
+      "bundle_hash": "fbf73409a2b70c0fbf50ea3d13e60c2d",
+      "path_id": "-797251643878978018",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fbf73409a2b70c0fbf50ea3d13e60c2d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13230,
+      "bundle_sha256": "f9d800c35064940bd58f442ed26fd92357586e98b4d00518cdd67fe3db01d886",
+      "object_sha256": "bc993fb16f3e60eb0cb5c17d84677c325de9572028c605dcecbb356decf936c2"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4651.bundle",
+      "bundle_hash": "fbf73409a2b70c0fbf50ea3d13e60c2d",
+      "path_id": "-1817085745598018018",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fbf73409a2b70c0fbf50ea3d13e60c2d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13230,
+      "bundle_sha256": "f9d800c35064940bd58f442ed26fd92357586e98b4d00518cdd67fe3db01d886",
+      "object_sha256": "e22e8f2abc34fda3863a8053a66172aca0b9ea9ffc6b684b88498af8ee69cb41"
+    },
+    {
+      "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model_anim.bundle",
+      "bundle_hash": "378657217acc2e5f73fdf33891c684da",
+      "path_id": "7360113673588045040",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/378657217acc2e5f73fdf33891c684da.bundle",
+      "raw_size": 97148,
+      "raw_sha256": "8661c7c6a17bb975c42a99c1f841488bd41f032229991c8cb4c19d6a4fa4e735",
+      "object_sha256": "cad3d898a7f9946685276617b66cc608d2f0311bf9a2e76be9c7ca2a04d7c0d2"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4651.bundle",
+      "bundle_hash": "fbf73409a2b70c0fbf50ea3d13e60c2d",
+      "path_id": "-686280864612921826",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fbf73409a2b70c0fbf50ea3d13e60c2d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13230,
+      "bundle_sha256": "f9d800c35064940bd58f442ed26fd92357586e98b4d00518cdd67fe3db01d886",
+      "object_sha256": "79a19dc3cd089e529bf7f8080a2bafb7b598f5aa58120e871c27a3db80408d0c"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4651.bundle",
+      "bundle_hash": "fbf73409a2b70c0fbf50ea3d13e60c2d",
+      "path_id": "9039535128892100126",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fbf73409a2b70c0fbf50ea3d13e60c2d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 13230,
+      "bundle_sha256": "f9d800c35064940bd58f442ed26fd92357586e98b4d00518cdd67fe3db01d886",
+      "object_sha256": "df65f226d1fc29633785ee1c1a95493ac0d39fb398cd3137724fa89afae930c9"
+    },
+    {
+      "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model.bundle",
+      "bundle_hash": "4e363b945d6386f5997c87f93424e1d6",
+      "path_id": "5517491646269376500",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/4e363b945d6386f5997c87f93424e1d6.bundle",
+      "raw_size": 1989180,
+      "raw_sha256": "0e4b96ded9c2590d155ba380c4cf0b45c3548fa8d6b28cf15b65e03650fe7ab3",
+      "object_sha256": "11097f81e8dd5eca94ec12197f5485cf16e58d5f124fbf2922e8c98b5873bc90"
+    },
+    {
+      "bundle": "defaultpackage_assets_appearanceassets_npc_npc_middle_model.bundle",
+      "bundle_hash": "4e363b945d6386f5997c87f93424e1d6",
+      "path_id": "5320543243099138958",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/4e363b945d6386f5997c87f93424e1d6.bundle",
+      "raw_size": 1989180,
+      "raw_sha256": "0e4b96ded9c2590d155ba380c4cf0b45c3548fa8d6b28cf15b65e03650fe7ab3",
+      "object_sha256": "26e8aeb69b64b1133ca1df8185d63005878acaba713909430e4031a1c1660a6e"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "-118608463853526617",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "2b7f2efa20259f66113232b085ebd00486da2bc3e7b4c374097267e5944643f0"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "754451063376306599",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "959f0eb0aa3de52c48cef4dd8cb1a63e94610095d3ad154278ecab6e0a39a06b"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "1607754076491538855",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "29fadddeae6e1057bd8ff6ae2b7d12e1289a4670424bd6ff9dd9dbe3eb8a81d5"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "2634877654711067047",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "dfe831aa77c3eed29285a0d5ba0fec054a3cfdeb5e4905d89a7daa8bbaaf16b8"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "5274423131809440167",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "9da8a8870cb975337db149d0a60028e04fd4c6983ffb2a616e2e1aeeffe19c8d"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightother_4652.bundle",
+      "bundle_hash": "e9354b364bb6ed1a771b609562e56694",
+      "path_id": "4850813707136983463",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e9354b364bb6ed1a771b609562e56694.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 15867,
+      "bundle_sha256": "98752a6208d344a219ec5d2db4ee32e24214fb11218cde67f7e5d588afd49ec2",
+      "object_sha256": "3745afbcac143d1c9e0d656aa33bb56be1f11a35b999cb085e1ca5ad21c6f5a0"
+    }
+  ],
+  "decodedSource": {
+    "path": ".tools/source-packages/current/871_156598/skeletons/npc_middle_model/source-manifest.json",
+    "sha256": "55fba03db30aa4b06cbeca922bb1f1ba33a10187e3cf028aa65979f8ea64e853"
+  },
+  "outputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/skeletons/npc_middle_model/skeleton.json",
+      "sha256": "244a5259123179aa667d40d13ea3d6670c23150b4dc545e6ce73b4e4d92a2ac6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/skeletons/npc_middle_model/source-manifest.json",
+      "sha256": "55fba03db30aa4b06cbeca922bb1f1ba33a10187e3cf028aa65979f8ea64e853"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/skeletons/npc_middle_model/map14-fightother-bindings.json",
+      "sha256": "e59cbbfa075c690b47cf13991d71a0ac79acd687fa13de43af379c38db07d8de"
+    }
+  ],
+  "counts": {
+    "bones": 2315,
+    "slots": 137,
+    "skins": 171,
+    "animations": 834,
+    "ik": 8,
+    "transform": 6,
+    "path": 4,
+    "physics": 2012
+  },
+  "models": [
+    {
+      "entityId": 4651,
+      "selectedSkins": [
+        "body_8451",
+        "pWeapon_100_G_8451",
+        "sWeapon_11_G_8451"
+      ],
+      "skinMembershipCounts": {
+        "body_8451": {
+          "bones": 58,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 54
+        },
+        "pWeapon_100_G_8451": {
+          "bones": 0,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 0
+        },
+        "sWeapon_11_G_8451": {
+          "bones": 0,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 0
+        }
+      }
+    },
+    {
+      "entityId": 4652,
+      "selectedSkins": [
+        "body_8452",
+        "pWeapon_100_G_8452",
+        "sWeapon_12_G_8452"
+      ],
+      "skinMembershipCounts": {
+        "body_8452": {
+          "bones": 61,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 58
+        },
+        "pWeapon_100_G_8452": {
+          "bones": 0,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 0
+        },
+        "sWeapon_12_G_8452": {
+          "bones": 0,
+          "ik": 0,
+          "transform": 0,
+          "path": 0,
+          "physics": 0
+        }
+      }
+    }
+  ]
+}
