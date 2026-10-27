@@ -27,6 +27,8 @@
 - 139 个环境 prefab 中的 238 个蝴蝶实例保留原 Transform、材质、初始皮肤、动画与更新模式；两种原模型分别为 9／7 根骨骼、3／1 套皮肤、9／2 段动画。按已确认的免费原生方案，读取原骨骼、非加权网格／四边形、图集裁切和旋转、链接网格、仿射继承及绝对时间三次曲线，独立计算原生 Mesh；没有复制、翻译或运行 Spine runtime。两套原 GLES shader 保留全部程序及渲染状态，全部变体的顶点／片元阶段通过 Windows D3D 编译；实际 Play Mode 使用 DX12。
 - 完整环境隔离夹具在内置屏 DX12 Play Mode 通过公／私图原分区与环境回调，分别加载 135／238 个蝴蝶实例、注册 108 个地区光照；全部 240 个地形区块及 389 个环境路径经过加载、场景停用／恢复及清除／注销。71 张纹理的 432 个 mip GPU 回读与源字节一致。独立双精度原始数据参考与 C# 原生求值器核对 3,274 个姿态、68,618 个顶点，覆盖全部皮肤、动画、关键帧及曲线内部；这不是与 Spine runtime 的逐帧对照。已验证两种可见实例的真实 Update 时钟并查看近景及公／私图实际画面。夹具明确省略 97 个地区标签，使用隔离环境状态，不包含正式角色、实体交互或存档。
 
+- 完整实体闭包中的 2,040 个原材质已严格解码并逐个 JSON 往返编码，要求与原二进制逐字节相同。5,747 个 shader／纹理指针按原 CAB 与 PathID 解析，无悬空引用，涉及 36 个原 shader 对象／族与 1,650 个原纹理对象；完整对象清单仍为 117,858。该成果为全部原字段及依赖来源，未把导出器生成的字体材质当作原游戏材质，也尚未完成这些实体材质的 Windows 绑定或实体画面。
+
 ## 自定义实现
 
 以下为用户确认并已接入独立规则层的单机处理；正式地图宿主、菜单、背包交易和存档尚未接通。
@@ -48,6 +50,7 @@
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
 - [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [实体原生导出](../../scripts/prepare_unity_map14_entity_export.py)与[逐字段／指针核对来源](../../assets/reference/official-map/map14-native-entity-export-source-manifest.json)；使用 `--convert` 执行私有转换器，原顺序恢复结果在同一缓存的 `restored/` 中。
+- [实体材质来源恢复](../../scripts/prepare_unity_map14_entity_materials.py)及[逐字节／指针来源](../../assets/reference/official-map/map14-native-entity-materials-source-manifest.json)；原字段载荷为 `Source/native-entity-materials.json`。
 - [机关投影](../../scripts/prepare_unity_map14_puzzles.py)、[官方代码／规则来源](../../assets/reference/official-map/map14-puzzles-source-manifest.json)、[本地绑定](../../assets/reference/official-map/map14-puzzles-binding-source-manifest.json)及[Play Mode 规则检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14PuzzleAcceptance.cs)。运行入口为 `Map14PuzzleAssets` 与共享 `OfflineMapPuzzleSession`；`AuxiliaryUnlockOnly` 仅对已确认的本图五终端启用，不改地图 11／12 的原辅助行为。
 - [地形转换](../../scripts/prepare_unity_map14_native_terrain.py)、[地形来源](../../assets/reference/official-map/map14-native-terrain-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-terrain-binding-source-manifest.json)。
 - [裸场景转换](../../scripts/prepare_unity_map14_native_scene.py)、[裸场景来源](../../assets/reference/official-map/map14-native-scene-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-scene-binding-source-manifest.json)。
