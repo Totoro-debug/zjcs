@@ -1,0 +1,189 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "operation": "Current map navigation and entity/config binding; original AStar code migration",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/navigation.json",
+      "sha256": "34d8ab7e0bbcfcb92436819d2366cbc83976fbdcbbd665867f546093ae857db5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/placement.json",
+      "sha256": "f588cad348979deb5590697f77b6a8b46c649c676a010336349392702ed72e5d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/entities.json",
+      "sha256": "1ec56a3113040b117e1d547490df59a88ff8f8634013a703381c4c49867b8dde"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/templates.json",
+      "sha256": "d2244e946dd2e860381f67570bc3495d73efa790e1b783faf6841194d9d9580d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/tables.json",
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/stories.json",
+      "sha256": "2bdecd8914261c66b502ed527c264ab07cf4c1de78f6f1923c306511b759c585"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/water-terminals.json",
+      "sha256": "de773d4e7c48a3d8329d5aca446ac7943d4a88c7e8f0da41a2035c173e948c4d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/dialogues.json",
+      "sha256": "e070aa18080d85e8dee56065d17ed379dfa47c29faff271a099e91b7f84fe131"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/server-story-records.json",
+      "sha256": "a420bcc9d9c9945596c03d3456d906b64887979d58fbf5a279879a1da3c7786b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/localization.json",
+      "sha256": "45bffc960b233c35ea824bd2fd39696e534545a931e970ba8459181e519d55c2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/entries.json",
+      "sha256": "12926115967eddddcab94e06c1b3903c0aeb82e8ac2b4d3dfa4af3a97fbc25a3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/transports.json",
+      "sha256": "8b36d4b24ca64b5b85e26f6edd559e32202ef1b4e537af5a6892e2bec74d9c2c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/water-rules.json",
+      "sha256": "b60f61fc92ea7159038cdec3927f1447868edfb6da4a3832667489695bd53c80"
+    },
+    {
+      "path": "assets/reference/official-map/map13-water-source-manifest.json",
+      "sha256": "dbc88b30aec0d6e43ed39a54614dad4dd8fafeac96d83406693587152059c71f"
+    },
+    {
+      "path": "assets/reference/official-map/map13-source-manifest.json",
+      "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+    }
+  ],
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AStar/AStarUtils.cs",
+      "sha256": "bcedf2ee03183e28becaa3a5a37d7df861ec5e0ca5822da9fb836986053ff9a8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AStar/FindPathArgContext.cs",
+      "sha256": "e45bbf25f2358f72f83276665651cc76ba02c6c1db53950d0a7085bde4d1d802"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AStar/IAStarMovableHandler.cs",
+      "sha256": "63e1b7c7ab1629ea287d50d3d2368a3e1b5b2e40fdbfdedd2a39678ba4bfe008"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AStar/IAStarMoveCustomContext.cs",
+      "sha256": "e62d0f8dcd32020e2ada0f6ed5948dc629cc6988dc79028e4b0260fab271ef36"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AStar/DefaultAStarMoveCustomContext.cs",
+      "sha256": "0edc08c9413917ee97fc30c27eedab10140610610dec2a9f0078731f6a99b3c9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Pos2d.cs",
+      "sha256": "8129206cd36eefdedf3d3d6a2a011d0c52325e35a7690a42b350ad96669fa8ea"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridGroundComponent.cs",
+      "sha256": "ed9dfb597d9082f4a5a6aaa2d33698f70898c7d96b688dc2c96d6247b2e1b2da"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridGroundComponentInfo.cs",
+      "sha256": "046bbf2833608ef42b8271a9124106f730bb34364d69170f74e35c9fd175335d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridMoverComponent.cs",
+      "sha256": "0482718b0260b2fcfb8d765615b1c334d22918d9fae5e180b3a9c0f0b20d29db"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GamePosData.cs",
+      "sha256": "8d9e6021d4a7d183fab8174df11df6590373968a1fe9cb78d1b7ff8b401f0317"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldConveyanceComponent.cs",
+      "sha256": "d551f6d32e90550d40db59ecaf318b0580358ad56f90d236acfb275b60b47e63"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/map13.json",
+      "sha256": "08200254758f6744a09c82fe871145f76f98ba590b9b59e4ca8c87e047ef98da"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/source-manifest.json",
+      "sha256": "a77c891100057b63905489aa9b49861901039a92bb20a31137f11cc85db27568"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/navigation-movers.json",
+      "sha256": "592e263514b3a6b94c0f2400cf452d260773fbc8bc13442b2bfec9b57d0e11b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/AStarUtils.cs",
+      "sha256": "e958246047b0c7b7ae2ef830ab2985b0527de3b57f7eab66777d5ce1dafb14e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/FindPathArgContext.cs",
+      "sha256": "d0ecbda9929d2ee7f52d92041b0a88ba8af336e04a61c45e055edb1fe45f7959"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/IAStarMovableHandler.cs",
+      "sha256": "f3fb08233d9342e6c598c7f6c45b17d45cca60b9c963ddc863930bea8cb2d5b5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/IAStarMoveCustomContext.cs",
+      "sha256": "f5aa9fa9b2596cff6147f7eada73a418dbd1d3680d9f43da4f37b50546d15a68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/DefaultAStarMoveCustomContext.cs",
+      "sha256": "5b74f88234bdd4301114153dafececda42c08bf894be5a04482993686816d042"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Navigation/Zjcs.Official.World.Map13Navigation.asmdef",
+      "sha256": "097b8c7b3c7d31061fb6913d462225e3414929f0b4a2fe6694571a58be452fb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13Navigation/Map13NavigationAssets.cs",
+      "sha256": "007b75484923112884fd81f5df50efcf5722076096542169bb18bfb055527337"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13Navigation/OfflineMap13NavigationSession.cs",
+      "sha256": "718fa66c963b9308c5d01987d46e9cb29d3f77eadf18030741af4d8b404bf296"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13Navigation/Zjcs.Offline.World.Map13Navigation.asmdef",
+      "sha256": "b0d9945c7e86284d96a3a3a52d6b5e4327aba4f49281710d4b35f2b938c99128"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Navigation/OfficialMap13NavigationAcceptance.cs",
+      "sha256": "ea1474633e26b32195ed51c53f88d68c36664435c16456d3d332944bb9e8b64f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Navigation/OfficialMap13NavigationTools.cs",
+      "sha256": "7a08262077bf1fda2ae4f3b70c0aae23a5df7b77090d9d8a44493445e1126612"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Navigation/Zjcs.Editor.Map13Navigation.asmdef",
+      "sha256": "9fc247f7b041b87e8e6fccff419d8fdfc04ae627d96211bfddb1dddf92379fd9"
+    }
+  ],
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+    "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_navigation.py",
+    "sha256": "a4a518f3cb22660c01b9ab56ff6d529526f2a6c519ed43821d9461ddbbe60081"
+  },
+  "adaptation": "AStar: namespace/import changes only; original Pos2d reused from verified terrain migration. Map data: structural projection only, no legacy-map inputs.",
+  "limitations": [
+    "No mainline menu registration, player visuals, terminal payment/reward transaction or map save binding.",
+    "Navigation ground integration covers original water bodies and explicit host-supplied occupancy; the host must supply other spawned entity state."
+  ]
+}

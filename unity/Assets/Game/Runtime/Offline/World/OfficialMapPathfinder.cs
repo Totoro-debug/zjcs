@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Zjcs.Offline.World
 {
+    [Serializable]
     public struct MapGridPoint : IEquatable<MapGridPoint>
     {
         public int X;
