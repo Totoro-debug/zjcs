@@ -9,7 +9,7 @@ from pathlib import Path
 import json
 
 from official_apk import Apk, ROOT
-from map13_native_schemas import NativeSchemas, read
+from map13_native_schemas import NativeSchemas, read, node as native_node
 from official_managed_reference_conversion import forward, identity, inverse, normalize, schema
 from prepare_unity_bundle_inputs import collect, read_source, serialized_files
 from prepare_unity_map13_sources import encode, meta, sha, source_path, write
@@ -25,22 +25,47 @@ OUTPUT = ROOT / "unity/Assets/Official/World/Map/13/Source/native-water-entity-c
 RECEIPT = ROOT / "assets/reference/official-map/map13-native-water-entity-input-source-manifest.json"
 
 
-def hydrate(bundle, schemas):
+def hydrate(bundle, schemas, include_source_identity=False):
     originals, fields, groups = {}, {}, defaultdict(set)
     records, changes, unions = [], [], []
+
+    def original_fields(value, pair, has_references):
+        if include_source_identity and has_references:
+            value = dict(value)
+            if (value.pop("Map13OriginalSourceCab"), value.pop("Map13OriginalSourcePathId")) != (pair[0], str(pair[1])):
+                raise ValueError("Temporary original component identity changed")
+        return inverse(value)
     for file in serialized_files(bundle):
         originals[file.name] = {obj.path_id: sha(obj.get_raw_data()) for obj in file.objects.values()}
         for obj in file.objects.values():
             if obj.type.name != "MonoBehaviour":
                 continue
-            script = obj.read(check_read=False).m_Script.read()
-            value, tree = read(schemas, obj)
+            base = obj.read(check_read=False)
+            if base.m_Script.m_PathID:
+                script = base.m_Script.read()
+                assembly = script.m_AssemblyName
+                type_name = (script.m_Namespace + "." if script.m_Namespace else "") + script.m_ClassName
+                try:
+                    value, tree = read(schemas, obj)
+                except Exception as error:
+                    raise ValueError(f"Original component decode failed: {file.name}/{obj.path_id} {assembly}:{type_name}") from error
+            else:
+                # The original animation-ui bundle contains two standalone,
+                # script-less 32-byte MonoBehaviour headers. Decode the native
+                # base schema strictly; never drop them or infer extra fields.
+                if obj.serialized_type.script_type_index != -1 or base.m_GameObject.m_PathID or len(obj.get_raw_data()) != 32:
+                    raise ValueError("Inspect original script-less component before conversion")
+                tree = get_typetree_node(114, obj.version)
+                reader = EndianBinaryReader(obj.get_raw_data(), endian=obj.reader.endian)
+                value = TypeTreeHelper.read_typetree(tree, reader, as_dict=True, assetsfile=file,
+                    byte_size=len(obj.get_raw_data()), check_read=True)
+                assembly, type_name = "", "UnityEngine.MonoBehaviour"
             key = (file.name, obj.serialized_type.script_type_index)
             fields[(file.name, obj.path_id)] = (value, tree, key)
             if "references" in value:
                 groups[key].update(identity(record) for record in value["references"]["RefIds"])
-            records.append(dict(cab=file.name, path_id=str(obj.path_id), assembly=script.m_AssemblyName,
-                type=(script.m_Namespace + "." if script.m_Namespace else "") + script.m_ClassName,
+            records.append(dict(cab=file.name, path_id=str(obj.path_id), assembly=assembly,
+                type=type_name,
                 payload_sha256=sha(obj.get_raw_data()), fields=value))
     nodes = {}
     for file in serialized_files(bundle):
@@ -52,6 +77,12 @@ def hydrate(bundle, schemas):
             if key not in nodes:
                 types = sorted(groups[key])
                 nodes[key] = schema(tree, types, schemas) if "references" in value else normalize(tree)
+                if include_source_identity and "references" in value:
+                    if any(child.m_Name.startswith("Map13OriginalSource") for child in nodes[key].m_Children):
+                        raise ValueError("Temporary source identity collides with an original field")
+                    nodes[key].m_Children.extend(native_node("string", label, 1) for label in
+                        ("Map13OriginalSourceCab", "Map13OriginalSourcePathId"))
+                    normalize(nodes[key])
                 if "references" in value:
                     unions.append(dict(cab=file.name, script_type_index=key[1], types=types,
                         schema=[{k: v for k, v in node.to_dict().items() if k != "m_Children"}
@@ -60,15 +91,19 @@ def hydrate(bundle, schemas):
             obj.serialized_type.node = node
             if "references" in value:
                 converted = forward(value, sorted(groups[key]))
+                if include_source_identity:
+                    converted.update(Map13OriginalSourceCab=file.name, Map13OriginalSourcePathId=str(obj.path_id))
                 raw = obj.save_typetree(converted, nodes=node)
                 reader = EndianBinaryReader(raw, endian=obj.reader.endian)
                 restored = TypeTreeHelper.read_typetree(node, reader, as_dict=True, assetsfile=file,
                                                        byte_size=len(raw), check_read=True)
-                if inverse(restored) != value:
+                if original_fields(restored, pair, True) != value:
                     raise ValueError("Managed-reference binary round trip differs: " + str(pair))
                 changes.append(dict(cab=file.name, path_id=str(obj.path_id),
                     original_sha256=originals[file.name][obj.path_id], converted_sha256=sha(raw),
                     converted_bytes=len(raw), reference_count=len(value["references"]["RefIds"])))
+                if include_source_identity:
+                    changes[-1]["temporary_source_identity"] = dict(cab=file.name, path_id=str(obj.path_id))
         for typ in file.types:
             if typ.node is None:
                 if typ.class_id == 114:
@@ -95,7 +130,7 @@ def hydrate(bundle, schemas):
             expected = expected_changes.get(key, originals[file.name][obj.path_id])
             if sha(obj.get_raw_data()) != expected:
                 raise ValueError("Converter changed an unrecorded object: " + str(key))
-            if key in fields and inverse(obj.read_typetree()) != fields[key][0]:
+            if key in fields and original_fields(obj.read_typetree(), key, "references" in fields[key][0]) != fields[key][0]:
                 raise ValueError("Reopened converter bundle fields differ: " + str(key))
             checked += 1
     return raw, records, changes, unions, checked
