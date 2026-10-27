@@ -157,7 +157,10 @@ namespace Zjcs.Presentation.World
             avatar = MapProfile.HasNativeUi ? MountMap11Player(characterModel) : characterModel;
             characterName = displayName ?? string.Empty;
             closeCallback = onClose;
-            DontDestroyOnLoad(gameObject);
+            // Original FollowSceneActiveSelfController enables the global
+            // map light only in its active Unity scene. Map12 closes through
+            // this runtime's existing lifecycle and has no scene transition.
+            if (mapClassId != 12) DontDestroyOnLoad(gameObject);
 
             try
             {
@@ -267,6 +270,7 @@ namespace Zjcs.Presentation.World
         private void LateUpdate()
         {
             if (worldCamera == null || avatar == null || closed) return;
+            RefreshNativeMap12State();
             if (UpdateBattleSceneCamera()) return;
             RefreshMap11CameraResolution();
             Vector3 target = storyCameraActive
@@ -311,8 +315,12 @@ namespace Zjcs.Presentation.World
             mapRoot = new GameObject("OfficialMap" + mapClassId + "World").transform;
             mapRoot.SetParent(transform, false);
             WorldMapAssets assets = session.Assets;
-            GameObject terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
-            terrain.name = "Map" + mapClassId + "Terrain";
+            GameObject terrain = null;
+            if (mapClassId != 12)
+            {
+                terrain = Instantiate(assets.GroundPrefab, mapRoot, false);
+                terrain.name = "Map" + mapClassId + "Terrain";
+            }
 
             if (mapClassId == 10)
             {
@@ -388,7 +396,8 @@ namespace Zjcs.Presentation.World
             }
             SaveLocalProgress();
             RefreshEntityActivity();
-            regions.InitializeFog(terrain.transform);
+            if (mapClassId == 12) InitializeNativeMap12();
+            else regions.InitializeFog(terrain.transform);
         }
 
         private void CreateWorldCamera()
@@ -496,6 +505,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            nativeMap12World?.Dispose();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();
             hud.DisposePortrait();

@@ -9,8 +9,18 @@ from prepare_unity_map13_native import ROOTS
 from prepare_unity_map13_sources import encode, sha, source_path, write, meta
 from prepare_unity_map13_water_components import import_meta
 from prepare_unity_map13_water_shaders import translate, SHADERS, SOURCE
-from prepare_unity_map13_pipeline_shaders import render_state, program_body as pipeline_program_body
+from prepare_unity_map13_pipeline_shaders import render_state as pipeline_render_state, program_body as pipeline_program_body
 from prepare_battle_hud_materials import hlsl
+
+
+def render_state(state):
+    result = pipeline_render_state(state)
+    mask = state.rtBlend0.colMask
+    if mask.name not in ('', '<noninit>'):
+        result, count = re.subn(r'(?m)^ColorMask \S+$', 'ColorMask [' + mask.name + ']', result)
+        if count != 1:
+            raise ValueError('Original dynamic environment color mask was not bound')
+    return result
 
 
 def program_body(program, vertex):
@@ -61,6 +71,13 @@ def build():
         form = copy(shader.m_ParsedForm); form.m_SubShaders = [sub]
         one = copy(shader); one.m_ParsedForm = form
         text, variants = translate(one, "EnvironmentNoise", program_body=program_body, render_state=render_state)
+        # Flags=1 are original local (non-overridable) keywords. URP sets
+        # shape-light globally; it must not create stripped local combinations.
+        for keyword, flags in zip(form.m_KeywordNames, form.m_KeywordFlags):
+            if flags not in (0, 1): raise ValueError('Unknown original keyword scope')
+            if flags == 1:
+                text = text.replace('#pragma multi_compile __ ' + keyword + '\n',
+                                    '#pragma multi_compile_local __ ' + keyword + '\n')
         begin = text.index("Pass {\n"); end = text.index("ENDCG\n}\n") + len("ENDCG\n}\n")
         if header is None: header = text[:begin]
         elif header != text[:begin]: raise ValueError("Original environment shader pass properties differ")

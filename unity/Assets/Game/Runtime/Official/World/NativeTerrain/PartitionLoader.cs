@@ -209,6 +209,16 @@ public class PartitionLoader : MonoBehaviour
 		}
 	}
 
+    // Local lifetime adapter: original Remove releases loaded and pending handles.
+    public void ReleaseOfflineAssets()
+    {
+        foreach (PartitionAsset asset in mId2Assets.Values) asset.Remove();
+        mId2Assets.Clear();
+        if (mChunkGrid != null)
+            foreach (ChunkData chunk in mChunkGrid) chunk?.Assets.Clear();
+        mVisited.Clear();
+    }
+
 	public void RemoveAsset(Vector2Int chunkPos, ushort id, string res, ChunkAssetType type)
 	{
 		//IL_0093: Unknown result type (might be due to invalid IL or missing references)

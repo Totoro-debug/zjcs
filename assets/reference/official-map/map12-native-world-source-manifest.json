@@ -1,0 +1,330 @@
+{
+  "adaptations": [
+    "Use local profile level, subrank, combat rating, raw region progress and saved goddess activation.",
+    "Keep original unfiltered PartitionData and loader camera/region callbacks.",
+    "Clone original dynamic fonts before Awake; restore previous pipeline when leaving the map.",
+    "Restore converted entity layer/order from original separate values; world character attachments use original Object layer.",
+    "Keep Map12 in the active Unity scene so original FollowSceneActiveSelfController controls its global light.",
+    "Release only registered partition assets through original Remove on local map destruction."
+  ],
+  "apk": {
+    "entry": "assets/bin/Data/data.unity3d",
+    "entrySha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+    "objectPathId": 1,
+    "objectSha256": "1c3d95ae3af48f0285e1465049096db966a1361e5ed4ac291071ddc1b3ec4a21",
+    "path": ".tools/source-packages/zjcs_M509085.apk",
+    "sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs",
+      "sha256": "b803dfae92e36d69f550ed4b5989e97f298a6f464d4cebff28b1a5e7775b5952"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs.meta",
+      "sha256": "0c0ede6d4ac70b456ea8168e8976df95f6cc1cd7ccc553f5f2a535d11f67a503"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs",
+      "sha256": "7e96192ca1fe2ab08a61266912055e5f1949b1c54a6a1c3041b45874be9802be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs.meta",
+      "sha256": "6886b1bf285be2ddf20a3ae92b5f3555c099beb3d72b6aee495ef63976132d75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs",
+      "sha256": "f270971f5fd5895abc3a35b31aa102fec36dc7d5d19e9737dba999fac13a1047"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs.meta",
+      "sha256": "944ef1376f418dd25d65e35436f99f80ea67678e053947227f0e6bedbfe49c68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldView.cs",
+      "sha256": "33ebb9d11c535743154e328c331c7c09191e798dfc4160b7eda5cb3bd30a0f77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldView.cs.meta",
+      "sha256": "070a5ff8478d1b7ebd784ad069e68799006b814ee5327f94d207066a8b404cd2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Zjcs.Presentation.World.NativeMap12.asmdef",
+      "sha256": "6b6f41d7bad24f557c09c0e5dccc68bc7b020183c65ce32406754118a22aff69"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Zjcs.Presentation.World.NativeMap12.asmdef.meta",
+      "sha256": "2469c6059891e465043b73376b3c681b91b8d1112491e3f047e9b4e9ce51d952"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap12.meta",
+      "sha256": "d7c46c0424d10b712fd80cd4af0c2f60570bbdd39868b21c92fbc3dea21237d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs",
+      "sha256": "bb40151129446eade04483b481a6c50d80ae846f48e3b72334b74afdffb34ae8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs.meta",
+      "sha256": "fa8981eeea65deb36cf5840995343b9863ec58334c2e58776aeee508aad521fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs",
+      "sha256": "1fbdcf180dcdd6b967281a4cedc666915010de96f3fd63f2d335b8cae319739a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs",
+      "sha256": "f7b3c4a96378599042251f34152dd916c96340e207c77ef17f9b8404cb0f2046"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs",
+      "sha256": "13ba18319fc6fbf845495e4aaee04f7771f5280e9e7a1ac1ea6af9c1aed45173"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs",
+      "sha256": "99f3cdff5695b67863052f24c24854f42c84bb3da169ef52524c0925aef88ada"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap10MonsterView.cs",
+      "sha256": "5070f05d0d602924cf519337eebdb1a35a9130f43e5cfaf7cb249db1c9afd35b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef",
+      "sha256": "7b00027573a764052a4cb39f430c22bf59de3f8deadb4949a27455ce85fc9425"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldTools.cs",
+      "sha256": "a13470c03ba0f576b54276a20f6fe91ed735b49696f64f5d47287273ebe391ea"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldTools.cs.meta",
+      "sha256": "a64da63c768740ace474f14cc52ae974efea15b7529ca9f9b87d583761bec928"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs",
+      "sha256": "833aed0743406a3318f64b10ae0a930a2e42644f2a9a67eb1a1ef5bcef4ab220"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs.meta",
+      "sha256": "c76b8a786e9594e671a757e30fc2013b46e17ac8c871b00398ef9d60e7d1f26d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef",
+      "sha256": "d3911a25acc3c3e10ebba0fd886d1785f3702d950dcb216c74e1618f9e28b1b5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.NativeWorld.cs",
+      "sha256": "0662be2db0f5aa0cc9a0574c7082b0feb55589b46cc2a9768f7b348a219ed9c7"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.NativeWorld.cs.meta",
+      "sha256": "17d70023fcf90b96ef16e70441cd3ef7bb19e9025e1ffc20a70ed1530ef1461b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs",
+      "sha256": "59e6e93d37047865142378495aa374079d6f4d8bedd0d2d900f3daad3705dbdf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs",
+      "sha256": "1b857ce6fdaf06fad99a53932f00008f9a69b95d3aaca8e47b5bbc609188bd84"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/world-assets.asset",
+      "sha256": "0241754180330063f3624d48c4c12b7e74b5365ff92125a00c8eba7e40b3b300"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/world-assets.asset.meta",
+      "sha256": "fbe9d2b8a100d89a9570693f5e50cbc91b5ed2e8d50d403b2bda55eeafa4e2b7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/BaseGround/player-view.json",
+      "sha256": "83f14da452d9924d1c055baa35b01d4163757228015cd4fcbad9395af94daa0f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/base-ground-source-manifest.json",
+      "sha256": "efdba9fb310bfff24672af743b6b755da15e0eff7006d2dcc2ca03b7a32abde1"
+    },
+    {
+      "path": "scripts/prepare_unity_map11_base_ground.py",
+      "sha256": "bf0f217368170ec232a54ac3e5c5159c3c5c604cb92e8509985e17efdcd66f9f"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_environment_shader.py",
+      "sha256": "02bf4c75a554d7bffd5505d425c8629e12fd30bbd42d844be49d3f2f94186ff8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map12_native_world.py",
+    "sha256": "6e37624549dc59bcb4773b47200d12dfd36845e8a6a63a676066642b2e2aecfb"
+  },
+  "limitations": [
+    "Full map progression, original camera behavior and complete UI/animation equivalence remain separate."
+  ],
+  "manifest": "871_156598",
+  "originalPlayerSettings": {
+    "m_ActiveColorSpace": 1,
+    "m_ColorGamuts": [
+      0
+    ]
+  },
+  "originalSortingLayers": {
+    "layers": [
+      {
+        "name": "Default",
+        "uniqueID": 0
+      },
+      {
+        "name": "Mansion_BG",
+        "uniqueID": 1037039787
+      },
+      {
+        "name": "Mansion_Sun",
+        "uniqueID": 3461957369
+      },
+      {
+        "name": "Mansion_Cloud",
+        "uniqueID": 3471532849
+      },
+      {
+        "name": "Mansion_Mountain",
+        "uniqueID": 1712449413
+      },
+      {
+        "name": "Mansion_Tree",
+        "uniqueID": 2244542265
+      },
+      {
+        "name": "HomeMedium",
+        "uniqueID": 1204824665
+      },
+      {
+        "name": "HomeMid",
+        "uniqueID": 1463963443
+      },
+      {
+        "name": "HomeMid01",
+        "uniqueID": 1806570199
+      },
+      {
+        "name": "HomeMid02",
+        "uniqueID": 3941832725
+      },
+      {
+        "name": "HomeFront",
+        "uniqueID": 3500751389
+      },
+      {
+        "name": "HomeFront01",
+        "uniqueID": 774647125
+      },
+      {
+        "name": "Garden_Mid",
+        "uniqueID": 4280950707
+      },
+      {
+        "name": "Garden_Front",
+        "uniqueID": 3149537521
+      },
+      {
+        "name": "Mansion_Front01",
+        "uniqueID": 1214206617
+      },
+      {
+        "name": "====Map||Game====",
+        "uniqueID": 2537129187
+      },
+      {
+        "name": "Ground",
+        "uniqueID": 540003499
+      },
+      {
+        "name": "EffectBehind",
+        "uniqueID": 3473503737
+      },
+      {
+        "name": "Object",
+        "uniqueID": 1182434123
+      },
+      {
+        "name": "Light",
+        "uniqueID": 3808321753
+      },
+      {
+        "name": "EffectFront",
+        "uniqueID": 3610173073
+      },
+      {
+        "name": "Cloud",
+        "uniqueID": 3372647923
+      },
+      {
+        "name": "UI",
+        "uniqueID": 3676197599
+      }
+    ],
+    "objectPathId": 3,
+    "objectSha256": "a3b3f89b4a3225e6f4b801ba1c4af444bd9f830c858084854d879d8c68e064bd"
+  },
+  "pipelineObject": "globalgamemanagers.assets:22209",
+  "resource": "Map12/Native/world-assets",
+  "sourceReceipts": [
+    {
+      "path": "assets/reference/official-map/map12-native-terrain-binding-source-manifest.json",
+      "sha256": "96269727757006ca78a68dcb109387702b36d682fa883013a126e401767942c0"
+    },
+    {
+      "path": "assets/reference/official-map/map12-native-scene-binding-source-manifest.json",
+      "sha256": "8bbe0680270a94c7730234ffb451bf85dcc8cc389f577713f0df7565e2e49ea1"
+    },
+    {
+      "path": "assets/reference/official-map/map12-native-environment-scene-binding-source-manifest.json",
+      "sha256": "dd53b74bd07f2e3c36299b11468ecd05bc4763cebf273941b14d33c300313549"
+    },
+    {
+      "path": "assets/reference/official-map/map12-native-region-labels-binding-source-manifest.json",
+      "sha256": "a30e645d3ee28e788fee6d5bfef121dcb2a41c7c03a9e6792cceb9ff6f9f2676"
+    },
+    {
+      "path": "assets/reference/official-map/map12-shared-environment-source-manifest.json",
+      "sha256": "903839b7214545b10202ac5b8785bc0dea0d7fc5b1befc13e79cf980c66d2a62"
+    },
+    {
+      "path": "assets/reference/official-map/map13-partition-code-source-manifest.json",
+      "sha256": "06a86b4929642874af4c0728b8ce80cfd1ec971f19f422c9c39059d9fd119883"
+    },
+    {
+      "path": "assets/reference/official-map/map13-environment-shader-source-manifest.json",
+      "sha256": "04d2b7c64a806c50c29bbfa6a58fe1b7f1f251435c937791c12eb5aaa3c80116"
+    }
+  ],
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PartitionController.cs",
+      "sha256": "08bf4957bf74dcb503394a609c5bc2d137be6303e14ede2f7874c370885673c1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PartitionLoader.cs",
+      "sha256": "932fdee8f503da515af8f8d1254463330c24fd343e27c35af60e9f3b03f7cd4a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEnvEffect.cs",
+      "sha256": "d9b1aaa710400edb6908f0f1a526abcb47c39e7a639912109b4b21c05fd49223"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionLight.cs",
+      "sha256": "9eff4f2c5657afb1efad4549eead158ff0aaf6c526348e42927191e954621bf6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapMyEntityUtils.cs",
+      "sha256": "5ed2968def9060bdfe54d0deb73dee1bbb67da3a35ed950573ebc109ac02e8b0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapSpineAttachmentMeshBackerRenderer.cs",
+      "sha256": "b0007e31cc89501a6be242754c5f5b0da377df4fbe1fefa6a940c6bd2d303221"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/FollowSceneActiveSelfController.cs",
+      "sha256": "13cf1151a6da2ad624317e03b145673adf47be76fe9d6e97d7ffb397f9aea423"
+    }
+  ]
+}

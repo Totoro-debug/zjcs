@@ -1795,3 +1795,7 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 山之国原生区域文字：`prepare_unity_map12_label_components.py` 核对当前871程序集与反编译方法，迁移世界标签所需区域描述、状态、等级与战力样式；`prepare_unity_map12_region_labels.py` 从已验证93包原生提取缓存恢复80份原 prefab、124个原生资产及400条原托管状态引用，核对原始字体对象后复用共享官方中文字体与文字特效。原语言二进制补齐两个横排标签键，原空战力列表以显式标记保留。来源及输入／输出哈希见 `official-map/map12-label-components-code-source-manifest.json`、`official-map/map12-native-region-labels-source-manifest.json`，Unity 绑定见 `official-map/map12-native-region-labels-binding-source-manifest.json`。完整原分区与100组区域文字的 DX12 昼夜／等级／探索度／境界／颜色夹具及87纹理604层 mip GPU 回读通过；正式玩家存档、正常游玩路线与完整定制 TMP 等价性仍待接入验证，未生成新的素材快照。
 
 山之国固定宝箱：83处原 Lo 等级、区域与奖励索引／追加清单、当前871原奖励表／倍率／包展开的复用等价证明见 [宝箱来源](official-map/map12-chests-source-manifest.json)。阶位0继承所在区域、非0显式配置为用户确认的单机规则；奖励、随机状态、开箱计数与完成标记原子保存。6401的规则782所需物品61925图标从官方资源补齐，原 UI 来源与绑定清单同步更新为929张 Sprite。83处事务、五处实际指针领奖及保存失败／冷读通过；正常路线、机关连续领奖与原交互动画范围仍见地图页。没有绘制替代素材，未生成完整素材快照。
+
+山之国正式原生场景：APK `assets/bin/Data/data.unity3d` 的 PlayerSettings／TagManager 原始对象证明 Linear 色彩空间和23个有序 Sorting Layer；原3001玩家渲染器的 Object层／顺序0、原实体独立层与顺序接入正式玩家场景。四份原生目录显式绑定 `Map12/Native/world-assets`，本地玩家／探索度／女神存档驱动原 PartitionController、环境与区域文字；来源及资源／代码哈希见[正式场景绑定](official-map/map12-native-world-source-manifest.json)。共享环境 shader 恢复原局部关键字作用域及动态 ColorMask，保留全部520份原程序、原公式和参数；转换清单同步更新。99区正式相机站位夹具及99处区域光照实际运行通过，完整正常路线与 Windows 交付仍见地图页，未生成完整素材备份快照。
+
+原102女神已通过正式地图指针／原按钮激活及冷读，实际画面恢复明亮地形；本地地图保持在活动场景，以保留原 FollowSceneActiveSelfController 的全局灯光控制，不改原灯光参数。

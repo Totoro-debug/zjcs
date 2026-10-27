@@ -74,7 +74,7 @@ ZWrite [_ZWrite]
 ZTest [_ZTest]
 Blend [_SrcBlend] [_DstBlend], [_SrcBlend] [_DstBlend]
 BlendOp [_BlendOp], [_BlendOp]
-ColorMask 0
+ColorMask [_ColorMask]
 Stencil { Ref [_Stencil] ReadMask [_StencilReadMask] WriteMask [_StencilWriteMask] Comp [_StencilComp] Pass [_StencilOp] Fail Keep ZFail Keep }
 AlphaToMask Off
 CGPROGRAM
@@ -82,16 +82,16 @@ CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag
 #pragma multi_compile __ INSTANCING_ON
-#pragma multi_compile __ UNITY_UI_CLIP_RECT
-#pragma multi_compile __ USE_DISSOLVE
-#pragma multi_compile __ USE_DISSOLVE2
+#pragma multi_compile_local __ UNITY_UI_CLIP_RECT
+#pragma multi_compile_local __ USE_DISSOLVE
+#pragma multi_compile_local __ USE_DISSOLVE2
 #pragma multi_compile __ USE_DISTORT
 #pragma multi_compile __ USE_MAINTEX
 #pragma multi_compile __ USE_MASK
 #pragma multi_compile __ USE_NOISE
 #pragma multi_compile __ USE_PIXEL
-#pragma multi_compile __ USE_SHAPE_LIGHT_TYPE_0
-#pragma multi_compile __ USE_WIND2D
+#pragma multi_compile_local __ USE_SHAPE_LIGHT_TYPE_0
+#pragma multi_compile_local __ USE_WIND2D
 #include "UnityCG.cginc"
 #if !defined(INSTANCING_ON) && !defined(UNITY_UI_CLIP_RECT) && !defined(USE_DISSOLVE) && !defined(USE_DISSOLVE2) && !defined(USE_DISTORT) && !defined(USE_MAINTEX) && !defined(USE_MASK) && !defined(USE_NOISE) && !defined(USE_PIXEL) && !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_WIND2D)
 struct Input { float4 vertex:POSITION; float4 uv:TEXCOORD0; float4 color:COLOR; };
@@ -49129,7 +49129,7 @@ ZWrite [_ZWrite]
 ZTest [_ZTest]
 Blend [_SrcBlend] [_DstBlend], [_SrcBlend] [_DstBlend]
 BlendOp [_BlendOp], [_BlendOp]
-ColorMask 0
+ColorMask [_ColorMask]
 Stencil { Ref [_Stencil] ReadMask [_StencilReadMask] WriteMask [_StencilWriteMask] Comp [_StencilComp] Pass [_StencilOp] Fail Keep ZFail Keep }
 AlphaToMask Off
 CGPROGRAM
@@ -49137,16 +49137,16 @@ CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag
 #pragma multi_compile __ INSTANCING_ON
-#pragma multi_compile __ UNITY_UI_CLIP_RECT
-#pragma multi_compile __ USE_DISSOLVE
-#pragma multi_compile __ USE_DISSOLVE2
+#pragma multi_compile_local __ UNITY_UI_CLIP_RECT
+#pragma multi_compile_local __ USE_DISSOLVE
+#pragma multi_compile_local __ USE_DISSOLVE2
 #pragma multi_compile __ USE_DISTORT
 #pragma multi_compile __ USE_MAINTEX
 #pragma multi_compile __ USE_MASK
 #pragma multi_compile __ USE_NOISE
 #pragma multi_compile __ USE_PIXEL
-#pragma multi_compile __ USE_SHAPE_LIGHT_TYPE_0
-#pragma multi_compile __ USE_WIND2D
+#pragma multi_compile_local __ USE_SHAPE_LIGHT_TYPE_0
+#pragma multi_compile_local __ USE_WIND2D
 #include "UnityCG.cginc"
 #if !defined(INSTANCING_ON) && !defined(UNITY_UI_CLIP_RECT) && !defined(USE_DISSOLVE) && !defined(USE_DISSOLVE2) && !defined(USE_DISTORT) && !defined(USE_MAINTEX) && !defined(USE_MASK) && !defined(USE_NOISE) && !defined(USE_PIXEL) && !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_WIND2D)
 struct Input { float4 vertex:POSITION; float4 uv:TEXCOORD0; float4 color:COLOR; };

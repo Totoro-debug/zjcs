@@ -63,12 +63,21 @@ namespace Zjcs.Editor
             map12Runtime.MapVoiceVolume = () => 0f;
             map12Runtime.Begin(12, slot, root, canvas.transform, avatar, name, null);
             yield return new WaitForSecondsRealtime(1);
+            VerifyNativeWorldGraphics(canvas.transform);
             if (!RuntimeField<MapGridPoint>("currentGrid").Equals(new MapGridPoint(248, 32)))
                 throw new InvalidDataException("Original Map12 entry 101 is not used.");
             string output = Path.GetFullPath("../.tools/map12-runtime-render-session");
             Directory.CreateDirectory(output);
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "entry.png"));
             yield return new WaitForSecondsRealtime(.5f);
+
+            if (UnityEditor.SessionState.GetBool(Key + ".nativeWorld", false))
+            {
+                IEnumerator nativeWorld = VerifyNativeWorldSteps(root, slot, canvas.transform, output);
+                while (nativeWorld.MoveNext()) yield return nativeWorld.Current;
+                RuntimeCall("CloseMap");
+                yield break;
+            }
 
             if (UnityEditor.SessionState.GetBool(Key + ".chests", false))
             {

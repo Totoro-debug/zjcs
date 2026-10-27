@@ -65,10 +65,13 @@ namespace Zjcs.Editor
         }
 
         private static void RunCore(bool verifyUi, bool import = true, int uiMapClassId = 12, bool verifyRuntime = false,
-            bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false)
+            bool verifyDialogueInput = false, bool verifyAudio = false, bool verifyChests = false, bool verifyNativeWorld = false)
         {
             try
             {
+                // Render the actual variants for screenshots instead of the
+                // editor's temporary cyan FallbackLoading shader.
+                ShaderUtil.allowAsyncCompilation = false;
                 if (import) OfficialMap12Tools.ImportAndValidate();
                 if (verifyUi && import) OfficialMap11UiTools.ImportForMap(12);
                 ProjectTools.Validate();
@@ -77,6 +80,7 @@ namespace Zjcs.Editor
                 SessionState.SetBool(Key + ".dialogueInput", verifyDialogueInput);
                 SessionState.SetBool(Key + ".audio", verifyAudio);
                 SessionState.SetBool(Key + ".chests", verifyChests);
+                SessionState.SetBool(Key + ".nativeWorld", verifyNativeWorld);
                 SessionState.SetInt(Key + ".uiMap", uiMapClassId);
                 SessionState.SetBool(Key, true);
                 SessionState.SetInt(Key + ".result", 1);

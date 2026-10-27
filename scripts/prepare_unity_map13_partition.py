@@ -120,6 +120,19 @@ def build():
                 text = text.replace("\t\tpartitionAsset.SetLogger((ILogger)(object)Logger);\n", "")
                 text = text.replace("TryGetComponent<PartitionElement>(ref partitionElement)", "TryGetComponent<PartitionElement>(out partitionElement)")
                 text = text.replace("\t\tbool flag = default;\n\t\tfor (int count = assets.Count;", "\t\tfor (int count = assets.Count;")
+                # Offline map destruction must release only registered layers;
+                # unopened Day layers and already removed Night layers differ.
+                text = text.replace("\tpublic void RemoveAsset(Vector2Int chunkPos", """    // Local lifetime adapter: original Remove releases loaded and pending handles.
+    public void ReleaseOfflineAssets()
+    {
+        foreach (PartitionAsset asset in mId2Assets.Values) asset.Remove();
+        mId2Assets.Clear();
+        if (mChunkGrid != null)
+            foreach (ChunkData chunk in mChunkGrid) chunk?.Assets.Clear();
+        mVisited.Clear();
+    }
+
+\tpublic void RemoveAsset(Vector2Int chunkPos""")
             text = text.replace("IResourceLoader", "IPartitionResourceLoader").replace("AssetOperationHandle<", "PartitionAssetHandle<")
             text = text.replace("IServiceProvider", "IPartitionInstanceFactory")
             text = text.replace("ServiceProviderExtensions.Instantiate(mServiceProvider, result, mHostTrans, false)", "mServiceProvider.Instantiate(result, mHostTrans, false)")
@@ -158,6 +171,7 @@ def build():
             "Bind resource handles, prefab instantiation, camera readiness, other-game state and world progress through explicit local interfaces; subscribe to actual Unity low-memory event.",
             "Reconstruct official UniTask continuations from their decompiled state machines as Unity coroutines: realtime five-second private-layer removal; preincrement readiness loop with maxTryTime 120; same call order and branches.",
             "Omit GM-only outdated-version broadcast diagnostics; route logger diagnostics to Unity Debug, retaining branch placement and literal text.",
+            "Expose local lifetime cleanup through original Remove for registered assets, including pending handles, without removing unregistered day/night layers.",
             "Repair decompiled TryGetComponent ref argument to actual Unity out parameter; disambiguate UnityEngine.Object."],
         limitations=["World-context and native scene bindings must be connected and validated; code import is not gameplay verification."])))
     print("Migrated original partition execution types:", len(inputs))

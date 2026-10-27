@@ -18,7 +18,7 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 剧情载荷保留49个入口与17个递归子图、22项1165～1270主线任务、11处终端的完整原始参数；战斗载荷保留155关／858项实体绑定／17个场景。放置202的未消费 `LoStageBehStageComponent.StageIds=[2000]` 保留在源数据中；其原 EC 模板没有对应行为消费者，故不把缺失的2000伪造为可执行战斗。
 
-官方 UI 从当前选定来源重新解析65份 prefab 层级、928张 Sprite、序列化引用、JSZX 布局、原动画曲线和中文文本，绑定到 `Resources/Map12/UI/`；不使用截图或手写布局。`prepare_unity_map12_ui.py` 负责原对象提取，`OfficialMap11UiTools.ImportForMap(12)` 复用原生导入步骤，保留各 Sprite 的尺寸、边框、枢轴和 PPU。女神图标按原 `GoddessDialogIcon` 的状态对象清单切换；当前源数据另保留 Image／Mask 启用值，防止把遮罩禁用后直接显示黑色遮罩贴图。原 UIParticle 引用已记录，完整粒子模拟和全部特效尚未接入。当前仅为界面素材与组件绑定，地图运行状态、费用、奖励和存档仍须整体验证。
+官方 UI 从当前选定来源重新解析65份 prefab 层级、929张 Sprite、序列化引用、JSZX 布局、原动画曲线和中文文本，绑定到 `Resources/Map12/UI/`；不使用截图或手写布局。`prepare_unity_map12_ui.py` 负责原对象提取，`OfficialMap11UiTools.ImportForMap(12)` 复用原生导入步骤，保留各 Sprite 的尺寸、边框、枢轴和 PPU。女神图标按原 `GoddessDialogIcon` 的状态对象清单切换；当前源数据另保留 Image／Mask 启用值，防止把遮罩禁用后直接显示黑色遮罩贴图。原 UIParticle 引用已记录，完整粒子模拟和全部特效尚未接入。当前仅为界面素材与组件绑定，地图运行状态、费用、奖励和存档仍须整体验证。
 
 `OfficialMap12PlayModeAcceptance.RunUiImported` 已在内置屏以 Direct3D12 实际运行，分别设置真实 GameView 分辨率并等待 Screen 尺寸同步，查看450×800和720×1280下的 HUD、女神及失落女神三种状态画面，核对原遮罩启用值、图标对象组、按钮尺寸与射线遮挡；模拟鼠标按下／抬起／点击，验证未满足条件、激活关闭及传送关闭分支。运行夹具使用独立界面数据与计数回调，未调用实际地图的发奖、扣费或存档，不代表正式玩家流程已经接通。
 
@@ -28,9 +28,9 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 
 剧情空间从当前官方138份 EC prefab 恢复原 `MapEntityTag`、`StoryNodeRegister` 与 `StorySettings`。`DungeonActive` 原 Selector 的输入／输出逐对证明六个其他地图子图不可在本图选中，原图仍完整保留；山之国使用 `MountLift`／`IronMount` 注册点。`RunRuntimeSpatial` 在 DX12 Play Mode 直接执行原剧情图夹具，核对升降台1.5格偏移、机神山本图分支、原6秒／9秒等待、镜头恢复及剧情状态／次数冷读，并查看两处实际截图。该夹具直接启动剧情，只证明图执行与画面，不证明建筑输入；两图 `MaxCount=-1`，不添加单次播放限制。8项来源专项测试、六终端回归（含746从范围外走近）、58次指针推动及Map11原立绘／透明按钮输入回归通过。原建筑点击应经显示 prefab 中的 `ECWorldStageView` 交互链：升降台先打开 `WorldFantasyLadderDialog`，窗口操作才启动预览；机神山先判断4102／4103等原条件。此链尚未接入，不能把点击建筑直接播放预览当作官方行为。
 
-原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存已生成原地形／场景／Water配置资产；当前仍是转换输入及中间产物，尚未替换运行场景或证明 Windows 表现。
+原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存用于后续原生地形／场景／Water资产恢复，正式运行绑定与实际验证范围见下文。
 
-`NativeTerrain/` 已恢复186个原 chunk、747个 Tile、739个 Sprite、11张原 ASTC 贴图及原 PartitionData，共1684个原生资产；按原线性／sRGB编码解压，保持尺寸、网格、UV、枢轴、采样与引用。`OfficialMap12TerrainTools` 验证实际 MonoScript、逐槽 Tile GUID／对象 ID、Sprite 网格和贴图导入参数，显式绑定 `Map12/Native/native-terrain-catalog`。`-6_0` 的第63个 Tile 槽在原始对象中即为空，精确保留，不补图；其他槽须绑定到对应原资产。`OfficialMap12PartitionAcceptance` 在 DX12 Play Mode 对全部186个 chunk 验证本地异步句柄、激活／隐藏、清除／重载／移除和加载未完成时移除，核对2060处带偏移的 Tilemap 数据及实际矩阵。复用同一871来源的官方 Partition 实现和本地资源适配，现有类型名中的 Map13 不代表使用泽之国配置。该夹具只验证分块生命周期与瓦片状态，尚未证明本图原场景层级、原材质渲染、界面或正常路线；当前正式地图运行仍使用前述转换地形；原生环境联动夹具另见下段。
+`NativeTerrain/` 已恢复186个原 chunk、747个 Tile、739个 Sprite、11张原 ASTC 贴图及原 PartitionData，共1684个原生资产；按原线性／sRGB编码解压，保持尺寸、网格、UV、枢轴、采样与引用。`OfficialMap12TerrainTools` 验证实际 MonoScript、逐槽 Tile GUID／对象 ID、Sprite 网格和贴图导入参数，显式绑定 `Map12/Native/native-terrain-catalog`。`-6_0` 的第63个 Tile 槽在原始对象中即为空，精确保留，不补图；其他槽须绑定到对应原资产。`OfficialMap12PartitionAcceptance` 在 DX12 Play Mode 对全部186个 chunk 验证本地异步句柄、激活／隐藏、清除／重载／移除和加载未完成时移除，核对2060处带偏移的 Tilemap 数据及实际矩阵。复用同一871来源的官方 Partition 实现和本地资源适配，现有类型名中的 Map13 不代表使用泽之国配置。该夹具只验证分块生命周期与瓦片状态，正式玩家场景接入及其范围另见下文。
 
 `NativeScene/` 已恢复原 `MapGround_12_bare` 主体及152个原生资产，核对哈希后复用109个地形资产；`NativeEnvironmentScene/` 保留187份环境 prefab／358个原生资产，`NativeRegionLabels/` 保留其余80份区域文字 prefab／124个原生资产。全部原层级、坐标、对象 ID、动画、材质、骨骼引用和纹理 mip 保留。原 shader 以原始对象 SHA-256 核对后迁移至 Windows ShaderImporter，保留显式脚本、shader、纹理与 prefab 加载绑定；熔岩边缘程序通过 Windows D3D 双阶段编译。`map12-shared-environment-source-manifest.json` 核对同一 APK 的5个全局配置对象及113项共享资源／代码载荷，不使用 map-13 的地图、导航或玩法配置。
 
@@ -63,6 +63,10 @@ Unity 入口 `Assets/Official/World/Map/12/` 已绑定地形、小地图和实�
 固定宝箱按当前871的83处放置组件、原 WorldStage 手动行为2／结果200、原奖励索引与 Lo 追加／替换清单接入本地奖励服务。82处相对等级取原区域等级，8110保留显式等级70／阶位7；`WorldEntityLevelComponent` 的私有区域使用实体等级、公共区域使用角色等级分支保持不变。按用户确认，Lo 阶位0继承宝箱所在区域阶位，非0使用显式配置；空奖励引用沿用已确认方案。6401追加原规则782，原物品61925的图标、品质、图标模板与文字从当前官方资源补齐，界面目录现为929张 Sprite。奖励选择、等级倍率、包展开、原随机状态、开箱计数和完成标记在同一角色档案事务中提交；次级地图文件／区域进度失败后重试，冷读先恢复完成标记，已领取宝箱不重新占位或发奖。
 
 `RunRuntimeChests` 在内置屏 DX12 通过全部83处奖励事务和重复领取检查，以及301／3104／2201／8110／8801五处正式地图指针领奖、四类宝箱、角色档案拒绝写入和“奖励已提交但地图未写入”后的冷读恢复。五处测试提供前置区域状态及初始站位；三处验证走入原交互格，两处写入拒绝夹具先站在交互格，不代表普通角色连续路线。已查看原奖励列表运行截图；6401的追加规则仅由规则夹具覆盖，四推箱奖励的连续解锁后实际领奖、原22025／22044交互动画、完整地图与 Windows Player 仍待验证。来源和代码／数据哈希见[固定宝箱来源](../../assets/reference/official-map/map12-chests-source-manifest.json)，界面绑定更新在原[原生界面清单](../../assets/reference/official-map/map12-ui-native-source-manifest.json)。
+
+正式 `OfficialMainlineMapRuntime` 已通过 `Map12/Native/world-assets` 接入原主体、186份地形和267份完整场景分区，使用未过滤的原 PartitionData、原相机邻域加载与区域回调。等级、阶位、战力、原始探索点数及女神激活状态由本地玩家／地图状态提供；动态字体在 Awake 前复制，退出时恢复原管线并仅释放已注册的分区句柄。APK 的 PlayerSettings 明确为 Linear，工程同步恢复；实体与 Spine 显示恢复原独立 Sorting Layer／Order，玩家外层排序组读取原3001的 Object层／顺序0。共享 `Effect/Noise_Mask_Pro` 保留原关键字作用域，防止 URP 全局灯光误启局部变体；原动态 `_ColorMask` 绑定已恢复，未改 shader 公式或绘制替代素材。来源、实际资源目录与代码哈希见[正式原生场景绑定](../../assets/reference/official-map/map12-native-world-source-manifest.json)。
+
+`RestoreAndRunNativeWorld` 在内置屏 DX12 使用正式地图相机逐区加载99处指定站位，实际观察到全部99处区域光照注册，核对原地形、文字生命周期和运行错误；原局部关键字修复后通过。已查看实际运行画面中的角色、实体、地形和区域文字。另在原102女神提供区域满进度前置，通过正式地图指针和原弹窗按钮激活，检查原5秒夜间分区移除、全局灯光所属活动场景及角色档案冷读；已查看解锁后与冷读后的实际明亮地形画面。正式地图保留在活动场景，避免原 `FollowSceneActiveSelfController` 因持久化场景不匹配而关闭全局灯光，未修改官方灯光数值或控制器分支。83处宝箱事务／五处指针领奖与写入失败冷读、Map10开场／地图存档及Map11原对话透明按钮输入回归通过，8项来源专项测试与静态元数据检查通过；Unity实际导入／编译和 `ProjectTools.Validate` 已执行。此处人为提供站位以覆盖分区，不代表普通角色连续路线；完整 HUD、头像、主线推进及 Windows Player 仍未完成。
 
 ## 尚未实现
 

@@ -338,6 +338,11 @@ namespace Zjcs.Presentation.World
                 MeshRenderer renderer = child.AddComponent<MeshRenderer>();
                 renderer.sharedMaterial = batch.material;
                 renderer.sortingOrder = batch.sortingOrder;
+                if (mapClassId == 12)
+                {
+                    renderer.sortingLayerID = SortingLayer.layers[batch.sortingLayer].id;
+                    renderer.sortingOrder = batch.nativeSortingOrder;
+                }
                 renderer.shadowCastingMode = ShadowCastingMode.Off;
                 renderer.receiveShadows = false;
             }
@@ -414,6 +419,8 @@ namespace Zjcs.Presentation.World
                 {
                     mesh = mesh,
                     material = material,
+                    sortingLayer = metadata.layer,
+                    nativeSortingOrder = metadata.order,
                     sortingOrder = metadata.layer * 1000 + metadata.order
                 });
 
@@ -614,7 +621,7 @@ namespace Zjcs.Presentation.World
         {
             public Mesh mesh;
             public Material material;
-            public int sortingOrder;
+            public int sortingOrder, sortingLayer, nativeSortingOrder;
         }
     }
 

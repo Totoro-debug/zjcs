@@ -93,7 +93,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLoader.cs",
-      "sha256": "c645fd6053e0922dd720c78d54c786205559788316d9b612454cb2718aab3210"
+      "sha256": "4ee36910c1a69dfb733b56ae803fed6db283d9878f26da7e012a4ab290ba7efa"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionController.cs",
@@ -134,18 +134,19 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13/Zjcs.Offline.World.NativeMap13.asmdef",
-      "sha256": "93878fde369cd08b5e629393a5a0a1c193a5f33078c0e3b2f603c8a151e7f82a"
+      "sha256": "337c7b45a0342be4ee29f0fedfb42306a265b3c7a125a1cb502c059b141eda59"
     }
   ],
   "generator": {
     "path": "scripts/prepare_unity_map13_partition.py",
-    "sha256": "6c57083e059a1226b84b7aba8a92d82da47c32e501f0a082ab9efafd8da8a3a5"
+    "sha256": "9084e5facc6b327447cf4967946f3f5bc439fd32f6952680a1e70461d5e6b31a"
   },
   "adaptations": [
     "Keep official partition data, branch order, nine-neighbor load order, tile fill/clear and refcounts, 900 idle frames and unload interval greater than five frames.",
     "Bind resource handles, prefab instantiation, camera readiness, other-game state and world progress through explicit local interfaces; subscribe to actual Unity low-memory event.",
     "Reconstruct official UniTask continuations from their decompiled state machines as Unity coroutines: realtime five-second private-layer removal; preincrement readiness loop with maxTryTime 120; same call order and branches.",
     "Omit GM-only outdated-version broadcast diagnostics; route logger diagnostics to Unity Debug, retaining branch placement and literal text.",
+    "Expose local lifetime cleanup through original Remove for registered assets, including pending handles, without removing unregistered day/night layers.",
     "Repair decompiled TryGetComponent ref argument to actual Unity out parameter; disambiguate UnityEngine.Object."
   ],
   "limitations": [

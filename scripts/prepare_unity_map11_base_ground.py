@@ -105,6 +105,9 @@ def build(map_id=11):
     view={'modelScale':{k:getattr(transform.read().m_LocalScale,k) for k in 'xyz'},
           'modelOffset':{k:getattr(offset.read().m_LocalPosition,k) for k in 'xyz'},
           'sortingOrder':renderer.read().m_SortingLayer*1000+renderer.read().m_SortingOrder}
+    if map_id == 12:
+        view.update(sortingLayerId=renderer.read().m_SortingLayerID,
+                    nativeSortingOrder=renderer.read().m_SortingOrder)
     camera_root=apk.asset('defaultpackage_assets_prefabs_map_common_entityui.bundle','/WorldCamera.prefab')
     controller=child(camera_root,'controller')
     adaptor=next(c.component.deref() for c in controller.read().m_Component if c.component.type.name=='MonoBehaviour'

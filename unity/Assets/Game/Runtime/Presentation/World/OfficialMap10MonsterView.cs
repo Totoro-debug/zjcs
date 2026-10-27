@@ -116,6 +116,11 @@ namespace Zjcs.Presentation.World
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.sharedMaterial = generatedMaterial;
             meshRenderer.sortingOrder = sequence.sortingLayer * 1000 + sequence.sortingOrder + orderOffset;
+            if (loaded.mapClassId == 12)
+            {
+                meshRenderer.sortingLayerID = SortingLayer.layers[loaded.sortingLayer].id;
+                meshRenderer.sortingOrder = loaded.sortingOrder + orderOffset;
+            }
             meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
             meshRenderer.receiveShadows = false;
             GetComponent<MeshFilter>().sharedMesh = generatedMesh;
@@ -141,6 +146,11 @@ namespace Zjcs.Presentation.World
                 throw new InvalidOperationException("Official Map10 story actor atlas is missing: " + loaded.textureResource);
             generatedMaterial.mainTexture = atlas;
             meshRenderer.sortingOrder = loaded.sortingLayer * 1000 + loaded.sortingOrder + sortingOrderOffset;
+            if (loaded.mapClassId == 12)
+            {
+                meshRenderer.sortingLayerID = SortingLayer.layers[loaded.sortingLayer].id;
+                meshRenderer.sortingOrder = loaded.sortingOrder + sortingOrderOffset;
+            }
             SetSequence(loaded, loop, restoreIdleOnComplete);
         }
 

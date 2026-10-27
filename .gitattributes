@@ -480,3 +480,32 @@ unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Chests.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf
+
+# Map12 production native world and exact local bindings.
+scripts/prepare_unity_map12_native_world.py text eol=lf
+scripts/prepare_unity_map13_environment_shader.py text eol=lf
+scripts/prepare_unity_map13_partition.py text eol=lf
+unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldTools.cs text eol=lf
+unity/Assets/Game/Editor/Map12/Zjcs.Editor.Map12.asmdef text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.NativeWorld.cs text eol=lf
+unity/Assets/Game/Runtime/Official/World/NativeTerrain/PartitionLoader.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.NativeMap12.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineStatuesModule.Goddess.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldEnvironment.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Map12WorldLabels.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldAssets.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12NativeWorldView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/Zjcs.Presentation.World.NativeMap12.asmdef text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/Zjcs.Presentation.World.asmdef text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12/** -text
+unity/Assets/Game/Runtime/Presentation/World/NativeMap12.meta -text
+unity/Assets/Game/Resources/Map12/Native/world-assets.asset -text
+unity/Assets/Game/Resources/Map12/Native/world-assets.asset.meta -text
+unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.PlayerView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/OfficialMap10EntityView.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/OfficialMap10MonsterView.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Runtime.cs text eol=lf
+unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs text eol=lf
+scripts/prepare_unity_map11_base_ground.py text eol=lf
