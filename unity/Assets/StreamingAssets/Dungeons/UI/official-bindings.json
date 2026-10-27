@@ -8938,6 +8938,7 @@
       "name": "TravelNotesPanel",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -51811,6 +51812,7 @@
       "name": "DailyDungeonEntryPanel",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -99681,6 +99683,7 @@
       "name": "DailyDungeonEntryPanelItem",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -103944,6 +103947,7 @@
       "name": "DailyDungeonConfirmEnterPanel",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -116919,6 +116923,7 @@
       "name": "DailyDungeonDialog",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -152506,11 +152511,111 @@
         "description": "0/0/4/0/3",
         "gradeRange": "0/0/4/0/4/3/1",
         "isPrivate": true,
+        "lockStates": [
+          {
+            "objects": [
+              "0/0/4/0/4/4",
+              "0/0/4/0/4/2"
+            ],
+            "state": 1
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5"
+            ],
+            "state": 0
+          }
+        ],
         "title": "0/0/4/0/1"
       },
       "privateDialog": {
         "background": "0/0/2/0",
-        "icon": "0/0/4/0/0"
+        "icon": "0/0/4/0/0",
+        "title": "0/0/1/2",
+        "titleStates": [
+          {
+            "objects": [
+              "0/0/1/2"
+            ],
+            "state": 1
+          },
+          {
+            "objects": [
+              "0/0/1/1"
+            ],
+            "state": 0
+          }
+        ]
+      },
+      "privateUnlock": {
+        "buttonStates": [
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/1",
+              "0/0/4/0/4/5/3/3"
+            ],
+            "state": 0
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/0",
+              "0/0/4/0/4/5/3/2"
+            ],
+            "state": 1
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/0",
+              "0/0/4/0/4/5/3/3"
+            ],
+            "state": 2
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/0",
+              "0/0/4/0/4/5/3/4"
+            ],
+            "state": 3
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/1",
+              "0/0/4/0/4/5/3/4"
+            ],
+            "state": 4
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/0",
+              "0/0/4/0/4/5/3/5"
+            ],
+            "state": 5
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/1",
+              "0/0/4/0/4/5/3/5"
+            ],
+            "state": 6
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/0",
+              "0/0/4/0/4/5/3/6"
+            ],
+            "state": 7
+          },
+          {
+            "objects": [
+              "0/0/4/0/4/5/3/1",
+              "0/0/4/0/4/5/3/6"
+            ],
+            "state": 8
+          }
+        ],
+        "enterState": 1,
+        "rewardTitle": "0/0/4/0/4/5/0/0/0",
+        "rewardTitleLayout": "0/0/4/0/4/5/0/0"
       },
       "roomButton": null,
       "roomView": null,
@@ -180641,6 +180746,7 @@
       "name": "DailyDungeonBigMapDialog",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": {
@@ -188715,6 +188821,7 @@
       "name": "DailyDungeonGradeItem",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -190117,6 +190224,7 @@
       "name": "DailyDungeonBigMapRoomItem",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": "",
       "roomView": {
         "animation": "",
@@ -193993,6 +194101,7 @@
       "name": "DailyDungeonRoomItem",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -217195,6 +217304,7 @@
       "name": "ArenaPanel",
       "privateDetail": null,
       "privateDialog": null,
+      "privateUnlock": null,
       "roomButton": null,
       "roomView": null,
       "routeWindow": null,
@@ -270757,10 +270867,12 @@
       },
       "difficulties": [
         {
+          "key": "ui_daily_dungeon_difficulty_text_Normal",
           "name": "Normal",
           "value": 0
         },
         {
+          "key": "ui_daily_dungeon_difficulty_text_Hard",
           "name": "Hard",
           "value": 1
         }

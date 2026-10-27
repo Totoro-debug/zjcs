@@ -75,6 +75,8 @@ namespace Zjcs.Official.WorldUI
     public class WorldStateGameObjectConfig : IWorldStateConfig
     {
         [SerializeField] private WorldStateGameObjectData mStateGameObjectData;
+        public static WorldStateGameObjectConfig FromBindings(WorldStateGameObjectData data)
+            => new WorldStateGameObjectConfig { mStateGameObjectData = data ?? throw new ArgumentNullException(nameof(data)) };
         public void SetState(WorldStateConfigValue state)
         {
             List<GameObject> selected = null;

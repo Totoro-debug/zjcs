@@ -108,6 +108,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
     grade_item = None
     private_detail = None
     private_dialog = None
+    private_unlock = None
     grade_grids = []
     room_animation = None
     vote_animation = None
@@ -122,6 +123,20 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
         target = prefab.assets_file.objects[pointer["m_PathID"]].read(check_read=False)
         target_id = target.m_GameObject.path_id if hasattr(target, "m_GameObject") else pointer["m_PathID"]
         return paths[target_id]
+    def object_states(fields, name):
+        references = {ref["rid"]: ref for ref in fields["references"]["RefIds"]}
+        configs = fields[name]["mStateConfigs"]
+        if len(configs) != 1:
+            raise ValueError("Private route state binding needs its original single config: " + name)
+        reference = references[configs[0]["rid"]]
+        if reference["type"]["class"] != "StateGameObjectConfig":
+            raise ValueError("Unexpected private route state config: " + name)
+        states = [dict(state=row["State"]["mValue"], objects=[reference_path(value) for value in row["GameObjects"]])
+                  for row in reference["data"]["mStateGameObjectData"]["GoConfig"]]
+        if any(path is None for state in states for path in state["objects"]):
+            raise ValueError("Private route state config has a null hierarchy reference: " + name)
+        return states
+
     images = []
     texts = []
     for game_object, path, names, transform in nodes:
@@ -178,12 +193,21 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
             elif script == "DailyDungeonDialog" and key == "DailyDungeonDialogPrivateMap":
                 fields = schemas.read(reader)
                 private_dialog = {name: reference_path(fields[field]) for name, field in (
-                    ("background", "mBgImage"), ("icon", "IconImage"))}
+                    ("background", "mBgImage"), ("icon", "IconImage"), ("title", "mTitleText"))}
+                private_dialog["titleStates"] = object_states(fields, "mTitleStateSwitcher")
             elif script == "DailyDungeonDetailContent" and key == "DailyDungeonDialogPrivateMap":
                 fields = schemas.read(reader)
                 private_detail = dict(isPrivate=bool(fields["mIsPrivateMap"]),
                     title=reference_path(fields["DailyDungeonName"]), description=reference_path(fields["DailyDungeonDesc"]),
-                    gradeRange=reference_path(fields["GradeRangeText"]))
+                    gradeRange=reference_path(fields["GradeRangeText"]), lockStates=object_states(fields, "LockContentStateSwitcher"))
+            elif script == "DailyDungeonUnlockContent" and key == "DailyDungeonDialogPrivateMap":
+                fields = schemas.read(reader)
+                source = (CODE / "client-source/DailyDungeonUnlockContent.cs").read_text(encoding="utf8")
+                enum = re.search(r"public enum BtnShowState\s*\{([^}]+)\}", source).group(1)
+                if "=" in enum: raise ValueError("Unexpected explicit private-entry enum values")
+                names = [name.strip() for name in enum.split(",") if name.strip()]
+                private_unlock = dict(buttonStates=object_states(fields, "BtnStateSwitcher"), enterState=names.index("Enter"),
+                    rewardTitle=reference_path(fields["mRewardTitleText"]), rewardTitleLayout=reference_path(fields["mRewardTitleLayout"]))
             elif script == "DailyDungeonGradeItem" and key == "DailyDungeonGradeItem":
                 fields = schemas.read(reader)
                 grade_item = {name: reference_path(fields[field]) for name, field in (
@@ -322,7 +346,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
         room_view["voteAnimation"] = vote_animation
     return {"name": key, "transforms": transforms, "safeAreas": safe_areas, "layouts": layouts, "scrolls": scrolls,
             "roomView": room_view, "roomButton": room_button, "buttons": buttons,
-            "routeWindow": route_window, "gradeItem": grade_item, "privateDetail": private_detail, "privateDialog": private_dialog, "gradeGrids": grade_grids, "localizations": localizations, "images": images, "texts": texts}, apk.provenance(prefab)
+            "routeWindow": route_window, "gradeItem": grade_item, "privateDetail": private_detail, "privateDialog": private_dialog, "privateUnlock": private_unlock, "gradeGrids": grade_grids, "localizations": localizations, "images": images, "texts": texts}, apk.provenance(prefab)
 
 
 def route_texts(apk, keys, required_keys):
@@ -404,16 +428,19 @@ def route_settings(apk, schemas, sprites, prefabs):
     difficulty_source = (CODE / "common-source/Common/DailyDungeonDifficulty.cs").read_text(encoding="utf8")
     difficulty_names = {int(value): name for name, value in re.findall(r"(\w+)\s*=\s*(\d+)", difficulty_source)}
     display = dict(dungeonId=next(iter(ids)), privateDungeonId=private["DungeonBattleId"], privateDifficulty=private["Difficulty"],
-        difficulties=[dict(value=entry["Difficulty"], name=difficulty_names[entry["Difficulty"]]) for entry in normal])
+        difficulties=[dict(value=entry["Difficulty"], name=difficulty_names[entry["Difficulty"]],
+            key="ui_daily_dungeon_difficulty_text_" + difficulty_names[entry["Difficulty"]]) for entry in normal])
     appearance = next(row for row in fields["Datas"] if row["DungeonId"] == display["dungeonId"])
     display.update(background=resolve(appearance["BgSpriteProxy"]), icon=resolve(appearance["IconSpriteProxy"]))
     if display["background"] is None or display["icon"] is None:
         raise ValueError("Original private-dialog appearance is not bound")
-    private_keys = ["ui_daily_dungeon_item_title_without_difficulty_" + str(display["dungeonId"])]
+    private_keys = ["ui_daily_dungeon_item_title_without_difficulty_" + str(display["dungeonId"]),
+                    "ui_daily_dungeon_dialog_reward_title_without_difficulty"]
+    private_keys.extend(row["key"] for row in display["difficulties"])
     private_keys.extend("ui_daily_dungeon_dialog_desc_content_" + str(display["dungeonId"]) + "_" + row["name"]
                         for row in display["difficulties"])
     keys = sorted(set(grade_keys + private_keys) | {entry["key"] for prefab in prefabs for entry in prefab["localizations"] if entry["key"]})
-    texts, language_inputs, missing = route_texts(apk, keys, grade_keys)
+    texts, language_inputs, missing = route_texts(apk, keys, grade_keys + private_keys)
     return dict(rooms=rooms, roads=roads, grades=grades, texts=texts, privateDisplay=display), dict(asset=settings, source=apk.provenance(reader),
         raw_sha256=sha256(reader.get_raw_data()), language_inputs=language_inputs, missing_translation_keys=missing,
         display_source=dict(path=template_path.relative_to(ROOT).as_posix(), sha256=sha256(template_path.read_bytes()),
@@ -503,11 +530,12 @@ def build():
                                "sha256": sha256(path.read_bytes()),
                                "meta_sha256": sha256(path.with_name(path.name + ".meta").read_bytes())})
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
-        "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
+        "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
         "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",
         "common-source/Common/BattleResultGradeType.cs", "framework-firstpass-source/MultiLanguageText.cs",
+        "framework-source/StateGameObjectConfig.cs", "framework-source/StateGameObjectData.cs",
         "framework-firstpass-source/Framework/LocalizationTextService.cs",
         "framework-firstpass-source/Framework/LocalizationBinaryTextService.cs"]
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),

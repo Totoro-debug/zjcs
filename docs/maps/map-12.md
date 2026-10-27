@@ -34,6 +34,8 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 原 `WorldFantasyLadderDialog`、6103／6302图标 prefab、`StageDialog`、`StageTouchUI`、`WorldCommonStageUI` 和两份原窗口点击组件已恢复序列化引用，保留原空 Touch 按钮与首个窗口处理器绑定。6302的三个原 SkeletonGraphic 起始动画均为空，按原骨骼初始姿态、区域裁剪／旋转及权重独立转换144个顶点为 Unity 原生网格，保留完整贴图 mip、材质参数及6份原 shader 程序；未使用 Spine runtime 或历史采样帧。`NativeMap12BuildingGraphic` 按实际网格边界执行原遮罩裁剪，避免100×100 RectTransform 将延伸网格整体裁掉。`ImportAndRunBuildingUi` 在内置屏 通过450×800／720×1280原窗口、三份网格实际可见像素、模拟射线点击及“开始关卡→关闭→窗口点击”顺序，并查看两幅实际运行画面。奖励槽现已使用原 ItemIcon 与当前原奖励570／571，迁移原浮点曲线乘算、整数截断、聚合和排序；显式等级50／阶位6的公式夹具显示金币2490与物品110×1，低／高阶位边界及双尺寸模拟输入通过。另从当前官方APK补取山之国全部44种实际战斗头像，按原纹理色彩空间、Sprite枢轴和采样参数显式绑定到Map12关卡图鉴；转换／输入／输出哈希见[战斗头像来源](../../assets/reference/official-map/map12-battle-portraits-source-manifest.json)。6103原 `DailyDungeonDialogPrivateMap` 的源绑定已恢复。按原 `DailyDungeonDialog.DoInit`，窗口从6103的 `StageBehStageDailyDungeonComponent` 读取公开副本21及其默认已解锁难度，用原语言键显示“机神山”、说明和评级范围；按同一实体的 `StageBehStageDailyDungeonPrivateMapComponent`，实际战斗入口仍为121／50。背景和建筑图标沿原 `DailyDungeonDialog.DoInit`，从展示副本21的 `DailyDungeonSettings.Datas` 解析原 `BgSpriteProxy`／`IconSpriteProxy` 并显式绑定；同路径 Texture2D／Sprite 使用 Sprite 类型精确选择，不误把纹理主对象当成 Sprite。四份原生 prefab 的34项素材递归依赖已逐项核对既有转换收据的内容哈希，补入路线选择／投票动画、控制器与材质／纹理，脚本逻辑另按反编译代码迁移。按钮文字读取当前官方语言表的 `ui_daily_dungeon_entry_btn`（“进入副本”），移除手写“开始战斗”。私人路线使用原 `DailyDungeonBigMapRoomItem`，保留6行×3列的18个格子（含0占位），按原 `LoopVerticalScrollRect` 的反向索引、滚动方向、网格与布局参数生成，普通查看／选路区沿原状态对象清单切换；原评级条高度、颜色、文本和滚动同步、房间类型图标、边框、选择图及道路状态分别迁移自 `DailyDungeonBigMapDialog`、`DailyDungeonRoomItem`、`DailyDungeonBigMapRoomItem` 和共享地图组解析器。原 `Content` 的零尺寸初值由迁移的 `WorldSafeArea` 按原参数撑满安全区；按钮目标使用原序列化 Graphic 引用，不从小房间 prefab 推断点击位置。当前官方配置、组件引用、83处多语言绑定及154张实际引用的 Sprite 由 `prepare_dungeon_ui_bindings.py` 从选定 APK／匹配云端提取，原始语言文件先校验所选版本，再按官方首个读取器优先和缺键返回原键的行为解析；来源与输入输出哈希见[副本原组件清单](../../assets/reference/dungeon-ui/prefab-binding-source-manifest.json)。
 
+私图详情的三组状态切换现已从原 `DailyDungeonDialog`、`DailyDungeonDetailContent` 和 `DailyDungeonUnlockContent` 重新提取，共13条原对象组；managed-reference ID 在提取阶段按64位整数解析，输出绑定使用原层级路径。私图执行原解锁分支，存在实体入口时选择原 `Enter` 状态，并按原无难度语言键显示“副本奖励”及重建标题布局。窗口标题栏根据展示副本21的两种难度选择原双难度栏，单难度分支仍按原难度语言键处理。显隐操作统一调用迁移的 `WorldStateGameObjectConfig.SetState`，保留先关闭其他组、保留共享对象、最后启用选中组的顺序。两项受影响程序集独立编译、来源无覆盖复现和64165个 GUID 静态检查通过；用户仍暂停自动验收，原窗口实际画面、输入和状态切换尚未运行验证。
+
 Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要求逻辑标签“山壁电梯”。该标签在当前官方地图逻辑配置中绑定实体3501，升降台胜利事务现与原奖励、内部完成标志原子写入该官方标签；加载旧的内部完成标志时也会补齐主线标签。 实际升降台胜利验收确认任务1215从0/1变为1/1，重开角色档案后标签、任务进度和奖励仍恰好各写入一次。
 
 原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存用于后续原生地形／场景／Water资产恢复，正式运行绑定与实际验证范围见下文。
@@ -82,11 +84,11 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 私图窗口和路线通过 `OfflineDailyDungeonSession.OpenPrivateMap` 读取本地副本档案，不执行公共副本的跨日次数重置；私图胜负和终点事务继续只更新活动路线。跨日夹具以昨日日期、已使用次数2和购买次数1开始，核对打开时文件字节不变、胜负／终点冷读后日期和次数仍保留；夹具已加入，尚未由 Unity 执行。本边界按用户已确认的“不发副本奖励、不修改公共次数或购买次数”处理；公共副本仍通过原 `Open` 执行原有日重置。
 
-本项代码已通过 `Zjcs.Official.WorldUI`、`Zjcs.Offline.World`、`Zjcs.Presentation.World` 的独立 C# 编译；`prepare_dungeon_ui_bindings.py` 在不覆盖输出的模式下复现通过，`python -B scripts/check_unity_project.py` 通过64141个 GUID。独立编译复用 Unity 缓存引用，不代表 Unity 导入或运行验收。用户已暂停自动验收，本次变更后的 `ProjectTools.Validate`、Play Mode 连续选路／战斗／冷读、窗口画面与 Windows Player 均未执行。既有 SafeArea 单项点击证据不能代替本次列表、语言和模式切换的运行验证。
+本项代码已通过 `Zjcs.Official.WorldUI`、`Zjcs.Offline.World`、`Zjcs.Presentation.World` 的独立 C# 编译；`prepare_dungeon_ui_bindings.py` 在不覆盖输出的模式下复现通过，`python -B scripts/check_unity_project.py` 通过64165个 GUID。独立编译复用 Unity 缓存引用，不代表 Unity 导入或运行验收。用户已暂停自动验收，本次变更后的 `ProjectTools.Validate`、Play Mode 连续选路／战斗／冷读、窗口画面与 Windows Player 均未执行。既有 SafeArea 单项点击证据不能代替本次列表、语言和模式切换的运行验证。
 
 ## 尚未实现
 
-当前选路倒计时／超时后的处理、私图详情其余动态控件、完整 NPC 队伍显示和所有选择动画仍未完成运行验证；不把原 prefab、脚本和绑定载荷的恢复标记为私人副本流程完成。
+当前选路倒计时／超时后的处理、私图详情的难度标签输入、公共次数展示、掉落预览与说明、完整 NPC 队伍显示和所有选择动画仍未完成运行验证；不把原 prefab、脚本和绑定载荷的恢复标记为私人副本流程完成。
 
 6103原状态3通过 `DailyDungeonDialog` 打开普通难度面板，状态1在条件满足后打开专用 `DailyDungeonDialogPrivateMap`；原 StageBehaviour 指定副本121／难度50，路线从12101分成12102→12104与12103→12105两支，在12106汇合后经12107到12108终点。专用官方 prefab 与当前源 Sprite／TMP 绑定已接入；运行时接入两支选路、无敌人房间推进、官方战斗入口和不发奖励／不改次数的本地终点标记。用户确认的离线结算边界为：胜负写入本地路线存档，失败可重试；不发副本奖励、不修改公共次数或购买次数。用户也确认可按本地其他官方规则推导敌人编队；当前依据同一来源版本的房间类型／关卡波次配置，12101和12106不生成敌人。夹具覆盖两条完整路线及冷读，但还未由 Unity 执行；地图指针到窗口和路线 UI 的 连续输入，以及实际战斗胜负、冷读恢复仍待验收。
 

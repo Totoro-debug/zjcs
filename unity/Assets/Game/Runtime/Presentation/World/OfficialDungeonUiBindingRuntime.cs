@@ -14,7 +14,7 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class Document { public string manifest; public Prefab[] prefabs; public RouteStyles routeStyles; }
         [Serializable] private sealed class Prefab
         { public string name; public TransformBinding[] transforms; public SafeAreaBinding[] safeAreas; public LayoutBinding[] layouts; public ScrollBinding[] scrolls; public ButtonBinding[] buttons;
-          public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog;
+          public RoomViewBinding roomView; public RouteWindowBinding routeWindow; public GradeItemBinding gradeItem; public PrivateDetailBinding privateDetail; public PrivateDialogBinding privateDialog; public PrivateUnlockBinding privateUnlock;
           public LocalizationBinding[] localizations;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class LayoutBinding
@@ -26,14 +26,16 @@ namespace Zjcs.Presentation.World
         }
         [Serializable] private sealed class PrivateDisplayBinding
         { public int dungeonId, privateDungeonId, privateDifficulty; public DifficultyBinding[] difficulties; public SpriteBinding background, icon; }
-        [Serializable] private sealed class DifficultyBinding { public int value; public string name; }
+        [Serializable] private sealed class DifficultyBinding { public int value; public string name, key; }
         public static int PrivateDisplayDungeonId => LoadDocument().routeStyles.privateDisplay.dungeonId;
         [Serializable] private sealed class LocalizationBinding
         { public string path, key; public string[] objects; public bool enabled; }
         [Serializable] private sealed class PrivateDialogBinding
-        { public string background, icon; }
+        { public string background, icon, title; public ObjectStateBinding[] titleStates; }
         [Serializable] private sealed class PrivateDetailBinding
-        { public bool isPrivate; public string title, description, gradeRange; }
+        { public bool isPrivate; public string title, description, gradeRange; public ObjectStateBinding[] lockStates; }
+        [Serializable] private sealed class PrivateUnlockBinding
+        { public ObjectStateBinding[] buttonStates; public int enterState; public string rewardTitle, rewardTitleLayout; }
         [Serializable] private sealed class LayoutElementBinding
         { public bool ignore; public float[] minimum, preferred, flexible; public int priority; }
         [Serializable] private sealed class RouteWindowBinding
@@ -324,17 +326,15 @@ namespace Zjcs.Presentation.World
         public static void RefreshPrivateDungeonDetails(GameObject root, int dungeonId, int difficulty,
             int minimumGrade, int maximumGrade)
         {
-            PrivateDetailBinding fields = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonDialogPrivateMap").privateDetail;
+            Prefab binding = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonDialogPrivateMap");
+            PrivateDetailBinding fields = binding.privateDetail;
+            PrivateUnlockBinding unlocked = binding.privateUnlock;
+            PrivateDialogBinding dialog = binding.privateDialog;
             PrivateDisplayBinding display = LoadDocument().routeStyles.privateDisplay;
             DifficultyBinding difficultyName = display?.difficulties.SingleOrDefault(value => value.value == difficulty);
             if (fields?.isPrivate != true || display == null || display.dungeonId != dungeonId || difficultyName == null
-                || display.privateDungeonId != 121 || display.privateDifficulty != 50)
+                || display.privateDungeonId != 121 || display.privateDifficulty != 50 || unlocked == null)
                 throw new InvalidDataException("Original Map12 private dungeon detail binding mismatch.");
-            PrivateDialogBinding dialog = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonDialogPrivateMap").privateDialog;
-            if (dialog == null || display.background == null || display.icon == null)
-                throw new InvalidDataException("Original private dungeon appearance binding is missing.");
-            Find(root.transform, dialog.background, null).GetComponent<Image>().sprite = LoadSprite(display.background);
-            Find(root.transform, dialog.icon, null).GetComponent<Image>().sprite = LoadSprite(display.icon);
             Find(root.transform, fields.title, null).GetComponent<WorldMultiLanguageText>()
                 .SetKey("ui_daily_dungeon_item_title_without_difficulty_" + dungeonId);
             Find(root.transform, fields.description, null).GetComponent<WorldMultiLanguageText>()
@@ -343,19 +343,40 @@ namespace Zjcs.Presentation.World
             GradeStyleBinding maximum = LoadDocument().routeStyles.grades.Single(value => value.grade == maximumGrade);
             Find(root.transform, fields.gradeRange, null).GetComponent<WorldMultiLanguageText>()
                 .Format(RouteText(minimum.key), RouteText(maximum.key));
+            // DailyDungeonDetailContent.Refresh: mIsPrivateMap makes the content unlocked.
+            SetObjectState(root, fields.lockStates, 0);
+            // GetBtnShowState: the bound world stage is present and mIsPrivateMap selects Enter.
+            SetObjectState(root, unlocked.buttonStates, unlocked.enterState);
+            Find(root.transform, unlocked.rewardTitle, null).GetComponent<WorldMultiLanguageText>()
+                .SetKey("ui_daily_dungeon_dialog_reward_title_without_difficulty");
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)Find(root.transform, unlocked.rewardTitleLayout, null));
+            if (dialog == null || display.background == null || display.icon == null)
+                throw new InvalidDataException("Original private dungeon appearance binding is missing.");
+            Find(root.transform, dialog.background, null).GetComponent<Image>().sprite = LoadSprite(display.background);
+            Find(root.transform, dialog.icon, null).GetComponent<Image>().sprite = LoadSprite(display.icon);
+            bool singleDifficulty = display.difficulties.Length == 1;
+            SetObjectState(root, dialog.titleStates, singleDifficulty ? 1 : 0);
+            if (singleDifficulty)
+                Find(root.transform, dialog.title, null).GetComponent<WorldMultiLanguageText>().SetKey(display.difficulties[0].key);
+        }
+
+        private static void SetObjectState(GameObject root, ObjectStateBinding[] states, int state)
+        {
+            if (states == null) throw new InvalidDataException("Original dungeon object-state binding is missing.");
+            var data = new WorldStateGameObjectData {
+                GoConfig = states.Select(value => new WorldStateGameObjectData.StateGameObjectKV {
+                    State = value.state,
+                    GameObjects = value.objects.Select(path => Find(root.transform, path, null).gameObject).ToList()
+                }).ToList()
+            };
+            WorldStateGameObjectConfig.FromBindings(data).SetState(state);
         }
 
         public static RouteWindowView ConfigureRouteWindow(GameObject root, bool choosing)
         {
             RouteWindowBinding binding = LoadDocument().prefabs.Single(value => value.name == "DailyDungeonBigMapDialog").routeWindow;
             if (binding?.chooseStates == null) throw new InvalidDataException("Official route window fields are missing.");
-            int state = choosing ? 1 : 0;
-            string[] selected = binding.chooseStates.Where(value => value.state == state).SelectMany(value => value.objects).ToArray();
-            foreach (ObjectStateBinding value in binding.chooseStates)
-                if (value.state != state)
-                    foreach (string path in value.objects)
-                        if (!selected.Contains(path)) Find(root.transform, path, null).gameObject.SetActive(false);
-            foreach (string path in selected) Find(root.transform, path, null).gameObject.SetActive(true);
+            SetObjectState(root, binding.chooseStates, choosing ? 1 : 0);
             Find(root.transform, binding.scroll, null).gameObject.SetActive(!choosing);
             // RefreshMember's no-active-faction branch: the offline route is outside a running fight.
             Find(root.transform, binding.team, null).gameObject.SetActive(false);
