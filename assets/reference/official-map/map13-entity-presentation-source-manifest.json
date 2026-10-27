@@ -1,0 +1,181 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "parser_base_native": {
+    "method": "GConfig.ParserBase.PostParse",
+    "method_index": 331774,
+    "address": 160557564,
+    "bytes": "c0035fd6",
+    "instruction": "ret",
+    "image": {
+      "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+      "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+    },
+    "metadata": {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    }
+  },
+  "source_receipt": {
+    "path": "assets/reference/official-map/map13-source-manifest.json",
+    "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+  },
+  "tables": {
+    "path": "unity/Assets/Official/World/Map/13/Source/tables.json",
+    "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+  },
+  "map": {
+    "path": "unity/Assets/Official/World/Map/13/map13.json",
+    "sha256": "08200254758f6744a09c82fe871145f76f98ba590b9b59e4ca8c87e047ef98da"
+  },
+  "index": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+      "path_id": "7349830744708744641",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 6898815,
+      "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+    },
+    "object_sha256": "77bbe92e83b0c86c64884212e516d5ab420a1a11254b75994ba16754d60efdb8",
+    "text_sha256": "2722684bb204e944d40a6e91229657f5199699f08871dff065c8571f4eb4833a"
+  },
+  "official_code": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LubanCsvParser.cs",
+      "sha256": "d5187d8dad1cf9f1641209117b47b7f0199a15547f425d7e50785d20e438eb70"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GroundType.cs",
+      "sha256": "1292cacc79578a628df15516b5069aa37194aa88f6d00c1ed41ef41ad9b093e2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapDisplayInfo.cs",
+      "sha256": "1afa9eb956bfc25875e435233c966797f00e6059343e757343bb2b72bf04ff5d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapUIDisplayInfo.cs",
+      "sha256": "e9ad9d0976c6f7e4c14ad55aa0fa6190b9e38b357c671ee4e453c271d74b271d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapDisplayActionInfo.cs",
+      "sha256": "35f74932cded44667b227ca6c8f974b43a8f03532b01742fea277a82a73c7f7d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapDisplayInfoParser.cs",
+      "sha256": "301d3b3f2543476d154c9447e875043923815e9b46c6b0c4e74d2c4c7971dedc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapUIDisplayInfoParser.cs",
+      "sha256": "d8f975ff1bac35844375827712ca25d03ec5f52dd29cac72203f05001ce11b00"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityMapDisplayActionInfoParser.cs",
+      "sha256": "f42c61c7a5bc08ba37e4785910b9e4ea7705551f9dfade403ccd7df0ec98b195"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyEntityIndexHandler.cs",
+      "sha256": "9d571925a2cbed3f9be0ccb16b1926ab4885aa6603f61f771aaea123ad0c3471"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/GroundType.cs",
+      "sha256": "a145c2b65ef54c92cfa45a6b63fe9c2cc438436a3ce0ffa9e864f968a494647c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayInfo.cs",
+      "sha256": "659446601b774754ee4443c30cb041e1776ee9d88460728bcaef20092046fec4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapUIDisplayInfo.cs",
+      "sha256": "c0fc46e82cf41da56690cf9d9f492bbd8bc23513fc300929577dfcd06fec4520"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayActionInfo.cs",
+      "sha256": "99e316923a54d8dc497abc2c28cbf7522c3e4b0fa418e3d49cdabd986ee0536b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayInfoParser.cs",
+      "sha256": "ed0cc2ab9b1e1531a354cb478f7f44879b17c7cb5738ed8332a4a08308d73d67"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapUIDisplayInfoParser.cs",
+      "sha256": "11817958e9059c8f995c1e622f3a6a422803ed5d51c169cafebe12490b3f5492"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/EntityMapDisplayActionInfoParser.cs",
+      "sha256": "5ede3f96778b6b8e7bd53b20b3c97f51647e4c89c41f9de936048a9c557a286e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/MyEntityIndexHandler.cs",
+      "sha256": "0d2dbf55ddbd977d9aaf8217025ca090f85ead14a7265fb72dd6b1a2b9059db3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13Entities/Zjcs.Official.World.Map13Entities.asmdef",
+      "sha256": "534f026c2a37205d956e1cb53427a7e398d1f43b2541312dac4ce4e910f2a2a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13Entities/OfflineMap13EntityPresentation.cs",
+      "sha256": "74bc73fb0ce1463da1c4366b15284a4aed96fee09bd1d5e61136cb90d7ef00c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map13Entities/Zjcs.Offline.World.Map13Entities.asmdef",
+      "sha256": "469759069d5a0d570d76bea83a544392ba44608bc04af8907603f38c5267632a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Entities/OfficialMap13EntityPresentationAcceptance.cs",
+      "sha256": "6b47cb4d48ebd8068bad8d723b43ba381c94f0570d7b057f51a257299c654623"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Entities/Zjcs.Editor.Map13Entities.asmdef",
+      "sha256": "c4fd3f4ba03cc6f4e9cee5fd786e46dcd9597564fd9ef208f52ce6971c4f9a13"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/entity-presentation.json",
+      "sha256": "eec2dc0e5aa96aaa95a6711604c9391b7d05576f8c8f07ad167b73df1e5af82f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/entity-presentation-source.json",
+      "sha256": "4494e3a1badaac3800e24c19afe8276a35ec10ddfeaf68c7c2b7d6c3413000cd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/entity-presentation-reference.json",
+      "sha256": "c372570ba5acc454de3b927f925d247e86105d24a87f6004f24f33aa2bc2e5c9"
+    }
+  ],
+  "counts": {
+    "displays": 1253,
+    "ui_displays": 757,
+    "actions": 43,
+    "directories": 3860,
+    "indexed_ids": 9604,
+    "map_entity_classes": 146,
+    "areas": 111
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_entity_presentation.py",
+    "sha256": "3f4421a51623a71bba0f3a49e21e3208544815d95a135fef20602c0a16dd68c1"
+  },
+  "operation": "Copy original three selector dictionaries, prefix processing, lookup order and branches. Adapt namespace and explicit local Load boundary instead of Luban parsing; retain original data fields, constants, ToString and GetTypeId. Make ten action DTO fields serializable instead of readonly. Copy original EC directory/path methods, static cache and duplicate-first-wins initialization; replace resource-service/JSON/logger boundary with explicit local input.",
+  "limitations": [
+    "Selector and index migration only; native entity runtime, prefab binding, interaction, saves and Windows release remain required."
+  ]
+}
