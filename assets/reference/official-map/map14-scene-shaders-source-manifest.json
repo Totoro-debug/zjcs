@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "mapClassId": 14,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+        "path_id": "1168864718425176912",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 853119,
+        "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108"
+      },
+      "object_sha256": "a9f3019a99319aae9993a6b654e24bb5b5b3352a48a7b61c67719058ee2876db",
+      "programs": [
+        {
+          "pass_index": 0,
+          "index": 2,
+          "keywords": [
+            "USE_SHAPE_LIGHT_TYPE_0"
+          ],
+          "path": "unity/Assets/Official/World/Map/14/Source/Shaders/MovableSprite-p0-2.glsl.txt",
+          "sha256": "085a07143e262ab3adb299e642909f573d6eabd4921a11d9d6101ebc8b5389ae"
+        },
+        {
+          "pass_index": 0,
+          "index": 3,
+          "keywords": [],
+          "path": "unity/Assets/Official/World/Map/14/Source/Shaders/MovableSprite-p0-3.glsl.txt",
+          "sha256": "d4f2dd5a735fb912168d1e9b366cb72ef562119037d1d044a056bf14fb8cd830"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14/Shaders/MovableSprite.shader",
+      "sha256": "2ab84eef2baf94125ce979bdfd810c2983edd2499fed51cd32680d4fd74c54e5",
+      "original_shader": "Universal Render Pipeline/2D/Movable-Sprite"
+    }
+  ],
+  "converters": [
+    {
+      "path": "scripts/prepare_unity_map14_scene_shaders.py",
+      "sha256": "1267ac3f49d6b399004294fd885137834641e81960c0bd5766554937a9992d94"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_water_shaders.py",
+      "sha256": "da5022fd9f2fb6502e3e629c1c5acf5c5ce158bfc6ceba52f809b5bd5b1052a8"
+    },
+    {
+      "path": "scripts/prepare_battle_hud_materials.py",
+      "sha256": "10f0b09a274ea14ffd090b80d0395c633e32e8be18d8a224eb749009163c8f1b"
+    },
+    {
+      "path": "scripts/official_shader_programs.py",
+      "sha256": "5c6eb7ac92ecdabb99b5a25f291d2234ba8d0937998073b80d3ab6846d444137"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map13/OfficialMap13NativeSceneTools.cs",
+    "sha256": "c4b43197d9e8324b6aa2d2715dade17080423ef3a9a19a376621e28c3ee91a0c"
+  },
+  "operation": "Mechanical GLES to HLSL conversion preserving all original terrain/lava passes, their LightMode tags, exact arithmetic, original material properties and pass state. Each pass selects only its executable original GPU programs.",
+  "limitations": [
+    "Windows shader compilation, material/prefab binding and native scene rendering require separate validation."
+  ]
+}

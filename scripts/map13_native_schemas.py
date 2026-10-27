@@ -120,7 +120,7 @@ def spine_tree(schemas, name):
         verify_fields("AtlasAssetBase", [n for n, _ in fields[:2]])
         verify_fields(name, [n for n, _ in fields[2:]])
         return fields_tree(schemas, fields)
-    if name == "SkeletonMecanim":
+    if name in ("SkeletonMecanim", "SkeletonAnimation"):
         fields = [("skeletonDataAsset", "PPtr<MonoBehaviour>"), ("initialSkinName", "string"),
                   ("initialFlipX", "bool"), ("initialFlipY", "bool"), ("updateWhenInvisible", "int"),
                   ("separatorSlotNames", "string[]"), ("zSpacing", "float")]
@@ -130,7 +130,13 @@ def spine_tree(schemas, name):
                    ("disableRenderingOnOverride", "bool"), ("physicsPositionInheritanceFactor", "Vector2f"),
                    ("physicsRotationInheritanceFactor", "float"), ("physicsMovementRelativeTo", "PPtr<Transform>")]
         verify_fields("SkeletonRenderer", [n for n, _ in fields])
-        fields += [("translator", "MecanimTranslator"), ("updateTiming", "int")]
+        if name == "SkeletonMecanim":
+            fields += [("translator", "MecanimTranslator"), ("updateTiming", "int")]
+        else:
+            animation_fields = [("updateTiming", "int"), ("unscaledTime", "bool"),
+                ("_animationName", "string"), ("loop", "bool"), ("timeScale", "float")]
+            verify_fields(name, [n for n, _ in animation_fields])
+            fields += animation_fields
         tree = fields_tree(schemas, fields)
         for i, child in enumerate(tree.m_Children):
             if child.m_Name == "maskMaterials":
@@ -216,12 +222,14 @@ def read_stripped(schemas, obj):
     if script.m_Namespace == "UnityEngine.Rendering.Universal" and script.m_ClassName == "Light2D":
         tree = light_tree(default)
         return obj.read_typetree(nodes=tree), tree
-    if script.m_Namespace == "Spine.Unity" and script.m_ClassName in ("SkeletonMecanim", "SkeletonDataAsset", "SpineAtlasAsset"):
+    if script.m_Namespace == "Spine.Unity" and script.m_ClassName in ("SkeletonMecanim", "SkeletonAnimation", "SkeletonDataAsset", "SpineAtlasAsset"):
         tree = spine_tree(default, script.m_ClassName)
         value = obj.read_typetree(nodes=tree)
-        if script.m_ClassName == "SkeletonMecanim":
+        if script.m_ClassName in ("SkeletonMecanim", "SkeletonAnimation"):
             from official_battle_spine_component import read_component
             expected = read_component(obj.get_raw_data(), script.m_ClassName)
+            if script.m_ClassName == "SkeletonAnimation":
+                expected["_animationName"] = expected.pop("animationName")
             if any(value[n] != v for n, v in expected.items() if n != "physicsPositionInheritanceFactor"):
                 raise ValueError("Restored Spine fields differ from the strict original component reader")
             if list(value["physicsPositionInheritanceFactor"].values()) != expected["physicsPositionInheritanceFactor"]:
