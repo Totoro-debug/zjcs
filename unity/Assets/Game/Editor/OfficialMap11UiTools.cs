@@ -85,7 +85,7 @@ namespace Zjcs.Editor
 
         public static void ImportForMap(int mapClassId, string[] panelKeys = null)
         {
-            if (mapClassId != 11 && mapClassId != 12 && mapClassId != 13) throw new ArgumentOutOfRangeException(nameof(mapClassId));
+            if (mapClassId != 11 && mapClassId != 12 && mapClassId != 13 && mapClassId != 14) throw new ArgumentOutOfRangeException(nameof(mapClassId));
             int previous = activeMapId;
             try { activeMapId = mapClassId; ImportNative(panelKeys); }
             finally { activeMapId = previous; }
@@ -331,7 +331,7 @@ namespace Zjcs.Editor
                     }
                     // The selected native prefab owns its JSZX layout groups,
                     // Canvas and raycaster too; its content height is layout-driven.
-                    if (activeMapId == 12 || activeMapId == 13) BindSupportPrefab(root, panel.key, data, Require, sprites);
+                    if (activeMapId == 12 || activeMapId == 13 || activeMapId == 14) BindSupportPrefab(root, panel.key, data, Require, sprites);
                     OfficialMap11UiBindings binding = data.bindings.Single(value => value.key == panel.key);
                     GoddessTouchDialog dialog = root.AddComponent<GoddessTouchDialog>();
                     dialog.myTouchBtn = Component<Button>(binding.touchButton);

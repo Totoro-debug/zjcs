@@ -1884,3 +1884,5 @@ Map14 当前版战斗数据按已校验的 871 源收据与当前程序集重新
 Map14 辉／残影来源解码：`scripts/prepare_unity_map14_fightother_sources.py` 先核对官方 APK，再按当前 `871_156598` 清单解析 FightOther 4651／4652 的原 prefab、`SkeletonDataAsset`、组合皮肤、HSV、Animator／Controller；`map14-fightother-source-manifest.json` 记录原对象与 schema、生成器及缓存输出哈希。原 NPC 骨骼与全部拆分动画使用固定 MIT 格式读取器解码，不使用 Spine runtime；皮肤骨骼和约束成员已补全，辉／残影分别保留 54／58 条物理约束。源缓存位于 `.tools/source-packages/current/871_156598/skeletons/npc_middle_model/`，尚未作为运行时模型或素材快照交付。
 
 Map14 统一原生宿主：`scripts/record_unity_map14_native_host.py` 核对原生地形／场景／环境／标签四份导入回执及实际目录、官方三维原点数据和共享原配置；来源与加载绑定见 `map14-native-host-source-manifest.json`。`OfficialMap14NativeWorldView` 使用原分区控制器、环境和标签行为，统一加载、刷新及释放；完整工程编译、`ProjectTools.Validate` 与宿主 Play Mode 已通过并查看运行画面。验证包含入口与跨位置加载、fixture 私有／公共状态刷新、卸载和重新挂载；正式地图入口、实体交互、进度存档及 Player 发布仍未覆盖。
+
+- 龙之国通用 UI：`scripts/prepare_unity_map14_ui.py` 严格使用当前 `871_156598`、按 APK 优先解析原 prefab 与共享支持界面，恢复 68 个面板／956 张精灵。`scripts/record_unity_map14_ui.py` 记录本地 `Resources/Map14/UI/` 原生输出、源投影、精灵导入参数及转换代码哈希；来源为 `assets/reference/official-map/map14-ui-binding-source-manifest.json`。提交窗口 `HandIn/` 保留独立来源；资源未生成完整素材快照，正式业务、粒子／音频与 Windows Player 仍待完成。

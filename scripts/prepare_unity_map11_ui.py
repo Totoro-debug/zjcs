@@ -472,12 +472,16 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
 
 
 def build(map_id=11):
-    if map_id not in (11, 12, 13):
+    if map_id not in (11, 12, 13, 14):
         raise ValueError("Unsupported native mainline UI map")
     OUTPUT = ROOT / f"unity/Assets/Official/World/Map/{map_id}/UI"
     ICONS = tuple(f"{identity}_{map_id}_DialogIcon" for identity in (6010, 6011, 6620))
     code_root = None
-    if map_id == 13:
+    if map_id == 14:
+        from prepare_unity_map14_ui import prepare_context
+        (source_path, manifest_path, raw, manifest, source, apk, schemas, support) = prepare_context()
+        code_root = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    elif map_id == 13:
         from prepare_unity_map13_ui import prepare_context
         (source_path, manifest_path, raw, manifest, source, apk, schemas, support) = prepare_context()
         code_root = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
@@ -498,7 +502,7 @@ def build(map_id=11):
         support = load_support_ui(apk, schemas)
     constructors = Constructors(code_root)
     official_code = code_root or ROOT / ".tools/source-packages/official-code"
-    version = apk.version if map_id in (12, 13) else VERSION
+    version = apk.version if map_id in (12, 13, 14) else VERSION
     panels, components, sprites, shader_programs = [], [], {}, {}
     extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = support
     source.update(extra_trees)
@@ -507,7 +511,7 @@ def build(map_id=11):
     panel_keys = PANELS + ICONS + ("WorldCanvas",) + tuple(extra_trees)
 
     panels, components, sprites, shader_programs = extract_panels(
-        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, OUTPUT, preserve_native_transforms=map_id == 13)
+        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, OUTPUT, preserve_native_transforms=map_id in (13, 14))
 
     # Native world-space player marker used by MiniMapCharacterManager. Its
     # SpriteRenderers and loop clip are independent of the UGUI panel hierarchy.
@@ -675,9 +679,9 @@ def build(map_id=11):
                 for i in range(1, 8) for suffix in ("title", "desc"))
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28500, 28501, 28502, 28503, 28504, 28505,
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
-    keys.extend(f"region_{map_id}_" + str(i) for i in range({11: 77, 12: 99, 13: 106}[map_id]))
-    if map_id in (12, 13):
-        preceding_regions = [(10, 2), (11, 77)] + ([(12, 99)] if map_id == 13 else [])
+    keys.extend(f"region_{map_id}_" + str(i) for i in range({11: 77, 12: 99, 13: 106, 14: 111}[map_id]))
+    if map_id in (12, 13, 14):
+        preceding_regions = [(10, 2), (11, 77)] + ([(12, 99)] if map_id >= 13 else []) + ([(13, 106)] if map_id == 14 else [])
         keys.extend(f"region_{other}_{i}" for other, count in preceding_regions for i in range(count))
         keys.extend("entity_" + str(identity) + suffix for identity in (6103, 6302)
                     for suffix in ("_name", "_desc", "_funcdesc"))
@@ -709,7 +713,7 @@ def build(map_id=11):
                 for i in range(100, 103) for suffix in ("title", "desc"))
     keys.extend(row["description"] for row in minimap_marks)
     task_ids = range(1000, 1161, 5) if map_id == 11 else range(1000, 1271, 5)
-    if map_id == 13:
+    if map_id in (13, 14):
         task_source = apk.asset("config_luban", "/task.g.bytes")
         task_rows = constructors.table(task_source.read().m_Script.encode("utf-8", "surrogateescape"), "TbTaskInfo")
         task_ids = [row["ClassId"] for row in task_rows if row["TaskType"] == 10]
@@ -890,14 +894,14 @@ def build(map_id=11):
     for path, importer in [(OUTPUT, "DefaultImporter"), (OUTPUT / "Sprites", "DefaultImporter"),
                            (target, "TextScriptImporter"), (previous, "TextScriptImporter")]:
         meta = Path(str(path) + ".meta")
-        if map_id == 13 and meta.is_file():
-            # The Map13 source extraction may already have been imported by Unity.
+        if map_id in (13, 14) and meta.is_file():
+            # Current-source extraction may already have been imported by Unity.
             # Preserve that serialized GUID instead of replacing existing bindings.
             text = meta.read_text(encoding="utf-8")
             if not re.search(r"(?m)^guid: [a-f0-9]{32}$", text) or f"{importer}:" not in text:
-                raise ValueError("Invalid existing Map13 Unity metadata: " + str(meta))
+                raise ValueError("Invalid existing Map" + str(map_id) + " Unity metadata: " + str(meta))
             if importer == "DefaultImporter" and "folderAsset: yes" not in text:
-                raise ValueError("Map13 UI folder metadata is not a folder: " + str(meta))
+                raise ValueError("Map" + str(map_id) + " UI folder metadata is not a folder: " + str(meta))
         else:
             write_meta(path, importer)
     print(f"Map{map_id} official UI:", len(panels), "panels,", len(records), "sprites; SHA256", sha256(data))

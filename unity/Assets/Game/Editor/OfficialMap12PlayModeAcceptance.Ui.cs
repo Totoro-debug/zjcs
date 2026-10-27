@@ -32,7 +32,7 @@ namespace Zjcs.Editor
                 && c.name.StartsWith("BootSplash", StringComparison.Ordinal))) UnityEngine.Object.Destroy(boot.gameObject);
             int uiMap = UnityEditor.SessionState.GetInt(Key + ".uiMap", 12);
             string uiRoot = "Map" + uiMap + "/UI/";
-            if (uiMap == 13)
+            if (uiMap == 13 || uiMap == 14)
             {
                 map13UiRuntimeError = false;
                 Application.logMessageReceived += ObserveMap13UiError;
@@ -43,7 +43,7 @@ namespace Zjcs.Editor
             MaterialReferenceManager.AddSpriteAsset(common.hashCode, common);
             MaterialReferenceManager.AddSpriteAsset(TMP_TextUtilities.GetSimpleHashCode(common.name), common);
             OfficialWorldMapSession session = null;
-            if (uiMap != 13)
+            if (uiMap != 13 && uiMap != 14)
             {
                 session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 12);
                 UnityEngine.Object.Instantiate(session.Assets.GroundPrefab);
@@ -109,7 +109,7 @@ namespace Zjcs.Editor
                         Array.Empty<string>(), () => activated++, () => transferred++, () => denied++, () => closed++);
                     yield return new WaitForSecondsRealtime(.6f);
                     VerifyIconState(dialog, false, expectedIcons);
-                    if (uiMap == 12 || uiMap == 13) VerifyNativeMasks(dialog.gameObject, data, key);
+                    if (uiMap == 12 || uiMap == 13 || uiMap == 14) VerifyNativeMasks(dialog.gameObject, data, key);
                     CaptureUi(camera, uiCamera, frame, output, width + "-" + key + "-locked");
                     SimulateUiClick(dialog.CannotActiveBtn, uiCamera);
                     if (denied != 1 || activated != 0 || closed != 0)
@@ -143,9 +143,9 @@ namespace Zjcs.Editor
                 frame.Release();
                 UnityEngine.Object.Destroy(frame);
                 yield return null;
-                if (uiMap == 13 && map13UiRuntimeError) throw new InvalidDataException("Original Map13 UI logged a runtime error.");
+                if ((uiMap == 13 || uiMap == 14) && map13UiRuntimeError) throw new InvalidDataException("Original Map" + uiMap + " UI logged a runtime error.");
             }
-            if (uiMap == 13) Application.logMessageReceived -= ObserveMap13UiError;
+            if (uiMap == 13 || uiMap == 14) Application.logMessageReceived -= ObserveMap13UiError;
         }
 
         private static string Text(OfficialMap11UiData data, string key) => data.texts.Single(t => t.key == key).value;
@@ -155,7 +155,7 @@ namespace Zjcs.Editor
             Type sizesType = editor.GetType("UnityEditor.GameViewSizes");
             object sizes = typeof(ScriptableSingleton<>).MakeGenericType(sizesType).GetProperty("instance").GetValue(null);
             object group = sizesType.GetMethod("GetGroup").Invoke(sizes,
-                new[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeGroupType"), 1) });
+                new[] { Enum.Parse(editor.GetType("UnityEditor.GameViewSizeGroupType"), "Standalone") });
             object size = Activator.CreateInstance(editor.GetType("UnityEditor.GameViewSize"),
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
                 new object[] { Enum.ToObject(editor.GetType("UnityEditor.GameViewSizeType"), 1), width, height, "Map12 UI fixture" }, null);

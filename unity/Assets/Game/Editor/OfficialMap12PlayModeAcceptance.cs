@@ -82,6 +82,7 @@ namespace Zjcs.Editor
                 if (import) OfficialMap12Tools.ImportAndValidate();
                 if (verifyUi && import) OfficialMap11UiTools.ImportForMap(12);
                 if (uiMapClassId == 13) ValidateMap13UiPrefabs();
+                else if (uiMapClassId == 14) ValidateMap14UiPrefabs();
                 else ProjectTools.Validate();
                 SessionState.SetBool(Key + ".ui", verifyUi);
                 SessionState.SetBool(Key + ".runtime", verifyRuntime);

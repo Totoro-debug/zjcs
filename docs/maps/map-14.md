@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+- 龙之国官方通用 UI 已按当前 `871_156598` 从原 prefab／组件字段恢复为 68 个面板、3,657 个节点、4,235 条组件记录及 956 张原精灵；保留原 Transform／RectTransform、层级顺序、锚点、四元数、Image 启用位与遮罩。另恢复对话图标等子 prefab、本地图小地图标记与原字体绑定。原生导入、编译、全项目校验及所有面板的层级／锚点／脚本绑定检查已通过；内置屏 Play Mode 在 450×800 与 720×1280 两种尺寸完成女神像／失落女神像锁定、激活、传送、图标切换、原动画关闭及遮挡射线检查，14 张实际画面已查看。修复共享夹具把尺寸写入已废弃 WebPlayer 组的问题，按当前编辑器实际 Standalone 组设置并断言尺寸。测试使用隔离 UI 状态，HUD 的玩家数值、头像、小地图和提示点未初始化；本轮不包含正式进度、存档或 Windows Player。雕像、命运探寻、HUD 和剧情正式业务尚未完整接通，粒子、音频与其余组件行为继续迁移，不据此认定全部界面已完成。
+
 - 原地形、场景、水体／环境及区域标签已接入 `OfficialMap14NativeWorldView` 统一宿主；修复官方原点 X／Y／Z 三坐标被误判为二维的问题。完整工程导入、编译、`ProjectTools.Validate` 和 Play Mode 通过；实际查看原入口（放置 101）、区域状态刷新、另一位置及卸载后重新挂载的运行截图。已核对 111 区状态查询、分区加载、管线与新增相机组件清理。此处状态由隔离 fixture 提供，尚未绑定正式地图进度、实体点击、存档或 Windows Player。
 
 - 辉／残影战斗实体 4651／4652 已追溯到 APK 内 `npc_middle_model`，源骨骼 2,315 根、171 个皮肤、834 段动画已完整解码；修复 MIT 二进制读取器遗漏的皮肤骨骼／约束成员引用，保留辉 54 条、残影 58 条物理约束。原 `SkeletonMecanim`、组合皮肤、HSV、Animator／Controller 字段已写入可复建源缓存，来源见 `map14-fightother-source-manifest.json`。6 项读取器测试及全部原二进制消费检查通过；尚未接入原生模型播放、战斗画面或 Windows Player，未烘焙或忽略这些约束。
@@ -62,6 +64,8 @@
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
 
 ### 官方来源与入口
+
+- [通用 UI 提取](../../scripts/prepare_unity_map14_ui.py)、[共享原生导入器](../../unity/Assets/Game/Editor/OfficialMap11UiTools.cs)、[UI 显式绑定与哈希](../../assets/reference/official-map/map14-ui-binding-source-manifest.json)及[原生层级／模拟点击检查](../../unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Ui.cs)。原始投影在 `Assets/Official/World/Map/14/UI/`，本地原生 prefab 入口为 `Resources/Map14/UI/`；提交窗口仍使用独立 `HandIn/` 及其原来源收据。
 
 - [当前战斗数据提取](../../scripts/prepare_unity_map14_battle_data.py)、[原对象／构造器／formatter／公式来源](../../assets/reference/official-map/map14-battles-source-manifest.json)、[运行载荷生成](../../scripts/prepare_unity_map14_battle_runtime.py)、[运行绑定来源](../../assets/reference/official-map/map14-battle-runtime-source-manifest.json)及[数据 Play Mode 校验](../../unity/Assets/Game/Editor/OfficialMap14BattleDataAcceptance.cs)；共享怪物构造位于 `OfficialMainlineMapRuntime.BattleMonsters.cs`。
 

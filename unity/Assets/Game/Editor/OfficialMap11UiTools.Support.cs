@@ -21,7 +21,7 @@ namespace Zjcs.Editor
             foreach (OfficialMap11UiComponent source in data.components.Where(value => value.panel == key))
             {
                 // Current-source exports also retain the native Graphic enabled bit.
-                if ((activeMapId == 12 || activeMapId == 13) && (source.type == "Image" || source.type == "MirrorImage"))
+                if ((activeMapId == 12 || activeMapId == 13 || activeMapId == 14) && (source.type == "Image" || source.type == "MirrorImage"))
                     Component<Image>(source.path).enabled = source.fields.m_Enabled != 0;
                 if (source.type == "TMPColorGradient")
                 {

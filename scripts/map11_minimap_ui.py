@@ -12,13 +12,13 @@ def extract_marks(apk, schemas, exporter, animation_record, sprites, map_id=11):
     templates_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/stories.json"
     definition = json.loads(definition_path.read_text("utf-8"))
     source_receipts = []
-    if map_id == 13:
-        templates_path = ROOT / "unity/Assets/Official/World/Map/13/Source/templates.json"
-        receipt_path = ROOT / "assets/reference/official-map/map13-source-manifest.json"
+    if map_id in (13, 14):
+        templates_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Source/templates.json"
+        receipt_path = ROOT / f"assets/reference/official-map/map{map_id}-source-manifest.json"
         receipt = json.loads(receipt_path.read_bytes())
         expected = {row["path"]: row["sha256"] for row in receipt["outputs"]}
         if receipt["manifest"] != apk.version or expected.get(templates_path.relative_to(ROOT).as_posix()) != hashlib.sha256(templates_path.read_bytes()).hexdigest():
-            raise ValueError("Map13 original entity template source differs")
+            raise ValueError("Map" + str(map_id) + " original entity template source differs")
         templates = {int(key): value for key, value in json.loads(templates_path.read_bytes()).items()}
         source_receipts.append(receipt_path)
     else:
