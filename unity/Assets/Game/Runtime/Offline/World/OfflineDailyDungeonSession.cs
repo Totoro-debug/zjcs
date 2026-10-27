@@ -514,7 +514,8 @@ namespace Zjcs.Offline.World
             if (run == null || run.dungeonId != 121 || run.difficulty != 50 || run.privateRouteComplete
                 || run.currentRoomId != roomId || room == null || room.type != 6
                 || room.nextRoomIds == null || room.nextRoomIds.Length != 0 || FindStage(room.stageId) != null
-                || run.lastBattleOutcome != 1 || !run.clearedRoomIds.Contains(run.lastBattleRoomId)) return false;
+                || run.lastBattleRoomId != 12107 || run.lastBattleOutcome != 1
+                || !run.clearedRoomIds.Contains(12107)) return false;
             DailyDungeonSave next = Clone(save);
             next.activeRun.privateRouteComplete = true;
             Persist(next);
