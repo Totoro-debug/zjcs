@@ -212,7 +212,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                 fields = schemas.read(reader)
                 grade_item = {name: reference_path(fields[field]) for name, field in (
                     ("image", "Image"), ("fill", "FillImage"), ("text", "GradeText"))}
-            elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem"):
+            elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonDialogPrivateMap"):
                 raw = reader.get_raw_data()
                 if len(raw) < 232: raise ValueError("Truncated official route Button")
                 if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (40, 52, 64, 76)):
@@ -235,7 +235,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     transition=struct.unpack_from("<i", raw, 88)[0], colors=list(struct.unpack_from("<22f", raw, 92)),
                     triggers=triggers, interactable=bool(interactable),
                     target=reference_path({"m_FileID":file_id, "m_PathID":path_id})))
-            elif key == "DailyDungeonBigMapDialog" and script in ("GridLayoutGroup", "ContentSizeFitter", "RectMask2D", "VerticalLayoutGroup", "HorizontalLayoutGroupJSZX", "LayoutElement"):
+            elif key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap") and script in ("GridLayoutGroup", "ContentSizeFitter", "RectMask2D", "VerticalLayoutGroup", "HorizontalLayoutGroup", "HorizontalLayoutGroupJSZX", "LayoutElement", "LayoutElementClamper"):
                 raw = reader.get_raw_data()
                 layout = {"path": path_key, "objects": object_names, "type": script,
                           "enabled": bool(reader.read(check_read=False).m_Enabled)}
@@ -245,8 +245,8 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     layout.update(padding=list(values[:4]), alignment=values[4], startCorner=values[5],
                         startAxis=values[6], cellSize=list(values[7:9]), spacing=list(values[9:11]),
                         constraint=values[11], constraintCount=values[12])
-                elif script == "VerticalLayoutGroup":
-                    if len(raw) != 84: raise ValueError("Unexpected official VerticalLayoutGroup: " + path_key)
+                elif script in ("VerticalLayoutGroup", "HorizontalLayoutGroup"):
+                    if len(raw) != 84: raise ValueError("Unexpected official horizontal/vertical layout: " + path_key)
                     values = struct.unpack_from("<5if7i", raw, 32)
                     layout.update(padding=list(values[:4]), alignment=values[4], layoutSpacing=values[5], flags=list(values[6:]))
                 elif script in ("HorizontalLayoutGroupJSZX", "LayoutElement"):
@@ -258,6 +258,9 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                         value = decoded["horizontal_layout"]
                         layout.update(padding=value["padding"], alignment=value["alignment"],
                             layoutSpacing=value["spacing"], spacingList=value["spacing_list"], flags=value["flags"])
+                elif script == "LayoutElementClamper":
+                    fields = schemas.read(reader)
+                    layout["clamp"] = {name: fields[name] for name in ("mMaxPreferredWidth", "mMaxPreferredHeight")}
                 elif script == "ContentSizeFitter":
                     if len(raw) != 40: raise ValueError("Unexpected official ContentSizeFitter: " + path_key)
                     layout["fit"] = list(struct.unpack_from("<2i", raw, 32))
@@ -266,13 +269,34 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                     layout["padding"] = list(struct.unpack_from("<4f", raw, 32))
                     layout["softness"] = list(struct.unpack_from("<2i", raw, 48))
                 layouts.append(layout)
+            elif key == "DailyDungeonDialogPrivateMap" and script == "ScrollRect":
+                raw = reader.get_raw_data()
+                if len(raw) != 128: raise ValueError("Unexpected original dungeon ScrollRect length")
+                if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (84, 96)):
+                    raise ValueError("Unbound original dungeon ScrollRect scrollbar")
+                if struct.unpack_from("<i", raw, 124)[0]:
+                    raise ValueError("Unbound original dungeon ScrollRect event")
+                def scroll_reference(offset):
+                    file_id, path_id = struct.unpack_from("<iq", raw, offset)
+                    return reference_path(dict(m_FileID=file_id, m_PathID=path_id))
+                scrolls.append(dict(type=script, path=path_key, objects=object_names,
+                    enabled=bool(reader.read(check_read=False).m_Enabled),
+                    content=scroll_reference(32), viewport=scroll_reference(72),
+                    horizontal=bool(struct.unpack_from("<i", raw, 44)[0]), vertical=bool(struct.unpack_from("<i", raw, 48)[0]),
+                    movementType=struct.unpack_from("<i", raw, 52)[0], elasticity=struct.unpack_from("<f", raw, 56)[0],
+                    inertia=bool(struct.unpack_from("<i", raw, 60)[0]), decelerationRate=struct.unpack_from("<f", raw, 64)[0],
+                    scrollSensitivity=struct.unpack_from("<f", raw, 68)[0],
+                    horizontalScrollbarVisibility=struct.unpack_from("<i", raw, 108)[0],
+                    verticalScrollbarVisibility=struct.unpack_from("<i", raw, 112)[0],
+                    horizontalScrollbarSpacing=struct.unpack_from("<f", raw, 116)[0],
+                    verticalScrollbarSpacing=struct.unpack_from("<f", raw, 120)[0]))
             elif key == "DailyDungeonBigMapDialog" and script == "LoopVerticalScrollRect":
                 fields = schemas.read(reader)
                 if any(fields[k]["m_PathID"] for k in ("m_HorizontalScrollbar", "m_VerticalScrollbar")):
                     raise ValueError("Unbound official route scrollbar")
                 if fields["m_OnValueChanged"]["m_PersistentCalls"]["m_Calls"]:
                     raise ValueError("Unbound official route scroll event")
-                scrolls.append(dict(path=path_key, objects=object_names, enabled=bool(fields["m_Enabled"]),
+                scrolls.append(dict(type=script, path=path_key, objects=object_names, enabled=bool(fields["m_Enabled"]),
                     content=reference_path(fields["m_Content"]), viewport=reference_path(fields["m_Viewport"]),
                     totalCount=fields["totalCount"], reverseDirection=bool(fields["reverseDirection"]),
                     reverseIndex=bool(fields["reverseIndex"]), horizontal=bool(fields["m_Horizontal"]),
@@ -294,7 +318,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
                 selected_players = [reference_path(value) for value in fields["mSelectedPlayerIcons"]]
                 room_animation = reference_path(fields["mAnimation"])
                 vote_animation = reference_path(fields["mVoteAnimation"])
-            elif script == "SafeArea" and key == "DailyDungeonBigMapDialog":
+            elif script == "SafeArea" and key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap"):
                 fields = schemas.read(reader)
                 safe_areas.append({"path": path_key, "objects": object_names,
                     "enabled": bool(reader.read(check_read=False).m_Enabled),
@@ -530,7 +554,7 @@ def build():
                                "sha256": sha256(path.read_bytes()),
                                "meta_sha256": sha256(path.with_name(path.name + ".meta").read_bytes())})
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
-        "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
+        "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/LayoutElementClamper.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
         "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",

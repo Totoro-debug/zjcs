@@ -22,8 +22,10 @@ namespace Zjcs.Presentation.World
             public string path, type; public string[] objects; public bool enabled;
             public float[] padding, cellSize, spacing; public int[] fit, softness;
             public int alignment, startCorner, startAxis, constraint, constraintCount;
-            public float layoutSpacing; public float[] spacingList; public int[] flags; public LayoutElementBinding element;
+            public float layoutSpacing; public float[] spacingList; public int[] flags; public LayoutElementBinding element; public ClamperBinding clamp;
         }
+        [Serializable] private sealed class ClamperBinding
+        { public int mMaxPreferredWidth, mMaxPreferredHeight; }
         [Serializable] private sealed class PrivateDisplayBinding
         { public int dungeonId, privateDungeonId, privateDifficulty; public DifficultyBinding[] difficulties; public SpriteBinding background, icon; }
         [Serializable] private sealed class DifficultyBinding { public int value; public string name, key; }
@@ -62,9 +64,10 @@ namespace Zjcs.Presentation.World
         }
         [Serializable] private sealed class ScrollBinding
         {
-            public string path, content, viewport, prefab; public string[] objects;
+            public string path, type, content, viewport, prefab; public string[] objects;
             public bool enabled, reverseDirection, reverseIndex, horizontal, vertical, inertia;
-            public int totalCount, movementType; public float elasticity, decelerationRate, scrollSensitivity;
+            public int totalCount, movementType, horizontalScrollbarVisibility, verticalScrollbarVisibility;
+            public float elasticity, decelerationRate, scrollSensitivity, horizontalScrollbarSpacing, verticalScrollbarSpacing;
         }
         [Serializable] private sealed class RoomViewBinding
         {
@@ -236,9 +239,11 @@ namespace Zjcs.Presentation.World
                     grid.constraintCount = item.constraintCount;
                     grid.enabled = item.enabled;
                 }
-                else if (item.type == "VerticalLayoutGroup")
+                else if (item.type == "VerticalLayoutGroup" || item.type == "HorizontalLayoutGroup")
                 {
-                    var group = node.GetComponent<VerticalLayoutGroup>() ?? node.AddComponent<VerticalLayoutGroup>();
+                    HorizontalOrVerticalLayoutGroup group = item.type == "VerticalLayoutGroup"
+                        ? (HorizontalOrVerticalLayoutGroup)(node.GetComponent<VerticalLayoutGroup>() ?? node.AddComponent<VerticalLayoutGroup>())
+                        : node.GetComponent<HorizontalLayoutGroup>() ?? node.AddComponent<HorizontalLayoutGroup>();
                     group.padding = new RectOffset((int)item.padding[0], (int)item.padding[1], (int)item.padding[2], (int)item.padding[3]);
                     group.childAlignment = (TextAnchor)item.alignment;
                     group.spacing = item.layoutSpacing;
@@ -270,6 +275,13 @@ namespace Zjcs.Presentation.World
                     element.layoutPriority = item.element.priority;
                     element.enabled = item.enabled;
                 }
+                else if (item.type == "LayoutElementClamper")
+                {
+                    if (item.clamp == null) throw new InvalidDataException("Original dungeon layout clamp fields are missing.");
+                    var clamper = node.GetComponent<WorldLayoutElementClamper>() ?? node.AddComponent<WorldLayoutElementClamper>();
+                    JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(item.clamp), clamper);
+                    clamper.enabled = item.enabled;
+                }
                 else if (item.type == "ContentSizeFitter")
                 {
                     var fitter = node.GetComponent<ContentSizeFitter>() ?? node.AddComponent<ContentSizeFitter>();
@@ -289,6 +301,25 @@ namespace Zjcs.Presentation.World
             foreach (ScrollBinding item in binding.scrolls ?? Array.Empty<ScrollBinding>())
             {
                 GameObject node = Find(root.transform, item.path, item.objects).gameObject;
+                if (item.type == "ScrollRect")
+                {
+                    var normalScroll = node.GetComponent<ScrollRect>() ?? node.AddComponent<ScrollRect>();
+                    normalScroll.content = (RectTransform)Find(root.transform, item.content, null);
+                    normalScroll.viewport = (RectTransform)Find(root.transform, item.viewport, null);
+                    normalScroll.horizontal = item.horizontal; normalScroll.vertical = item.vertical;
+                    normalScroll.movementType = (ScrollRect.MovementType)item.movementType;
+                    normalScroll.elasticity = item.elasticity; normalScroll.inertia = item.inertia;
+                    normalScroll.decelerationRate = item.decelerationRate; normalScroll.scrollSensitivity = item.scrollSensitivity;
+                    normalScroll.horizontalScrollbar = null; normalScroll.verticalScrollbar = null;
+                    normalScroll.horizontalScrollbarVisibility = (ScrollRect.ScrollbarVisibility)item.horizontalScrollbarVisibility;
+                    normalScroll.verticalScrollbarVisibility = (ScrollRect.ScrollbarVisibility)item.verticalScrollbarVisibility;
+                    normalScroll.horizontalScrollbarSpacing = item.horizontalScrollbarSpacing;
+                    normalScroll.verticalScrollbarSpacing = item.verticalScrollbarSpacing;
+                    normalScroll.enabled = item.enabled;
+                    continue;
+                }
+                if (item.type != "LoopVerticalScrollRect")
+                    throw new InvalidDataException("Unbound original dungeon scroll: " + item.type);
                 var scroll = node.GetComponent<LoopVerticalScrollRect>() ?? node.AddComponent<LoopVerticalScrollRect>();
                 scroll.content = (RectTransform)Find(root.transform, item.content, null);
                 scroll.viewport = (RectTransform)Find(root.transform, item.viewport, null);
