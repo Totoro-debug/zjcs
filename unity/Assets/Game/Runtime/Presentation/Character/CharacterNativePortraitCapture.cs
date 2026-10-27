@@ -66,7 +66,7 @@ namespace Zjcs.Presentation.CharacterCreation
             {
                 commands.SetRenderTarget(target);
                 commands.ClearRenderTarget(true, true, Color.clear);
-                commands.SetViewProjectionMatrices(camera.worldToCameraMatrix, camera.projectionMatrix);
+                commands.SetViewProjectionMatrices(camera.worldToCameraMatrix, GL.GetGPUProjectionMatrix(camera.projectionMatrix, false));
                 // The source uses renderer Z ordering. The native conversion preserves the
                 // original slot order in sortingOrder while retaining renderer Z as a tie break.
                 foreach (Renderer renderer in model.GetComponentsInChildren<Renderer>()

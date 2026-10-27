@@ -17,6 +17,8 @@ namespace Zjcs.Presentation.Character
     internal sealed class CharacterPanelNodeFactory
     {
         private readonly OfficialCharacterAssetCatalog assets;
+        private readonly Dictionary<string, Sprite> slicedSprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+        private Zjcs.Presentation.Skills.OfficialSkillAssetCatalog skillAssets;
 
         private static Font uiFont;
         private static bool fontLogged;
@@ -85,7 +87,7 @@ namespace Zjcs.Presentation.Character
             rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
             rect.localScale = new Vector3(Value(source.scale, 0, 1f), Value(source.scale, 1, 1f),
                 Value(source.scale, 2, 1f));
-            rect.localRotation = Quaternion.Euler(0f, 0f, source.rotation);
+            rect.localRotation = Quaternion.Euler(0f, 0f, source.rotation * Mathf.Rad2Deg);
             ApplySafeAreaLayout(source, rect);
             instance.SetActive(source.active);
             nodes[source.path] = rect;
@@ -97,7 +99,13 @@ namespace Zjcs.Presentation.Character
                 if (image.sprite == null && source.image.sprite != null)
                     image.sprite = assets.FindSkillAppearanceSprite(source.image.sprite.file);
                 if (image.sprite == null && source.image.sprite != null)
+                {
+                    if (skillAssets == null) skillAssets = Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault();
+                    image.sprite = skillAssets.FindSprite(source.image.sprite.file);
+                }
+                if (image.sprite == null && source.image.sprite != null)
                     image.sprite = Resources.Load<Sprite>(source.image.sprite.file);
+                image.sprite = RestoreSpriteBorder(image.sprite, source.image.sprite);
                 image.color = ImageColor(source.image, ColorValue(source.image.color, Color.white));
                 image.type = (Image.Type)Mathf.Clamp(source.image.type, 0, 3);
                 image.preserveAspect = source.image.preserve_aspect;
@@ -115,8 +123,8 @@ namespace Zjcs.Presentation.Character
                     text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));
                     text.alignment = TextAlignment(source.text.horizontal, source.text.vertical);
                     text.horizontalOverflow = source.text.word_wrap ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
-                    text.verticalOverflow = source.text.overflow == 1 || source.text.overflow == 5 || source.text.overflow == 6
-                        ? VerticalWrapMode.Overflow : VerticalWrapMode.Truncate;
+                    text.verticalOverflow = source.text.overflow == 3
+                        ? VerticalWrapMode.Truncate : VerticalWrapMode.Overflow;
                     text.supportRichText = true;
                     text.raycastTarget = false;
                 }
@@ -164,10 +172,8 @@ namespace Zjcs.Presentation.Character
             {
                 var fitter = instance.AddComponent<ContentSizeFitter>();
                 bool vertical = source.layout == null || source.layout.axis == 1;
-                fitter.verticalFit = vertical ? ContentSizeFitter.FitMode.PreferredSize
-                    : ContentSizeFitter.FitMode.Unconstrained;
-                fitter.horizontalFit = vertical ? ContentSizeFitter.FitMode.Unconstrained
-                    : ContentSizeFitter.FitMode.PreferredSize;
+                fitter.horizontalFit = (ContentSizeFitter.FitMode)IntValue(source.size_fitter, 0, vertical ? 0 : 2);
+                fitter.verticalFit = (ContentSizeFitter.FitMode)IntValue(source.size_fitter, 1, vertical ? 2 : 0);
             }
             if (HasScript(source, "ScrollRect")) AddScrollRect(instance);
             foreach (OfficialCharacterPanelNode child in source.children ?? Array.Empty<OfficialCharacterPanelNode>())
@@ -186,6 +192,7 @@ namespace Zjcs.Presentation.Character
                 anchor_max = Floats(data, "anchor_max"),
                 anchored_position = Floats(data, "anchored_position"),
                 size_delta = Floats(data, "size_delta"),
+                size_fitter = Ints(data, "size_fitter"),
                 pivot = Floats(data, "pivot"),
                 scale = Floats(data, "scale"),
                 rotation = Number(data, "rotation", 0f),
@@ -327,6 +334,7 @@ namespace Zjcs.Presentation.Character
                 return instance.AddComponent<Zjcs.Official.UI.NoDrawingRayCast>();
             Image hitTarget = instance.AddComponent<Image>();
             hitTarget.color = Color.clear;
+            hitTarget.canvasRenderer.cullTransparentMesh = false;
             return hitTarget;
         }
 
@@ -340,12 +348,25 @@ namespace Zjcs.Presentation.Character
             rect.anchoredPosition = Vector2.zero;
         }
 
+        private Sprite RestoreSpriteBorder(Sprite sprite, OfficialCharacterPanelSprite source)
+        {
+            if (sprite == null || source?.border == null || source.border.Length != 4) return sprite;
+            var border = new Vector4(source.border[0], source.border[1], source.border[2], source.border[3]);
+            if (sprite.border == border) return sprite;
+            string key = source.file + ":" + border;
+            if (slicedSprites.TryGetValue(key, out Sprite restored)) return restored;
+            Rect textureRect = sprite.rect;
+            Vector2 pivot = new Vector2(sprite.pivot.x / textureRect.width, sprite.pivot.y / textureRect.height);
+            restored = Sprite.Create(sprite.texture, textureRect, pivot, sprite.pixelsPerUnit,
+                0, SpriteMeshType.FullRect, border);
+            restored.name = sprite.name;
+            slicedSprites[key] = restored;
+            return restored;
+        }
+
         internal static Color ImageColor(OfficialCharacterPanelImage image, Color color)
         {
-            if (image?.sprite != null
-                && string.Equals(Path.GetFileNameWithoutExtension(image.sprite.file),
-                    "C_none-fa3e084e40", StringComparison.OrdinalIgnoreCase))
-                color.a = 0f;
+            // C_none is the official opaque white tint sprite, including the page background.
             return color;
         }
 

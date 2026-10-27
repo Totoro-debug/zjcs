@@ -151,6 +151,8 @@ namespace Zjcs.Presentation.Character
         public void RefreshCurrent()
         {
             if (progression == null || petRoot == null) return;
+            // PlayerWithPetContent / FunctionType.Pet (62): HasAnyPetCondition.
+            petRoot.gameObject.SetActive(progression.PetProgression.State.Pets.Count > 0);
             long petIndex = displayedPlan >= 0
                 ? progression.Player.Skills.Plans[displayedPlan].PetIndex
                 : progression.PetProgression.State.FollowPetIndex;

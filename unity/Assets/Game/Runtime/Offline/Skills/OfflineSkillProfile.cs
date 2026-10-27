@@ -140,10 +140,19 @@ namespace Zjcs.Offline.Skills
     public sealed class OfflineSkillRules
     {
         public OfflineSkillDefinition[] Skills = Array.Empty<OfflineSkillDefinition>();
+        public OfflineSkillRankDisplay[] RankDisplays = Array.Empty<OfflineSkillRankDisplay>();
         public OfflineSkillLevelCost[] SlotLevelCosts = Array.Empty<OfflineSkillLevelCost>();
         public OfflineSkillBlessCost[] SlotBlessCosts = Array.Empty<OfflineSkillBlessCost>();
         public OfflineSkillLevelLimit[] LevelLimits = Array.Empty<OfflineSkillLevelLimit>();
         public OfflineSkillSubRankLimit[] BaseLevelLimits = Array.Empty<OfflineSkillSubRankLimit>();
+    }
+
+    [Serializable]
+    public sealed class OfflineSkillRankDisplay
+    {
+        public int Rank;
+        public int Quality;
+        public int RankAddition;
     }
 
     [Serializable]

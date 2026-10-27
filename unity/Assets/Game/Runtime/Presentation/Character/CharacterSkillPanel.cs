@@ -25,6 +25,7 @@ namespace Zjcs.Presentation.Character
             public Transform Target;
             public string Property;
             public AnimationCurve Curve;
+            public float InitialValue;
         }
 
         private const int ActiveSkillItemType = 100;
@@ -34,13 +35,22 @@ namespace Zjcs.Presentation.Character
         private OfficialCharacterAssetCatalog assets;
         private OfflineCharacterProgressionService progression;
         private CharacterPanelNodeFactory factory;
+        private OfficialSkillAssetCatalog skillAssets;
+        private readonly Dictionary<Button, Coroutine> tabAnimations = new Dictionary<Button, Coroutine>();
         private Dictionary<string, object> screen;
         private Dictionary<string, object> listItemTemplate;
         private Dictionary<string, object> itemTemplate;
+        private Dictionary<string, object> emptyItemTemplate;
         private Dictionary<string, object> promoteTemplate;
         private Dictionary<string, object> infoTemplate;
         private Dictionary<string, object> skillUiTemplates;
+        private Dictionary<string, object> skillListRowTemplate;
+        private Dictionary<string, object> skillListSeparatorTemplate;
         private GameObject panel;
+        private RectTransform skillContentRoot;
+        private RectTransform achievementContentRoot;
+        private Button skillPageTab;
+        private Button achievementPageTab;
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private Text planName;
@@ -53,7 +63,6 @@ namespace Zjcs.Presentation.Character
         private RectTransform skillPieceScrollList;
         private GameObject emptyTip;
         private Toggle showAll;
-        private Text statusText;
         private GameObject promoteDialog;
         private int promoteSkillId;
         private OfficialSkillQualityGradientData qualityGradient;
@@ -77,6 +86,7 @@ namespace Zjcs.Presentation.Character
         private GameObject installMask;
 
         public event Action Changed;
+        public event Action<bool> PlayerHeaderVisibilityChanged;
         public string LastMessage { get; private set; } = string.Empty;
 
         public bool IsOpen => panel != null;
@@ -88,16 +98,24 @@ namespace Zjcs.Presentation.Character
             progression = characterProgression ?? throw new ArgumentNullException(nameof(characterProgression));
             CharacterPanelNodeFactory.SetUiFont(assets.UiFont);
             factory = new CharacterPanelNodeFactory(assets);
+            skillAssets = OfficialSkillAssetCatalog.LoadDefault();
             Dictionary<string, object> panels = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.CharacterPanels.text), "panels");
             Dictionary<string, object> screens = CharacterModelPackage.AsObject(panels["screens"], "screens");
-            screen = CharacterModelPackage.AsObject(screens["skills"], "skills");
             listItemTemplate = CharacterModelPackage.AsObject(screens["skill_list_item"], "skill_list_item");
             itemTemplate = CharacterModelPackage.AsObject(screens["item"], "item");
             promoteTemplate = CharacterModelPackage.AsObject(screens["skill_promote"], "skill_promote");
             infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
             skillUiTemplates = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI layouts");
+            itemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_skill"], "official skill icon");
+            emptyItemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_empty"], "official empty skill icon");
+            screen = CharacterModelPackage.AsObject(
+                skillUiTemplates["character_skills"], "official character skill panel");
+            skillListRowTemplate = CharacterModelPackage.AsObject(
+                skillUiTemplates["skill_list_row"], "official skill list row");
+            skillListSeparatorTemplate = CharacterModelPackage.AsObject(
+                skillUiTemplates["skill_list_separator"], "official skill list separator");
         }
 
         public void Open(Transform parent)
@@ -105,7 +123,7 @@ namespace Zjcs.Presentation.Character
             if (panel != null) return;
             nodes.Clear();
             buttons.Clear();
-            panel = new GameObject("SkillContentPanel", typeof(RectTransform));
+            panel = new GameObject("CharacterSkillsLayer", typeof(RectTransform));
             panel.transform.SetParent(parent, false);
             RectTransform rect = (RectTransform)panel.transform;
             rect.anchorMin = Vector2.zero;
@@ -143,6 +161,10 @@ namespace Zjcs.Presentation.Character
             pendingType = 0;
             if (panel != null) Destroy(panel);
             panel = null;
+            skillContentRoot = null;
+            achievementContentRoot = null;
+            skillPageTab = null;
+            achievementPageTab = null;
             listRows.Clear();
             nodes.Clear();
             buttons.Clear();
@@ -201,11 +223,11 @@ namespace Zjcs.Presentation.Character
         {
             foreach (Text text in panel.GetComponentsInChildren<Text>(true)) text.raycastTarget = false;
             foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true)) text.raycastTarget = false;
-            planName = FindTextDeep("SkillPlanName");
             RectTransform nameRect = FindDeep("SkillPlanName");
+            planName = nameRect == null ? null : nameRect.GetComponentInChildren<Text>(true);
             if (nameRect != null)
             {
-                Button nameButton = nameRect.GetComponent<Button>() ?? nameRect.gameObject.AddComponent<Button>();
+                Button nameButton = FindDeep(nameRect, "CustomMask")?.GetComponent<Button>();
                 Graphic graphic = nameRect.GetComponent<Graphic>();
                 if (graphic == null)
                 {
@@ -213,8 +235,8 @@ namespace Zjcs.Presentation.Character
                     image.color = new Color(1f, 1f, 1f, 0f);
                     graphic = image;
                 }
-                nameButton.targetGraphic = graphic;
-                nameButton.onClick.AddListener(BeginRename);
+                graphic.canvasRenderer.cullTransparentMesh = false;
+                if (nameButton != null) nameButton.onClick.AddListener(BeginRename);
                 if (planName != null)
                 {
                     planInput = nameRect.GetComponent<InputField>();
@@ -234,20 +256,6 @@ namespace Zjcs.Presentation.Character
             BindButtonName("FastLevelUpBtn", UpgradeAllSlots);
             BindButtonName("FastPromotionBtn", PromoteAllSkills);
             BindButtonName("RecommendBtn", OpenRecommendations);
-            var statusObject = new GameObject("SkillPanelStatus", typeof(RectTransform), typeof(Text));
-            statusObject.transform.SetParent(panel.transform, false);
-            RectTransform statusRect = (RectTransform)statusObject.transform;
-            statusRect.anchorMin = new Vector2(0.5f, 0f);
-            statusRect.anchorMax = new Vector2(0.5f, 0f);
-            statusRect.pivot = new Vector2(0.5f, 0f);
-            statusRect.sizeDelta = new Vector2(900f, 40f);
-            statusRect.anchoredPosition = new Vector2(0f, 8f);
-            statusText = statusObject.GetComponent<Text>();
-            statusText.font = CharacterPanelNodeFactory.UiFont;
-            statusText.fontSize = 20;
-            statusText.alignment = TextAnchor.MiddleCenter;
-            statusText.color = new Color(1f, 0.85f, 0.5f);
-            statusText.raycastTarget = false;
             BindButtonName("NextPlanBtn", () => SwitchPlan(1));
             activeGroup = FindDeep("ActiveSkill");
             passiveGroup = FindDeep("PassiveSkill");
@@ -263,16 +271,100 @@ namespace Zjcs.Presentation.Character
             {
                 showAll = toggle.GetComponent<Toggle>() ?? toggle.gameObject.AddComponent<Toggle>();
                 showAll.isOn = false;
-                showAll.onValueChanged.AddListener(_ => RefreshList());
+                Transform on = toggle.Find("Toggle/On");
+                Transform off = toggle.Find("Toggle/Off");
+                if (on != null) on.gameObject.SetActive(false);
+                if (off != null) off.gameObject.SetActive(true);
+                showAll.onValueChanged.AddListener(selected =>
+                {
+                    if (on != null) on.gameObject.SetActive(selected);
+                    if (off != null) off.gameObject.SetActive(!selected);
+                    RefreshList();
+                });
             }
             BindTab("ActiveSkillTab", ActiveSkillItemType);
             BindTab("PassiveSkillTab", PassiveSkillItemType);
             BindTab("SkillPieceTab", PieceItemType);
+            skillContentRoot = FindDeep(panel.transform, "SkillContentPanel") as RectTransform;
+            achievementContentRoot = FindDeep(panel.transform, "AchievementPanelWithTypes") as RectTransform;
+            skillPageTab = buttons.Values.FirstOrDefault(value =>
+                value.name == "CharacterPanelSkillDetailPanelSkillTabGroupItem_11");
+            achievementPageTab = buttons.Values.FirstOrDefault(value =>
+                value.name == "AchievementTabGroupItem_11");
+            if (skillPageTab != null) skillPageTab.onClick.AddListener(ShowSkillContent);
+            if (achievementPageTab != null) achievementPageTab.onClick.AddListener(ShowAchievementContent);
+            foreach (Button button in buttons.Values)
+                if (button.targetGraphic != null)
+                    button.targetGraphic.canvasRenderer.cullTransparentMesh = false;
+            SetBottomPageState(showSkills: true);
+            RefreshCategoryTabs();
             if (panel == null) return;
-            Button close = buttons.Values.FirstOrDefault(value => value.name.IndexOf("Close", StringComparison.OrdinalIgnoreCase) >= 0);
-            if (close != null) close.onClick.AddListener(Close);
+            BindButtonName("CloseBtn_dark", Close);
             BuildSlotHandlers(activeGroup, ActiveSkillItemType);
             BuildSlotHandlers(passiveGroup, PassiveSkillItemType);
+        }
+
+        private void ShowSkillContent()
+        {
+            SetBottomPageState(showSkills: true);
+            Refresh();
+        }
+
+        private void ShowAchievementContent()
+        {
+            SetBottomPageState(showSkills: false);
+        }
+
+        private void SetBottomPageState(bool showSkills)
+        {
+            PlayerHeaderVisibilityChanged?.Invoke(showSkills);
+            if (skillContentRoot != null) skillContentRoot.gameObject.SetActive(showSkills);
+            if (achievementContentRoot != null) achievementContentRoot.gameObject.SetActive(!showSkills);
+            SetBottomTabSelected(skillPageTab, showSkills);
+            SetBottomTabSelected(achievementPageTab, !showSkills);
+        }
+
+        private void SetBottomTabSelected(Button tab, bool selected)
+        {
+            PlayTabTransition(tab, selected ? "TabBottomBarCell_On" : "TabBottomBarCell_Off");
+        }
+
+        private void PlayTabTransition(Button tab, string animationName)
+        {
+            if (tab == null) return;
+            string path = nodes.FirstOrDefault(pair => pair.Value == tab.transform).Key;
+            if (string.IsNullOrEmpty(path)) return;
+            Dictionary<string, object> root = CharacterModelPackage.AsObject(screen["root"], "skill page root");
+            Dictionary<string, object> source = FindLayoutNode(root, path);
+            if (source == null || !source.TryGetValue("animations", out object raw)
+                || !(raw is List<object> animations)) return;
+            Dictionary<string, object> clip = animations.OfType<Dictionary<string, object>>()
+                .FirstOrDefault(value => CharacterPanelNodeFactory.String(value, "name") == animationName);
+            if (clip == null || !TryBuildAnimationTracks(clip, nodes, out var tracks, out float duration)) return;
+            if (tabAnimations.TryGetValue(tab, out Coroutine previous) && previous != null) StopCoroutine(previous);
+            tabAnimations[tab] = StartCoroutine(PlaySkillAnimation(tracks, duration, false));
+        }
+
+        private static Dictionary<string, object> FindLayoutNode(Dictionary<string, object> node, string path)
+        {
+            if (CharacterPanelNodeFactory.String(node, "path") == path) return node;
+            if (node.TryGetValue("children", out object raw) && raw is List<object> children)
+                foreach (Dictionary<string, object> child in children.OfType<Dictionary<string, object>>())
+                {
+                    Dictionary<string, object> found = FindLayoutNode(child, path);
+                    if (found != null) return found;
+                }
+            return null;
+        }
+
+        private void RefreshCategoryTabs()
+        {
+            foreach (var pair in new[] { ("ActiveSkillTab", ActiveSkillItemType),
+                         ("PassiveSkillTab", PassiveSkillItemType), ("SkillPieceTab", PieceItemType) })
+            {
+                Button tab = buttons.Values.FirstOrDefault(value => value.name.Contains(pair.Item1));
+                PlayTabTransition(tab, listType == pair.Item2 ? "TabGroupItem_On_21" : "TabGroupItem_Off_21");
+            }
         }
 
         private void BindSkillListScroll()
@@ -364,36 +456,11 @@ namespace Zjcs.Presentation.Character
                     button.targetGraphic = image;
                 }
                 button.onClick.AddListener(() => SelectSlot(itemType, slot));
-                var upgradeObject = new GameObject("SlotUpgrade", typeof(RectTransform), typeof(Image),
-                    typeof(Button));
-                upgradeObject.transform.SetParent(slots[index], false);
-                RectTransform upgradeRect = (RectTransform)upgradeObject.transform;
-                upgradeRect.anchorMin = new Vector2(1f, 0f);
-                upgradeRect.anchorMax = new Vector2(1f, 0f);
-                upgradeRect.pivot = new Vector2(1f, 0f);
-                upgradeRect.sizeDelta = new Vector2(64f, 32f);
-                upgradeRect.anchoredPosition = new Vector2(-4f, 4f);
-                Image upgradeImage = upgradeObject.GetComponent<Image>();
-                upgradeImage.color = new Color(0.4f, 0.55f, 0.75f, 0.9f);
-                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-                labelObject.transform.SetParent(upgradeObject.transform, false);
-                RectTransform labelRect = (RectTransform)labelObject.transform;
-                labelRect.anchorMin = Vector2.zero;
-                labelRect.anchorMax = Vector2.one;
-                labelRect.offsetMin = Vector2.zero;
-                labelRect.offsetMax = Vector2.zero;
-                Text labelText = labelObject.GetComponent<Text>();
-                labelText.font = CharacterPanelNodeFactory.UiFont;
-                labelText.fontSize = 16;
-                labelText.alignment = TextAnchor.MiddleCenter;
-                labelText.color = Color.white;
-                labelText.raycastTarget = false;
-                labelText.text = "\u5347\u7ea7";
-                Button upgradeButton = upgradeObject.GetComponent<Button>();
-                upgradeButton.targetGraphic = upgradeImage;
-                upgradeObject.transform.SetAsLastSibling();
-                int capturedType = itemType;
-                upgradeButton.onClick.AddListener(() => UpgradeSlot(capturedType, slot));
+                if (button.targetGraphic != null) button.targetGraphic.canvasRenderer.cullTransparentMesh = false;
+                Button iconButton = FindDeep(slots[index], "Slot")?.GetComponent<Button>();
+                if (iconButton != null) iconButton.onClick.AddListener(() => SelectSlot(itemType, slot));
+                Transform levelEffect = FindDeep(slots[index], "AniLevelUp");
+                if (levelEffect != null) levelEffect.gameObject.SetActive(false);
                 SkillSlotDrag drag = slots[index].gameObject.AddComponent<SkillSlotDrag>();
                 drag.ItemType = itemType;
                 drag.Slot = slot;
@@ -432,6 +499,11 @@ namespace Zjcs.Presentation.Character
             RefreshSlots(passiveGroup, PassiveSkillItemType);
             RefreshList();
             RefreshFastAction();
+            var damageTest = FindDeep("StageDamageTestBtn");
+            var condition = CharacterModelPackage.AsObject(progression.Catalog.Rows("function_limit")
+                .First(value => Convert.ToInt32(value["Type"], CultureInfo.InvariantCulture) == 148)["Condition"], "damage test limit");
+            if (damageTest != null) damageTest.gameObject.SetActive(progression.Player.Level >=
+                Convert.ToInt32(condition["Level"], CultureInfo.InvariantCulture));
         }
 
         private void RefreshFastAction()
@@ -452,10 +524,11 @@ namespace Zjcs.Presentation.Character
             }
 
             bool fastPromotionUnlocked = progression.Player.Level >= 12;
-            if (nodes.TryGetValue("/SkillContentPanel/FastPromotionBtn", out RectTransform promotion))
-                promotion.gameObject.SetActive(fastPromotionUnlocked && promotable >= 5);
-            if (nodes.TryGetValue("/SkillContentPanel/FastLevelUpBtn", out RectTransform levelUp))
-                levelUp.gameObject.SetActive(!fastPromotionUnlocked || promotable < 5);
+            RectTransform promotion = FindDeep("FastPromotionBtn");
+            if (promotion != null) promotion.gameObject.SetActive(fastPromotionUnlocked && promotable >= 5);
+            RectTransform levelUp = FindDeep("FastLevelUpBtn");
+            if (levelUp != null) levelUp.gameObject.SetActive(fastPromotionUnlocked && promotable < 5
+                && progression.PreviewUpgradeAllSkillSlotChanges().Any());
         }
 
         private void RefreshSlots(RectTransform group, int itemType)
@@ -474,16 +547,13 @@ namespace Zjcs.Presentation.Character
                 Transform mount = FindDeep(child, "Slot") ?? child;
                 for (int i = mount.childCount - 1; i >= 0; i--)
                     if (mount.GetChild(i).name == "SkillIcon") Destroy(mount.GetChild(i).gameObject);
-                if (skillId != 0)
-                {
-                    BuildSkillIcon(skillId, mount, "SkillIcon");
-                }
+                BuildSkillIcon(skillId, mount, "SkillIcon");
                 Text level = FindDeep(child, "LevelText")?.GetComponent<Text>();
                 if (level != null)
                 {
                     int slotLevel = progression.SkillProgression == null ? 0
                         : progression.SkillProgression.SlotLevel(progression.Player.Skills, itemType, index);
-                    level.text = skillId == 0 ? string.Empty : "Lv" + slotLevel.ToString(CultureInfo.InvariantCulture);
+                    level.text = slotLevel.ToString(CultureInfo.InvariantCulture) + "级";
                 }
                 Transform selected = FindDeep(child, "SelAnimGo");
                 bool highlighted = selectedType == itemType
@@ -549,16 +619,108 @@ namespace Zjcs.Presentation.Character
             mergeable.Sort(bySkillPanel);
             collected.Sort(bySkillPanel);
             uncollected.Sort(bySkillPanel);
-            foreach (int skillId in mergeable.Concat(collected).Concat(uncollected))
+            int rowCapacity = SkillListRowCapacity(out float rowSpacing);
+            AppendSkillRows(mergeable, rowCapacity, owned, rowSpacing);
+            AppendSkillRows(collected, rowCapacity, owned, rowSpacing);
+            if (collected.Count > 0 && uncollected.Count > 0)
             {
-                OfflineSkillDefinition definition = progression.SkillRules.Skills
-                    .FirstOrDefault(value => value.ClassId == skillId);
-                bool available = OfflineSkillProgression.IsAvailableFor(definition, context);
-                GameObject row = BuildSkillRow(skillId, owned.ContainsKey(skillId), available);
-                if (row != null) listRows.Add(row);
+                var separatorNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                var separatorButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                RectTransform separator = factory.Build(
+                    CharacterPanelNodeFactory.ReadRoot(skillListSeparatorTemplate), skillGrid,
+                    separatorNodes, separatorButtons);
+                listRows.Add(separator.gameObject);
             }
+            AppendSkillRows(uncollected, rowCapacity, owned, rowSpacing);
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
             RefreshSkillListLayout(skillScrollList, skillGrid);
+        }
+
+        private void AppendSkillRows(List<int> skillIds, int rowCapacity,
+            IReadOnlyDictionary<int, int> owned, float spacing)
+        {
+            for (int offset = 0; offset < skillIds.Count; offset += rowCapacity)
+            {
+                int count = Mathf.Min(rowCapacity, skillIds.Count - offset);
+                GameObject row = BuildSkillListRow(skillIds, offset, count, owned, spacing);
+                if (row != null) listRows.Add(row);
+            }
+        }
+
+        private int SkillListRowCapacity(out float spacing)
+        {
+            Canvas.ForceUpdateCanvases();
+            RectTransform viewport = FindDeep(skillScrollList, "Viewport") as RectTransform;
+            float width = viewport == null ? skillGrid.rect.width : viewport.rect.width;
+            const float itemSize = 155f;
+            const float itemSpacing = 37.42f;
+            const float minItemSpacing = 20f;
+            const float paddingLeft = 50f;
+            const float paddingRight = 50f;
+            const int maxCountPerRow = 10;
+            if (width <= 1f)
+            {
+                spacing = itemSpacing;
+                return 1;
+            }
+
+            float availableWidth = width - paddingLeft - paddingRight;
+            int count = 1;
+            for (int candidate = maxCountPerRow; candidate >= 1; candidate--)
+            {
+                float candidateSpacing = candidate <= 1 ? 0f
+                    : (availableWidth - candidate * itemSize) / (candidate - 1);
+                if (candidateSpacing + 0.01f < Mathf.Min(minItemSpacing, itemSpacing)) continue;
+                count = candidate;
+                break;
+            }
+            spacing = count <= 1 ? 0f : Mathf.Max(
+                (availableWidth - count * itemSize) / (count - 1),
+                Mathf.Min(minItemSpacing, itemSpacing));
+            return count;
+        }
+
+        private GameObject BuildSkillListRow(IReadOnlyList<int> skillIds, int start, int count,
+            IReadOnlyDictionary<int, int> owned, float spacing)
+        {
+            var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+            var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+            RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(skillListRowTemplate),
+                skillGrid, rowNodes, rowButtons);
+            HorizontalLayoutGroup rowLayout = row.GetComponent<HorizontalLayoutGroup>();
+            if (rowLayout != null)
+            {
+                rowLayout.spacing = spacing;
+                rowLayout.padding.left = 50;
+                rowLayout.padding.right = 50;
+            }
+            for (int index = 0; index < count; index++)
+            {
+                int skillId = skillIds[start + index];
+                var itemNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                var itemButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                RectTransform item = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate),
+                    row, itemNodes, itemButtons);
+                item.name = "SkillListItem_" + skillId.ToString(CultureInfo.InvariantCulture);
+                item.sizeDelta = new Vector2(155f, 155f);
+                Transform mount = FindDeep(item, "Anchor") ?? item;
+                BuildSkillIcon(skillId, mount, "SkillIcon");
+                Graphic target = item.GetComponent<Graphic>();
+                if (target == null)
+                {
+                    Image hitTarget = item.gameObject.AddComponent<Image>();
+                    hitTarget.color = new Color(1f, 1f, 1f, 0.01f);
+                    hitTarget.raycastTarget = true;
+                    hitTarget.canvasRenderer.cullTransparentMesh = false;
+                    target = hitTarget;
+                }
+                else target.raycastTarget = true;
+                Button button = item.GetComponent<Button>() ?? item.gameObject.AddComponent<Button>();
+                button.targetGraphic = target;
+                if (owned.ContainsKey(skillId)) button.onClick.AddListener(() => OpenSkillDetail(skillId));
+                else button.onClick.AddListener(() => Install(skillId));
+            }
+            return row.gameObject;
         }
 
         private static void RefreshSkillListLayout(RectTransform list, RectTransform content)
@@ -635,10 +797,13 @@ namespace Zjcs.Presentation.Character
                     if (target == null || !target.enabled)
                     {
                         target = row.gameObject.AddComponent<Image>();
-                        target.color = new Color(1f, 1f, 1f, 0.001f);
+                        target.color = new Color(1f, 1f, 1f, 0.01f);
                     }
                     rowButton.targetGraphic = target;
+                    if (target.sprite == null) target.color = new Color(1f, 1f, 1f, 0.01f);
                     target.raycastTarget = true;
+                    CanvasRenderer targetRenderer = target.canvasRenderer;
+                    if (targetRenderer != null) targetRenderer.cullTransparentMesh = false;
                     int skillId = pieceDefinition.ClassId;
                     rowButton.onClick.AddListener(() => OpenPieceDetail(skillId));
                 }
@@ -680,142 +845,17 @@ namespace Zjcs.Presentation.Character
                 : Convert.ToString(item["Name"], CultureInfo.InvariantCulture);
         }
 
-        private GameObject BuildSkillRow(int skillId, bool has, bool available)
-        {
-            var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
-            var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
-            RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), skillGrid,
-                rowNodes, rowButtons);
-            foreach (Text childText in row.GetComponentsInChildren<Text>(true)) childText.raycastTarget = false;
-            foreach (TMP_Text childText in row.GetComponentsInChildren<TMP_Text>(true)) childText.raycastTarget = false;
-            Transform mount = FindDeep(row, "Anchor") ?? row;
-            BuildSkillIcon(skillId, mount, "SkillIcon");
-            var label = new GameObject("SkillLabel", typeof(RectTransform), typeof(Text));
-            label.transform.SetParent(row, false);
-            RectTransform labelRect = (RectTransform)label.transform;
-            labelRect.anchorMin = new Vector2(0f, 0f);
-            labelRect.anchorMax = new Vector2(1f, 0f);
-            labelRect.pivot = new Vector2(0.5f, 0f);
-            labelRect.sizeDelta = new Vector2(0f, 34f);
-            labelRect.anchoredPosition = new Vector2(0f, 4f);
-            var starObject = new GameObject("SkillFavorite", typeof(RectTransform), typeof(Image), typeof(Button));
-            starObject.transform.SetParent(row, false);
-            RectTransform starRect = (RectTransform)starObject.transform;
-            starRect.anchorMin = new Vector2(1f, 1f);
-            starRect.anchorMax = new Vector2(1f, 1f);
-            starRect.pivot = new Vector2(1f, 1f);
-            starRect.sizeDelta = new Vector2(44f, 44f);
-            starRect.anchoredPosition = new Vector2(-6f, -6f);
-            Image starImage = starObject.GetComponent<Image>();
-            starImage.color = new Color(1f, 1f, 1f, 0f);
-            starImage.raycastTarget = true;
-            var starTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            starTextObject.transform.SetParent(starObject.transform, false);
-            RectTransform starTextRect = (RectTransform)starTextObject.transform;
-            starTextRect.anchorMin = Vector2.zero;
-            starTextRect.anchorMax = Vector2.one;
-            starTextRect.offsetMin = Vector2.zero;
-            starTextRect.offsetMax = Vector2.zero;
-            Text starText = starTextObject.GetComponent<Text>();
-            starText.font = CharacterPanelNodeFactory.UiFont;
-            starText.fontSize = 30;
-            starText.alignment = TextAnchor.MiddleCenter;
-            starText.color = new Color(1f, 0.85f, 0.3f);
-            starText.raycastTarget = false;
-            starText.text = OfflineSkillProgression.IsFavorite(progression.Player.Skills, skillId)
-                ? "\u2605" : "\u2606";
-            Button starButton = starObject.GetComponent<Button>();
-            starButton.targetGraphic = starImage;
-            starButton.onClick.AddListener(() => ToggleFavorite(skillId));
-            var promoteObject = new GameObject("SkillPromote", typeof(RectTransform), typeof(Image), typeof(Button));
-            promoteObject.transform.SetParent(row, false);
-            RectTransform promoteRect = (RectTransform)promoteObject.transform;
-            promoteRect.anchorMin = new Vector2(1f, 0f);
-            promoteRect.anchorMax = new Vector2(1f, 0f);
-            promoteRect.pivot = new Vector2(1f, 0f);
-            promoteRect.sizeDelta = new Vector2(88f, 36f);
-            promoteRect.anchoredPosition = new Vector2(-130f, 6f);
-            Image promoteImage = promoteObject.GetComponent<Image>();
-            promoteImage.color = new Color(0.86f, 0.55f, 0.3f, 0.9f);
-            var promoteTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            promoteTextObject.transform.SetParent(promoteObject.transform, false);
-            RectTransform promoteTextRect = (RectTransform)promoteTextObject.transform;
-            promoteTextRect.anchorMin = Vector2.zero;
-            promoteTextRect.anchorMax = Vector2.one;
-            promoteTextRect.offsetMin = Vector2.zero;
-            promoteTextRect.offsetMax = Vector2.zero;
-            Text promoteText = promoteTextObject.GetComponent<Text>();
-            promoteText.font = CharacterPanelNodeFactory.UiFont;
-            promoteText.fontSize = 18;
-            promoteText.alignment = TextAnchor.MiddleCenter;
-            promoteText.color = Color.white;
-            promoteText.raycastTarget = false;
-            promoteText.text = "\u57f9\u517b";
-            Button promoteButton = promoteObject.GetComponent<Button>();
-            promoteButton.targetGraphic = promoteImage;
-            promoteButton.onClick.AddListener(() => OpenPromote(skillId));
-            var detailObject = new GameObject("SkillDetail", typeof(RectTransform), typeof(Image), typeof(Button));
-            detailObject.transform.SetParent(row, false);
-            RectTransform detailRect = (RectTransform)detailObject.transform;
-            detailRect.anchorMin = new Vector2(1f, 0f);
-            detailRect.anchorMax = new Vector2(1f, 0f);
-            detailRect.pivot = new Vector2(1f, 0f);
-            detailRect.sizeDelta = new Vector2(88f, 36f);
-            detailRect.anchoredPosition = new Vector2(-206f, 6f);
-            Image detailImage = detailObject.GetComponent<Image>();
-            detailImage.color = new Color(0.4f, 0.55f, 0.75f, 0.9f);
-            var detailTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            detailTextObject.transform.SetParent(detailObject.transform, false);
-            RectTransform detailTextRect = (RectTransform)detailTextObject.transform;
-            detailTextRect.anchorMin = Vector2.zero;
-            detailTextRect.anchorMax = Vector2.one;
-            detailTextRect.offsetMin = Vector2.zero;
-            detailTextRect.offsetMax = Vector2.zero;
-            Text detailText = detailTextObject.GetComponent<Text>();
-            detailText.font = CharacterPanelNodeFactory.UiFont;
-            detailText.fontSize = 18;
-            detailText.alignment = TextAnchor.MiddleCenter;
-            detailText.color = Color.white;
-            detailText.raycastTarget = false;
-            detailText.text = "\u8be6\u60c5";
-            Button detailButton = detailObject.GetComponent<Button>();
-            detailButton.targetGraphic = detailImage;
-            detailButton.onClick.AddListener(() => OpenSkillDetail(skillId));
-            Text text = label.GetComponent<Text>();
-            text.font = CharacterPanelNodeFactory.UiFont;
-            text.fontSize = 18;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = !available ? new Color(0.6f, 0.6f, 0.6f)
-                : has ? Color.white : new Color(1f, 0.55f, 0.45f);
-            text.text = SkillName(skillId) + (available ? string.Empty : "\uff08\u804c\u4e1a\u4e0d\u7b26\uff09")
-                + (has ? string.Empty : HasPiece(SkillPieceId(skillId)) ? "\uff08\u53ef\u5408\u6210\uff09" : string.Empty);
-            text.raycastTarget = false;
-            LayoutElement element = row.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
-            element.preferredHeight = 150f;
-            element.minHeight = 150f;
-            Image graphic = row.gameObject.GetComponent<Image>();
-            if (graphic == null)
-            {
-                graphic = row.gameObject.AddComponent<Image>();
-                graphic.color = new Color(1f, 1f, 1f, 0f);
-            }
-            Button button = row.GetComponent<Button>() ?? row.gameObject.AddComponent<Button>();
-            button.targetGraphic = graphic;
-            button.onClick.AddListener(() => Install(skillId));
-            foreach (Text childText in row.GetComponentsInChildren<Text>(true)) childText.raycastTarget = false;
-            foreach (TMP_Text childText in row.GetComponentsInChildren<TMP_Text>(true)) childText.raycastTarget = false;
-            return row.gameObject;
-        }
-
         private GameObject BuildSkillIcon(int itemId, Transform parent, string name)
         {
             var iconNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             var iconButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
-            RectTransform root = factory.Build(CharacterPanelNodeFactory.ReadRoot(itemTemplate), parent,
+            RectTransform root = factory.Build(CharacterPanelNodeFactory.ReadRoot(itemId == 0 ? emptyItemTemplate
+                : progression.Catalog.ItemType(itemId) == PieceItemType
+                    ? CharacterModelPackage.AsObject(skillUiTemplates["item_skill_piece"], "official skill piece icon") : itemTemplate), parent,
                 iconNodes, iconButtons);
             root.gameObject.name = name;
             Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
-            int quality = item == null ? 0 : Convert.ToInt32(item["Quality"], CultureInfo.InvariantCulture);
+            int quality = Quality(itemId);
             foreach (RectTransform rect in iconNodes.Values)
             {
                 if (rect.name == "QualityImg")
@@ -825,7 +865,7 @@ namespace Zjcs.Presentation.Character
                         "ImgQuality_Blue-42b8cb9630.png", "ImgQuality_Purple-0b40a53021.png",
                         "ImgQuality_Orange-78887320b0.png", "ImgQuality_Gold-5f018c42e0.png",
                         "ImgQuality_Red-caa09e6943.png", "ImgQuality_Multicolour-93374ebc65.png" };
-                    if (image != null) image.sprite = assets.FindSprite("res://assets/official/sprites/"
+                    if (image != null && itemId != 0) image.sprite = assets.FindSprite("res://assets/official/sprites/"
                         + files[Mathf.Clamp(quality, 0, files.Length - 1)]);
                 }
             }
@@ -838,12 +878,55 @@ namespace Zjcs.Presentation.Character
                 if (image != null)
                 {
                     image.sprite = sprite;
+                    image.color = Color.white;
                     image.enabled = sprite != null;
                 }
             }
+            ConfigureSkillStars(root, itemId, quality);
+            Transform count = FindDeep(root, "BgCountText");
+            if (count != null) count.gameObject.SetActive(false);
             foreach (Button value in root.GetComponentsInChildren<Button>(true)) value.enabled = false;
             foreach (Graphic value in root.GetComponentsInChildren<Graphic>(true)) value.raycastTarget = false;
             return root.gameObject;
+        }
+
+        private void ConfigureSkillStars(RectTransform icon, int skillId, int quality)
+        {
+            Transform stars = FindDeep(icon, "SkillStarInfo");
+            if (stars == null) return;
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
+            OfflineSkillRankDisplay display = progression.SkillRules.RankDisplays.FirstOrDefault(value => value.Rank == rank);
+            int addition = display?.RankAddition ?? 0;
+            stars.gameObject.SetActive(addition > 0);
+            if (addition == 0) return;
+            Dictionary<string, object> settings = CharacterModelPackage.AsObject(skillUiTemplates["skill_star_settings"], "official star settings");
+            int threshold = Convert.ToInt32(settings["threshold"], CultureInfo.InvariantCulture);
+            Dictionary<string, object> sprites = CharacterModelPackage.AsObject(settings["quality_sprites"], "official star sprites");
+            string uri = Convert.ToString(sprites[quality.ToString(CultureInfo.InvariantCulture)], CultureInfo.InvariantCulture);
+            Sprite sprite = assets.FindSprite(uri) ?? skillAssets.FindSprite(uri);
+            Transform starList = FindDeep(stars, "StarList");
+            Transform starNumber = FindDeep(stars, "StarNum");
+            bool showNumber = addition > threshold;
+            if (starNumber != null)
+            {
+                starNumber.gameObject.SetActive(showNumber);
+                Text text = starNumber.GetComponentInChildren<Text>(true);
+                if (text != null) text.text = addition.ToString(CultureInfo.InvariantCulture);
+                Image image = FindDeep(starNumber, "Star")?.GetComponent<Image>();
+                if (image != null) image.sprite = sprite;
+            }
+            if (starList == null) return;
+            starList.gameObject.SetActive(!showNumber);
+            int index = 0;
+            foreach (Transform star in starList)
+            {
+                star.gameObject.SetActive(index++ < addition);
+                if (star.childCount > 0)
+                {
+                    Image image = star.GetChild(0).GetComponent<Image>();
+                    if (image != null) image.sprite = sprite;
+                }
+            }
         }
 
         private void UpgradeAllSlots()
@@ -1035,7 +1118,7 @@ namespace Zjcs.Presentation.Character
             }
             Button skip = DialogButton(resultButtons, "SkipBtn");
             if (skip != null) skip.gameObject.SetActive(resultRows.Count > 0);
-            batchReveal = StartCoroutine(RevealBatchPromotionRows(resultRows, resultNodes, close, skip));
+            batchReveal = StartCoroutine(RevealBatchPromotionRows(resultDialog, resultRows, resultNodes, close, skip));
             if (skip != null) skip.onClick.AddListener(() =>
             {
                 if (batchReveal != null) StopCoroutine(batchReveal);
@@ -1047,13 +1130,14 @@ namespace Zjcs.Presentation.Character
             });
         }
 
-        private IEnumerator RevealBatchPromotionRows(List<CanvasGroup> rows,
+        private IEnumerator RevealBatchPromotionRows(GameObject owner, List<CanvasGroup> rows,
             Dictionary<string, RectTransform> resultNodes,
             Button closeButton, Button skipButton)
         {
             foreach (CanvasGroup row in rows)
             {
                 yield return new WaitForSecondsRealtime(0.06f);
+                if (owner == null || resultDialog != owner) yield break;
                 if (row != null) row.alpha = 1f;
             }
             ScrollSkillResultsToEnd(resultNodes);
@@ -1095,7 +1179,6 @@ namespace Zjcs.Presentation.Character
         private void SetStatus(string message)
         {
             LastMessage = message ?? string.Empty;
-            if (statusText != null) statusText.text = LastMessage;
         }
 
         private void OpenRecommendations()
@@ -1238,7 +1321,7 @@ namespace Zjcs.Presentation.Character
                 throw new InvalidOperationException("Official skill UI layout is missing: " + layoutKey);
             Dictionary<string, object> template = CharacterModelPackage.AsObject(raw, layoutKey);
             GameObject dialog = new GameObject(layoutKey, typeof(RectTransform));
-            dialog.transform.SetParent(transform, false);
+            dialog.transform.SetParent(panel != null ? panel.transform.parent : transform.parent, false);
             RectTransform root = (RectTransform)dialog.transform;
             root.anchorMin = Vector2.zero;
             root.anchorMax = Vector2.one;
@@ -1275,8 +1358,48 @@ namespace Zjcs.Presentation.Character
                 if (loopClip != null && TryBuildAnimationTracks(loopClip, layoutNodes,
                     out List<SkillAnimationTrack> loopTracks, out float loopDuration))
                     StartCoroutine(PlaySkillAnimationAfter(tracks, duration, loopTracks, loopDuration));
+                else StartCoroutine(PlaySkillAnimation(tracks, duration, false));
             }
         }
+
+        internal void PlayCharacterPageState(Dictionary<string, object> template,
+            Dictionary<string, RectTransform> layoutNodes, string animationName)
+        {
+            var root = CharacterModelPackage.AsObject(template["root"], "character page root");
+            PlayCharacterNodeState(root, layoutNodes, animationName);
+        }
+
+        private void PlayCharacterNodeState(Dictionary<string, object> node,
+            Dictionary<string, RectTransform> layoutNodes, string animationName)
+        {
+            if (node.TryGetValue("animations", out object rawAnimations)
+                && rawAnimations is List<object> animations)
+                foreach (object raw in animations)
+                {
+                    if (!(raw is Dictionary<string, object> clip)
+                        || CharacterPanelNodeFactory.String(clip, "name") != animationName) continue;
+                    if (characterStateAnimation != null) StopCoroutine(characterStateAnimation);
+                    // Animator Write Defaults restores channels absent from the next official state.
+                    if (characterStateTracks != null)
+                        foreach (SkillAnimationTrack track in characterStateTracks)
+                            ApplySkillAnimationValue(track.Target, track.Property, track.InitialValue);
+                    if (TryBuildAnimationTracks(clip, layoutNodes, out var tracks, out float duration))
+                    {
+                        characterStateTracks = tracks;
+                        foreach (SkillAnimationTrack track in tracks)
+                            track.InitialValue = ReadSkillAnimationValue(track.Target, track.Property);
+                        characterStateAnimation = StartCoroutine(PlaySkillAnimation(tracks, duration, false));
+                    }
+                    return;
+                }
+            if (node.TryGetValue("children", out object rawChildren) && rawChildren is List<object> children)
+                foreach (object child in children)
+                    PlayCharacterNodeState(CharacterModelPackage.AsObject(child, "character node"),
+                        layoutNodes, animationName);
+        }
+
+        private Coroutine characterStateAnimation;
+        private List<SkillAnimationTrack> characterStateTracks;
 
         private static bool TryBuildAnimationTracks(Dictionary<string, object> clip,
             Dictionary<string, RectTransform> layoutNodes, out List<SkillAnimationTrack> tracks, out float duration)
@@ -1307,8 +1430,10 @@ namespace Zjcs.Presentation.Character
                     if (!(rawKey is List<object> values) || values.Count < 2) continue;
                     float time = Convert.ToSingle(values[0], CultureInfo.InvariantCulture);
                     float value = Convert.ToSingle(values[1], CultureInfo.InvariantCulture);
-                    float inSlope = values.Count > 2 ? Convert.ToSingle(values[2], CultureInfo.InvariantCulture) : 0f;
-                    float outSlope = values.Count > 3 ? Convert.ToSingle(values[3], CultureInfo.InvariantCulture) : 0f;
+                    float inSlope = values.Count > 2 ? values[2] == null ? float.PositiveInfinity
+                        : Convert.ToSingle(values[2], CultureInfo.InvariantCulture) : 0f;
+                    float outSlope = values.Count > 3 ? values[3] == null ? float.PositiveInfinity
+                        : Convert.ToSingle(values[3], CultureInfo.InvariantCulture) : 0f;
                     keyframes.Add(new Keyframe(time, value, inSlope, outSlope));
                     duration = Mathf.Max(duration, time);
                 }
@@ -1345,6 +1470,31 @@ namespace Zjcs.Presentation.Character
             while (true);
         }
 
+        private static float ReadSkillAnimationValue(Transform target, string property)
+        {
+            if (target == null) return 0f;
+            RectTransform rect = target as RectTransform;
+            bool x = property.EndsWith(".x", StringComparison.Ordinal);
+            if (property.StartsWith("m_AnchoredPosition.", StringComparison.Ordinal))
+                return x ? rect.anchoredPosition.x : rect.anchoredPosition.y;
+            if (property.StartsWith("m_AnchorMin.", StringComparison.Ordinal)) return x ? rect.anchorMin.x : rect.anchorMin.y;
+            if (property.StartsWith("m_AnchorMax.", StringComparison.Ordinal)) return x ? rect.anchorMax.x : rect.anchorMax.y;
+            if (property.StartsWith("m_SizeDelta.", StringComparison.Ordinal)) return x ? rect.sizeDelta.x : rect.sizeDelta.y;
+            if (property.StartsWith("scale.", StringComparison.Ordinal))
+                return x ? target.localScale.x : property.EndsWith(".y", StringComparison.Ordinal) ? target.localScale.y : target.localScale.z;
+            if (property == "m_IsActive") return target.gameObject.activeSelf ? 1f : 0f;
+            Graphic graphic = target.GetComponent<Graphic>();
+            if (property == "m_Alpha")
+            {
+                CanvasGroup group = target.GetComponent<CanvasGroup>();
+                return group != null ? group.alpha : graphic != null ? graphic.color.a : 1f;
+            }
+            Color color = graphic == null ? Color.white : graphic.color;
+            return property.EndsWith(".r", StringComparison.Ordinal) ? color.r
+                : property.EndsWith(".g", StringComparison.Ordinal) ? color.g
+                : property.EndsWith(".b", StringComparison.Ordinal) ? color.b : color.a;
+        }
+
         private static void ApplySkillAnimationValue(Transform target, string property, float value)
         {
             if (target == null) return;
@@ -1356,6 +1506,20 @@ namespace Zjcs.Presentation.Character
                 if (property.EndsWith(".x", StringComparison.Ordinal)) position.x = value;
                 else position.y = value;
                 rect.anchoredPosition = position;
+            }
+            else if (property.StartsWith("m_AnchorMin.", StringComparison.Ordinal)
+                || property.StartsWith("m_AnchorMax.", StringComparison.Ordinal)
+                || property.StartsWith("m_SizeDelta.", StringComparison.Ordinal))
+            {
+                if (rect == null) return;
+                bool minimum = property.StartsWith("m_AnchorMin.", StringComparison.Ordinal);
+                bool maximum = property.StartsWith("m_AnchorMax.", StringComparison.Ordinal);
+                Vector2 vector = minimum ? rect.anchorMin : maximum ? rect.anchorMax : rect.sizeDelta;
+                if (property.EndsWith(".x", StringComparison.Ordinal)) vector.x = value;
+                else vector.y = value;
+                if (minimum) rect.anchorMin = vector;
+                else if (maximum) rect.anchorMax = vector;
+                else rect.sizeDelta = vector;
             }
             else if (property == "scale.x" || property == "scale.y" || property == "scale.z")
             {
@@ -1389,7 +1553,8 @@ namespace Zjcs.Presentation.Character
                 group.alpha = value;
             }
             else if (property == "m_IsActive") target.gameObject.SetActive(value >= 0.5f);
-            else if (property.StartsWith("m_Color.", StringComparison.Ordinal))
+            else if (property.StartsWith("m_Color.", StringComparison.Ordinal)
+                || property.StartsWith("m_fontColor.", StringComparison.Ordinal))
             {
                 Graphic graphic = target.GetComponent<Graphic>();
                 if (graphic == null) return;
@@ -1402,6 +1567,40 @@ namespace Zjcs.Presentation.Character
             }
         }
 
+        private void SetOfficialState(string layoutKey, string component, string field, int state,
+            Dictionary<string, RectTransform> layoutNodes)
+        {
+            var template = CharacterModelPackage.AsObject(skillUiTemplates[layoutKey], layoutKey);
+            var root = CharacterModelPackage.AsObject(template["root"], layoutKey + " root");
+            if (!root.TryGetValue("original_bindings", out object rawBindings)) return;
+            var bindings = CharacterModelPackage.AsObject(rawBindings, "official component bindings");
+            if (!bindings.TryGetValue(component, out object rawComponent)) return;
+            var data = CharacterModelPackage.AsObject(rawComponent, component);
+            if (!data.TryGetValue(field, out object rawSwitcher) || !data.TryGetValue("references", out object rawReferences)) return;
+            var switcher = CharacterModelPackage.AsObject(rawSwitcher, field);
+            var references = CharacterModelPackage.AsObject(rawReferences, "managed references");
+            if (!(switcher["mStateConfigs"] is List<object> configs) || !(references["RefIds"] is List<object> refs)) return;
+            var ids = new HashSet<string>(configs.OfType<Dictionary<string, object>>()
+                .Select(value => Convert.ToString(value["rid"], CultureInfo.InvariantCulture)));
+            var states = new Dictionary<string, bool>(StringComparer.Ordinal);
+            foreach (var reference in refs.OfType<Dictionary<string, object>>())
+            {
+                if (!ids.Contains(Convert.ToString(reference["rid"], CultureInfo.InvariantCulture))) continue;
+                var config = CharacterModelPackage.AsObject(reference["data"], "state configuration");
+                if (!config.TryGetValue("mStateGameObjectData", out object rawGo)) continue;
+                var go = CharacterModelPackage.AsObject(rawGo, "state game objects");
+                foreach (var entry in ((List<object>)go["GoConfig"]).OfType<Dictionary<string, object>>())
+                {
+                    int entryState = Convert.ToInt32(CharacterModelPackage.AsObject(entry["State"], "state")["mValue"], CultureInfo.InvariantCulture);
+                    foreach (string path in ((List<object>)entry["GameObjects"]).Select(value => Convert.ToString(value, CultureInfo.InvariantCulture)))
+                        states[path] = (states.TryGetValue(path, out bool active) && active) || entryState == state;
+                }
+            }
+            foreach (var entry in states)
+                if (layoutNodes.TryGetValue(entry.Key, out RectTransform target) && target != null)
+                    target.gameObject.SetActive(entry.Value);
+        }
+
         private static Button DialogButton(Dictionary<string, Button> dialogButtons, string nodeName)
         {
             return dialogButtons.FirstOrDefault(pair => pair.Key.EndsWith("/" + nodeName,
@@ -1411,7 +1610,7 @@ namespace Zjcs.Presentation.Character
         private static RectTransform DialogNode(Dictionary<string, RectTransform> dialogNodes,
             string nodeName)
         {
-            return dialogNodes.Values.FirstOrDefault(value => value.name == nodeName);
+            return dialogNodes.Values.FirstOrDefault(value => value != null && value.name == nodeName);
         }
 
         private static RectTransform DialogNodeEnding(Dictionary<string, RectTransform> dialogNodes,
@@ -1476,7 +1675,8 @@ namespace Zjcs.Presentation.Character
             DialogButton(dialogButtons, "CollectionBtn")?.onClick.AddListener(() =>
             {
                 ToggleFavorite(skillId);
-                CloseSkillDetail();
+                SetOfficialState("skill_panel_detail", "SkillPanelSkillDetailDialog", "mCollectionStateSwitcher",
+                    progression.Player.Skills.FavoriteSkills.Contains(skillId) ? 1 : 0, dialogNodes);
             });
             DialogButton(dialogButtons, "UpgradeBtn")?.onClick.AddListener(() =>
             {
@@ -1650,122 +1850,6 @@ namespace Zjcs.Presentation.Character
             pieceDialog = null;
         }
 
-        private void OpenSkillDetailFallback(int skillId)
-        {
-            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
-            if (definition == null) return;
-            CloseSkillDetail();
-            detailDialog = new GameObject("SkillDetailDialog", typeof(RectTransform));
-            detailDialog.transform.SetParent(transform, false);
-            RectTransform root = (RectTransform)detailDialog.transform;
-            root.anchorMin = Vector2.zero;
-            root.anchorMax = Vector2.one;
-            root.offsetMin = Vector2.zero;
-            root.offsetMax = Vector2.zero;
-            var blocker = new GameObject("DetailBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
-            blocker.transform.SetParent(root, false);
-            RectTransform blockerRect = (RectTransform)blocker.transform;
-            blockerRect.anchorMin = Vector2.zero;
-            blockerRect.anchorMax = Vector2.one;
-            blockerRect.offsetMin = Vector2.zero;
-            blockerRect.offsetMax = Vector2.zero;
-            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
-            blocker.GetComponent<Button>().onClick.AddListener(CloseSkillDetail);
-            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
-            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
-            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), root, nodes, buttons);
-            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
-            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
-                .FirstOrDefault(text => text != null && text.name == "TitleText");
-            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
-            if (title != null) title.text = SkillName(skillId);
-            if (content == null) return;
-            foreach (RectTransform child in content) child.gameObject.SetActive(false);
-            var body = new GameObject("SkillDetailText", typeof(RectTransform), typeof(Text));
-            body.transform.SetParent(content, false);
-            RectTransform bodyRect = (RectTransform)body.transform;
-            bodyRect.anchorMin = new Vector2(0.08f, 0.32f);
-            bodyRect.anchorMax = new Vector2(0.92f, 0.92f);
-            bodyRect.offsetMin = Vector2.zero;
-            bodyRect.offsetMax = Vector2.zero;
-            Text text = body.GetComponent<Text>();
-            text.font = CharacterPanelNodeFactory.UiFont;
-            text.fontSize = 24;
-            text.color = Color.white;
-            text.alignment = TextAnchor.UpperLeft;
-            text.horizontalOverflow = HorizontalWrapMode.Wrap;
-            var lines = new List<string>
-            {
-                "\u7c7b\u578b\uff1a" + (definition.ItemType == ActiveSkillItemType ? "\u6218\u6280" : "\u79d8\u6cd5"),
-                "\u7b49\u9636\uff1a" + rank + " / " + definition.MaximumRank,
-                "\u788e\u7247\uff1a" + ItemName(definition.PieceItemId) + " \u00d7"
-                    + progression.Player.Inventory.Where(value => value.ItemId == definition.PieceItemId)
-                        .Sum(value => value.Count)
-            };
-            OfflineSkillRankCost cost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
-            if (cost != null)
-                lines.Add("\u4e0b\u4e00\u7b49\u9636\uff1a" + string.Join("\u3001", cost.Items.Select(item =>
-                    ItemName(item.ItemId) + " \u00d7" + item.Count)));
-            text.text = string.Join("\n", lines);
-            bool owned = progression.Player.Skills.Skills.Any(value =>
-                value != null && value.ClassId == skillId);
-            int mergePieces = progression.SkillMergePiece(skillId);
-            bool mergeable = !owned && mergePieces > 0;
-            Button install = CreatePanelButton(content, owned ? "\u5b89\u88c5" : mergeable ? "\u5408\u6210"
-                : "\u672a\u62e5\u6709", new Vector2(-160f, 40f),
-                new Color(0.86f, 0.55f, 0.3f, 0.95f));
-            bool confirmingMerge = false;
-            install.onClick.AddListener(() =>
-            {
-                if (mergeable)
-                {
-                    long ownedPieces = progression.Player.Inventory
-                        .Where(value => value.ItemId == definition.PieceItemId).Sum(value => value.Count);
-                    if (ownedPieces < mergePieces)
-                    {
-                        SetStatus("\u788e\u7247\u4e0d\u8db3\uff1a" + ownedPieces + "/" + mergePieces);
-                        return;
-                    }
-                    if (!confirmingMerge)
-                    {
-                        confirmingMerge = true;
-                        Text label = install.GetComponentInChildren<Text>();
-                        if (label != null) label.text = "\u786e\u8ba4\u5408\u6210";
-                        SetStatus("\u518d\u6b21\u70b9\u51fb\u5408\u6210\u4ee5\u786e\u8ba4\uff08"
-                            + mergePieces + " \u7247\uff09");
-                        return;
-                    }
-                    ProgressionResult merged = progression.MergeSkill(skillId);
-                    SetStatus(merged.Message ?? merged.Status.ToString());
-                    if (!merged.IsApplied) return;
-                    CloseSkillDetail();
-                    Refresh();
-                    Changed?.Invoke();
-                    return;
-                }
-                CloseSkillDetail();
-                Install(skillId);
-            });
-            Button promote = CreatePanelButton(content, "\u57f9\u517b", new Vector2(0f, 40f),
-                new Color(0.55f, 0.7f, 0.9f, 0.95f));
-            promote.onClick.AddListener(() =>
-            {
-                CloseSkillDetail();
-                OpenPromote(skillId);
-            });
-            bool favorite = OfflineSkillProgression.IsFavorite(progression.Player.Skills, skillId);
-            Button star = CreatePanelButton(content, favorite ? "\u53d6\u6d88\u6536\u85cf" : "\u6536\u85cf",
-                new Vector2(320f, 40f), new Color(1f, 0.8f, 0.3f, 0.95f));
-            star.onClick.AddListener(() =>
-            {
-                ToggleFavorite(skillId);
-                CloseSkillDetail();
-            });
-            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(480f, 40f),
-                new Color(0.45f, 0.45f, 0.45f, 0.95f));
-            close.onClick.AddListener(CloseSkillDetail);
-        }
-
         private void CloseSkillDetail()
         {
             if (detailDialog != null) Destroy(detailDialog);
@@ -1790,16 +1874,14 @@ namespace Zjcs.Presentation.Character
             Button rankTab = DialogButton(dialogButtons, "SkillPromotePanelRankUpTabGroupItem_11");
             if (rankTab != null) rankTab.onClick.AddListener(() =>
             {
-                if (rankContent != null) rankContent.gameObject.SetActive(true);
-                if (levelContent != null) levelContent.gameObject.SetActive(false);
+                SetOfficialState("skill_promote", "SkillPromotePanel", "ContentStateSwitcher", 1, dialogNodes);
                 PlayOfficialLayoutAnimations("skill_promote", skillUiTemplates["skill_promote"]
                     as Dictionary<string, object>, dialogNodes, "SkillPromotePanel_Switch");
             });
             Button levelTab = DialogButton(dialogButtons, "SkillPromotePanelLevelUpTabGroupItem_11");
             if (levelTab != null) levelTab.onClick.AddListener(() =>
             {
-                if (rankContent != null) rankContent.gameObject.SetActive(false);
-                if (levelContent != null) levelContent.gameObject.SetActive(true);
+                SetOfficialState("skill_promote", "SkillPromotePanel", "ContentStateSwitcher", 0, dialogNodes);
                 PlayOfficialLayoutAnimations("skill_promote", skillUiTemplates["skill_promote"]
                     as Dictionary<string, object>, dialogNodes, "SkillPromotePanel_Switch");
             });
@@ -1807,6 +1889,10 @@ namespace Zjcs.Presentation.Character
             OfflineSkillPlan planState = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan];
             int[] skillSlots = itemType == ActiveSkillItemType ? planState.ActiveSkills : planState.PassiveSkills;
             int equippedSlot = Array.IndexOf(skillSlots, skillId);
+            SetOfficialState("skill_promote", "SkillPromotePanel", "ContentStateSwitcher", 1, dialogNodes);
+            SetOfficialState("skill_promote", "SkillPromotePanel", "IsNoTabSwitcher", equippedSlot >= 0 ? 1 : 0, dialogNodes);
+            SetOfficialState("skill_promote", "SkillPromotePanel", "SkillListShowStateSwitcher", equippedSlot >= 0 ? 1 : 0, dialogNodes);
+            SetOfficialState("skill_promote", "SkillPromotePanel", "mPopTipStates", 0, dialogNodes);
             int currentLevel = equippedSlot < 0 ? 0 : progression.SkillProgression.SlotLevel(
                 progression.Player.Skills, itemType, equippedSlot, progression.SkillContext().CurrentSeasonId);
             SetTextValue(DialogNode(dialogNodes, "NameText")?.GetComponent<Text>(), SkillName(skillId));
@@ -1854,7 +1940,7 @@ namespace Zjcs.Presentation.Character
 
             RectTransform levelButtonNode = dialogNodes.Values.FirstOrDefault(value =>
                 value.name == "UseItemBtn" && value.parent != null
-                && value.parent.parent != null && value.parent.parent.name == "LevelUpContent");
+                && value.GetComponentsInParent<Transform>(true).Any(parent => parent.name == "LevelUpContent"));
             Button levelUpgrade = levelButtonNode == null ? null : levelButtonNode.GetComponent<Button>();
             if (levelUpgrade != null)
             {
@@ -1877,73 +1963,6 @@ namespace Zjcs.Presentation.Character
             OpenPromote(promoteSkillId);
         }
 
-        private void OpenPromoteFallback(int skillId)
-        {
-            OfflineSkillDefinition definition = progression.SkillDefinition(skillId);
-            if (definition == null) return;
-            ClosePromote();
-            promoteSkillId = skillId;
-            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
-            promoteDialog = new GameObject("SkillPromotePanel", typeof(RectTransform));
-            promoteDialog.transform.SetParent(transform, false);
-            RectTransform root = (RectTransform)promoteDialog.transform;
-            root.anchorMin = Vector2.zero;
-            root.anchorMax = Vector2.one;
-            root.offsetMin = Vector2.zero;
-            root.offsetMax = Vector2.zero;
-            var blocker = new GameObject("PromoteBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
-            blocker.transform.SetParent(root, false);
-            RectTransform blockerRect = (RectTransform)blocker.transform;
-            blockerRect.anchorMin = Vector2.zero;
-            blockerRect.anchorMax = Vector2.one;
-            blockerRect.offsetMin = Vector2.zero;
-            blockerRect.offsetMax = Vector2.zero;
-            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
-            blocker.GetComponent<Button>().onClick.AddListener(ClosePromote);
-            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
-            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
-            factory.Build(CharacterPanelNodeFactory.ReadRoot(promoteTemplate), root, nodes, buttons);
-            RectTransform middle = nodes.Values.FirstOrDefault(value => value.name == "MiddleGo");
-            if (middle == null) return;
-            var titleObject = new GameObject("PromoteTitle", typeof(RectTransform), typeof(Text));
-            titleObject.transform.SetParent(middle, false);
-            RectTransform titleRect = (RectTransform)titleObject.transform;
-            titleRect.anchorMin = new Vector2(0f, 0.86f);
-            titleRect.anchorMax = new Vector2(1f, 0.86f);
-            titleRect.sizeDelta = new Vector2(0f, 54f);
-            Text title = titleObject.GetComponent<Text>();
-            title.font = CharacterPanelNodeFactory.UiFont;
-            title.fontSize = 28;
-            title.alignment = TextAnchor.MiddleCenter;
-            title.color = Color.white;
-            title.text = SkillName(skillId) + "  \u7b49\u9636 " + rank.ToString(CultureInfo.InvariantCulture)
-                + " \u2192 " + Math.Min(definition.MaximumRank, rank + 1).ToString(CultureInfo.InvariantCulture);
-            float top = 0.76f;
-            OfflineSkillRankCost cost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == rank);
-            if (cost == null)
-            {
-                AddPromoteLine(middle, "\u5df2\u8fbe\u6700\u5927\u7b49\u9636\u3002", ref top,
-                    new Color(1f, 0.6f, 0.55f));
-            }
-            else
-            {
-                foreach (OfflineSkillItemCount item in cost.Items)
-                {
-                    long owned = progression.Player.Inventory.Where(value => value.ItemId == item.ItemId)
-                        .Sum(value => value.Count);
-                    AddPromoteLine(middle, ItemName(item.ItemId) + "\uff1a" + owned.ToString("N0",
-                        CultureInfo.InvariantCulture) + "/" + item.Count.ToString("N0", CultureInfo.InvariantCulture),
-                        ref top, owned >= item.Count ? Color.white : new Color(1f, 0.6f, 0.55f));
-                }
-            }
-            Button promote = CreatePanelButton(middle, "\u5347\u9636", new Vector2(-140f, 30f),
-                new Color(0.86f, 0.55f, 0.3f, 0.95f));
-            promote.onClick.AddListener(DoPromote);
-            Button close = CreatePanelButton(middle, "\u5173\u95ed", new Vector2(140f, 30f),
-                new Color(0.45f, 0.45f, 0.45f, 0.95f));
-            close.onClick.AddListener(ClosePromote);
-        }
-
         private void DoPromote()
         {
             int skillId = promoteSkillId;
@@ -1964,51 +1983,6 @@ namespace Zjcs.Presentation.Character
             promoteDialog = null;
         }
 
-        private void AddPromoteLine(RectTransform parent, string value, ref float top, Color color)
-        {
-            var line = new GameObject("PromoteLine", typeof(RectTransform), typeof(Text));
-            line.transform.SetParent(parent, false);
-            RectTransform rect = (RectTransform)line.transform;
-            rect.anchorMin = new Vector2(0.08f, top);
-            rect.anchorMax = new Vector2(0.92f, top);
-            rect.sizeDelta = new Vector2(0f, 40f);
-            Text text = line.GetComponent<Text>();
-            text.font = CharacterPanelNodeFactory.UiFont;
-            text.fontSize = 24;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = color;
-            text.text = value;
-            top -= 0.09f;
-        }
-
-        private Button CreatePanelButton(RectTransform parent, string label, Vector2 position, Color color)
-        {
-            var buttonObject = new GameObject("PromoteButton" + label, typeof(RectTransform), typeof(Image),
-                typeof(Button));
-            buttonObject.transform.SetParent(parent, false);
-            RectTransform rect = (RectTransform)buttonObject.transform;
-            rect.anchorMin = new Vector2(0.5f, 0f);
-            rect.anchorMax = new Vector2(0.5f, 0f);
-            rect.pivot = new Vector2(0.5f, 0f);
-            rect.sizeDelta = new Vector2(240f, 76f);
-            rect.anchoredPosition = position;
-            buttonObject.GetComponent<Image>().color = color;
-            var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            textObject.transform.SetParent(buttonObject.transform, false);
-            RectTransform textRect = (RectTransform)textObject.transform;
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = Vector2.zero;
-            textRect.offsetMax = Vector2.zero;
-            Text text = textObject.GetComponent<Text>();
-            text.font = CharacterPanelNodeFactory.UiFont;
-            text.fontSize = 26;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = Color.white;
-            text.text = label;
-            return buttonObject.GetComponent<Button>();
-        }
-
         private void ToggleFavorite(int skillId)
         {
             ProgressionResult result = progression.ToggleSkillFavorite(skillId);
@@ -2022,6 +1996,7 @@ namespace Zjcs.Presentation.Character
         {
             ClearPendingInstall();
             listType = itemType;
+            RefreshCategoryTabs();
             selectedType = 0;
             selectedSlot = -1;
             ShowSkillList(itemType == PieceItemType);
@@ -2043,9 +2018,11 @@ namespace Zjcs.Presentation.Character
                 EquipToSlot(skillId, slot);
                 return;
             }
-            if (selectedType == itemType && selectedSlot == slot)
+            int[] equipped = itemType == ActiveSkillItemType
+                ? progression.Player.Skills.Plans[plan].ActiveSkills : progression.Player.Skills.Plans[plan].PassiveSkills;
+            if (equipped[slot] != 0)
             {
-                Unequip(itemType, slot);
+                OpenSkillDetail(equipped[slot]);
                 return;
             }
             selectedType = itemType;
@@ -2192,6 +2169,10 @@ namespace Zjcs.Presentation.Character
 
         private int Quality(int itemId)
         {
+            int rank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, itemId);
+            OfflineSkillRankDisplay display = rank <= 0 ? null
+                : progression.SkillRules.RankDisplays.FirstOrDefault(value => value.Rank == rank);
+            if (display != null) return display.Quality;
             Dictionary<string, object> item = progression.Catalog.FindItem(itemId);
             return item == null ? 0 : Convert.ToInt32(item["Quality"], CultureInfo.InvariantCulture);
         }

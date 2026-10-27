@@ -410,16 +410,13 @@ namespace Zjcs.Presentation.Character
             imageObject.transform.SetParent(transform, false);
             imageObject.transform.SetAsFirstSibling();
             RectTransform imageRect = imageObject.GetComponent<RectTransform>();
-            imageRect.anchorMin = Vector2.zero;
-            imageRect.anchorMax = Vector2.one;
-            imageRect.offsetMin = Vector2.zero;
-            imageRect.offsetMax = Vector2.zero;
+            // SkeletonGraphic places the mesh relative to its pivot at 100 UI units per world unit.
+            imageRect.anchorMin = ((RectTransform)transform).pivot;
+            imageRect.anchorMax = imageRect.anchorMin;
+            imageRect.pivot = new Vector2(0.5f, 0.5f);
             nativeImage = imageObject.GetComponent<RawImage>();
             nativeImage.raycastTarget = false;
             nativeImage.color = Color.white;
-            AspectRatioFitter aspect = imageObject.AddComponent<AspectRatioFitter>();
-            aspect.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-            aspect.aspectRatio = 2f / 3f;
 
             nativeTexture = new RenderTexture(512, 768, 24, RenderTextureFormat.ARGB32)
             {
@@ -430,7 +427,7 @@ namespace Zjcs.Presentation.Character
             nativeImage.texture = nativeTexture;
 
             nativeWorldRoot = new GameObject("CharacterPageNativePreviewWorld");
-            nativeWorldRoot.transform.SetParent(transform.root, false);
+            // RenderTexture geometry stays in world units while the UI canvas changes its screen scale.
             nativeWorldRoot.transform.localPosition = Vector3.zero;
             nativeWorldRoot.transform.localRotation = Quaternion.identity;
             nativeWorldRoot.transform.localScale = Vector3.one;
@@ -454,11 +451,13 @@ namespace Zjcs.Presentation.Character
         private void FitNativeCamera()
         {
             if (nativeCamera == null || nativeModel == null) return;
+            nativeModel.GetComponent<CharacterNativeAttachmentGeometry>()?.RefreshForCapture();
             Renderer[] renderers = nativeModel.GetComponentsInChildren<Renderer>(false);
             bool hasBounds = false;
             Bounds bounds = new Bounds(nativeModel.transform.position, Vector3.zero);
             foreach (Renderer renderer in renderers)
             {
+                if (!renderer.enabled || renderer.forceRenderingOff) continue;
                 if (!hasBounds)
                 {
                     bounds = renderer.bounds;
@@ -471,6 +470,11 @@ namespace Zjcs.Presentation.Character
             nativeCamera.orthographicSize = Mathf.Max(bounds.extents.y, bounds.extents.x / nativeCamera.aspect) * 1.08f;
             nativeCamera.transform.position = new Vector3(bounds.center.x, bounds.center.y,
                 bounds.center.z - Mathf.Max(bounds.extents.z + 10f, 20f));
+            RectTransform imageRect = nativeImage.rectTransform;
+            imageRect.sizeDelta = new Vector2(nativeCamera.orthographicSize * 2f * nativeCamera.aspect,
+                nativeCamera.orthographicSize * 2f) * 100f;
+            Vector3 center = nativeModel.transform.InverseTransformPoint(bounds.center);
+            imageRect.anchoredPosition = new Vector2(center.x, center.y) * 100f;
         }
 
         private bool PlayNativeAnimation(string animationName, float mixDuration = 0f)

@@ -134,6 +134,7 @@ namespace Zjcs.Presentation.Character
         private Component subRankText;
         private Image rankImage;
         private GameObject activeDialog;
+        private GameObject characterPanelRoot;
         private Text operationResultText;
         private OfficialCharacterPanelNode characterRoot;
         private Coroutine experienceAnimation;
@@ -244,7 +245,8 @@ namespace Zjcs.Presentation.Character
                 CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(1080f, 1920f);
-                scaler.matchWidthOrHeight = 0.5f;
+                scaler.matchWidthOrHeight = 0f;
+                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             }
             if (GetComponent<GraphicRaycaster>() == null) gameObject.AddComponent<GraphicRaycaster>();
             EnsureEventSystem();
@@ -264,6 +266,8 @@ namespace Zjcs.Presentation.Character
             Debug.Log("[Character] official prefab sprites bound=" + templateSpritesBound
                 + " missing=" + templateSpritesMissing);
             BindOfficialTargets();
+            // GameMatchMiniPanel.RefreshUI hides its content when there is no matching target.
+            Node("/CharacterPanel/BgPanel1/Content/TopGo/GameMatchMiniPanel/ContentGo")?.gameObject.SetActive(false);
             InitializeCharacterModel();
             InitializePropPanels();
             Refresh();
@@ -284,6 +288,7 @@ namespace Zjcs.Presentation.Character
             ConfigureOfficialCanvases(instance.transform);
             StripUnavailableOfficialBehaviours(instance.transform);
             instance.transform.SetParent(parent, false);
+            characterPanelRoot = instance;
             RectTransform pageRoot = instance.transform as RectTransform;
             pageRoot.anchorMin = Vector2.zero;
             pageRoot.anchorMax = Vector2.one;
@@ -333,13 +338,14 @@ namespace Zjcs.Presentation.Character
             }
         }
 
-        private static void StripUnavailableOfficialBehaviours(Transform root)
+        internal static void StripUnavailableOfficialBehaviours(Transform root)
         {
             foreach (MonoBehaviour behaviour in root.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (behaviour == null) continue;
                 Type type = behaviour.GetType();
-                if (type.Assembly == typeof(Button).Assembly || type.Assembly == typeof(TMP_Text).Assembly)
+                if (type.Assembly == typeof(Button).Assembly || type.Assembly == typeof(TMP_Text).Assembly
+                    || behaviour is LayoutGroup || behaviour is ILayoutElement || behaviour is IMeshModifier)
                     continue;
                 DestroyImmediate(behaviour);
             }
@@ -552,6 +558,10 @@ namespace Zjcs.Presentation.Character
             skillPanel = holder.AddComponent<CharacterSkillPanel>();
             skillPanel.Initialize(assets, progression);
             skillPanel.Changed += HandleSkillPanelChanged;
+            skillPanel.PlayerHeaderVisibilityChanged += visible =>
+            {
+                if (skillHeader != null) skillHeader.gameObject.SetActive(visible);
+            };
 
             petEquipmentView = holder.AddComponent<CharacterPetEquipmentView>();
             RectTransform petModelRoot = ResolvePetModelRoot();
@@ -608,6 +618,7 @@ namespace Zjcs.Presentation.Character
 
         private void HandleSkillPanelChanged()
         {
+            SetSkillPageState(skillPanel != null && skillPanel.IsOpen);
             if (petEquipmentView != null)
             {
                 if (skillPanel != null && skillPanel.IsOpen)
@@ -660,8 +671,49 @@ namespace Zjcs.Presentation.Character
                 return;
             }
             skillPanel.Open(transform);
+            SetSkillPageState(true);
             if (petEquipmentView != null)
                 petEquipmentView.ShowPlan(progression.Player.Skills.SelectedPlan);
+        }
+
+        private bool skillPageShown;
+        private OfficialCharacterSkillHeader skillHeader;
+
+        private void SetSkillPageState(bool show)
+        {
+            if (skillPageShown == show)
+            {
+                if (show && skillHeader != null) skillHeader.Refresh();
+                return;
+            }
+            skillPageShown = show;
+            if (show && skillHeader == null)
+            {
+                var headerRoot = new GameObject("OfficialSkillPlayerHeader", typeof(RectTransform));
+                headerRoot.transform.SetParent(transform, false);
+                RectTransform headerRect = (RectTransform)headerRoot.transform;
+                headerRect.anchorMin = Vector2.zero; headerRect.anchorMax = Vector2.one;
+                headerRect.offsetMin = Vector2.zero; headerRect.offsetMax = Vector2.zero;
+                skillHeader = headerRoot.AddComponent<OfficialCharacterSkillHeader>();
+                Transform topSlot = transform.GetComponentsInChildren<Transform>(true).First(value =>
+                    value.name == "CharacterPanelSkillPanel").Find("NewPublicTopBarParent/Slot");
+                skillHeader.Initialize(assets, progression, characterSlotId, characterSavesRoot, topSlot);
+            }
+            if (skillHeader != null)
+            {
+                if (show) { skillHeader.gameObject.SetActive(true); skillHeader.Refresh(); }
+                else { Destroy(skillHeader.gameObject); skillHeader = null; }
+            }
+            if (characterPanelRoot != null) characterPanelRoot.SetActive(true);
+            Animator animator = Node("/CharacterPanel/BgPanel1")?.GetComponent<Animator>();
+            if (animator != null && animator.runtimeAnimatorController != null)
+            {
+                animator.SetInteger("StatusId", show ? 1 : 0);
+                return;
+            }
+            Dictionary<string, object> screens = ReadPanelScreens();
+            skillPanel.PlayCharacterPageState(CharacterModelPackage.AsObject(screens["character"],
+                "official character page"), nodes, show ? "CharacterPanel_Skill" : "CharacterPanel_SkillSwitchmain");
         }
 
         private void OpenRankPanel()
