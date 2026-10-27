@@ -161,6 +161,63 @@ class MountainSourceTests(unittest.TestCase):
         data = json.loads(node["sourceJson"]); data["MapClassId"] = 12; node["sourceJson"] = json.dumps(data)
         self.assertNotIn("WorldTreeDungeonActive", foreign_map_subgraphs(changed, 12))
 
+    def test_water_runtime_keeps_all_original_mesh_uv_material_and_mask_bindings(self):
+        source = load("assets/official/map12-rendering.json")["water"]
+        runtime = load("unity/Assets/Game/Resources/Map12/Water/map12-water-runtime.json")
+        receipt = load("assets/reference/official-map/map12-water-runtime-source-manifest.json")
+        self.assertEqual(runtime["mapClassId"], 12)
+        self.assertEqual(len(source["renderers"]), 57)
+        self.assertEqual(len(runtime["renderers"]), 57)
+        self.assertEqual(runtime["maskRect"], source["native_materials"]["mask"]["rect"])
+        self.assertEqual(runtime["maskResource"], "Map12/Water/map12-water-mask")
+        self.assertEqual(receipt["renderer_count"], 57)
+        self.assertEqual(len(receipt["texture_bindings"]), 4)
+        self.assertEqual(sum(not row["uv"] for row in source["renderers"]), 34)
+        water_view = (ROOT / "unity/Assets/Game/Runtime/Presentation/World/NativeMap12/OfficialMap12WaterView.cs").read_text()
+        native_acceptance = (ROOT / "unity/Assets/Game/Editor/Map12/OfficialMap12NativeWorldAcceptance.cs").read_text()
+        for code in (water_view, native_acceptance):
+            self.assertIn("GetIndexCount(subMesh)", code)
+            self.assertNotIn(".triangles", code)
+        self.assertNotIn("mesh.vertices", native_acceptance)
+        self.assertNotIn("mesh.uv", native_acceptance)
+        for original, packaged in zip(source["renderers"], runtime["renderers"]):
+            with self.subTest(renderer=original["name"]):
+                self.assertEqual(packaged["name"], original["name"])
+                self.assertEqual(packaged["material"], original["material"])
+                self.assertEqual(packaged["vertices"], [v for point in original["vertices"] for v in point])
+                self.assertEqual(packaged["uv"], [v for point in original["uv"] for v in point])
+                self.assertEqual(packaged["indices"], original["indices"])
+                self.assertEqual({v["property"] for v in packaged["textures"]}, set(original["textures"]))
+                self.assertEqual({v["property"] for v in packaged["colors"]}, set(original["colors"]))
+                self.assertEqual({v["property"] for v in packaged["parameters"]}, set(original["parameters"]))
+        self.assertTrue((ROOT / "unity/Assets/Game/Resources/World/Map12Water.shader").is_file())
+        self.assertTrue((ROOT / "unity/Assets/Game/Resources/Map12/Water/map12-water-mask.png").is_file())
+
+    def test_interaction_range_state_overrides_are_exported_without_inventing_priority(self):
+        templates = load("unity/Assets/Official/World/Map/12/Source/templates.json")
+        overrides = {int(class_id): row["StageResultOverrideInteractiveRangeComponent"]
+                     for class_id, row in templates.items()
+                     if "StageResultOverrideInteractiveRangeComponent" in row}
+        self.assertEqual(set(overrides), {5013, 5014, 5015, 6660})
+        self.assertTrue(all(not row["WorldStageComponent"]["InteractionFirst"] for row in templates.values()
+                            if "WorldStageComponent" in row))
+        rules = load("unity/Assets/Official/World/Map/12/Resources/Map12/stories.json")["puzzleRules"]
+        for class_id, component in overrides.items():
+            with self.subTest(class_id=class_id):
+                rule = next(value for value in rules if value["EntityClassId"] == class_id)
+                self.assertEqual(rule["InteractiveRangeInfos"], component["InteractionRangeInfos"])
+                self.assertEqual(rule["InteractiveRangeOperations"], component["StateOperationInfos"])
+
+    def test_map12_mainline_1215_tag_resolves_to_mount_lift(self):
+        runtime = load("unity/Assets/Official/World/Map/12/Resources/Map12/stories.json")
+        task_catalog = load("unity/Assets/Game/Resources/Official/Progression/mainline-tasks.json")
+        task = next(value for value in task_catalog["tasks"] if value["classId"] == 1215)
+        tag = task["finishCondition"]["tag"]
+        logic = next(value for value in runtime["mapLogicTags"] if value["Tag"] == tag)
+        self.assertEqual(task["finishCondition"]["type"], "MapLogicEntityEndByTagCondition")
+        self.assertEqual((logic["MapClass"], logic["LogicId"], logic["EntityClass"]), (12, 3501, 6302))
+        self.assertIn(1215, {value["ClassId"] for value in runtime["mainlineTasks"]})
+
 
 if __name__ == "__main__":
     unittest.main()

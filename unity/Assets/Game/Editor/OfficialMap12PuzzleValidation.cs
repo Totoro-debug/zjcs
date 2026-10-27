@@ -36,6 +36,7 @@ namespace Zjcs.Editor
                         .Replace("-", "").ToLowerInvariant() == input.Sha256, "Test plan input hash: " + input.Path);
             }
             Require(rules.Length == 2591 && plans.Plans.Length == 4, "Original mountain placements and push-box groups");
+            ValidateInteractionRangeOverrides(rules);
             var collision = new OfflineMapPuzzleSession(rules, null);
             // 4605 and 4604 occupy consecutive original cells. A box cannot enter another box.
             MapPuzzleRule adjacentA = rules.Single(r => r.PlacementId == 4605);
@@ -124,6 +125,31 @@ namespace Zjcs.Editor
             }
             Debug.Log("Map12 puzzle rules passed: four original full push paths, " + pushes
                 + " pushes, walking reachability, follow-through, per-push cold reload, latched unlock/spawn, automatic unlock, six resets and detached saves. UI/payment/player input remain separate.");
+        }
+
+        private static void ValidateInteractionRangeOverrides(MapPuzzleRule[] rules)
+        {
+            var configured = rules.Where(rule => rule.InteractiveRangeOperations?.Length > 0).ToArray();
+            Require(configured.Select(rule => rule.EntityClassId).Distinct().OrderBy(value => value)
+                .SequenceEqual(new[] { 5013, 5014, 5015, 6660 }), "Original interaction range override templates");
+            foreach (MapPuzzleRule rule in configured)
+            {
+                for (int state = 0; state < rule.InteractiveRangeOperations.Length; state++)
+                {
+                    MapPuzzleEntityState[] saved = { new MapPuzzleEntityState
+                    {
+                        PlacementId = rule.PlacementId, State = state, HasPosition = true,
+                        GridX = rule.GridX, GridY = rule.GridY
+                    } };
+                    var session = new OfflineMapPuzzleSession(rules, saved);
+                    MapPuzzleInteractiveRangeOperation operation = rule.InteractiveRangeOperations[state];
+                    OfficialStageInteractionOffset[] expected = operation.IsRevertGroundType
+                        ? rule.Stage.InteractiveRange.ToArray()
+                        : rule.InteractiveRangeInfos[operation.DataIndex].InteractiveRange;
+                    Require(session.InteractionRange(rule.PlacementId).SequenceEqual(expected),
+                        "Original interaction range state " + rule.EntityClassId + "/" + state);
+                }
+            }
         }
 
         [Serializable] private sealed class Definitions { public MapPuzzleRule[] puzzleRules; }

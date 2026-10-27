@@ -56,11 +56,12 @@ def puzzle_rules(definition, catalog, templates, mover_rows):
         mover = template.get("GridMoverComponent", {})
         ground_types = movers.get(mover.get("WalkableGroundTypeKey"), [])
         pushed = local.get("LoStageResultEntityPushedComponent", {})
+        range_override = template.get("StageResultOverrideInteractiveRangeComponent", {})
         # Common.LoEntityComponentSpawnInfo.BlockDefaultSpawnInMap(Private)
         # is independent of WorldActiveable.Active. Deferred Lo-spawn results
         # must not exist until their original result 234 executes.
         support = local["LoEntityComponent"]["SpanwInfo"]["PrivateMapSupportData"]
-        result.append({
+        row = {
             "PlacementId": entity["placementId"], "EntityClassId": entity["entityClassId"],
             "InitialState": entity["state"], "GridX": entity["grid"][0], "GridY": entity["grid"][1],
             "InitiallySpawned": entity["active"] and support["SupportSpawnInMap"]
@@ -90,7 +91,11 @@ def puzzle_rules(definition, catalog, templates, mover_rows):
             "OtherStates": local.get("LoStageResultStateUpdateComponent", {}).get("DataList") or [],
             "OfflineIgnoredMissingStateTargets": [],
             "Notify": local.get("LoStageResultNotifyCompleteComponent", {}).get("Configs", []),
-        })
+        }
+        if range_override:
+            row["InteractiveRangeInfos"] = range_override.get("InteractionRangeInfos", [])
+            row["InteractiveRangeOperations"] = range_override.get("StateOperationInfos", [])
+        result.append(row)
     ids = {r["PlacementId"] for r in result}
     for rule in result:
         referenced = (rule["SpawnIds"] + rule["TerminalLockIds"] + rule["TerminalRemoveIds"]

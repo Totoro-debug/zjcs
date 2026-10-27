@@ -51,6 +51,26 @@ namespace Zjcs.Editor.Map12
             var view = runtime.GetComponentInChildren<OfficialMap12NativeWorldView>(true);
             var data = JsonUtility.FromJson<Map12LabelData>(Resources.Load<TextAsset>("Map12/Native/region-label-data").text);
             var root = view.GroundRoot;
+            var water = view.GetComponent<OfficialMap12WaterView>();
+            Shader waterShader = Resources.Load<Shader>("World/Map12Water");
+            if (water == null || water.RendererCount != 57 || waterShader == null)
+                throw new InvalidDataException("Official Map12 Water2 binding did not load all 57 source renderers.");
+            var waterSource = JsonUtility.FromJson<Map12WaterAcceptancePayload>(
+                Resources.Load<TextAsset>("Map12/Water/map12-water-runtime").text);
+            if (waterSource?.renderers?.Length != 57) throw new InvalidDataException("Map12 Water2 runtime payload is incomplete.");
+            foreach (var item in waterSource.renderers)
+            {
+                var renderer = root.GetComponentsInChildren<MeshRenderer>(true).SingleOrDefault(value => value.name == item.name);
+                if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.shader != waterShader)
+                    throw new InvalidDataException("Original Map12 Water2 renderer did not receive its local shader: " + item.name);
+                Mesh mesh = renderer.GetComponent<MeshFilter>()?.sharedMesh;
+                long indexCount = 0;
+                if (mesh != null)
+                    for (int subMesh = 0; subMesh < mesh.subMeshCount; subMesh++)
+                        indexCount += mesh.GetIndexCount(subMesh);
+                if (mesh == null || mesh.vertexCount != item.vertices.Length / 2 || indexCount != item.indices.Length)
+                    throw new InvalidDataException("Original Map12 Water2 geometry differs from its source: " + item.name);
+            }
             var loader = root.PartitionController.Loader;
             var observedLights = new HashSet<int>();
             var errors = new List<string>();
@@ -94,6 +114,16 @@ namespace Zjcs.Editor.Map12
                     + observedLights.Count + " observed region lights, native terrain and label lifecycle. Normal progression remains separate.");
             }
             finally { Application.logMessageReceived -= capture; }
+        }
+
+        [Serializable]
+        private sealed class Map12WaterAcceptancePayload { public Map12WaterAcceptanceRenderer[] renderers; }
+        [Serializable]
+        private sealed class Map12WaterAcceptanceRenderer
+        {
+            public string name;
+            public float[] vertices, uv;
+            public int[] indices;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Zjcs.Offline.World
         public int[] OfflineIgnoredMissingStateTargets;
         public MapPuzzleOverlapInfo OverlapDetector;
         public OfficialWorldStageRule Stage;
+        public MapPuzzleInteractiveRangeInfo[] InteractiveRangeInfos = Array.Empty<MapPuzzleInteractiveRangeInfo>();
+        public MapPuzzleInteractiveRangeOperation[] InteractiveRangeOperations = Array.Empty<MapPuzzleInteractiveRangeOperation>();
         public MapPuzzleSelfState[] SelfStates;
         public MapPuzzleNotify[] Notify;
         public MapPuzzleOtherStates[] OtherStates;
@@ -27,6 +29,15 @@ namespace Zjcs.Offline.World
         public MapPuzzleRect MovableRect;
         public MapPuzzleBody[] Body = Array.Empty<MapPuzzleBody>();
         public float[] RealCenter = { 0, 0 };
+    }
+    [Serializable] public sealed class MapPuzzleInteractiveRangeInfo
+    {
+        public OfficialStageInteractionOffset[] InteractiveRange = Array.Empty<OfficialStageInteractionOffset>();
+    }
+    [Serializable] public sealed class MapPuzzleInteractiveRangeOperation
+    {
+        public int DataIndex;
+        public bool IsRevertGroundType;
     }
     [Serializable] public sealed class MapPuzzleRect { public MapPuzzleOffset MinGrid, MaxGrid; }
     [Serializable] public sealed class MapPuzzleTransportInfo
@@ -122,6 +133,24 @@ namespace Zjcs.Offline.World
 
         public bool Contains(int id) => rules.ContainsKey(id);
         public int State(int id) => states.TryGetValue(id, out MapPuzzleEntityState state) ? state.State : externalState?.Invoke(id) ?? 0;
+        public IReadOnlyList<OfficialStageInteractionOffset> InteractionRange(int id)
+        {
+            MapPuzzleRule rule = rules[id];
+            MapPuzzleInteractiveRangeOperation[] operations = rule.InteractiveRangeOperations ?? Array.Empty<MapPuzzleInteractiveRangeOperation>();
+            int state = State(id);
+            if (state >= 0 && state < operations.Length)
+            {
+                MapPuzzleInteractiveRangeOperation operation = operations[state];
+                if (!operation.IsRevertGroundType)
+                {
+                    MapPuzzleInteractiveRangeInfo[] ranges = rule.InteractiveRangeInfos ?? Array.Empty<MapPuzzleInteractiveRangeInfo>();
+                    if (operation.DataIndex < 0 || operation.DataIndex >= ranges.Length || ranges[operation.DataIndex] == null)
+                        throw new InvalidDataException("Invalid interaction range override: " + id + "/" + state);
+                    return ranges[operation.DataIndex].InteractiveRange ?? Array.Empty<OfficialStageInteractionOffset>();
+                }
+            }
+            return rule.Stage?.InteractiveRange ?? new List<OfficialStageInteractionOffset>();
+        }
         public int OverlapTimes(int id) => states[id].OverlapTimes;
         public bool IsUnlocked(int id) => states.TryGetValue(id, out MapPuzzleEntityState state) ? state.IsUnlocked : externalUnlocked?.Invoke(id) ?? false;
         public bool IsSpawned(int id) => states[id].Spawned && !states[id].Destroyed;

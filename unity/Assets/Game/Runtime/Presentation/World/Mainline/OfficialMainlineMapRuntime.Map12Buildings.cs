@@ -5,9 +5,13 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Reflection;
 using Zjcs.Official.World;
 using Zjcs.Official.WorldUI;
 using Zjcs.Offline.Progression;
+using Zjcs.Offline.State;
+using Zjcs.Offline.World;
 
 namespace Zjcs.Presentation.World
 {
@@ -17,7 +21,13 @@ namespace Zjcs.Presentation.World
         private readonly Dictionary<int, Map12BuildingContext> map12BuildingContexts = new Dictionary<int, Map12BuildingContext>();
         private GameObject map12BuildingDialog;
         private bool map12BuildingStagePending;
+        private bool map12PrivateDungeonBattleActive;
+        private GameObject map12PrivateDungeonDialog;
+        private GameObject map12PrivateDungeonRouteDialog;
+        private GameObject map12PrivateDungeonRunner;
+        private OfflineDailyDungeonSession map12PrivateDungeonSession;
         private const string MountLiftCompletionTag = "map12:building:3501";
+        private const string MountLiftMainlineTag = "山壁电梯";
 
         private void LoadMap12BuildingOperations()
         {
@@ -38,13 +48,19 @@ namespace Zjcs.Presentation.World
             if (!map12BuildingContexts.TryGetValue(entity.PlacementId, out var context))
                 map12BuildingContexts.Add(entity.PlacementId, context = new Map12BuildingContext(this, entity, source));
             if (entity.State < 0 || entity.State >= source.States.Length) return false;
-            var operation = context.ResolveOperation(source.States[entity.State].OperationId);
+            int effectiveState = entity.State;
+            if (entity.EntityClassId == 6103 && entity.State == 0)
+            {
+                bool active = new[] { 4103, 4104, 4105 }.Any(id => context.Condition(id) == true);
+                if (active) effectiveState = 1;
+            }
+            var operation = context.ResolveOperation(source.States[effectiveState].OperationId);
             if (entity.EntityClassId == 6103)
             {
                 // The unactivated original branch only plays its prerequisite
                 // story. The private daily-dungeon provider is a separate flow.
-                if (entity.State != 0 || operation.Type != "ECWorldStageInteractionOperationCondition"
-                    || operation.NeedAllMeet || operation.ConditionIds.Any(id => context.Condition(id) == true)) return false;
+                if (effectiveState == 0 && (operation.Type != "ECWorldStageInteractionOperationCondition"
+                    || operation.NeedAllMeet || operation.ConditionIds.Any(id => context.Condition(id) == true))) return false;
             }
             operation.DoOper(context);
             return true;
@@ -86,6 +102,7 @@ namespace Zjcs.Presentation.World
             {
                 if (report || panelId != 0) throw new InvalidDataException("Original building window reporting changed.");
                 if (name == "WorldMap/WorldFantasyLadderDialog") host.OpenMap12MountLiftDialog(entity, source, this, click);
+                else if (name == "DailyDungeon/DailyDungeonDialogPrivateMap") host.OpenMap12PrivateDungeonDialog(entity, click);
                 else if (name == "WorldMap/StageEndTipUI")
                 {
                     var text = host.map12Buildings.Texts.FirstOrDefault(v => v.key == source.EndTipKey)
@@ -94,6 +111,232 @@ namespace Zjcs.Presentation.World
                 }
                 else throw new InvalidDataException("Building feature window is not bound: " + name);
             }
+        }
+
+        private void OpenMap12PrivateDungeonDialog(Map10RuntimeEntity entity, Action<int> click)
+        {
+            if (map12PrivateDungeonDialog != null || map12PrivateDungeonBattleActive) return;
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonDialogPrivateMap");
+            if (prefab == null) throw new InvalidDataException("Original private daily dungeon window is missing.");
+            map12PrivateDungeonDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
+            try
+            {
+                OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap");
+                foreach (WorldMultiLanguageText text in map12PrivateDungeonDialog.GetComponentsInChildren<WorldMultiLanguageText>(true))
+                    text.Localizer = NativeUi.Text;
+                SetPrivateDungeonText("BgDialog3/Content/DailyDungeonDetailContent/Content/TitleTxt", "机神山");
+                SetPrivateDungeonText("BgDialog3/Content/DailyDungeonDetailContent/Content/NormalGo/UnlockGo/BtnContent/BattleBtn/Content/Text", "开始战斗");
+                Button battle = map12PrivateDungeonDialog.transform.Find("BgDialog3/Content/DailyDungeonDetailContent/Content/NormalGo/UnlockGo/BtnContent/BattleBtn")
+                    ?.GetComponent<Button>();
+                if (battle == null) battle = FindNamedTransform(map12PrivateDungeonDialog.transform, "BattleBtn")?.GetComponent<Button>();
+                if (battle == null) throw new InvalidDataException("Original private daily dungeon battle button is missing.");
+                battle.onClick.RemoveAllListeners();
+                battle.onClick.AddListener(() => StartMap12PrivateDungeonBattle(entity));
+                WorldPopupWindow popup = map12PrivateDungeonDialog.GetComponent<WorldPopupWindow>();
+                if (popup != null) popup.Show();
+            }
+            catch
+            {
+                Destroy(map12PrivateDungeonDialog);
+                map12PrivateDungeonDialog = null;
+                throw;
+            }
+        }
+
+        private void SetPrivateDungeonText(string path, string value)
+        {
+            Transform node = FindNamedTransform(map12PrivateDungeonDialog.transform, path);
+            TMP_Text text = node == null ? null : node.GetComponent<TMP_Text>();
+            if (text != null) text.text = value;
+        }
+
+        private static Transform FindNamedTransform(Transform root, string path)
+        {
+            Transform direct = root.Find(path);
+            if (direct != null) return direct;
+            string name = path.Contains("/") ? path.Substring(path.LastIndexOf('/') + 1) : path;
+            foreach (Transform candidate in root.GetComponentsInChildren<Transform>(true))
+                if (candidate.name == name) return candidate;
+            return null;
+        }
+
+        private void StartMap12PrivateDungeonBattle(Map10RuntimeEntity entity)
+        {
+            if (map12PrivateDungeonBattleActive || closed || battleController != null) return;
+            var slots = new ProfileSlotCatalog(persistentDataPath);
+            map12PrivateDungeonSession = OfflineDailyDungeonSession.Open(slots, slotId);
+            DailyDungeonRunSave run = map12PrivateDungeonSession.ActiveRun;
+            if (run == null)
+            {
+                if (!map12PrivateDungeonSession.TryBegin(121, 50, null, null, null, 0,
+                        DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out string error))
+                    throw new InvalidOperationException("Official private daily dungeon route could not start: " + error);
+                run = map12PrivateDungeonSession.ActiveRun;
+            }
+            if (run.dungeonId != 121 || run.difficulty != 50)
+                throw new InvalidOperationException("An incompatible daily dungeon route is already active.");
+            if (map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(false);
+            OpenMap12PrivateDungeonRoute();
+        }
+
+        private void OpenMap12PrivateDungeonRoute()
+        {
+            if (map12PrivateDungeonRouteDialog != null) return;
+            GameObject prefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonBigMapDialog");
+            if (prefab == null) throw new InvalidOperationException("Official daily dungeon route map is missing.");
+            map12PrivateDungeonRouteDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
+            map12PrivateDungeonRouteDialog.name = "DailyDungeonBigMapDialog";
+            OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonRouteDialog, "DailyDungeonBigMapDialog");
+            Button close = map12PrivateDungeonRouteDialog.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(value => value.name == "CloseBtn");
+            if (close != null) close.onClick.AddListener(CloseMap12PrivateDungeonRoute);
+            RenderMap12PrivateDungeonRoute();
+        }
+
+        private void RenderMap12PrivateDungeonRoute()
+        {
+            if (map12PrivateDungeonRouteDialog == null || map12PrivateDungeonSession?.ActiveRun == null) return;
+            DailyDungeonRunSave run = map12PrivateDungeonSession.ActiveRun;
+            DailyDungeonRuntimeMap map = map12PrivateDungeonSession.Catalog.maps
+                .FirstOrDefault(value => value.id == run.mapGroupId);
+            Transform grid = FindChild(map12PrivateDungeonRouteDialog.transform, "RoomGrid");
+            GameObject itemPrefab = Resources.Load<GameObject>("Dungeons/UI/DailyDungeonRoomItem");
+            if (map == null || grid == null || itemPrefab == null)
+                throw new InvalidOperationException("Official private dungeon route bindings are incomplete.");
+            foreach (Transform child in grid) Destroy(child.gameObject);
+            foreach (int roomId in map.roomArray.Where(value => value > 0))
+            {
+                DailyDungeonRuntimeRoom room = map12PrivateDungeonSession.FindRoom(roomId);
+                if (room == null || room.type == 0) continue;
+                bool visible = run.clearedRoomIds.Contains(roomId) || roomId == run.currentRoomId
+                    || run.clearedRoomIds.Select(map12PrivateDungeonSession.FindRoom)
+                        .Any(previous => previous != null && previous.nextRoomIds.Contains(roomId));
+                if (!visible) continue;
+                GameObject item = Instantiate(itemPrefab, grid, false);
+                item.name = "Room_" + roomId;
+                OfficialDungeonUiBindingRuntime.Apply(item, "DailyDungeonRoomItem");
+                SetActiveNamed(item.transform, "SelectImg", roomId == run.currentRoomId);
+                Button button = item.GetComponent<Button>() ?? item.AddComponent<Button>();
+                int selectedRoom = roomId;
+                button.onClick.AddListener(() => SelectMap12PrivateDungeonRoom(selectedRoom));
+            }
+        }
+
+        private void SelectMap12PrivateDungeonRoom(int roomId)
+        {
+            DailyDungeonRunSave run = map12PrivateDungeonSession?.ActiveRun;
+            if (run == null || run.clearedRoomIds.Contains(roomId)) return;
+            DailyDungeonRuntimeRoom room = map12PrivateDungeonSession.FindRoom(roomId);
+            DailyDungeonRuntimeStage stage = room == null
+                ? null : map12PrivateDungeonSession.FindStage(room.stageId);
+            if (stage == null) return;
+            if (roomId != run.currentRoomId && !map12PrivateDungeonSession.ChooseNextRoom(roomId)) return;
+            if (stage.waveArrayIds?.Length > 0 || stage.waveMonsterIds?.Any(wave => wave?.Length > 0) == true
+                || stage.waveMonsterOffsets?.LastOrDefault() > 0)
+            {
+                EnterMap12PrivateDungeonBattle(roomId);
+                return;
+            }
+            if (room.type != 1 || !map12PrivateDungeonSession.RecordRoomCleared(roomId, string.Empty))
+                throw new InvalidOperationException("Official private dungeon non-battle room could not be entered.");
+            RenderMap12PrivateDungeonRoute();
+        }
+
+        private void EnterMap12PrivateDungeonBattle(int roomId)
+        {
+            if (map12PrivateDungeonBattleActive) return;
+            Type runnerType = Type.GetType("Zjcs.Presentation.Home.DailyDungeonBattleRunner, Zjcs.Presentation.Home");
+            MethodInfo begin = runnerType?.GetMethod("BeginPrivateMapRoom", BindingFlags.Instance | BindingFlags.Public);
+            if (runnerType == null || begin == null)
+                throw new InvalidOperationException("Official daily dungeon battle runner is unavailable.");
+            var runnerObject = new GameObject("Map12PrivateDungeon121Battle");
+            map12PrivateDungeonRunner = runnerObject;
+            Component runner = runnerObject.AddComponent(runnerType);
+            map12PrivateDungeonBattleActive = true;
+            try
+            {
+                begin.Invoke(runner, new object[] { progressionSave, progression, map12PrivateDungeonSession,
+                    avatar.transform, hud.ui.OverlayRoot, (Action<bool>)FinishMap12PrivateDungeonBattle });
+                SuspendWorldForBattle();
+                if (map12PrivateDungeonRouteDialog != null) map12PrivateDungeonRouteDialog.SetActive(false);
+                if (map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(false);
+            }
+            catch (TargetInvocationException error)
+            {
+                map12PrivateDungeonBattleActive = false;
+                RestoreWorldAfterBattle();
+                Destroy(runnerObject);
+                map12PrivateDungeonRunner = null;
+                throw error.InnerException ?? error;
+            }
+            catch
+            {
+                map12PrivateDungeonBattleActive = false;
+                RestoreWorldAfterBattle();
+                Destroy(runnerObject);
+                map12PrivateDungeonRunner = null;
+                throw;
+            }
+        }
+
+        private void FinishMap12PrivateDungeonBattle(bool won)
+        {
+            map12PrivateDungeonBattleActive = false;
+            RestoreWorldAfterBattle();
+            int roomId = map12PrivateDungeonSession?.ActiveRun?.currentRoomId ?? 0;
+            if (roomId <= 0 || !map12PrivateDungeonSession.RecordPrivateBattleResult(roomId, won))
+                throw new InvalidOperationException("Private Map12 battle result could not be recorded locally.");
+            navigation.SetAvatarPosition(navigation.currentGrid);
+            if (!closed && map12PrivateDungeonRouteDialog != null)
+            {
+                map12PrivateDungeonRouteDialog.SetActive(true);
+                RenderMap12PrivateDungeonRoute();
+            }
+            if (!closed && map12PrivateDungeonDialog != null)
+            {
+                map12PrivateDungeonDialog.SetActive(true);
+                WorldPopupWindow popup = map12PrivateDungeonDialog.GetComponent<WorldPopupWindow>();
+                if (popup != null) popup.Show();
+            }
+            map12PrivateDungeonRunner = null;
+            if (!won) hud.ShowOfficialNotice("战斗失败，可在路线图重试");
+        }
+
+        private void CloseMap12PrivateDungeonRoute()
+        {
+            if (map12PrivateDungeonRouteDialog != null)
+            {
+                Destroy(map12PrivateDungeonRouteDialog);
+                map12PrivateDungeonRouteDialog = null;
+            }
+            if (!closed && map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(true);
+        }
+
+        private static Transform FindChild(Transform root, string name)
+        {
+            if (root.name == name) return root;
+            foreach (Transform child in root)
+            {
+                Transform found = FindChild(child, name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        private static void SetActiveNamed(Transform root, string name, bool active)
+        {
+            Transform node = FindChild(root, name);
+            if (node != null) node.gameObject.SetActive(active);
+        }
+
+        private void CloseMap12PrivateDungeonDialog()
+        {
+            if (map12PrivateDungeonDialog == null) return;
+            GameObject root = map12PrivateDungeonDialog;
+            map12PrivateDungeonDialog = null;
+            WorldPopupWindow popup = root.GetComponent<WorldPopupWindow>();
+            if (popup != null) popup.Hide(() => Destroy(root));
+            else Destroy(root);
         }
 
         private IEnumerator BeginMap12BuildingStage(Map10RuntimeEntity entity)
@@ -149,6 +392,13 @@ namespace Zjcs.Presentation.World
         private void SynchronizeMap12BuildingCompletions()
         {
             if (mapClassId != 12 || puzzles == null || !progressionSave.Save.World.CompletedEntityTags.Contains(MountLiftCompletionTag)) return;
+            if (!progressionSave.Save.World.CompletedEntityTags.Contains(MountLiftMainlineTag))
+            {
+                ProgressionResult migrated = progressionSave.RecordEntityTagCompleted(
+                    MountLiftMainlineTag, MountLiftCompletionTag + ":mainline");
+                if (migrated.Status == ProgressionResultStatus.InvalidState)
+                    throw new InvalidDataException(migrated.Message);
+            }
             puzzles.SetState(3501, 1);
             mapEntities[3501].State = 1;
         }
@@ -170,6 +420,8 @@ namespace Zjcs.Presentation.World
                         if (!OfflineInventoryOperations.Grant(save.Player, award.Key, award.Value, DateTimeOffset.UtcNow.ToUnixTimeSeconds()).IsApplied)
                             throw new InvalidDataException("Original MountLift award could not be applied: " + award.Key);
                     save.World.CompletedEntityTags.Add(MountLiftCompletionTag);
+                    if (!save.World.CompletedEntityTags.Contains(MountLiftMainlineTag))
+                        save.World.CompletedEntityTags.Add(MountLiftMainlineTag);
                 }, entity.EntityClassId, 1);
                 if (result.Status == ProgressionResultStatus.InvalidState) throw new InvalidDataException(result.Message);
                 SynchronizeMap12BuildingCompletions();
