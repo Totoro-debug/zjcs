@@ -1,0 +1,71 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "operation": "Decode original story playable prefab hierarchy and full component serialization; native import, external dependency closure and live performance remain pending.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/stories.json",
+      "sha256": "2bdecd8914261c66b502ed527c264ab07cf4c1de78f6f1923c306511b759c585",
+      "bytes": 1525269
+    },
+    {
+      "path": "assets/reference/official-map/map13-source-manifest.json",
+      "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114",
+      "bytes": 1120382
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_playables.py",
+      "sha256": "7ac724e777c5cc1101c9f9e4721aa72f7f90736d41b9f7cb2187aeeda9f01be4",
+      "bytes": 7557
+    },
+    {
+      "path": "scripts/map13_native_schemas.py",
+      "sha256": "00f31381939832704474018723a821326c58c54dd10707d5531eaf858f1eafcd",
+      "bytes": 13439
+    },
+    {
+      "path": "scripts/map13_entity_native_schemas.py",
+      "sha256": "f323250e276997295a5e5a62e9137c4c8ce45e421ca94511f40eaf0351462978",
+      "bytes": 21957
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "5ec21a2e168115e596dfeac36ace6a786f08e2d05eb56e7b9760c6a3ccb15e58",
+      "bytes": 8718
+    }
+  ],
+  "manifests": {
+    "apk_sha256": "77a94a9d0c8710a9e8a3b7145551efc49d3bbd29f0471b8d215bd4798b6c2081",
+    "selected_sha256": "0df9cba67811eb7465f62c8ffae64278566f4273cf5326b7e4e1a440f3324ed5"
+  },
+  "registry_source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_story.bundle",
+    "bundle_hash": "baa7f4cc03886126c33376430869910f",
+    "path_id": "-3194777040592680104",
+    "origin": "apk_zip",
+    "manifest": "871_156598",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "apk_entry": "assets/yoo/DefaultPackage/baa7f4cc03886126c33376430869910f.bundle",
+    "raw_size": 5418,
+    "raw_sha256": "53cefe69d5e551559d1bed2bfd6db96c61c455632d33251aed3bb8f80ef4c4ee"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/story-playables.json",
+      "sha256": "77af841d896f00547b0cb3741f55f5d6c4c73c831fc649191d7968da88f29744",
+      "bytes": 23594538
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/story-playables.json.meta",
+      "sha256": "1e2dab61a6b4a54b862b471c4b550e7dd20d57e842cbc34a90a01e81902d3e2e",
+      "bytes": 155
+    }
+  ],
+  "counts": {
+    "prefabs": 15,
+    "aliases": 5,
+    "hierarchyObjects": 1548,
+    "components": 1130
+  }
+}

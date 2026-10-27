@@ -1,8 +1,10 @@
 """Build Map13 story payloads from the selected, hash-pinned official sources."""
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -20,6 +22,25 @@ def sha(raw: bytes) -> str:
 
 def read_json(path: Path):
     return json.loads(path.read_bytes())
+
+
+def parse_inline_object(param: str) -> dict:
+    try:
+        value = json.loads(param)
+    except json.JSONDecodeError:
+        normalized = re.sub(r"(?<![\w\"'])([A-Za-z_]\w*)\s*:", r"'\1':", param)
+        value = ast.literal_eval(normalized)
+    if not isinstance(value, dict):
+        raise ValueError("Map13 player condition parameter is not an object: " + param)
+    return value
+
+
+def composite_condition_ids(param: str) -> list[int]:
+    value = parse_inline_object(param)
+    ids = value.get("ids")
+    if not isinstance(ids, list) or any(not isinstance(item, int) or item <= 0 for item in ids):
+        raise ValueError("Map13 composite player condition IDs are malformed: " + param)
+    return ids
 
 
 def write_json(path: Path, value) -> None:
@@ -83,8 +104,14 @@ def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
             {"Tag": row.get("LoEntTag", ""), "State": int(row.get("State", 0))}
             for row in source.get("MapLoEntTagDatas", [])
         ]
-        playable_guids = [row.get("mAssetGuid", "") for row in source.get("PlayablesProxy", [])
-                          if row.get("mAssetGuid")]
+        playable_guids = [row.get("mAssetGuid", "") for row in source.get("PlayablesProxy", [])]
+        player_condition_type = source.get("Type", "") if source.get("_type") == "PlayerConditionNode" else ""
+        player_condition_param = None
+        player_condition_ids = []
+        if player_condition_type:
+            player_condition_param = parse_inline_object(source.get("Param") or "{}")
+            if player_condition_type == "CompositeOr":
+                player_condition_ids = composite_condition_ids(source.get("Param") or "{}")
         node = {
             "id": int(node_key),
             "type": source.get("_type", ""),
@@ -118,8 +145,10 @@ def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
             "duration": float(source.get("Duration", 0)),
             "unlockRadius": int(source.get("UnlockRadius", 0)),
             "playableAssetGuid": playable_guids[0] if playable_guids else "",
+            "playableAssetGuids": playable_guids,
             "playableKeys": source.get("Playables", []),
-            "playableDuration": float(source.get("Duration", 0)),
+            "playableDuration": float(source.get("PlayableDura", -1))
+                if source.get("_type") == "PlayPlayableNode" else float(source.get("Duration", 0)),
             "waitPlayableStop": bool(source.get("IsWaitPlayableStop", False)),
             "mapLogicStates": map_logic_states,
             "endAsStoryFinish": bool(source.get("EndAsStoryFinish", 0)),
@@ -128,6 +157,13 @@ def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
                                      for row in source.get("RemoveEntities", [])],
             "ports": ports,
         }
+        if player_condition_type:
+            node.update({
+                "playerConditionType": player_condition_type,
+                "playerConditionParam": player_condition_param,
+                "playerConditionIds": player_condition_ids,
+                "playerConditionNot": int(source.get("Not", 0)),
+            })
         nodes.append(node)
 
     starts = [node["id"] for node in nodes if node["type"] == "StartStoryNode"]
@@ -184,6 +220,26 @@ def build() -> dict:
                for name, graph in sorted(graphs.items())]
     main_stories = [row for row in records if not row["isSubgraph"]]
     subgraphs = [row for row in records if row["isSubgraph"]]
+    condition_rows = {row["ClassId"]: row for row in tables["conditions"]}
+    condition_ids = set()
+    for story in records:
+        for node in story["nodes"]:
+            if node["type"] != "PlayerConditionNode":
+                continue
+            if not node["playerConditionType"]:
+                continue
+            condition_ids.update(node["playerConditionIds"])
+    player_conditions = []
+    while condition_ids:
+        condition_id = condition_ids.pop()
+        row = condition_rows.get(condition_id)
+        if row is None:
+            raise ValueError("Map13 story references a missing official condition: " + str(condition_id))
+        player_conditions.append(row)
+        if row["Condition"].get("_type") == "CompositeOrCondition":
+            condition_ids.update(set(row["Condition"].get("Ids", [])) -
+                                 {value["ClassId"] for value in player_conditions})
+    player_conditions.sort(key=lambda row: row["ClassId"])
     logic_tags = [row for row in tables["Map/map_logic_entity_tag"] if row["MapClass"] == 13]
     role_ids = {line["RoleId"] for story in records for group in story["dialogueGroups"]
                 for line in group["Lines"] if line["RoleId"] > 0}
@@ -207,6 +263,7 @@ def build() -> dict:
                          "RoleName": row["RoleName"], "PortraitPath": row["PortraitPath"]}
                         for row in roles],
         "mapLogicTags": logic_tags,
+        "playerConditions": player_conditions,
         "mapTalkEntries": [],
         "mapTalkConditions": [],
         "storyOptions": option_rows,
@@ -237,6 +294,7 @@ def build() -> dict:
                    "dialogueGroups": sum(len(row["dialogueGroups"]) for row in records),
                    "dialogueLines": sum(len(group["Lines"]) for row in records for group in row["dialogueGroups"]),
                    "dialogRoles": len(roles), "mapLogicTags": len(logic_tags),
+                   "playerConditions": len(player_conditions),
                    "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows)},
         "pendingRuntimeBindings": ["official playables", "MapTalk/native dialog data", "Map13 entity templates"],
     }

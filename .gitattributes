@@ -550,3 +550,8 @@ unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/** -text
 unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders.meta -text
 unity/Assets/StreamingAssets/Combat/native-battle-meshes.zip filter=lfs diff=lfs merge=lfs -text
+
+# Map13 story conversion tools are hashed by their source receipts.
+scripts/prepare_unity_map13_story_play*.py text eol=lf
+scripts/prepare_unity_map13_story_runtime.py text eol=lf
+scripts/test_prepare_unity_map13_story_runtime.py text eol=lf

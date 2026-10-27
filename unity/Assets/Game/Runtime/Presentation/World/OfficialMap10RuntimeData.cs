@@ -176,6 +176,7 @@ namespace Zjcs.Presentation.World
         public string sourceSha256;
         public Map10RuntimeDialogRole[] dialogRoles;
         public Map10RuntimeLogicTag[] mapLogicTags;
+        public Map13RuntimePlayerCondition[] playerConditions;
         public Map10RuntimeMapTalkEntry[] mapTalkEntries;
         public Map10RuntimeTalkConditionInfo[] mapTalkConditions;
         public Map10RuntimeStoryOption[] storyOptions;
@@ -368,10 +369,15 @@ namespace Zjcs.Presentation.World
         public float offsetX;
         public float offsetY;
         public string playableAssetGuid;
+        public string[] playableAssetGuids;
         public float playableDuration;
         public bool waitPlayableStop;
         public string[] playableKeys;
         public Map10RuntimeMapLogicState[] mapLogicStates;
+        public string playerConditionType;
+        public Map13RuntimePlayerConditionData playerConditionParam;
+        public int[] playerConditionIds;
+        public int playerConditionNot;
         public bool endAsStoryFinish;
         public int[] options;
         public int[] removeEntityClassIds;
@@ -384,6 +390,22 @@ namespace Zjcs.Presentation.World
         public int Id;
         public int CanHandTimes;
         public Map10RuntimeAwardItem[] Items;
+    }
+
+    [Serializable]
+    public sealed class Map13RuntimePlayerCondition
+    {
+        public int ClassId;
+        public Map13RuntimePlayerConditionData Condition;
+    }
+
+    [Serializable]
+    public sealed class Map13RuntimePlayerConditionData
+    {
+        public string _type;
+        public int[] Ids;
+        public int ItemId, Count, StageId, MapClassId, Region, Progress;
+        public string Op, StoryKey, Status, Tag;
     }
 
     [Serializable]
@@ -630,6 +652,7 @@ namespace Zjcs.Presentation.World
         public int activeBattleStageId;
         public int activeBattlePlacementId;
         public long activeBattleSavedAt;
+        public int[] aloneWorldClassIds = Array.Empty<int>();
     }
 
     [Serializable]
