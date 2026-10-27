@@ -190,7 +190,7 @@
   "local_service": {
     "runtime": {
       "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
-      "sha256": "168035bc819a98fa642df6125d08bfc46b7e8c47e4e0313c9ea1760f8b82f581"
+      "sha256": "9b3292f5216f407c77ee89d109a2df33f0dbf98b53ca4c0f60c230d5c36f17e4"
     },
     "scope": "Profession level reads, group-10 reward transaction and source-based non-mutating profession appearance preview only.",
     "appearance_sources": {
@@ -198,16 +198,24 @@
       "AppearanceSystem.Runtime/AppearanceUtils.cs": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109"
     }
   },
+  "tipdot": {
+    "path": "assets/reference/profession-ui/tipdot-source-manifest.json",
+    "sha256": "700201dc10e5021b23fe7d883aa58e6ea559a07e0474e6598048f3f549ac4d8c"
+  },
+  "shaders": {
+    "path": "assets/reference/profession-ui/shader-bindings-source-manifest.json",
+    "sha256": "bc903c04c89cfe99371448dbab5db1a8863e9b9615c351da227225d1a62fe3ad"
+  },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs",
     "sha256": "2fa770516c8193f7967a4a1c34d75a88fe96f9f564f8ed1d710f5019724c1785"
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "0b0f96b187fb4e83dfc410428b473e1838b48e170b04f2dceeff5afbc8824e14"
+    "sha256": "90980b2378397309588fe99c7ba42bf14a80583dd7d6f799db45b193001f687a"
   },
   "limitations": [
-    "Native prefab runtime scripts, shaders and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
+    "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
     "Data/resource/window/appearance/map/tip services must be connected to the original native prefabs before runtime completion.",
     "PlayerPropItem remains scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
     "No full asset snapshot or Windows Player release is produced by this source restoration."

@@ -399,13 +399,17 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 355 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `854_156383` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个组件及字体／外观／提示图依赖，共 14035 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](profession-ui/native-input-source-manifest.json)。
 
-`prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。1485 个导出资产中的 1791 个注册表、3313 条记录、12000 个对象引用、1665 组打包数组和 132427 个值已核对，包含 CAB／对象身份、RID、原始顺序、字段、标量、浮点位值和完整层级身份，其中 25 个为空注册表。凭据见 [native-export-source-manifest.json](profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、Windows shader 和原生 prefab 的显式绑定，不能视为可运行界面。
+`prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。1485 个导出资产中的 1791 个注册表、3313 条记录、12000 个对象引用、1665 组打包数组和 132427 个值已核对，包含 CAB／对象身份、RID、原始顺序、字段、标量、浮点位值和完整层级身份，其中 25 个为空注册表。凭据见 [native-export-source-manifest.json](profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、材质引用和原生 prefab 的显式绑定，不能视为可运行界面。
 
 职业主页面立绘按 `ProfessionSettings.mColors` 的男女 GUID，从 APK YooAsset `AssetTable` 定位原角色 Sprite，保留透明像素、尺寸、PPU、pivot 和 border。38 个职业的男女映射复用 12 个唯一图片，进入 `OfficialCharacterAssetCatalog.sprites` 显式绑定；不复制多份相同图片。原始 bundle、版本、MD5、对象、GUID 和输出 SHA256 见 [portraits-source-manifest.json](profession-ui/portraits-source-manifest.json)。职业树须由原 `ProfessionCharacterPortrait`／`ProfessionAppearance` 使用官方骨骼、网格、外观和动作构建，不能以主页面立绘代替。
 
-`prepare_unity_profession_fonts.py` 按原 `FontAssetFontConfig` 取回 FZY4K 和 MPLUSRounded1c-Medium 的原 TTF，并校验原长度／MD5。MPLUS 原动态图集为 0×0、空数据的 Alpha8 Texture2D；恢复其原生字段和原 GUID 后，Unity 已验证空纹理的真实导入和参数。字体、纹理、官方配置及输入输出哈希见 [fonts-source-manifest.json](profession-ui/fonts-source-manifest.json)。字体服务和实际字形渲染仍待接入，不用新绘图片补图集。`prepare_unity_profession_native_bindings.py` 沿真实 GUID 检查主面板 845 个静态资产：断开 GUID 为 0，但 28 种运行脚本、6 种提示图托管类型、7 个 shader 和服务动态加载资源未完成绑定；仅生成可重用转换计划，不安装缺失组件或删减 prefab。
+`prepare_unity_profession_fonts.py` 按原 `FontAssetFontConfig` 取回 FZY4K 和 MPLUSRounded1c-Medium 的原 TTF，并校验原长度／MD5。MPLUS 原动态图集为 0×0、空数据的 Alpha8 Texture2D；恢复其原生字段和原 GUID 后，Unity 已验证空纹理的真实导入和参数。字体、纹理、官方配置及输入输出哈希见 [fonts-source-manifest.json](profession-ui/fonts-source-manifest.json)。字体服务和实际字形渲染仍待接入，不用新绘图片补图集。`prepare_unity_profession_native_bindings.py` 沿真实 GUID 检查主面板 845 个静态资产：断开 GUID 为 0，但 23 种运行脚本及服务动态加载资源仍待接入；6 种提示图托管类型已恢复，7 个 shader 的原始对象与现有 Windows 转换结果已逐项核实；仅生成可重用转换计划，不安装缺失组件或删减 prefab。
 
 原面板控制代码、树状态／条件分组、馈赠列表、倒计时、关闭及导师按钮的迁移范围和代码哈希见 [runtime-source-manifest.json](profession-ui/runtime-source-manifest.json)。成就按官方组 10／类型 56、四个固定档、一个循环起始档和 2000 轮五项递增配置生成 10005 档。官方 `AchievementPanelItem` 请求 `(group=10,count=-1,receiveSameType=false)`，共享 `Player.TryRecordAlreadyGotAchievementReward` 明确领取该组所有已完成、未领取档位。独立 C# 规则测试及隔离 Unity 的本地事务、文件锁写盘失败／溢出回滚、冷读和重复领取验证已通过；这不替代原生 prefab 的模拟点击、画面和奖励图标验证。
+
+`prepare_unity_profession_tipdot_sources.py` 直接迁移原红点聚合、激活、条件、图读取、linker 和计数显示代码，保留原 `SafeAction` 去重／快照／可重入语义；只读玩家、解析器及图生命周期接口尚待实际接入。原始代码、枚举常量、32 个迁入文件、图导入校验和输入输出哈希见 [tipdot-source-manifest.json](profession-ui/tipdot-source-manifest.json)。`prepare_unity_profession_tipdot_probe.py` 在隔离 Unity 工程导入原 2 张图、16 个节点，验证 6 种托管类型、字段、预设、条件数据、端口及完整连接顺序，完成后删除本次探针资产；不重建图拓扑。
+
+职业主面板的 7 个 shader 按原 CAB／对象 ID／原始 SHA256，复用地图模块已机械转换的官方 GLES 程序。`prepare_unity_profession_shader_bindings.py` 核验全部原始程序凭据、原生源码与 GUID，灰化程序重新生成后逐字节核对；来源和绑定见 [shader-bindings-source-manifest.json](profession-ui/shader-bindings-source-manifest.json)。隔离 Unity 已验证 7 个绑定及 662 组原始程序的 1324 个 Windows D3D 阶段编译，未将其计为职业 prefab 的实际渲染验证。此次仅新增代码和来源映射，未生成完整素材快照，也未发布可执行版本。
 
 ## 技能首页与安装流程复核
 

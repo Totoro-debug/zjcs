@@ -34,6 +34,11 @@ MANAGED = {("Framework", "", "StateGameObjectConfig"): ("Zjcs.Official.WorldUI",
            ("Framework", "", "StateUIColorConfig"): ("Zjcs.Official.WorldUI", "Zjcs.Official.WorldUI", "WorldStateUIColorConfig")}
 
 
+for _name in ("TipDotCommonNode", "TipDotAchievementConditionNode", "TipDotAnyProfessionPromotionCondtionNode",
+              "TipDotFreedomProfessioningConditionDot", "TipDotProfessionCanUpgradeConditionNode", "TipDotProfessionPromotionCondtionNode"):
+    MANAGED[("Assembly-CSharp", "", _name)] = ("Zjcs.Official.ProfessionUI", "Zjcs.Official.ProfessionUI", _name)
+
+
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -135,17 +140,32 @@ def build(scope="main"):
     pending = [dict(script=path, uses=script_uses[path]) for path, binding in sorted(scripts.items()) if binding is None]
     references = [dict(assembly=key[0], namespace=key[1], type=key[2], count=count,
                        binding=list(MANAGED[key]) if key in MANAGED else None) for key, count in sorted(managed.items())]
+    shader_proof_path = ROOT / "assets/reference/profession-ui/shader-bindings-source-manifest.json"
+    shader_bindings = {}
+    if shader_proof_path.exists():
+        shader_proof = json.loads(shader_proof_path.read_bytes())
+        if shader_proof["manifest"] != proof["manifest"]:
+            raise ValueError("Native profession shader version differs")
+        for binding in shader_proof["bindings"]:
+            native = ROOT / "unity" / binding["native"]["path"]
+            rel = binding["native_relative_path"]
+            if sha(native) != binding["native"]["sha256"] or guid(native) != binding["native"]["guid"]:
+                raise ValueError("Verified profession shader binding changed: " + rel)
+            if rel not in selected or selected[rel]["sha256"] != binding["export_sha256"] or guid(ROOT / selected[rel]["path"]) != binding["export_guid"]:
+                raise ValueError("Verified profession shader no longer matches the actual closure: " + rel)
+            shader_bindings[rel] = binding["native"]
+    pending_shaders = [path for path in shaders if path not in shader_bindings]
     result = dict(format=1, manifest=proof["manifest"], scope=scope, seeds=seeds,
         verified_export=dict(path=proof_path.relative_to(ROOT).as_posix(), sha256=sha(proof_path)),
         verified_fonts=dict(path=font_proof_path.relative_to(ROOT).as_posix(), sha256=sha(font_proof_path)),
         operation="Resolve all original native asset GUID references, retain restored registries, identify actual local script GUIDs and original shader dependencies; no prefab construction, stripping or approximate replacement.",
         generator=dict(path=Path(__file__).resolve().relative_to(ROOT).as_posix(), sha256=sha(Path(__file__))),
         assets=selected, script_bindings=scripts, pending_scripts=pending,
-        managed_reference_types=references, shaders=shaders, missing=missing,
+        managed_reference_types=references, shaders=shaders, shader_bindings=shader_bindings, pending_shaders=pending_shaders, missing=missing,
         dynamic_resources="Original service-loaded resources (reward icons, rule popup, portraits and tutor windows) require explicit source-backed seeds before installation.")
     dest = cache / ("native-bindings-" + scope + ".json")
     dest.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("Native profession binding closure:", len(selected), "assets;", len(scripts), "script types;", len(pending), "pending scripts;", len(references), "managed types;", len(shaders), "shaders;", len(missing), "missing GUIDs")
+    print("Native profession binding closure:", len(selected), "assets;", len(scripts), "script types;", len(pending), "pending scripts;", len(references), "managed types;", len(shaders), "shaders;", len(pending_shaders), "pending shaders;", len(missing), "missing GUIDs")
     for item in pending:
         print("Pending:", item["uses"], item["script"])
     for item in references:

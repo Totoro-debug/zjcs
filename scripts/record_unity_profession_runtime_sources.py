@@ -57,9 +57,11 @@ def build():
             scope="Profession level reads, group-10 reward transaction and source-based non-mutating profession appearance preview only.",
             appearance_sources={name: sha(CODE / "client-source" / name) for name in (
                 "ProfessionUtils.cs", "AppearanceSystem.Runtime/AppearanceUtils.cs")}),
+        tipdot=file_record(ROOT / "assets/reference/profession-ui/tipdot-source-manifest.json"),
+        shaders=file_record(ROOT / "assets/reference/profession-ui/shader-bindings-source-manifest.json"),
         validation=file_record(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs"),
         recorder=file_record(Path(__file__)),
-        limitations=["Native prefab runtime scripts, shaders and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
+        limitations=["Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
             "Data/resource/window/appearance/map/tip services must be connected to the original native prefabs before runtime completion.",
             "PlayerPropItem remains scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
             "No full asset snapshot or Windows Player release is produced by this source restoration."])
