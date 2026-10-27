@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import re
+from pathlib import Path
 import struct
 import os
 import uuid
@@ -108,7 +110,7 @@ def animation_record(apk, animation, tree):
             "tracks": tracks, "unknown": unknown, "events": native["m_Events"], "source": apk.provenance(animation)}
 
 
-def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT):
+def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, output_root=OUTPUT, preserve_native_transforms=False):
     """Restore official panel geometry, serialized component bindings and clips."""
     panels, components, sprites, shader_programs = [], [], {}, {}
     for key in panel_keys:
@@ -435,6 +437,17 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(fields, obj), "source": apk.provenance(obj)})
         nodes = flatten_nodes(source[key])
+        if preserve_native_transforms:
+            original = {}
+            def collect_transforms(node):
+                original[node["path"]] = node
+                for child in node.get("children", []):
+                    collect_transforms(child)
+            collect_transforms(source[key])
+            for node in nodes:
+                native = original[node["path"]]
+                if native.get("is_rect_transform") is False:
+                    node.update(native_transform=True, local_position=native["local_position"], local_rotation=native["local_rotation"])
         node_by_path = {node["path"]: node for node in nodes}
         for component in (c for c in components if c["panel"] == key):
             node, fields = node_by_path[component["path"]], component["fields"]
@@ -459,12 +472,16 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
 
 
 def build(map_id=11):
-    if map_id not in (11, 12):
+    if map_id not in (11, 12, 13):
         raise ValueError("Unsupported native mainline UI map")
     OUTPUT = ROOT / f"unity/Assets/Official/World/Map/{map_id}/UI"
     ICONS = tuple(f"{identity}_{map_id}_DialogIcon" for identity in (6010, 6011, 6620))
     code_root = None
-    if map_id == 12:
+    if map_id == 13:
+        from prepare_unity_map13_ui import prepare_context
+        (source_path, manifest_path, raw, manifest, source, apk, schemas, support) = prepare_context()
+        code_root = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
+    elif map_id == 12:
         from prepare_unity_map12_ui import prepare_context
         (source_path, manifest_path, raw, manifest, source, apk, schemas, support) = prepare_context()
         code_root = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
@@ -481,7 +498,7 @@ def build(map_id=11):
         support = load_support_ui(apk, schemas)
     constructors = Constructors(code_root)
     official_code = code_root or ROOT / ".tools/source-packages/official-code"
-    version = apk.version if map_id == 12 else VERSION
+    version = apk.version if map_id in (12, 13) else VERSION
     panels, components, sprites, shader_programs = [], [], {}, {}
     extra_trees, extra_sources, extra_resources, item_icons, icon_config_source, quality_sprite, ui_schemas, support_exporter = support
     source.update(extra_trees)
@@ -490,7 +507,7 @@ def build(map_id=11):
     panel_keys = PANELS + ICONS + ("WorldCanvas",) + tuple(extra_trees)
 
     panels, components, sprites, shader_programs = extract_panels(
-        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, OUTPUT)
+        apk, schemas, source, manifest, panel_keys, extra_trees, ui_schemas, support_exporter, raw, OUTPUT, preserve_native_transforms=map_id == 13)
 
     # Native world-space player marker used by MiniMapCharacterManager. Its
     # SpriteRenderers and loop clip are independent of the UGUI panel hierarchy.
@@ -658,9 +675,10 @@ def build(map_id=11):
                 for i in range(1, 8) for suffix in ("title", "desc"))
     keys.extend("entry_" + str(i) + "_" + suffix for i in (28500, 28501, 28502, 28503, 28504, 28505,
                 28510, 28511, 28512, 28513, 28520) for suffix in ("name", "desc"))
-    keys.extend(f"region_{map_id}_" + str(i) for i in range(77 if map_id == 11 else 99))
-    if map_id == 12:
-        keys.extend(f"region_{other}_{i}" for other, count in ((10, 2), (11, 77)) for i in range(count))
+    keys.extend(f"region_{map_id}_" + str(i) for i in range({11: 77, 12: 99, 13: 106}[map_id]))
+    if map_id in (12, 13):
+        preceding_regions = [(10, 2), (11, 77)] + ([(12, 99)] if map_id == 13 else [])
+        keys.extend(f"region_{other}_{i}" for other, count in preceding_regions for i in range(count))
         keys.extend("entity_" + str(identity) + suffix for identity in (6103, 6302)
                     for suffix in ("_name", "_desc", "_funcdesc"))
         keys.extend(("ui_challenge_text", "ui_drop_preview_text"))
@@ -690,7 +708,12 @@ def build(map_id=11):
     keys.extend("map_periodicity_random_award_interaction_" + suffix + "_" + str(i)
                 for i in range(100, 103) for suffix in ("title", "desc"))
     keys.extend(row["description"] for row in minimap_marks)
-    keys.extend("task_" + str(i) + suffix for i in (range(1000, 1161, 5) if map_id == 11 else range(1000, 1271, 5)) for suffix in ("_title", "_progress", "_desc"))
+    task_ids = range(1000, 1161, 5) if map_id == 11 else range(1000, 1271, 5)
+    if map_id == 13:
+        task_source = apk.asset("config_luban", "/task.g.bytes")
+        task_rows = constructors.table(task_source.read().m_Script.encode("utf-8", "surrogateescape"), "TbTaskInfo")
+        task_ids = [row["ClassId"] for row in task_rows if row["TaskType"] == 10]
+    keys.extend("task_" + str(i) + suffix for i in task_ids for suffix in ("_title", "_progress", "_desc"))
     keys.extend(("confirmation", "confirm", "cancel", "GachaPanel.ReplaceRaffleTicket",
                  "ItemInfoDialog.Limit.QuickBuyConditionNotMet", "ui_ItemIcon_count_key",
                  "common_format_args1", "ui_common_item_not_enough", "item_325_name", "item_2_name", "item_3_name",
@@ -864,10 +887,19 @@ def build(map_id=11):
                        "output": {"path": f"map{map_id}-ui.json", "sha256": sha256(data), "panels": len(panels), "sprites": len(records)}}
     write_ui_payload(target, data, known)
     write_ui_payload(previous, json_bytes(output_manifest), known)
-    for directory in (OUTPUT, OUTPUT / "Sprites"):
-        write_meta(directory, "DefaultImporter")
-    for path in (target, previous):
-        write_meta(path, "TextScriptImporter")
+    for path, importer in [(OUTPUT, "DefaultImporter"), (OUTPUT / "Sprites", "DefaultImporter"),
+                           (target, "TextScriptImporter"), (previous, "TextScriptImporter")]:
+        meta = Path(str(path) + ".meta")
+        if map_id == 13 and meta.is_file():
+            # The Map13 source extraction may already have been imported by Unity.
+            # Preserve that serialized GUID instead of replacing existing bindings.
+            text = meta.read_text(encoding="utf-8")
+            if not re.search(r"(?m)^guid: [a-f0-9]{32}$", text) or f"{importer}:" not in text:
+                raise ValueError("Invalid existing Map13 Unity metadata: " + str(meta))
+            if importer == "DefaultImporter" and "folderAsset: yes" not in text:
+                raise ValueError("Map13 UI folder metadata is not a folder: " + str(meta))
+        else:
+            write_meta(path, importer)
     print(f"Map{map_id} official UI:", len(panels), "panels,", len(records), "sprites; SHA256", sha256(data))
 
 

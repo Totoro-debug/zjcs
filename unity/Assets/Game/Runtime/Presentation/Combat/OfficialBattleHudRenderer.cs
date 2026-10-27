@@ -185,18 +185,28 @@ namespace Zjcs.Presentation.Combat
 
         private GameObject CreateNode(BattleHudNode source, Transform parent, Action<string, GameObject> bind)
         {
-            var gameObject = new GameObject(source.name, typeof(RectTransform));
+            var gameObject = source.native_transform ? new GameObject(source.name) : new GameObject(source.name, typeof(RectTransform));
             gameObject.SetActive(false);
             gameObject.layer = parent.gameObject.layer;
-            RectTransform rect = (RectTransform)gameObject.transform;
-            rect.SetParent(parent, false);
-            rect.anchorMin = Vector(source.anchor_min, Vector2.zero);
-            rect.anchorMax = Vector(source.anchor_max, Vector2.zero);
-            rect.anchoredPosition = Vector(source.anchored_position, Vector2.zero);
-            rect.sizeDelta = Vector(source.size_delta, Vector2.zero);
-            rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
-            rect.localScale = Vector(source.scale, Vector3.one);
-            rect.localEulerAngles = new Vector3(0, 0, source.rotation);
+            Transform nodeTransform = gameObject.transform;
+            nodeTransform.SetParent(parent, false);
+            if (nodeTransform is RectTransform rect)
+            {
+                rect.anchorMin = Vector(source.anchor_min, Vector2.zero);
+                rect.anchorMax = Vector(source.anchor_max, Vector2.zero);
+                rect.anchoredPosition = Vector(source.anchored_position, Vector2.zero);
+                rect.sizeDelta = Vector(source.size_delta, Vector2.zero);
+                rect.pivot = Vector(source.pivot, new Vector2(0.5f, 0.5f));
+                rect.localEulerAngles = new Vector3(0, 0, source.rotation);
+            }
+            else
+            {
+                if (source.local_position == null || source.local_position.Length != 3 || source.local_rotation == null || source.local_rotation.Length != 4)
+                    throw new InvalidOperationException("Original non-UI Transform fields are missing: " + source.path);
+                nodeTransform.localPosition = Vector(source.local_position, Vector3.zero);
+                nodeTransform.localRotation = new Quaternion(source.local_rotation[0], source.local_rotation[1], source.local_rotation[2], source.local_rotation[3]);
+            }
+            nodeTransform.localScale = Vector(source.scale, Vector3.one);
             // Both SafeArea components in the verified FightMainPanel prefab have zero
             // padding and both adaptations enabled. Reuse the migrated official implementation.
             if (HasScript(source, "SafeArea") && source.path.StartsWith("/FightMainPanel/",
@@ -330,12 +340,12 @@ namespace Zjcs.Presentation.Combat
             if (!string.IsNullOrEmpty(source.path)) nodes[source.path] = gameObject;
             bind?.Invoke(source.path, gameObject);
             if (source.children != null)
-                foreach (BattleHudNode child in source.children) CreateNode(child, rect, bind);
+                foreach (BattleHudNode child in source.children) CreateNode(child, nodeTransform, bind);
             if (source.has_scroll)
             {
                 ScrollRect scroll = gameObject.GetComponent<ScrollRect>();
-                scroll.viewport = FindDescendant(rect, "Viewport", "ViewPort") as RectTransform;
-                scroll.content = FindDescendant(rect, "Content") as RectTransform;
+                scroll.viewport = FindDescendant(nodeTransform, "Viewport", "ViewPort") as RectTransform;
+                scroll.content = FindDescendant(nodeTransform, "Content") as RectTransform;
             }
             gameObject.SetActive(source.active);
             return gameObject;

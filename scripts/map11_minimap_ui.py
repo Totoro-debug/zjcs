@@ -1,5 +1,6 @@
 """Restore Map11 minimap mark prefabs and their official entity bindings."""
 import json
+import hashlib
 from pathlib import Path
 
 from UnityPy.classes.PPtr import PPtr
@@ -10,8 +11,19 @@ def extract_marks(apk, schemas, exporter, animation_record, sprites, map_id=11):
     definition_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/map{map_id}.json"
     templates_path = ROOT / f"unity/Assets/Official/World/Map/{map_id}/Resources/Map{map_id}/stories.json"
     definition = json.loads(definition_path.read_text("utf-8"))
-    templates = {row["EntityClassId"]: {c["Type"]: json.loads(c["Json"]) for c in row["Components"]}
-                 for row in json.loads(templates_path.read_text("utf-8"))["entityTemplates"]}
+    source_receipts = []
+    if map_id == 13:
+        templates_path = ROOT / "unity/Assets/Official/World/Map/13/Source/templates.json"
+        receipt_path = ROOT / "assets/reference/official-map/map13-source-manifest.json"
+        receipt = json.loads(receipt_path.read_bytes())
+        expected = {row["path"]: row["sha256"] for row in receipt["outputs"]}
+        if receipt["manifest"] != apk.version or expected.get(templates_path.relative_to(ROOT).as_posix()) != hashlib.sha256(templates_path.read_bytes()).hexdigest():
+            raise ValueError("Map13 original entity template source differs")
+        templates = {int(key): value for key, value in json.loads(templates_path.read_bytes()).items()}
+        source_receipts.append(receipt_path)
+    else:
+        templates = {row["EntityClassId"]: {c["Type"]: json.loads(c["Json"]) for c in row["Components"]}
+                     for row in json.loads(templates_path.read_text("utf-8"))["entityTemplates"]}
     rows = lambda table: [json.loads(row["Json"]) for row in definition["Configs"] if row["TableName"] == table]
     extends = {row["EntityClassId"]: row for row in rows("TbEntityExtendParameterInfo")}
     areas = {row["Area"]: row["AreaTag"] for row in rows("TbMapAreaInfo")}
@@ -118,4 +130,4 @@ def extract_marks(apk, schemas, exporter, animation_record, sprites, map_id=11):
                            "playAutomatically": bool(native.m_PlayAutomatically)}, "source": apk.provenance(obj)})
         prefabs.append({"key": key, "nodes": nodes})
         sources[key] = apk.provenance(root)
-    return prefabs, bindings, components_out, sources, [definition_path, templates_path]
+    return prefabs, bindings, components_out, sources, [definition_path, templates_path, *source_receipts]

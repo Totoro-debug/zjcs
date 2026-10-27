@@ -564,3 +564,22 @@ unity/Assets/Game/Runtime/Official/UI/Map14HandInGray.shader text eol=lf
 unity/Assets/Game/Resources/Map14/UI/HandIn/** -text
 unity/Assets/Official/World/Map/14/UI/HandIn/** -text
 assets/reference/official-map/map14-handin-ui*-source-manifest.json text eol=lf
+
+# Map13 UI source receipts hash these exact converter and native asset bytes.
+scripts/prepare_unity_map13_ui*.py text eol=lf
+scripts/map13_ui_native_schemas.py text eol=lf
+scripts/prepare_unity_map13_player_view.py text eol=lf
+scripts/prepare_unity_map11_ui.py text eol=lf
+scripts/map11_minimap_ui.py text eol=lf
+unity/Assets/Game/Resources/Map13/UI/** -text
+unity/Assets/Official/World/Map/13/UI/** -text
+scripts/record_unity_map13_ui.py text eol=lf
+
+# Map14 current battle extraction and runtime receipt bytes.
+scripts/prepare_unity_map14_battle_*.py text eol=lf
+assets/reference/official-map/map14-battle*-source-manifest.json text eol=lf
+unity/Assets/Official/World/Map/14/map14-battles.json* text eol=lf
+unity/Assets/Game/Resources/Map14/battle-runtime.json* text eol=lf
+unity/Assets/Game/Editor/OfficialMap11UiTools.cs text eol=lf
+unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs text eol=lf
+unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs text eol=lf

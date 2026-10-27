@@ -1,0 +1,961 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/UI/map13-ui.json",
+      "sha256": "1b61e4a1c66e41a89c74d0260eb4315c987a2119b4444e662dac0f838ad6a07a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/UI/source-manifest.json",
+      "sha256": "ef7a876391c60db5facc6f9d0f3ebc33dee2ea7b2166566916b5b4337c5da1d5"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/record_unity_map13_ui.py",
+      "sha256": "0918dda3572e98c30e50c4aa07394c37a55dfc24567765b4666dce976807ac71"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
+      "sha256": "74c56a91e1ebb7bbb7b6ca939dcf5053d1bc7cc500828fd894bb33efa0e7a180"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs",
+      "sha256": "e63a3ae57623606e554a986b020871ae51d24bfe27e769386a5c8cd6ba2b5837"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs",
+      "sha256": "aa0260e5cb3a5e75d10558a74a14ba76dbb5e20e4022644cb1492cdf89a216cb"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6010_13_DialogIcon.prefab",
+      "sha256": "fff1af21fa8b21a070904005689cfdae51d9afe0bcd8fd171d5315a53103be1a",
+      "meta_sha256": "8e5f71a629396e3eaa11604c4f0063846c3714971fe647a067c97def8223c011"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6011_13_DialogIcon.prefab",
+      "sha256": "7a7da621dcdbc44c455a6fa37f010515025f11aa83cd2fd93d4bebe744abc7b6",
+      "meta_sha256": "a4f2d50d3e6667d472c8db04027bb00be2414bb9eb093574929a3382928afd8e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6103_DialogIcon.prefab",
+      "sha256": "ce7d4ee280aac5d812565c1fca369405fc78527f7d11e2528756e641c6a09ccd",
+      "meta_sha256": "892cfce0be2081dcaec1eb0026e2f16886d08f29ec4a35dd9bd7e98961e85aaf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6302_DialogIcon.prefab",
+      "sha256": "61c2ab5495975475f395dd511b41bc566fae9328cce9fc051a316df33e92f644",
+      "meta_sha256": "8be9a8ea0c8dcf50baa93db63262a8d419ca837f8ec832214ac827186fb6e5d3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6570_13_DialogIcon.prefab",
+      "sha256": "030bcea337810a59d6b6219d2e9c4ad26461598597d02048b72e9eca2c27c7c0",
+      "meta_sha256": "1230ab812e87677e05d3db9880e42a05438829470326e5c9a76886d0bb2e4699"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6571_13_DialogIcon.prefab",
+      "sha256": "37c714a3807e7f7515c6af15ee8cfc0c12705a7db1aa1f2c8bd236e1f25f911d",
+      "meta_sha256": "d2d32e67c62570c0bc84d544c55c41f51fb75f490741f9f5508a75090ffc4239"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6572_13_DialogIcon.prefab",
+      "sha256": "ad6afda7720130051468a62c4b1a4ede44f5095d2f7412d3a9236808d49e6cb8",
+      "meta_sha256": "b1e68a7fcf28d9559167995ec19fddbba511a51858f5b72cb85635402e4cad15"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6573_13_DialogIcon.prefab",
+      "sha256": "ee0a35f68654e46fabf82010d7b5776745dbb9264f797abacf2bbaad4c46388e",
+      "meta_sha256": "4e1a3249ccf91b05ec8377d24baa65b52908a28b9b57db3cdac65e1b9619678b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/6620_13_DialogIcon.prefab",
+      "sha256": "36a5c68e31f3c7b8df91760ffd3e50d990e1e80dfb3019dbccbf715900702a9e",
+      "meta_sha256": "2e6ad2971a901649cde73fec6f0180634fdcf4aa2c818307164738df18653293"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/AwardListPanel.prefab",
+      "sha256": "fe30a6a72c354e7e7d1f83b0ca266355756fb62db7bd6007a47e006439605e18",
+      "meta_sha256": "c2089ff2b633e9bc2ac22b838cff59710d0c478fd6946fdb6c08a2cdda6d0098"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/AwardListPanelItem.prefab",
+      "sha256": "7c3ab2fbba8381b4bfdfd80ede529de443500fc804d8f4c39f15ea448554c3c5",
+      "meta_sha256": "fba722d3496205f79f18b36c2bb4a5771d142a68a7c574739f298bc47f20a976"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/catalog.json",
+      "sha256": "1b61e4a1c66e41a89c74d0260eb4315c987a2119b4444e662dac0f838ad6a07a",
+      "meta_sha256": "31b792f5662218aedc26a7ab7236049536e0c999e125b19c88b98bc4f46680de"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Common.asset",
+      "sha256": "c0c8f095654de95e210885ce6caf57c91e9d4a6ae86249459edd94f3fb36579b",
+      "meta_sha256": "8f5dcc764b226e6bc7899f55be2df30bcc6eb934da44475859c6459e707e3e38"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Common.mat",
+      "sha256": "fe9e06d9249fd23598707b854fd1984fdb90aeb6c54d8583964048557a6228e8",
+      "meta_sha256": "535a888704d0e27af790848ad1d4595fb2d656c6b2dd925fa86b3f9d6329bdd8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/CostItemConfirmDialog.prefab",
+      "sha256": "6b2c0427a544be73d23c492dfc58b8d1592c7e2713d4288f4d9c4f287462b543",
+      "meta_sha256": "52dd0b27aad25fe6f5cda1b065b51a36ec943b1549df4a7aee15f5831fefc679"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/DynamicItems.asset",
+      "sha256": "a894c59afc86b4a2e851f0ef45f0554c25cff1755f2ac35b74aca517936820d1",
+      "meta_sha256": "96283b42492f1a3cada9abd779d2044cdd740843b72cfbec6de091481bac6c9b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreConfirmDialog.prefab",
+      "sha256": "53cf8fe81bbe51e3f2322aa477009df75d5f4f1c2abce8188e769930aa90e9fe",
+      "meta_sha256": "07ca32ab0f8b7b7033c251511678e4ad42c832ec7ff5d0105cae2c2ae3fb7c53"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreDetailDialog.prefab",
+      "sha256": "0ab7c11a8a61deec89f6d613a161ff899b22344bf8428b56017d9bdb9397a5d2",
+      "meta_sha256": "647534ef2ffdd752e98e06f3edf44121c00de9e21838c9cdcd3afd3d07c90533"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreHistoryItem.prefab",
+      "sha256": "c57978fa3115a111f42b333141e054997e3beedbfb32eeaf8c21216e2fdb2f2c",
+      "meta_sha256": "8447598b7a9b9c024264e457b8f3771c986af7bcc540cba70331ba0ab55fdc57"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreProbabilityItem.prefab",
+      "sha256": "3913591b61d8ddd69b214ec8936e110f6a3d428c4b34e3d06b7cfc300339873d",
+      "meta_sha256": "60536d2eb6677a25af07f3a8a620e49e743c5509cbb6ef956f3a136fd649f414"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreRewardItem.prefab",
+      "sha256": "fe0d3396f6ad1722973db82905a26bf2c1af9e4ebc2f698a7a37dfe2efd0a6a5",
+      "meta_sha256": "85e17b7973e8017bcec26ddd511b7a538f72e7dff9c35f7329a87d9ba08840fe"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreRewardPreviewItemDetailDialog.prefab",
+      "sha256": "fc5400290236989481bd0530b96c9de21f99d487d18b5027a77b763920ef4399",
+      "meta_sha256": "9d61bd9b405f538e1b0cc9d8cd978a7229a067ce189937d8e92397006f1b0855"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreSelectTokenDialog.prefab",
+      "sha256": "fdab1e465e4f068ab64651256edf3f64c0a1611562f23c90df0c041358733cdd",
+      "meta_sha256": "bf8f81eed5dad0f40e52cfb261a1e109aa5eab9ba423e5042a456244bd661011"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ExploreSelectTokenDialogItem.prefab",
+      "sha256": "47d97eb4e37a97f6fb528ad8c3d99ce6ac9c601f5f6c4b230a0228fa8020b40d",
+      "meta_sha256": "d7b65976260bf4333a71e1143b34bdca773334031c1deec0d6ff055ffd2c5ea7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/FirstPayBtn.prefab",
+      "sha256": "de61177e6072d7e71aed89440330211689e474cfc3230609572fb30dd64c668b",
+      "meta_sha256": "476b6c4f104e864950e36b6b875bddab13ffe49ee43a0736c8f9a8bcc7c0dee5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/FunctionEntryDialog.prefab",
+      "sha256": "21084da8aa9657a7ab8ce13b73774d300f71bfb824909c0600a8097b8eb3cf6e",
+      "meta_sha256": "7fd4568213b9a47cac9298b81850ca2a691ab271647bd85d416a1ab1684debc1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/FunctionEntryDialog_Hide.anim",
+      "sha256": "2daa1c77402424a0bd6c341b91aa776f3369d8b802721af61c342d0ec3097b7d",
+      "meta_sha256": "6e26a3df8916d770a13ae9775824ad8378b8505b57481b4e5596e56d1b04a814"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/FunctionEntryDialog_Show.anim",
+      "sha256": "d775c9cc1bbcdc5d0cee3c7d98cf25568159d8f50267d49603536e0a3b5d0cd7",
+      "meta_sha256": "9de3cfcce9bc08fe4c0b8d3ed738d38889d5714c9b30e88cd04916869f0dcdf8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/GoddessTouchDialog.prefab",
+      "sha256": "8166fdede712d4f75e9fb43887929d681353ec3a414fef661709c43a5dae554b",
+      "meta_sha256": "a37b41c84a1153637d51de89bf764cf63dfa457f802b55e454d6f8ce34c1ceb5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ItemAwardIcon.prefab",
+      "sha256": "a2aa5116d698f5568887e12cb0681f72595144748f8ca35beecb8bb08ac232f8",
+      "meta_sha256": "f6157ccf01ced9a364da178ac36a5724a1b37b9300a7beee7ee8b5182469480c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ItemIconDefault.prefab",
+      "sha256": "e09a3d2dbfcce99590ea27171d9fc56ac798c07ab2a481bfdcaba9890eaed23c",
+      "meta_sha256": "cb8cab3a8d081e67374ffbda728eec16cc0d310fa454771f62a01a5dc1c7c2c9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ItemIconEquip.prefab",
+      "sha256": "614c4a0e203315a966269491c64988f4d7b1afbb5df1482057945b5120d17685",
+      "meta_sha256": "6e859df5cd279fa97f6e08ea9e76f98c3ba02dc14b4e11877a0e3b1a62c79660"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ItemIconSkill.prefab",
+      "sha256": "c88643575c67de180d098cf80e2541a51188881539f6387b799de0fbbe381392",
+      "meta_sha256": "25fa1d6ea112138057f9e434fd03a3a7599ab4076f06a3c5e717da36c80baad7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/ItemIconTreasure.prefab",
+      "sha256": "705262da38c09f0539a2256fd1d3a294c4798e7f0960dba37aaf4156cacd91e6",
+      "meta_sha256": "6dd3732d2b34fd350adcbf0dbfdbe5e1e1098ff494485069234897acfd21d350"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultCharacterLevelDialog-LostGoddessResultBaseDialog_Hide.anim",
+      "sha256": "06cb0314f4db15b03df5508ffb6022f494afdcc3d66af9d31943d38e29a83ad9",
+      "meta_sha256": "d71366925f0f27e21df768c3b0e89c1e478d4e44fe2c4c9fc8852774deb8d422"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultCharacterLevelDialog-LostGoddessResultBaseDialog_Loop.anim",
+      "sha256": "7f127aafed8691a527bc8abdf655cec3075adbdf40a13385b1cee3af7bdc0140",
+      "meta_sha256": "6c476aea6484588a3717ef215c96f1c9ea1fdd8574c404dc4ba059571f6aada8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultCharacterLevelDialog-LostGoddessResultBaseDialog_Show.anim",
+      "sha256": "28cbe330485d642e3f97eb8ae9bd83323f3126ddeb6f0b493b4b394fd373ed6a",
+      "meta_sha256": "077695d8e2314653dc99f30e73b966237907548ecbeac7bbedd9ecd43b5a7410"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultCharacterLevelDialog.prefab",
+      "sha256": "5d9480dfe21e7b44e9a2de56bbd1d6eaf147f6d6212b0fc09455f661a0420ba7",
+      "meta_sha256": "4bf4fae5c4d86b0116bcd76c10694119479e9930b90b71ec32782bcec1a700e8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialog-LostGoddessResultBaseDialog_Hide.anim",
+      "sha256": "c3e6bc3c4b2ac12d38a52c02a180bd6a82c931cb00ae611f004c57b2d0beb73c",
+      "meta_sha256": "0cca29f430aa14fb9e1b45eb658daf6177bc2a1cee3a97f0d2ec5206ea618d95"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialog-LostGoddessResultBaseDialog_Loop.anim",
+      "sha256": "7f127aafed8691a527bc8abdf655cec3075adbdf40a13385b1cee3af7bdc0140",
+      "meta_sha256": "cbc57a630edd0204a3fc89c1bcd03853ba56dd4d5d590fd9706a0aaf7fe4a4c7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialog-LostGoddessResultBaseDialog_Show.anim",
+      "sha256": "7783902c0dbd3b99c4536f66a0a2a599ced7e4f5933602955d3f604449726c2c",
+      "meta_sha256": "4add151e734d0972e3e357f70e96ebe4fab0c1ea0dd40bfbae7bf96b1aaffc9b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialog.prefab",
+      "sha256": "21e26f72114477c7d1120551c3e4790e8101ab997d11faf52a8d82c2597690eb",
+      "meta_sha256": "8c6e58400dd392ef97326aea5814315e649b3b6d9b63ba45feda2a48b47f869b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialogItem.prefab",
+      "sha256": "9c14e4aab0754b3d11bc9c913e80010cf800769e1758d050a2720b90b7670061",
+      "meta_sha256": "3da6a65f528210f45ca1de1b93f2d7efc987b2c87d08e0b04c4eee801e6bcfac"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultSkillRankDialog-LostGoddessResultBaseDialog_Hide.anim",
+      "sha256": "6b44e4adc079721dbafe30a8cdaace04eae16c7567392b68ce02aa4f137efb53",
+      "meta_sha256": "c552d5447f7a809204252424c1163e0da2855145d8270b0c5686b84fb3e5f94a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultSkillRankDialog-LostGoddessResultBaseDialog_Loop.anim",
+      "sha256": "7f127aafed8691a527bc8abdf655cec3075adbdf40a13385b1cee3af7bdc0140",
+      "meta_sha256": "d670d569274ff8550419b154cb80e758ccc897f619c8b27d5bc5b5fd13f942da"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultSkillRankDialog-LostGoddessResultSkillRankDialog_Show.anim",
+      "sha256": "a2fbf9b8afbb53e51582ee1232b6afe49f0cf774895c5df8438d5eed75e42190",
+      "meta_sha256": "1fd1e87a1266f63033cc90881096d7089541b2a65700479d300479cb1132e097"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultSkillRankDialog.prefab",
+      "sha256": "dac28561cd32bf764e1e1f3a4b521f4c7e9532e7cb8e5d29925b51c0a36488c9",
+      "meta_sha256": "0e87d87af97f4014ac98c9f77d6731b51a614cd2747f2761b1376488837182e3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessTouchDialog.prefab",
+      "sha256": "4e14883b61d386cfcdba6bf3b8b35afa055253f5e98d5fd9a12660414541dec4",
+      "meta_sha256": "5e4c021707de665bbd1d56a775d634e9ee61322e3c0e0099f67c758e6dc4d21b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MarkUIFilterEntryItem.prefab",
+      "sha256": "a4cfc8e298eb5243609ef4da7601a569d6190406ceb330eb04ee29add2e07f1e",
+      "meta_sha256": "38cb774ad45dcae7bb96648387911ca3312e169e3736c5592ed12537c2be6f46"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapBattlefield_3.prefab",
+      "sha256": "d089ec95567e1efc49ee8b4d9926223d81a46a960cc9e985c7a2ef5254e98722",
+      "meta_sha256": "7254def9c512434549866573e8a19a876b055dfc5d6f7a6a588a76b15acead28"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapCave.prefab",
+      "sha256": "7736cd55216cdb63cdec13ccaeb11a90beb1b0c30c4521f87ac07c137530e9c4",
+      "meta_sha256": "c5c57c1394ae95236f54f2b3543b6c7c8a7fc17bd28fa11b0b9d9c1eb6dbe574"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapChallengestela.prefab",
+      "sha256": "2c5ab7aa01e5596eaef04b4466274af15f99dbadf21f2b5d453ecfb3f7f99565",
+      "meta_sha256": "a4474cb2a15d205776b0673ade628c9794c5e01a9b96aa3a558c178ef89fd5f9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MinimapCharacter.prefab",
+      "sha256": "b66fd6db84a88b0118dac0672ad587806a1c25cc1f6f52d2608382a9229f2ed4",
+      "meta_sha256": "2fb7989cb2bde5b68cf6fb44068c5a98b2fa8312713f2a2f91b0650ff1c818b4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapChest.prefab",
+      "sha256": "f5ff55f05c4547e53e24e12c20f584c8d4790e10e1d827a1fc551d1063088352",
+      "meta_sha256": "ba3dbbc6c19fabd92e1370fc1812c75605aa19ac68eaa9176a86d3f5f1a90264"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapCollection.prefab",
+      "sha256": "b05253fd39d00917c8ac2495f27b85f84cb39f4285a8da9813595df81debf346",
+      "meta_sha256": "df8ca02c5f43e5bedc04e9e48157253f81d1755e610846bc0822c52e6021d5a8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapDailyDungeon_12.prefab",
+      "sha256": "0c96d1eb01801d3becda7b78cda0f72b50efa8bbf8ebf255dcd567e672d095a2",
+      "meta_sha256": "c73c9e59a47e72692f3ca7f76f52fd8fa5f6e0345d49da786deb450804451dc3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapDailyDungeon_4.prefab",
+      "sha256": "32aad7cdb2fa0de3ab164466ed24750e745c485d80db780411d59056608f158d",
+      "meta_sha256": "409989a416179afb3ef033945948140561988616778da13313d5a273fa509777"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapDailyDungeon_5.prefab",
+      "sha256": "01170a791b151ab4ab553fb00bcfeaa322d7945bfac66ac05f4c55023694b388",
+      "meta_sha256": "271b2e3ac9d612fc9be7de7a05e33e3114b9d26d47141016ec550153e0ae3d5f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapEntry.prefab",
+      "sha256": "ebe865598fc960f401e4ceed25f48cce7566a45715e3026c6e40bdb1c8fe8958",
+      "meta_sha256": "ba550c5a6b4732b15ae1dd4748ddaa7395f5ea692143f8ee0077484543d60938"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapEntry1.prefab",
+      "sha256": "5914b24dbd2e37059c1a0f872e132093e483eaca18ed4ad8a9b6f17df0010ce8",
+      "meta_sha256": "f9fbf1611eeb4fe9747a56307e19703f5bf8219fcef116ac5a01135cf198b455"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapFootpath.prefab",
+      "sha256": "f31294e41567ecd7a67315016c6a3eaaa4051ff2831e6e265da91f67083e2b1d",
+      "meta_sha256": "f0741ecebf174611bacfd07e5e5687a371e221df19b011f99c9849ed43f500b8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapFullScreenPanel.prefab",
+      "sha256": "5a628aeef688ed664ae8619b6d089ba71b6bef2c549610a3c790a8983fde8339",
+      "meta_sha256": "e073a8857954961cc88a43909cbd1ac1f1f395ceff81dbc7f0a2245e02eaeda8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateBlock1.prefab",
+      "sha256": "c34b1f104be66c67514a17cc9316845862497e7c0f9d5a4b871f5e6d81adb7df",
+      "meta_sha256": "b0eaa689ce9b0c9188e3e7e455468b3839c491a18dcc9cfd3fed9cbd2eb0b172"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateBlock2.prefab",
+      "sha256": "69066726a5d00161cde27bcd70bf1ebc7d44284d53d5cb04a3180fd4e8164ffa",
+      "meta_sha256": "df106f36e58e975c5bff1a8f134617512afb62056319a59aa2462dc343f0a54e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateBlock3.prefab",
+      "sha256": "5a7f43c12ec939b0c84ff2d7a328991b44eec833037fca53a46a62ddf114a330",
+      "meta_sha256": "6aefc3cbe8dddf5bfd56d85ad0f8fcf490298f6f62bd58fcf26e7bc988204ae3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateElement1.prefab",
+      "sha256": "ff2b1f93f6eee94c38b19412e462918c9e9fa6b5458cb8d26ef810d145657e95",
+      "meta_sha256": "2bc5794a7935b3e24559b3204f20fd510b3fbc241d28c03b63219c048a326743"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateElement2.prefab",
+      "sha256": "2d1705ead10da0624b2d2ab920dbb0ccff85a69c575fc5f35c8554f33d69243f",
+      "meta_sha256": "dda49f9101732389d2ff4bbb01eb8ad88a1d75945883b5964d6bb1f935cdb46f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateKey.prefab",
+      "sha256": "d14c0e633cb0fc195dd974720f229557164512a70c86102bad93afc1ba7141e6",
+      "meta_sha256": "a0d879067542324fa0d94e36a61e6d558de1949177180261ef1edd99faf9d7fa"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGatePower.prefab",
+      "sha256": "85bf9212c2727b4b172ee964cc4655d9884199df7fc13bf00e917223f1151d48",
+      "meta_sha256": "0f3e02b908f8bfded9d73239675ac42cd70d99ab0f5888b6dfe9ab49c5e0d969"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGateRankBridge.prefab",
+      "sha256": "e151403cf485e71b1d36fba25a4c5515052ab5848bb56714f0e557ad23ceff10",
+      "meta_sha256": "08a55bc2c5d58306885d4e130de0b6eca5899285a930cba79b65d2ad5e310d27"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGoddess.prefab",
+      "sha256": "bc6f1301fe59c1110edff28856535dce2421115a4607bd1f677eb32cddb7edb6",
+      "meta_sha256": "c4d43e529900c6b16af2c15644a5cb45b3f8389bc7ad95908511a79bfab68fd9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGoddesslittle.prefab",
+      "sha256": "be4e93afcd68533cf11ddc32303f353e5b6f9fa9bb262b2409c1656e3ba6ec1d",
+      "meta_sha256": "4474baf9ba1cc4d2a283d2a6896fb283891a35c9a339111f53d0fb73dc947567"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGodMonster_3.prefab",
+      "sha256": "b5a3531dfafcdd31eef52f99fe312298b2870b1dbe47080a3825a2f1581f5ed3",
+      "meta_sha256": "99b83483631461a5d9048d17f28365f8af08e04620450245fe4d3cf8d8845958"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapGrave.prefab",
+      "sha256": "75b137ba06de016aa624981f00a0fc12f473e448a1adef255769ae0030f2c0f9",
+      "meta_sha256": "9edacb6c78cd112f3e4022264acd6ec196b34cda533ca63ff9b7b8ecfc189f85"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapHerostatue.prefab",
+      "sha256": "9d980fc6c22f9aca4d81f806bb1977f139a559b482167261f39f0ccffe9b2ac6",
+      "meta_sha256": "25d56767777bd6114159da6fcab321a0f6136ba6fbfe26d32d199b3d4ca69a7a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMarkFilterItem.prefab",
+      "sha256": "6b111f829abd0e7c74a654d2a5171276874c03bc328d622a41c2768806f217c0",
+      "meta_sha256": "93450a7e30b2747be227cafa9d523f6e14dbe47ab0d8b59f559d2c1cbae6d58d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMaskedUI.prefab",
+      "sha256": "b6f8526b77fda54709199d77ad6669ae0364ccf7c9daedf42d5e0cc5ece62012",
+      "meta_sha256": "11792136c3f6344707d3a0729abf2d5dde3a892ba66b57938d4d3688fe6ac676"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMineGold.prefab",
+      "sha256": "514d694ee71321a0ac9849ee61dba254f8a6cb4d55c4ce451d04db4bbe0bd705",
+      "meta_sha256": "202d254c03c0397d9153e522fcf142f8d1c82e1fd9f77c5832ebc240160a7acb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMineIron.prefab",
+      "sha256": "fe929466607b00e74e6fbdeeccd377c2cd4eaec1f8eda7582ba3bc77ad04ba08",
+      "meta_sha256": "5c6d0359367cf27ee1d51877c000b3ad832046c7a72bfe3c0ff582995ab66988"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMineSand.prefab",
+      "sha256": "c7eccb7e872723a0a6deea16dfa808c3f4c3d6942be40acbaa8a2bf004636430",
+      "meta_sha256": "6d8d90e8ec8baabdb3434b5004f2e90d8ba1b2835df12c501b8be7efd7ed5a60"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMisfortune.prefab",
+      "sha256": "9a3f78043b6a1d58b01f0237a76284aea7fed6cd1212e69540c85eb168848dbc",
+      "meta_sha256": "0fb6638f8072228edd07362e72ca11eea1fc75e0e12971d990ad9a0eab753cbc"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMonster1.prefab",
+      "sha256": "a7df4b55c3e591829fc4176d00ec6e745dece6e0e663d7dd07aaca58493c34c2",
+      "meta_sha256": "663b7040ab28c646cffb67583d7ab4c5014053d1cdbd1a8a365fd43e49d95083"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMonster2.prefab",
+      "sha256": "e65314d3e255d3c4f7bcbb8e9cdf137c11b019a2b053254bc80cdbc08d9be377",
+      "meta_sha256": "bc2348dbe306cc2286e20c42715a955fce79c4fac8a145d4d8d4885cb550f397"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapMonster3.prefab",
+      "sha256": "8b2e33947335f9ac20cb51b815c30e659f59a34e46752a3a130c4ae69ee53ac4",
+      "meta_sha256": "0b8983c2b1671d0438193b7a5446736a737ee481abc90db6c6772ed0e9b56346"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapNPC.prefab",
+      "sha256": "2b66b163474dcb39a583efeb0b13aaf9fe4d1e0d62236a5d380d20a35ce9aae4",
+      "meta_sha256": "6e13f1c74f741e085d2949f5a3494c4bfd98b6e694995bc7b30c0d872da3b747"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapPuzzlemonster.prefab",
+      "sha256": "0117f5b70e64183e86f4851df7107f925591aea40430c7eb343b433666f78e4a",
+      "meta_sha256": "165cc329fddaee21b25d0cddb77852bafd4ee2d3079f4b792102f9346bd54a99"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapRattan.prefab",
+      "sha256": "833b9f04845ad8350f50875f860d2aaf5abb0f5d5bc528b8a6733242f70a0e23",
+      "meta_sha256": "02be18ef120ea6e74973bd472498d4eaad030cc6d56484b38eb5193a7f225f21"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapRoulette.prefab",
+      "sha256": "093881e877a68c431afefaabd6de4b5b5ee0985fb905ac3ad62fb25126145507",
+      "meta_sha256": "82519129c2dbb9d73f46cb79445a56df4f8853bc1ae4f06dae61034b76a0de8b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapStele.prefab",
+      "sha256": "d1a009228697245b7458a453f89b524dd7a946a5132f536e545ebb42f251b735",
+      "meta_sha256": "b661bc87b472f29d7a111a0b8f512d45e68b5c9b1b866ef480ee7d4435d16b82"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapStorystela.prefab",
+      "sha256": "60c944c56f12342c193f00e430d8e507dc7ddd959b68479a183484281b87a97a",
+      "meta_sha256": "a8a07dcdea4f7abb72a510d6ada65887095970ebf1112521cffb0a4019ef8ba8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapSwitch1.prefab",
+      "sha256": "c2a42749a82593795f5f7b524a54418d71176d9c22a73dfe8aa8ca3994cd82d5",
+      "meta_sha256": "dac3c4424434cf90fc85d19444336df0e1802c3a503b6f12f939463e1e588e1f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapSwitch2.prefab",
+      "sha256": "b08cb483b704285f9c22a0a666fb32c0ce0c5424ee31316e4ae08137dfcbe7b7",
+      "meta_sha256": "868071dc0f98766e5f9758a0ed21348694b101a1ae8784606c1469995a9e323b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapTaskboard.prefab",
+      "sha256": "9c20f580e0e0665956081bc09c3935e945493730f7b067f022809c5b0bfafe4e",
+      "meta_sha256": "399c7fab26f202a01a5d385fd504d41da419c7fa68337400433d865559cde7c7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapTemple.prefab",
+      "sha256": "7acbe20eb9dc587d09c17231c01ff9fd18dc6c25ebedc9c44361782b618559a4",
+      "meta_sha256": "fe76fe2254f5c63c4c2d7e43b263d9b2230ad81489c9c9eaba3ab7525103f187"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapUIMask.mat",
+      "sha256": "5c62423af96e2b5934a42bb1c7010afdc142275ef25260e87f1c146430e01abb",
+      "meta_sha256": "69ec6c878e6a88a00c848e5caf361b8218583a6fb1f52746113d59af674f9f11"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/MoneyUI.prefab",
+      "sha256": "b64e05786e6224842053fb9863acff40ff906bb82b2e9d93fd77e18826a413fc",
+      "meta_sha256": "088f3ab41771adba27e1d99f46849a1d42e45e5c4790d3a2871c5c3c84f22182"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-01f1bc755c4a3cb1113a9f43d1801ef8.anim",
+      "sha256": "ebd2ba3b33209a9c16b1e6cdf2065de91b5795573e3658820cd384581415c783",
+      "meta_sha256": "a43f90fbc9f4adf98d88e1a99faa6be5a6747f09d0ed98b0653877b4a762f069"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-06fae31808ab1f5fd26e17332a88ac27.anim",
+      "sha256": "ebd2ba3b33209a9c16b1e6cdf2065de91b5795573e3658820cd384581415c783",
+      "meta_sha256": "fcf40d667695ef1d4b0098c9698d44d6e38e9486ad32ee5933b215f183ab4b7e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-1489f4ca48f45f256e540dd29454b13f.anim",
+      "sha256": "851afb4e9c72fb6db1a8c19578a142157022b4fa765a07fed6934023e18701e9",
+      "meta_sha256": "22afe5c1bfaef57abaec1831cdf42e7c048a4b895bf3991943ec5573c82c9c68"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-1e13893025f2990a17efb34146d20b31.anim",
+      "sha256": "38ba3cde97efa192f2a73b29d2e6ad6fc752a7f9ec7051d9aee81a538485f9a8",
+      "meta_sha256": "a9a1e4bce365b2f5344a55d3abdc11ab78b7debfd688c13dcc9d027383fe3f2e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-263c9cf92bf1fcd16966207a9abbf90b.anim",
+      "sha256": "7a3e7c24376f68a3a3bb2a7901b350730c0996613ffa9932e53e6451b735c86e",
+      "meta_sha256": "32582d90ca4c0ebf0c7c9e364b52a96de75f167f7739cdc08ec093b0f25cfd72"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-28c549da7122732ed16f07feff0094c4/ToggleOff.anim",
+      "sha256": "4755deba14113c79e72c9d39c964bdb86e4873da6352e00c2df155333dcd57fa",
+      "meta_sha256": "81075a58dc2b5b7fe95fbbdb761f1c336e76c86cc7b93bec0c5119bf5752e749"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-3d7604cf021a45f4b56e88a85eefd23f.anim",
+      "sha256": "fc2ae34c348194946eb8b0d223e83c2b426fbad7296d2dc7b03e1bafd0a7e286",
+      "meta_sha256": "6b32a6a8f9c5cdef4b9a5a11f0883b9605c52b438de09e1746a565976828e33d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-400e235508ba689085dd674c6b3b01c6.anim",
+      "sha256": "851afb4e9c72fb6db1a8c19578a142157022b4fa765a07fed6934023e18701e9",
+      "meta_sha256": "96a0eca330805a5539380c683fcd300bfea32c7a8f261dfa9e7c5d2a7ed59368"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-47027ed1ede5838869c3e6ed6a81afff.anim",
+      "sha256": "2f5a34061aa907c3861c873de77a5f7f2968faed4317bcc0d7d63b517c7d3a5a",
+      "meta_sha256": "635da7a7cfe5386fc35d40aa08a9208171a59211a8b44a1f7fcebc58c0a954c3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-497571e7ff99f96716b8a8d34c449abc.anim",
+      "sha256": "129981a9e930a4da983f77eafc7e6b345cc052fe21cd6552667fa241eca1ce28",
+      "meta_sha256": "f710c8200d97b1db3ac3de0ddd6879e0be1bbe8c04f3c7a793822d90410aa836"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-4d74c4a575a3a5ada6f4cf4ae1ae3e31.anim",
+      "sha256": "fc2ae34c348194946eb8b0d223e83c2b426fbad7296d2dc7b03e1bafd0a7e286",
+      "meta_sha256": "67d65e98d005662eccfb1033f54d91a20eb9ec59721a7d0bde7c63483038ae36"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-52ba96cdabfcaba71e394fe5b0fd8937.anim",
+      "sha256": "2f5a34061aa907c3861c873de77a5f7f2968faed4317bcc0d7d63b517c7d3a5a",
+      "meta_sha256": "74e901c580cecafccc2a89b100010b743faca3e1d7caf5c3585419d7938967c3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-61393d498044e5b0bedbc630744ad04d.anim",
+      "sha256": "e0268f090a3d1676f8bd5e14240560914f797e21bfe77e3348c751f6237813f4",
+      "meta_sha256": "dea9e2ec8738c4cca99310d82239d1416f7f015bb0135d86094613cdc3361f9c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-6747b564d2ddac025b86b4d8b0d67857.anim",
+      "sha256": "8b230ca2dd3784ca9230d12cf5bec0183cc5b248ed9c53107233b1a083b5bbc8",
+      "meta_sha256": "1300c5c3f5c82c92bb4d2e6bf05671a5e6c541d3dc442dba7a78438059b4e841"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-74153bc7e82f3fd088bab25108b6f1d2.anim",
+      "sha256": "e0268f090a3d1676f8bd5e14240560914f797e21bfe77e3348c751f6237813f4",
+      "meta_sha256": "0a7a6b0fdec964f521f83831525b1485c5c18f437efe2984f9cc86cbae51c3e4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-791570728ec8cd8664ea20431feebd8c.anim",
+      "sha256": "7a3e7c24376f68a3a3bb2a7901b350730c0996613ffa9932e53e6451b735c86e",
+      "meta_sha256": "dbd45876a8dd56085728ddc1810bffb6b21fdb5d36bcaf9d93b7472be73ab29f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-7f772a7fbadc38152a1116e1bed1c881.anim",
+      "sha256": "b98e8a592132cfc9da69c7c44bdc37a7307352d77f0085a5bb497ce7d59cb15f",
+      "meta_sha256": "be1401f3c64c3711c20fa4fbbac3fc8cc5ec8d78e501d4573bfa790d78ca6cde"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-8d80e187727bb180e4f21e5305fbcd5c.anim",
+      "sha256": "b98e8a592132cfc9da69c7c44bdc37a7307352d77f0085a5bb497ce7d59cb15f",
+      "meta_sha256": "d79dc331ce6e56a2083ae8741d76b2ce23f001cc49bfd961690529904a45b0b2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-90a6786076c6fadbb903a6a5715ded21.anim",
+      "sha256": "b98e8a592132cfc9da69c7c44bdc37a7307352d77f0085a5bb497ce7d59cb15f",
+      "meta_sha256": "c7de690252db82e40effd9fe2266a5c975ffe20fa2246f684da15c7850f8f1f4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-90bfb85a6af4b5e1ad9b61f7f7e8dd2e.anim",
+      "sha256": "851afb4e9c72fb6db1a8c19578a142157022b4fa765a07fed6934023e18701e9",
+      "meta_sha256": "61ab69d40ee3de1da88f85f33306af152e5ed45762952e552f2dc1d0f97dffe5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-93a1ea8457bdde6a71fa72353eaec7ea.anim",
+      "sha256": "129981a9e930a4da983f77eafc7e6b345cc052fe21cd6552667fa241eca1ce28",
+      "meta_sha256": "0033b3d6c33da3c08ae455881642bc1cc47583dd780bed1139a3e1e7bb9b74b0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-9b6eb8bed7c87802ea345af912d89ea2.anim",
+      "sha256": "627ca7e8251991dbcf85816cca4646d6e0aff77040dc19bc3cfda5b002116173",
+      "meta_sha256": "5f17a9834de38bda7f093d604836acb461221bfd6a6843962e5cbec0dfa4367d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-a0aac51d3b55efd18fd5c67cfd17a316.anim",
+      "sha256": "bad8478ddeaa56f06851a39c924c52d8d150260ef4c68e47e103be7b151e4e24",
+      "meta_sha256": "0298d9da6067f609cb3f0321262d8ee4554d4deb0ed6a10ffc717b16d389b110"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-a1f0476043cce4173b3169b77752d1c0.anim",
+      "sha256": "4ad13ed4a38e6386d74b669489601e7174da996a3cdc5bc1ede6c5d98de9a630",
+      "meta_sha256": "45aebc6fe729378bd9719527a24ccec0083feb1d047a4268de45aa3d10383ff9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-a790a792c99636f51a49d9128aa20a6a/ToggleOff.anim",
+      "sha256": "4755deba14113c79e72c9d39c964bdb86e4873da6352e00c2df155333dcd57fa",
+      "meta_sha256": "e23b90eaeef34cb3eb281d3c3ea0fe9023f8769acc7de5b8de28b9bccce94d3a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-a8fe779f3e0449e1aafe3b2d1b0f91ac.anim",
+      "sha256": "a9b6ea1839fd1f4fdcc5f43b10f785cb433d7b889a6ff83423999fb5c868383d",
+      "meta_sha256": "13fdf3e956b5682c4855da07cddd46a0eb7b620537aa488668e01aa323237ab9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-ae98a3566bcf478b9daab6626c1e109b/ToggleOn.anim",
+      "sha256": "fb34d1cd2083b6ed3af3d6c2c2a918708429f63bc99c8fd5c94ea796d3fcda0c",
+      "meta_sha256": "fd722901be19ad46d6d525a9ddda3171f54eca8d5ac25ae0fb8b9c0fb7e64a48"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-afaf5e045e23284a8a13fd69b8c4ffef.anim",
+      "sha256": "f53334baa6e2f7ae5ed88ff9df1af1bd2a3ea08d8842cc3457c6a1d39d71d804",
+      "meta_sha256": "89813a82ac7928c65e05bfabb73044645220fdf974e794857882b2c63f79cdc2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-bb2cc1202e36814b5c9f4e30b6f46177.anim",
+      "sha256": "627ca7e8251991dbcf85816cca4646d6e0aff77040dc19bc3cfda5b002116173",
+      "meta_sha256": "976b5b5a16758394d46f51cfa902fc7105439ae32036875b4e71c59b6762c52f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-bcc3c88417f51be28a2e825f2258c3a9.anim",
+      "sha256": "bad8478ddeaa56f06851a39c924c52d8d150260ef4c68e47e103be7b151e4e24",
+      "meta_sha256": "4e25a482098e77f12ea80f1bade8e59a3c507c53f98722de07159a7bba876fd2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-c08193ca92e240cece596cb798ef7a42.anim",
+      "sha256": "851afb4e9c72fb6db1a8c19578a142157022b4fa765a07fed6934023e18701e9",
+      "meta_sha256": "75c7b9eecdfa8d33e0dc6554bcc1c83ff0a61118ee0b7289568ce3a7567c21c9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-c27fa70b1365f3d095f82c34c73ed046.anim",
+      "sha256": "3212cfca6365b6bc33774a3789b4acb4c64fa4afc9c4037927d72ff9738aa105",
+      "meta_sha256": "d463af672920307b744e2aab248f0bc8ea671592e880db0defa1f6421bc00fdb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-c4f749cc1307f40c4de68a471640bb33.anim",
+      "sha256": "8988069a3a47b9baca6b487338d77629ca871db432d5ce278e633a274ae32203",
+      "meta_sha256": "18c2b1f54ecbe528f2287d59e063faec01bea7d47b03d615b353544f6534dfb3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-c77b5a8d483c85414ecb7f538c098a8d.anim",
+      "sha256": "38ba3cde97efa192f2a73b29d2e6ad6fc752a7f9ec7051d9aee81a538485f9a8",
+      "meta_sha256": "31af1973d085d85cdbf53ab0038758519810a30f4424638c4d1e931308932a00"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-c9586995e60b44b17152e401a0245fdc.anim",
+      "sha256": "77570aadde30a1381ae901917f62177f921f8aef89248fcc44af78720aa6a7c6",
+      "meta_sha256": "28b815eaca83a07b805cc560316028e42fa4f61eb3b4c3eb5015b3c697a4c54c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-cac8bc44d2f183bc5740ea4870a06948.anim",
+      "sha256": "5db036ee5a60994def70c315b92482ea41e3cf3027308cea67cfbbe59e2d24da",
+      "meta_sha256": "ddf1b8bbd3068a0bcc2e858cb9365f8bc5cd8af9659389790c83e6410bf204b0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-cc38c1d9946c2393e8cda7a9806a3ec2.anim",
+      "sha256": "8988069a3a47b9baca6b487338d77629ca871db432d5ce278e633a274ae32203",
+      "meta_sha256": "828e4425651874bdd8a8123fe733761ea5a9435a6ca54bb9f57d46bc96e25ea9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-ce563bb82e158688d23090d561745f19.anim",
+      "sha256": "b98e8a592132cfc9da69c7c44bdc37a7307352d77f0085a5bb497ce7d59cb15f",
+      "meta_sha256": "7be84d5cb4a5e217df7bf08e66a0881529b9763eeb738894ae71130b648fc60a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-cfa9e8aace9fe92b59c7794c59ad1d4a.anim",
+      "sha256": "3212cfca6365b6bc33774a3789b4acb4c64fa4afc9c4037927d72ff9738aa105",
+      "meta_sha256": "d080934f6250329f559e138717b4290d8975c09300c4d36b9aad1ae1f0ff1a11"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-d603179cf802b23d3f736d3c5a9a80a4.anim",
+      "sha256": "77570aadde30a1381ae901917f62177f921f8aef89248fcc44af78720aa6a7c6",
+      "meta_sha256": "8931e068256f3a7e40af74b5198d98eef89cb540b7696172eca8bcd78d78d422"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-de432e991183567b79392137e76ab55d.anim",
+      "sha256": "8b230ca2dd3784ca9230d12cf5bec0183cc5b248ed9c53107233b1a083b5bbc8",
+      "meta_sha256": "c24099398b62cb9e53c61b85272a4639c56844e9fa5e1f12baca471001fe3d22"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-e4364bbece8ce603cda28f074517fd0d/ToggleOn.anim",
+      "sha256": "fb34d1cd2083b6ed3af3d6c2c2a918708429f63bc99c8fd5c94ea796d3fcda0c",
+      "meta_sha256": "4b5fc5cde3c1235c84ee616a1b453722811d6b755ffbabe61126ff3c3fd16479"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-e5c625d6cbc71e32b5bb969e8a0e4182.anim",
+      "sha256": "4ad13ed4a38e6386d74b669489601e7174da996a3cdc5bc1ede6c5d98de9a630",
+      "meta_sha256": "bc822498320796b97914b6b56b05b2e80696f37db2f09220190b359c35ae820c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-ed6d0f34e9b101eeac85ff170740eea7.anim",
+      "sha256": "851afb4e9c72fb6db1a8c19578a142157022b4fa765a07fed6934023e18701e9",
+      "meta_sha256": "1fd9e8ae66d23ae212671272062fba7f1e63f47e83130b6df20db27d55c93f78"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-ee10e25568539917716c60e5b76de870.anim",
+      "sha256": "3fe2535b534b558552cf2a56b452013bfb6c11e856973a3e7996a31b9f309611",
+      "meta_sha256": "400d49d60568be925d00088dcca8c4d736c9549dfd47da819fd176c6719cb242"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-ee7facd01bf67ab7fcd0142149859832.anim",
+      "sha256": "b98e8a592132cfc9da69c7c44bdc37a7307352d77f0085a5bb497ce7d59cb15f",
+      "meta_sha256": "a98b7dc613eb05e7fe9f4c9127e38de2264e932af1ded7c465f489813fa206f0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/Native-f111609390063442ef728b8ddd71d2d4.anim",
+      "sha256": "3b47289044f64d622c2e42344a4b064c6feee7a90da0af0954a8828a2e9e386d",
+      "meta_sha256": "57736d61efb57b6b1f7c7bf2037632cc7c73f642e0a98f772e32392121b369b9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/OpenStoryBookItem.prefab",
+      "sha256": "1a2848cad7d151c2db5677f6c6d1abd8d33d13f0e911cf73254f50be28b6f21a",
+      "meta_sha256": "8867e02f65e0456d14622ceda2241674039e6d99b5639a4cae0b423434136041"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/OptionTalkDialog.prefab",
+      "sha256": "e74ad5d42273a9864639a04a3ec225628ec0c381a216e876ba24bba370c2e4bc",
+      "meta_sha256": "cb62ca75b259e00ae066f9793368afc9f080c6d1ee4cf5b73ef453dff444593a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/PayMoneyChangeDialog.prefab",
+      "sha256": "e87c4d32dd6221d815d1c97349b51ff74bd8aaa8714d963ac567eb081dd42dcb",
+      "meta_sha256": "253babf97b6d7de1f46d9895b05be4ab1d45b866eb9380f4dae6b61f939f60f0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/PreviewContentGroup.prefab",
+      "sha256": "5980e16440b7016bd49b7028fd10bf45c3dfffdc516045dacae3e0a2fd0ca4bd",
+      "meta_sha256": "08afa127483cf04aaa9176b4ee44561eaad1bdbb25b48cb4bc02d182c69ad7fd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/PublicTopBar.prefab",
+      "sha256": "4cc918c56094daa1f9ca2b2baf1bd786bed6231ddb211bde16ed0990ad3119b8",
+      "meta_sha256": "81ca3b55af1c74cbd20603a5d83ddc73c2c040bba2f1a89d5068db0836a03e42"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/StoryBookDialog.prefab",
+      "sha256": "e27c35dc49fb0806281eb23e8849df4059ed3b3565b73b95eb781848002fe02f",
+      "meta_sha256": "ba3f7baf045f764d4d868114b9b7efe7cd8b26f84b2763aef27a8482980b050b"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/StoryWitchBookDialog.prefab",
+      "sha256": "ff7c79e3f901dc95828cfe4adf90f3b1358e8588bcf3538fe78188f601917421",
+      "meta_sha256": "bf746e6153eb36eb3c66a3475d3951d19f5e38986b61b76e704cf9838812651f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/TalkDialog.prefab",
+      "sha256": "5d84595acec25ba1a92eae39ef2c9032d7f3512567a5bd77af15bfd8b9f940ae",
+      "meta_sha256": "d3900fa619045c4c3015f83e90f69061de84323d719b1a946dc7044df08833b6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/TalkDialog_Loop.anim",
+      "sha256": "0a55b54e424c16b492c940d17edf35c26ccbd595aa66d9ca3a44906cb0aafd33",
+      "meta_sha256": "f4c13ef286484cfa4b91cdd2f5fbef90d129bbac25a15d8a766e8957211124bf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/TalkDialog_Show.anim",
+      "sha256": "5fc4020e29c15a9393cc69a7cce33ede3342b844f3cdac3deff2c3b6e3dcb042",
+      "meta_sha256": "9753e3dbad4124d34b4e2e9e93b4f61230ed08f4b8e6dfa7bf7d24e292aa9164"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/TaskListItem.prefab",
+      "sha256": "603259d8f2c67d60be455068c368dfb1d7bd9c764c05421dfc2d2542c3e0f677",
+      "meta_sha256": "5929a70e677a1cee158624d5b579a49f221ff3e10b6a193de0b8bd67358c028a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/TaskPanelListItemProgress.prefab",
+      "sha256": "372c596c34256e702cc3b85e3b2a3e383d70edd17ace0840fd6598a94ade3d33",
+      "meta_sha256": "be1f4267cd5764ad2ad5d8bd3f4014d4658542b4b76593ef20ed3b84a059d7ba"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UI-ColorShift.mat",
+      "sha256": "f8bd21cb2251b8d101c850415cafc32ea1a35e8efd7d45862100469f4844a571",
+      "meta_sha256": "b8f0ddad32617df38b368907a48e983aa2150bae1a4ce56ccac31c6d101a848e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIDialog_Hide.anim",
+      "sha256": "b419497e8b72babe9cc7a8b96e422fda44303a0195d6c7c8b77f886336682b1a",
+      "meta_sha256": "eb901133c04b2e876536396e926fcc7840db308e0371ed9fe4faba8c9165c31e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIDialog_Show.anim",
+      "sha256": "87dd355c86603ef1c1e7ff3c3bb589f1c3e2d1160102d7e17543598299bb4c71",
+      "meta_sha256": "39c959f0f05b818ef7ce127ddb27ace9f4771cb5009d22e0d2d9786b8e0c1e91"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIDialogCommon_Hide.anim",
+      "sha256": "edf5565f556066bf9173a8f3c1f64cd6c528dfaa8934dffd16a9a195ad3ea7ae",
+      "meta_sha256": "a0c5b2419ffca90501fe776c6d691f9656bb713c6f96ace3a165e745777b7e66"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIDialogCommon_Show.anim",
+      "sha256": "b2f458797430d7b06bbcb76162096aa4278a72d23c59693e59b57a660b415a0f",
+      "meta_sha256": "4d82472048e7f806a24853019e00144ac0addd4b4fe34f21c0cbc6ab72ae07d0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/UIImgAdd.mat",
+      "sha256": "f3a5ba3cb9e357428358ffe2ed2e9bcd853b5927a53c719d7c38e9e1981880d2",
+      "meta_sha256": "8928fccfb4669b2ed8c7947e58bd1e8c1bfc5dff174bffc62cc9585b29e40b43"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WitchStoryCollectContent.prefab",
+      "sha256": "06e1db3b546188b3749198521196d9b45c3d95bfce6f14a4a4daaca58cb2418f",
+      "meta_sha256": "927e642cc2491414388603cd2f9369e4f4c339341deb4e69d43b65e3ee78ca0e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldCanvas.prefab",
+      "sha256": "379223993cd868e8b3b42b6c931da270fa4cfee4359dea8f3ea6351c4c92358f",
+      "meta_sha256": "ac4ef7da98e4c6f0620aca61de1d720579e17112735ae28fc882398b8edca5d3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldFantasyLadderDialog.prefab",
+      "sha256": "ead842bab8ed0d5702d3f843e83c93c860ff9b3415498da3726f759b2c7a797d",
+      "meta_sha256": "cb6694a16cf359231fa39adbe3f149ce5b13bbc768c18c8403058efd5ed3ba3e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageDialogWithWitchStoryCollect.prefab",
+      "sha256": "57c0e1d041aac887ba1363becf0db158837f135d8cb0713bac9ab835a730ad41",
+      "meta_sha256": "15401636f97ce6ef9b7d8ec900a761ca5a4707a49aa4d588dd173b975e88750f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionAwardPreview.prefab",
+      "sha256": "8b9087b410e35a029546916aa286718cf3ef43024496def4f4a6bd1773ed7953",
+      "meta_sha256": "34a82effee85d34318b1ce9d4e77c16eb86dddc0753d797552cbe10f4071bcc7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreparePlayableDialog.prefab",
+      "sha256": "b02bb920a09fcf64f41d53a33427a7a0eed9d19ec690ec4d8816f530cbdf4f01",
+      "meta_sha256": "656bbe25a6867e7d7125a9883f162cd64b7a7a5afb1e3b7be2851aaa3d7fbbeb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialog6504_Show.anim",
+      "sha256": "30c5efada845a01c7ea9d30e664d129a606442578f9216cc5b3e1d1ce7a3c5e5",
+      "meta_sha256": "c6b0c3294db36994218307d49d0d0eb150b0e2fdfb1bec19e3ca31f0d3ccdc87"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialog6570_Show.anim",
+      "sha256": "c07c7777f303d017a63a728168d379f764a5c3a47c2895e6b2cc173e3673d73f",
+      "meta_sha256": "c4003dfd9f62fa27702e4f93c742ed14eba4ed44d4811b4b169d2e2c6ca8cf37"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialog_Loop.anim",
+      "sha256": "3866911c315b05e25ae1f9dd45a446fe239a7860fa02c3ed22742407b1b813a4",
+      "meta_sha256": "082fb9cf8952953944570d99c4598320c819b8575ed3985850b8f5998cc6ba49"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialogHeroStatue.prefab",
+      "sha256": "b27b9506694ef6b187ae88c858bb139736e781f60ec4b53039060607b12535ee",
+      "meta_sha256": "42a4a5b934f98615509681ce42797e4f429498b0c65f500c2f95acf3d1affefd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialogWitch.prefab",
+      "sha256": "9e7af5eb51634fa60e9df8ad0e1c738ca7854871fd1d6a16cf4b91027c742c10",
+      "meta_sha256": "33ec34ba008262edd1ccaa9c91abd738b320d7f48907060c8fb72554539ec1cd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultAwardExtraPropPreview.prefab",
+      "sha256": "fb75df966d8c616d190f4e35fe04b2ad77446071b6dbb060aedcfb7b8f2eed0b",
+      "meta_sha256": "f28481970355b7de8e03b3913c39d60926847ca55ef7f8124c9928f60e165d37"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultAwardExtraPropPreviewItem.prefab",
+      "sha256": "96d68a2642d4371477462ec3f503e50128c348162c2a0191a94993db30d78013",
+      "meta_sha256": "d38748fc83b355fc31f7797751e2afb952798417d4688038279b24b89666a073"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultAwardStatusEffectPreview.prefab",
+      "sha256": "c3ed6a167a048a64395152cd55c6f2f30fcd2d9edd9a1602fa7eab1d486509cf",
+      "meta_sha256": "8b6a5df9d67e6ea63e9cf687f3d004a6523823690214bdcfa151bb347501e832"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultAwardStatusEffectPreviewItem.prefab",
+      "sha256": "53b6f635b06bb9ce3ffa1612785726e97a654bb475762d1737075ae539c11b69",
+      "meta_sha256": "94cc49ebcdc75e144d538bdb0dc68b01e1078d44a6a820f5e2ac6ede4cdfd428"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultModifyHpPercentPreview.prefab",
+      "sha256": "c5af2a484f12ddf76786cb10f56dbd82d4f4eead90779a9f6efdd4e4ecc72100",
+      "meta_sha256": "d96045c08b04296152442e8aa4d06af8cb6196f7d7306a6fdde58e0fd89ac58d"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionResultSpawnEntityPreview.prefab",
+      "sha256": "32547afc1f07f22691626e2562ad398bd78953109c1e98214093ef00ea8ea14d",
+      "meta_sha256": "32687be5e9f752ad5d0b8fa10125e2489ef9bfe7eacfad8b751a61260a904476"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldTouchDialogLostGoddess.prefab",
+      "sha256": "9c6fe1c70d786a3b60c10aed1abe3ba8bf224ce2e9c525fbb20fe49176915619",
+      "meta_sha256": "0f79591a643648339b0eaec50d749415b4529f57d918f2db1a9f857336bea234"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldTouchDialogNegativePeriodicityInteraction.prefab",
+      "sha256": "e3503e49697b6b3f0b4963dc8d1a9f76178ef22f1cce980150423b35d256ca5f",
+      "meta_sha256": "d829ce49f11fbea45e8f14a7c3863776c6a10502ffa651d1426b227a023eafb9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldTouchDialogPeriodicityInteraction.prefab",
+      "sha256": "024a23aab863516e7aa03248653970d1c7c36f3671ac356985c9257fa6dae6cc",
+      "meta_sha256": "b284670aa3c509991000a8dc3d1e7b80486aa5a34305500444eae93cca52aaaf"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldTouchDialogWitchPeriodicityInteraction.prefab",
+      "sha256": "12ad191ffc79721a97f6ff84a9808f0b49d0b0e58135d945a5b16e7354c3faed",
+      "meta_sha256": "ecf3507b0e1149f4b9884fe5a9c0916df5fc1c059474641fa888c1e993073a31"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldTouchDialogWithPreview.prefab",
+      "sha256": "e8180b03dfb42fa74484de6865a6bcd0be41eb38b7ef22fc6bc4ccf77879e376",
+      "meta_sha256": "21a78f7b2507d1f91737f3643b7cda84d8155a205a26f5836adb20b2f7bb9365"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/UI/WorldWitchTouchDialog.prefab",
+      "sha256": "2beb839b3fdcf3ad7f4ca74947ba6771259f340a977d42be3507e19182f1b522",
+      "meta_sha256": "2aa25e76c6c934a3b169c2121c1b3859f20de0efe82a73cfb32333455d1b2315"
+    }
+  ],
+  "counts": {
+    "source_prefabs": 68,
+    "nodes": 3642,
+    "sprites": 931
+  },
+  "operation": "Restore original Map13 UI layout and supported components through the existing native importer. Preserve original Transform vs RectTransform, quaternion and position, and Image enable state. Source particles and sounds are captured separately; their full Windows binding is still required.",
+  "validation": "Editor import/compile and ProjectTools.Validate passed in the main project. Two portrait sizes passed actual PlayMode pointer raycast/click, goddess states, popup/close animation, hierarchy and runtime-error checks; actual screenshots inspected. Full world HUD state, remaining interactions, particles/audio and Windows Player are pending."
+}

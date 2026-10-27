@@ -32,13 +32,22 @@ namespace Zjcs.Editor
                 && c.name.StartsWith("BootSplash", StringComparison.Ordinal))) UnityEngine.Object.Destroy(boot.gameObject);
             int uiMap = UnityEditor.SessionState.GetInt(Key + ".uiMap", 12);
             string uiRoot = "Map" + uiMap + "/UI/";
+            if (uiMap == 13)
+            {
+                map13UiRuntimeError = false;
+                Application.logMessageReceived += ObserveMap13UiError;
+            }
             var data = JsonUtility.FromJson<OfficialMap11UiData>(Resources.Load<TextAsset>(uiRoot + "catalog").text);
             if (EventSystem.current == null) new GameObject("Map12SimulatedInput", typeof(EventSystem));
             TMP_SpriteAsset common = Resources.Load<TMP_SpriteAsset>(uiRoot + "Common");
             MaterialReferenceManager.AddSpriteAsset(common.hashCode, common);
             MaterialReferenceManager.AddSpriteAsset(TMP_TextUtilities.GetSimpleHashCode(common.name), common);
-            var session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 12);
-            UnityEngine.Object.Instantiate(session.Assets.GroundPrefab);
+            OfficialWorldMapSession session = null;
+            if (uiMap != 13)
+            {
+                session = OfficialWorldMapSession.Load(OfficialWorldMapAssetCatalog.LoadDefault(), 12);
+                UnityEngine.Object.Instantiate(session.Assets.GroundPrefab);
+            }
             var camera = new GameObject("Map12UiCamera").AddComponent<Camera>();
             camera.orthographic = true;
             camera.orthographicSize = 10;
@@ -51,12 +60,15 @@ namespace Zjcs.Editor
             uiCamera.cullingMask = 1 << 5;
             uiCamera.clearFlags = CameraClearFlags.Depth;
             uiCamera.depth = camera.depth + 1;
-            var origin = session.Definition.Navigation.Origin;
-            var entry = session.Definition.Entities.Single(e => e.Id == 101);
-            camera.transform.position = new Vector3(origin.X + entry.Grid[0], origin.Y + entry.Grid[1], -100);
-            var entityRoot = new GameObject("Map12UiEntities");
-            entityRoot.AddComponent<OfficialMap10EntityView>().Initialize(entityRoot.transform,
-                new Vector2(origin.X, origin.Y), camera, 12, "Map12/Entities/native-catalog");
+            if (session != null)
+            {
+                var origin = session.Definition.Navigation.Origin;
+                var entry = session.Definition.Entities.Single(e => e.Id == 101);
+                camera.transform.position = new Vector3(origin.X + entry.Grid[0], origin.Y + entry.Grid[1], -100);
+                var entityRoot = new GameObject("Map12UiEntities");
+                entityRoot.AddComponent<OfficialMap10EntityView>().Initialize(entityRoot.transform,
+                    new Vector2(origin.X, origin.Y), camera, 12, "Map12/Entities/native-catalog");
+            }
             string output = Path.GetFullPath("../.tools/map" + uiMap + "-ui-render-session");
             Directory.CreateDirectory(output);
             foreach (int width in new[] { 450, 720 })
@@ -97,7 +109,7 @@ namespace Zjcs.Editor
                         Array.Empty<string>(), () => activated++, () => transferred++, () => denied++, () => closed++);
                     yield return new WaitForSecondsRealtime(.6f);
                     VerifyIconState(dialog, false, expectedIcons);
-                    if (uiMap == 12) VerifyNativeMasks(dialog.gameObject, data, key);
+                    if (uiMap == 12 || uiMap == 13) VerifyNativeMasks(dialog.gameObject, data, key);
                     CaptureUi(camera, uiCamera, frame, output, width + "-" + key + "-locked");
                     SimulateUiClick(dialog.CannotActiveBtn, uiCamera);
                     if (denied != 1 || activated != 0 || closed != 0)
@@ -131,7 +143,9 @@ namespace Zjcs.Editor
                 frame.Release();
                 UnityEngine.Object.Destroy(frame);
                 yield return null;
+                if (uiMap == 13 && map13UiRuntimeError) throw new InvalidDataException("Original Map13 UI logged a runtime error.");
             }
+            if (uiMap == 13) Application.logMessageReceived -= ObserveMap13UiError;
         }
 
         private static string Text(OfficialMap11UiData data, string key) => data.texts.Single(t => t.key == key).value;

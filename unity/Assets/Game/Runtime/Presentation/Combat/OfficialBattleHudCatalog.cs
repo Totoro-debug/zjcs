@@ -136,6 +136,8 @@ namespace Zjcs.Presentation.Combat
         public int layout_axis, layout_alignment, fitter_horizontal, fitter_vertical;
         public bool[] layout_expand, layout_control, layout_child_scale;
         public float[] anchor_min, anchor_max, anchored_position, size_delta, pivot, scale, local_position;
+        public bool native_transform;
+        public float[] local_rotation;
         public float rotation, alpha = 1f;
         public bool animation_play_automatically;
         public string default_animation;

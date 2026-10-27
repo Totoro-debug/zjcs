@@ -20,6 +20,12 @@ namespace Zjcs.Editor
         public static void Run() => RunCore(false);
         public static void RunUi() => RunCore(true);
         public static void RunUiImported() => RunCore(true, false);
+        public static void RunUiMap13Imported()
+        {
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
+            Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED", "1");
+            RunCore(true, false, 13);
+        }
         public static void RunRuntime()
         {
             SessionState.SetBool(Key + ".runtimeTerminals", false);
@@ -75,7 +81,8 @@ namespace Zjcs.Editor
                 ShaderUtil.allowAsyncCompilation = false;
                 if (import) OfficialMap12Tools.ImportAndValidate();
                 if (verifyUi && import) OfficialMap11UiTools.ImportForMap(12);
-                ProjectTools.Validate();
+                if (uiMapClassId == 13) ValidateMap13UiPrefabs();
+                else ProjectTools.Validate();
                 SessionState.SetBool(Key + ".ui", verifyUi);
                 SessionState.SetBool(Key + ".runtime", verifyRuntime);
                 SessionState.SetBool(Key + ".dialogueInput", verifyDialogueInput);

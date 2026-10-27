@@ -2,6 +2,8 @@
 
 [返回文档索引](../../docs/README.md)
 
+泽之国 UI 使用当前 871_156598 的 APK／已下载官方资源及原客户端字段，恢复 68 份 UI prefab 的完整组件来源、931 张 Sprite 和 Map13 原生层级导入。来源入口为 `scripts/prepare_unity_map13_ui.py`、`prepare_unity_map13_ui_native_sources.py` 与 `assets/reference/official-map/map13-native-ui-components-source-manifest.json`；输入框新增字段由原 APK 类型／属性注册核对，来源对象、转换脚本和输出分别记录 SHA256。两种竖屏尺寸的女神窗口模拟点击／动画、原节点类型／坐标和运行时错误检查已通过并查看实际画面；80 组粒子、声音、动态头像与正式地图业务仍待绑定，未宣称整图或 Windows Player 已完成。详见[泽之国](../../docs/maps/map-13.md)。
+
 泽之国原生地图显示宿主复用已有地形、环境、地区标签、语言和字体来源及显式资源目录，新增 `Presentation/World/NativeMap13/` 仅提供本地状态／资源服务接线，未替换原 prefab。内置屏隔离 Play Mode 已验证三个地区的按位置加载、原文字网格、公开状态／光照演出和资源释放，并查看实际公／私图画面；测试工程带入项目 TMP Resources 配置。正式主线入口、交互、存档和 Windows Player 仍待完成，范围见[泽之国](../../docs/maps/map-13.md)。
 
 ## 当前官方输入与历史重建
