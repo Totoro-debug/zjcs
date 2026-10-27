@@ -167,6 +167,7 @@ namespace Zjcs.Editor
         {
             string settlementSlot = slots.CreateSlot();
             string profilePath = slots.GetProgressPath(settlementSlot);
+            File.WriteAllText(profilePath, JsonUtility.ToJson(new OfflineMainlineSave(), true));
             byte[] profileBefore = File.ReadAllBytes(profilePath);
             var session = Zjcs.Offline.World.OfflineDailyDungeonSession.Open(slots, settlementSlot);
             if (!session.TryBegin(121, 50, null, null, null, 0,

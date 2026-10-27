@@ -186,11 +186,40 @@ namespace Zjcs.Presentation.World
             if (prefab == null) throw new InvalidOperationException("Official daily dungeon route map is missing.");
             map12PrivateDungeonRouteDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
             map12PrivateDungeonRouteDialog.name = "DailyDungeonBigMapDialog";
+            map12PrivateDungeonRouteDialog.transform.SetAsLastSibling();
+            PlaceMap12PrivateDungeonRouteOnTop();
             OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonRouteDialog, "DailyDungeonBigMapDialog");
+            foreach (WorldMultiLanguageText text in map12PrivateDungeonRouteDialog
+                .GetComponentsInChildren<WorldMultiLanguageText>(true))
+                text.Localizer = NativeUi.Text;
             Button close = map12PrivateDungeonRouteDialog.GetComponentsInChildren<Button>(true)
                 .FirstOrDefault(value => value.name == "CloseBtn");
             if (close != null) close.onClick.AddListener(CloseMap12PrivateDungeonRoute);
             RenderMap12PrivateDungeonRoute();
+            ShowMap12PrivateDungeonRoute();
+        }
+
+        private void PlaceMap12PrivateDungeonRouteOnTop()
+        {
+            Canvas modalCanvas = map12PrivateDungeonRouteDialog == null
+                ? null : map12PrivateDungeonRouteDialog.GetComponent<Canvas>();
+            Canvas baseCanvas = hud == null || hud.ui == null || hud.ui.OverlayRoot == null
+                ? null : hud.ui.OverlayRoot.GetComponentInParent<Canvas>();
+            if (modalCanvas == null || baseCanvas == null) return;
+            int sortingOrder = baseCanvas.sortingOrder;
+            foreach (Canvas existing in baseCanvas.GetComponentsInChildren<Canvas>(true))
+                if (existing != modalCanvas && existing.overrideSorting)
+                    sortingOrder = Math.Max(sortingOrder, existing.sortingOrder);
+            modalCanvas.overrideSorting = true;
+            modalCanvas.sortingLayerID = baseCanvas.sortingLayerID;
+            modalCanvas.sortingOrder = sortingOrder + 1;
+        }
+
+        private void ShowMap12PrivateDungeonRoute()
+        {
+            WorldPopupWindow popup = map12PrivateDungeonRouteDialog == null
+                ? null : map12PrivateDungeonRouteDialog.GetComponent<WorldPopupWindow>();
+            if (popup != null) popup.Show();
         }
 
         private void RenderMap12PrivateDungeonRoute()
@@ -213,10 +242,20 @@ namespace Zjcs.Presentation.World
                         .Any(previous => previous != null && previous.nextRoomIds.Contains(roomId));
                 if (!visible) continue;
                 GameObject item = Instantiate(itemPrefab, grid, false);
-                item.name = "Room_" + roomId;
                 OfficialDungeonUiBindingRuntime.Apply(item, "DailyDungeonRoomItem");
+                foreach (WorldMultiLanguageText text in item.GetComponentsInChildren<WorldMultiLanguageText>(true))
+                    text.Localizer = NativeUi.Text;
+                item.name = "Room_" + roomId;
                 SetActiveNamed(item.transform, "SelectImg", roomId == run.currentRoomId);
+                SetActiveNamed(item.transform, "RewardIconImg", room.surpriseRewards != null
+                    && room.surpriseRewards.Any(value => value.difficulty == run.difficulty
+                        && value.rewardRuleIds != null && value.rewardRuleIds.Length > 0));
                 Button button = item.GetComponent<Button>() ?? item.AddComponent<Button>();
+                Image hitGraphic = FindChild(item.transform, "IconImg")?.GetComponent<Image>();
+                if (hitGraphic == null)
+                    throw new InvalidOperationException("Official private dungeon room icon is missing its input graphic.");
+                hitGraphic.raycastTarget = true;
+                button.targetGraphic = hitGraphic;
                 int selectedRoom = roomId;
                 button.onClick.AddListener(() => SelectMap12PrivateDungeonRoom(selectedRoom));
             }
@@ -291,6 +330,7 @@ namespace Zjcs.Presentation.World
             {
                 map12PrivateDungeonRouteDialog.SetActive(true);
                 RenderMap12PrivateDungeonRoute();
+                ShowMap12PrivateDungeonRoute();
             }
             if (!closed && map12PrivateDungeonDialog != null)
             {
