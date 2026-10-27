@@ -18,6 +18,7 @@
 - 本图新增的原 `Universal Render Pipeline/2D/Movable-Sprite` GLES 程序已机械转换为 Windows shader，保留原属性、算式与渲染状态，并通过 DX12 实际材质 pass 编译。其余依赖复用已迁移且核对同一原对象的水面、地形和场景 shader。显式目录为 `Resources/Map14/Native/native-terrain-catalog`（241 路径）与 `native-scene-catalog`（242 路径）；裸场景没有丢失脚本。
 - Unity 2022.3.57f1c2 内置屏 DX12 导入／编译及 `Zjcs.Editor.ProjectTools.Validate` 通过。Play Mode 在隔离场景逐一运行全部 240 个完整区块的原 `PartitionLoader` 加载、激活、清除、重载、卸载及未完成异步移除；核对 2,094 个含偏移的 Tilemap 记录及原矩阵。本图没有局部区块，未以本图覆盖该分支。10 张裸场景纹理的 47 个 mip GPU 回读字节一致。已查看两处实际地形画面；该夹具只加载单区块，未加载邻区块、水面与环境分区，不能视为完整地图画面验收。
 - 十二终端的完整依赖闭包为 109 个实体，包含 27 个去重火炮目标、60 个走格子踏板、五把锁及五个独立奖励。原目标列表中的重复项保留于载荷，仅在执行清障时去重。踏板保留原偏移、访问次数、来向限制、公／私图启用及解锁后停用规则；`1704`、`4206`、`4208`、`4508`、`4511` 需要两次访问，八个踏板限制来向。完成锁按原顺序执行生成奖励、更新终端和自增状态。
+- 当前 EC 索引、全部放置类及完整显示状态选择表解析出 416 个实际 prefab、33 个根 bundle；补齐 CAB 和原动态贴图加载依赖后为 1,544 份输入、3,228 条动态贴图绑定。25,419 个原组件严格恢复序列化字段，2,643 个托管引用注册表以可逆临时描述交给转换器；重新编码、严格读取并重开后核对原字段，117,858 个内部对象保留其余原载荷字节。`CinemachineComposer` 的 15 个序列化字段、类型、继承、属性与 APK 元数据核对后补齐描述；没有实现替代相机逻辑。当前成果为转换输入及字段来源，尚未完成实体原生引用、行为、骨骼和正式场景接入。
 - 四个踏板原活动结果为传送：`3604→3609`、`4201→4205`、`4504→4506`、`4509→4512`，原 ActionId 为 `22081`。目标按原 `StageResultTransportComponent.TryGetTargetPos` 读取放置坐标再加 Offset，结果通过显式宿主回调交付；尚未接入正式角色移动和动作播放。没有传送宿主时明确报错，不忽略原结果。
 - `Map14/Native/puzzle-catalog` 显式绑定原规则与哈希、十二终端的 `325×1` 原费用。内置屏 DX12 Play Mode 通过七组火炮清障／重置范围、重复目标、状态与坐标保留，五组走格子原次数／来向、超次数不完成、手动条件、辅助、独立奖励状态保留、组间隔离、传送目标／动作参数、JSON 冷读及坏哈希拒绝；地图 11、12 的共享机关回归、全局校验与静态检查通过。该验证直接执行规则，没有模拟鼠标、正式地图路线、扣费、实际领奖或磁盘存档。
 
@@ -40,6 +41,7 @@
 
 - [配置生成器](../../scripts/prepare_unity_map14_sources.py)、[配置来源](../../assets/reference/official-map/map14-source-manifest.json)；载荷为 `Assets/Official/World/Map/14/Source/`。
 - [原生输入恢复](../../scripts/prepare_unity_map14_native.py)、[输入及组件来源](../../assets/reference/official-map/map14-native-input-source-manifest.json)。
+- [实体输入恢复](../../scripts/prepare_unity_map14_entity_inputs.py)、[原组件序列化描述](../../scripts/map14_entity_native_schemas.py)及[实体／显示／动态贴图来源](../../assets/reference/official-map/map14-native-entity-input-source-manifest.json)；完整原字段载荷为 `Source/native-entity-components.json`，临时转换输入保存在 `.tools/map14-entity-native-cache-871_156598/`，不进入运行时。
 - [机关投影](../../scripts/prepare_unity_map14_puzzles.py)、[官方代码／规则来源](../../assets/reference/official-map/map14-puzzles-source-manifest.json)、[本地绑定](../../assets/reference/official-map/map14-puzzles-binding-source-manifest.json)及[Play Mode 规则检查](../../unity/Assets/Game/Editor/Map14/OfficialMap14PuzzleAcceptance.cs)。运行入口为 `Map14PuzzleAssets` 与共享 `OfflineMapPuzzleSession`；`AuxiliaryUnlockOnly` 仅对已确认的本图五终端启用，不改地图 11／12 的原辅助行为。
 - [地形转换](../../scripts/prepare_unity_map14_native_terrain.py)、[地形来源](../../assets/reference/official-map/map14-native-terrain-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-terrain-binding-source-manifest.json)。
 - [裸场景转换](../../scripts/prepare_unity_map14_native_scene.py)、[裸场景来源](../../assets/reference/official-map/map14-native-scene-source-manifest.json)及[Unity 绑定](../../assets/reference/official-map/map14-native-scene-binding-source-manifest.json)。
