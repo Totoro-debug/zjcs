@@ -1,0 +1,249 @@
+"""Build Map13 story payloads from the selected, hash-pinned official sources."""
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / "unity/Assets/Official/World/Map/13/Source"
+SOURCE_RECEIPT = ROOT / "assets/reference/official-map/map13-source-manifest.json"
+OUTPUT = ROOT / "unity/Assets/Game/Resources/Map13/stories.json"
+OUTPUT_RECEIPT = ROOT / "assets/reference/official-map/map13-story-runtime-source-manifest.json"
+VERSION = "871_156598"
+
+
+def sha(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def read_json(path: Path):
+    return json.loads(path.read_bytes())
+
+
+def write_json(path: Path, value) -> None:
+    raw = (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode("utf8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists() or path.read_bytes() != raw:
+        path.write_bytes(raw)
+
+
+def source_record(path: Path) -> dict:
+    raw = path.read_bytes()
+    return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw), "sha256": sha(raw)}
+
+
+def json_meta(path: Path) -> None:
+    identity = path.relative_to(ROOT).as_posix().removeprefix("unity/")
+    guid = hashlib.md5(("zjcs-official:" + identity).encode()).hexdigest()
+    raw = (f"fileFormatVersion: 2\nguid: {guid}\nTextScriptImporter:\n"
+           "  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n").encode()
+    meta = path.with_name(path.name + ".meta")
+    if meta.exists() and meta.read_bytes() != raw:
+        raise ValueError("Refusing to replace unrelated Unity metadata: " + str(meta))
+    if not meta.exists():
+        meta.write_bytes(raw)
+
+
+def story_lines(story_name: str, group_id: str, rows: list, localization: dict) -> list:
+    lines = []
+    for row in sorted(rows, key=lambda item: item["Order"]):
+        order = int(row["Order"])
+        key = f"dialog_{story_name}_{group_id}_{order}"
+        text = localization.get(key)
+        if not text:
+            raise ValueError("Official Map13 dialogue localization is missing: " + key)
+        lines.append({
+            "Order": order,
+            "DialogType": "Voice" if int(row.get("DialogType", 0)) == 1 else "Text",
+            "Text": text,
+            "VoiceEventKey": row.get("VoiceEventKey", ""),
+            "RoleId": int(row.get("RoleId", 0)),
+            "RoleFaceType": row.get("RoleFaceType", ""),
+            "PlayablePath": row.get("PlayablePath", ""),
+        })
+    return lines
+
+
+def normalize_story(name: str, graph: dict, metadata: dict, dialogues: dict,
+                    localization: dict, subgraph_names: set[str]) -> dict:
+    nodes = []
+    for node_key, source in sorted(graph["nodes"].items(), key=lambda item: int(item[0])):
+        ports = []
+        for port_name, port in source.get("ports", {}).items():
+            connections = [{"nodeId": int(connection["node"]), "port": connection["port"]}
+                           for connection in port.get("connections", []) if connection.get("node")]
+            ports.append({"name": port_name, "connections": connections})
+        position = source.get("Position") or source.get("Pos") or {}
+        destination = source.get("Destination") or {}
+        target = source.get("Target") or {}
+        move = source.get("MoveBehaviour") or {}
+        map_logic_states = [
+            {"Tag": row.get("LoEntTag", ""), "State": int(row.get("State", 0))}
+            for row in source.get("MapLoEntTagDatas", [])
+        ]
+        playable_guids = [row.get("mAssetGuid", "") for row in source.get("PlayablesProxy", [])
+                          if row.get("mAssetGuid")]
+        node = {
+            "id": int(node_key),
+            "type": source.get("_type", ""),
+            "sourceJson": json.dumps(source, ensure_ascii=False, separators=(",", ":")),
+            "dialogId": int(source.get("DialogId", -1)),
+            "awardId": int(source.get("AwardId", 0)),
+            "fixedRewardId": int(source.get("FixedRewardId", source.get("AwardId", 0))),
+            "handInItemId": int(source.get("HandleItemId", 0)),
+            "storyName": source.get("StoryName", source.get("Name", "")),
+            "subgraphName": source.get("subgraph_name", source.get("SubgraphName", "")),
+            "storyStatus": int(source.get("Status", source.get("State", 0))),
+            "entityState": int(source.get("State", 0)),
+            "count": int(source.get("Count", 0)),
+            "playerLevel": int(source.get("Level", 0)),
+            "compareOption": int(source.get("Option", -1)),
+            "compareTargetInt": int(target.get("mInt", 0)) if isinstance(target, dict) else 0,
+            "entityClassId": int(source.get("EntityClassId", 0)),
+            "entityType": int(source.get("EntityType", 0)),
+            "positionX": int(position.get("X", position.get("x", 0))),
+            "positionY": int(position.get("Y", position.get("y", 0))),
+            "destinationX": int(destination.get("X", 0)),
+            "destinationY": int(destination.get("Y", 0)),
+            "seconds": float(source.get("Seconds", 0)),
+            "moveSpeed": float(move.get("Speed", source.get("Speed", 4))),
+            "range": int(source.get("Range", 1)),
+            "loEntityId": int(source.get("LoEntityId", 0)),
+            "entityTag": source.get("Tag", source.get("LoEntTag", "")),
+            "needHideUi": bool(source.get("NeedHideUi", source.get("IsHideOtherUI", 0))),
+            "needShowUi": bool(source.get("NeedShowUi", 0)),
+            "viewSizeOffset": float(source.get("ViewSizeOffset", 0)),
+            "duration": float(source.get("Duration", 0)),
+            "unlockRadius": int(source.get("UnlockRadius", 0)),
+            "playableAssetGuid": playable_guids[0] if playable_guids else "",
+            "playableKeys": source.get("Playables", []),
+            "playableDuration": float(source.get("Duration", 0)),
+            "waitPlayableStop": bool(source.get("IsWaitPlayableStop", False)),
+            "mapLogicStates": map_logic_states,
+            "endAsStoryFinish": bool(source.get("EndAsStoryFinish", 0)),
+            "options": source.get("Options", []),
+            "removeEntityClassIds": [int(row.get("EntityClassId", 0))
+                                     for row in source.get("RemoveEntities", [])],
+            "ports": ports,
+        }
+        nodes.append(node)
+
+    starts = [node["id"] for node in nodes if node["type"] == "StartStoryNode"]
+    if len(starts) != 1:
+        raise ValueError(f"Official Map13 story must have exactly one start node: {name}")
+    groups = [
+        {"Id": int(group_id), "Lines": story_lines(name, group_id, rows, localization)}
+        for group_id, rows in sorted(dialogues.get(name, {}).items(), key=lambda item: int(item[0]))
+    ]
+    return {
+        "key": name,
+        "maxCount": int(metadata.get("MaxCount", -1)),
+        "entryNodeId": starts[0],
+        "graphJson": json.dumps(graph, ensure_ascii=False, separators=(",", ":")),
+        "nodes": nodes,
+        "dialogueGroups": groups,
+        "isSubgraph": name in subgraph_names,
+    }
+
+
+def build() -> dict:
+    source_receipt = read_json(SOURCE_RECEIPT)
+    if source_receipt.get("manifest") != VERSION or source_receipt.get("mapClassId") != 13:
+        raise ValueError("Map13 source receipt does not match the selected official version.")
+    inputs = {name: SOURCE / name for name in
+              ("stories.json", "tables.json", "dialogues.json", "localization.json")}
+    expected = {Path(row["path"]).name: row["sha256"] for row in source_receipt["outputs"]}
+    for name, path in inputs.items():
+        if not path.is_file() or sha(path.read_bytes()) != expected.get(name):
+            raise ValueError("Pinned Map13 source is missing or changed: " + name)
+
+    graphs = read_json(inputs["stories.json"])
+    tables = read_json(inputs["tables.json"])
+    dialogues = read_json(inputs["dialogues.json"])
+    localization = read_json(inputs["localization.json"])
+    story_rows = {row["StoryName"]: row for row in tables["story"]
+                  if row.get("ResPath", "").startswith("Map13Story/")}
+    missing_graphs = set(story_rows) - set(graphs)
+    if missing_graphs:
+        raise ValueError("Map13 story table references missing graphs: " + repr(sorted(missing_graphs)))
+
+    subgraph_names = {
+        node.get("subgraph_name", node.get("SubgraphName", ""))
+        for graph in graphs.values()
+        for node in graph.get("nodes", {}).values()
+        if node.get("_type") == "SubgraphRunNode"
+        and node.get("subgraph_name", node.get("SubgraphName", ""))
+    }
+    if subgraph_names - set(graphs):
+        raise ValueError("Map13 story subgraph closure is incomplete: "
+                         + repr(sorted(subgraph_names - set(graphs))))
+
+    records = [normalize_story(name, graph, story_rows.get(name, {}), dialogues, localization, subgraph_names)
+               for name, graph in sorted(graphs.items())]
+    main_stories = [row for row in records if not row["isSubgraph"]]
+    subgraphs = [row for row in records if row["isSubgraph"]]
+    logic_tags = [row for row in tables["Map/map_logic_entity_tag"] if row["MapClass"] == 13]
+    role_ids = {line["RoleId"] for story in records for group in story["dialogueGroups"]
+                for line in group["Lines"] if line["RoleId"] > 0}
+    roles = [row for row in tables["Dialog/dialog_role"] if row["RoleId"] in role_ids]
+    if {row["RoleId"] for row in roles} != role_ids:
+        raise ValueError("Map13 dialogue references a missing official role.")
+    option_rows = [row for row in tables["story_option_dialog"] if row["StoryName"] in graphs]
+    fixed_rows = [row for row in tables["fixed_reward"]
+                  if any(node["type"] == "GetFixAwardNode" and node["awardId"] == row["Id"]
+                         for story in records for node in story["nodes"])]
+    hand_in_ids = {node["handInItemId"] for story in records for node in story["nodes"]
+                   if node["type"] == "HandInItemNode"}
+    hand_in_rows = [row for row in tables["hand_in_item"] if row["Id"] in hand_in_ids]
+    if {row["Id"] for row in hand_in_rows} != hand_in_ids:
+        raise ValueError("Map13 story references a missing official hand-in item configuration.")
+    runtime = {
+        "manifest": VERSION,
+        "mapClassId": 13,
+        "sourceSha256": sha(inputs["stories.json"].read_bytes()),
+        "dialogRoles": [{"RoleId": row["RoleId"], "EntityClassId": row["EntityClassId"],
+                         "RoleName": row["RoleName"], "PortraitPath": row["PortraitPath"]}
+                        for row in roles],
+        "mapLogicTags": logic_tags,
+        "mapTalkEntries": [],
+        "mapTalkConditions": [],
+        "storyOptions": option_rows,
+        "fixedRewards": [{"Id": row["Id"], "CanGetTimes": row["CanGetTimes"],
+                           "Items": [{"ItemId": int(item_id), "Count": count}
+                                     for item_id, count in row["Reward"].items()]}
+                          for row in fixed_rows],
+        "handInItems": [{"Id": row["Id"], "CanHandTimes": row["CanHandTimes"],
+                         "Items": [{"ItemId": int(item_id), "Count": count}
+                                   for item_id, count in row["Items"].items()]}
+                        for row in hand_in_rows],
+        "nativeDialogs": [],
+        "playables": [],
+        "stories": main_stories,
+        "subgraphs": subgraphs,
+        "entityTemplates": [],
+    }
+    write_json(OUTPUT, runtime)
+    json_meta(OUTPUT)
+    receipt = {
+        "manifest": VERSION,
+        "mapClassId": 13,
+        "operation": "Preserve official Map13 story graphs, subgraph closure, dialogue, roles, tags, options, and configured fixed rewards for the shared offline runtime.",
+        "inputs": [source_record(path) for path in [SOURCE_RECEIPT, *inputs.values(), Path(__file__)]],
+        "outputs": [source_record(OUTPUT), source_record(OUTPUT.with_name(OUTPUT.name + ".meta"))],
+        "counts": {"graphs": len(records), "mainStories": len(main_stories), "subgraphs": len(subgraphs),
+                   "nodes": sum(len(row["nodes"]) for row in records),
+                   "dialogueGroups": sum(len(row["dialogueGroups"]) for row in records),
+                   "dialogueLines": sum(len(group["Lines"]) for row in records for group in row["dialogueGroups"]),
+                   "dialogRoles": len(roles), "mapLogicTags": len(logic_tags),
+                   "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows)},
+        "pendingRuntimeBindings": ["official playables", "MapTalk/native dialog data", "Map13 entity templates"],
+    }
+    write_json(OUTPUT_RECEIPT, receipt)
+    print(json.dumps(receipt["counts"], ensure_ascii=False, sort_keys=True))
+    return receipt
+
+
+if __name__ == "__main__":
+    build()

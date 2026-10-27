@@ -180,6 +180,7 @@ namespace Zjcs.Presentation.World
         public Map10RuntimeTalkConditionInfo[] mapTalkConditions;
         public Map10RuntimeStoryOption[] storyOptions;
         public Map10RuntimeFixedReward[] fixedRewards;
+        public Map13RuntimeHandInItem[] handInItems;
         public Map10RuntimeNativeDialog[] nativeDialogs;
         public Map10RuntimePlayable[] playables;
         public Map10RuntimeMainlineTask[] mainlineTasks;
@@ -328,6 +329,7 @@ namespace Zjcs.Presentation.World
         public int dialogId;
         public int awardId;
         public int fixedRewardId;
+        public int handInItemId;
         public string storyName;
         public string subgraphName;
         public int storyStatus;
@@ -374,6 +376,14 @@ namespace Zjcs.Presentation.World
         public int[] options;
         public int[] removeEntityClassIds;
         public Map10RuntimeStoryPort[] ports;
+    }
+
+    [Serializable]
+    public sealed class Map13RuntimeHandInItem
+    {
+        public int Id;
+        public int CanHandTimes;
+        public Map10RuntimeAwardItem[] Items;
     }
 
     [Serializable]

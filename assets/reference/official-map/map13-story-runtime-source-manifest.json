@@ -1,0 +1,66 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "operation": "Preserve official Map13 story graphs, subgraph closure, dialogue, roles, tags, options, and configured fixed rewards for the shared offline runtime.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map13-source-manifest.json",
+      "bytes": 1120382,
+      "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/stories.json",
+      "bytes": 1525269,
+      "sha256": "2bdecd8914261c66b502ed527c264ab07cf4c1de78f6f1923c306511b759c585"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/tables.json",
+      "bytes": 20174824,
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/dialogues.json",
+      "bytes": 133841,
+      "sha256": "e070aa18080d85e8dee56065d17ed379dfa47c29faff271a099e91b7f84fe131"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/localization.json",
+      "bytes": 54143,
+      "sha256": "45bffc960b233c35ea824bd2fd39696e534545a931e970ba8459181e519d55c2"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_runtime.py",
+      "bytes": 12844,
+      "sha256": "e8242cc99fd3023e15424e96d6546fa7cf6b0e6e3f0d4d6df58fff4da42a3000"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map13/stories.json",
+      "bytes": 4096028,
+      "sha256": "6ef3b16aa4c6d59664f06012ce3926e7ad59017513cad4781f6520da14f17f82"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/stories.json.meta",
+      "bytes": 155,
+      "sha256": "9a50c4863b575107911979beb2b5959e3c38dcbc5af711a08a8db122718c491d"
+    }
+  ],
+  "counts": {
+    "graphs": 88,
+    "mainStories": 65,
+    "subgraphs": 23,
+    "nodes": 1327,
+    "dialogueGroups": 183,
+    "dialogueLines": 412,
+    "dialogRoles": 18,
+    "mapLogicTags": 49,
+    "fixedRewards": 6,
+    "handInItems": 3
+  },
+  "pendingRuntimeBindings": [
+    "official playables",
+    "MapTalk/native dialog data",
+    "Map13 entity templates"
+  ]
+}
