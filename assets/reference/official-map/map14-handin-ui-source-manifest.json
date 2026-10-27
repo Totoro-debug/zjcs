@@ -1,0 +1,533 @@
+{
+  "format": 2,
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Strictly decode original hand-in and item-icon hierarchies, UGUI/TMP/script fields, sprites, localization and popup animation curves. Restore native Unity prefabs through the existing official UI importer; retain source button controller and remap all five clips.",
+  "source": {
+    "bundle": "defaultpackage_assets_prefabs_ui_itemdetail.bundle",
+    "bundle_hash": "0357a149ba1473547a8de2eea5f24d32",
+    "path_id": "-3711661536462812506",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/0357a149ba1473547a8de2eea5f24d32.bundle",
+    "manifest": "871_156598",
+    "bundle_size": 1729415,
+    "bundle_sha256": "71b84596e909fb2148302b27e8ca04dc6b2be0d272cea68f2369c7da10e56542"
+  },
+  "nodeCounts": {
+    "DialogHandInItemDialog": 39,
+    "ItemIconDefault": 19
+  },
+  "componentCount": 94,
+  "inputs": [
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/BtnNo-fef0ddc591.png",
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/BtnOk-27952bd12b.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/C_none-d73d644cfd.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBg_CountText-31498f0e88.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBg_PopUps-20ee64ac9f.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBlue-852756b231.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBlueDot-d245e09217.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgBlue_Upgrade-f77095c4c9.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+      "sha256": "3e82a7afe162f64fa8331da266940cd9a5d00a83e631ea7495fcb520a956cae4"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgLine-273bb8cd8c.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgMask-4b8fcf1e08.png",
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgNew-f37ed67204.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgQuality_Blue-d7af3c8915.png",
+      "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgQuality_Shadow-2db8da22eb.png",
+      "sha256": "2db8da22ebd8ce09ddc89bd7a975e1763d49c5085b1f5919a5b68789dfba1e1f"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ImgRedDot-02ebb92c90.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+    },
+    {
+      "path": ".tools/map14-handin-ui-verified/Sprites/ItemPiece2-94d2a86906.png",
+      "sha256": "94d2a86906483a6c2f42be2ff088145ba618ba1a1e7206e75448470b5d6c4710"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click.controller",
+      "sha256": "46106e6e425afe9de5b5c9de2417b5a9088ad845bd70c999e20f40a56414c272"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Btn_Base_Click.controller.meta",
+      "sha256": "b1f488c70961d8a174f46d2a4df17c3b996a36f7ea848efd8bb8192e9d7bd92d"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Normal.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Normal.anim.meta",
+      "sha256": "bed98bb86d2971cb71dcad7db4f96cfc31a7c9983b7ed81880e0924c84be3561"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Highlighted.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Highlighted.anim.meta",
+      "sha256": "7d444331798af5500a006a574d66a5084ebd53e35aaf2fa596c00237bd484335"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Pressed.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Pressed.anim.meta",
+      "sha256": "cd1c2509cf193a570d97e3651643ebc683e1619a70842f28879f7dc344acd82b"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Selected.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Selected.anim.meta",
+      "sha256": "61ea338ab63786a0b15c5c5e2391950f5741d42916df50f89e66e6f9175bdfcf"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Disabled.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "path": ".tools/assetripper-1.3.14/temp/zjcs-item-source-native/ExportedProject/Assets/Animation/UI/Common/Disabled.anim.meta",
+      "sha256": "4de4e40b090b68aef466953f5c1e2b5ff572df8203d59f42efaf60efe5881d7c"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/DialogHandInItemDialog.cs",
+      "sha256": "b7eb2120bab70f15094e6cd97e88815e7bbbbbd43eff07d272812650bce0be15"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/HandInItemNode.cs",
+      "sha256": "ff4a1db0301b895198a0a4e9f6a6f7ab81d53da0ea71e723259101585222d39d"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/ItemIcon.cs",
+      "sha256": "767aecf58005653613080af4d23138cb9209c4abed97db2744e0ec64962db774"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/ItemProgress.cs",
+      "sha256": "1d797c5299275e3c605c896124f9737a7278ceb1155614b9e8628175eaa14db0"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/AwardPanelLayoutElement.cs",
+      "sha256": "fc3e1a12f32ed5c273c432485f972e22edfdf30f967ec92a2c78cd920179e80e"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MaintainGlobalScaleUI.cs",
+      "sha256": "76178190a60249fb14401802d83b5e754cd8baf17d095573eefabd62e8dd7532"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/MaintainGlobalScale.cs",
+      "sha256": "6755e9666d8e48ffcabcf2335ec3b95901b8ea1867eacedb313c5c2c1f7aa9e8"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/UIUtils.cs",
+      "sha256": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/UIBloomGroup.cs",
+      "sha256": "8b0067368de53b85fa7e005eb79189a404a7ebe36f7e80ba48feed550c1886d1"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/BgDialogElement.cs",
+      "sha256": "f1ed7fefdd22e0dd0303cda0abb2af87b8098357039a8373baef40223658f115"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/CountRedDotImage.cs",
+      "sha256": "ac39ed1e6169b9d75de7bfd97b2d516cea752313a081824ae494ff403dca3bfe"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/CountRedDotBase.cs",
+      "sha256": "9a5acf21bc64eaaf7dbbb1fbba1bed9e4a37f06fc12565431dc2e35203b89e77"
+    },
+    {
+      "path": ".tools/source-packages/official-code/client-source/UIBloomGroupBase.cs",
+      "sha256": "71d223aa6113944e73237858a9c791bd13fa932b4e5c980ff714168037dc4106"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-source/PreviewTool.cs",
+      "sha256": "66b138f5f124629eb239d4fe9cd3e7b92a5bdd5e3bf691cedc24f6f002982611"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-source/StateSwitcher.cs",
+      "sha256": "4321aa3e4c2a2c4a4575b20a6f2b7d4cb737ec970c0bc4c5900ad520d979cae5"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-source/StateGameObjectConfig.cs",
+      "sha256": "3d69fe3cb00b4c45165c1867f403ea3c58f409e25d1284b74550dfb85e10954a"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/PopupWindow.cs",
+      "sha256": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/MirrorImage.cs",
+      "sha256": "d95bb90ada43ef9971d9125d3c51543ffd5b202030e2947598b2bc607c3213b3"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/NoDrawingRayCast.cs",
+      "sha256": "d9a793a446c6912020aea93b4076ea7e8707f44be424d1391f99a48b4964b2e0"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/ButtonSound.cs",
+      "sha256": "25c466a171758877aefabd0c2f61337d6534bfb198c4a21dcf0538f3945830a0"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/PopupWindowSound.cs",
+      "sha256": "3a90a0108932895b5e9e01b51a7c5ade33efadb8892d088fe10bbb1450ed7e95"
+    },
+    {
+      "path": ".tools/source-packages/official-code/framework-firstpass-source/MultiLanguageText.cs",
+      "sha256": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963"
+    },
+    {
+      "path": "assets/reference/commerce-components/audio-source-manifest.json",
+      "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_common_002_ui_pck.rawfile",
+      "sha256": "92141ed248a5ca34f886432738d27bab97885a03f89f956191ab85bc03ff1cc7"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+      "sha256": "f690bfd652b5cef0fe9768df7347b45c16bf1e36b80e5c4141cbcadeffddd317"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_bgm_01_pck.rawfile",
+      "sha256": "57e66248a8e1d44ddebb35d3f00df9a34436fab754f07309b3f610d2a157c776"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_bgm_02_pck.rawfile",
+      "sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235"
+    },
+    {
+      "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_sfx_01_pck.rawfile",
+      "sha256": "225fb3ff220abb569582340339adb257141a8065a99bd006277f0244a9a7a37c"
+    },
+    {
+      "path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
+      "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
+    },
+    {
+      "path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Back-e58f14a05a20.ogg",
+      "sha256": "516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_handin_ui.py",
+      "sha256": "e1ccd46f03799cfbddeae59276cb73ee2022d4066e1da73059eeb1c4be0b62ff"
+    },
+    {
+      "path": "scripts/map14_handin_ui_source.py",
+      "sha256": "d47f3b79b1c48cad0c937a8e38953796241ebee40cbfdbb3a7db45cc299f347e"
+    }
+  ],
+  "guidRemappings": {
+    "ead5d5038c659e14c90750a0e4c838b2": "532d7ebcf189efe64ae06c8d9dc03be5",
+    "d8b4d68c375a2f342964fedcdf39994f": "1f03824098caf2ef30bfecc0616e6952",
+    "c4c568cf52e4a704aabf16569a4f2886": "6806d5e334210e1f918dfc90304c8435",
+    "eea1d4cb2854be14ab71b46d1b6dcb8b": "df26e19f2fedd7ea560a8da2b9d52d31",
+    "5ac90a9e9012d62438cc15ce7fcf99a1": "909c91eddf28ae0408ca1312c526b478",
+    "78a40121851f588499f9823aede55dd1": "ae0f1001061b4fb801d4b50557f91842"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/BtnNo-fef0ddc591.png",
+      "sha256": "fef0ddc59129e7a5136f6bac11369284e494e1964add4d2aea8901671756802a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/BtnNo-fef0ddc591.png.meta",
+      "sha256": "646f442d67a4b9463381695d4d821ec85dd91bd54ec50223545f1fe4cd85eccf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/BtnOk-27952bd12b.png",
+      "sha256": "27952bd12b6b60e0cfcc870ea8e3278f0aa47cd48c7048a1a7868b745648d599"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/BtnOk-27952bd12b.png.meta",
+      "sha256": "0ac702017ed660a71573e970bcb1638d25871f94a1b47d6c37b468bd0be02df0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/C_none-d73d644cfd.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/C_none-d73d644cfd.png.meta",
+      "sha256": "1c920f7d9222349d5fe1540361ebe194098b1eae70805d6afcb0cfd34b2f9ff8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_CountText-31498f0e88.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_CountText-31498f0e88.png.meta",
+      "sha256": "92ae0ca9fad4888f0ec3640c53925c73294e4861a811cb8644c86e4077c97f50"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUps-20ee64ac9f.png",
+      "sha256": "20ee64ac9f8b6824c26ca389c68ecd05b2862d66305dc2bfb6fcec4b6b113920"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUps-20ee64ac9f.png.meta",
+      "sha256": "5f194adff982fce1119b6f2846c6a4e461eb8b4858a7f66e3df48342ea03ebdc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png",
+      "sha256": "4b683e8fe6816c3ff7f4e127beb8e577cfb5e9331626e5b31fa81595a3064599"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUpsTitle-4b683e8fe6.png.meta",
+      "sha256": "2bce9ab15f628589c9d238fe41b14e96865baa54fbf01a35a9b05cbfbe32b55e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png",
+      "sha256": "68058e4df2fc9aa171d0e654156dedd97995be2187490d9e0a0c798b4d3a5339"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBg_PopUpsWenLi-68058e4df2.png.meta",
+      "sha256": "6ecc6ce058e8616fff2091993ef46533cb835d24f99b00f116e949f2173cc360"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlue-852756b231.png",
+      "sha256": "852756b23165ca4c2a377acee93125060d2948f3157b9b29094debbd5aa8d913"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlue-852756b231.png.meta",
+      "sha256": "bb27ad03803e6243698f0085438aee18faa03aec0a90d3e8f3d2b98150f9edb5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlueDot-d245e09217.png",
+      "sha256": "d245e092178e3753282c32c895dc1f8c050c9013f4dbfb50c59be696074a3261"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlueDot-d245e09217.png.meta",
+      "sha256": "06638ccf00a914e5420da85d39d8280f439f287676db5a249e20eee03190b986"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlue_Upgrade-f77095c4c9.png",
+      "sha256": "f77095c4c9da7a0b4544f2117b6e048084f17d724229e0992de796fe7add22f1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgBlue_Upgrade-f77095c4c9.png.meta",
+      "sha256": "3a009d6e62baf0c35e13f6259c8e2f03dabf38ade0242897ab8eabaf169bdf9f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgItemIcon_NumBg-3e82a7afe1.png",
+      "sha256": "3e82a7afe162f64fa8331da266940cd9a5d00a83e631ea7495fcb520a956cae4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgItemIcon_NumBg-3e82a7afe1.png.meta",
+      "sha256": "70e80ad00d44eb35eb4451aecdb412f451d974b1fdca9183beaa38324af3100f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgLine-273bb8cd8c.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgLine-273bb8cd8c.png.meta",
+      "sha256": "52243a67d309122a41d51e9aeb7daa6338e59dcc063ecfd74768194dd1874a2a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgMask-4b8fcf1e08.png",
+      "sha256": "4b8fcf1e081b5f29b8e698c0dd9d297a11e0ac8a992e25d43d0d175ef805dfea"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgMask-4b8fcf1e08.png.meta",
+      "sha256": "d6cf9f21d2658816d3e7dcb20db0817d5cd84db68b5f9461aa12c240e81210fc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgNew-f37ed67204.png",
+      "sha256": "f37ed6720455fd649b8458d715dccfc2771655cdf4b8cb8d2f5598e5056a1021"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgNew-f37ed67204.png.meta",
+      "sha256": "20a51776831c37c39e565a2360a55e3ae51cd95e997a5c4c9172716c43dc5096"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgQuality_Blue-d7af3c8915.png",
+      "sha256": "d7af3c8915139d2d876cb2f85ca24e63135c48c028cd83474a8248802ab5a93f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgQuality_Blue-d7af3c8915.png.meta",
+      "sha256": "8c3456dab981a20fc7213c3de29f3e01880c7cb146dba36c4a75fd2befe8bf08"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgQuality_Shadow-2db8da22eb.png",
+      "sha256": "2db8da22ebd8ce09ddc89bd7a975e1763d49c5085b1f5919a5b68789dfba1e1f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgQuality_Shadow-2db8da22eb.png.meta",
+      "sha256": "9b64991498841a667a7aa51529097640ff4a6190926142b9008005747f7e25a2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgRedDot-02ebb92c90.png",
+      "sha256": "02ebb92c906b1b9fe1166b9882dbdd92e545769b61dfc7462f2b410965c8a81c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ImgRedDot-02ebb92c90.png.meta",
+      "sha256": "aafc4165bda55e5bf0c3080a46a1bcc7c5fb6445190cdaf944d725204903bd3f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ItemPiece2-94d2a86906.png",
+      "sha256": "94d2a86906483a6c2f42be2ff088145ba618ba1a1e7206e75448470b5d6c4710"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites/ItemPiece2-94d2a86906.png.meta",
+      "sha256": "de309e33faebf0cac8d58177312c2e51366de19580e7956ef5dc57516da54bfb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/UI/Map14HandInGray.shader",
+      "sha256": "cd39cca51e2a9bf9b4aae9f8fb2f0f50658389a9bfbf353d8078f74ce021cd9f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/UI/Map14HandInGray.shader.meta",
+      "sha256": "c288daac9b597000c59795629e3ce14a71cb3421286855b4e6da27349c21b927"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/handin-ui.json",
+      "sha256": "22df53194d942c5b71684aa6aa8209d7366042d2b541921d5d477c1cf97c7313"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/handin-ui.json.meta",
+      "sha256": "c1ca1d40237d487f4623608f613e058d106cbf77e36829032f78e5a32ab59dd5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/catalog.json",
+      "sha256": "22df53194d942c5b71684aa6aa8209d7366042d2b541921d5d477c1cf97c7313"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/catalog.json.meta",
+      "sha256": "e74980f3b98ff9e7df5f3accc4066873507c540c5edfaf68fc18955cce81de03"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Btn_Base_Click.controller",
+      "sha256": "df3b7caa1dd2120b0b857f754ecced518a7712d0ecdaebf0d572e4cc41d2254f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Btn_Base_Click.controller.meta",
+      "sha256": "a1bacc7102f29d12948444593c971f4aa4081e3d450880b16a9756180fbc5685"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Normal.anim",
+      "sha256": "4dd795bea32dfbcfc1e82ead0098f004f2d9ba93010e9022fb2ce328e2187952"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Normal.anim.meta",
+      "sha256": "bd708eba8fc50cebc6d481dc99c7ccffc3e4cd7d2dcc64ed33d1ec7c8efbd9bd"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Highlighted.anim",
+      "sha256": "11c0bfc0348200c8a9d70e2ab44c681a447bb73e5ecfd20e0ac930e35e80ee07"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Highlighted.anim.meta",
+      "sha256": "8682da76c2f2344c1929db486c7a68c7b72386327750fdc0d328c9f63dab660f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Pressed.anim",
+      "sha256": "6115af211859758598fa85d9e665897bdd12ac92d35237f82aeb4c2d7dfe3a49"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Pressed.anim.meta",
+      "sha256": "e9d70b4a24593b94ed93311f6bc782d18bc3a7270068e952dcbf90dd43f5dbc5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Selected.anim",
+      "sha256": "cc4c01706fbbd7a9bed9fa6f7f01ffc2c050c0909916d85ee553149d6d14a1b3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Selected.anim.meta",
+      "sha256": "b84a998794c654ff5062942d168627b336b6d95dd65a5fe04615a61d236266d4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Disabled.anim",
+      "sha256": "fd758250c96b133b3195660a6c88a0591f91af5f7f5df43e83c9f19eaa013e51"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn/Disabled.anim.meta",
+      "sha256": "d84fed479a487bcc266686465abd46734c4d72e8e6c72222c6bc613d51479dff"
+    },
+    {
+      "path": "unity/Assets/Official/World.meta",
+      "sha256": "0f86ea591411dd937c0aef46d6ded95a0929acf1d7f80dc0dce719dd925a2b8b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map.meta",
+      "sha256": "8c4a87565127a504ea335414ef712b3f601152b97352b35708c1d9de5750e556"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14.meta",
+      "sha256": "1c1dad46fb126106775505eb5228733cdfc7c8379eade37100315b09c9978427"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI.meta",
+      "sha256": "184f6baea0a758a50ba9c75d6d2893859bce8c7c7059c39c4b13d6daeebc93ce"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn.meta",
+      "sha256": "5dfdfee94c7c2febe0231f79f3ea4327a1b5cb0deccf7fb0d6dfa73b0f10ca20"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/UI/HandIn/Sprites.meta",
+      "sha256": "ad32681be8ef424f3f99597c816a219e919e987daf2a7dfdeb2d5a4e60f089b3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14.meta",
+      "sha256": "2f22621edb8792953b4f7ec7d078b593f8805804937112bc0b35d479a4e90673"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI.meta",
+      "sha256": "4947bfca7918d9f6fd664788f20628f28d1ae61d586e026669d0524534f2b12c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/UI/HandIn.meta",
+      "sha256": "af3a51fc68c83c1dd83c18f761fd3404921edd9a26e534c4aaecac0603a7a56f"
+    }
+  ]
+}

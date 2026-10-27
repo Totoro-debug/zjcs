@@ -53,6 +53,7 @@ namespace Zjcs.Presentation.World
             new Dictionary<int, Map10RuntimeBattleEntityStageBinding>();
         private readonly Stack<Map10RuntimeStoryFrame> storyFrames = new Stack<Map10RuntimeStoryFrame>();
         private readonly Dictionary<int, Map10RuntimeFixedReward> fixedRewards = new Dictionary<int, Map10RuntimeFixedReward>();
+        private readonly Dictionary<int, Map13RuntimeHandInItem> handInItems = new Dictionary<int, Map13RuntimeHandInItem>();
         private readonly Dictionary<int, Map10RuntimeEntityTemplate> entityTemplates =
             new Dictionary<int, Map10RuntimeEntityTemplate>();
         private OfficialWorldMapSession session;
@@ -513,6 +514,7 @@ namespace Zjcs.Presentation.World
 
         private void DisposeRuntime()
         {
+            CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
             map12BuildingDialog = null;
             nativeMap12World?.Dispose();

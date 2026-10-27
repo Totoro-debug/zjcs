@@ -176,7 +176,28 @@ namespace Zjcs.Editor.Progression
                     && restored.Save.Player.InventoryRandomState == 42,
                     "Roll back cancelled item and random mutations");
 
-                Debug.Log("Offline mainline progress validation passed: tasks 1000/1005/1070, fixed rewards and save reload, cross-map witch activation count, deduplication and reload.");
+                Require(restored.ApplyInventoryTransaction("hand-in-seed", save =>
+                    Require(OfflineInventoryOperations.Grant(save.Player, 2208, 1, 100).IsApplied,
+                        "Seed the configured official hand-in item")).IsApplied,
+                    "Persist hand-in inventory before submission");
+                var handInItems = new System.Collections.Generic.Dictionary<int, long> { [2208] = 1 };
+                Require(restored.CanHandInItem(4, 1)
+                    && restored.SubmitHandInItem(4, 1, handInItems, 100, "map14:hand-in:4:1").IsApplied
+                    && restored.InventoryCount(2208) == 0 && restored.HandInItemCount(4) == 1,
+                    "Consume the configured item and advance its submission count atomically");
+                Require(restored.SubmitHandInItem(4, 1, handInItems, 100, "map14:hand-in:4:1").Status
+                    == ProgressionResultStatus.Unchanged,
+                    "Ignore a replayed hand-in receipt after reaching its maximum");
+                Require(restored.SubmitHandInItem(4, 1, handInItems, 100, "map14:hand-in:4:2").Status
+                    == ProgressionResultStatus.InvalidState,
+                    "Reject submissions beyond the configured maximum");
+                OfflineMainlineProgressSession handInRestored = OfflineMainlineProgressSession.Open(
+                    slots, slot, catalog, readDemonBattleLayer);
+                Require(handInRestored.HandInItemCount(4) == 1 && !handInRestored.CanHandInItem(4, 1)
+                    && handInRestored.InventoryCount(2208) == 0,
+                    "Restore hand-in count and consumed inventory from the profile save");
+
+                Debug.Log("Offline mainline progress validation passed: tasks, rewards, statue transactions, hand-in transactions and save reload.");
             }
             finally
             {

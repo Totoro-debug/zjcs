@@ -78,6 +78,7 @@ namespace Zjcs.Offline.Progression
         public OfflineCharacterPropertyProgress CharacterProperties = new OfflineCharacterPropertyProgress();
         public OfflineNpcTravelProgress NpcTravel = new OfflineNpcTravelProgress();
         public List<OfflineStoryProgress> Stories = new List<OfflineStoryProgress>();
+        public List<OfflineHandInItemProgress> HandInItems = new List<OfflineHandInItemProgress>();
         public List<OfflineProfessionLevel> ProfessionLevels = new List<OfflineProfessionLevel>();
         public OfflineHomeShopProgress HomeShop = new OfflineHomeShopProgress();
         public List<string> AppliedCharacterEventIds = new List<string>();
@@ -102,6 +103,13 @@ namespace Zjcs.Offline.Progression
         public string Key;
         public int Count;
         public int Status;
+    }
+
+    [Serializable]
+    public sealed class OfflineHandInItemProgress
+    {
+        public int Id;
+        public int Count;
     }
 
     [Serializable]
@@ -287,6 +295,43 @@ namespace Zjcs.Offline.Progression
         {
             OfflineStoryProgress story = FindStory(Save.Player, key);
             return story == null ? 0 : story.Status;
+        }
+
+        public int HandInItemCount(int id) => Save.Player.HandInItems?
+            .FirstOrDefault(value => value != null && value.Id == id)?.Count ?? 0;
+
+        public bool CanHandInItem(int id, int maximumTimes) => id > 0 && maximumTimes > 0
+            && HandInItemCount(id) < maximumTimes;
+
+        public ProgressionResult SubmitHandInItem(int id, int maximumTimes,
+            IReadOnlyDictionary<int, long> requirements, long nowUnixSeconds, string eventId)
+        {
+            if (id <= 0 || maximumTimes <= 0 || requirements == null || requirements.Count == 0
+                || requirements.Any(value => value.Key <= 0 || value.Value <= 0)
+                || nowUnixSeconds < 0 || string.IsNullOrWhiteSpace(eventId))
+                return Result(ProgressionResultStatus.InvalidState, message: "Hand-in identity, limit, items, time, or event is invalid.");
+            if (Save.Player.AppliedInventoryEventIds.Contains(eventId))
+                return Result(ProgressionResultStatus.Unchanged);
+            if (!CanHandInItem(id, maximumTimes))
+                return Result(ProgressionResultStatus.InvalidState, message: "The official hand-in limit has been reached.");
+            return ApplyInventoryTransaction(eventId, save =>
+            {
+                OfflineHandInItemProgress progress = save.Player.HandInItems?
+                    .FirstOrDefault(value => value != null && value.Id == id);
+                if (progress != null && progress.Count >= maximumTimes)
+                    throw new InvalidOperationException("The official hand-in limit has been reached.");
+                foreach (KeyValuePair<int, long> item in requirements.OrderBy(value => value.Key))
+                {
+                    InventoryOperationResult consumed = OfflineInventoryOperations.Consume(
+                        save.Player, item.Key, item.Value, nowUnixSeconds);
+                    if (!consumed.IsApplied)
+                        throw new InvalidOperationException("Required hand-in item is unavailable: " + item.Key);
+                }
+                save.Player.HandInItems ??= new List<OfflineHandInItemProgress>();
+                if (progress == null)
+                    save.Player.HandInItems.Add(new OfflineHandInItemProgress { Id = id, Count = 1 });
+                else progress.Count++;
+            });
         }
 
         public ProgressionResult SetStoryProgress(string key, int count, int status, string eventId = null)
@@ -1007,6 +1052,7 @@ namespace Zjcs.Offline.Progression
                     != save.Player.ProfessionLevels.Count
                 || save.Player.HomeShop == null || !OfflineHomeShopProgress.IsValid(save.Player.HomeShop)
                 || save.Player.Stories == null || save.Player.Stories.Count > 100000
+                || save.Player.HandInItems == null || save.Player.HandInItems.Count > 10000
                 || save.Player.AppliedCharacterEventIds.Count > 200000
                 || save.Player.AppliedInventoryEventIds.Count > 200000
                 || save.Player.StatueVisitDate == null || save.Player.StatueVisitKind == null
@@ -1057,6 +1103,9 @@ namespace Zjcs.Offline.Progression
             foreach (OfflineStoryProgress story in save.Player.Stories)
                 if (story == null || string.IsNullOrWhiteSpace(story.Key) || story.Key.Length > 256
                     || story.Count < 0 || !storyKeys.Add(story.Key)) return false;
+            var handInIds = new HashSet<int>();
+            foreach (OfflineHandInItemProgress handIn in save.Player.HandInItems)
+                if (handIn == null || handIn.Id <= 0 || handIn.Count <= 0 || !handInIds.Add(handIn.Id)) return false;
             var mapIds = new HashSet<int>();
             foreach (OfflineMapProgress map in save.World.Maps)
             {
@@ -1124,6 +1173,7 @@ namespace Zjcs.Offline.Progression
             }
             if (save.Player.AppliedCharacterEventIds == null) save.Player.AppliedCharacterEventIds = new List<string>();
             if (save.Player.Stories == null) save.Player.Stories = new List<OfflineStoryProgress>();
+            if (save.Player.HandInItems == null) save.Player.HandInItems = new List<OfflineHandInItemProgress>();
             if (save.Player.Wardrobe == null) save.Player.Wardrobe = new OfflineWardrobeProgress();
             if (save.Player.Wardrobe.SkillSkins == null)
                 save.Player.Wardrobe.SkillSkins = new List<OfflineSkillAppearance>();

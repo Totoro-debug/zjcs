@@ -11,6 +11,7 @@ namespace Zjcs.Official.WorldUI
     public sealed class WorldPopupWindow : MonoBehaviour
     {
         public AnimationClip mShowClip, mHideClip, mLoopClip;
+        public event Action<WorldPopupWindow> OnShowing, OnHiding, OnShow, OnHide;
         private PlayableGraph graph;
         private AnimationPlayableOutput output;
         private Coroutine transition;
@@ -31,7 +32,8 @@ namespace Zjcs.Official.WorldUI
         {
             closing = false;
             if (transition != null) StopCoroutine(transition);
-            transition = StartCoroutine(Transition(mShowClip, () => Play(mLoopClip)));
+            OnShowing?.Invoke(this);
+            transition = StartCoroutine(Transition(mShowClip, () => { OnShow?.Invoke(this); Play(mLoopClip); }));
         }
 
         public void Hide(Action completed)
@@ -39,9 +41,11 @@ namespace Zjcs.Official.WorldUI
             if (closing) return;
             closing = true;
             if (transition != null) StopCoroutine(transition);
+            OnHiding?.Invoke(this);
             transition = StartCoroutine(Transition(mHideClip, () =>
             {
                 gameObject.SetActive(false);
+                OnHide?.Invoke(this);
                 completed?.Invoke();
             }));
         }

@@ -65,6 +65,9 @@ namespace Zjcs.Presentation.World
                 case "QueryPlayerContainsItemNode":
                     return StoryFields(input).ItemConfigs.All(value => StoryItemCount(value.ItemId) >= value.ItemCount);
                 case "CanGetFixedRewardNode": return CanGetFixedStoryReward(input.fixedRewardId);
+                case "CanHandInItemNode":
+                    return handInItems.TryGetValue(input.handInItemId, out Map13RuntimeHandInItem handIn)
+                        && progressionSave.CanHandInItem(handIn.Id, handIn.CanHandTimes);
                 case "CheckMapEntityStateNode": return CheckStoryMapEntityState(input);
                 case "IsPlayerHasFollowerIdsNode": return false;
                 case "CompareNode":

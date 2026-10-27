@@ -33,9 +33,15 @@
 - 97 个原地区标签 prefab 新增 130 份原生资产、复用 78 份已核验依赖，保留 440 条原状态切换托管引用记录。原 `MapRegionDescSupportUI`、`MapRegionDescItemUI`、`MapRegionStrengthDisplayUI`、`UIColorByLevel` 等代码按本图可达分支迁移，保留层级、坐标、原字体／材质／图集、初始化顺序、进度公式、公图特例、等级限制、战力颜色线性转换及事件释放。111 区配置没有时间／服务器段位开放限制；世界标签原调用传入空 MiniMap，未把小地图专用分支视为已实现。所有地区名称及横排文本从当前 APK 语言表解析，不以其他地图名称替代。
 - 完整环境与标签夹具在内置屏 Play Mode 通过公／私图、110 个原地区组件绑定、660 处本地化文本、等级 1→150→1、段位与战力颜色、进度满值／恢复、禁用重启及公／私详情切换。原 TMP 文字实际生成字形；加载全部 486 个场景路径和 240 个地形区块，注册 111 处原地区光照，停用／恢复、完整清除和标签订阅释放通过。84 张纹理的 496 个 mip GPU 回读字节一致，已查看六处公／私图实际画面。动态字形写入使用原字体及图集的本地实例，未修改源字体。主工程原生导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与静态检查通过。该夹具仍使用隔离状态，不包含正式角色、实体交互、鼠标输入或磁盘存档。
 
+- Map14 官方 `HandInItemNode` 客户端只发送提交请求，扣物品规则由服务端执行。已按用户确认接入单机原子事务：`hand_in_item[4]` 提交 `2208×1`、最多 1 次；成功后增加次数，失败回滚，相同凭证回放不重复扣除，旧存档补齐独立提交次数列表。`CanHandInItemNode` 保留官方只检查次数的查询。正式地图剧情入口尚未接通；原窗口恢复与独立运行覆盖见下文。
+- 提交物品窗口从当前 `ItemDetail/DialogHandInItemDialog` 与原 APK 默认 `ItemIconDefault` 严格恢复，保留 39＋19 个原节点、94 份组件字段记录、18 张原切片贴图、三个原 Animator 配置、两段 60 Hz 弹出／关闭曲线及原五态按钮 controller。controller 的五个参数、五个状态、四条转场、条件、时间和剪辑曲线与官方二进制解析值逐项核对。`AwardPanelLayoutElement`、`ItemProgress`、原状态切换器、全局缩放补偿、标题／红点／bloom 元数据、按钮音及 `PopupWindowSound` 绑定已恢复；`PreviewTool` 按原空组件保留。官方 `UI/Gray` 四个 GLES 变体机械转换为 Windows shader，保留原禁用材质参数，TMP 灰阶复用已迁移的官方 `TMPEffect`。本图 catalog 使用 `871_156598`，共享 APK 载荷保留实际基础包来源；两段 UI 音频复用前核对当前五份 Wwise 输入包与既有转换输入完全相同。
+- 本次提交窗口在主工程 Unity 2022.3.57f1c2 完成原生 prefab 重建、导入／编译、`Zjcs.Editor.ProjectTools.Validate` 与 Play Mode 实测，并通过静态元数据检查。以 1080×1920 原弹窗基准在内置屏竖屏 Game View 显示，已查看物品不足与持有物品两种实际画面；模拟鼠标经过 EventSystem 射线及输入模块，核验禁用确认、取消、确认、原窗口关闭事件中断、销毁中断、原 UI 音实际播放与释放、原子扣除、次数上限、凭证回放、多物品缺项回滚和磁盘冷读。夹具使用独立存档，未进入 Map14 正式主线；图标点击详情、全局窗口遮罩与正式宿主仍待接通，不据此认定整个窗口功能或地图已完成。
+
 ## 自定义实现
 
 以下为用户确认并已接入独立规则层的单机处理；正式地图宿主、菜单、背包交易和存档尚未接通。
+
+剧情 `HelpHuiAfterBattle` 的 `HandInItemNode`（节点 15）按 `hand_in_item[4]` 提交 `2208×1`，最大次数为 1。用户确认离线规则为在单次本地事务中按表原子扣除配置物品，并且只在成功后增加提交次数；失败回滚，回放相同凭证不重复扣除。官方 `CanHandInItemNode` 只查询次数上限；窗口按是否持有配置物品启用确认。确认、取消和中断分别沿原 `ComfirmExit`、`CancelExit`、`InterruptExit` 分支；Map14 正式剧情宿主尚未接通，不能据此认定该任务可游玩。
 
 火炮终端共 7 个：`1512`、`2914`、`5015`、`6912`、`8011`、`8516`、`9413`，原类型为 `MapWorldPuzzleType.Cannon=4`。自动解谜使用原实体类 `6502` 的道具费用 `325×1`，仅清除该终端 `NeedRemoveLoEntityIds` 中的障碍，重复目标去重。不模拟炮弹发射、成功演出或失败状态，不生成额外奖励。重置只清除这些障碍的 `destroyed` 标记，不改变终端状态、玩家位置、其他机关、费用或奖励。
 
@@ -45,10 +51,12 @@
 
 - 恢复实体 prefab、角色／实体骨骼、粒子、动画、MiniMap_14 迷雾／标记、BGM 与剧情音频，并接入官方 HUD、对话和交互界面；将已恢复的地区标签绑定正式本地地图状态。
 - 接通 111 区、2,961 个放置实体、8 块战斗碑、3 处遗迹、7 组火炮、5 组走格子及地图 15 原出口的正式入口、原条件、剧情、交互、战斗与奖励。不得以配置提取或地形夹具代替完整玩法。
-- 接通背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复；上述资源验证未模拟鼠标，也未覆盖正式业务或存档。
+- 接通正式地图背包交易、本地状态和存档，完成正常游玩、失败回滚、退出与冷读恢复。提交窗口的隔离夹具已覆盖模拟鼠标与存档事务；其他资源夹具不代表正式地图流程。
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
 
 ### 官方来源与入口
+
+- [提交窗口字段／素材生成器](../../scripts/prepare_unity_map14_handin_ui.py)、[官方 UI 严格解码](../../scripts/map14_handin_ui_source.py)、[原对象／代码／输入输出来源清单](../../assets/reference/official-map/map14-handin-ui-source-manifest.json)、[原生绑定来源清单](../../assets/reference/official-map/map14-handin-ui-bindings-source-manifest.json)；原始投影位于 `Assets/Official/World/Map/14/UI/HandIn/`，运行目录为 `Resources/Map14/UI/HandIn/`，Unity 绑定入口为 `Zjcs.Editor.OfficialMap11UiTools.ImportMap14HandIn`，故事回调为 `OfficialMainlineMapRuntime.HandIn.cs`。
 
 - [配置生成器](../../scripts/prepare_unity_map14_sources.py)、[配置来源](../../assets/reference/official-map/map14-source-manifest.json)；载荷为 `Assets/Official/World/Map/14/Source/`。
 - [统一地图定义生成器](../../scripts/prepare_unity_map14_definition.py)；输出 `Assets/Official/World/Map/14/map14.json` 并对照本图来源收据核验导航、区域、位置及默认入口。

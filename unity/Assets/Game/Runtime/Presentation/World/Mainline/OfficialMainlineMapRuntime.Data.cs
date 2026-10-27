@@ -110,6 +110,24 @@ namespace Zjcs.Presentation.World
                     throw new InvalidDataException("Official Map" + mapClassId + " fixed reward is malformed.");
                 fixedRewards.Add(value.Id, value);
             }
+            foreach (Map13RuntimeHandInItem value in storyDataValue.handInItems ?? Array.Empty<Map13RuntimeHandInItem>())
+            {
+                if (value == null || value.Id <= 0 || value.CanHandTimes < 0 || value.Items == null
+                    || value.Items.Length == 0 || handInItems.ContainsKey(value.Id)
+                    || value.Items.Any(item => item == null || item.ItemId <= 0 || item.Count <= 0))
+                    throw new InvalidDataException("Official Map" + mapClassId + " hand-in item configuration is malformed.");
+                handInItems.Add(value.Id, value);
+            }
+            if (mapClassId == 14 && (handInItems.Count != 1
+                || !handInItems.TryGetValue(4, out Map13RuntimeHandInItem map14HandIn)
+                || map14HandIn.CanHandTimes != 1 || map14HandIn.Items.Length != 1
+                || map14HandIn.Items[0].ItemId != 2208 || map14HandIn.Items[0].Count != 1))
+                throw new InvalidDataException("Official Map14 hand-in configuration does not match the pinned source.");
+            if (mapClassId == 14 && storyDataValue.stories.Concat(storyDataValue.subgraphs ?? Array.Empty<Map10RuntimeStory>())
+                .SelectMany(value => value.nodes)
+                .Where(value => value.type == "HandInItemNode" || value.type == "CanHandInItemNode")
+                .Any(value => !handInItems.ContainsKey(value.handInItemId)))
+                throw new InvalidDataException("Official Map14 story references an unknown hand-in configuration.");
             foreach (Map10RuntimeDialogRole value in storyDataValue.dialogRoles)
             {
                 if (value == null || value.RoleId <= 0 || value.EntityClassId < 0

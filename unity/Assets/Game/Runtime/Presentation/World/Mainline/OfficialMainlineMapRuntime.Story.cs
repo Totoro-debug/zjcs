@@ -200,6 +200,9 @@ namespace Zjcs.Presentation.World
                             // not a mainline map lock. No such activity is active here.
                             nodeId = StoryNext(node, "NotComplete");
                             continue;
+                        case "HandInItemNode":
+                            RunHandInItemNode(node);
+                            return;
                         case "GoToNode":
                             StoryValueFields jump = StoryFields(node);
                             nodeId = jump.GoByNodeId != 0 ? jump.GoByNodeId : jump.GotoId != 0
