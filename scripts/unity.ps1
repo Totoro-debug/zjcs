@@ -47,15 +47,15 @@ switch ($Action) {
         } | Format-List
     }
     'open' {
-        Start-UnityOnInternalDisplay -Editor $editor -ArgumentList @('-force-d3d12', '-projectPath', "`"$project`"")
+        Start-UnityOnInternalDisplay -Editor $editor -ArgumentList @('-projectPath', "`"$project`"")
     }
     'initialize' {
         $logDirectory = Join-Path $repository 'output/unity'
         New-Item -ItemType Directory -Path $logDirectory -Force | Out-Null
         $logPath = Join-Path $logDirectory 'initialize.log'
         $unityProcess = Start-UnityOnInternalDisplay -Editor $editor -ArgumentList @(
-            '-batchmode', '-quit', '-force-d3d12', '-projectPath', "`"$project`"",
-            '-executeMethod', 'Zjcs.Editor.WindowsGraphicsSettings.Configure',
+            '-batchmode', '-quit', '-projectPath', "`"$project`"",
+            '-executeMethod', 'Zjcs.Editor.ProjectTools.Configure',
             '-logFile', "`"$logPath`""
         )
         $unityProcess.WaitForExit()

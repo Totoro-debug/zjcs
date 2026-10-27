@@ -92,7 +92,6 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private IEnumerator Run()
         {
-            Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12, "Save selection validation requires DX12.");
             Dictionary<string, string> before = HashProfiles();
             OfficialSaveSelectionView view = null;
             while (view == null || !view.IsReady) { view = FindObjectOfType<OfficialSaveSelectionView>(); yield return null; }
@@ -108,7 +107,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 yield return null;
                 Require(GameObject.Find("OfficialCreatePlayerPanel") != null, "Cold restart did not resume the saved draft.");
                 yield return new WaitForEndOfFrame(); Capture("restart-resumed");
-                File.WriteAllText(Path.Combine(output, "restart-result.json"), "{\"passed\":true,\"dx12\":true,\"draftRecovered\":true}");
+                File.WriteAllText(Path.Combine(output, "restart-result.json"), "{\"passed\":true,\"draftRecovered\":true}");
                 Complete(true);
                 yield break;
             }
@@ -174,7 +173,7 @@ namespace Zjcs.Presentation.CharacterCreation
                 "New profile button did not create an independent draft and enter creation.");
             yield return new WaitForEndOfFrame(); Capture("created");
             Debug.Log("Save selection validation passed: native UI, portraits, tabs, simulated scroll/click, no browse writes, continue, corrupt profile preservation and creation.");
-            File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"dx12\":true,\"simulatedInput\":true}");
+            File.WriteAllText(Path.Combine(output, "result.json"), "{\"passed\":true,\"simulatedInput\":true}");
             Complete(true);
         }
 

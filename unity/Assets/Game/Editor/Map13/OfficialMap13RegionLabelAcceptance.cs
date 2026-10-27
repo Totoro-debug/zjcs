@@ -99,7 +99,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 full partition and world-label Play Mode passed: 200 original chunks, 271 original scene prefabs, 106 lights, 105 region descriptions/630 localized text components, original binary language, state/event transitions and DX12 rendering. Real player state, map gameplay/input and saves remain unverified.");
+            Debug.Log("Map13 full partition and world-label Play Mode passed: 200 original chunks, 271 original scene prefabs, 106 lights, 105 region descriptions/630 localized text components, original binary language, state/event transitions and rendering. Real player state, map gameplay/input and saves remain unverified.");
             EditorApplication.isPlaying = false;
         }
 
@@ -116,8 +116,8 @@ namespace Zjcs.Editor.Map13
         private static IEnumerator VerifySteps()
         {
             lifecycleError = false; Application.logMessageReceived += Observe;
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12 || QualitySettings.activeColorSpace != ColorSpace.Linear)
-                throw new InvalidDataException("Original environment fixture requires native DX12 and original Linear settings.");
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear)
+                throw new InvalidDataException("Original environment fixture requires original Linear settings.");
             string rootPath = OfficialMap13FlagTools.Repository;
             VerifyOriginalContainers();
             var source = JsonUtility.FromJson<Source>(File.ReadAllText(Path.Combine(rootPath,
@@ -198,7 +198,7 @@ namespace Zjcs.Editor.Map13
                     yield return new WaitForSeconds(0.15f); yield return null; yield return null;
                     var request = AsyncGPUReadback.Request(target, 0, TextureFormat.RGBA32);
                     while (!request.done) yield return null;
-                    if (request.hasError) throw new InvalidDataException("Original partition DX12 camera readback failed.");
+                    if (request.hasError) throw new InvalidDataException("Original partition camera readback failed.");
                     var image = new Texture2D(384, 640, TextureFormat.RGBA32, false, true);
                     image.SetPixels32(request.GetData<Color32>().ToArray()); image.Apply();
                     File.WriteAllBytes(Path.Combine(rootPath, ".tools/map13-label-partition-" + status + "-" + (view.x == 30 ? "shrine" : "label") + ".png"), image.EncodeToPNG());

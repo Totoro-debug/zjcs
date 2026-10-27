@@ -41,8 +41,6 @@ namespace Zjcs.Editor.Map13EntityBindings
         }
         private static void Validate()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
-                throw new InvalidOperationException("Native shader binding GPU checks require DX12.");
             var first = Resources.Load<NativeMap13EntityShaderCatalog>("Map13/Native/entity-shader-catalog");
             if (first == null || first.manifest != "871_156598" || first.entries.Length != 21)
                 throw new InvalidDataException("Serialized native shader catalog is missing.");
@@ -115,7 +113,7 @@ namespace Zjcs.Editor.Map13EntityBindings
                         throw new InvalidDataException("Native engine depth pass did not write depth: "+string.Join(",",counts));
                 }
                 Debug.Log("Map13 native shader binding Play Mode passed: 21 cold-reloaded serialized references, " +
-                    "two original Spine variants, exact channel discard, both unlit passes and native engine output; all 16384 pixels per draw checked under DX12.");
+                    "two original Spine variants, exact channel discard, both unlit passes and native engine output; all 16384 pixels per draw checked.");
             }
             finally
             {

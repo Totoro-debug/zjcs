@@ -35,8 +35,6 @@ namespace Zjcs.Editor.Map13EntityBindings
             var asynchronous = ShaderUtil.allowAsyncCompilation;
             try
             {
-                if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
-                    throw new InvalidOperationException("Map13 bindings require an actual DX12 editor.");
                 ShaderUtil.allowAsyncCompilation = false;
                 var source = JsonUtility.FromJson<Source>(File.ReadAllText(SourcePath));
                 if (source.manifest != "871_156598" || source.bindings.Length != 21)
@@ -107,7 +105,7 @@ namespace Zjcs.Editor.Map13EntityBindings
                     Debug.Log("Map13 bound shader: " + shader.name + " supported=" + shader.isSupported);
                 }
                 Debug.Log("Map13 native entity shader bindings passed: 21 serialized shader references, " +
-                    "all original fallback chains, " + stages + " newly converted executable stages; DX12. Precompiled engine shader is checked by GPU execution.");
+                    "all original fallback chains, " + stages + " newly converted executable stages. Precompiled engine shader is checked by GPU execution.");
             }
             finally { ShaderUtil.allowAsyncCompilation = asynchronous; }
         }

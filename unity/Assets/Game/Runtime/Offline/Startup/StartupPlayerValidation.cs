@@ -21,6 +21,7 @@ namespace Zjcs.Offline.Startup
             string[] args = Environment.GetCommandLineArgs();
             int index = Array.IndexOf(args, "--zjcs-validate-startup");
             if (index < 0 || index + 1 >= args.Length) return;
+            Application.runInBackground = true;
             var host = new GameObject("StartupPlayerValidation");
             DontDestroyOnLoad(host);
             var runner = host.AddComponent<StartupPlayerValidation>();

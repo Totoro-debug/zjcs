@@ -116,7 +116,7 @@ namespace Zjcs.Editor.Map13
         { UnityEngine.Object.Destroy(font.material); UnityEngine.Object.Destroy(font.atlasTexture); UnityEngine.Object.Destroy(font); }
         private static IEnumerator VerifySteps()
         {
-            Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12 && QualitySettings.activeColorSpace == ColorSpace.Linear, "Label fixture requires Linear DX12.");
+            Require(QualitySettings.activeColorSpace == ColorSpace.Linear, "Label fixture requires Linear color space.");
             VerifyStates();
             var original = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(OfficialMap13TextTools.FontPath);
             var font = CloneFont(original); var replacementFont = CloneFont(original);

@@ -65,7 +65,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 native text Play Mode passed: original Alpha8 GPU bytes, dynamic Chinese/ASCII glyphs, source-font identity, native mesh/atlas generation and original shader face/outline/dual-outline/underlay/glow/gray/clipping paths on Linear DX12. Original region UI and effect components remain unverified.");
+            Debug.Log("Map13 native text Play Mode passed: original Alpha8 GPU bytes, dynamic Chinese/ASCII glyphs, source-font identity, native mesh/atlas generation and original shader face/outline/dual-outline/underlay/glow/gray/clipping paths on Linear. Original region UI and effect components remain unverified.");
             EditorApplication.isPlaying = false;
         }
         [Serializable] private sealed class Atlas { public string sha256; public int byte_count; }
@@ -73,8 +73,8 @@ namespace Zjcs.Editor.Map13
 
         private static IEnumerator VerifySteps()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12 || QualitySettings.activeColorSpace != ColorSpace.Linear)
-                throw new InvalidDataException("Original text fixture requires Linear DX12.");
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear)
+                throw new InvalidDataException("Original text fixture requires Linear color space.");
             string root = OfficialMap13FlagTools.Repository;
             var source = JsonUtility.FromJson<Source>(File.ReadAllText(Path.Combine(root, "assets/reference/official-map/map13-native-text-font-source-manifest.json")));
             var original = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(OfficialMap13TextTools.FontPath);

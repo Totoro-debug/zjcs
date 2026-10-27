@@ -73,7 +73,6 @@ namespace Zjcs.Editor.Map13Entities
             started = true;
             try
             {
-                Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12, "DX12 is required.");
                 VerifyOriginalBranches(); VerifyCurrentData();
                 SessionState.SetInt(Key + ".result", 0);
                 Debug.Log("Map13 entity presentation Play Mode passed: 2053 complete current rows, 2690 original placement contexts, base-ground/area selection, ordered fallbacks without parent backtracking, original prefixes, duplicate rejection and EC static path-cache/disposal. Direct selectors only; native entity rendering, mouse input, gameplay and saves remain unverified.");

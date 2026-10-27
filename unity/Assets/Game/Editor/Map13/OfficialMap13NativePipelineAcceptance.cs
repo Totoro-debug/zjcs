@@ -92,7 +92,7 @@ namespace Zjcs.Editor.Map13
                 yield return value;
             }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Map13 native pipeline Play Mode passed: all 47 original texture GPU payloads; both original Renderer2DData camera paths, exact color/row sampling and DX12 rendering. Fixtures do not verify the complete map, mouse flows or saves.");
+            Debug.Log("Map13 native pipeline Play Mode passed: all 47 original texture GPU payloads; both original Renderer2DData camera paths, exact color/row sampling and rendering. Fixtures do not verify the complete map, mouse flows or saves.");
             EditorApplication.isPlaying = false;
         }
 
@@ -106,8 +106,8 @@ namespace Zjcs.Editor.Map13
 
         private static IEnumerator VerifySteps()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12 || QualitySettings.activeColorSpace != ColorSpace.Linear)
-                throw new InvalidDataException("Native pipeline GPU check requires original Linear color and Windows DX12.");
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear)
+                throw new InvalidDataException("Native pipeline GPU check requires original Linear color.");
             string root = Path.GetFullPath(Path.GetFullPath(".").Replace('\\', '/').Contains("/.tools/") ? "../../.." : "..");
             var textures = JsonUtility.FromJson<NativeTextures>(File.ReadAllText(Path.Combine(root,
                 "assets/reference/official-map/map13-pipeline-textures-source-manifest.json")));
@@ -160,7 +160,7 @@ namespace Zjcs.Editor.Map13
                 string screenshot = Path.Combine(root, "output/map13-native-renderer-" + index + "-20261027.png");
                 var image = new Texture2D(64, 64, TextureFormat.RGBA32, false, true);
                 image.SetPixels32(actual.ToArray()); image.Apply(); File.WriteAllBytes(screenshot, image.EncodeToPNG()); UnityEngine.Object.Destroy(image);
-                Debug.Log("Original native Renderer2DData " + index + " rendered all 3136 interior fixture pixels with exact Linear color and row order on DX12.");
+                Debug.Log("Original native Renderer2DData " + index + " rendered all 3136 interior fixture pixels with exact Linear color and row order.");
             }
             camera.targetTexture = null; target.Release();
             UnityEngine.Object.Destroy(cameraObject); UnityEngine.Object.Destroy(spriteObject); UnityEngine.Object.Destroy(target);

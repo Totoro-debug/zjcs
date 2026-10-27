@@ -97,7 +97,7 @@ namespace Zjcs.Editor.Map13
             Application.logMessageReceived -= Log;
             if (errors.Count != 0) { Debug.LogError("TMP effect lifecycle logged errors: " + string.Join("\n", errors)); EditorApplication.isPlaying = false; yield break; }
             SessionState.SetInt(Key + ".result", 0);
-            Debug.Log("Original TMP effects Play Mode passed: official label fields, original colors/normalization, pooled CRC identity and ownership, last-reference release, real OnEnable/OnDisable/Update, gray mutation, autosize TEXT_CHANGED_EVENT and Linear DX12 rendering. Full original world label UI remains separate.");
+            Debug.Log("Original TMP effects Play Mode passed: official label fields, original colors/normalization, pooled CRC identity and ownership, last-reference release, real OnEnable/OnDisable/Update, gray mutation, autosize TEXT_CHANGED_EVENT and Linear rendering. Full original world label UI remains separate.");
             EditorApplication.isPlaying = false;
         }
 
@@ -125,8 +125,8 @@ namespace Zjcs.Editor.Map13
         }
         private static IEnumerator VerifySteps()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12 || QualitySettings.activeColorSpace != ColorSpace.Linear)
-                throw new InvalidDataException("Original TMP effect fixture requires Linear DX12.");
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear)
+                throw new InvalidDataException("Original TMP effect fixture requires Linear color space.");
             var original = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(OfficialMap13TextTools.FontPath);
             var font = UnityEngine.Object.Instantiate(original); font.material = UnityEngine.Object.Instantiate(original.material);
             var atlas = UnityEngine.Object.Instantiate(original.atlasTexture); font.atlasTextures = new[] { atlas }; font.material.mainTexture = atlas;

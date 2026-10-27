@@ -92,7 +92,7 @@ def build(editor, prepare_only=False, map_id=11):
         return
     log = work/'native-fog-mesh-project/editor.log'
     quote = lambda value: "'" + str(value).replace("'", "''") + "'"
-    arguments = ['-batchmode','-force-d3d12','-projectPath',str(project),'-executeMethod',
+    arguments = ['-batchmode','-projectPath',str(project),'-executeMethod',
         'Zjcs.FogTool.FogMeshGenerator.Run','-fog-input',str(mesh_input),'-logFile',str(log)]
     command = '. ' + quote(ROOT/'scripts/unity_internal_display.ps1') + '\n'
     command += '$fogProcess = Start-UnityOnInternalDisplay -Editor ' + quote(editor) + ' -ArgumentList @('

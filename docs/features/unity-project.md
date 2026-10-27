@@ -14,7 +14,7 @@ Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗
 
 默认启动先恢复并播放官方 `BootSplash`，随后显示原版 `ThemeCanvas`／`LaunchPanel` 和本地资源进度条，再进入现有存档入口。适龄提示使用原可交互弹窗，启动阶段不请求网络；素材、字体、动画与本地加载的实际验证范围见[登录前启动画面](startup.md)。
 
-存档入口已将原 `PlanesListPanel`／`PlanesRoleItem` 转换为本地列表，保留官方卡片、头像、双页签与动画；DX12 Play Mode、实际 Windows Player 的模拟点击／滚轮、新建／续玩入口和草稿冷启动恢复通过。验证使用隔离存档，并已查看内置屏上可见 Player 的实际画面，9个用户数据文件哈希未改变。官方来源、具体测试边界及未完成部分见[设置、拍照与本地存档](settings-and-save.md)。
+存档入口已将原 `PlanesListPanel`／`PlanesRoleItem` 转换为本地列表，保留官方卡片、头像、双页签与动画；Play Mode、实际 Windows Player 的模拟点击／滚轮、新建／续玩入口和草稿冷启动恢复通过。验证使用隔离存档，并已查看内置屏上可见 Player 的实际画面，9个用户数据文件哈希未改变。官方来源、具体测试边界及未完成部分见[设置、拍照与本地存档](settings-and-save.md)。
 
 `ProjectTools.Configure` 配置工程设置；`ProjectTools.Validate` 检查编辑器版本、启动场景、窗口设置，并调用战斗目录、HUD 与 Map10 校验。`Zjcs.Editor.ProjectTools.BuildWindowsGame` 是游戏测试构建入口，输出 `D:/Desktop/杖剑传说/杖剑传说.exe`，桌面快捷方式指向该文件，工作目录为同名文件夹。`BuildFrameworkWindows` 只构建空启动框架，不能替代游戏构建。代码位于 [`ProjectTools.cs`](../../unity/Assets/Game/Editor/ProjectTools.cs)。
 
@@ -22,7 +22,7 @@ Unity 工程固定使用 `2022.3.57f1c2`。项目配置了 450×800 可缩放窗
 
 各模块／地图共享 [Android → Windows 素材迁移流程](../asset-management.md#android-资源迁移到-windows)，以 [`prepare_unity_bundle_inputs.py`](../../scripts/prepare_unity_bundle_inputs.py) 检查真实源版本、平台与递归 CAB 依赖并准备转换输入。输入闭包成功不代表 Unity 原生资产、运行时依赖和 Windows 表现已经恢复；完整处理和判断依据在该共用流程中维护。
 
-Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_internal_display.ps1) 识别内置屏的硬件标识，将编辑器与验证窗口放到该屏，独立于 Windows 主屏设置及屏幕编号。自定义验证命令先点源该脚本，再用 `Start-UnityOnInternalDisplay -Editor <编辑器路径> -ArgumentList <原参数数组>` 启动；隔离 worktree 复用仓库根目录工具。启动时隐藏窗口，定位时不激活窗口或改变前后顺序；保留现有渲染参数。内置屏未启用或识别不唯一时停止启动并报告原因，不回退到外接主屏。窗口启动阶段定位完成后可由用户自由移动。
+Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_internal_display.ps1) 识别内置屏的硬件标识，将编辑器与验证窗口放到该屏，独立于 Windows 主屏设置及屏幕编号。自定义验证命令先点源该脚本，再用 `Start-UnityOnInternalDisplay -Editor <编辑器路径> -ArgumentList <原参数数组>` 启动；隔离 worktree 复用仓库根目录工具。启动时隐藏窗口，定位时不激活窗口或改变前后顺序。内置屏未启用或识别不唯一时停止启动并报告原因，不回退到外接主屏。窗口启动阶段定位完成后可由用户自由移动。
 
 为覆盖其他会话从隔离 worktree 直接启动 `Unity.exe` 的路径，本机还安装了随用户登录启动的窗口定位守护；脚本与 `status.json` 位于 `%LOCALAPPDATA%/UnityInternalDisplay/`，启动入口为用户 Startup 文件夹中的 `Unity 内置屏.lnk`。守护只匹配 `D:/Desktop/zjcs/` 下的 Unity 工程，将其可见窗口保持在内置屏，既有会话无需更换命令。停用时删除该启动快捷方式并结束 `status.json` 记录的守护进程即可；可用仓库脚本的 `-WatchProjectRoot D:/Desktop/zjcs` 参数手动启动。
 
@@ -40,15 +40,7 @@ Unity 启动工具通过 [`unity_internal_display.ps1`](../../scripts/unity_inte
 
 `Zjcs.Editor.Startup.SaveSelectionWindowsBuild.Run` 包装现有 `BuildWindowsGame`，显式使用本机已安装的 Windows Mono 支持，与既有桌面版本保持相同脚本后端并复用增量缓存；构建完成或失败后恢复工程原先的脚本后端设置。避免工程中的 IL2CPP 设置与仅安装 Mono 的编辑器及旧输出目录冲突。
 
-Windows 渲染后端按用户要求固定为 DX12（Direct3D12），关闭自动图形 API，仅配置 `Direct3D12`。这属于 Windows 平台适配；迁移依据的官方 Android APK 在 `data.unity3d/globalgamemanagers` 的 `BuildSettings.m_GraphicsAPIs` 为 `[11]`，对应 `OpenGLES3`，不能将此编号解释为 DX11。官方材质、shader 和画面参数继续按原版恢复。
-
-[`WindowsGraphicsSettings.cs`](../../unity/Assets/Game/Editor/WindowsGraphicsSettings.cs) 提供配置与验证入口，并在 Windows 构建前检查项目图形 API 及编辑器实际设备，防止用其他后端或无图形模式代替 DX12 验证。`unity.ps1 open`／`initialize` 显式传入 `-force-d3d12`；初始化先配置 DX12，再调用 `ProjectTools.Configure`。自定义 Unity 验证命令也传入 `-force-d3d12`，继续使用内置屏定位工具。Player 使用打包的 DX12 配置，正常启动不依赖额外命令行参数。
-
-显式 `--zjcs-validate-startup <输出目录>` 诊断由 [`WindowsGraphicsValidation.cs`](../../unity/Assets/Game/Runtime/Offline/Startup/WindowsGraphicsValidation.cs) 在场景加载前核对实际 DX12 设备并启用后台运行，使现有启动验证可以在内置屏、不抢占前台的情况下执行截图和模拟指针。该行为仅在传入诊断参数时启用。
-
-DX12 的 Unity 导入／编译、`ProjectTools.Validate`、Map10 战斗模拟指针回归和开场战斗视觉回归已通过；已查看地图、战斗 HUD、技能／状态特效与伤害数字的实际运行截图。战斗验证先创建 Game 窗口，再检查 `Renderer.isVisible`，避免未产生渲染帧时误判怪物不可见；模拟指针分支跳过系统前台激活与真实鼠标操作。Windows Player 构建成功，无 C# 或 shader 编译错误。设备日志为 `NVIDIA GeForce RTX 5060 Laptop GPU / Direct3D 12 [level 12.1]`；这验证 DX12 兼容性，不构成与 D3D11 的性能对比或完整游戏验收。
-
-共享工作区静态 metadata 检查通过（41,192 个 GUID）。导出的 Player 不带 `-force-d3d12` 启动，已确认默认使用 DX12；原版适龄弹窗通过实际 EventSystem 射线命中及按下／抬起／点击事件完成开关，并进入存档选择。实际查看了弹窗与存档入口截图，原有 7 个用户数据文件的 SHA256 保持不变。窗口须在启动验证首帧前显示于内置屏；隐藏窗口中仅有逻辑通过或黑色截图不计为画面验证。桌面目录继续交付当前工作区测试版，完整游戏及逐功能源码一致发布的缺项保留。
+Windows 图形 API 使用 Unity 默认选择。原版适龄弹窗通过实际 EventSystem 射线命中及按下／抬起／点击事件完成开关，并进入存档选择。实际查看了弹窗与存档入口截图，原有 7 个用户数据文件的 SHA256 保持不变。窗口须在启动验证首帧前显示于内置屏；隐藏窗口中仅有逻辑通过或黑色截图不计为画面验证。桌面目录继续交付当前工作区测试版，完整游戏及逐功能源码一致发布的缺项保留。
 
 本地单机规则沿用已确认的离线处理范围；外观、界面、动画、音效及流程以可恢复的官方 Unity 内容为准。其他功能页中记录的旧引擎实现不能据此视为 Unity 已接入。
 

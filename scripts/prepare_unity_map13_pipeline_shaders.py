@@ -72,7 +72,7 @@ def program_body(program, vertex):
         code = code[:helper.start()] + code[helper.end():]
         code = helper[0] + "\n" + code
     if vertex and "hlslcc_mtx4x4unity_MatrixVP" not in program.split("#ifdef FRAGMENT")[0]:
-        # Procedural GLES blits use the GL near plane (-1); DX12 reverses depth.
+        # Procedural GLES blits use the GL near plane (-1).
         # Matrix-based vertices already use the native Unity projection matrix.
         code = code.replace("return output;", "output.position.z = UNITY_NEAR_CLIP_VALUE * output.position.w;\n"
             "#if UNITY_UV_STARTS_AT_TOP\noutput.position.y = -output.position.y;\n#endif\nreturn output;")

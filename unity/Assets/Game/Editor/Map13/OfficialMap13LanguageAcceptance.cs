@@ -110,7 +110,7 @@ namespace Zjcs.Editor.Map13
         private static void Require(bool value, string message) { if (!value) throw new InvalidDataException(message); }
         private static IEnumerator VerifySteps()
         {
-            Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12 && QualitySettings.activeColorSpace == ColorSpace.Linear, "Language fixture requires Linear DX12.");
+            Require(QualitySettings.activeColorSpace == ColorSpace.Linear, "Language fixture requires Linear color space.");
             var reference = JsonUtility.FromJson<LanguageReference>(File.ReadAllText("Assets/Official/World/Map/13/Source/native-label-language.json"));
             foreach (var vector in reference.hashes)
                 Require(XXHash64.ComputeHash(vector.text, ulong.Parse(vector.seed)).ToString() == vector.value, "Original XXHash64 differs from independent vectors.");

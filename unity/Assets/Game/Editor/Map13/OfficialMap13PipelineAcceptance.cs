@@ -165,7 +165,7 @@ namespace Zjcs.Editor.Map13
             for (int i = 0; i < depthValues.Length; i++)
                 if (Math.Abs(actualDepth[i] - depthValues[i]) > 0.0001f)
                     throw new InvalidDataException("Native original depth pass differs: " + i + ": " + actualDepth[i] + " expected " + depthValues[i]);
-            Debug.Log("Map13 original fragment-depth pass writes and transfers all 64 depth values through a native DX12 depth buffer.");
+            Debug.Log("Map13 original fragment-depth pass writes and transfers all 64 depth values through a native depth buffer.");
             depthTarget.Release(); sampledDepth.Release(); target.Release();
             UnityEngine.Object.Destroy(depthTarget); UnityEngine.Object.Destroy(sampledDepth); UnityEngine.Object.Destroy(depthMaterial); UnityEngine.Object.Destroy(depthSource);
             UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(material); UnityEngine.Object.Destroy(source);

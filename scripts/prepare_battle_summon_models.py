@@ -375,7 +375,7 @@ def build():
             use='Explicitly share the recovered original APK global URP 2D pipeline during battle; restore the previous scene pipeline on release.'),
         public_format_reference=dict(url='https://eu.esotericsoftware.com/spine-clipping',
             use='End slot equal to the clipping slot means clipping continues to the end of draw order. Documentation only; no runtime implementation copied.'),
-        operation='APK-first verified source recovery, lossless skeleton decoding, signed32 draw-order offsets, original weighted influences/curves/attachments/draw order/IK, full high-resolution texture mips and original prefab transforms. Unity native meshes, source curves, IK, clipping, original material/shader/pipeline and summon portraits are bound and exercised in DX12 Play Mode. No Spine runtime loaded or sampled.',
+        operation='APK-first verified source recovery, lossless skeleton decoding, signed32 draw-order offsets, original weighted influences/curves/attachments/draw order/IK, full high-resolution texture mips and original prefab transforms. Unity native meshes, source curves, IK, clipping, original material/shader/pipeline and summon portraits are bound and exercised in Play Mode. No Spine runtime loaded or sampled.',
         limitations=['Only original skeletal channels and direct named-pose playback are migrated; original Animator state transitions, mixing and controller behavior remain incomplete.',
             'Only summon entities 3181 and 4600 are bound. Generation/connection/destruction effects and remaining summon models are not migrated.',
             'Play Mode validation covers the two models and existing battle HUD flow; Windows Player and complete battle acceptance remain outstanding.'])))

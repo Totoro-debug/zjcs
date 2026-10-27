@@ -151,8 +151,6 @@ namespace Zjcs.Editor
 
         private static IEnumerator VerifySteps()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
-                throw new InvalidOperationException("Map12 graphics must run with Direct3D12.");
             if (SessionState.GetBool(Key + ".buildingUi", false))
             {
                 IEnumerator buildingSteps = VerifyBuildingUiSteps();

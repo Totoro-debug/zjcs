@@ -92,7 +92,6 @@ namespace Zjcs.Editor.Map14
 
         private static IEnumerator VerifySteps()
         {
-            Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12, "Native validation requires DX12.");
             string repository = Path.GetFullPath("..");
             var source = JsonUtility.FromJson<SceneSource>(File.ReadAllText(Path.Combine(repository,
                 "assets/reference/official-map/map14-native-scene-source-manifest.json")));

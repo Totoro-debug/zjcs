@@ -46,7 +46,6 @@ namespace Zjcs.Editor.Map14
             started = true;
             try
             {
-                Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12, "DX12 execution");
                 Validate(); SessionState.SetInt(Key + ".result", 0);
                 Debug.Log("Map14 puzzle Play Mode passed. Rule execution and JSON cold read only; no simulated player input, backpack payment, disk save or rendered puzzle scene.");
             }

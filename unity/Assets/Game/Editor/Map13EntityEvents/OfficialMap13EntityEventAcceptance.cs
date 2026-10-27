@@ -72,7 +72,6 @@ namespace Zjcs.Editor.Map13EntityEvents
             started = true;
             try
             {
-                Require(SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D12, "DX12 is required.");
                 Verify();
                 SessionState.SetInt(Key + ".result", 0);
                 Debug.Log("Map13 entity-event Play Mode passed: original zero-to-four argument dispatch, receiver snapshots and nested mutation, duplicate receiver removal, Merge/Clear, exception continuation, retained delegate dictionary and thread-local empty list pools. Event dispatch only; no native entity rendering, mouse input or saves.");

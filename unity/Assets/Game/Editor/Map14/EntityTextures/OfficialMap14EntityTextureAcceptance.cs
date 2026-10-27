@@ -63,8 +63,6 @@ namespace Zjcs.Editor.Map14EntityTextures
         }
         private static IEnumerator VerifySteps()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Direct3D12)
-                throw new InvalidDataException("Original material texture validation requires DX12.");
             string sourcePath = Path.Combine(OfficialMap14EntityTextureTools.Repository, OfficialMap14EntityTextureTools.SourcePath);
             if (OfficialMap14EntityTextureTools.Hash(File.ReadAllBytes(sourcePath)) != SessionState.GetString(Key + ".source", string.Empty))
                 throw new InvalidDataException("Original material texture source changed during Play Mode transition.");
@@ -87,7 +85,7 @@ namespace Zjcs.Editor.Map14EntityTextures
             }
             if (mips != source.counts.mips) throw new InvalidDataException("Original material texture mip inventory differs.");
             Debug.Log("Map14 original material textures Play Mode passed: 1644 explicit CAB/PathID bindings, " + mips +
-                " exact native GPU mip readbacks and original texture/sampler settings on DX12. Six original empty dynamic font atlases, dynamic loader variants, entity rendering, input and saves remain unverified.");
+                "Exact native GPU mip readbacks and original texture/sampler settings. Six original empty dynamic font atlases, dynamic loader variants, entity rendering, input and saves remain unverified.");
         }
         private sealed class Runner : MonoBehaviour { }
     }
