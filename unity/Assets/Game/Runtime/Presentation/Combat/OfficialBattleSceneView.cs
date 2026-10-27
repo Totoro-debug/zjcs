@@ -73,7 +73,7 @@ namespace Zjcs.Presentation.Combat
         {
             public FightBattleUnitState State;
             public SkeletonAnimation Skeleton;
-            public OfficialBattleNativeModelView NativeModel;
+            public IOfficialBattleNativeModel NativeModel;
             public OfficialBattleModelBinding Binding;
             public OfficialBattleUnitWorldHudView Hud;
             public string CurrentAnimation;
@@ -491,7 +491,7 @@ namespace Zjcs.Presentation.Combat
             var present = new HashSet<int>();
             foreach (FightBattleUnitState state in checkpoint.Units)
             {
-                if (state == null || !IsWaveSpawned(checkpoint, state.Id)) continue;
+                if (state == null || state.Ended && state.Hp > 0 || !IsWaveSpawned(checkpoint, state.Id)) continue;
                 if (state.Hp <= 0)
                 {
                     Transform deadAttached = attachedTransforms.TryGetValue(state.Id, out Transform deadBody)
@@ -1337,6 +1337,16 @@ namespace Zjcs.Presentation.Combat
         private UnitView GetOrCreate(FightBattleUnitState state)
         {
             if (units.TryGetValue(state.Id, out UnitView existing)) return existing;
+            var summonData = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + state.MonsterId + "-data");
+            if (summonData != null)
+            {
+                var model = new OfficialSummonNativeModelView(summonData, root, "BattleUnit_" + state.Id);
+                var summonView = new UnitView { State = state, NativeModel = model };
+                PlayAnimation(summonView, "idle_01", true);
+                summonView.Hud = OfficialBattleUnitWorldHudView.Create(hudCatalog, state, model.Transform);
+                units.Add(state.Id, summonView);
+                return summonView;
+            }
             if (nativeModelLibrary != null)
             {
                 string nativeKey = nativeModelLibrary.ResolveModelKey(state);

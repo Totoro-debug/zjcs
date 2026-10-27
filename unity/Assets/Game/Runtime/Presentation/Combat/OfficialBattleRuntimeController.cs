@@ -11,6 +11,7 @@ namespace Zjcs.Presentation.Combat
     public sealed class OfficialBattleRuntimeController : MonoBehaviour
     {
         private FightBattleExecutor executor;
+        private IDisposable renderPipelineScope;
         private OfficialBattleSceneView sceneView;
         private OfficialBattleHudView hudView;
         private GameObject hudRoot;
@@ -141,6 +142,8 @@ namespace Zjcs.Presentation.Combat
             GameObject nextHudRoot = null;
             try
             {
+                var pipelineAssets=Resources.Load<OfficialBattleRenderPipelineAssets>("Combat/OfficialBattleRenderPipelineAssets");
+                if(pipelineAssets!=null)renderPipelineScope=pipelineAssets.Enter();
                 nextNativeModels = OfficialBattleNativeAnimationLibrary.LoadDefault();
                 if (environmentGameId > 0)
                     nextEnvironment = OfficialBattleEnvironmentView.Load(worldRoot, environmentGameId,
@@ -201,6 +204,8 @@ namespace Zjcs.Presentation.Combat
                     nextEnvironment?.Dispose();
                     nextNativeModels?.Dispose();
                     if (nextHudRoot != null) Destroy(nextHudRoot);
+                    renderPipelineScope?.Dispose();
+                    renderPipelineScope=null;
                 }
                 throw;
             }
@@ -416,6 +421,8 @@ namespace Zjcs.Presentation.Combat
             }
             sceneView?.Dispose();
             environmentView?.Dispose();
+            renderPipelineScope?.Dispose();
+            renderPipelineScope=null;
             environmentView = null;
             nativeModelLibrary?.Dispose();
             if (hudRoot != null) Destroy(hudRoot);

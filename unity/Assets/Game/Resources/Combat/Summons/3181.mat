@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: summons_3181_Material
+  m_Shader: {fileID: 4800000, guid: f059e67ee43d5bc8bb2dd9551b6aade7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _LIGHT_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DissolveTex:
+        m_Texture: {fileID: 2800000, guid: 71e2424b7a00591a87ee10f8bf58b063, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DistortionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IceNoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IceTex:
+        m_Texture: {fileID: 2800000, guid: 7ff0e3c95b3058938200bd16814079d8, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 5d1eed6b9b135e6e840f572ac48a107b, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BaseStrength: 0.5
+    - _ColorEnhancement: 1
+    - _DissolveLineWidth: 0.1
+    - _DissolveOffsetThreshold: 0.5
+    - _DissolveThreshold: 0
+    - _Distortion: 0
+    - _DistortionTex_Rota: 0
+    - _DistortionTex_Rotator: 0
+    - _ExtraStrength: 1
+    - _FordingOffset: 0
+    - _FordingScale: 1
+    - _HitEffectBlend: 0
+    - _Hue: 0
+    - _Light: 1
+    - _LightAtten: 0.565
+    - _Saturation: 1
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilRef: 1
+    - _TintBlack: 0
+    - _Value: 1
+    - _ZWrite: 1
+    m_Colors:
+    - _Black: {r: 0, g: 0, b: 0, a: 0}
+    - _BoundingBox: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _DistortionTex_MoveCenter: {r: 0, g: 0, b: 0.5, a: 0.5}
+    - _HitEffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

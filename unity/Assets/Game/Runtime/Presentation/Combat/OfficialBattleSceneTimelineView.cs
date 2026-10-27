@@ -49,7 +49,8 @@ namespace Zjcs.Presentation.Combat
             Func<FightBattleUnitState, Sprite> faction, bool animate, FightBattleStepEvent step)
         {
             var all = checkpoint.Units.Where(u => u != null).ToDictionary(u => u.Id);
-            var states = all.Values.Where(u => u.Hp > 0 && IsSpawned(checkpoint, u.Id)).ToDictionary(u => u.Id);
+            var states = all.Values.Where(u => u.Hp > 0 && !u.Ended && IsSpawned(checkpoint, u.Id)
+                && ShowOnRoundProgress(u)).ToDictionary(u => u.Id);
             var entries = checkpoint.Timeline.Entries.Where(e => e != null && states.ContainsKey(e.Id)).ToArray();
             // OnRoundDataInsert updates all positions immediately in the client.
             if (entries.Any(e => !cards.ContainsKey(e.Id))) animate = false;
@@ -87,8 +88,9 @@ namespace Zjcs.Presentation.Combat
                     root.name = "GameRoundCharacterItem_" + unit.Id;
                     card = new Card { Root = root, Animator = root.GetComponent<Animator>() };
                     cards.Add(unit.Id, card);
+                    var summon = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + unit.MonsterId + "-data");
                     BindPortrait(root, unit, unit.NpcClassId > 0 ? OfficialBattleNpcPortraitCatalog.Load().Find(unit.NpcClassId)
-                        : portrait(unit), faction?.Invoke(unit));
+                        : summon != null ? summon.Portrait : portrait(unit), faction?.Invoke(unit));
                     card.Animator.Rebind(); card.Animator.Update(0);
                 }
                 bool acting = i == 0;
@@ -137,6 +139,12 @@ namespace Zjcs.Presentation.Combat
             foreach (FightBattleWaveState wave in checkpoint.Waves)
                 if (wave?.UnitIds != null && wave.UnitIds.Contains(id)) return wave.Spawned;
             return true;
+        }
+
+        private static bool ShowOnRoundProgress(FightBattleUnitState unit)
+        {
+            var summon = Resources.Load<OfficialSummonSkeletonData>("Combat/Summons/" + unit.MonsterId + "-data");
+            return summon == null || summon.Source.showOnRoundProgress;
         }
 
         private IEnumerator Hurt(Card card, float delay)

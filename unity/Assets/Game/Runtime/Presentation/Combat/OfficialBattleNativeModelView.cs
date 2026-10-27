@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 
 namespace Zjcs.Presentation.Combat
 {
-    public sealed class OfficialBattleNativeModelView : IDisposable
+    public sealed class OfficialBattleNativeModelView : IOfficialBattleNativeModel
     {
         private sealed class DrawView
         {

@@ -221,6 +221,7 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            Combat.OfficialBattleSummonModelAcceptance summonModelTest = null;
             bool finalPresentationHeld = false, finalPresentationCompleted = false;
             sceneController.StepCompleted += result =>
             {
@@ -466,6 +467,8 @@ namespace Zjcs.Editor
             Require(!(bool)pausedProperty.GetValue(controller), "Battle did not resume.");
 
             if (SessionState.GetBool(RealInputKey, false)) yield return Capture("playing.png");
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_SUMMON_MODEL")))
+                summonModelTest = Combat.OfficialBattleSummonModelAcceptance.Install(sceneController);
             if (SessionState.GetBool(RealInputKey, false) || damageDisplayTest != null) runtime.enabled = true;
 
             float deadline = Time.realtimeSinceStartup + 60f;
@@ -479,6 +482,12 @@ namespace Zjcs.Editor
             Require(checkpoint() != null, "Battle checkpoint is missing after the battle started.");
             Require(checkpointField("Counter") >= 1, "Battle did not execute its first step.");
             Require(checkpointField("DamageEventSerial") >= 1, "Battle did not record damage during the first steps.");
+            if (summonModelTest != null)
+            {
+                runtime.enabled = false;
+                yield return summonModelTest.Verify(sceneController);
+                runtime.enabled = true;
+            }
             if (damageProcessTest != null)
             {
                 while (active() && !damageProcessTest.HasExecuted(sceneController.Checkpoint)
