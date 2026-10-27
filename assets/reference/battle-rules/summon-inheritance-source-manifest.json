@@ -1,0 +1,116 @@
+{
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a",
+      "source": {
+        "bundle": "hybridclr_assets_hybridclrdata_dlls_assembly-csharp_dll.bundle",
+        "bundle_hash": "b0c05eae0b6849a83ad8df1ef6cd6fad",
+        "path_id": "49683184131557060",
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/b0c05eae0b6849a83ad8df1ef6cd6fad.bundle",
+          "manifest": "871_156598",
+          "size": 16819860,
+          "sha256": "ee29ccdbd30878ffa37bc4f51a05f618004a2c3a61e0a367d21a9c4a75a74499"
+        },
+        "text_asset_sha256": "f7ad215ee00fd8fc8c8048b323f043d5d7ea7fc377830f7709751ad353e40f10",
+        "decoded_sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+      "source": {
+        "bundle": "hybridclr_assets_hybridclrdata_dlls_console_dll.bundle",
+        "bundle_hash": "fbe53f2dde9225c9265632bfbf06c2e8",
+        "path_id": "-7462651629129428820",
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/fbe53f2dde9225c9265632bfbf06c2e8.bundle",
+          "manifest": "871_156598",
+          "size": 16752756,
+          "sha256": "bb987bda43105683b7394dd52d7282428271abdab33dc07301cf69b2021704f2"
+        },
+        "text_asset_sha256": "312795c2e8aa028166fda2ec6ea0117b3279f7b35450f99ecd07aed0e8593360",
+        "decoded_sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "current": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
+        "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+      },
+      "historical": {
+        "path": ".tools/source-packages/official-code/common-source/Common/BattleFormulaHandler.cs",
+        "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+      },
+      "byte_identical": true
+    },
+    {
+      "current": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SummonRankAdditiveFactorParser.cs",
+        "sha256": "c0797922c56db81a124ea9bdca732f8a06cab4b8243f8ffcfc8e71f365a6d76a"
+      },
+      "historical": {
+        "path": ".tools/source-packages/official-code/common-source/Common/SummonRankAdditiveFactorParser.cs",
+        "sha256": "c0797922c56db81a124ea9bdca732f8a06cab4b8243f8ffcfc8e71f365a6d76a"
+      },
+      "byte_identical": true
+    },
+    {
+      "current": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/MonsterInfoPanelNavigateHandler.cs",
+        "sha256": "81a4ea1d69c0b4453ddac2d27494c513ee7f4f884063afcea650b1e896397b72"
+      },
+      "historical": {
+        "path": ".tools/source-packages/official-code/client-source/MonsterInfoPanelNavigateHandler.cs",
+        "sha256": "81a4ea1d69c0b4453ddac2d27494c513ee7f4f884063afcea650b1e896397b72"
+      },
+      "byte_identical": true
+    }
+  ],
+  "runtime_inputs": [
+    {
+      "path": "unity/Assets/Official/Combat/skill-rules.json",
+      "sha256": "560f556ee615125f17c7ced02f0197442d2b5c5f3dfbcf6c2d398f84e0dbfac8",
+      "manifest": "854_156383",
+      "source_manifest": {
+        "path": "unity/Assets/Official/Combat/skill-rules-source-manifest.json",
+        "sha256": "e88d754e06c0b334ba1c2d94ae42dfbf3d2007b8f44ff7b7526dabbc983f4017"
+      }
+    },
+    {
+      "path": "unity/Assets/Official/Combat/battle-rules.json",
+      "sha256": "9e1f1cf7332760f55ad27b39966f5a97bb8b227d0d8bff8c98a5c856dafd6803",
+      "manifest": "854_156383",
+      "source_manifest": {
+        "path": "unity/Assets/Official/Combat/battle-rules-source-manifest.json",
+        "sha256": "4794e1977e7ab4b0361743502601446d247384d7a6f1b2b338b8ffa62281a778"
+      }
+    },
+    {
+      "path": "unity/Assets/Official/Combat/rules.json",
+      "sha256": "ce75dd1cfa8309ccf5eb1b9eac01599404ad1f6579a7aa235c70ab2d730fc22c",
+      "manifest": "854_156383",
+      "source_manifest": {
+        "path": "unity/Assets/Official/Combat/rules-source-manifest.json",
+        "sha256": "895c97957bb034eed4cc7351ff7477a5d9726a092fa6469f9c57db5d3c1b5250"
+      }
+    }
+  ],
+  "formula": "CalcSummonMonsterInheritProp: fixed level/rank props + (long)(addition/10000.0 * source raw value * exact rank factor/10000.0)",
+  "scope": "Ordinary monster summon execution; pet and substitute generation remain separate consumers.",
+  "critical": "58,75,79 inherit together according to per-summon tables; no universal critical chance bonus is present.",
+  "ports": [
+    "unity/Assets/Game/Runtime/Official/Combat/FightOfficialCombatCatalog.SummonProperties.cs",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs"
+  ],
+  "validation": "scripts/test_battle_summon_inheritance.ps1"
+}

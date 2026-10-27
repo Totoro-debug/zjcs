@@ -76,6 +76,7 @@ namespace Zjcs.Combat.Official
             catalog.battleProperties = Object(Required(battleCatalog, "props"), "battle props");
             catalog.ParseStateMutex();
             catalog.ParseSkillPropertyTables(skillCatalog);
+            catalog.ParseSummonPropertyTables(skillCatalog);
             if (hasHpPliesPayload) catalog.ParseMonsterHpPlies(monsterHpPliesJson);
             return catalog;
         }

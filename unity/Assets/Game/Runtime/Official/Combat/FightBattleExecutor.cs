@@ -648,7 +648,7 @@ namespace Zjcs.Combat.Official
                 int level = hit.SummonLevelType == 1 ? Math.Max(1, skill.Level)
                     : Math.Max(1, actor.Level);
                 FightBattleUnitState summon = CreateSummonedUnit(actor, skill, pool, hit, level,
-                    position);
+                    position, reference);
                 if (!CanPlaceSummon(summon)) continue;
 
                 units.Add(summon);
@@ -701,11 +701,24 @@ namespace Zjcs.Combat.Official
 
         private FightBattleUnitState CreateSummonedUnit(FightBattleUnitState actor,
             FightBattleSkillDefinition skill, FightBattleSummonPool pool,
-            FightBattleHitDefinition hit, int level, FightGridPoint position)
+            FightBattleHitDefinition hit, int level, FightGridPoint position,
+            FightBattleUnitState reference)
         {
             int groupNo = actor.MonsterGroupNo;
             var properties = new Dictionary<int, long>(statusCatalog.CalculateMonsterProps(
                 pool.MonsterId, groupNo, level, Math.Max(0, actor.SubRank)));
+            if (hit.SummonInheritProps)
+            {
+                var sourceProperties = new Dictionary<int, long>();
+                foreach (var property in reference.Properties)
+                    sourceProperties[property.Id] = property.Value;
+                FightSummonPropertyInheritance inheritance = statusCatalog.CalculateSummonInheritance(
+                    pool.MonsterId, skill.Level, skill.Rank, actor.SubRank, sourceProperties);
+                foreach (var property in inheritance.Fixed)
+                    properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
+                foreach (var property in inheritance.Summoner)
+                    properties[property.Key] = checked(Property(properties, property.Key) + property.Value);
+            }
             var passiveStatusIds = new List<int>();
             foreach (int itemId in statusCatalog.MonsterPassiveSkillItems(pool.MonsterId, groupNo))
             {
