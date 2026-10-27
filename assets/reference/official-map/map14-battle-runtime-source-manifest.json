@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Package verified current official stages, monster rosters, battle scenes and entity stage bindings. Mainline gameplay and FightOther models are separate bindings.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/map14-battles.json",
+      "sha256": "52e980dc46d2e26469884e0c28881a42857b9059bb43420b32560bcc97b6bcdc"
+    },
+    {
+      "path": "assets/reference/official-map/map14-battles-source-manifest.json",
+      "sha256": "deab447df77ac8946f6f6f428f17317549112710c7091abedbff12de4e076b97"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_battle_runtime.py",
+      "sha256": "357ffa512adf4796511dbdee4882092ddbdc03f307a1ef59d2a265249b459b4e"
+    }
+  ],
+  "runtimeSources": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.BattleMonsters.cs",
+      "sha256": "70768fb6d7f12943e3e8dafff0faf08b93a506620e10fef9baac2310e84f6134",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap14BattleDataAcceptance.cs",
+      "sha256": "670cd2dfc3d5f09d041bd1a6ea5ec1423b87a72da70d427e719133fc596820d2",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map14/battle-runtime.json",
+      "sha256": "a88aba23b7d564f3e81e744765f937318ec63c19e30dcd9a1a3cfbae9ae82f9a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/battle-runtime.json.meta",
+      "sha256": "31882184807b0872ef39b3d8600e94cdb5f5629cc7878071dd704f47dba0a6a1"
+    }
+  ],
+  "counts": {
+    "arrays": 90,
+    "entityStageBindings": 909,
+    "monsterGroups": 63,
+    "monsterRosters": 217,
+    "scenes": 20,
+    "stages": 217,
+    "storyStages": 3
+  }
+}

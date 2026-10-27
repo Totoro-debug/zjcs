@@ -12,6 +12,9 @@
 
 ## 完整还原部分
 
+- 龙之国的当前版战斗数据闭包已恢复为 217 个关卡、217 份波次名单、20 个战斗场景、90 套阵型和 909 组实体关卡绑定；包括魔女召唤关卡 `20004` 和剧情图中的三处 `StoryStartStageNode`（关卡 `52`／`53`）。关卡、怪物组、技能物品、阵型、场景和属性二进制均读取 `871_156598` 所选官方来源，九份共享公式源码与当前程序集反编译结果逐字节相同。运行载荷为 `Resources/Map14/battle-runtime`，尚未接通正式地图战斗入口。
+- Unity Editor 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和战斗数据 Play Mode 夹具通过；实际消费 1,649 个怪物实例，其中 87 个按测试玩家等级动态计算，逐项比较 C# 官方属性公式与提取名单，并执行实际被动属性、单位建立和主动／被动技能组装。共享单位构造已保留计算后的等级，避免动态关卡技能误用占位等级 1。此夹具不覆盖完整战斗画面、鼠标输入、胜负奖励与存档；剧情对手 `4651`／`4652` 的原 `FightOther` prefab、`npc_middle_model` 骨骼及辉／残影皮肤已定位，原生模型、武器、动画和表现绑定仍待恢复。
+
 - 当前官方程序集及客户端／共享反编译代码已经核验，按原 formatter、构造器与 schema 解码本图导航、放置、169 个模板／动作、93 张关联表、85 份客户端剧情图及对应服务端配置记录。对白为当前 Luban 表的 64 组，保留原顺序、中文键、角色、表情与配音键。配置记录不视为服务端执行器。原脚本中误指向地图 13 的输入已纠正；本图区域和实体分别读取 `mapinfowrap_14.g.bytes` 与 `map_14.g.bytes`。
 - 已从当前官方收据生成统一地图会话格式的 `map14.json`：包含原导航、2,961 个放置、2,961 组实体组件、111 区进度及原配置表；默认出生入口为 101。它尚未进入 `OfficialWorldMapAssetCatalog`，也没有实体显示资源／战斗载荷，不能单独打开为可玩地图。
 - 五个原地图 bundle 及 CAB 闭包共 113 份输入已提取、解码并核对。5,400 个原组件按元数据顺序严格消费字段，29,773 个对象在补齐序列化描述后逐字节核对。`SkeletonAnimation` 仅恢复原序列化 schema，包括私有 `_animationName`，与独立骨骼组件解析器逐字段比较；此步骤不实现或替代 Spine 动画运行代码。
@@ -55,6 +58,8 @@
 - 完成编辑器与 Windows Player 的受影响流程、模拟输入、完整画面及存档验证，提交并发布包含本图成果的 Windows 可执行版本。当前没有本图可游玩版本交付结论。
 
 ### 官方来源与入口
+
+- [当前战斗数据提取](../../scripts/prepare_unity_map14_battle_data.py)、[原对象／构造器／formatter／公式来源](../../assets/reference/official-map/map14-battles-source-manifest.json)、[运行载荷生成](../../scripts/prepare_unity_map14_battle_runtime.py)、[运行绑定来源](../../assets/reference/official-map/map14-battle-runtime-source-manifest.json)及[数据 Play Mode 校验](../../unity/Assets/Game/Editor/OfficialMap14BattleDataAcceptance.cs)；共享怪物构造位于 `OfficialMainlineMapRuntime.BattleMonsters.cs`。
 
 - [提交窗口字段／素材生成器](../../scripts/prepare_unity_map14_handin_ui.py)、[官方 UI 严格解码](../../scripts/map14_handin_ui_source.py)、[原对象／代码／输入输出来源清单](../../assets/reference/official-map/map14-handin-ui-source-manifest.json)、[原生绑定来源清单](../../assets/reference/official-map/map14-handin-ui-bindings-source-manifest.json)；原始投影位于 `Assets/Official/World/Map/14/UI/HandIn/`，运行目录为 `Resources/Map14/UI/HandIn/`，Unity 绑定入口为 `Zjcs.Editor.OfficialMap11UiTools.ImportMap14HandIn`，故事回调为 `OfficialMainlineMapRuntime.HandIn.cs`。
 

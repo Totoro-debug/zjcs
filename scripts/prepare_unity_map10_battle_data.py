@@ -409,7 +409,10 @@ def collect_monster_rosters(stage_rows: list[dict], arrays: dict[int, dict], sce
                 })
             if (group_index + 1 > len(group_monster_ids)
                     or (not allow_unused_monster_ids and group_index + 1 != len(group_monster_ids))):
-                raise ValueError("Official formation group count differs from the stage monster list")
+                raise ValueError("Official formation group count differs from the stage monster list: "
+                                 + str(stage["Id"]) + "/wave" + str(wave_index)
+                                 + " groups=" + str(group_index + 1)
+                                 + " monsters=" + str(len(group_monster_ids)))
             waves.append({"Index": wave_index, "ArrayId": array_id, "Origin": origin, "Units": units})
         rosters.append({"StageId": int(stage["Id"]), "GameId": int(stage["GameId"]),
                         "MaxRound": int(stage["MaxRound"]), "MonsterGroupNo": int(stage["MonsterGroupNo"]),

@@ -381,33 +381,8 @@ namespace Zjcs.Presentation.World
                         : source.Properties.ToDictionary(value => value.Id, value => value.Value);
                     ApplyMonsterPassiveSkills(combatCatalog, skillItems, properties, source,
                         monsterLevel, monsterSubRank);
-                    long maxHp = Property(properties, 3);
-                    if (maxHp <= 0) throw new InvalidDataException("Official Map10 monster MaxHp is not positive: " + source.MonsterId);
-                    var unit = new FightBattleUnitState
-                    {
-                        Id = nextUnitId++,
-                        Side = 2,
-                        CharacterType = 2,
-                        MonsterId = source.MonsterId,
-                        MonsterGroupNo = source.MonsterGroupNo,
-                        MonsterType = source.MonsterType,
-                        MaxHpPlies = combatCatalog.MonsterHpPliesFor(source.MonsterId,
-                            source.MonsterGroupNo, monsterLevel),
-                        Level = mountLift ? monsterLevel : Mathf.RoundToInt(source.Level),
-                        SubRank = monsterSubRank,
-                        Wave = sourceWave.Index,
-                        X = source.Position.X,
-                        Y = source.Position.Y,
-                        Hp = maxHp,
-                        MaxHp = maxHp,
-                        LastMaxHp = maxHp,
-                        MoveMask = moveMask,
-                        Properties = ToProperties(properties)
-                    };
-                    unit.MoveDist = formula.CalculateMoveDist(properties);
-                    unit.Turn.Id = unit.Id;
-                    unit.Turn.Hp = unit.Hp;
-                    unit.Turn.Speed = CheckedProperty(properties, 4);
+                    FightBattleUnitState unit = CreateMonsterBattleUnit(combatCatalog, formula, source,
+                        properties, monsterLevel, monsterSubRank, nextUnitId++, moveMask);
                     checkpoint.Units.Add(unit);
                     wave.UnitIds.Add(unit.Id);
                     AssembleMonsterSkills(combatCatalog, skillItems, unit, source);
