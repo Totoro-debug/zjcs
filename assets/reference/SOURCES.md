@@ -391,15 +391,15 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 ## 角色职业总览、职业树与养成
 
-2026-10-13：核对固定版本 `854_156383` 的 `ProfessionOverviewPanel / ProfessionPanel / ProfessionTreePanel / ProfessionUpgradePanel / ProfessionChangePanel / ProfessionPromotionPanel` 及公共 `BattleFormulaHandler`。此前角色职业入口误用了属性弹窗，仅显示描述和临时升级按钮；现改用 `CharacterPanelProfessionPanel` 的原始不透明背景、职业立绘、特点雷达、总等级属性、底部页签和内嵌分支树，并接入职业详情、升级、转职与晋升的专有原始界面。原位阶突破界面保留为独立 `rank_upgrade`，不再混作职业页。
+职业页的官方实现为 `ProfessionOverviewPanel`、`ProfessionTreePanel`、`ProfessionTreePanelItem`、`ProfessionPanel`、`ProfessionUpgradePanel`、`ProfessionChangePanel`、`ProfessionPromotionPanel`；等级属性、消耗与奖励继续核对官方 `profession_base`、`level_prop`、`profession_level_cost` 和 `achievement`。旧 `ui.json` 节点投影和历史本地接线不作为 Unity 原生 prefab 迁移或可玩验证的完成依据，当前状态见[职业功能页](../../docs/features/professions.md)。
 
-`python scripts/prepare_profession_ui.py` 校验固定 APK，读取 APK 及同版本、具有下载凭据的官方 CDN 缓存，转换七个 prefab 入口及其内嵌布局、动画、状态切换、动态引用和中文文本。官方 `ProfessionSettings` 的 GUID 用于男女完整立绘、职业颜色和武器标记；补齐全部 376 个职业技能的原始图标。572 项相关运行资源均记录原 bundle、APK / CDN 来源、对象、输入身份、操作及输出 SHA256，并进入显式加载清单；来源见 [profession-ui/source-manifest.json](profession-ui/source-manifest.json)。没有绘制替代图片。
+当前原生转换从 APK 和已校验的 `871_156598` 官方资源取得 355 个 bundle 的依赖闭包；职业 prefab 包 MD5 为 `66728446397356c9e2febcd2ebf9f057`，与 APK 的 `854_156383` 同名包一致。`scripts/prepare_unity_profession_native_inputs.py` 严格恢复职业包 8357 个、规则弹窗包 241 个组件的序列化字段，写入、重开并逐字段对比；所有未更改对象保持原字节。Spine、Wwise 和布局组件仅恢复用于转换的真实序列化 schema，不构造替代 runtime。程序集、原生 metadata、类型表、工具、原始／转换输入哈希见 [native-input-source-manifest.json](profession-ui/native-input-source-manifest.json)。
 
-升级使用原 `profession_level_cost` 的徽章需求和等级上限，晋升使用原 `PromoteConditon` 的前置职业及总职业等级，不追加角色等级门槛。累计等级属性来自官方中文 / `level_prop.g.bytes` 分包，完整读取 30 个职业属性类别；当前职业特点的基础属性倍率按原 `HandlePropRate → HandleBasePercentProps` 顺序计算，分别截断增量，并与历次等级属性接入本地战斗及属性来源。原总职业等级成就读取 `AchievementType.TotalProfessionLevel`，恢复固定奖励和后续 2000 轮循环奖励；各项扣费、职业切换、已领取记录均通过本地事务保存。
+`prepare_unity_profession_native_export.py` 复用独立 AssetRipper 1.3.14 导出和反向恢复工具，把临时有类型向量还原为原始托管引用注册表。22 个导出资产中的 328 个注册表、387 条记录和 4938 个对象引用已经核对，包含 RID、原始顺序、字段、标量、浮点位值和完整层级身份；另有 25 个空注册表。凭据见 [native-export-source-manifest.json](profession-ui/native-export-source-manifest.json)。这些结果仍是转换缓存；尚未完成所有官方运行时组件、Windows shader 和原生 prefab 的显式绑定，不能视为可运行界面。
 
-职业树卡片使用官方职业立绘；原专属换装网格、导师寻路、服务器晋升任务和完整演出尚未迁移，后两者在单机版使用本地晋升条件与确认操作。职业相关属性已接入现有单机战斗，角色基础属性及完整技能 / 战力公式仍沿用已登记的本地适配，不宣称完整原版战斗已经还原。
+职业主页面立绘按 `ProfessionSettings.mColors` 的男女 GUID，从 APK YooAsset `AssetTable` 定位原角色 Sprite，保留透明像素、尺寸、PPU、pivot 和 border。38 个职业的男女映射复用 12 个唯一图片，进入 `OfficialCharacterAssetCatalog.sprites` 显式绑定；不复制多份相同图片。原始 bundle、版本、MD5、对象、GUID 和输出 SHA256 见 [portraits-source-manifest.json](profession-ui/portraits-source-manifest.json)。职业树须由原 `ProfessionCharacterPortrait`／`ProfessionAppearance` 使用官方骨骼、网格、外观和动作构建，不能以主页面立绘代替。
 
-2026-10-13 追加修复职业图标及等级说明：按原 `ProfessionOverviewPanel.UpdateProfessionView`，图标本体和阴影均使用 `GetSecondIconPath`（`Icon2`），替换误用的方形 `Icon3`；换职业时同步当前 Sprite 的画布 / 裁切，保留原前景色与灰色阴影的透明度。按原 `OnViewHelp → RuleDialog.SetRule("ProfessionLevelInfo")`，从 APK 提取 `RuleDialog` 及其通用包依赖 `TipInfo1`，解码 `rule_tip.g.bytes` 的 557 条规则并按 Order 取三条原始中文等级说明。职业来源清单现含九个 prefab 入口、576 项素材凭据，保留此前已提取技能图标的来源与输出哈希；重复转换不会丢失缓存素材凭据。
+成就按官方组 10／类型 56、四个固定档、一个循环起始档和 2000 轮五项递增配置生成 10005 档。官方 `AchievementPanelItem` 请求 `(group=10,count=-1,receiveSameType=false)`，共享 `Player.TryRecordAlreadyGotAchievementReward` 明确领取该组所有已完成、未领取档位。C# 迁移已通过原配置边界、五行显示、批量领取和重复领取保护测试；这不替代 Unity 点击、奖励图标、存档写盘与恢复的验证。
 
 ## 技能首页与安装流程复核
 

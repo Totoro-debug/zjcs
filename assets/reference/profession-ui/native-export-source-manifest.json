@@ -1,0 +1,193 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "input_receipt": {
+    "path": ".tools/profession-native-ui/871_156598/typed/inputs/source-manifest.json",
+    "sha256": "a03697282baff70c62b3949b2a910a17bf7e4811f31e6c9fe5c7e1021cb3d370"
+  },
+  "tool": {
+    "path": ".tools/profession-native-ui/871_156598/typed/runner/AssetRipper.GUI.Free.exe",
+    "sha256": "11ec892dcd70b1b86f2e52db631e83e007f6103daa20a9616ecaa7a95baa9f21",
+    "version": "1.3.14.0"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_water_entity_export.py",
+    "sha256": "795f41089baef7663e74c8f6491e7481ae9330a941c2f0547547fab0b802481c"
+  },
+  "entry": {
+    "path": "scripts/prepare_unity_profession_native_export.py",
+    "sha256": "481f9eb00e2da1383031fef5f3487c6e1ef33cc1490419f3f5973d66c59e18fe"
+  },
+  "verification_library": {
+    "path": "scripts/official_native_yaml_verification.py",
+    "sha256": "8b7535821b433d7c0f2a55fc0faa8c62a07432b15cf6215dc3856efe0feb5fd9"
+  },
+  "counts": {
+    "empty_registries": 25,
+    "native_pointers": 4938,
+    "checked_values": 21006,
+    "registries": 328,
+    "reference_records": 387
+  },
+  "outputs": [
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "input_sha256": "09924f3dcd7ef9506b39863e8e59b68b923e0218c8a1c8f1d0112fb415c2cd80",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "sha256": "84a7225a0867bfd76472f5deec536fee6f6fbbedf8ad55ae12f43d99b4061e65",
+      "registries": 147
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeCostItemConfirmDialog.prefab",
+      "input_sha256": "31a868bd282486426e8e82c7f2750a9061266c49edb26261902ac0d81edf9af4",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeCostItemConfirmDialog.prefab",
+      "sha256": "b45f43f79c490bf9eecf71a51f4ea34fb441a3a0a2b0ee6638a7f1f11554f606",
+      "registries": 5
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeProfessionBtn.prefab",
+      "input_sha256": "6970b7ad6fc23c9abf3b4cc314cce6f139cdf2c0bb765e92f9c021156911e60c",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeProfessionBtn.prefab",
+      "sha256": "5db3d4aa142df9ac94d5da96dea744f3e7595752b91b5d30df521f16ee55df7b",
+      "registries": 4
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeSelectProItem.prefab",
+      "input_sha256": "3cac15079236feac2260f3f9a8b092174b58bd8ef0dff9e4ae0a06f42b32ea78",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeSelectProItem.prefab",
+      "sha256": "b9810150d40b73cc0e931e5504ac4eb024f8bb6c741611e057773f6e16f4dc35",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeSelectProPanel.prefab",
+      "input_sha256": "0afe3b61ddaa7ae385a50ef55ec5d5143ff3b98988c7d94525b317ecbb457775",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomChangeSelectProPanel.prefab",
+      "sha256": "13dab4919cc190212a5451a8bdfcb58db2a263f06883b2770789e2dca871808d",
+      "registries": 4
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionChangeCanclePanel.prefab",
+      "input_sha256": "dddaba92811a9f53b67440a2139b13e9a92b3d71682cc1164d28bbb2486c3f5f",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionChangeCanclePanel.prefab",
+      "sha256": "4b54ce5f4f2d82c6ed91a2f5cd73d13ef13ca55a080b40f1c5db7f69192d0f7e",
+      "registries": 2
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionChangePanel.prefab",
+      "input_sha256": "0a3b7a33a49a1f456ce90aa5037669e0a1efab84cb9066ceb19502882a1585c2",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionChangePanel.prefab",
+      "sha256": "506728b94ee0caa680eed2bcdf28cd37901b222e5acc4af5467e242a2fddb19d",
+      "registries": 2
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionSkillDetailDialog.prefab",
+      "input_sha256": "28893f72484b99929553702b3cead59d48bda212c02e182ae7728f3f5e66eae3",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionSkillDetailDialog.prefab",
+      "sha256": "3b45cb343cee2b348637d22480712b93265240163f7c79dc455e5023b14e3802",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionSkillPanlSelectPanel.prefab",
+      "input_sha256": "e8a93da030b057828eb074116c07b270ad31e877c04044059e7098f1f42af6d3",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/FreedomChangeProfession/FreedomProfessionSkillPanlSelectPanel.prefab",
+      "sha256": "07e161336018a744a109fc1f7b7fbb4c426904369a09bf7e6f5e265375fc7b91",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionChangePanel.prefab",
+      "input_sha256": "63711a0a8559915e94dfa2ffd5b9479a31cd51ada0c2760b9784982c5e111ca4",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionChangePanel.prefab",
+      "sha256": "0798b65f3ef1d49604e140753100f4a6c3de170f913906c52c113be44a5d245d",
+      "registries": 2
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionConditionPrefab.prefab",
+      "input_sha256": "4e1dde8edc55228e566aa7f354ec7f176ebde2608cc91ddce05e8475a3288178",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionConditionPrefab.prefab",
+      "sha256": "0a27357904719ad9ba3e1459bd2397db08fef56012e0b9a73ee7f72b2860971e",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionConvertPropItem.prefab",
+      "input_sha256": "556595b777db7e79d6156231123c69b7c3911e7a1a6de0d7198b5408df06dc05",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionConvertPropItem.prefab",
+      "sha256": "5808ea94f31febaaa4b272096015b60be407e68863453621dd469f3e17424300",
+      "registries": 2
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPanel.prefab",
+      "input_sha256": "0d836ed53f5e141ebc1a40553d102d067f0624364a5d3a87bd96e4100f43ed44",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPanel.prefab",
+      "sha256": "5941b88580f80d042e055e03b39386036d3c5473b380fb32b589f2111ae3e5a1",
+      "registries": 13
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPromotionPanel.prefab",
+      "input_sha256": "9a0541012045e3790d838d3a05fbbef651db6c0c64d6f1da8e4f4e4fe18cfc73",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPromotionPanel.prefab",
+      "sha256": "ade4d8896981b99dae34ee5df65cc1e2ea320de0d455c04d4148ff220f5a91a9",
+      "registries": 2
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPropItem.prefab",
+      "input_sha256": "204d511e90132b316fa47bcada2b1f587f6c227a8707f9f37dd2bf0e1c28422c",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPropItem.prefab",
+      "sha256": "bbc07c5d192d5fe6fb360432a2c7cbda18e5da932778c16e3d166becf264155f",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPropRadar.prefab",
+      "input_sha256": "cfa2967986597745d8873c04e188f3a23d0abff1f10011ec67d98082858c2910",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPropRadar.prefab",
+      "sha256": "a0dd741603b5a3580951aaaec0ff14e0e19bca02e0eea948b5acd4e16d52efdc",
+      "registries": 5
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionTreePanel.prefab",
+      "input_sha256": "bf3d8b0af4d1103c81a0d1a5eb73e626763c14279a83b875e2a0f88b57375682",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionTreePanel.prefab",
+      "sha256": "18d6387ecb1970345f47ad44c60b1ced80e4b541f610d657b3e45ae86443f0c1",
+      "registries": 121
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionTreePanelItem.prefab",
+      "input_sha256": "565a952a6bc7d1c54b8fdf839d8874f3e6861e8999773d52ab21b59c5380017a",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionTreePanelItem.prefab",
+      "sha256": "d7ece48246038d550e354b33bd200519d2a929a0e0e88596aa704a7b9bd778e1",
+      "registries": 4
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionTreePanelItemLeft.prefab",
+      "input_sha256": "ec186642ba830dc3b1929bdbfe278a011a52e16ea48dde40eb7a7f9f2dd9bf7e",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionTreePanelItemLeft.prefab",
+      "sha256": "006e43660562b25fda5a0229ce37d47867833d51cecdc9437f8ef84fa036a942",
+      "registries": 4
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionTreePanelItemRight.prefab",
+      "input_sha256": "0f2c74f171cf7647d8e236d19456ba30537d63a5a5d413f4d4f51256bfee4fa8",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionTreePanelItemRight.prefab",
+      "sha256": "8037eeb9777e5b1f9dc41386b24f0c8bc10d3e051f7f77ffac3e6ef511c0bb6c",
+      "registries": 4
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+      "input_sha256": "2c674c77420d4f323041372173849f09a042877799c4f0c8778f881080f52362",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+      "sha256": "cee192756458e87f844128836d89bbf53041ac0b66ab1b85c05e2049bc0f382b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Rule/RulePropItem.prefab",
+      "input_sha256": "0d04ac9b245c47311f2736e220078afb6b42f24311514a1c20ec8652ada5108f",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Rule/RulePropItem.prefab",
+      "sha256": "7fc163dee0322fcd4206fafe79ee6d0a678a3c9405af07dffe24e0f17b19950a",
+      "registries": 1
+    }
+  ],
+  "operation": "AssetRipper 1.3.14 UnityProject export of the verified input closure; restore typed registry vectors to original ordered RefIds while retaining exported YAML record text, including empty registries. Strip and verify temporary source CAB/path IDs. Compare every original reference field/list/scalar, original float32/float64 bits, descriptor and RID; decode packed primitive arrays with their original type and width. Resolve every non-null pointer on both sides and compare native component type and complete original GameObject hierarchy (or named asset identity), with source IDs for registry components.",
+  "limitations": [
+    "Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."
+  ],
+  "subject": "profession UI"
+}

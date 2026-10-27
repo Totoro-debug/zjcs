@@ -94,7 +94,7 @@ def original_identity(obj):
 
 
 def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
-          cache_root=CACHE, proof_path=PROOF, expected_counts=(22, 11), entry_path=None):
+          cache_root=CACHE, proof_path=PROOF, expected_counts=(22, 11), entry_path=None, map_class_id=13, subject="water entity"):
     exported = cache_root / "export/ExportedProject/Assets"
     destination = cache_root / "restored"
     receipt = json.loads(receipt_path.read_bytes())
@@ -264,7 +264,7 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
                          " outputs=" + str(len(outputs)) + " originals=" + str(len(originals)) +
                          " unchecked=" + str(len(set(originals) - checked)))
     ripper = cache_root / "runner/AssetRipper.GUI.Free.exe"
-    result = dict(format=1, manifest=apk.version, mapClassId=13,
+    result = dict(format=1, manifest=apk.version, mapClassId=map_class_id,
         input_receipt=dict(path=source_path(receipt_path), sha256=sha(receipt_path.read_bytes())),
         tool=dict(path=source_path(ripper), sha256=sha(ripper.read_bytes()), version="1.3.14.0"),
         generator=dict(path=source_path(Path(__file__)), sha256=sha(Path(__file__).read_bytes())),
@@ -275,6 +275,9 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
         counts=dict(counts), outputs=outputs,
         operation="AssetRipper 1.3.14 UnityProject export of the verified input closure; restore typed registry vectors to original ordered RefIds while retaining exported YAML record text, including empty registries. Strip and verify temporary source CAB/path IDs. Compare every original reference field/list/scalar, original float32/float64 bits, descriptor and RID; decode packed primitive arrays with their original type and width. Resolve every non-null pointer on both sides and compare native component type and complete original GameObject hierarchy (or named asset identity), with source IDs for registry components.",
         limitations=["Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."])
+    if map_class_id is None:
+        result.pop("mapClassId")
+        result["subject"] = subject
     write(proof_path, encode(result))
     print("Entity native export references verified:", dict(counts), "outputs:", len(outputs), flush=True)
 

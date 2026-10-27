@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "subject": "profession UI and total-level achievement",
+  "official_code_root": ".tools/source-packages/official-code",
+  "ports": [
+    {
+      "official": "client-source/ImageLocator.cs",
+      "official_sha256": "3e8adf5bef2d87f090be5a281da2d9ce6a56324e62fe32f5436e488916efabb4",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ImageLocator.cs",
+      "runtime_sha256": "2d9b6fb35d38c7195b86dcd9f51822ab7ebf31b86d7c2e18cf39fc3e31a7ba74",
+      "meta_sha256": "833577b055bd4dfca02cdcb7cebc8e87f1ef32ffc832ec230a9ebce607d705f3",
+      "scope": "Sprite native size and pivot correction."
+    },
+    {
+      "official": "client-source/ProfessionOverviewPanel.cs",
+      "official_sha256": "590e505edfa145e400c510a01714803449525bbb104c8a3e65cf57b94cbbfabf",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionOverviewPanel.cs",
+      "runtime_sha256": "ab55ec7bc0a95539543d366680d2e94f28f0c4e0d8da2c44b74b2ee79431721a",
+      "meta_sha256": "623902a8e4b0fa8a14a2d360ff97b50af1aec6a30322b3373c8806764e0d25a5",
+      "scope": "Original tab state order, source image selection, property row pool and alternating backgrounds; offline data/resource/window services are injected."
+    },
+    {
+      "official": "client-source/ProfessionPropRadar.cs",
+      "official_sha256": "c97e7fb67658a87d2cb51c4041773745fd1b69db96fc5951df99a10011f6e762",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadar.cs",
+      "runtime_sha256": "9f03b27d687c967924c5b29d654a3dcc323463036b7121f48db23c3e2a4400a3",
+      "meta_sha256": "322cc611cd19a92b1ae7f4d07b79bb92adc4cbcc87f8e5b343ba7e593557bcd7",
+      "scope": "Original radar slot order, nonlinear function, ordinary property row cache and settings color."
+    },
+    {
+      "official": "client-source/ProfessionPropRadarDrawer.cs",
+      "official_sha256": "06275fa7c386257e62db5903b6ded7ef9674c051d497ed0ad0f2dfc2e5db3167",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadarDrawer.cs",
+      "runtime_sha256": "9ebcc29cf16ca806c457c6e27dc4eea4ddee543522dadb9bab0b3528b96e7283",
+      "meta_sha256": "b73d0c6f923e04dfefb2b7e2f5d3613f3e29beb64d36900810c3be36656f6e64",
+      "scope": "Original Graphic mesh vertices, colors and triangles."
+    },
+    {
+      "official": "client-source/PlayerPropItem.cs",
+      "official_sha256": "04564d758ff3e8115b7083d9f86a00d32cd5389a4202653987bce5da02298544",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
+      "runtime_sha256": "5bdbf3a29fc7a1769c1e9a1f1e46cc4f0d6750cf15432fee2d88dd37b87b7cd1",
+      "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568",
+      "scope": "String value presentation lifecycle, preview visibility, delayed text effect and background/line visibility. The general typed/colorful value and blessing-detail paths are not migrated by this port."
+    }
+  ],
+  "achievement": {
+    "source_code": {
+      "common-source/Common/AchievementRawInfoParser.cs": "73402cd4fc2aa3b03f2d107724fc5004f778ab620c7083af01389da121efc124",
+      "common-source/Common/CycleTemplateInfo.cs": "daca14e102c50743277a42b6bb1b8e5899619908cbb1ec67418157608cda49e0",
+      "common-source/Common/AchievementInfo.cs": "f8e542e362bc04d5c7ec2643b7737b3125e973ee23a8be9c25af9a3e193c0093",
+      "common-source/Common/AchievementUtils.cs": "198475e6d335eabbf40af551c316d69c1a31ab26bcf433057f4274fed503ced4",
+      "common-source/Common/Player.cs": "9b7193208966a332c7f28e758d48682e7e0ffb27c01472d9c93f1f563a1bd933",
+      "client-source/AchievementPanelItem.cs": "5882612045b1c78ae84d55962b76bcc6815cda7aba7b12d547f837e0b5b0e94e",
+      "common-source/PlayerServiceProxyImpl.cs": "756fca49c338bf91dbe9c698b18ccf759ead20876f68963f9ad2df2b332e394f"
+    },
+    "rules": {
+      "path": "assets/official/rules.json",
+      "sha256": "f8c0f515d2f44c5d0847d5422b49d8823578d55de69f59f2d10ec5db83091256"
+    },
+    "runtime": {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfficialProfessionAchievementRules.cs",
+      "sha256": "5ec05fa8948ffaf1723463cca5d825eeb7c000a3ee6fc3d80cfb9d2e76e9287b"
+    },
+    "fixtures": {
+      "path": "scripts/fixtures/profession_achievements_harness.cs",
+      "sha256": "365b5e1e82c398214713c9ab384036011e72f05effaff722d156a86b4c43c6f7"
+    }
+  },
+  "limitations": [
+    "Native prefab runtime scripts and resource bindings are incomplete; these code ports have not been exercised in the profession Play Mode flow.",
+    "PlayerPropItem port is scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
+    "No new full asset snapshot or Windows Player release is produced by this source restoration."
+  ]
+}

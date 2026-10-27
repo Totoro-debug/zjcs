@@ -40,11 +40,58 @@ def build():
         raise ValueError("The original PreviewAppearanceDialog template is missing or not pinned.")
     packaged_screens = {name: screens[name] for name in names}
     packaged_screens["appearance_preview"] = {"root": preview["root"]}
-    packaged_screen_names = list(names) + ["appearance_preview"]
+    profession_names = (
+        "profession", "profession_detail", "profession_promotion", "profession_change",
+        "profession_prop", "profession_skill", "profession_convert_prop", "profession_notify",
+        "profession_skill_notify", "profession_level_rules", "profession_rule_row",
+        "profession_overview_prop", "profession_promotion_prop", "profession_condition",
+        "profession_tree_condition", "profession_notify_prop", "profession_player",
+    )
+    if any(name not in screens for name in profession_names):
+        raise ValueError("An original profession panel is missing from the official UI catalog")
+    packaged_screens.update({name: screens[name] for name in profession_names})
+    profession_data = ROOT / "assets/official/professions.json"
+    profession_payload = json.loads(profession_data.read_text(encoding="utf-8"))
+    profession_source = json.loads((ROOT / "assets/reference/profession-ui/source-manifest.json").read_text(encoding="utf-8"))
+    if profession_source.get("manifest") != "854_156383" or profession_source.get("outputs", {}).get("professions.json") != sha256(profession_data):
+        raise ValueError("The original profession settings do not match their pinned source manifest")
+    rules_path = ROOT / "assets/official/rules.json"
+    rules_source_path = ROOT / "assets/reference/dungeons-runtime-source-manifest.json"
+    rules_source = json.loads(rules_source_path.read_text(encoding="utf-8"))
+    if rules_source.get("manifest") != "854_156383" or not any(row.get("path") == "assets/official/rules.json"
+               and row.get("sha256") == sha256(rules_path) for row in rules_source.get("inputs", [])):
+        raise ValueError("The profession rules do not match their pinned official data source")
+    official_rules = json.loads(rules_path.read_text(encoding="utf-8"))
+    achievements = [row for row in official_rules["achievement"]
+                    if row.get("Group") == 10 and row.get("AchievementType") == 56]
+    profession_rules = {
+        "profession_base": official_rules["profession_base"],
+        "profession_level_cost": official_rules["profession_level_cost"],
+        "profession_achievement": achievements,
+        "source_sha256": sha256(rules_path),
+    }
+    portrait_manifest_path = ROOT / "assets/reference/profession-ui/portraits-source-manifest.json"
+    portrait_manifest = json.loads(portrait_manifest_path.read_text(encoding="utf-8"))
+    if portrait_manifest.get("manifest") != "854_156383" or not portrait_manifest.get("profession_portraits"):
+        raise ValueError("The pinned profession portrait extraction receipt is missing or invalid")
+    for rows in portrait_manifest["profession_portraits"].values():
+        for source_path in rows.values():
+            filename = source_path.rsplit("/", 1)[-1]
+            sprite_path = ROOT / "unity/Assets/Official/Character/Art" / source_path
+            meta_path = sprite_path.with_suffix(sprite_path.suffix + ".meta")
+            if not sprite_path.is_file() or sha256(sprite_path) != portrait_manifest["outputs"].get(
+                    "unity/Assets/Official/Character/Art/" + source_path):
+                raise ValueError("An extracted profession portrait differs from its pinned receipt: " + filename)
+            if not meta_path.is_file():
+                raise ValueError("A profession portrait Unity sprite meta file is missing: " + filename)
     payload = {
         "manifest": "854_156383",
         "ui_sha256": expected,
         "appearance_preview_sha256": sha256(preview_path),
+        "profession_ui_sha256": sha256(profession_data),
+        "profession": profession_payload,
+        "profession_rules": profession_rules,
+        "profession_portraits": portrait_manifest["profession_portraits"],
         "screens": packaged_screens,
         "bindings": bindings,
     }
@@ -72,14 +119,22 @@ def build():
         "manifest": "854_156383",
         "input": "assets/official/ui.json",
         "input_sha256": expected,
-        "screens": packaged_screen_names,
+        "screens": list(names) + ["appearance_preview"] + list(profession_names),
+        "profession_settings_input": "assets/official/professions.json",
+        "profession_settings_sha256": sha256(profession_data),
+        "profession_rules_input": "assets/official/rules.json",
+        "profession_rules_sha256": sha256(rules_path),
+        "profession_portraits_input": "assets/reference/profession-ui/portraits-source-manifest.json",
+        "profession_portraits_sha256": sha256(portrait_manifest_path),
+        "profession_portrait_count": len(portrait_manifest["asset_guids"]),
+        "profession_achievement_rows": len(achievements),
         "appearance_preview_input": "assets/official/appearance-chest-preview.json",
         "appearance_preview_input_sha256": sha256(preview_path),
         "output": "unity/Assets/Official/Character/character-panels.json",
         "output_sha256": sha256(OUTPUT),
     }
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("Packaged original character panel layouts:", ", ".join(packaged_screen_names))
+    print("Packaged original character panel layouts:", ", ".join(list(names) + ["appearance_preview"] + list(profession_names)))
 
 
 if __name__ == "__main__":
