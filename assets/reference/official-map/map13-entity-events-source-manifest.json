@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+    "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEventReceiver.cs",
+      "sha256": "fa8b94cfd54fc9735200f6da938c5b75da8b61d4cc8aa5130679183ba572f055"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEventDelegate.cs",
+      "sha256": "a3d491beb900dfe645cbc4c1e20878ebc4b90b8e9bbc6957a206307b07cba760"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EventDelegateBasicBase.cs",
+      "sha256": "f8d7e8a53676d173e388610b01808138196ad3a8e6eca3ea6b94b3dae278a4c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EventDelegateBase.cs",
+      "sha256": "bb2e44f1fc80ce7dc668c298b9872153e4ccde9dc9797033188ff9b9c09da34b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/IEventReceiver.cs",
+      "sha256": "bf6472e29d85067098ee047f402c865388094df9415fda8fda6050e5a5c6a146"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/IEventDelegate.cs",
+      "sha256": "297bab3f123fb8a705c46d755c0b593ed9033dabb1a048558f5453b4e3fd0d9a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/EventDelegateBasicBase.cs",
+      "sha256": "35c990e871496ce73b7e20ac17510e9262176a9187c30e0fbc3660cd5b3ce0f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/EventDelegateBase.cs",
+      "sha256": "32f79c7dec0b6b5b05ac18955539e70f2f90daffe4345888ee0b3f3de495eff7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/Zjcs.Official.World.Map13EntityEvents.asmdef",
+      "sha256": "abecb86e35fba3a0ebae7fd80bbb40f685678a95dcc1e535b726523697152afd"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_entity_events.py",
+    "sha256": "0cff629dd91c8a302c11ea36d32a01df57d89088a48177ee4a72cebf77deebff"
+  },
+  "adaptation": "Namespace and 17 diagnostic blocks only. Original zero-to-four argument generic dispatch, receiver snapshot, nested dispatch, thread-local list pool, duplicate receiver behavior, Merge/Clear and delegate dictionary retention are unchanged.",
+  "limitations": [
+    "This is event dispatch only. Entity/container lifecycle, view binding, map interaction and saves still require migration."
+  ]
+}
