@@ -1821,3 +1821,5 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 龙之国实体转换输入：按当前871官方 EC 索引、地图放置与全部显示状态选择器定位416个实际 prefab、33个根 bundle；CAB 与动态贴图闭包为1544份已核对输入和3228条绑定。25419个组件及2643个托管引用注册表恢复字段描述，117858个内部对象在二进制重编码／严格重读后核对，其他原载荷逐字节保留。CinemachineComposer 的15字段、属性、继承与 APK 元数据核验后补齐序列化描述，没有实现替代相机逻辑。输入输出、程序集、元数据与工具哈希见[实体来源](official-map/map14-native-entity-input-source-manifest.json)。转换输入不是可运行实体，原生 prefab／脚本／shader／动画绑定与完整地图验证仍待完成，范围见[龙之国](../../docs/maps/map-14.md)。
 
 战斗替身使用官方12200／12201／4600实体及12202寿命、10140同步技能，原始组件、配置、描述与用户确认的单机裁决分别记录于 [替身来源清单](battle-rules/voodoo-doll-source-manifest.json)。`scripts/prepare_battle_voodoo_doll.py` 记录输入；固定真伤绕盾、溢出传导与减益转移为用户已确认的离线执行接线，原生模型和完整演出尚未完成。
+
+龙之国实体原生导出：私有 AssetRipper 1.3.14 完成1544份已核验输入的 UnityProject 转换；1822份原生缓存载荷恢复2643个注册表及10376条原引用记录，保留43个空注册表。独立核对193131个值、16576个实际非空指针、1001个按原类型解包的数组及原RID／顺序／浮点位表示，剥离并核验2643组临时来源标记。输入、转换器、验证工具与输出哈希见[实体导出来源](official-map/map14-native-entity-export-source-manifest.json)。此成果仅为原生缓存，游戏脚本、shader、动画、正式实体宿主及运行验证仍待接入，范围见[龙之国](../../docs/maps/map-14.md)。
