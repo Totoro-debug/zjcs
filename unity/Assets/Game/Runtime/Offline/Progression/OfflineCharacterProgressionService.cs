@@ -347,7 +347,7 @@ namespace Zjcs.Offline.Progression
                 {
                     Status = result.Code == OfflineSkillResultCode.Unchanged
                         ? ProgressionResultStatus.Unchanged : ProgressionResultStatus.InvalidState,
-                    Message = result.Message
+                    Message = string.IsNullOrEmpty(result.Message) ? result.Code.ToString() : result.Message
                 };
             Dictionary<int, long> after = SkillItemCounts(clone);
             ProgressionResult applied = session.ApplyCharacterMutation(player =>
@@ -377,12 +377,27 @@ namespace Zjcs.Offline.Progression
         private void SyncSkillItems(OfflineSkillProfile profile, List<OfflineItemStack> inventory)
         {
             profile.Items.Clear();
+            var skillCostItems = new HashSet<int>();
+            foreach (OfflineSkillLevelCost cost in SkillRules?.SlotLevelCosts ?? Array.Empty<OfflineSkillLevelCost>())
+                AddSkillCostItems(skillCostItems, cost?.Items);
+            foreach (OfflineSkillBlessCost cost in SkillRules?.SlotBlessCosts ?? Array.Empty<OfflineSkillBlessCost>())
+                AddSkillCostItems(skillCostItems, cost?.Items);
+            foreach (OfflineSkillDefinition skill in SkillRules?.Skills ?? Array.Empty<OfflineSkillDefinition>())
+                foreach (OfflineSkillRankCost cost in skill?.RankCosts ?? Array.Empty<OfflineSkillRankCost>())
+                    AddSkillCostItems(skillCostItems, cost?.Items);
             foreach (OfflineItemStack stack in inventory)
             {
                 if (stack == null || stack.Count <= 0) continue;
-                if (stack.ItemId != 1 && catalog.ItemType(stack.ItemId) != 111) continue;
+                if (stack.ItemId != 1 && catalog.ItemType(stack.ItemId) != 111
+                    && !skillCostItems.Contains(stack.ItemId)) continue;
                 profile.Items.Add(new OfflineSkillItemCount { ItemId = stack.ItemId, Count = stack.Count });
             }
+        }
+
+        private static void AddSkillCostItems(HashSet<int> itemIds, OfflineSkillItemCount[] costs)
+        {
+            foreach (OfflineSkillItemCount cost in costs ?? Array.Empty<OfflineSkillItemCount>())
+                if (cost != null && cost.ItemId > 0) itemIds.Add(cost.ItemId);
         }
 
         public int SkillMergePiece(int skillId)

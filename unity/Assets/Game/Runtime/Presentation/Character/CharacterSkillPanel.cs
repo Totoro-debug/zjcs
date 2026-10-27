@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -47,6 +48,9 @@ namespace Zjcs.Presentation.Character
         private RectTransform activeGroup;
         private RectTransform passiveGroup;
         private RectTransform skillGrid;
+        private RectTransform skillPieceGrid;
+        private RectTransform skillScrollList;
+        private RectTransform skillPieceScrollList;
         private GameObject emptyTip;
         private Toggle showAll;
         private Text statusText;
@@ -60,6 +64,9 @@ namespace Zjcs.Presentation.Character
         private GameObject confirmationDialog;
         private Coroutine batchReveal;
         private GameObject recommendDialog;
+        private readonly List<GameObject> recommendationItems = new List<GameObject>();
+        private readonly Dictionary<int, GameObject> recommendationRankTabs = new Dictionary<int, GameObject>();
+        private int recommendationRank;
         private readonly List<GameObject> listRows = new List<GameObject>();
         private int listType = ActiveSkillItemType;
         private int selectedType;
@@ -192,6 +199,8 @@ namespace Zjcs.Presentation.Character
 
         private void Bind()
         {
+            foreach (Text text in panel.GetComponentsInChildren<Text>(true)) text.raycastTarget = false;
+            foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true)) text.raycastTarget = false;
             planName = FindTextDeep("SkillPlanName");
             RectTransform nameRect = FindDeep("SkillPlanName");
             if (nameRect != null)
@@ -242,7 +251,12 @@ namespace Zjcs.Presentation.Character
             BindButtonName("NextPlanBtn", () => SwitchPlan(1));
             activeGroup = FindDeep("ActiveSkill");
             passiveGroup = FindDeep("PassiveSkill");
-            skillGrid = FindDeep("skillGrid");
+            skillScrollList = FindDeep(panel.transform, "SkillScrollList") as RectTransform;
+            skillPieceScrollList = FindDeep(panel.transform, "SkillPieceScrollList") as RectTransform;
+            skillGrid = FindDeep(skillScrollList, "skillGrid") as RectTransform;
+            skillPieceGrid = FindDeep(skillPieceScrollList, "skillGrid") as RectTransform;
+            BindSkillListScroll();
+            ConfigureSkillPieceGrid();
             emptyTip = FindDeep("EmptyTip")?.gameObject;
             RectTransform toggle = FindDeep("ShowAll");
             if (toggle != null)
@@ -261,6 +275,61 @@ namespace Zjcs.Presentation.Character
             BuildSlotHandlers(passiveGroup, PassiveSkillItemType);
         }
 
+        private void BindSkillListScroll()
+        {
+            if (skillGrid == null) return;
+            BindSkillScroll(skillScrollList, skillGrid);
+            BindSkillScroll(skillPieceScrollList, skillPieceGrid);
+        }
+
+        private void ConfigureSkillPieceGrid()
+        {
+            if (skillPieceGrid == null || skillPieceScrollList == null) return;
+            GridLayoutGroup grid = skillPieceGrid.GetComponent<GridLayoutGroup>();
+            if (grid == null) grid = skillPieceGrid.gameObject.AddComponent<GridLayoutGroup>();
+            Dictionary<string, object> itemRoot = CharacterModelPackage.AsObject(
+                listItemTemplate["root"], "official skill piece list item root");
+            List<object> itemSize = CharacterModelPackage.AsArray(
+                itemRoot["size_delta"], "official skill piece list item size");
+            grid.cellSize = new Vector2(
+                Convert.ToSingle(itemSize[0], CultureInfo.InvariantCulture),
+                Convert.ToSingle(itemSize[1], CultureInfo.InvariantCulture));
+            grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+            grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+            grid.childAlignment = TextAnchor.UpperLeft;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.spacing = Vector2.zero;
+            RectTransform viewport = FindDeep(skillPieceScrollList, "Viewport") as RectTransform;
+            float availableWidth = viewport == null ? skillPieceGrid.rect.width : viewport.rect.width;
+            grid.constraintCount = Mathf.Max(1, Mathf.FloorToInt(
+                (availableWidth + grid.spacing.x) / (grid.cellSize.x + grid.spacing.x)));
+            skillPieceGrid.anchorMin = new Vector2(0f, 1f);
+            skillPieceGrid.anchorMax = new Vector2(1f, 1f);
+            skillPieceGrid.pivot = new Vector2(0.5f, 1f);
+            skillPieceGrid.anchoredPosition = Vector2.zero;
+            ContentSizeFitter fitter = skillPieceGrid.GetComponent<ContentSizeFitter>();
+            if (fitter == null) fitter = skillPieceGrid.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+
+        private static void BindSkillScroll(RectTransform list, RectTransform content)
+        {
+            if (list == null || content == null) return;
+            RectTransform viewport = FindDeep(list, "Viewport") as RectTransform;
+            if (viewport == null) return;
+            foreach (Graphic graphic in viewport.GetComponents<Graphic>()) graphic.raycastTarget = false;
+            ScrollRect scroll = list.GetComponent<ScrollRect>() ?? list.gameObject.AddComponent<ScrollRect>();
+            scroll.content = content;
+            scroll.viewport = viewport;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.inertia = true;
+            scroll.decelerationRate = 0.135f;
+            scroll.scrollSensitivity = 32f;
+        }
+
         private void BindButtonName(string name, Action action)
         {
             Button button = buttons.Values.FirstOrDefault(value => value.name == name);
@@ -269,7 +338,8 @@ namespace Zjcs.Presentation.Character
 
         private void BindTab(string namePart, int itemType)
         {
-            Button button = buttons.FirstOrDefault(pair => pair.Key.IndexOf(namePart, StringComparison.Ordinal) >= 0).Value;
+            Button button = buttons.Values.FirstOrDefault(value =>
+                value != null && value.name.IndexOf(namePart, StringComparison.Ordinal) >= 0);
             if (button != null) button.onClick.AddListener(() => SelectTab(itemType));
         }
 
@@ -321,6 +391,7 @@ namespace Zjcs.Presentation.Character
                 labelText.text = "\u5347\u7ea7";
                 Button upgradeButton = upgradeObject.GetComponent<Button>();
                 upgradeButton.targetGraphic = upgradeImage;
+                upgradeObject.transform.SetAsLastSibling();
                 int capturedType = itemType;
                 upgradeButton.onClick.AddListener(() => UpgradeSlot(capturedType, slot));
                 SkillSlotDrag drag = slots[index].gameObject.AddComponent<SkillSlotDrag>();
@@ -343,6 +414,7 @@ namespace Zjcs.Presentation.Character
         private void UpgradeSlot(int itemType, int slot)
         {
             ProgressionResult result = progression.UpgradeSkillSlot(itemType, slot);
+            LastMessage = string.IsNullOrEmpty(result.Message) ? result.Status.ToString() : result.Message;
             SetStatus(result.Message ?? result.Status.ToString());
             if (!result.IsApplied) return;
             Refresh();
@@ -423,7 +495,13 @@ namespace Zjcs.Presentation.Character
 
         private void RefreshList()
         {
-            foreach (GameObject row in listRows) if (row != null) Destroy(row);
+            ShowSkillList(listType == PieceItemType);
+            foreach (GameObject row in listRows)
+                if (row != null)
+                {
+                    row.SetActive(false);
+                    Destroy(row);
+                }
             listRows.Clear();
             if (skillGrid == null) return;
             OfflineSkillProfile profile = progression.Player.Skills;
@@ -480,6 +558,16 @@ namespace Zjcs.Presentation.Character
                 if (row != null) listRows.Add(row);
             }
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
+            RefreshSkillListLayout(skillScrollList, skillGrid);
+        }
+
+        private static void RefreshSkillListLayout(RectTransform list, RectTransform content)
+        {
+            if (list == null || content == null) return;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+            Canvas.ForceUpdateCanvases();
+            ScrollRect scroll = list.GetComponent<ScrollRect>();
+            if (scroll != null) scroll.verticalNormalizedPosition = 1f;
         }
 
         private bool HasPiece(int pieceItemId)
@@ -498,6 +586,15 @@ namespace Zjcs.Presentation.Character
 
         private void RefreshPieceList()
         {
+            RectTransform grid = skillPieceGrid;
+            if (grid == null) return;
+            Canvas.ForceUpdateCanvases();
+            GridLayoutGroup pieceLayout = grid.GetComponent<GridLayoutGroup>();
+            RectTransform viewport = FindDeep(skillPieceScrollList, "Viewport") as RectTransform;
+            if (pieceLayout != null && viewport != null && pieceLayout.cellSize.x > 0f)
+                pieceLayout.constraintCount = Mathf.Max(1, Mathf.FloorToInt(
+                    (viewport.rect.width + pieceLayout.spacing.x)
+                    / (pieceLayout.cellSize.x + pieceLayout.spacing.x)));
             OfflineSkillPlayerContext context = progression.SkillContext();
             var pieces = progression.Player.Inventory
                 .Where(value => value != null && value.Count > 0
@@ -509,7 +606,7 @@ namespace Zjcs.Presentation.Character
             {
                 var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
                 var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
-                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), skillGrid,
+                RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), grid,
                     rowNodes, rowButtons);
                 Transform mount = FindDeep(row, "Anchor") ?? row;
                 BuildSkillIcon(stack.ItemId, mount, "SkillIcon");
@@ -534,9 +631,14 @@ namespace Zjcs.Presentation.Character
                 {
                     Button rowButton = row.gameObject.GetComponent<Button>();
                     if (rowButton == null) rowButton = row.gameObject.AddComponent<Button>();
-                    Image target = row.GetComponent<Image>() ?? row.GetComponentInChildren<Image>();
+                    Image target = row.GetComponent<Image>();
+                    if (target == null || !target.enabled)
+                    {
+                        target = row.gameObject.AddComponent<Image>();
+                        target.color = new Color(1f, 1f, 1f, 0.001f);
+                    }
                     rowButton.targetGraphic = target;
-                    if (target != null) target.raycastTarget = true;
+                    target.raycastTarget = true;
                     int skillId = pieceDefinition.ClassId;
                     rowButton.onClick.AddListener(() => OpenPieceDetail(skillId));
                 }
@@ -546,6 +648,7 @@ namespace Zjcs.Presentation.Character
                 listRows.Add(row.gameObject);
             }
             if (emptyTip != null) emptyTip.SetActive(listRows.Count == 0);
+            RefreshSkillListLayout(skillPieceScrollList, skillPieceGrid);
         }
 
         private bool IsPieceAvailable(int itemId, OfflineSkillPlayerContext context)
@@ -583,6 +686,8 @@ namespace Zjcs.Presentation.Character
             var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
             RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(listItemTemplate), skillGrid,
                 rowNodes, rowButtons);
+            foreach (Text childText in row.GetComponentsInChildren<Text>(true)) childText.raycastTarget = false;
+            foreach (TMP_Text childText in row.GetComponentsInChildren<TMP_Text>(true)) childText.raycastTarget = false;
             Transform mount = FindDeep(row, "Anchor") ?? row;
             BuildSkillIcon(skillId, mount, "SkillIcon");
             var label = new GameObject("SkillLabel", typeof(RectTransform), typeof(Text));
@@ -629,7 +734,7 @@ namespace Zjcs.Presentation.Character
             promoteRect.anchorMax = new Vector2(1f, 0f);
             promoteRect.pivot = new Vector2(1f, 0f);
             promoteRect.sizeDelta = new Vector2(88f, 36f);
-            promoteRect.anchoredPosition = new Vector2(-6f, 6f);
+            promoteRect.anchoredPosition = new Vector2(-130f, 6f);
             Image promoteImage = promoteObject.GetComponent<Image>();
             promoteImage.color = new Color(0.86f, 0.55f, 0.3f, 0.9f);
             var promoteTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
@@ -656,7 +761,7 @@ namespace Zjcs.Presentation.Character
             detailRect.anchorMax = new Vector2(1f, 0f);
             detailRect.pivot = new Vector2(1f, 0f);
             detailRect.sizeDelta = new Vector2(88f, 36f);
-            detailRect.anchoredPosition = new Vector2(-100f, 6f);
+            detailRect.anchoredPosition = new Vector2(-206f, 6f);
             Image detailImage = detailObject.GetComponent<Image>();
             detailImage.color = new Color(0.4f, 0.55f, 0.75f, 0.9f);
             var detailTextObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
@@ -697,6 +802,8 @@ namespace Zjcs.Presentation.Character
             Button button = row.GetComponent<Button>() ?? row.gameObject.AddComponent<Button>();
             button.targetGraphic = graphic;
             button.onClick.AddListener(() => Install(skillId));
+            foreach (Text childText in row.GetComponentsInChildren<Text>(true)) childText.raycastTarget = false;
+            foreach (TMP_Text childText in row.GetComponentsInChildren<TMP_Text>(true)) childText.raycastTarget = false;
             return row.gameObject;
         }
 
@@ -993,79 +1100,116 @@ namespace Zjcs.Presentation.Character
 
         private void OpenRecommendations()
         {
-            IReadOnlyList<OfficialSkillRecommendation> recommendations =
-                progression.RecommendationsForProfession(progression.Player.Wardrobe.Profession);
+            OfflineSkillPlayerContext context = progression.SkillContext();
+            Dictionary<int, int> professionRanks = progression.Catalog.Rows("profession_base")
+                .Where(value => value != null)
+                .GroupBy(value => Convert.ToInt32(value["Profession"], CultureInfo.InvariantCulture))
+                .ToDictionary(group => group.Key, group => Convert.ToInt32(group.First()["Rank"], CultureInfo.InvariantCulture));
+            IReadOnlyList<OfficialSkillRecommendation> recommendations = progression.SkillRecommendations
+                .Where(value => value != null && context.CurrentProfessionChain.Contains(value.Profession))
+                .OrderBy(value => professionRanks.TryGetValue(value.Profession, out int rank) ? rank : int.MaxValue)
+                .ThenBy(value => value.Id).ToArray();
             if (recommendations.Count == 0)
             {
                 SetStatus("\u5f53\u524d\u804c\u4e1a\u6682\u65e0\u63a8\u8350\u65b9\u6848\u3002");
                 return;
             }
-            if (recommendDialog != null) Destroy(recommendDialog);
-            recommendDialog = new GameObject("SkillRecommendDialog", typeof(RectTransform));
-            recommendDialog.transform.SetParent(transform, false);
-            RectTransform root = (RectTransform)recommendDialog.transform;
-            root.anchorMin = Vector2.zero;
-            root.anchorMax = Vector2.one;
-            root.offsetMin = Vector2.zero;
-            root.offsetMax = Vector2.zero;
-            var blocker = new GameObject("RecommendBlocker", typeof(RectTransform), typeof(Image), typeof(Button));
-            blocker.transform.SetParent(root, false);
-            RectTransform blockerRect = (RectTransform)blocker.transform;
-            blockerRect.anchorMin = Vector2.zero;
-            blockerRect.anchorMax = Vector2.one;
-            blockerRect.offsetMin = Vector2.zero;
-            blockerRect.offsetMax = Vector2.zero;
-            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
-            blocker.GetComponent<Button>().onClick.AddListener(CloseRecommendations);
-            var nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
-            var buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
-            factory.Build(CharacterPanelNodeFactory.ReadRoot(infoTemplate), root, nodes, buttons);
-            RectTransform content = nodes.Values.FirstOrDefault(value => value.name == "OverallContent");
-            Text title = nodes.Values.Select(value => value.GetComponent<Text>())
-                .FirstOrDefault(text => text != null && text.name == "TitleText");
-            if (title != null) title.text = "\u6280\u80fd\u63a8\u8350";
-            if (content == null) return;
-            foreach (RectTransform child in content) child.gameObject.SetActive(false);
-            float top = 0.9f;
-            foreach (OfficialSkillRecommendation recommendation in recommendations)
+            CloseRecommendations();
+            recommendDialog = BuildOfficialDialog("skill_recommend", out var dialogNodes, out _);
+            recommendDialog.name = "SkillRecommendDialog";
+            RectTransform tabParent = DialogNode(dialogNodes, "TabGroup");
+            RectTransform itemParent = DialogNode(dialogNodes, "Slot");
+            if (tabParent == null || itemParent == null)
+                throw new InvalidOperationException("Official skill recommendation layout is incomplete.");
+            recommendationRankTabs.Clear();
+
+            var rankByProfession = recommendations
+                .Select(value => professionRanks.TryGetValue(value.Profession, out int rank) ? rank : 0)
+                .Where(value => value > 0).Distinct().OrderBy(value => value).ToArray();
+            int currentProfession = progression.Player.Wardrobe.Profession;
+            recommendationRank = professionRanks.TryGetValue(currentProfession, out int currentRank)
+                && rankByProfession.Contains(currentRank) ? currentRank : rankByProfession.Last();
+            foreach (int rank in rankByProfession)
             {
-                if (top < 0.14f) break;
-                var rowObject = new GameObject("RecommendRow", typeof(RectTransform));
-                rowObject.transform.SetParent(content, false);
-                RectTransform row = (RectTransform)rowObject.transform;
-                row.anchorMin = new Vector2(0.06f, top);
-                row.anchorMax = new Vector2(0.94f, top);
-                row.sizeDelta = new Vector2(0f, 110f);
-                var labelObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
-                labelObject.transform.SetParent(row, false);
-                RectTransform labelRect = (RectTransform)labelObject.transform;
-                labelRect.anchorMin = new Vector2(0f, 0f);
-                labelRect.anchorMax = new Vector2(0.72f, 1f);
-                labelRect.offsetMin = Vector2.zero;
-                labelRect.offsetMax = Vector2.zero;
-                Text label = labelObject.GetComponent<Text>();
-                label.font = CharacterPanelNodeFactory.UiFont;
-                label.fontSize = 20;
-                label.alignment = TextAnchor.MiddleLeft;
-                label.color = Color.white;
-                label.horizontalOverflow = HorizontalWrapMode.Wrap;
-                label.text = recommendation.name + "\n" + string.Join("\u3001",
-                    recommendation.CoreSkillList.Select(ItemName).Where(value => value.Length > 0));
-                Button apply = CreatePanelButton(row, "\u5e94\u7528", new Vector2(0f, 0f),
-                    new Color(0.86f, 0.55f, 0.3f, 0.95f));
-                RectTransform applyRect = (RectTransform)apply.transform;
-                applyRect.anchorMin = new Vector2(1f, 0.5f);
-                applyRect.anchorMax = new Vector2(1f, 0.5f);
-                applyRect.pivot = new Vector2(1f, 0.5f);
-                applyRect.sizeDelta = new Vector2(120f, 48f);
-                applyRect.anchoredPosition = Vector2.zero;
-                OfficialSkillRecommendation captured = recommendation;
-                apply.onClick.AddListener(() => ApplyRecommendation(captured));
-                top -= 0.13f;
+                var tabNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                var tabButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                RectTransform tab = factory.Build(CharacterPanelNodeFactory.ReadRoot(
+                    CharacterModelPackage.AsObject(skillUiTemplates["skill_tab"], "skill_tab")),
+                    tabParent, tabNodes, tabButtons);
+                tab.gameObject.name = "SkillRecommendRankTab_" + rank.ToString(CultureInfo.InvariantCulture);
+                Button tabButton = tab.GetComponent<Button>() ?? tab.gameObject.AddComponent<Button>();
+                Graphic target = tab.GetComponent<Graphic>() ?? tab.GetComponentInChildren<Graphic>(true);
+                if (target == null)
+                {
+                    Image raycast = tab.gameObject.AddComponent<Image>();
+                    raycast.color = new Color(1f, 1f, 1f, 0f);
+                    target = raycast;
+                }
+                tabButton.targetGraphic = target;
+                SetTextValue(DialogNode(tabNodes, "text")?.GetComponent<Text>(),
+                    rank.ToString(CultureInfo.InvariantCulture) + "\u9636");
+                recommendationRankTabs.Add(rank, tab.gameObject);
+                int capturedRank = rank;
+                tabButton.onClick.AddListener(() =>
+                {
+                    SetSelectedRecommendationRank(capturedRank);
+                    ShowRecommendationsForRank(capturedRank, recommendations, professionRanks,
+                        context.CurrentProfessionChain, itemParent);
+                });
             }
-            Button close = CreatePanelButton(content, "\u5173\u95ed", new Vector2(0f, 20f),
-                new Color(0.45f, 0.45f, 0.45f, 0.95f));
-            close.onClick.AddListener(CloseRecommendations);
+            SetSelectedRecommendationRank(recommendationRank);
+            ShowRecommendationsForRank(recommendationRank, recommendations, professionRanks,
+                context.CurrentProfessionChain, itemParent);
+        }
+
+        private void SetSelectedRecommendationRank(int rank)
+        {
+            foreach (KeyValuePair<int, GameObject> pair in recommendationRankTabs)
+            {
+                if (pair.Value == null) continue;
+                Transform selected = FindDeep(pair.Value.transform, "Selected");
+                if (selected != null) selected.gameObject.SetActive(pair.Key == rank);
+            }
+        }
+
+        private void ShowRecommendationsForRank(int rank,
+            IReadOnlyList<OfficialSkillRecommendation> recommendations,
+            IReadOnlyDictionary<int, int> professionRanks, ISet<int> professionChain, RectTransform parent)
+        {
+            recommendationRank = rank;
+            foreach (GameObject item in recommendationItems) if (item != null) Destroy(item);
+            recommendationItems.Clear();
+            foreach (OfficialSkillRecommendation recommendation in recommendations.Where(value =>
+                         professionChain.Contains(value.Profession)
+                         && professionRanks.TryGetValue(value.Profession, out int valueRank) && valueRank == rank))
+            {
+                var itemNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
+                var itemButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
+                RectTransform item = factory.Build(CharacterPanelNodeFactory.ReadRoot(
+                    CharacterModelPackage.AsObject(skillUiTemplates["skill_recommend_item"],
+                        "skill_recommend_item")), parent, itemNodes, itemButtons);
+                item.gameObject.name = "SkillRecommendItem_" + recommendation.Id.ToString(CultureInfo.InvariantCulture);
+                SetTextValue(DialogNode(itemNodes, "TitleTxt")?.GetComponent<Text>(), recommendation.name);
+                SetTextValue(DialogNode(itemNodes, "DescText")?.GetComponent<Text>(), recommendation.description);
+                BuildRecommendedSkillIcons(itemNodes, "ActiveSkillGo", recommendation.ActiveSkillList);
+                BuildRecommendedSkillIcons(itemNodes, "PassiveSkillGo", recommendation.PassiveSkillList);
+                OfficialSkillRecommendation captured = recommendation;
+                Button apply = DialogButton(itemButtons, "SaveBtn");
+                if (apply != null) apply.onClick.AddListener(() => ApplyRecommendation(captured));
+                recommendationItems.Add(item.gameObject);
+            }
+        }
+
+        private void BuildRecommendedSkillIcons(Dictionary<string, RectTransform> nodes,
+            string groupName, int[] skillIds)
+        {
+            RectTransform group = DialogNode(nodes, groupName);
+            if (group == null) return;
+            foreach (int skillId in skillIds ?? Array.Empty<int>())
+            {
+                if (progression.SkillDefinition(skillId) == null) continue;
+                BuildSkillIcon(skillId, group, "RecommendedSkill_" + skillId.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         private void ApplyRecommendation(OfficialSkillRecommendation recommendation)
@@ -1080,6 +1224,8 @@ namespace Zjcs.Presentation.Character
 
         private void CloseRecommendations()
         {
+            recommendationItems.Clear();
+            recommendationRankTabs.Clear();
             if (recommendDialog != null) Destroy(recommendDialog);
             recommendDialog = null;
         }
@@ -1878,7 +2024,14 @@ namespace Zjcs.Presentation.Character
             listType = itemType;
             selectedType = 0;
             selectedSlot = -1;
+            ShowSkillList(itemType == PieceItemType);
             Refresh();
+        }
+
+        private void ShowSkillList(bool pieces)
+        {
+            if (skillScrollList != null) skillScrollList.gameObject.SetActive(!pieces);
+            if (skillPieceScrollList != null) skillPieceScrollList.gameObject.SetActive(pieces);
         }
 
         private void SelectSlot(int itemType, int slot)
@@ -1898,6 +2051,7 @@ namespace Zjcs.Presentation.Character
             selectedType = itemType;
             selectedSlot = slot;
             listType = itemType;
+            ShowSkillList(false);
             Refresh();
         }
 
