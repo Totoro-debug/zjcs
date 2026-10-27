@@ -1,7 +1,8 @@
+. (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
-$sources = Get-ChildItem $combat -Filter '*.cs' -File | Select-Object -ExpandProperty FullName
+$sources = Get-FightCombatSources
 Add-Type -Path $sources
 
 function Assert-Combat($condition, $message) {

@@ -1,0 +1,389 @@
+{
+  "manifest": "871_156598",
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a",
+      "source": {
+        "bundle": "hybridclr_assets_hybridclrdata_dlls_assembly-csharp_dll.bundle",
+        "bundle_hash": "b0c05eae0b6849a83ad8df1ef6cd6fad",
+        "path_id": "49683184131557060",
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/b0c05eae0b6849a83ad8df1ef6cd6fad.bundle",
+          "manifest": "871_156598",
+          "size": 16819860,
+          "sha256": "ee29ccdbd30878ffa37bc4f51a05f618004a2c3a61e0a367d21a9c4a75a74499"
+        },
+        "text_asset_sha256": "f7ad215ee00fd8fc8c8048b323f043d5d7ea7fc377830f7709751ad353e40f10",
+        "decoded_sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397",
+      "source": {
+        "bundle": "hybridclr_assets_hybridclrdata_dlls_console_dll.bundle",
+        "bundle_hash": "fbe53f2dde9225c9265632bfbf06c2e8",
+        "path_id": "-7462651629129428820",
+        "source": {
+          "origin": "official_cdn",
+          "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/HybridCLR/fbe53f2dde9225c9265632bfbf06c2e8.bundle",
+          "manifest": "871_156598",
+          "size": 16752756,
+          "sha256": "bb987bda43105683b7394dd52d7282428271abdab33dc07301cf69b2021704f2"
+        },
+        "text_asset_sha256": "312795c2e8aa028166fda2ec6ea0117b3279f7b35450f99ecd07aed0e8593360",
+        "decoded_sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+      }
+    }
+  ],
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PrepareBattlePlayerDrag.cs",
+      "sha256": "f44b036f021d6ea3b72524026fb6a1d17aa4845fc73b879d86b8de2b471c7302"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PrepareBattlePlayerDragBase.cs",
+      "sha256": "f915042319d8f6e2eaf96425045b0f3606fb28a5fca7df7602329e35f3823dc0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ChangeRangeTool.cs",
+      "sha256": "d0c85cb8ad16c9bfabc287573cdf40a1c122de5e0e7562cbbe6bf02465682e48"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CommonChangeRangeInfoTool.cs",
+      "sha256": "44fd5487c88a4cf9c456ba2398c9ffea6ef2c34b99e78141b9c92203cf7cd8f5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StartGameBtn.cs",
+      "sha256": "abad94358241f7c40be8efe9770687dde3df4e4867ad8fe5d6e99500705b46dc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/GameTeamReadyCountDownUI.cs",
+      "sha256": "ac73859c36ae51793d902da946f5a369b67dfd85bb54af63b06f26567579b1ac"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/NormalPlaybackStrategy.cs",
+      "sha256": "7395acd4227e0bf7db1db0e0580b9caaaa662e821cf42e8e8ed541a1e499db49"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GameCharacterType.cs",
+      "sha256": "dbd0806e477af1da85def813248f80d02bd16bdc34b4ab15bfc2142cdeebd9d6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageInfo.cs",
+      "sha256": "2e74b84021e43ae63af965c3d05502bb0676d241f3bd6c09926541a9939ea1fb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightHitSummonComponent.cs",
+      "sha256": "b1b0cf4d642dc700095e02aab2e178a8e5412f2d0e3ba24f864f1aab12bc7859"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightResultFailedGuardComponent.cs",
+      "sha256": "af1984078a234b7a376c641b23bed168ce2f4d4cd32d64ce0b898ffca50da03d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightResultFailedPlayerDuelComponent.cs",
+      "sha256": "18820b275630ede84b6bfbff293865919ef3b918e1a30f60b0e3a26d5fafc54d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FightProcessStepMsg.cs",
+      "sha256": "acb84ca7c589513fc0b2889f3ce4d12b3d7e9d513461f32f58d32d63916b8ea6"
+    }
+  ],
+  "inputs": [
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+      "path_id": "-1310591482892603796",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 2143410,
+      "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+      "object_sha256": "3b4d901fbeed00e24a7504900dc1d15d2a45073cfdf6bf35097e1bfb56989657",
+      "type": "TextAsset"
+    },
+    {
+      "bundle": "defaultpackage_assets_config_luban.bundle",
+      "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+      "path_id": "-4156634952383626901",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 2143410,
+      "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+      "object_sha256": "38f501e58578a0501703c9fbd7677a92bafe3c533935f44fd783fcb15ca80ba1",
+      "type": "TextAsset"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3100.bundle",
+      "bundle_hash": "1782e9d2589bbed0f4dcf800a6a170ab",
+      "path_id": "-500651654501174730",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1782e9d2589bbed0f4dcf800a6a170ab.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 33362,
+      "bundle_sha256": "027a6debc485a6a26c2dc6e4fb2b23828ff4d8c8c7bc9836fbd22c6de90d5ace",
+      "object_sha256": "71af43201aa73e94f2a0c0f6fee8b941d4fbc7fb5dfc9b3c21fa6f7c5eeacec2",
+      "type": "MonoBehaviour"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3100.bundle",
+      "bundle_hash": "1782e9d2589bbed0f4dcf800a6a170ab",
+      "path_id": "-4868116612097248714",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1782e9d2589bbed0f4dcf800a6a170ab.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 33362,
+      "bundle_sha256": "027a6debc485a6a26c2dc6e4fb2b23828ff4d8c8c7bc9836fbd22c6de90d5ace",
+      "object_sha256": "cb2db94ffd4ffcc2c2ed1fd127e9775a35d727130bb03dcc4d05392ceaee8bce",
+      "type": "BoxCollider"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3100.bundle",
+      "bundle_hash": "1782e9d2589bbed0f4dcf800a6a170ab",
+      "path_id": "3542547185510642230",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1782e9d2589bbed0f4dcf800a6a170ab.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 33362,
+      "bundle_sha256": "027a6debc485a6a26c2dc6e4fb2b23828ff4d8c8c7bc9836fbd22c6de90d5ace",
+      "object_sha256": "9fea67aae765da65533e97199e978c4e1f368394f76bb53ae8b365a817cd6814",
+      "type": "Transform"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ecentity_fight_fightcharacter_3100.bundle",
+      "bundle_hash": "1782e9d2589bbed0f4dcf800a6a170ab",
+      "path_id": "5101625185018376758",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1782e9d2589bbed0f4dcf800a6a170ab.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 33362,
+      "bundle_sha256": "027a6debc485a6a26c2dc6e4fb2b23828ff4d8c8c7bc9836fbd22c6de90d5ace",
+      "object_sha256": "e7ec77d2e4965e7c32dfa5e5a2a5a6a68cca4446f13283460492cf7fd45cabc3",
+      "type": "Transform"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_changebattleposarea.bundle",
+      "bundle_hash": "9a59123c0e9afc03918e177d912e21f3",
+      "path_id": "-6791342362153264656",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a59123c0e9afc03918e177d912e21f3.bundle",
+      "raw_size": 866,
+      "raw_sha256": "425879c5bce48103a8d64e87bb656b2c29f3dfd5408d9a6124f03cd0e2bae1aa",
+      "object_sha256": "a63ddddf3e050f5b6c5697d178814f2ad18c1140d29de5bf37e2502933eb5187",
+      "type": "SpriteRenderer"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+      "path_id": "-5728661423419516038",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+      "raw_size": 589349,
+      "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625",
+      "object_sha256": "22b5921eeaa8bdc46a964b15bd34f263caac82acefc254eddb3c7f2de43604bf",
+      "type": "Sprite"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+      "path_id": "-8834430803358793438",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+      "raw_size": 589349,
+      "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625",
+      "object_sha256": "9cf87bbe03da43e5e58cb6599e48e937b00e35975c0df68578a5dfcc8e677971",
+      "type": "SpriteAtlas"
+    },
+    {
+      "bundle": "defaultpackage_assets_image_ui_game.bundle",
+      "bundle_hash": "bff6cee5399419c3e7b7cdd5d1d7d051",
+      "path_id": "528214093136511266",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/bff6cee5399419c3e7b7cdd5d1d7d051.bundle",
+      "raw_size": 589349,
+      "raw_sha256": "421595d6414dbee3c736583a0ab27c2741edf3893334b4b7769a0b245c1ec625",
+      "object_sha256": "a82d6c1baea8036a3aa9288404963a045e56780737bbf91d1a035bd549b18a50",
+      "type": "Texture2D"
+    },
+    {
+      "bundle": "defaultpackage_unityshaders.bundle",
+      "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+      "path_id": "-7504259843138580660",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 853119,
+      "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "object_sha256": "442b0fb54cfb17fa1a6b66f2d9609745a1b2b13e9dccc6d4b652b8c54a7bae03",
+      "type": "Material"
+    },
+    {
+      "bundle": "defaultpackage_unityshaders.bundle",
+      "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+      "path_id": "3262840161956400972",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 853119,
+      "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "object_sha256": "1b43fd672cfd4ca8595c6f9a081ed8d73154d05560ae5dff89563e7ed6acab9a",
+      "type": "Shader"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_changebattleposarea.bundle",
+      "bundle_hash": "9a59123c0e9afc03918e177d912e21f3",
+      "path_id": "3270121605259450864",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a59123c0e9afc03918e177d912e21f3.bundle",
+      "raw_size": 866,
+      "raw_sha256": "425879c5bce48103a8d64e87bb656b2c29f3dfd5408d9a6124f03cd0e2bae1aa",
+      "object_sha256": "c7be5d2be49a9ac0c27db778d3690427a371d1966efa7f175adc89df18d07907",
+      "type": "Animation"
+    },
+    {
+      "bundle": "defaultpackage_share_44151264272aaf8d68d0fa82bec1b4bf.bundle",
+      "bundle_hash": "d47c5d7417c97cb364c8a8105de46655",
+      "path_id": "-5090663189254028278",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/d47c5d7417c97cb364c8a8105de46655.bundle",
+      "raw_size": 577,
+      "raw_sha256": "c2bd217b404b12b4d9d89c9fe07c8a610205a77ba8a4895658b8856e7c801cc7",
+      "object_sha256": "c73f50f479f042bc59fcf87c62cc72f6f7ef749e31d893d05718618c7d9d26b4",
+      "type": "AnimationClip"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_changebattleposarea.bundle",
+      "bundle_hash": "9a59123c0e9afc03918e177d912e21f3",
+      "path_id": "7261359301280651760",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a59123c0e9afc03918e177d912e21f3.bundle",
+      "raw_size": 866,
+      "raw_sha256": "425879c5bce48103a8d64e87bb656b2c29f3dfd5408d9a6124f03cd0e2bae1aa",
+      "object_sha256": "83ca83615dcb0f5fd3852e232c08de9c45d931aa511535e0bb81ceeb2d567be5",
+      "type": "GameObject"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_changebattleposarea.bundle",
+      "bundle_hash": "9a59123c0e9afc03918e177d912e21f3",
+      "path_id": "7698799609674127856",
+      "origin": "apk_zip",
+      "manifest": "871_156598",
+      "apk_manifest": "854_156383",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "apk_entry": "assets/yoo/DefaultPackage/9a59123c0e9afc03918e177d912e21f3.bundle",
+      "raw_size": 866,
+      "raw_sha256": "425879c5bce48103a8d64e87bb656b2c29f3dfd5408d9a6124f03cd0e2bae1aa",
+      "object_sha256": "c714024b6e5e9170c40f7a307315d06a781208aeef8e9bf27ac22d75e14078e0",
+      "type": "Transform"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/ChangeBattlePosArea.prefab",
+      "sha256": "bdc5209453b794dc0f3e6c60ca66c4307e7912bf6eb286a60bb5fe99da1ac3d6"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/ChangeBattlePosArea_Loop.anim",
+      "sha256": "9caefbe9dd1973cd487e3ab02795a1b2db4eaede4bca03b0a192a12cdc52eb73"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/Sprites-Default.mat",
+      "sha256": "8fc5dd17228c3865ee02d86baf446930e365dc939d5548980d887550edd4f9e1"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/PrepareBattlePlayerPointer.prefab",
+      "sha256": "62383f156f61a059bc692831839f74ed52a7b03a3a906d9e5a857c73ad52414c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/OfficialBattlePreparationCatalog.asset",
+      "sha256": "a3beac6a9c2259f10f924002a7ea4afef455f615a747247d511c789654aa350c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/ChangeBattlePosArea.prefab.meta",
+      "sha256": "3b6b50df6bad0e17ba3cbdff860ccdb1c209cdb8800d0d34f4ad4b04577658af"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/ChangeBattlePosArea_Loop.anim.meta",
+      "sha256": "12b3d152658e6b244078f9d841c0226bb6c2f82a79426dc281c7e2b29a5ce135"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/Sprites-Default.mat.meta",
+      "sha256": "7fe8cc987063d10a2d44f7055d150b88962742c20df7adb12b1d32c7b021e4a0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/PrepareBattlePlayerPointer.prefab.meta",
+      "sha256": "15a7fe76a7b40a01720b9b130590444114d328bdba2fc4207ce10454346c1f33"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Combat/Preparation/OfficialBattlePreparationCatalog.asset.meta",
+      "sha256": "35a763d31119eb3eca64ff8acb4622be23a176097db44742b8d66b4286b26208"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/preparation.json",
+      "sha256": "f6fabfd45dd399562f6d64d87e4eec286e2c113be71e424d3f4e021898d3c975"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/preparation.json.meta",
+      "sha256": "7c3e8be8675d279983093b5f6f5984ba74241baa2c7309aa66dae0f5be6dd3b9"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/ImgChangeBattlePosArea.png",
+      "sha256": "717ffd42c464f6be1b41ed431f44cfe8bd4dfd87ed31cb136b8dad356ecd131c"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/ImgChangeBattlePosArea.png.meta",
+      "sha256": "1e27876fa32d3f9ad437a0f29c3c22908750d531c79f5174867d2342998f76d8"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/ImgChangeBattlePosArea.asset",
+      "sha256": "014f2d378b5ed90f7556d8b8f7bd286c5309beef0d3d52bea6fcacf016709d56"
+    },
+    {
+      "path": "unity/Assets/Official/Combat/Preparation/ImgChangeBattlePosArea.asset.meta",
+      "sha256": "32fc65dd0af7c8cbed6ecaafbacc96816412d19104715dbf405773a6601de579"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_battle_preparation.py",
+    "sha256": "24137bbe43453def5d9bee8113e31f60995b1dec01e61281a319912999a92f55"
+  },
+  "operation": "Verify decoded current assemblies; reuse recorded decompilation. Resolve prefab references APK-first, then verified selected CDN cache; decode original sprite and preserve native renderer, material, legacy animation and drag fields. No replacement artwork or gameplay rules.",
+  "native_converter": {
+    "path": "unity/Assets/Game/Editor/Combat/OfficialBattlePreparationAssetTools.cs",
+    "sha256": "4e04dcbecf7538b1c265ea02114f61f98cf6b50e296d95847e25f71852f84f70"
+  },
+  "binding": "OfficialBattlePreparationCatalog.Resources -> Source + AreaPrefab + PlayerPointerPrefab; area -> native sprite/material/legacy AnimationClip. OfficialBattleRuntimeController -> OfficialBattlePreparationView -> native collider raycast and explicit local position acceptance."
+}

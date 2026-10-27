@@ -23,5 +23,25 @@ namespace Zjcs.Presentation.Combat
                 grid.OriginY + point.Y,
                 grid.OriginZ));
         }
+
+        public bool TryScreenToWorld(Camera camera, Vector2 screen, out Vector3 world)
+        {
+            world = default;
+            if (camera == null) return false;
+            var plane = new Plane(groundRoot.forward, groundRoot.TransformPoint(new Vector3(0, 0, grid.OriginZ)));
+            Ray ray = camera.ScreenPointToRay(screen);
+            if (!plane.Raycast(ray, out float distance)) return false;
+            world = ray.GetPoint(distance);
+            return true;
+        }
+
+        public FightGridPoint WorldToGrid(Vector3 world)
+        {
+            Vector3 local = groundRoot.InverseTransformPoint(world);
+            // GridGroundComponentInfo.PosToGrid -> EntityHandler.DirToGrid: add half a cell,
+            // then integer conversion truncates toward zero (including outside-grid pointers).
+            return new FightGridPoint((int)(local.x - grid.OriginX + .5f),
+                (int)(local.y - grid.OriginY + .5f));
+        }
     }
 }

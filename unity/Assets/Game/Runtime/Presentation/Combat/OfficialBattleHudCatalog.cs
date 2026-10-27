@@ -312,11 +312,13 @@ namespace Zjcs.Presentation.Combat
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private BattleHudSpriteBinding[] sprites = Array.Empty<BattleHudSpriteBinding>();
         [SerializeField] private TMPro.TMP_FontAsset font;
-        private BattleHudCatalogData data;
-        private BattleCustomActionWorldRuntimeData customActionWorldRuntime;
-        private BattleWorldDamageData worldDamageData;
-        private BattleUnitBarRuntimeData unitBarData;
-        private BattleStatusIconData statusIconData;
+        // These graphs are derived from verified flat payloads. Unity's domain reload can
+        // serialize private caches by value, losing node identity/deep children; always rebuild.
+        [NonSerialized] private BattleHudCatalogData data;
+        [NonSerialized] private BattleCustomActionWorldRuntimeData customActionWorldRuntime;
+        [NonSerialized] private BattleWorldDamageData worldDamageData;
+        [NonSerialized] private BattleUnitBarRuntimeData unitBarData;
+        [NonSerialized] private BattleStatusIconData statusIconData;
         private Dictionary<int, BattleUnitBarBinding> unitBarsByEntity;
         private Dictionary<int, BattleStatusDisplay> statusDisplaysById;
 

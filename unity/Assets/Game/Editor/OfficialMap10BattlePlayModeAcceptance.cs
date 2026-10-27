@@ -221,6 +221,22 @@ namespace Zjcs.Editor
             Require(controller != null, "No Map10 entity started a battle.");
 
             var sceneController = (Zjcs.Presentation.Combat.OfficialBattleRuntimeController)controller;
+            bool finalPresentationHeld = false, finalPresentationCompleted = false;
+            sceneController.StepCompleted += result =>
+            {
+                if (!result.Checkpoint.Finished) return;
+                Require(sceneController.IsPresentingStep && !sceneController.CanCompleteBattle,
+                    "The final settled result bypassed its presentation wait.");
+                finalPresentationHeld = true;
+            };
+            sceneController.StepPresentationCompleted += () =>
+            {
+                if (sceneController.Checkpoint == null || !sceneController.Checkpoint.Finished) return;
+                Require(sceneController.CanCompleteBattle
+                    && sceneController.Phase == Zjcs.Combat.Official.FightBattlePhase.BattleEnd,
+                    "Final presentation did not hand off through BattleEnd.");
+                finalPresentationCompleted = true;
+            };
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_STATUS_COUNTER") == "1")
                 Combat.OfficialBattleStatusCounterAcceptance.Run();
             if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_TABS") == "1")
@@ -356,6 +372,8 @@ namespace Zjcs.Editor
                 {
                     Combat.BattleGameViewInput.Focus();
                     yield return new WaitForSecondsRealtime(1f);
+                    if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_PREPARATION") == "1")
+                        yield return Combat.OfficialBattlePreparationAcceptance.Verify(sceneController);
                     yield return Capture("preparing.png");
                     yield return Combat.BattleGameViewInput.Click(start.GetComponent<Button>());
                 }
@@ -541,6 +559,8 @@ namespace Zjcs.Editor
                     yield return null;
                 yield return null; // Allow deferred destruction of the temporary renderer group.
                 Require(checkpointField("Finished") != 0, "The complete battle did not reach a final result.");
+                Require(finalPresentationHeld && finalPresentationCompleted,
+                    "The complete battle did not exercise final presentation hold and release.");
                 if (Environment.GetEnvironmentVariable("ZJCS_BATTLE_TEST_REPORT_STATISTICS") == "1")
                     Combat.OfficialBattleReportStatisticsAcceptance.Verify(
                         (Zjcs.Combat.Official.FightBattleCheckpoint)checkpoint());

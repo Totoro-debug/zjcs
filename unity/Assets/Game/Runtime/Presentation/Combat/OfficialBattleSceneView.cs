@@ -829,6 +829,12 @@ namespace Zjcs.Presentation.Combat
             return false;
         }
 
+        internal void PreviewPreparationPosition(int unitId, Vector3 world)
+        {
+            Transform body = Body(unitId);
+            if (body != null) body.position = world;
+        }
+
         private Transform Body(int unitId)
         {
             if (attachedTransforms.TryGetValue(unitId, out Transform attached) && attached != null)

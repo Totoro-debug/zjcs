@@ -2012,6 +2012,12 @@ namespace Zjcs.Combat.Official
 
         private void UpdateOutcome(int round)
         {
+            if (checkpoint.ResultRules != null)
+            {
+                checkpoint.Outcome = checkpoint.ResultRules.Evaluate(checkpoint, round);
+                checkpoint.Finished = checkpoint.Outcome.Finished;
+                return;
+            }
             long playerHp = RequiredUnit(1).Hp;
             long enemyHp = 0;
             long enemyMax = 0;
@@ -2092,7 +2098,11 @@ namespace Zjcs.Combat.Official
         {
             long hp = 0;
             if (waveIndex < 0 || waveIndex >= checkpoint.Waves.Count) return hp;
-            foreach (int id in checkpoint.Waves[waveIndex].UnitIds) hp += RequiredUnit(id).Hp;
+            foreach (int id in checkpoint.Waves[waveIndex].UnitIds)
+            {
+                FightBattleUnitState unit = RequiredUnit(id);
+                if (FightBattleResultRules.CountsEnemy(unit, checkpoint.ResultRules)) hp += unit.Hp;
+            }
             return hp;
         }
 

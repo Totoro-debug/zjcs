@@ -228,6 +228,11 @@ namespace Zjcs.Presentation.World
 
             if (battleController != null)
             {
+                if (battleController.IsPresentingStep)
+                {
+                    battleStepTimer = Mathf.Max(0f, battleStepTimer - Time.deltaTime);
+                    return;
+                }
                 if (battleController.Checkpoint != null && !battleController.CanAdvance
                     && !battleController.Checkpoint.Finished) return;
                 battleStepTimer -= Time.deltaTime;
@@ -242,7 +247,7 @@ namespace Zjcs.Presentation.World
                             battleController.Advance();
                             battleStepTimer = battleController.LastStepSeconds;
                             SaveActiveBattle(false);
-                            if (battleController.Checkpoint.Finished) FinishBattle();
+                            if (battleController.CanCompleteBattle) FinishBattle();
                         }
                     }
                     catch (Exception error)

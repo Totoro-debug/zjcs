@@ -36,11 +36,18 @@ namespace Zjcs.Presentation.Combat
         private OfficialBattleEnvironmentView environmentView;
         private OfflineMainlineProgressSession statueProgress;
         private bool statueEffectsEnded;
+        private FightProcessPlayback<float> stepPlayback;
+        private OfficialBattlePreparationView preparationView;
+
+        // The game uses mouse input; acceptance can feed the same pointer path without OS input.
+        public Func<OfficialBattlePointerFrame> PreparationPointerProvider { get; set; }
 
         public event Action<FightBattleExecutionResult> StepCompleted;
         public event Action<string> HudControlClicked;
         public event Action<int> SpeedChanged;
         public event Action<FightBattlePhase, FightBattlePhase> PhaseChanged;
+        public event Action StepPresentationCompleted;
+        public event Action PreparationPositionChanged;
 
         public FightBattleCheckpoint Checkpoint => executor == null ? null : executor.State;
         /// <summary>Presentation length of the last step, from the official skill/hit timing.</summary>
@@ -51,8 +58,11 @@ namespace Zjcs.Presentation.Combat
         public double SpeedMultiplier => speedMultiplier;
         public System.Collections.Generic.IReadOnlyList<int> UnlockedSpeedIndices => unlockedSpeeds;
         public bool IsPaused => paused;
+        public bool IsPresentingStep => stepPlayback != null && !stepPlayback.Complete;
+        public bool CanCompleteBattle => executor != null && executor.State.Finished && !IsPresentingStep;
         public bool CanAdvance => executor != null && !executor.State.Finished
-            && !paused && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart);
+            && !paused && !IsPresentingStep
+            && (Phase == FightBattlePhase.Play || Phase == FightBattlePhase.PlayStart);
 
         public void SetHudVisible(bool visible)
         {
@@ -162,11 +172,21 @@ namespace Zjcs.Presentation.Combat
                 timelineFactionResolver = timelineFactionIcon;
                 pendingHudParent = hudParent;
                 remainingHudDelay = sessionOptions.ShowMainPanelDelay;
-                phases = new FightBattlePhaseMachine(sessionOptions.PrepareSeconds);
+                phases = new FightBattlePhaseMachine(restoreCheckpoint && checkpoint.PreparationPending
+                    ? checkpoint.PreparationSecondsRemaining : sessionOptions.PrepareSeconds);
                 phases.PhaseChanged += OnPhaseChanged;
                 phases.AutoStartRequested += OnAutoStartRequested;
                 phases.CountdownChanged += OnPrepareCountdownChanged;
-                phases.Begin(restoreCheckpoint || sessionOptions.SkipPrepareStatus);
+                if (sessionOptions.CanChangePosition)
+                {
+                    preparationView = new OfficialBattlePreparationView(checkpoint, worldRoot,
+                        sceneView, gridMapper, sessionOptions);
+                    preparationView.PositionChanged += OnPreparationPositionChanged;
+                }
+                bool restorePreparation = restoreCheckpoint && checkpoint.PreparationPending;
+                phases.Begin((restoreCheckpoint && !restorePreparation) || sessionOptions.SkipPrepareStatus);
+                checkpoint.PreparationPending = phases.IsPreparing;
+                preparationView?.SetPreparing(phases.IsPreparing);
                 if (phases.Phase == FightBattlePhase.PlayStart) phases.StartPlay();
                 hudView.RefreshPhase(phases.Phase, sessionOptions);
                 hudView.RefreshPrepareCountdown(phases.CountdownRemaining);
@@ -212,8 +232,16 @@ namespace Zjcs.Presentation.Combat
                     sceneView.ShowDamageFloats(result.Event, result.Checkpoint, hudCatalog.Font, damageColors);
                 LastStepSeconds = result.Event != null && result.Event.Duration > 0f
                     ? result.Event.Duration : 0.35f;
-                if (result.Checkpoint.Finished) phases.BeginBattleEnd();
-                if (result.Checkpoint.Finished) EndBattle();
+                if (result.Event != null)
+                {
+                    LastStepSeconds = Mathf.Max(LastStepSeconds, result.Event.ActionDuration);
+                    foreach (FightBattleDamageEvent damage in result.Event.DamageEvents)
+                        if (damage != null) LastStepSeconds = Mathf.Max(LastStepSeconds, damage.Delay);
+                }
+                // A settled result is not a completed presentation. In particular the last lethal
+                // hit must reach its configured time before the mode destroys the battle scene.
+                stepPlayback = new FightProcessPlayback<float>(new[] { LastStepSeconds }, value => value,
+                    _ => CompleteStepPresentation());
                 StepCompleted?.Invoke(result);
                 return result;
             }
@@ -334,6 +362,11 @@ namespace Zjcs.Presentation.Combat
         private void Update()
         {
             phases.Tick(Time.unscaledDeltaTime);
+            if (phases.IsPreparing && preparationView != null)
+                preparationView.Tick(PreparationPointerProvider != null ? PreparationPointerProvider()
+                    : new OfficialBattlePointerFrame { Position = Input.mousePosition,
+                        Down = Input.GetMouseButtonDown(0), Held = Input.GetMouseButton(0),
+                        Up = Input.GetMouseButtonUp(0) }, Time.unscaledDeltaTime);
             if (executor != null && hudRoot == null && pendingHudParent != null)
             {
                 // FightMainPanelLoader.DealyLoad uses WaitForSeconds, hence scaled time.
@@ -342,6 +375,17 @@ namespace Zjcs.Presentation.Combat
             }
             hudView?.Tick(Time.unscaledDeltaTime);
             sceneView?.Tick(Time.deltaTime);
+            if (!paused) stepPlayback?.Tick(Time.deltaTime);
+        }
+
+        private void CompleteStepPresentation()
+        {
+            if (executor != null && executor.State.Finished)
+            {
+                phases.BeginBattleEnd();
+                EndBattle();
+            }
+            StepPresentationCompleted?.Invoke();
         }
 
         public void AttachUnitTransform(int unitId, Transform transform)
@@ -353,6 +397,8 @@ namespace Zjcs.Presentation.Combat
 
         public void DisposeSession()
         {
+            stepPlayback?.Cancel();
+            stepPlayback = null;
             if (hudView != null)
             {
                 hudView.ControlClicked -= OnHudControlClicked;
@@ -362,6 +408,12 @@ namespace Zjcs.Presentation.Combat
             phases.AutoStartRequested -= OnAutoStartRequested;
             phases.CountdownChanged -= OnPrepareCountdownChanged;
             phases.Finish();
+            if (preparationView != null)
+            {
+                preparationView.PositionChanged -= OnPreparationPositionChanged;
+                preparationView.Dispose();
+                preparationView = null;
+            }
             sceneView?.Dispose();
             environmentView?.Dispose();
             environmentView = null;
@@ -391,6 +443,7 @@ namespace Zjcs.Presentation.Combat
             pendingHudParent = null;
             remainingHudDelay = 0;
             sessionOptions = null;
+            PreparationPointerProvider = null;
             hudVisible = true;
         }
 
@@ -422,6 +475,8 @@ namespace Zjcs.Presentation.Combat
 
         private void OnPhaseChanged(FightBattlePhase previous, FightBattlePhase next)
         {
+            if (executor != null) executor.State.PreparationPending = next == FightBattlePhase.Preparing;
+            preparationView?.SetPreparing(next == FightBattlePhase.Preparing);
             hudView?.RefreshPhase(next, sessionOptions);
             hudView?.RefreshPrepareCountdown(next == FightBattlePhase.Preparing
                 ? phases.CountdownRemaining : 0);
@@ -436,8 +491,11 @@ namespace Zjcs.Presentation.Combat
 
         private void OnAutoStartRequested() => Ready();
 
+        private void OnPreparationPositionChanged() => PreparationPositionChanged?.Invoke();
+
         private void OnPrepareCountdownChanged(double remaining)
         {
+            if (executor != null) executor.State.PreparationSecondsRemaining = remaining;
             hudView?.RefreshPrepareCountdown(remaining);
         }
 

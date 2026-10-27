@@ -17,6 +17,14 @@ namespace Zjcs.Editor.Combat
         private static EditorWindow gameView;
         private static bool Simulated => Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED") == "1";
 
+        private static Rect ValidationRect(float width, float height)
+        {
+            // unity_internal_display.ps1 positions the editor by the built-in panel's hardware
+            // identity. Keep this auxiliary window beside that editor, in Unity desktop points.
+            Rect editor = EditorGUIUtility.GetMainWindowPosition();
+            return new Rect(editor.x + 40f, editor.y + 40f, width, height);
+        }
+
         public static void Focus()
         {
             Type type = typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView", true);
@@ -25,9 +33,9 @@ namespace Zjcs.Editor.Combat
                     || Environment.GetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION") == "1") old.Close();
             gameView = ScriptableObject.CreateInstance(type) as EditorWindow;
             gameView.titleContent = new GUIContent("Battle input validation");
-            gameView.position = new Rect(80, 60, 450, 821);
+            gameView.position = ValidationRect(450, 821);
             gameView.Show();
-            gameView.position = new Rect(80, 60, 450, 821);
+            gameView.position = ValidationRect(450, 821);
             type.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic
                 | BindingFlags.Instance)?.SetValue(gameView, 0);
             if (!Simulated) gameView.Focus();
@@ -50,7 +58,7 @@ namespace Zjcs.Editor.Combat
         public static IEnumerator ResizePortrait(float width)
         {
             if (gameView == null) throw new InvalidOperationException("Focus the Game view first.");
-            gameView.position = new Rect(80, 60, width, width * 16f / 9f + 21f);
+            gameView.position = ValidationRect(width, width * 16f / 9f + 21f);
             if (!Simulated) gameView.Focus();
             gameView.Repaint();
             yield return new WaitForSecondsRealtime(0.5f);

@@ -21,5 +21,8 @@ namespace Zjcs.Presentation.Combat
         public int ChangePositionHeight;
         public int ChangePositionCenterX;
         public int ChangePositionCenterY;
+        // Explicitly supplied by the mode; NPC ownership is never inferred from its faction.
+        public System.Collections.Generic.List<int> ControllableUnitIds =
+            new System.Collections.Generic.List<int> { 1 };
     }
 }

@@ -1,7 +1,8 @@
+. (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
-$sources = Get-ChildItem $combat -Filter '*.cs' -File | Select-Object -ExpandProperty FullName
+$sources = Get-FightCombatSources
 $fallback = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationFallback.cs'
 $timeline = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimationTimeline.cs'
 $parameterStack = Join-Path $root 'unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleAnimatorParameterStack.cs'

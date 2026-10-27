@@ -188,7 +188,10 @@ namespace Zjcs.Presentation.World
                     LeaveInPreparing = stage.LeaveInPreparing,
                     LeaveInPlaying = stage.LeaveInPlaying,
                     ChangeCameraMode = stage.ChangeCameraMode,
-                    CanFastforward = stage.CanFastforward
+                    CanFastforward = stage.CanFastforward,
+                    CanChangePosition = !stage.JoinInMiddle,
+                    ChangePositionCenterX = playerEntry.X,
+                    ChangePositionCenterY = playerEntry.Y
                 });
             battleController.AttachUnitTransform(1, avatar.transform);
             battleController.ConfigureSpeeds(
@@ -199,6 +202,8 @@ namespace Zjcs.Presentation.World
             navigation.pendingInteraction = entity;
             activeBattleStage = stage;
             battleCompletion = completed;
+            battleController.PreparationPositionChanged += () => SaveActiveBattle(true);
+            SaveActiveBattle(true);
         }
 
         private Action battleCompletion;
@@ -299,6 +304,7 @@ namespace Zjcs.Presentation.World
                 StageId = stage.Id,
                 StageType = stage.Type,
                 IsPvp = false,
+                ResultRules = new FightBattleResultRules(),
                 MaxRound = stage.MaxRound > 0 ? stage.MaxRound : roster.MaxRound,
                 IsPlayerRoundLimit = stage.IsPlayerRoundLimit,
                 PlayerRoundLimit = stage.PlayerRoundLimit,
@@ -574,11 +580,21 @@ namespace Zjcs.Presentation.World
         {
             if (battleController == null) return;
             FightBattleCheckpoint checkpoint = battleController.Checkpoint;
-            if (checkpoint == null || !checkpoint.Finished) return;
+            if (checkpoint == null || !battleController.CanCompleteBattle) return;
             Map10RuntimeEntity entity = navigation.pendingInteraction;
             Action callback = battleCompletion;
             bool storyBattle = callback != null;
             FightBattleOutcome outcome = checkpoint.Outcome;
+            if (outcome != null && outcome.Invalid)
+            {
+                // Invalid duels have no settlement: never run loss, resource, attempt or reward
+                // consumers. Mode-specific reservations must likewise use Outcome.CanSettle.
+                ClearActiveBattle();
+                Action invalidCompleted = DestroyBattleSession();
+                SaveLocalProgress();
+                invalidCompleted?.Invoke();
+                return;
+            }
             bool won = outcome != null && outcome.Won;
             stamina.FinishStaminaBattle(entity, won);
             if (entity != null)

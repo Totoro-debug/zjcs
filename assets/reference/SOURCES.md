@@ -14,6 +14,8 @@
 
 ### 当前转换载荷
 
+战斗准备区使用当前 `871_156598` 官方输入，`scripts/prepare_battle_preparation.py` 先核对 `Assembly-CSharp.dll`／`Console.dll` 解码哈希及反编译来源，再由 APK 优先、当前云端校验缓存其次解析 `prefabs_ui_fight_changebattleposarea` 和角色3100拖拽组件引用；解码9266条阶段范围与阶段类型偏移，恢复128×128原 Sprite、九宫格、PPU、SpriteRenderer、Sprites/Default材质、2.5秒原透明度动画及原玩家碰撞体。载荷为 `unity/Assets/Official/Combat/Preparation/`，原生绑定为 `unity/Assets/Game/Resources/Combat/Preparation/`，输入对象与输出哈希见[准备来源清单](battle-rules/preparation-source-manifest.json)。只恢复已取证的组件，未用替代素材补齐拾起／放下、高亮或NPC交互；实际验证范围与缺项见[战斗执行](../../docs/features/battle-execution.md)。
+
 当前 `871_156598` 的表格、战斗组件、材质、家园层级、中文和变化 Sprite 已转换到现有载荷；原版来源不会统一改名成新版。角色模型重导出保留 GUID，创角／人物网格包及男体原生 prefab 已核对新版索引；女体 451 个动画独立解码后与旧版一致。具体输入、旧文件备份、转换方式与输出哈希分别见 `character-creation/current-mesh-source-manifest.json`、`current-native-prefabs-source-manifest.json` 和 `official-map/current-*-source-manifest.json`。万圣节已接入媒体及既有事件路由逐字节一致，保留已有音频输出；新增路由及控制对象保留在完整原始缓存内。新版资源替换的运行验证范围见[素材管理](../../docs/asset-management.md#官方来源与转换)，功能完成状态仍以所属页为准。
 
 战斗 Boss HP 层数表单独从固定 APK `854_156383` 的 `defaultpackage_assets_config_luban.bundle` 对象 `Assets/Config/Luban/monster_hp_plies.g.bytes` 解码，164 行输入 SHA256 为 `66b6496732f115b7370bc4fa3114d76c66f552de1fa73f70c06fa59b485e342e`。`python -B scripts/prepare_unity_combat_hp_plies.py` 通过固定版 `TbMonsterHpPliesInfo` 构造器生成 `unity/Assets/Official/Combat/monster-hp-plies.json`；输出、APK 对象、bundle 和转换版本记录在 [Boss HP 层数来源清单](official-map/monster-hp-plies-source-manifest.json)。

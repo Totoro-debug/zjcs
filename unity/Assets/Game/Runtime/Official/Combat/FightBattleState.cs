@@ -646,6 +646,9 @@ namespace Zjcs.Combat.Official
     {
         public bool Finished;
         public bool Won;
+        // User-confirmed duel double knockout: discard settlement and resource/attempt charges.
+        public bool Invalid;
+        public bool CanSettle => Finished && !Invalid;
         public int Reason;
         public int Round;
         public long PlayerHp;
@@ -709,6 +712,10 @@ namespace Zjcs.Combat.Official
         public FightBattleGrid Grid;
         public FightTurnQueueState Timeline = new FightTurnQueueState();
         public FightBattleOutcome Outcome = new FightBattleOutcome();
+        public FightBattleResultRules ResultRules;
+        // Local session persistence; absent fields in older saves retain legacy resume behavior.
+        public bool PreparationPending;
+        public double PreparationSecondsRemaining;
         public FightBattleStatistics Statistics = new FightBattleStatistics();
         public List<FightBattleStepReceipt> Receipts = new List<FightBattleStepReceipt>();
     }
@@ -797,6 +804,9 @@ namespace Zjcs.Combat.Official
                 || checkpoint.RandomSeed >= FightRandomStream.Modulus || checkpoint.FalloffSerial < 0
                 || checkpoint.StatusInstanceSerial < 0 || checkpoint.SummonSerial < 0
                 || checkpoint.PlayerRoundLimit < 0
+                || double.IsNaN(checkpoint.PreparationSecondsRemaining)
+                || double.IsInfinity(checkpoint.PreparationSecondsRemaining)
+                || checkpoint.PreparationSecondsRemaining < 0
                 || checkpoint.WaveIndex < 0 || checkpoint.WaveIndex >= Math.Max(1, checkpoint.Waves?.Count ?? 0))
                 throw new ArgumentException("Fight checkpoint header is invalid.", nameof(checkpoint));
             if (checkpoint.Units == null || checkpoint.Waves == null || checkpoint.Timeline == null
@@ -862,6 +872,10 @@ namespace Zjcs.Combat.Official
             var waveUnitIds = new HashSet<int>();
             var unitById = new Dictionary<int, FightBattleUnitState>();
             foreach (FightBattleUnitState unit in checkpoint.Units) unitById[unit.Id] = unit;
+            checkpoint.ResultRules?.Validate(checkpoint);
+            if (checkpoint.Outcome.Invalid && (!checkpoint.Finished || checkpoint.Outcome.Won
+                || checkpoint.Outcome.Reason != FightBattleResultRules.InvalidDuelReason))
+                throw new ArgumentException("Fight checkpoint contains an inconsistent invalid result.", nameof(checkpoint));
             for (int i = 0; i < checkpoint.Waves.Count; i++)
             {
                 FightBattleWaveState wave = checkpoint.Waves[i];

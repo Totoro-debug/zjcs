@@ -1,7 +1,8 @@
+. (Join-Path $PSScriptRoot 'combat_sources.ps1')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $combat = Join-Path $root 'unity/Assets/Game/Runtime/Official/Combat'
-Add-Type -Path (Get-ChildItem $combat -Filter '*.cs' -File | Select-Object -ExpandProperty FullName)
+Add-Type -Path (Get-FightCombatSources)
 function Require($condition, $message) { if (-not $condition) { throw $message } }
 function Read-Source($name) { [IO.File]::ReadAllText((Join-Path $root "unity/Assets/Official/Combat/$name.json")) }
 function Hash-Source($name) { [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([IO.File]::ReadAllBytes((Join-Path $root "unity/Assets/Official/Combat/$name.json")))).ToLowerInvariant() }
