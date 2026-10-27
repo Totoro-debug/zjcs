@@ -1,0 +1,2216 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "object_graph": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
+    "sha256": "4e64436922b4b9a018fd0d8815687fef32974cfe8f1924d6f87b88802b1e41f6"
+  },
+  "graph_receipt": {
+    "path": "assets/reference/official-map/map13-native-entity-object-graph-source-manifest.json",
+    "sha256": "ddc5d438fa3caa03332cfa75cd0c65b63f86e2332be9bb385996fb501ef8e5a1"
+  },
+  "previous_shader_receipt": {
+    "path": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+    "sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+  },
+  "counts": {
+    "bindings": 21,
+    "native_shader_assets": 20,
+    "byte_verified_program_reuse": 18,
+    "converted_fallback_shaders": 2,
+    "converted_pass_programs": 4,
+    "engine_shaders": 1,
+    "equivalent_engine_pass_programs": 12
+  },
+  "converted": [
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "4053925350041733874",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "7fd93e139e356840e563e327dd529f978098f10c1ae52afcde495042a6bd1e31",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Unlit-Default",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "original_lod": 0,
+      "programs": [
+        {
+          "pass_index": 0,
+          "index": 1,
+          "keywords": [],
+          "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/UniversalRenderPipeline2DSpriteUnlitDefault_d2ef838d-p0-1.glsl.txt",
+          "sha256": "bb41ef311ba8d731838b4c717645a8e45164f9947c9507b3d004d56c8cdb6758"
+        },
+        {
+          "pass_index": 1,
+          "index": 2,
+          "keywords": [],
+          "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/UniversalRenderPipeline2DSpriteUnlitDefault_d2ef838d-p1-2.glsl.txt",
+          "sha256": "3c20838e6ad840cf3dd6ee57b3238ef8f7736b7f06c9baadbcfc209666387ebd"
+        }
+      ]
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "6308443123967521658",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "1bfb00c51d76f12bea142ab6f0c6fa75fc0cbc9bba2a04e0e2d0eb1dcbb56711",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "4053925350041733874"
+          },
+          {
+            "field": ".m_Dependencies[1]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Spine/Skeleton",
+        "fallback": "Universal Render Pipeline/2D/Sprite-Unlit-Default",
+        "input_index": 1332
+      },
+      "original_lod": 100,
+      "programs": [
+        {
+          "pass_index": 0,
+          "index": 1,
+          "keywords": [],
+          "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/UniversalRenderPipeline2DSpineSkeleton_389dc359-p0-1.glsl.txt",
+          "sha256": "bf13d6ba51c90e54ebd219bbc45f6fefe0899baf5ee544faef3b8020feadb4eb"
+        },
+        {
+          "pass_index": 0,
+          "index": 2,
+          "keywords": [
+            "_STRAIGHT_ALPHA_INPUT"
+          ],
+          "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/UniversalRenderPipeline2DSpineSkeleton_389dc359-p0-2.glsl.txt",
+          "sha256": "c1331c9d8bf6e94a2e2744aa0edfbc83f5974f6f351a7b73325c2c91c787d8ca"
+        }
+      ]
+    }
+  ],
+  "reused": [
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-8771378664905259062",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "e0764c6a7225d9aaf061e78d074e1e5eb26b6aeeb9e0da89b31c76f04eb96a21",
+        "references": [],
+        "name": "Universal Render Pipeline/2D/Spine/WaterMask",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineWaterMask_53f54bd9.shader",
+        "sha256": "e2f130d43dd01c93f2f7a82f9844a74883df9933ed2fcc5f3f616a1725aad3b1",
+        "original_shader": "Universal Render Pipeline/2D/Spine/WaterMask"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-8099521327577927624",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "55d3c85e45e5b7ab0f6dd504de1b1842091172a05095cf8fabf869ef123e2343",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Lit-ColorShift",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitColorShift_8de0c09e.shader",
+        "sha256": "7839c108ce346358667a5bca9b7edef6470f148fc5eb92b84d397a063596cf33",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-ColorShift"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-6523303159900261502",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "41ce261486c8bcd2ce565b36eff8861bbd8c380710af8f3a767e7941ed17f8ad",
+        "references": [],
+        "name": "Sprites/DefaultZWrite",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefaultZWrite_a1002d66.shader",
+        "sha256": "25b89ddbc78dfa7e93c26a82176e1f04ac9ebe7bad315ea978c79f3c55f538ea",
+        "original_shader": "Sprites/DefaultZWrite"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-4700773692085390196",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "191ba17ca6a70e71c7986e23759ba70def56a06d180c097d4773161af4357e16",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3994547607707645358"
+          },
+          {
+            "field": ".m_Dependencies[1]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Spine/Skeleton-Lit-Atten",
+        "fallback": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSkeletonLitAtten_28ddc61f.shader",
+        "sha256": "683ceb0dfa92e35aa52dc227f2b58c065493c470f4927606dd6719d61f540f0e",
+        "original_shader": "Universal Render Pipeline/2D/Spine/Skeleton-Lit-Atten"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-4548095329842235858",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "28ba7df699d9d10c96c634988a316f261956a05653f98ba4e7d0465806d5ca19",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Lit-Atten",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitAtten_15542ddd.shader",
+        "sha256": "33c9c76e9e746fe9704135949c31f634e8b78745e1eb819f31152b32fc10f7d6",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Atten"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-4286560471751938018",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "6815fb43a64533673219bdc19ecea4d39ae9b821c85ad9f5556efcabfbd032e9",
+        "references": [],
+        "name": "Hidden/JSZX/TextMeshPro",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WorldText.shader",
+        "sha256": "b29a0d136e54e7072b0064278c3902166467b7ae1a4af400530e7049ea88eab6",
+        "original_shader": "Hidden/JSZX/TextMeshPro"
+      },
+      "receipt": "assets/reference/official-map/map13-text-shader-source-manifest.json",
+      "receipt_sha256": "682dfc6167ea6f2c5d435eb03682170e21820c14c4cb26d303bfe94e085402a9"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-4194332216904691769",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "cb3ca5a46c09c1e3337fcfbcca1cd760d8eca301884a644f0a64bc0bef9218ec",
+        "references": [],
+        "name": "Spine/Skeleton",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpineSkeleton_ef302479.shader",
+        "sha256": "0b58201eb32be5b5afb4b6fc89b900ad7026c3ae65566d079bbd93f61531d617",
+        "original_shader": "Spine/Skeleton"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-2004376655224171885",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "b8c42e1e565089931bfa192e4aaf2184f49942081bb5bfaf63d17bf5e2e3b026",
+        "references": [],
+        "name": "Sprites/WaterMaskOverwrite",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMaskOverwrite.shader",
+        "sha256": "da474e8063091648b08941a6050799e8f36ccf595f1f33360b401618b0763578",
+        "original_shader": "Sprites/WaterMaskOverwrite"
+      },
+      "receipt": "assets/reference/official-map/map13-water-shaders-source-manifest.json",
+      "receipt_sha256": "524369349dc8e990ddc8116b937ac9d40906f418f49e773f6b0b3cb857b42639"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-1464726073327024352",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "fdd7e334661a5e6a2e3a2f29708ceef23bea776828572c063010f3d3fce58b81",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "unity default resources",
+            "path_id": "17"
+          }
+        ],
+        "name": "Effect/Noise_Mask_Pro",
+        "fallback": "Hidden/InternalErrorShader",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/EnvironmentNoise.shader",
+        "sha256": "63bd6a58036ba0543e02137abe57c780864a004e3ff463547bf54f38d5932a4e",
+        "original_shader": "Effect/Noise_Mask_Pro"
+      },
+      "receipt": "assets/reference/official-map/map13-environment-shader-source-manifest.json",
+      "receipt_sha256": "04d2b7c64a806c50c29bbfa6a58fe1b7f1f251435c937791c12eb5aaa3c80116"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "-1423086188850211587",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "3dcf06575b0b6bee284ba6638308e412ce7394e70ebe08fdf56e5c71086c8d2d",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Sprites/Submersion",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/Submersion.shader",
+        "sha256": "1bd590fb84f3b4747168436fb2b4bb01e0c3df223fb1fa636e3a9cef0c11df97",
+        "original_shader": "Sprites/Submersion"
+      },
+      "receipt": "assets/reference/official-map/map13-water-shaders-source-manifest.json",
+      "receipt_sha256": "524369349dc8e990ddc8116b937ac9d40906f418f49e773f6b0b3cb857b42639"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "2413981681647329293",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "374c0ed97e62a325d5f9ca2bce1e16c72e18bfa664d392347c5832e8cd47f721",
+        "references": [],
+        "name": "Universal Render Pipeline/2D/Sprite-Mask",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteMask_b13d7dc4.shader",
+        "sha256": "5110b14563b6c01dc80902bb4234385d332d0d5e28e8a5a277e7636f0ddc7ce7",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Mask"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "3262840161956400972",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "1b43fd672cfd4ca8595c6f9a081ed8d73154d05560ae5dff89563e7ed6acab9a",
+        "references": [],
+        "name": "Sprites/Default",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/SpritesDefault_b64456be.shader",
+        "sha256": "868e46bd4727ffc1bd2ebbc82fb7c4b78ea05ecfa8c05ce1c0e01bec908bd8e6",
+        "original_shader": "Sprites/Default"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "3994547607707645358",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "2a1aaf872063130b306e2d0cb127cfe50de0c227efdd6753e32e21d5c29b163a",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/TerrainLit.shader",
+        "sha256": "da972ea9c5afba02b43b8406ffc57713d6bda052406128f51b7bfc67cbde144b",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Default"
+      },
+      "receipt": "assets/reference/official-map/map13-scene-shaders-source-manifest.json",
+      "receipt_sha256": "1bbd408a003eccf698ab9a09c582d9a5fa351ca1db3ad7a5238cdfd55c9649cc"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "5833574890153768745",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "65e2e7bdf30811234cc85a1a9db5033b0ea3f6e935501936c264c8eaea5e8a06",
+        "references": [],
+        "name": "Sprites/WaterMask",
+        "fallback": "",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WaterMask.shader",
+        "sha256": "5fe271924f7aa01f5627f92f82bdd92276408479f1523cf2f91ded9e4f441122",
+        "original_shader": "Sprites/WaterMask"
+      },
+      "receipt": "assets/reference/official-map/map13-water-shaders-source-manifest.json",
+      "receipt_sha256": "524369349dc8e990ddc8116b937ac9d40906f418f49e773f6b0b3cb857b42639"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "6526482762126230203",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "a13b8a51029902e978941d47db333f9fca21d2a66df79b4d6773c44ab766107d",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "6308443123967521658"
+          },
+          {
+            "field": ".m_Dependencies[1]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "4053925350041733874"
+          },
+          {
+            "field": ".m_Dependencies[2]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Spine/Submersion",
+        "fallback": "Universal Render Pipeline/2D/Spine/Skeleton",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpineSubmersion_4b760304.shader",
+        "sha256": "ef3fb60f6ddc2cfa10a8b44e91c5431f5b15f79cb0ec0136a9f1e743794fc0d7",
+        "original_shader": "Universal Render Pipeline/2D/Spine/Submersion"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "6715375491662588155",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "35d04a4c4dea66f96321aee0fc8c07401f51a83aa9e5858f2967eec8b8b163aa",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Lit-Fording",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitFording_e257809f.shader",
+        "sha256": "0c51755da1e00bc18e0f68fe2f7a4ef49ad630be35bce5301b262763519342ee",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Fording"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "7238312497244910435",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "ea4815e12a0a60b4202311e57b4b5ddec6cccee2030d89dbbf23ca9845b1b084",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/2D/Sprite-Lit-Misc",
+        "fallback": "Sprites/Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipeline2DSpriteLitMisc_e2daabda.shader",
+        "sha256": "f0c3ec98f3bcbce404f0defcf87dbdcecd85989bbc671c27dc3fd1464cbd7aa1",
+        "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Misc"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    },
+    {
+      "original": {
+        "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+        "path_id": "9169776915593584302",
+        "type": "Shader",
+        "input": "defaultpackage_unityshaders.bundle",
+        "payload_sha256": "dc993e33fc6cc98b97497d8b8484e461332540c798f8a00fda7a4396a7c31ede",
+        "references": [
+          {
+            "field": ".m_Dependencies[0]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3994547607707645358"
+          },
+          {
+            "field": ".m_Dependencies[1]",
+            "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+            "path_id": "3262840161956400972"
+          }
+        ],
+        "name": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
+        "fallback": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+        "input_index": 1332
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader",
+        "sha256": "e7b72cb4f5be7e8b2fc6980a5bb62c65365d78a2675b0c53debb4a4544b01191",
+        "original_shader": "Universal Render Pipeline/Spine/SkeletonEffect-2D"
+      },
+      "receipt": "assets/reference/official-map/map13-entity-shaders-source-manifest.json",
+      "receipt_sha256": "6cae489d4afbcf88155d4af4d2fd91f9dc2b53418b736afa8fb3b8560c17b747"
+    }
+  ],
+  "engine": [
+    {
+      "original": {
+        "cab": "unity default resources",
+        "path_id": "17",
+        "type": "Shader",
+        "input": "unity default resources",
+        "payload_sha256": "935cb6f0bf07873be688add52fcad8bf7d8c1303bbbee0a8bbb702ddb55c2007",
+        "references": [],
+        "name": "Hidden/InternalErrorShader",
+        "fallback": "",
+        "input_index": 0
+      },
+      "counterpart": {
+        "path": "D:/Tool/Unity/Editor/Data/Resources/unity default resources",
+        "file_sha256": "b4cdaec669b2c9196a9c53c0bd221181027ce876456209a25945d06d0ca36851",
+        "object_sha256": "a92cbe2c96c08a03e2380cdfa4f13a52c42d84734ece96b791fc84a32c43b7c4",
+        "path_id": "17",
+        "unity_version": "2022.3.54f1"
+      },
+      "state": {
+        "m_PropInfo": {
+          "m_Props": []
+        },
+        "m_SubShaders": [
+          {
+            "m_Passes": [
+              {
+                "m_Platforms": [
+                  5,
+                  9,
+                  18
+                ],
+                "m_NameIndices": [],
+                "m_Type": 0,
+                "m_State": {
+                  "m_Name": "",
+                  "rtBlend0": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend1": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend2": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend3": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend4": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend5": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend6": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend7": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtSeparateBlend": false,
+                  "zClip": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "zTest": {
+                    "val": 4.0,
+                    "name": "<noninit>"
+                  },
+                  "zWrite": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "culling": {
+                    "val": 2.0,
+                    "name": "<noninit>"
+                  },
+                  "conservative": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetFactor": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetUnits": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "alphaToMask": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilOp": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpFront": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpBack": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilReadMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilWriteMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilRef": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogStart": {
+                    "val": 0.0,
+                    "name": "unity_FogStart"
+                  },
+                  "fogEnd": {
+                    "val": 0.0,
+                    "name": "unity_FogEnd"
+                  },
+                  "fogDensity": {
+                    "val": 0.0,
+                    "name": "unity_FogDensity"
+                  },
+                  "fogColor": {
+                    "x": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "y": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "z": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "w": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "name": "unity_FogColor"
+                  },
+                  "fogMode": -1,
+                  "gpuProgramID": 57320,
+                  "m_Tags": {
+                    "tags": []
+                  },
+                  "m_LOD": 0,
+                  "lighting": false
+                },
+                "m_ProgramMask": 6,
+                "m_HasInstancingVariant": false,
+                "m_HasProceduralInstancingVariant": false,
+                "m_UseName": "",
+                "m_Name": "",
+                "m_TextureName": "",
+                "m_Tags": {
+                  "tags": []
+                }
+              },
+              {
+                "m_Platforms": [
+                  5,
+                  9,
+                  18
+                ],
+                "m_NameIndices": [],
+                "m_Type": 0,
+                "m_State": {
+                  "m_Name": "DepthNormalsOnly",
+                  "rtBlend0": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend1": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend2": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend3": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend4": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend5": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend6": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend7": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtSeparateBlend": false,
+                  "zClip": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "zTest": {
+                    "val": 4.0,
+                    "name": "<noninit>"
+                  },
+                  "zWrite": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "culling": {
+                    "val": 2.0,
+                    "name": "<noninit>"
+                  },
+                  "conservative": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetFactor": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetUnits": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "alphaToMask": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilOp": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpFront": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpBack": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilReadMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilWriteMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilRef": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogStart": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogEnd": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogDensity": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogColor": {
+                    "x": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "y": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "z": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "w": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "name": "<noninit>"
+                  },
+                  "fogMode": 0,
+                  "gpuProgramID": 77375,
+                  "m_Tags": {
+                    "tags": [
+                      [
+                        "LIGHTMODE",
+                        "DepthNormalsOnly"
+                      ]
+                    ]
+                  },
+                  "m_LOD": 0,
+                  "lighting": false
+                },
+                "m_ProgramMask": 6,
+                "m_HasInstancingVariant": false,
+                "m_HasProceduralInstancingVariant": false,
+                "m_UseName": "",
+                "m_Name": "",
+                "m_TextureName": "",
+                "m_Tags": {
+                  "tags": []
+                }
+              },
+              {
+                "m_Platforms": [
+                  5,
+                  9,
+                  18
+                ],
+                "m_NameIndices": [],
+                "m_Type": 0,
+                "m_State": {
+                  "m_Name": "DepthOnly",
+                  "rtBlend0": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend1": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend2": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend3": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend4": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend5": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend6": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtBlend7": {
+                    "srcBlend": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlend": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "srcBlendAlpha": {
+                      "val": 1.0,
+                      "name": "<noninit>"
+                    },
+                    "destBlendAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOp": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "blendOpAlpha": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "colMask": {
+                      "val": 15.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "rtSeparateBlend": false,
+                  "zClip": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "zTest": {
+                    "val": 4.0,
+                    "name": "<noninit>"
+                  },
+                  "zWrite": {
+                    "val": 1.0,
+                    "name": "<noninit>"
+                  },
+                  "culling": {
+                    "val": 2.0,
+                    "name": "<noninit>"
+                  },
+                  "conservative": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetFactor": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "offsetUnits": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "alphaToMask": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilOp": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpFront": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilOpBack": {
+                    "pass": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "fail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "zFail": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "comp": {
+                      "val": 8.0,
+                      "name": "<noninit>"
+                    }
+                  },
+                  "stencilReadMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilWriteMask": {
+                    "val": 255.0,
+                    "name": "<noninit>"
+                  },
+                  "stencilRef": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogStart": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogEnd": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogDensity": {
+                    "val": 0.0,
+                    "name": "<noninit>"
+                  },
+                  "fogColor": {
+                    "x": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "y": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "z": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "w": {
+                      "val": 0.0,
+                      "name": "<noninit>"
+                    },
+                    "name": "<noninit>"
+                  },
+                  "fogMode": 0,
+                  "gpuProgramID": 142911,
+                  "m_Tags": {
+                    "tags": [
+                      [
+                        "LIGHTMODE",
+                        "DepthOnly"
+                      ]
+                    ]
+                  },
+                  "m_LOD": 0,
+                  "lighting": false
+                },
+                "m_ProgramMask": 6,
+                "m_HasInstancingVariant": false,
+                "m_HasProceduralInstancingVariant": false,
+                "m_UseName": "",
+                "m_Name": "",
+                "m_TextureName": "",
+                "m_Tags": {
+                  "tags": []
+                }
+              }
+            ],
+            "m_Tags": {
+              "tags": []
+            },
+            "m_LOD": 0
+          }
+        ],
+        "m_KeywordNames": [
+          "STEREO_INSTANCING_ON",
+          "UNITY_SINGLE_PASS_STEREO",
+          "STEREO_MULTIVIEW_ON",
+          "STEREO_CUBEMAP_RENDER_ON",
+          "FOG_LINEAR",
+          "FOG_EXP",
+          "FOG_EXP2"
+        ],
+        "m_KeywordFlags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "m_Name": "Hidden/InternalErrorShader",
+        "m_CustomEditorName": "",
+        "m_FallbackName": "",
+        "m_Dependencies": [],
+        "m_CustomEditorForRenderPipelines": [],
+        "m_DisableNoSubshadersMessage": true
+      },
+      "programs": [
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [],
+          "original_index": 3,
+          "windows_index": 3,
+          "original_source_sha256": "4e19add9f5dd32517180ac85652ababf1abffb3bd8902d7cf8a0e5cb058def55",
+          "windows_source_sha256": "2cce2f8dae12531d21fd49c7d83b26ae787ccd49b83dcc0a6e837d988bf9aeb0",
+          "canonical_source_sha256": "4e19add9f5dd32517180ac85652ababf1abffb3bd8902d7cf8a0e5cb058def55",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p0-3.glsl.txt",
+            "sha256": "4e19add9f5dd32517180ac85652ababf1abffb3bd8902d7cf8a0e5cb058def55"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p0-3.glsl.txt",
+            "sha256": "2cce2f8dae12531d21fd49c7d83b26ae787ccd49b83dcc0a6e837d988bf9aeb0"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "UNITY_SINGLE_PASS_STEREO"
+          ],
+          "original_index": 4,
+          "windows_index": 4,
+          "original_source_sha256": "d64b3a846786e7a338280d5af6fde16a74c9689ca3ca09232f29b8f7aab0781a",
+          "windows_source_sha256": "5032ebd51a5b3b01568326e6bcdd428569d8801db91298cc13d99eebabe5611c",
+          "canonical_source_sha256": "d64b3a846786e7a338280d5af6fde16a74c9689ca3ca09232f29b8f7aab0781a",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p0-4.glsl.txt",
+            "sha256": "d64b3a846786e7a338280d5af6fde16a74c9689ca3ca09232f29b8f7aab0781a"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p0-4.glsl.txt",
+            "sha256": "5032ebd51a5b3b01568326e6bcdd428569d8801db91298cc13d99eebabe5611c"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "STEREO_INSTANCING_ON"
+          ],
+          "original_index": 5,
+          "windows_index": 5,
+          "original_source_sha256": "5ac509bfd4bf9e60dfa51baad7a9a561a91f3d1111efc92e0cd61a0655a25d05",
+          "windows_source_sha256": "619d2851f5b99c00c3760a8cc964d55a87671edfa549178978b312724e8d027d",
+          "canonical_source_sha256": "5ac509bfd4bf9e60dfa51baad7a9a561a91f3d1111efc92e0cd61a0655a25d05",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p0-5.glsl.txt",
+            "sha256": "5ac509bfd4bf9e60dfa51baad7a9a561a91f3d1111efc92e0cd61a0655a25d05"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p0-5.glsl.txt",
+            "sha256": "619d2851f5b99c00c3760a8cc964d55a87671edfa549178978b312724e8d027d"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "STEREO_MULTIVIEW_ON"
+          ],
+          "original_index": 6,
+          "windows_index": 6,
+          "original_source_sha256": "82d26c28ede598d86766034098425d34f545e8382e6d889da82f785ab12616b4",
+          "windows_source_sha256": "f73468a810b6c2e64c2ba33c84c2aa8024fb2908bb6a0be2b713ae61e6196527",
+          "canonical_source_sha256": "82d26c28ede598d86766034098425d34f545e8382e6d889da82f785ab12616b4",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p0-6.glsl.txt",
+            "sha256": "82d26c28ede598d86766034098425d34f545e8382e6d889da82f785ab12616b4"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p0-6.glsl.txt",
+            "sha256": "f73468a810b6c2e64c2ba33c84c2aa8024fb2908bb6a0be2b713ae61e6196527"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 1,
+          "keywords": [],
+          "original_index": 8,
+          "windows_index": 8,
+          "original_source_sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1",
+          "windows_source_sha256": "f790f6a23401d5cd4ad6f29aca247ca204264fe9cbeedf3f6119c3a5c4bd11ec",
+          "canonical_source_sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p1-8.glsl.txt",
+            "sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p1-8.glsl.txt",
+            "sha256": "f790f6a23401d5cd4ad6f29aca247ca204264fe9cbeedf3f6119c3a5c4bd11ec"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 1,
+          "keywords": [
+            "FOG_LINEAR"
+          ],
+          "original_index": 9,
+          "windows_index": 9,
+          "original_source_sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5",
+          "windows_source_sha256": "0bf0fa45e223f5997c06ca2287094918d8ebc5e0b1e5ae018cc503e081850298",
+          "canonical_source_sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p1-9.glsl.txt",
+            "sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p1-9.glsl.txt",
+            "sha256": "0bf0fa45e223f5997c06ca2287094918d8ebc5e0b1e5ae018cc503e081850298"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 1,
+          "keywords": [
+            "FOG_EXP"
+          ],
+          "original_index": 10,
+          "windows_index": 10,
+          "original_source_sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2",
+          "windows_source_sha256": "894481150f773a729839c130102a26ff75046c9b168cd6cbc1f36ea1be5495db",
+          "canonical_source_sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p1-10.glsl.txt",
+            "sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p1-10.glsl.txt",
+            "sha256": "894481150f773a729839c130102a26ff75046c9b168cd6cbc1f36ea1be5495db"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 1,
+          "keywords": [
+            "FOG_EXP2"
+          ],
+          "original_index": 11,
+          "windows_index": 11,
+          "original_source_sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca",
+          "windows_source_sha256": "b31cae689d4be885f611db4ea28b098b6b7eaad8df459fa9d255d9ec34e8cce7",
+          "canonical_source_sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p1-11.glsl.txt",
+            "sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p1-11.glsl.txt",
+            "sha256": "b31cae689d4be885f611db4ea28b098b6b7eaad8df459fa9d255d9ec34e8cce7"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 2,
+          "keywords": [],
+          "original_index": 8,
+          "windows_index": 8,
+          "original_source_sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1",
+          "windows_source_sha256": "f790f6a23401d5cd4ad6f29aca247ca204264fe9cbeedf3f6119c3a5c4bd11ec",
+          "canonical_source_sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p2-8.glsl.txt",
+            "sha256": "fd8010bce67802188492dbe3383c01254a1a7315442a316bbf53bf29543460f1"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p2-8.glsl.txt",
+            "sha256": "f790f6a23401d5cd4ad6f29aca247ca204264fe9cbeedf3f6119c3a5c4bd11ec"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 2,
+          "keywords": [
+            "FOG_LINEAR"
+          ],
+          "original_index": 9,
+          "windows_index": 9,
+          "original_source_sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5",
+          "windows_source_sha256": "0bf0fa45e223f5997c06ca2287094918d8ebc5e0b1e5ae018cc503e081850298",
+          "canonical_source_sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p2-9.glsl.txt",
+            "sha256": "1bdd18a7e9fa98dc56a45970985eb709d899d60ede82fdb71a445df57dc95ab5"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p2-9.glsl.txt",
+            "sha256": "0bf0fa45e223f5997c06ca2287094918d8ebc5e0b1e5ae018cc503e081850298"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 2,
+          "keywords": [
+            "FOG_EXP"
+          ],
+          "original_index": 10,
+          "windows_index": 10,
+          "original_source_sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2",
+          "windows_source_sha256": "894481150f773a729839c130102a26ff75046c9b168cd6cbc1f36ea1be5495db",
+          "canonical_source_sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p2-10.glsl.txt",
+            "sha256": "7643e4d0800bb4095cf5363ed23434223d5e629813e28768499f1da17e2e5ec2"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p2-10.glsl.txt",
+            "sha256": "894481150f773a729839c130102a26ff75046c9b168cd6cbc1f36ea1be5495db"
+          }
+        },
+        {
+          "subshader": 0,
+          "pass_index": 2,
+          "keywords": [
+            "FOG_EXP2"
+          ],
+          "original_index": 11,
+          "windows_index": 11,
+          "original_source_sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca",
+          "windows_source_sha256": "b31cae689d4be885f611db4ea28b098b6b7eaad8df459fa9d255d9ec34e8cce7",
+          "canonical_source_sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca",
+          "apk_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-apk-p2-11.glsl.txt",
+            "sha256": "6df27a384d7859eb4ca02ee62b9bbda08561a8529f66e541cc134dcf271355ca"
+          },
+          "windows_source": {
+            "path": "unity/Assets/Official/World/Map/13/Source/EntityFallbackShaders/InternalError-windows-p2-11.glsl.txt",
+            "sha256": "b31cae689d4be885f611db4ea28b098b6b7eaad8df459fa9d255d9ec34e8cce7"
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpineWaterMask_53f54bd9.shader",
+      "sha256": "9519d6efdde739fbb2b231ce15213b1bb4797ac6368a08f234a6771117b32fbc",
+      "original_shader": "Universal Render Pipeline/2D/Spine/WaterMask",
+      "meta_sha256": "f80dd9a43e7b0678e6ee59b86849f2a62e67262e6e7ff8973c2b74b4632f68bd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteLitColorShift_8de0c09e.shader",
+      "sha256": "404ff2454df02430fc48b6954a56030c4438988307835bbde38b78a75b66ebe6",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-ColorShift",
+      "meta_sha256": "f6d25ed9eb0683cc914c9a87efca995bdbb20cf80108e5297c487e2d151f24f4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpritesDefaultZWrite_a1002d66.shader",
+      "sha256": "82d6550edafb796939a5211a5a7ea91e8962fe2145399f927e3b6926236d75fb",
+      "original_shader": "Sprites/DefaultZWrite",
+      "meta_sha256": "6cf6cc8c76e39a355c0d3769f126803a6f5d8624d96f42011d131de477366110"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpineSkeletonLitAtten_28ddc61f.shader",
+      "sha256": "5724a76dab1d2c56a959f60d97ba775091c389e69cc3254476933baef1ad4375",
+      "original_shader": "Universal Render Pipeline/2D/Spine/Skeleton-Lit-Atten",
+      "meta_sha256": "7cb5a485dc19e5dfaf297fcc4b6f2bc65d1e5e8bdef9c13fae0e7ba043e4418b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteLitAtten_15542ddd.shader",
+      "sha256": "312fcd25c4a0949f5a219547f6dcaef57c4a9729bbff769bd5682472e6e3a34b",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Atten",
+      "meta_sha256": "5cd68974564867d94ce5ce72cfad7ef8b4fbdef1689c63e38620a35c9f7e3cbe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/HiddenJSZXTextMeshPro_b2516f73.shader",
+      "sha256": "5e37df16eaa7522e2167f4f65dabfad7fc377d7d6bb041493597c0d2367e610f",
+      "original_shader": "Hidden/JSZX/TextMeshPro",
+      "meta_sha256": "74da8769798ddc45ff8daf8ad84edd3410dadff56268ef12609b33a8384060c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpineSkeleton_ef302479.shader",
+      "sha256": "0822b265af283a4312c84ad5dc3556faef6fb1c08480831492a3466e25ee9d20",
+      "original_shader": "Spine/Skeleton",
+      "meta_sha256": "90cebb1c1d46ff2f59bd632dce2d233d826430f18194aef0ad77af59da7cd0f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpritesWaterMaskOverwrite_e0753b0c.shader",
+      "sha256": "3a036878d4004155acf4bca9a1913b65eb1721d02ec5cd3d78eaf38441b05b37",
+      "original_shader": "Sprites/WaterMaskOverwrite",
+      "meta_sha256": "33efbcf57b22c33bda3becfe19f13fcdd5eeaf0b4c192c19fe1571aeb482d1f2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/EffectNoiseMaskPro_6d8d993d.shader",
+      "sha256": "7d2543b766ae49f4f9df40d7ef3fa9c375241eca104888636e18724036c3f674",
+      "original_shader": "Effect/Noise_Mask_Pro",
+      "meta_sha256": "b1e683423f62a56cb9c559bcc20237f83208ab7d90397983a41971812729c2d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpritesSubmersion_6e0ab92c.shader",
+      "sha256": "39ea405ac87cd82169354c560915f4a6e6142ff3b87c77325ce5f6bbd381f1bc",
+      "original_shader": "Sprites/Submersion",
+      "meta_sha256": "002a0ecbc6c6056dc7fd00580d3c439c8ce929f5dbe1f578e82e39aa6c6e50a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteMask_b13d7dc4.shader",
+      "sha256": "08b6094eec826b41c4504902553e1352984e642635a038395dd8c44c601486da",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Mask",
+      "meta_sha256": "da8a43fafb4e03d7e339e7727605d0f2ede1e4abc25a47d710554c9915da7b36"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpritesDefault_b64456be.shader",
+      "sha256": "1db3c0276968d8e8a10c6b1a88b030dbe44ab374db79c5799dc377274735ae8f",
+      "original_shader": "Sprites/Default",
+      "meta_sha256": "f0bd3569b83c323dbe583e04dd764183317c63d9f003bcccdf6290e9339c7920"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteLitDefault_4107d4c3.shader",
+      "sha256": "15a1eb8bee3ceb0f55ca18f920fa0ae25631dd41563a73bed46bc5f18b3f13bf",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Default",
+      "meta_sha256": "60c9cc3c42b3e32931af8887daf9658e988bc3a2f3743f6b14d09fa25a553b40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteUnlitDefault_d2ef838d.shader",
+      "sha256": "5a3ec648e8d32680dee84bb406674c36a432ce550d5d028b440eb11f2049ecb6",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Unlit-Default",
+      "meta_sha256": "58168439c7328c2d8037d29fc10712d994a33f7ecb7da37a762d5df53b078cc5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/SpritesWaterMask_06eb90ce.shader",
+      "sha256": "bdce9dd855cb5b2d61e6da1b9c1aa38d0bebc18fdabdc870be3bb6c446c1838c",
+      "original_shader": "Sprites/WaterMask",
+      "meta_sha256": "2de8ed133c45f1c3d31c0b09cc77adc717ccbb498bf09c5065757d5402e8eab9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpineSkeleton_389dc359.shader",
+      "sha256": "fe4d02d7a20c43e8c69922566c03674118e5e752643d11ef9535fd2f11fb64e4",
+      "original_shader": "Universal Render Pipeline/2D/Spine/Skeleton",
+      "meta_sha256": "398843ce2a8536bf8d87fd7d3846c77d9200dd09e760ad3977963adee8f6b54c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpineSubmersion_4b760304.shader",
+      "sha256": "826ef62fc14557029607a5c3815b5b6f0127a9347077696fa148a97be9c0d6b7",
+      "original_shader": "Universal Render Pipeline/2D/Spine/Submersion",
+      "meta_sha256": "fc8407e5eb3f0bc8940f62c036944f95fa8858fe965f7217465432486a02414d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteLitFording_e257809f.shader",
+      "sha256": "6495cf7b01695d25ebbda505c6435f95bca0e030e93f78ba08b62609218abc18",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Fording",
+      "meta_sha256": "3dd4358d73688001df11008aa314499f578bfde90a025a035cae45776177c9d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipeline2DSpriteLitMisc_e2daabda.shader",
+      "sha256": "6e8eba38dc822fc7b126ed731924570ffdc95a9ed6d606a0b62d4b3833be6643",
+      "original_shader": "Universal Render Pipeline/2D/Sprite-Lit-Misc",
+      "meta_sha256": "5807c1cff773ad82d2c595d96894656c8e458bda6809e4755eaeb629fe9d1e65"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Entities/Shaders/BoundEntity/UniversalRenderPipelineSpineSkeletonEffect2D_19e49995.shader",
+      "sha256": "3602d9cead1689729b6e38235bd8b1a49e5486368e43272c34ff232fa554204e",
+      "original_shader": "Universal Render Pipeline/Spine/SkeletonEffect-2D",
+      "meta_sha256": "6a516d1685a3ca831d6fb01a62e2a41a374dc10f9584b8a52122476aa7fab2c6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-shader-bindings.json",
+      "sha256": "64a882da75acd451845e279c9ddc0f97e77ef75c2fb2c67c263e154b36a676f9"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Native/entity-shader-catalog.asset",
+      "sha256": "f06bb60653a70d8611fba6ba7e69a432d38ab6e7c8de158ed110a521dbe86107",
+      "meta_sha256": "e4048ddfb8b998dbc08974138cfca6e73676bae9e95883291cab4c580b5733b9"
+    }
+  ],
+  "binding_catalog": "unity/Assets/Game/Resources/Map13/Native/entity-shader-catalog.asset",
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_entity_shader_bindings.py",
+      "sha256": "259636e598a95bdd3853eeeed576c13de02610177e801fad1d54d90f4be5c98e"
+    },
+    {
+      "path": "scripts/official_platform_shader_programs.py",
+      "sha256": "69ca0253ed0e7cdcc38f6480fb0c5d562199c92f7e27253befea88f41970551f"
+    },
+    {
+      "path": "scripts/official_engine_shader_equivalence.py",
+      "sha256": "70d697c4bf17412b1fe39b1714dde3b7882dcd6ce514f4a8151773bf0a07031e"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_entity_shaders.py",
+      "sha256": "41f8bad92bbc91147556477e0691c8dee7aff5de08d38138b591194a4dcf5791"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntityShaderCatalog.cs",
+      "sha256": "ed21462312b6ad2ee094f83b03ed3d762da78a606a2acd3f35223ccdc97d5182"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntityBindings/OfficialMap13EntityBindingGpuAcceptance.cs",
+      "sha256": "ee60f12394a3717755b847b8b8a26e8113d5d2335e0345e0a8dccf49ff13b30c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13EntityBindings/OfficialMap13EntityBindingTools.cs",
+      "sha256": "e4c1c63a177c140c037debd8ac5f5122514151395275a3090be5e0e0f43274bc"
+    }
+  ],
+  "operation": "Bind every shader in the native entity object graph, including the original m_Dependencies and fallback names. Preserve 18 previously verified programs byte-for-byte while changing only shader identity and fallback binding. Convert both remaining original fallback shaders with native LOD, properties, passes and GLES3 executables. Before using the Windows engine error shader, compare every original non-program state field and all 12 original GLES executable profiles; normalize only a framebuffer-fetch declaration whose output is unconditionally fully overwritten and never read. Windows adds only its API tables, editor build hashes and empty package-requirement metadata. Serialize all 21 native Shader references in a local runtime catalog to retain dependencies in the Player.",
+  "limitations": [
+    "Compilation and GPU checks are performed separately. This catalog binds shaders only; native entity materials, texture/mesh/animation assets, original runtime components, gameplay input, saves and the Windows map release remain required."
+  ]
+}
