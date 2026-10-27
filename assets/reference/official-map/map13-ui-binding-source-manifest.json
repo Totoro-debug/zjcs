@@ -9,24 +9,36 @@
     {
       "path": "unity/Assets/Official/World/Map/13/UI/source-manifest.json",
       "sha256": "ef7a876391c60db5facc6f9d0f3ebc33dee2ea7b2166566916b5b4337c5da1d5"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-ui-particle-assets-source-manifest.json",
+      "sha256": "e00bc667856ed29a185f73d18959167212bce6e710b6088341c34e7f861f8ebd"
     }
   ],
   "tools": [
     {
       "path": "scripts/record_unity_map13_ui.py",
-      "sha256": "0918dda3572e98c30e50c4aa07394c37a55dfc24567765b4666dce976807ac71"
+      "sha256": "32d3a43bfc8d532191150333d280842e25a071c651cb17c57269447f51295345"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
-      "sha256": "74c56a91e1ebb7bbb7b6ca939dcf5053d1bc7cc500828fd894bb33efa0e7a180"
+      "sha256": "bc7f9cf4628dae79c024f4fca16d7d27b43b02f4905978c56eddade0a37f0245"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Support.cs",
-      "sha256": "e63a3ae57623606e554a986b020871ae51d24bfe27e769386a5c8cd6ba2b5837"
+      "sha256": "644be575c14d74727a6aa3c42c6621afaf08aec4889687d7684a8655cc0942c1"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleHudRenderer.cs",
       "sha256": "aa0260e5cb3a5e75d10558a74a14ba76dbb5e20e4022644cb1492cdf89a216cb"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13UiParticles/OfficialMap13UiParticleTools.cs",
+      "sha256": "0845dce2da61aa14c4dc4a5023302de127205f77de1f8de6572114ad59d2fb46"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13UiParticles/OfficialMap13UiParticleTools.Playback.cs",
+      "sha256": "c66db22f6a74b1574287c45ed26023dde6236531402bfffe4f9d280c643b3548"
     }
   ],
   "outputs": [
@@ -82,7 +94,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/AwardListPanelItem.prefab",
-      "sha256": "7c3ab2fbba8381b4bfdfd80ede529de443500fc804d8f4c39f15ea448554c3c5",
+      "sha256": "bce482f9474b14cd13938dcdc6eb9eab876e002d94c932cb0f227beb9c6c7164",
       "meta_sha256": "fba722d3496205f79f18b36c2bb4a5771d142a68a7c574739f298bc47f20a976"
     },
     {
@@ -217,7 +229,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultCharacterLevelDialog.prefab",
-      "sha256": "5d9480dfe21e7b44e9a2de56bbd1d6eaf147f6d6212b0fc09455f661a0420ba7",
+      "sha256": "39cce4bfca44629171c5931d00bdfa536588adb05b736678a8c4325033a1a8b2",
       "meta_sha256": "4bf4fae5c4d86b0116bcd76c10694119479e9930b90b71ec32782bcec1a700e8"
     },
     {
@@ -237,12 +249,12 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialog.prefab",
-      "sha256": "21e26f72114477c7d1120551c3e4790e8101ab997d11faf52a8d82c2597690eb",
+      "sha256": "b8f136ab399988efb879b2acb432a5b85ec7144272db2fd19d8cc01151e17160",
       "meta_sha256": "8c6e58400dd392ef97326aea5814315e649b3b6d9b63ba45feda2a48b47f869b"
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultPlayerPropDialogItem.prefab",
-      "sha256": "9c14e4aab0754b3d11bc9c913e80010cf800769e1758d050a2720b90b7670061",
+      "sha256": "1a3365fcf85f5f3b938515cfc1367ea1b3d3089e2f5546db0912f2bab698deb8",
       "meta_sha256": "3da6a65f528210f45ca1de1b93f2d7efc987b2c87d08e0b04c4eee801e6bcfac"
     },
     {
@@ -262,7 +274,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/LostGoddessResultSkillRankDialog.prefab",
-      "sha256": "dac28561cd32bf764e1e1f3a4b521f4c7e9532e7cb8e5d29925b51c0a36488c9",
+      "sha256": "bcd93e12ccc105ee3351bcd633c9920b6362ca5ac9a9910ee00c403818b5224c",
       "meta_sha256": "0e87d87af97f4014ac98c9f77d6731b51a614cd2747f2761b1376488837182e3"
     },
     {
@@ -337,7 +349,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/MiniMapFullScreenPanel.prefab",
-      "sha256": "5a628aeef688ed664ae8619b6d089ba71b6bef2c549610a3c790a8983fde8339",
+      "sha256": "dcc1072f2caf6645d1f4aa61a0d0d515cff8bfacdbf33557c121ace860076120",
       "meta_sha256": "e073a8857954961cc88a43909cbd1ac1f1f395ceff81dbc7f0a2245e02eaeda8"
     },
     {
@@ -842,7 +854,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/WorldCanvas.prefab",
-      "sha256": "379223993cd868e8b3b42b6c931da270fa4cfee4359dea8f3ea6351c4c92358f",
+      "sha256": "e6bb3fd92c819ca2ccf7e1e5afd0cb9846acf292104a03954586bd75a46e8ed3",
       "meta_sha256": "ac4ef7da98e4c6f0620aca61de1d720579e17112735ae28fc882398b8edca5d3"
     },
     {
@@ -882,7 +894,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/UI/WorldStageInteractionPreviewDialogHeroStatue.prefab",
-      "sha256": "b27b9506694ef6b187ae88c858bb139736e781f60ec4b53039060607b12535ee",
+      "sha256": "7246bf776805b6b01e667fa298124c31dd7dc87cd73aeb23a0fc7bd5f4179a7b",
       "meta_sha256": "42a4a5b934f98615509681ce42797e4f429498b0c65f500c2f95acf3d1affefd"
     },
     {
@@ -954,8 +966,12 @@
   "counts": {
     "source_prefabs": 68,
     "nodes": 3642,
-    "sprites": 931
+    "sprites": 931,
+    "native_particle_systems": 80,
+    "coffee_components": 32,
+    "native_materials": 16,
+    "native_textures": 17
   },
-  "operation": "Restore original Map13 UI layout and supported components through the existing native importer. Preserve original Transform vs RectTransform, quaternion and position, and Image enable state. Source particles and sounds are captured separately; their full Windows binding is still required.",
-  "validation": "Editor import/compile and ProjectTools.Validate passed in the main project. Two portrait sizes passed actual PlayMode pointer raycast/click, goddess states, popup/close animation, hierarchy and runtime-error checks; actual screenshots inspected. Full world HUD state, remaining interactions, particles/audio and Windows Player are pending."
+  "operation": "Restore original Map13 UI layout and supported components through the existing native importer. Preserve original Transform vs RectTransform, quaternion and position, and Image enable state. Bind all 80 original ParticleSystem/Renderer pairs, 32 Coffee components with exact source parameters and ordered references, 16 original materials, 17 complete-mip textures and the original mesh through the verified Windows shader. UI audio and business bindings remain separate.",
+  "validation": "Core UI import/compile and ProjectTools.Validate previously passed in the main project. This particle batch passed import/compile, ProjectTools.Validate and the same static checker in the isolated dependency snapshot (25,799 GUIDs); the shared main-project static run was blocked by another map's in-progress missing metadata. Two portrait sizes passed actual PlayMode pointer raycast/click, goddess states, popup/close animation, hierarchy and runtime-error checks; actual screenshots inspected. Separate component PlayMode playback passed all eight particle panels at both portrait sizes in the original URP pipeline, with actual screenshots and error-shader detection. The component fixture stops UI animations and explicitly activates effect states; production state timing remains separate. GPU readback verified all 112 original texture mip payloads/rows. Full world HUD state, remaining business interactions, audio and Windows Player are pending."
 }
