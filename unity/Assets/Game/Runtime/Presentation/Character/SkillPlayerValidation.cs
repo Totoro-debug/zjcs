@@ -85,6 +85,7 @@ namespace Zjcs.Presentation.Character
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 42200, Count = 57 });
             save.Player.Inventory.Add(new OfflineItemStack { ItemId = 12000, Count = 120 });
             save.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = 10015, Rank = 1 });
+            save.Player.Skills.SeniorMaterialSpentOnLevelUp = 500;
             File.WriteAllText(slots.GetProgressPath(slot), JsonUtility.ToJson(save, true));
             foreach (Canvas other in FindObjectsOfType<Canvas>()) other.gameObject.SetActive(false);
             foreach (Camera other in FindObjectsOfType<Camera>()) other.enabled = false;
@@ -126,10 +127,34 @@ namespace Zjcs.Presentation.Character
             Click(ButtonContaining("ActiveSkillTab"));
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame(); Capture("skills-equipped");
+            Click(ButtonNamed("AchievementTabGroupItem_11"));
+            yield return new WaitForSecondsRealtime(.4f);
+            Click(ButtonNamed("ReceiveBtn"));
+            yield return null;
+            Require(progression.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count) == 60,
+                "The Windows Player skill gift did not credit the original reward.");
+            Require(!progression.ClaimSkillAchievements(33).IsApplied, "The Windows Player skill gift can be claimed twice.");
+            yield return new WaitForSecondsRealtime(.4f);
+            yield return new WaitForEndOfFrame(); Capture("skills-gifts");
+            Click(ButtonNamed("AchievementTabGroupItem_14 (1)"));
+            yield return new WaitForSecondsRealtime(.4f);
+            yield return new WaitForEndOfFrame(); Capture("skills-quality-gifts");
+            long qualityRewardBefore = progression.Player.Inventory.Where(value => value.ItemId == 100).Sum(value => value.Count);
+            Click(ButtonNamed("ReceiveBtn"));
+            yield return null;
+            Require(progression.Player.Inventory.Where(value => value.ItemId == 100).Sum(value => value.Count) == qualityRewardBefore + 1
+                && progression.Player.AppliedCharacterEventIds.Contains("skill-achievement:9:0"),
+                "The Windows Player quality gift did not credit and record its original reward.");
+            Click(ButtonNamed("CharacterPanelSkillDetailPanelSkillTabGroupItem_11"));
+            yield return new WaitForSecondsRealtime(.4f);
             var reopened = OfflineMainlineProgressSession.InspectCharacter(new ProfileSlotCatalog(saveRoot), slot);
             Require(reopened.Save.Player.Skills.SelectedPlan == 1
                 && reopened.Save.Player.Skills.Plans[1].ActiveSkills.SequenceEqual(progression.Player.Skills.Plans[1].ActiveSkills),
                 "The Windows Player skill plan did not survive profile reload.");
+            Require(reopened.Save.Player.Skills.SeniorMaterialSpentOnLevelUp == 500
+                && reopened.Save.Player.AppliedCharacterEventIds.Contains("skill-achievement:33:0")
+                && reopened.Save.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count) == 60,
+                "The Windows Player skill gift spend counter, reward or claim receipt did not survive reload.");
             Click(ButtonNamed("CloseBtn_dark"));
             Require(!panel.IsOpen, "The Player skill return button did not restore the character page.");
             yield return new WaitForSecondsRealtime(.4f);
@@ -140,8 +165,23 @@ namespace Zjcs.Presentation.Character
             Application.Quit(0);
         }
 
-        private static Button ButtonNamed(string name) => FindObjectsOfType<Button>().First(value => value.name == name && value.isActiveAndEnabled);
-        private static Button ButtonContaining(string name) => FindObjectsOfType<Button>().First(value => value.name.Contains(name) && value.isActiveAndEnabled);
+        private static Button ButtonNamed(string name) => FindPointerTarget(value => value.name == name);
+        private static Button ButtonContaining(string name) => FindPointerTarget(value => value.name.Contains(name));
+        private static Button FindPointerTarget(Func<Button, bool> matches)
+        {
+            Canvas.ForceUpdateCanvases();
+            foreach (Button control in FindObjectsOfType<Button>().Where(value => matches(value) && value.isActiveAndEnabled))
+            {
+                RectTransform rect = (RectTransform)control.transform;
+                var pointer = new PointerEventData(EventSystem.current) {
+                    position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)) };
+                var hits = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointer, hits);
+                if (hits.Count > 0 && (hits[0].gameObject == control.gameObject
+                    || hits[0].gameObject.transform.IsChildOf(control.transform))) return control;
+            }
+            throw new InvalidOperationException("No unobstructed Player button matches the original control.");
+        }
         private static void Click(Button control)
         {
             Canvas.ForceUpdateCanvases();

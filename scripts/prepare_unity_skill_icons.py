@@ -73,12 +73,102 @@ def restore():
     reader.apk = apk
     character = reader.component_fields("defaultpackage_assets_prefabs_ui_character.bundle",
         -6326212988873864872, ("CharacterPanel", "PlayerWithPetContent"))
+    from prepare_character_prop_bindings import node_path
+    character_source = ui["character"]["source"]
+    character_root = reader.object(character_source["bundle"], character_source["path_id"]).read()
+    followers = {}
+    for node in reader.walk(character_root):
+        if node.m_Name != "ShadowAttachment":
+            continue
+        followers[node_path(node)] = reader.component_fields(character_source["bundle"], node.object_reader.path_id, ("AttachmentFollower",))["AttachmentFollower"]
+    data["character_followers"] = followers
     skill_source = data["character_skills"]["source"]
     skill_root = reader.object(skill_source["bundle"], skill_source["path_id"]).read()
     skill_tab = next(node for node in reader.walk(skill_root)
         if node.m_Name == "CharacterPanelSkillDetailPanelSkillTabGroupItem_11")
     skill = reader.component_fields(skill_source["bundle"], skill_tab.object_reader.path_id, ("TabItemTopBarSwitcher",))
     assert skill["TabItemTopBarSwitcher"]["ShowTypeList"] == [18]
+    from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
+    from official_unity_schema import ScriptSchemas
+    text_schemas = ScriptSchemas()
+    text_schemas.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
+    text_schemas.generator.load_local_dll_folder("D:/Tool/Unity/Editor/Data/Managed/UnityEngine")
+    text_schemas.generator.load_local_dll_folder(str(ROOT / "unity/Library/ScriptAssemblies"))
+    for framework in ("D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll", "D:/Tool/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.5/mscorlib.dll"):
+        text_schemas.generator.load_dll(Path(framework).read_bytes())
+    text_sources = {}
+    def layout_nodes(node):
+        yield node
+        for child in node.get("children", []):
+            yield from layout_nodes(child)
+    for template in list(data.values()):
+        if not isinstance(template, dict) or "source" not in template or "root" not in template:
+            continue
+        source = template["source"]
+        by_path = {node["path"]: node for node in layout_nodes(template["root"])}
+        for node in reader.walk(reader.object(source["bundle"], source["path_id"]).read()):
+            path = node_path(node)
+            if path not in by_path:
+                continue
+            for entry in node.m_Component:
+                component = entry.component.deref()
+                if component.type.name != "MonoBehaviour" or component.read(check_read=False).m_Script.read().m_ClassName != "TextMeshProUGUI":
+                    continue
+                fields = text_schemas.read(component)
+                text = by_path[path].setdefault("text", {})
+                text.update(font_size=fields["m_fontSizeBase"], auto_size=bool(fields["m_enableAutoSizing"]),
+                    font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
+                    word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
+                    horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
+                text_sources[path] = {"source": reader.apk.provenance(component), "style": {key: value for key, value in text.items() if key != "value"}}
+    data["text_style_inputs"] = text_sources
+    gift_path = "/CharacterPanelSkillPanel/Content/AchievementPanelWithTypes"
+    gift_bindings = {}
+    classes = {"AchievementPanelBase", "AchievementPanelItem", "AchievementPanelWithTypes", "AchievementToggleType", "PanelTitle"}
+    for node in reader.walk(skill_root):
+        path = node_path(node)
+        if path != gift_path and not path.startswith(gift_path + "/"):
+            continue
+        for entry in node.m_Component:
+            component = entry.component.deref()
+            if component.type.name != "MonoBehaviour":
+                continue
+            name = component.read(check_read=False).m_Script.read().m_ClassName
+            if name not in classes:
+                continue
+            fields = reader.schemas.read(component)
+            gift_bindings.setdefault(path, {})[name] = {key: reader.convert(value, component)
+                for key, value in fields.items() if key not in ("m_GameObject", "m_Script", "m_Name")}
+            reader.inputs[component.assets_file.name + ":" + str(component.path_id)] = reader.apk.provenance(component)
+    data["gift_bindings"] = gift_bindings
+    data["item"] = ui["item"]
+    reward_ids = {int(key) for row in rules["achievement"] if row["Group"] in (9, 33) for key in row["Reward"]}
+    item_rows = {row["ClassId"]: row for row in rules["item"]}
+    item_icons = {}
+    for item_id in sorted(reward_ids):
+        name = item_rows[item_id]["RawIcon"].rsplit("/", 1)[-1]
+        candidates = [uri for uri, record in city["resources"].items() if record.get("object") == name and uri.startswith("res://assets/official/sprites/")]
+        assert len(candidates) == 1, (item_id, name, candidates)
+        item_icons[str(item_id)] = candidates[0]
+        uris.add(candidates[0])
+    data["gift_item_icons"] = item_icons
+    import xxhash
+    language_path = ROOT / ".tools/source-packages/WwiseBnk/wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile"
+    language_receipt = json.loads((ROOT / "assets/reference/official-map/localization-source-manifest.json").read_text(encoding="utf-8"))
+    language_input = language_receipt["inputs"][language_path.name]
+    raw = apk.archive.read(language_input["source"]["path"])
+    assert hashlib.sha256(raw).hexdigest() == language_input["sha256"]
+    count = struct.unpack_from("<i", raw)[0]
+    offset_start = 4 + count * 12
+    entries = dict(struct.unpack_from("<Qi", raw, 4 + i * 12) for i in range(count))
+    texts = {}
+    for key in ("ui_achievement_title_CostItem_42200", "ui_achievement_content_CostItem_42200",
+                "ui_achievement_title_SkillScoreCount", "ui_achievement_content_SkillScoreCount"):
+        position = offset_start + entries[xxhash.xxh64_intdigest(key.encode("utf-8"))]
+        size = struct.unpack_from("<H", raw, position)[0]
+        texts[key] = raw[position + 2:position + 2 + size].decode("utf-8")
+    data["gift_texts"] = texts
+    data["gift_language_input"] = language_input
     shared_path = ROOT / "unity/Assets/Official/World/Map/11/UI/map11-ui.json"
     shared_manifest_path = shared_path.with_name("source-manifest.json")
     shared_manifest = json.loads(shared_manifest_path.read_text(encoding="utf-8"))
@@ -103,6 +193,7 @@ def restore():
         for child in node.get("children", []):
             walk(child)
     walk(data["item_empty"]["root"])
+    walk(data["item"]["root"])
     world_source = shared_manifest["source"]["prefabs"]["WorldCanvas"]
     header_components = {}
     for node in reader.walk(reader.object(world_source["bundle"], world_source["path_id"]).read()):
@@ -152,7 +243,8 @@ def restore():
         "bytes": layout.stat().st_size, "sha256": digest(layout)}
     receipt = {"manifest": "854_156383", "bundle": bundle, "bundle_hash": apk.index[bundle],
                "components": records, "threshold": threshold, "empty_prefab": data["item_empty"]["source"],
-               "shared_header": data["shared_header"],
+               "shared_header": data["shared_header"], "character_followers": followers,
+               "gift_bindings": gift_bindings, "gift_language_input": data["gift_language_input"], "text_style_inputs": text_sources,
                "rules_input": "assets/official/rules.json", "rules_input_sha256": digest(rules_path),
                "ui_input": "assets/official/ui.json", "ui_input_sha256": digest(ui_path),
                "resources": {uri: city["resources"][uri] for uri in sorted(uris)},

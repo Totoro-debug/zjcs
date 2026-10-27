@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Character
         private RectTransform achievementContentRoot;
         private Button skillPageTab;
         private Button achievementPageTab;
+        private OfficialSkillGiftPanel giftPanel;
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
         private Text planName;
@@ -296,6 +297,8 @@ namespace Zjcs.Presentation.Character
             foreach (Button button in buttons.Values)
                 if (button.targetGraphic != null)
                     button.targetGraphic.canvasRenderer.cullTransparentMesh = false;
+            giftPanel = new OfficialSkillGiftPanel(nodes, skillUiTemplates, progression, assets, skillAssets,
+                PlayTabTransition, () => { Changed?.Invoke(); });
             SetBottomPageState(showSkills: true);
             RefreshCategoryTabs();
             if (panel == null) return;
@@ -320,6 +323,7 @@ namespace Zjcs.Presentation.Character
             PlayerHeaderVisibilityChanged?.Invoke(showSkills);
             if (skillContentRoot != null) skillContentRoot.gameObject.SetActive(showSkills);
             if (achievementContentRoot != null) achievementContentRoot.gameObject.SetActive(!showSkills);
+            if (!showSkills) giftPanel?.Show();
             SetBottomTabSelected(skillPageTab, showSkills);
             SetBottomTabSelected(achievementPageTab, !showSkills);
         }

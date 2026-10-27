@@ -121,6 +121,12 @@ namespace Zjcs.Presentation.Character
                     text.text = source.text.value ?? string.Empty;
                     text.color = ColorValue(source.text.color, Color.black);
                     text.fontSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size));
+                    text.resizeTextForBestFit = source.text.auto_size;
+                    if (source.text.auto_size)
+                    {
+                        text.resizeTextMinSize = Mathf.Max(1, Mathf.RoundToInt(source.text.font_size_min));
+                        text.resizeTextMaxSize = Mathf.Max(text.resizeTextMinSize, Mathf.RoundToInt(source.text.font_size_max));
+                    }
                     text.alignment = TextAlignment(source.text.horizontal, source.text.vertical);
                     text.horizontalOverflow = source.text.word_wrap ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
                     text.verticalOverflow = source.text.overflow == 3
@@ -223,6 +229,9 @@ namespace Zjcs.Presentation.Character
                     value = String(text, "value"),
                     color = Floats(text, "color"),
                     font_size = Number(text, "font_size", 16f),
+                    auto_size = Boolean(text, "auto_size", false),
+                    font_size_min = Number(text, "font_size_min", 1f),
+                    font_size_max = Number(text, "font_size_max", 100f),
                     horizontal = (int)Number(text, "horizontal", 2),
                     vertical = (int)Number(text, "vertical", 512),
                     word_wrap = Boolean(text, "word_wrap", true),

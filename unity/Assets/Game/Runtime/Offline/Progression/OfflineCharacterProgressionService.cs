@@ -43,6 +43,29 @@ namespace Zjcs.Offline.Progression
         public OfflinePlayerProgress Player => session.Save.Player;
         public OfficialCharacterCatalog Catalog => catalog;
 
+        public ProgressionResult ClaimSkillAchievements(int group)
+        {
+            if (group != 9 && group != 33) return Invalid("Unknown original skill achievement group.");
+            var rules = new OfficialSkillAchievementRules(SkillRules);
+            return session.ApplyCharacterMutationIfChanged(player =>
+            {
+                var recorded = new HashSet<string>(player.AppliedCharacterEventIds, StringComparer.Ordinal);
+                var available = rules.CanClaim(player.Skills, group, recorded);
+                if (available.Count == 0) return false;
+                foreach (var milestone in available)
+                {
+                    foreach (var reward in milestone.Rewards)
+                    {
+                        var stack = player.Inventory.FirstOrDefault(value => value.ItemId == reward.ItemId);
+                        if (stack == null) player.Inventory.Add(new OfflineItemStack { ItemId = reward.ItemId, Count = reward.Count });
+                        else stack.Count = checked(stack.Count + reward.Count);
+                    }
+                    player.AppliedCharacterEventIds.Add(milestone.EventId);
+                }
+                return true;
+            });
+        }
+
         public int ProfessionLevel(int profession)
         {
             return Player.ProfessionLevels.Where(value => value != null && value.Profession == profession)
@@ -400,6 +423,8 @@ namespace Zjcs.Offline.Progression
                     OfflineItemStack stack = player.Inventory.FirstOrDefault(value => value.ItemId == entry.Key);
                     if (stack == null) throw new InvalidOperationException("A skill cost item is missing.");
                     stack.Count = Math.Max(0, stack.Count - consumed);
+                    if (entry.Key == 42200 && eventId.StartsWith("skill-slot-upgrade-", StringComparison.Ordinal))
+                        player.Skills.SeniorMaterialSpentOnLevelUp = checked(player.Skills.SeniorMaterialSpentOnLevelUp + consumed);
                 }
             }, eventId + "-" + Guid.NewGuid().ToString("N"));
             return applied.IsApplied ? new ProgressionResult { Status = ProgressionResultStatus.Applied } : applied;

@@ -43,7 +43,7 @@ namespace Zjcs.Offline.Skills
 
         public static bool IsValid(OfflineSkillProfile profile)
         {
-            if (profile == null || profile.Version != 1 || profile.SelectedPlan < 0 || profile.SelectedPlan >= 3
+            if (profile == null || profile.SeniorMaterialSpentOnLevelUp < 0 || profile.Version != 1 || profile.SelectedPlan < 0 || profile.SelectedPlan >= 3
                 || profile.Plans == null || profile.Plans.Length != 3
                 || !ValidLevels(profile.ActiveSlotLevels) || !ValidLevels(profile.PassiveSlotLevels)
                 || profile.BlessRecords == null || profile.Skills == null || profile.Items == null

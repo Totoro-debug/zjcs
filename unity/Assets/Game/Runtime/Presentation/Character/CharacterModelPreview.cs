@@ -208,6 +208,60 @@ namespace Zjcs.Presentation.Character
         private Coroutine wardrobeTransition;
         private string currentNativeAnimation = "home/idle_01";
         private string wardrobeAnimType = "idle";
+        private sealed class NativeFollower
+        {
+            public RectTransform Target, Skeleton;
+            public string BoneName;
+            public Transform Bone;
+            public bool FollowLocalScale, FollowRotation, FollowFlip;
+        }
+        private readonly List<NativeFollower> nativeFollowers = new List<NativeFollower>();
+
+        internal void InitializeOriginalFollowers(TextAsset source, Dictionary<string, RectTransform> nodes)
+        {
+            var metadata = CharacterModelPackage.AsObject(OfficialEquipmentJson.Parse(source.text), "skill UI metadata");
+            if (!(metadata["character_followers"] is Dictionary<string, object> bindings))
+                throw new InvalidOperationException("Original character AttachmentFollower bindings are unavailable.");
+            nativeFollowers.Clear();
+            foreach (var pair in bindings)
+            {
+                var binding = CharacterModelPackage.AsObject(pair.Value, "AttachmentFollower");
+                string skeleton = Convert.ToString(binding["SkeletonGraphic"], CultureInfo.InvariantCulture);
+                if (string.IsNullOrEmpty(skeleton) || !nodes.TryGetValue(skeleton, out var mount) || mount != modelRect) continue;
+                if (!nodes.TryGetValue(pair.Key, out var target))
+                    throw new InvalidOperationException("Original AttachmentFollower node is unavailable: " + pair.Key);
+                nativeFollowers.Add(new NativeFollower { Target = target, Skeleton = mount,
+                    BoneName = Convert.ToString(binding["BoneName"], CultureInfo.InvariantCulture),
+                    FollowLocalScale = Convert.ToInt32(binding["FollowLocalScale"]) != 0,
+                    FollowRotation = Convert.ToInt32(binding["FollowRotation"]) != 0,
+                    FollowFlip = Convert.ToInt32(binding["FollowSkeletonTransformFlipX"]) != 0 });
+            }
+            UpdateOriginalFollowers();
+        }
+
+        private void UpdateOriginalFollowers()
+        {
+            if (nativeModel == null) return;
+            foreach (NativeFollower follower in nativeFollowers)
+            {
+                if (follower.Bone == null)
+                    follower.Bone = nativeModel.GetComponentsInChildren<Transform>(true).FirstOrDefault(value => value.name == follower.BoneName);
+                if (follower.Bone == null) throw new InvalidOperationException("Original follower bone is unavailable: " + follower.BoneName);
+                // AttachmentFollower.GetBoneLocalPosition + sibling-target LateUpdate path.
+                Vector3 bone = nativeModel.transform.InverseTransformPoint(follower.Bone.position);
+                follower.Target.position = follower.Skeleton.TransformPoint(bone * 100f);
+                if (follower.FollowRotation)
+                    follower.Target.rotation = follower.Skeleton.rotation * Quaternion.Euler(0f, 0f,
+                        follower.Bone.eulerAngles.z - nativeModel.transform.eulerAngles.z);
+                if (follower.FollowLocalScale || follower.FollowFlip)
+                {
+                    Vector3 scale = follower.Target.localScale;
+                    if (follower.FollowLocalScale) { scale.x = follower.Bone.localScale.x; scale.y = follower.Bone.localScale.y; }
+                    if (follower.FollowFlip) scale.x *= Mathf.Sign(follower.Skeleton.lossyScale.x);
+                    follower.Target.localScale = scale;
+                }
+            }
+        }
 
         public void Initialize(OfflineCharacterProgressionService characterProgression)
         {
@@ -371,6 +425,7 @@ namespace Zjcs.Presentation.Character
 
         private void LateUpdate()
         {
+            UpdateOriginalFollowers();
             if (progression == null || modelRect == null || modelRect.rect.size == renderedSize) return;
             if (nativeModel != null)
             {

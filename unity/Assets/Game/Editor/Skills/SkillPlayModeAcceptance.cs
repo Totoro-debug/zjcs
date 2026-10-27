@@ -21,6 +21,7 @@ namespace Zjcs.Editor.Skills
         private const string SlotKey = "Zjcs.Skills.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Skills.Acceptance.Passed";
         private static bool started;
+        private static bool reloadLocked;
         private static Exception runtimeFailure;
         [InitializeOnLoadMethod]
         private static void AutoRunInWindowedEditor()
@@ -111,6 +112,8 @@ namespace Zjcs.Editor.Skills
             if (started)
                 return;
             started = true;
+            EditorApplication.LockReloadAssemblies();
+            reloadLocked = true;
             Application.runInBackground = true;
             runtimeFailure = null;
             Application.logMessageReceived -= CaptureRuntimeFailure;
@@ -268,8 +271,28 @@ namespace Zjcs.Editor.Skills
             Require(returnButton != null && skillPageTab != null && achievementPageTab != null, "The official full-screen skill panel frame or bottom tabs are missing.");
             Require(skillContent != null && skillContent.gameObject.activeInHierarchy && achievementContent != null && !achievementContent.gameObject.activeInHierarchy, "The official skill page did not start in the skills state.");
             yield return null;
+            progression.Player.Skills.SeniorMaterialSpentOnLevelUp = 500;
+            long giftBefore = progression.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count);
             SimulatePointerClick(achievementPageTab);
             Require(!skillContent.gameObject.activeInHierarchy && achievementContent.gameObject.activeInHierarchy, "The official gift tab did not switch to its Achievement state.");
+            yield return null;
+            Button giftReceive = achievementContent.GetComponentsInChildren<Button>(false).First(value => value.name == "ReceiveBtn");
+            SimulatePointerClick(giftReceive);
+            yield return null;
+            Require(progression.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count) == giftBefore + 60,
+                "The original skill-material gift did not atomically credit its 60-item reward.");
+            Require(progression.Player.AppliedCharacterEventIds.Contains("skill-achievement:33:0")
+                && !progression.ClaimSkillAchievements(33).IsApplied, "A skill gift reward can be claimed repeatedly.");
+            yield return new WaitForSecondsRealtime(.4f);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-gifts.png"));
+            yield return null;
+            Button qualityGift = achievementContent.GetComponentsInChildren<Button>(false)
+                .First(value => value.name == "AchievementTabGroupItem_14 (1)");
+            SimulatePointerClick(qualityGift);
+            yield return new WaitForSecondsRealtime(.4f);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-quality-gifts.png"));
             yield return null;
             SimulatePointerClick(skillPageTab);
             Require(skillContent.gameObject.activeInHierarchy && !achievementContent.gameObject.activeInHierarchy, "The official skill tab did not restore its skill content.");
@@ -780,6 +803,7 @@ namespace Zjcs.Editor.Skills
             EditorApplication.update -= OnUpdate;
             SessionState.SetBool(ActiveKey, false);
             SessionState.SetBool(ResultKey, passed);
+            if (reloadLocked) { reloadLocked = false; EditorApplication.UnlockReloadAssemblies(); }
             EditorApplication.isPlaying = false;
         }
 

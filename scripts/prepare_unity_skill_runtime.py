@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import re
 import os
 import tempfile
 from pathlib import Path
@@ -144,7 +145,13 @@ def build(data):
     cultivation = data["cultivation"]["tables"]
     return {
         "Skills": definitions,
-        "RankDisplays": [{key: row[key] for key in ("Rank", "Quality", "RankAddition")}
+        "GiftShowCount": rules["game_settings"]["AchievementPanelShowCount"],
+        "GiftTemplates": [{"RawId": row["Id"], "Group": row["Group"],
+                           "RequiredCount": int(re.search(r"Count\s*:\s*(\d+)", row["CompleteParams"]).group(1)) if row["CompleteParams"] else 0,
+                           "Increment": int(re.search(r"Count\s*:\s*(\d+)", row["CycleIncrementParams"]).group(1)) if row["CycleIncrementParams"] else 0,
+                           "CycleCount": row["CycleCount"], "Rewards": item_costs(row["Reward"])}
+                          for row in rules["achievement"] if row["Group"] in (9, 33)],
+        "RankDisplays": [{key: row[key] for key in ("Rank", "Quality", "RankAddition", "Score")}
                          for row in rules["skill_rank"]],
         "SlotLevelCosts": [{"Level": row["Level"], "Items": item_costs(row["LevelCostItems"])}
                            for row in cultivation["skill_slot_upgrade_material"]],

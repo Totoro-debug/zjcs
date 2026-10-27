@@ -82,6 +82,8 @@ namespace Zjcs.Presentation.Character
         public string value;
         public float[] color;
         public float font_size;
+        public bool auto_size;
+        public float font_size_min, font_size_max;
         public int horizontal;
         public int vertical;
         public bool word_wrap = true;
@@ -842,6 +844,7 @@ namespace Zjcs.Presentation.Character
             characterModel = mount.GetComponent<CharacterModelPreview>();
             if (characterModel == null) characterModel = mount.gameObject.AddComponent<CharacterModelPreview>();
             characterModel.Initialize(progression, null, characterSlotId, characterSavesRoot);
+            characterModel.InitializeOriginalFollowers(assets.SkillUiLayouts, nodes);
             Component name = FindText("CharacterName") ?? FindText("PlayerName") ?? FindText("NameText");
             SetText(name, progression.Player.CharacterName);
         }

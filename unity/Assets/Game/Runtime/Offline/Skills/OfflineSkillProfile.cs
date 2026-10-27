@@ -8,6 +8,8 @@ namespace Zjcs.Offline.Skills
     {
         public int Version = 1;
         public int SelectedPlan;
+        // Original CostItem(42200, SkillLevelUp): record actual committed costs; old saves start at zero.
+        public long SeniorMaterialSpentOnLevelUp;
         public OfflineSkillPlan[] Plans = CreatePlans();
         public int[] ActiveSlotLevels = { 1, 1, 1, 1 };
         public int[] PassiveSlotLevels = { 1, 1, 1, 1 };
@@ -32,6 +34,7 @@ namespace Zjcs.Offline.Skills
             {
                 Version = Version,
                 SelectedPlan = SelectedPlan,
+                SeniorMaterialSpentOnLevelUp = SeniorMaterialSpentOnLevelUp,
                 Plans = new OfflineSkillPlan[Plans == null ? 0 : Plans.Length],
                 ActiveSlotLevels = Copy(ActiveSlotLevels),
                 PassiveSlotLevels = Copy(PassiveSlotLevels),
@@ -140,6 +143,8 @@ namespace Zjcs.Offline.Skills
     public sealed class OfflineSkillRules
     {
         public OfflineSkillDefinition[] Skills = Array.Empty<OfflineSkillDefinition>();
+        public int GiftShowCount = 5;
+        public OfflineSkillAchievementTemplate[] GiftTemplates = Array.Empty<OfflineSkillAchievementTemplate>();
         public OfflineSkillRankDisplay[] RankDisplays = Array.Empty<OfflineSkillRankDisplay>();
         public OfflineSkillLevelCost[] SlotLevelCosts = Array.Empty<OfflineSkillLevelCost>();
         public OfflineSkillBlessCost[] SlotBlessCosts = Array.Empty<OfflineSkillBlessCost>();
@@ -153,6 +158,7 @@ namespace Zjcs.Offline.Skills
         public int Rank;
         public int Quality;
         public int RankAddition;
+        public int Score;
     }
 
     [Serializable]
