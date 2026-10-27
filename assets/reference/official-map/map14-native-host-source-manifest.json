@@ -1,0 +1,159 @@
+{
+  "format": 1,
+  "mapClassId": 14,
+  "manifest": "871_156598",
+  "operation": "Bind the existing original Map14 terrain, scene, environment and world-label resources to one runtime host; restore original three-coordinate origin validation and host cleanup. The runtime host does not enable the mainline map entry.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map14-native-terrain-binding-source-manifest.json",
+      "sha256": "a715cb93cd7de57a6bf8293cfedd79d74c4bdb910710ba577d932fe71e9f7d3c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-terrain-catalog.asset",
+      "sha256": "ab3c4e4db0f1265dc811b904ca33aae13172df65ed37b3cf6ee4e97e01f5b0b5"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-terrain-catalog.asset.meta",
+      "sha256": "fa0e83f4e6c66bf5b8ee02502c31e89a1c26b34835e7447a4e6f4b3ab3bd7f29"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-scene-binding-source-manifest.json",
+      "sha256": "911077f9f3cf85d3d914e4df1322415ddee79e6d555c77f4672b3cb5a2aee898"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-scene-catalog.asset",
+      "sha256": "b46cf089c06fa5882757f8094532956fde53c7404b80c90f43c4b5bcd5c12ff3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-scene-catalog.asset.meta",
+      "sha256": "18a085030b3c1cc9ef7ad1386ecccd4158da8a6b084dc8c36274ce22ea7eb321"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-environment-scene-binding-source-manifest.json",
+      "sha256": "3a77ee8e93a009b109b5bec8d708635532fa859319b3bd6749ed7f43cdb55ce3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-environment-scene-catalog.asset",
+      "sha256": "81269bd292451181cf5fdf19b980087f48f10008b172fde4d9e830ad5ba55edb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-environment-scene-catalog.asset.meta",
+      "sha256": "be3c8b31e1a9cc6a59f7b04b17db254aa1fc08a5d6d188b38690b4a6434629c5"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-region-labels-binding-source-manifest.json",
+      "sha256": "b236f8cb244468c184efb4dd6aac24de596acd5c78d970181c9be152dc091f41"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-region-labels-catalog.asset",
+      "sha256": "f5b9b5a4638177fd300bd8ccbbf19467fa5d218639f1bce63212e09b5a3720ab"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-region-labels-catalog.asset.meta",
+      "sha256": "a70e5402124944d22a44bc7c986c9a783bc1abec372fb556a1b68f9862cb0601"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/Native/region-label-data.json",
+      "sha256": "26d4c5f8a96336f13d63f321fe42589b67ce31d0f5a8e8ce7cc8a8b663bb63ce"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/Native/region-label-data.json.meta",
+      "sha256": "b028b159b5b06e2c08721f00a8f64eb7dc30a5b9ee22803869969c6f2c2f2feb"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/world-assets.asset",
+      "sha256": "0241754180330063f3624d48c4c12b7e74b5365ff92125a00c8eba7e40b3b300"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/world-assets.asset.meta",
+      "sha256": "fbe9d2b8a100d89a9570693f5e50cbc91b5ed2e8d50d403b2bda55eeafa4e2b7"
+    },
+    {
+      "path": "assets/reference/official-map/map14-label-components-code-source-manifest.json",
+      "sha256": "1148f19712b9717dff7f167e2d654068b100ab904becd17db74f25eb9314485d"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-text-font-source-manifest.json",
+      "sha256": "61d7a8dd4f21485b4a7b9cb4c02801ed396e886060ad21466d4fd25b9a4af2a5"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14.meta",
+      "sha256": "2aeea28201e2ee9d2b9e042f59d60d6f0fb9c71cfce1bcfdf8c23ec11c5c1dda",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs",
+      "sha256": "10a9e29011ab185e4b541e9fd4ab142eb82f50179987bf716ffeb7ea8e6ed465",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs.meta",
+      "sha256": "df871e50a6b26d80492bf2275493dbd2a561588abe0f690b9cfea33a53719eec",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef",
+      "sha256": "654d4aab7d05039aeed34a650eb4855ed679038aa5be4378f84bad4f54a646d3",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef.meta",
+      "sha256": "45f9f2ddb4bfee62c5d47bf2136f20859ec771757632f66c4a57fd6224ee4d47",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldHost.meta",
+      "sha256": "b819c4ddebac8aded6f38d02593fd78ccde2e76180490915c7fe5bae07abacc9",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldHost/OfficialMap14NativeHostAcceptance.cs",
+      "sha256": "34b57a41f01f1bc1ba963105f52cb0a3032e78fdd23c3ac168ebcd75912406b8",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldHost/OfficialMap14NativeHostAcceptance.cs.meta",
+      "sha256": "07a8b0f1e3491347281bfda316e6e8d6d71c75f65a26720ad57a2079184f1614",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldHost/Zjcs.Editor.Map14.WorldHost.asmdef",
+      "sha256": "f83d06e149a7a8853f5041c8a99e5d36fb5f7290291e434180969df1a1784fbe",
+      "hashLineEndings": "LF"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/WorldHost/Zjcs.Editor.Map14.WorldHost.asmdef.meta",
+      "sha256": "42fae1025464deae3b944521b8e99f710762ba2703518ba565b54222fd9f7736",
+      "hashLineEndings": "LF"
+    }
+  ],
+  "generator": {
+    "path": "scripts/record_unity_map14_native_host.py",
+    "sha256": "b4daa21f63ddc614787922f5288ae6818a92d5d9b8d76dbeea559cf7d8039ee8",
+    "hashLineEndings": "LF"
+  },
+  "counts": {
+    "regions": 111,
+    "terrainCatalog": 241,
+    "sceneCatalog": 242,
+    "environmentCatalog": 389,
+    "labelCatalog": 97
+  },
+  "verificationMethod": "Zjcs.Editor.Map14.OfficialMap14NativeHostAcceptance.Run",
+  "verificationScope": [
+    "original default-entry rendering",
+    "live fixture region state refresh",
+    "camera movement and partition loading",
+    "dispose and remount",
+    "pipeline and added camera component cleanup"
+  ],
+  "remaining": [
+    "mainline entry",
+    "real map state and saves",
+    "map entities",
+    "pointer interaction",
+    "Windows Player release"
+  ]
+}
