@@ -908,6 +908,8 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = classId,
                 StatusType = Int(status, "StatusType"),
+                RemoveApplyEntityOnEnd = Component(components, "StatusEndComponent") != null
+                    && Bool(Component(components, "StatusEndComponent"), "RemoveApplyEntity"),
                 ActionType = action == null ? 0 : Int(action, "ActionType"),
                 HasBackToLifeComponent = HasBackToLifeComponent(classId),
                 DurationRound = durationRound,
@@ -2275,6 +2277,8 @@ namespace Zjcs.Combat.Official
             Dictionary<string, object> config = Object(rawConfig, "FightHitSummonComponent.SummonCfg");
             output.SummonImmediateRound = Bool(config, "SummonImmediateRound");
             output.SummonInheritProps = Bool(config, "InheritProp");
+            output.SummonConfigType = config.TryGetValue("_type", out object summonType)
+                ? Convert.ToString(summonType, CultureInfo.InvariantCulture) : null;
             output.SummonReferenceType = Int(config, "ReferenceType");
             output.SummonLevelType = Int(config, "LevelType");
             output.SummonLifespanStatusId = Int(config, "LifespanStatusId");

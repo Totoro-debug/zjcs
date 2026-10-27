@@ -101,6 +101,7 @@ namespace Zjcs.Combat.Official
                     SummonIsRandom = entity.SummonIsRandom,
                     SummonImmediateRound = entity.SummonImmediateRound,
                     SummonInheritProps = entity.SummonInheritProps,
+                    SummonConfigType = entity.SummonConfigType,
                     SummonReferenceType = entity.SummonReferenceType,
                     SummonLevelType = entity.SummonLevelType,
                     SummonLifespanStatusId = entity.SummonLifespanStatusId,

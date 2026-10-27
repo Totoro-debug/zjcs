@@ -247,7 +247,7 @@ namespace Zjcs.Combat.Official
             FightBattleSkillDefinition eventSkill = null;
             if (casts.Count > 0)
                 eventSkill = FindSkillBySlot(actor, casts[0].Slot);
-            else if (movements.Count == 0)
+            else if (movements.Count == 0 && actor.VoodooDoll == null)
                 MoveAwayFromNearestEnemy(actor, movements);
             // Keep unavailable-skill turns non-damaging; the local retreat rule may still move
             // the actor when a legal grid destination increases its distance from enemies.
@@ -517,6 +517,8 @@ namespace Zjcs.Combat.Official
                 }
                 foreach (FightBattleUnitState target in hitTargets)
                 {
+                    if (target.Hp <= 0 || target.Ended) continue;
+                    if (target.VoodooDoll != null && (hit.ActionType == 5 || skill.SkillType == 3)) continue;
                     float hitDelay = HitDelay(actor, target, hit);
                     if (hitDelay > lastDelay) lastDelay = hitDelay;
                     long beforeHp = target.Hp;
@@ -581,6 +583,7 @@ namespace Zjcs.Combat.Official
                     damageEvents.Add(damage);
                     checkpoint.Statistics.RecordHit(damage, damageHitTargets);
                     FightStatusAccumulatedDamageRuntime.RecordHit(target, damage);
+                    TransmitVoodooDamage(target, damage, damageEvents, casts);
                     var triggerSkills = new List<int>();
                     var configuredTriggerSkills = new List<FightBattleStatusStateTrigger>();
                     var hpTriggerSkills = new List<int>();
@@ -642,13 +645,16 @@ namespace Zjcs.Combat.Official
                 FightBattleSummonPool pool = SelectSummonPool(actor.Id, hit);
                 if (pool == null) break;
 
+                bool isDoll = hit.SummonConfigType == "FightHitSummonVoodooDollCfg";
+                FightBattleUnitState origin = isDoll ? actor : reference;
                 FightGridPoint offset = hit.SummonPositions[i];
-                if (reference.Direction == 1) offset.X = -offset.X;
-                var position = new FightGridPoint(reference.X + offset.X, reference.Y + offset.Y);
+                if (origin.Direction == 1) offset.X = -offset.X;
+                var position = new FightGridPoint(origin.X + offset.X, origin.Y + offset.Y);
                 int level = hit.SummonLevelType == 1 ? Math.Max(1, skill.Level)
                     : Math.Max(1, actor.Level);
-                FightBattleUnitState summon = CreateSummonedUnit(actor, skill, pool, hit, level,
-                    position, reference);
+                FightBattleUnitState summon = isDoll
+                    ? CreateVoodooDoll(actor, skill, pool, reference, position)
+                    : CreateSummonedUnit(actor, skill, pool, hit, level, position, reference);
                 if (!CanPlaceSummon(summon)) continue;
 
                 units.Add(summon);
@@ -659,6 +665,13 @@ namespace Zjcs.Combat.Official
                 if (currentStepSpawnedUnitIds != null)
                     currentStepSpawnedUnitIds.Add(summon.Id);
                 AddSummonStatuses(summon, actor, skill, pool, hit);
+                if (isDoll)
+                {
+                    FightBattleStatusState mark = ApplySummonStatus(reference, actor, skill,
+                        summon.VoodooDoll.VoodooStatusId);
+                    summon.VoodooDoll.VoodooStatusInstanceId = mark == null ? 0 : mark.InstanceId;
+                    ApplySummonStatus(summon, reference, skill, summon.VoodooDoll.FollowDieStatusId);
+                }
                 FightStatusTriggerRuntime.Apply(summon, statusCatalog, true, random: random);
                 RebuildBattleProperties();
             }
@@ -846,16 +859,23 @@ namespace Zjcs.Combat.Official
             RebuildBattleProperties();
         }
 
-        private void ApplySummonStatus(FightBattleUnitState summon, FightBattleUnitState actor,
+        private FightBattleStatusState ApplySummonStatus(FightBattleUnitState summon, FightBattleUnitState actor,
             FightBattleSkillDefinition skill, int statusId)
         {
-            if (statusId <= 0) return;
+            if (statusId <= 0) return null;
             FightBattleStatusState template = statusCatalog.CreateStatus(statusId, summon.Id,
                 actor.Id, NextStatusInstanceId(), skill.EntityId, skill.ItemId, skill.Rank,
                 skill.Level, skill.SubRank, actor.Properties);
             FightBattleStatusState applied = FightStatusLifecycle.Apply(summon, template,
-                summon.SkillState.Round, template.InstanceId, random);
-            FightStatusLifecycle.Initialize(applied, summon.SkillState.Round);
+                StatusClockRound(template), template.InstanceId, random);
+            FightStatusLifecycle.Initialize(applied, StatusClockRound(template));
+            return applied;
+        }
+
+        private int StatusClockRound(FightBattleStatusState status)
+        {
+            int id = FightStatusLifecycle.ResolveTargetUnitId(status, units);
+            return unitById.TryGetValue(id, out var clock) ? clock.SkillState.Round : 0;
         }
 
         private int NextSummonUnitId()
@@ -1685,6 +1705,11 @@ namespace Zjcs.Combat.Official
 
         private void RebuildBattleProperties()
         {
+            foreach (FightBattleUnitState unit in units)
+                foreach (FightBattleStatusState status in unit.Statuses)
+                    if (status != null && status.StartRound < 0)
+                        FightStatusLifecycle.Initialize(status, StatusClockRound(status));
+            FinishVoodooDolls();
             if (statusCatalog != null)
                 FightStatusPropertyRuntime.RebuildAll(units, statusCatalog, formula);
             checkpoint.Statistics.RecordPendingShieldGrants(units);

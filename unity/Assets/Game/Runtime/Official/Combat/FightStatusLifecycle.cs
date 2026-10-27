@@ -143,6 +143,7 @@ namespace Zjcs.Combat.Official
         {
             if (unit == null) throw new ArgumentNullException(nameof(unit));
             if (template == null) throw new ArgumentNullException(nameof(template));
+            if (unit.VoodooDoll != null && template.StatusType == 1) return null;
             if (unit.Statuses == null) unit.Statuses = new List<FightBattleStatusState>();
             FightBattleStatusState existing = null;
             foreach (FightBattleStatusState candidate in unit.Statuses)
@@ -166,6 +167,7 @@ namespace Zjcs.Combat.Official
                 InstanceId = instanceId,
                 ClassId = template.ClassId,
                 StatusType = template.StatusType,
+                RemoveApplyEntityOnEnd = template.RemoveApplyEntityOnEnd,
                 ActionType = template.ActionType,
                 HasBackToLifeComponent = template.HasBackToLifeComponent,
                 DurationRound = template.DurationRound,
@@ -337,21 +339,22 @@ namespace Zjcs.Combat.Official
         public static int TickTurn(FightBattleUnitState actor, IReadOnlyList<FightBattleUnitState> units,
             int round, int timing)
         {
-            if (actor == null || actor.Statuses == null) return 0;
+            if (actor == null || units == null) return 0;
             if (timing == TimingEnd)
                 foreach (FightBattleStatusState status in actor.Statuses)
                     if (status != null && status.HasHpAccDecrease && status.HpAccResetAtRoundEnd)
                         status.HpAccDamageAccumulated = 0;
             int removed = 0;
-            for (int i = actor.Statuses.Count - 1; i >= 0; i--)
+            foreach (FightBattleUnitState owner in units)
+            for (int i = owner.Statuses.Count - 1; i >= 0; i--)
             {
-                FightBattleStatusState status = actor.Statuses[i];
+                FightBattleStatusState status = owner.Statuses[i];
                 if (status == null) continue;
-                if (status.StartRound < 0) Initialize(status, round);
                 if (status.RoundUpdateTiming != timing) continue;
                 if (ResolveTargetUnitId(status, units) != actor.Id) continue;
+                if (status.StartRound < 0) Initialize(status, round);
                 if (!IsExpired(status, round)) continue;
-                End(actor, status);
+                End(owner, status);
                 removed++;
             }
             return removed;
@@ -362,6 +365,7 @@ namespace Zjcs.Combat.Official
             if (unit == null || status == null || unit.Statuses == null || !unit.Statuses.Remove(status)) return false;
             if (status.AccumulatedDamage != null && status.AccumulatedDamage.RulesSupported)
                 unit.EndedAccumulatedDamageStatuses.Add(status);
+            if (status.RemoveApplyEntityOnEnd) unit.Ended = true;
             return true;
         }
 

@@ -25,7 +25,7 @@ namespace Zjcs.Combat.Official
 
         public static bool CountsEnemy(FightBattleUnitState unit, FightBattleResultRules rules)
         {
-            if (unit == null || unit.Side == 1) return false;
+            if (unit == null || unit.Side == 1 || unit.VoodooDoll != null) return false;
             return rules == null || (rules.Kind == Duel
                 ? unit.CharacterType == 1 : Participates(unit.CharacterType));
         }
@@ -44,7 +44,7 @@ namespace Zjcs.Combat.Official
                     enemyMax += unit.MaxHp;
                     if (unit.Hp > 0) enemyAlive = true;
                 }
-                if (unit.CharacterType == 1 && unit.Side == 1 && unit.Hp > 0)
+                if (unit.VoodooDoll == null && unit.CharacterType == 1 && unit.Side == 1 && unit.Hp > 0)
                     allyAlive = true;
             }
             bool invalid = Kind == Duel && !allyAlive && !enemyAlive;
@@ -80,8 +80,8 @@ namespace Zjcs.Combat.Official
                     if (!seen.Add(id) || !state.Units.Exists(unit => unit.Id == id && unit.Side == 1))
                         throw new ArgumentException("Guard result contains an unknown, duplicate or opposing unit.");
             }
-            if (Kind == Duel && (!state.Units.Exists(unit => unit.CharacterType == 1 && unit.Side == 1)
-                || !state.Units.Exists(unit => unit.CharacterType == 1 && unit.Side != 1)))
+            if (Kind == Duel && (!state.Units.Exists(unit => unit.VoodooDoll == null && unit.CharacterType == 1 && unit.Side == 1)
+                || !state.Units.Exists(unit => unit.VoodooDoll == null && unit.CharacterType == 1 && unit.Side != 1)))
                 throw new ArgumentException("Duel result requires explicit player participants on both sides.");
         }
     }

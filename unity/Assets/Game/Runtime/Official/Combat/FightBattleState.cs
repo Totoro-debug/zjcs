@@ -56,6 +56,7 @@ namespace Zjcs.Combat.Official
         public long MaxResilience;
         public int BrokenRound = -1;
         public bool Ended;
+        public FightVoodooDollLink VoodooDoll;
         public List<FightPropertyValue> Properties = new List<FightPropertyValue>();
         public List<FightBattleSkillDefinition> Skills = new List<FightBattleSkillDefinition>();
         public FightSkillAgentState SkillState = new FightSkillAgentState();
@@ -140,6 +141,7 @@ namespace Zjcs.Combat.Official
     [Serializable]
     public sealed class FightBattleStatusState
     {
+        public bool RemoveApplyEntityOnEnd;
         public int InstanceId;
         public int ClassId;
         public int StatusType;
@@ -535,6 +537,7 @@ namespace Zjcs.Combat.Official
         public bool SummonIsRandom;
         public bool SummonImmediateRound;
         public bool SummonInheritProps;
+        public string SummonConfigType;
         public int SummonReferenceType;
         public int SummonLevelType;
         public int SummonLifespanStatusId;
@@ -580,6 +583,7 @@ namespace Zjcs.Combat.Official
         public bool SummonIsRandom;
         public bool SummonImmediateRound;
         public bool SummonInheritProps;
+        public string SummonConfigType;
         public int SummonReferenceType;
         public int SummonLevelType;
         public int SummonLifespanStatusId;

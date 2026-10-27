@@ -1819,3 +1819,5 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 战斗召唤继承使用已取得的官方 `BattleFormulaHandler.CalcSummonMonsterInheritProp`、`SummonRankAdditiveFactorParser` 和详情合并调用。当前871与历史854相应反编译文件逐字节一致，运行时保持854已校验配置；输入哈希、程序集与转换入口见 [召唤继承清单](battle-rules/summon-inheritance-source-manifest.json)，生成脚本为 `scripts/prepare_battle_summon_inheritance.py`。
 
 龙之国实体转换输入：按当前871官方 EC 索引、地图放置与全部显示状态选择器定位416个实际 prefab、33个根 bundle；CAB 与动态贴图闭包为1544份已核对输入和3228条绑定。25419个组件及2643个托管引用注册表恢复字段描述，117858个内部对象在二进制重编码／严格重读后核对，其他原载荷逐字节保留。CinemachineComposer 的15字段、属性、继承与 APK 元数据核验后补齐序列化描述，没有实现替代相机逻辑。输入输出、程序集、元数据与工具哈希见[实体来源](official-map/map14-native-entity-input-source-manifest.json)。转换输入不是可运行实体，原生 prefab／脚本／shader／动画绑定与完整地图验证仍待完成，范围见[龙之国](../../docs/maps/map-14.md)。
+
+战斗替身使用官方12200／12201／4600实体及12202寿命、10140同步技能，原始组件、配置、描述与用户确认的单机裁决分别记录于 [替身来源清单](battle-rules/voodoo-doll-source-manifest.json)。`scripts/prepare_battle_voodoo_doll.py` 记录输入；固定真伤绕盾、溢出传导与减益转移为用户已确认的离线执行接线，原生模型和完整演出尚未完成。
