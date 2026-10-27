@@ -68,6 +68,36 @@ namespace Zjcs.Presentation.World
             });
         }
 
+        public bool CanClaimFixedReward(OfflineMainlineProgressSession progress, string slotId, int rewardId)
+        {
+            if (progress == null || string.IsNullOrWhiteSpace(slotId)) return false;
+            Map10RuntimeFixedReward config = Data.fixedRewards.FirstOrDefault(value => value != null && value.Id == rewardId);
+            return config != null && NextFixedRewardClaim(progress, slotId, rewardId, config.CanGetTimes) >= 0;
+        }
+
+        public ProgressionResult ClaimFixedReward(OfflineMainlineProgressSession progress, string slotId, int rewardId)
+        {
+            if (progress == null || string.IsNullOrWhiteSpace(slotId))
+                throw new ArgumentException("Map13 fixed reward requires a local progress session and slot.");
+            Map10RuntimeFixedReward config = Data.fixedRewards.FirstOrDefault(value => value != null && value.Id == rewardId);
+            if (config == null) throw new InvalidDataException("Official Map13 fixed reward is missing: " + rewardId);
+            int claim = NextFixedRewardClaim(progress, slotId, rewardId, config.CanGetTimes);
+            if (claim < 0) return new ProgressionResult { Status = ProgressionResultStatus.Unchanged };
+
+            string receipt = FixedRewardReceipt(slotId, rewardId, claim);
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return progress.ApplyInventoryTransaction(receipt, save =>
+            {
+                foreach (Map10RuntimeAwardItem item in config.Items)
+                {
+                    InventoryOperationResult granted = OfflineInventoryOperations.Grant(save.Player,
+                        item.ItemId, item.Count, now);
+                    if (!granted.IsApplied)
+                        throw new InvalidOperationException("Map13 fixed reward could not be applied: " + item.ItemId);
+                }
+            });
+        }
+
         private static int NextHandInClaim(OfflineMainlineProgressSession progress, string slotId,
             int itemId, int maximum)
         {
@@ -77,8 +107,20 @@ namespace Zjcs.Presentation.World
             return -1;
         }
 
+        private static int NextFixedRewardClaim(OfflineMainlineProgressSession progress, string slotId,
+            int rewardId, int maximum)
+        {
+            for (int claim = 0; claim < maximum; claim++)
+                if (!progress.Save.Player.AppliedInventoryEventIds.Contains(FixedRewardReceipt(slotId, rewardId, claim)))
+                    return claim;
+            return -1;
+        }
+
         private static string HandInReceipt(string slotId, int itemId, int claim) =>
             "map13:" + slotId + ":hand-in:" + itemId + ":" + claim;
+
+        private static string FixedRewardReceipt(string slotId, int rewardId, int claim) =>
+            "map13:" + slotId + ":fixed-reward:" + rewardId + ":" + claim;
 
         private void Validate()
         {
@@ -116,6 +158,14 @@ namespace Zjcs.Presentation.World
                     || value.Items == null || value.Items.Length == 0
                     || value.Items.Any(item => item == null || item.ItemId <= 0 || item.Count <= 0)))
                 throw new InvalidDataException("Official Map13 hand-in item configuration is malformed.");
+            if (Data.handInItems.Select(value => value.Id).Distinct().Count() != Data.handInItems.Length)
+                throw new InvalidDataException("Official Map13 hand-in item IDs are duplicated.");
+            if (Data.fixedRewards.Any(value => value == null || value.Id <= 0 || value.CanGetTimes < 0
+                    || value.Items == null || value.Items.Length == 0
+                    || value.Items.Any(item => item == null || item.ItemId <= 0 || item.Count <= 0)))
+                throw new InvalidDataException("Official Map13 fixed reward configuration is malformed.");
+            if (Data.fixedRewards.Select(value => value.Id).Distinct().Count() != Data.fixedRewards.Length)
+                throw new InvalidDataException("Official Map13 fixed reward IDs are duplicated.");
         }
     }
 }
