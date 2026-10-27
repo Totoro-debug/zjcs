@@ -1,0 +1,362 @@
+{
+  "format": 1,
+  "mapClassId": 14,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionDescSupportUI.cs",
+      "sha256": "d0817470ce6b0043d9ec30f6e83f4de56768e62a413063a023e04262478226a9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionDescItemUI.cs",
+      "sha256": "a44d66c0f675a5443ee5b0e843ad08a2e65fffd7fd33f7df34e89901a044a710"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionStrengthDisplayUI.cs",
+      "sha256": "108525ba6a5893b40a7082bc74877acb3b985b7f8cdad3857cd1c378c9612b9f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionDescHelper.cs",
+      "sha256": "12ad2a8c39459d2f11598f2c4071244f35a4892086b96c11c876e9ac9b6a97a3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionLimitStatusRefreshHelper.cs",
+      "sha256": "3e88a1ed122490069ddc88c3599be0a38a36d420b7ef56231c9a7d6e62c9f33e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionLimitStatusRefreshProviderForLevel.cs",
+      "sha256": "9dfa45758a9c31b9c375e531919d61691cb1649d316d317a52bcea0bbe6b7254"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMapRegionLimitStatusRefreshProvider.cs",
+      "sha256": "a601b8bad259ba684236f46954d6a76f1d166e70297798c57807e052a82d3bf8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UIColorByLevel.cs",
+      "sha256": "67f5ea59fdb9ead6586bc5ba3ebe1911d87c5e57f2df926da5c2300e361ef65b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionStrengthDisplayType.cs",
+      "sha256": "cf565b0208c5d95ab3687874876a2544972d3a5b7380be111c53422d17809fe3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionLimitType.cs",
+      "sha256": "46a4c13a6ef48058521e5bb86bbf7ed2a5329bc1c2468ee02ce9ad58b741aa8a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CombatRateingColorType.cs",
+      "sha256": "eaf610274c67f09a7e7d29ca108a52433eaf77da67b15685a6c0ed4045be7cf0"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "scoped_ports": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/Map12LabelData.cs",
+      "sha256": "7ad3da611fb754bda846f473a010bc0148edb2950ba0b6d561625554ac654cd0",
+      "output": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Map14LabelData.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/Map12LabelServices.cs",
+      "sha256": "a21e01fb2422359b5463856de8cc395c2f3ca12fc005fc5c10bd71ebd36f3608",
+      "output": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Map14LabelServices.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/MapUIBase.cs",
+      "sha256": "a30931115271098a8b47c444a38b1689433b75b10949ad4d68a02de5697f4512",
+      "output": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapUIBase.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/ShowRemainTimeInfo.cs",
+      "sha256": "9f137c130b14afe729c1b1214aa7f19df4da2535600e09e1692cd657dafb360e",
+      "output": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/ShowRemainTimeInfo.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap12Labels/UIBase.cs",
+      "sha256": "ad927437957b66ba28d8fd38676df974f3650833eddaa0aa74c90cd6f3961ef1",
+      "output": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/UIBase.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels/Map12LabelBinding.cs",
+      "sha256": "df2c8723c40131a7c835955ec7b142f0c646fc991ece2550cc0b0d648e39112d",
+      "output": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Map14LabelBinding.cs"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap12Labels/Map12LabelFontInstance.cs",
+      "sha256": "e2f2d02b1902b759c6ee3e7ffc182745e0b3a02a73f2bc274feae5a9e2f874db",
+      "output": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Map14LabelFontInstance.cs"
+    }
+  ],
+  "scoped_port_receipt": {
+    "path": "assets/reference/official-map/map12-label-components-code-source-manifest.json",
+    "sha256": "9c362068dbd3b77abaf21a571b9569896742292137aab4d94ceef03e36014fa4"
+  },
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "language_inputs": {
+    "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "source": {
+        "origin": "apk_zip",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "path": "assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile",
+        "bundle_hash": "a373f2acc39aeb5c4560f1456879b997"
+      },
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "entries": 108
+    },
+    "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "source": {
+        "origin": "apk_zip",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "path": "assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile",
+        "bundle_hash": "9a0b6ab8c5136050fd005ead8f567863"
+      },
+      "sha256": "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8",
+      "entries": 100081
+    }
+  },
+  "localization_manifest": {
+    "path": "assets/reference/official-map/localization-source-manifest.json",
+    "sha256": "e9b7a5d75c61f340ba6e75a8a58335c1535be7e66564a2b5628e6d1d8af9ba04"
+  },
+  "additional_original_inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIBase.cs",
+      "sha256": "fd029496b78172ec9e9e0710366106bcdaf493c1270dfff6311d1c79400abc61"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapUIBase.cs",
+      "sha256": "bd6059d8690d544a8ce97e5a27afb62c92147fa760dc9bd98e34531fa3236aae"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ShowRemainTimeInfo.cs",
+      "sha256": "b5560a4512bf3398a3ec9846fe1ae56550965ef39045571716033527e5eb7a53"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionInfo.cs",
+      "sha256": "c98644f4854ff2f4c4e03b4e517d8d6799d323f6eabb7bbc6f64d281c2537a36"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/BattleFormulaHandler.cs",
+      "sha256": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridGroundComponentInfo.cs",
+      "sha256": "046bbf2833608ef42b8271a9124106f730bb34364d69170f74e35c9fd175335d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityHandler.cs",
+      "sha256": "fe35786dcc2c2f369b162cfe35b15375e77ae33383e1ac743ac824b545af45d7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EnumExt.cs",
+      "sha256": "245e7b2e1352e2e86a3e85227bf8dc0e36b6b3d080c6070d67a403443b805d52"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionProgressManager.cs",
+      "sha256": "80e397267fbdbe3ff5d5cc381b509ee17b8214ad138de478ffe0b1f09f95a0b8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Player.cs",
+      "sha256": "b1705b4d267ccbc5c266c80bbd9ea491d0bee92db5d5a408f2b436a7cd4a4377"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "1b6de15f2b3a90a5a6ba1920c8475af10bc783141fa7bccd8a14492ac935f6b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionStatus.cs",
+      "sha256": "807d90a76bb87aaf9c9f3c0b4e6b9aa0a6e816c266af237836b6956ff810f3d4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Rank.cs",
+      "sha256": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SubRank.cs",
+      "sha256": "a4ed6930d7473456d13f7f102a708aa88510e52cda6521a034dc625cda40406e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/UI/catalog.json",
+      "sha256": "18d24da3bbd1fc86eca73fd242f15eb0b7bbcaa74c83e4e136a24e42a93482e1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/navigation.json",
+      "sha256": "1f0170fb765db2fcb109e9f6d6afc5d2a9ad135fbc54b9cf0ced3a1bfcced531"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/placement.json",
+      "sha256": "fe9488706b4b423f985a35d0f52402323741b084755676edf50dd7072829b9c4"
+    }
+  ],
+  "scope": {
+    "tables": "unity/Assets/Official/World/Map/14/Source/tables.json",
+    "tables_sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c",
+    "regions": 111,
+    "level_limited_regions": 17,
+    "time_or_server_rank_limits": 0,
+    "world_label_call": "MapRegionDescItemUI.Init(CurrentMapClassId, region, null, null)",
+    "excluded": "MiniMap-only layout/highlight branches and unreachable timed-region provider; reject expanded table scope rather than invent behavior."
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/CombatRateingColorType.cs",
+      "sha256": "0c51c81dc972389c0066266c85937094ba9fc8c03e50bce41c97f670402d74d4",
+      "meta_sha256": "c52c2dd3c14e03205781a718d48eb79202b61f3b913df8e071b503ceb196aacc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/IMapRegionLimitStatusRefreshProvider.cs",
+      "sha256": "7636759b9b4a065679d9e9264904cd1dac31ccac0175372bd881020f5d83c151",
+      "meta_sha256": "0d41cb36b9b17fdf7f84010b6bf8a6daf83891a3bc0a1552eddc21b248ba91ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Map14LabelData.cs",
+      "sha256": "89d67be87c987b19e269c81f909f2d617d3be04c9ccf0c3b888cf2eb37c68157",
+      "meta_sha256": "1404f4c7f4a0f8346afd5b796d1afb18b06ab8e40a52c60bb619d3397329efa3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Map14LabelServices.cs",
+      "sha256": "eafbda28b345a431bea61b6a2f89942103caa2a03ca105ff1d17fa2f7885dd4e",
+      "meta_sha256": "e871277e4d313b8cfdab8c6e8cae4e51b9e3dcc361b9597c29754046dec8c81d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionDescHelper.cs",
+      "sha256": "dfa6088c2cf35dfa07354e2466db334a4fc82d25fda65392f6d4501782fed15a",
+      "meta_sha256": "859430fc522a3f18a0a7b0624ff1930f89eaf29ae71968f94d0e6502a6536212"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionDescItemUI.cs",
+      "sha256": "b006fbce2d04d3365c4dda55ab68e671114373a913d329876076cbb863332196",
+      "meta_sha256": "9e488c99b22e81323b935b0eb505ce741c0692fc70b9eb7f037faabe54fa4c95"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionDescSupportUI.cs",
+      "sha256": "27db1a81f4c832405b617052e346671a4f0376944782412f3dca9c473d5b4a79",
+      "meta_sha256": "c4e7759c5ad18960dd76bc10eed891c887fcb2357d1388e881e81a5e5de040b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshHelper.cs",
+      "sha256": "d891853bfa4ec233272b68effaa4790a51e19fec5316059e06211031d63ee57d",
+      "meta_sha256": "e9f2f92fdadcbe3ea6039271491bff2b7706719cda436bb8b2888aa81d1dd1de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitStatusRefreshProviderForLevel.cs",
+      "sha256": "375d0e76de579d9489878489bb66b280b0d082faff2bb332d835dfcac35d2ef6",
+      "meta_sha256": "1545dfd0730d6104b66e29c9037a2bc903eab5efac70810f93471e4734cebebb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionLimitType.cs",
+      "sha256": "5aa0c30d1e9a5f787396d90056836855d8d107ef967ecb15844f7e3af3ca7aac",
+      "meta_sha256": "4386d4c551c4ddd16e038e0f503ebcc8e31d6de96c619a5fb2e7b35a4f18f2c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionStrengthDisplayType.cs",
+      "sha256": "9296f038620f3313583cc97b3058027a4e12b1fb7a885dd9dd6d74a1bfe0b47e",
+      "meta_sha256": "bd1b484813ece5edc7cafe364bd8886fc90d63da91dc20dd496025d1857c942e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapRegionStrengthDisplayUI.cs",
+      "sha256": "787c40bdea98e11c3affcc88c0ea07c8293e68cdaa3ecb0944f5361a29120704",
+      "meta_sha256": "227da1069039c86b0c956e74faa61ffd82466fa13c47d46d9c73c6d0f7add2b7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/MapUIBase.cs",
+      "sha256": "3956bfd58e767e4486d0cc5b68bdbe2b9e3f0f9edd6ee91543e6ad38c6899a48",
+      "meta_sha256": "3090ad33fd8a67c64bb26d1493b79da710bd17adbf6d53280da3155e890ce64a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/ShowRemainTimeInfo.cs",
+      "sha256": "5e4da6472451415f7a420db8639a33508cc84b769244dd6b9a61ed4cc2f29dd4",
+      "meta_sha256": "c7435648d942e706d77d6cb2682fcb0dc9e05828a6a818d677b283f16936b096"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/UIBase.cs",
+      "sha256": "63090bb6a1c94e39c4f49dcae35abcdbf9acfb51f6a22de470cb4e454dd73ae4",
+      "meta_sha256": "7e3c9c3aa0828c48a71b3d83a871208fec4f8b47927537e1f6c0b06790121efc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/UIColorByLevel.cs",
+      "sha256": "6dce50fb863072677074bddbbe0b5216c2e6ebe8b37bfab0f2f7fd63fe37a156",
+      "meta_sha256": "19c8f22b80406c5c4787d8562d8e499e2c468939e76a22bb383f73ecc0fd2df3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap14Labels/Zjcs.Official.World.NativeMap14Labels.asmdef",
+      "sha256": "da462d9adc2dfb528393881a6bf1ce645148b3ca451377c9a3aa530690ab13f8",
+      "meta_sha256": "e9501fdf2a6eed809262a42ac09a29e95bad4d25959780dc89ad95e4ac9780d5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/Native/region-label-data.json",
+      "sha256": "26d4c5f8a96336f13d63f321fe42589b67ce31d0f5a8e8ce7cc8a8b663bb63ce",
+      "meta_sha256": "b028b159b5b06e2c08721f00a8f64eb7dc30a5b9ee22803869969c6f2c2f2feb"
+    }
+  ],
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Zjcs.Offline.World.NativeMap14Labels.asmdef",
+      "sha256": "ff834007d0677b6c9ece2259417cad699649714f56ce2104eb3e1699fc59ffaa",
+      "meta_sha256": "2a65a5c13259805d937b003cda459d1df85ec16d49398306a9866be5723be530"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Map14LabelBinding.cs",
+      "sha256": "3ed218c121bbe5c1c6d18c1e01ffd2e3bfdce1ad1bfd0edbea9df7e92522ebf3",
+      "meta_sha256": "4cbd15fe96591f70711dbed23b8f52fcdc61bd0d8101ce7653ccd3e16bc6ea5f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14Labels/Map14LabelFontInstance.cs",
+      "sha256": "c08fd194673636222e047277a48035838af37d31ae49d457c369297c87785105",
+      "meta_sha256": "be5802ab69909e4008e18af59efc715f2515ea53abdc39f83544218e40d71643"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelTools.cs",
+      "sha256": "3946bd60709a6ea35b6f4df8add2740b98cacb82e5117e99adda4d723f68d1dd"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelTools.Binding.cs",
+      "sha256": "ba591312c85b9ba97bbe01ff4f93c94894a856eb3dda50c858add22e83ef997e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabelAcceptance.cs",
+      "sha256": "ad4388347b350929f8da984a01d3c29577d57e73365804fa600da2fd10f1e5dd"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Labels/OfficialMap14LabeledEnvironmentAcceptance.cs",
+      "sha256": "9119da663f00c34d7c368d6a2ed4e68de0030f8ecb7e7bea6e634f44797e8dad"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/Labels/Zjcs.Editor.Map14.Labels.asmdef",
+      "sha256": "8c01bd3bce2e8958d369d54cfed12bd40d03db9b166c85e3ff99b80a41236df9"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map14_label_components.py",
+    "sha256": "da809580f0bc4e438c5d968ea9c0d973bc6ded3e83b8048b6a08f0e69df3a2b9"
+  },
+  "operation": "Copy the official reachable world-label methods and serialized fields; replace DI/global player services with explicit pre-activation binding. Preserve original UI initialization order, status branches, progress special case, event subscription/removal and state switcher data.",
+  "limitations": [
+    "Formal local player/save services, normal progression and published Windows Player remain required; complete custom TMP engine equivalence is not established."
+  ]
+}
