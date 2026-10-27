@@ -1,0 +1,139 @@
+{
+  "format": 1,
+  "mapClassId": 14,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/navigation.json",
+      "sha256": "1f0170fb765db2fcb109e9f6d6afc5d2a9ad135fbc54b9cf0ced3a1bfcced531"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/placement.json",
+      "sha256": "fe9488706b4b423f985a35d0f52402323741b084755676edf50dd7072829b9c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/entities.json",
+      "sha256": "68ca0a9513a2036b725cb7bf585d3b95211b4fb34d34ff8372966303afa25e8b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/templates.json",
+      "sha256": "0c4c5ad2cf9a3fa54ce290993e85a5bc8c81b390bfaee3a723f2a7e18396d824"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/tables.json",
+      "sha256": "e54c871ff3f6dbbb1e0a5a9cb0891153824e280442424760ad2523bbddbcc09c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/stories.json",
+      "sha256": "d318d0a4ba0b8bbd2abf4b196e9c3ecb8dc5c394d866c72b27a436a63703ca2e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/cannon-terminals.json",
+      "sha256": "b08e20411186f6aa4564a1207652d465c0590f76c24bee7fecaabe041aa1d04d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/dialogues.json",
+      "sha256": "c6dcda6c65ffd3191c824fc53c121c4275b0f5629f56fc1abf94e1d0fb456d43"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/server-story-records.json",
+      "sha256": "7d4f54c9890cf452485afbd05642f486a0be6e23fc91ef51d6f60b3d71b453d3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/localization.json",
+      "sha256": "5100699319c8070751702c7811e4e1b42c136dfcd39a180843c18c819c3e356d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/entries.json",
+      "sha256": "12926115967eddddcab94e06c1b3903c0aeb82e8ac2b4d3dfa4af3a97fbc25a3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/transports.json",
+      "sha256": "8b36d4b24ca64b5b85e26f6edd559e32202ef1b4e537af5a6892e2bec74d9c2c"
+    }
+  ],
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "original_code": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPuzzleTerminalDataCannon.cs",
+      "sha256": "a1febe894ea0d5b42b1072a265f8f43e14b71b916f5b4816e7ef071e85a91ded"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPuzzleTerminalDataStepGrid.cs",
+      "sha256": "1ed7705f347b51410d6ef42546d8fbcda52163d60c7b9d4b383ce8eb852db57e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPuzzleTerminalDataLockBase.cs",
+      "sha256": "19fd9d3de32aae0a00121f10bef10c57f5fc3a2df5aa48d1c0cf7f1f36c601a6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityLockStepGrid.cs",
+      "sha256": "a1f934cabc5871423e527e17b5ebbbe1dd29f746e2117bf80d70286b78913279"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityLockEntityActivedBase.cs",
+      "sha256": "37380d4d46c54171f986de11e6cf8b6d04233fc35d25865490332545b4a5ca8a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/CharacterPositionOverlapDetectorComponent.cs",
+      "sha256": "7804036b8cc5eb72ca0a99451d28b47034201e5838becc286a0054a261b16706"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultTransportComponent.cs",
+      "sha256": "040cf65d14bc30e575aa26d2b1cf3d61f884d62c7b447e12ca56f3ca11a1b9ba"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LoStageResultTransportComponentInfo.cs",
+      "sha256": "89745893b336c35dac4ce700b0f20bfa9a593bc035b6789f748c04b3933df8a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultAutoPuzzleComponent.cs",
+      "sha256": "77bd59351a46586a59ab02af9fba780f345ace062371253c0fe89f48752139b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageResultResetPuzzleComponent.cs",
+      "sha256": "c203b6a23a8e1ca437c4ef776474cd9679504d4175454691326695c9db6a4d31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyStageResultAutoPuzzle.cs",
+      "sha256": "409223b90ed95e281b7d599e4cea0a33225506a6798ad8f981c3829ee9afdcc9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyStageResultResetPuzzle.cs",
+      "sha256": "e869076e186b4637399dac23344d4ff7654627d634086c40eb6a6a8819ba2c24"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/puzzle-rules.json",
+      "sha256": "52950652c74f817e8182dd1c4dd21e38588472dad33a12ba1e4562f05378dd18"
+    }
+  ],
+  "adapters": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleSession.cs",
+      "sha256": "5e23d2833556d8ba4d82eff2fee430308252d491980ee426c706875d118388c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/OfflineMapPuzzleMovement.cs",
+      "sha256": "361f5c04c071af5e8d7260513c2cab84b3925d6ef381a8d6a89e1f025d95bedf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/Map14PuzzleAssets.cs",
+      "sha256": "b879974e143dee8ed3af079ce6305e6f3d9c7bebf527d2b0c0b05f0101b1ea82"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map14_puzzles.py",
+    "sha256": "004e1de9725301a25b277558553c051dd9c7a9e29614a4dca3739eee8ccc68de"
+  },
+  "operation": "Structural projection of all twelve original terminal dependency closures, preserving placement, stage order, duplicate cannon targets and original cost configuration.",
+  "offline_rules": "User confirmed: cannon sets/clears only configured obstacle destroyed flags; step-grid auxiliary unlocks only listed locks; reset restores only that group's lock/pads and preserves independent rewards/claim state. Original completion results generate rewards and update terminal state in source order.",
+  "limitations": [
+    "The source APK contains marker DTOs, not the server executor.",
+    "No backpack payment transaction, official menu, disk save, navigation route or player input is wired by this data module."
+  ]
+}

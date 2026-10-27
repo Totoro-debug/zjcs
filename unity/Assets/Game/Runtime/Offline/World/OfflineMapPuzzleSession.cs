@@ -20,6 +20,8 @@ namespace Zjcs.Offline.World
         public MapPuzzleOtherStates[] OtherStates;
         public int TerminalPuzzleType, ResetTransferActionId, MoveMask, InitialDirection;
         public bool HasPushResult, InitialFlipX;
+        public bool AuxiliaryUnlockOnly, HasTransport;
+        public MapPuzzleTransportInfo Transport;
         public int[] TerminalRemoveIds = Array.Empty<int>(), TerminalBoxIds = Array.Empty<int>();
         public int[] PushBoxDetectorIds = Array.Empty<int>(), PushBoxIds = Array.Empty<int>();
         public MapPuzzleRect MovableRect;
@@ -27,6 +29,16 @@ namespace Zjcs.Offline.World
         public float[] RealCenter = { 0, 0 };
     }
     [Serializable] public sealed class MapPuzzleRect { public MapPuzzleOffset MinGrid, MaxGrid; }
+    [Serializable] public sealed class MapPuzzleTransportInfo
+    {
+        public int TargetLoEntityId, ActionId, MapClassId;
+        public MapPuzzleOffset Offset;
+    }
+    public sealed class MapPuzzleTransportRequest
+    {
+        public int SourceId, TargetLoEntityId, ActionId, MapClassId;
+        public MapGridPoint Target;
+    }
     [Serializable] public sealed class MapPuzzleBody
     {
         public MapPuzzleOffset Pos;
@@ -51,7 +63,7 @@ namespace Zjcs.Offline.World
     [Serializable] public sealed class MapPuzzleEntityState
     {
         public int PlacementId, State, OverlapTimes;
-        public bool IsUnlocked, Spawned;
+        public bool IsUnlocked, Spawned, Destroyed;
         public bool HasPosition;
         public int GridX, GridY;
     }
@@ -67,16 +79,19 @@ namespace Zjcs.Offline.World
         private readonly Dictionary<int, MapPuzzleEntityState> states;
         private readonly Func<int, int> externalState;
         private readonly Func<int, bool> externalUnlocked;
+        private readonly Action<MapPuzzleTransportRequest> requestTransport;
         private int executionDepth;
         public IReadOnlyCollection<MapPuzzleRule> Rules => rules.Values;
 
         public OfflineMapPuzzleSession(MapPuzzleRule[] definitions, MapPuzzleEntityState[] saved,
-            Func<int, int> readExternalState = null, Func<int, bool> readExternalUnlocked = null)
+            Func<int, int> readExternalState = null, Func<int, bool> readExternalUnlocked = null,
+            Action<MapPuzzleTransportRequest> onTransport = null)
         {
             rules = (definitions ?? throw new ArgumentNullException(nameof(definitions))).ToDictionary(value => value.PlacementId);
             states = (saved ?? Array.Empty<MapPuzzleEntityState>()).ToDictionary(value => value.PlacementId, CloneState);
             externalState = readExternalState;
             externalUnlocked = readExternalUnlocked;
+            requestTransport = onTransport;
             foreach (MapPuzzleRule rule in rules.Values)
             {
                 if (!states.ContainsKey(rule.PlacementId)) states.Add(rule.PlacementId, new MapPuzzleEntityState
@@ -109,13 +124,13 @@ namespace Zjcs.Offline.World
         public int State(int id) => states.TryGetValue(id, out MapPuzzleEntityState state) ? state.State : externalState?.Invoke(id) ?? 0;
         public int OverlapTimes(int id) => states[id].OverlapTimes;
         public bool IsUnlocked(int id) => states.TryGetValue(id, out MapPuzzleEntityState state) ? state.IsUnlocked : externalUnlocked?.Invoke(id) ?? false;
-        public bool IsSpawned(int id) => states[id].Spawned;
+        public bool IsSpawned(int id) => states[id].Spawned && !states[id].Destroyed;
         public MapPuzzleEntityState[] Save() => states.Values.OrderBy(value => value.PlacementId).Select(CloneState).ToArray();
 
         private static MapPuzzleEntityState CloneState(MapPuzzleEntityState value) => new MapPuzzleEntityState
         {
             PlacementId = value.PlacementId, State = value.State, OverlapTimes = value.OverlapTimes,
-            IsUnlocked = value.IsUnlocked, Spawned = value.Spawned, HasPosition = value.HasPosition,
+            IsUnlocked = value.IsUnlocked, Spawned = value.Spawned, Destroyed = value.Destroyed, HasPosition = value.HasPosition,
             GridX = value.GridX, GridY = value.GridY
         };
 
@@ -148,12 +163,18 @@ namespace Zjcs.Offline.World
                                     RunStage(target.LoEntId, target.SubStateIndex, true);
                             break;
                         case 254:
-                            if (rule.TerminalPuzzleType == 3)
+                            if (rule.TerminalPuzzleType == 4)
+                                SetCannonDestroyed(rule, true);
+                            else if (rule.TerminalPuzzleType == 6 && rule.AuxiliaryUnlockOnly)
+                                UnlockListedLocks(rule);
+                            else if (rule.TerminalPuzzleType == 3)
                                 foreach (int removed in rule.TerminalRemoveIds) states[removed].Spawned = false;
                             else Solve(rule.TerminalLockIds);
                             break;
                         case 258:
-                            if (rule.TerminalPuzzleType == 3)
+                            if (rule.TerminalPuzzleType == 4)
+                                SetCannonDestroyed(rule, false);
+                            else if (rule.TerminalPuzzleType == 3)
                                 RestoreEntities(rule.TerminalRemoveIds.Concat(rule.TerminalBoxIds));
                             else Reset(rule.TerminalLockIds);
                             break;
@@ -191,7 +212,20 @@ namespace Zjcs.Offline.World
                 if (info.OverlapDirection.Length > 0 && !info.OverlapDirection.Contains(LookDirection(position, previous))) continue;
                 states[rule.PlacementId].OverlapTimes++;
                 if (states[rule.PlacementId].OverlapTimes == info.OverlapTimesIsActivity && info.ActivityResult.CompType != 500)
-                    throw new InvalidDataException("Unimplemented overlap activation effect: " + info.ActivityResult.CompType);
+                {
+                    if (info.ActivityResult.CompType != 240 || info.ActivityResult.CompIndex != 0 || !rule.HasTransport || rule.Transport == null || requestTransport == null)
+                        throw new InvalidDataException("Unbound overlap activation effect: " + info.ActivityResult.CompType);
+                    // Original StageResultTransportComponent.TryGetTargetPos reads
+                    // the placement position, not a moved entity's current pose.
+                    var transport = rule.Transport;
+                    var target = rules[transport.TargetLoEntityId];
+                    requestTransport(new MapPuzzleTransportRequest
+                    {
+                        SourceId = rule.PlacementId, TargetLoEntityId = transport.TargetLoEntityId,
+                        ActionId = transport.ActionId, MapClassId = transport.MapClassId,
+                        Target = new MapGridPoint(target.GridX + transport.Offset.X, target.GridY + transport.Offset.Y)
+                    });
+                }
             }
             RefreshLocks();
         }
@@ -231,6 +265,35 @@ namespace Zjcs.Offline.World
             MapPuzzleRule rule = rules[id];
             if (!rule.HasOverlapDetector) throw new InvalidDataException("Step-grid target has no overlap detector: " + id);
             return OverlapTimes(id) == rule.OverlapDetector.OverlapTimesIsActivity;
+        }
+
+        // Confirmed Dragon Country adaptation. The original terminal stage still
+        // owns result order and its own state update; only the server-only result
+        // is supplied here. Payment and disk persistence belong to the host transaction.
+        private void SetCannonDestroyed(MapPuzzleRule terminal, bool value)
+        {
+            foreach (int id in terminal.TerminalRemoveIds.Distinct()) states[id].Destroyed = value;
+        }
+
+        private void UnlockListedLocks(MapPuzzleRule terminal)
+        {
+            foreach (int id in terminal.TerminalLockIds)
+            {
+                var rule = rules[id];
+                if (rule.LockType != 7) throw new InvalidDataException("Expected an original step-grid lock: " + id);
+                if (states[id].IsUnlocked) continue;
+                states[id].IsUnlocked = true;
+                if (rule.EntityClassId == 6533 && State(id) == 0) RunStage(id, 0, true);
+            }
+        }
+
+        public void ResetTerminal(int terminalId)
+        {
+            var rule = rules[terminalId];
+            if (rule.TerminalPuzzleType == 4) SetCannonDestroyed(rule, false);
+            else if (rule.TerminalPuzzleType == 6 && rule.AuxiliaryUnlockOnly) Reset(rule.TerminalLockIds);
+            else throw new InvalidDataException("No confirmed terminal reset binding: " + terminalId);
+            RefreshLocks();
         }
 
         private void Solve(IEnumerable<int> lockIds)
