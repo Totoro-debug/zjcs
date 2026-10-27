@@ -209,6 +209,7 @@ flowchart TD
 | 原界面与交互 | 原分页默认项／互斥／事件顺序，279项图形字段、36个原 Sprite、117项布局／缩放／滚动控件、表头比例跟随、28项下拉控件，以及121处原文本键／25个中文条目。[分页](../../assets/reference/battle-hud/report-tabs-source-manifest.json)、[图形](../../assets/reference/battle-hud/report-graphics-source-manifest.json)、[布局](../../assets/reference/battle-hud/report-foundation-source-manifest.json)、[滚动](../../assets/reference/battle-hud/report-scroll-source-manifest.json)、[下拉框](../../assets/reference/battle-hud/report-dropdown-source-manifest.json)、[文本](../../assets/reference/battle-hud/report-text-source-manifest.json)。 |
 | 技能数值行 | 原字段、正常／零值颜色、Slider、GM显隐及中文紧凑格式；接已有伤害／治疗／护盾、次数和占比。旧历史缺项清空，避免行池串值；图标、详情及快照未完成。[技能行来源](../../assets/reference/battle-hud/report-skill-row-source-manifest.json)；代码为 OfficialBattleReportSkillRowBinder。 |
 | 玩家数值行 | 原四项数值／占比、本人底色、四条 SlicedFilledImage；沿原本体／召唤／宠物三类相加，再以传入玩家总量为分母。未知历史保留空白，未知分母清空比例。[玩家行来源](../../assets/reference/battle-hud/report-player-row-source-manifest.json)；代码为 OfficialBattleReportPlayerRowBinder。 |
+| 玩家列表 | WorldBattleReportPlayerView 绑定原 PlayerSlot／PrefabObj、实例化真实行、合计队伍数值并支持重新启用刷新；PlayerRows 消费已确定分组，未归组记录使完整队伍占比保持未知。归组属于下文列出的本地规则；头像、名称、资料点击和正式入口仍缺。[玩家视图来源](../../assets/reference/battle-hud/report-player-view-source-manifest.json)。 |
 | 官方评分 | 已迁移 FightSettings／FightReportUIUtils 的原查找和乘加顺序：增益／普通减益／异常减益权重5／5／10，破韧系数1，None／未知类型0分；null字典提前返回0，空字典仍计算传入破韧项。原9种报告阶段顺序保留。[评分来源](../../assets/reference/battle-rules/report-score-settings-source-manifest.json)；代码为 FightBattleReportScoreSettings。 |
 
 统计数据由 [FightBattleStatistics](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs) 和 [FightBattleReportBuilder](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs) 生成；缺服务器收集／聚合代码后的计数、分母、来源和归组定义见“自定义实现”，不与已取得的显示公式混写。
@@ -219,7 +220,7 @@ flowchart TD
 
 | 层次 | 已执行范围 | 尚不覆盖 |
 | --- | --- | --- |
-| 规则与存档 | 公式固定向量，配置、队列／阶段、范围／移动／延迟、状态／CD／盾／韧性、触发技能、波次、报告统计／来源、检查点序列化及重复步骤回归。入口为 [test_unity_combat.ps1](../../scripts/test_unity_combat.ps1)、对应 scripts/test_battle_*.ps1 和 FightCombatValidation.RunSmokeTest。 | 缺失的服务器裁决、未接组件和真实退出重启续战。 |
+| 规则与存档 | 公式固定向量，配置、队列／阶段、范围／移动／延迟、状态／CD／盾／韧性、触发技能、波次、报告统计／来源／归组、检查点序列化及重复步骤回归。入口为 [test_unity_combat.ps1](../../scripts/test_unity_combat.ps1)、对应 scripts/test_battle_*.ps1 和 FightCombatValidation.RunSmokeTest。 | 缺失的服务器裁决、未接组件和真实退出重启续战。 |
 | Unity 与资源 | 已有静态检查、Unity 2022.3.57f1c2 导入／编译、ProjectTools.Validate 及受影响 prefab／shader／动画／字段绑定检查通过记录。 | 文件或单项检查通过不等于整体流程／表现已完成。 |
 | Play Mode | 隔离会话中的就绪、入口收展／空白关闭、技能栏两种竖屏尺寸、暂停／恢复、战斗结算返回；公式专项、魔印、元素抗性、飘字／提示、移动锚点、头像及战报分页／拖拽／数值行已有实际画面检查。 | 部分提示或列表使用受控样本；正式战报入口、所有动作／音频／条件、完整存档恢复未完成。历史真实鼠标测试不替代后续模拟输入要求。 |
 | Windows 交付 | 尚无覆盖完整通用战斗功能的 Windows Player 验证与发布。 | 不能以其他功能已发布或局部战斗可运行认定本功能完成。 |
@@ -272,6 +273,7 @@ flowchart TD
 | 承伤与破韧 | BeAbsoluteDamage 按已确认口径包含盾吸收、溢出与防御／减伤抵消部分；执行器直接累计官方公式输出的 AbsoluteDamage，不另造去减伤公式或重复加盾量。破韧只在敌方韧性从正数降至0时给实际破韧者计1，部分扣韧、空条后续攻击和重复回执不加。 |
 | 间接状态来源 | 状态直接生成新状态时沿用已知根角色／根技能／技能物品；独立触发技能归该技能。已接 HP 阈值、累计生命损失、技能结束三条直接状态链及其护盾归因；统计来源单独保存，不改玩法创建者／属性快照。其他事件与被动初始化仍缺。 |
 | 魔印追加归因 | 最终实际扣血按原角色／技能的实际生命伤害贡献分摊，沿官方 DistributeLongProportional 舍入与末项余数；独立魔印事件仍保留，追加量单列 AdditionalAttributedDamage，不二次扣血／命中／承伤。统计合计因此可能高于实际扣血。施加者阵亡但目标仍活且战斗未结束时，已确认继续结算并保留归因。 |
+| 玩家归组 | NPC队友各占一行；召唤后代沿 MasterId／CharacterType 归最终主人的召唤物栏，宠物及其召唤后代归宠物栏；阵亡／离场不删除历史。缺主人、循环、跨阵营、未确认代理类型保留未归组，不猜为主角。PetEntity等代理类型仍待确认。代码为 [FightBattleReportGrouping](../../unity/Assets/Game/Runtime/Official/Combat/FightBattleReportGrouping.cs)。 |
 
 新战斗保存完整计数和待记事件，恢复／重复回执不重记。旧检查点缺少命中、盾量、承伤、破韧、状态类型或根来源历史时继续标为未知，不从剩余血盾、旧混合 Hits 或相邻状态倒推；未归因数据保留角色总量，相关技能值／分母保持未知。
 

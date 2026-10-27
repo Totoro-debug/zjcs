@@ -1,10 +1,12 @@
 {
   "manifest": "854_156383",
-  "generator_sha256": "011859a64e32ad776c3ba7c062affd4c2cf3d19e963c6b427b71e939bcc4ff4e",
+  "generator_sha256": "5bccc57aa35efc00e7127a8b6c19450e65796088fb6388133e3d11a36ba07d62",
   "official_code": {
     "common-source/Common/PlayerFightSkillReport.cs": "43609f9643e847bf82e63a9ea3a1e4479777c8066f4ca759c1027bc9649ceef5",
     "common-source/Common/FightReportDamageStats.cs": "94f6b9a9827532cb7deb6e444617fe46fa538545ef5c108d52e79200bcdfc3d6",
     "common-source/Common/FightRoleNormalReport.cs": "46c49f0a6058d9ecbd258ed1748a112e1486da4ad0676f41281d6acb19879957",
+    "common-source/Common/FightReportData.cs": "5bec8cff56fea79608024b939493dc1c65ebd4549e96217433b8d310e94dc862",
+    "common-source/Common/GameCharacterType.cs": "dbd0806e477af1da85def813248f80d02bd16bdc34b4ab15bfc2142cdeebd9d6",
     "common-source/Common/DamageResultParameter.cs": "23830ee94f74e3dc573ab2d70e6ed91f7ce3c6773b613ea6ff1e692bb29f7671",
     "common-source/Common/BattleFormulaHandler.cs": "d464f1f70a436185e946194eb37419685d3fca441f35d829789654281e4e17da",
     "client-source/FightEndReportPlayerTabViewItem.cs": "242b2a350596bbcbb1ac0398f99447721cd5cd69ad940a84aad6820c54b07174",
@@ -24,12 +26,13 @@
   "runtime": {
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.cs": "01d42df8802947bec5c09a4287578d7e16faa04d94827a04a7309be3355d0424",
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleStatistics.cs": "9c3bcb1f5a08cc43b551ca9ccd9564f93bdbdb0175a7fadb9a879d222e116292",
-    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "bc2dbe0ff9237b6a22a93386cca489c23d1d1c6bfaeff7abe49d1bfd7c2e0775",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "17e746de8f8dad1c79d76904a51f9ef878ce918e8214d7e267e2eefb91b7ed29",
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleState.cs": "428e04ce66511e0ae8a84fed3f79c4b0e2b392f3d3e487585a456e46f6d3e940",
     "unity/Assets/Game/Runtime/Official/Combat/FightStatusLifecycle.cs": "168f30e9fe2e45ee6c4d8daf2af6796c7247eb27b7fe59a1d6f9e2ba26a551c4",
     "unity/Assets/Game/Runtime/Official/Combat/FightStatusPropertyRuntime.cs": "5e718c327c9af8f9bc3e742bc60a81c91f5f025a49c2a22eae2a4124703e2ee3",
     "unity/Assets/Game/Runtime/Official/Combat/FightStatusTriggerRuntime.cs": "8f4d42ab615c777e022806faa9e22b7aa96f81e800b90ec0eec7d0da7b5b86e5",
     "unity/Assets/Game/Runtime/Official/Combat/FightBattleExecutor.Resilience.cs": "3141ef94c5a80cadee72d53791b99be72dbe9f87d0ab597420ddc375d8cf3fa2",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportGrouping.cs": "65d6dcc01ded00e83a750755afc972d8678c41b981d00867a65365286203b9bb",
     "unity/Assets/Game/Editor/Combat/OfficialBattleReportStatisticsAcceptance.cs": "0ffe2c15d131579b09421ca90cf64db420fda853a36fab351262aec8c5e96427",
     "unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs": "3453bc083d0fd3958e8bafc706e65807531ebd20e6a40da2dce135f649e3599b",
     "scripts/test_battle_report_averages.ps1": "e47076af75dda60fd45b5906b929f3196db8f46a62ea145056e1ffeaf9674127",
@@ -39,6 +42,7 @@
     "scripts/test_battle_report_sources.ps1": "60bb1813dfa1cc9ea91bda1cbbd7687d620882d2a3b2ef929c2e789f98fbd360",
     "scripts/test_battle_report_players.ps1": "642f2c15365f6b85f25c17250367a411122c7aa91e644eba7bae357c40844cec",
     "scripts/test_battle_resilience.ps1": "45d609acf818741fa9f77459bfa0c600b42ee577f14444a0b038ce3725dbac3c",
+    "scripts/test_battle_report_grouping.ps1": "6dc4d935a37c69225b225214382f459dd7f4011c6274238e9da911e6b13adb3b",
     "scripts/test_unity_combat.ps1": "3c84ce170fbb7a16d72b89446b5fa52837c0f5646d084d1aef219bf24537c954",
     "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportSkillRowBinder.cs": "449d923c4b7fa1588ca9771bf75bbdcd87aaa4ade9fd93cf02f47b9a3d0c481a"
   },
@@ -56,13 +60,15 @@
     "distributions": "Each skill effective damage/healing/shield divided by the sum of the corresponding effective values across all skills of that caster.",
     "hp_ratios": "Each skill effective healing/shield divided by the caster maximum HP.",
     "received_damage": "BeAbsoluteDamage includes shield absorption, HP overflow and damage negated by defence/reduction.",
-    "break_resilience": "BreakResilience counts successful enemy breaks, not resilience points removed."
+    "break_resilience": "BreakResilience counts successful enemy breaks, not resilience points removed.",
+    "player_groups": "NPC teammates retain independent rows. Summons of summons remain in the final owner summon report category. Pet-created summons retain the final owner pet category."
   },
   "implementation": "Each ExecuteSkill invocation owns its target set, so same-skill recursive replay starts another denominator. Healing, HP-cost records, original blinding/miss and no-damage actions do not enter damage-hit counters. Extra mark attribution creates no additional hit.",
   "shield_implementation": "A new numeric-shield lifecycle instance is pending until the original property rebuild initializes its configured/custom shield value. Attribute that successful grant to CreatorId/RootSkillId/ApplyingSkillItemId exactly once. Existing discard/stack updates and restored shields do not manufacture grants. Shield consumption never reduces granted statistics.",
   "status_implementation": "The common lifecycle journals each accepted application using its incoming creator/root skill/item, independent of the active instance. The executor drains pending records once after property rebuild. This preserves refreshes, multiple applications and statuses removed before aggregation; records without a root skill remain explicit unit-level unattributed counts, never a fabricated skill 0. Unattributed caster applications mark per-skill totals unavailable while retaining recorded lower bounds.",
   "source_implementation": "HP-threshold, accumulated-HP-loss and skill-end status reactions copy their parent ReportSource. ReportSource contains the root caster/entity/item independently of gameplay CreatorId/RootSkillId, property snapshots and falloff. Accepted application journals and successful shield grants consume that statistical source. Independently executed skills retain their own casts/hits/direct status roots. IsSet distinguishes intentional unknown ancestry from Unity default inline objects; legacy saves use only their recorded direct source and never infer nearby parents.",
   "player_implementation": "Accumulate the resolved official AbsoluteDamage independently of actual HP loss. Never add shield values, overflow, reductions or mark source-credit again. Count enemy resilience positive-to-zero transitions once before their configured response. Preserve separate ordinary/abnormal debuff application counters for the original 5/5/10/1 formula, including known-caster applications without a root skill. Newly begun units and summons start complete; restored legacy histories are never promoted to complete by later events.",
+  "grouping_implementation": "Snapshot MasterId and CharacterType into report units. Player/NPC records retain roster order; typed summons follow recorded summon chains, including the pet category for pet-created summons and their summon descendants. Dead/ended units remain included. Unresolved ownership, cycles, cross-side chains and unconfirmed proxy categories remain explicit; the view adapter rejects incomplete groups rather than manufacturing complete team ratios.",
   "persistence": "Serialize raw counts, HasAbsoluteDamageTaken, HasBreakResilienceCount, HasStatusTypeCounts, HasDamageHitCounts, HasCureHitCounts, HasStatusApplicationCounts, HasShieldGrantCounts, pending status applications and pending shield-grant bits. Missing historical counters remain explicitly unavailable; never estimate them from legacy Hits, active statuses or remaining shields. An incomplete caster shield history also marks its distribution denominator unavailable.",
   "pending": "The original numeric row has a reusable binding adapter; production entry, icon/detail providers, full passive/status source mapping and complete report fields remain incomplete."
 }

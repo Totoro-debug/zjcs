@@ -115,10 +115,58 @@ namespace Zjcs.Editor.Combat
                 row.gameObject.SetActive(true);
                 Require(row.DamageValue.Text == "1.23万" && !row.MyselfStateSwitcher.State,
                     "Original player-row enable refresh or compact formatting changed.");
+
+                var playerView = view.GetComponent<WorldBattleReportPlayerView>();
+                Require(playerView != null && playerView.PlayerSlot == scroll.content
+                    && playerView.PrefabObj == asset, "Original player view slot/row-prefab references changed.");
+                // The same completed battle now supplies the formal ownership provider. Append
+                // isolated recorded NPC/pet/multi-hop summon samples without changing the battle.
+                report.Units.Add(SampleUnit(8000, 4, 1, 10));
+                report.Units.Add(SampleUnit(8002, 3, 8001, 20));
+                report.Units.Add(SampleUnit(8001, 3, 1, 30));
+                report.Units.Add(SampleUnit(8003, 5, 1, 40));
+                report.Units.Add(SampleUnit(8004, 3, 8003, 50));
+                report.Units.Add(SampleUnit(8005, 3, 8004, 60));
+                var groups = FightBattleReportGrouping.Build(report, unit.Side);
+                var records = OfficialBattleReportPlayerRowBinder.PlayerRows(groups, settings);
+                Require(records.Count == 2 && records[0].TargetId == 1 && records[1].TargetId == 8000
+                    && records[0].SummonNormalReport.Damage == 50 && records[0].PetNormalReport.Damage == 150
+                    && records[1].NormalReport.Damage == 10, "Resolved NPC/pet/nested-summon categories changed.");
+                playerView.Init(records, 1);
+                yield return null; // Original child destruction is deferred by Unity.
+                Require(playerView.PlayerSlot.childCount == 2, "Original player-view refresh retained old children.");
+                var groupedRows = playerView.PlayerSlot.GetComponentsInChildren<WorldBattleReportPlayerRow>();
+                Require(groupedRows.Length == 2 && groupedRows[0].MyselfStateSwitcher.State
+                    && !groupedRows[1].MyselfStateSwitcher.State
+                    && groupedRows[0].DamageValue.Text == WorldBattleReportNumberFormat.Compact(unit.DamageDealt + 200)
+                    && groupedRows[1].DamageValue.Text == "10"
+                    && Near(groupedRows[0].DamageSlider.value, (float)(unit.DamageDealt + 200) / (unit.DamageDealt + 210)),
+                    "Original view did not bind resolved ownership or whole-team totals.");
+                LayoutRebuilder.ForceRebuildLayoutImmediate(scroll.content);
+                yield return Capture("report-player-grouping.png");
+                playerView.gameObject.SetActive(false);
+                playerView.Init(records, 8000);
+                playerView.gameObject.SetActive(true);
+                yield return null;
+                groupedRows = playerView.PlayerSlot.GetComponentsInChildren<WorldBattleReportPlayerRow>();
+                Require(playerView.PlayerSlot.childCount == 2 && !groupedRows[0].MyselfStateSwitcher.State
+                    && groupedRows[1].MyselfStateSwitcher.State, "Original player-view enable refresh or child replacement changed.");
+                report.Units.Add(SampleUnit(9000, 3, 9999, 10));
+                bool unresolvedRejected = false;
+                try { OfficialBattleReportPlayerRowBinder.PlayerRows(FightBattleReportGrouping.Build(report, unit.Side), settings); }
+                catch (InvalidOperationException) { unresolvedRejected = true; }
+                Require(unresolvedRejected, "An unresolved owner produced a misleading complete team ratio.");
                 Debug.Log("Original player report row passed: " + receipt.binding.checks.Length
-                    + " original fields/references, self state, three-category sums, four team sliders, CN formatting, unavailable history and completed-battle counters. Production grouping, portrait/detail provider and formal entry remain pending.");
+                    + " original fields/references, self state, three-category sums, four team sliders, CN formatting, unavailable history and completed-battle counters. Original player view passed: slot/prefab binding, NPC rows, nested summons, pet category, team totals, child replacement, enable refresh and unresolved-owner rejection. Portrait/detail provider and formal entry remain pending.");
             }
             finally { UnityEngine.Object.DestroyImmediate(canvas); }
+        }
+
+        private static FightBattleReportUnit SampleUnit(int id, int type, int master, long damage)
+        {
+            return new FightBattleReportUnit { UnitId = id, Side = 1, CharacterType = type,
+                MasterId = master, DamageDealt = damage, HasAbsoluteDamageTaken = true,
+                HasBreakResilienceCount = true, HasStatusTypeCounts = true };
         }
 
         private static bool Near(float actual, float expected) => Mathf.Abs(actual - expected) < .0001f;

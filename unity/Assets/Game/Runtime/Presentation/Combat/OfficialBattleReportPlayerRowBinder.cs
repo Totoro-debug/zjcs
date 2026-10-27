@@ -7,6 +7,43 @@ namespace Zjcs.Presentation.Combat
 {
     public static class OfficialBattleReportPlayerRowBinder
     {
+        public static List<WorldBattleReportPlayerRowData> PlayerRows(FightBattleReportPlayerGroups groups,
+            FightBattleReportScoreSettings settings)
+        {
+            if (groups == null) throw new ArgumentNullException(nameof(groups));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            // A partial group must not become a seemingly complete team denominator.
+            if (groups.Unassigned.Count != 0) throw new InvalidOperationException("Player report contains unresolved ownership records.");
+            var rows = new List<WorldBattleReportPlayerRowData>();
+            foreach (var player in groups.Players)
+                rows.Add(new WorldBattleReportPlayerRowData
+                {
+                    TargetId = player.TargetId,
+                    NormalReport = Sum(player.Normal, settings),
+                    SummonNormalReport = Sum(player.Summon, settings),
+                    PetNormalReport = Sum(player.Pet, settings)
+                });
+            return rows;
+        }
+
+        private static WorldBattleReportPlayerRoleData Sum(IReadOnlyList<FightBattleReportUnit> units,
+            FightBattleReportScoreSettings settings)
+        {
+            var sum = new WorldBattleReportPlayerRoleData();
+            foreach (var unit in units)
+            {
+                var role = Role(unit, settings);
+                checked
+                {
+                    sum.Damage += role.Damage;
+                    sum.BeAbsoluteDamage += role.BeAbsoluteDamage;
+                    sum.RealCure += role.RealCure;
+                    sum.ApplyStatusScore += role.ApplyStatusScore;
+                }
+            }
+            return sum;
+        }
+
         // One resolved unit supplies one role record. Player/pet/summon ownership grouping is a
         // separate provider and must not silently merge every allied unit into the main player.
         public static WorldBattleReportPlayerRoleData Role(FightBattleReportUnit unit,
@@ -29,18 +66,7 @@ namespace Zjcs.Presentation.Combat
             IReadOnlyList<WorldBattleReportPlayerRowData> data, long currentPlayerId,
             Action<UnityEngine.Component, long> iconProvider = null)
         {
-            if (rows == null || data == null || rows.Count != data.Count) throw new ArgumentException("Player report rows and records differ.");
-            long damage = 0, cure = 0;
-            long? beDamage = 0, status = 0;
-            foreach (var item in data)
-            {
-                damage += item.Damage;
-                beDamage += item.BeAbsoluteDamage;
-                cure += item.Cure;
-                status += item.ApplyStatusScore;
-            }
-            for (int i = 0; i < rows.Count; i++)
-                rows[i].Init(data[i], currentPlayerId, damage, beDamage, cure, status, iconProvider);
+            WorldBattleReportPlayerView.InitRows(rows, data, currentPlayerId, iconProvider);
         }
     }
 }

@@ -163,7 +163,7 @@ def build(source_root):
                 adaptations=['Original player-row refresh order, self state, four values, three-category sums and four team-ratio sliders.',
                              'Unknown historical values remain blank; an unknown team denominator clears its slider.',
                              'The original PlayerIcon reference is retained as a Component adapter endpoint; its portrait/detail implementation remains pending.'],
-                pending=['Production player/pet/summon report grouping, player portrait/detail provider, formal report-window entry.'])
+                pending=['Player portrait/detail provider, unconfirmed proxy grouping and formal report-window entry.'])
     write(RECEIPT, (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode())
     record_runtime()
     print('Restored original player row:', len(checks), 'fields/references.')
@@ -171,6 +171,7 @@ def build(source_root):
 
 def record_runtime():
     data = json.loads(RECEIPT.read_bytes())
+    data['pending'] = ['Player portrait/detail provider, unconfirmed proxy grouping and formal report-window entry.']
     assert all(sha((ROOT / row['path']).read_bytes().replace(b'\r\n', b'\n')) == row['sha256'] for row in data['outputs'])
     paths = [p for n in [ROW, BINDER, ACCEPTANCE] for p in [n, n + '.meta']]
     paths += ['unity/Assets/Game/Editor/OfficialMap10BattlePlayModeAcceptance.cs']

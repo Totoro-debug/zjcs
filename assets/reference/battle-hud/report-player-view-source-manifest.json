@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "manifest": "854_156383",
+  "official_code": {
+    "client-source/FightEndReportPlayerTabView.cs": "ab995be357ff40a031c9feb234339d1aff404246381847b78ea31a52161cbafa",
+    "common-source/Common/FightReportData.cs": "5bec8cff56fea79608024b939493dc1c65ebd4549e96217433b8d310e94dc862",
+    "common-source/Common/FightRoleNormalReport.cs": "46c49f0a6058d9ecbd258ed1748a112e1486da4ad0676f41281d6acb19879957",
+    "common-source/Common/GameCharacterType.cs": "dbd0806e477af1da85def813248f80d02bd16bdc34b4ab15bfc2142cdeebd9d6",
+    "common-source/Common/BattleReportDistributor.cs": "ef64ddb45e7e818fe0689aaf7b505494c876c9d59c502de08b2788456bf8efb6",
+    "common-source/Common/FightReportComponent.cs": "a8a2934af40c0f22d2d732dfe6b03cd37720b6c518edc770ffc94acd52c00aac"
+  },
+  "binding": {
+    "prefab": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabView.prefab",
+    "file_id": "114985305603660343",
+    "original_path_id": "986654945706968322",
+    "object_sha256": "c5dc4e7daf20546c4bc7b1ddb7c8d2f0d9554754a6a7b0d2bf5afca499895a46",
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ui_fight_fightendreportpanel_fightendreportplayertabview.bundle",
+      "bundle_hash": "e23a4838f216e13ea03614dcb38c229d",
+      "path_id": "986654945706968322",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/e23a4838f216e13ea03614dcb38c229d.bundle",
+      "manifest": "871_156598",
+      "source_manifest": "854_156383",
+      "bundle_size": 3988,
+      "bundle_sha256": "7c8c8934fb82f2f0dc2152306bcd03c316fbdd0f28190ef545f80ee2705930c0"
+    },
+    "fields": {
+      "PlayerSlot": {
+        "fileID": 224107629493147155
+      },
+      "PrefabObj": {
+        "fileID": 1709254077376921,
+        "guid": "94f0f033a6095d79b010597e0fb74cef",
+        "type": 3
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Combat/BattleReport/FightEndReportPlayerTabView.prefab",
+      "sha256": "6063d9477570b04abaea2a907a60e12900a848cd9b717d9e307ff90e3dccca9e",
+      "bytes": 34712
+    }
+  ],
+  "confirmed": [
+    "Each NPC teammate occupies its own row.",
+    "Summons of summons belong to the final owner summon category.",
+    "Pet-created summons inherit the final owner pet report category."
+  ],
+  "local_adaptation": "Use recorded report MasterId and CharacterType. Player/NPC rows keep roster order. Dead/ended units remain included. Unresolved/cyclic/cross-side ownership is retained explicitly and cannot create a partial team ratio.",
+  "pending": [
+    "PetEntity and other proxy category rules.",
+    "Portrait/detail provider and formal report-window entry."
+  ],
+  "runtime": {
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerView.cs": "48f820f6476100be426a7a78ed4be088e03f60575da3fa47184887d81b3861bb",
+    "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleReportPlayerView.cs.meta": "330ef8898ebc32dc97414308729bc17fb686ccc76558e496db9665d66ac7fd12",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportGrouping.cs": "65d6dcc01ded00e83a750755afc972d8678c41b981d00867a65365286203b9bb",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportGrouping.cs.meta": "bee5b4c008f3957e1d3c5d020d39b2427cca0552b708d4ea6da325345890629e",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs": "17e746de8f8dad1c79d76904a51f9ef878ce918e8214d7e267e2eefb91b7ed29",
+    "unity/Assets/Game/Runtime/Official/Combat/FightBattleReportBuilder.cs.meta": "3c9c91322c1aa15c32eed2afa5144580112f6a698605fa711461577ae47b5dbd",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinder.cs": "1cf0f6b1b9eba250d4ebbbf49c8a36858550169815529a0798635831c13d6a76",
+    "unity/Assets/Game/Runtime/Presentation/Combat/OfficialBattleReportPlayerRowBinder.cs.meta": "a494d978b0647cf23f7fb4670192c4fc60e3fc94cb7a2c5f3b882d07b5df44b6",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs": "2a0a0b023ee2b657898cbe6384343c83338fac9972da060ef2385504a5f3a80c",
+    "unity/Assets/Game/Editor/Combat/OfficialBattleReportPlayerRowAcceptance.cs.meta": "e3fb5212c2570c24878ede38be694dbd38318891d22992600775e3099ee2c32e",
+    "scripts/test_battle_report_grouping.ps1": "6dc4d935a37c69225b225214382f459dd7f4011c6274238e9da911e6b13adb3b"
+  },
+  "generator_sha256": "cd88f5e91efd917f93d79f88f02940b5ec5a5e73aabc19315cb5ad3e7d69e90e"
+}

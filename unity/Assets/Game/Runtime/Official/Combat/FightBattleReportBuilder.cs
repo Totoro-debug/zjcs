@@ -7,6 +7,8 @@ namespace Zjcs.Combat.Official
     public sealed class FightBattleReportUnit
     {
         public int UnitId;
+        public int MasterId;
+        public int CharacterType;
         public int Side;
         public int MonsterId;
         public int MonsterType;
@@ -129,6 +131,8 @@ namespace Zjcs.Combat.Official
                 var row = new FightBattleReportUnit
                 {
                     UnitId = unit.Id,
+                    MasterId = unit.MasterId,
+                    CharacterType = unit.CharacterType,
                     Side = unit.Side,
                     MonsterId = unit.MonsterId,
                     MonsterType = unit.MonsterType,
