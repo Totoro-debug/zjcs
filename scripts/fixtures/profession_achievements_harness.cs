@@ -44,6 +44,11 @@ static class ProfessionAchievementsHarness
         foreach (var row in claim) recorded.Add(row.EventId);
         Check(rules.CanClaim(5, recorded).Count == 0, "Repeat/reopened claim can duplicate rewards.");
         Check(rules.Visible(5, recorded, 5).Select(x => x.RequiredLevel).SequenceEqual(new[] { 6, 7, 8, 9, 10 }), "Claimed rows were not removed/refilled.");
+        var receivedOnly = rules.VisibleWithStates(5, recorded, 5, true, false);
+        Check(receivedOnly.Count == 4 && receivedOnly.All(x => x.State == OfficialAchievementState.Received),
+            "Original prefab received/processing filter flags were ignored.");
+        Check(rules.VisibleWithStates(1, new HashSet<string>(), 5, false, false).Count == 0,
+            "Empty state must follow the original item visibility flags.");
         Check(rules.CanClaim(6, recorded).Single().Reward[303] == 2, "Cycle seed reward was skipped after receiving the fixed group.");
         Check(rules.CanClaim(10006, new HashSet<string>()).Count == 10005, "High-level group claim truncated the original cycles.");
         Console.WriteLine("Profession achievement official fixtures passed: 10005 milestones, fixed/cycle boundaries, five-row display, group claim and repeat protection.");

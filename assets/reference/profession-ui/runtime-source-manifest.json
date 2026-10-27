@@ -25,14 +25,14 @@
       "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadar.cs",
       "runtime_sha256": "9f03b27d687c967924c5b29d654a3dcc323463036b7121f48db23c3e2a4400a3",
       "meta_sha256": "322cc611cd19a92b1ae7f4d07b79bb92adc4cbcc87f8e5b343ba7e593557bcd7",
-      "scope": "Original radar slot order, nonlinear function, ordinary property row cache and settings color."
+      "scope": "Original radar slot order, nonlinear function, property row cache and settings color."
     },
     {
       "official": "client-source/ProfessionPropRadarDrawer.cs",
       "official_sha256": "06275fa7c386257e62db5903b6ded7ef9674c051d497ed0ad0f2dfc2e5db3167",
       "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPropRadarDrawer.cs",
       "runtime_sha256": "9ebcc29cf16ca806c457c6e27dc4eea4ddee543522dadb9bab0b3528b96e7283",
-      "meta_sha256": "b73d0c6f923e04dfefb2b7e2f5d3613f3e29beb64d36900810c3be36656f6e64",
+      "meta_sha256": "310dc74a635261b33bdddda5e3eb56aaec6679261933ba974319989374640d4e",
       "scope": "Original Graphic mesh vertices, colors and triangles."
     },
     {
@@ -41,7 +41,127 @@
       "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerPropItem.cs",
       "runtime_sha256": "5bdbf3a29fc7a1769c1e9a1f1e46cc4f0d6750cf15432fee2d88dd37b87b7cd1",
       "meta_sha256": "58c5e748982303567a619487116d4c0698fa483761112b6cadd3a93a13185568",
-      "scope": "String value presentation lifecycle, preview visibility, delayed text effect and background/line visibility. The general typed/colorful value and blessing-detail paths are not migrated by this port."
+      "scope": "String value presentation lifecycle, preview visibility, delayed text effect and background/line visibility. General typed/colorful values and blessing paths remain required."
+    },
+    {
+      "official": "client-source/ProfessionTreePanel.cs",
+      "official_sha256": "bc09d7da29cdb72dee0884df383a1e4ad876e25e01eb7a0b41eb3f250be89ac5",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionTreePanel.cs",
+      "runtime_sha256": "f317d27931c61db5bc08b0eb1df3edf4da805097c833666317dfd98da06d30ac",
+      "meta_sha256": "10fdbf9e19eea57d140df93231731c50a37d9247d4938be6772ab21f3d7f42a1",
+      "scope": "Original item initialization, total profession level and highest-rank state; player events are supplied by the local adapter."
+    },
+    {
+      "official": "client-source/ProfessionTreePanelItem.cs",
+      "official_sha256": "34bcb908ae96f15cda8217e938d6e9fc49ae1ad31e56f9220c8ed15acf2dc50d",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionTreePanelItem.cs",
+      "runtime_sha256": "a516757fba5bb4d7706bf5edcb692833ba34e86c1e62fd49a7657d7cfd08f5c6",
+      "meta_sha256": "6f0b2c0b808ad3857b3fbedfcb31d4476f7ee96f2d90f30e3b7c4a1d41684d2c",
+      "scope": "Original five statuses, update order, native condition-prefab creation, grouping and tutor routing; appearance, map, tip and detail services are injected."
+    },
+    {
+      "official": "client-source/PanelTitle.cs",
+      "official_sha256": "62caf8ffc1bea0355134c9d96ede3f2f6d9914965ed52f1d9a7c48a47a4d2944",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/PanelTitle.cs",
+      "runtime_sha256": "7ce12c788c36ef3b5ad7154551118059d692261e8983d1e0cb558dc250615858",
+      "meta_sha256": "0d7771023dc52550c4d7b417aacfa849dfb2c633e8f6c4edc917217f6662e62c",
+      "scope": "Original title key setter and serialized text reference."
+    },
+    {
+      "official": "client-source/AchievementPanel.cs",
+      "official_sha256": "762b74d958387cd677aac9469f775ecb84aeb418f5a9991f08d27533cea52d0c",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanel.cs",
+      "runtime_sha256": "8b8d1f5c80a5656294dad97a46711cd9024bdc534fab6ebfcce18c86e08a174d",
+      "meta_sha256": "4a27b02f476834a9a57e89d6f347642cac3d7c8bb86e44184b113c512f3a8651",
+      "scope": "Original panel entry scoped to ProfessionTotalLevel type 56 and empty parameter; other achievement entry paths are not ported here."
+    },
+    {
+      "official": "client-source/AchievementPanelBase.cs",
+      "official_sha256": "7bcaafc5391e30837f61f7824ba5fea98a89ad5898697efdd07c430fc03f5e49",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelBase.cs",
+      "runtime_sha256": "3a8b0d5a737043a9901a6b6a3bcefef018fd2d9b0604456c2b2860fcd84a2912",
+      "meta_sha256": "db04213ad92a966d6aee7f998ae895270f583233e6294c572cbad2ecfbd10bc8",
+      "scope": "Group 10, original state filters, score/index sorting, title and original five row instances; other ranking/achievement types are not ported here."
+    },
+    {
+      "official": "client-source/AchievementPanelItem.cs",
+      "official_sha256": "5882612045b1c78ae84d55962b76bcc6815cda7aba7b12d547f837e0b5b0e94e",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/AchievementPanelItem.cs",
+      "runtime_sha256": "87737c082125002c8e1737df120973003206c7ef50670ee969e39ae6d6c30a06",
+      "meta_sha256": "04be5b89624409ef71fe15e3a228956b0328e2a673f6b28f519a8878ea55e463",
+      "scope": "Original refresh order, progress, state, reward-icon borrowing and group claim checks; local icon/function/player/RPC services are injected."
+    },
+    {
+      "official": "client-source/FreedomChangeProfessionBtn.cs",
+      "official_sha256": "7fa11c77fc126f37f917fc69e9a0e73dc7e5ea94aaed7cf0891069abbe4487b0",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/FreedomChangeProfessionBtn.cs",
+      "runtime_sha256": "043eb362f0488fcbe22b05a8933023808b87f1696e1e7bc4429d57c51d912b09",
+      "meta_sha256": "9cd7ff3e52f04a07486a45108be956c0fcbc86bec017247d80430350acdf190a",
+      "scope": "Original function lock key, timer/state branches, tutor image offset and click validation order; local clock/function/map services are injected."
+    },
+    {
+      "official": "client-source/ShowRemainTimeInfo.cs",
+      "official_sha256": "b5560a4512bf3398a3ec9846fe1ae56550965ef39045571716033527e5eb7a53",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/ShowRemainTimeInfo.cs",
+      "runtime_sha256": "467ff74bb3ae04188593321f33510574140f933ef5908b989da4e4e9c06bdceb",
+      "meta_sha256": "e38bea10c21504ac008f856e86d623211a422c34e3a24c95d933a173f8bdc692",
+      "scope": "Original timer comparisons, refresh interval, callback and text visibility; local clock/culture services replace original singletons and UIBase initialization."
+    },
+    {
+      "official": "client-source/CloseWindowBtn.cs",
+      "official_sha256": "80fb590a2ad2704d93726b8376f2e68af60af46b45c8f02ef0f3fb0d50c8aea2",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/CloseWindowBtn.cs",
+      "runtime_sha256": "ef06dd27c0c6ec942b71203c56bfea346cbc54bb1adca0336f4cf2254d04fdc3",
+      "meta_sha256": "b291d02ed6755f89d4ceeadd553a6c0e818c222fae0c7982d08e60d72dc4ab05",
+      "scope": "Original parent/specified/last close target and destroyed-window subscription; local window service is injected."
+    },
+    {
+      "official": "client-source/HyperLinkClickListener.cs",
+      "official_sha256": "fd978c1ab58105cb56a16f3c867c5af1851741091b60465160df71fa6da9be54",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/HyperLinkClickListener.cs",
+      "runtime_sha256": "4e58aa5218c352151de94bd9bd3bb4332f72d422dbb301cd61676e555997aa3e",
+      "meta_sha256": "54103c85c1383b505cb97e03ea49fb674de95f1401e0f9ef2a49b783f1ec097f",
+      "scope": "Original TMP link hit, numeric provider selection, parameter parsing and click dispatch. Provider supplies original navigation context; optional UITouchPass component routing is not installed here."
+    },
+    {
+      "official": "client-source/StoryNodeRegister.cs",
+      "official_sha256": "d9d2962f28780506e846013a93225a9ca7d6a0e286ea8d4b661ff9e13a646155",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/StoryNodeRegister.cs",
+      "runtime_sha256": "a19673d5ed2c05f4bccd25a39ce9b731c35f769223a82894b2bb32440a7e5ab9",
+      "meta_sha256": "ad7de6e90dfe4d8bb73a7041831f21ca7417451bdccf89ce853fe6e67fbc133e",
+      "scope": "Original registration order, missing-node reporting and unregister loop; local story registry is injected."
+    },
+    {
+      "official": "client-source/UIBloomElement.cs",
+      "official_sha256": "aa9fd88b9e0753c1e21c023b19627fb5b4468cb6195180663018fcf258842857",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBloomElement.cs",
+      "runtime_sha256": "ddc53a6a6b69c8d1aa0d4ac854e2549932b659a5f09fa978323fbbc0211baccb",
+      "meta_sha256": "c354af8725c64aec130c275a9187f1b2acbd7995833dd012a2f369d49ead1a6e",
+      "scope": "Original serialized renderer metadata without lifecycle methods."
+    },
+    {
+      "official": "client-source/UIBloomElementOrder.cs",
+      "official_sha256": "1f94b6721341cae00cb7532bc1d619d3b6b8db103ab4a8b1a98471106acda5cc",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBloomElementOrder.cs",
+      "runtime_sha256": "cb7c106f02a29f86fffd5f31219ed1bd04ad6b528df86ecddf6f77e04f942d92",
+      "meta_sha256": "48a30f8379f362a305476b4cad520ac04c3ad85c0119a4b6296a11d92092aea6",
+      "scope": "Original serialized renderer order metadata."
+    },
+    {
+      "official": "client-source/UIBloomGraphicElement.cs",
+      "official_sha256": "157d766178551fea2b36ecc68675306ae2571872cfa2e0df28d71976fce303ea",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBloomGraphicElement.cs",
+      "runtime_sha256": "c07c8efe1f9e03c569e443657b5ede558bf7c388d3a6c80340d2890e90089bb5",
+      "meta_sha256": "a9bf90347486a843acf528d050d5062e1ed2c46adb1f7c1500f5d90a860c080e",
+      "scope": "Original graphic/material/stencil references; bloom renderer is not ported by this metadata holder."
+    },
+    {
+      "official": "client-source/UIBloomPlayerElement.cs",
+      "official_sha256": "a44997b3393f854b0bad1a7566f273853e735d3c3b59f3de98c4e166c91da9f6",
+      "runtime": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBloomPlayerElement.cs",
+      "runtime_sha256": "988a1f8695f359de8f6b88def48c747fb0d91085ccc1911babcfad5c85594de3",
+      "meta_sha256": "152d7db3b9268c2da3bd87029ae7de9dd4ae3223e30a24164a30953d63b90130",
+      "scope": "Original appearance/weapon references retained as Components pending native appearance type binding; bloom renderer is not ported here."
     }
   ],
   "achievement": {
@@ -60,16 +180,36 @@
     },
     "runtime": {
       "path": "unity/Assets/Game/Runtime/Offline/Progression/OfficialProfessionAchievementRules.cs",
-      "sha256": "5ec05fa8948ffaf1723463cca5d825eeb7c000a3ee6fc3d80cfb9d2e76e9287b"
+      "sha256": "80c17f30cbcdc52459203182f82825e2de71ddc05a0c8afe8a7ae2eb3ecee048"
     },
     "fixtures": {
       "path": "scripts/fixtures/profession_achievements_harness.cs",
-      "sha256": "365b5e1e82c398214713c9ab384036011e72f05effaff722d156a86b4c43c6f7"
+      "sha256": "7c21f8db325ba7b0eda6028beac437f07fba43bfdf034841490bf2b3464b5632"
     }
   },
+  "local_service": {
+    "runtime": {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
+      "sha256": "168035bc819a98fa642df6125d08bfc46b7e8c47e4e0313c9ea1760f8b82f581"
+    },
+    "scope": "Profession level reads, group-10 reward transaction and source-based non-mutating profession appearance preview only.",
+    "appearance_sources": {
+      "ProfessionUtils.cs": "61b1f0c7b6d3a936b2734936f2faae4e9e4cd36a3420093b361e0d95a9b2b37f",
+      "AppearanceSystem.Runtime/AppearanceUtils.cs": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109"
+    }
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs",
+    "sha256": "2fa770516c8193f7967a4a1c34d75a88fe96f9f564f8ed1d710f5019724c1785"
+  },
+  "recorder": {
+    "path": "scripts/record_unity_profession_runtime_sources.py",
+    "sha256": "0b0f96b187fb4e83dfc410428b473e1838b48e170b04f2dceeff5afbc8824e14"
+  },
   "limitations": [
-    "Native prefab runtime scripts and resource bindings are incomplete; these code ports have not been exercised in the profession Play Mode flow.",
-    "PlayerPropItem port is scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
-    "No new full asset snapshot or Windows Player release is produced by this source restoration."
+    "Native prefab runtime scripts, shaders and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
+    "Data/resource/window/appearance/map/tip services must be connected to the original native prefabs before runtime completion.",
+    "PlayerPropItem remains scoped to overview/radar string values; full typed preview and blessing interactions remain required where used.",
+    "No full asset snapshot or Windows Player release is produced by this source restoration."
   ]
 }

@@ -18,7 +18,8 @@ def build(run_converter=False):
     cache = CACHE / 'typed'
     receipt = cache / 'inputs/source-manifest.json'
     source = json.loads(receipt.read_bytes())
-    if source['root'] != BUNDLE or len(source['components']) != 8598:
+    if (source['root'] != BUNDLE or source['restored_component_counts'].get(BUNDLE) != 8357
+            or source['restored_component_counts'].get('defaultpackage_assets_prefabs_ui_rule.bundle') != 241):
         raise ValueError('Profession native input coverage changed; inspect the original prefab inventory.')
     if run_converter:
         convert(cache)

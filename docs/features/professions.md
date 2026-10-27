@@ -12,13 +12,15 @@
 
 ## 完整还原部分
 
-已核对官方职业总览、职业树、详情、成就和相关弹窗的源码、prefab 及配置；职业包与规则弹窗共 8598 个组件的字段已经严格解码，并完成转换输入写入、重开和逐字段比对。原生导出已恢复 22 个资产中的 328 个托管引用注册表、387 条记录和 4938 个对象引用，保留 RID、顺序、浮点位值与层级身份。转换缓存尚未接通全部官方运行时类型和显式资源绑定。
+已核对官方职业总览、职业树、详情、成就和相关弹窗的源码、prefab 及配置。职业包 8357 个、规则弹窗包 241 个组件，以及字体、外观和提示图依赖共 14035 个组件的字段已经严格解码，完成转换输入写入、重开和逐字段比对。原生导出已恢复 1485 个资产中的 1791 个托管引用注册表、3313 条记录、12000 个对象引用和 1665 组打包数组，保留 CAB／对象身份、RID、顺序、浮点位值与层级身份。转换缓存尚未接通全部官方运行时类型和显式资源绑定。
 
-主页面立绘按原 `ProfessionSettings` 的 GUID 从官方 Sprite 提取，38 个职业的男女映射复用 12 张原图片，保留 alpha、PPU、pivot、border；原 `ImageLocator` 的原生尺寸及锚点修正代码已迁移。职业总览的页签状态、属性行复用及雷达计算正在按官方组件迁移，不能把旧节点投影界面算作原生 prefab 迁移完成。
+主页面立绘按原 `ProfessionSettings` 的 GUID 从官方 Sprite 提取，38 个职业的男女映射复用 12 张原图片，保留 alpha、PPU、pivot、border；原 `ImageLocator` 的原生尺寸及锚点修正代码已迁移。职业总览、雷达、职业树的五种状态与条件分组，以及馈赠的原面板控制代码已迁入 `Runtime/Official/ProfessionUI/`。关闭、倒计时、导师入口和剧情节点登记通过服务接口连接本地运行环境；服务和原生 prefab 接线仍未完成。不能把旧节点投影界面算作原生 prefab 迁移完成。
 
-成就 C# 规则已按官方 `AchievementRawInfoParser`、`CycleTemplateInfo` 和 `AchievementInfo` 生成 10005 个档位。点击任一可领取行时，按原 `AchievementPanelItem` 的组 10／`count=-1` 请求及共享 `Player.TryRecordAlreadyGotAchievementReward`，领取该组所有已达成、未领取档位；本地奖励和记录使用一次事务。原配置边界、五行显示、循环尾档、批量领取和重复领取保护的独立 C# 测试通过。
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，转换工具未输出图片；现已按原字段恢复原生 Texture2D，Unity 导入后核对尺寸、格式、可读性、空数据、过滤及环绕参数。主面板静态闭包检查覆盖 845 个资产、77 种脚本和 7 个 shader，断开 GUID 为 0；尚有 28 种运行脚本及 6 种提示图托管类型待迁移，shader 和动态加载资源也未完成绑定。以上是引用检查，不代表界面已经可以运行。
 
-隔离 Unity 工程已完成现有接线和新迁移组件的导入、编译及 `Zjcs.Editor.ProjectTools.Validate`。尚未完成职业原生 prefab 的 Play Mode 点击、画面与存档验证，以上不代表功能完整还原。
+成就 C# 规则已按官方 `AchievementRawInfoParser`、`CycleTemplateInfo` 和 `AchievementInfo` 生成 10005 个档位，保留已领取／处理中条目的过滤和排序。点击任一可领取行时，按原 `AchievementPanelItem` 的组 10／`count=-1` 请求及共享 `Player.TryRecordAlreadyGotAchievementReward`，领取该组所有已达成、未领取档位；本地奖励和记录使用一次事务。原配置边界、五行显示、循环尾档、批量领取和重复领取保护的独立 C# 测试通过。
+
+隔离 Unity 工程已完成迁入控制组件的导入、编译及 `Zjcs.Editor.ProjectTools.Validate`。`ProfessionProgressionValidation.Run` 使用独立存档验证总等级 5 时一次取得 1200 个原奖励物品、四条记录，重复请求不写盘，冷读恢复，总等级 6 时只领取循环起始奖励；真实文件锁导致的写盘失败和物品数量溢出均保持原存档与内存状态。职业预览的服装／武器处理按原 `ProfessionUtils.SetProfessionAppearance` 克隆玩家外观，不改写装备和存档。尚未完成职业原生 prefab 的 Play Mode 点击、画面与保存恢复验证，以上不代表功能完整还原。
 
 ## 自定义实现
 
@@ -32,7 +34,7 @@
 - 职业详情中的官方技能和属性、升级消耗与徽章领取差额；树中未解锁条件、导师寻路与晋升条件。
 - 成就五行列表的领取状态与官方奖励图标／数量、批量领取、保存恢复和重复领取保护的实际运行验收。
 - 职业转换与晋升；导师自由转职的比较、三组方案、确认、原奖励、撤回及免费间隔。
-- Unity 编译、Play Mode 模拟点击与运行画面检查，Windows Player 构建／启动／存档验证和发布。
+- 全部原生组件与资源接线后的 Unity 编译、Play Mode 模拟点击和运行画面检查，Windows Player 构建／启动／存档验证和发布。
 - 在 Unity 中验证规则、正常操作、动画／音效、保存恢复和失败回滚；相关参考测试的旧通过结果不计入 Unity 验收。
 
 ### 待迁移的规则与表现

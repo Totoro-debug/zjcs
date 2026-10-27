@@ -15,7 +15,6 @@ from prepare_unity_map13_water_entity_inputs import hydrate
 
 CACHE = ROOT / '.tools/profession-native-ui/871_156598'
 BUNDLE = 'defaultpackage_assets_prefabs_ui_profession.bundle'
-RESTORE = {BUNDLE, 'defaultpackage_assets_prefabs_ui_rule.bundle'}
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 def build():
@@ -86,10 +85,12 @@ def build():
     dest = CACHE / 'typed/inputs'
     dest.mkdir(parents=True, exist_ok=True)
     inputs, fields, changes, unions = [], [], [], []
+    restored_counts = {}
     for name in sorted(apk.loaded):
         raw, source = read_source(apk, name)
-        if name in RESTORE:
-            converted, records, altered, typed, checked = hydrate(apk.loaded[name], schemas)
+        if not name.startswith('assets/bin/Data/') and ('_prefabs_' not in name or name in (BUNDLE, 'defaultpackage_assets_prefabs_ui_rule.bundle')):
+            converted, records, altered, typed, checked = hydrate(apk.loaded[name], schemas, include_source_identity=True)
+            restored_counts[name] = len(records)
             fields.extend(records)
             changes.extend(altered)
             unions.extend(typed)
@@ -115,7 +116,7 @@ def build():
     result = dict(format=1, manifest=apk.version, root=BUNDLE, inputs=inputs, components=fields,
                   converted_objects=changes, managed_reference_unions=unions,
                   tools=[dict(path=str(path.resolve()), sha256=digest(path.read_bytes())) for path in sorted(set(tools))],
-                  outputs=[], schema_proof=schema_proof,
+                  outputs=[], schema_proof=schema_proof, restored_component_counts=restored_counts,
                   operation='Strict original schema read; restore complete serialized fields and reversible managed-reference registries. Encode, reopen, compare every original field and preserve all other object payload bytes.',
                   limitations=['Converter inputs only; original runtime types, Windows asset import, interaction and publication remain required.'])
     (dest / 'source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

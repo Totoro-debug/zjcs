@@ -1,0 +1,160 @@
+"""Resolve the native profession prefab closure and verify every runtime binding.
+
+Planning reads recovered native YAML. Installation stays gated until every original
+script, managed-reference class, shader and dynamic resource has a verified port.
+"""
+from collections import Counter
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+
+from prepare_unity_profession_native_inputs import ROOT, CACHE
+
+GUID = re.compile(r"guid: ([0-9a-f]{32})")
+META_GUID = re.compile(r"^guid: ([0-9a-f]{32})$", re.M)
+SCRIPT = re.compile(r"^  m_Script: \{fileID: \d+, guid: ([0-9a-f]{32})", re.M)
+BUILTIN = {"00000000000000000000000000000000", "0000000000000000e000000000000000", "0000000000000000f000000000000000"}
+TEXT = {".prefab", ".asset", ".mat", ".controller", ".overridecontroller", ".anim", ".shader", ".rendertexture", ".spriteatlas"}
+ORIGINAL = "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab"
+WORLD = ROOT / "unity/Assets/Game/Runtime/Official/WorldUI"
+PROFESSION = ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI"
+ALIASES = {
+    "MultiLanguageText": "WorldMultiLanguageText", "PlayerPropItem": "ProfessionPlayerPropItem",
+    "TabItem": "WorldTabItem", "TabGroup": "WorldTabGroup", "TabAnimatorTransition": "WorldTabAnimatorTransition",
+    "ClampingScrollRect": "WorldClampingScrollRect", "SafeArea": "WorldSafeArea",
+    "MaintainGlobalScaleUI": "WorldMaintainGlobalScaleUI", "LayoutElementClamper": "WorldLayoutElementClamper",
+    "CountRedDotImage": "WorldCountRedDotImage", "PopupWindow": "WorldPopupWindow", "PreviewTool": "WorldPreviewTool",
+    "UIBloomGroup": "WorldUIBloomGroup",
+}
+STANDARD = {"Image", "RawImage", "Button", "Mask", "RectMask2D", "ScrollRect", "ContentSizeFitter", "LayoutElement",
+            "HorizontalLayoutGroup", "VerticalLayoutGroup", "GridLayoutGroup", "AspectRatioFitter", "GraphicRaycaster", "Slider", "Shadow"}
+MANAGED = {("Framework", "", "StateGameObjectConfig"): ("Zjcs.Official.WorldUI", "Zjcs.Official.WorldUI", "WorldStateGameObjectConfig"),
+           ("Framework", "", "StateUIColorConfig"): ("Zjcs.Official.WorldUI", "Zjcs.Official.WorldUI", "WorldStateUIColorConfig")}
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def guid(path):
+    found = META_GUID.search(path.with_name(path.name + ".meta").read_text(encoding="utf-8"))
+    if not found:
+        raise ValueError("Native binding metadata has no GUID: " + str(path))
+    return found[1]
+
+
+def runtime_script(original):
+    name = original.stem
+    if name in STANDARD:
+        package = ROOT / "unity/Library/PackageCache/com.unity.ugui@1.0.0"
+        paths = [path.with_suffix("") for path in package.rglob(name + ".cs.meta") if "Editor" not in path.parts]
+        if len(paths) != 1:
+            raise ValueError("Inspect the actual local UGUI script: " + name + " " + str(paths))
+        return paths[0]
+    if name in ("TextMeshProUGUI", "TMP_FontAsset"):
+        return ROOT / "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime" / (name + ".cs")
+    if name == "UIParticle":
+        return ROOT / "unity/Assets/Game/Runtime/Presentation/Opening/OfficialCoffeeUIParticle/UIParticle.cs"
+    name = ALIASES.get(name, name)
+    for folder in (PROFESSION, WORLD):
+        path = folder / (name + ".cs")
+        if path.exists():
+            return path
+    return None
+
+
+def build(scope="main"):
+    cache = CACHE / "typed"
+    exported = cache / "export/ExportedProject/Assets"
+    proof_path = ROOT / "assets/reference/profession-ui/native-export-source-manifest.json"
+    proof = json.loads(proof_path.read_bytes())
+    if proof["manifest"] != "871_156598":
+        raise ValueError("Profession native export version differs")
+    restored = {}
+    for row in proof["outputs"]:
+        path = ROOT / row["path"]
+        if sha(path) != row["sha256"]:
+            raise ValueError("Restored native asset changed: " + str(path))
+        restored[path.relative_to(cache / "restored").as_posix()] = path
+    index = {}
+    for meta in exported.rglob("*.meta"):
+        match = META_GUID.search(meta.read_text(encoding="utf-8"))
+        if match:
+            rel = meta.with_suffix("").relative_to(exported).as_posix()
+            if match[1] in index:
+                raise ValueError("Duplicate native export asset GUID: " + match[1])
+            index[match[1]] = rel
+    font_proof_path = ROOT / "assets/reference/profession-ui/fonts-source-manifest.json"
+    font_proof = json.loads(font_proof_path.read_bytes())
+    if font_proof["manifest"] != proof["manifest"]:
+        raise ValueError("Native profession font source version differs")
+    for row in font_proof["assets"]:
+        path = ROOT / row["path"]
+        if sha(path) != row["sha256"] or sha(path.with_name(path.name + ".meta")) != row["meta_sha256"]:
+            raise ValueError("Recovered native font asset changed: " + str(path))
+        if row["guid"] in index:
+            raise ValueError("Recovered zero-size atlas conflicts with a converter output")
+        index[row["guid"]] = row["native_relative_path"]
+        restored[row["native_relative_path"]] = path
+    seeds = [ORIGINAL] if scope == "main" else sorted(path.relative_to(exported).as_posix()
+        for path in (exported / "Prefabs/UI/Profession").glob("*.prefab"))
+    selected, missing, scripts, script_uses, managed, shaders = {}, [], {}, Counter(), Counter(), []
+    queue = [(path, "explicit original prefab") for path in seeds]
+    while queue:
+        rel, owner = queue.pop()
+        if rel in selected:
+            continue
+        path = restored.get(rel, exported / rel)
+        if not path.exists():
+            raise ValueError("Native dependency is not exported: " + rel)
+        if path.suffix == ".cs":
+            target = runtime_script(path)
+            scripts[rel] = None if target is None else dict(path=target.relative_to(ROOT).as_posix(), guid=guid(target), sha256=sha(target))
+            continue
+        selected[rel] = dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path), owner=owner)
+        if path.suffix.lower() not in TEXT:
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "Map13Original" in text:
+            raise ValueError("Native asset still contains converter-only fields: " + rel)
+        for script_guid in SCRIPT.findall(text):
+            script_uses[index[script_guid]] += 1
+        for match in re.finditer(r"(?m)^      type:\n        class: ([^\n]*)\n        ns:([^\n]*)\n        asm:([^\n]*)", text):
+            cls, ns, asm = (value.strip() for value in match.groups())
+            if cls:
+                managed[(asm, ns, cls)] += 1
+        if path.suffix == ".shader":
+            shaders.append(rel)
+        for reference in set(GUID.findall(text)) - BUILTIN:
+            if reference not in index:
+                missing.append(dict(owner=rel, guid=reference))
+            else:
+                queue.append((index[reference], rel))
+    pending = [dict(script=path, uses=script_uses[path]) for path, binding in sorted(scripts.items()) if binding is None]
+    references = [dict(assembly=key[0], namespace=key[1], type=key[2], count=count,
+                       binding=list(MANAGED[key]) if key in MANAGED else None) for key, count in sorted(managed.items())]
+    result = dict(format=1, manifest=proof["manifest"], scope=scope, seeds=seeds,
+        verified_export=dict(path=proof_path.relative_to(ROOT).as_posix(), sha256=sha(proof_path)),
+        verified_fonts=dict(path=font_proof_path.relative_to(ROOT).as_posix(), sha256=sha(font_proof_path)),
+        operation="Resolve all original native asset GUID references, retain restored registries, identify actual local script GUIDs and original shader dependencies; no prefab construction, stripping or approximate replacement.",
+        generator=dict(path=Path(__file__).resolve().relative_to(ROOT).as_posix(), sha256=sha(Path(__file__))),
+        assets=selected, script_bindings=scripts, pending_scripts=pending,
+        managed_reference_types=references, shaders=shaders, missing=missing,
+        dynamic_resources="Original service-loaded resources (reward icons, rule popup, portraits and tutor windows) require explicit source-backed seeds before installation.")
+    dest = cache / ("native-bindings-" + scope + ".json")
+    dest.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("Native profession binding closure:", len(selected), "assets;", len(scripts), "script types;", len(pending), "pending scripts;", len(references), "managed types;", len(shaders), "shaders;", len(missing), "missing GUIDs")
+    for item in pending:
+        print("Pending:", item["uses"], item["script"])
+    for item in references:
+        if item["binding"] is None:
+            print("Pending registry:", item["assembly"], item["namespace"], item["type"], item["count"])
+    return result
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--scope", choices=("main", "all"), default="main")
+    build(parser.parse_args().scope)

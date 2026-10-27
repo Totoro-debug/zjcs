@@ -18,6 +18,15 @@ namespace Zjcs.Offline.Progression
         { Index = index; RawId = rawId; RequiredLevel = level; Reward = reward; }
     }
 
+    public enum OfficialAchievementState { Processing, Completed, Received }
+    public sealed class OfficialProfessionAchievementView
+    {
+        public OfficialAchievementState State { get; }
+        public OfficialProfessionAchievement Info { get; }
+        internal OfficialProfessionAchievementView(OfficialAchievementState state, OfficialProfessionAchievement info)
+        { State = state; Info = info; }
+    }
+
     // AchievementRawInfoParser.GenerateAchievementInfosCount/GetAllAchievementDict,
     // CycleTemplateInfo.GetRawInfoByIndex and AchievementInfo.GetGenerateCycleValue,
     // restricted to the original ProfessionTotalLevel (56), group 10, Level parameter.
@@ -59,10 +68,31 @@ namespace Zjcs.Offline.Progression
         public IReadOnlyList<OfficialProfessionAchievement> CanClaim(int totalLevel, ISet<string> recorded)
             => milestones.Where(row => totalLevel >= row.RequiredLevel && !recorded.Contains(row.EventId)).ToArray();
         public IReadOnlyList<OfficialProfessionAchievement> Visible(int totalLevel, ISet<string> recorded, int showCount)
+            => VisibleWithStates(totalLevel, recorded, showCount).Select(row => row.Info).ToArray();
+        public IReadOnlyList<OfficialProfessionAchievementView> VisibleWithStates(int totalLevel, ISet<string> recorded,
+            int showCount, bool showReceived = false, bool showProcessing = true)
         {
-            // Original panel hides Received and keeps Completed ahead of Processing.
-            return milestones.Where(row => !recorded.Contains(row.EventId))
-                .OrderByDescending(row => totalLevel >= row.RequiredLevel).ThenBy(row => row.Index).Take(showCount).ToArray();
+            // AchievementUtils.GetAchievementStateSearchRange / AchievementPanelBase.InitData.
+            int gotMax = milestones.Where(row => recorded.Contains(row.EventId)).Select(row => row.Index).DefaultIfEmpty(0).Max();
+            int canMax = milestones.Where(row => totalLevel >= row.RequiredLevel).Select(row => row.Index).DefaultIfEmpty(0).Max();
+            int start = gotMax > 0 ? Math.Max(0, gotMax - showCount) : 0;
+            int end = Math.Min(milestones.Count - 1, canMax + showCount);
+            var rows = new List<OfficialProfessionAchievementView>();
+            for (int i = start; i <= end; i++)
+            {
+                OfficialProfessionAchievement info = milestones[i];
+                if (recorded.Contains(info.EventId))
+                {
+                    if (showReceived) rows.Add(new OfficialProfessionAchievementView(OfficialAchievementState.Received, info));
+                }
+                else if (totalLevel >= info.RequiredLevel)
+                    rows.Add(new OfficialProfessionAchievementView(OfficialAchievementState.Completed, info));
+                else if (showProcessing)
+                    rows.Add(new OfficialProfessionAchievementView(OfficialAchievementState.Processing, info));
+            }
+            return rows.OrderByDescending(row => row.State == OfficialAchievementState.Completed ? 3
+                    : row.State == OfficialAchievementState.Processing ? 2 : 1)
+                .ThenBy(row => row.Info.Index).Take(showCount).ToArray();
         }
         private static int Number(Dictionary<string, object> row, string key)
             => Convert.ToInt32(row[key], CultureInfo.InvariantCulture);

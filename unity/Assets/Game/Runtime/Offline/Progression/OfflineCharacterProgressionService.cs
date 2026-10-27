@@ -42,6 +42,45 @@ namespace Zjcs.Offline.Progression
 
         public OfflinePlayerProgress Player => session.Save.Player;
         public OfficialCharacterCatalog Catalog => catalog;
+
+        public int ProfessionLevel(int profession)
+        {
+            return Player.ProfessionLevels.Where(value => value != null && value.Profession == profession)
+                .Select(value => value.Level).DefaultIfEmpty(0).Max();
+        }
+
+        public int TotalProfessionLevel()
+        {
+            return Player.ProfessionLevels.Where(value => value != null).Sum(value => value.Level);
+        }
+
+        public ProgressionResult ClaimProfessionAchievements(OfficialProfessionAchievementRules rules)
+        {
+            if (rules == null) return Invalid("The official profession achievement rules are required.");
+            // AchievementPanelItem uses group 10, count=-1, receiveSameType=false.
+            // Player.TryRecordAlreadyGotAchievementReward consumes every completed,
+            // unreceived index. Rewards and all records share one save transaction.
+            return session.ApplyCharacterMutationIfChanged(player =>
+            {
+                int total = player.ProfessionLevels.Where(value => value != null).Sum(value => value.Level);
+                var recorded = new HashSet<string>(player.AppliedCharacterEventIds, StringComparer.Ordinal);
+                IReadOnlyList<OfficialProfessionAchievement> available = rules.CanClaim(total, recorded);
+                if (available.Count == 0) return false;
+                foreach (OfficialProfessionAchievement milestone in available)
+                {
+                    foreach (KeyValuePair<int, long> reward in milestone.Reward)
+                    {
+                        OfflineItemStack item = player.Inventory.FirstOrDefault(value => value.ItemId == reward.Key);
+                        if (item == null)
+                            player.Inventory.Add(new OfflineItemStack { ItemId = reward.Key, Count = reward.Value });
+                        else item.Count = checked(item.Count + reward.Value);
+                    }
+                    player.AppliedCharacterEventIds.Add(milestone.EventId);
+                }
+                return true;
+            });
+        }
+
         public int FriendshipLevel(int npcClassId, long experience, int subRank)
         {
             return session.FriendshipLevel(npcClassId, experience, subRank);
@@ -1807,6 +1846,38 @@ namespace Zjcs.Offline.Progression
         {
             return OfflineWardrobeRules.Resolve(ReadAppearance(Player.Wardrobe),
                 catalog.Appearances, catalog.Skins, catalog.AllowedSkins);
+        }
+
+        public WardrobeResolution ResolveProfessionAppearance(int profession)
+        {
+            Dictionary<string, object> definition = catalog.Find("profession_base", profession, "Profession");
+            if (definition == null) throw new ArgumentOutOfRangeException(nameof(profession));
+            // Original ProfessionUtils.SetProfessionAppearance clones the player's
+            // appearance; previews never write the player's equipped/worn state.
+            WardrobeAppearanceState state = ReadAppearance(Player.Wardrobe);
+            state.Profession = profession;
+            if (profession != 0)
+            {
+                string sex = state.Sex.ToString(CultureInfo.InvariantCulture);
+                Dictionary<string, object> defaults = Map(Map(definition, "DefaultSkins"), sex);
+                if (defaults != null)
+                {
+                    state.AppendedItemByType.Remove(7);
+                    if (defaults.TryGetValue("7", out object primary))
+                        state.EquippedSkinBySlot[10] = Convert.ToInt32(primary, CultureInfo.InvariantCulture);
+                    else state.EquippedSkinBySlot.Remove(10);
+                    state.AppendedItemByType.Remove(8);
+                    if (defaults.TryGetValue("8", out object secondary))
+                        state.EquippedSkinBySlot[14] = Convert.ToInt32(secondary, CultureInfo.InvariantCulture);
+                    else state.EquippedSkinBySlot.Remove(14);
+                }
+                Dictionary<string, object> appended = Map(Map(definition, "AppendAppearanceRewards"), sex);
+                if (appended != null)
+                    foreach (KeyValuePair<string, object> entry in appended)
+                        state.AppendedItemByType[int.Parse(entry.Key, CultureInfo.InvariantCulture)] =
+                            Convert.ToInt32(entry.Value, CultureInfo.InvariantCulture);
+            }
+            return OfflineWardrobeRules.Resolve(state, catalog.Appearances, catalog.Skins, catalog.AllowedSkins);
         }
 
         public WardrobeConflictTip PreviewAppearanceConflict(int itemId, long nowUnixSeconds)
