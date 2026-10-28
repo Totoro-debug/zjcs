@@ -217,7 +217,7 @@ namespace Zjcs.Editor
             scaler.matchWidthOrHeight = original.matchWidthOrHeight;
         }
 
-        private static void SimulateUiClick(Button expected, Camera camera)
+        private static void SimulateUiClick(Button expected, Camera camera, Vector2? inputPosition = null)
         {
             Canvas.ForceUpdateCanvases();
             var rect = expected.targetGraphic == null
@@ -229,7 +229,7 @@ namespace Zjcs.Editor
             Vector2 maximum = RectTransformUtility.WorldToScreenPoint(camera, corners[2]);
             if (maximum.x - minimum.x < 20 || maximum.y - minimum.y < 12)
                 throw new InvalidDataException("Native button rendered below a usable portrait size: " + expected.name);
-            Vector2 position = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
+            Vector2 position = inputPosition ?? RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
             var pointer = new PointerEventData(EventSystem.current) { position = position, button = PointerEventData.InputButton.Left };
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointer, hits);

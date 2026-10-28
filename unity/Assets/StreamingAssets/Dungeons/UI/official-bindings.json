@@ -158145,6 +158145,117 @@
         "enabled": true,
         "fullScreen": false,
         "isDuplicate": false,
+        "mask": {
+          "button": "",
+          "buttons": [
+            {
+              "colors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.9607843160629272,
+                0.9607843160629272,
+                0.9607843160629272,
+                1.0,
+                0.7843137383460999,
+                0.7843137383460999,
+                0.7843137383460999,
+                1.0,
+                0.9607843160629272,
+                0.9607843160629272,
+                0.9607843160629272,
+                1.0,
+                0.7843137383460999,
+                0.7843137383460999,
+                0.7843137383460999,
+                0.501960813999176,
+                1.0,
+                0.10000000149011612
+              ],
+              "enabled": true,
+              "interactable": true,
+              "navigation": 3,
+              "objects": [
+                "BlurMask"
+              ],
+              "path": "",
+              "target": "",
+              "transition": 0,
+              "triggers": [
+                "Normal",
+                "Highlighted",
+                "Pressed",
+                "Selected",
+                "Disabled"
+              ],
+              "wrapAround": false
+            }
+          ],
+          "canvasResource": "Map12/UI/WorldCanvas",
+          "enabled": true,
+          "image": "",
+          "materialResource": "World/Mainline/ScreenBlur",
+          "native_assets": [
+            {
+              "path": "unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab",
+              "sha256": "2279595c416e037265a438c4567bc81b743a87cdadae7e736cf3115f82e59c5e"
+            },
+            {
+              "path": "unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab.meta",
+              "sha256": "01bc18402757070639548adb6379118f611236256786e6dc9c11b9eb6ef9bb26"
+            },
+            {
+              "path": "unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader",
+              "sha256": "003539bdd3ebbe1a1dad4f44b5bc9104ece5b06e50a54af7c77a52229c7d7a77"
+            },
+            {
+              "path": "unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat",
+              "sha256": "3dde4139d9afbe6b644bc7458549d4cde58c8352e2601946cc350166af674aac"
+            }
+          ],
+          "path": "Content/Popup/BlurMask",
+          "prefab_source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_map_world.bundle",
+            "bundle_hash": "cfe1a92533edad0112b1ba72ef259cd7",
+            "bundle_sha256": "1655ffd511d70cdff6b7beab227e4220bf4970de5ef8648b77a9c8cb634093bc",
+            "bundle_size": 396067,
+            "manifest": "871_156598",
+            "origin": "official_cdn",
+            "path_id": "3681283045889155442",
+            "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/cfe1a92533edad0112b1ba72ef259cd7.bundle"
+          },
+          "receipts": [
+            {
+              "path": "assets/reference/official-map/map12-ui-native-source-manifest.json",
+              "sha256": "03e0c1e385e3e5c277b55a1c0b7aa7effbca404a7646a6bf545b62cd627eac59"
+            },
+            {
+              "path": "assets/reference/official-map/popup-effects-source-manifest.json",
+              "sha256": "b83a855f1792f7dd8a9295f5ab3178f9a1143b626bc7e0c4281a92a3c0dbdf70"
+            }
+          ],
+          "shader_source": {
+            "apk_entry": "assets/bin/Data/data.unity3d",
+            "bundle": "assets/bin/Data/data.unity3d",
+            "bundle_hash": "a3c5e878864fefe6b41ecf3e5795061d",
+            "manifest": "854_156383",
+            "origin": "apk_zip",
+            "path_id": "4800000",
+            "raw_sha256": "d6f89f8426ee67c6db7b5f0a283f914443ddb00b694b59654a4c955791f0780f",
+            "raw_size": 3554552
+          },
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_map_world.bundle",
+            "bundle_hash": "cfe1a92533edad0112b1ba72ef259cd7",
+            "bundle_sha256": "1655ffd511d70cdff6b7beab227e4220bf4970de5ef8648b77a9c8cb634093bc",
+            "bundle_size": 396067,
+            "manifest": "871_156598",
+            "origin": "official_cdn",
+            "path_id": "-8815456120940125838",
+            "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/cfe1a92533edad0112b1ba72ef259cd7.bundle"
+          }
+        },
         "maskType": 3,
         "native_source_receipt": {
           "path": "assets/reference/official-map/map12-ui-native-source-manifest.json",

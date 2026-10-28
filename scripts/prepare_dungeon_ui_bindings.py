@@ -91,6 +91,97 @@ def sprite_binding(sprite_cache, assets_file, file_id, path_id):
     }
 
 
+def button_binding(reader, path_key, object_names, reference_path):
+    raw = reader.get_raw_data()
+    if len(raw) < 232: raise ValueError("Truncated official route Button")
+    if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (40, 52, 64, 76)):
+        raise ValueError("Unbound route navigation target")
+    if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (180, 192, 204, 216)):
+        raise ValueError("Unbound route button SpriteState")
+    offset, triggers = 228, []
+    for _ in range(5):
+        length = struct.unpack_from("<i", raw, offset)[0]
+        if length < 0 or offset + 4 + length > len(raw): raise ValueError("Invalid route Button trigger")
+        triggers.append(raw[offset+4:offset+4+length].decode("utf8"))
+        offset = (offset + 4 + length + 3) & ~3
+    interactable = struct.unpack_from("<i", raw, offset)[0]
+    file_id, path_id = struct.unpack_from("<iq", raw, offset+4)
+    if offset+20 != len(raw) or struct.unpack_from("<i", raw, offset+16)[0]:
+        raise ValueError("Unbound official route Button event")
+    return dict(path=path_key, objects=object_names,
+        enabled=bool(reader.read(check_read=False).m_Enabled),
+        navigation=struct.unpack_from("<i", raw, 32)[0], wrapAround=bool(struct.unpack_from("<i", raw, 36)[0]),
+        transition=struct.unpack_from("<i", raw, 88)[0], colors=list(struct.unpack_from("<22f", raw, 92)),
+        triggers=triggers, interactable=bool(interactable),
+        target=reference_path({"m_FileID":file_id, "m_PathID":path_id}))
+
+
+def private_mask_binding(apk, schemas):
+    """Resolve the original WorldCanvas mask and pin the existing desktop conversion."""
+    from UnityPy.classes.PPtr import PPtr
+    prefab = apk.asset("prefabs_ui_map_world", "/WorldCanvas.prefab")
+    nodes = list(relative_transform_path(prefab.read()))
+    mask_nodes = [(go, names) for go, _, names, _ in nodes if "/".join(names[1:]) == "Content/Popup/BlurMask"]
+    if len(mask_nodes) != 1:
+        raise ValueError("Original private popup BlurMask hierarchy is ambiguous")
+    root, root_names = mask_nodes[0]
+    readers = [pair.component.deref() for pair in root.m_Component if pair.component.type.name == "MonoBehaviour"
+               and pair.component.deref().read(check_read=False).m_Script.read().m_ClassName == "WindowBlurMask"]
+    if len(readers) != 1:
+        raise ValueError("Original WindowBlurMask component is missing")
+    reader = readers[0]
+    fields = schemas.read(reader)
+    if fields["mMaskType"] != 3 or fields["mMaskImg"]["m_PathID"]:
+        raise ValueError("Original private popup mask type or optional Image changed")
+    names_by_id = {go.object_reader.path_id: names for go, _, names, _ in nodes}
+    def reference(field, expected):
+        pointer = PPtr(**fields[field], assetsfile=reader.assets_file)
+        target = pointer.deref()
+        if target.read(check_read=False).m_Script.read().m_ClassName != expected:
+            raise ValueError("Original private popup mask reference type changed: " + field)
+        names = names_by_id[target.read(check_read=False).m_GameObject.path_id]
+        if names[:len(root_names)] != root_names:
+            raise ValueError("Original private popup mask has an external hierarchy reference")
+        return "/".join(names[len(root_names):])
+    native_receipt_path = ROOT / "assets/reference/official-map/map12-ui-native-source-manifest.json"
+    native_receipt = json.loads(native_receipt_path.read_bytes())
+    if native_receipt["manifest"] != VERSION or native_receipt["mapClassId"] != 12:
+        raise ValueError("Original private popup mask conversion uses another source version")
+    records = {row["path"]: row for row in native_receipt["outputs"]}
+    native_paths = ["unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab", "unity/Assets/Game/Resources/Map12/UI/WorldCanvas.prefab.meta"]
+    blur_receipt_path = ROOT / "assets/reference/official-map/popup-effects-source-manifest.json"
+    blur_receipt = json.loads(blur_receipt_path.read_bytes())
+    apk.load_builtin("assets/bin/Data/data.unity3d")
+    builtin = apk.env.get_cab("unity_builtin_extra")
+    shader = builtin.objects[int(blur_receipt["shader"]["path_id"])]
+    if shader.type.name != "Shader" or shader.read().m_ParsedForm.m_Name != "CustomRenderTexture/ScreenBlur" or sha256(shader.get_raw_data()) != blur_receipt["shader"]["objectSha256"]:
+        raise ValueError("Current official ScreenBlur differs from the recorded desktop conversion")
+    records.update({row["path"]: row for row in blur_receipt["outputs"]})
+    native_paths += ["unity/Assets/Game/Runtime/Presentation/World/Shaders/ScreenBlur.shader", "unity/Assets/Game/Resources/World/Mainline/ScreenBlur.mat"]
+    assets = []
+    for path in native_paths:
+        payload = (ROOT / path).read_bytes()
+        if sha256(payload) != records[path]["sha256"]:
+            raise ValueError("Private popup mask native output changed after conversion: " + path)
+        assets.append(dict(path=path, sha256=sha256(payload)))
+    mask_nodes = list(relative_transform_path(root))
+    local_paths = {go.object_reader.path_id: ("/".join(map(str, path)), list(names)) for go, path, names, _ in mask_nodes}
+    def button_target(pointer):
+        if not pointer["m_PathID"]:
+            return None
+        target = PPtr(**pointer, assetsfile=reader.assets_file).deref().read(check_read=False)
+        return local_paths[target.m_GameObject.path_id][0]
+    button_reader = PPtr(**fields["mBtn"], assetsfile=reader.assets_file).deref()
+    button_path, button_names = local_paths[button_reader.read(check_read=False).m_GameObject.path_id]
+    buttons = [button_binding(button_reader, button_path, button_names, button_target)]
+    return dict(canvasResource="Map12/UI/WorldCanvas", path="/".join(root_names[1:]),
+        image=reference("mImage", "RawImage"), button=reference("mBtn", "Button"),
+        buttons=buttons, materialResource="World/Mainline/ScreenBlur", enabled=bool(reader.read(check_read=False).m_Enabled),
+        source=apk.provenance(reader), prefab_source=apk.provenance(prefab), shader_source=apk.provenance(shader),
+        native_assets=assets, receipts=[dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes()))
+            for path in (native_receipt_path, blur_receipt_path)])
+
+
 def private_popup_binding(apk, schemas, reader, root, path):
     """Reuse the native common clips only after checking the selected source curves."""
     import math
@@ -168,7 +259,7 @@ def private_popup_binding(apk, schemas, reader, root, path):
             curve_count=len(source_tracks), absent_source_channels=unknown))
     if len(clips) != 2:
         raise ValueError("Private popup must keep its original show and hide clips")
-    return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips,
+    return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips, mask=private_mask_binding(apk, schemas),
         maskType=fields["mMaskType"], windowType=fields["mWindowType"], fullScreen=bool(fields["mFullScreen"]),
         closeByClickMask=bool(fields["mCloseByClickMask"]), autoCloseWhenContainerDisable=bool(fields["mAutoCloseWhenContainerDisable"]),
         isDuplicate=bool(fields["mIsDuplicate"]),
@@ -300,28 +391,7 @@ def prefab_bindings(apk, schemas, sprite_cache, key, bundle, asset_path):
             elif script == "PopupWindow" and key == "DailyDungeonDialogPrivateMap":
                 popup = private_popup_binding(apk, schemas, reader, prefab.read(), path_key)
             elif script == "Button" and key in ("DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonDialogPrivateMap"):
-                raw = reader.get_raw_data()
-                if len(raw) < 232: raise ValueError("Truncated official route Button")
-                if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (40, 52, 64, 76)):
-                    raise ValueError("Unbound route navigation target")
-                if any(struct.unpack_from("<iq", raw, offset)[1] for offset in (180, 192, 204, 216)):
-                    raise ValueError("Unbound route button SpriteState")
-                offset, triggers = 228, []
-                for _ in range(5):
-                    length = struct.unpack_from("<i", raw, offset)[0]
-                    if length < 0 or offset + 4 + length > len(raw): raise ValueError("Invalid route Button trigger")
-                    triggers.append(raw[offset+4:offset+4+length].decode("utf8"))
-                    offset = (offset + 4 + length + 3) & ~3
-                interactable = struct.unpack_from("<i", raw, offset)[0]
-                file_id, path_id = struct.unpack_from("<iq", raw, offset+4)
-                if offset+20 != len(raw) or struct.unpack_from("<i", raw, offset+16)[0]:
-                    raise ValueError("Unbound official route Button event")
-                buttons.append(dict(path=path_key, objects=object_names,
-                    enabled=bool(reader.read(check_read=False).m_Enabled),
-                    navigation=struct.unpack_from("<i", raw, 32)[0], wrapAround=bool(struct.unpack_from("<i", raw, 36)[0]),
-                    transition=struct.unpack_from("<i", raw, 88)[0], colors=list(struct.unpack_from("<22f", raw, 92)),
-                    triggers=triggers, interactable=bool(interactable),
-                    target=reference_path({"m_FileID":file_id, "m_PathID":path_id})))
+                buttons.append(button_binding(reader, path_key, object_names, reference_path))
             elif key in ("DailyDungeonBigMapDialog", "DailyDungeonDialogPrivateMap") and script in ("GridLayoutGroup", "ContentSizeFitter", "RectMask2D", "VerticalLayoutGroup", "HorizontalLayoutGroup", "HorizontalLayoutGroupJSZX", "LayoutElement", "LayoutElementClamper"):
                 raw = reader.get_raw_data()
                 layout = {"path": path_key, "objects": object_names, "type": script,
@@ -643,7 +713,7 @@ def build():
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
         "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/LayoutElementClamper.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
-        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/WindowMaskType.cs", "client-source/DailyDungeonGradeItem.cs",
+        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/WindowMaskType.cs", "framework-firstpass-source/WindowMaskBase.cs", "framework-firstpass-source/WindowBlurMask.cs", "framework-firstpass-source/BlurManager.cs", "framework-firstpass-source/ScreenBlurPass.cs", "framework-firstpass-source/Framework.UI/WindowContainer.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",
         "common-source/Common/BattleResultGradeType.cs", "framework-firstpass-source/MultiLanguageText.cs",
         "framework-source/StateGameObjectConfig.cs", "framework-source/StateGameObjectData.cs",

@@ -137,8 +137,7 @@ namespace Zjcs.Presentation.World
                 if (battle == null) throw new InvalidDataException("Original private daily dungeon battle button is missing.");
                 battle.onClick.RemoveAllListeners();
                 battle.onClick.AddListener(() => StartMap12PrivateDungeonBattle(entity));
-                WorldPopupWindow popup = map12PrivateDungeonDialog.GetComponent<WorldPopupWindow>();
-                if (popup != null) popup.Show();
+                ShowMap12PrivateDungeonDialog();
             }
             catch
             {
@@ -146,6 +145,24 @@ namespace Zjcs.Presentation.World
                 map12PrivateDungeonDialog = null;
                 throw;
             }
+        }
+
+        private void ShowMap12PrivateDungeonDialog()
+        {
+            GameObject window = map12PrivateDungeonDialog;
+            var popup = window == null ? null : window.GetComponent<OfficialDungeonPopupMask>();
+            if (popup == null) throw new InvalidDataException("Original private dungeon mask driver is missing.");
+            popup.Show(() =>
+            {
+                if (map12PrivateDungeonDialog == window) map12PrivateDungeonDialog = null;
+                if (window != null) Destroy(window);
+            });
+        }
+
+        private void CloseMap12PrivateDungeonDialog()
+        {
+            if (map12PrivateDungeonDialog != null)
+                map12PrivateDungeonDialog.GetComponent<OfficialDungeonPopupMask>().Close();
         }
 
         private static Transform FindNamedTransform(Transform root, string path)
@@ -173,8 +190,8 @@ namespace Zjcs.Presentation.World
             }
             if (run.dungeonId != 121 || run.difficulty != 50)
                 throw new InvalidOperationException("An incompatible daily dungeon route is already active.");
-            if (map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(false);
             OpenMap12PrivateDungeonRoute();
+            CloseMap12PrivateDungeonDialog();
         }
 
         private void OpenMap12PrivateDungeonRoute()
@@ -329,7 +346,6 @@ namespace Zjcs.Presentation.World
                     avatar.transform, hud.ui.OverlayRoot, (Action<bool>)FinishMap12PrivateDungeonBattle });
                 SuspendWorldForBattle();
                 if (map12PrivateDungeonRouteDialog != null) map12PrivateDungeonRouteDialog.SetActive(false);
-                if (map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(false);
             }
             catch (TargetInvocationException error)
             {
@@ -363,12 +379,6 @@ namespace Zjcs.Presentation.World
                 RenderMap12PrivateDungeonRoute();
                 ShowMap12PrivateDungeonRoute();
             }
-            if (!closed && map12PrivateDungeonDialog != null)
-            {
-                map12PrivateDungeonDialog.SetActive(true);
-                WorldPopupWindow popup = map12PrivateDungeonDialog.GetComponent<WorldPopupWindow>();
-                if (popup != null) popup.Show();
-            }
             map12PrivateDungeonRunner = null;
             if (!won) hud.ShowOfficialNotice("战斗失败，可在路线图重试");
         }
@@ -380,7 +390,6 @@ namespace Zjcs.Presentation.World
                 Destroy(map12PrivateDungeonRouteDialog);
                 map12PrivateDungeonRouteDialog = null;
             }
-            if (!closed && map12PrivateDungeonDialog != null) map12PrivateDungeonDialog.SetActive(true);
         }
 
         private static Transform FindChild(Transform root, string name)
@@ -398,16 +407,6 @@ namespace Zjcs.Presentation.World
         {
             Transform node = FindChild(root, name);
             if (node != null) node.gameObject.SetActive(active);
-        }
-
-        private void CloseMap12PrivateDungeonDialog()
-        {
-            if (map12PrivateDungeonDialog == null) return;
-            GameObject root = map12PrivateDungeonDialog;
-            map12PrivateDungeonDialog = null;
-            WorldPopupWindow popup = root.GetComponent<WorldPopupWindow>();
-            if (popup != null) popup.Hide(() => Destroy(root));
-            else Destroy(root);
         }
 
         private IEnumerator BeginMap12BuildingStage(Map10RuntimeEntity entity)

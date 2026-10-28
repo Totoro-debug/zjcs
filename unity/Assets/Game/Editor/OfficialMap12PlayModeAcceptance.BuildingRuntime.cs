@@ -62,6 +62,51 @@ namespace Zjcs.Editor
                     + $"avatar={RuntimeField<MapGridPoint>("currentGrid").X}/{RuntimeField<MapGridPoint>("currentGrid").Y}, stand={stand.X}/{stand.Y}, "
                     + $"point={at.X}/{at.Y}, puzzleActive={puzzle.InteractionEnabled(503)}, region={entity.GetType().GetField("Region").GetValue(entity)}.");
             }
+            var maskDriver = dialog.GetComponent<OfficialDungeonPopupMask>();
+            deadline = Time.realtimeSinceStartup + 12f;
+            while (maskDriver != null && !maskDriver.IsReady && Time.realtimeSinceStartup < deadline) yield return null;
+            if (maskDriver == null || !maskDriver.IsReady) throw new InvalidDataException("Original private blur mask did not become ready.");
+            GameObject mask = (GameObject)typeof(OfficialDungeonPopupMask).GetField("mask",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(maskDriver);
+            var maskImage = mask == null ? null : mask.GetComponent<RawImage>();
+            var maskButton = mask == null ? null : mask.GetComponent<Button>();
+            if (maskImage == null || maskImage.texture == null || maskButton == null
+                || mask.GetComponent<Canvas>().sortingOrder != dialog.GetComponent<Canvas>().sortingOrder - 1)
+                throw new InvalidDataException("Original private blur image/button/sorting binding is incomplete.");
+            float shown = (float)typeof(WorldPopupWindow).GetField("mShowStartTime",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(dialog.GetComponent<WorldPopupWindow>());
+            if (Time.time - shown > .5f) throw new InvalidDataException("The initial half-second mask gate was not observed in time.");
+            SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
+            yield return null;
+            if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != dialog)
+                throw new InvalidDataException("Private mask accepted a click before the original half-second gate.");
+            yield return new WaitForSeconds(.6f);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-mask.png"));
+            var maskSlots = new Zjcs.Offline.State.ProfileSlotCatalog(root);
+            byte[] beforeMaskClose = File.ReadAllBytes(maskSlots.GetProgressPath(slot));
+            SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
+            deadline = Time.realtimeSinceStartup + 5f;
+            while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
+            yield return null;
+            if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null || mask != null
+                || !File.ReadAllBytes(maskSlots.GetProgressPath(slot)).SequenceEqual(beforeMaskClose)
+                || File.Exists(Path.Combine(maskSlots.GetSlotDirectory(slot), "daily-dungeon-save.json")))
+                throw new InvalidDataException("Mask close did not release the original window/mask without changing the profile or dungeon state.");
+            pointer = ClickTerminalMapEntity(503);
+            while (pointer.MoveNext()) yield return pointer.Current;
+            deadline = Time.realtimeSinceStartup + 12f;
+            dialog = null;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                dialog = RuntimeField<GameObject>("map12PrivateDungeonDialog");
+                maskDriver = dialog == null ? null : dialog.GetComponent<OfficialDungeonPopupMask>();
+                if (maskDriver != null && maskDriver.IsReady) break;
+                yield return null;
+            }
+            if (dialog == null || maskDriver == null || !maskDriver.IsReady)
+                throw new InvalidDataException("Private window could not be reopened by its original map input.");
+            yield return new WaitForSeconds(dialog.GetComponent<WorldPopupWindow>().mShowClip.length + .05f);
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-dungeon.png"));
             var buttons = dialog.GetComponentsInChildren<Button>(true);
@@ -84,6 +129,10 @@ namespace Zjcs.Editor
             }
             if (route == null || RuntimeField<OfficialBattleRuntimeController>("battleController") != null)
                 throw new InvalidDataException("Original private dungeon BattleBtn did not enter the official route map.");
+            deadline = Time.realtimeSinceStartup + 5f;
+            while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
+            if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)
+                throw new InvalidDataException("Successful private stage entry did not close its original detail window.");
             var privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             var run = privateSession.ActiveRun;
             if (run == null || run.dungeonId != 121 || run.difficulty != 50 || run.currentRoomId != 12101)
@@ -143,6 +192,8 @@ namespace Zjcs.Editor
                 throw new InvalidDataException("Official private battle did not deliver a valid local victory/loss result.");
             privateSession = Zjcs.Offline.World.OfflineDailyDungeonSession.OpenPrivateMap(slots, slot);
             run = privateSession.ActiveRun;
+            if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null)
+                throw new InvalidDataException("Private battle return reopened a detail window that the original stage entry closed.");
             int expectedOutcome = actualOutcome.Won ? 1 : 2;
             if (run.lastBattleRoomId != 12102 || run.lastBattleOutcome != expectedOutcome
                 || run.clearedRoomIds.Contains(12102) != actualOutcome.Won
@@ -162,6 +213,27 @@ namespace Zjcs.Editor
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-battle-result.png"));
             Debug.Log("Map12 IronMount private entry passed original simulated map and route input; official 121/50 battle 30152 completed with a valid "
                 + (actualOutcome.Won ? "victory" : "loss") + ". Result survived cold read without changing character profile, rewards, public attempts or purchases.");
+        }
+
+        private static Vector2 PrivateMaskInputPoint(Button expected)
+        {
+            var rect = expected.GetComponent<RawImage>().rectTransform;
+            Camera camera = expected.GetComponent<Canvas>().worldCamera;
+            Canvas.ForceUpdateCanvases();
+            foreach (float x in new[] { .01f, .99f, .1f, .9f, .5f })
+                foreach (float y in new[] { .01f, .99f, .1f, .9f, .5f })
+                {
+                    Vector2 point = RectTransformUtility.WorldToScreenPoint(camera,
+                        rect.TransformPoint(new Vector3(Mathf.Lerp(rect.rect.xMin, rect.rect.xMax, x),
+                            Mathf.Lerp(rect.rect.yMin, rect.rect.yMax, y), 0)));
+                    var pointer = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current) { position = point };
+                    var hits = new List<UnityEngine.EventSystems.RaycastResult>();
+                    UnityEngine.EventSystems.EventSystem.current.RaycastAll(pointer, hits);
+                    GameObject first = hits.FirstOrDefault().gameObject;
+                    if (first != null && UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(first) == expected.gameObject)
+                        return point;
+                }
+            throw new InvalidDataException("Original private blur mask has no reachable area outside its window.");
         }
 
         private static void VerifyPrivateDungeonSettlementBoundary(Zjcs.Offline.State.ProfileSlotCatalog slots)

@@ -1873,7 +1873,9 @@ Map10 水面 Windows D3D11 编译适配仅为 `TRANSFORM_TEX` 的复合 UV 参�
 
 副本原组件绑定的路径解析修复沿用已提取的官方索引路径，不改动图像、文本或布局载荷。新增 C# 方法回放直接执行 `OfficialDungeonUiBindingRuntime.Find` 的当前方法体，以当前11份 prefab 的3158个原节点和31个按钮 Graphic 引用构造层级，证明无名称断言的合法引用可解析，并保留名称／父层级错误的拒绝；它仅证明路径解析行为，不能作为 Unity 画面或交互已还原的证据。
 
-机神山私图原 `PopupWindow` 的显示／隐藏引用从当前 prefab 的完整64位 PPtr 解析，回溯 APK 的 `UIDialogCommon_Show`／`UIDialogCommon_Hide` 对象；复用 Map12 已转换的同源 `.anim`，严格核对转换收据的载荷／meta 哈希，再将实际运行用的缩放／浮点曲线与所选 APK 解码的目标、时间、值、切线逐项比对（每份4通道）。原事件为空，时长与非循环参数保持来源值；6条缺席目标通道仅记录原对象情况，不创建替代节点。单个原动画对象字节 SHA-256、原生资源路径及绑定由同一副本组件清单记录，原 `PopupWindow`／`WindowMaskType` 源码哈希一并纳入；模糊遮罩和关闭条件仍按山之国页列为未接回。
+机神山私图遮罩从所选 `prefabs_ui_map_world/WorldCanvas.prefab` 解析原 `WindowBlurMask` 的完整64位 `mImage`／`mBtn` 引用，复用已转换的 `Content/Popup/BlurMask` 原层级，并显式恢复原按钮的全部已有解码字段。WorldCanvas 载荷／meta、原 ScreenBlur shader／材质均核对原转换收据；APK 内置 `unity_builtin_extra:4800000` 对象哈希与旧转换输入完全相同，APK 基线与所选 prefab 的版本分别保留，不修改预期哈希。原 `WindowMaskBase`／`WindowBlurMask`／`BlurManager`／`ScreenBlurPass`／`WindowContainer` 代码哈希追加到同一副本绑定清单；Windows 图形调用沿既有转换的原片元程序执行相同4层滤波及1/13截图尺寸。运行时绑定、关闭计时与显隐回收逻辑已迁移，实际画面与输入仍须按山之国页执行，新增素材未进入新的完整快照。
+
+机神山私图原 `PopupWindow` 的显示／隐藏引用从当前 prefab 的完整64位 PPtr 解析，回溯 APK 的 `UIDialogCommon_Show`／`UIDialogCommon_Hide` 对象；复用 Map12 已转换的同源 `.anim`，严格核对转换收据的载荷／meta 哈希，再将实际运行用的缩放／浮点曲线与所选 APK 解码的目标、时间、值、切线逐项比对（每份4通道）。原事件为空，时长与非循环参数保持来源值；6条缺席目标通道仅记录原对象情况，不创建替代节点。单个原动画对象字节 SHA-256、原生资源路径及绑定由同一副本组件清单记录，原 `PopupWindow`／`WindowMaskType` 源码哈希一并纳入；原模糊遮罩和关闭分支已按上述来源绑定，实际运行验证仍暂停。
 
 机神山私图控件参数追加19个原按钮、149项布局／尺寸／裁切、1个奖励横向滚动和1个顶部安全区；原导航目标及 SpriteState 为空、原按钮／滚动序列化事件为空的条件均严格核对。标准横排／纵排、网格、尺寸适配、布局元素与矩形裁切直接恢复原字段，两处尺寸上限复用 `WorldLayoutElementClamper` 并写回原序列化字段；原 `LayoutElementClamper.cs` 输入哈希纳入同一来源清单。奖励区滚动对原128字节载荷逐字段解析，保留内容／视口、弹性、惯性、衰减和灵敏度。源绑定结构比较只涉及私图新增控件及循环滚动类型标识，未改变原图像、文本和样式载荷；实际输入与画面仍待验收。
 

@@ -16,6 +16,9 @@ namespace Zjcs.Official.WorldUI
         private AnimationPlayableOutput output;
         private Coroutine transition;
         private bool closing;
+        private float mShowStartTime;
+        private Action mMaskClickAction;
+        public bool CloseByClickMask { get; set; }
 
         private void Awake()
         {
@@ -32,6 +35,7 @@ namespace Zjcs.Official.WorldUI
         {
             closing = false;
             if (transition != null) StopCoroutine(transition);
+            mShowStartTime = Time.time;
             OnShowing?.Invoke(this);
             transition = StartCoroutine(Transition(mShowClip, () => { OnShow?.Invoke(this); Play(mLoopClip); }));
         }
@@ -48,6 +52,22 @@ namespace Zjcs.Official.WorldUI
                 OnHide?.Invoke(this);
                 completed?.Invoke();
             }));
+        }
+
+        public void SetMaskClickAction(Action action) => mMaskClickAction = action;
+
+        public void OnMaskClick()
+        {
+            if (!CanCloseByMask()) return;
+            if (mMaskClickAction != null) mMaskClickAction();
+            else Hide(null);
+        }
+
+        private bool CanCloseByMask()
+        {
+            if (!CloseByClickMask) return false;
+            if (Time.time - mShowStartTime <= .5f) return false;
+            return true;
         }
 
         private IEnumerator Transition(AnimationClip clip, Action completed)

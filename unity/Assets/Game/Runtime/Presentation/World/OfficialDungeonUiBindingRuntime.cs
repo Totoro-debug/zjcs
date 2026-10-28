@@ -18,7 +18,9 @@ namespace Zjcs.Presentation.World
           public LocalizationBinding[] localizations;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
-        { public string path; public string[] objects; public bool enabled; public PopupClipBinding[] clips; }
+        { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; }
+        [Serializable] private sealed class PopupMaskBinding
+        { public string canvasResource, path, image, button, materialResource; public bool enabled; public ButtonBinding[] buttons; }
         [Serializable] private sealed class PopupClipBinding
         { public string field, name, resource; public float duration; public bool loop; }
         [Serializable] private sealed class LayoutBinding
@@ -133,6 +135,16 @@ namespace Zjcs.Presentation.World
                 }
             }
             popup.enabled = binding.enabled;
+            popup.CloseByClickMask = binding.closeByClickMask;
+            if (binding.maskType != 3 || binding.mask == null || !binding.mask.enabled)
+                throw new InvalidDataException("Original private dungeon blur mask binding is missing or unsupported.");
+            PopupMaskBinding mask = binding.mask;
+            GameObject canvas = Resources.Load<GameObject>(mask.canvasResource);
+            Transform nativeMask = canvas == null ? null : canvas.transform.Find(mask.path);
+            var material = Resources.Load<Material>(mask.materialResource);
+            var driver = target.GetComponent<OfficialDungeonPopupMask>() ?? target.gameObject.AddComponent<OfficialDungeonPopupMask>();
+            driver.Initialize(popup, nativeMask == null ? null : nativeMask.gameObject, material, mask.image, mask.button,
+                instance => RestoreButtons(instance, new Prefab { buttons = mask.buttons }));
         }
 
         public static void Apply(GameObject root, string prefabName)
