@@ -46,11 +46,11 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 原 `DailyDungeonUnlockContent.StartBattle` 成功后关闭父窗口的顺序已接回：本地路线入口建立后播放原 Hide 并回收详情窗；战斗返回与关闭路线不再重新启用该详情窗。关闭及战斗切换中断会清理遮罩、临时纹理和材质。三项受影响程序集（含验收代码）独立 C# 编译、来源无覆盖复现、3158节点／31个原按钮引用回放及65502个 GUID 静态检查通过；新增 Play Mode 夹具覆盖原遮罩射线输入、0.5秒门槛、关闭清理、原实体重开及进路后不重开详情，但按用户要求尚未运行。屏幕画面、实际点击、战斗胜负／冷读和 Windows 发布仍未据此验收。
 
-机神山私图原 `SFX/PopupWindowSound` 已接回：当前官方 prefab 的 `ShowSound` 为空，`HideSound` 指向 `Main_Cursor_Back`（事件3686182067），保留打开时无该事件、关闭时由原 `PopupWindow.OnHiding` 发出的顺序。提取器逐项解码原 AK.Event／WwiseEventReference，并将旧转换所用5份音频包与所选871_156598索引及实际字节对照；APK 内存在的包先与 APK 比对，5份均等价后才复用原事件增益／剪辑转换。本地 OGG 的 SHA-256 为 `516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9`，原转换音频及导入设置的输入哈希、Resources 副本与元数据输出哈希均写入私图绑定；原音频只做本地复制，不重新合成声音。
+机神山私图原 `SFX/PopupWindowSound` 已接回：当前官方 prefab 的 `ShowSound` 为空，`HideSound` 指向 `Main_Cursor_Back`（事件3686182067），保留打开时无该事件、关闭时由原 `PopupWindow.OnHiding` 发出的顺序。`prepare_unity_map12_ui_audio.py` 按 APK 优先顺序核对所选871_156598的5份音频包，解析原 Event／ActionPlay／Sound 图并以固定0 dB主增益解码，保留关闭事件的−16 dB增益。原包、嵌入媒体、播放图、原组件／事件对象、转换工具及 PCM 输入输出哈希记录在 `assets/reference/official-map/map12-ui-audio-source-manifest.json`，关闭 PCM 的 SHA-256 为 `2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194`。
 
-世界运行、游戏入口及验收程序集独立 C# 编译通过；官方绑定无覆盖复现和全工程静态检查通过（65514个 GUID）。原遮罩指针夹具增加了空打开音效引用、过早点击不发声、有效关闭只发一次原事件、独立播放器及本地音源回调的断言。自动验收仍暂停，未执行这些 Play Mode 断言、Unity 音频导入或实际听音；此段不证明窗口音效或完整私图流程已经验收。
+音频及副本绑定无覆盖复现、65,643个 GUID 的全工程静态检查通过；五个原事件增益、PCM 声道／采样率／帧数、既有四个音频 GUID、19项点击组件身份及所有其他 prefab 字段均已核对。世界运行、游戏入口和验收代码此前独立 C# 编译通过；原遮罩指针夹具包含空打开音效、过早点击不发声、有效关闭只发一次原事件、独立播放器及音量通道回调断言。自动验收仍暂停，尚未执行这些 Play Mode 断言、Unity 音频导入及实际听音。
 
-同一机神山私图现恢复原5个 `UIClickSound` 与14个 `ButtonSound`：5个标签分别绑定 `Main_Tag`，12个普通按钮绑定 `Main_Cursor_Normal`，2个限制按钮绑定 `Main_Cursor_Fail`。原 `UIClickSound.OnPointerClick` 只响应左键；原 ButtonSound 的 Start／Button.onClick 订阅顺序继续使用已迁移组件。组件原路径、父节点名、启用值、事件完整64位来源引用及对象哈希由 `prepare_dungeon_ui_bindings.py` 记录在 `popup.sound.clicks`，运行时按原节点恢复。标签与普通点击复用经当前完整音频包比对的原 Commerce 转换，失败提示复用原 Bingo 转换，其 Minimum 包与当前已核对包完全相同；三份音频及导入元数据的输入、输出哈希均随绑定记录，Resources 副本不重编码音频。
+同一机神山私图现恢复原5个 `UIClickSound` 与14个 `ButtonSound`：5个标签分别绑定 `Main_Tag`，12个普通按钮绑定 `Main_Cursor_Normal`，2个限制按钮绑定 `Main_Cursor_Fail`。原 `UIClickSound.OnPointerClick` 只响应左键；原 ButtonSound 的 Start／Button.onClick 订阅顺序继续使用已迁移组件。组件原路径、父节点名、启用值、事件完整64位来源引用及对象哈希由 `prepare_dungeon_ui_bindings.py` 记录在 `popup.sound.clicks`，运行时按原节点恢复。标签／普通点击／失败提示均由同版原播放图直接解码，分别保留−6／−6／−8 dB增益；原采样率、声道和长度保留，Unity 导入设置为 PCM、不归一化，资源路径和既有 GUID 保持一致。`TeamMatch_Waiting_1` 的原−3 dB音频也已解码，动画事件接线及实际播放仍未完成。
 
 官方 UI、世界运行及验收程序集独立 C# 编译、官方绑定无覆盖复现与全工程静态检查通过（65533个 GUID）。Play Mode 夹具增加19个原组件／3种事件的绑定检查，以及原 BattleBtn 模拟指针应发一次普通点击事件的检查，但这些运行夹具仍未执行。该恢复不证明难度标签／公共次数／说明／匹配等业务交互已完成；匹配动画另有 `AnimationSoundPlayer` 的 `TeamMatch_Waiting_1` 事件，其音频和原动画事件时序仍待接回。
 

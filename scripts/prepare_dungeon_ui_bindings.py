@@ -183,7 +183,7 @@ def private_mask_binding(apk, schemas):
 
 
 def private_popup_sound_binding(apk, schemas, root):
-    """Keep the original nullable AK events and prove reuse against current banks."""
+    """Bind original nullable AK events to verified original Wwise PCM rendering."""
     from UnityPy.classes.PPtr import PPtr
     from official_source import OfficialSource
     matches = []
@@ -211,41 +211,32 @@ def private_popup_sound_binding(apk, schemas, root):
     show, hide = event(obj, fields["ShowSound"]), event(obj, fields["HideSound"])
     if show is not None or hide["name"] != "Main_Cursor_Back" or hide["id"] != 3686182067:
         raise ValueError("Original private popup sound configuration changed")
-    receipt_path = ROOT / "assets/reference/commerce-components/audio-source-manifest.json"
+    receipt_path = ROOT / "assets/reference/official-map/map12-ui-audio-source-manifest.json"
     receipt = json.loads(receipt_path.read_bytes())
-    selected = OfficialSource()
-    current_banks = {row["name"]: row for row in selected.manifest("WwiseBnk")["bundles"]}
-    bank_dir = ROOT / ".tools/source-packages/WwiseBnk"
-    bank_sources = json.loads((bank_dir / "bundle-sources.json").read_bytes())
-    banks = []
-    for key, previous in sorted(receipt["packages"].items()):
-        package = bank_dir / key
-        raw = package.read_bytes()
-        current = current_banks[key]
-        if sha256(raw) != previous["sha256"] or hashlib.md5(raw).hexdigest() != current["hash"]:
-            raise ValueError("Current popup audio bank needs conversion: " + key)
+    if receipt["manifest"] != VERSION:
+        raise ValueError("Private UI audio is not the selected official version")
+    current_banks = {row["name"]: row for row in OfficialSource().manifest("WwiseBnk")["bundles"]}
+    for package in receipt["packages"]:
+        current = current_banks[package["name"]]
+        if package["current_manifest"] != current:
+            raise ValueError("Private UI audio package selection changed")
         entry = "assets/yoo/WwiseBnk/" + current["file"]
-        packaged = entry in apk.archive.namelist()
-        if packaged and apk.archive.read(entry) != raw:
-            raise ValueError("APK-first popup audio package mismatch")
-        banks.append(dict(apk_entry=entry if packaged else None, path=package.relative_to(ROOT).as_posix(),
-                          sha256=previous["sha256"], current_manifest=current, source=bank_sources[key]))
-    uri, record = next((uri, row) for uri, row in receipt["resources"].items() if row["event"] == hide["name"])
-    original = ROOT / uri.removeprefix("res://")
-    native = ROOT / "unity/Assets/Official/Commerce/Art/audio" / original.name
-    payload = original.read_bytes()
-    if sha256(payload) != record["sha256"] or native.read_bytes() != payload:
-        raise ValueError("Verified original popup audio changed")
-    target = ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.ogg"
-    importer = native.with_name(native.name + ".meta").read_text(encoding="utf8")
-    guid = hashlib.sha256(b"zjcs-map12-private-popup-back-audio").hexdigest()[:32]
-    importer = re.sub(r"(?m)^guid: [0-9a-f]{32}$", "guid: " + guid, importer)
-    importer = "\n".join(line.rstrip() for line in importer.splitlines()) + "\n"
-    folder = target.parent
-    folder_meta = folder.with_name(folder.name + ".meta")
-    folder_guid = hashlib.sha256(b"zjcs-map12-private-popup-sound-folder").hexdigest()[:32]
-    output_data = [(target, payload), (target.with_name(target.name + ".meta"), importer.encode("utf8")),
-                   (folder_meta, ("fileFormatVersion: 2\nguid: " + folder_guid + "\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n").encode("ascii"))]
+        payload = apk.archive.read(entry) if entry in apk.archive.namelist() else (ROOT / ".tools/source-packages/WwiseBnk" / package["name"]).read_bytes()
+        if sha256(payload) != package["sha256"] or hashlib.md5(payload).hexdigest() != current["hash"]:
+            raise ValueError("Private UI audio original package changed")
+    for output in receipt["outputs"]:
+        if sha256((ROOT / output["path"]).read_bytes()) != output["sha256"]:
+            raise ValueError("Private UI PCM output changed: " + output["path"])
+    clips = {row["name"]: row for row in receipt["events"]}
+    expected = {"Main_Tag": 680474747, "Main_Cursor_Normal": 3772241779,
+        "Main_Cursor_Fail": 2458796094, "Main_Cursor_Back": 3686182067, "TeamMatch_Waiting_1": 1386996041}
+    if {name: row["id"] for name, row in clips.items()} != expected:
+        raise ValueError("Private UI rendered event set changed")
+    def bind_clip(value):
+        clip = clips[value["name"]]
+        if clip["id"] != value["id"]:
+            raise ValueError("Private UI event and PCM identity differ")
+        value.update(resource=clip["resource"], file_sha256=clip["sha256"], conversion=clip)
     click_bindings = []
     for click_go, click_indices, click_names, _ in relative_transform_path(root):
         for click_pair in click_go.m_Component:
@@ -265,60 +256,13 @@ def private_popup_sound_binding(apk, schemas, root):
                 source=apk.provenance(click_obj), object_raw_sha256=sha256(click_obj.get_raw_data())))
     if sum(row["type"] == "UIClickSound" for row in click_bindings) != 5 or sum(row["type"] == "ButtonSound" for row in click_bindings) != 14:
         raise ValueError("Original private click sound component set changed")
-    fail_receipt_path = ROOT / "assets/reference/bingo-activity/audio/source-manifest.json"
-    fail_receipt = json.loads(fail_receipt_path.read_bytes())
-    verified_banks = {Path(row["path"]).name: row["sha256"] for row in banks}
-    for key, previous in fail_receipt["packages"].items():
-        if verified_banks.get(key) != previous["sha256"]:
-            raise ValueError("Original failure sound bank is not current-equivalent")
-    clip_records = {}
-    for event_name in sorted({row["event"]["name"] for row in click_bindings}):
-        if event_name == "Main_Cursor_Fail":
-            clip_uri, clip_record = next((uri, row) for uri, row in fail_receipt["resources"].items()
-                if uri.endswith("/f279174fd04ed416fccc485f.ogg"))
-            if clip_record["loop"] or clip_record["sha256"] != "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074":
-                raise ValueError("Original private failure sound conversion differs")
-            importer_source = native.with_name(native.name + ".meta")
-            clip_receipt_path = fail_receipt_path
-        else:
-            clip_uri, clip_record = next((uri, row) for uri, row in receipt["resources"].items() if row["event"] == event_name)
-            clip_native = ROOT / "unity/Assets/Official/Commerce/Art/audio" / Path(clip_uri).name
-            if clip_native.read_bytes() != (ROOT / clip_uri.removeprefix("res://")).read_bytes():
-                raise ValueError("Original private click native audio changed")
-            importer_source = clip_native.with_name(clip_native.name + ".meta")
-            clip_receipt_path = receipt_path
-        clip_source = ROOT / clip_uri.removeprefix("res://")
-        clip_payload = clip_source.read_bytes()
-        if sha256(clip_payload) != clip_record["sha256"]:
-            raise ValueError("Original private click audio hash differs")
-        clip_target = folder / (event_name + ".ogg")
-        clip_importer_raw = importer_source.read_bytes()
-        clip_guid = hashlib.sha256(("zjcs-map12-private-ui-sound:" + event_name).encode()).hexdigest()[:32]
-        clip_importer = re.sub(r"(?m)^guid: [0-9a-f]{32}$", "guid: " + clip_guid, clip_importer_raw.decode("utf8").replace("\r\n", "\n"))
-        clip_importer = "\n".join(line.rstrip() for line in clip_importer.splitlines()) + "\n"
-        output_data.extend([(clip_target, clip_payload), (clip_target.with_name(clip_target.name + ".meta"), clip_importer.encode("utf8"))])
-        clip_records[event_name] = dict(resource="Map12/PopupSound/" + event_name, file_sha256=sha256(clip_payload),
-            input=dict(path=clip_source.relative_to(ROOT).as_posix(), sha256=sha256(clip_payload),
-                importer_path=importer_source.relative_to(ROOT).as_posix(), importer_sha256=sha256(clip_importer_raw)),
-            conversion=clip_record, audio_source_receipt=dict(path=clip_receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(clip_receipt_path.read_bytes())))
+    bind_clip(hide)
     for row in click_bindings:
-        row["event"].update(clip_records[row["event"]["name"]])
-    outputs = []
-    for path, data in output_data:
-        previous = path.read_bytes() if path.exists() else None
-        if previous is not None and previous != data and "--update" not in sys.argv[1:]:
-            raise ValueError("Refusing to overwrite changed private popup audio: " + str(path))
-        if previous != data:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(data)
-        outputs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(data)))
-    hide.update(resource="Map12/PopupSound/Main_Cursor_Back", file_sha256=record["sha256"],
-                conversion=record, original_path=original.relative_to(ROOT).as_posix())
+        bind_clip(row["event"])
     return dict(path="/".join(map(str, indices)), objects=list(names), enabled=bool(fields["m_Enabled"]),
                 show=show, hide=hide, source=apk.provenance(obj), object_raw_sha256=sha256(obj.get_raw_data()),
-                banks=banks, audio_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())),
-                clicks=click_bindings, native_audio_input=dict(path=native.relative_to(ROOT).as_posix(), sha256=sha256(payload),
-                    meta_sha256=sha256(native.with_name(native.name + ".meta").read_bytes())), native_outputs=outputs)
+                banks=receipt["packages"], audio_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())),
+                clicks=click_bindings, native_outputs=receipt["outputs"])
 
 
 def private_popup_binding(apk, schemas, reader, root, path):
@@ -861,7 +805,7 @@ def build():
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),
         sha256=sha256((CODE / path).read_bytes())) for path in code_paths]
     receipt = {"manifest": VERSION, "code_sources": code_sources,
-        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound events, verify original audio conversion against all current bank hashes and bind the local close clip; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
+        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
         "path": BINDINGS.relative_to(ROOT).as_posix(), "sha256": sha256(encoded),
         "meta_sha256": sha256(meta.read_bytes())},
         "prefabs": sources, "sprites": sprite_outputs, "route_settings": settings_source,

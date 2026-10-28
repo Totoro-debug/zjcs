@@ -32,9 +32,9 @@
 
 机神山私图原模糊遮罩与点击关闭已接回，复用当前 `WorldCanvas` 子层级及有来源记录的原 `ScreenBlur` shader／材质；原按钮参数、1/13目标尺寸、4层模糊、宽高比裁切、容器间隔10／遮罩下一层以及超过0.5秒的点击门槛均保留。进入本地121／50路线后沿原 `StartBattle` 成功分支关闭详情窗，战斗返回不再重新启用旧详情。独立 C# 编译、源绑定复现、路径回放和65502个 GUID 静态检查通过；遮罩实际画面／射线输入与关闭清理的 Play Mode 夹具已补充，仍暂停执行。
 
-机神山私图原 `SFX/PopupWindowSound` 的打开事件为空、关闭事件为 `Main_Cursor_Back`（3686182067），现按原 OnHiding 事件恢复。所选版本的5份完整音频包与已有官方转换源哈希等价，才复用原增益／剪辑的本地 OGG 和原导入设置；绑定及输入输出哈希由 `prepare_dungeon_ui_bindings.py` 复现。关闭音效的本地播放器保持到事件结束，注册现有 Sound 设置通道；实际播放、音量设置变化、指针关闭和场景退出清理仍待 Play Mode 验证，未替代其他按钮／标签／匹配动画音效。
+机神山私图原 `SFX/PopupWindowSound` 的打开事件为空、关闭事件为 `Main_Cursor_Back`（3686182067），现按原 OnHiding 事件恢复。`prepare_unity_map12_ui_audio.py` 核对当前5份原包，从原 Wwise Event／ActionPlay／Sound 图以固定0 dB主增益解码，保留关闭事件−16 dB及原媒体长度、声道和采样率；来源、播放图、工具及 PCM 哈希见 `assets/reference/official-map/map12-ui-audio-source-manifest.json`。关闭音效的本地播放器保持到事件结束，注册现有 Sound 设置通道；实际播放、音量设置变化、指针关闭和场景退出清理仍待 Play Mode 验证。
 
-机神山私图追加恢复原5个 UIClickSound 与14个 ButtonSound，分别保留5份标签、12份普通点击和2份失败提示事件。左键筛选及 Start／Button.onClick 原订阅方式保留；本地声音沿用关闭音效已接通的 Sound 设置通道。既有官方 Commerce／Bingo 音频包与当前完整包哈希比对通过后才复用，原音频／导入设置输入与 Resources 输出哈希随绑定记录。实际音效指针、音量变化和全部控件业务仍待运行验收；`TeamMatch_Waiting_1` 匹配动画音频与事件时序仍未迁移。
+机神山私图追加恢复原5个 UIClickSound 与14个 ButtonSound，分别保留5份标签、12份普通点击和2份失败提示事件。左键筛选及 Start／Button.onClick 原订阅方式保留；本地声音沿用关闭音效已接通的 Sound 设置通道。原标签／普通点击／失败事件分别按−6／−6／−8 dB解码为 PCM，导入不归一化，保留资源路径及 GUID；原组件、媒体、播放图与输出哈希均可复现。实际音效指针、音量变化和全部控件业务仍待运行验收；匹配等待事件 `TeamMatch_Waiting_1` 的−3 dB音频已解码，原动画事件时序仍未接回。
 
 ## 自定义实现
 

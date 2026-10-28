@@ -158267,12 +158267,34 @@
         "path": "",
         "sound": {
           "audio_source_receipt": {
-            "path": "assets/reference/commerce-components/audio-source-manifest.json",
-            "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
+            "path": "assets/reference/official-map/map12-ui-audio-source-manifest.json",
+            "sha256": "78047a1dc9c2463ecd1aa5e388307056cfb405c17f360f8d4ecf31220e0ab1ae"
           },
           "banks": [
             {
-              "apk_entry": null,
+              "current_manifest": {
+                "dependencies": [],
+                "encrypted": false,
+                "file": "bb7cae73a84082b1229a4a67c24bc435.rawfile",
+                "file_crc": 3498814299,
+                "hash": "bb7cae73a84082b1229a4a67c24bc435",
+                "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                "record_offset": 1519,
+                "size": 34488425,
+                "tags": [
+                  "Payd_Base"
+                ],
+                "unity_crc": 0
+              },
+              "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+              "sha256": "f690bfd652b5cef0fe9768df7347b45c16bf1e36b80e5c4141cbcadeffddd317",
+              "source": {
+                "apk_entry": "assets/yoo/WwiseBnk/bb7cae73a84082b1229a4a67c24bc435.rawfile",
+                "apk_manifest": "854_156383",
+                "origin": "apk_zip"
+              }
+            },
+            {
               "current_manifest": {
                 "dependencies": [],
                 "encrypted": false,
@@ -158285,7 +158307,7 @@
                 "tags": [],
                 "unity_crc": 0
               },
-              "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_common_002_ui_pck.rawfile",
+              "name": "wwisebnk_assets_wwisedata_android_common_002_ui_pck.rawfile",
               "sha256": "92141ed248a5ca34f886432738d27bab97885a03f89f956191ab85bc03ff1cc7",
               "source": {
                 "apk_manifest": "854_156383",
@@ -158302,97 +158324,6 @@
               }
             },
             {
-              "apk_entry": "assets/yoo/WwiseBnk/bb7cae73a84082b1229a4a67c24bc435.rawfile",
-              "current_manifest": {
-                "dependencies": [],
-                "encrypted": false,
-                "file": "bb7cae73a84082b1229a4a67c24bc435.rawfile",
-                "file_crc": 3498814299,
-                "hash": "bb7cae73a84082b1229a4a67c24bc435",
-                "name": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
-                "record_offset": 1519,
-                "size": 34488425,
-                "tags": [
-                  "Payd_Base"
-                ],
-                "unity_crc": 0
-              },
-              "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
-              "sha256": "f690bfd652b5cef0fe9768df7347b45c16bf1e36b80e5c4141cbcadeffddd317",
-              "source": {
-                "apk_manifest": "854_156383",
-                "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-                "bundle_hash": "bb7cae73a84082b1229a4a67c24bc435",
-                "bundle_md5": "bb7cae73a84082b1229a4a67c24bc435",
-                "bundle_sha256": "f690bfd652b5cef0fe9768df7347b45c16bf1e36b80e5c4141cbcadeffddd317",
-                "bundle_size": 34488425,
-                "manifest": "871_156598",
-                "origin": "apk_zip",
-                "path": "assets/yoo/WwiseBnk/bb7cae73a84082b1229a4a67c24bc435.rawfile"
-              }
-            },
-            {
-              "apk_entry": "assets/yoo/WwiseBnk/34819696f955dc32072f42ddeb8f8e02.rawfile",
-              "current_manifest": {
-                "dependencies": [],
-                "encrypted": false,
-                "file": "34819696f955dc32072f42ddeb8f8e02.rawfile",
-                "file_crc": 2257179011,
-                "hash": "34819696f955dc32072f42ddeb8f8e02",
-                "name": "wwisebnk_assets_wwisedata_android_ui_bgm_01_pck.rawfile",
-                "record_offset": 1640,
-                "size": 43711260,
-                "tags": [
-                  "Payd_Base"
-                ],
-                "unity_crc": 0
-              },
-              "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_bgm_01_pck.rawfile",
-              "sha256": "57e66248a8e1d44ddebb35d3f00df9a34436fab754f07309b3f610d2a157c776",
-              "source": {
-                "apk_manifest": "854_156383",
-                "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-                "bundle_hash": "34819696f955dc32072f42ddeb8f8e02",
-                "bundle_md5": "34819696f955dc32072f42ddeb8f8e02",
-                "bundle_sha256": "57e66248a8e1d44ddebb35d3f00df9a34436fab754f07309b3f610d2a157c776",
-                "bundle_size": 43711260,
-                "manifest": "871_156598",
-                "origin": "apk_zip",
-                "path": "assets/yoo/WwiseBnk/34819696f955dc32072f42ddeb8f8e02.rawfile"
-              }
-            },
-            {
-              "apk_entry": null,
-              "current_manifest": {
-                "dependencies": [],
-                "encrypted": false,
-                "file": "9e190221dd98d958c430becfa5abe2d5.rawfile",
-                "file_crc": 2626557382,
-                "hash": "9e190221dd98d958c430becfa5abe2d5",
-                "name": "wwisebnk_assets_wwisedata_android_ui_bgm_02_pck.rawfile",
-                "record_offset": 9701,
-                "size": 78710362,
-                "tags": [],
-                "unity_crc": 0
-              },
-              "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_bgm_02_pck.rawfile",
-              "sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
-              "source": {
-                "apk_manifest": "854_156383",
-                "bundle_hash": "9e190221dd98d958c430becfa5abe2d5",
-                "bundle_md5": "9e190221dd98d958c430becfa5abe2d5",
-                "bundle_sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
-                "bundle_size": 78710362,
-                "manifest": "871_156598",
-                "origin": "official_cdn",
-                "sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
-                "size": 78710362,
-                "source_manifest": "854_156383",
-                "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/9e190221dd98d958c430becfa5abe2d5.rawfile"
-              }
-            },
-            {
-              "apk_entry": "assets/yoo/WwiseBnk/f125147fe16a9c53880af40f1ad057ca.rawfile",
               "current_manifest": {
                 "dependencies": [],
                 "encrypted": false,
@@ -158407,18 +158338,64 @@
                 ],
                 "unity_crc": 0
               },
-              "path": ".tools/source-packages/WwiseBnk/wwisebnk_assets_wwisedata_android_ui_sfx_01_pck.rawfile",
+              "name": "wwisebnk_assets_wwisedata_android_ui_sfx_01_pck.rawfile",
               "sha256": "225fb3ff220abb569582340339adb257141a8065a99bd006277f0244a9a7a37c",
               "source": {
+                "apk_entry": "assets/yoo/WwiseBnk/f125147fe16a9c53880af40f1ad057ca.rawfile",
                 "apk_manifest": "854_156383",
-                "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
-                "bundle_hash": "f125147fe16a9c53880af40f1ad057ca",
-                "bundle_md5": "f125147fe16a9c53880af40f1ad057ca",
-                "bundle_sha256": "225fb3ff220abb569582340339adb257141a8065a99bd006277f0244a9a7a37c",
-                "bundle_size": 7650511,
+                "origin": "apk_zip"
+              }
+            },
+            {
+              "current_manifest": {
+                "dependencies": [],
+                "encrypted": false,
+                "file": "34819696f955dc32072f42ddeb8f8e02.rawfile",
+                "file_crc": 2257179011,
+                "hash": "34819696f955dc32072f42ddeb8f8e02",
+                "name": "wwisebnk_assets_wwisedata_android_ui_bgm_01_pck.rawfile",
+                "record_offset": 1640,
+                "size": 43711260,
+                "tags": [
+                  "Payd_Base"
+                ],
+                "unity_crc": 0
+              },
+              "name": "wwisebnk_assets_wwisedata_android_ui_bgm_01_pck.rawfile",
+              "sha256": "57e66248a8e1d44ddebb35d3f00df9a34436fab754f07309b3f610d2a157c776",
+              "source": {
+                "apk_entry": "assets/yoo/WwiseBnk/34819696f955dc32072f42ddeb8f8e02.rawfile",
+                "apk_manifest": "854_156383",
+                "origin": "apk_zip"
+              }
+            },
+            {
+              "current_manifest": {
+                "dependencies": [],
+                "encrypted": false,
+                "file": "9e190221dd98d958c430becfa5abe2d5.rawfile",
+                "file_crc": 2626557382,
+                "hash": "9e190221dd98d958c430becfa5abe2d5",
+                "name": "wwisebnk_assets_wwisedata_android_ui_bgm_02_pck.rawfile",
+                "record_offset": 9701,
+                "size": 78710362,
+                "tags": [],
+                "unity_crc": 0
+              },
+              "name": "wwisebnk_assets_wwisedata_android_ui_bgm_02_pck.rawfile",
+              "sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
+              "source": {
+                "apk_manifest": "854_156383",
+                "bundle_hash": "9e190221dd98d958c430becfa5abe2d5",
+                "bundle_md5": "9e190221dd98d958c430becfa5abe2d5",
+                "bundle_sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
+                "bundle_size": 78710362,
                 "manifest": "871_156598",
-                "origin": "apk_zip",
-                "path": "assets/yoo/WwiseBnk/f125147fe16a9c53880af40f1ad057ca.rawfile"
+                "origin": "official_cdn",
+                "sha256": "1e906afacf58b727171f722c6e62c2c9a2bc28c6b4abd460e2cb263fc4c86235",
+                "size": 78710362,
+                "source_manifest": "854_156383",
+                "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/WwiseBnk/9e190221dd98d958c430becfa5abe2d5.rawfile"
               }
             }
           ],
@@ -158426,25 +158403,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Tag",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
-                  "txtp_sha256": "4299e149c85a2d4d5d26d316745e4f67bcb88a349be5d713ff7c09f43429804e"
+                  "action_id": 693682386,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 16800,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 680474747,
+                  "loop": false,
+                  "media": {
+                    "bytes": 6437,
+                    "id": 69663821,
+                    "offset": 5344,
+                    "sha256": "a43e321508f11363c6bd3ce655bb5fd65b62b32341eaa4d249f4eb8969ab4d6a",
+                    "subsong": 3
+                  },
+                  "name": "Main_Tag",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+                  "resource": "Map12/PopupSound/Main_Tag",
+                  "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
+                  "sound_id": 532446941,
+                  "txtp": "../banks/3844515483.bnk #s3 #i  #v -6.0dB  ##69663821.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0058-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[58] 680474747\n#\n#     CAkActionPlay[57] 693682386\n#\n#       CAkSound[6] 532446941\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 69663821\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "6f836336594ef65a1e66e55f0df87d3d29366443cb15cf1aab5fbfb60f8af9a8"
                 },
-                "file_sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
+                "file_sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
                 "guid": "164C4624-F19E-4DA6-9ECA-4C36A1C1A09F",
                 "id": 680474747,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Tag-4299e149c85a.ogg.meta",
-                  "importer_sha256": "f64427903fab56d937549e2f7ed83ccccf5e1c6da45423168baf52ce98f1e537",
-                  "path": "assets/official/commerce-components/audio/Main_Tag-4299e149c85a.ogg",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
-                },
                 "name": "Main_Tag",
                 "object_raw_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
                 "resource": "Map12/PopupSound/Main_Tag",
@@ -158485,25 +158480,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Tag",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
-                  "txtp_sha256": "4299e149c85a2d4d5d26d316745e4f67bcb88a349be5d713ff7c09f43429804e"
+                  "action_id": 693682386,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 16800,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 680474747,
+                  "loop": false,
+                  "media": {
+                    "bytes": 6437,
+                    "id": 69663821,
+                    "offset": 5344,
+                    "sha256": "a43e321508f11363c6bd3ce655bb5fd65b62b32341eaa4d249f4eb8969ab4d6a",
+                    "subsong": 3
+                  },
+                  "name": "Main_Tag",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+                  "resource": "Map12/PopupSound/Main_Tag",
+                  "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
+                  "sound_id": 532446941,
+                  "txtp": "../banks/3844515483.bnk #s3 #i  #v -6.0dB  ##69663821.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0058-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[58] 680474747\n#\n#     CAkActionPlay[57] 693682386\n#\n#       CAkSound[6] 532446941\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 69663821\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "6f836336594ef65a1e66e55f0df87d3d29366443cb15cf1aab5fbfb60f8af9a8"
                 },
-                "file_sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
+                "file_sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
                 "guid": "164C4624-F19E-4DA6-9ECA-4C36A1C1A09F",
                 "id": 680474747,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Tag-4299e149c85a.ogg.meta",
-                  "importer_sha256": "f64427903fab56d937549e2f7ed83ccccf5e1c6da45423168baf52ce98f1e537",
-                  "path": "assets/official/commerce-components/audio/Main_Tag-4299e149c85a.ogg",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
-                },
                 "name": "Main_Tag",
                 "object_raw_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
                 "resource": "Map12/PopupSound/Main_Tag",
@@ -158544,25 +158557,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Tag",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
-                  "txtp_sha256": "4299e149c85a2d4d5d26d316745e4f67bcb88a349be5d713ff7c09f43429804e"
+                  "action_id": 693682386,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 16800,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 680474747,
+                  "loop": false,
+                  "media": {
+                    "bytes": 6437,
+                    "id": 69663821,
+                    "offset": 5344,
+                    "sha256": "a43e321508f11363c6bd3ce655bb5fd65b62b32341eaa4d249f4eb8969ab4d6a",
+                    "subsong": 3
+                  },
+                  "name": "Main_Tag",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+                  "resource": "Map12/PopupSound/Main_Tag",
+                  "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
+                  "sound_id": 532446941,
+                  "txtp": "../banks/3844515483.bnk #s3 #i  #v -6.0dB  ##69663821.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0058-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[58] 680474747\n#\n#     CAkActionPlay[57] 693682386\n#\n#       CAkSound[6] 532446941\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 69663821\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "6f836336594ef65a1e66e55f0df87d3d29366443cb15cf1aab5fbfb60f8af9a8"
                 },
-                "file_sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
+                "file_sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
                 "guid": "164C4624-F19E-4DA6-9ECA-4C36A1C1A09F",
                 "id": 680474747,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Tag-4299e149c85a.ogg.meta",
-                  "importer_sha256": "f64427903fab56d937549e2f7ed83ccccf5e1c6da45423168baf52ce98f1e537",
-                  "path": "assets/official/commerce-components/audio/Main_Tag-4299e149c85a.ogg",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
-                },
                 "name": "Main_Tag",
                 "object_raw_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
                 "resource": "Map12/PopupSound/Main_Tag",
@@ -158603,25 +158634,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Tag",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
-                  "txtp_sha256": "4299e149c85a2d4d5d26d316745e4f67bcb88a349be5d713ff7c09f43429804e"
+                  "action_id": 693682386,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 16800,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 680474747,
+                  "loop": false,
+                  "media": {
+                    "bytes": 6437,
+                    "id": 69663821,
+                    "offset": 5344,
+                    "sha256": "a43e321508f11363c6bd3ce655bb5fd65b62b32341eaa4d249f4eb8969ab4d6a",
+                    "subsong": 3
+                  },
+                  "name": "Main_Tag",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+                  "resource": "Map12/PopupSound/Main_Tag",
+                  "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
+                  "sound_id": 532446941,
+                  "txtp": "../banks/3844515483.bnk #s3 #i  #v -6.0dB  ##69663821.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0058-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[58] 680474747\n#\n#     CAkActionPlay[57] 693682386\n#\n#       CAkSound[6] 532446941\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 69663821\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "6f836336594ef65a1e66e55f0df87d3d29366443cb15cf1aab5fbfb60f8af9a8"
                 },
-                "file_sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
+                "file_sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
                 "guid": "164C4624-F19E-4DA6-9ECA-4C36A1C1A09F",
                 "id": 680474747,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Tag-4299e149c85a.ogg.meta",
-                  "importer_sha256": "f64427903fab56d937549e2f7ed83ccccf5e1c6da45423168baf52ce98f1e537",
-                  "path": "assets/official/commerce-components/audio/Main_Tag-4299e149c85a.ogg",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
-                },
                 "name": "Main_Tag",
                 "object_raw_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
                 "resource": "Map12/PopupSound/Main_Tag",
@@ -158662,25 +158711,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Tag",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
-                  "txtp_sha256": "4299e149c85a2d4d5d26d316745e4f67bcb88a349be5d713ff7c09f43429804e"
+                  "action_id": 693682386,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 16800,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 680474747,
+                  "loop": false,
+                  "media": {
+                    "bytes": 6437,
+                    "id": 69663821,
+                    "offset": 5344,
+                    "sha256": "a43e321508f11363c6bd3ce655bb5fd65b62b32341eaa4d249f4eb8969ab4d6a",
+                    "subsong": 3
+                  },
+                  "name": "Main_Tag",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+                  "resource": "Map12/PopupSound/Main_Tag",
+                  "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
+                  "sound_id": 532446941,
+                  "txtp": "../banks/3844515483.bnk #s3 #i  #v -6.0dB  ##69663821.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0058-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[58] 680474747\n#\n#     CAkActionPlay[57] 693682386\n#\n#       CAkSound[6] 532446941\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 69663821\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "6f836336594ef65a1e66e55f0df87d3d29366443cb15cf1aab5fbfb60f8af9a8"
                 },
-                "file_sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767",
+                "file_sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b",
                 "guid": "164C4624-F19E-4DA6-9ECA-4C36A1C1A09F",
                 "id": 680474747,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Tag-4299e149c85a.ogg.meta",
-                  "importer_sha256": "f64427903fab56d937549e2f7ed83ccccf5e1c6da45423168baf52ce98f1e537",
-                  "path": "assets/official/commerce-components/audio/Main_Tag-4299e149c85a.ogg",
-                  "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
-                },
                 "name": "Main_Tag",
                 "object_raw_sha256": "a29af6c60b91b02f3970b0dd3fbff08fae7a626ba15271af6fe1d2bd0b399e68",
                 "resource": "Map12/PopupSound/Main_Tag",
@@ -158721,25 +158788,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -158778,25 +158863,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -158838,25 +158941,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -158899,25 +159020,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -158960,25 +159099,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159023,25 +159180,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159086,25 +159261,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159150,25 +159343,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159212,25 +159423,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159274,25 +159503,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159336,25 +159583,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159398,25 +159663,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/commerce-components/audio-source-manifest.json",
-                  "sha256": "444473fe1a097ee475c3f46683a8331cb7c0c7071dfb270c46a3c1250ca0b297"
-                },
                 "conversion": {
-                  "event": "Main_Cursor_Normal",
-                  "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
-                  "txtp_sha256": "31dffb29ef46653934c89f828b6385c56e351320bd71df96ea0409fc7f84cc84"
+                  "action_id": 1026573382,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 7200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -6.0,
+                  "id": 3772241779,
+                  "loop": false,
+                  "media": {
+                    "bytes": 3609,
+                    "id": 80286812,
+                    "offset": 11792,
+                    "sha256": "546e41545a2b9245f9ad0cd5d6277811691279539f1f7706d5c719015824cbff",
+                    "subsong": 4
+                  },
+                  "name": "Main_Cursor_Normal",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Normal",
+                  "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
+                  "sound_id": 983794440,
+                  "txtp": "../banks/3844515483.bnk #s4 #i  #v -6.0dB  ##80286812.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0128-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[128] 3772241779\n#\n#     CAkActionPlay[127] 1026573382\n#\n#       CAkSound[1] 983794440\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 80286812\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "ec05897da64d90b8e1be506642b128bd93a1665f10a6d863c3dfc5c90d09d783"
                 },
-                "file_sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281",
+                "file_sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e",
                 "guid": "ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3",
                 "id": 3772241779,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Normal-31dffb29ef46.ogg.meta",
-                  "importer_sha256": "3ebfd96bbaa4d4a5fa18c8df4b5118fcb55f13484c9e0cf7706ac795e57abacd",
-                  "path": "assets/official/commerce-components/audio/Main_Cursor_Normal-31dffb29ef46.ogg",
-                  "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
-                },
                 "name": "Main_Cursor_Normal",
                 "object_raw_sha256": "aa98c17ed13ff350c43219d39320b67f9927ab0ac8c844b798e80bdda51f3dfe",
                 "resource": "Map12/PopupSound/Main_Cursor_Normal",
@@ -159460,27 +159743,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/bingo-activity/audio/source-manifest.json",
-                  "sha256": "4879c42c15d77de1534760f61628d74ba5f8ed034fe3af3585b3c27e546e6e50"
-                },
                 "conversion": {
-                  "duration": 0.4,
-                  "file": "res://assets/official/bingo-activity/audio/f279174fd04ed416fccc485f.ogg",
+                  "action_id": 918004023,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 19200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -8.0,
+                  "id": 2458796094,
                   "loop": false,
-                  "loop_offset": 0.0,
-                  "sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074",
-                  "txtp_sha256": "f279174fd04ed416fccc485fc4bb422a389c08f5c334f40e1f3b968018447776"
+                  "media": {
+                    "bytes": 6313,
+                    "id": 768850253,
+                    "offset": 65024,
+                    "sha256": "6e315e34b1181092d370dcf2e4af9aa0515dad2b9731d2714eb32133e11896b0",
+                    "subsong": 22
+                  },
+                  "name": "Main_Cursor_Fail",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Fail",
+                  "sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd",
+                  "sound_id": 308932270,
+                  "txtp": "../banks/3844515483.bnk #s22 #i  #v -8.0dB  ##768850253.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0096-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[96] 2458796094\n#\n#     CAkActionPlay[95] 918004023\n#\n#       CAkSound[3] 308932270\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 768850253\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "5aa0477bf7e085d7d179a2890888c6a698d654194ca708a22deaed8732b56981"
                 },
-                "file_sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074",
+                "file_sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd",
                 "guid": "A85F9B10-CB5B-4DFD-A322-9C85365FC72D",
                 "id": 2458796094,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Back-e58f14a05a20.ogg.meta",
-                  "importer_sha256": "b4baa7a9dd0ff4196d4fe8916f2031d534dbe9cdf64c2cdf6027aac453915ab8",
-                  "path": "assets/official/bingo-activity/audio/f279174fd04ed416fccc485f.ogg",
-                  "sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074"
-                },
                 "name": "Main_Cursor_Fail",
                 "object_raw_sha256": "1fff22d965dd612267456f50c85ea8cb08447b5b0801a99da3f76b72d8bbec41",
                 "resource": "Map12/PopupSound/Main_Cursor_Fail",
@@ -159524,27 +159823,43 @@
             {
               "enabled": true,
               "event": {
-                "audio_source_receipt": {
-                  "path": "assets/reference/bingo-activity/audio/source-manifest.json",
-                  "sha256": "4879c42c15d77de1534760f61628d74ba5f8ed034fe3af3585b3c27e546e6e50"
-                },
                 "conversion": {
-                  "duration": 0.4,
-                  "file": "res://assets/official/bingo-activity/audio/f279174fd04ed416fccc485f.ogg",
+                  "action_id": 918004023,
+                  "audio": {
+                    "channels": 2,
+                    "frames": 19200,
+                    "sample_rate": 48000,
+                    "sample_width": 2
+                  },
+                  "bank": {
+                    "bytes": 102267,
+                    "id": 3844515483,
+                    "offset": 4631,
+                    "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                    "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                    "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+                  },
+                  "gain_db": -8.0,
+                  "id": 2458796094,
                   "loop": false,
-                  "loop_offset": 0.0,
-                  "sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074",
-                  "txtp_sha256": "f279174fd04ed416fccc485fc4bb422a389c08f5c334f40e1f3b968018447776"
+                  "media": {
+                    "bytes": 6313,
+                    "id": 768850253,
+                    "offset": 65024,
+                    "sha256": "6e315e34b1181092d370dcf2e4af9aa0515dad2b9731d2714eb32133e11896b0",
+                    "subsong": 22
+                  },
+                  "name": "Main_Cursor_Fail",
+                  "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.wav",
+                  "resource": "Map12/PopupSound/Main_Cursor_Fail",
+                  "sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd",
+                  "sound_id": 308932270,
+                  "txtp": "../banks/3844515483.bnk #s22 #i  #v -8.0dB  ##768850253.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0096-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[96] 2458796094\n#\n#     CAkActionPlay[95] 918004023\n#\n#       CAkSound[3] 308932270\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 768850253\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+                  "txtp_sha256": "5aa0477bf7e085d7d179a2890888c6a698d654194ca708a22deaed8732b56981"
                 },
-                "file_sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074",
+                "file_sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd",
                 "guid": "A85F9B10-CB5B-4DFD-A322-9C85365FC72D",
                 "id": 2458796094,
-                "input": {
-                  "importer_path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Back-e58f14a05a20.ogg.meta",
-                  "importer_sha256": "b4baa7a9dd0ff4196d4fe8916f2031d534dbe9cdf64c2cdf6027aac453915ab8",
-                  "path": "assets/official/bingo-activity/audio/f279174fd04ed416fccc485f.ogg",
-                  "sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074"
-                },
                 "name": "Main_Cursor_Fail",
                 "object_raw_sha256": "1fff22d965dd612267456f50c85ea8cb08447b5b0801a99da3f76b72d8bbec41",
                 "resource": "Map12/PopupSound/Main_Cursor_Fail",
@@ -159589,17 +159904,44 @@
           "enabled": true,
           "hide": {
             "conversion": {
-              "event": "Main_Cursor_Back",
-              "operation": "Original Wwise event/actions, source gain, segment edits and native loop; wwiser TXTP -> vgmstream PCM -> Vorbis",
-              "sha256": "516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9",
-              "txtp_sha256": "e58f14a05a2050330c077d1488015b4e774d2ff610417e795ba221def06aee53"
+              "action_id": 572065703,
+              "audio": {
+                "channels": 2,
+                "frames": 21600,
+                "sample_rate": 48000,
+                "sample_width": 2
+              },
+              "bank": {
+                "bytes": 102267,
+                "id": 3844515483,
+                "offset": 4631,
+                "package": "wwisebnk_assets_wwisedata_android_minimum_pck.rawfile",
+                "path": ".tools/map12-ui-audio-871_156598/banks/3844515483.bnk",
+                "sha256": "2814e2166cf77526a7c59ab6f12f899c8c95041772c23cfc2b2752caedf104f3"
+              },
+              "gain_db": -16.0,
+              "id": 3686182067,
+              "loop": false,
+              "media": {
+                "bytes": 7062,
+                "id": 351351401,
+                "offset": 34544,
+                "sha256": "a8c2e791526b92119e479bac2900c4bd95f451bb01c02bdbd7f6ba15ba31203c",
+                "subsong": 13
+              },
+              "name": "Main_Cursor_Back",
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.wav",
+              "resource": "Map12/PopupSound/Main_Cursor_Back",
+              "sha256": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194",
+              "sound_id": 444692093,
+              "txtp": "../banks/3844515483.bnk #s13 #i  #v -16.0dB  ##351351401.wem\n\n\n\n# AUTOGENERATED WITH WWISER v20260808\n#\n# 3844515483-0126-event.txtp\n# - .tools/map12-ui-audio-871_156598/banks/3844515483.bnk\n#\n# PATH\n#   CAkEvent[126] 3686182067\n#\n#     CAkActionPlay[125] 572065703\n#\n#       CAkSound[0] 444692093\n#       * StreamType: 0x00 [Data/bnk]\n#\n#         Source 351351401\n#         * ulPluginID: 0x00040001 [VORBIS]\n#\n#\n# GAMEVARS\n# - RTPCID: {3240620755=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n# - RTPCID: {3673881719=0.0,100.0} <[Volume]: -96.3,0.0> (default 100.0: 0.0)\n",
+              "txtp_sha256": "40914ebadb57b24a48ab1a740abc9e71db935390a74ae671ba267b2dce725823"
             },
-            "file_sha256": "516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9",
+            "file_sha256": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194",
             "guid": "1844E599-1636-4634-BE47-E7702A2D75D8",
             "id": 3686182067,
             "name": "Main_Cursor_Back",
             "object_raw_sha256": "4a35be6a38de212d2250e20e5b3ac1702e4ca86e9fffd2adb2387c1f5da875c5",
-            "original_path": "assets/official/commerce-components/audio/Main_Cursor_Back-e58f14a05a20.ogg",
             "resource": "Map12/PopupSound/Main_Cursor_Back",
             "source": {
               "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
@@ -159612,47 +159954,61 @@
               "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle"
             }
           },
-          "native_audio_input": {
-            "meta_sha256": "b4baa7a9dd0ff4196d4fe8916f2031d534dbe9cdf64c2cdf6027aac453915ab8",
-            "path": "unity/Assets/Official/Commerce/Art/audio/Main_Cursor_Back-e58f14a05a20.ogg",
-            "sha256": "516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9"
-          },
           "native_outputs": [
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.ogg",
-              "sha256": "516de5796fdfcb03ec6444d23250b0d5d9af20a749190152125a420b2788cfa9"
-            },
-            {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.ogg.meta",
-              "sha256": "0b74c9766e0040bf182d3a4410f082f682527d7dfed82a8e7f758f4e62a92bba"
-            },
-            {
+              "bytes": 169,
               "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound.meta",
               "sha256": "27e92905f0ef32ec24f82becff3136974a3f13d82fe3d524bb1911f0a4def388"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.ogg",
-              "sha256": "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074"
+              "bytes": 86444,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.wav",
+              "sha256": "2ad53c943b98c5d0d6d8d0e83a96667b8f13835a6869f321d6ee8e001b522194"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.ogg.meta",
-              "sha256": "c16f552a0cf92038fd3be5bf94ed003ee1f92ef349a9d9de63ccb42a175b8af4"
+              "bytes": 482,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.wav.meta",
+              "sha256": "c4203755154a99141809c871b81bae95f0de629650bf2147f133fb9eb3477007"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.ogg",
-              "sha256": "a907ca58746c639a71cf09c7845339be8d86e2af4d2732d9504bd1b54f963281"
+              "bytes": 76844,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.wav",
+              "sha256": "36291f63203645a0629d2139fa236d3458005fd21a67e49a996bb0a19c8032bd"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.ogg.meta",
-              "sha256": "7b810802ecacb2baa18a9194d7526b8c7011c742624170ac6dad2ea12301e4b3"
+              "bytes": 482,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Fail.wav.meta",
+              "sha256": "32c60bd1e12ca0bc69c6a7a21035a4bcc12bbb363e12a13cc9545a22d2e17fd5"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.ogg",
-              "sha256": "0796154bdf2ae41dd1cd45c5c210036cde848ea1175aa32d585b5307e8d6a767"
+              "bytes": 28844,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+              "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e"
             },
             {
-              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.ogg.meta",
-              "sha256": "0f183eb8409b1cc5bb54070efa58b472f64586db98bfa09ac50008e92186f28f"
+              "bytes": 482,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav.meta",
+              "sha256": "43890d4262811f9561154fad197488fa242d539e400f75b128df91755f4655e8"
+            },
+            {
+              "bytes": 67244,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav",
+              "sha256": "99bdf2db7f7db2cbd4c80a13237906fe8cf86591b05d2fe3a68c9c6867785e9b"
+            },
+            {
+              "bytes": 482,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Tag.wav.meta",
+              "sha256": "ec02c658c37ad316066d01cfe829046b539e806551455a848c31b57dd929b743"
+            },
+            {
+              "bytes": 387148,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/TeamMatch_Waiting_1.wav",
+              "sha256": "6941cdbeb3fc2dd7987162428635486be7d74b4ca70326a7538a8060c3de243f"
+            },
+            {
+              "bytes": 482,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/TeamMatch_Waiting_1.wav.meta",
+              "sha256": "fbc535f80d97ed44819e9048e665d55f07ea4b298659978d47dd8b1790c354f4"
             }
           ],
           "object_raw_sha256": "095f2b31bf564d5ea94ec6f248d6a5969c765a40d187bbb329e8515d0c5792a8",

@@ -2,7 +2,7 @@
   "bindings": {
     "meta_sha256": "edd247e4d1a84032754c9e7611ac3a39bce64403851cd87a5403a44e186d721c",
     "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
-    "sha256": "1d8a1953f90f53005c9be9fd6b36eeb92f2d68d1f1a7ffeb120439de9e778831"
+    "sha256": "a641422fff5220a00d872faea365bc9bd491facf2983a0b0e814797a85a08332"
   },
   "code_sources": [
     {
@@ -309,7 +309,7 @@
       "sha256": "886c7589207188b1f0541a9a53008611aa4d4ca99f8fb921d328ad605edb2017"
     }
   },
-  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound events, verify original audio conversion against all current bank hashes and bind the local close clip; decode original atlas pixels and preserve pivot, border and PPU.",
+  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; decode original atlas pixels and preserve pivot, border and PPU.",
   "prefabs": [
     {
       "image_count": 160,
