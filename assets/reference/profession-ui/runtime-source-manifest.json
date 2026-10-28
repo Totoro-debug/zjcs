@@ -282,6 +282,10 @@
     "path": "assets/reference/profession-ui/photographer-source-manifest.json",
     "sha256": "d2c090987fa76b0674bcf95e9f1503a79e359562a2ee32717ff0eb1a23e437cf"
   },
+  "portrait_studio": {
+    "path": "assets/reference/profession-ui/portrait-studio-source-manifest.json",
+    "sha256": "3dc2b681f09f148a9c300bf1a3d0d83f13537d035f3a89569834cd692534e5a9"
+  },
   "item_resources": {
     "path": "assets/reference/profession-ui/item-resources-source-manifest.json",
     "sha256": "033264a7dde8b82e511e5c09f6649136cc3dfdcdc4cded3e750447aec28b9981"
@@ -320,7 +324,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "5253735477125a9359d101b4147209150582bcd878dd5f243a8a89bc519fffb0"
+    "sha256": "81da09e55168a8e87cfde3fd67f0b6075c567304686aaed6179145f13d103955"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

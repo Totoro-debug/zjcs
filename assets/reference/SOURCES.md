@@ -449,6 +449,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业肖像拍摄：原 `CharacterPortraitPhotographer`、`AppearancePortraitParticleProvider`、`RendererZSortComparer`、构建器接口和两个原收集方法已迁入；保留相机／CommandBuffer／临时 RT、子网格材质顺序、纹理池读回与异常／释放边界。来源与代码哈希见 `profession-ui/photographer-source-manifest.json`。隔离 Direct3D Play Mode 实际验证两组原尺寸、透明背景、子网格结果、原收集／排序／粒子 ColorMask、构建器缓存及三个设置失败分支，GPU 图片已查看。角色、构建器和渲染图为夹具，原 studio、真实角色及完整职业页仍未绑定；未构建发布或生成完整素材快照。
 
+职业肖像 studio：原管理器配置从 APK 的实际对象指针指向 `defaultpackage_assets_prefabs_appearance_portrait.bundle`（MD5 `9466f2e5b048b0119c9d63e6cdf26406`）。八个 bundle 依赖、15 个脚本组件已严格解码并完成写回／重开比较；原 studio 与管理器／参数根包的 5 个节点、11 个脚本组件及相机／网格组件核对 485 项值、85 处引用。转换文件、来源和工具哈希见 `profession-ui/portrait-studio-source-manifest.json` 及其输入收据。原节点、脚本、引用、浮点负零与默认运行时光照字段保留，仅放转换缓存；未安装不完整 prefab，未执行此 studio 的 Unity／角色 Play Mode 或 Windows Player 验证。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
