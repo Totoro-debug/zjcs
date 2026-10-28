@@ -22,6 +22,9 @@
 
 转换工具对单张奖励 Sprite 的裁剪 pivot 与原 Sprite 不同，现按原逻辑矩形、pivot、PPU、border、网格／索引字节、UV 变换及纹理引用恢复 4 个原生 Sprite；原 ASTC 按既有 UNORM8 解码流程转成 4 个原生 RGBA32 Texture2D，保留 mip、颜色空间和采样参数，Windows 不再二次压缩。`ProfessionRewardSpriteValidation.Run` 在隔离 Unity 中核对全部原始顶点、三角形顺序、UV、pivot、尺寸、PPU、border、纹理绑定、采样与格式；四张纹理上传 GPU 后读回的 SHA256 与解码 RGBA 完全一致。此验证没有覆盖职业馈赠列表的实际渲染和点击。
 
+馈赠图标的原 `ImageProxy`、`ImageLoaderProxy`、`LoaderProxyBase`、`PreviewableProxyBase`、`AssetGuidProxy` 已按原源码迁入，保留嵌套序列化字段、Image 属性委托、路径前缀、同步／GUID／异步加载、当前请求身份检查和清理／销毁顺序。资源操作替换为显式本地接口；原 R3 资源集合的按当前数量正序释放、末尾清空及销毁标记顺序由原 APK 原生指令核实。`ProfessionImageLoaderValidation.Run` 在隔离 Unity 中以原奖励 Sprite 验证乱序完成、失败结果、清理后迟到结果、已完成请求的即时订阅，以及销毁后的请求拒绝和资源释放。完整 `ItemIcon` 控件、实际提供器和相关弹窗仍待接入；此组件验证没有覆盖馈赠界面渲染或点击。代码及原生证据见[图标加载来源](../../assets/reference/profession-ui/image-resource-source-manifest.json)。
+
+
 `RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源的闭包为 871 个资产、84 种脚本，断开 GUID 为 0，仍有 20 种运行脚本待接入。
 
 

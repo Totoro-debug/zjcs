@@ -421,6 +421,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 五个原始职业声音事件的当前映射、APK PCK／BNK／WEM 哈希、原始声音链、增益、PCM 输出及 Windows 显式绑定见 `assets/reference/profession-ui/windows-audio-source-manifest.json`。五份 AudioClip 的全部导入采样与解码 PCM 相同，实际 Play Mode 的 AudioSource 样本推进及监听器非零输出均通过；正式职业窗口接线与设置混音仍待完成。素材载荷在 `unity/Assets/Official/ProfessionAudio/`，平台适配在 `Runtime/Offline/ProfessionUI/`，没有生成完整素材快照。
 
+图标原始图片代理和加载器五类、所消费的原资源操作接口、R3 集合释放的 APK 指令及本地资源边界见 `assets/reference/profession-ui/image-resource-source-manifest.json`。保留原字段和请求／清理顺序；隔离 Unity 使用已导入的原奖励 Sprite 验证异步乱序、迟到、失败、即时完成和销毁路径。完整 ItemIcon 原控件、提供器及真实界面输入仍未接通。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

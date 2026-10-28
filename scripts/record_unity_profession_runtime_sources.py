@@ -64,6 +64,7 @@ def build():
         dynamic_resources=file_record(ROOT / "assets/reference/profession-ui/dynamic-resources-source-manifest.json"),
         audio=file_record(ROOT / "assets/reference/profession-ui/audio-source-manifest.json"),
         windows_audio=file_record(ROOT / "assets/reference/profession-ui/windows-audio-source-manifest.json"),
+        image_resources=file_record(ROOT / "assets/reference/profession-ui/image-resource-source-manifest.json"),
         rule_adapter=file_record(ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs"),
         rule_instantiation_source=file_record(CODE / "client-source/UIUtils.cs"),
         validation=file_record(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs"),
