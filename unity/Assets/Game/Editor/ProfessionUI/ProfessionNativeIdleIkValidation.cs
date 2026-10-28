@@ -97,7 +97,7 @@ namespace Zjcs.Editor.ProfessionUI
                 new ProfessionNativeBonePose.Bone { name = "arm", parent = 0 },
                 new ProfessionNativeBonePose.Bone { name = "hand", parent = 1, x = 4 },
                 new ProfessionNativeBonePose.Bone { name = "target", parent = 0, x = 3, y = 4 },
-                new ProfessionNativeBonePose.Bone { name = "unsupported", parent = 0, inherit = 2 }
+                new ProfessionNativeBonePose.Bone { name = "unsupported", parent = 0, inherit = 4 }
             };
             var pose = new ProfessionNativeBonePose(source);
             Require(pose.World(2).m03 == 4, "initial descendant cache");

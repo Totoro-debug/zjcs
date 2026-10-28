@@ -8,9 +8,12 @@ from prepare_unity_profession_native_inputs import ROOT, CACHE
 from prepare_unity_profession_photographer import record
 
 
-def world(bones, local, active):
+def world(bones, local, active, overrides=None):
     result = []
     for i, (bone, pose) in enumerate(zip(bones, local)):
+        if overrides and i in overrides:
+            result.append(overrides[i])
+            continue
         if i not in active:
             result.append((0j, 0j, 0j))
             continue

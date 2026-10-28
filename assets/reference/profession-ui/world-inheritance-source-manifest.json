@@ -25,7 +25,7 @@
   },
   "runtime": {
     "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
-    "sha256": "6381bb93e2ef6823e7e8eb3130a6e7d56cc8fb79fd554aeaac41299590999575"
+    "sha256": "ddccab4283fcc59145bb8cc1ce733321305bf6ea4e73bbc3f33dd3da42790f51"
   },
   "reader": {
     "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
@@ -41,7 +41,7 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_world_inheritance.py",
-    "sha256": "5c1e2a12ade0486d8a16a04c3940553e2df77ab967ebc4e761e86ecbc1c9f6a8"
+    "sha256": "3ef73a18396c74fd0306bef663087cf670c01719fc9a11166ecb84b4a9a62653"
   },
   "independent_reuse": {
     "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13SkeletonView.cs",
@@ -61,5 +61,5 @@
     "Transform/physics constraints, mixed animation and full character rendering are not evaluated here.",
     "Source world references are pre-constraint mathematical references, not original game or SDK frame captures."
   ],
-  "validated_scope": "Unity 2022.3.57f1c2 Direct3D actual Play Mode: 509584 scalar comparisons, maximum absolute difference 0.000381469727 within 0.0004 + 0.000007 * abs(expected). All 48 source local poses from actual packaged tracks, 144 pre-constraint world frames and 40 independent synthetic cases pass. Skin activation covers both source skeletons, original warrior/mage clothing, female core sleeves and map leaves. Nonuniform/sheared no-rotation parents and mode 4 explicitly reject. Unity import/compile and ProjectTools.Validate pass; frozen project 73733 GUIDs and current project 74239 GUIDs pass static metadata checks. No constraints, mixed animation, actor raster, page input, save or Windows Player validation."
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D actual Play Mode: 509584 scalar comparisons, maximum absolute difference 0.000381469727 within 0.0004 + 0.000007 * abs(expected). All 48 source local poses from actual packaged tracks, 144 pre-constraint world frames and 40 independent synthetic cases pass. Skin activation covers both source skeletons, original warrior/mage clothing, female core sleeves and map leaves. Nonuniform/sheared no-rotation parents and mode 4 explicitly reject. Unity import/compile and ProjectTools.Validate pass; frozen project 73733 GUIDs and current project 74239 GUIDs pass static metadata checks. No constraints, mixed animation, actor raster, page input, save or Windows Player validation. All original local/world and synthetic checks repeated inside the combined idle-transform Play Mode validation after introducing world-constraint matrix overrides."
 }

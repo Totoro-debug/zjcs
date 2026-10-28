@@ -1,0 +1,88 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "baseline_ik": {
+    "path": "assets/reference/profession-ui/idle-ik-source-manifest.json",
+    "sha256": "994d9e35475e5e618a284d71db5fe242fe958cab01e2c27ea72a4c2b080914b8"
+  },
+  "ik_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-ik-validation.json",
+    "sha256": "304564bfc57e56fb54b8d7d6aa5a7fc9eeff8176320aedcd193ea28174fd5565"
+  },
+  "baseline_inheritance": {
+    "path": "assets/reference/profession-ui/world-inheritance-source-manifest.json",
+    "sha256": "634af7de7c5d66eed1127970c983c02e2b0dd71a573005e5e6310f63a3476928"
+  },
+  "local_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+    "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+  },
+  "format_reader": {
+    "path": ".tools/skeltojson-1.0.1/skeltojson-1.0.1-py3-none-any.whl",
+    "sha256": "e6a0c0c5a38c811c7b23074fb22381615edbbc0be42db2cd12468764228e8897"
+  },
+  "references": [
+    "https://esotericsoftware.com/spine-transform-constraints"
+  ],
+  "format_scope": "Pinned independent MIT decoder _read_transform_constraints and _read_animation field omission defaults; no SDK implementation.",
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-transform-validation.json",
+    "sha256": "573b7a7a46a12f2bcbb5fdf7a975ae2aef7e500f82a00c844f943346170a5107"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_idle_transform.py",
+    "sha256": "9059f7989f33e2873f1c773c9cf312c60dfb87c0c190aeebcf124dceabea5c92"
+  },
+  "reference_generator": {
+    "path": "scripts/prepare_unity_profession_world_inheritance.py",
+    "sha256": "3ef73a18396c74fd0306bef663087cf670c01719fc9a11166ecb84b4a9a62653"
+  },
+  "ik_regression_validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeIdleIkValidation.cs",
+    "sha256": "ae17bb9a257fedd96fc63f57ad1c9632e9be3ba9f7b5ed8443559b923b012c1a"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleTransform.cs",
+      "sha256": "e534d4d367701b34ff5fbe63283e98a0a127e8ccf338a7f38133b771ec764091"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleTransform.cs.meta",
+      "sha256": "6c2f42f5b6b9c1312309d46ad19098f2a20a56420350fa786afb758115dbfde6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+      "sha256": "ddccab4283fcc59145bb8cc1ce733321305bf6ea4e73bbc3f33dd3da42790f51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs.meta",
+      "sha256": "028d2ee0033d09b65a5feec9b6e98495b7c577f80e0ac54794c7c4cc489b9fe3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionIdleTransformValidation.cs",
+      "sha256": "4a31a5c14b76d8bed95dfd94907dede4f6034e3de29524ae0d7f6a2e37311ed4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionIdleTransformValidation.cs.meta",
+      "sha256": "60d3deca6df41f200dbc4820a7c88118fef06bab4771c799635853895f62ca8e"
+    }
+  ],
+  "cases": 96,
+  "operation": "Bind source setup zero defaults and the constant idle animation six-channel defaults separately; evaluate active absolute world constraints after verified idle IK. Independent double-precision complex rotations/affine interpolation supply references.",
+  "limitations": [
+    "Active local/relative, scale/shear offsets, reflected rotation offsets, singular scale/direction and nonconstant transform timelines explicitly reject.",
+    "Verified source IK constraints precede every transform constraint; interleaved IK/world scheduling is not generalized.",
+    "No physics constraints, original SDK poses, mixed animation, actor raster, full page or Windows Player verification."
+  ],
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D actual Play Mode passed 96 combined source frames and 62492 world/state scalar comparisons, maximum absolute difference 0.0006952286 within 0.001 + 0.000007 * abs(expected). Actual packaged bone tracks, verified original-order idle IK, setup zero defaults, constant animation first-five-one/shear-zero defaults, source transform order, full weapon target copy and descendant cache checks pass for both source skeletons and original warrior/mage outfits. Independent reflected/sheared full-copy and position-mix geometry, explicit unsupported branches and prior 144 world frames/IK regression checks pass. Import/compile, ProjectTools.Validate and frozen/current static GUID checks 73735/74249 pass. No physics, animation mixing, original SDK pose, actor raster, page input/save or Windows Player verification."
+}

@@ -120,6 +120,26 @@ namespace Zjcs.Offline.ProfessionUI
             Array.Clear(ready, 0, ready.Length);
         }
 
+        // A world-space constraint runs after its dependencies. Retain unrelated
+        // solved matrices, but discard descendant caches so their source local
+        // transforms see this result. Reset/Apply starts a fresh unconstrained frame.
+        public void OverrideWorld(int bone, Matrix4x4 matrix)
+        {
+            if (bone < 0 || bone >= source.Length) throw new ArgumentOutOfRangeException(nameof(bone));
+            if (!active[bone]) throw new InvalidOperationException("Cannot constrain an inactive original bone.");
+            Finite(matrix.m00); Finite(matrix.m01); Finite(matrix.m10); Finite(matrix.m11); Finite(matrix.m03); Finite(matrix.m13);
+            if (matrix.m02 != 0 || matrix.m12 != 0 || matrix.m20 != 0 || matrix.m21 != 0 || matrix.m23 != 0 ||
+                matrix.m30 != 0 || matrix.m31 != 0 || matrix.m32 != 0 || matrix.m22 != 1 || matrix.m33 != 1)
+                throw new ArgumentException("Original bone constraint must supply a planar affine matrix.", nameof(matrix));
+            for (int i = bone + 1; i < source.Length; i++)
+            {
+                int parent = source[i].parent;
+                while (parent > bone) parent = source[parent].parent;
+                if (parent == bone) ready[i] = false;
+            }
+            world[bone] = matrix; ready[bone] = true;
+        }
+
         private Matrix4x4 EvaluateWorld(int i)
         {
             if (ready[i]) return world[i];

@@ -68,6 +68,7 @@ def build():
         local_appearance=file_record(ROOT / "assets/reference/profession-ui/local-appearance-source-manifest.json"),
         skeleton_data=file_record(ROOT / "assets/reference/profession-ui/skeleton-data-source-manifest.json"),
         world_inheritance=file_record(ROOT / "assets/reference/profession-ui/world-inheritance-source-manifest.json"),
+        idle_transform=file_record(ROOT / "assets/reference/profession-ui/idle-transform-source-manifest.json"),
         image_resources=file_record(ROOT / "assets/reference/profession-ui/image-resource-source-manifest.json"),
         item_components=file_record(ROOT / "assets/reference/profession-ui/item-components-source-manifest.json"),
         item_pools=file_record(ROOT / "assets/reference/profession-ui/item-pools-source-manifest.json"),

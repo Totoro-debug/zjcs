@@ -34,6 +34,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业本地外观绑定 | [原应用方法、当前配置与本地存档投影](profession-ui/local-appearance-source-manifest.json)；原职业预览使用独立深副本，当前物品类型与角色会话显式注入；未完成边界见[职业功能页](../../docs/features/professions.md) |
 | 职业原生骨骼数据 | [固定原数据、无损容器与显式加载](profession-ui/skeleton-data-source-manifest.json)；男女骨骼、图集区域、全部动画／事件／约束／附件及逐字节输入输出 SHA256；未使用 Spine runtime 或姿态烘焙，运行边界见[职业功能页](../../docs/features/professions.md) |
 | 职业骨骼继承与原曲线 | [独立复数参考、真实皮肤和运行时绑定](profession-ui/world-inheritance-source-manifest.json)；男女待机原曲线与约束前变换，保留原数据；物理、混合与角色显示边界见[职业功能页](../../docs/features/professions.md) |
+| 职业待机变换约束 | [原配置／动画默认值与独立几何](profession-ui/idle-transform-source-manifest.json)；男女待机 IK 后的绝对世界变换和主武器挂点，输入输出哈希及未完成边界见[职业功能页](../../docs/features/professions.md) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 
