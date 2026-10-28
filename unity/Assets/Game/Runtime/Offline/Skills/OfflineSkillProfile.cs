@@ -149,6 +149,7 @@ namespace Zjcs.Offline.Skills
     public sealed class OfflineSkillRules
     {
         public int PlanCount = OfflineSkillProfile.PlanCount;
+        public int NameCharacterMaxCount = 12;
         public OfflineSkillDefinition[] Skills = Array.Empty<OfflineSkillDefinition>();
         public int GiftShowCount = 5;
         public OfflineSkillAchievementTemplate[] GiftTemplates = Array.Empty<OfflineSkillAchievementTemplate>();

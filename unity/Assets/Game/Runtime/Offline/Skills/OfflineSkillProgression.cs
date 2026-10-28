@@ -9,6 +9,8 @@ namespace Zjcs.Offline.Skills
         private const int PassiveSkillItemType = 101;
         private const int SlotCount = 4;
         private readonly OfflineSkillRules rules;
+        public int NameCharacterMaxCount => rules.NameCharacterMaxCount;
+        public int CheckPlanName(string name) => Zjcs.Official.SkillRules.OfficialSkillPlanName.Check(name, rules.NameCharacterMaxCount);
 
         public OfflineSkillProgression(OfflineSkillRules rules)
         {
@@ -47,7 +49,8 @@ namespace Zjcs.Offline.Skills
                 if (plan.PetIndex == 0) plan.PetIndex = -1;
                 if (plan.ActiveSkills == null) plan.ActiveSkills = new int[SlotCount];
                 if (plan.PassiveSkills == null) plan.PassiveSkills = new int[SlotCount];
-                if (string.IsNullOrWhiteSpace(plan.Name)) plan.Name = "方案" + (i + 1);
+                if (string.IsNullOrWhiteSpace(plan.Name) && i < OfflineSkillProfile.PlanCount)
+                    plan.Name = OfflineSkillProfile.CreatePlans()[i].Name;
             }
         }
 
@@ -77,7 +80,10 @@ namespace Zjcs.Offline.Skills
 
             foreach (OfflineSkillPlan plan in profile.Plans)
             {
-                if (plan == null || string.IsNullOrWhiteSpace(plan.Name) || plan.Name.Length > 16
+                // Preserve names accepted by the earlier 16-UTF-16-unit release,
+                // and permit the original grapheme-counted names (e.g. emoji).
+                if (plan == null || string.IsNullOrWhiteSpace(plan.Name)
+                    || (plan.Name.Length > 16 && Common.CJK.GetByteCount(plan.Name) > 12)
                     || plan.PetIndex < -1
                     || !ValidSlots(plan.ActiveSkills) || !ValidSlots(plan.PassiveSkills)) return false;
                 if (!UniqueNonzero(plan.ActiveSkills) || !UniqueNonzero(plan.PassiveSkills)) return false;
@@ -177,11 +183,10 @@ namespace Zjcs.Offline.Skills
         public OfflineSkillResult RenamePlan(OfflineSkillProfile profile, int plan, string name)
         {
             if (!IsValidProfile(profile)) return Result(OfflineSkillResultCode.InvalidProfile);
-            if (plan < 0 || plan >= profile.Plans.Length || string.IsNullOrWhiteSpace(name)
-                || name.Trim().Length > 16) return Result(OfflineSkillResultCode.InvalidArgument);
-            string normalized = name.Trim();
-            if (profile.Plans[plan].Name == normalized) return Result(OfflineSkillResultCode.Unchanged);
-            profile.Plans[plan].Name = normalized;
+            if (plan < 0 || plan >= profile.Plans.Length) return Result(OfflineSkillResultCode.InvalidArgument);
+            if (profile.Plans[plan].Name == name) return Result(OfflineSkillResultCode.Unchanged);
+            if (CheckPlanName(name) != 0) return Result(OfflineSkillResultCode.InvalidArgument);
+            profile.Plans[plan].Name = name;
             return Result(OfflineSkillResultCode.Applied);
         }
 

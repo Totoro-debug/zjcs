@@ -294,7 +294,7 @@ namespace Zjcs.Editor.Skills
             yield return null;
             SimulatePointerClick(FindButton("CharacterPanelSkillBtn"));
             Require(panel.IsOpen, "The simulated character-page skill entry did not open the full skill page.");
-            Require(characterView.GetComponentInChildren<InputField>(true) != null,
+            Require(characterView.GetComponentInChildren<TMPro.TMP_InputField>(true) != null,
                 "The official plan name input did not bind.");
             foreach (GraphicRaycaster raycaster in UnityEngine.Object.FindObjectsOfType<GraphicRaycaster>(true))
                 if (raycaster.transform.root != canvasObject.transform)
@@ -310,6 +310,29 @@ namespace Zjcs.Editor.Skills
                 "The original shared player portrait rendered an empty image.");
             File.WriteAllBytes(Path.Combine(ValidationDirectory, "zjcs-skills-head.png"), headTexture.EncodeToPNG());
             ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
+            yield return null;
+            var planInput = characterView.GetComponentsInChildren<TMPro.TMP_InputField>(true).Single(value => value.name == "SkillPlanName");
+            Require(planInput.characterLimit == 0 && planInput.interactable, "Original TMP plan input settings were not restored.");
+            string originalPlanName = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].Name;
+            foreach (string candidate in new[] { "中文六字方案", "中文七字方案名", "abc def", "abcdefghijkl", originalPlanName }) {
+                SimulatePointerClick(planInput);
+                yield return null;
+                Require(planInput.isFocused, "Simulated mouse input did not focus the original plan input.");
+                planInput.ProcessEvent(new Event { type = EventType.KeyDown, keyCode = KeyCode.A, modifiers = EventModifiers.Control });
+                foreach (char character in candidate)
+                    planInput.ProcessEvent(new Event { type = EventType.KeyDown, character = character });
+                SimulatePointerClick(FindButton("NextPlanBtn"));
+                yield return null;
+                SimulatePointerClick(FindButton("PrevPlanBtn"));
+                yield return null;
+                bool valid = progression.SkillProgression.CheckPlanName(candidate) == 0;
+                if (valid) originalPlanName = candidate;
+                Require(planInput.text == originalPlanName && progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].Name == originalPlanName,
+                    "Official plan name acceptance/rejection differed after keyboard input and switching plans: " + candidate);
+                var saved = JsonUtility.FromJson<OfflineMainlineSave>(File.ReadAllText(new ProfileSlotCatalog(root).GetProgressPath(slot)));
+                Require(saved.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].Name == originalPlanName, "The renamed plan was not restored from disk.");
+            }
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-plan-input.png"));
             yield return null;
             Button entrySkill = FindVisibleOwnedSkillRowButton("SkillListItem", progression, 10015, out _);
             Require(entrySkill != null, "The owned skill with original entry links is missing.");

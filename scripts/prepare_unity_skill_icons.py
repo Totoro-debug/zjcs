@@ -157,7 +157,7 @@ def restore():
                     font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
-                text.update(native_tmp=(path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
+                text.update(native_tmp=("/SkillScheme/SkillPlanName/" in path) or (path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
                     ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText"))) or any(path.startswith("/" + prefix + "/")
                     for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem")),
                     font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
@@ -290,6 +290,13 @@ def restore():
         auxiliary_keys.add("item_" + str(row["ClassId"]) + "_name")
         auxiliary_keys.add("skill_skin_" + str(row["ClassId"]) + "_desc")
     auxiliary_keys.update("skill_plan_default_name_" + str(i) for i in range(1, rules["game_settings"]["SkillPlanMaxCount"] + 1))
+    auxiliary_keys.update(("NAME_CHARACTER_TOO_LONG", "PLAYER_SKILL_PLAN_NAME_NOT_EMPTY", "PLAYER_NAME_INCLUDE_NONSENSE",
+                           "ChangeSkillPlanNameSuc", "ui_contentmoderation_skill_confirm"))
+    data["auxiliary_inputs"]["plan_name_rules"] = []
+    for relative in ("common-source/Common/CJK.cs", "common-source/Common/Formula.cs", "common-source/Common/FormulaHandler.cs",
+                     "common-source/Common/ErrCode.cs", "client-source/CharacterPanelSkillPlan.cs", "client-source/ContentModerationClickMask.cs"):
+        path = ROOT / ".tools/source-packages/official-code" / relative
+        data["auxiliary_inputs"]["plan_name_rules"].append({"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path)})
     data["auxiliary_data"]["texts"] = {}
     for key in sorted(auxiliary_keys):
         offset = entries.get(xxhash.xxh64_intdigest(key.encode("utf-8")))

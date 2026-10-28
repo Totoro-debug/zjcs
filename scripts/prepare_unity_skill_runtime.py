@@ -145,6 +145,7 @@ def build(data):
     cultivation = data["cultivation"]["tables"]
     return {
         "PlanCount": rules["game_settings"]["SkillPlanMaxCount"],
+        "NameCharacterMaxCount": rules["game_settings"]["NameCharacterDefaultMaxCount"],
         "Skills": definitions,
         "GiftShowCount": rules["game_settings"]["AchievementPanelShowCount"],
         "GiftTemplates": [{"RawId": row["Id"], "Group": row["Group"],

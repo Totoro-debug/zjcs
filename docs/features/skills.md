@@ -36,6 +36,8 @@
 
 ## 完整还原部分
 
+方案名称已恢复原 `TMP_InputField`（对象 `5229620140741382476`，原始 580 字节 SHA-256 `12c6afe0debddb1e9a5bd164cc495b7f1f0ede5acc182a01872a6bd0728d104c`），保留原文字视口、字体、32 px 字号、颜色、光标与单行配置，不再添加旧 InputField 或透明替代图像。官方 TMP 分支额外序列化的 `m_EncodingType` 根据 APK 元数据恢复，严格检查完整对象字节。名称校验直接迁移 `Common.CJK` 与 `FormulaHandler.CheckSkillPlanNameLegal`：当前区域配置上限 12 计数单位，中日韩文字及原扩展区计 2，按原 StringInfo 文本元素计数；空名称、超长、`#<>`、半角／全角空格分别保留原错误分支，不执行 Trim。保留旧版本已接受的名称，空名称恢复“方案一”至“方案七”。单机没有在线 ContentCustom 禁用标志，原禁用遮罩保持隐藏；其原用途是禁用时重置名称，并非编辑入口。纯规则测试和带画面 Play Mode 均已通过，实际点击输入框、模拟 Ctrl+A 与逐字键盘输入、点击切换方案、检查成功／拒绝提示及硬盘主档案重读，覆盖六个中文字符、七个中文字符、含空格名称及十二个英文字母；另有表情计数和旧名称兼容规则测试。已查看实际运行截图。
+
 固定 APK 的 `GameSettings.SkillPlanMaxCount=7` 已恢复；旧单机档案的三套方案原样保留，并补入原文名称的方案四至方案七，不改变已选方案、装配、幻兽及共享槽位等级。方案下方按原 `Scrollbar` 的 Handle、20% 尺寸、颜色、方向与不可交互状态恢复，步数与 `CharacterPanelSkillPlan.RefreshView` 一样使用七档。`scripts/test_skill_plans.ps1` 已通过旧档案保留、重复规范化、异常数组拒绝及第七方案选择检查；七套方案的模拟点击循环、首尾回绕及进度条位置已通过 Play Mode 与 675×1463 独立 Windows Player 回归，并核对实际画面。
 
 Unity 已新增离线技能档案与规则服务 [OfflineSkillProfile.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProfile.cs)、[OfflineSkillProgression.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProgression.cs)。模型保存七套方案、主动／被动槽位、基础等级、按赛季分开的祝福等级、技能阶位与道具数量；服务提供方案切换／改名、技能安装／替换／卸下、单槽及一键培养、单技能及批量升阶。培养和升阶在档案副本核算费用后提交。
@@ -78,7 +80,7 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 ## 尚未实现
 
-- 方案改名仍使用临时的旧 InputField／16 字符校验，尚需恢复原 TMP_InputField、CJK 计数及内容重置交互；技能项目的职业不适用、新获得、已装备和合成提示附件仍需逐项核对。
+- 技能项目的职业不适用、新获得、已装备和合成提示附件仍需逐项核对。
 
 - 馈赠原道具详情已接入并通过 Play Mode；家具及单人公会来源导航仍需连接对应模块，不能视为全部来源已可达。
 - 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算原动作和发布仍待完成。

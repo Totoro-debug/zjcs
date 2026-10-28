@@ -15,7 +15,7 @@ using Zjcs.Presentation.Skills;
 namespace Zjcs.Presentation.Character
 {
     /// <summary>
-    /// Original <c>CharacterPanelSkillContent</c>: three skill plans, four battle-skill and four
+    /// Original <c>CharacterPanelSkillContent</c>: seven skill plans, four battle-skill and four
     /// secret-skill slots, the skill list tabs and installing/replacing/removing a skill.
     /// </summary>
     public sealed partial class CharacterSkillPanel : MonoBehaviour
@@ -54,8 +54,8 @@ namespace Zjcs.Presentation.Character
         private OfficialSkillGiftPanel giftPanel;
         private readonly Dictionary<string, RectTransform> nodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
         private readonly Dictionary<string, Button> buttons = new Dictionary<string, Button>(StringComparer.Ordinal);
-        private Text planName;
-        private InputField planInput;
+        private TMP_Text planName;
+        private TMP_InputField planInput;
         private Scrollbar planSelectedBar;
         private RectTransform activeGroup;
         private RectTransform passiveGroup;
@@ -238,32 +238,30 @@ namespace Zjcs.Presentation.Character
             foreach (Text text in panel.GetComponentsInChildren<Text>(true)) text.raycastTarget = false;
             foreach (TMP_Text text in panel.GetComponentsInChildren<TMP_Text>(true)) text.raycastTarget = false;
             RectTransform nameRect = FindDeep("SkillPlanName");
-            planName = nameRect == null ? null : nameRect.GetComponentInChildren<Text>(true);
+            planName = nameRect == null ? null : nameRect.GetComponentInChildren<TMP_Text>(true);
             if (nameRect != null)
             {
                 Button nameButton = FindDeep(nameRect, "CustomMask")?.GetComponent<Button>();
-                Graphic graphic = nameRect.GetComponent<Graphic>();
-                if (graphic == null)
-                {
-                    Image image = nameRect.gameObject.AddComponent<Image>();
-                    image.color = new Color(1f, 1f, 1f, 0f);
-                    graphic = image;
-                }
-                graphic.canvasRenderer.cullTransparentMesh = false;
-                if (nameButton != null) nameButton.onClick.AddListener(BeginRename);
+                // ContentModerationClickMask is an online content-customisation
+                // restriction mask. Offline custom names remain available.
+                if (nameButton != null) nameButton.gameObject.SetActive(false);
                 if (planName != null)
                 {
-                    planInput = nameRect.GetComponent<InputField>();
-                    if (planInput == null)
-                    {
-                        planInput = nameRect.gameObject.AddComponent<InputField>();
-                        planInput.textComponent = planName;
-                        planInput.targetGraphic = graphic;
-                        planInput.lineType = InputField.LineType.SingleLine;
-                        planInput.characterLimit = 16;
-                        planInput.onEndEdit.AddListener(CommitRename);
-                    }
-                    planInput.interactable = false;
+                    bool active = nameRect.gameObject.activeSelf;
+                    nameRect.gameObject.SetActive(false);
+                    planInput = nameRect.gameObject.AddComponent<TMP_InputField>();
+                    var root = AuxObject(AuxObject(skillUiTemplates["character_skills"])["root"]);
+                    var fields = new Dictionary<string, object>(FindOriginalComponent(root, "TMP_InputField"));
+                    // The input shares its text's restored official font asset.
+                    // Empty serialized UnityEvents are replaced by the migrated
+                    // CharacterPanelSkillPlan.OnPlanNameChanged callback below.
+                    fields.Remove("m_FontAsset");
+                    fields.Remove("m_GlobalFontAsset");
+                    foreach (string key in fields.Keys.Where(key => key.StartsWith("m_On", StringComparison.Ordinal)).ToArray()) fields.Remove(key);
+                    OfficialSkillComponentBindings.Apply(planInput, fields, nodes);
+                    planInput.fontAsset = planName.font;
+                    planInput.onEndEdit.AddListener(CommitRename);
+                    nameRect.gameObject.SetActive(active);
                 }
             }
             BindButtonName("PrevPlanBtn", () => SwitchPlan(-1));
@@ -2279,26 +2277,26 @@ namespace Zjcs.Presentation.Character
             Changed?.Invoke();
         }
 
-        private void BeginRename()
-        {
-            if (planInput == null) return;
-            planInput.interactable = true;
-            planInput.ActivateInputField();
-        }
-
         private void CommitRename(string value)
         {
             if (planInput == null) return;
-            planInput.interactable = false;
-            if (string.IsNullOrWhiteSpace(value) || value.Trim() == progression.Player.Skills.Plans[plan].Name)
-            {
-                if (planName != null) planName.text = progression.Player.Skills.Plans[plan].Name;
+            if (value == progression.Player.Skills.Plans[plan].Name) return;
+            int code = progression.SkillProgression.CheckPlanName(value);
+            if (code != 0) {
+                string text = OriginalDetailText(code == 1149 ? "NAME_CHARACTER_TOO_LONG"
+                    : code == 1204 ? "PLAYER_SKILL_PLAN_NAME_NOT_EMPTY" : "PLAYER_NAME_INCLUDE_NONSENSE");
+                if (code == 1149 && text != null) text = string.Format(CultureInfo.InvariantCulture, text, progression.SkillProgression.NameCharacterMaxCount);
+                ShowOriginalSystemMessageValue(text ?? code.ToString(CultureInfo.InvariantCulture));
+                planInput.SetTextWithoutNotify(progression.Player.Skills.Plans[plan].Name);
                 return;
             }
             ProgressionResult result = progression.RenameSkillPlan(plan, value);
             LastMessage = result.Message ?? result.Status.ToString();
-            if (result.IsApplied) Changed?.Invoke();
-            if (planName != null) planName.text = progression.Player.Skills.Plans[plan].Name;
+            if (result.IsApplied) {
+                Changed?.Invoke();
+                ShowOriginalSystemMessageValue(OriginalDetailText("ChangeSkillPlanNameSuc"));
+            }
+            planInput.SetTextWithoutNotify(progression.Player.Skills.Plans[plan].Name);
         }
 
         private string SkillName(int itemId)

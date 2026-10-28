@@ -18,6 +18,12 @@ namespace Zjcs.Presentation.Character
         {
             var texts = CharacterModelPackage.AsObject(skillUiTemplates["gift_texts"], "original skill texts");
             string value = Convert.ToString(texts[key], CultureInfo.InvariantCulture);
+            ShowOriginalSystemMessageValue(value);
+        }
+
+        private void ShowOriginalSystemMessageValue(string value)
+        {
+            if (string.IsNullOrEmpty(value)) throw new InvalidOperationException("Original system message text is absent.");
             if (systemMessage == null)
             {
                 messageTemplate = CharacterModelPackage.AsObject(skillUiTemplates["system_message"], "SystemMsgPanel");

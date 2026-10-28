@@ -9,6 +9,7 @@ from UnityPy.classes.PPtr import PPtr
 from official_animation import mecanim_tracks
 from prepare_character_prop_bindings import node_path
 from prepare_cooking_module import CookingConverter
+from official_tmp_input_schema import read_input_field, encoding_evidence
 
 
 def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
@@ -101,7 +102,7 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "FightEndReportPanel", "FightEndReportPlayerTabView", "FightEndReportSkillTabView",
                     "FightEndReportPanelTabItem", "FightEndReportSkillTabItem", "TabGroup", "TabItem",
                     "LocalFightRecordPanel", "LocalFightRecordInfoItem", "FightRecordInfoItem",
-                    "FightRecordDownloadPlayButton"))
+                    "FightRecordDownloadPlayButton", "TMP_InputField", "ContentModerationClickMask"))
     for node in reader.walk(pointer.read()):
         row = by_path[node_path(node)]
         for entry in node.m_Component:
@@ -112,7 +113,7 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     row["layout"]["enabled"] = bool(text_schemas.read(obj)["m_Enabled"])
                 if name not in classes:
                     continue
-                fields = text_schemas.read(obj) if name in ("Toggle", "ToggleGroup", "LoopVerticalScrollRect", "ScrollRect",
+                fields = read_input_field(text_schemas, obj) if name == "TMP_InputField" else text_schemas.read(obj) if name in ("Toggle", "ToggleGroup", "LoopVerticalScrollRect", "ScrollRect",
                     "HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "GridLayoutGroupJSZX", "AspectRatioFitter", "Slider") else reader.schemas.read(obj)
                 row.setdefault("original_bindings", {})[name] = {key: convert(value, obj) for key, value in fields.items()
                     if key not in ("m_GameObject", "m_Enabled", "m_Script", "m_Name")}
@@ -203,7 +204,7 @@ def restore(reader, schemas, data, city, rules):
         yield node
         for child in node.get("children", []):
             yield from walk(child)
-    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote"):
+    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote", "character_skills"):
         source = data[key]["source"]
         original = reader.object(source["bundle"], source["path_id"])
         template, extracted = recover_prefab(reader, schemas, source["bundle"], original.read().m_Name, city)
@@ -212,6 +213,7 @@ def restore(reader, schemas, data, city, rules):
         for node in walk(template["root"]):
             if node["path"] in nodes:
                 nodes[node["path"]].setdefault("original_bindings", {}).update(node.get("original_bindings", {}))
+    inputs["plan_input_schema"] = encoding_evidence()
     configs = {}
     # CharacterPanelSkillPlan initializes this original non-interactive scrollbar
     # with GameSettings.SkillPlanMaxCount steps, retaining its prefab handle size.
@@ -219,6 +221,11 @@ def restore(reader, schemas, data, city, rules):
     original = reader.object(source["bundle"], source["path_id"]).read()
     bars = []
     for node in reader.walk(original):
+        if node.m_Name == "SkillPlanName":
+            for part in node.m_Component:
+                obj = part.component.deref()
+                if obj.type.name == "MonoBehaviour" and obj.read(check_read=False).m_Script.read().m_ClassName == "TMP_InputField":
+                    inputs["plan_input"] = {"source": reader.apk.provenance(obj), "sha256": hashlib.sha256(obj.get_raw_data()).hexdigest()}
         if node.m_Name != "PlanSelectedBar":
             continue
         for part in node.m_Component:
