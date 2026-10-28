@@ -1,0 +1,193 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-playable-hierarchy-source-manifest.json",
+      "sha256": "77da58bc35d55659e31eedf8de7f17a522ed6c758be7e696319b64832ca26061"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-playables.json",
+      "sha256": "8aa401716a98ac6f153603fe57a5adf01e30d51c48478507c57011f26052207f"
+    }
+  ],
+  "templates": [
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab",
+      "sha256": "bead719452062ba91fc1b9a72838aad4ef5273b98cd51aab1c076e9ac13f4750"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab.meta",
+      "sha256": "695bd38efd277c13b34d34d0611904bd57bfe3a7080b8f5f3ce20fcbc11984c5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab",
+      "sha256": "efddd4a20b9fe04c9a13d96e625c982ecd9b4d303bd834adb8d666c04c46af32"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab.meta",
+      "sha256": "e46dee3dd66dd543cd203444ae9f0fc37289a00be70d999a8590eeaa6d30f052"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab",
+      "sha256": "01bec3c7caf057389f0f849d7c415dd9f5ca01cfcebf7bb08c068ac8df5dafb1"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab.meta",
+      "sha256": "0bf40ba00f6c0f369b1299923d4e06620d0b3ffa7743bd48047ece374c31962d"
+    }
+  ],
+  "scripts": [
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/ApplyBySource.cs",
+        "sha256": "72e8bdc47f09a3ebad62f8f9a702d9249ef29c44eb68e1aa72aee49743eb56ce"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "9d741f962881f9e20f10787a4a192d0f2c3dad39fd568d85599bd65c55a477a5"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "0de6d5dbdac81a17982f7c68790b459a8d7889bb7e2db4e057724e1cc3df9474"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/MyPlayableAnimator.cs",
+        "sha256": "89aa497a1217105d1eeb7d2c9ef99734dfbc47780271e7fbdbc46c625e78bf4a"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs",
+        "sha256": "181799c5ed613f948e546380413f1362015d9e12e619b8f890461a7f544e3333"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAnimation/MyPlayableAnimator.cs.meta",
+        "sha256": "942fca0e8ff73062890f7a349b61a34694d7426b34bd05afe80bcff9c9881324"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/MyPlayableSequence.cs",
+        "sha256": "7d7f577336020f15e7d94bee4e39f3a4d479e982624ddba12084ad48121ba76c"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "1369a92abaf77eb0edcc3559fd9152910b676797e944639478fa27bd01a9ed29"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "fded68a502ae384ab61ed9f4a137ab3ecb7d4c325901380d7973d5f408c60f94"
+      }
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_npc_animator_playables.py",
+      "sha256": "7583cf3af3610b217fa82000e6e28d2ed5be46423011fa8820888c3337754c07"
+    }
+  ],
+  "prefabs": [
+    {
+      "guid": "136cd8f04e65aa0429355f8bf5df97d9",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab"
+    },
+    {
+      "guid": "4ee644fd004372245be51d12a3d7cf51",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab"
+    },
+    {
+      "guid": "bb73792b166b5cb46bdcff12ba4582ee",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab"
+    }
+  ],
+  "counts": {
+    "prefabs": 3,
+    "scriptBindings": 3
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcAnimatorPlayables/OfficialMap14NpcAnimatorPlayableAcceptance.cs",
+      "sha256": "74131efa485dc45f56b0f094efea4b658442c7347b31fd7f538ce7f2a82c83bc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcAnimatorPlayables/OfficialMap14NpcAnimatorPlayableAcceptance.cs.meta",
+      "sha256": "92360256c7f66aa94ef7744b16449e3b91aaca6e5b868c93cb1a65247ac08822"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcAnimatorPlayables/Zjcs.Editor.Map14.NpcAnimatorPlayables.asmdef",
+      "sha256": "86ed940089fc5793e20d664ed428cc2fd11dff0e2616725885a5aeeb583bf7d1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcAnimatorPlayables/Zjcs.Editor.Map14.NpcAnimatorPlayables.asmdef.meta",
+      "sha256": "9c978da8c3296de16ae3560f8d6b824252cbe090bb63f40a68eb777974e45e4e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcAnimatorPlayables.meta",
+      "sha256": "fe86b7810b422bb49908f41fd24dbbb35537ab32cddf91a1318258d9ffec68af"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-npc-animator-playables-catalog.asset",
+      "sha256": "ac0b6c79537a693a7d82c64be09e3d3bcd1e80be76c35111a8a3d864260d3fc3"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-npc-animator-playables-catalog.asset.meta",
+      "sha256": "e26a5cd9d8e2a623497e94a2a26a739a5b1e8036391b03cbdbd11dc49120e4d1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab",
+      "sha256": "05fb6dd60866ba5b45f92b76ef5d65d743694256b49c6b6b4ef62a8327f3c857"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_float_02.prefab.meta",
+      "sha256": "c1daa1e83ee14cafdc92558769a23efacc9e28a8711a4546d56d70f568e818e0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab",
+      "sha256": "9ed0131ac61eef174b5f52586c41336b37a0481a14088beedca32c1e8ed236a8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_idle.prefab.meta",
+      "sha256": "967317437d6cb6e684fea1b8d30a284f69fa68e4b9ec6c83be842b3aa1544dff"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab",
+      "sha256": "e5a11f73b1d6e45686444b1bcf8282e7c4cdae26c2de49ec8093ab36f4532958"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_run.prefab.meta",
+      "sha256": "6dc6732d555ec44775d6e985140811579510d5003d52b5a2563f0d67eedde847"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story/NPCAnimator.meta",
+      "sha256": "007c9f64b056f5e2818b02a8231c1b59d0b577f7c93171a4ea3f1a414f041727"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage/Story.meta",
+      "sha256": "a40c67963db4205bedfe0944422372f5cb337d01f0792a6ad877423f971cf242"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables/DisplayPackage.meta",
+      "sha256": "d9b4dae134719e93b50117f4b7203f320a6703c19f78f36b04fb2b9be1be9da2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs/Playables.meta",
+      "sha256": "8a11700dfc44a91a33e66d13e4bd3e92ef067749f9ab0ab27082d989d86dff46"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables/Prefabs.meta",
+      "sha256": "cc6623db7ea43740a7aa86765b6a8da3aa38663b1f0ed7862bd8d5ca1f777942"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcAnimatorPlayables.meta",
+      "sha256": "cc7537e74bb93059ba82a5182607fadecbe86aed9a77e25f3b0978c494b85919"
+    }
+  ],
+  "operation": "Restore the three source-verified original idle, run and float_02 NPC Animator playable prefabs. Preserve the original GameObjects, transforms, component order, sequence references, Animator parameters, duration, restoration flags and local IDs. Remap only script/prefab GUIDs to migrated original classes; bind original asset GUIDs explicitly.",
+  "limitations": [
+    "Original NPC skeleton/controller/animation appearance, formal story dispatch, map/save and Windows Player integration remain required. Native asset/parameter validation scope is recorded in map-14.md."
+  ]
+}

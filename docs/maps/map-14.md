@@ -76,6 +76,8 @@
 
 - 五份原实体 Timeline 的独立闭包已恢复为 127 个转换输入，与此前完整实体提取的 SHA256 逐包一致；原生导出核对全部 165 个轨道／片段对象、171 份脚本对象、6,919 项值和 855 个指针，维持原 CAB／PathID 到文件／本地 ID 的一一对应。四份 `GriffinShakeTimeline 4`、`SuiMo_StoryShow02Timeline`、`SuiMo_StoryShow05`、`XianHaiYunZhou` 已迁入 `NativeEntityTimelines/`：73 份原生载荷、17 类已迁移／原生包脚本，保留本地对象 ID／字段，仅改绑 GUID；显式目录为 `Map14/Native/native-entity-timelines-catalog`。隔离工程静态检查（72,644 个 GUID）、内置屏 Unity 导入、编译、`ProjectTools.Validate` 和 Play Mode 通过，四段真实资产创建原生图；手动时钟运行原 `SuiMo_StoryShow02Timeline`，四个原气泡窗及全部六个原音频事件（包括 `_36_17_1`／`_36_17_2`）按原片段时序执行，450×800 的四张实际画面已查看。此验证使用隔离角色／相机绑定，只验证事件派发，未播放原音频；第五段 `SuiMo_StoryShow06` 保留完整源轨道，原生骨骼轨道未完成。另按原指针恢复六个导演、314 份目标／层级对象以及全部原场景／暴露引用表，包括原空项和旧项，尚未据此恢复完整实体 prefab。正式角色、相机、特效、声音、剧情入口、地图输入／存档及 Windows Player 仍未完成。恢复器 `prepare_unity_map14_entity_timeline_inputs.py`、`verify_unity_map14_entity_timeline_export.py`、`prepare_unity_map14_entity_timeline_native.py`、`prepare_unity_map14_entity_timeline_bindings.py`，来源为 entity-timeline input／export／native-fields／bindings 与 native-entity-timelines 五份清单。
 
+- NPC 的 idle、run、float_02 三个原演出 prefab 已恢复为原生资产，保留原节点／组件顺序、本地 ID、序列子引用、时长与结束恢复标志；3 个脚本绑定迁移后的官方调度／Animator 类，原资产 GUID 通过 `Map14/Native/native-npc-animator-playables-catalog` 显式加载。Unity 导入、编译、全工程校验及内置屏 Play Mode 通过：每份原资产重复播放两次，核对 ApplyBySource 选择源控制器、原布尔参数应用与停止恢复、半秒触发动作自然完成、无限动作显式停止及池化重置。已查看原地图地形的运行画面；Animator 参数控制器为隔离夹具，本轮不证明 NPC 原模型／动作画面、完整剧情、正式地图／存档或 Windows Player 已完成。来源为 `map14-native-npc-animator-playables-source-manifest.json`，转换入口 `prepare_unity_map14_npc_animator_playables.py`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
