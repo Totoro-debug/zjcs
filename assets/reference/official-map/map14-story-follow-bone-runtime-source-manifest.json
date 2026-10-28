@@ -1,0 +1,278 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "6ca97373f53a249575525a5df2ca0c261a455c0b5ddd312db8b08087a3afe1dd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyPlayableFollowBone.cs",
+      "sha256": "cd3895c5b5bf31c42df77bf420b76c0e3ef4914ab74f5c930b41babcaefb942a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TransformUtils.cs",
+      "sha256": "515743dda0f44eb1a4086b643c0c9775484ffe6cd74df4c06c0b1fcc3bb1d307"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TransformSyncType.cs",
+      "sha256": "5e506c5ba4ef7d6f90f94f138ea0ddfbba4f19106c1091c111461961c7942497"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IPlayableOverrideAttachOffset.cs",
+      "sha256": "0fd73c9ccc6f8e9fecafea7fec22b5668babd6ccb499a8071b8ffee45f0bcaf1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MySizeCfg.cs",
+      "sha256": "998f1c434c57045a7c095b897346d749f1c47d699583ab898441780558e32d09"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ApplyOnStopFadeOut.cs",
+      "sha256": "4888f2a7285590305cd2b361e1b776f7027af6f8cee0df73ba1b337af284e77f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyEffectFadeOut.cs",
+      "sha256": "f1b64ab54aa51c5b3a6733e74bfc9daab8dfb25671826ebb2b0d67757ffbcf46"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/MyPlayableConfig.cs",
+      "sha256": "716ab07f973c0411e0a9bc2492a107b163809e04b280651193da098cea203cc3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/GameFramework/ApplyOnStop.cs",
+      "sha256": "70825ec808fbe3c4ac423716542a8eea97a4a7c9372f3dcae93e7ab1b95cf4ef"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MonoDictionary.cs",
+      "sha256": "917a3faa3aec63c4c76d4e03420e72d09afbbb8d48b7a8b99315ac39aa7a78aa"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MonoKeyValuePair.cs",
+      "sha256": "c34cf4bae7f206f60ce7edbe4b6615c23a5c0d78dc078bb9426445e41cf85fe6"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_follow_bone_runtime.py",
+      "sha256": "e5aa7c93b782ffd59e2fa51501688f5bc349682957c3ccf1e2d0b33f6770d91f"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    },
+    {
+      "path": "scripts/prepare_unity_story_attachment_runtime.py",
+      "sha256": "b814e7b5af6555290efe64440b994ddca088d48abac81ad1b22c6b894be5eda1"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs",
+      "sha256": "aff2a82efe73d67d25f79a9cf370118604c4e484461e3448897cd65bc6f03dee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableFollowBone.cs.meta",
+      "sha256": "ea838d9ef7baf0829d25e6728edf919546b95cffd329203a4227e406ce588751"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformUtils.cs",
+      "sha256": "6f4892bca09ddc2c59ab9afb1f91057feef07ad41d1e933114ce4f33b6b42e9c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformUtils.cs.meta",
+      "sha256": "29142d30d9796a0b2d79fa33c45cd53aec231b42c4da15fca6eeee241973e1ea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformSyncType.cs",
+      "sha256": "9ef007534f4ccc190552fc2d4aaa8a058b3b8e4e43645e70198e3fd34554489e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/TransformSyncType.cs.meta",
+      "sha256": "d0afb21db26e25f47748629167126001432a1b99b1b0f3f2d1d1c1f6bf7fd6b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/IPlayableOverrideAttachOffset.cs",
+      "sha256": "a93451f341a70f247dd2872a3381be8e74ddd2bdfa1f7cb9cf17aee6f49b5650"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/IPlayableOverrideAttachOffset.cs.meta",
+      "sha256": "c4a5bf04689bbb23106be8aac3fc2a5a75d43b5431fc0116d3cb6ae6688ad3db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs",
+      "sha256": "2b73633f32036bc98513722cb2e6fd16127f2f223b04906d09a3bc2cb66d694f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MySizeCfg.cs.meta",
+      "sha256": "bbb64e65d62134a246ab700880bc2a37c31d5db216ff3e5db2e8ef39dc7fb900"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs",
+      "sha256": "0fa84be21af44d6309db17944569885e8c55a6e2aec495012395c31a0abbcd7c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStopFadeOut.cs.meta",
+      "sha256": "f27b7b5efd7adbbfc4a6095e0147ab959cafe531b792529252dd0c2bb31e3c6d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs",
+      "sha256": "f957a45eaa17d810e0f064b82436a1591d85b3d3b7d7763106348704cfc3f398"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyEffectFadeOut.cs.meta",
+      "sha256": "2e1bf2f80e578c8eef68246be42ec2d3bcc5a20de1e8eb242132858fb084fe64"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableConfig.cs",
+      "sha256": "bd69d9c9f07695386a1875e1d6fb9b5c14aedb195bc4b13c32beadc62c7ee17f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MyPlayableConfig.cs.meta",
+      "sha256": "fbaa8f8e8cf12e947d6bfb3ca6663cc5cdcde26cba8afe84e66a33544d83b34a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs",
+      "sha256": "731e5245f79547788fd5e1d915198cc5850613d1b079dc8ee1e81e24e04d243a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/ApplyOnStop.cs.meta",
+      "sha256": "402f953f29fb5c54270d589ab9bcc3fa8de20905c096e5d13295dc9acc7d000c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoDictionary.cs",
+      "sha256": "de795a50a03380e1f16dab5dfa676c098f6c66107fcb89ca2d9ab6c019c87632"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoDictionary.cs.meta",
+      "sha256": "b2039759692850be48ea4ec541323bc1be0947af7c70c3996a581cd1fc9d5716"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoKeyValuePair.cs",
+      "sha256": "b7d3a947a7be019f8da783ef65e2a8b99a364d3231f671ff656fb071befc6149"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/MonoKeyValuePair.cs.meta",
+      "sha256": "1ac89ae447579cae80a023dd3fa112d1dccf26ee347018b21c47d680e01802c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/Zjcs.Official.StoryFollowBone.asmdef",
+      "sha256": "d7853e9a92cbd28ef65e54dc2c048c9ac811e62a9fbd4eee2634d4c243b5c2c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone/Zjcs.Official.StoryFollowBone.asmdef.meta",
+      "sha256": "a2a9f8654a87a3479b6e8432aa5c6e0749ef9692060df1a855b16304bc203c06"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryFollowBone.meta",
+      "sha256": "ac2447415afbb48691393e128ca1582ec79f8223995df6d3bcbeb835a5a13db7"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "MyPlayableFollowBone.cs",
+      "diagnosticBlocks": 1,
+      "outArgumentCalls": 1,
+      "explicitConfigInjection": true,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "TransformUtils.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "TransformSyncType.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "IPlayableOverrideAttachOffset.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "MySizeCfg.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": true,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "ApplyOnStopFadeOut.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "MyEffectFadeOut.cs",
+      "diagnosticBlocks": 4,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": true
+    },
+    {
+      "source": "MyPlayableConfig.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "ApplyOnStop.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "MonoDictionary.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 2,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    },
+    {
+      "source": "MonoKeyValuePair.cs",
+      "diagnosticBlocks": 0,
+      "outArgumentCalls": 0,
+      "explicitConfigInjection": false,
+      "explicitEntityBodyRangeBinding": false,
+      "asyncRestoredFromOriginalMoveNext": false
+    }
+  ],
+  "operation": "Copy original application bone-follow playable, transform utilities, size configuration, fade callbacks and original framework dictionary/config types. Restore MyEffectFadeOut's async loop from emitted MoveNext, preserving delta increment, curve evaluation, particle/sprite/text order, NextFrame and cancellation. Preserve transform formulas, static/dynamic following, duration gates, original reset/captured transforms, fade/visibility/grid-size branches and mutex order. Adapt namespaces, diagnostics, DI to explicit original config injection, Unity out syntax, and the entity body-range lookup to an explicitly bound count provider; retain the original rounding/square-root and missing-info fallback.",
+  "limitations": [
+    "Original config asset/entity body-range provider, original playable prefab/art closure, actor bone/skeleton binding, full story/map/save and Windows Player remain required."
+  ]
+}

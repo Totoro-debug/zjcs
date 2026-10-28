@@ -5,7 +5,7 @@ import re
 
 from official_apk import ROOT
 from prepare_unity_map13_sources import encode, sha, source_path, write
-from prepare_unity_story_playable_runtime import runtime_meta
+from prepare_unity_story_sound_runtime import runtime_meta
 from prepare_unity_story_attachment_runtime import CODE, OUTPUT, NAMESPACE, record
 
 RECEIPT = ROOT / "assets/reference/official-map/map14-story-attachment-transform-runtime-source-manifest.json"
@@ -38,7 +38,7 @@ def build():
         adaptations.append(dict(source=path.name, unityTryGetComponentOutCalls=out_calls))
     write(RECEIPT, encode(dict(manifest="871_156598", mapClassId=14,
         assemblies=[record(p) for p in assemblies], inputs=[record(p) for p in sources],
-        tools=[record(Path(__file__)), record(ROOT / "scripts/prepare_unity_story_attachment_runtime.py")],
+        tools=[record(Path(__file__)), record(ROOT / "scripts/prepare_unity_story_attachment_runtime.py"), record(ROOT / "scripts/prepare_unity_story_sound_runtime.py")],
         dependencies=[record(ROOT / "assets/reference/official-map/map14-story-attachment-runtime-source-manifest.json")],
         outputs=[record(p) for p in outputs], adaptations=adaptations,
         operation="Copy original AttachPosCfg, AttachPosRotCfg, EAttachTo, Common.Direction and MyPlayableAttachToBone. Preserve source/target/skill/damage selection, missing-bone root fallback, original direction/offset/rotation/scale formulas, parent restoration, show/hide following, fade and state mutex branches. Adapt namespaces and Unity out argument syntax only.",

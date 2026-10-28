@@ -9,7 +9,8 @@ import re
 
 from official_apk import ROOT
 from prepare_unity_map13_sources import encode, sha, source_path, write
-from prepare_unity_story_playable_runtime import logging_adapter, runtime_meta
+from prepare_unity_story_playable_runtime import logging_adapter
+from prepare_unity_story_sound_runtime import runtime_meta
 
 CODE = ROOT / ".tools/source-packages/current/871_156598/official-code"
 OUTPUT = ROOT / "unity/Assets/Game/Runtime/Official/StoryAttachment"
@@ -72,7 +73,7 @@ def build():
     outputs.extend([asmdef, Path(str(asmdef) + ".meta"), Path(str(OUTPUT) + ".meta")])
     write(RECEIPT, encode(dict(manifest="871_156598", mapClassId=14,
         assemblies=[record(p) for p in assemblies], inputs=inputs,
-        tools=[record(Path(__file__)), record(ROOT / "scripts/prepare_unity_story_playable_runtime.py")],
+        tools=[record(Path(__file__)), record(ROOT / "scripts/prepare_unity_story_playable_runtime.py"), record(ROOT / "scripts/prepare_unity_story_sound_runtime.py")],
         outputs=[record(p) for p in outputs], adaptations=adaptations,
         operation="Copy original application AttachAgent, MyPlayableActiveBone and two original Common.Utils methods. Preserve named-transform lookup/registration, initial active-state refcounts, increment/decrement order, root visibility, stop restoration and original duration. Adapt namespace and diagnostics only; no animation SDK implementation is used.",
         limitations=["Original actor transform binding, skeleton animation/rendering, full story/map/save and Windows Player remain separate required work."])))
