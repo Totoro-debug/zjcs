@@ -22,6 +22,10 @@
 
 原 `PlayerPortraitSettings`、完整序列化字典和皮肤类型枚举已迁入；四组拍摄参数及默认／加载／禁用三张 Sprite 直接取自 APK，保留原网格、UV、pivot、边框和纹理采样字段，ASTC 各 mip 解码为 Windows RGBA32 原生 Texture2D。职业拍摄尺寸为 260×310、正交尺寸 1.9、偏移为 `(0, 1.9, -5)`、深度 24，并捕获粒子；其他三组参数、皮肤哈希权重与排除项均保留。隔离 Play Mode 核对全部配置、原字典反序列化和删除分支、延迟纹理封装及不销毁标记，三张 Sprite 几何与每个 mip 的 GPU 读回哈希通过，运行图片已查看。原占位肖像只用于其默认／加载／禁用分支；真实角色拍摄及职业树角色仍未接通。来源见[肖像配置与资源](../../assets/reference/profession-ui/portrait-settings-source-manifest.json)，代码入口为 `PlayerPortraitSettings.cs`，资源入口为 `Assets/Official/ProfessionUI/Portrait/PlayerPortraitSettings.asset`；未生成完整素材快照。
 
+原 `CharacterPortraitManager` 的队列、缓存更新、回收和皮肤哈希映射已迁入；两个 UniTask 状态机按原分支恢复，等待结束并释放关联取消对象后再次读取外观，再拍摄并按 `NeedPersist` 决定写盘。读磁盘不受该标记限制，更新会在同一帧处理全部排队请求。保留十秒清理间隔、订阅保护及每四次清理缩减一次纹理池。原 `CharacterPortraitUtils` 中的四个参数／详细请求／哈希／有效性方法单独迁入 `CharacterPortraitDetails`：从 `ModifyTimeStamp` 开始，只对权重大于零的皮肤哈希逐项异或，不乘权重；有效性只比较外观哈希。只读适配器在现有对象边界访问原 `SkinMap`／`SkinId` 字段，零或负权重不会读取对应皮肤值。
+
+隔离 Play Mode 通过原哈希、空的未选皮肤、同帧队列、拍摄前外观重读、原持久化器真实磁盘复用、选择性写盘、取消／无令牌／拍摄失败分支、原加载／禁用资源及销毁取消验证。夹具推进私有清理时钟，核对订阅保护、过期后移除和第四次清理仅释放一个纹理，没有等待四十秒；实际 GPU 红色测试纹理已查看。此处的拍摄器和外观对象均为验证夹具，正式原 studio prefab、玩家外观对象、皮肤表和游戏后台服务尚未绑定，不能据此声称真实角色或职业界面已完成。来源见[肖像调度](../../assets/reference/profession-ui/portrait-manager-source-manifest.json)与[原哈希方法](../../assets/reference/profession-ui/portrait-details-source-manifest.json)。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。

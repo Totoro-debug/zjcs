@@ -439,6 +439,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 肖像配置与原占位美术见 `profession-ui/portrait-settings-source-manifest.json`：先核对 APK 中实际 `defaultpackage_assets_scriptableconfig_modules_playerportrait.bundle`（MD5 `b2bbdefda767f3b9f00117861247e457`）及其引用的 `defaultpackage_assets_image_ui_portrait.bundle`（`b205bc1f1618a18ee23a313c861cffec`），取得四组参数和三个原 Sprite，无需云端替代。迁入原 `PlayerPortraitSettings`、序列化字典和皮肤枚举；三张 Sprite、三张 RGBA32 Texture2D 与设置资产的源对象、字段、mip、转换和交付哈希均记录在该清单，显式入口为 `Assets/Official/ProfessionUI/Portrait/PlayerPortraitSettings.asset`。隔离 Unity Play Mode 验证配置、原字典分支、纹理所有权、Sprite 几何／UV 及全部 GPU mip 字节，运行图片已查看。仅恢复原默认／加载／禁用分支，真实角色拍摄和页面未完成，未生成完整素材快照。
 
+肖像调度和详细请求分别见 `profession-ui/portrait-manager-source-manifest.json`、`profession-ui/portrait-details-source-manifest.json`。前者迁入原管理器并恢复两个 UniTask 状态机，后者复制原参数、外观哈希、详细请求和缓存有效性四个方法，只读访问原外观字段。保留同帧排队处理、关联取消对象先释放再重读、磁盘读取／选择性写入、十秒清理及第四次池缩减、首个同名皮肤哈希优先和按正权重异或。隔离 Play Mode 通过真实 GPU 纹理／磁盘数据及上述调度、取消、失败、订阅保护和强制清理时钟验证，测试纹理画面已查看；原 studio prefab、完整外观与后台服务的正式绑定未完成，拍摄及外观对象夹具不属于交付素材或角色替代。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

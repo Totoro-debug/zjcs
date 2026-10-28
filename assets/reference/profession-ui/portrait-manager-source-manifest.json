@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterPortraitManager.cs",
+    "sha256": "0ac2bf30dd3e17cc1561d613e085b790d4d4d00beb3e1e8920067d191ea02b0f"
+  },
+  "interface_source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/client-source/ICharacterPortraitSkinHashProvider.cs",
+    "sha256": "732db8dcedfbefb2b9b7da822e46f726d1fbc0f9d0eb4c1e42b8c306bf7488de"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitManager.cs",
+      "sha256": "df76f9f20327117afdf9c2c138602cd8f5de83da6464626cdefa867611fdbfba",
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitManager.cs.meta",
+        "sha256": "c801725ffd80bec080a3252e7f9f979f9e0bbcc909d8437bcb221eb2a942fdcf"
+      }
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPortraitSkinHashProvider.cs",
+      "sha256": "822d271cee1a616de349ecd865ac68f4fd2ae7d53ab81420ab09fecf0a04728f",
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPortraitSkinHashProvider.cs.meta",
+        "sha256": "57bac2fb00c1f61ec459f1024204126b2d3b70cdcbfb635723780c70f0686018"
+      }
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitManagerBindings.cs",
+      "sha256": "800b056ac4b07e29a5634199988a1dd4970660847ea57ae7deeafe64d940f2ad",
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitManagerBindings.cs.meta",
+        "sha256": "571988c01ca506d18a84025994e96436919740106aafe030cabfc1c5e676a4da"
+      }
+    }
+  ],
+  "original_detail_helper": {
+    "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterPortraitUtils.cs",
+    "sha256": "bf7b1a445c28de1bbcb9db98dd15ffc97e60c6137bd7e4bfec2069dee5094de6"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_portrait_manager.py",
+    "sha256": "16aa8d9762a043aca0e91e93091989e1fc30e4a99883248084b14fd5526c24d7"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPortraitManagerValidation.cs",
+    "sha256": "edaed73e889864ec1b3bce0babba81943121519c082d5d273ce6549545ca59bc"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPortraitManagerValidation.cs.meta",
+    "sha256": "72f63a0178ae1c70b8d1f33663f38beceaa078ef97ab250429fcc1758c2ea40c"
+  },
+  "source_code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json",
+      "sha256": "41b56be3c7fa90d936293015a461c62ed68e287509d854a11754565a54f7506f"
+    },
+    {
+      "path": "assets/reference/profession-ui/portrait-persistence-source-manifest.json",
+      "sha256": "410f479ba1534ece30945f77c9f43ef5da8022c65c6cbfa932ddea395d37a7e4"
+    },
+    {
+      "path": "assets/reference/profession-ui/portrait-settings-source-manifest.json",
+      "sha256": "f2c1af8608a3bd10dbc47ada1a180badb4fab9e871d3213457a70f4bb78c96b4"
+    }
+  ],
+  "operation": "Copy original queue/cache manager methods and reconstruct the two emitted UniTask async state machines in their original branch and disposal order. Keep linked cancellation, same-frame queue draining, second appearance read, persistence read regardless of NeedPersist, selective writes, cache replacement/recycling, 10-second cleanup and fourth-pass pool shrinking. Bind background-service lifecycle, original studio factory, appearance details, hash tables, settings and low-memory signal explicitly.",
+  "validation_scope": "Actual isolated Unity Play Mode verifies the original detail/XOR helper against public appearance field fixtures, positive/negative/zero weights and a null skipped skin, cache hash-only validity, queue release and second read, same-frame draining, actual original disk persister reuse, NeedPersist write gating, cancellation/no-token/failure branches and default/loading/disable art ownership. Private fixture timestamps force subscriber-protected expiry and four cleanup passes; no claim is made of waiting forty real seconds. Verifies studio component destruction and cancellation on dispose. The real GPU-rendered red texture is a capture fixture, not character art or a replacement profession UI.",
+  "detail_helpers": {
+    "path": "assets/reference/profession-ui/portrait-details-source-manifest.json",
+    "sha256": "e8ce021135f5d71e19bb19c85b5643590b2dcc4265eabc1c366e088e5bad7bf3"
+  },
+  "limitations": [
+    "Production bindings for original studio prefab, appearance objects, skin tables and game lifecycle remain unimplemented. Fixture capture does not establish live character rendering or profession UI completion."
+  ]
+}

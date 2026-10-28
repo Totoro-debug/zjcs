@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "source": {
+    "path": ".tools/source-packages/current/871_156598/official-code/client-source/CharacterPortraitUtils.cs",
+    "sha256": "bf7b1a445c28de1bbcb9db98dd15ffc97e60c6137bd7e4bfec2069dee5094de6"
+  },
+  "methods": [
+    "GetAppearanceHashCode",
+    "GetParam",
+    "GetDetailRequestData",
+    "IsVaildCacha"
+  ],
+  "appearance_field_sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AppearanceData.cs",
+      "sha256": "b4eee243d246e9e98e5e4cb39b5da92caf6a279a20907f2599542b045aeae451"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SkinData.cs",
+      "sha256": "5ff299e76e61047a6d76cafb01a7153027ac779274285d59283f343d384f4920"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitDetails.cs",
+      "sha256": "d40be9b6b18bc15f28ea034cb929e3f8f576f91493fde50746f92032928c86fe",
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPortraitDetails.cs.meta",
+        "sha256": "b58b61aa2e88eeaaf5ccd06ed1e60578b3569459a6c722a96e8f8e5e19498b43"
+      }
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitAppearanceReader.cs",
+      "sha256": "a06959d9d1e41751f2935da5f07b22d599e0ad05c39d656551b8c2a016d9614e",
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPortraitAppearanceReader.cs.meta",
+        "sha256": "d48a4f2b604bc4af8d229d41d03577a735d4bbce78c122176c92d5997c8d6ca1"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_portrait_details.py",
+    "sha256": "1722c4f7904916db5094754e64610f0c2027a0045c99d839eb21d1d8201ce45e"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPortraitManagerValidation.cs",
+    "sha256": "edaed73e889864ec1b3bce0babba81943121519c082d5d273ce6549545ca59bc"
+  },
+  "portrait_settings": {
+    "path": "assets/reference/profession-ui/portrait-settings-source-manifest.json",
+    "sha256": "f2c1af8608a3bd10dbc47ada1a180badb4fab9e871d3213457a70f4bb78c96b4"
+  },
+  "operation": "Copy four original helpers. Retain ModifyTimeStamp XOR skin hashes only when the original weight is greater than zero; do not multiply by the weight or include excluded zero-weight skins. Keep original request/version/hash data and cache hash-only validity. Read the original public AppearanceData/SkinData field schema through an explicit read-only adapter across the existing opaque payload boundary. No appearance clone or mutation is performed by the adapter.",
+  "limitations": [
+    "Full appearance models/builders, production studio and profession page remain unbound."
+  ]
+}
