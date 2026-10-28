@@ -347,3 +347,4 @@ Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追
 
 原共享 EC 通过 `python -B scripts/prepare_unity_map14_shared_ec_runtime.py` 复建。原 DLL 保存在 `Assets/Official/World/Map/14/SharedRuntime/`，由 `Map14/Native/shared-assembly-catalog` 逐项绑定，运行时仅加载本地校验字节，不作为 Android bundle 或普通 Unity 插件导入。原 Console 的应用类型身份经检查，不包含 Spine 命名空间下的 SDK 实现；工具只检查程序集类型与公开日志 ABI，不读取动画 SDK 方法。GConfig.IConfig 是 APK 中完整无成员接口；生成的 GFrameCore 仅提供已核验的 IGSerializable 接口，不代表完整 GFrameCore。日志 ABI 在构建素材时由 Unity 自带 Cecil 生成，固定 NuGet 包、许可及哈希随来源记录；运行时不下载依赖。共享 prefab 恢复器保留原组件顺序和字段，调用原 Info.Init；完整序列化、正式地图宿主及 Player 仍待接通。
 
+Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式绑定的 Console IL，以原 EventDelegateBasicBase 的加减运算注册／移除接收器；动态类型仅实现两个原应用接收接口并原样转发参数，不实现共享事件遍历或网格／阶段规则。EntityUtils 按原 UtilsHandlerBinder 初始化原 EntityHandler，坐标换算直接执行原方法。运行时仍只加载本地字节；Unity Mono／Direct3D11 的四类雕像显示 Play Mode 已验证，Windows Player 与正式配置／窗口／存档宿主尚未验证。运行时接口生成依赖 Mono 的 Reflection.Emit，不能据此宣称 IL2CPP 后端可用；本项没有新增美术载荷或完整素材快照。

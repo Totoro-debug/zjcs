@@ -2094,3 +2094,4 @@ Map13 原格子可见性：`scripts/prepare_unity_map13_grid_visibility.py` 直�
 
 龙之国原共享 EC：`map14-shared-ec-runtime-source-manifest.json` 记录未修改的 Console／Luban／Framework.FirstPass.Runtime、APK 元数据接口、固定 SHA-512 的 Microsoft.Extensions.Logging.Abstractions 8.0.0／ZLogger 2.5.10 与出版者许可、七组日志 ABI 和四类原雕像配置。原 DLL 以本地 TextAsset 显式绑定，加载检查 SHA-256／MVID；四种雕像共 44 份原组件的真实网格和生命周期已通过隔离 Play Mode。源码位于 `Runtime/Offline/World/NativeMap14SharedEntities/`，完整标记接口位于 `Runtime/Official/SharedConfig/`；正式显示／地图状态／输入／存档及 Player 尚待绑定，完整 AOT 依赖未恢复，本批未生成完整素材快照。
 
+龙之国共享实体显示绑定：`scripts/prepare_unity_map14_shared_views.py` 与 `map14-shared-view-source-manifest.json` 记录当前 871 的原 EntityUtils／EntityHandler／客户端初始化调用、原实体／网格／阶段及两个事件接口／委托的源码和程序集哈希。新适配只转接数据与接口 ABI，原两向坐标换算、配置／状态／活动查询及事件派发继续执行原 Console IL；不复制任何骨骼 SDK 实现。原 SubStageStateInfo.Select 的 null 行为保留，旧显示 DTO 的整数槽不作为规则。实际四雕像 Play Mode 已通过原事件到根／显示组件、原不立即移动设置、三态效果、隐藏／复用及解绑，画面已查看；正式容器配置 AOT API、实际条件／提示图／窗口业务、地图输入、存档和 Player 尚待接通。
