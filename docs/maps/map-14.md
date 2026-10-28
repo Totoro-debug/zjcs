@@ -62,6 +62,8 @@
 
 - 原 `AnimationController`、`StateMergeList<T>`、`MyPlayableAnimator` 已迁入 `Runtime/Official/StoryAnimation/`，保留初始化前缓冲、同一来源覆盖／取消、来源分层恢复、嵌套暂停、Animator 替换通知、允许状态限制，以及淡出／停止恢复和池复用。保留原层权重使用各自快照、布尔／浮点／整数使用来源栈的差异，未改写为另一种合并规则。仅将反编译 C# 13 自动属性适配为等价 C# 9，并替换诊断日志。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 和原生 Animator Play Mode 的参数／状态调度验证通过；夹具使用隔离控制器，不代表原角色／原控制器、骨骼／换装／物理约束或实际画面已经恢复。来源 `map14-story-animator-runtime-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_runtime.py`；原模型／动画资源绑定、正式地图输入／存档和 Windows 发布继续迁移。
 
+- 原外部剧情节点注册接口、管理器、启停注册组件及 `CinemachineTrackStoryBinder` 已迁入 `Runtime/Official/StoryNodes/`，保留同键覆盖后通知、缺项注销仍通知、Unity 已销毁对象语义、匹配列表注册／全部键注销，以及相机轨道仅补空绑定。两份异步方法按原 MoveNext 调用链恢复：可选 `UniTask.WaitUntil`、原 PlayerLoopTiming 8、原令牌与非立即取消，等待后再次读取原节点；不等待分支沿原实现不使用令牌。显式注入替代 DI，职业界面注册可复用同一宿主。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 的注册、覆盖、启停、类型查找、延迟注册、取消、已销毁对象及原生 Cinemachine Timeline 绑定通过。来源 `map14-story-nodes-runtime-source-manifest.json`，恢复器 `scripts/prepare_unity_story_nodes_runtime.py`；原完整 Timeline／虚拟相机／角色／气泡、实际地图画面、输入和存档仍待接通。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

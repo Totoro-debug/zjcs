@@ -1,0 +1,96 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IStoryNodeRegisterMgr.cs",
+      "sha256": "215843a3106b7e07bcede0460e823da8eb814fc8bd48f9c48113d4a5c05de025"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryNodeRegisterMgr.cs",
+      "sha256": "90ccd3363e523cf45eaaec0c73135d02d7eacf603d741571a603ca30cac3db69"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StoryNodeRegister.cs",
+      "sha256": "d9d2962f28780506e846013a93225a9ca7d6a0e286ea8d4b661ff9e13a646155"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/CinemachineTrackStoryBinder.cs",
+      "sha256": "0bc015e366a7c8272d54f68f5dce1ad2485dff22a7069a7d119c2a7913b41489"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_nodes_runtime.py",
+      "sha256": "e9a52f49b3a7f72dd95e9db2903e0598fa52aec2048bb7a6a47b7e16a0b40836"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/IStoryNodeRegisterMgr.cs",
+      "sha256": "1a6f78aa8d77d7cea126815906882adae5dbf2214e5a76c958f8fa822d393482"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/IStoryNodeRegisterMgr.cs.meta",
+      "sha256": "e6b7cebd399e9967528bca5de1bcca18fd967ac029d7b74675a910fa0d031429"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/StoryNodeRegisterMgr.cs",
+      "sha256": "8267bcd09b0e8973e79a94aeb6fe1aef244eab1b89c7ef5b1794d32ac3e9bf2d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/StoryNodeRegisterMgr.cs.meta",
+      "sha256": "52d737ab828545e77f931da2a9d950b1a7c0545e680f0f522717decc9fcf9558"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/StoryNodeRegister.cs",
+      "sha256": "ebf585e94a7a6a629f79ab2a848e0f45d486c12ecba1e66b3bc606b2d9c807cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/StoryNodeRegister.cs.meta",
+      "sha256": "c72af933d0b7cf8b23bfc8b4b9963d74299eb77ea614ed060668ba75cb315cf9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/CinemachineTrackStoryBinder.cs",
+      "sha256": "45c3d0a2c807867383f9250fd56bd09667ae72418edd773e3969e3f0d729f2e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/CinemachineTrackStoryBinder.cs.meta",
+      "sha256": "4c8beac9cca7487e8acd7196c5e68f8162583a99b32bf369106c2cace4f7d9ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/Zjcs.Official.StoryNodes.asmdef",
+      "sha256": "208b30281861863fb168db069cc618df09ad6ca89c7d7f1e0d46f4b68cc69dca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes/Zjcs.Official.StoryNodes.asmdef.meta",
+      "sha256": "94372d52e853a8dbe09d67080bac3d23484156b997a120c787de0d59e509d579"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryNodes.meta",
+      "sha256": "2e38f5c417c94ba8eb3201c097921851fe3f0e2391b349afc9cfd71963a91871"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map14/StoryNodes/OfficialMap14StoryNodesAcceptance.cs",
+    "sha256": "1f161b11a942afe5b818cf9d73b5ddfc5b1d5459b30a0964462b6cd783f37284"
+  },
+  "operation": "Copy original external story-node dictionary/event/lifecycle/lookup rules and Cinemachine Timeline binding. Restore two async methods from exact emitted MoveNext: optional UniTask.WaitUntil at PlayerLoopTiming 8 with original token and cancelImmediately=false, followed by original lookup. Explicit property injection replaces DI. SDK/type and diagnostic adaptations only; reuse profession registration interface for shared host compatibility.",
+  "limitations": [
+    "Node registration and camera binding only; full original Timeline assets, virtual-camera graph/scene, character/bubble/native appearance and formal map input/save flow remain pending."
+  ]
+}

@@ -68,3 +68,5 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 共享原声音及 Timeline 驱动已恢复至 `Runtime/Official/StorySounds/`：保留官方循环、停止、事件目标和手动时钟绑定；内置屏隔离 Play Mode 调度验证通过。原事件 ID 桥接复用官方 SDK Post，完整原声总线 DSP／RTPC、原演出 prefab／气泡与正式剧情入口仍待接通，范围见[龙之国](../maps/map-14.md)。
 
 共享原 Animator 参数执行组件位于 `Runtime/Official/StoryAnimation/`，保留原缓冲、来源分层、暂停和淡出／停止恢复；隔离原生 Animator Play Mode 已验证生命周期及复用。来源和范围见[龙之国](../maps/map-14.md)；该检查尚不覆盖原骨骼／角色画面、控制器资源绑定和正式地图业务。
+
+共享原剧情外部节点注册与 Cinemachine 轨道空绑定逻辑位于 `Runtime/Official/StoryNodes/`，两种异步等待保留官方阶段、令牌与取消行为，职业 UI 注册可共用管理器；隔离 Play Mode 注册／取消／轨道绑定验证通过。原 Timeline 场景和正式地图流程仍未完成，见[龙之国](../maps/map-14.md)。
