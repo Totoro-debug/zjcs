@@ -308,7 +308,15 @@
   },
   "native_skins": {
     "path": "assets/reference/profession-ui/native-skins-source-manifest.json",
-    "sha256": "ee1f6afee7eb6c150535335ccc40f28169b8df22d6f4844166b4c51d7c68b625"
+    "sha256": "4c16e1d1494f6927a73ba0ca66e576fc033d11747030b7836a559c6d9768f527"
+  },
+  "skin_slots": {
+    "path": "assets/reference/profession-ui/skin-slots-source-manifest.json",
+    "sha256": "ee2e2661764627e3b2ac288384a91c3ea60f34ab03b0d93e0d4883d70dc8ce23"
+  },
+  "native_attachments": {
+    "path": "assets/reference/profession-ui/native-attachments-source-manifest.json",
+    "sha256": "9cd4c0c18ed4103922fcb4ec4bb2a52ab013c406403dbd6352cfd349d8eb297b"
   },
   "appearance_ui": {
     "path": "assets/reference/profession-ui/appearance-ui-source-manifest.json",
@@ -380,7 +388,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "1037d3fab5e7327f66769d7b48188e3791403f37c49084b601bc05e53588edd7"
+    "sha256": "1ebd7ef2fe397070050c54aa99152b9a2748b8a43ff60113015950299e2048cc"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

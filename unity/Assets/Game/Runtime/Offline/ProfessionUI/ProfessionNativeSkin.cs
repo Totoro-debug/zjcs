@@ -21,7 +21,16 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly List<int> bones = new List<int>(), constraints = new List<int>();
         private readonly HashSet<int> boneSet = new HashSet<int>(), constraintSet = new HashSet<int>();
         public string Name { get; }
+        public int SlotCount => slotCount;
         public int AttachmentCount => attachments.Count;
+        public IEnumerable<Entry> Entries
+        {
+            get
+            {
+                foreach (var item in attachments)
+                    yield return new Entry(item.Key.Item1, item.Key.Item2, item.Value);
+            }
+        }
         public ReadOnlyCollection<int> Bones { get; }
         public ReadOnlyCollection<int> Constraints { get; }
 

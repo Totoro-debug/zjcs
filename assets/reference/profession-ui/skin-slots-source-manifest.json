@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/native-skins-source-manifest.json",
+      "sha256": "4c16e1d1494f6927a73ba0ca66e576fc033d11747030b7836a559c6d9768f527"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-skins-validation.json",
+      "sha256": "3cbf7a0fc09850eb469b14371479adc5b7652666d8b32f807cb0b5d6ad90fb68"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/skin-slots-validation.json",
+    "sha256": "a38244d8cb7f0a0768b8a0514836267f853d67ce14052b73de9c5365204d20fb"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_skin_slots.py",
+    "sha256": "3fae94be611978ebc595a7edf355fd4b6594ba64de3783627858678f70c88fb3"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkinSlots.cs",
+      "sha256": "666869a75bbd215541593e8c5f5a83f660915e0d0f416e27f1ea618bd326264f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkinSlots.cs.meta",
+      "sha256": "27828ff2e7edf91486e96858ca4b486184a2d6f856c1e0eb8deab6e0c62e81ba"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSkinSlotsValidation.cs",
+      "sha256": "5aaca940aa87346aeb3d031b8c684ced381108954833242e62ca048f577d3550"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeSkinSlotsValidation.cs.meta",
+      "sha256": "ad452ad28a6bd93cb638e3087841d8383bf83f2772b872231921debe26795946"
+    }
+  ],
+  "counts": {
+    "skins": 1007,
+    "transitions": 4028,
+    "slot_states": 888174
+  },
+  "behavior_reference": "https://esotericsoftware.com/spine-runtime-skins#Skin-changes",
+  "operation": "Independent slot attachment identity state using published skin-change semantics and verified original slot/name maps. Initial skin affects setup-visible entries; subsequent skin changes replace only matching old attachment identities at the corresponding source slot/name key. Manual/null attachments survive changes, absent replacement keys retain the old identity, null skin changes do not reset slots, and explicit setup reset resolves active then default skin. No skeleton SDK implementation is read or used.",
+  "validated_scope": "Unity 2022.3.57f1c2 isolated real Play Mode passed all 1007 source skins: 4028 skin transitions and 888174 exact source slot states. Initial setup-visible attachments, old-identity migration at compound keys, missing replacements, manual/null overrides, null skin, active/default setup resolution, same-skin behavior, original identity enumeration, input ownership, ordinal lookup and invalid layout rejection pass. Attachments are identity objects; no constrained actor or full profession UI is rendered by this test.",
+  "limitations": [
+    "This is attachment state only. Bone/constraint activation, world update scheduling, timeline mixing and the native graphic are separate production integration requirements."
+  ]
+}

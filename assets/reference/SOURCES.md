@@ -483,6 +483,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原 `AppearanceUI` 与 `IAppearanceAnimComponent` 已逐方法迁入，SDK 的图形／动画端点改为显式原生接口，Unity 的遮罩、CanvasRenderer、材质 API 保持原调用。来源与验证范围见 `profession-ui/appearance-ui-source-manifest.json`：实际 Play Mode 核对零 stencil 的延迟换装／染色、原字典身份、占位贴图材质复用、加载引用、网格异常清空及释放顺序。原 `OffScreenUISpinePlayer` 保留原异步状态机的取消／释放／两帧延迟及层级刷新顺序，来源见 `profession-ui/offscreen-player-source-manifest.json`；真实游戏帧核对通过。原骨骼图形／挂件端点仍未生产接入，不作为完整角色或职业页通过结论；没有复制骨骼 SDK 实现。主页面依赖闭包为 881 资产、87 类脚本、9 类待迁入、零缺失 GUID。
 
+原皮肤的槽位附件切换由独立 `ProfessionNativeSkinSlots` 实现，依据公开行为说明和两具原模型的槽位／皮肤表，保留对象身份与对应键，4,028 次切换／888,174 项状态在隔离 Play Mode 精确比对通过；来源见 `profession-ui/skin-slots-source-manifest.json`。全部 34,009 个原附件的原生网格／区域／包围框／裁剪／点、原数据缩放和索引／UV 接口已验证，来源见 `profession-ui/native-attachments-source-manifest.json`。男法师 `body_200_M_01` 主图及染色图由当前原模型的 High 加载器占位映射和 AssetTable GUID 找到真实 bundle；APK 优先、原 ASTC 逐 mip 转 RGBA32，保留原色彩空间／采样，分别记录输入／输出哈希与独立资产路径，显式绑定到原 UI 染色 shader。D3D11 实际纹理几何截图已查看，并与独立参考几何的渲染比较通过；矩阵为合成验证输入，不能视为真实角色约束或完整职业页通过。载荷位于 `Assets/Official/ProfessionUI/CharacterTextures/`；未生成完整素材快照。没有复制骨骼 SDK 实现。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

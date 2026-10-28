@@ -58,6 +58,10 @@
 
 独立 `ProfessionNativeSkin`／`ProfessionNativeSkinCatalog` 实现原应用接口，读取全部 1,007 个原皮肤、34,009 个插槽／名称附件键、9,749 个骨骼成员及 9,633 个约束成员，保留附件对象共享身份、后加入皮肤覆盖和成员有序并集。查找优先活动皮肤，再回退到 `default`，名称按原大小写区分。隔离 Play Mode 核对全部原条目与 1,007 组组合，清空／复用、输入所有权和源表不被修改均通过。验证附件目前为身份对象，尚未绑定生产几何／材质；换皮肤时的插槽迁移、世界约束和实际渲染仍待连接。来源见[原生皮肤表](../../assets/reference/profession-ui/native-skins-source-manifest.json)。
 
+独立 `ProfessionNativeSkinSlots` 按公开的皮肤行为约定接入原槽位附件身份：首次皮肤仅附上初始姿态可见项；后续仅替换仍使用旧皮肤对象的对应槽位／键，保留手动附件、空槽和缺少替换项的旧对象；显式复位再按当前皮肤、默认皮肤解析。隔离 Play Mode 对全部 1,007 套原皮肤的 4,028 次切换、888,174 项槽位状态逐项精确比对通过，并检查对象身份、原键遍历、输入所有权及非法布局。尚未连接完整骨骼／约束激活和动画混合。来源见[原皮肤槽位切换](../../assets/reference/profession-ui/skin-slots-source-manifest.json)。
+
+全部原附件已接入独立的原生区域／网格、包围框、裁剪及点对象，保留原三角索引、UV、权重、类型与骨骼数据缩放。隔离 Play Mode 对 34,009 个附件、254,385 个缩放后顶点／点和 635,730 个三角索引检查通过；最大坐标差 `3.81469727E-06`，最大 UV 差 `5.96046448E-08`。原 `body_200_M_01` 高分辨率主图及染色图按原加载器的占位贴图和当前 AssetTable GUID 解析，APK 优先、逐 mip 解码并保留采样／色彩空间；同名两图使用独立路径，载荷与哈希分别核对。实际 D3D11 渲染含 25,719 个可见像素、22,359 个彩色像素，与独立参考几何零像素超出每通道 2 的差值，运行截图已查看。这是合成矩阵下的原附件几何验证，尚未验证原约束角色、生产图形组件或完整职业页。代码位于 `Runtime/Offline/ProfessionUI/ProfessionNativeAttachment.cs`，纹理位于 `Assets/Official/ProfessionUI/CharacterTextures/`，来源见[原生附件与衣服图集](../../assets/reference/profession-ui/native-attachments-source-manifest.json)。本次未生成完整素材快照。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 9 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
