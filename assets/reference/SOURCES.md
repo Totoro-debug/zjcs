@@ -2,6 +2,8 @@
 
 [返回文档索引](../../docs/README.md)
 
+山之国原 Team 窗口的171份 CAB 已恢复21413个组件／1298份托管引用并复开核对57677个对象载荷；原生导出核对全部托管引用的8469个指针、85484项值和989组打包数组。本图所需10份原窗口原生 YAML 已保留至 `Source/native-team-ui-prefabs.json`，645节点／2914对象／1105个脚本及9675个指针逐字段通过原源比对，保留原层级／组件顺序、浮点位和脚本程序集／类型。默认头像的原生导出存在 ASTC 解码舍入差异，原生源中保留按既有 UnityPy 路径解码的同源无损 PNG 修正并记录解码工具哈希、原／输出像素及 PNG 哈希；没有改绘图片或改变尺寸／GUID。缺失字段描述按同 APK 原元数据核对，零行为引用类型声明只供转换、不进游戏。输入、处理及证明见[原队伍转换输入](official-map/map12-team-ui-native-input-source-manifest.json)与[原生窗口源](official-map/map12-team-ui-native-source-manifest.json)。正式 prefab／运行时脚本与美术绑定、队伍服务、运行验收和发布待完成；新增载荷尚未纳入完整素材快照。默认只读复现逐字节一致，全工程静态元数据检查通过（73938个 GUID）；Unity 导入／运行与发布未执行。
+
 山之国战斗碑原 Team 界面依赖已按 APK 优先、选定871云端补充顺序核对：10份原 prefab、645节点、2914个序列化对象、1105个完整脚本载荷及3104个实际引用，171份 CAB 输入均有原字节哈希。复用已证明的同 APK 原生元数据描述，保留 TMP／外观／布局全字段、节点／组件顺序和64位指针；这是解码源，Windows 原生资源／脚本绑定与队伍运行接线尚未完成。输入、组件结构证明、原代码和输出见[原队伍界面来源](official-map/map12-team-ui-source-manifest.json)，入口为 `scripts/prepare_unity_map12_team_sources.py`；新增载荷未进入完整素材快照。默认只读复现逐字节一致，全工程静态元数据检查通过（73911个 GUID）。
 
 山之国七战斗碑的原 `BattleSteleWorldStageDialog`／StageUI／UIBase、目标身份及等级／战力规则，已按选定871程序集和配置恢复窗口本地服务绑定与三类队伍事件生命周期。六个源码程序集编译、七点位独立数据规则和静态元数据检查通过；尚未完成原生窗口导入、正式地图宿主／队伍接线和运行验收。原输入、程序集、依赖及适配哈希见[窗口数据与队伍事件](official-map/map12-stele-context-source-manifest.json)，复现入口为 `scripts/prepare_unity_map12_stele_context.py`、`scripts/test_map12_stele_context.ps1`。
