@@ -1,0 +1,59 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/native-attachments-source-manifest.json",
+      "sha256": "9cd4c0c18ed4103922fcb4ec4bb2a52ab013c406403dbd6352cfd349d8eb297b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-attachments-validation.json",
+      "sha256": "8bd0b3e885ecc57d50889ddcd2abe32aaf85f50b14cc9e2cae89fa80e2b6bd92"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-clipping-validation.json",
+    "sha256": "7cdfd965541c26930c469c78da65e4129ad8a6f0b06ce63bfa183ef4cd76f9b7"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_clipping.py",
+    "sha256": "c2098eafd4dc71658c303f7b531a3ab7cdc641097e8915d58a1dcbf788060096"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConvexClipper.cs",
+      "sha256": "5658157ddbbf0a8aefc253398524a6d65d8b22c3f5854f88f7a06d73e722928c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeConvexClipper.cs.meta",
+      "sha256": "8bcdd4b72e5197ad4b1e5deccd4e85952186ac55bd78a240f372163f2a1a221d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeClippingValidation.cs",
+      "sha256": "4fde5a3ad822498d1f1d4f7177eee842a18578741f489c37b7f2f92a7fc34e3f"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeClippingValidation.cs.meta",
+      "sha256": "9f0e8acefe9169c9ee2189a7a362ed5da1406db33a66d96038b2b1e51c4d0ee8"
+    }
+  ],
+  "counts": {
+    "boundaries": 6,
+    "triangles": 960,
+    "empty": 185,
+    "cut": 772,
+    "inside": 3
+  },
+  "reference": {
+    "package": "Shapely",
+    "version": "2.1.2",
+    "geos": "3.13.1",
+    "precision_grid_size": 0,
+    "documentation": "https://shapely.readthedocs.io/en/2.1.2/reference/shapely.intersection.html"
+  },
+  "operation": "Independent half-plane intersection for all six original convex clipping quadrilaterals. Preserve source boundary orientation, exact clipping end-slot metadata, affine UV interpolation and triangle winding. Compare intersections, total area, centroid and boundary positions against GEOS double-precision polygon intersections. Source world matrices and intersecting triangles are synthetic geometry inputs, not constrained character poses. No skeleton SDK implementation is read or used.",
+  "validated_scope": "Isolated Unity Play Mode: six source boundaries, 960 intersections and 5160 output vertices passed against GEOS; maximum area difference 6.6130726E-05, centroid difference 3.20112824E-05 and UV difference 1.1920929E-07. Both boundary orientations, winding, fully inside/outside and partial intersections, input ownership and invalid inputs passed. Native actor constraints and full profession UI remain unbound.",
+  "limitations": [
+    "Concave input fails explicitly; the six current original character clipping attachments are convex. Draw-order/end-slot lifecycle and native character/page rendering are separate integration requirements."
+  ]
+}

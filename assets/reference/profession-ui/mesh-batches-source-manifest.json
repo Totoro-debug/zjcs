@@ -1,0 +1,78 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+      "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359",
+      "component": "!u!114 &114362475124603865",
+      "fields": {
+        "useClipping": 1.0,
+        "pmaVertexColors": 0.0,
+        "zSpacing": 0.0,
+        "useCustomSpacing": 1.0
+      }
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/PlayerModel_ProfessionUI.prefab",
+      "sha256": "24b6bbcc731d396370c61fa62c469d40ea62d691b0e197e3affe9415f0532145",
+      "component": "!u!114 &114703437598541787",
+      "fields": {
+        "useClipping": 1.0,
+        "pmaVertexColors": 0.0,
+        "zSpacing": 0.0,
+        "useCustomSpacing": 1.0
+      }
+    }
+  ],
+  "verified_export": {
+    "path": "assets/reference/profession-ui/native-export-source-manifest.json",
+    "sha256": "8001aef15b75a6995b66a7e1d4081b4d7a5f5e3fb38fdafb399c502bf12dd382"
+  },
+  "shader": {
+    "path": "assets/reference/profession-ui/shader-bindings-source-manifest.json",
+    "sha256": "b1dd152794d0135721547d09c4f35ad13cad4df0de1cfa13263b12421e66b4b0"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/native-attachments-source-manifest.json",
+      "sha256": "9cd4c0c18ed4103922fcb4ec4bb2a52ab013c406403dbd6352cfd349d8eb297b"
+    },
+    {
+      "path": "assets/reference/profession-ui/native-clipping-source-manifest.json",
+      "sha256": "01e0d7962c2c97a51189d9a539f19183286840bc5eea763b1f25693d21a1a1b8"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-mesh-batches-validation.json",
+    "sha256": "6d6a807b9a66ea5e51dc22514aaca2b508df51b6b1134f6dcbf54f3699fa56eb"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_mesh_batches.py",
+    "sha256": "785d5654d4ae5d64536da0a9db2a28e526c92927102679ae2479a02c5b406251"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
+      "sha256": "a414c122efd2f9a7a7ee4e11af4de74dc4107f9aa7bd90efafca5ab3ea9a970f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs.meta",
+      "sha256": "722a22bd6ee1a95be3786b8783a58bc7f9be1a00b1cc1ea5de24cf3757968d54"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeMeshBatchesValidation.cs",
+      "sha256": "ec38efbcf25937d08d4a5da0daee640480b10110c5ca92c748b15671bc5b4dd3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeMeshBatchesValidation.cs.meta",
+      "sha256": "8084be89d7396060fb09f421fc4054911c9291a045a77bdb10d43936d47ce047"
+    }
+  ],
+  "behavior_reference": "https://esotericsoftware.com/spine-clipping#End-slot",
+  "operation": "Independent native mesh batching preserves the supplied complete source draw-order permutation, contiguous page/blend groups, explicit separator boundaries, per-slot colors, source zero Z spacing and original clipping/PMA settings. Clipping ends inclusively on source slot identity even if the end slot is empty/inactive; a self end runs to the end of draw order. Meshes are reused, stale geometry cleared, and only owned meshes are disposed. Original UI appearance code remains responsible for actual materials, parts and CanvasRenderer assignment; this creates no UI layout or substitute art.",
+  "validated_scope": "Isolated Unity Play Mode and D3D11 passed: both source prefab geometry settings, inclusive/empty/inactive/reordered/self end slots, contiguous page/blend groups, explicit separators, slot colors, inactive skin bones, pooled mesh clearing/reuse and disposal. Original converted UI shader GPU output shows clipped red geometry, unclipped blue geometry after the end slot and transparent exterior; runtime image inspected. Geometry and white texture are synthetic fixtures. Full source character and profession-page services remain unbound.",
+  "limitations": [
+    "Geometry validation uses synthetic slots, poses and a white texture fixture. Original source constraints, production material/part binding and full page input/save/release still require integration. Overlapping clipping ranges fail explicitly; source clipping ranges must not overlap."
+  ]
+}

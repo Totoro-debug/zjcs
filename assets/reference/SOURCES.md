@@ -485,6 +485,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原皮肤的槽位附件切换由独立 `ProfessionNativeSkinSlots` 实现，依据公开行为说明和两具原模型的槽位／皮肤表，保留对象身份与对应键，4,028 次切换／888,174 项状态在隔离 Play Mode 精确比对通过；来源见 `profession-ui/skin-slots-source-manifest.json`。全部 34,009 个原附件的原生网格／区域／包围框／裁剪／点、原数据缩放和索引／UV 接口已验证，来源见 `profession-ui/native-attachments-source-manifest.json`。男法师 `body_200_M_01` 主图及染色图由当前原模型的 High 加载器占位映射和 AssetTable GUID 找到真实 bundle；APK 优先、原 ASTC 逐 mip 转 RGBA32，保留原色彩空间／采样，分别记录输入／输出哈希与独立资产路径，显式绑定到原 UI 染色 shader。D3D11 实际纹理几何截图已查看，并与独立参考几何的渲染比较通过；矩阵为合成验证输入，不能视为真实角色约束或完整职业页通过。载荷位于 `Assets/Official/ProfessionUI/CharacterTextures/`；未生成完整素材快照。没有复制骨骼 SDK 实现。
 
+职业原生几何裁剪与批次：独立半平面求交覆盖原男女模型 6 个凸裁剪附件，960 组交集与 GEOS 双精度参考核对；保留边界绕序、UV 插值及结束槽位身份。`ProfessionNativeMeshBatches` 按完整原绘制顺序聚合连续图集／混合组、保留显式分隔和槽位颜色，清理旧网格并复用自有 Mesh。两份原职业 prefab 的裁剪、预乘色和零深度字段通过已核验导出链读取；空／禁用／重排／自身结束槽位、分组与释放在 Play Mode 通过，原转换 UI shader 的 D3D11 红蓝几何截图已查看。输入骨骼、几何和白贴图为夹具，不代表真实角色或完整页面通过；未读取骨骼 SDK 实现。哈希、来源和限制见 `profession-ui/native-clipping-source-manifest.json` 及 `profession-ui/mesh-batches-source-manifest.json`。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

@@ -318,6 +318,14 @@
     "path": "assets/reference/profession-ui/native-attachments-source-manifest.json",
     "sha256": "9cd4c0c18ed4103922fcb4ec4bb2a52ab013c406403dbd6352cfd349d8eb297b"
   },
+  "native_clipping": {
+    "path": "assets/reference/profession-ui/native-clipping-source-manifest.json",
+    "sha256": "01e0d7962c2c97a51189d9a539f19183286840bc5eea763b1f25693d21a1a1b8"
+  },
+  "mesh_batches": {
+    "path": "assets/reference/profession-ui/mesh-batches-source-manifest.json",
+    "sha256": "1811e83c80aa23ab00d22a034e13994bc86a00081ffaa7b3d177d3d36289a8c2"
+  },
   "appearance_ui": {
     "path": "assets/reference/profession-ui/appearance-ui-source-manifest.json",
     "sha256": "b51c202d49624d9862d5219dea3dd389428ddb20e747085db6f8ba33b86ab899"
@@ -388,7 +396,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "1ebd7ef2fe397070050c54aa99152b9a2748b8a43ff60113015950299e2048cc"
+    "sha256": "a4fbf320c6e73f006937a5fd0b4e8e1f7dcc701acc68cd5a267d21cf847c7a9e"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

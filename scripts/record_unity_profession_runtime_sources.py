@@ -85,6 +85,8 @@ def build():
         native_skins=file_record(ROOT / "assets/reference/profession-ui/native-skins-source-manifest.json"),
         skin_slots=file_record(ROOT / "assets/reference/profession-ui/skin-slots-source-manifest.json"),
         native_attachments=file_record(ROOT / "assets/reference/profession-ui/native-attachments-source-manifest.json"),
+        native_clipping=file_record(ROOT / "assets/reference/profession-ui/native-clipping-source-manifest.json"),
+        mesh_batches=file_record(ROOT / "assets/reference/profession-ui/mesh-batches-source-manifest.json"),
         appearance_ui=file_record(ROOT / "assets/reference/profession-ui/appearance-ui-source-manifest.json"),
         offscreen_player=file_record(ROOT / "assets/reference/profession-ui/offscreen-player-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
