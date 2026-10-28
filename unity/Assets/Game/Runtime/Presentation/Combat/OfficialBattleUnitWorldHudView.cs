@@ -201,7 +201,7 @@ namespace Zjcs.Presentation.Combat
         {
             if (disposed) return;
             disposed = true;
-            if (root != null) UnityEngine.Object.Destroy(root);
+            OfficialBattleSceneBindings.DestroyCreatedObject(root);
             bars.Clear();
             statusItems.Clear();
         }

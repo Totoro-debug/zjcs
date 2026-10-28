@@ -99,11 +99,11 @@ namespace Zjcs.Presentation.Combat
             disposed = true;
             foreach (DrawView draw in draws)
             {
-                if (draw.Mesh != null) UnityEngine.Object.Destroy(draw.Mesh);
-                if (draw.Object != null) UnityEngine.Object.Destroy(draw.Object);
+                OfficialBattleSceneBindings.DestroyCreatedObject(draw.Mesh);
+                OfficialBattleSceneBindings.DestroyCreatedObject(draw.Object);
             }
             draws.Clear();
-            if (Transform != null) UnityEngine.Object.Destroy(Transform.gameObject);
+            if (Transform != null) OfficialBattleSceneBindings.DestroyCreatedObject(Transform.gameObject);
         }
 
         private void ApplyFrame(int frameIndex)

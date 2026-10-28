@@ -75,7 +75,7 @@ namespace Zjcs.Presentation.Combat
                     animator.Update(0f);
                 }
             }
-            if (Root != null) UnityEngine.Object.Destroy(Root.gameObject);
+            if (Root != null) OfficialBattleSceneBindings.DestroyCreatedObject(Root.gameObject);
         }
 
     }

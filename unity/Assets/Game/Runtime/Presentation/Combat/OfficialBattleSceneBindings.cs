@@ -10,6 +10,13 @@ namespace Zjcs.Presentation.Combat
     /// <summary>Recovered prefab renderer layers, expressed in the existing flattened scene order.</summary>
     internal static class OfficialBattleSceneBindings
     {
+        internal static void DestroyCreatedObject(UnityEngine.Object instance)
+        {
+            if (instance == null) return;
+            if (Application.isPlaying) UnityEngine.Object.Destroy(instance);
+            else UnityEngine.Object.DestroyImmediate(instance);
+        }
+
         [Serializable] private sealed class Data { public string manifest; public Unit[] units; public CameraBinding[] cameras; }
         [Serializable] private sealed class Receipt { public string manifest, output_sha256; }
         [Serializable] internal sealed class RendererBinding
@@ -120,7 +127,7 @@ namespace Zjcs.Presentation.Combat
         public void Dispose()
         {
             if (group == null) return;
-            if (added) UnityEngine.Object.Destroy(group);
+            if (added) OfficialBattleSceneBindings.DestroyCreatedObject(group);
             else
             {
                 group.sortingLayerID = layer;

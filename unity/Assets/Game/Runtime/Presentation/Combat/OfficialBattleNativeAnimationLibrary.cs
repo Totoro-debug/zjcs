@@ -194,7 +194,7 @@ namespace Zjcs.Presentation.Combat
             };
             if (!texture.LoadImage(bytes, true))
             {
-                UnityEngine.Object.Destroy(texture);
+                OfficialBattleSceneBindings.DestroyCreatedObject(texture);
                 throw new InvalidDataException("Native battle atlas page is not a readable PNG: " + page);
             }
             textures.Add(page, texture);
@@ -243,9 +243,9 @@ namespace Zjcs.Presentation.Combat
             if (disposed) return;
             disposed = true;
             foreach (Material material in materials.Values)
-                if (material != null) UnityEngine.Object.Destroy(material);
+                OfficialBattleSceneBindings.DestroyCreatedObject(material);
             foreach (Texture2D texture in textures.Values)
-                if (texture != null) UnityEngine.Object.Destroy(texture);
+                OfficialBattleSceneBindings.DestroyCreatedObject(texture);
             materials.Clear();
             textures.Clear();
             animations.Clear();
