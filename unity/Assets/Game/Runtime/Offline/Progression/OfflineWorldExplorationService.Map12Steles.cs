@@ -115,7 +115,15 @@ namespace Zjcs.Offline.Progression
             if (stele == null || stele.StageId != stageId || now <= 0)
                 return Failure("Invalid placed Map12 stele battle.", ProgressionResultStatus.InvalidState);
             if (!won) return Failure(string.Empty, ProgressionResultStatus.Unchanged);
-            session.Reload();
+            try { session.Reload(); }
+            catch (InvalidDataException error)
+            {
+                // The shared reader reports both an unreadable locked primary
+                // and invalid JSON as Corrupt. Treat this failed read as I/O so
+                // the battle retains its finished checkpoint, without writing
+                // a fallback profile or consuming the stele interaction.
+                throw new IOException("The Map12 stele profile could not be read; settlement remains pending.", error);
+            }
             string tag = OfficialMap12SteleCatalog.CompletionTag(placementId);
             if (session.Save.World.CompletedEntityTags.Contains(tag))
                 return Failure(string.Empty, ProgressionResultStatus.Unchanged);

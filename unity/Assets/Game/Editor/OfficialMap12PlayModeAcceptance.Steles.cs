@@ -60,7 +60,14 @@ namespace Zjcs.Editor
                 using (var deny = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
                     try { service.SettleMap12Stele(catalog, stele.PlacementId, stele.StageId, true, 5000, now, out _); }
                     catch (IOException) { rejected = true; }
-                SteleRequire(rejected && before.SequenceEqual(File.ReadAllBytes(path)), "Denied profile write was not atomic.");
+                SteleRequire(rejected && before.SequenceEqual(File.ReadAllBytes(path)), "Denied profile read escaped the I/O retry contract.");
+                rejected = false;
+                string memoryBeforeWrite = JsonUtility.ToJson(session.Save);
+                using (var deny = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    try { service.SettleMap12Stele(catalog, stele.PlacementId, stele.StageId, true, 5000, now, out _); }
+                    catch (IOException) { rejected = true; }
+                SteleRequire(rejected && before.SequenceEqual(File.ReadAllBytes(path))
+                    && memoryBeforeWrite == JsonUtility.ToJson(session.Save), "Denied profile write changed inventory, RNG, wins or completion.");
                 string worldBefore = JsonUtility.ToJson(session.Save.World);
                 var expected = boxes[stele.PlacementId];
                 int currency = stele.SupportTeam ? 110 : 2;
