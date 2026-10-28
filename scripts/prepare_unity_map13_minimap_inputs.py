@@ -55,7 +55,7 @@ class CameraSchemas:
                 or name in ("NoDrawingRayCast", "TMPro.TextMeshProUGUI"))
 
 
-def build(cache):
+def build(cache, root_bundle=ROOT_BUNDLE):
     cache = cache.resolve()
     if not cache.is_relative_to(ROOT / "output/validation"):
         raise ValueError("Minimap conversion must use an owned validation workspace")
@@ -63,7 +63,7 @@ def build(cache):
     if inputs.exists():
         raise FileExistsError(inputs)
     apk = Apk.current()
-    assets, missing = collect(apk, [ROOT_BUNDLE])
+    assets, missing = collect(apk, [root_bundle])
     if missing:
         raise ValueError(missing)
     code = ROOT / ".tools/source-packages/current" / apk.version / "official-code"
@@ -105,7 +105,7 @@ def build(cache):
         if not (inputs / Path(builtin).name).exists():
             write(inputs / Path(builtin).name, raw)
         receipt = dict(format=1, manifest=apk.version, mapClassId=13,
-            roots=[ROOT_BUNDLE], inputs=records, serialized_files=list(assets.values()),
+            roots=[root_bundle], inputs=records, serialized_files=list(assets.values()),
             camera_reference_assemblies=camera_assemblies,
             assemblies=assemblies,code_manifest=dict(path=source_path(code_manifest),sha256=sha(code_manifest.read_bytes())),
             schema_proof=schema_proof,
@@ -124,4 +124,6 @@ def build(cache):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", type=Path, required=True)
-    build(parser.parse_args().cache)
+    parser.add_argument("--root-bundle", default=ROOT_BUNDLE)
+    options=parser.parse_args()
+    build(options.cache, options.root_bundle)

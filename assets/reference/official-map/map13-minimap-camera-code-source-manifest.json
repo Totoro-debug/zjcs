@@ -1,0 +1,115 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/MiniMapSettings.cs",
+      "sha256": "6060409a1d90546917efe0f67cd2d6cbf48d2d21d7f5a5265bcbd7a00d0f43f7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MiniMapDiagnostic.cs",
+      "sha256": "c1ab49bd0de276372963702d023c327efd5f181b7de3c44a4fa586fb5be38449"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapCameraController.cs",
+      "sha256": "1447fc6cb89114f1a7854711b38cb402e40f0885ee49b0adca8bd16051cbc4f8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IFullScrMiniMapStateListener.cs",
+      "sha256": "da92b348c34433797ba5c59106856ad432014d3860ba0a41bb502203dd23f5b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/LineRendererDashedLine.cs",
+      "sha256": "c1195d352d9993a0918a2520ba5fe6bbcb99b204dca80d312a914c193d9c0635"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UITouchInput.cs",
+      "sha256": "b034dee8f1c80f5b1516d923eb734d27f72e6545001022ebca3e740749679abc"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/MiniMapSettings.cs",
+      "sha256": "7bb9717b65da99a0d11914afb414088dcf8464d5f194d118c8f10bc798e7b497"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/MiniMapSettingsDiagnostic.cs",
+      "sha256": "3cceb49955433f71d6b363cba2797abb0029889c8d35e5d0eae1246efea0d034"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/MiniMapCameraController.cs",
+      "sha256": "965bc48ca28273b4c986742450e86eb9590f828244a90220dab00964747ed30b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/IFullScrMiniMapStateListener.cs",
+      "sha256": "21278859be6f9d5c41090a3fe7c3f8d2655947b22facabeda3fd98468f482e42"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/LineRendererDashedLine.cs",
+      "sha256": "f504594cac2d5c1d3fc9cc378ef240ba9ef942d4f0de9b4a2c7e5b30102d5443"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/UITouchInput.cs",
+      "sha256": "9b1c2c9a5d1fe635bc67b7afa6ae805331a1d9027627c93cfcdfd7aa31371ea1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCamera/Zjcs.Official.World.Map13MiniMapCamera.asmdef",
+      "sha256": "3e333d86d33a2d75f1bb1c187025d5a650d15b446d86232669bc3ef4e0f64071"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_camera.py",
+    "sha256": "eba25675b1ae27f02946d871cb9ac0a8a52d3d1ac27198f2a06d07689390039b",
+    "worktree_sha256": "eba25675b1ae27f02946d871cb9ac0a8a52d3d1ac27198f2a06d07689390039b",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy the complete original MiniMapCameraController, full MiniMapSettings lookup/cache/tile-selection methods and IFullScrMiniMapStateListener. Preserve camera render-target quality calculation, render-scale multiplication, truncation, zoom clamp/order/events, culling, sort/shader pass selection and render-target lifecycle. Repair decompiler IL cast/out syntax; replace only injected settings access and logging backend. Adapt original UITouchInput pointer hooks to Windows UGUI drag/click/wheel events, reusing the migrated original DragControllerBase physics without changing UI layout.",
+  "limitations": [
+    "Camera/settings code only. Original selected MiniMapSettings asset and full-screen prefab bindings, original root/managers, formal input/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "ee993a210c6f661d8c70e1e1ebef6dd1babec2f3aab9e93908993bf3e4cf8be6",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "camera_settings": 5,
+        "tile_configurations": 10,
+        "tile_rows": 2930,
+        "zoom_events": 5,
+        "texture_width": 384,
+        "texture_height": 288,
+        "rendered_pixels": 82060,
+        "dash_vertices": 360,
+        "dash_triangles": 180,
+        "original_settings": true,
+        "original_tile_cache": true,
+        "original_zoom_order": true,
+        "windows_wheel_hook": true,
+        "render_target_destroyed": true
+      },
+      "runtime_errors": 0
+    },
+    "rendered_image": {
+      "sha256": "d390abd2278641e310dd13b79972b4e8df24a7796a2ccec051b2832661ecd2de",
+      "viewed": true,
+      "original_urp": true
+    },
+    "project_validation": {
+      "log_sha256": "ae578625322a0036b31da0259fd3a4e33d08e7385fc4ef9009277029b4c34f7a",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "guid_count": 74853,
+      "passed": true
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapCameraAcceptance.cs",
+      "sha256": "fa933f959f6df9e9f662bd1474d4745e2db39e33590c55a55392a7e2e75b8dc7"
+    },
+    "pointer_callbacks_only": true,
+    "formal_minimap": false,
+    "windows_player": false
+  }
+}

@@ -1,0 +1,2397 @@
+{
+  "source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_mapcommon.bundle",
+    "bundle_hash": "3d89e3440676b995cef6b1b9c95817bb",
+    "path_id": "7989364980571778080",
+    "origin": "official_cdn",
+    "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/3d89e3440676b995cef6b1b9c95817bb.bundle",
+    "manifest": "871_156598",
+    "source_manifest": "854_156383",
+    "bundle_size": 108179,
+    "bundle_sha256": "13cdeb94363b8eea5bb6bd8a3c9a8a901821756200de5381856d03d38b93ccc7"
+  },
+  "object_sha256": "c3e1694ef9aad90c159aa51850390f2fa3b8a31c3077ee25bf851c19cbd21e73",
+  "fields": {
+    "m_GameObject": {
+      "m_FileID": 0,
+      "m_PathID": 0
+    },
+    "m_Enabled": 1,
+    "m_Script": {
+      "m_FileID": 0,
+      "m_PathID": 2117242069515782252
+    },
+    "m_Name": "MiniMapSettings",
+    "MiniMapFullScreenTextureQuality": 0.6000000238418579,
+    "Settings": [
+      {
+        "MinimapConfigId": 1,
+        "MinimapConfigDesc": "初始岛级地图",
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "BoundExtendSize": 4.0,
+        "MarkZoomThreshold": 0.10000000149011612,
+        "ShowMapSwitch": 1,
+        "CameraControllerSetting": {
+          "MinCameraOrthographicSize": 20.0,
+          "MaxCameraOrthographicSize": 40.0
+        },
+        "DescSetting": {
+          "ZoomThreshold": 0.5,
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          }
+        }
+      },
+      {
+        "MinimapConfigId": 2,
+        "MinimapConfigDesc": "标准国度地图",
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "BoundExtendSize": 4.0,
+        "MarkZoomThreshold": 0.10000000149011612,
+        "ShowMapSwitch": 1,
+        "CameraControllerSetting": {
+          "MinCameraOrthographicSize": 20.0,
+          "MaxCameraOrthographicSize": 60.0
+        },
+        "DescSetting": {
+          "ZoomThreshold": 0.30000001192092896,
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          }
+        }
+      },
+      {
+        "MinimapConfigId": 3,
+        "MinimapConfigDesc": "迷你地图",
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "BoundExtendSize": 4.0,
+        "MarkZoomThreshold": 0.10000000149011612,
+        "ShowMapSwitch": 1,
+        "CameraControllerSetting": {
+          "MinCameraOrthographicSize": 20.0,
+          "MaxCameraOrthographicSize": 40.0
+        },
+        "DescSetting": {
+          "ZoomThreshold": 0.5,
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          }
+        }
+      },
+      {
+        "MinimapConfigId": 4,
+        "MinimapConfigDesc": "较大地图-赛季用",
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "BoundExtendSize": 4.0,
+        "MarkZoomThreshold": 0.10000000149011612,
+        "ShowMapSwitch": 0,
+        "CameraControllerSetting": {
+          "MinCameraOrthographicSize": 20.0,
+          "MaxCameraOrthographicSize": 100.0
+        },
+        "DescSetting": {
+          "ZoomThreshold": 0.30000001192092896,
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          }
+        }
+      },
+      {
+        "MinimapConfigId": 5,
+        "MinimapConfigDesc": "特大国度地图",
+        "MiniMapUICameraOrthographicSize": 12.0,
+        "BoundExtendSize": 4.0,
+        "MarkZoomThreshold": 0.10000000149011612,
+        "ShowMapSwitch": 1,
+        "CameraControllerSetting": {
+          "MinCameraOrthographicSize": 20.0,
+          "MaxCameraOrthographicSize": 120.0
+        },
+        "DescSetting": {
+          "ZoomThreshold": 0.30000001192092896,
+          "DashedLinePrefab": {
+            "m_FileID": 65,
+            "m_PathID": -8919789940513223093
+          }
+        }
+      }
+    ],
+    "TileSettings": [
+      {
+        "MapClassIds": [
+          10,
+          11
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 60,
+                  "m_PathID": -6798104596126563818
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Spider",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 46,
+                  "m_PathID": -2019336053679639431
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 46,
+                  "m_PathID": -7113490177031148638
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 46,
+                  "m_PathID": -7113490177031148638
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 46,
+                  "m_PathID": -7113490177031148638
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 46,
+                  "m_PathID": -7113490177031148638
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          12
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": 5524142494146805049
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": 6282051833989517660
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Lava",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": 2944090200334999342
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -5461106344246363778
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -5461106344246363778
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -5461106344246363778
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Oasis",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": 4074236241570201245
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -4212204166810969562
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -4212204166810969562
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -4212204166810969562
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": -4212204166810969562
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 50,
+                  "m_PathID": 171765620231445432
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          13,
+          16
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": 5668559692514278896
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": 4863116661011373257
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Hell",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": -3611171686634547749
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 6065779646078213796
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 6065779646078213796
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 6065779646078213796
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 6065779646078213796
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 6837469751219152183
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": -6694002442025432692
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "YaoQi",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": 3570053262659488103
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": -2985410701983594575
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 66,
+                  "m_PathID": 1062320049520289226
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Village",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": 5668559692514278896
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": -330324361146350193
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 52,
+                  "m_PathID": 4863116661011373257
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          14,
+          96,
+          42061,
+          42062,
+          42063,
+          42090,
+          42092,
+          42193
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": -3966481869279895680
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Bamboo",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 4059561022135726289
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 7379791619659646509
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 7379791619659646509
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 7379791619659646509
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 7379791619659646509
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Bronze",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 49,
+                  "m_PathID": -9042786815323553156
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 49,
+                  "m_PathID": -6675473949711348247
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 49,
+                  "m_PathID": -6675473949711348247
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 49,
+                  "m_PathID": -6675473949711348247
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 49,
+                  "m_PathID": -6675473949711348247
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Lake",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": -4675666882718176937
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 2106578044410765791
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 2106578044410765791
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 2106578044410765791
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 58,
+                  "m_PathID": 2106578044410765791
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Rotten",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 68,
+                  "m_PathID": -5869963605954976382
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 68,
+                  "m_PathID": -4234536376419042465
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 68,
+                  "m_PathID": -4234536376419042465
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 68,
+                  "m_PathID": -4234536376419042465
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 68,
+                  "m_PathID": -4234536376419042465
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Snow",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 63,
+                  "m_PathID": -2580153292520354759
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 63,
+                  "m_PathID": -6374689739274737192
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 63,
+                  "m_PathID": -6374689739274737192
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 63,
+                  "m_PathID": -6374689739274737192
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 63,
+                  "m_PathID": -6374689739274737192
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          17,
+          42093,
+          42099
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 51,
+                  "m_PathID": -579034837760858554
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 51,
+                  "m_PathID": -8108586970442839187
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 51,
+                  "m_PathID": -8108586970442839187
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 51,
+                  "m_PathID": -8108586970442839187
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 51,
+                  "m_PathID": -8108586970442839187
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Dirt",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -3764052969142699859
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": 7110894152453281266
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": 7110894152453281266
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": 7110894152453281266
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": 7110894152453281266
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Ruins",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -8807490575799347922
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -6720750269021826969
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -6720750269021826969
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -6720750269021826969
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 43,
+                  "m_PathID": -6720750269021826969
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          42101,
+          42125,
+          42126,
+          42127,
+          42102,
+          42128,
+          42129,
+          42130,
+          42103,
+          42131,
+          42132,
+          42133,
+          42105,
+          42134,
+          42135,
+          42136,
+          42106,
+          42137,
+          42138,
+          42139,
+          42107,
+          42140,
+          42141,
+          42142,
+          42109,
+          42143,
+          42144,
+          42145,
+          42110,
+          42146,
+          42147,
+          42148,
+          42111,
+          42149,
+          42150,
+          42151,
+          42117,
+          42152,
+          42153,
+          42118,
+          42154,
+          42155,
+          42122,
+          42123,
+          42121
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": -3966481869279895680
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Mountain",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": 5524142494146805049
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 42,
+                  "m_PathID": -1610264857113627445
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Lake",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": 3570053262659488103
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 54,
+                  "m_PathID": -6215097004350112554
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Forest",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 60,
+                  "m_PathID": -6798104596126563818
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 48,
+                  "m_PathID": -2558258892340700427
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          19,
+          42067,
+          42069,
+          42070,
+          42072,
+          42073,
+          42081
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": -3966481869279895680
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 57,
+                  "m_PathID": 2117984679445312042
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Field",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 56,
+                  "m_PathID": 5098227533768539984
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 56,
+                  "m_PathID": 7725095077179445542
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 56,
+                  "m_PathID": 7725095077179445542
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 56,
+                  "m_PathID": 7725095077179445542
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 56,
+                  "m_PathID": 7725095077179445542
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Factory",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 53,
+                  "m_PathID": -186152625113547718
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 53,
+                  "m_PathID": -2526997077721516967
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 53,
+                  "m_PathID": -2526997077721516967
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 53,
+                  "m_PathID": -2526997077721516967
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 53,
+                  "m_PathID": -2526997077721516967
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Beach",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 69,
+                  "m_PathID": 4753439310292696931
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 69,
+                  "m_PathID": 914277164327741758
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 69,
+                  "m_PathID": 914277164327741758
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 69,
+                  "m_PathID": 914277164327741758
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 69,
+                  "m_PathID": 914277164327741758
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Sky",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 67,
+                  "m_PathID": 3273849055897339456
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 67,
+                  "m_PathID": 7889223070502765089
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 67,
+                  "m_PathID": 7889223070502765089
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 67,
+                  "m_PathID": 7889223070502765089
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 67,
+                  "m_PathID": 7889223070502765089
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          20,
+          42171,
+          42172,
+          42173,
+          42174,
+          42068,
+          42071
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 44,
+                  "m_PathID": 7661655140009473683
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 44,
+                  "m_PathID": 8652851751974418175
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 44,
+                  "m_PathID": 8652851751974418175
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 44,
+                  "m_PathID": 8652851751974418175
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 44,
+                  "m_PathID": 8652851751974418175
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          21,
+          22,
+          42201,
+          42202,
+          42203,
+          42204,
+          42205,
+          42206,
+          42208,
+          42214,
+          42216,
+          42217,
+          42218,
+          42219,
+          42220,
+          42221,
+          42223,
+          42229
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": 2778932335109419001
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Ice",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 55,
+                  "m_PathID": -7593071398135129343
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 55,
+                  "m_PathID": 8287718604594654064
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 55,
+                  "m_PathID": 8287718604594654064
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 55,
+                  "m_PathID": 8287718604594654064
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 55,
+                  "m_PathID": 8287718604594654064
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Fire",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": 2778932335109419001
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 61,
+                  "m_PathID": -452097666736041123
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 64,
+                  "m_PathID": -3406128089321222135
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Fireruins",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 62,
+                  "m_PathID": -2611262123172468908
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 62,
+                  "m_PathID": -2443231138651576537
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 62,
+                  "m_PathID": -2443231138651576537
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 62,
+                  "m_PathID": -2443231138651576537
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 62,
+                  "m_PathID": -2443231138651576537
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "MapClassIds": [
+          23,
+          42238,
+          42239
+        ],
+        "AreaTileDatas": [
+          {
+            "AreaTag": "",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3674424023941744765
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Green",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3674424023941744765
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3836783027613734866
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Blue",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -5872817337247451304
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 8558515039493899246
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 8558515039493899246
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 8558515039493899246
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 8558515039493899246
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Red",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 302142413059570285
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -4760228759704506259
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -4760228759704506259
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -4760228759704506259
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -4760228759704506259
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Yellow",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -9092304937022785392
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 2730235303624755426
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 2730235303624755426
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 2730235303624755426
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": 2730235303624755426
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          },
+          {
+            "AreaTag": "Dark",
+            "GroundTypeTileDatas": [
+              {
+                "GroundType": 0,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -5328736782117679973
+                }
+              },
+              {
+                "GroundType": 1,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3975129265598342423
+                }
+              },
+              {
+                "GroundType": 2,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3975129265598342423
+                }
+              },
+              {
+                "GroundType": 4,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3975129265598342423
+                }
+              },
+              {
+                "GroundType": 5,
+                "Tile": {
+                  "m_FileID": 59,
+                  "m_PathID": -3975129265598342423
+                }
+              },
+              {
+                "GroundType": 6,
+                "Tile": {
+                  "m_FileID": 45,
+                  "m_PathID": -490511602956183999
+                }
+              },
+              {
+                "GroundType": 3,
+                "Tile": {
+                  "m_FileID": 47,
+                  "m_PathID": 8617239163512520350
+                }
+              },
+              {
+                "GroundType": 8,
+                "Tile": {
+                  "m_FileID": 41,
+                  "m_PathID": 8117640071619529395
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

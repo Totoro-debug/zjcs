@@ -1,0 +1,723 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db963adfec5b5e628b552bf48ca9e1f3, type: 3}
+  m_Name: MiniMapSettings
+  m_EditorClassIdentifier:
+  MiniMapFullScreenTextureQuality: 0.6
+  Settings:
+  - MinimapConfigId: 1
+    MinimapConfigDesc: 初始岛级地图
+    MiniMapUICameraOrthographicSize: 12
+    BoundExtendSize: 4
+    MarkZoomThreshold: 0.1
+    ShowMapSwitch: 1
+    CameraControllerSetting:
+      MinCameraOrthographicSize: 20
+      MaxCameraOrthographicSize: 40
+    DescSetting:
+      ZoomThreshold: 0.5
+      DashedLinePrefab: {fileID: 1709254077376921, guid: 7ab7f338a6d2c70c37126a81e5813e86, type: 2}
+  - MinimapConfigId: 2
+    MinimapConfigDesc: 标准国度地图
+    MiniMapUICameraOrthographicSize: 12
+    BoundExtendSize: 4
+    MarkZoomThreshold: 0.1
+    ShowMapSwitch: 1
+    CameraControllerSetting:
+      MinCameraOrthographicSize: 20
+      MaxCameraOrthographicSize: 60
+    DescSetting:
+      ZoomThreshold: 0.3
+      DashedLinePrefab: {fileID: 1709254077376921, guid: 7ab7f338a6d2c70c37126a81e5813e86, type: 2}
+  - MinimapConfigId: 3
+    MinimapConfigDesc: 迷你地图
+    MiniMapUICameraOrthographicSize: 12
+    BoundExtendSize: 4
+    MarkZoomThreshold: 0.1
+    ShowMapSwitch: 1
+    CameraControllerSetting:
+      MinCameraOrthographicSize: 20
+      MaxCameraOrthographicSize: 40
+    DescSetting:
+      ZoomThreshold: 0.5
+      DashedLinePrefab: {fileID: 1709254077376921, guid: 7ab7f338a6d2c70c37126a81e5813e86, type: 2}
+  - MinimapConfigId: 4
+    MinimapConfigDesc: 较大地图-赛季用
+    MiniMapUICameraOrthographicSize: 12
+    BoundExtendSize: 4
+    MarkZoomThreshold: 0.1
+    ShowMapSwitch: 0
+    CameraControllerSetting:
+      MinCameraOrthographicSize: 20
+      MaxCameraOrthographicSize: 100
+    DescSetting:
+      ZoomThreshold: 0.3
+      DashedLinePrefab: {fileID: 1709254077376921, guid: 7ab7f338a6d2c70c37126a81e5813e86, type: 2}
+  - MinimapConfigId: 5
+    MinimapConfigDesc: 特大国度地图
+    MiniMapUICameraOrthographicSize: 12
+    BoundExtendSize: 4
+    MarkZoomThreshold: 0.1
+    ShowMapSwitch: 1
+    CameraControllerSetting:
+      MinCameraOrthographicSize: 20
+      MaxCameraOrthographicSize: 120
+    DescSetting:
+      ZoomThreshold: 0.3
+      DashedLinePrefab: {fileID: 1709254077376921, guid: 7ab7f338a6d2c70c37126a81e5813e86, type: 2}
+  TileSettings:
+  - MapClassIds: 0a0000000b000000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 9ab67c99b6b801fd16f8c5a95ec80d90, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Spider
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 61130433332ea78234b56124e57d9050, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 9e560d28501cb5ed0ba3d04b660c6099, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 9e560d28501cb5ed0ba3d04b660c6099, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 9e560d28501cb5ed0ba3d04b660c6099, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 9e560d28501cb5ed0ba3d04b660c6099, type: 2}
+  - MapClassIds: 0c000000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 42c5b060b18c75f293a826db32b5cb0c, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: e3515f71767f567f63fd9aa71d3e95d8, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Lava
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: d471eaf0aa32386e11b38767fd21edb0, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: e36993c2549d350a22b36e8937574ad2, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: e36993c2549d350a22b36e8937574ad2, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: e36993c2549d350a22b36e8937574ad2, type: 2}
+    - AreaTag: Oasis
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: d3fbdb9f390b0473d04a0af00c2ba1aa, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 7d89dc1a835b9d48ad3d0dff5a0c43aa, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 7d89dc1a835b9d48ad3d0dff5a0c43aa, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 7d89dc1a835b9d48ad3d0dff5a0c43aa, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 7d89dc1a835b9d48ad3d0dff5a0c43aa, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: d2f53707b7f516772c4af867d553f81c, type: 2}
+  - MapClassIds: 0d00000010000000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 45634ee927fbc41185623338eda051bd, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 0c3cec444f080052c0759bfdc1a3d67c, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Hell
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 3bfa08414f35c3f92b67c768eb0b5732, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 07db9bce1581089f025ef80f69813682, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 07db9bce1581089f025ef80f69813682, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 07db9bce1581089f025ef80f69813682, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 07db9bce1581089f025ef80f69813682, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: 0f95e708c8dfb1bae318c12d42eb9536, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: a31487859d0f12e5a38a13367e662d2e, type: 2}
+    - AreaTag: YaoQi
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 4d39af7d74065427100a52f2a465cebe, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: a23f89dc36cdb9985998ad9786b4d080, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 6db858501e53fffccbdc6f1482db6ae4, type: 2}
+    - AreaTag: Village
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 45634ee927fbc41185623338eda051bd, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 46c0edd8fa0543c3c6e8cbaff6cffe1f, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 0c3cec444f080052c0759bfdc1a3d67c, type: 2}
+  - MapClassIds: 0e000000600000004da400004ea400004fa400006aa400006ca40000d1a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 700103403ddf76edeaf83a5d95ade8b0, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Bamboo
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 7b5a5b46ae77cf2538e2ffee7b0d28b1, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: b2a5a6c326e72c4deca7116e8f23f5ea, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: b2a5a6c326e72c4deca7116e8f23f5ea, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: b2a5a6c326e72c4deca7116e8f23f5ea, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: b2a5a6c326e72c4deca7116e8f23f5ea, type: 2}
+    - AreaTag: Bronze
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: f55f310ba3c4a2adc04f6bbede7c5575, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: b08b59d582bcff898ed8294cad0f0a84, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: b08b59d582bcff898ed8294cad0f0a84, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: b08b59d582bcff898ed8294cad0f0a84, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: b08b59d582bcff898ed8294cad0f0a84, type: 2}
+    - AreaTag: Lake
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: b6ce6ec431ce6cfd5ad5c1e89dc8c784, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 93e1ef630d4d122ea1f0f8a4c6d6fe2f, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 93e1ef630d4d122ea1f0f8a4c6d6fe2f, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 93e1ef630d4d122ea1f0f8a4c6d6fe2f, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 93e1ef630d4d122ea1f0f8a4c6d6fe2f, type: 2}
+    - AreaTag: Rotten
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 232f11f8eca488da1eef8321709b61ed, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 96b9f1fc1315f9094a45be126a8eb3ba, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 96b9f1fc1315f9094a45be126a8eb3ba, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 96b9f1fc1315f9094a45be126a8eb3ba, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 96b9f1fc1315f9094a45be126a8eb3ba, type: 2}
+    - AreaTag: Snow
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 0a43693b38e73eb8a208256da377bea1, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 83d6a3c2be314dcca7806805fb5a373e, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 83d6a3c2be314dcca7806805fb5a373e, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 83d6a3c2be314dcca7806805fb5a373e, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 83d6a3c2be314dcca7806805fb5a373e, type: 2}
+  - MapClassIds: 110000006da4000073a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 4eb62fd32158afe64ea2f33e24f98ae1, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 586a980630a82769a2fedf006f28c9d3, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 586a980630a82769a2fedf006f28c9d3, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 586a980630a82769a2fedf006f28c9d3, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 586a980630a82769a2fedf006f28c9d3, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Dirt
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 995d641cc5d59c876d467bd625300afc, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 91e08608fe1e417dffcb3518257621b9, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 91e08608fe1e417dffcb3518257621b9, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 91e08608fe1e417dffcb3518257621b9, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 91e08608fe1e417dffcb3518257621b9, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Ruins
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: fc7e5189789206eebb24e486dfd6924d, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 679d3a71eca8ad7fbdb941848b73814d, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 679d3a71eca8ad7fbdb941848b73814d, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 679d3a71eca8ad7fbdb941848b73814d, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 679d3a71eca8ad7fbdb941848b73814d, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+  - MapClassIds: 75a400008da400008ea400008fa4000076a4000090a4000091a4000092a4000077a4000093a4000094a4000095a4000079a4000096a4000097a4000098a400007aa4000099a400009aa400009ba400007ba400009ca400009da400009ea400007da400009fa40000a0a40000a1a400007ea40000a2a40000a3a40000a4a400007fa40000a5a40000a6a40000a7a4000085a40000a8a40000a9a4000086a40000aaa40000aba400008aa400008ba4000089a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 700103403ddf76edeaf83a5d95ade8b0, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Mountain
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 42c5b060b18c75f293a826db32b5cb0c, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: e344f42b80151e66d57f64196a3bc3d0, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Lake
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 4d39af7d74065427100a52f2a465cebe, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 17da9ff46baac69f0ce9fc3ce98d6372, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Forest
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 9ab67c99b6b801fd16f8c5a95ec80d90, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 7bd1e85e56fadb9729f8eb70b26e67eb, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+  - MapClassIds: 1300000053a4000055a4000056a4000058a4000059a4000061a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 700103403ddf76edeaf83a5d95ade8b0, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: d260a11f2440ce6cd2d168f98d7c9075, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Field
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 625184765528d1fab44b5f8a0b1f358a, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: b84081fc3a84defd5f90fdcd57ac5cbc, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: b84081fc3a84defd5f90fdcd57ac5cbc, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: b84081fc3a84defd5f90fdcd57ac5cbc, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: b84081fc3a84defd5f90fdcd57ac5cbc, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Factory
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: e0d26c99ac0ea5a3abc6e5463ee292c2, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: e5ed72bf2fb0a1a150e686f279559603, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: e5ed72bf2fb0a1a150e686f279559603, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: e5ed72bf2fb0a1a150e686f279559603, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: e5ed72bf2fb0a1a150e686f279559603, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Beach
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 7805d6ba65f2d9f179102b4fa6a04735, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 49fc0da1a4101105bf39a3e12f79b9cf, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 49fc0da1a4101105bf39a3e12f79b9cf, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 49fc0da1a4101105bf39a3e12f79b9cf, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 49fc0da1a4101105bf39a3e12f79b9cf, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Sky
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 096d5b9c819e55f82bc8d88e6f7846bd, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 4838cc6e2e288f44d57deaf398184a58, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 4838cc6e2e288f44d57deaf398184a58, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 4838cc6e2e288f44d57deaf398184a58, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 4838cc6e2e288f44d57deaf398184a58, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+  - MapClassIds: 14000000bba40000bca40000bda40000bea4000054a4000057a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 4d05648b0ef6cf17c74af9d5b770caf7, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 7aa5c14f4dbdc41712516569b4466a72, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 7aa5c14f4dbdc41712516569b4466a72, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 7aa5c14f4dbdc41712516569b4466a72, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 7aa5c14f4dbdc41712516569b4466a72, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+  - MapClassIds: 1500000016000000d9a40000daa40000dba40000dca40000dda40000dea40000e0a40000e6a40000e8a40000e9a40000eaa40000eba40000eca40000eda40000efa40000f5a40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 6dbfa537b16e5ea3612ec4c98da15a9c, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Ice
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 417759f5764f1f7d4c90238d18f678b6, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 88b354a61582a939d0f1e8b65b0ef97b, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 88b354a61582a939d0f1e8b65b0ef97b, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 88b354a61582a939d0f1e8b65b0ef97b, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 88b354a61582a939d0f1e8b65b0ef97b, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Fire
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 6dbfa537b16e5ea3612ec4c98da15a9c, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: f5e3e36cf78210614c7e4b5c55980dc1, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: 0567fe80a285cbe81e9b9611dc9caa6b, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Fireruins
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: aca2d2564a849d36b5420ef9e551ad3b, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: b38da6df8102005df26721198906cda5, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: b38da6df8102005df26721198906cda5, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: b38da6df8102005df26721198906cda5, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: b38da6df8102005df26721198906cda5, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+  - MapClassIds: 17000000fea40000ffa40000
+    AreaTileDatas:
+    - AreaTag:
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: bc8a0ac110f9d77f10938d4e6c0e8869, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Green
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: bc8a0ac110f9d77f10938d4e6c0e8869, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: bfd8187f85de9abf79ab887e3376295b, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Blue
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 0ba89742f9e6e187563d5dbfda415a77, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: 3c219dbaac28f86d0a0477b0945df625, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: 3c219dbaac28f86d0a0477b0945df625, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: 3c219dbaac28f86d0a0477b0945df625, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: 3c219dbaac28f86d0a0477b0945df625, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Red
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: eee621ae378bfa6fbc3d38c6da09c160, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: dd1616121f8ec163abee3cdacfed3fe5, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: dd1616121f8ec163abee3cdacfed3fe5, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: dd1616121f8ec163abee3cdacfed3fe5, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: dd1616121f8ec163abee3cdacfed3fe5, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Yellow
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: 5c9f357f1f4d75a82421c5627a63b625, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: ccc5048e32d1cb14d2a4960452642c4a, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: ccc5048e32d1cb14d2a4960452642c4a, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: ccc5048e32d1cb14d2a4960452642c4a, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: ccc5048e32d1cb14d2a4960452642c4a, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
+    - AreaTag: Dark
+      GroundTypeTileDatas:
+      - GroundType: 0
+        Tile: {fileID: 11400000, guid: c6cdc90facb7e3818d3af5da14bebfde, type: 2}
+      - GroundType: 1
+        Tile: {fileID: 11400000, guid: f52a6264d4f8f97965aac1d17a2a0a79, type: 2}
+      - GroundType: 2
+        Tile: {fileID: 11400000, guid: f52a6264d4f8f97965aac1d17a2a0a79, type: 2}
+      - GroundType: 4
+        Tile: {fileID: 11400000, guid: f52a6264d4f8f97965aac1d17a2a0a79, type: 2}
+      - GroundType: 5
+        Tile: {fileID: 11400000, guid: f52a6264d4f8f97965aac1d17a2a0a79, type: 2}
+      - GroundType: 6
+        Tile: {fileID: 11400000, guid: 672150c5b256a9669896f519a1076eaf, type: 2}
+      - GroundType: 3
+        Tile: {fileID: 11400000, guid: ebb1224007c0fd390208bb90a7a85b0f, type: 2}
+      - GroundType: 8
+        Tile: {fileID: 11400000, guid: 6ce4d32e08da32e2b54ed1a3ee743d04, type: 2}
