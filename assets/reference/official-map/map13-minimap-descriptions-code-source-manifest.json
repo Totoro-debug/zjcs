@@ -1,0 +1,138 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapRegionDescManager.cs",
+      "sha256": "62827bad882a5e566a76750369b9c466fe8aff0f05dab9f8c6e6476f05fb23a6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapRegionDescItem.cs",
+      "sha256": "f54647fb68ef4b4bfaeeab92c9e9b2c27866dfe59e8f9207b048e5ca67bcebbc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapRegionDescItemUI.cs",
+      "sha256": "a44d66c0f675a5443ee5b0e843ad08a2e65fffd7fd33f7df34e89901a044a710"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapRegionBoardLineManager.cs",
+      "sha256": "6bdc24cf679035ac262fff48e6dfedb031ebe7622c05152c90a24b604728a2c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionType.cs",
+      "sha256": "d007efcd08e4cc82ff8f13a8f10f6be9d08ddba297822061b73ad64dc3d4a793"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/MapUtils.cs",
+      "sha256": "c61cc6fd38cb18ce4f42a72d96d93c78fe3792c0412415c25f58dcd0d9009dcd"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MiniMapRegionDescManager.cs",
+      "sha256": "7c62f85e5b3242496f8a4fd269c8daff83e026bbd537b65994430f35d599fcbf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MiniMapRegionDescItem.cs",
+      "sha256": "a5973b9ac54b9598f203c5880d713a800b4ceb4e9fdeabf7304b59f25dc2bbd0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MapRegionDescItemUI.cs",
+      "sha256": "ef0f54242d74f158d1582e264af8e62fb50b5b5edc203fbff36e65c8f6a93754"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MiniMapRegionBoardLineManager.cs",
+      "sha256": "528046b17e0133e35bd2596220ec2518f5408ddae6caade2b0fb2c73377c6797"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MapRegionType.cs",
+      "sha256": "a0349eb1b31b6103cd2b3782b106f9e07f1469684a48b1675812798fe507896a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MiniMapDescriptionContext.cs",
+      "sha256": "bac80dd1ef0a28afd43de7f6333ede73cb1c17ed42d0c4436893946026e454bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/MiniMapDescriptionDiagnostic.cs",
+      "sha256": "3ffbbd2deebaca686ff8426e11e7d031bcdfff704a7d697f0228f946ded6bafc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapDescriptions/Zjcs.Official.World.Map13MiniMapDescriptions.asmdef",
+      "sha256": "a3e5f4e25438fb267672111a994993b8a1efd781f78cbe6eecc1f172f7616957"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionInfo.cs",
+      "sha256": "8d4e014f3c9c6b6fd5ceff4a7d14f58080cd0587a00b98aaac04e5e5889c18f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/Map13LabelServices.cs",
+      "sha256": "80443a4f8a2b041f027d698fd08f8593890956c0fa10582f56fa728d9c328096"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/MapRegionStrengthDisplayUI.cs",
+      "sha256": "0549b9fceb8a5e606f286e516e3ef10b2ab3a4d7b0b51d0302a6563221705c1d"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_descriptions.py",
+    "sha256": "23fd148433819f647602fd5757b0dcd76fde02d4bf941e6aa39428eb5fdc6e0c",
+    "worktree_sha256": "23fd148433819f647602fd5757b0dcd76fde02d4bf941e6aa39428eb5fdc6e0c",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy complete original description manager, item, full MapRegionDescItemUI, region border-line manager and MapRegionType. Preserve reverse area grouping, integer centers, junction/walkable and progress gates, text/rating/strength display, original village line/highlight and full-screen subscriptions, doubled-grid border path traversal with the original 1000-call limit, dashed-line pool and world coordinates. Adapt original singleton/resource/injection backends to explicit local context; reuse native label services, UIBase, formulas, language and original grid visibility. No UI layout or art substitute.",
+  "limitations": [
+    "Native region-description/highlight prefabs and complete root/local-context binding, formal map interactions/save and Windows Player must be verified."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "regions": 106,
+        "prefabs": 4,
+        "sprites": 5,
+        "centers": 106,
+        "visibility_cells": 57600,
+        "unlocked_by_visibility": 105,
+        "line_points": 13,
+        "asset_loads": 4,
+        "disposed": 4,
+        "rendered_pixels": 195243,
+        "border_paths": 1,
+        "border_segments": 88,
+        "original_native_prefabs": true,
+        "junction_gate": true,
+        "progress_unlock": true,
+        "public_status": true,
+        "progress_formula": true,
+        "full_screen_highlight": true,
+        "reentry": true,
+        "subscriptions_released": true,
+        "original_line_pool": true
+      },
+      "log_sha256": "b514e8bcadd608ae6f772cca480dd0f37951bdd7404004cd68cd86a78683a3aa",
+      "runtime_errors": 0
+    },
+    "screenshot": {
+      "sha256": "2d19820e79887947ffffcf691eec7d6d25dc030fb6c83b12d5b743e3f2ad3ec0",
+      "viewed": true,
+      "scope": "Actual original URP regional Tilemaps, native Chinese descriptions, village highlight and original 88-segment pooled border. Diagnostic camera only; no formal mouse/input/save or Player claim."
+    },
+    "project_validation": {
+      "exit_code": 0,
+      "log_sha256": "3c317a34ca1913af02a4cba97a0466e1b0439fe023cf6213bec80dfbed495b8f"
+    },
+    "static_metadata": {
+      "passed": true,
+      "guid_count": 75986
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapDescriptionsAcceptance.cs",
+      "sha256": "872118c836a1a7d64e232ade567fed71684d121cac61539baaa2480c0e6f3a64"
+    },
+    "scope": "Native module rendering and UI lifecycle only. Whole map formal root/input/save and Windows Player remain pending."
+  }
+}

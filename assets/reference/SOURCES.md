@@ -108,3 +108,5 @@ Map13 原剧情演出请求边界：`map13-story-playable-requests-source-manife
 泽之国原小地图尺寸保持：`prepare_unity_map13_minimap_sizing.py` 完整迁移原三个尺寸保持类，直接复用原 GAction 和 UIBase，保留阈值、统一缩放、原默认值恢复与全部订阅生命周期，只适配命名空间、根依赖端口、日志和资源释放后端。代码／依赖哈希、Play Mode 的 20 个公式边界、28 个缩放保护条件、初始化／重新启用及 61 次事件，连同 Unity 验证结果见 [原代码清单](official-map/map13-minimap-sizing-code-source-manifest.json)。未改变正式 prefab 或素材，原小地图根和正式画面／输入／存档及 Player 尚未接通。
 
 泽之国原小地图地区边界：`prepare_unity_map13_minimap_borders.py` 迁入两个完整原几何类，直接复用原 Pos2d／Direction，仅适配命名空间和日志。原代码／依赖哈希和实际 Play Mode 全图边线、村庄轮廓、凹角偏移、取整边界结果见 [原代码清单](official-map/map13-minimap-borders-code-source-manifest.json)。正式界面／根接入和 Player 仍未完成。
+
+泽之国原小地图地区说明：`prepare_unity_map13_minimap_descriptions.py` 迁入四个完整原类、原地区类型及完整 `MapUtils.GetMapRegionPosList`，复用原文本／战力／UIBase／可见性，仅适配本地服务后端。`prepare_unity_map13_minimap_description_assets.py` 复原两套原说明与村庄线框／高亮，使用已逐字段验证的原 RefIds 注册表，保留所有原层级、对象 ID、字段、5 个 Sprite 网格／UV／矩形与 3 张 ASTC 贴图原 mip；复用所选官方字体及其独立运行时字形实例。106 地区中心、全图解锁条件、状态／进度、全屏高亮、原虚线池、真实渲染和资源释放结果见 [代码清单](official-map/map13-minimap-descriptions-code-source-manifest.json)、[素材清单](official-map/map13-native-minimap-descriptions-source-manifest.json)。正式全图鼠标、存档、根绑定与 Player 尚未完成。
