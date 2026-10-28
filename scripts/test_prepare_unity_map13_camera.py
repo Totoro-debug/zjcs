@@ -25,4 +25,22 @@ class OriginalCameraProvenance(unittest.TestCase):
         self.assertEqual(len(bindings['records']),9)
         self.assertEqual(len({(r['path'],r['type']) for r in bindings['records']}),9)
 
+class OriginalCameraVolumeProvenance(unittest.TestCase):
+    def test_native_volume_and_all_original_parameter_sources_are_verified(self):
+        receipt=json.loads((ROOT/'assets/reference/official-map/map13-camera-volume-source-manifest.json').read_bytes())
+        self.assertEqual(receipt['manifest'],'871_156598')
+        self.assertEqual(receipt['counts'],{'objects':2,'bloomParameters':11,'checkedFields':29})
+        for record in receipt['inputs']+receipt['tools']+receipt['engineSources']+receipt['outputs']+receipt['referenceAssemblies']:
+            with self.subTest(path=record['path']):
+                self.assertEqual(hashlib.sha256((ROOT/record['path']).read_bytes()).hexdigest(),record['sha256'])
+        source=json.loads((ROOT/'unity/Assets/Official/World/Map/13/Source/native-camera-volume.json').read_bytes())
+        self.assertEqual(len(source['objects']),2)
+        self.assertEqual(len({obj['identity'] for obj in source['objects']}),2)
+        self.assertTrue(all(obj['source']['origin']=='apk_zip' for obj in source['objects']))
+        bloom=next(obj for obj in source['objects'] if obj['type']=='Bloom')['fields']
+        self.assertEqual(bloom['skipIterations'],{'m_OverrideState':1,'m_Value':5})
+        self.assertEqual(bloom['maxIterations'],{'m_OverrideState':1,'m_Value':5})
+        self.assertEqual(bloom['clamp'],{'m_OverrideState':0,'m_Value':10})
+        self.assertEqual(bloom['dirtTexture'],{'m_OverrideState':0,'m_Value':{'m_FileID':0,'m_PathID':0},'dimension':1})
+
 if __name__=='__main__':unittest.main()
