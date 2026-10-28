@@ -290,6 +290,10 @@
     "path": "assets/reference/profession-ui/weapon-texture-loader-source-manifest.json",
     "sha256": "1f9bd4b5f36649edd056b1f198017b450ec6be4181db45d05b4fc83f112af46f"
   },
+  "detail_controllers": {
+    "path": "assets/reference/profession-ui/detail-controllers-source-manifest.json",
+    "sha256": "ac5ae32aa64028d1c66484168a4bf24e009ee63b9bb61d1f2a15381c6f6be9fa"
+  },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
@@ -480,7 +484,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "9caa5f257589524ce7d366c59b6aa010725ff8572c740d2e72338944026848a0"
+    "sha256": "17aa7a5320485e423319398ad162325675cf1582660d705a0846df9b096e756b"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

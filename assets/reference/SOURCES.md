@@ -57,6 +57,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业原剑杖资源 | [原默认剑／杖资源与可执行 shader](profession-ui/weapon-resources-source-manifest.json)；四个原 UI 层级、完整共享模型与图集、实际高分辨率纹理、原高度裁剪程序及精确曲线采样；验证与缺项见[职业功能页](../../docs/features/professions.md) |
 | 职业原轻量外观与材质管理 | 当前 871_156598 官方应用程序集及反编译类 | 原 AppearanceUILite 生命周期、完整 AppearanceAssetManager 与配置／共享材质记录；本地资源／Graphic 边界，实际剑杖贴图生命周期 Play Mode 和 GPU 验证；正式 prefab／整页尚未接通 | [来源与哈希](profession-ui/appearance-ui-lite-source-manifest.json) |
 | 职业原武器加载器与图集 | 当前 871_156598 原 APK／已缓存官方资源 | 完整 398 项占位／主图／染色映射与原图集材质、原管理配置和 shader 回退依赖；400 个纹理 GPU 哈希、真实本地请求与原外观生命周期验证；完整武器 prefab／整页尚未接通 | [来源与哈希](profession-ui/weapon-texture-loader-source-manifest.json) |
+| 职业原详情窗口控制器 | 当前 `871_156598` 官方应用反编译代码 `ProfessionPanel`、`ProfessionSkillBadgeRewarder`、`ProfessionChangeJumpBtn` | `assets/reference/profession-ui/detail-controllers-source-manifest.json`；保留原初始化／页签／状态、技能阶位差额与排序、导师后继／回溯及失败分支，仅通过显式接口接入本地服务；完整 prefab 与子面板仍待绑定 |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

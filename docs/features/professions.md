@@ -30,6 +30,8 @@
 
 ### 官方代码与资源依据
 
+职业详情控制器：原 `ProfessionPanel`、`ProfessionSkillBadgeRewarder`、`ProfessionChangeJumpBtn` 的所有方法已迁入，来源与服务边界见 `profession-ui/detail-controllers-source-manifest.json`。保留原初始化／复初始化、三个页签状态、等级上限检查与事件顺序、技能阶位差额／降序展示、领取成功后弹窗、首个后继导师和前置导师回溯；资源句柄按原窗口禁用／导师组件销毁边界释放。隔离 Direct3D Play Mode 的模拟鼠标、遮挡、状态、事件、差额领取和释放检查通过，GPU 控件夹具截图已查看。详情子面板、弹窗内容、正式玩家／导师服务与完整原 prefab 尚未绑定，不代表职业页面完成或 Windows 发布。
+
 以下记录原客户端／配置和已有转换依据；转换产物不等同于 Unity 玩法已接通。
 
 职业页的官方实现为 `ProfessionOverviewPanel`、`ProfessionTreePanel`、`ProfessionTreePanelItem`、`ProfessionPanel`、`ProfessionUpgradePanel`、`ProfessionChangePanel`、`ProfessionPromotionPanel`；等级属性、消耗与奖励继续核对官方 `profession_base`、`level_prop`、`profession_level_cost` 和 `achievement`。旧 `ui.json` 节点投影和历史本地接线不作为 Unity 原生 prefab 迁移或可玩验证的完成依据，当前状态见[职业功能页](professions.md)。

@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "application_assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "name": "ProfessionPanel",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionPanel.cs",
+        "sha256": "59617a7337004a42fbb74f7eadae80b1e55261428e9b28e85c2d308513158fe4"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPanel.cs",
+        "sha256": "a0517c8b95559575eb39b1d28d8a14b0806dedf3fba4cf21d7edb0c887d75e6c"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPanel.cs.meta",
+        "sha256": "6432ef59d80eb93bde51b6125dbac3d4d96e6a59eb24d4c64ec3cad422d7f17d"
+      }
+    },
+    {
+      "name": "ProfessionSkillBadgeRewarder",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionSkillBadgeRewarder.cs",
+        "sha256": "9597edc9e2fd95519a855edc872d00d0a014f259196eab1612dea7796dcddd36"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionSkillBadgeRewarder.cs",
+        "sha256": "d8526a88348588dc8c5900409cb9ffea3deff63ee379b78a64f0cfcda315b42b"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionSkillBadgeRewarder.cs.meta",
+        "sha256": "c0aee564d66f83cd63e685a837b7a439b706593e0bab5579f34b8d6b7bcf76c8"
+      }
+    },
+    {
+      "name": "ProfessionChangeJumpBtn",
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/ProfessionChangeJumpBtn.cs",
+        "sha256": "bcede1034645b6a1a209e4c30c468086b27f975ed6dfc97f7df3bd760612af9c"
+      },
+      "output": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionChangeJumpBtn.cs",
+        "sha256": "3ebc08a58938f47475676024bb83b2737bc7c1bdf841e08a4d2753caa7f824da"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionChangeJumpBtn.cs.meta",
+        "sha256": "71f2f705e0a6b2f7e0049110b92fa7ab089d8f848bcd420784e9fe4147969b96"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionDetailBindings.cs",
+      "sha256": "aaad22c63f930842216126d9317a576afce43bd83a220742cc1686b3a1e00477"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionDetailBindings.cs.meta",
+      "sha256": "2db60c5edaea31bb67dda407d704b3603f04e605c00228469e7af795e21e4179"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_detail_controllers.py",
+    "sha256": "e06598d53ac204d4e6b59f114f3b29115b5af5ab75305711198731e9009ba80a"
+  },
+  "operation": "Copy all original detail-window, skill-rank badge rewarder and tutor-jump controller methods. Keep UIBase initialization, original state/tab/reset order, resource request lifetimes, rank difference and sort, success-only popup, successor-first/backtracking tutor traversal and failure message. Only original service/parser accesses and child-panel calls use explicit injected contracts; enums consumed as profession keys use their original integers.",
+  "validated_scope": "Unity 2022.3.57f1c2 actual Direct3D Play Mode passed: original UIBase Init/re-init/re-enable, three detail states, source shared property pool, real original portrait sprite assignments, colors/levels and independent request disposal; simulated mouse info/upgrade/tutor clicks and occlusion checks; max-level event ordering, unrelated/disabled event filtering, cumulative rank difference 80 with all missing ranks in descending rank/item order, success-only badge popup and no repeat claim; first-successor, predecessor, None short-circuit and failed tutor message. Control GPU screenshot viewed. Child panels, state effects, player/parser/resource/map transaction services are fixtures; this does not validate the actual detail prefab or complete profession page.",
+  "limitations": [
+    "Info/upgrade child panels, rank reward dialog, actual detail prefab/resource/window/player/tutor service integration remain unbound.",
+    "Complete native animated profession pages, save/input and Windows release remain incomplete."
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionDetailControllerValidation.cs",
+      "sha256": "ef02c2ef3378e331470f4b494917308874e9871a65dd6a16d6234a192fae5647"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionDetailControllerValidation.cs.meta",
+      "sha256": "8d734aee07f8e879939a32daa6655f346a4ae77eb2bd3600851e75af3f936f06"
+    }
+  ]
+}
