@@ -491,9 +491,11 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业原生几何裁剪与批次：独立半平面求交覆盖原男女模型 6 个凸裁剪附件，960 组交集与 GEOS 双精度参考核对；保留边界绕序、UV 插值及结束槽位身份。`ProfessionNativeMeshBatches` 按完整原绘制顺序聚合连续图集／混合组、保留显式分隔和槽位颜色，清理旧网格并复用自有 Mesh。两份原职业 prefab 的裁剪、预乘色和零深度字段通过已核验导出链读取；空／禁用／重排／自身结束槽位、分组与释放在 Play Mode 通过，原转换 UI shader 的 D3D11 红蓝几何截图已查看。输入骨骼、几何和白贴图为夹具，不代表真实角色或完整页面通过；未读取骨骼 SDK 实现。哈希、来源和限制见 `profession-ui/native-clipping-source-manifest.json` 及 `profession-ui/mesh-batches-source-manifest.json`。
 
-原玩家外观与职业预览：`prepare_unity_profession_player_appearance.py` 迁移完整玩家外观基类、刷新／动画组件、职业预览及其原克隆／默认武器／追加奖励方法、回调和覆盖契约。保留原对象身份、事件过滤、回调与 Clear、动画／资源执行顺序；协议与本地玩家数据通过显式接口连接，未提供替代规则。原 871 APK 的外观配置包中 7 条动画命名规则按原字段恢复到 `Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset`，绑定迁入的原规则类，包／对象、程序集和输入输出哈希见 `profession-ui/player-appearance-source-manifest.json`。隔离 Play Mode 检查生命周期、覆盖还原、原克隆预览分支与数据不变、规则全部字段／原顺序及反序列化／格式化通过；提供方为夹具，正式角色／页面未完成。主面板原依赖尚有 5 类组件，未生成完整素材快照，未使用骨骼 SDK 实现。
+原玩家外观与职业预览：`prepare_unity_profession_player_appearance.py` 迁移完整玩家外观基类、刷新／动画组件、职业预览及其原克隆／默认武器／追加奖励方法、回调和覆盖契约。保留原对象身份、事件过滤、回调与 Clear、动画／资源执行顺序；协议与本地玩家数据通过显式接口连接，未提供替代规则。原 871 APK 的外观配置包中 7 条动画命名规则按原字段恢复到 `Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset`，绑定迁入的原规则类，包／对象、程序集和输入输出哈希见 `profession-ui/player-appearance-source-manifest.json`。隔离 Play Mode 检查生命周期、覆盖还原、原克隆预览分支与数据不变、规则全部字段／原顺序及反序列化／格式化通过；提供方为夹具，正式角色／页面未完成。主面板原依赖尚有 4 类组件，未生成完整素材快照，未使用骨骼 SDK 实现。
 
 原武器外观：`prepare_unity_profession_player_weapon.py` 复制完整应用层 `PlayerWeapon`、部件条目／接口与职业枚举，保留资源句柄边界、原字段、借还和异常顺序、局部变换复位及武器朝向命名方法；骨骼消费接口连接独立原生后端，不读取或复制 SDK 实现。隔离 Play Mode 核对世界／UI 预绑定、独立部件的池标记、未激活子节点、缓存、异常后的朝向播放、无效条目、源 20 秒计时与默认缩放，全部通过。来源、程序集和输入输出哈希及限制见 `profession-ui/player-weapon-source-manifest.json`。验证使用自有几何端点，无新增替代武器美术，真实资源池／模型动画和完整页面尚未接通。
+
+原 UI 部件：`prepare_unity_profession_ui_parts.py` 复制完整应用层部件处理器、条目、接口、槽分组、分隔元数据和两种枚举，原地址工具限定为三个部件／效果路径方法。资源句柄、骨骼插槽、跟随器及分隔图形使用显式独立后端接口，不读取 SDK 实现。真实 Play Mode 帧检查皮肤过滤与缓存、额外队列、逆序效果提取、初始化／事件／逐帧排序、前后层级、世界变换保留、延迟销毁、卸载与句柄释放通过。原空 prefab 失败分支保留原未释放句柄行为；生产资源、跟随器和真实角色画面尚未接通。来源、程序集及输入输出哈希见 `profession-ui/ui-parts-source-manifest.json`。当前主页面依赖重查剩余 4 类组件、0 个缺失 GUID，完整页面与 Windows 发布仍未完成。
 
 ## 技能首页与安装流程复核
 

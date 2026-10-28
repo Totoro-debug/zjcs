@@ -62,7 +62,7 @@
 
 全部原附件已接入独立的原生区域／网格、包围框、裁剪及点对象，保留原三角索引、UV、权重、类型与骨骼数据缩放。隔离 Play Mode 对 34,009 个附件、254,385 个缩放后顶点／点和 635,730 个三角索引检查通过；最大坐标差 `3.81469727E-06`，最大 UV 差 `5.96046448E-08`。原 `body_200_M_01` 高分辨率主图及染色图按原加载器的占位贴图和当前 AssetTable GUID 解析，APK 优先、逐 mip 解码并保留采样／色彩空间；同名两图使用独立路径，载荷与哈希分别核对。实际 D3D11 渲染含 25,719 个可见像素、22,359 个彩色像素，与独立参考几何零像素超出每通道 2 的差值，运行截图已查看。这是合成矩阵下的原附件几何验证，尚未验证原约束角色、生产图形组件或完整职业页。代码位于 `Runtime/Offline/ProfessionUI/ProfessionNativeAttachment.cs`，纹理位于 `Assets/Official/ProfessionUI/CharacterTextures/`，来源见[原生附件与衣服图集](../../assets/reference/profession-ui/native-attachments-source-manifest.json)。本次未生成完整素材快照。
 
-两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 5 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 4 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
 
@@ -118,6 +118,8 @@
 原 `PlayerAppearanceInfo`、`PlayerAppearance`、`PlayerAnimationAppearance` 与 `ProfessionAppearance` 及其回调／覆盖契约已迁入，保留玩家事件登记／停用／恢复、忽略地图与晋升事件、轻量信息回调替换／释放、运行数据对象复用、覆盖还原和动画先于加载的原顺序。`Clear` 保留原覆盖器及未释放的轻量信息回调，不额外改变原行为。职业预览按原 `ProfessionUtils.SetProfessionAppearance` 克隆数据，再修改默认主／副武器与追加外观奖励，最后应用外观并循环播放 UI 动画；原玩家数据不变。APK 内 7 条动画命名规则按原字段和顺序恢复为 `Assets/Official/ProfessionUI/Portrait/AppearanceAnimNameCombineRule.asset`。隔离 Play Mode 验证上述生命周期、缺失性别默认值、None 分支、动画名缓存／loop 和原配置反序列化／格式化通过。数据、回调及资源／动画提供方为验证对象，正式本地玩家事件、外观数据构建和角色后端仍待连接，不代表职业页可运行。来源与入口见[玩家外观及职业预览](../../assets/reference/profession-ui/player-appearance-source-manifest.json)；本批素材未生成完整快照。
 
 原 `PlayerWeapon`、`CharacterPartPoolEntry`、部件借还接口和完整职业枚举已迁入，保留预绑定世界／UI 组件选择、独立部件借还、UI 不入池／世界入池、未激活子骨骼查找、局部位置／旋转／缩放复位、原皮肤缓存和朝向动画。加载事件异常按原逻辑先记录并重抛，由刷新外层捕获后仍执行朝向播放；释放仅归还有效条目，不额外清除原保留字段。隔离 Play Mode 检查上述执行顺序、重复预绑定换皮肤、无效借用／骨骼、左右朝向与皮肤兜底，以及条目原 20 秒存活时间和默认缩放恢复通过。骨骼、资源和池为验证端点，未验证真实武器动画／美术或完整职业页。来源与入口见[原武器外观调用链](../../assets/reference/profession-ui/player-weapon-source-manifest.json)。
+
+原 `AppearancePartHandler`／`AppearanceUIPartHandler`、部件条目、槽位分组、部件接口、分隔槽配置及部件模式枚举已迁入，保留过滤、皮肤缓存、效果子节点逆序提取、额外挂件队列、主部件初始化及事件顺序。原分隔指令和前／后挂载、默认保留世界变换、动态槽位去重、逐帧脏状态复位，以及延迟销毁和立即卸载／句柄释放顺序均通过真实 Play Mode 帧检查；空 prefab 的原句柄保留行为也按源码核对。首次验证预期误将后置挂件设为前层，修正验证后通过，原实现未改。骨骼／跟随器／资源和分隔渲染器仍为验证端点，真实部件 prefab 和生产后端尚未绑定。来源见[原 UI 部件挂载](../../assets/reference/profession-ui/ui-parts-source-manifest.json)。主页面静态依赖重查为 881 个资产、87 类脚本、4 类尚未迁入组件、0 个缺失 GUID；不代表完整页面可运行。
 
 ## 自定义实现
 
