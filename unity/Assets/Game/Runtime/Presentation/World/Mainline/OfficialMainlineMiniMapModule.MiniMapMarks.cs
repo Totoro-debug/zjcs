@@ -31,7 +31,8 @@ namespace Zjcs.Presentation.World
                     if (host.mapLogicTags.TryGetValue(entity.PlacementId, out var tag))
                         state = host.localSave.mapLogicStates.FirstOrDefault(value => value.Tag == tag.Tag)?.State ?? state;
                     if (entity.TypeId == 202 && host.statues.IsGoddessActivated(entity)) state = binding.completeState;
-                    bool completed = state == binding.completeState || host.localSave.completedEntityPlacements.Contains(entity.PlacementId);
+                    bool completed = state == binding.completeState || (!host.IsMap12StelePresentation(entity)
+                        && host.localSave.completedEntityPlacements.Contains(entity.PlacementId));
                     bool active = worldObject != null && worldObject.activeSelf && host.regions.IsRegionAccessible(entity.Region)
                         && !(binding.hideInEnd && completed);
                     if (!nativeMiniMapMarks.TryGetValue(entity.PlacementId, out var mark))

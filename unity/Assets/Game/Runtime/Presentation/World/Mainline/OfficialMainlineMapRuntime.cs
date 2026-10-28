@@ -348,6 +348,7 @@ namespace Zjcs.Presentation.World
             if (entityData == null) throw new InvalidOperationException("Official Map" + mapClassId + " entity data is missing.");
             Vector2 mapOrigin = new Vector2(session.Definition.Navigation.Origin.X,
                 session.Definition.Navigation.Origin.Y);
+            if (mapClassId == 12) InitializeMap12SteleEntities(mapOrigin);
             entityView.Initialize(entityData, entityRoot, mapOrigin, worldCamera, mapClassId);
             entityView.EntitySelected += navigation.OnEntitySelected;
             mapEntities.Clear();
@@ -517,6 +518,8 @@ namespace Zjcs.Presentation.World
             CloseHandInView();
             if (map12BuildingDialog != null) Destroy(map12BuildingDialog);
             map12BuildingDialog = null;
+            map12SteleEntities?.Dispose();
+            map12SteleEntities = null;
             nativeMap12World?.Dispose();
             miniMap.CloseNativeFullMiniMap();
             hud.CloseNativeWorldFunctions();

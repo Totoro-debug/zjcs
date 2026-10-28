@@ -224,11 +224,13 @@ namespace Zjcs.Presentation.World
                         && stamina.Stamina.Available(mapClassId, entity.PlacementId, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
                 }
                 bool active = (spawned || goddess) && regions.IsRegionAccessible(entity.Region)
-                    && (entity.TypeId == 223 || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
+                    && (entity.TypeId == 223 || IsMap12StelePresentation(entity)
+                        || !localSave.completedEntityPlacements.Contains(entity.PlacementId))
                     && !IsMapLogicEntityDestroyed(entity.PlacementId);
                 entityView.SetEntityActive(entity.PlacementId, active);
             }
             SynchronizePuzzleGround();
+            map12SteleEntities?.Refresh();
             if (MapProfile.HasNativeUi) miniMap.RefreshNativeMiniMapMarks();
         }
 

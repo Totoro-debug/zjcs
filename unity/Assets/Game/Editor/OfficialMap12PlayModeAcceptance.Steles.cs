@@ -106,6 +106,12 @@ namespace Zjcs.Editor
                     OfficialMainlineMapInspection.Set(host, "mapClassId", 12);
                     OfficialMainlineMapInspection.Set(host, "progressionSave", session);
                     OfficialMainlineMapInspection.Set(host, "localSave", map);
+                    OfficialMainlineMapInspection.Set(host, "map12Steles", catalog);
+                    SteleRequire((int)OfficialMainlineMapInspection.Call(host, "GetMap12StelePeriodicityCount", stele.PeriodicityGroupId) == 1,
+                        "Native stele count ignored a committed profile before the map-file recovery.");
+                    int untouchedGroup = catalog.Data.Steles.First(v => v.PeriodicityGroupId != stele.PeriodicityGroupId).PeriodicityGroupId;
+                    SteleRequire((int)OfficialMainlineMapInspection.Call(host, "GetMap12StelePeriodicityCount", untouchedGroup) == 0,
+                        "Native stele count completed an unrelated periodicity group.");
                     OfficialMainlineMapInspection.Call(host, "RecoverMap12SteleCompletions");
                     int[] MapValues(string field) => (int[])mapType.GetField(field).GetValue(map);
                     SteleRequire(MapValues("completedEntityPlacements").Contains(stele.PlacementId)
@@ -114,6 +120,8 @@ namespace Zjcs.Editor
                     OfficialMainlineMapInspection.Call(host, "RecoverMap12SteleCompletions");
                     SteleRequire(MapValues("completedPeriodicityGroups").Count(v => v == stele.PeriodicityGroupId) == 1,
                         "Repeated cold recovery duplicated a periodicity group.");
+                    SteleRequire((int)OfficialMainlineMapInspection.Call(host, "GetMap12StelePeriodicityCount", stele.PeriodicityGroupId) == 1,
+                        "Recovered stele profile/map flags counted one completion twice.");
                 }
                 finally { UnityEngine.Object.DestroyImmediate(host.gameObject); }
             }

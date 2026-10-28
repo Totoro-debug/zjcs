@@ -31,6 +31,8 @@ namespace Zjcs.Presentation.World
 
         public int EntityCount { get; private set; }
         public IReadOnlyList<OfficialMap10EntityInfo> EntityInfos => entityInfos;
+        public Func<OfficialMap10EntityInfo, GameObject, bool> NativeVisualFactory { get; set; }
+        public Func<int, MapGridPoint, bool> NativeGridSetter { get; set; }
 
         public bool SetEntityActive(int placementId, bool active)
         {
@@ -48,7 +50,8 @@ namespace Zjcs.Presentation.World
         {
             GameObject entity = FindEntityObject(placementId);
             if (entity == null) return;
-            entity.transform.localPosition = new Vector3(mapOrigin.x + grid.X, mapOrigin.y + grid.Y, -grid.Y * 0.001f);
+            if (NativeGridSetter == null || !NativeGridSetter(placementId, grid))
+                entity.transform.localPosition = new Vector3(mapOrigin.x + grid.X, mapOrigin.y + grid.Y, -grid.Y * 0.001f);
             OfficialMap10EntityInfo info = entityInfos.Find(value => value.PlacementId == placementId);
             if (info != null) { info.Grid[0] = grid.X; info.Grid[1] = grid.Y; }
         }
@@ -299,7 +302,8 @@ namespace Zjcs.Presentation.World
                 entityInfos.Add(info);
             }
 
-            if (!string.IsNullOrEmpty(record.modelPath) && models.TryGetValue(record.modelPath, out GeneratedModel model))
+            bool nativeVisual = NativeVisualFactory?.Invoke(info, entity) ?? false;
+            if (!nativeVisual && !string.IsNullOrEmpty(record.modelPath) && models.TryGetValue(record.modelPath, out GeneratedModel model))
             {
                 if (model.states != null)
                 {
