@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "prerequisites": [
+    {
+      "path": "assets/reference/profession-ui/native-appearance-graph-source-manifest.json",
+      "sha256": "d24567136d8f23da8c6fc486d0770ee1aeaa785df9f44ec03e579d9e1f359df5"
+    },
+    {
+      "path": "assets/reference/profession-ui/idle-transform-source-manifest.json",
+      "sha256": "619aa6834aa39ccbae3a597608ef047c4d4a6a44af99218ec7ee56af61efee0f"
+    },
+    {
+      "path": "assets/reference/profession-ui/followers-source-manifest.json",
+      "sha256": "c65aebc0fa06554098bb95bd16aefa25b09566222b413f25d15e887e9eabcb0b"
+    },
+    {
+      "path": "assets/reference/profession-ui/character-resources-source-manifest.json",
+      "sha256": "0fede6890e318829f3b47057cdb781f643dbe9a54cfacbab77084af24b8c52b8"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-transform-validation.json",
+    "sha256": "573b7a7a46a12f2bcbb5fdf7a975ae2aef7e500f82a00c844f943346170a5107"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+    "sha256": "31982986ac58cfdc459e7d17d384dc1f5e165f45e7e29eb20d1e70e2eb598049"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs.meta",
+    "sha256": "c66bb8dede110b60bdd01de35c3b1ece86979ca4bbf6f566352166ecee3e846e"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeFollowerValidation.cs",
+    "sha256": "d2a40205d068cf2a25b4794ecfadf65e0b9641171cfc46fb240527cbb8c99615"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeFollowerValidation.cs.meta",
+    "sha256": "dfa67ca220a6a9162c93c4e1b55a2227bb985bad779b217cdbb4398e43ebfea7"
+  },
+  "application": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionFollowerBindings.cs",
+      "sha256": "7fe9329ffecceeec0b8688c36f25d2dc43f3aab5ba11a31cbb2c4d83dd97c31b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseSkeletonFollower.cs",
+      "sha256": "ba2ef614a29d46fb92d24e1a6a8e8c5876f35190f9957564d8f478cfa1d447e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonGraphicFollower.cs",
+      "sha256": "df975b3e1c253a7f2b61a0924c0e34424adfbbe724441a3fa150612c2c93d073"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/SkeletonRendererFollower.cs",
+      "sha256": "ee3128c81b45da2963f66c3c9c7a5ce73051a4323c332a07b3ee28fba1616f34"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_followers.py",
+    "sha256": "3c30b5314007c95c2d225ef5754de208731efadc27fc83e04d2298585f233c05"
+  },
+  "operation": "Expose stable live native bone and slot objects through the migrated original application follower interfaces. Translate source world positions by the original data scale; world axes stay unscaled, world rotation is the actual X-axis angle and scales are actual local values. Skin-clip/part/follower slot views share identity and current attachment/order. Original UI/world followers execute their own parent/external transforms, visibility and lifecycle against these views. Custom nonzero depth requires an explicit validated provider and is not invented; the original zero-depth UI branch needs none.",
+  "limitations": [
+    "This binds actual native pose objects, not a new physical solver or full SkeletonGraphic.",
+    "Unbound custom slot depth throws; production nonzero custom-depth derivation and actual part/weapon assets remain required.",
+    "Physics/mixing, complete original profession page/input/save and Windows Player remain required."
+  ],
+  "validated_scope": "Actual Direct3D Play Mode passes 96 source frames: 9,768 bone views against independent world references, 12,096 shared slot/attachment/order views, 192 original UI/world follower updates, source-scaled positions, axis-derived angles/local scales, parent/external transforms, attachment visibility, noncustom draw-order spacing, explicit unbound custom-depth rejection and actual zero-depth branch, live matrix overrides, skeleton rebuild and listener cleanup. Original application/native appearance graph regression passes again with the same 96 frames and four original-resolver GPU diagnostics; all four images inspected. Unity import/compile/ProjectTools.Validate pass, root static 74,429 GUIDs and frozen static 73,789 GUIDs pass. This does not validate actual part assets, nonzero custom-depth derivation, physics/mixing, full profession page/input/save or Windows Player."
+}

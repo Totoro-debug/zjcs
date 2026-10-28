@@ -9,12 +9,31 @@ namespace Zjcs.Offline.ProfessionUI
     // Connect the migrated application contracts to actual independent native
     // bone/slot/skin objects. The explicitly named pre-physics sampler is a
     // pipeline stage, never a fallback for unimplemented physical motion.
-    public sealed class ProfessionNativeAppearanceSkeleton : IProfessionAppearanceSkeleton, IProfessionAppearancePartSkeleton
+    public sealed class ProfessionNativeAppearanceSkeleton : IProfessionAppearanceSkeleton, IProfessionAppearancePartSkeleton, IProfessionFollowerSkeleton
     {
-        private sealed class Slot : IProfessionNativeAttachmentSlot
+        private sealed class Bone : IProfessionFollowerBone
         {
             private readonly ProfessionNativeAppearanceSkeleton owner;
-            internal readonly int Index;
+            private readonly int index;
+            internal Bone(ProfessionNativeAppearanceSkeleton owner, int index) { this.owner = owner; this.index = index; }
+            private Matrix4x4 World => owner.Pose.World(index);
+            public bool Active => owner.Pose.IsActive(index);
+            public float WorldX => World.m03 * owner.Source.DataScale;
+            public float WorldY => World.m13 * owner.Source.DataScale;
+            public float WorldRotationX => Mathf.Atan2(World.m10, World.m00) * Mathf.Rad2Deg;
+            public float ScaleX => owner.Pose.LocalScale(index).x;
+            public float ScaleY => owner.Pose.LocalScale(index).y;
+            public float A => World.m00;
+            public float B => World.m01;
+            public float C => World.m10;
+            public float D => World.m11;
+        }
+        private sealed class Slot : IProfessionNativeAttachmentSlot, IProfessionFollowerSlot
+        {
+            private readonly ProfessionNativeAppearanceSkeleton owner;
+            public int Index { get; }
+            public IProfessionFollowerBone Bone => owner.bones[owner.SlotPose.Bone(Index)];
+            public float zOrder => owner.CustomZOrder(Index);
             internal Slot(ProfessionNativeAppearanceSkeleton owner, int index) { this.owner = owner; Index = index; }
             public ProfessionNativeBonePose Pose => owner.Pose;
             public object Attachment => owner.attachments.Attachment(Index);
@@ -22,6 +41,9 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly ProfessionNativeSkinSlots attachments;
         private readonly Slot[] slots;
         private readonly IProfessionSkinClipSlot[] drawOrder;
+        private readonly IProfessionFollowerSlot[] followerOrder;
+        private readonly Bone[] bones;
+        private readonly Func<int, float> customZOrder;
         private readonly Dictionary<string, ProfessionNativeBonePose.Track[]> boneClips = new Dictionary<string, ProfessionNativeBonePose.Track[]>(StringComparer.Ordinal);
         private readonly Dictionary<string, ProfessionNativeSlotPose.Clip> slotClips = new Dictionary<string, ProfessionNativeSlotPose.Clip>(StringComparer.Ordinal);
         public ProfessionNativeSkeletonData Source { get; }
@@ -39,13 +61,35 @@ namespace Zjcs.Offline.ProfessionUI
                 return drawOrder;
             }
         }
-        public ProfessionNativeAppearanceSkeleton(ProfessionNativeSkeletonData data)
+        IProfessionFollowerSlot[] IProfessionFollowerSkeleton.DrawOrder
         {
+            get
+            {
+                for (int i = 0; i < followerOrder.Length; i++) followerOrder[i] = slots[SlotPose.DrawSlot(i)];
+                return followerOrder;
+            }
+        }
+        IProfessionFollowerSlot IProfessionFollowerSkeleton.FindSlot(string name)
+        { int index = Source.FindSlot(name); return index < 0 ? null : slots[index]; }
+        public IProfessionFollowerBone FindBone(string name)
+        { int index = Source.FindBone(name); return index < 0 ? null : bones[index]; }
+        private float CustomZOrder(int slot)
+        {
+            if (customZOrder == null) throw new NotSupportedException("Original custom slot depth has not been bound.");
+            float value = customZOrder(slot);
+            if (float.IsNaN(value) || float.IsInfinity(value)) throw new InvalidOperationException("Original custom slot depth is not finite.");
+            return value;
+        }
+        public ProfessionNativeAppearanceSkeleton(ProfessionNativeSkeletonData data, Func<int, float> customZOrder = null)
+        {
+            this.customZOrder = customZOrder;
             Source = data ?? throw new ArgumentNullException(nameof(data));
             Pose = data.CreateBonePose(); SlotPose = data.CreateSlotPose(Pose);
             attachments = new ProfessionNativeSkinSlots(data.SkinCatalog, Enumerable.Range(0, data.SlotCount).Select(SlotPose.Attachment).ToArray());
+            bones = Enumerable.Range(0, data.BoneCount).Select(i => new Bone(this, i)).ToArray();
             slots = Enumerable.Range(0, data.SlotCount).Select(i => new Slot(this, i)).ToArray();
             drawOrder = new IProfessionSkinClipSlot[slots.Length];
+            followerOrder = new IProfessionFollowerSlot[slots.Length];
         }
         public ProfessionNativeSkin CreateSkin(string name) => new ProfessionNativeSkin(name, Source.SlotCount, Source.BoneCount,
             Source.Constraints.Count, Array.Empty<ProfessionNativeSkin.Entry>(), Array.Empty<int>(), Array.Empty<int>());

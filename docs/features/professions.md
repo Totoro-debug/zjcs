@@ -288,6 +288,8 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 原角色资源入口：已沿原 AssetTable 的四条男女骨骼／分离动画路径及 GUID，建立 `Resources/ProfessionUI/character-resources` 本地目录；主资源载体显式引用已验证的无损骨骼数据和完整原模型元数据，保留缩放、默认混合时长、混合表和层级槽位。原应用 `SpineAnimationSplitBinarySO`／`SplitSpineBinaryAssetContent` 直接迁入，保留 34,793 个字符串、879 条分离动画的原顺序／GUID、原延迟索引和空查找返回。原 `LoadAllAnimationsSkeletonDataModifier.Apply` 为空；原控制器／图集等指针身份保留在元数据中，此载体不执行 SDK 或 AnimatorController。`OfflineProfessionCharacterResources` 为原 `AppearanceCharacter` 提供独立请求句柄；释放请求不卸载目录所拥有的共享资源，部件回调须显式提供。隔离 Direct3D Play Mode 核对全部数据、原路径与 GUID、请求释放及四组真实资源加载后的原职业预览／角色／皮肤链，并实际渲染查看四格核心角色图；Unity 编译与全局校验、仓库 74,374 个 GUID 和隔离工程 73,788 个 GUID 静态检查通过。原 SO 的未拆分名单及职业 prefab 初始动作均声明 `home/idle_M_01`，但重新完整读取男女原主二进制后，实际只含另外 6／11 个主动作；此项保留原声明并明确记录无对应数据，不新增替代动作，初始图形处理仍须接线验证。实际主动作与分离动作合计 896 个均已对上无损载荷；三个已验证待机动作均存在。正式 `SkeletonGraphic`、物理／混合、独立部件、窗口交互／存档及 Player 仍未完成。来源见[原角色资源与分离动画入口](../../assets/reference/profession-ui/character-resources-source-manifest.json)。
 
+实际原生挂点：原 `SkeletonGraphicFollower`／`SkeletonRendererFollower` 已能读取原生角色中稳定的实时骨骼与插槽对象；位置应用原数据缩放，世界轴不重复缩放，旋转取实际 X 轴角度，缩放保留局部值。跟随、裁剪和部件接口共享插槽身份、当前附件及绘制顺序。隔离 Direct3D Play Mode 按 96 组独立世界姿态核对 9,768 个骨骼视图、12,096 个插槽视图及 192 次原 UI／场景跟随更新；父级／外部变换、附件显隐、非自定义顺序间距、实时矩阵覆盖、重建及解绑均通过。职业原 prefab 的自定义深度间距为零，原跟随代码会提前返回零，无须虚构槽位深度；非零自定义深度尚未接入，访问未绑定深度明确报错。角色应用／原生网格回归及四张 GPU 诊断图重跑并查看，Unity 编译、全局校验、仓库 74,429 个 GUID 和隔离工程 73,789 个 GUID 静态检查通过。此处接通挂点对象，独立武器／饰品资源、图形组件、物理／混合及正式页面／存档／Player 仍待完成。来源见[实际原生挂点](../../assets/reference/profession-ui/native-followers-source-manifest.json)。
+
 ## 自定义实现
 
 本地外观会话将原网络玩家／序列化副本替换为已选角色存档的只读投影和深副本；原肖像缓存的修改标记使用会话内单调递增的 UTC ticks，不写回存档或作为玩法时间。存档没有整身外观 ID 和过期集合的对应字段，本作用域不推导其规则。
