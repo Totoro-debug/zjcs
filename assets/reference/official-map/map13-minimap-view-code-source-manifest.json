@@ -1,0 +1,89 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMapViewRangeHandler.cs",
+      "sha256": "9cf4deecc3cc20010deaeb2ee37e25eb794a21bb5de2b9e4ada1be0c7b7f6e5d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapViewRangeHandlerBase.cs",
+      "sha256": "62e2f39655ee8cafd7749b1b8b6c696ed4aa47c1415cb05d9c8fb6d8be2e1044"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapAllViewRangeHandler.cs",
+      "sha256": "1e122080e4e0b372afde4bab4c9b6314d2ce9301c2ae95024cb2a7e26194c96a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapCharacterViewRangeHandler.cs",
+      "sha256": "99485c4ff1fa8c523a34045e1d2c5ed16c4f5302e03e978e16d0c7f846a9549b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/IMapViewRangeHandler.cs",
+      "sha256": "e0451e9e69f92e3f35ea4df58cc1b1b4406288c214a6a989094e22cebcbb1c04"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/MapViewRangeHandlerBase.cs",
+      "sha256": "7d46b4cf11ac2d0f68e5cdcd8f2a0fc23b29e0eeafd4fe7e9f4f5f34d111bf8d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/MapAllViewRangeHandler.cs",
+      "sha256": "5dc661db7fb8d9ea19d27e28a33f4a465e61b3b91944604233ecc20bf0584b02"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/MapCharacterViewRangeHandler.cs",
+      "sha256": "b0d391a8289c0449af2d15aec570a7f8886350a226a423cf750548d09e953fc9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/MiniMapViewInputs.cs",
+      "sha256": "9a8caf767b29d91d018110ac0c2c2cc758089333d268d91bbb2abf88738044c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/Zjcs.Official.World.Map13MiniMapView.asmdef",
+      "sha256": "c2361690b03634aa4dd0428164b65dea78909f98d23586224bdd24b18896e8c0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_view.py",
+    "sha256": "25982d1996fa2b52e8f5025b5cf491db78ffba10e75a2cbeb046ce0e50304bd6"
+  },
+  "operation": "Copy the complete original IMapViewRangeHandler, MapViewRangeHandlerBase, MapAllViewRangeHandler and MapCharacterViewRangeHandler. Preserve rectangle overlap boundaries, original visible-cell order, half-range ceiling, position comparison, subscription and controller replacement/disposal order. Replace only namespaces and consumed body/controller interfaces; reuse the complete migrated original MyGridTransform and GAction implementations.",
+  "limitations": [
+    "Runtime core only; original MiniMap_13 prefab, formal player/controller events, camera transitions, resource visibility and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "af68745673b1208f3d1ead3a2d37b591d626562e8eb9a8e3a81b31caf8d5b356",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "initial_cells": 483,
+        "moved_cells": 483,
+        "rectangle_cases": 25,
+        "original_grid_events": true,
+        "controller_replacement": true,
+        "dispose_unsubscribes": true,
+        "body_culling": true,
+        "all_view": true
+      },
+      "runtime_errors": 0
+    },
+    "project_validation": {
+      "log_sha256": "9fda922c3828923a706c019c04b9092eefa98ad7125be4fc798a2ff0b07e0f8a",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "guid_count": 74598,
+      "passed": true
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapViewAcceptance.cs",
+      "sha256": "7edf53031250c5f95280da9c38daf70d358c7e3ed045f5ccd44ef867e28034ee"
+    },
+    "formal_minimap": false,
+    "windows_player": false
+  }
+}
