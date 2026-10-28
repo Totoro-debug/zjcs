@@ -90,6 +90,10 @@
 
 - Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追出 36,116 个可达对象、86,093 条原生指针及 966 条可达动态纹理绑定；全量输入仍为 117,858 个对象，不依赖已清理的临时转换缓存。新增原生 Sprite 资源库保留 1,294 个 Sprite／Atlas 对象的原始载荷字节，显式绑定 337 张 Sprite 和 1,055 个 SpriteRenderer／SpriteMask（含 2 个原空字段）。76 个 Windows 图像包保留原图集、几何、轴心、采样和内部引用；混合包只提取独立图像闭包，原实体／效果对象继续保留于来源图。原 `Sprites-Default` 按当前 APK 字段与已核验的原 GLES→Windows shader 恢复，没有使用替代材质。内置屏 Unity 2022.3.57f1c2 导入／编译、`ProjectTools.Validate` 和 Direct3D11 Play Mode 通过：498 张纹理的 520 个 mip 精确 GPU 回读、全部 Sprite 顶点／三角形／PPU／rect／pivot、逐项组件绑定及原材质显示均已检查，六张实际画面已查看。运行入口为 `Runtime/Offline/World/NativeMap14EntityAssets/` 与 `Map14/Native/entity-sprite-catalog`；来源为 `map14-native-entity-object-graph-source-manifest.json`、`map14-native-entity-sprites-source-manifest.json`。本项为资源及绑定分项，尚未恢复完整实体 prefab 生命周期、地图鼠标交互、存档或 Windows Player。
 
+- 原 `ECViewDriver`、`ECViewBase`、视图／事件接口、普通显隐控制器及地图／恒定可见性支持器与工厂共 23 份源码已迁入 `Runtime/Official/EntityViews/`，保留原追加遍历、排序、注入／初始化、四类实体事件、加载／显隐／暂停／卸载、协程签名与取消、逐键隐藏与强制显示、地图销毁分支及淡入淡出重置。原 RunTask 按 MoveNext 恢复；UniTask 取消停止迭代但不 Dispose IEnumerator；原 OnDestroy 仅注销，Unload 由 RemoveEvent 触发。实体／事件、依赖注入、R3 帧流和地图生命周期为必须显式接入的宿主边界。此前内置屏 Unity 导入／编译、ProjectTools.Validate 及隔离 Play Mode 通过，实际查看原雕像 Sprite 显示画面，并验证隐藏／恢复、−1 执行顺序、追加／排序／首次匹配、8 份帧订阅释放与重载、静态／新实体、独立隐藏键与强制恢复、协程完成／取消／移除、原注销诊断、销毁令牌与地图销毁分支。当前静态元数据检查通过；重新建立的完整工程复核因既有战斗骨骼依赖、Map12 水体程序集引用及 Map13 外观适配依赖不齐未通过，不能据此宣称当前整工程编译成功。正式 managed-reference 子类、实体 prefab、地图交互、存档及 Windows Player 仍未完成。来源：`map14-entity-view-runtime-source-manifest.json`。
+
+- 实体视图当前已在 22 个程序集的显式调用链隔离工程中再次编译并通过 Play Mode，实际查看原雕像 Sprite 画面；本轮明确跳过全工程 ProjectTools.Validate，不能替代完整工程检查。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

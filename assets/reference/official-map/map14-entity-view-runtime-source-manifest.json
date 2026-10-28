@@ -1,0 +1,430 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECViewDriver.cs",
+      "sha256": "f50ab9311d8fe7cb864e34ac636f9624d269b62f20ed62adb2abe2867e73eb24"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECViewDriver.cs",
+      "sha256": "93df375a6abd4dd4f24d8c4dfa6d87acefc2082b1ef86882e6a1352cf9862260"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECViewBridge.cs",
+      "sha256": "02359860056069d9d2b31d52c12c2d21bcfdcfe66ab91395f468d979f1b0d0d1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECView.cs",
+      "sha256": "f7ef5ecfba9081d3266781a704c4a0b142385020ffedfa56f55868e93cf88758"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECViewBase.cs",
+      "sha256": "82927b53ca2fe9b202ae1f2dfe68cc88d88015d8b3f690c1d6880b5a1baf32ce"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECVisibleControlerViewBase.cs",
+      "sha256": "845869b24ecdd8d9de16687df6189a448a1d57e3aea6bb399cd5f4f2d7902ed5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECVisibleControlerNormalView.cs",
+      "sha256": "cbce8d4991a7ade5a48b81b842ac4d75487c88342167b402d8295ac242f50044"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyEntityViewModelControler.cs",
+      "sha256": "32f31c28698a1bab85d96a1cdea65976af4d22c6f0ff15f8e8afd044fd6d7148"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyEntityViewModelControlerUtils.cs",
+      "sha256": "4b77961122d472466b7dfed172f8e41e829fadd50983992474bd100b5b35cba2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IClientVisibilitySupporter.cs",
+      "sha256": "54d652fe8eb9bd8d8ca21c8691f740acc64e82867e6b22897156ef185133279a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IClientVisibilitySupporterFactory.cs",
+      "sha256": "82266dc3fb854aafaaa5ddad22df3c8013997446eae58988e542cdf01d9a7021"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ClientVisibilitySupporterBase.cs",
+      "sha256": "2f8181bfbc86b388eed10d06f66d16e107afcb066c7d5895807308f6b8c44b48"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapECViewClientVisibilitySupporter.cs",
+      "sha256": "8a6af956cb850fc5cd5427c3a1f1aa4ad4cc8f0b0fcd4f2d312485520183ddb9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapClientVisibilitySupporterFactory.cs",
+      "sha256": "b52832d3546f739b0a7015da321167675fe553563559a76cd64eb1756e60d654"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ConstantClientVisibilitySupporter.cs",
+      "sha256": "6129246d0d7aa790a200674c16d917a7e4e2d66382ac541be58c29d50c0654a2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ConstantClientVisibilitySupporterFactory.cs",
+      "sha256": "19ee9b5e6bbbe5655949bf034d06a009d942f6473fd6ff38ee753d088b577a7c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyEntityStartEventReceiver.cs",
+      "sha256": "8e62a82029fa2921d14ff6e57bb47191b05600d9cbd49b1312a51b9de0adce46"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyEntityRemoveEventReceiver.cs",
+      "sha256": "5da7109411ccc23f7c3bd4542ed614206bb1406538c90f1268be91f0ea8b5324"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyEntityStartPostEventReceiver.cs",
+      "sha256": "bc48b829c11925c82eb263bdec46d91ab1dbedf553890f9a50b8fa8b9318df8c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyEntityRemovePreEventReceiver.cs",
+      "sha256": "5e2dacc58ae27ea1bf148b49c0c86f196977c15a20cf79772c4a0c7976e856e3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/IUpdatable.cs",
+      "sha256": "0790a7e6768bcabe83487627aea2f5052afb3d840c9130e75ed34139f43b4476"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ILateUpdatable.cs",
+      "sha256": "b954b1aff36eb1d5c1d7472a4a50011268f499882392d9bd3c6b72f788ba0c18"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEventReceiver.cs",
+      "sha256": "fa8b94cfd54fc9735200f6da938c5b75da8b61d4cc8aa5130679183ba572f055"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_view_runtime.py",
+      "sha256": "77bc998b4009bce2fe9bd62961d097b38c44218df2065d87147ea25062ddd0ea"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs",
+      "sha256": "10498f1f45e3cfd36c178ad29313be40df944f39cd7db335c4855551089b8d4f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewDriver.cs.meta",
+      "sha256": "72ea3392750cf39c0fab31e7f5759eee510cdd221f147bba420fa210a12e797e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewDriver.cs",
+      "sha256": "2571452045469a7a91f8bf9ab95c269cb54705019a1df0e39591b87b3e26891b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewDriver.cs.meta",
+      "sha256": "5491de48a0c14063c0b5c65cb1f418bade0dfb178c2cf55663dd7c499bc6e553"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewBridge.cs",
+      "sha256": "0322f1da093f898dbd95b9ad358193b76aa1cdf3d8ae0fda9d1ee96a07287a83"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECViewBridge.cs.meta",
+      "sha256": "3da378082ce755d3234eb91ffe2827a51fd2b971eb1fb29a2a3735ca421c9847"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECView.cs",
+      "sha256": "eb308453b230599ce41681c1e0acf84c2474060efe1b3f3eda2e54e89bf1ceaa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IECView.cs.meta",
+      "sha256": "ea7f0e8099428eb1343c69c7de142e43a49b0859741ef56341fbe63b16514d31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewBase.cs",
+      "sha256": "d7367c826f099e2d6f5019fdf91d7bfecb443e83cf17809342dbb619db767a29"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewBase.cs.meta",
+      "sha256": "afa742a2e262f7627100456507bb2662b62eadcbce4ba501d03a6c9cd0d4d81e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerViewBase.cs",
+      "sha256": "00fc4e72266d6688b5dce3b7ec9f3a42cbbea8b418a1b88f6ec9cba0e5927fde"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerViewBase.cs.meta",
+      "sha256": "397d1f95e9bda5616cec90bcbac01e5fd48b5b86c97284e79652225d99c9f0a5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerNormalView.cs",
+      "sha256": "6c2f39e3cbeec7ade4bdb1e7ae718109916bff0701b0199a4e3759bbc61b21de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECVisibleControlerNormalView.cs.meta",
+      "sha256": "6387da3149d20f65763dc7b6469b379825479bf41e5c7caba84cfa46b00f4b35"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityViewModelControler.cs",
+      "sha256": "9fb858c62f64d74d0c3b5fc3a0e8ca2753c18ccdf51f37d4ac9f0fd3baa5c0c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityViewModelControler.cs.meta",
+      "sha256": "0fffcb03d91b3aea6744ec396cb1c6d0f6e3c0727316a972508f50838d55fa70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MyEntityViewModelControlerUtils.cs",
+      "sha256": "bde5edfc865cf2deb639126389c60c0f949b91b6fbd9c7cae60dc82162724e83"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MyEntityViewModelControlerUtils.cs.meta",
+      "sha256": "fccb02c1106a0e92b8f74dca778ff29ec56f8699439bf1db26923a728b49fcd3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporter.cs",
+      "sha256": "2de486f62687ab12734f7d38364cf6879fdbc1e3ca79d99ae5db88572b797eb4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporter.cs.meta",
+      "sha256": "fc47d4263f96f87a7b94e02b1fae9aad3fefaadc55fea58ca5a0cfd06839a3db"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporterFactory.cs",
+      "sha256": "939f03a4b372cb08f001ea32eb37cfc3bdf0183a40574c914df80544b714c09b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "de8f172d2845142d2cbb704d7b4be3a063e227ea9cb7c9089eea6f005a134e61"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ClientVisibilitySupporterBase.cs",
+      "sha256": "d80af57275f859131f9824ed91d50e9f6373d087f4e51a2b261a234d9f52e468"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ClientVisibilitySupporterBase.cs.meta",
+      "sha256": "c7d6e570f25357c6ac0991b9db261b24f6fb91277f34540494aecb9557c4adb3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapECViewClientVisibilitySupporter.cs",
+      "sha256": "699de81264eb3af5ad0eda8d56ca34246d86fd6b43b69a5eb544081fa26c5c7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapECViewClientVisibilitySupporter.cs.meta",
+      "sha256": "ff14b9bd501e7e97b020dfbad3c8f9636cfb8124ce17a381a63f11890e51fedc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapClientVisibilitySupporterFactory.cs",
+      "sha256": "a46d16ee6a8547a9dba712ef0e57cc7fbb2d1c3b915a4f051fae35c197594781"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/MapClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "36077e7f6d29388d1bdcf06bdf0579d2ea98f6333a41bef0d37b7e7a9e2619d1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporter.cs",
+      "sha256": "0cef920efac80cc731310f597baebfd60d12e49c8eec920c089a91dcaa75189a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporter.cs.meta",
+      "sha256": "7b09978c4b7f5615c6fc4b6f2b45b4b8d94b2eee363129f4157f17fc0da44a5e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporterFactory.cs",
+      "sha256": "4cf610f2839c9191c4c029fc8c12d719c910bd89567f2b5811873ddafb2f9d4b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ConstantClientVisibilitySupporterFactory.cs.meta",
+      "sha256": "c915f991156e28a04eaafc0cf6aae488d2953268c2d895c2757711e4bd58546f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartEventReceiver.cs",
+      "sha256": "6ae92818a83cb56ef4c6649dc45b2650c33f689884e52e2bb2d9197d8a619cea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartEventReceiver.cs.meta",
+      "sha256": "4af9ddb774fc53740d205ba05628a6058c29089277e099110b664b0207314309"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemoveEventReceiver.cs",
+      "sha256": "7fdd785eedcf1d7d1c6454e1cb2c30867e52e24e8a5d8b647015919fe89c4462"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemoveEventReceiver.cs.meta",
+      "sha256": "ca5eda410918e8f504fa2b9ed84c3fe96d81429b582587216760935405d23a5d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartPostEventReceiver.cs",
+      "sha256": "79f811a7fe457e58136785d55e5e2f93bc049c7ab96825ed2d189721e7178247"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityStartPostEventReceiver.cs.meta",
+      "sha256": "46a953059acb2a26a30285da2c62e207309ce1826f2f3c19184ea9d1048c92c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemovePreEventReceiver.cs",
+      "sha256": "aba5bf21aa4be7ec2ab8e093689b55ac5148bd77214b28e03b224546b3efe301"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IMyEntityRemovePreEventReceiver.cs.meta",
+      "sha256": "4308368c7ff16850f3b77472614b6d404d71b69c29b267fe46a5654a5f0f6f43"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IUpdatable.cs",
+      "sha256": "26ab9189a32170ab06af18473a539aba8050a266ea20ec7fd82d9b928fb4b9c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IUpdatable.cs.meta",
+      "sha256": "0322f4e48cf811d908681eff7874273d89bb6eb99ec6f1fdc17c0348fcbf81c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ILateUpdatable.cs",
+      "sha256": "ea8d0bbba77ab942a879577d6b539bea951fd0288f1ad319051c34d820bccbd5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ILateUpdatable.cs.meta",
+      "sha256": "64db5e2c003b009c61ba2ab6a1d8a187d72ee7c730f1842e91f5b940278e89fd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IEventReceiver.cs",
+      "sha256": "3f7073c61289c7735533b5a92d4b3f9fe3370208cd2b41d4a81dbdaa9db3fd45"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/IEventReceiver.cs.meta",
+      "sha256": "459cc269becab3dca9e87dc7678cc9dce8f3b6c01e25ac73333bb544ece65096"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewEntityBinding.cs",
+      "sha256": "3c3ab3a7438ed872a2ffee316604635f28e61561939f89fa50fa87e5e3e4ad00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewEntityBinding.cs.meta",
+      "sha256": "db8da8f209ee4acfda96ee281d10d558e6b788cd9c666ab3b8c960168327dd4e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/Zjcs.Official.EntityViews.asmdef",
+      "sha256": "e1c94615487efe957ea99ea45757ecdf6c9170de2c596bed8cc45aa87948d471"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/Zjcs.Official.EntityViews.asmdef.meta",
+      "sha256": "63d0777ecdd218e13f3c6ace8e2db027d593e2551fae48b54cf2e90da0142c08"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews.meta",
+      "sha256": "2f7627790d6ad2ffc65c7a9b6ec4fdc65ad1695c2804d1508b6172185ab2aed6"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "client-source/ECViewDriver.cs",
+      "diagnosticBlocks": 1
+    },
+    {
+      "source": "client-source/IECViewDriver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IECViewBridge.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IECView.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ECViewBase.cs",
+      "diagnosticBlocks": 5
+    },
+    {
+      "source": "client-source/ECVisibleControlerViewBase.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ECVisibleControlerNormalView.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IMyEntityViewModelControler.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/MyEntityViewModelControlerUtils.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IClientVisibilitySupporter.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IClientVisibilitySupporterFactory.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ClientVisibilitySupporterBase.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/MapECViewClientVisibilitySupporter.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/MapClientVisibilitySupporterFactory.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ConstantClientVisibilitySupporter.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ConstantClientVisibilitySupporterFactory.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/Common/IMyEntityStartEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/Common/IMyEntityRemoveEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/Common/IMyEntityStartPostEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/Common/IMyEntityRemovePreEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "framework-firstpass-source/Framework/IUpdatable.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "framework-firstpass-source/Framework/ILateUpdatable.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "common-source/Common/IEventReceiver.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "operation": "Copy original ECViewDriver, view base/interfaces, normal visibility controller, map/constant visibility supporters/factories and event receiver contracts. Restore RunTask from its actual MoveNext. Preserve append traversal, sort/inject/init order, register/event/load/show/hide/pause/unload order, coroutine signatures/cancellation, original null asymmetries, per-key hide requests, force visibility, map-destroy suppression, child activation and fade reset. Only consumed entity data/event operations, injection, R3 update/pre-late-update subscription and map-root lifetime are explicit required host boundaries.",
+  "limitations": [
+    "Full entity data/event publisher, R3 stream provider and dependency-container integration are not implemented by abstract host boundaries. Original managed-reference view subclasses, prefab binding, formal map/gameplay/input/save and Windows Player remain required."
+  ]
+}
