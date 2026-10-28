@@ -1,0 +1,5953 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-native-story-playable-input-source-manifest.json",
+      "sha256": "835c8e645a58b26aa5de41d7e535341b89459263c39c0686e338ef8ca86f1e94"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-playable-hierarchy-source-manifest.json",
+      "sha256": "77da58bc35d55659e31eedf8de7f17a522ed6c758be7e696319b64832ca26061"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-playables.json",
+      "sha256": "8aa401716a98ac6f153603fe57a5adf01e30d51c48478507c57011f26052207f"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-source-fade-runtime-source-manifest.json",
+      "sha256": "3fcb4982da73845387156f0898ec27776f236750e80410bdd2d4b2726d4c1c03"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-entity-materials-native-source-manifest.json",
+      "sha256": "35f3768b5d03713e0a296b0fd672a3192e251a0835fd3eca688e65acb7fddf98"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-entity-textures-source-manifest.json",
+      "sha256": "7c28954e0f9640ad351ed3d5589ba5aef5821df3bceca18808d548bb72ae004e"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-shaders-source-manifest.json",
+      "sha256": "c47110ae38c88f1c3c11fc4b2b7e12d1f5f0c2053c4bce8b3d71a6bf6fc3d872"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-shaders-binding-source-manifest.json",
+      "sha256": "aedd132b0b9f8c53be76dbbada9c4a076fd391f6ca8eeda8988d765078d86d8c"
+    },
+    {
+      "path": "assets/reference/official-map/map14-suimo-native-performance-source-manifest.json",
+      "sha256": "59c5012210233e311af538f91b38ecf8a483baa44dc3ed643ccc6013899a7da0"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-npc-appearance-playables-source-manifest.json",
+      "sha256": "39c4b422a1fdc3459558796f357927aadc1af5f2c117c1da0105ad320409a4c9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/50c5ac60e7dfbffee63c900a7d4d97b6/-9203820619277488241.texture.asset",
+      "sha256": "81689f221251f1f8324099d5c0e3a262aedc076da30103833c1c18aee83f87a9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/6f9085b7b845ccd9e67b730d71ee8246/1781634083833702718.texture.asset",
+      "sha256": "f97bd388510941af40a42c2011477a5dae0327a788f75174cb391124502891bd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/6f9085b7b845ccd9e67b730d71ee8246/1781634083833702718.texture.asset.meta",
+      "sha256": "55ac1d677aaeccedad4c66525aba6569951cc8a2c998923e84989fdeb8f0e0f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/9cd3b0da6681eabe60ba157b79f2f5dc/3515940045999828070.texture.asset",
+      "sha256": "eaf88881773c57556db36288e065d37ef53055508b3bd41c1bdfcb81d1f0f30e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/9cd3b0da6681eabe60ba157b79f2f5dc/3515940045999828070.texture.asset.meta",
+      "sha256": "4fb2aea3f608ff2325b420b6e7efbeee05c9d0dea1e728ba0d5cf152b9bcc0bd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/8c48032d0d2e219762aaa09ef4f88370/-4043447173091892191.texture.asset",
+      "sha256": "bb6264e229cf6469349116901402b97d0ac051349b5f1e15087602b361184244"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/8c48032d0d2e219762aaa09ef4f88370/-4043447173091892191.texture.asset.meta",
+      "sha256": "99d74fde2d9c06064165fd04023fcb6e891367d7a607ebfe04088b734b85a7e1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset",
+      "sha256": "56e17b4704bcc3b70787c9df9a118ff14e4c22f3e0f3a3075c0ca7c5cf6f7a24"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset.meta",
+      "sha256": "808928de716b50a6375b1725bc4f97b106adcdd570e82c940e9cfb26e7a42e15"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/4f4829bc3b2eda903653dcfa5eaa08a9/4259216555797876143.texture.asset",
+      "sha256": "ba9dc08a7110503842c4e7d18ee7cd75c5d103d4e32f75bcacc0506a4f7e2c28"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/4f4829bc3b2eda903653dcfa5eaa08a9/4259216555797876143.texture.asset.meta",
+      "sha256": "288da9d2919ce74b2cf9cf025fe589f9bec2a274aae5175f149f9a9388593147"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset",
+      "sha256": "77934df426a006283ffe1f5237d04c40a352194fe78c57cb55bd4c0b69efedb2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset.meta",
+      "sha256": "cd53cd55fa50abf6e0532439fd4e201afaa16deef3a0443e969cd1f9f7271ee5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset",
+      "sha256": "18fd59bfa64001aded2c79903ef4fc5209ad204e3dcb3c3f7f33504064c9c63e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset.meta",
+      "sha256": "178d8b70123672adae319dffc0e40e1e38bd246bb8344e94e6c8d8aa2a5c1ad4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/0826a19c1aa52ca776987c207b2f796c/8766374760043495101.texture.asset",
+      "sha256": "13e819ac20d7225f3a6ca852528858b5298027f373b1e969a3399c126781d02c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/0826a19c1aa52ca776987c207b2f796c/8766374760043495101.texture.asset.meta",
+      "sha256": "cb7aaa76b767028c17807d9f1f75f3a47ad5aefb67e8ba288bd446bd2a885ed5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/a6e47bd4be5563deb578a6dcf4fd2277/989113346940741725.texture.asset",
+      "sha256": "d64718c716f796308da899bcfb73cd2e14c9af0a090c0c4a3f94b76cb733a634"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/a6e47bd4be5563deb578a6dcf4fd2277/989113346940741725.texture.asset.meta",
+      "sha256": "e1c250e84edccc74845856f5c4e542439c820306720b349836bc7bba0ebc5d51"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/457812c66c4327318dbea5dbb5f3e840/-4146102302354605095.texture.asset",
+      "sha256": "dd92b671739bee9823fbfed924a387bf4e082dafc23f42882a19eeb50f327585"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/457812c66c4327318dbea5dbb5f3e840/-4146102302354605095.texture.asset.meta",
+      "sha256": "93c3f69df9706e5e1a66022cd45e742c7566718683a860d3fd24c9fd640807d6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/726313b3bd8be0bf963545306e3a2886/1259340324636677913.texture.asset",
+      "sha256": "47eb737fd8e9596a0c37d9a2d7435619d7dd1e65a9e4c8738d3ca0b979a274a6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/726313b3bd8be0bf963545306e3a2886/1259340324636677913.texture.asset.meta",
+      "sha256": "24bc92d5280fe4ec27b5220648c7391261ec7eaf15ca9dc757344baed9999997"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d9c8dfdb7ab4e263a79b1300efde023a/3691610079784464355.texture.asset",
+      "sha256": "93a9fdc6a1640a61a9b9a41eaabaf44887832b919c96783f74fd9e383b844a78"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d9c8dfdb7ab4e263a79b1300efde023a/3691610079784464355.texture.asset.meta",
+      "sha256": "e16eab4b33d65faa4a742e1b64f5a211e62de191c5ee3efe5a802830968c8253"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/c893b834a3c9da42e76a01fe0686d604/5025718510840788266.texture.asset",
+      "sha256": "7dd61602855651d065fbb4b0ff6bec69eed181af53e7354cef6afb1cd6d2f48d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/c893b834a3c9da42e76a01fe0686d604/5025718510840788266.texture.asset.meta",
+      "sha256": "3e72934f2307b16ca5032febe3f6aa55f5a0aaf467654acd35d537f8c5bb8411"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset",
+      "sha256": "56e17b4704bcc3b70787c9df9a118ff14e4c22f3e0f3a3075c0ca7c5cf6f7a24"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset.meta",
+      "sha256": "808928de716b50a6375b1725bc4f97b106adcdd570e82c940e9cfb26e7a42e15"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset",
+      "sha256": "154fa8887fa2f1489fe8d1b9800d50d44496e728e07b22b5de016a3ba2758c79"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset.meta",
+      "sha256": "bf6aa9a7f4bc67849e298edb41bfac2ab90359dbd7fcd3fd3904da68813dcfc1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset",
+      "sha256": "77934df426a006283ffe1f5237d04c40a352194fe78c57cb55bd4c0b69efedb2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset.meta",
+      "sha256": "cd53cd55fa50abf6e0532439fd4e201afaa16deef3a0443e969cd1f9f7271ee5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset",
+      "sha256": "18fd59bfa64001aded2c79903ef4fc5209ad204e3dcb3c3f7f33504064c9c63e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset.meta",
+      "sha256": "178d8b70123672adae319dffc0e40e1e38bd246bb8344e94e6c8d8aa2a5c1ad4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityMaterials/9e009808ae4e70b79851dace31b6c3f0/-6743261002651409832.mat",
+      "sha256": "928b39e04c5584909a4d91a1755e929fb236d8b4b82f5a095aca0f6375ade8be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeEntityMaterials/9e009808ae4e70b79851dace31b6c3f0/-6743261002651409832.mat.meta",
+      "sha256": "55efe2b6c9de88e0d292685e47089790069f5416728621898fa1064a8a6b1794"
+    }
+  ],
+  "inputs": [
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7b5dd4308d680d387c9695857e33c1c4.bundle",
+      "manifest": "871_156598",
+      "size": 7062,
+      "sha256": "97bbf7aa1580039ec94dee39f14bcecdd13136ebfaa7855eb04bdcf3bc4a92b8",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_assets_prefabs_playables_displaypackage_story_playable_chaos_appear.bundle",
+      "raw_size": 7062,
+      "raw_md5": "7b5dd4308d680d387c9695857e33c1c4",
+      "raw_sha256": "97bbf7aa1580039ec94dee39f14bcecdd13136ebfaa7855eb04bdcf3bc4a92b8",
+      "decoded_size": 7062,
+      "decoded_sha256": "97bbf7aa1580039ec94dee39f14bcecdd13136ebfaa7855eb04bdcf3bc4a92b8",
+      "decoding": "none",
+      "output": "defaultpackage_assets_prefabs_playables_displaypackage_story_playable_chaos_appear.bundle",
+      "converter_input_sha256": "e673ebacf8e8285fe0a1ee0c2520760dacfb86f13143e44978330e5edc008e8f",
+      "converter_input_bytes": 36572,
+      "restored_components": 9,
+      "changed_payloads": 0,
+      "checked_objects": 77
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/4d680b79f40a52ee9621a986ec518f15.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_01b371e926b1300cbc9e4b62547a63ba.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1534,
+      "raw_md5": "4d680b79f40a52ee9621a986ec518f15",
+      "raw_sha256": "5ac968b97db6dac6ca70190f480418e1e780af883e4378a80dab21b8e112f910",
+      "decoded_size": 1534,
+      "decoded_sha256": "5ac968b97db6dac6ca70190f480418e1e780af883e4378a80dab21b8e112f910",
+      "decoding": "none",
+      "output": "defaultpackage_share_01b371e926b1300cbc9e4b62547a63ba.bundle",
+      "converter_input_sha256": "ed5b95f1a7e04f4b22df7167c428308c2e74895a9be195e4066cf493ab8bc20c",
+      "converter_input_bytes": 3319,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle",
+      "manifest": "871_156598",
+      "size": 853119,
+      "sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "name": "defaultpackage_unityshaders.bundle",
+      "raw_size": 853119,
+      "raw_md5": "b44cadacfabd37f97ebaf88173e3e2a1",
+      "raw_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "decoded_size": 853119,
+      "decoded_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+      "decoding": "none",
+      "output": "defaultpackage_unityshaders.bundle",
+      "converter_input_sha256": "aaf263b17f032f0e3c1822ce7e83288c907111ff83989ecde773d7d34381281c",
+      "converter_input_bytes": 873296,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 157
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/4ce8e00805827158bdd02383075338cb.bundle",
+      "manifest": "871_156598",
+      "size": 1601,
+      "sha256": "6cd92551ea2e919113fc752ecd3e6d85e33041f8690c514c636298462ed52fa0",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_63bf8c06098a8c4e9301a34f7a6abb9c.bundle",
+      "raw_size": 1601,
+      "raw_md5": "4ce8e00805827158bdd02383075338cb",
+      "raw_sha256": "6cd92551ea2e919113fc752ecd3e6d85e33041f8690c514c636298462ed52fa0",
+      "decoded_size": 1601,
+      "decoded_sha256": "6cd92551ea2e919113fc752ecd3e6d85e33041f8690c514c636298462ed52fa0",
+      "decoding": "none",
+      "output": "defaultpackage_share_63bf8c06098a8c4e9301a34f7a6abb9c.bundle",
+      "converter_input_sha256": "22a1db724535f82619139180de2f840b83c81f2c6ccb3bca0266b7c3bda13552",
+      "converter_input_bytes": 3388,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/7400e39d53b6ff2048cb8bc6bfbc0dc7.bundle",
+      "manifest": "871_156598",
+      "size": 1773,
+      "sha256": "4f06c7769e43d3d658f24d361d87c0b9405b691df124d222f83efb4717030b0a",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_d2469b63b5640f7cbca7fa06b4d9a287.bundle",
+      "raw_size": 1773,
+      "raw_md5": "7400e39d53b6ff2048cb8bc6bfbc0dc7",
+      "raw_sha256": "4f06c7769e43d3d658f24d361d87c0b9405b691df124d222f83efb4717030b0a",
+      "decoded_size": 1773,
+      "decoded_sha256": "4f06c7769e43d3d658f24d361d87c0b9405b691df124d222f83efb4717030b0a",
+      "decoding": "none",
+      "output": "defaultpackage_share_d2469b63b5640f7cbca7fa06b4d9a287.bundle",
+      "converter_input_sha256": "4dea89b30176a028a729487fc8da81c94476f5d411c26499cba1502740445b30",
+      "converter_input_bytes": 3556,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/37e06a03ec3227a1ccd0e0518914c172.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_1cc387d5119d53c2e114512897b46aa3.bundle",
+      "manifest": "871_156598",
+      "raw_size": 39813,
+      "raw_md5": "37e06a03ec3227a1ccd0e0518914c172",
+      "raw_sha256": "a49fa36eb6ae95054fc8197275bb962fb3dcd5e88dd45d5cba9ebcbe79567c9c",
+      "decoded_size": 39813,
+      "decoded_sha256": "a49fa36eb6ae95054fc8197275bb962fb3dcd5e88dd45d5cba9ebcbe79567c9c",
+      "decoding": "none",
+      "output": "defaultpackage_share_1cc387d5119d53c2e114512897b46aa3.bundle",
+      "converter_input_sha256": "9600cb9acebf8f900beb0003822ef110f1fab4bbea9aed4bcc5ddc06853fd818",
+      "converter_input_bytes": 41348,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/e340de8702d3cf884a496ad38fb8ddb8.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_bca8a95354740f68040bfd3f63161bc9.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1863,
+      "raw_md5": "e340de8702d3cf884a496ad38fb8ddb8",
+      "raw_sha256": "a9610a31c23dd878e1a273ce335d16648c8d6c95990d069090f34c65ee82f32a",
+      "decoded_size": 1863,
+      "decoded_sha256": "a9610a31c23dd878e1a273ce335d16648c8d6c95990d069090f34c65ee82f32a",
+      "decoding": "none",
+      "output": "defaultpackage_share_bca8a95354740f68040bfd3f63161bc9.bundle",
+      "converter_input_sha256": "3b1b6cad2a661ab207019102b9d044ed88feae24b23c1a74bb1a032a7794a485",
+      "converter_input_bytes": 3644,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/868c1d3d8e30915736c34214330d4c3a.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_bd637ba032bde2afc07ce55f1680f239.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1483,
+      "raw_md5": "868c1d3d8e30915736c34214330d4c3a",
+      "raw_sha256": "ebeff399a2de789b687f3b3aaa45ee2539acf5a24f8b6a13e2f5cbcf113f8b08",
+      "decoded_size": 1483,
+      "decoded_sha256": "ebeff399a2de789b687f3b3aaa45ee2539acf5a24f8b6a13e2f5cbcf113f8b08",
+      "decoding": "none",
+      "output": "defaultpackage_share_bd637ba032bde2afc07ce55f1680f239.bundle",
+      "converter_input_sha256": "4382e742ab0c79cf17195a1f1a23030e911ad2cca20c82498994b620c97ec40a",
+      "converter_input_bytes": 3243,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/4ad28b0c671c3dcee3a631786079ce56.bundle",
+      "manifest": "871_156598",
+      "size": 21962,
+      "sha256": "7059b8a4c16099fefc59147ea96f7bea70ca575ba7e9db34ae4df61f42d8807c",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_4df72b3329d57ef83758d2e0168944dc.bundle",
+      "raw_size": 21962,
+      "raw_md5": "4ad28b0c671c3dcee3a631786079ce56",
+      "raw_sha256": "7059b8a4c16099fefc59147ea96f7bea70ca575ba7e9db34ae4df61f42d8807c",
+      "decoded_size": 21962,
+      "decoded_sha256": "7059b8a4c16099fefc59147ea96f7bea70ca575ba7e9db34ae4df61f42d8807c",
+      "decoding": "none",
+      "output": "defaultpackage_share_4df72b3329d57ef83758d2e0168944dc.bundle",
+      "converter_input_sha256": "aabbf5d5b00e31ba1be7cd6349d8b2ee8d8f89117dcbdc03695520b64fcb5a65",
+      "converter_input_bytes": 52912,
+      "restored_components": 18,
+      "changed_payloads": 0,
+      "checked_objects": 199
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/6174620c3ba3f15c1123d3e2fff03926.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_5f19bdd98859e20622f1c16126c10e5e.bundle",
+      "manifest": "871_156598",
+      "raw_size": 6547,
+      "raw_md5": "6174620c3ba3f15c1123d3e2fff03926",
+      "raw_sha256": "f6093dc15e0257bfff374bf12b20e1fec48e5b8d84d0d829d74cb414603e2051",
+      "decoded_size": 6547,
+      "decoded_sha256": "f6093dc15e0257bfff374bf12b20e1fec48e5b8d84d0d829d74cb414603e2051",
+      "decoding": "none",
+      "output": "defaultpackage_share_5f19bdd98859e20622f1c16126c10e5e.bundle",
+      "converter_input_sha256": "c42bd3d5b359f2d12eabb8082cb2aad1063514c6bee56e2eac322dc9e3d94adb",
+      "converter_input_bytes": 8076,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/fba93fc41085d4560f284213a0cc73f3.bundle",
+      "manifest": "871_156598",
+      "size": 4183,
+      "sha256": "a7898d20844c4646f90dea457acb1f0bfd4b953f53629eb55082b8cbeea4fb74",
+      "source_manifest": "854_156383",
+      "name": "defaultpackage_share_7ad198de87441f46ec5afdf31613a8bc.bundle",
+      "raw_size": 4183,
+      "raw_md5": "fba93fc41085d4560f284213a0cc73f3",
+      "raw_sha256": "a7898d20844c4646f90dea457acb1f0bfd4b953f53629eb55082b8cbeea4fb74",
+      "decoded_size": 4183,
+      "decoded_sha256": "a7898d20844c4646f90dea457acb1f0bfd4b953f53629eb55082b8cbeea4fb74",
+      "decoding": "none",
+      "output": "defaultpackage_share_7ad198de87441f46ec5afdf31613a8bc.bundle",
+      "converter_input_sha256": "1c5ae36b9d003ed0cf3a99560bc58c7ce1a7c8ceef21b48430b9245f0a1707df",
+      "converter_input_bytes": 5742,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "apk_zip",
+      "apk_entry": "assets/yoo/DefaultPackage/3be5b4ff76b67a7ab1f171d65765fa06.bundle",
+      "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+      "name": "defaultpackage_share_92bfd6315ea8b2a743a2bca10c2b073e.bundle",
+      "manifest": "871_156598",
+      "raw_size": 1866,
+      "raw_md5": "3be5b4ff76b67a7ab1f171d65765fa06",
+      "raw_sha256": "6a863e9e946557c67ab1d22fbb695f941b50a8f7f43a587c99ffccecae50953d",
+      "decoded_size": 1866,
+      "decoded_sha256": "6a863e9e946557c67ab1d22fbb695f941b50a8f7f43a587c99ffccecae50953d",
+      "decoding": "none",
+      "output": "defaultpackage_share_92bfd6315ea8b2a743a2bca10c2b073e.bundle",
+      "converter_input_sha256": "2c54829a42c125089b08df83cc74d17e8c0abf8f1c148bafd5e22d22010f027a",
+      "converter_input_bytes": 3615,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    },
+    {
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/f6dd9fab2efd06eaa1dac7964b7cff0f.bundle",
+      "manifest": "871_156598",
+      "size": 1580,
+      "sha256": "d0e283f69ff9d1093d6bad8528a8e235be0d2684a5e06c8ebc5b6ef3676b9eea",
+      "name": "defaultpackage_share_d15dec65f8a03fed0fb34a1ae68ea641.bundle",
+      "raw_size": 1580,
+      "raw_md5": "f6dd9fab2efd06eaa1dac7964b7cff0f",
+      "raw_sha256": "d0e283f69ff9d1093d6bad8528a8e235be0d2684a5e06c8ebc5b6ef3676b9eea",
+      "decoded_size": 1580,
+      "decoded_sha256": "d0e283f69ff9d1093d6bad8528a8e235be0d2684a5e06c8ebc5b6ef3676b9eea",
+      "decoding": "none",
+      "output": "defaultpackage_share_d15dec65f8a03fed0fb34a1ae68ea641.bundle",
+      "converter_input_sha256": "f1ca6f32c19324438fe996b28469ae7c61c2a1eb036d9bc93f6f43c8330efb74",
+      "converter_input_bytes": 3367,
+      "restored_components": 0,
+      "changed_payloads": 0,
+      "checked_objects": 2
+    }
+  ],
+  "templates": [
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_17.mat",
+      "sha256": "b12116e8b4ed7b4098db1a9701bd960cf8334d33079361b1b68a31d1b13a876a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_163 4.mat",
+      "sha256": "1da32a770f3ffa0b90af730914e2e7e8435b6edc8c92a979d63c5ccb55e5df44"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_RaoDon_0008 2.mat",
+      "sha256": "37b17ac26d74b45e8280726c137baf1462a32fda150483d50c30de5ccc94d563"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_1 2.mat",
+      "sha256": "1a8680d6f79e8b41ba4ee0f31e63a6aa8fb6997bb9737cfd0029ae64bd0a61b2"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_155_1_F_NB_5.mat",
+      "sha256": "81a108ffb3cc5a7276195e61e35c4cfd3f66afdacf754db8592fde8165202c0b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_240 1.mat",
+      "sha256": "a5aa25e41dafbd93b3ef173f9b6978cb5a5f71a55c5e736432f357f890e22dc4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_DiLie_125_1F 1_NB_ZH.mat",
+      "sha256": "277e8dd40dddf890dcd2836c6d06270480a32578b2db87426f4f14604acff499"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_RaoDon_0008 3.mat",
+      "sha256": "d1d65032de5ee7596ac07b8525af17bc4a0929f2585acb3e7c9e051fdb58e5a5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_1 2_NB_8.mat",
+      "sha256": "380bc82e77f31be89e931a7a0fb5d069097fcec2fc0e0c86f3b9721b30dc2da4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_240 2.mat",
+      "sha256": "e21fd2bd63c1fcf4eed89712c2a217d970ce127b8b1ada5e74fe5f9e93835f23"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab",
+      "sha256": "48f70a8b3f4679bd1b1ed78c1a6e6fd494f155db4ab65e1a068931ff1a27c748"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/models/banyuan_01.asset",
+      "sha256": "d8d782f85d3645bf99a01977c2e681e0cfb54af005140a3bce9c2a485973751c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/470F5AC6-E30F-4094-92F1-E7D7DBB5A86F.asset",
+      "sha256": "511686c297002d0d191924119e918cb40f076a40d3df172368a109b62d9aaaf2"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_DiLie_125_1F 1_NB_ZH.mat",
+      "sha256": "277e8dd40dddf890dcd2836c6d06270480a32578b2db87426f4f14604acff499"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_17.mat",
+      "sha256": "b12116e8b4ed7b4098db1a9701bd960cf8334d33079361b1b68a31d1b13a876a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_1 2.mat",
+      "sha256": "1a8680d6f79e8b41ba4ee0f31e63a6aa8fb6997bb9737cfd0029ae64bd0a61b2"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_1 2_NB_8.mat",
+      "sha256": "380bc82e77f31be89e931a7a0fb5d069097fcec2fc0e0c86f3b9721b30dc2da4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_155_1_F_NB_5.mat",
+      "sha256": "81a108ffb3cc5a7276195e61e35c4cfd3f66afdacf754db8592fde8165202c0b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_RaoDon_0008 2.mat",
+      "sha256": "37b17ac26d74b45e8280726c137baf1462a32fda150483d50c30de5ccc94d563"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_RaoDon_0008 3.mat",
+      "sha256": "d1d65032de5ee7596ac07b8525af17bc4a0929f2585acb3e7c9e051fdb58e5a5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_163 4.mat",
+      "sha256": "1da32a770f3ffa0b90af730914e2e7e8435b6edc8c92a979d63c5ccb55e5df44"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_240 1.mat",
+      "sha256": "a5aa25e41dafbd93b3ef173f9b6978cb5a5f71a55c5e736432f357f890e22dc4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_240 2.mat",
+      "sha256": "e21fd2bd63c1fcf4eed89712c2a217d970ce127b8b1ada5e74fe5f9e93835f23"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Effect/models/banyuan_01.asset",
+      "sha256": "d8d782f85d3645bf99a01977c2e681e0cfb54af005140a3bce9c2a485973751c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab",
+      "sha256": "48f70a8b3f4679bd1b1ed78c1a6e6fd494f155db4ab65e1a068931ff1a27c748"
+    }
+  ],
+  "scripts": [
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/ApplyEnableOnPlay.cs",
+        "sha256": "4f992b58d74836ecc4c7db5f66c1b72fd36b97bbbe1e711e50aad18b3391ae2e"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs",
+        "sha256": "04510c621eded13f8db658a273635c652ea75b4e2c311132e4a8f1559c9af9ee"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyEnableOnPlay.cs.meta",
+        "sha256": "792947a4351a8ab7f4471e8f4a632e38426fd1cbf12df2a3dad06ff557b8f46f"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/MyPlayableAttachToBone.cs",
+        "sha256": "6668a172969cd40098d35ea5ff6a05d60319eaafc5883bd06e757853e7b53ecd"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs",
+        "sha256": "d8e5dbe7c3310350efaa0c9c4be07a302f755d691dfde9057c96f6d313786cfb"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs.meta",
+        "sha256": "d85eb4e12b42839ecfda1958402fac7941468c87f3f4121720148955272d9798"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/AK.Wwise.Unity.API.WwiseTypes/WwiseEventReference.cs",
+        "sha256": "d2dc131afb47559192cd6aa47b910844268d06e45d833224b2d0aa8236ab7e67"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs.meta",
+        "sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/MyPlayableSound.cs",
+        "sha256": "43101ee1a3abdcec8e17d4ab2408bd4bad1bc76738d118822ff882b1b95f965f"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+        "sha256": "e9ae6b8c026dd2bb036d96f8da21c7cadb6f9578c6dabc9ee5e0287590023b61"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+        "sha256": "f8cfcbb872083b2bd405a0feee76137e05c725e732e57ac822336f6564ba7e97"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/ApplyInitOnSourceFadeIn.cs",
+        "sha256": "1bf3aba1b7937c80be84930506f8e21426eadd41af9c17f65aef7e97580fa9f5"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/ApplyInitOnSourceFadeIn.cs",
+        "sha256": "aefc30e5a8fd3894e746a305fb2f86a7651d4b92a5ee38978bd16c599a7c0f9e"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/ApplyInitOnSourceFadeIn.cs.meta",
+        "sha256": "1159b6141346b48391a705cb0ec1a25886c8de82e55dccaac39f2ab7301bd681"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/MyPlayable.cs",
+        "sha256": "ff64ec61c3d6f7ce041d520d5466b30c398264ab05c62c115a3a81e0e0c9e821"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs",
+        "sha256": "2f54bfbb45d62ce21a33fb13ae3d938810087c96734a91fb27d82d2d944c8da0"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayable.cs.meta",
+        "sha256": "c7858d7b174039b687d782b957ce8a49f00316797fb5f99a174c4d4e2027a514"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/ApplyInitOnSourceFadeOut.cs",
+        "sha256": "9d74f7351f52041e91c0c505b29cbd9e80ba2884ac7aef7d31bfbfde6c1d587e"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/ApplyInitOnSourceFadeOut.cs",
+        "sha256": "acb6432cbe073ce8903ccb460337925ade81a6ed80494f878b3412bcce78871f"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySourceFade/ApplyInitOnSourceFadeOut.cs.meta",
+        "sha256": "664f735677d173ab126d69a33039ffd6e2e7d777394f7062950fe05cfbe9a1d6"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/MyPlayableSequence.cs",
+        "sha256": "7d7f577336020f15e7d94bee4e39f3a4d479e982624ddba12084ad48121ba76c"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "1369a92abaf77eb0edcc3559fd9152910b676797e944639478fa27bd01a9ed29"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "fded68a502ae384ab61ed9f4a137ab3ecb7d4c325901380d7973d5f408c60f94"
+      }
+    }
+  ],
+  "materials": [
+    {
+      "cab": "cab-0bff418fa073bc9d9f3bb99e08c71721",
+      "path_id": "-3445989891565852589",
+      "name": "Fx_Glow_17",
+      "payload_sha256": "3b01c9e1dc930e9d72f0348fcb6e38d02c9a0a757380286a0d2cad27cda30180",
+      "fields": {
+        "m_Name": "Fx_Glow_17",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 1781634083833702718
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.0
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_EnableExternalAlpha",
+              0.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_Color",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_Flip",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_RendererColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-87c3482ced6fb1ced4c9e45ee0493bb2",
+          "path_id": "1781634083833702718"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/fec101b9c356cdc91129787cf29078f7_-3445989891565852589.mat",
+        "sha256": "77f69c73f793e54731fd87d17d65b6f9d282d2c40014a5bcba93683ae3629883"
+      }
+    },
+    {
+      "cab": "cab-1e97c35258ef67b5d0c85afbefbe2d77",
+      "path_id": "-5026624517182466262",
+      "name": "Fx_Yan_163 4",
+      "payload_sha256": "6150616eaadb6c1cf747707c5baf4658c3c11c1cadd9c982462dadece7456c8a",
+      "fields": {
+        "m_Name": "Fx_Yan_163 4",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_DISTORT",
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 3515940045999828070
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 3,
+                  "m_PathID": -4043447173091892191
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.5
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.07900000363588333
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_ClipRect",
+              {
+                "r": -32767.0,
+                "g": -32767.0,
+                "b": 32767.0,
+                "a": 32767.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.38999998569488525,
+                "g": -0.44999998807907104,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[1][1].m_Texture",
+          "cab": "CAB-c4600feeeeea502891ae9111c15633c6",
+          "path_id": "3515940045999828070"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-2f8d1fc5f23fb3808628a34d6fd12757",
+          "path_id": "-4043447173091892191"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/987d142c8d8e8868c548b5d5ea5750e6_-5026624517182466262.mat",
+        "sha256": "c99a0bee5cde2445f28dfafd13da4464a03a52da2078c32bc01e4fed7376898f"
+      }
+    },
+    {
+      "cab": "cab-38b5688764a7bdca6a378eb546d1160f",
+      "path_id": "-1707499343100549522",
+      "name": "Fx_RaoDon_0008 2",
+      "payload_sha256": "35167db1fbe33da6354e7abff3de6b08e396e7d42c02fc78d1d834c478c4f163",
+      "fields": {
+        "m_Name": "Fx_RaoDon_0008 2",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_DISTORT",
+          "USE_MAINTEX",
+          "USE_MASK",
+          "USE_NOISE"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": -8744816673249466109
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 3,
+                  "m_PathID": -3029306251814357840
+                },
+                "m_Scale": {
+                  "x": 2.0,
+                  "y": 1.0199999809265137
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 4,
+                  "m_PathID": 4259216555797876143
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 5,
+                  "m_PathID": 6137369484462379539
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.0
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.2150000035762787
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_EnableExternalAlpha",
+              0.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_Color",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.07000000029802322,
+                "g": 0.46000000834465027,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_Flip",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_RendererColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[1][1].m_Texture",
+          "cab": "CAB-6ede48b460c1bf425b23d71cd951ed70",
+          "path_id": "-8744816673249466109"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-fcd4d779bdaceb6bbc86f63de6177497",
+          "path_id": "-3029306251814357840"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[3][1].m_Texture",
+          "cab": "CAB-a0189113907aa3f3daa8022698fd6fd6",
+          "path_id": "4259216555797876143"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[4][1].m_Texture",
+          "cab": "CAB-9571879e59104471efffab128d520d7d",
+          "path_id": "6137369484462379539"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/630811312cf89e7ade9695d6b8394534_-1707499343100549522.mat",
+        "sha256": "aa207727aa7f72f1fc1d5a52dce13dabead3b650276f981e2e774951357566f0"
+      }
+    },
+    {
+      "cab": "cab-49cfe2a58fec3773fe3b30bca98777d3",
+      "path_id": "-1200351412229388545",
+      "name": "Fx_GuangDian_12_1 2",
+      "payload_sha256": "e64defe5d4c3f6e382c5af45c7d89fe3cfdb4f716ef5745f32752aa8ec092c4c",
+      "fields": {
+        "m_Name": "Fx_GuangDian_12_1 2",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": 3000,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 7977009734118183386
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_AlphaClip",
+              0.0
+            ],
+            [
+              "_Blend",
+              0.0
+            ],
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_BumpScale",
+              1.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ClearCoatMask",
+              0.0
+            ],
+            [
+              "_ClearCoatSmoothness",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.5
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_Cull",
+              2.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_Cutoff",
+              0.5
+            ],
+            [
+              "_DetailAlbedoMapScale",
+              1.0
+            ],
+            [
+              "_DetailNormalMapScale",
+              1.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_EnvironmentReflections",
+              1.0
+            ],
+            [
+              "_GlossMapScale",
+              0.0
+            ],
+            [
+              "_Glossiness",
+              0.0
+            ],
+            [
+              "_GlossyReflections",
+              0.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Metallic",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_OcclusionStrength",
+              1.0
+            ],
+            [
+              "_Parallax",
+              0.004999999888241291
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_QueueOffset",
+              0.0
+            ],
+            [
+              "_ReceiveShadows",
+              1.0
+            ],
+            [
+              "_Smoothness",
+              0.5
+            ],
+            [
+              "_SmoothnessTextureChannel",
+              0.0
+            ],
+            [
+              "_SpecularHighlights",
+              1.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_Surface",
+              0.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorkflowMode",
+              1.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_BaseColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_Color",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_EmissionColor",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_SpecColor",
+              {
+                "r": 0.19999995827674866,
+                "g": 0.19999995827674866,
+                "b": 0.19999995827674866,
+                "a": 1.0
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-4b8008a779b7f8f80ec83227397b5370",
+          "path_id": "7977009734118183386"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d6ed507406f061eaf5382998e48a1624_-1200351412229388545.mat",
+        "sha256": "f5fcfa3ab11107f548c51ede29dfaa9b5f9d578dc39ef804117e90d7f75f48ed"
+      }
+    },
+    {
+      "cab": "cab-4cd74290aba5d8604d7a5d3eb212b849",
+      "path_id": "7477923245766766214",
+      "name": "Fx_GuangDian_155_1_F_NB_5",
+      "payload_sha256": "4879f75e5512d6f6772f341f11830a27c0d7ff569a8851ee643e8b8836b2f539",
+      "fields": {
+        "m_Name": "Fx_GuangDian_155_1_F_NB_5",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": 3000,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 8766374760043495101
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              5.0
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-48ba3cabe55cd4d4169cd03a62e7cbdf",
+          "path_id": "8766374760043495101"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/a26480f51af333d645d55942ad9c1768_7477923245766766214.mat",
+        "sha256": "283e38e7297db9213b9899280fca82e6c0e6a7fb7e9db84e536bfa8478559c2c"
+      }
+    },
+    {
+      "cab": "cab-721065c8926549ed73b0e832a6accdc7",
+      "path_id": "-9162766705952112620",
+      "name": "Fx_Yan_240 1",
+      "payload_sha256": "f036affa33e5d3c51b21bac724174dd2cb3053bae98690f4200011658b81502a",
+      "fields": {
+        "m_Name": "Fx_Yan_240 1",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_DISTORT",
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 989113346940741725
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 3,
+                  "m_PathID": -4146102302354605095
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.9199999570846558
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.1340000033378601
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.23999999463558197,
+                "g": 0.3700000047683716,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[1][1].m_Texture",
+          "cab": "CAB-f898ae43300df7282a42f2aef28980df",
+          "path_id": "989113346940741725"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-d0692b0387e96f3ca44bd54823376897",
+          "path_id": "-4146102302354605095"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_-9162766705952112620.mat",
+        "sha256": "dda9b8172e69ddbce6c48f9a56e2635df32addc15ca6df0db7d4c58bd742d5d6"
+      }
+    },
+    {
+      "cab": "cab-721065c8926549ed73b0e832a6accdc7",
+      "path_id": "345138790711807121",
+      "name": "Fx_DiLie_125_1F 1_NB_ZH",
+      "payload_sha256": "9c3b486c19d9b3c8d1c45bb0339f5e33d431980427e2c1aca1daf6d847561033",
+      "fields": {
+        "m_Name": "Fx_DiLie_125_1F 1_NB_ZH",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_DISSOLVE",
+          "USE_DISTORT",
+          "USE_MAINTEX",
+          "USE_NOISE"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEALPHACONTROL_ON",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 15,
+                  "m_PathID": 1259340324636677913
+                },
+                "m_Scale": {
+                  "x": 0.44999998807907104,
+                  "y": 0.7099999785423279
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 13,
+                  "m_PathID": 3691610079784464355
+                },
+                "m_Scale": {
+                  "x": 1.5299999713897705,
+                  "y": 0.9599999785423279
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 14,
+                  "m_PathID": -636174646202191833
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 16,
+                  "m_PathID": 5025718510840788266
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": -0.1899999976158142
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.0299999713897705
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              1.0
+            ],
+            [
+              "_DissolveControl",
+              0.03799999877810478
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.03799999877810478
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.054999999701976776
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 8.147926330566406,
+                "g": 4.4528303146362305,
+                "b": 16.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": -0.20000000298023224,
+                "g": 0.5400000214576721,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.07999999821186066,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[0][1].m_Texture",
+          "cab": "CAB-b355a877f6b778d379f05501dff1a982",
+          "path_id": "1259340324636677913"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[1][1].m_Texture",
+          "cab": "CAB-0602ec730a4b711e1badf8dd9f4939d9",
+          "path_id": "3691610079784464355"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-b229df69a84432c5b68fc4c8754e4139",
+          "path_id": "-636174646202191833"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[4][1].m_Texture",
+          "cab": "CAB-f5f7d1bf1fbb501c014f57bef0d71548",
+          "path_id": "5025718510840788266"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_345138790711807121.mat",
+        "sha256": "22858f7bcaf699994b639af0c4a87850413899833b3e142b412feaeb1e81a938"
+      }
+    },
+    {
+      "cab": "cab-721065c8926549ed73b0e832a6accdc7",
+      "path_id": "7347117796967447493",
+      "name": "Fx_RaoDon_0008 3",
+      "payload_sha256": "94a5330b49ba1c3899f7f764bb1bc24d9fae9783bfc6658a70e547e4ecf81dad",
+      "fields": {
+        "m_Name": "Fx_RaoDon_0008 3",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_DISTORT",
+          "USE_MAINTEX",
+          "USE_MASK",
+          "USE_NOISE"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": -1,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 18,
+                  "m_PathID": -8744816673249466109
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 20,
+                  "m_PathID": -3029306251814357840
+                },
+                "m_Scale": {
+                  "x": 2.0,
+                  "y": 0.6399999856948853
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 17,
+                  "m_PathID": -5276925392669711326
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 19,
+                  "m_PathID": 6137369484462379539
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.9900000095367432
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              1.2000000476837158
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.2150000035762787
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_EnableExternalAlpha",
+              0.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_Color",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.07000000029802322,
+                "g": 0.46000000834465027,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_Flip",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_RendererColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[1][1].m_Texture",
+          "cab": "CAB-6ede48b460c1bf425b23d71cd951ed70",
+          "path_id": "-8744816673249466109"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-fcd4d779bdaceb6bbc86f63de6177497",
+          "path_id": "-3029306251814357840"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[3][1].m_Texture",
+          "cab": "CAB-26faf5a5b6c60084f6d2f31d9070f45e",
+          "path_id": "-5276925392669711326"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[4][1].m_Texture",
+          "cab": "CAB-9571879e59104471efffab128d520d7d",
+          "path_id": "6137369484462379539"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_7347117796967447493.mat",
+        "sha256": "58f9e333d73ae02af915b2033e448d63cc11f3a11894e68754d6d86ab97e6828"
+      }
+    },
+    {
+      "cab": "cab-9956653cf1fb97fb8b1774161947b5b7",
+      "path_id": "7682582552374462329",
+      "name": "Fx_GuangDian_12_1 2_NB_8",
+      "payload_sha256": "67ec1d9ee4eb68705578b8ad281e560c9bbafb968e7bef251aabf4eb9f2ee5c5",
+      "fields": {
+        "m_Name": "Fx_GuangDian_12_1 2_NB_8",
+        "m_Shader": {
+          "m_FileID": 1,
+          "m_PathID": -1464726073327024352
+        },
+        "m_ValidKeywords": [
+          "USE_MAINTEX"
+        ],
+        "m_InvalidKeywords": [
+          "_BLENDMODE_BLEND",
+          "_DISSOLVEFLIP_ON"
+        ],
+        "m_LightmapFlags": 4,
+        "m_EnableInstancingVariants": false,
+        "m_DoubleSidedGI": false,
+        "m_CustomRenderQueue": 3000,
+        "stringTagMap": [
+          [
+            "RenderType",
+            "Transparent"
+          ]
+        ],
+        "disabledShaderPasses": [],
+        "m_SavedProperties": {
+          "m_TexEnvs": [
+            [
+              "_DissolveTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_DistortionTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MainTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 2,
+                  "m_PathID": 7977009734118183386
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_MaskTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ],
+            [
+              "_NoiseTex",
+              {
+                "m_Texture": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "m_Scale": {
+                  "x": 1.0,
+                  "y": 1.0
+                },
+                "m_Offset": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            ]
+          ],
+          "m_Ints": [],
+          "m_Floats": [
+            [
+              "_AlphaClip",
+              0.0
+            ],
+            [
+              "_Blend",
+              0.0
+            ],
+            [
+              "_BlendMode",
+              1.0
+            ],
+            [
+              "_BlendOp",
+              0.0
+            ],
+            [
+              "_BloomFactor",
+              0.0
+            ],
+            [
+              "_BumpScale",
+              1.0
+            ],
+            [
+              "_CenterDissolve",
+              0.0
+            ],
+            [
+              "_ClampMainUV",
+              0.0
+            ],
+            [
+              "_ClearCoatMask",
+              0.0
+            ],
+            [
+              "_ClearCoatSmoothness",
+              0.0
+            ],
+            [
+              "_ColorIntensity",
+              8.0
+            ],
+            [
+              "_ColorMask",
+              14.0
+            ],
+            [
+              "_Cull",
+              2.0
+            ],
+            [
+              "_CullMode",
+              0.0
+            ],
+            [
+              "_Cutoff",
+              0.5
+            ],
+            [
+              "_DetailAlbedoMapScale",
+              1.0
+            ],
+            [
+              "_DetailNormalMapScale",
+              1.0
+            ],
+            [
+              "_DissolveAlphaControl",
+              0.0
+            ],
+            [
+              "_DissolveControl",
+              0.5
+            ],
+            [
+              "_DissolveFlip",
+              1.0
+            ],
+            [
+              "_DissolveMoveSmooth",
+              1.0
+            ],
+            [
+              "_DissolveProgress",
+              0.0
+            ],
+            [
+              "_DissolveRange",
+              0.5
+            ],
+            [
+              "_DissolveSoftness",
+              0.05000000074505806
+            ],
+            [
+              "_DissolveTex_Rota",
+              0.0
+            ],
+            [
+              "_DissolveTex_Rotator",
+              0.0
+            ],
+            [
+              "_Distortion",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rota",
+              0.0
+            ],
+            [
+              "_DistortionTex_Rotator",
+              0.0
+            ],
+            [
+              "_DstBlend",
+              10.0
+            ],
+            [
+              "_EnvironmentReflections",
+              1.0
+            ],
+            [
+              "_GlossMapScale",
+              0.0
+            ],
+            [
+              "_Glossiness",
+              0.0
+            ],
+            [
+              "_GlossyReflections",
+              0.0
+            ],
+            [
+              "_Glow",
+              10.0
+            ],
+            [
+              "_GlowGlobal",
+              0.5
+            ],
+            [
+              "_IntensityAffectAlpha",
+              0.0
+            ],
+            [
+              "_Maintex_Rota",
+              0.0
+            ],
+            [
+              "_Maintex_Rotator",
+              0.0
+            ],
+            [
+              "_MaksPower",
+              1.0
+            ],
+            [
+              "_MaskRA",
+              0.0
+            ],
+            [
+              "_Mask_Rota",
+              0.0
+            ],
+            [
+              "_Mask_Rotator",
+              0.0
+            ],
+            [
+              "_Metallic",
+              0.0
+            ],
+            [
+              "_Noise_Rota",
+              0.0
+            ],
+            [
+              "_Noise_Rotator",
+              0.0
+            ],
+            [
+              "_OcclusionStrength",
+              1.0
+            ],
+            [
+              "_Parallax",
+              0.004999999888241291
+            ],
+            [
+              "_PixelSize",
+              0.0
+            ],
+            [
+              "_QueueOffset",
+              0.0
+            ],
+            [
+              "_ReceiveShadows",
+              1.0
+            ],
+            [
+              "_Smoothness",
+              0.5
+            ],
+            [
+              "_SmoothnessTextureChannel",
+              0.0
+            ],
+            [
+              "_SpecularHighlights",
+              1.0
+            ],
+            [
+              "_SrcBlend",
+              5.0
+            ],
+            [
+              "_Stencil",
+              0.0
+            ],
+            [
+              "_StencilComp",
+              8.0
+            ],
+            [
+              "_StencilOp",
+              0.0
+            ],
+            [
+              "_StencilReadMask",
+              255.0
+            ],
+            [
+              "_StencilWriteMask",
+              255.0
+            ],
+            [
+              "_Surface",
+              0.0
+            ],
+            [
+              "_UseCustomData",
+              0.0
+            ],
+            [
+              "_UseDissolve2",
+              0.0
+            ],
+            [
+              "_UseSoftDissolve",
+              0.0
+            ],
+            [
+              "_UseWind2D",
+              0.0
+            ],
+            [
+              "_WindAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindAnchorFalloff",
+              1.0
+            ],
+            [
+              "_WindAnchorStart",
+              0.05000000074505806
+            ],
+            [
+              "_WindFlutterAmplitude",
+              0.05000000074505806
+            ],
+            [
+              "_WindSpeed",
+              2.0
+            ],
+            [
+              "_WindWaveFrequency",
+              3.0
+            ],
+            [
+              "_WorkflowMode",
+              1.0
+            ],
+            [
+              "_WorldClipHeight",
+              -1000000.0
+            ],
+            [
+              "_ZTest",
+              4.0
+            ],
+            [
+              "_ZWrite",
+              0.0
+            ]
+          ],
+          "m_Colors": [
+            [
+              "_BaseColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_Color",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_DissolveAxisDir",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_DissolveColor",
+              {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DissolveTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_DistortionTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_EmissionColor",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_GlowColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainColor",
+              {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+              }
+            ],
+            [
+              "_MainTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ],
+            [
+              "_MaskTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_NoiseTex_MoveCenter",
+              {
+                "r": 0.0,
+                "g": 0.0,
+                "b": 0.5,
+                "a": 0.5
+              }
+            ],
+            [
+              "_SpecColor",
+              {
+                "r": 0.19999995827674866,
+                "g": 0.19999995827674866,
+                "b": 0.19999995827674866,
+                "a": 1.0
+              }
+            ],
+            [
+              "_WindDirection",
+              {
+                "r": -1.0,
+                "g": 0.0,
+                "b": 0.0,
+                "a": 0.0
+              }
+            ]
+          ]
+        },
+        "m_BuildTextureStacks": []
+      },
+      "links": [
+        {
+          "field": ".m_Shader",
+          "cab": "CAB-014000ed2538cb87d1aa4612be612002",
+          "path_id": "-1464726073327024352"
+        },
+        {
+          "field": ".m_SavedProperties.m_TexEnvs[2][1].m_Texture",
+          "cab": "CAB-4b8008a779b7f8f80ec83227397b5370",
+          "path_id": "7977009734118183386"
+        }
+      ],
+      "reused": false,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d3dfc4ee700c5ab050c68236cd324c0f_7682582552374462329.mat",
+        "sha256": "6920726f93d78b3b45d11ec548a7a72e8ce29a9796897c070e667be7ca043129"
+      }
+    },
+    {
+      "cab": "cab-c60592d1b1e39ca304883cba5bc5ae22",
+      "path_id": "-6743261002651409832",
+      "name": "Fx_Yan_240 2",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityMaterials/9e009808ae4e70b79851dace31b6c3f0/-6743261002651409832.mat",
+        "sha256": "928b39e04c5584909a4d91a1755e929fb236d8b4b82f5a095aca0f6375ade8be"
+      }
+    }
+  ],
+  "textures": [
+    {
+      "cab": "cab-87c3482ced6fb1ced4c9e45ee0493bb2",
+      "path_id": "1781634083833702718",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/6f9085b7b845ccd9e67b730d71ee8246/1781634083833702718.texture.asset",
+        "sha256": "f97bd388510941af40a42c2011477a5dae0327a788f75174cb391124502891bd"
+      }
+    },
+    {
+      "cab": "cab-c4600feeeeea502891ae9111c15633c6",
+      "path_id": "3515940045999828070",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/9cd3b0da6681eabe60ba157b79f2f5dc/3515940045999828070.texture.asset",
+        "sha256": "eaf88881773c57556db36288e065d37ef53055508b3bd41c1bdfcb81d1f0f30e"
+      }
+    },
+    {
+      "cab": "cab-2f8d1fc5f23fb3808628a34d6fd12757",
+      "path_id": "-4043447173091892191",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/8c48032d0d2e219762aaa09ef4f88370/-4043447173091892191.texture.asset",
+        "sha256": "bb6264e229cf6469349116901402b97d0ac051349b5f1e15087602b361184244"
+      }
+    },
+    {
+      "cab": "cab-6ede48b460c1bf425b23d71cd951ed70",
+      "path_id": "-8744816673249466109",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset",
+        "sha256": "56e17b4704bcc3b70787c9df9a118ff14e4c22f3e0f3a3075c0ca7c5cf6f7a24"
+      }
+    },
+    {
+      "cab": "cab-fcd4d779bdaceb6bbc86f63de6177497",
+      "path_id": "-3029306251814357840",
+      "reused": false,
+      "object_sha256": "9f716b8da66342e5b12a81d99ac3f7546f3b72b6cedacf00c83f6a58dd16c9f6",
+      "fields": {
+        "m_Name": "Fx_RaoDon_0008 1",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": false,
+        "m_Width": 256,
+        "m_Height": 256,
+        "m_CompleteImageSize": 40096,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 9,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 0,
+          "size": 40096,
+          "path": "archive:/CAB-fcd4d779bdaceb6bbc86f63de6177497/CAB-fcd4d779bdaceb6bbc86f63de6177497.resS"
+        }
+      },
+      "raw_sha256": "4acd32f1141ebda566e48e59a674327beeea7efa0529263c52dbaa61d7b733ef",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "ac9f607f3b652c070d4a3a2ac5d42b1c1b34335d355bc80aa89b7884dc65c04f",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "48f2206fc95353f254cfb838b3b31d060d19c8eb68b88101cdbc41571eab0661"
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "fb17d6a200d63c0af0158e16e626c64fd62e7ccbb18852a654684cb98dd55a4e",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "61f17029ae9118dbea6971158b3b2ad546becb98c4d37e436a3716d3a177b440"
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "bde47768737a08421bb4f97f338991784cb031fdd7a00ad89df6a1c91c064516",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "1b69c2189709a8fd817baedbda33d86fc051db67e9e5963bcd09848452601d01"
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "5064d9a4ec89deca94f09059174ec3684eaaef2aa435d1fe4bddee4cacfef5f0",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "23a0f9757a2b5a4b9a8f39d6e4457c4fb6178c05832295ef96c3642b35283b10"
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "91d69cb40e1c55e197cdfb0e5a1d9598d7cd2aa74f7c47dbd0c46b73a021744b",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "fa7d13042bacd5da06efdab999da5c9c21cf6230e205794fbea2a54534a36cf0"
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "8408b79e692550cadba2b585461d23d8c25eefd07a0b3020eb22b8ba9297eb80",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "802fc1e693205479041e88b42965fdefe82fe4e45ac272edc96ddbf5b1d08b38"
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "5b32d16ae1c8a0173d4b38fe83a7e2c2a3229b4b752dc041848b829d332bd026",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "3a006d4f6c4fa85a5647bc7070b9dc85186fcbcb37ea6e13c0ab76d89d1c6684"
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "cd1add1c4861635ba82c3eb1b384f923ccede25a00b1f95d8d29f8858bb16b8a",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "9d2e75da612aa016e1716c796c31a3b077f0d57e1edda9dae6116c541bbe4789"
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "707b3796b80c0917437adf3b433671e8054d3037a4c420171b8cc7d14081fc15",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "cc6852b717c2c7f49f655a095c1b7b6f1222924ccdccf8f3be803a539f31dec1"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset",
+        "sha256": "154fa8887fa2f1489fe8d1b9800d50d44496e728e07b22b5de016a3ba2758c79"
+      }
+    },
+    {
+      "cab": "cab-a0189113907aa3f3daa8022698fd6fd6",
+      "path_id": "4259216555797876143",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/4f4829bc3b2eda903653dcfa5eaa08a9/4259216555797876143.texture.asset",
+        "sha256": "ba9dc08a7110503842c4e7d18ee7cd75c5d103d4e32f75bcacc0506a4f7e2c28"
+      }
+    },
+    {
+      "cab": "cab-9571879e59104471efffab128d520d7d",
+      "path_id": "6137369484462379539",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset",
+        "sha256": "77934df426a006283ffe1f5237d04c40a352194fe78c57cb55bd4c0b69efedb2"
+      }
+    },
+    {
+      "cab": "cab-4b8008a779b7f8f80ec83227397b5370",
+      "path_id": "7977009734118183386",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset",
+        "sha256": "18fd59bfa64001aded2c79903ef4fc5209ad204e3dcb3c3f7f33504064c9c63e"
+      }
+    },
+    {
+      "cab": "cab-48ba3cabe55cd4d4169cd03a62e7cbdf",
+      "path_id": "8766374760043495101",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/0826a19c1aa52ca776987c207b2f796c/8766374760043495101.texture.asset",
+        "sha256": "13e819ac20d7225f3a6ca852528858b5298027f373b1e969a3399c126781d02c"
+      }
+    },
+    {
+      "cab": "cab-f898ae43300df7282a42f2aef28980df",
+      "path_id": "989113346940741725",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/a6e47bd4be5563deb578a6dcf4fd2277/989113346940741725.texture.asset",
+        "sha256": "d64718c716f796308da899bcfb73cd2e14c9af0a090c0c4a3f94b76cb733a634"
+      }
+    },
+    {
+      "cab": "cab-d0692b0387e96f3ca44bd54823376897",
+      "path_id": "-4146102302354605095",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/457812c66c4327318dbea5dbb5f3e840/-4146102302354605095.texture.asset",
+        "sha256": "dd92b671739bee9823fbfed924a387bf4e082dafc23f42882a19eeb50f327585"
+      }
+    },
+    {
+      "cab": "cab-b355a877f6b778d379f05501dff1a982",
+      "path_id": "1259340324636677913",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/726313b3bd8be0bf963545306e3a2886/1259340324636677913.texture.asset",
+        "sha256": "47eb737fd8e9596a0c37d9a2d7435619d7dd1e65a9e4c8738d3ca0b979a274a6"
+      }
+    },
+    {
+      "cab": "cab-0602ec730a4b711e1badf8dd9f4939d9",
+      "path_id": "3691610079784464355",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d9c8dfdb7ab4e263a79b1300efde023a/3691610079784464355.texture.asset",
+        "sha256": "93a9fdc6a1640a61a9b9a41eaabaf44887832b919c96783f74fd9e383b844a78"
+      }
+    },
+    {
+      "cab": "cab-b229df69a84432c5b68fc4c8754e4139",
+      "path_id": "-636174646202191833",
+      "reused": false,
+      "object_sha256": "d96d1e3977e3eb71fdc0972637985c95a64118e7c00579d4cfb4feffd212e627",
+      "fields": {
+        "m_Name": "Fx_Glow12",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": false,
+        "m_Width": 128,
+        "m_Height": 128,
+        "m_CompleteImageSize": 10512,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 8,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 0,
+          "size": 10512,
+          "path": "archive:/CAB-b229df69a84432c5b68fc4c8754e4139/CAB-b229df69a84432c5b68fc4c8754e4139.resS"
+        }
+      },
+      "raw_sha256": "82d8a39ce0408dba8314a7b99e22c47dc018c02080b968c441741b17204ce018",
+      "mips": [
+        {
+          "level": 0,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 0,
+          "astc_size": 7744,
+          "astc_sha256": "fe7550f78e740bb86555aaecbf99e9f55174e336aa818b94095edb15da04a0eb",
+          "rgba_offset": 0,
+          "rgba_size": 65536,
+          "rgba_sha256": "b3e4983f93a372418c77eee218303cd8415d5945f0211781e9ebb21c3c16a034"
+        },
+        {
+          "level": 1,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 7744,
+          "astc_size": 1936,
+          "astc_sha256": "3867bfe3ad6bea691da1890ba68c4cbdb4bfe1a36a38c31c43765d7f18608bed",
+          "rgba_offset": 65536,
+          "rgba_size": 16384,
+          "rgba_sha256": "5246f2ddacf37d970aee285bc247b9db8e7af78e631ba7bb14ed39972d1d93ea"
+        },
+        {
+          "level": 2,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 9680,
+          "astc_size": 576,
+          "astc_sha256": "dd9fd4d88a4e6bc04533c0829b829380bbd2c198de5f98fb7572211beffef888",
+          "rgba_offset": 81920,
+          "rgba_size": 4096,
+          "rgba_sha256": "d4b292f72be9560c15aae2d90255eaf1918fc5a38302493b682ca947f2c45933"
+        },
+        {
+          "level": 3,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 10256,
+          "astc_size": 144,
+          "astc_sha256": "8c12f746151deb46f5a1f6d9fabd955ca246cbea58737a70cc96b7988f7188af",
+          "rgba_offset": 86016,
+          "rgba_size": 1024,
+          "rgba_sha256": "ac2fe77c25b49745bf33a8bec916d52875c2663f1fb0ffdc516ba3c0c0722d2f"
+        },
+        {
+          "level": 4,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 10400,
+          "astc_size": 64,
+          "astc_sha256": "0ca15cf7e9ca9956f9d8ccdf52029a863452eed5e3a1695f9e47c402504b9959",
+          "rgba_offset": 87040,
+          "rgba_size": 256,
+          "rgba_sha256": "087998aece551677a5872a3c09f613b892783b18c6231e1e31aeaafc6c27e1ba"
+        },
+        {
+          "level": 5,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 10464,
+          "astc_size": 16,
+          "astc_sha256": "87a11d95da580121098cf8e0977f93576eb1bece16b2553a52762726b0991ac8",
+          "rgba_offset": 87296,
+          "rgba_size": 64,
+          "rgba_sha256": "aae799fa6da145cbd5348e088d8cb599a454b4a40129cff4d68918f350e020e3"
+        },
+        {
+          "level": 6,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 10480,
+          "astc_size": 16,
+          "astc_sha256": "f92c0514e872688547ca3a43216ca8bdcf7f5eaece257315aca3907ecde2093c",
+          "rgba_offset": 87360,
+          "rgba_size": 16,
+          "rgba_sha256": "271c307e61c198b25035eeca5478f6687131605a2bae83e8567ef66cdc74baf7"
+        },
+        {
+          "level": 7,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 10496,
+          "astc_size": 16,
+          "astc_sha256": "68f6075f0d7f0b3b84bb1ae89897e323fac2599a1c3df22ad78e912c48d5dcc4",
+          "rgba_offset": 87376,
+          "rgba_size": 4,
+          "rgba_sha256": "27d74f076ecdfc9d0ec3faabf5326eee386399def36789be60974eeeea8592da"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/4f986811ef3cec2e288afd511bcc0aea_-636174646202191833.texture.asset",
+        "sha256": "08f5353f008668bcf50765c970a7411bedfc544aa545314f053f296f4b5c7f27"
+      }
+    },
+    {
+      "cab": "cab-f5f7d1bf1fbb501c014f57bef0d71548",
+      "path_id": "5025718510840788266",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/c893b834a3c9da42e76a01fe0686d604/5025718510840788266.texture.asset",
+        "sha256": "7dd61602855651d065fbb4b0ff6bec69eed181af53e7354cef6afb1cd6d2f48d"
+      }
+    },
+    {
+      "cab": "cab-6ede48b460c1bf425b23d71cd951ed70",
+      "path_id": "-8744816673249466109",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/b1db1f8791c1b9b0342555ab54c2b5ab/-8744816673249466109.texture.asset",
+        "sha256": "56e17b4704bcc3b70787c9df9a118ff14e4c22f3e0f3a3075c0ca7c5cf6f7a24"
+      }
+    },
+    {
+      "cab": "cab-fcd4d779bdaceb6bbc86f63de6177497",
+      "path_id": "-3029306251814357840",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset",
+        "sha256": "154fa8887fa2f1489fe8d1b9800d50d44496e728e07b22b5de016a3ba2758c79"
+      }
+    },
+    {
+      "cab": "cab-26faf5a5b6c60084f6d2f31d9070f45e",
+      "path_id": "-5276925392669711326",
+      "reused": false,
+      "object_sha256": "8b473ae01d25ae9ba82dfd9bc6a3965dc9521fa637ec2a4a38d91b953aece85e",
+      "fields": {
+        "m_Name": "Fx_Mask_08_C",
+        "m_ForcedFallbackFormat": 4,
+        "m_DownscaleFallback": false,
+        "m_IsAlphaChannelOptional": true,
+        "m_Width": 256,
+        "m_Height": 256,
+        "m_CompleteImageSize": 40096,
+        "m_MipsStripped": 0,
+        "m_TextureFormat": 50,
+        "m_MipCount": 9,
+        "m_IsReadable": false,
+        "m_IsPreProcessed": false,
+        "m_IgnoreMipmapLimit": false,
+        "m_MipmapLimitGroupName": "",
+        "m_StreamingMipmaps": false,
+        "m_StreamingMipmapsPriority": 0,
+        "m_ImageCount": 1,
+        "m_TextureDimension": 2,
+        "m_TextureSettings": {
+          "m_FilterMode": 1,
+          "m_Aniso": 1,
+          "m_MipBias": 0.0,
+          "m_WrapU": 0,
+          "m_WrapV": 0,
+          "m_WrapW": 0
+        },
+        "m_LightmapFormat": 0,
+        "m_ColorSpace": 1,
+        "m_PlatformBlob": [],
+        "m_StreamData": {
+          "offset": 0,
+          "size": 40096,
+          "path": "archive:/CAB-26faf5a5b6c60084f6d2f31d9070f45e/CAB-26faf5a5b6c60084f6d2f31d9070f45e.resS"
+        }
+      },
+      "raw_sha256": "2ad7f3418530bc01a08ef89e22e8edd622466b828194691d95af551f4ab170aa",
+      "mips": [
+        {
+          "level": 0,
+          "width": 256,
+          "height": 256,
+          "astc_offset": 0,
+          "astc_size": 29584,
+          "astc_sha256": "030d7f13aab098e04fad141a88e0c83a7c2939c8c604718d249f8670d93ec3fc",
+          "rgba_offset": 0,
+          "rgba_size": 262144,
+          "rgba_sha256": "f786c2caaec73e208863d85ef29f13a012b7d2b1f5c92da483bccc28d94453b4"
+        },
+        {
+          "level": 1,
+          "width": 128,
+          "height": 128,
+          "astc_offset": 29584,
+          "astc_size": 7744,
+          "astc_sha256": "c1e7e4ed8d83048402d3a7a60c4deb0e0376441add56cc83853afd0b0cfb4086",
+          "rgba_offset": 262144,
+          "rgba_size": 65536,
+          "rgba_sha256": "1bd07d44d65df1ef703079526d076cdd7d404172ff24bd66f73615f2e312d156"
+        },
+        {
+          "level": 2,
+          "width": 64,
+          "height": 64,
+          "astc_offset": 37328,
+          "astc_size": 1936,
+          "astc_sha256": "6ee2656f53c779a8062c36f8ffa3ded94b4aa59284abc0b1d7303825fd71fd38",
+          "rgba_offset": 327680,
+          "rgba_size": 16384,
+          "rgba_sha256": "662bc384e0eb9bbcb690d61fd378cbdde094ad60a161fdb892f8fbbe90b31bfe"
+        },
+        {
+          "level": 3,
+          "width": 32,
+          "height": 32,
+          "astc_offset": 39264,
+          "astc_size": 576,
+          "astc_sha256": "afc3f97d8e6f24b64ad01c049b4920097dca45bfa8b3f6069449d7ee972d494e",
+          "rgba_offset": 344064,
+          "rgba_size": 4096,
+          "rgba_sha256": "424cec7c09433096986ab34da72d1e0910ae840f2f310a5f3cf0faa9c3b29034"
+        },
+        {
+          "level": 4,
+          "width": 16,
+          "height": 16,
+          "astc_offset": 39840,
+          "astc_size": 144,
+          "astc_sha256": "64f7930e0899d0810be53a09fca2448cb34d6310c558b012f52acfadc6040415",
+          "rgba_offset": 348160,
+          "rgba_size": 1024,
+          "rgba_sha256": "d50cd082558ae19e9112029306f33c2fe3b2199e0704f1ea9e9eded7ae97a566"
+        },
+        {
+          "level": 5,
+          "width": 8,
+          "height": 8,
+          "astc_offset": 39984,
+          "astc_size": 64,
+          "astc_sha256": "dd831916a807668dab8d281a1df8de31daf1e526da235b97635a1434f0c94491",
+          "rgba_offset": 349184,
+          "rgba_size": 256,
+          "rgba_sha256": "1bac0fe348615cca3bc561e660f46b48198f750614f38d3b1717c400ac29b988"
+        },
+        {
+          "level": 6,
+          "width": 4,
+          "height": 4,
+          "astc_offset": 40048,
+          "astc_size": 16,
+          "astc_sha256": "6ed6160a4a3534f2999f01fe3cdf865434562a710d2ebe81cbcdf09cc16aa9ba",
+          "rgba_offset": 349440,
+          "rgba_size": 64,
+          "rgba_sha256": "5f506c25319f861fe2269061bd8537bedc912a8ba8398f76ddbefde28ce614cb"
+        },
+        {
+          "level": 7,
+          "width": 2,
+          "height": 2,
+          "astc_offset": 40064,
+          "astc_size": 16,
+          "astc_sha256": "b0ab6c1446a931f131ab13645c0a8e0c822f9ce04876ea84ddb655d86846a5a0",
+          "rgba_offset": 349504,
+          "rgba_size": 16,
+          "rgba_sha256": "701277e5c7b71c9fa325320d415ced4c6ca6e6371de73a2972cff90b7ca251c4"
+        },
+        {
+          "level": 8,
+          "width": 1,
+          "height": 1,
+          "astc_offset": 40080,
+          "astc_size": 16,
+          "astc_sha256": "bcb00a0665d14ae0831371a7b1b8c94ad00af7ca14bd9248e01e468b5d4dc21a",
+          "rgba_offset": 349520,
+          "rgba_size": 4,
+          "rgba_sha256": "10564d1ffe9f9d921eb1b9efdf08966a596d6ea7994cb48cbed7f297a090c994"
+        }
+      ],
+      "profile": "LDR_SRGB",
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/798655777a95eadc8ac5d41439ebc549_-5276925392669711326.texture.asset",
+        "sha256": "d6792a478068a1adf8f28135430137b7fd79ba156b936294de8055f293900e2d"
+      }
+    },
+    {
+      "cab": "cab-9571879e59104471efffab128d520d7d",
+      "path_id": "6137369484462379539",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d5ccbcff702cb8ba20b109b4dafc6cb2/6137369484462379539.texture.asset",
+        "sha256": "77934df426a006283ffe1f5237d04c40a352194fe78c57cb55bd4c0b69efedb2"
+      }
+    },
+    {
+      "cab": "cab-4b8008a779b7f8f80ec83227397b5370",
+      "path_id": "7977009734118183386",
+      "reused": true,
+      "output": {
+        "path": "unity/Assets/Official/World/Map/14/NativeEntityTextures/d46cefc95cb15d76fb9e81cc13c2b6c5/7977009734118183386.texture.asset",
+        "sha256": "18fd59bfa64001aded2c79903ef4fc5209ad204e3dcb3c3f7f33504064c9c63e"
+      }
+    }
+  ],
+  "nativeVerification": {
+    "pointers": 240,
+    "values": 33263,
+    "ParticleSystem": 12,
+    "runtimeLightmapDefaults": 48,
+    "ParticleSystemRenderer": 12
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_chaos_appearance_playable.py",
+      "sha256": "379564a02d96f8dae03757539ab150bfdfdbd05f7b737110769f1ee7b8aa093f"
+    },
+    {
+      "path": "scripts/verify_unity_map14_chaos_appearance_native.py",
+      "sha256": "d85e1e4c84f2bc6a7589ef581a4d1430e4a9f98a9029adc33884158f0aadd7c1"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_suimo_performance.py",
+      "sha256": "f8db557df1c9a4c5e1d084ca5a55a7e29d8c60c7c0f7ae5c6c2fcb8df093effd"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "0c4f3d08c5323e2c9e2ef708221a1ec757fdfdf6f1933e29a09896f15337375e"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_entity_textures.py",
+      "sha256": "91e9e8b589f033aeb230b2f20d758b5b14fcb06bac39eed80c80e44fd9c2eb90"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_native_scene.py",
+      "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_entity_materials_native.py",
+      "sha256": "7b5a322402436ea58efda2ccf21abe511355f59a05f0e34be026119386ca52d2"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_entity_materials.py",
+      "sha256": "9a8aa83dceba97879811fa0306fbc8654880e4f6f7477973469b95083fa615bc"
+    },
+    {
+      "path": "scripts/prepare_unity_bundle_inputs.py",
+      "sha256": "8978bfd0277dab37f06070af408a18d56bc8610fc74c25764b48a03c26a99ef6"
+    },
+    {
+      "path": "scripts/verify_unity_map14_story_playable_hierarchy.py",
+      "sha256": "d81b52bba0d697fb193fa80a7e77aef1c57d1d77ba81887a4aad4a53e5b5169f"
+    }
+  ],
+  "textureConverters": [
+    {
+      "path": ".tools/python-packages/astc_encoder/__init__.py",
+      "sha256": "a6ab1739f3b06c44828892f9da15b68bebc3f2f0ee712d33218fc7c6a2091664"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/_encoder_avx2.pyd",
+      "sha256": "d4cd289885af9f0b05d2043d5ab7dbbaa590cccf4615f8f32cebe8531549d769"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/_encoder_none.pyd",
+      "sha256": "6fc0c52566373322ef39f25f0a4d4e4ec217e06e5c3629e5ad81cc5618d944f0"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/_encoder_sse2.pyd",
+      "sha256": "050c4e3260322d338c47c83384f1ddd824c510ee456c73c2d9361903c3229c06"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/_encoder_sse41.pyd",
+      "sha256": "02b3ab83f649ca73ecb67ca449cd4a7ff76d6d2f88fb95e800fb52d636c59155"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/encoder.py",
+      "sha256": "842886bcf4b5c620cca8c218519a6e6137bb07b2f3e28dfa21cc3ef25bed13bb"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/enum.py",
+      "sha256": "aac24fe8fc2fec5cdf8e9715c9d7b4be8bcc385e0c54f37008f7edcf43562680"
+    },
+    {
+      "path": ".tools/python-packages/astc_encoder/pil_codec.py",
+      "sha256": "b24e2717758e5d1c643f742f42a376536f5281868de07adab03da7e1dadbbad3"
+    },
+    {
+      "path": ".tools/python-packages/texture2ddecoder/__init__.py",
+      "sha256": "622a376256e52aae4e2dddb8800e1c3c417d17048c5dcc4af1957e1be1ef50f9"
+    },
+    {
+      "path": ".tools/python-packages/texture2ddecoder/_texture2ddecoder.pyd",
+      "sha256": "20ce237967b48cb9e7a57eb774e147fa67730189010b4ea0aa3b0c6d954d4d45"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ChaosAppearancePlayable/OfficialMap14ChaosAppearancePlayableAcceptance.cs",
+      "sha256": "daee24ef5bee40802621ce173cc7003f8ec0de9e39a216815c9036579bcc28a7"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ChaosAppearancePlayable/OfficialMap14ChaosAppearancePlayableAcceptance.cs.meta",
+      "sha256": "216fe4cedf3caf0c47834b5c0fb2657525817572932e2aeeb554833d155ed685"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ChaosAppearancePlayable/Zjcs.Editor.Map14.ChaosAppearancePlayable.asmdef",
+      "sha256": "71c4b90dfd7080f8123d60da7c73ea4de973b705b9bededbe46df4ea570d38de"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ChaosAppearancePlayable/Zjcs.Editor.Map14.ChaosAppearancePlayable.asmdef.meta",
+      "sha256": "74458937e01da8a1ba7c3a0b091915d9f9f4c20d21c9d047265d4bc481a540cf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ChaosAppearancePlayable.meta",
+      "sha256": "77e5b2acb306751518fe664479624b10ac3e1a5696bf1c88ecaa461cf6fbc104"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Effect/models/banyuan_01.asset",
+      "sha256": "d8d782f85d3645bf99a01977c2e681e0cfb54af005140a3bce9c2a485973751c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Effect/models/banyuan_01.asset.meta",
+      "sha256": "3291ff696bcf7f3eb72175a2c35c7b2b594a771208b6febc6d49d401adf353df"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Effect/models.meta",
+      "sha256": "da3ae14d9febcc6b080fe685dbc9c322bfa13807125c73a9cb3b2c9003ac77a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Effect.meta",
+      "sha256": "df63a6250c30dc2d19d95aa3d05aa502cf024d746e6a1ee8c1bfb809e586793c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/630811312cf89e7ade9695d6b8394534_-1707499343100549522.mat",
+      "sha256": "aa207727aa7f72f1fc1d5a52dce13dabead3b650276f981e2e774951357566f0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/630811312cf89e7ade9695d6b8394534_-1707499343100549522.mat.meta",
+      "sha256": "2406c74304ef62c92fa4a54a0b9615d48d827a549707f85a9dca160ea21602f0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_-9162766705952112620.mat",
+      "sha256": "dda9b8172e69ddbce6c48f9a56e2635df32addc15ca6df0db7d4c58bd742d5d6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_-9162766705952112620.mat.meta",
+      "sha256": "b5f251518f06e7c58296233a3894fa42003f2daf69c70739f15348bff923c580"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_345138790711807121.mat",
+      "sha256": "22858f7bcaf699994b639af0c4a87850413899833b3e142b412feaeb1e81a938"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_345138790711807121.mat.meta",
+      "sha256": "b8b2c0d3d34d538f73d84a85df36b55647c9770c58c7e7b0575ee1ae00512db6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_7347117796967447493.mat",
+      "sha256": "58f9e333d73ae02af915b2033e448d63cc11f3a11894e68754d6d86ab97e6828"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/76fa9e13247c163838628542149f3f50_7347117796967447493.mat.meta",
+      "sha256": "2a88da4d60728b2dc34e80ef894b31cd797c44165d31a0cece1a6ca76d86d600"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/987d142c8d8e8868c548b5d5ea5750e6_-5026624517182466262.mat",
+      "sha256": "c99a0bee5cde2445f28dfafd13da4464a03a52da2078c32bc01e4fed7376898f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/987d142c8d8e8868c548b5d5ea5750e6_-5026624517182466262.mat.meta",
+      "sha256": "91bb80d1182b30c4e24422776dca2d72078d578a6496ec926b0d08d6cb792f9d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/a26480f51af333d645d55942ad9c1768_7477923245766766214.mat",
+      "sha256": "283e38e7297db9213b9899280fca82e6c0e6a7fb7e9db84e536bfa8478559c2c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/a26480f51af333d645d55942ad9c1768_7477923245766766214.mat.meta",
+      "sha256": "bc9521fa279313a2456c24339452b0f7597dea5a3bafe81a85324bff4f7dd3c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d3dfc4ee700c5ab050c68236cd324c0f_7682582552374462329.mat",
+      "sha256": "6920726f93d78b3b45d11ec548a7a72e8ce29a9796897c070e667be7ca043129"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d3dfc4ee700c5ab050c68236cd324c0f_7682582552374462329.mat.meta",
+      "sha256": "e907e7580026e76983163cbe8667800ba965f522c9ddc740c994bcc2165100fd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d6ed507406f061eaf5382998e48a1624_-1200351412229388545.mat",
+      "sha256": "f5fcfa3ab11107f548c51ede29dfaa9b5f9d578dc39ef804117e90d7f75f48ed"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/d6ed507406f061eaf5382998e48a1624_-1200351412229388545.mat.meta",
+      "sha256": "a953d709ebcd2f9d1ec9899e226dbf14e89697832e268ec86f2e9f68ddc232e4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/fec101b9c356cdc91129787cf29078f7_-3445989891565852589.mat",
+      "sha256": "77f69c73f793e54731fd87d17d65b6f9d282d2c40014a5bcba93683ae3629883"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials/fec101b9c356cdc91129787cf29078f7_-3445989891565852589.mat.meta",
+      "sha256": "a0b3c6ddb133f10926375580ad1a59ae56d1e63094f4d4fe0eae36ea2c1541a8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Materials.meta",
+      "sha256": "6d2be6bd510b25a2167ef2a26ae7dd10314efe3481c05b656268317029575698"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab",
+      "sha256": "f54b2e92edb20a113d5d14f1626c1dc5aa8e700fec53b0cdab4f640e2b5c82e7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab.meta",
+      "sha256": "15e921ffc7fd7e5100d418a171230575956f82c9d7859c952c89fc079a84104b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables/DisplayPackage/Story.meta",
+      "sha256": "e9f0bd4784743326ba34bf95819cdd78b26aace44c18e30c46e233010534262c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables/DisplayPackage.meta",
+      "sha256": "499cd4cf6850f3a9e7b4594ed0a4722ab0484482c9599af860f74a4ab56b71ac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables.meta",
+      "sha256": "8e40cb73f8d7ebb050d66497fc8c211c70c48aa56c0cf76d9b26d849dd5bdc9e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs.meta",
+      "sha256": "1daa67f06436133288aff736a4516b4eef2d838112d681095888c80934da7ab2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset",
+      "sha256": "154fa8887fa2f1489fe8d1b9800d50d44496e728e07b22b5de016a3ba2758c79"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/0e46ffc36caef29a2d7a69cff4a19e52_-3029306251814357840.texture.asset.meta",
+      "sha256": "bf6aa9a7f4bc67849e298edb41bfac2ab90359dbd7fcd3fd3904da68813dcfc1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/4f986811ef3cec2e288afd511bcc0aea_-636174646202191833.texture.asset",
+      "sha256": "08f5353f008668bcf50765c970a7411bedfc544aa545314f053f296f4b5c7f27"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/4f986811ef3cec2e288afd511bcc0aea_-636174646202191833.texture.asset.meta",
+      "sha256": "966198b513001bd6d635b6a224c0f4d6cc5ca06a52d9940bea19d0d046d4c288"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/798655777a95eadc8ac5d41439ebc549_-5276925392669711326.texture.asset",
+      "sha256": "d6792a478068a1adf8f28135430137b7fd79ba156b936294de8055f293900e2d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures/798655777a95eadc8ac5d41439ebc549_-5276925392669711326.texture.asset.meta",
+      "sha256": "03852d90251995ed3a7c708f5b25f08d60dd1e65e7c69006be75ff7d5c310078"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Textures.meta",
+      "sha256": "5397e329c3830f365df850aafcb69fa14e2966a71cae0d18451057faad391813"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Wwise/ScriptableObjects/Event/470F5AC6-E30F-4094-92F1-E7D7DBB5A86F.asset",
+      "sha256": "069fba22defbcab67e3547cc5ecb9fb2320e04e746000e584112c6af4b1bbb5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Wwise/ScriptableObjects/Event/470F5AC6-E30F-4094-92F1-E7D7DBB5A86F.asset.meta",
+      "sha256": "18ae5b01c0e45dfb5a9ab2828d78b9519179503556b487fd55bf175648240dff"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Wwise/ScriptableObjects/Event.meta",
+      "sha256": "d7633e3a182177549515d9b237478ddfe0f28123f0858a689288745c1f821c51"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Wwise/ScriptableObjects.meta",
+      "sha256": "2ee9bbfc5050961c849601440eee3a665b6ac601955728a0d3ab4b966d80b0e0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Wwise.meta",
+      "sha256": "523efc29d1986cd8a968fcdbc6685b7527da0bcd3cc8853e77e616194711c46b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable.meta",
+      "sha256": "9bca2ce0d151db3bec4b3ba769723c0891e8b32a60f685113a12dc69f93ddfa8"
+    }
+  ],
+  "prefabs": [
+    {
+      "guid": "dd56c0b7ddba41545a66512acc8f5ea1",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeChaosAppearancePlayable/Prefabs/Playables/DisplayPackage/Story/playable_chaos_appear.prefab"
+    }
+  ],
+  "operation": "Restore the original chaos appearance prefab and dependency closure using migrated original application scripts. Reuse source-verified native materials/textures; recover additional materials byte-exactly, require every exported material scalar field to match, bind the identical original shader payload and original CAB/PathID textures with all mips. Preserve exported native hierarchy, curves, particles, trails and IDs, remapping GUIDs only.",
+  "limitations": [
+    "Four lightmap fields absent from native editor YAML retain original default descriptors; runtime sentinels/tiling require validation.",
+    "Live validation and its exact scope are recorded in map-14.md. Player model/animation binding, sound-bank playback, full story/map/save and Windows Player remain pending."
+  ]
+}
