@@ -182,6 +182,89 @@ def private_mask_binding(apk, schemas):
             for path in (native_receipt_path, blur_receipt_path)])
 
 
+def private_popup_sound_binding(apk, schemas, root):
+    """Keep the original nullable AK events and prove reuse against current banks."""
+    from UnityPy.classes.PPtr import PPtr
+    from official_source import OfficialSource
+    matches = []
+    for go, indices, names, _ in relative_transform_path(root):
+        for pair in go.m_Component:
+            obj = pair.component.deref()
+            if obj.type.name == "MonoBehaviour" and obj.read(check_read=False).m_Script.read().m_ClassName == "PopupWindowSound":
+                matches.append((obj, indices, names))
+    if len(matches) != 1:
+        raise ValueError("Original private PopupWindowSound is missing or ambiguous")
+    obj, indices, names = matches[0]
+    fields = schemas.read(obj)
+    def event(field):
+        value = fields[field]
+        if value["idInternal"] or value["valueGuidInternal"]:
+            raise ValueError("Unverified direct Wwise event identity")
+        pointer = value["WwiseObjectReference"]
+        if not pointer["m_PathID"]:
+            return None
+        reference = PPtr(**pointer, assetsfile=obj.assets_file).deref()
+        if reference.type.name != "MonoBehaviour" or reference.read(check_read=False).m_Script.read().m_ClassName != "WwiseEventReference":
+            raise ValueError("Original popup sound reference is not a Wwise event")
+        data = schemas.read(reference)
+        return dict(name=data["objectName"], id=data["id"], guid=data["guid"],
+                    source=apk.provenance(reference), object_raw_sha256=sha256(reference.get_raw_data()))
+    show, hide = event("ShowSound"), event("HideSound")
+    if show is not None or hide["name"] != "Main_Cursor_Back" or hide["id"] != 3686182067:
+        raise ValueError("Original private popup sound configuration changed")
+    receipt_path = ROOT / "assets/reference/commerce-components/audio-source-manifest.json"
+    receipt = json.loads(receipt_path.read_bytes())
+    selected = OfficialSource()
+    current_banks = {row["name"]: row for row in selected.manifest("WwiseBnk")["bundles"]}
+    bank_dir = ROOT / ".tools/source-packages/WwiseBnk"
+    bank_sources = json.loads((bank_dir / "bundle-sources.json").read_bytes())
+    banks = []
+    for key, previous in sorted(receipt["packages"].items()):
+        package = bank_dir / key
+        raw = package.read_bytes()
+        current = current_banks[key]
+        if sha256(raw) != previous["sha256"] or hashlib.md5(raw).hexdigest() != current["hash"]:
+            raise ValueError("Current popup audio bank needs conversion: " + key)
+        entry = "assets/yoo/WwiseBnk/" + current["file"]
+        packaged = entry in apk.archive.namelist()
+        if packaged and apk.archive.read(entry) != raw:
+            raise ValueError("APK-first popup audio package mismatch")
+        banks.append(dict(apk_entry=entry if packaged else None, path=package.relative_to(ROOT).as_posix(),
+                          sha256=previous["sha256"], current_manifest=current, source=bank_sources[key]))
+    uri, record = next((uri, row) for uri, row in receipt["resources"].items() if row["event"] == hide["name"])
+    original = ROOT / uri.removeprefix("res://")
+    native = ROOT / "unity/Assets/Official/Commerce/Art/audio" / original.name
+    payload = original.read_bytes()
+    if sha256(payload) != record["sha256"] or native.read_bytes() != payload:
+        raise ValueError("Verified original popup audio changed")
+    target = ROOT / "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Back.ogg"
+    importer = native.with_name(native.name + ".meta").read_text(encoding="utf8")
+    guid = hashlib.sha256(b"zjcs-map12-private-popup-back-audio").hexdigest()[:32]
+    importer = re.sub(r"(?m)^guid: [0-9a-f]{32}$", "guid: " + guid, importer)
+    importer = "\n".join(line.rstrip() for line in importer.splitlines()) + "\n"
+    folder = target.parent
+    folder_meta = folder.with_name(folder.name + ".meta")
+    folder_guid = hashlib.sha256(b"zjcs-map12-private-popup-sound-folder").hexdigest()[:32]
+    output_data = [(target, payload), (target.with_name(target.name + ".meta"), importer.encode("utf8")),
+                   (folder_meta, ("fileFormatVersion: 2\nguid: " + folder_guid + "\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n").encode("ascii"))]
+    outputs = []
+    for path, data in output_data:
+        previous = path.read_bytes() if path.exists() else None
+        if previous is not None and previous != data and "--update" not in sys.argv[1:]:
+            raise ValueError("Refusing to overwrite changed private popup audio: " + str(path))
+        if previous != data:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        outputs.append(dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(data)))
+    hide.update(resource="Map12/PopupSound/Main_Cursor_Back", file_sha256=record["sha256"],
+                conversion=record, original_path=original.relative_to(ROOT).as_posix())
+    return dict(path="/".join(map(str, indices)), objects=list(names), enabled=bool(fields["m_Enabled"]),
+                show=show, hide=hide, source=apk.provenance(obj), object_raw_sha256=sha256(obj.get_raw_data()),
+                banks=banks, audio_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())),
+                native_audio_input=dict(path=native.relative_to(ROOT).as_posix(), sha256=sha256(payload),
+                    meta_sha256=sha256(native.with_name(native.name + ".meta").read_bytes())), native_outputs=outputs)
+
+
 def private_popup_binding(apk, schemas, reader, root, path):
     """Reuse the native common clips only after checking the selected source curves."""
     import math
@@ -259,7 +342,7 @@ def private_popup_binding(apk, schemas, reader, root, path):
             curve_count=len(source_tracks), absent_source_channels=unknown))
     if len(clips) != 2:
         raise ValueError("Private popup must keep its original show and hide clips")
-    return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips, mask=private_mask_binding(apk, schemas),
+    return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips, mask=private_mask_binding(apk, schemas), sound=private_popup_sound_binding(apk, schemas, root),
         maskType=fields["mMaskType"], windowType=fields["mWindowType"], fullScreen=bool(fields["mFullScreen"]),
         closeByClickMask=bool(fields["mCloseByClickMask"]), autoCloseWhenContainerDisable=bool(fields["mAutoCloseWhenContainerDisable"]),
         isDuplicate=bool(fields["mIsDuplicate"]),
@@ -713,7 +796,7 @@ def build():
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
         "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/LayoutElementClamper.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
-        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/WindowMaskType.cs", "framework-firstpass-source/WindowMaskBase.cs", "framework-firstpass-source/WindowBlurMask.cs", "framework-firstpass-source/BlurManager.cs", "framework-firstpass-source/ScreenBlurPass.cs", "framework-firstpass-source/Framework.UI/WindowContainer.cs", "client-source/DailyDungeonGradeItem.cs",
+        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/PopupWindowSound.cs", "framework-firstpass-source/WindowMaskType.cs", "framework-firstpass-source/WindowMaskBase.cs", "framework-firstpass-source/WindowBlurMask.cs", "framework-firstpass-source/BlurManager.cs", "framework-firstpass-source/ScreenBlurPass.cs", "framework-firstpass-source/Framework.UI/WindowContainer.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",
         "common-source/Common/BattleResultGradeType.cs", "framework-firstpass-source/MultiLanguageText.cs",
         "framework-source/StateGameObjectConfig.cs", "framework-source/StateGameObjectData.cs",
@@ -722,7 +805,7 @@ def build():
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),
         sha256=sha256((CODE / path).read_bytes())) for path in code_paths]
     receipt = {"manifest": VERSION, "code_sources": code_sources,
-        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
+        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound events, verify original audio conversion against all current bank hashes and bind the local close clip; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
         "path": BINDINGS.relative_to(ROOT).as_posix(), "sha256": sha256(encoded),
         "meta_sha256": sha256(meta.read_bytes())},
         "prefabs": sources, "sprites": sprite_outputs, "route_settings": settings_source,

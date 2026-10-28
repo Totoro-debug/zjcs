@@ -625,3 +625,6 @@ assets/reference/official-map/map14-story-runtime-source-manifest.json text eol=
 unity/Assets/Game/Resources/Map14/interactions.json* text eol=lf
 unity/Assets/Game/Resources/Map14/stories.json* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Map14Statues.cs* text eol=lf
+# Preserve verified Map12 popup audio payload and importer hashes.
+unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/** -text
+unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound.meta -text

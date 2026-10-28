@@ -2,7 +2,7 @@
   "bindings": {
     "meta_sha256": "edd247e4d1a84032754c9e7611ac3a39bce64403851cd87a5403a44e186d721c",
     "path": "unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json",
-    "sha256": "2ecaab45281c1eed5205eab032aa3749f2d4b9bcd0dfa738b2253be75e3900a4"
+    "sha256": "112b87acdd936395f52de4388c38135e978b63bdacabe644f21529e374e247cb"
   },
   "code_sources": [
     {
@@ -56,6 +56,10 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/PopupWindow.cs",
       "sha256": "bffa7ae9f9d3058a44519e2f899497945ce47f6ccac783ab0485b58751aa3f80"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/PopupWindowSound.cs",
+      "sha256": "3a90a0108932895b5e9e01b51a7c5ade33efadb8892d088fe10bbb1450ed7e95"
     },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/WindowMaskType.cs",
@@ -297,7 +301,7 @@
       "sha256": "886c7589207188b1f0541a9a53008611aa4d4ca99f8fb921d328ad605edb2017"
     }
   },
-  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; decode original atlas pixels and preserve pivot, border and PPU.",
+  "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound events, verify original audio conversion against all current bank hashes and bind the local close clip; decode original atlas pixels and preserve pivot, border and PPU.",
   "prefabs": [
     {
       "image_count": 160,

@@ -21,6 +21,12 @@ namespace Zjcs.Editor
 
         private static IEnumerator VerifyPrivateDungeonEntrySteps(string root, string slot, Transform canvas, string output)
         {
+            int soundRegistrations = 0, soundUnregistrations = 0;
+            map12Runtime.MapSoundRegistration = (source, registered) =>
+            {
+                if (registered) { source.volume = 0f; soundRegistrations++; }
+                else soundUnregistrations++;
+            };
             RuntimeCall("SetStoryProgress", "IronMountBeforeBattle", 1, 2);
             RuntimeCall("SetStoryProgress", "IronMountActive", 1, 1);
             foreach (var maximum in RuntimeField<Dictionary<int, int>>("regionPointLimits"))
@@ -73,11 +79,19 @@ namespace Zjcs.Editor
             if (maskImage == null || maskImage.texture == null || maskButton == null
                 || mask.GetComponent<Canvas>().sortingOrder != dialog.GetComponent<Canvas>().sortingOrder - 1)
                 throw new InvalidDataException("Original private blur image/button/sorting binding is incomplete.");
+            var popupSound = dialog.GetComponentsInChildren<WorldPopupWindowSound>(true).Single();
+            if (popupSound.ShowSound != null || popupSound.HideSound == null || popupSound.HideSound.name != "Main_Cursor_Back"
+                || popupSound.Post == null || !popupSound.enabled)
+                throw new InvalidDataException("Original private popup sound/null-open reference was not restored.");
+            int closeSoundPosts = 0;
+            Action<AudioClip, GameObject> postSound = popupSound.Post;
+            popupSound.Post = (clip, emitter) => { closeSoundPosts++; postSound(clip, emitter); };
             float shown = (float)typeof(WorldPopupWindow).GetField("mShowStartTime",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(dialog.GetComponent<WorldPopupWindow>());
             if (Time.time - shown > .5f) throw new InvalidDataException("The initial half-second mask gate was not observed in time.");
             SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
             yield return null;
+            if (closeSoundPosts != 0) throw new InvalidDataException("Early rejected mask click emitted a close sound.");
             if (RuntimeField<GameObject>("map12PrivateDungeonDialog") != dialog)
                 throw new InvalidDataException("Private mask accepted a click before the original half-second gate.");
             yield return new WaitForSeconds(.6f);
@@ -86,6 +100,12 @@ namespace Zjcs.Editor
             var maskSlots = new Zjcs.Offline.State.ProfileSlotCatalog(root);
             byte[] beforeMaskClose = File.ReadAllBytes(maskSlots.GetProgressPath(slot));
             SimulateUiClick(maskButton, mask.GetComponent<Canvas>().worldCamera, PrivateMaskInputPoint(maskButton));
+            var closeSoundSource = UnityEngine.Object.FindObjectsOfType<AudioSource>()
+                .SingleOrDefault(source => source.gameObject.name == "OfficialDungeonUiSound:Main_Cursor_Back");
+            if (closeSoundPosts != 1 || soundRegistrations != 1 || closeSoundSource == null || closeSoundSource.clip != popupSound.HideSound
+                || closeSoundSource.loop || closeSoundSource.spatialBlend != 0f || closeSoundSource.volume != 0f
+                || closeSoundSource.transform.IsChildOf(dialog.transform))
+                throw new InvalidDataException("Original close event did not post once to an independent muted UI source.");
             deadline = Time.realtimeSinceStartup + 5f;
             while (RuntimeField<GameObject>("map12PrivateDungeonDialog") != null && Time.realtimeSinceStartup < deadline) yield return null;
             yield return null;
@@ -93,6 +113,10 @@ namespace Zjcs.Editor
                 || !File.ReadAllBytes(maskSlots.GetProgressPath(slot)).SequenceEqual(beforeMaskClose)
                 || File.Exists(Path.Combine(maskSlots.GetSlotDirectory(slot), "daily-dungeon-save.json")))
                 throw new InvalidDataException("Mask close did not release the original window/mask without changing the profile or dungeon state.");
+            deadline = Time.realtimeSinceStartup + 5f;
+            while (closeSoundSource != null && Time.realtimeSinceStartup < deadline) yield return null;
+            if (closeSoundSource != null || soundUnregistrations != 1)
+                throw new InvalidDataException("Private close sound did not release and unregister its independent source.");
             pointer = ClickTerminalMapEntity(503);
             while (pointer.MoveNext()) yield return pointer.Current;
             deadline = Time.realtimeSinceStartup + 12f;

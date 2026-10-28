@@ -120,7 +120,7 @@ namespace Zjcs.Presentation.World
             map12PrivateDungeonDialog = Instantiate(prefab, hud.ui.OverlayRoot, false);
             try
             {
-                OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap");
+                OfficialDungeonUiBindingRuntime.Apply(map12PrivateDungeonDialog, "DailyDungeonDialogPrivateMap", PostMap12PopupSound);
                 var slots = new ProfileSlotCatalog(persistentDataPath);
                 map12PrivateDungeonSession = OfflineDailyDungeonSession.OpenPrivateMap(slots, slotId);
                 int displayId = OfficialDungeonUiBindingRuntime.PrivateDisplayDungeonId;

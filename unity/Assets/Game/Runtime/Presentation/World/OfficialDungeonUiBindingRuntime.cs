@@ -18,7 +18,11 @@ namespace Zjcs.Presentation.World
           public LocalizationBinding[] localizations;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
-        { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; }
+        { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; }
+        [Serializable] private sealed class PopupSoundBinding
+        { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; }
+        [Serializable] private sealed class PopupSoundEventBinding
+        { public string name, resource; public uint id; }
         [Serializable] private sealed class PopupMaskBinding
         { public string canvasResource, path, image, button, materialResource; public bool enabled; public ButtonBinding[] buttons; }
         [Serializable] private sealed class PopupClipBinding
@@ -114,7 +118,7 @@ namespace Zjcs.Presentation.World
         private static Document cachedDocument;
         private static readonly Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
 
-        private static void RestorePopup(GameObject root, PopupBinding binding)
+        private static void RestorePopup(GameObject root, PopupBinding binding, Action<AudioClip, GameObject> postSound)
         {
             if (binding == null) return;
             Transform target = Find(root.transform, binding.path, binding.objects);
@@ -145,9 +149,21 @@ namespace Zjcs.Presentation.World
             var driver = target.GetComponent<OfficialDungeonPopupMask>() ?? target.gameObject.AddComponent<OfficialDungeonPopupMask>();
             driver.Initialize(popup, nativeMask == null ? null : nativeMask.gameObject, material, mask.image, mask.button,
                 instance => RestoreButtons(instance, new Prefab { buttons = mask.buttons }));
+            PopupSoundBinding sound = binding.sound;
+            if (sound == null || sound.show != null || sound.hide == null || sound.hide.name != "Main_Cursor_Back"
+                || sound.hide.id != 3686182067 || postSound == null)
+                throw new InvalidDataException("Original private popup sound service or event binding is missing.");
+            GameObject emitter = Find(root.transform, sound.path, sound.objects).gameObject;
+            var soundSource = emitter.GetComponent<WorldPopupWindowSound>() ?? emitter.AddComponent<WorldPopupWindowSound>();
+            soundSource.ShowSound = null;
+            soundSource.HideSound = Resources.Load<AudioClip>(sound.hide.resource);
+            if (soundSource.HideSound == null || soundSource.HideSound.name != sound.hide.name)
+                throw new InvalidDataException("Original private popup close sound is missing: " + sound.hide.resource);
+            soundSource.Post = postSound;
+            soundSource.enabled = sound.enabled;
         }
 
-        public static void Apply(GameObject root, string prefabName)
+        public static void Apply(GameObject root, string prefabName, Action<AudioClip, GameObject> postSound = null)
         {
             string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
             if (!File.Exists(path)) throw new FileNotFoundException("Official dungeon UI bindings are missing.", path);
@@ -157,7 +173,7 @@ namespace Zjcs.Presentation.World
             if (binding?.transforms == null || binding.images == null || binding.texts == null)
                 throw new InvalidDataException("Official dungeon UI bindings are incomplete: " + prefabName);
 
-            RestorePopup(root, binding.popup);
+            RestorePopup(root, binding.popup, postSound);
             foreach (TransformBinding item in binding.transforms)
             {
                 Transform node = Find(root.transform, item.path, item.objects);

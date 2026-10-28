@@ -1349,6 +1349,11 @@ namespace Zjcs.Presentation.CharacterCreation
                 OfficialMainlineMapRuntime runtime = runtimeObject.AddComponent<OfficialMainlineMapRuntime>();
                 runtime.MapMusicVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.MusicVolume;
                 runtime.MapVoiceVolume = () => Zjcs.Presentation.Home.HomeAudioSettings.VoiceVolume;
+                runtime.MapSoundRegistration = (source, registered) =>
+                {
+                    if (registered) Zjcs.Presentation.Home.HomeAudioSettings.Register(source, Zjcs.Presentation.Home.HomeAudioChannel.Sound);
+                    else Zjcs.Presentation.Home.HomeAudioSettings.Unregister(source);
+                };
                 runtime.Begin(mapClassId, slotId, SaveSelectionProbe.ProfileRoot, canvas.transform, model, name,
                     () => { if (screen != null) screen.SetActive(true); });
                 if (screen != null) screen.SetActive(false);
