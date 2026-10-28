@@ -1011,3 +1011,13 @@ unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json* text eol=
 unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs* text eol=lf
 # Keep the migrated skill component bytes identical to their source receipts.
 unity/Assets/Game/Runtime/Official/SkillsUI/** -text
+
+# Map13 original minimap source and mask migration.
+scripts/prepare_unity_map13_minimap_*.py text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13MiniMap.meta text eol=lf
+unity/Assets/Game/Runtime/Official/World/Map13MiniMap/** text eol=lf
+unity/Assets/Game/Editor/Map13MiniMap.meta text eol=lf
+unity/Assets/Game/Editor/Map13MiniMap/** text eol=lf
+unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource.meta text eol=lf
+unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource/** text eol=lf
+unity/Assets/Official/World/Map/13/Source/minimap-mask-patterns.json* text eol=lf

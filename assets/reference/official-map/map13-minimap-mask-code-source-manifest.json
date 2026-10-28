@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapMaskHandler.cs",
+      "sha256": "195f7e39aaf499f414e9f6cc0640a613cd17187a61133146bcadd3e8d01a4f56"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UIUtils.cs",
+      "sha256": "b6a88b20df5a8222afafd086f2ae949a5dc661380901bfed6f92449802f57fcf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRootEntityLiteGridInfo.cs",
+      "sha256": "109e0cbac6a87b8220292ee92cc219e185284b0a66b1d8314b3c2314001b7568"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRootEntityLiteAreaInfo.cs",
+      "sha256": "6215893315cc876cc30b1f7ed9f6d14d89de6fa3e0f1a817fb057cf4dcf7bca5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRootEntityLiteSingleInfo.cs",
+      "sha256": "abe778aac8eea6276d1c2417c9da8e006a3268d541eeb0f4eac385d1f4956966"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MiniMapMaskHandler.cs",
+      "sha256": "fc1db2c05b4e933a1e4a4080d46cdde68bd3eb674dfaff280c98c990757f7160"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MapRootEntityLiteGridInfo.cs",
+      "sha256": "4e1617d9f5b5e85c79cd48c77d18c9459df116d03de21d6a48a6d377ae43201c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MapRootEntityLiteAreaInfo.cs",
+      "sha256": "8c2deaa48f4825f1e6af23efffda0468337429602eb8e494f443daac18c73b7a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MapRootEntityLiteSingleInfo.cs",
+      "sha256": "86188d7456adefc43f179384b65531d9bba19454befe3b4f978cccc25241fb48"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MiniMapDiagnostic.cs",
+      "sha256": "c1ab49bd0de276372963702d023c327efd5f181b7de3c44a4fa586fb5be38449"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/Zjcs.Official.World.Map13MiniMap.asmdef",
+      "sha256": "20c9f85bfe82a65f1eab1a8cc8f190e6fc7aeffbebd7824cd3f85aa9fd24cc02"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_mask.py",
+    "sha256": "68466898be33bb8a4fd7c5d2587ce4b43b84c1f69b2daef629386fc6b6f5851f"
+  },
+  "operation": "Copy the complete official MiniMapMaskHandler including original pattern ordering, four rotations, maskability/lock branches, cache updates and Tilemap transforms. Replace only namespaces, IL decompiler vector syntax, diagnostic backend and MapUtils/session lookup with an explicit instance delegate; preserve the exact UIUtils tile-position formula. Copy unchanged shared grid data and methods, removing only MessagePack transport annotations.",
+  "limitations": [
+    "Core migration only. Complete original MiniMap_13 component bindings, native asset import, rendering/input/save verification and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "a58150929a8722745d7452e06b91926d9ceda3ee1db4ac58d37a0d5a7e2153ec",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "cases": 256,
+        "patterns": 10,
+        "actual_tilemap": true,
+        "unlock_removes_last_tile": true,
+        "grid_filter": true,
+        "original_switcher": true
+      },
+      "runtime_errors": 0
+    },
+    "project_validation": {
+      "log_sha256": "2fc8d76a8433ab6ca03b5fb2aba151ea3753cfca549d01f5d9eb306782b57bf7",
+      "exit_code": 0
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapMaskAcceptance.cs",
+      "sha256": "f33af7e9f22d795ca77ef72df0cc8e0e750e3a60f3052337846d46091bc0cd97"
+    },
+    "formal_minimap": false,
+    "windows_player": false,
+    "static_metadata": {
+      "guid_count": 74403,
+      "passed": true
+    }
+  }
+}

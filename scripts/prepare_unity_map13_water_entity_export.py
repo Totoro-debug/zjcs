@@ -176,7 +176,17 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
         if kind in ("Transform", "RectTransform"):
             return kind, exported_identity(path, data["m_GameObject"]["fileID"])[1]
         if kind == "MonoBehaviour":
-            kind = index[str(data["m_Script"]["guid"])].stem
+            script_ref = data["m_Script"]
+            if str(script_ref["guid"]) == "0000000000000000e000000000000000":
+                # AssetRipper preserves built-in MonoScripts (for example Tile)
+                # as Unity default-resource pointers, without an exported .cs.
+                builtin = apk.env.find_file("unity default resources")
+                script = builtin.objects[script_ref["fileID"]]
+                if script.type.name != "MonoScript":
+                    raise ValueError("Built-in script pointer is not a MonoScript")
+                kind = script.read().m_ClassName
+            else:
+                kind = index[str(script_ref["guid"])].stem
             if data["m_GameObject"]["fileID"]:
                 return kind, exported_identity(path, data["m_GameObject"]["fileID"])[1]
         return kind, "" if data.get("m_Name") is None else str(data["m_Name"])

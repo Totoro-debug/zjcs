@@ -1,0 +1,2378 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "source": {
+    "cab": "CAB-17c7f46fcb8b0dc20003021e9a9b4d76",
+    "path_id": "-5384755146599175494",
+    "assembly": "Assembly-CSharp",
+    "type": "MiniMapMaskHandler",
+    "payload_sha256": "06fd17bf3f78520debf0045253f69c59cda487ac1e8125999af08d6ec9653d55",
+    "fields": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 9050161200354224826
+      },
+      "m_Enabled": 1,
+      "m_Script": {
+        "m_FileID": 0,
+        "m_PathID": 3963191364344908169
+      },
+      "m_Name": "",
+      "mMaskGrid": {
+        "m_FileID": 0,
+        "m_PathID": 2117799700081601210
+      },
+      "mMaskTilemap": {
+        "m_FileID": 0,
+        "m_PathID": 662412882151271098
+      },
+      "mMaskedGoSwitcher": {
+        "mStateConfigs": [
+          {
+            "rid": 3769242681436274705
+          }
+        ],
+        "mOwner": {
+          "m_FileID": 0,
+          "m_PathID": 9050161200354224826
+        }
+      },
+      "mCornerPatterns": [
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": 5011813278646008708
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": -1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": -1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": 2862798339394418478
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": -1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": -1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": 8534842022739760717
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": -1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": -1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": -5549556372063057854
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": -1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": -1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": -3658875197170299586
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": -1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": -1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        }
+      ],
+      "mEdgePatterns": [
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": -8567814244428075856
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": -7986123489197864236
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 0
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": 9214890949840752390
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 1
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": -1655958206018475147
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 0
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 1
+              }
+            ]
+          }
+        },
+        {
+          "MyTile": {
+            "m_FileID": 11,
+            "m_PathID": 7146420081687096712
+          },
+          "DefaultCondition": {
+            "PosDatas": [
+              {
+                "Pos": {
+                  "X": 1,
+                  "Y": 0
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": -1,
+                  "Y": 0
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": 1
+                },
+                "Locked": 1
+              },
+              {
+                "Pos": {
+                  "X": 0,
+                  "Y": -1
+                },
+                "Locked": 1
+              }
+            ]
+          }
+        }
+      ],
+      "references": {
+        "version": 2,
+        "RefIds": [
+          {
+            "rid": 3769242681436274705,
+            "type": {
+              "class": "StateGameObjectConfig",
+              "ns": "",
+              "asm": "Framework"
+            },
+            "data": {
+              "mStateGameObjectData": {
+                "GoConfig": [
+                  {
+                    "State": {
+                      "mValue": 1
+                    },
+                    "GameObjects": [
+                      {
+                        "m_FileID": 0,
+                        "m_PathID": -5775607442517398854
+                      },
+                      {
+                        "m_FileID": 0,
+                        "m_PathID": 4004312807455779514
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "patterns": {
+    "mCornerPatterns": [
+      {
+        "tile": "5011813278646008708",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": -1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": -1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "2862798339394418478",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": -1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": -1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "8534842022739760717",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": -1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": -1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "-5549556372063057854",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": -1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": -1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "-3658875197170299586",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": -1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": -1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      }
+    ],
+    "mEdgePatterns": [
+      {
+        "tile": "-8567814244428075856",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "-7986123489197864236",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": false
+            }
+          ]
+        }
+      },
+      {
+        "tile": "9214890949840752390",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": true
+            }
+          ]
+        }
+      },
+      {
+        "tile": "-1655958206018475147",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": false
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": true
+            }
+          ]
+        }
+      },
+      {
+        "tile": "7146420081687096712",
+        "DefaultCondition": {
+          "PosDatas": [
+            {
+              "Pos": {
+                "X": 1,
+                "Y": 0
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": -1,
+                "Y": 0
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": 1
+              },
+              "Locked": true
+            },
+            {
+              "Pos": {
+                "X": 0,
+                "Y": -1
+              },
+              "Locked": true
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "cases": [
+    {
+      "mask": 0,
+      "tile": "",
+      "rotation": 0
+    },
+    {
+      "mask": 1,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 2,
+      "tile": "5011813278646008708",
+      "rotation": 2
+    },
+    {
+      "mask": 3,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 4,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 5,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 6,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 7,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 8,
+      "tile": "5011813278646008708",
+      "rotation": 1
+    },
+    {
+      "mask": 9,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 10,
+      "tile": "2862798339394418478",
+      "rotation": 2
+    },
+    {
+      "mask": 11,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 12,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 13,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 14,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 15,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 16,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 17,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 18,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 19,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 20,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 21,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 22,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 23,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 24,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 25,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 26,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 27,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 28,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 29,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 30,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 31,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 32,
+      "tile": "5011813278646008708",
+      "rotation": 0
+    },
+    {
+      "mask": 33,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 34,
+      "tile": "8534842022739760717",
+      "rotation": 0
+    },
+    {
+      "mask": 35,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 36,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 37,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 38,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 39,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 40,
+      "tile": "2862798339394418478",
+      "rotation": 1
+    },
+    {
+      "mask": 41,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 42,
+      "tile": "-5549556372063057854",
+      "rotation": 0
+    },
+    {
+      "mask": 43,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 44,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 45,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 46,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 47,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 48,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 49,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 50,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 51,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 52,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 53,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 54,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 55,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 56,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 57,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 58,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 59,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 60,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 61,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 62,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 63,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 64,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 65,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 66,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 67,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 68,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 69,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 70,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 71,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 72,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 73,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 74,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 75,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 76,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 77,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 78,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 79,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 80,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 81,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 82,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 83,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 84,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 85,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 86,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 87,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 88,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 89,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 90,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 91,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 92,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 93,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 94,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 95,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 96,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 97,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 98,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 99,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 100,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 101,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 102,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 103,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 104,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 105,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 106,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 107,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 108,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 109,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 110,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 111,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 112,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 113,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 114,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 115,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 116,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 117,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 118,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 119,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 120,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 121,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 122,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 123,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 124,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 125,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 126,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 127,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 128,
+      "tile": "5011813278646008708",
+      "rotation": 3
+    },
+    {
+      "mask": 129,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 130,
+      "tile": "2862798339394418478",
+      "rotation": 3
+    },
+    {
+      "mask": 131,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 132,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 133,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 134,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 135,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 136,
+      "tile": "8534842022739760717",
+      "rotation": 1
+    },
+    {
+      "mask": 137,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 138,
+      "tile": "-5549556372063057854",
+      "rotation": 1
+    },
+    {
+      "mask": 139,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 140,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 141,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 142,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 143,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 144,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 145,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 146,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 147,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 148,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 149,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 150,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 151,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 152,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 153,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 154,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 155,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 156,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 157,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 158,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 159,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 160,
+      "tile": "2862798339394418478",
+      "rotation": 0
+    },
+    {
+      "mask": 161,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 162,
+      "tile": "-5549556372063057854",
+      "rotation": 2
+    },
+    {
+      "mask": 163,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 164,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 165,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 166,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 167,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 168,
+      "tile": "-5549556372063057854",
+      "rotation": 3
+    },
+    {
+      "mask": 169,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 170,
+      "tile": "-3658875197170299586",
+      "rotation": 0
+    },
+    {
+      "mask": 171,
+      "tile": "-8567814244428075856",
+      "rotation": 2
+    },
+    {
+      "mask": 172,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 173,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 174,
+      "tile": "-8567814244428075856",
+      "rotation": 1
+    },
+    {
+      "mask": 175,
+      "tile": "-7986123489197864236",
+      "rotation": 2
+    },
+    {
+      "mask": 176,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 177,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 178,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 179,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 180,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 181,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 182,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 183,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 184,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 185,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 186,
+      "tile": "-8567814244428075856",
+      "rotation": 0
+    },
+    {
+      "mask": 187,
+      "tile": "9214890949840752390",
+      "rotation": 0
+    },
+    {
+      "mask": 188,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 189,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 190,
+      "tile": "-7986123489197864236",
+      "rotation": 1
+    },
+    {
+      "mask": 191,
+      "tile": "-1655958206018475147",
+      "rotation": 2
+    },
+    {
+      "mask": 192,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 193,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 194,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 195,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 196,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 197,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 198,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 199,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 200,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 201,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 202,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 203,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 204,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 205,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 206,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 207,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 208,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 209,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 210,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 211,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 212,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 213,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 214,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 215,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 216,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 217,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 218,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 219,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 220,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 221,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 222,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 223,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 224,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 225,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 226,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 227,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 228,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 229,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 230,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 231,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 232,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 233,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 234,
+      "tile": "-8567814244428075856",
+      "rotation": 3
+    },
+    {
+      "mask": 235,
+      "tile": "-7986123489197864236",
+      "rotation": 3
+    },
+    {
+      "mask": 236,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 237,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 238,
+      "tile": "9214890949840752390",
+      "rotation": 1
+    },
+    {
+      "mask": 239,
+      "tile": "-1655958206018475147",
+      "rotation": 3
+    },
+    {
+      "mask": 240,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 241,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 242,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 243,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 244,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 245,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 246,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 247,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 248,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 249,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 250,
+      "tile": "-7986123489197864236",
+      "rotation": 0
+    },
+    {
+      "mask": 251,
+      "tile": "-1655958206018475147",
+      "rotation": 0
+    },
+    {
+      "mask": 252,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 253,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    },
+    {
+      "mask": 254,
+      "tile": "-1655958206018475147",
+      "rotation": 1
+    },
+    {
+      "mask": 255,
+      "tile": "7146420081687096712",
+      "rotation": 0
+    }
+  ]
+}
