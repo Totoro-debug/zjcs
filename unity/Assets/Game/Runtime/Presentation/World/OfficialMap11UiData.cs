@@ -204,6 +204,10 @@ namespace Zjcs.Presentation.World
         public UnityEngine.Color mBlackBgColorDark, mBlackBgColorDarkLess;
         public float mWordInterval;
         public string TitleText, ContentText, HintGo, HintText, ConfirmBtn, CancelBtn, ConfirmText, CancelText, LockMaskWithTime;
+        public string mTxt, mTmp, mShowRemainTimeInfo, mRemainTimeText, CancelBtnLayoutElement;
+        public float mLockTimeDefault, LockTime, CancelBtnCustomWidth;
+        public int mSingleLineAlignment, mMultiLineAlignment;
+        public OfficialMap11StateSwitcher mLockedStateSwitcher;
         public string CostMoneyContent, MoneyContent, CostItemIcon, CostText, ItemContentObj, Slot, mSlot;
         public string QualityImg, QualityShadowImg, myText, myTextGo, myContent, BottomGo, myBottomText, ItemIconAttachment, mFakeIcon, mProgress, BgTransform;
         public string EquipedGo, LevelLimit, SubRankLimit, EquipedIconObj, MiniGemsContent, myStarInfo, mHasHinit;
@@ -306,7 +310,7 @@ namespace Zjcs.Presentation.World
     [Serializable] public sealed class OfficialMap11AssetGuid { public string mAssetGuid; }
     [Serializable] public sealed class OfficialMap11ManagedReferences { public OfficialMap11ManagedReference[] RefIds; }
     [Serializable] public sealed class OfficialMap11ManagedReference { public long rid; public OfficialMap11ManagedType type; public OfficialMap11ManagedData data; }
-    [Serializable] public sealed class OfficialMap11StateSwitcher { public OfficialMap11ReferenceId[] mStateConfigs; }
+    [Serializable] public sealed class OfficialMap11StateSwitcher { public string mOwner; public OfficialMap11ReferenceId[] mStateConfigs; }
     [Serializable] public sealed class OfficialMap11LayerMask { public int m_Bits; }
     [Serializable] public sealed class OfficialMap11ReferenceId { public long rid; }
     [Serializable] public sealed class OfficialMap11ManagedType { public string @class; }

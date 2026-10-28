@@ -383,7 +383,7 @@ def extract_panels(apk, schemas, source, manifest, panel_keys, extra_trees, ui_s
                                                   operation="Four original serialized fields; strict 64-byte extent; SafeAction excluded.")})
             elif key in ("BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog") and script.m_ClassName in (
                     "MaintainGlobalScaleUI", "CountRedDotImage", "PreviewTool", "UIBloomGroup",
-                    "AutoAlignForSingleMultiLineText", "LockMaskWithTime", "ButtonSound", "PopupWindowSound", "TMPEffect"):
+                    "AutoAlignForSingleMultiLineText", "LockMaskWithTime", "ShowRemainTimeInfo", "ButtonSound", "PopupWindowSound", "TMPEffect"):
                 components.append({"panel": key, "path": paths[(obj.assets_file.name, obj.path_id)],
                                    "type": script.m_ClassName, "fields": resolve(schemas.read(obj), obj),
                                    "source": apk.provenance(obj)})

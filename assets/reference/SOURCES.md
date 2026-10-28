@@ -6,7 +6,7 @@
 
 泽之国原生地图显示宿主复用已有地形、环境、地区标签、语言和字体来源及显式资源目录，新增 `Presentation/World/NativeMap13/` 仅提供本地状态／资源服务接线，未替换原 prefab。内置屏隔离 Play Mode 已验证三个地区的按位置加载、原文字网格、公开状态／光照演出和资源释放，并查看实际公／私图画面；测试工程带入项目 TMP Resources 配置。正式主线入口、交互、存档和 Windows Player 仍待完成，范围见[泽之国](../../docs/maps/map-13.md)。
 
-山之国七战斗碑：`prepare_unity_map12_steles.py` 从当前 `871_156598` 官方配置与两个显示 prefab 提取七个放置关卡、原窗口操作、52条条件奖励和50种奖品的原物品记录。`Map12/steles` 用于区域等级／阶位、怪物+7与本地一次结算；奖励表原空引用1850／1853按客户端空返回保留。专用 UI 新增四个原 prefab 依赖及50种奖品图标闭包，转换源扩为72份／943张；原方法与64位状态绑定已迁入，新增 Windows 导入、NPC 队伍及运行验收尚未完成。规则来源见 [Map12 战斗碑](official-map/map12-steles-source-manifest.json)，窗口原代码／输入／输出哈希见[专用 UI 清单](official-map/map12-stele-ui-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。
+山之国七战斗碑：`prepare_unity_map12_steles.py` 从当前 `871_156598` 官方配置与两个显示 prefab 提取七个放置关卡、原窗口操作、52条条件奖励和50种奖品的原物品记录。`Map12/steles` 用于区域等级／阶位、怪物+7与本地一次结算；奖励表原空引用1850／1853按客户端空返回保留。专用 UI 新增四个原 prefab 依赖及50种奖品图标闭包，转换源扩为72份／943张；原方法与64位状态绑定已迁入；原确认窗的生命周期、确认／取消分支、帧尾对齐、计时锁及完整时间格式代码也已迁入，并追加计时文字原组件来源与显式绑定。新增 Windows 导入、地图宿主、NPC 队伍及运行验收尚未完成。规则来源见 [Map12 战斗碑](official-map/map12-steles-source-manifest.json)，窗口原代码／输入／输出哈希见[专用 UI 清单](official-map/map12-stele-ui-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。
 
 ## 当前官方输入与历史重建
 

@@ -84,6 +84,21 @@ def record_stele_ui_sources():
     for switch in ("mTeamStateSwitcher", "mRankSuppressionSwitcher"):
         if any(r["rid"] not in refs for r in fields[switch]["mStateConfigs"]):
             raise ValueError("Original stele managed state ID is unbound")
+    confirmation = [c for c in data["components"] if c["panel"] == "ConfirmDialog"]
+    required = ("ConfirmDialog", "AutoAlignForSingleMultiLineText", "LockMaskWithTime", "ShowRemainTimeInfo")
+    if any(sum(c["type"] == kind for c in confirmation) != 1 for kind in required):
+        raise ValueError("Original confirmation component closure is incomplete")
+    align = next(c["fields"] for c in confirmation if c["type"] == required[1])
+    if (align["mSingleLineAlignment"], align["mMultiLineAlignment"]) != (514, 513):
+        raise ValueError("Original confirmation text alignment changed")
+    locked = next(c["fields"] for c in confirmation if c["type"] == required[2])
+    timer = next(c["fields"] for c in confirmation if c["type"] == required[3])
+    if locked["mLockTimeDefault"] != 10 or not timer["mRemainTimeText"]:
+        raise ValueError("Original confirmation timer binding changed")
+    lock_refs = {r["rid"]: r for r in locked["references"]["RefIds"]}
+    lock_ids = locked["mLockedStateSwitcher"]["mStateConfigs"]
+    if len(lock_ids) != 1 or lock_ids[0]["rid"] not in lock_refs:
+        raise ValueError("Original confirmation lock state reference is unbound")
     sprites = []
     for row in data["sprites"]:
         path = ROOT / "unity" / row["unityAssetPath"]
@@ -106,13 +121,26 @@ def record_stele_ui_sources():
     originals = [code / "client-source" / (name + ".cs") for name in
         ("BattleSteleWorldStageDialog", "WorldSteleStageInput", "ConfirmDialog", "AutoAlignForSingleMultiLineText")]
     originals += [code / "framework-source" / (name + ".cs") for name in ("StateMultiLanguagesConfig", "StateMultiLanguageData")]
+    originals += [code / "client-source" / (name + ".cs") for name in ("LockMaskWithTime", "ShowRemainTimeInfo")]
+    originals += [code / "framework-firstpass-source" / "UIBase.cs",
+                  code / "framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+                  code / "framework-firstpass-source/Framework/ETimeSpanFormatType.cs",
+                  code / "common-source/Common/TimeManager.cs"]
     adapters = [ROOT / p for p in (
         "scripts/prepare_unity_map12_ui.py", "scripts/prepare_unity_map11_ui.py", "scripts/map11_support_ui.py",
         "unity/Assets/Game/Runtime/Official/WorldUI/StageDialog.cs", "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
         "unity/Assets/Game/Runtime/Official/WorldUI/WorldBattleSteleStageUI.cs", "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateMultiLanguagesConfig.cs",
         "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11UiData.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs",
-        "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs")]
+        "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs",
+        "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs",
+        "unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldInitializedUI.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldAutoAlignForSingleMultiLineText.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldConfirmDialog.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldLockMaskWithTime.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldShowRemainTimeInfo.cs",
+        "unity/Assets/Game/Runtime/Official/WorldUI/WorldCultureTimeSpanArg.cs")]
     inputs = [steles_path, ROOT / "assets/reference/official-map/map12-steles-source-manifest.json",
               ui_root / "source-manifest.json", ROOT / "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json"]
     receipt = dict(manifest=data["manifest"], mapClassId=12,
@@ -122,7 +150,7 @@ def record_stele_ui_sources():
         outputs=[record(ui_path)] + [record(p) for p in sorted(set(sprites))],
         counts=dict(panels=len(data["panels"]), sprites=len(data["sprites"]), rewardItems=50, stateReferences=len(refs)),
         limitations=["Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
-            "NPC team binding, map window entry, native ConfirmDialog callbacks/alignment, UI audio/text effects and complete reward rendering remain pending.",
+            "NPC team binding, map window entry, native ConfirmDialog runtime verification, hyperlink handling, UI audio/text effects and complete reward rendering remain pending.",
             "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."])
     target = ROOT / "assets/reference/official-map/map12-stele-ui-source-manifest.json"
     write(target, encode(receipt))

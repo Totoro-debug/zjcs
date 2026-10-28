@@ -756,3 +756,13 @@ unity/Assets/Game/Runtime/Offline/ProfessionUI/** -text -eol
 unity/Assets/Game/Editor/ProfessionUI/** -text -eol
 assets/reference/profession-ui/** -text -eol
 scripts/*profession*.py -text -eol
+
+# Mountain stele confirmation code retains source receipt bytes.
+unity/Assets/Game/Runtime/Official/WorldUI/WorldInitializedUI.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldAutoAlignForSingleMultiLineText.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldConfirmDialog.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldLockMaskWithTime.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldShowRemainTimeInfo.cs* text eol=lf
+unity/Assets/Game/Runtime/Official/WorldUI/WorldCultureTimeSpanArg.cs* text eol=lf
+unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs* text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs* text eol=lf

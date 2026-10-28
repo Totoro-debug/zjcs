@@ -328,6 +328,7 @@ namespace Zjcs.Editor
                         || panel.key == "ItemIconEquip" || panel.key == "ItemIconTreasure" || panel.key == "ItemIconSkill" || panel.key == "PayMoneyChangeDialog")
                     {
                         BindSupportPrefab(root, panel.key, data, Require, sprites);
+                        if (activeMapId == 12 && panel.key == "ConfirmDialog") BindSteleConfirmPrefab(root, data, Require);
                         if (PrefabUtility.SaveAsPrefabAsset(root, ResourceRoot + "/" + panel.key + ".prefab") == null)
                             throw new InvalidOperationException("Could not save restored support prefab: " + panel.key);
                         UnityEngine.Object.DestroyImmediate(root);

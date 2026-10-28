@@ -50,6 +50,7 @@ namespace Zjcs.Editor
                     { if (Time.realtimeSinceStartup > deadline) throw new InvalidDataException("Stele portrait resize timed out."); yield return null; }
                     var canvas = new GameObject("Map12SteleWindow", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
                     ConfigureCanvas(canvas, camera, data);
+                    yield return VerifySteleConfirmUi(canvas, camera, data, output, width);
                     foreach (var stele in steles.Data.Steles)
                     {
                         var root = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Map12/UI/BattleSteleWorldStageDialog"), canvas.transform, false);
@@ -131,7 +132,7 @@ namespace Zjcs.Editor
                 }
             }
             finally { WorldMultiLanguageText.Localize = previousLanguage; UnityEngine.Object.Destroy(camera.gameObject); }
-            Debug.Log("Map12 stele UI simulated input passed at two portrait sizes for all seven placements. Real NPC teams, reward rendering, confirmation window and map battles remain separate.");
+            Debug.Log("Map12 stele UI simulated input passed at two portrait sizes for all seven placements. The native confirmation callbacks, alignment and lock mask also passed. Real NPC teams, reward rendering and map battles remain separate.");
         }
     }
 }

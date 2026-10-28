@@ -5,7 +5,7 @@
   "output": {
     "panels": 72,
     "path": "map12-ui.json",
-    "sha256": "e2720777383a326bf4aa5449049583acd7e8fcaac560ad6c4c62bd8b19cb069a",
+    "sha256": "f49ca87709fb2f908748c48daf83639ec1aad005b7bf4243ca372e9cc1d91040",
     "sprites": 943
   },
   "source": {
@@ -45336,6 +45336,80 @@
           "level": 5,
           "name": "data",
           "type": "ReferencedObjectData"
+        }
+      ],
+      "Assembly-CSharp:ShowRemainTimeInfo": [
+        {
+          "flags": 0,
+          "level": 0,
+          "name": "Base",
+          "type": "ShowRemainTimeInfo"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_GameObject",
+          "type": "PPtr<GameObject>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Enabled",
+          "type": "UInt8"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Script",
+          "type": "PPtr<MonoScript>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
+        },
+        {
+          "flags": 16384,
+          "level": 1,
+          "name": "m_Name",
+          "type": "string"
+        },
+        {
+          "flags": 0,
+          "level": 1,
+          "name": "mRemainTimeText",
+          "type": "PPtr<$MultiLanguageText>"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_FileID",
+          "type": "int"
+        },
+        {
+          "flags": 0,
+          "level": 2,
+          "name": "m_PathID",
+          "type": "SInt64"
         }
       ],
       "Assembly-CSharp:SkillStarInfo": [

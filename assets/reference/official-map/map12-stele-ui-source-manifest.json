@@ -1,14 +1,14 @@
 {
   "adapters": [
     {
-      "bytes": 12309,
+      "bytes": 14572,
       "path": "scripts/prepare_unity_map12_ui.py",
-      "sha256": "e78f2fb0e9787f50f82eb96cafe961a802a33221868ace5da5f111fb679e7d1f"
+      "sha256": "cc6ab9daebd1802ce40a35055e70916ea6d05de53f0af6f72360b2fcb9b26443"
     },
     {
-      "bytes": 72931,
+      "bytes": 72953,
       "path": "scripts/prepare_unity_map11_ui.py",
-      "sha256": "eb1acfc19aa433e6c6132f2a8c7b7250dca600b15d3d4554166aac7c75e3f99e"
+      "sha256": "f107af1fffc82ecaf078c638a66b03ccf511e2b0c48471e20aa7649cf36bbcb5"
     },
     {
       "bytes": 16148,
@@ -36,14 +36,14 @@
       "sha256": "92d7eb0769663bc17d409e911e84064c66f19c0a1867c6c78005176c92cb0c1b"
     },
     {
-      "bytes": 21981,
+      "bytes": 22296,
       "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11UiData.cs",
-      "sha256": "cc4a799c69794aad5ea63f8f087dd2acb52a2110fbfbb3a22f1c78b5e8f05d14"
+      "sha256": "60c127838b681e3de1c0696d9ed678b57d19069230105376085971799fa3875d"
     },
     {
-      "bytes": 28338,
+      "bytes": 28462,
       "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
-      "sha256": "7a62b545c9b962538fc5cf5b4cdfdcbd67cb12787df6ad4f8f51c61628df714f"
+      "sha256": "35ba70da3566274b22c627954ede7e8f1a9f66b5a46cff244ab97bf4cbbba413"
     },
     {
       "bytes": 3595,
@@ -56,9 +56,49 @@
       "sha256": "50a82464aaf10333fd690c5b06de4a4323348c5ab00d78cfba4ffb4399fe3b1e"
     },
     {
-      "bytes": 10116,
+      "bytes": 10259,
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs",
-      "sha256": "3599952f2e2e631a8392e7e5890beb12436ca6b4d08fad665bc62ab1618a08df"
+      "sha256": "02600400b60965fb4f01258e916c662457c25a6c466ad80d27431bacdf225c11"
+    },
+    {
+      "bytes": 7122,
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs",
+      "sha256": "49d23346df13daf3392e8da203dbf40c7657d078a6d4d8e5092d21d601ab1fbc"
+    },
+    {
+      "bytes": 4446,
+      "path": "unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs",
+      "sha256": "f6e85488d58673c8b0020101eb65d5d7d64688325aae4c6cb8224b3a2b619cc5"
+    },
+    {
+      "bytes": 1432,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldInitializedUI.cs",
+      "sha256": "e83d67b574e0f8c6a0f17f578dfeb2f69305ab04635632e68bcb9cdfd59c5e0d"
+    },
+    {
+      "bytes": 1527,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldAutoAlignForSingleMultiLineText.cs",
+      "sha256": "62fd110aad7014a62b863bed573f935c5e9ca618dcea9f1f005fc37d4e1f441c"
+    },
+    {
+      "bytes": 4281,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldConfirmDialog.cs",
+      "sha256": "6146859f0a95f54cf8623f93959d08b41815039d194aac5e0ed40b6f094e50ff"
+    },
+    {
+      "bytes": 1182,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLockMaskWithTime.cs",
+      "sha256": "5b472c60748275038b76a01c2e4af83ce3b55095d5217dfde0abad54e7da8587"
+    },
+    {
+      "bytes": 2948,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldShowRemainTimeInfo.cs",
+      "sha256": "a72971902197d6413cdabf468b4dac580e68aa3bc9558244d940a9bc9eb64d11"
+    },
+    {
+      "bytes": 4450,
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldCultureTimeSpanArg.cs",
+      "sha256": "8a1e394467c7a981429ece929a1a1993c7ea543f4f0541f0ddb18632c2408d28"
     }
   ],
   "counts": {
@@ -79,9 +119,9 @@
       "sha256": "8e7fa248727199c313039620e6759aae974583b1a0df9b0b04bc28a764f73b75"
     },
     {
-      "bytes": 2066634,
+      "bytes": 2068214,
       "path": "unity/Assets/Official/World/Map/12/UI/source-manifest.json",
-      "sha256": "607db6ea980ad3f26c7f6aa3902afdf9edd8723d002cfa76a0736f4257982cc1"
+      "sha256": "b09d3c207cb30dba0fe34cdee7db33219481b874d059f1a046bb1490546a6059"
     },
     {
       "bytes": 648896,
@@ -91,7 +131,7 @@
   ],
   "limitations": [
     "Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
-    "NPC team binding, map window entry, native ConfirmDialog callbacks/alignment, UI audio/text effects and complete reward rendering remain pending.",
+    "NPC team binding, map window entry, native ConfirmDialog runtime verification, hyperlink handling, UI audio/text effects and complete reward rendering remain pending.",
     "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."
   ],
   "manifest": "871_156598",
@@ -127,13 +167,43 @@
       "bytes": 147,
       "path": ".tools/source-packages/current/871_156598/official-code/framework-source/StateMultiLanguageData.cs",
       "sha256": "b54a3699e8dc10249e261b8f33b5155c63646bb74bb2cd1ab81f5e86e5912788"
+    },
+    {
+      "bytes": 1116,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/LockMaskWithTime.cs",
+      "sha256": "428a4bdd68323308315b5df4a2e2f87578a4a0c1bd9c7449083ca27a4f710f9c"
+    },
+    {
+      "bytes": 2952,
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ShowRemainTimeInfo.cs",
+      "sha256": "b5560a4512bf3398a3ec9846fe1ae56550965ef39045571716033527e5eb7a53"
+    },
+    {
+      "bytes": 4247,
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIBase.cs",
+      "sha256": "fd029496b78172ec9e9e0710366106bcdaf493c1270dfff6311d1c79400abc61"
+    },
+    {
+      "bytes": 4515,
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/CultureTimeSpanArg.cs",
+      "sha256": "4c531fc89d49f77f3cebc6f7bbd6e0fa2246a35c0d2abbcdb7441dadb7e83913"
+    },
+    {
+      "bytes": 124,
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/ETimeSpanFormatType.cs",
+      "sha256": "c15e05c30ab59f7a3ac76710c761b2ac12ecb2caa7c23ff4e5f250b2c48879d8"
+    },
+    {
+      "bytes": 6555,
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TimeManager.cs",
+      "sha256": "d3da79879de9847353415d3ff1c8c304af144d2829d5636951d905249b25fa85"
     }
   ],
   "outputs": [
     {
-      "bytes": 21057472,
+      "bytes": 21059165,
       "path": "unity/Assets/Official/World/Map/12/UI/map12-ui.json",
-      "sha256": "e2720777383a326bf4aa5449049583acd7e8fcaac560ad6c4c62bd8b19cb069a"
+      "sha256": "f49ca87709fb2f908748c48daf83639ec1aad005b7bf4243ca372e9cc1d91040"
     },
     {
       "bytes": 9868,
