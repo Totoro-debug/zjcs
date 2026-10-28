@@ -1,0 +1,2086 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "roots": [
+    {
+      "name": "SuiMo_StoryShow06",
+      "source": [
+        "cab-0892bd00f4e39482ed1f6164a911c212",
+        613844331217651761
+      ],
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 11400000
+    },
+    {
+      "name": "GriffinShakeTimeline 4",
+      "source": [
+        "cab-6c22157d398ea5508505e1faae752ea9",
+        7246930292191139513
+      ],
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 11400000
+    },
+    {
+      "name": "SuiMo_StoryShow02Timeline",
+      "source": [
+        "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+        5140903139780379000
+      ],
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 11400000
+    },
+    {
+      "name": "SuiMo_StoryShow05",
+      "source": [
+        "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+        -3322158653568776960
+      ],
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 11400000
+    },
+    {
+      "name": "XianHaiYunZhou",
+      "source": [
+        "cab-40e45028ffef078012c1f7224d8fa63f",
+        -4861394986059470401
+      ],
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 11400000
+    }
+  ],
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/entity-timelines.json",
+      "sha256": "4504d584b47f9896ed2270c04f2f6b2979ff29301750a3b6cef89fd5c6d1c22c"
+    },
+    {
+      "path": "assets/reference/official-map/map14-native-entity-timeline-input-source-manifest.json",
+      "sha256": "109814de44183a71096d319b2b6f93d37b1341df4fbd5c1e757dbb736888eb47"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/native-entity-timeline-components.json",
+      "sha256": "e9208abe5e95513e4244d6eafdd1836fda0fc9538a4cdc8add863cf2b2ff64b7"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/verify_unity_map14_entity_timeline_export.py",
+      "sha256": "78e99beafc001f5b15435ac233a9ea61d1bef6c76840769e17b9db2390efc56e"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "0c4f3d08c5323e2c9e2ef708221a1ec757fdfdf6f1933e29a09896f15337375e"
+    },
+    {
+      "path": "scripts/verify_unity_map14_story_playable_hierarchy.py",
+      "sha256": "d81b52bba0d697fb193fa80a7e77aef1c57d1d77ba81887a4aad4a53e5b5169f"
+    }
+  ],
+  "counts": {
+    "boundObjects": 177,
+    "pointers": 855,
+    "values": 6919,
+    "scriptObjects": 171,
+    "timelines": 5,
+    "originalTrackClipObjects": 165
+  },
+  "bindings": [
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -8896105100911867855,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114256069497284392,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7809823954808567759,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114969106005120503,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7587674517880076239,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114900271049623953,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7583956026671986639,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114002669891404536,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7350718694534379471,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114371939378208658,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7327147323298248655,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114634108722742392,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -7161074777913915343,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114060945828524476,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -6787043582764414927,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114730242686860875,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -6221778019693262799,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1)_0.anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -5981510986809571279,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114642988549198181,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -5790644926718965711,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114336590748365959,
+      "type": "CinemachineTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4711904478999246799,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114967328832014496,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4629032389086771151,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114703437598541787,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4560547898999928783,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114089843903986396,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4540409507469162447,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114985305603660343,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4230985564887742415,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114841364053301648,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4153170742781310927,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114875609422105747,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -4049781841102206927,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114618682377417806,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -3161174408002172879,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114320256170494724,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -3058224077954643919,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114724804207875695,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -2996879090602964943,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114470112387431263,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -2182357961545185231,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114621510681728303,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -2178446684314105807,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114107629493147155,
+      "type": "TlAnimatorParamClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -1143630160026499023,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114025901758691103,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -1088441955048650703,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114808113985169905,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -1026589357613742031,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114161607090078389,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -978910696465201103,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114589667821646929,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -941491947500828623,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114044625135789424,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -861533386373494735,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114587397909062814,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -818596475215574991,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114243736805655561,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -507029780493924303,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114709254077376921,
+      "type": "AppearanceSystem.SpineExt.SpineAnimationStateFixTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": -267457007624419279,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114918264173551851,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 613844331217651761,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.TimelineAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 674722380383029297,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114017697238300914,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 707543761821075505,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114313026266067498,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 843168598294169649,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114709867586078768,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 1209966160607414321,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114472185465350827,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 1280254333249685553,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114217368724061974,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 1305557870137346097,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114372920208702427,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 1835821279050106929,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114919942235722503,
+      "type": "TlAnimatorParamClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 2007681724455159857,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114344419225485095,
+      "type": "TlAnimatorParamTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 3163757021389424689,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114632457200066912,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 3258248753129556017,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114946936116752871,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 3652038511667152945,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_2.anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 4012462081918928945,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114733206282342372,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 4459311612840675377,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114587765826080250,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 4706563984514517041,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114099118695303065,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 4809436594058790961,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114694121525821480,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 5042128295009814577,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114977153420339851,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 5253190556849899569,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114884547391421755,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 5377435529308178481,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114291844617409189,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 6026159963401979953,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114518489005915545,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 6359880698570704945,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114705390221481576,
+      "type": "AppearanceSystem.SpineExt.SpineAnimationStateFixTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 6503839134422829105,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114220653531496868,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 7607061763642066993,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114672306508523268,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 8074538499320416305,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114711914853252429,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 8827071556407887921,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114061268324235159,
+      "type": "Spine.Unity.Playables.SpineAnimationStateClip"
+    },
+    {
+      "cab": "cab-0892bd00f4e39482ed1f6164a911c212",
+      "path_id": 8891574367033133105,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "fileId": 114302127217294661,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": -7668404057886004801,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 114724804207875695,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": -5669809305235134017,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 114730242686860875,
+      "type": "CinemachineTrack"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": -4861394986059470401,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.TimelineAsset"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": -2076557394086172225,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded.anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": 541824735631927743,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 114618682377417806,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": 1132104322681170367,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 114709254077376921,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-40e45028ffef078012c1f7224d8fa63f",
+      "path_id": 6965698278002026943,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "fileId": 114703437598541787,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -7853356264844028231,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114724804207875695,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -6291771107638765895,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114025901758691103,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -5372910087581788487,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114618682377417806,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -2946954272503228743,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114709254077376921,
+      "type": "CinemachineTrack"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -1743044393087002951,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114589667821646929,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -921203672763787591,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114703437598541787,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": -753682886772975943,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114884547391421755,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 174760992105895609,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114099118695303065,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 1774652483828651705,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114587765826080250,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 2111793924662040249,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114044625135789424,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 3084829737593149113,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114730242686860875,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 5318155256897017529,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114372920208702427,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 5560920067776255673,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114243736805655561,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 6372909068044277433,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114061268324235159,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 7246930292191139513,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.TimelineAsset"
+    },
+    {
+      "cab": "cab-6c22157d398ea5508505e1faae752ea9",
+      "path_id": 7937795132976207545,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "fileId": 114709867586078768,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -8316936718670625536,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -7710194664508553984,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114587765826080250,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -7032614604654246656,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_0.anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -4619010589508172544,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -3823473544438676224,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114884547391421755,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -3322158653568776960,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.TimelineAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -2934747269570099968,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114061268324235159,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -2418048092364995328,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114044625135789424,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -1908580879975971584,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -1605032905867787008,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track.asset",
+      "fileId": 11400000,
+      "type": "TlAnimatorParamTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -169185754744683264,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_1.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": -132158716358621952,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114243736805655561,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 496879333745231104,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip.asset",
+      "fileId": 11400000,
+      "type": "TlAnimatorParamClip"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 787080708276356352,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114025901758691103,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 1406439627184342272,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114709867586078768,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 3089882360167335168,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114099118695303065,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 3638006266837402880,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114724804207875695,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 3862408522175874304,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114985305603660343,
+      "type": "UnityEngine.Timeline.GroupTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 4118388764151776512,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114703437598541787,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 4559999193140626688,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 5141131483037959424,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114730242686860875,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 6119614483550700800,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 7411954696091075840,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114618682377417806,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 7684650821367235840,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114589667821646929,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 7892745044476560640,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114709254077376921,
+      "type": "CinemachineTrack"
+    },
+    {
+      "cab": "cab-8d1ec42ccd8ba61414b8626e0ce853cc",
+      "path_id": 8863376689247356160,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "fileId": 114372920208702427,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": -7672586648966456091,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/5E4DB478-EC2B-4D99-BE44-1DB6C1AEC52B.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": -4438303856589441257,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/89A18052-35A7-4D1D-84D5-7C034A6B3EB2.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": -4158540565147035852,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/0A176813-6DB3-430E-A10B-3CAA59E1B36C.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": -2235715721738097618,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/CC52A0FC-DE43-4DFA-8433-BACD336E051C.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": -399344881670970471,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/07D9B09D-171A-4BD3-B059-64E5AE42EE73.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-8ede2c00df79c3aff9bab2859b047085",
+      "path_id": 6406327001593536222,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/94EC30DE-D40D-42A9-95E9-A1A475F9AA9C.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventReference"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -8743940968406007432,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset.asset",
+      "fileId": 11400000,
+      "type": "EntityTalkAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -8383400142555463304,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track (1).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -8304434151502003848,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Map_Entity_Activate_6693_1.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -8132443923020398216,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -8012916336589160072,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_2.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -7912159556816813704,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_3.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -7684811252282637960,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track_0.asset",
+      "fileId": 11400000,
+      "type": "TlAnimatorParamTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -7316442506951343752,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Animation Track (1).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -6726932839468842632,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2)_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -6683871129012223624,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1).anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -6022024767126388360,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_4.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -5969639537942412936,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_5.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -5826749072205299336,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114618682377417806,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -5667188485511986824,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -5565750754344255112,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (10).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -4741128852191133320,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_0.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -4124677165281394312,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_6.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -3929172627286736520,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_7.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -3338792027542470280,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114884547391421755,
+      "type": "WwiseEventTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -3286273853065281160,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_16.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -2346850249716088456,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_1.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -2015165847921507976,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_15.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -1684614546670763656,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_8.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -1359787612023897736,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -1163267717873352328,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (4).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -872181160183217800,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_1.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -797934734867971720,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -680462160966205064,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_2.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -349278025775595144,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (6).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": -95207563125669512,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114061268324235159,
+      "type": "UnityEngine.Timeline.GroupTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 286807981049168248,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1)_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 566584073791193464,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_9.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 758596336623206776,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 823593608530346360,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114709254077376921,
+      "type": "UnityEngine.Timeline.AnimationTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 901699645597532536,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track.asset",
+      "fileId": 11400000,
+      "type": "EntityTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 954337711507554680,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114703437598541787,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1078328611948249464,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_17.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1467950723401761144,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114730242686860875,
+      "type": "CinemachineTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1483294878259069304,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114724804207875695,
+      "type": "CinemachineShot"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1767327359198806392,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1909573692801139064,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (8).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 1945290445276955000,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_0.asset",
+      "fileId": 11400000,
+      "type": "EntityTalkAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 2620869061977358712,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_10.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 2665535775611076984,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (5).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 2779854281912926584,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3)_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 2793392786740461944,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114243736805655561,
+      "type": "UnityEngine.Timeline.GroupTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 3056401654938386808,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_11.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 4419801537434993016,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_1.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 4509754551200956792,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_12.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 4819936356639031672,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track_0.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ActivationTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 5140903139780379000,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.TimelineAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 5202966757959385464,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_3.asset",
+      "fileId": 11400000,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 5212372592728195448,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (9).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 5316394201194152312,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_13.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 6138683814465225080,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip_0.asset",
+      "fileId": 11400000,
+      "type": "TlAnimatorParamClip"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 6316423171852386680,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_0.asset",
+      "fileId": 11400000,
+      "type": "EntityTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 6946605959004012920,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_1.anim",
+      "fileId": 7400000,
+      "type": "AnimationClip"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 7093756874093937016,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114099118695303065,
+      "type": "WwiseEventPlayableAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 7617012606931026296,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_1.asset",
+      "fileId": 11400000,
+      "type": "EntityTalkAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 7707267678481072504,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (7).asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 8254503310099595640,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "fileId": 114587765826080250,
+      "type": "UnityEngine.Timeline.GroupTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 8351672762568982904,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_1.asset",
+      "fileId": 11400000,
+      "type": "EntityTrack"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 8497081040203006328,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_2.asset",
+      "fileId": 11400000,
+      "type": "EntityTalkAsset"
+    },
+    {
+      "cab": "cab-d4a275944e5ce6c6a8c2dace2c139fa0",
+      "path_id": 8918316243992297848,
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_14.asset",
+      "fileId": 11400000,
+      "type": "UnityEngine.Timeline.ControlPlayableAsset"
+    }
+  ],
+  "outputs": [
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track (1).asset",
+      "sha256": "67ed90dc3dce0c1c3308d2c631a20db3760669cd04b85c859abc5f52f059dd1e"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track (1).asset.meta",
+      "sha256": "a7b2f8d872f8df14e1271efc66384885bd0d21342e3e8c3d1b02d45e8007e7a0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track.asset",
+      "sha256": "c19f725b33f04ed4b6c148d79619143b0db4a9b7b2d349570ffb55fd62bf4a3c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track.asset.meta",
+      "sha256": "09b497e507765b9aed145c1d901d74ee4cfe53857a85337ff942901fe2c460a8"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track_0.asset",
+      "sha256": "a7035c3f71ad4564f28be500a73eb6a0f8937ad9480e1783e18cb34767165b2a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Activation Track_0.asset.meta",
+      "sha256": "973a61cf7f7ba78377d3ac104aa6d35c25d06e5760a2031b45eb741dac204096"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset.asset",
+      "sha256": "fd936cbddf708fb153bded0d10a7ebadcc8c8540652f71d73a16922654a42f26"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset.asset.meta",
+      "sha256": "d4532fdd96de74780a07ff6af750b1f3ebe4932a844ca372b7e0b6c7f7050ed0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_0.asset",
+      "sha256": "fd936cbddf708fb153bded0d10a7ebadcc8c8540652f71d73a16922654a42f26"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_0.asset.meta",
+      "sha256": "76e16b58010558318e3a423ad5e48c0e211110f67be1e7129de85b62bd8595b9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_1.asset",
+      "sha256": "fd936cbddf708fb153bded0d10a7ebadcc8c8540652f71d73a16922654a42f26"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ActivationPlayableAsset_1.asset.meta",
+      "sha256": "97652d73313b56d18663b0370c4ed2b280c4ec5bbb074b0a5aa46958e6605b98"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Animation Track (1).asset",
+      "sha256": "03a6058f18f29d124cc710284dd9ed63b7507311aeab657bd2732845e073686d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Animation Track (1).asset.meta",
+      "sha256": "95c1214620ede24ea3ca9510cd4fe068e5c483c166bbc8b5ae6f74e1de364b2a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_15.asset",
+      "sha256": "dbcbc2497629b20d61f42f204e9f8eaad81a7eaa0f401d441ec85e2c2f065506"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_15.asset.meta",
+      "sha256": "c95e6295af3784e544a53482807f3835e21794539a4e09c19beacfa7d2b15bbe"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_16.asset",
+      "sha256": "66c50d5b2031b3bd2a1fdffaf369fba4041a46be92c2edb5cfbb60c48872394a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_16.asset.meta",
+      "sha256": "0d2e807e961c88c971e52285cb2755a944859d61ee995d71c263e84b2bbb95da"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_17.asset",
+      "sha256": "5b238bbbdcedb8211ea20bc395180b3a7e0eeab1730a78fd17383599ce1b5df8"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/chapter_5_main_36_17.asset.meta",
+      "sha256": "804262d0c268d5bb10ae7575d1612943595594da670ce7f84e6ede3692d478c1"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1).asset",
+      "sha256": "b25824a0197d5c3ec48f36a2e125ac8c3f8d86c8c51bbc5127fc29313decb699"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1).asset.meta",
+      "sha256": "0f7f7148fccf61f4bda2cc3e95ee0637bfb9f19e436daae63627ff6c83dcaa98"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1)_0.asset",
+      "sha256": "aff273475772b1fb81017d2d9e9582951f67fa0df505a71b2c40a81ebc1cbd33"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (1)_0.asset.meta",
+      "sha256": "df5c5cb4e06ed7e7f96817ba9cdd095422c569e32de7ae4e75e10b18d43f9382"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (10).asset",
+      "sha256": "edefc968bfff48c76055b34f9cb185d6f193db3b71aa82fee421273c6c5eb41b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (10).asset.meta",
+      "sha256": "a292824ae71e5276d4b09c5a60a8fe4710a575186944c8a0ac412779da7be517"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2).asset",
+      "sha256": "b90bc2594929e1f39d48e7b00ba6ca046cb675fb8ab14408cb51818cb7035889"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2).asset.meta",
+      "sha256": "c7c3886ee5e3b937365766b0b863171cc80d43f46b09b83f8a7ac32c24af3d48"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2)_0.asset",
+      "sha256": "10d99778a81b701a65d66de1252f08da709e788bba23072c761de3c4df7ba28b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (2)_0.asset.meta",
+      "sha256": "84b6f97dc2cd44a44d5512a8516c9bd619c1f25bd7fde534ea3cb2b6b63d0ba9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3).asset",
+      "sha256": "b3414cce45e63ed972efdd6dba0d21c4f2da89aab8249bc9a54080cca56a1e5d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3).asset.meta",
+      "sha256": "90facd204a739d33eaefe8e7eb4690555f0c26fda928a673a0f6767763399cb8"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3)_0.asset",
+      "sha256": "1e2f2bb064b68698b628ad3035f90b72835141b04d81b7d33015f90c490b7e96"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (3)_0.asset.meta",
+      "sha256": "f950d53e7943ae20c9586668dfbd4f4a00417eb42c8df9cedfa1adcde17af0f4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (4).asset",
+      "sha256": "7e7aded6ae129104a22245f72aaec8a43b71800d762b29fd8e364759d0999567"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (4).asset.meta",
+      "sha256": "966c53b382b86a0b01a78e7f3bebfa9f14c70d6b3d293d93d4f41f1eba5b8947"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (5).asset",
+      "sha256": "2b285bb7da1b66778d2b0225c642bea9173893fd412181a16df5817e03383c4c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (5).asset.meta",
+      "sha256": "00a2c86b42e185aa54110f772b2abc13835899474ab3ac891d63fd00b54662cd"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (6).asset",
+      "sha256": "c35479d5bac303f17740ef0a63fd4accf5dffbd5257bf2b096b95d5e04db3a1e"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (6).asset.meta",
+      "sha256": "5f91e94da46e33e21c6bd26986274f10fc9e07e0205ba194e70371808902c3b6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (7).asset",
+      "sha256": "198103dc6a53c351585ba460d912f0bd7f38ba9a8262acfea474b911027de2f6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (7).asset.meta",
+      "sha256": "56f8f4a476ccdbf16ff10a2b2d43d0295160f22f23860cc049fa83bd77711c56"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (8).asset",
+      "sha256": "b05e061d5525922f95835eec1fe32d300ed3097bab9f99b6bd4ee803f2789b72"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (8).asset.meta",
+      "sha256": "76525c385788d17a8ddcca37fc5df9ad33d509c8f593e9d186b7a11a626b1ee6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (9).asset",
+      "sha256": "f395ec5c06c7771c20019cce265f1e9643fc6da539db81ab90731b6b9e502062"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track (9).asset.meta",
+      "sha256": "97e56530e04c5360d7169bc228c1cade77b0d47ecc785281cf04e848a5f3f1f7"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track.asset",
+      "sha256": "70eac6f5288a0b2c383b3de5970e08fd1e6cbe009d442126e461734033e4eff6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track.asset.meta",
+      "sha256": "e61f5369874622cf9ff18b9639552a901e026fdcbc8e843159896020940909f4"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_0.asset",
+      "sha256": "8b5ab9b9b917982112533932f34e0de8e302c8e6c8b5317c703d09adcc23dfce"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_0.asset.meta",
+      "sha256": "1415c58d42b2db27ba6f7ea7bbb0765a55ad63beb9647f04f5af6b616d02aa34"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_1.asset",
+      "sha256": "aba787bcdb43f3a17790668d874289fec7f49fb8ed8e538e52f2afc88f7e2aea"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Control Track_1.asset.meta",
+      "sha256": "45e6333b14e25cd338d49bf8ed75d755209a587859bd2f56ee5aa3955c50d69a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset.asset",
+      "sha256": "e5af987fdbd938927385f5e98b4718bf2ddc3087efd5559f21f81b044ddafb59"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset.asset.meta",
+      "sha256": "56cc73fb3863f4fd747bf02a02d59a6750bc6a92bfbc5f343ea74e88ee2d99f3"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_0.asset",
+      "sha256": "ec0cee7d11d89a742b79f4eb9bbb762687a021ab15e258208d9b4f8fb2b24837"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_0.asset.meta",
+      "sha256": "770feb3e55c208325651d0070d4a2982ac3f802fd495d2a7e216a5d1266a15de"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_1.asset",
+      "sha256": "bc913d15d7bf51c0540b0c277a34c6ce90f5c52fbe65097c2ff4dfb0e057e779"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_1.asset.meta",
+      "sha256": "e2bd1bad6d9d2e6229c9b9ced1d29c163999eec0fd4a0877a387a6032ed519b9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_10.asset",
+      "sha256": "4ae1d565152ad8f9155c9acf7a1126b68ec2a9f9eeab001c4a6a23649ed3a516"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_10.asset.meta",
+      "sha256": "ff652720ae364ee5cfde5fcfecc2367cfb4acec281daff73b30815f04bb6494b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_11.asset",
+      "sha256": "68a75cfef7abe59066a290cf18d97ad5cea588727933d6d03547fbaf4746f2cd"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_11.asset.meta",
+      "sha256": "2ddd3b39ee01a9bc2c8a0418ee516f6c9c4e6be863b6b719f9db0bd7fd8fb23a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_12.asset",
+      "sha256": "c1f4522720675ce2c1dc5819619270cb296c43be2ccc5694be58ac4c73c5b609"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_12.asset.meta",
+      "sha256": "33a07ba607326ec33019c07cc437051e7320ee23d26ac7564a4aa4dbcfa76cdf"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_13.asset",
+      "sha256": "76e7e9b3598eadedad6bf6f97ac5757f9f13ced906560dfeaed173bbc0c0aec1"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_13.asset.meta",
+      "sha256": "1e71e0e060c4ccd72257cf37abcdd09607483843e809b5c829c264a821ac228d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_14.asset",
+      "sha256": "25aa608355d4f2f303825c045d84c07a4e1c75f964f64e86b8e217ef9e3c4315"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_14.asset.meta",
+      "sha256": "93f66100c2125dd75b6c1fc87f00e3be7763ac9d5a1bfd0beaab15d816c4e4f0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_2.asset",
+      "sha256": "f551a898d820c3903ec04ac70123975205557d3a356c233517d649874b9bbc62"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_2.asset.meta",
+      "sha256": "c47f5e4ca29c4b11476aa97d64b5d6d7a072883b24add436ab220ffd18db126a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_3.asset",
+      "sha256": "e21f363fb545e4914e7bb903471164c83892101add46ac5e37f629ba53898ddf"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_3.asset.meta",
+      "sha256": "5625ba51cce53a7f25ddfd90d3509c2bc19350ede14c7d4590e44beb3392a106"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_4.asset",
+      "sha256": "2cacb64924755ede5261ac6c9406a1f977524fe2ba5511f3185afe6797f5143d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_4.asset.meta",
+      "sha256": "8cbd77598f2053af87f24c2d9180745a553238663873ae3d9874252c19dd5c4a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_5.asset",
+      "sha256": "15b0910f75fdae5bccff3548243ad72f25844d634783b5ce7548456d759b7fa2"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_5.asset.meta",
+      "sha256": "b122c5d5eb85c8a95baeecc318de7b637e8849bd4cb07929a2ac518422f8b98c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_6.asset",
+      "sha256": "787d3a548b0b071a0d0e31798519d83b3a0248516222e026de04a94544b448fb"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_6.asset.meta",
+      "sha256": "3d697c2ab23c791b5a074b476b4426a92f8036f0b79ad9366d25fe9d0a1dd920"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_7.asset",
+      "sha256": "4369607a31878903d729e5b2d1b08ad3c14218bf920f6021c260b5e20fe81229"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_7.asset.meta",
+      "sha256": "ed55fe89af5f369240b9fc37f941187d320a4cd682800c8b099a46fbaeb9fa97"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_8.asset",
+      "sha256": "c6803f5fb3f4edc4118ff64df112f1a579e7d5750580c640a82de74620a18779"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_8.asset.meta",
+      "sha256": "98ca6fe6baecc3a4ae883177d53d7f97db590631a0996d2146de293c65882d19"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_9.asset",
+      "sha256": "1455d25290f0fdafcf34e4a5b292ecdf5f3ddbb90cd5c0c6d6a09870c2d22f16"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/ControlPlayableAsset_9.asset.meta",
+      "sha256": "e5cc316fd3e1bdb4947b6e2c86a548f7d363c97357267b15e603c33958b34c1e"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track.asset",
+      "sha256": "9f4e1a174bb929545df6a793a52447c26f34effa6bfeb5cf45d0517c43e2c12a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track.asset.meta",
+      "sha256": "a9fa1169a627cf75683539276f42d0e2e43e33229e39e0894a55a3f50ceeaa04"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_0.asset",
+      "sha256": "e22c85f48d59c42767951b1e8ea843f3e850cac47168caf6bdd5ebf61f46c9f3"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_0.asset.meta",
+      "sha256": "0fbfccb5804a6f8e12b2af2d580bc2ddfa74171db81569eab955ec45a97542ff"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_1.asset",
+      "sha256": "3730b619bf4131317098fd04366d5964e24712b90583d6d7e50b31fb61d1009d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Entity Track_1.asset.meta",
+      "sha256": "0d430cad1d0e658a777d221dcc667eeb1d2a89c2d825afaaede4d2a1ca4ea180"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset.asset",
+      "sha256": "458d28baefabef63b9fe6a935f7deaaf706dbd85ec6caf25c2c163dac38af180"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset.asset.meta",
+      "sha256": "179bab33e42246af9589df596d046aa8dee9cebe54c9c6acd51124b0df476a42"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_0.asset",
+      "sha256": "2da279755a19f8b95ee8c690d7064be970cfa0f14d9c7a78f63d3836ef82c818"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_0.asset.meta",
+      "sha256": "7f1a5cea506463ab137d872761d5069412fb5d8714558456d9376145e5a4c66c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_1.asset",
+      "sha256": "daa9e15edcdcfec2856f6ab513aea57157ca4e705a4f57c14eaf4d22bf1f13dc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_1.asset.meta",
+      "sha256": "bb726722c0755b857a148ec32069d3e0eeb1154ebd223a2a7f27d761267063e6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_2.asset",
+      "sha256": "d49531df99a7035b0b39b47a70e639ff42504242070e1c5f621f96f037d559dc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/EntityTalkAsset_2.asset.meta",
+      "sha256": "328505b35fca9e329ef7c5b1c461ee00e6d2fca9c54a46bf255bd9044801fd82"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Map_Entity_Activate_6693_1.asset",
+      "sha256": "30dc301ba2ab8fd2cdcbb99f9038c79031d869159fa80343edd10745d6d16d26"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Map_Entity_Activate_6693_1.asset.meta",
+      "sha256": "95b10e109ff6ae0414bfae9c3f05c84a46b1512f99cbfbf1e9297eb8fbb84637"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track.asset",
+      "sha256": "f2c0a80192375321d2c0fa56858e23206a78e4ecb6ecfef5904d95ca3c7a8d78"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track.asset.meta",
+      "sha256": "33077f6f228961c62ff285cf8d042ee2c1a12eb6cf9856b3fa009f7f33c0a24c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track_0.asset",
+      "sha256": "70e27307d019d7d6da6bae5b1ce156ca4c4cffa856aeae4126e17015a1e84faf"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/Tl Animator Param Track_0.asset.meta",
+      "sha256": "e3180c50fd066ae782890998ca15bca27005ae09c092a1d64f0618bdfdf144f8"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip.asset",
+      "sha256": "fb8e2299233262cb1d184a599f87eceaeea52880f01eefb5abe971e120c838df"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip.asset.meta",
+      "sha256": "2d7f924e2f8d648a5352d110f7fb2a0d4929630c13d6131da97e72ba1eb8ee87"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip_0.asset",
+      "sha256": "4fe3970ff94f8e315f7f0d67133d3cb23125ef3c03fd38fbcdbeaf59da31caaa"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/TlAnimatorParamClip_0.asset.meta",
+      "sha256": "5f9b6b81b58f6220bd94065495b7dfc460643254a16dfb698778cb928a5b9dbc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset.asset",
+      "sha256": "ffa9181b3f87852069e8ea7c98cb58ad214366e99d7cfc5fff633ed8af31dbbe"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset.asset.meta",
+      "sha256": "836520e221682e86f887c814943f436a81824eb3158a86536013870e51378b56"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_0.asset",
+      "sha256": "e534a3955dced1f416911a2f4c60c4adbdfcc041cb999a33180bacfecf029102"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_0.asset.meta",
+      "sha256": "85dc536a486cc0a639cc513e1ab1d23cef500e4488fdc2bedcd1e3521d14e7f1"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_1.asset",
+      "sha256": "6b5aa40d9fd98e81a3c11ecbcc386fc29b2176e6a7e53ab03dc8362c54a2bcc7"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_1.asset.meta",
+      "sha256": "7dda2001babccef7981b57e51acbfd00e16850212e8492076c939433b93f1fe5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_2.asset",
+      "sha256": "33af92a862d898a507fcf2c36ae1cd13823213eb6a0dbaccc22c630b92dad471"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_2.asset.meta",
+      "sha256": "1f8c1962074a4ae6096a124fa9c8f4a3129ff66fae46c497e8fb945c0275176f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_3.asset",
+      "sha256": "f5e8201d82571de970fe27d43d860d8f9b4625a47ce5c4a56f13c8eb26239aa9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/MonoBehaviour/WwiseEventPlayableAsset_3.asset.meta",
+      "sha256": "fc65654478534315be26c856ed53b53b841c3ce6858414a528a1bc6f2fb697c2"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/AK.Wwise.Unity.API.WwiseTypes/WwiseEventReference.cs",
+      "sha256": "d2dc131afb47559192cd6aa47b910844268d06e45d833224b2d0aa8236ab7e67"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/AK.Wwise.Unity.API.WwiseTypes/WwiseEventReference.cs.meta",
+      "sha256": "d13b8788d0390a9db21296ebdcec0338a011be8c93a71660d8604c1fdf1b7e92"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/AppearanceSystem/SpineExt/SpineAnimationStateFixTrack.cs",
+      "sha256": "a52c9294040600460c7e018e18cd95f6cc1159419fa6441f6b6c2a147161def6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/AppearanceSystem/SpineExt/SpineAnimationStateFixTrack.cs.meta",
+      "sha256": "a851456e7cbeae4847a68d3174e38a98888e0cf4b251ed070f861ca9121c5bcc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/EntityTalkAsset.cs",
+      "sha256": "a2bcd1e62dfc5f772b1474b0007eacf0ab44fbb19b54e2af49bed8f4c9879ee9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/EntityTalkAsset.cs.meta",
+      "sha256": "d901ce14428da2446221a81dbdfea37b5f6d8f375ccfaf197ad2cff0b02773d7"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/EntityTrack.cs",
+      "sha256": "1ff46f9284380b82ac9d6094609e82a5e8661c7208686b91ea61899de90ce23d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/EntityTrack.cs.meta",
+      "sha256": "7fcf09b565ab094e9ee67567dfca0e1b8a6a82b1e128712f2ef805e3bb994393"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TlAnimatorParamClip.cs",
+      "sha256": "524fe4625041f237237d3932a5ad711439f50055c14fede3687df6cf531f4b89"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TlAnimatorParamClip.cs.meta",
+      "sha256": "de2e281cafd62a1f3d467d970b0b0ee99aee93dd75e318ef5a977b5cab74505a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TlAnimatorParamTrack.cs",
+      "sha256": "b458534b202aa1595350089dc1c3de4c65d1db1cc20140f42bd75d48088c7ac5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TlAnimatorParamTrack.cs.meta",
+      "sha256": "6e83f28eedf85d3e2b7dd5ffecdbd4a21564e01f092ea3d63cc468a15adb0419"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WwiseEventPlayableAsset.cs",
+      "sha256": "f3c09035249c3fc5ee57762cdf6245a6b2c78dc8b13bea19530b47ca2ff310b5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WwiseEventPlayableAsset.cs.meta",
+      "sha256": "f6084bf08e2f57ba5849fae3b77bd0a914ba02f2fb4a6e992012d59d1200be87"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WwiseEventTrack.cs",
+      "sha256": "03260e57f852f22b884b57edcb99bd3dc238ab912161db69a20e18cb8e0f8dc3"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WwiseEventTrack.cs.meta",
+      "sha256": "89274e0e830c25e97fc4a63f31d3defeaae961d649309e59c7dca229b8676964"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Cinemachine/CinemachineShot.cs",
+      "sha256": "088b4a516be007e26b1954908429a69adb213839b212f81f00bd24f5001e3f5a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Cinemachine/CinemachineShot.cs.meta",
+      "sha256": "967f62ec57a5607b33ff21269379d953ac572c36c646a5fc80fc7e81ce50c19e"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Cinemachine/CinemachineTrack.cs",
+      "sha256": "7bd747852233a36658b1ae3d853440b2edfe3021105668e53951d90376f78c40"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Cinemachine/CinemachineTrack.cs.meta",
+      "sha256": "ab078c10e0ba73bfb2fb328db96fa1ebf456c9fda740e0a8fdb0827297e18f92"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/spine-timeline/Spine/Unity/Playables/SpineAnimationStateClip.cs",
+      "sha256": "01e18ebaf7f021c00ff2b7ea7a05d1856006424c688b2d75e5cbd0f9ccc17a35"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/spine-timeline/Spine/Unity/Playables/SpineAnimationStateClip.cs.meta",
+      "sha256": "f8d38077d5445e9065a31c3a81404901cace16123fbca2adeb745f19abed3809"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ActivationPlayableAsset.cs",
+      "sha256": "06adb0d6ed792f693a0232567896921f53f6c98cecb2420fd3eefcda8962418a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ActivationPlayableAsset.cs.meta",
+      "sha256": "ba9c86d88c23807cf7d7f2f74e014040f88d742f2bd7f346b5b38dc8b9aad254"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ActivationTrack.cs",
+      "sha256": "1a5d3e18b23a9545db23f0b6e453ce8bf9346aa6bb54eed8f05f54a554dcd93c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ActivationTrack.cs.meta",
+      "sha256": "67adff6cae457efc760e3901ad26f456209a99f1769c694e2307be15a4bc2849"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/AnimationTrack.cs",
+      "sha256": "add74d4b69a5b2fb85a1e075a512ac58a7398f32a9ed7d0ba37311b2f206838d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/AnimationTrack.cs.meta",
+      "sha256": "15d852a1aa385345fd6157f58e01d6fa264e7aecb2a5d5e6491cb6ada3c13f7f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ControlPlayableAsset.cs",
+      "sha256": "ae96bc28592548a8fd39a7d123be876a3f669bbc47438a1674c8c126483b6eef"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ControlPlayableAsset.cs.meta",
+      "sha256": "12a1bedfc5e1929fdad3f1aee3eb44d003d08e93c35f4648ac27b107675cfb93"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ControlTrack.cs",
+      "sha256": "0cca0ee7e9d860f317be24d0088b0503173b7107516a8db2146dc00b81bf70d8"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/ControlTrack.cs.meta",
+      "sha256": "107fd4eb942638a9a59c0a83f02af86eceb0b7015aac3d6999c53e91e2648cc9"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/GroupTrack.cs",
+      "sha256": "d4a99b38a3d16371ca17f71cf8584fbafe593b4dd8a5b07e80ddd3c8a9be219e"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/GroupTrack.cs.meta",
+      "sha256": "80696a0e19622108aed75c68b575560eca1f5fc6fc2dac3903ec00fea6edc4c6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/TimelineAsset.cs",
+      "sha256": "7b888d5266e4f33bc1a053f30c347ab416a5c7eea7c8e6a141b6f288a0975750"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Scripts/Unity.Timeline/UnityEngine/Timeline/TimelineAsset.cs.meta",
+      "sha256": "6cdc03ae50380e985751f18ea35c0e71a5a8901a75c3f88cc22162431b104b74"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable",
+      "sha256": "b126b2f0cde9c180028046837ef484c834f13a7e787c5b792e88cccc9205edc6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/GriffinShakeTimeline 4.playable.meta",
+      "sha256": "ba3e878ae7fdc01d089fa551453a4e6fc930f61a5b8f39dad3cfde6b0e4f01b3"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1).anim",
+      "sha256": "dcd1ce9d8d95031f5ec70c2c473d845c2abb4dd9e76322cfcc274cac55e0aaef"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1).anim.meta",
+      "sha256": "e89ae24e6a15f4b435aa5d3826381597f526110a283dc47dd9032114e407a1ea"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1)_0.anim",
+      "sha256": "038af79e817424d29764a63691792118d92f89cd0d7f1f5708af60c9ae41aed5"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded (1)_0.anim.meta",
+      "sha256": "e8013356a20d2c0ef7a8c8d37a5ab04194558f0c90e6ccd77715614b57209d1d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded.anim",
+      "sha256": "060f728af962ea784974683c632ffb892bcc6e964d1758dc7f1e91860da2f668"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded.anim.meta",
+      "sha256": "6747b4fb981f594921824c977c8ba3513f308b05d5a7bba10a7e8bfc415ee358"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_0.anim",
+      "sha256": "3edb8b8a091c4c9815b55fa424ffd2420469d7b675f4396060dbb81665924a8d"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_0.anim.meta",
+      "sha256": "81fa10a84dbd170398ed19daee2a74118694ee325bfe070a11761410cdc0f66b"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_1.anim",
+      "sha256": "d4b1ab9bbd20b7190f45d127731ada02b0ef4f11e3ba0e0166355f4b996f6e0c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_1.anim.meta",
+      "sha256": "7eac50209da4bad1c999a91035547a69a54a2953fa52a36d4a0a32a18aa3da9f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_2.anim",
+      "sha256": "3ded649b0d6fc403d942f56504e4bc526dfaf1ccd0027b2118e0cb0166506c19"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/Recorded_2.anim.meta",
+      "sha256": "f89e3abda24b1ad1ca2abd8c0e50b831ca55d32033c28f780441cec0ca03108f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable",
+      "sha256": "aac9074f242e3ae9957eaa84643106eb8b00abee305a6c9a11c92672609215df"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow02Timeline.playable.meta",
+      "sha256": "774af3c9d6260a6ac43e05913564907996985d5fcb0dbf15729b143782d849b6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable",
+      "sha256": "7ecb6673fb423000948388ff18e9f2000ee8bc8d6faff5af30074172234a09c6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow05.playable.meta",
+      "sha256": "e0df55c66c219afa7e5b5039308cebc0bb282f02fe4fd8a8cdbf8bf0257bbdbc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable",
+      "sha256": "a5fff11085c48ee8950ad9277d73414ab46468110caf0fad5117e938c8464a94"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/SuiMo_StoryShow06.playable.meta",
+      "sha256": "d84268a0ce402f084496bcd35d93b7fa9459c7d89a2a121bf2ffe5f7b1be66f6"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable",
+      "sha256": "c74e688ddf23968a42dd9078736296111b18249bc2fb3e8d858f0fdc2c8e3a39"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Timeline/XianHaiYunZhou.playable.meta",
+      "sha256": "0d2430c002461a2b1595393ed5d0fa7245aa9e1d70902caa931504f2c1baf92c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/07D9B09D-171A-4BD3-B059-64E5AE42EE73.asset",
+      "sha256": "2130c40abfafd0938edf4f1d3d7fede5283c6e1816f0bea7cbcb69fbe21bbbdf"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/07D9B09D-171A-4BD3-B059-64E5AE42EE73.asset.meta",
+      "sha256": "835b54380be6983838de84c16005022982cf4bcaf30ef66eaa474f6acc81f8a0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/0A176813-6DB3-430E-A10B-3CAA59E1B36C.asset",
+      "sha256": "70dd531ad182f63d3ace1268e6b0d14f64080fd675acfba8418352d8ca63a199"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/0A176813-6DB3-430E-A10B-3CAA59E1B36C.asset.meta",
+      "sha256": "ffa85c5818ec5820b8d032ee62b00b67954567eee5e0a3e193c83f9b987f0b67"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/5E4DB478-EC2B-4D99-BE44-1DB6C1AEC52B.asset",
+      "sha256": "34a7f099bc1f7b4821e84fc21dd47fad4bd6c5bf838bbee5034ad7f71811efd0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/5E4DB478-EC2B-4D99-BE44-1DB6C1AEC52B.asset.meta",
+      "sha256": "9535f663b389499037886229534edb6a6fb0c74339be219f7d6835aff6f47dc3"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/89A18052-35A7-4D1D-84D5-7C034A6B3EB2.asset",
+      "sha256": "e32db3891f57b78a36ed0cd3cb33e75fb5297728cd291e348ce089b1637309dc"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/89A18052-35A7-4D1D-84D5-7C034A6B3EB2.asset.meta",
+      "sha256": "03638065b4a766e751ee35f4fa42d2f304ed667273f535830282f2a071f3d347"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/94EC30DE-D40D-42A9-95E9-A1A475F9AA9C.asset",
+      "sha256": "2279280fb13e63236b2d007807c074524a94793611406ab61a31332ecdaf8b25"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/94EC30DE-D40D-42A9-95E9-A1A475F9AA9C.asset.meta",
+      "sha256": "aea329b47055ae88832f0262fb07ff09a2ee3da1b81dcd334ab46e9e4c26dd04"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/CC52A0FC-DE43-4DFA-8433-BACD336E051C.asset",
+      "sha256": "22befdd827479f80fb453cb848c1b42011c8dee20d2bb1841a67d857c98f918f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-entity-timelines/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/CC52A0FC-DE43-4DFA-8433-BACD336E051C.asset.meta",
+      "sha256": "2f97f9e51f22a2041883e4d6a0a26db4d0e393f04373699289607c4b6dac0234"
+    }
+  ],
+  "operation": "Traverse all five original Timeline roots and every original MonoBehaviour pointer. Compare all fields, track/clip order, original float widths and bits, and a bijection of original CAB/PathID to exported file/local IDs. Native AnimationClip dependencies are identified and hashed; their curve playback is not certified by this check. Exported script stubs are inspected only for asset type identity and are never imported as game runtime.",
+  "limitations": [
+    "Cache verification only. Script/actor/material bindings, native curve playback, split audio playback and formal map integration remain required."
+  ]
+}
