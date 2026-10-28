@@ -28,6 +28,8 @@
 
 原 `AppearanceConfig` 及其九个值类型／枚举已完整迁入；配置直接取自 APK，保留 13 类皮肤及基础／可设置标记、四组附加皮肤、三个挂点动画组、男女覆盖 ID、1,742 条有符号 64 位皮肤哈希和 466 条骨骼路径。隔离 Unity 导入和实际 Play Mode 逐项核对全部字段、查询返回的原列表／实例、延迟字典、重复键异常及异常后部分缓存、哈希追加不去重／排序与反向删除，均通过；变更测试只修改克隆，不写入正式配置。此配置不包含渲染器，真实角色、studio 和完整职业页接线仍未完成。来源见[外观配置](../../assets/reference/profession-ui/appearance-config-source-manifest.json)，代码入口为 `AppearanceConfig.cs`，资源入口为 `Assets/Official/ProfessionUI/Portrait/AppearanceConfig.asset`。
 
+独立的 `ProfessionNativeCurve` 将原三种待机动作（`home/idle_01`、`100/idle_01`、`200/idle_01`）的标量骨骼轨道转为 Unity 加权 `AnimationCurve`，保留原时间、数值、绝对 Bezier 控制点、线性／阶跃分段及首关键帧之前不应用的语义；不使用 Spine runtime。男女共 1,171 条曲线、5,177 个关键帧，隔离 Play Mode 以每个原关键帧、每段三个内部时间及两端边界共 19,537 个点，对照独立二分反解的三次 Bezier，最大绝对差 `0.00022315979`，最大归一化差 `0.0000860095`，满足本数值检查的 `0.0002 + 0.000005 × abs(value)` 容差。未输出角色画面，也未完成骨骼世界变换、附件组合、IK／变换／物理约束及实际角色绑定，不能作为动作视觉一致性的结论。来源见[原生曲线适配](../../assets/reference/profession-ui/native-curves-source-manifest.json)。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
@@ -76,6 +78,8 @@
 隔离 Unity 工程已完成迁入控制组件的导入、编译及 `Zjcs.Editor.ProjectTools.Validate`。`ProfessionProgressionValidation.Run` 使用独立存档验证总等级 5 时一次取得 1200 个原奖励物品、四条记录，重复请求不写盘，冷读恢复，总等级 6 时只领取循环起始奖励；真实文件锁导致的写盘失败和物品数量溢出均保持原存档与内存状态。职业预览的服装／武器处理按原 `ProfessionUtils.SetProfessionAppearance` 克隆玩家外观，不改写装备和存档。尚未完成职业原生 prefab 的 Play Mode 点击、画面与保存恢复验证，以上不代表功能完整还原。
 
 ## 自定义实现
+
+角色动画沿用已确认的[免费原生迁移方案](../asset-management.md#spine-角色动画迁移决策)。当前自定义适配仅完成源骨骼标量曲线到 Unity 加权曲线的映射与数值验证，未改变动作或游戏规则；完整角色动画尚未实现。
 
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 

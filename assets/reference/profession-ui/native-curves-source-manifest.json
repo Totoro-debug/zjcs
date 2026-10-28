@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "source": [
+    {
+      "sex": "male",
+      "receipt": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/source-manifest.json",
+        "sha256": "e670cdd902d9c8426b9b161abeec6577da0934e7ad8f6d0e56c9d8de87f71b13"
+      },
+      "source_json": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+        "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+      },
+      "input_count": 440
+    },
+    {
+      "sex": "female",
+      "receipt": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/source-manifest.json",
+        "sha256": "e67172b6f722421ea23c56ee230f98e2cf41231d4b6cf4878f9486e58a870c2d"
+      },
+      "source_json": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+        "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+      },
+      "input_count": 441
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_curves.py",
+    "sha256": "fd9b901d3db0ddc90c708a0af00816ed77a7bf588a2a7952bc2fccce3943727c"
+  },
+  "format_decoder": {
+    "path": "scripts/convert_official_skeletons.py",
+    "sha256": "b93b36907c3c831eb7dd453fa6842742056c1c451e281b9b4ef9b0745a36e9a8"
+  },
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-curves-validation.json",
+    "sha256": "91867830eac5351a56459206ec6f33ac3233a2bdfdd873673938737c7d5aaa79"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs",
+      "sha256": "ebb1af1bdcbc731a9e8bbe95adba530ece61f19ec88cbbddfec8f1a97bf005cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeCurve.cs.meta",
+      "sha256": "cd2a90f17ba7a32e72d94033d82176fc38f763390a827ad5bfbee61cd378b7a3"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeCurveValidation.cs",
+      "sha256": "71e9370072c9d281debda1c199d8148dd47b970fe449dec13525e1e4463c3921"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeCurveValidation.cs.meta",
+      "sha256": "456e7f97ef10ae7bf0f3a3120741a2ef69e486fabc1d6ca20e4de8ef941ffa8b"
+    }
+  ],
+  "animations": [
+    "home/idle_01",
+    "100/idle_01",
+    "200/idle_01"
+  ],
+  "scalar_curves": 1171,
+  "samples": 19537,
+  "counts": {
+    "bezier": 3596,
+    "linear": 404,
+    "stepped": 6,
+    "keys": 5177
+  },
+  "operation": "Independently map every source scalar idle bone track to Unity weighted AnimationCurve keys using absolute time/value Bezier handles, exact source times/values, linear/stepped interpolation and explicit before-first-key non-application. Verify against independently inverted cubic Beziers at every source key and three positions inside every segment, plus both boundaries. No Spine runtime is read or used.",
+  "references": [
+    "https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Keyframe.html",
+    "https://esotericsoftware.com/spine-json-format"
+  ],
+  "limitations": [
+    "Only scalar bone timeline evaluation is implemented here. Bone world transforms/inheritance, skin composition, IK/transform/physics constraints, meshes, dyeing, appearance controllers and full profession UI still require native implementation and integration. No character is rendered by these numerical fixtures."
+  ]
+}
