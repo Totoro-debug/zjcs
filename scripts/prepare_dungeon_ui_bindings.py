@@ -265,6 +265,44 @@ def private_popup_sound_binding(apk, schemas, root):
                 clicks=click_bindings, native_outputs=receipt["outputs"])
 
 
+def private_matching_binding(apk, schemas, root):
+    from UnityPy.classes.PPtr import PPtr
+    path = ROOT / 'assets/reference/official-map/map12-matching-animation-source-manifest.json'
+    receipt = json.loads(path.read_bytes())
+    if receipt['manifest'] != VERSION:
+        raise ValueError('Private matching animation is not the selected version')
+    for output in receipt['outputs']:
+        if sha256((ROOT / output['path']).read_bytes()) != output['sha256']:
+            raise ValueError('Private matching native output changed')
+    audio = receipt['audio_source_receipt']
+    if sha256((ROOT / audio['path']).read_bytes()) != audio['sha256']:
+        raise ValueError('Private matching original audio receipt changed')
+    binding = dict(receipt['binding'])
+    rows = [row for row in relative_transform_path(root) if '/'.join(map(str, row[1])) == binding['path']]
+    if len(rows) != 1 or list(rows[0][2]) != binding['objects']:
+        raise ValueError('Private matching source host changed')
+    go = rows[0][0]
+    animation = next(pair.component.deref() for pair in go.m_Component if pair.component.type.name == 'Animation')
+    if sha256(animation.get_raw_data()) != binding['object_raw_sha256']:
+        raise ValueError('Private matching source Animation changed')
+    clip = PPtr(**animation.read_typetree()['m_Animation'], assetsfile=animation.assets_file).deref()
+    if sha256(clip.get_raw_data()) != binding['clip']['object_raw_sha256']:
+        raise ValueError('Private matching original clip changed')
+    sounds = [pair.component.deref() for pair in go.m_Component if pair.component.type.name == 'MonoBehaviour'
+              and pair.component.deref().read(check_read=False).m_Script.read().m_ClassName == 'AnimationSoundPlayer']
+    if len(sounds) != 1 or sha256(sounds[0].get_raw_data()) != binding['sound']['object_raw_sha256']:
+        raise ValueError('Private matching original sound player changed')
+    events = schemas.read(sounds[0])['mEvents']
+    if len(events) != len(binding['sound']['events']):
+        raise ValueError('Private matching event list changed')
+    for event, expected in zip(events, binding['sound']['events']):
+        reference = PPtr(**event['WwiseObjectReference'], assetsfile=sounds[0].assets_file).deref()
+        if sha256(reference.get_raw_data()) != expected['object_raw_sha256']:
+            raise ValueError('Private matching original event changed')
+    binding.update(native_outputs=receipt['outputs'], source_receipt=dict(path=path.relative_to(ROOT).as_posix(), sha256=sha256(path.read_bytes())))
+    return binding
+
+
 def private_popup_binding(apk, schemas, reader, root, path):
     """Reuse the native common clips only after checking the selected source curves."""
     import math
@@ -343,7 +381,7 @@ def private_popup_binding(apk, schemas, reader, root, path):
     if len(clips) != 2:
         raise ValueError("Private popup must keep its original show and hide clips")
     return dict(path=path, objects=[root.m_Name], enabled=bool(reader.read(check_read=False).m_Enabled), clips=clips, mask=private_mask_binding(apk, schemas), sound=private_popup_sound_binding(apk, schemas, root),
-        maskType=fields["mMaskType"], windowType=fields["mWindowType"], fullScreen=bool(fields["mFullScreen"]),
+        matching=private_matching_binding(apk, schemas, root), maskType=fields["mMaskType"], windowType=fields["mWindowType"], fullScreen=bool(fields["mFullScreen"]),
         closeByClickMask=bool(fields["mCloseByClickMask"]), autoCloseWhenContainerDisable=bool(fields["mAutoCloseWhenContainerDisable"]),
         isDuplicate=bool(fields["mIsDuplicate"]),
         native_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())))
@@ -805,7 +843,7 @@ def build():
     code_sources = [dict(path=(CODE / path).relative_to(ROOT).as_posix(),
         sha256=sha256((CODE / path).read_bytes())) for path in code_paths]
     receipt = {"manifest": VERSION, "code_sources": code_sources,
-        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
+        "operation": "Read original prefab transforms, Image/TMP fields and route GridLayoutGroup, ContentSizeFitter, RectMask2D, SafeArea, LoopVerticalScrollRect and Button fields. Resolve DailyDungeonSettings room Sprite GUIDs against the selected AssetTable; verify private popup show/hide runtime curves against the current source and reuse the recorded native Map12 clips; resolve nullable PopupWindowSound and click events, verify all selected original bank hashes and bind PCM decoded from original Wwise graphs at fixed 0 dB master with original event gain; verify original matching clip/event sources and native Legacy animation; decode original atlas pixels and preserve pivot, border and PPU.", "bindings": {
         "path": BINDINGS.relative_to(ROOT).as_posix(), "sha256": sha256(encoded),
         "meta_sha256": sha256(meta.read_bytes())},
         "prefabs": sources, "sprites": sprite_outputs, "route_settings": settings_source,

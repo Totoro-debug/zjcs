@@ -34,7 +34,9 @@
 
 机神山私图原 `SFX/PopupWindowSound` 的打开事件为空、关闭事件为 `Main_Cursor_Back`（3686182067），现按原 OnHiding 事件恢复。`prepare_unity_map12_ui_audio.py` 核对当前5份原包，从原 Wwise Event／ActionPlay／Sound 图以固定0 dB主增益解码，保留关闭事件−16 dB及原媒体长度、声道和采样率；来源、播放图、工具及 PCM 哈希见 `assets/reference/official-map/map12-ui-audio-source-manifest.json`。关闭音效的本地播放器保持到事件结束，注册现有 Sound 设置通道；实际播放、音量设置变化、指针关闭和场景退出清理仍待 Play Mode 验证。
 
-机神山私图追加恢复原5个 UIClickSound 与14个 ButtonSound，分别保留5份标签、12份普通点击和2份失败提示事件。左键筛选及 Start／Button.onClick 原订阅方式保留；本地声音沿用关闭音效已接通的 Sound 设置通道。原标签／普通点击／失败事件分别按−6／−6／−8 dB解码为 PCM，导入不归一化，保留资源路径及 GUID；原组件、媒体、播放图与输出哈希均可复现。实际音效指针、音量变化和全部控件业务仍待运行验收；匹配等待事件 `TeamMatch_Waiting_1` 的−3 dB音频已解码，原动画事件时序仍未接回。
+机神山私图追加恢复原5个 UIClickSound 与14个 ButtonSound，分别保留5份标签、12份普通点击和2份失败提示事件。左键筛选及 Start／Button.onClick 原订阅方式保留；本地声音沿用关闭音效已接通的 Sound 设置通道。原标签／普通点击／失败事件分别按−6／−6／−8 dB解码为 PCM，导入不归一化，保留资源路径及 GUID；原组件、媒体、播放图与输出哈希均可复现。实际音效指针、音量变化和全部控件业务仍待运行验收；匹配等待事件 `TeamMatch_Waiting_1` 的−3 dB音频已解码，原第5帧事件已接线，实际动画事件与声音仍待运行验证。
+
+机神山私图匹配显示动画现保留原60 Hz／0.9333333373秒 Legacy clip 的31条浮点曲线和5条缩放曲线，逐项核对 float32 关键帧、切线、权重及事件；原第5帧 `PostEvent(0)` 通过迁移的 AnimationSoundPlayer 播放已验证的 TeamMatch_Waiting_1。原播放参数、两处 CanvasGroup 原值与17组实际目标已绑定；共享动画另外6条曲线的原目标在本 prefab 缺席，保留完整原曲线并记录来源。来源见 `assets/reference/official-map/map12-matching-animation-source-manifest.json`。无覆盖复现、独立 C# 编译、路径回放和静态检查通过；实际播放夹具尚未执行，匹配业务和正式控件输入仍待验证。
 
 ## 自定义实现
 

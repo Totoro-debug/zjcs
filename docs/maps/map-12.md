@@ -50,9 +50,9 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 音频及副本绑定无覆盖复现、65,643个 GUID 的全工程静态检查通过；五个原事件增益、PCM 声道／采样率／帧数、既有四个音频 GUID、19项点击组件身份及所有其他 prefab 字段均已核对。世界运行、游戏入口和验收代码此前独立 C# 编译通过；原遮罩指针夹具包含空打开音效、过早点击不发声、有效关闭只发一次原事件、独立播放器及音量通道回调断言。自动验收仍暂停，尚未执行这些 Play Mode 断言、Unity 音频导入及实际听音。
 
-同一机神山私图现恢复原5个 `UIClickSound` 与14个 `ButtonSound`：5个标签分别绑定 `Main_Tag`，12个普通按钮绑定 `Main_Cursor_Normal`，2个限制按钮绑定 `Main_Cursor_Fail`。原 `UIClickSound.OnPointerClick` 只响应左键；原 ButtonSound 的 Start／Button.onClick 订阅顺序继续使用已迁移组件。组件原路径、父节点名、启用值、事件完整64位来源引用及对象哈希由 `prepare_dungeon_ui_bindings.py` 记录在 `popup.sound.clicks`，运行时按原节点恢复。标签／普通点击／失败提示均由同版原播放图直接解码，分别保留−6／−6／−8 dB增益；原采样率、声道和长度保留，Unity 导入设置为 PCM、不归一化，资源路径和既有 GUID 保持一致。`TeamMatch_Waiting_1` 的原−3 dB音频也已解码，动画事件接线及实际播放仍未完成。
+同一机神山私图现恢复原5个 `UIClickSound` 与14个 `ButtonSound`：5个标签分别绑定 `Main_Tag`，12个普通按钮绑定 `Main_Cursor_Normal`，2个限制按钮绑定 `Main_Cursor_Fail`。原 `UIClickSound.OnPointerClick` 只响应左键；原 ButtonSound 的 Start／Button.onClick 订阅顺序继续使用已迁移组件。组件原路径、父节点名、启用值、事件完整64位来源引用及对象哈希由 `prepare_dungeon_ui_bindings.py` 记录在 `popup.sound.clicks`，运行时按原节点恢复。标签／普通点击／失败提示均由同版原播放图直接解码，分别保留−6／−6／−8 dB增益；原采样率、声道和长度保留，Unity 导入设置为 PCM、不归一化，资源路径和既有 GUID 保持一致。`TeamMatch_Waiting_1` 的原−3 dB音频也已解码，原第5帧动画事件已接线，实际动画与声音仍待运行验证。
 
-官方 UI、世界运行及验收程序集独立 C# 编译、官方绑定无覆盖复现与全工程静态检查通过（65533个 GUID）。Play Mode 夹具增加19个原组件／3种事件的绑定检查，以及原 BattleBtn 模拟指针应发一次普通点击事件的检查，但这些运行夹具仍未执行。该恢复不证明难度标签／公共次数／说明／匹配等业务交互已完成；匹配动画另有 `AnimationSoundPlayer` 的 `TeamMatch_Waiting_1` 事件，其音频和原动画事件时序仍待接回。
+机神山私图匹配显示现按原 `DailyDungeonDetailContent_GameMatch_Show` 接回 Legacy Animation：保留60 Hz、0.9333333373秒时长、31条浮点曲线、5条缩放曲线，以及关键帧时间／数值／入出切线／权重／前后外推与原组件播放参数。第5帧（0.0833333358秒）原 `PostEvent(0)` 指向 `TeamMatch_Waiting_1`，由迁移的 `WorldAnimationSoundPlayer` 沿原列表索引和调用顺序交给已有本地音频服务。原两处 CanvasGroup 的透明度与交互字段按序列化值恢复；共享动画中6条曲线指向本 prefab 原本缺席的 DescTxt1／Progress，完整曲线保留，实际17组目标按原层级绑定。`prepare_unity_map12_matching_animation.py` 从当前 APK 原动画逐字段核对已有原生导出，仅转换 Image／TMP 脚本 GUID；原对象、源代码、原生输入输出、脚本 GUID 与事件来源见 [匹配动画来源](../../assets/reference/official-map/map12-matching-animation-source-manifest.json)。动画／副本绑定无覆盖复现、三项独立 C# 编译及71,047 GUID静态检查通过；实际 C# 路径回放覆盖3158节点、31个按钮目标、匹配宿主、2个 CanvasGroup、17组曲线目标和3组原缺席目标，改变缩放关键帧或事件时间的输入会被拒绝且不改交付载荷。Play Mode 夹具已覆盖原节点自动播放、第5帧事件、独立静音 PCM 音源、只播放一次和存档不变，但尚未执行；匹配业务、实际动画／音效与完整私图流程仍未验收。 原 APK 的 AnimationClip 长度内核已通过 ARM64 仿真核对：实际时长由原曲线和事件范围得到，未使用导出设置中的默认1秒；同一内核回归测试已加入 scripts/test_map12_matching_animation.py。
 
 Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要求逻辑标签“山壁电梯”。该标签在当前官方地图逻辑配置中绑定实体3501，升降台胜利事务现与原奖励、内部完成标志原子写入该官方标签；加载旧的内部完成标志时也会补齐主线标签。 实际升降台胜利验收确认任务1215从0/1变为1/1，重开角色档案后标签、任务进度和奖励仍恰好各写入一次。
 
@@ -108,9 +108,11 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 关闭音效沿用已迁移的原 `WorldPopupWindowSound`，以 `OfficialDungeonUiAudio` 的本地 AudioSource 承接 Wwise Post。音频对象独立于待销毁窗口，播放结束后销毁；游戏入口通过 `MapSoundRegistration` 注册／注销现有 Sound 设置通道，保留总音量和音效音量控制，不修改用户存档。
 
+原 AnimationSoundPlayer 的事件列表索引、越界日志与 PostEvent 顺序保留；Windows 单机适配将 AK.Wwise.Event 引用换为已核对的 AudioClip，Post 使用上述本地音频服务承接。
+
 ## 尚未实现
 
-私图显隐动画／模糊遮罩与关闭及原关闭音效的实际表现、标签／按钮的实际音效输入与匹配动画音效、各控件业务输入、选路倒计时／超时后的处理、私图详情的难度标签输入、公共次数展示、掉落预览与说明、完整 NPC 队伍显示和所有选择动画仍未完成运行验证；不把原 prefab、脚本和绑定载荷的恢复标记为私人副本流程完成。
+私图显隐动画／模糊遮罩与关闭及原关闭音效的实际表现、标签／按钮与匹配动画事件的实际播放、各控件业务输入、选路倒计时／超时后的处理、私图详情的难度标签输入、公共次数展示、掉落预览与说明、完整 NPC 队伍显示和所有选择动画仍未完成运行验证；不把原 prefab、脚本和绑定载荷的恢复标记为私人副本流程完成。
 
 6103原状态3通过 `DailyDungeonDialog` 打开普通难度面板，状态1在条件满足后打开专用 `DailyDungeonDialogPrivateMap`；原 StageBehaviour 指定副本121／难度50，路线从12101分成12102→12104与12103→12105两支，在12106汇合后经12107到12108终点。专用官方 prefab 与当前源 Sprite／TMP 绑定已接入；运行时接入两支选路、无敌人房间推进、官方战斗入口和不发奖励／不改次数的本地终点标记。用户确认的离线结算边界为：胜负写入本地路线存档，失败可重试；不发副本奖励、不修改公共次数或购买次数。用户也确认可按本地其他官方规则推导敌人编队；当前依据同一来源版本的房间类型／关卡波次配置，12101和12106不生成敌人。夹具覆盖两条完整路线及冷读，但还未由 Unity 执行；地图指针到窗口和路线 UI 的 连续输入，以及实际战斗胜负、冷读恢复仍待验收。
 

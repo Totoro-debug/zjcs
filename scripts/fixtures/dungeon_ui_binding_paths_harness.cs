@@ -22,7 +22,7 @@ internal static class Paths
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(args[0]));
-            int named = 0, references = 0;
+            int named = 0, references = 0, matchingHosts = 0, matchingGroups = 0, matchingTargets = 0, absentMatchingTargets = 0;
             foreach (JsonElement prefab in document.RootElement.GetProperty("prefabs").EnumerateArray())
             {
                 var nodes = new Dictionary<string, Transform>();
@@ -55,6 +55,39 @@ internal static class Paths
                     if (Find(nodes[""], path, null) != nodes[path]) throw new Exception("Button Graphic reference resolved to another node.");
                     references++;
                 }
+                if (prefab.TryGetProperty("popup", out JsonElement popup) && popup.ValueKind == JsonValueKind.Object
+                    && popup.TryGetProperty("matching", out JsonElement matching))
+                {
+                    string hostPath = matching.GetProperty("path").GetString();
+                    string[] hostNames = matching.GetProperty("objects").EnumerateArray().Select(x => x.GetString()).ToArray();
+                    Transform host = Find(nodes[""], hostPath, hostNames);
+                    if (host != nodes[hostPath]) throw new Exception("Matching animation resolved to another host.");
+                    matchingHosts++;
+                    foreach (JsonElement group in matching.GetProperty("canvasGroups").EnumerateArray())
+                    {
+                        string relative = group.GetProperty("path").GetString();
+                        string[] names = group.GetProperty("objects").EnumerateArray().Select(x => x.GetString()).ToArray();
+                        if (Find(host, relative, names) != nodes[hostPath + "/" + relative])
+                            throw new Exception("Matching CanvasGroup reference resolved outside its original host.");
+                        matchingGroups++;
+                    }
+                    foreach (JsonElement target in matching.GetProperty("targets").EnumerateArray())
+                    {
+                        Transform node = host;
+                        foreach (string part in target.GetProperty("path").GetString().Split('/'))
+                            node = node.children.Single(child => child.name == part);
+                        if (node == null) throw new Exception("Matching curve target is absent from the source hierarchy.");
+                        matchingTargets++;
+                    }
+                    foreach (JsonElement target in matching.GetProperty("absentSourceTargets").EnumerateArray())
+                    {
+                        Transform node = host;
+                        foreach (string part in target.GetProperty("path").GetString().Split('/'))
+                            node = node?.children.SingleOrDefault(child => child.name == part);
+                        if (node != null) throw new Exception("An officially absent shared-clip target was replaced with a fabricated node.");
+                        absentMatchingTargets++;
+                    }
+                }
                 bool rejected = false;
                 try { Find(nodes[""], "", new[] { "wrong original root" }); }
                 catch (InvalidDataException) { rejected = true; }
@@ -75,7 +108,9 @@ internal static class Paths
                 if (!rejected) throw new Exception("Mismatched original parent names must still be rejected.");
             }
             if (references == 0) throw new Exception("No real Button Graphic references were replayed.");
-            Console.WriteLine($"Dungeon path replay passed: {named} original nodes, {references} Button Graphic references; wrong names and parents rejected.");
+            if (matchingHosts != 1 || matchingGroups != 2 || matchingTargets != 17 || absentMatchingTargets != 3)
+                throw new Exception("The original matching animation host, groups or curve targets were not replayed.");
+            Console.WriteLine($"Dungeon path replay passed: {named} original nodes, {references} Button Graphic references, {matchingHosts} matching host, {matchingGroups} CanvasGroups, {matchingTargets} curve targets and {absentMatchingTargets} absent source target groups; wrong names and parents rejected.");
             return 0;
         }
         catch (Exception error)

@@ -138,6 +138,8 @@ namespace Zjcs.Editor
             if (dialog == null || maskDriver == null || !maskDriver.IsReady)
                 throw new InvalidDataException("Private window could not be reopened by its original map input.");
             yield return new WaitForSeconds(dialog.GetComponent<WorldPopupWindow>().mShowClip.length + .05f);
+            IEnumerator matchingAnimation = VerifyPrivateMatchingAnimation(dialog, output, maskSlots.GetProgressPath(slot));
+            while (matchingAnimation.MoveNext()) yield return matchingAnimation.Current;
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-dungeon.png"));
             var buttons = dialog.GetComponentsInChildren<Button>(true);

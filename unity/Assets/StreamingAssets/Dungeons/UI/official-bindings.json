@@ -158257,6 +158257,245 @@
           }
         },
         "maskType": 3,
+        "matching": {
+          "absentSourceTargets": [
+            {
+              "path": "TxtContent/DescTxt1",
+              "type": "RectTransform"
+            },
+            {
+              "path": "TxtContent/DescTxt1",
+              "type": "TextMeshProUGUI"
+            },
+            {
+              "path": "TxtContent/Progress",
+              "type": "TextMeshProUGUI"
+            }
+          ],
+          "animatePhysics": false,
+          "canvasGroups": [
+            {
+              "alpha": 1.0,
+              "blocksRaycasts": true,
+              "enabled": true,
+              "ignoreParentGroups": false,
+              "interactable": true,
+              "object_raw_sha256": "0f3c06253aff3e2191e5c4b15453cc52a5a9b2d6d6ccedcc54e4907bacb8eef6",
+              "objects": [
+                "Content",
+                "Mask",
+                "ImgMatchW_Circle3"
+              ],
+              "path": "1/2",
+              "source": {
+                "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+                "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+                "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+                "bundle_size": 807989,
+                "manifest": "871_156598",
+                "origin": "official_cdn",
+                "path_id": "-8038347119480313629",
+                "source_manifest": "854_156383",
+                "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+              }
+            },
+            {
+              "alpha": 1.0,
+              "blocksRaycasts": true,
+              "enabled": true,
+              "ignoreParentGroups": false,
+              "interactable": true,
+              "object_raw_sha256": "09b2d945848f002553b27f1cfd778eaca6830947a23d720188a40650bab93bd4",
+              "objects": [
+                "Content",
+                "Mask",
+                "ImgMatchW_CircleLight"
+              ],
+              "path": "1/3",
+              "source": {
+                "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+                "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+                "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+                "bundle_size": 807989,
+                "manifest": "871_156598",
+                "origin": "official_cdn",
+                "path_id": "1340927201531422947",
+                "source_manifest": "854_156383",
+                "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+              }
+            }
+          ],
+          "clip": {
+            "duration": 0.9333333373069763,
+            "name": "DailyDungeonDetailContent_GameMatch_Show",
+            "object_raw_sha256": "7cbb304d4de10364a842a7e6b94647260b3d7f7f17e80933dac1aee674554f9f",
+            "resource": "Map12/Matching/DailyDungeonDetailContent_GameMatch_Show",
+            "sampleRate": 60.0,
+            "source": {
+              "apk_entry": "assets/yoo/DefaultPackage/73c8ef90624abf10ff0babfe7401c498.bundle",
+              "apk_manifest": "854_156383",
+              "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+              "bundle": "defaultpackage_share_db24b6518e8964991dd3d6a8bd3fd04d.bundle",
+              "bundle_hash": "73c8ef90624abf10ff0babfe7401c498",
+              "manifest": "871_156598",
+              "origin": "apk_zip",
+              "path_id": "-7677826505346372514",
+              "raw_sha256": "993b37ad3a117401d8595a3b57619db5ce12b19dceebad8e5ea01ce9cf4be438",
+              "raw_size": 21567
+            }
+          },
+          "cullingType": 0,
+          "enabled": true,
+          "native_outputs": [
+            {
+              "bytes": 30838,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching/DailyDungeonDetailContent_GameMatch_Show.anim",
+              "sha256": "271e705a7561815739e5bcd16c39ae1d960332067419d6620fe1a7ecdaa15ae4"
+            },
+            {
+              "bytes": 185,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching/DailyDungeonDetailContent_GameMatch_Show.anim.meta",
+              "sha256": "902aab15f1c8e5d9b87f03cc422e5e191e254cc044a45dc32c9b0a847f0f5e38"
+            },
+            {
+              "bytes": 169,
+              "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching.meta",
+              "sha256": "06bd15a7d1ca2ae543554802f3cd2cec6d0ea58354d0dd5de2d9254732d3dd79"
+            }
+          ],
+          "object_raw_sha256": "9c0cad18048851ac7fe4a82162bbc94921b8323ea1f67a645dcb291a9049d069",
+          "objects": [
+            "DailyDungeonDialogPrivateMap",
+            "BgDialog3",
+            "Content",
+            "DailyDungeonDetailContent",
+            "Content",
+            "NormalGo",
+            "GameMatch",
+            "Content"
+          ],
+          "path": "0/0/4/0/4/1/0",
+          "playAutomatically": true,
+          "sound": {
+            "enabled": true,
+            "events": [
+              {
+                "id": 1386996041,
+                "name": "TeamMatch_Waiting_1",
+                "object_raw_sha256": "a6807482971987cdefa979d16c89c8221c85d9984563f4f6b8069798bd6f2453",
+                "resource": "Map12/PopupSound/TeamMatch_Waiting_1",
+                "source": {
+                  "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+                  "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+                  "bundle_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a",
+                  "bundle_size": 440942,
+                  "manifest": "871_156598",
+                  "origin": "official_cdn",
+                  "path_id": "3605014870370475607",
+                  "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle"
+                }
+              }
+            ],
+            "object_raw_sha256": "81a0be286d2d4246e200cdd2b27a96ba2ae786913a5e1bff4d080ec17c4513dd",
+            "source": {
+              "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+              "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+              "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+              "bundle_size": 807989,
+              "manifest": "871_156598",
+              "origin": "official_cdn",
+              "path_id": "-3614409072541341469",
+              "source_manifest": "854_156383",
+              "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+            }
+          },
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+            "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+            "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+            "bundle_size": 807989,
+            "manifest": "871_156598",
+            "origin": "official_cdn",
+            "path_id": "-4975450289231206173",
+            "source_manifest": "854_156383",
+            "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+          },
+          "source_receipt": {
+            "path": "assets/reference/official-map/map12-matching-animation-source-manifest.json",
+            "sha256": "bae2e90329b31dc8bac61e18c7956784c165a27c16f5bde53405967072565c56"
+          },
+          "targets": [
+            {
+              "path": "ImgBg",
+              "type": "Image"
+            },
+            {
+              "path": "ImgBg",
+              "type": "RectTransform"
+            },
+            {
+              "path": "ImgMatchW_Circle1",
+              "type": "Image"
+            },
+            {
+              "path": "ImgMatchW_Circle1",
+              "type": "Transform"
+            },
+            {
+              "path": "ImgMatchW_Glow",
+              "type": "Image"
+            },
+            {
+              "path": "ImgMatchW_Glow",
+              "type": "Transform"
+            },
+            {
+              "path": "Mask/ImgMatchW_Circle3",
+              "type": "CanvasGroup"
+            },
+            {
+              "path": "Mask/ImgMatchW_Circle3",
+              "type": "Transform"
+            },
+            {
+              "path": "Mask/ImgMatchW_CircleLight",
+              "type": "CanvasGroup"
+            },
+            {
+              "path": "Mask/ImgMatchW_CircleLight",
+              "type": "Transform"
+            },
+            {
+              "path": "Mask/ImgMatchW_LineL",
+              "type": "Image"
+            },
+            {
+              "path": "Mask/ImgMatchW_LineL",
+              "type": "RectTransform"
+            },
+            {
+              "path": "Mask/ImgMatchW_LineR",
+              "type": "Image"
+            },
+            {
+              "path": "Mask/ImgMatchW_LineR",
+              "type": "RectTransform"
+            },
+            {
+              "path": "TxtContent/DescTxt",
+              "type": "TextMeshProUGUI"
+            },
+            {
+              "path": "TxtContent/LeftTimeTxt",
+              "type": "TextMeshProUGUI"
+            },
+            {
+              "path": "TxtContent/LeftTimeTxt",
+              "type": "Transform"
+            }
+          ],
+          "wrapMode": 0
+        },
         "native_source_receipt": {
           "path": "assets/reference/official-map/map12-ui-native-source-manifest.json",
           "sha256": "03e0c1e385e3e5c277b55a1c0b7aa7effbca404a7646a6bf545b62cd627eac59"

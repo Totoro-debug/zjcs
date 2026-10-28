@@ -18,7 +18,22 @@ namespace Zjcs.Presentation.World
           public LocalizationBinding[] localizations;
           public GradeGridBinding[] gradeGrids; public string roomButton; public ImageBinding[] images; public TextBinding[] texts; }
         [Serializable] private sealed class PopupBinding
-        { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; }
+        { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; public MatchingBinding matching; }
+        [Serializable] private sealed class MatchingBinding
+        {
+            public string path; public string[] objects;
+            public bool enabled, playAutomatically, animatePhysics; public int wrapMode, cullingType;
+            public MatchingClipBinding clip; public MatchingSoundBinding sound;
+            public MatchingCanvasBinding[] canvasGroups; public MatchingTargetBinding[] targets;
+        }
+        [Serializable] private sealed class MatchingClipBinding
+        { public string name, resource; public float duration, sampleRate; }
+        [Serializable] private sealed class MatchingSoundBinding
+        { public bool enabled; public PopupSoundEventBinding[] events; }
+        [Serializable] private sealed class MatchingCanvasBinding
+        { public string path; public string[] objects; public bool enabled, interactable, blocksRaycasts, ignoreParentGroups; public float alpha; }
+        [Serializable] private sealed class MatchingTargetBinding
+        { public string path, type; }
         [Serializable] private sealed class PopupSoundBinding
         { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; public PopupClickSoundBinding[] clicks; }
         [Serializable] private sealed class PopupClickSoundBinding
@@ -185,6 +200,61 @@ namespace Zjcs.Presentation.World
             }
         }
 
+        private static void RestoreMatching(GameObject root, MatchingBinding binding, Action<AudioClip, GameObject> postSound)
+        {
+            if (binding?.clip == null || binding.sound?.events == null || binding.sound.events.Length != 1
+                || binding.sound.events[0].id != 1386996041 || binding.sound.events[0].name != "TeamMatch_Waiting_1" || postSound == null)
+                throw new InvalidDataException("Original private matching animation/event binding is incomplete.");
+            Transform host = Find(root.transform, binding.path, binding.objects);
+            foreach (MatchingCanvasBinding source in binding.canvasGroups)
+            {
+                GameObject node = Find(host, source.path, source.objects).gameObject;
+                var group = node.GetComponent<CanvasGroup>() ?? node.AddComponent<CanvasGroup>();
+                group.alpha = source.alpha; group.interactable = source.interactable;
+                group.blocksRaycasts = source.blocksRaycasts; group.ignoreParentGroups = source.ignoreParentGroups;
+                group.enabled = source.enabled;
+            }
+            foreach (MatchingTargetBinding source in binding.targets)
+            {
+                Transform node = string.IsNullOrEmpty(source.path) ? host : host.Find(source.path);
+                Type type;
+                switch (source.type)
+                {
+                    case "Transform": type = typeof(Transform); break;
+                    case "RectTransform": type = typeof(RectTransform); break;
+                    case "CanvasGroup": type = typeof(CanvasGroup); break;
+                    case "Image": type = typeof(Image); break;
+                    case "TextMeshProUGUI": type = typeof(TextMeshProUGUI); break;
+                    default: throw new InvalidDataException("Unsupported original matching target: " + source.type);
+                }
+                if (node == null || node.GetComponent(type) == null)
+                    throw new InvalidDataException("Original matching animation target is missing: " + source.path + " / " + source.type);
+            }
+            AnimationClip clip = Resources.Load<AnimationClip>(binding.clip.resource);
+            if (clip == null || clip.name != binding.clip.name || !clip.legacy
+                || !Mathf.Approximately(clip.length, binding.clip.duration) || !Mathf.Approximately(clip.frameRate, binding.clip.sampleRate))
+                throw new InvalidDataException("Original matching Legacy clip is missing or mismatched.");
+            AnimationEvent[] events = clip.events;
+            if (events.Length != 1 || events[0].functionName != "PostEvent" || events[0].intParameter != 0
+                || !Mathf.Approximately(events[0].time, 5f / 60f))
+                throw new InvalidDataException("Original matching animation event is missing or mismatched.");
+            var receiver = host.GetComponent<WorldAnimationSoundPlayer>() ?? host.gameObject.AddComponent<WorldAnimationSoundPlayer>();
+            receiver.mEvents = new List<AudioClip>();
+            foreach (PopupSoundEventBinding source in binding.sound.events)
+            {
+                AudioClip audio = Resources.Load<AudioClip>(source.resource);
+                if (audio == null || audio.name != source.name)
+                    throw new InvalidDataException("Original matching sound is missing: " + source.resource);
+                receiver.mEvents.Add(audio);
+            }
+            receiver.Post = postSound; receiver.enabled = binding.sound.enabled;
+            var player = host.GetComponent<Animation>() ?? host.gameObject.AddComponent<Animation>();
+            player.RemoveClip(clip.name); player.AddClip(clip, clip.name); player.clip = clip;
+            player.wrapMode = (WrapMode)binding.wrapMode; player.playAutomatically = binding.playAutomatically;
+            player.animatePhysics = binding.animatePhysics; player.cullingType = (AnimationCullingType)binding.cullingType;
+            player.enabled = binding.enabled;
+        }
+
         public static void Apply(GameObject root, string prefabName, Action<AudioClip, GameObject> postSound = null)
         {
             string path = Path.Combine(Application.streamingAssetsPath, "Dungeons", "UI", "official-bindings.json");
@@ -264,6 +334,7 @@ namespace Zjcs.Presentation.World
                 text.enabled = item.enabled;
                 if (item.enabled) text.Refresh();
             }
+            if (binding.popup != null) RestoreMatching(root, binding.popup.matching, postSound);
         }
 
         private static Document LoadDocument()

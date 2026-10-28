@@ -1,0 +1,541 @@
+{
+  "absent_source_curves": [
+    {
+      "attribute": "m_AnchoredPosition.y",
+      "classID": 224,
+      "path": "TxtContent/DescTxt1"
+    },
+    {
+      "attribute": "m_fontColor.r",
+      "classID": 114,
+      "path": "TxtContent/DescTxt1"
+    },
+    {
+      "attribute": "m_fontColor.g",
+      "classID": 114,
+      "path": "TxtContent/DescTxt1"
+    },
+    {
+      "attribute": "m_fontColor.b",
+      "classID": 114,
+      "path": "TxtContent/DescTxt1"
+    },
+    {
+      "attribute": "m_fontColor.a",
+      "classID": 114,
+      "path": "TxtContent/DescTxt1"
+    },
+    {
+      "attribute": "m_fontColor.a",
+      "classID": 114,
+      "path": "TxtContent/Progress"
+    }
+  ],
+  "audio_source_receipt": {
+    "path": "assets/reference/official-map/map12-ui-audio-source-manifest.json",
+    "sha256": "78047a1dc9c2463ecd1aa5e388307056cfb405c17f360f8d4ecf31220e0ab1ae"
+  },
+  "binding": {
+    "absentSourceTargets": [
+      {
+        "path": "TxtContent/DescTxt1",
+        "type": "RectTransform"
+      },
+      {
+        "path": "TxtContent/DescTxt1",
+        "type": "TextMeshProUGUI"
+      },
+      {
+        "path": "TxtContent/Progress",
+        "type": "TextMeshProUGUI"
+      }
+    ],
+    "animatePhysics": false,
+    "canvasGroups": [
+      {
+        "alpha": 1.0,
+        "blocksRaycasts": true,
+        "enabled": true,
+        "ignoreParentGroups": false,
+        "interactable": true,
+        "object_raw_sha256": "0f3c06253aff3e2191e5c4b15453cc52a5a9b2d6d6ccedcc54e4907bacb8eef6",
+        "objects": [
+          "Content",
+          "Mask",
+          "ImgMatchW_Circle3"
+        ],
+        "path": "1/2",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+          "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+          "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+          "bundle_size": 807989,
+          "manifest": "871_156598",
+          "origin": "official_cdn",
+          "path_id": "-8038347119480313629",
+          "source_manifest": "854_156383",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+        }
+      },
+      {
+        "alpha": 1.0,
+        "blocksRaycasts": true,
+        "enabled": true,
+        "ignoreParentGroups": false,
+        "interactable": true,
+        "object_raw_sha256": "09b2d945848f002553b27f1cfd778eaca6830947a23d720188a40650bab93bd4",
+        "objects": [
+          "Content",
+          "Mask",
+          "ImgMatchW_CircleLight"
+        ],
+        "path": "1/3",
+        "source": {
+          "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+          "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+          "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+          "bundle_size": 807989,
+          "manifest": "871_156598",
+          "origin": "official_cdn",
+          "path_id": "1340927201531422947",
+          "source_manifest": "854_156383",
+          "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+        }
+      }
+    ],
+    "clip": {
+      "duration": 0.9333333373069763,
+      "name": "DailyDungeonDetailContent_GameMatch_Show",
+      "object_raw_sha256": "7cbb304d4de10364a842a7e6b94647260b3d7f7f17e80933dac1aee674554f9f",
+      "resource": "Map12/Matching/DailyDungeonDetailContent_GameMatch_Show",
+      "sampleRate": 60.0,
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/73c8ef90624abf10ff0babfe7401c498.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_db24b6518e8964991dd3d6a8bd3fd04d.bundle",
+        "bundle_hash": "73c8ef90624abf10ff0babfe7401c498",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-7677826505346372514",
+        "raw_sha256": "993b37ad3a117401d8595a3b57619db5ce12b19dceebad8e5ea01ce9cf4be438",
+        "raw_size": 21567
+      }
+    },
+    "cullingType": 0,
+    "enabled": true,
+    "object_raw_sha256": "9c0cad18048851ac7fe4a82162bbc94921b8323ea1f67a645dcb291a9049d069",
+    "objects": [
+      "DailyDungeonDialogPrivateMap",
+      "BgDialog3",
+      "Content",
+      "DailyDungeonDetailContent",
+      "Content",
+      "NormalGo",
+      "GameMatch",
+      "Content"
+    ],
+    "path": "0/0/4/0/4/1/0",
+    "playAutomatically": true,
+    "sound": {
+      "enabled": true,
+      "events": [
+        {
+          "id": 1386996041,
+          "name": "TeamMatch_Waiting_1",
+          "object_raw_sha256": "a6807482971987cdefa979d16c89c8221c85d9984563f4f6b8069798bd6f2453",
+          "resource": "Map12/PopupSound/TeamMatch_Waiting_1",
+          "source": {
+            "bundle": "defaultpackage_assets_wwise_scriptableobjects_event.bundle",
+            "bundle_hash": "d0ea86beaa052471f6138a9bddaa19f0",
+            "bundle_sha256": "c4009d466fcf8199fd5c4b7ba92f9915f0509ced7ea74c28ddec8b4867a6970a",
+            "bundle_size": 440942,
+            "manifest": "871_156598",
+            "origin": "official_cdn",
+            "path_id": "3605014870370475607",
+            "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/d0ea86beaa052471f6138a9bddaa19f0.bundle"
+          }
+        }
+      ],
+      "object_raw_sha256": "81a0be286d2d4246e200cdd2b27a96ba2ae786913a5e1bff4d080ec17c4513dd",
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+        "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+        "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+        "bundle_size": 807989,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-3614409072541341469",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+      }
+    },
+    "source": {
+      "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+      "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+      "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+      "bundle_size": 807989,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path_id": "-4975450289231206173",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+    },
+    "targets": [
+      {
+        "path": "ImgBg",
+        "type": "Image"
+      },
+      {
+        "path": "ImgBg",
+        "type": "RectTransform"
+      },
+      {
+        "path": "ImgMatchW_Circle1",
+        "type": "Image"
+      },
+      {
+        "path": "ImgMatchW_Circle1",
+        "type": "Transform"
+      },
+      {
+        "path": "ImgMatchW_Glow",
+        "type": "Image"
+      },
+      {
+        "path": "ImgMatchW_Glow",
+        "type": "Transform"
+      },
+      {
+        "path": "Mask/ImgMatchW_Circle3",
+        "type": "CanvasGroup"
+      },
+      {
+        "path": "Mask/ImgMatchW_Circle3",
+        "type": "Transform"
+      },
+      {
+        "path": "Mask/ImgMatchW_CircleLight",
+        "type": "CanvasGroup"
+      },
+      {
+        "path": "Mask/ImgMatchW_CircleLight",
+        "type": "Transform"
+      },
+      {
+        "path": "Mask/ImgMatchW_LineL",
+        "type": "Image"
+      },
+      {
+        "path": "Mask/ImgMatchW_LineL",
+        "type": "RectTransform"
+      },
+      {
+        "path": "Mask/ImgMatchW_LineR",
+        "type": "Image"
+      },
+      {
+        "path": "Mask/ImgMatchW_LineR",
+        "type": "RectTransform"
+      },
+      {
+        "path": "TxtContent/DescTxt",
+        "type": "TextMeshProUGUI"
+      },
+      {
+        "path": "TxtContent/LeftTimeTxt",
+        "type": "TextMeshProUGUI"
+      },
+      {
+        "path": "TxtContent/LeftTimeTxt",
+        "type": "Transform"
+      }
+    ],
+    "wrapMode": 0
+  },
+  "code_sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/AnimationSoundPlayer.cs",
+      "sha256": "bcd2cd4ec55b7302a4fe97003526758438ab73674923e10a5a769f038fe428c3"
+    }
+  ],
+  "duration_rule": {
+    "engine_path": ".tools/source-packages/official-code/libunity.so",
+    "engine_sha256": "5142b00b7ef6fa53828de13afd2cfd07a6a7763100d145cbb50a22e0114a0340",
+    "icall": "UnityEngine.AnimationClip::get_length",
+    "icall_address": "0x5755e0",
+    "port_path": "scripts/commerce_clip_time.py",
+    "port_sha256": "0ce3acd4469ee0fc1431dea590e8b8f5ee89613cf94dfe0de8f0c3cb5e06536e",
+    "range_kernel": "0xf9c434"
+  },
+  "events": [
+    {
+      "data": "",
+      "floatParameter": 0.0,
+      "functionName": "PostEvent",
+      "intParameter": 0,
+      "messageOptions": 0,
+      "objectReferenceParameter": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      },
+      "time": 0.0833333358168602
+    }
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "native_input": {
+    "path": "unity/Assets/Official/Dungeons/Prefabs/UI/DailyDungeon/DailyDungeonDetailContent_GameMatch_Show.anim",
+    "sha256": "06828d661b62b40d013ce6140667eb03a879b5bfecf8f4f50c0da7a571709e89"
+  },
+  "native_script_targets": [
+    {
+      "guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs.meta",
+      "sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066",
+      "type": "Image"
+    },
+    {
+      "guid": "f4688fdb7df04437aeb418b961361dc5",
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs.meta",
+      "sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd",
+      "type": "TextMeshProUGUI"
+    }
+  ],
+  "operation": "Compare all original Legacy curve fields, float32 key values/slopes/weights, script identities, clip settings and events; reuse native export with only Image/TMP script GUID mapping. Local audio adapter replaces Wwise Post; preserve event indexing and Animation settings.",
+  "outputs": [
+    {
+      "bytes": 30838,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching/DailyDungeonDetailContent_GameMatch_Show.anim",
+      "sha256": "271e705a7561815739e5bcd16c39ae1d960332067419d6620fe1a7ecdaa15ae4"
+    },
+    {
+      "bytes": 185,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching/DailyDungeonDetailContent_GameMatch_Show.anim.meta",
+      "sha256": "902aab15f1c8e5d9b87f03cc422e5e191e254cc044a45dc32c9b0a847f0f5e38"
+    },
+    {
+      "bytes": 169,
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/Matching.meta",
+      "sha256": "06bd15a7d1ca2ae543554802f3cd2cec6d0ea58354d0dd5de2d9254732d3dd79"
+    }
+  ],
+  "script_sources": {
+    "Image": {
+      "namespace": "UnityEngine.UI",
+      "native_guid": "fe87c0e1cc204ed48ad3b37840f39efc",
+      "object_raw_sha256": "99675d4fbd7698ff1cc99aa93d8e632769d16ae1a79243473d964cf438e02705",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/73c8ef90624abf10ff0babfe7401c498.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_db24b6518e8964991dd3d6a8bd3fd04d.bundle",
+        "bundle_hash": "73c8ef90624abf10ff0babfe7401c498",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "350208831926335389",
+        "raw_sha256": "993b37ad3a117401d8595a3b57619db5ce12b19dceebad8e5ea01ce9cf4be438",
+        "raw_size": 21567
+      }
+    },
+    "TextMeshProUGUI": {
+      "namespace": "TMPro",
+      "native_guid": "f4688fdb7df04437aeb418b961361dc5",
+      "object_raw_sha256": "a168fcab4cde4ed7c8efc2dee7ca5984616e669b1d266badf061cc8d651be997",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/73c8ef90624abf10ff0babfe7401c498.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_share_db24b6518e8964991dd3d6a8bd3fd04d.bundle",
+        "bundle_hash": "73c8ef90624abf10ff0babfe7401c498",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "7477354737935883349",
+        "raw_sha256": "993b37ad3a117401d8595a3b57619db5ce12b19dceebad8e5ea01ce9cf4be438",
+        "raw_size": 21567
+      }
+    }
+  },
+  "source_hierarchy": [
+    {
+      "indices": [],
+      "objects": [
+        "Content"
+      ],
+      "path": ""
+    },
+    {
+      "indices": [
+        0
+      ],
+      "objects": [
+        "Content",
+        "ImgBg"
+      ],
+      "path": "ImgBg"
+    },
+    {
+      "indices": [
+        1
+      ],
+      "objects": [
+        "Content",
+        "Mask"
+      ],
+      "path": "Mask"
+    },
+    {
+      "indices": [
+        1,
+        0
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_LineR"
+      ],
+      "path": "Mask/ImgMatchW_LineR"
+    },
+    {
+      "indices": [
+        1,
+        1
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_LineL"
+      ],
+      "path": "Mask/ImgMatchW_LineL"
+    },
+    {
+      "indices": [
+        1,
+        2
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_Circle3"
+      ],
+      "path": "Mask/ImgMatchW_Circle3"
+    },
+    {
+      "indices": [
+        1,
+        2,
+        0
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_Circle3",
+        "Mesh"
+      ],
+      "path": "Mask/ImgMatchW_Circle3/Mesh"
+    },
+    {
+      "indices": [
+        1,
+        3
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_CircleLight"
+      ],
+      "path": "Mask/ImgMatchW_CircleLight"
+    },
+    {
+      "indices": [
+        1,
+        3,
+        0
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_CircleLight",
+        "ImgMatchW_Circle2"
+      ],
+      "path": "Mask/ImgMatchW_CircleLight/ImgMatchW_Circle2"
+    },
+    {
+      "indices": [
+        1,
+        3,
+        1
+      ],
+      "objects": [
+        "Content",
+        "Mask",
+        "ImgMatchW_CircleLight",
+        "Mesh (1)"
+      ],
+      "path": "Mask/ImgMatchW_CircleLight/Mesh (1)"
+    },
+    {
+      "indices": [
+        2
+      ],
+      "objects": [
+        "Content",
+        "ImgMatchW_Circle1"
+      ],
+      "path": "ImgMatchW_Circle1"
+    },
+    {
+      "indices": [
+        3
+      ],
+      "objects": [
+        "Content",
+        "ImgMatchW_Glow"
+      ],
+      "path": "ImgMatchW_Glow"
+    },
+    {
+      "indices": [
+        4
+      ],
+      "objects": [
+        "Content",
+        "TxtContent"
+      ],
+      "path": "TxtContent"
+    },
+    {
+      "indices": [
+        4,
+        0
+      ],
+      "objects": [
+        "Content",
+        "TxtContent",
+        "LeftTimeTxt"
+      ],
+      "path": "TxtContent/LeftTimeTxt"
+    },
+    {
+      "indices": [
+        4,
+        1
+      ],
+      "objects": [
+        "Content",
+        "TxtContent",
+        "DescTxt"
+      ],
+      "path": "TxtContent/DescTxt"
+    }
+  ],
+  "verified": {
+    "absent_float_curves": 6,
+    "event_time_exact": true,
+    "float32_keys_exact": true,
+    "float_curves": 31,
+    "present_target_groups": 17,
+    "scale_curves": 5,
+    "source_sample_rate": 60.0
+  }
+}
