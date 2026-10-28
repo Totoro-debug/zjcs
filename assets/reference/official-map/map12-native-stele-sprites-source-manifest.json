@@ -1,0 +1,681 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "inputs": [
+    {
+      "path": "scripts/prepare_unity_map12_stele_sprites.py",
+      "sha256": "110a4b11ec58c88dfdb29fe754d34daa9bfc3a31321cff77fedb15d54741527f"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-entity-sprites-source-manifest.json",
+      "sha256": "64a74a54d1008d942d8ecc5fe6fc9705e25d392edaec5d7f10b8d0ffe622a4c2"
+    },
+    {
+      "path": "assets/reference/official-map/map12-stele-entity-input-source-manifest.json",
+      "sha256": "3c6048f18549ddd88882c609460c358e9b616cd7fb173f6013e4cefc5cd5b614"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/native-stele-entity-components.json",
+      "sha256": "49c961e2e80a8ef6354bb2c9fa85c032d780592e98100e7e7c9fc3315aeecc51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteCatalog.cs",
+      "sha256": "b4ef2fb07b732b37682eac96ffad200d3f3fd27e7975925d854ac8a88a45a787"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteLibrary.cs",
+      "sha256": "b4c912b63a8ea96c160feebb1c7fa4e0a90c211de02d863e0b0fe688a163cf9f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteBinding.cs",
+      "sha256": "228f5eb2f9ef2c599f7f101654e6772a6a725049c332f1ea1395efb2489b5a7d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteCatalog.cs.meta",
+      "sha256": "0fe331fde60d39f1c1167e88fc0fe3e21c1ee0e01a003cdfd4ffc4801166116a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteLibrary.cs.meta",
+      "sha256": "2abde74ec572160d1a576b878b62e05bb155420b4b297f5f7f7aa1f46901fc82"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13EntityAssets/NativeMap13EntitySpriteBinding.cs.meta",
+      "sha256": "15bbcb6f9e9ec5a5a562f2709d92afba8d0a046c886cdbd7dccebfb81390a806"
+    },
+    {
+      "path": "scripts/official_apk.py",
+      "sha256": "daeb1d36238a159e3095db0fd8ea90b0a25c88e23af0c44a7e9d9f202cf65c18"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_sources.py",
+      "sha256": "184ad823d4c850434c2fc792036c277e1305484ffdb0acd7a92a129e7bf87aaa"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_stele_entity_inputs.py",
+      "sha256": "00727df7423c1757234e8a637bc551e15a30fc809b29c9101b0b436354a47207"
+    }
+  ],
+  "renderer_bindings": [
+    {
+      "sourceKey": "cab-aa9dec5b61e29e2272af47879f5ecb94:646671367425384466",
+      "spriteKey": "cab-765698413415d811a305dc45ce7b8cd6:4106583105904624520",
+      "kind": "SpriteRenderer"
+    },
+    {
+      "sourceKey": "cab-aa9dec5b61e29e2272af47879f5ecb94:3335269511196727863",
+      "spriteKey": "cab-765698413415d811a305dc45ce7b8cd6:358296276005043042",
+      "kind": "SpriteRenderer"
+    }
+  ],
+  "sprites": [
+    {
+      "key": "cab-765698413415d811a305dc45ce7b8cd6:4106583105904624520",
+      "package": "5bedee83a339ec488fece510",
+      "assetName": "__zjcs/map13/native/63b25c215a1cea3371411c94",
+      "originalName": "ChallengeMonument_Long",
+      "original_payload_sha256": "e8f7fb36c9cfeeae23e18f028604ddbe8c6f2f1279afe87d38658f43209d4acb",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapentity_interactiveentity_commonentity.bundle",
+        "bundle_hash": "9ea71b358006d6fe6bd1d1c4648ca67d",
+        "path_id": "4106583105904624520",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/9ea71b358006d6fe6bd1d1c4648ca67d.bundle",
+        "raw_size": 354966,
+        "raw_sha256": "5855d13b40c506f7a3af9a27f6477d03a5309f367ecee876e2bf858fd8afbaff"
+      }
+    },
+    {
+      "key": "cab-765698413415d811a305dc45ce7b8cd6:358296276005043042",
+      "package": "5bedee83a339ec488fece510",
+      "assetName": "__zjcs/map13/native/8ba9f4f64c0190128d23a9db",
+      "originalName": "SoloChallenge_Long",
+      "original_payload_sha256": "c49e1f80ee24efb21ed2077f77f553f6d440a15472a0e6547ec5d723e3bcccfe",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapentity_interactiveentity_commonentity.bundle",
+        "bundle_hash": "9ea71b358006d6fe6bd1d1c4648ca67d",
+        "path_id": "358296276005043042",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/9ea71b358006d6fe6bd1d1c4648ca67d.bundle",
+        "raw_size": 354966,
+        "raw_sha256": "5855d13b40c506f7a3af9a27f6477d03a5309f367ecee876e2bf858fd8afbaff"
+      }
+    }
+  ],
+  "shared_packages": [
+    {
+      "key": "5bedee83a339ec488fece510",
+      "source": {
+        "bundle": "defaultpackage_assets_image_mapentity_interactiveentity_commonentity.bundle",
+        "bundle_hash": "9ea71b358006d6fe6bd1d1c4648ca67d",
+        "path_id": "1",
+        "origin": "apk_zip",
+        "manifest": "871_156598",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/9ea71b358006d6fe6bd1d1c4648ca67d.bundle",
+        "raw_size": 354966,
+        "raw_sha256": "5855d13b40c506f7a3af9a27f6477d03a5309f367ecee876e2bf858fd8afbaff"
+      },
+      "output": {
+        "path": "unity/Assets/Official/World/Map/13/NativeEntitySprites/5bedee83a339ec488fece510.windows.bundle.bytes",
+        "sha256": "e501ea3ae4ca450a42c62af58c99def86c6a116a9e32c9377b7423e9ee8e6ffa"
+      },
+      "meta": {
+        "path": "unity/Assets/Official/World/Map/13/NativeEntitySprites/5bedee83a339ec488fece510.windows.bundle.bytes.meta",
+        "sha256": "b967a07b54c5028e2dd72b92e720816337e071828cde17d4189c8f08ebd25519"
+      },
+      "textures": [
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-9024097892090157271",
+          "assetName": "__zjcs/map13/native/b082e8f93c50681286432993",
+          "name": "entity_basement_ground_F",
+          "width": 155,
+          "height": 99,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 155,
+              "height": 99,
+              "astc_offset": 0,
+              "astc_size": 7072,
+              "astc_sha256": "6270c39319a6eff95d95338af262d8dac1c48501e4b44772c8244c8ed23642b7",
+              "rgba_offset": 0,
+              "rgba_size": 61380,
+              "rgba_sha256": "c0cc8c703a79a87632da822f423e638feed68193d2f42ac326d2b675f4761b71"
+            }
+          ],
+          "rgba_sha256": "c0cc8c703a79a87632da822f423e638feed68193d2f42ac326d2b675f4761b71"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-8550099879214586942",
+          "assetName": "__zjcs/map13/native/f1686eb78ad12ca30b6e64fa",
+          "name": "building_smallgoddess",
+          "width": 168,
+          "height": 168,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 168,
+              "height": 168,
+              "astc_offset": 0,
+              "astc_size": 12544,
+              "astc_sha256": "fdbffda4ec4f91ba8ac13e0b94a6ed7802c733619dac89f15ae05ee8395e032c",
+              "rgba_offset": 0,
+              "rgba_size": 112896,
+              "rgba_sha256": "386eb900ae934321464b472a4fd6965d6ab5f60e07025d9d8509cac61c0d7fd8"
+            }
+          ],
+          "rgba_sha256": "386eb900ae934321464b472a4fd6965d6ab5f60e07025d9d8509cac61c0d7fd8"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-7634446630303955709",
+          "assetName": "__zjcs/map13/native/20fdb0357805ee17c3bc4640",
+          "name": "building_stele_2_word",
+          "width": 227,
+          "height": 374,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 227,
+              "height": 374,
+              "astc_offset": 0,
+              "astc_size": 38304,
+              "astc_sha256": "a232c314d925cf2ac5861a48f9ce410860231c5ceacb8503145a556dcc86bc98",
+              "rgba_offset": 0,
+              "rgba_size": 339592,
+              "rgba_sha256": "51206c3154ad95436000bda365819a3b0299a163c3b6644adf0de70e38c6e456"
+            }
+          ],
+          "rgba_sha256": "51206c3154ad95436000bda365819a3b0299a163c3b6644adf0de70e38c6e456"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-7502643243443412811",
+          "assetName": "__zjcs/map13/native/9c694ec4f1cdc2c70c91457c",
+          "name": "building_stele_5",
+          "width": 200,
+          "height": 382,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 200,
+              "height": 382,
+              "astc_offset": 0,
+              "astc_size": 34816,
+              "astc_sha256": "160aed67495d6b59067991cc9c71f4d307ed15998493f667b06156d2007bb33a",
+              "rgba_offset": 0,
+              "rgba_size": 305600,
+              "rgba_sha256": "237c5c7e67dcf7bc48c666f743287b84c2a11d0d666fb08f763abbe966450bbf"
+            }
+          ],
+          "rgba_sha256": "237c5c7e67dcf7bc48c666f743287b84c2a11d0d666fb08f763abbe966450bbf"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-6530082047250219878",
+          "assetName": "__zjcs/map13/native/f7d0ddcfc89f961811c256ee",
+          "name": "SoloChallenge_For",
+          "width": 169,
+          "height": 169,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 169,
+              "height": 169,
+              "astc_offset": 0,
+              "astc_size": 13456,
+              "astc_sha256": "9165564b4c1e6ce50e6762535c15ee85e0a9b1658c2b529aee312eec9056b9a1",
+              "rgba_offset": 0,
+              "rgba_size": 114244,
+              "rgba_sha256": "314f1c07e7126b7716d8ebb72757a5cd26678c6c400d7632d1212bfc231fd6ea"
+            }
+          ],
+          "rgba_sha256": "314f1c07e7126b7716d8ebb72757a5cd26678c6c400d7632d1212bfc231fd6ea"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-5231268547444262046",
+          "assetName": "__zjcs/map13/native/28808c20509f500d1ed04635",
+          "name": "SoloChallenge_Long",
+          "width": 169,
+          "height": 169,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 169,
+              "height": 169,
+              "astc_offset": 0,
+              "astc_size": 13456,
+              "astc_sha256": "1c7845ab4bd6a7cec27ff6351b64435b6b6ca0ce70887004959fdcb1085e73aa",
+              "rgba_offset": 0,
+              "rgba_size": 114244,
+              "rgba_sha256": "acd882919a1cbba7ea721a9924324c34e02f11e5ab97e024f4d6938f595c4ed0"
+            }
+          ],
+          "rgba_sha256": "acd882919a1cbba7ea721a9924324c34e02f11e5ab97e024f4d6938f595c4ed0"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-5053613372834262436",
+          "assetName": "__zjcs/map13/native/a20b924e96d2a679bca8f74f",
+          "name": "building_stele_2",
+          "width": 227,
+          "height": 374,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 227,
+              "height": 374,
+              "astc_offset": 0,
+              "astc_size": 38304,
+              "astc_sha256": "872bd82048f5ea15e05958d68cab9f20f957b6c9e07d2b14d4789d704ff95d42",
+              "rgba_offset": 0,
+              "rgba_size": 339592,
+              "rgba_sha256": "7d6718e3eb3e47136e3a2ad4f1fc07fced10f2f20a174c1d7da26d18e3b28efd"
+            }
+          ],
+          "rgba_sha256": "7d6718e3eb3e47136e3a2ad4f1fc07fced10f2f20a174c1d7da26d18e3b28efd"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-4771873922299453627",
+          "assetName": "__zjcs/map13/native/49e98b65f17371bbce6a998c",
+          "name": "building_stele_3",
+          "width": 207,
+          "height": 355,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 207,
+              "height": 355,
+              "astc_offset": 0,
+              "astc_size": 33600,
+              "astc_sha256": "0433b319832e9014944c187546a821f7588e2e3ba6bc02f35d6d589bc5129fff",
+              "rgba_offset": 0,
+              "rgba_size": 293940,
+              "rgba_sha256": "2882c5445d5afaf0044f8c866c1003e8d0607a51d51fc5ee5471c2fe76927cca"
+            }
+          ],
+          "rgba_sha256": "2882c5445d5afaf0044f8c866c1003e8d0607a51d51fc5ee5471c2fe76927cca"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-2331595118855842033",
+          "assetName": "__zjcs/map13/native/d79bbf2a2ef3d387c3852d89",
+          "name": "6025_icon",
+          "width": 576,
+          "height": 752,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 576,
+              "height": 752,
+              "astc_offset": 0,
+              "astc_size": 193536,
+              "astc_sha256": "5632fc97002a9de82d83ce729a314d9dd93045eb04e9f13750ec99d6b73ad74e",
+              "rgba_offset": 0,
+              "rgba_size": 1732608,
+              "rgba_sha256": "1ce9caee3ad29392605444a6af99a3d11935187ca3a823a1df4a3e21d1e353b4"
+            }
+          ],
+          "rgba_sha256": "1ce9caee3ad29392605444a6af99a3d11935187ca3a823a1df4a3e21d1e353b4"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-2211858676781042709",
+          "assetName": "__zjcs/map13/native/16ba7ff9f3c7752a85a6565a",
+          "name": "6028_icon",
+          "width": 161,
+          "height": 182,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 161,
+              "height": 182,
+              "astc_offset": 0,
+              "astc_size": 13392,
+              "astc_sha256": "68e403a656da6cc44fda5027087f71c096b81617df4089eb3e898664038169be",
+              "rgba_offset": 0,
+              "rgba_size": 117208,
+              "rgba_sha256": "b1d5fca091f1287950bfcaf64b6aedac1c2fc0121d612be1c6ab57fcb926fc50"
+            }
+          ],
+          "rgba_sha256": "b1d5fca091f1287950bfcaf64b6aedac1c2fc0121d612be1c6ab57fcb926fc50"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-1975705739277198058",
+          "assetName": "__zjcs/map13/native/fcc9ee1fbeaceea0b8c2e5fd",
+          "name": "building_stele_4",
+          "width": 221,
+          "height": 355,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 221,
+              "height": 355,
+              "astc_offset": 0,
+              "astc_size": 35520,
+              "astc_sha256": "3a8478c9b5b4180ea4c7764218ad9c91fed76d0c7f85061557c4fb929b812383",
+              "rgba_offset": 0,
+              "rgba_size": 313820,
+              "rgba_sha256": "6c70adffbcf38d338ba524becc650a268f4e5e9ed55e3821f92b2ba4396eebe4"
+            }
+          ],
+          "rgba_sha256": "6c70adffbcf38d338ba524becc650a268f4e5e9ed55e3821f92b2ba4396eebe4"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-1870996528376465118",
+          "assetName": "__zjcs/map13/native/2f570cda9062b4b59a6c0f17",
+          "name": "puzzle_monster_statue",
+          "width": 168,
+          "height": 168,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 168,
+              "height": 168,
+              "astc_offset": 0,
+              "astc_size": 12544,
+              "astc_sha256": "6e07c89c590164f9cf8a14d677af847621df48ee6dcc2457c246861a0c1e5046",
+              "rgba_offset": 0,
+              "rgba_size": 112896,
+              "rgba_sha256": "07432bb43ad10afe1f1c0d8441a499cebd2efa794ea01d82bd0b6b5aa51dfa6a"
+            }
+          ],
+          "rgba_sha256": "07432bb43ad10afe1f1c0d8441a499cebd2efa794ea01d82bd0b6b5aa51dfa6a"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:-989538113913975061",
+          "assetName": "__zjcs/map13/native/58cb7bf092280ae267c9878f",
+          "name": "ChallengeMonument_For",
+          "width": 122,
+          "height": 150,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 122,
+              "height": 150,
+              "astc_offset": 0,
+              "astc_size": 8400,
+              "astc_sha256": "511e52dda0cc35465aa82dcdc38e9b4997c4a9351cea60ef2fd6ce1ce2783bf9",
+              "rgba_offset": 0,
+              "rgba_size": 73200,
+              "rgba_sha256": "eccc11119597c09088c20fcaec19ff7dd63712d4ece2efeac677b4c79faa121e"
+            }
+          ],
+          "rgba_sha256": "eccc11119597c09088c20fcaec19ff7dd63712d4ece2efeac677b4c79faa121e"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:1103497057476709778",
+          "assetName": "__zjcs/map13/native/8bda3c97b001c894eb2e4051",
+          "name": "building_stele_3_word",
+          "width": 207,
+          "height": 355,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 207,
+              "height": 355,
+              "astc_offset": 0,
+              "astc_size": 33600,
+              "astc_sha256": "e8b135b388a548b4b1db35734c6207a31f7323cec3266db9b0807aa959746bb3",
+              "rgba_offset": 0,
+              "rgba_size": 293940,
+              "rgba_sha256": "ce4d3943f86e61a300bb717e58766498fb5f6c9f6b18162e3d6fe58eabe0fce1"
+            }
+          ],
+          "rgba_sha256": "ce4d3943f86e61a300bb717e58766498fb5f6c9f6b18162e3d6fe58eabe0fce1"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:1228094783160805336",
+          "assetName": "__zjcs/map13/native/785f1cd4379ed3a3b0bcb0cd",
+          "name": "ChallengeMonumenticon_For",
+          "width": 115,
+          "height": 147,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 115,
+              "height": 147,
+              "astc_offset": 0,
+              "astc_size": 8000,
+              "astc_sha256": "df9982d4693ba3b5e10243da54616151afdf52d2e5c4111fe9c80c37b1202bf2",
+              "rgba_offset": 0,
+              "rgba_size": 67620,
+              "rgba_sha256": "349677a4a6b16779dd51681b4a18380f747ca6ca33d6eeb79400f626cfcf50de"
+            }
+          ],
+          "rgba_sha256": "349677a4a6b16779dd51681b4a18380f747ca6ca33d6eeb79400f626cfcf50de"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:1926262130053137288",
+          "assetName": "__zjcs/map13/native/dcdce3874805e2fe0fe2785f",
+          "name": "ChallengeMonument_Long",
+          "width": 122,
+          "height": 150,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 122,
+              "height": 150,
+              "astc_offset": 0,
+              "astc_size": 8400,
+              "astc_sha256": "c841c921faa06d49f5300991f1d7fc4f66209dfb26d702d5d6394678653d4245",
+              "rgba_offset": 0,
+              "rgba_size": 73200,
+              "rgba_sha256": "72e75af99d46fff141245729be1253b00da1c00b2bc7541a8c228135dc853e1e"
+            }
+          ],
+          "rgba_sha256": "72e75af99d46fff141245729be1253b00da1c00b2bc7541a8c228135dc853e1e"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:2066357212161190099",
+          "assetName": "__zjcs/map13/native/b03ace52a265a1d8a0e4adef",
+          "name": "building_stele_5_word",
+          "width": 200,
+          "height": 382,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 200,
+              "height": 382,
+              "astc_offset": 0,
+              "astc_size": 34816,
+              "astc_sha256": "47dd77b7a82bade0ba521c30939b58ee68156813c338f37bbd536aa334c61b5e",
+              "rgba_offset": 0,
+              "rgba_size": 305600,
+              "rgba_sha256": "c41b760ad7e55c28ed94625f6a664e161bd5c40b4ae0417e98930eebf2cd492d"
+            }
+          ],
+          "rgba_sha256": "c41b760ad7e55c28ed94625f6a664e161bd5c40b4ae0417e98930eebf2cd492d"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:2487664341270218494",
+          "assetName": "__zjcs/map13/native/01b6f1a79fe5622e9789df56",
+          "name": "building_stele_4_word",
+          "width": 221,
+          "height": 355,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 221,
+              "height": 355,
+              "astc_offset": 0,
+              "astc_size": 35520,
+              "astc_sha256": "cf57e1992e883c069dc430e5bccc72da20211d6b57be8736b2ac1a103afc418d",
+              "rgba_offset": 0,
+              "rgba_size": 313820,
+              "rgba_sha256": "99ba599054faa81b81858e3f2a1bcf9e3c27dedd5a24861ff9a8fb9c6e1f2bcc"
+            }
+          ],
+          "rgba_sha256": "99ba599054faa81b81858e3f2a1bcf9e3c27dedd5a24861ff9a8fb9c6e1f2bcc"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:4006597859925149348",
+          "assetName": "__zjcs/map13/native/c6153005de3629563e3d3617",
+          "name": "building_stele_1_word",
+          "width": 190,
+          "height": 341,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 190,
+              "height": 341,
+              "astc_offset": 0,
+              "astc_size": 29184,
+              "astc_sha256": "d5f2e76872fc04c175464fde1dd096d09c4fd94cbd650f00a520957f013e8d8f",
+              "rgba_offset": 0,
+              "rgba_size": 259160,
+              "rgba_sha256": "ffcfb1541f2f66623501d91a02674c36e06a49dc93e293349539882f0abfc371"
+            }
+          ],
+          "rgba_sha256": "ffcfb1541f2f66623501d91a02674c36e06a49dc93e293349539882f0abfc371"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:6358622945271305631",
+          "assetName": "__zjcs/map13/native/e5191e058efc69fb1d79736a",
+          "name": "SoloChallengeicon_For",
+          "width": 80,
+          "height": 150,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 80,
+              "height": 150,
+              "astc_offset": 0,
+              "astc_size": 5600,
+              "astc_sha256": "f8080ba10e13b4b0ef63129c30711f967806ef007b011ba7db0fb29c38d7a419",
+              "rgba_offset": 0,
+              "rgba_size": 48000,
+              "rgba_sha256": "5114fd52fac2646829a58d3614fb85b58deb8d449c9340527de684e6df4e01bf"
+            }
+          ],
+          "rgba_sha256": "5114fd52fac2646829a58d3614fb85b58deb8d449c9340527de684e6df4e01bf"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:8158988434220559843",
+          "assetName": "__zjcs/map13/native/153f06058eaf76a7c485b9d8",
+          "name": "Lost_Goddess",
+          "width": 174,
+          "height": 163,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 174,
+              "height": 163,
+              "astc_offset": 0,
+              "astc_size": 12992,
+              "astc_sha256": "c22a26cfdfe21713aea4d69fe6aa47509bbd9cf21c097fc3cc1e00e2cee318f6",
+              "rgba_offset": 0,
+              "rgba_size": 113448,
+              "rgba_sha256": "e51a6260028c4ebb23240a6dacf2a22d440359233c4a13cfedf8927166115b62"
+            }
+          ],
+          "rgba_sha256": "e51a6260028c4ebb23240a6dacf2a22d440359233c4a13cfedf8927166115b62"
+        },
+        {
+          "identity": "cab-765698413415d811a305dc45ce7b8cd6:8496966191279616251",
+          "assetName": "__zjcs/map13/native/61452be324b1d052d99dcb28",
+          "name": "building_stele_1",
+          "width": 190,
+          "height": 341,
+          "original_format": 50,
+          "native_format": 4,
+          "profile": "LDR_SRGB",
+          "mips": [
+            {
+              "level": 0,
+              "width": 190,
+              "height": 341,
+              "astc_offset": 0,
+              "astc_size": 29184,
+              "astc_sha256": "c7c8d1d341000c429a18296cddc8d99cf86611d85e9d17a2af3a5539b02adfb8",
+              "rgba_offset": 0,
+              "rgba_size": 259160,
+              "rgba_sha256": "a59aaa790cd5f0cac1e30b6c17df9f91611d1ee92f2634d34b866e67900343ef"
+            }
+          ],
+          "rgba_sha256": "a59aaa790cd5f0cac1e30b6c17df9f91611d1ee92f2634d34b866e67900343ef"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/stele-sprite-catalog.asset",
+      "sha256": "373efb15367036abaec4be34e11365741c005d03a37f63ec57eaed3aa680a93c"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Native/stele-sprite-catalog.asset.meta",
+      "sha256": "4f3e608fd8cd4aece5f78e1e1b39e45ca0da8454baf1531fc0ec05f8ec27f8f6"
+    }
+  ],
+  "resource": "Map12/Native/stele-sprite-catalog",
+  "operation": "Resolve both original Map12 SpriteRenderer PPtrs from the selected APK-first entity source. Match exact CAB/path IDs and original payload SHA-256 against the shared selected-version Windows package. Verify retained Sprite bytes and every decoded field against the original, native target 19, explicit type trees, unchanged source Unity version, exact lookup aliases and package bytes. Reuse the existing verified mip-complete texture conversion without duplicating or cropping images. Scope renderer bindings to the two original Map12 identities.",
+  "limitations": [
+    "Explicit Sprite library only. Native entity prefab binding, lifecycle, Unity import, actual rendering, pointer interaction and Windows Player validation remain required. Automatic runtime acceptance is paused."
+  ]
+}

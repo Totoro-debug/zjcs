@@ -10,6 +10,8 @@
 
 七战斗碑原演出：`prepare_unity_map12_stele_playable_inputs.py` 校验两份原显示的四个精确 PPtr，按 APK 优先／已下载云端顺序校验并准备29个实际 CAB 依赖；`prepare_unity_map12_stele_playables.py` 使用独立 AssetRipper 1.3.14 服务恢复四份原 prefab，严格核对84节点／64粒子／72渲染器、166632个值与1794个指针，仅重映射原脚本／shader／完整原纹理 mip 依赖的 GUID 和原生纹理引用类型。17份材质、2份网格、18张同 CAB／PathID／对象哈希纹理及原 Windows 噪声 shader 均显式绑定；原周期交互状态代码及本地 Resources 目录已迁入。四项独立 C# 编译与全工程静态检查（73279个 GUID）通过；Unity 导入、地图宿主、挂点、完成显示／小地图与实际演出尚未验证，自动运行验收暂停。输入／程序集／转换设置／输出／适配哈希见[演出输入](official-map/map12-stele-playable-input-source-manifest.json)与[原生演出绑定](official-map/map12-native-stele-playables-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)；本次新增素材尚未进入完整快照。
 
+七战斗碑原实体：`prepare_unity_map12_stele_entity_inputs.py` 按 APK 优先核对309个实际依赖包，从已校验程序集／原生元数据恢复4493个组件并重读13290个对象；选定两份原实体各4节点，共20个原对象。`prepare_unity_map12_stele_entity_export.py` 从独立转换结果选取54项真实引用依赖，恢复两份原 `ECViewDriver` 的12条托管引用，校验170个值与14个非空指针，保留原64位 RID／顺序／挂点；另核对原8个 GameObject／8个 Transform／2个 SpriteRenderer 的166个值与46个指针，保留18处原负零及未烘焙光照默认值。`prepare_unity_map12_stele_sprites.py` 按实际源 Sprite PPtr、CAB／PathID／原对象哈希复用同版完整 Windows 图像包，逐字节／字段核对两张原 Sprite 并显式绑定 `Map12/Native/stele-sprite-catalog`，不生成替代图片。来源、程序集、工具、临时转换标识与输出哈希见[实体输入](official-map/map12-stele-entity-input-source-manifest.json)、[引用恢复](official-map/map12-stele-entity-export-source-manifest.json)与[精灵绑定](official-map/map12-native-stele-sprites-source-manifest.json)。正式 prefab／视图宿主与运行仍待完成，自动验收暂停；本批素材尚未进入完整快照，范围见[山之国](../../docs/maps/map-12.md)。
+
 ## 当前官方输入与历史重建
 
 当前默认输入由根目录 `official-source.json` 固定：原生 APK 为 `854_156383`，当前热更新五包为 `871_156598`，资源目录版本为 `202610211330871`。官网接口仍指向同一个 `zjcs_M509085.apk`；服务端大小、MD5 与包尾均匹配本地 APK，不能把热更新版本记成新安装包。原始云端文件全部保存在 `.tools/source-packages/cloud/runtime/202610211330871/`，ADB 模拟器原始缓存继续保留。

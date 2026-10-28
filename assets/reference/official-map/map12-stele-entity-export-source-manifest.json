@@ -1,0 +1,285 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "input_receipt": {
+    "path": "assets/reference/official-map/map12-stele-entity-input-source-manifest.json",
+    "sha256": "3c6048f18549ddd88882c609460c358e9b616cd7fb173f6013e4cefc5cd5b614"
+  },
+  "tool": {
+    "path": "output/validation/map12-stele-entity-binding-8e4e6d486c544a5a838ca984d4d0a1e8/selected-stele-entities/runner/AssetRipper.GUI.Free.exe",
+    "sha256": "11ec892dcd70b1b86f2e52db631e83e007f6103daa20a9616ecaa7a95baa9f21",
+    "version": "1.3.14.0"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map13_water_entity_export.py",
+    "sha256": "795f41089baef7663e74c8f6491e7481ae9330a941c2f0547547fab0b802481c"
+  },
+  "entry": {
+    "path": "scripts/prepare_unity_map12_stele_entity_export.py",
+    "sha256": "852260d702d2b528ead69cc04ad14547d85526f737d22365e829aa63f980dde0"
+  },
+  "verification_library": {
+    "path": "scripts/official_native_yaml_verification.py",
+    "sha256": "0c4f3d08c5323e2c9e2ef708221a1ec757fdfdf6f1933e29a09896f15337375e"
+  },
+  "counts": {
+    "empty_registries": 0,
+    "source_identities": 2,
+    "checked_values": 170,
+    "native_pointers": 14,
+    "registries": 2,
+    "reference_records": 12
+  },
+  "outputs": [
+    {
+      "input": "output/validation/map12-stele-entity-binding-8e4e6d486c544a5a838ca984d4d0a1e8/selected-stele-entities/export/ExportedProject/Assets/Prefabs/Map/Map_12/EntityDisplays/WorldGamePlay/6650_12_view.prefab",
+      "input_sha256": "0263c9d770dab1d194595885dd45545df47f5b2a504bfab6df9cb38ca9379764",
+      "path": "output/validation/map12-stele-entity-binding-8e4e6d486c544a5a838ca984d4d0a1e8/selected-stele-entities/restored/Prefabs/Map/Map_12/EntityDisplays/WorldGamePlay/6650_12_view.prefab",
+      "sha256": "28ebba7630ae36dab9294e191087b564168ba7a8c0ee463ed6098e1192872d4f",
+      "registries": 1
+    },
+    {
+      "input": "output/validation/map12-stele-entity-binding-8e4e6d486c544a5a838ca984d4d0a1e8/selected-stele-entities/export/ExportedProject/Assets/Prefabs/Map/Map_12/EntityDisplays/WorldGamePlay/6655_12_view.prefab",
+      "input_sha256": "d8b5d9e0d28b814b024a1c70343ed8f56be64b8e20d24f0413bd68feeea13547",
+      "path": "output/validation/map12-stele-entity-binding-8e4e6d486c544a5a838ca984d4d0a1e8/selected-stele-entities/restored/Prefabs/Map/Map_12/EntityDisplays/WorldGamePlay/6655_12_view.prefab",
+      "sha256": "b768845bacf8612c62fe31281d3d803c43b21b4fe48049f1e6b132952efc4aa3",
+      "registries": 1
+    }
+  ],
+  "operation": "AssetRipper 1.3.14 UnityProject export of the verified input closure; restore typed registry vectors to original ordered RefIds while retaining exported YAML record text, including empty registries. Strip and verify temporary source CAB/path IDs. Compare every original reference field/list/scalar, original float32/float64 bits, descriptor and RID; decode packed primitive arrays with their original type and width. Resolve every non-null pointer on both sides and compare native component type and complete original GameObject hierarchy (or named asset identity), with source IDs for registry components.",
+  "limitations": [
+    "Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."
+  ],
+  "hierarchy_verification": {
+    "counts": {
+      "pointers": 46,
+      "values": 166,
+      "runtime_tag_to_editor_name": 8,
+      "GameObject": 8,
+      "Transform": 8,
+      "SpriteRenderer": 2
+    },
+    "original_runtime_lightmap_defaults": [
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "646671367425384466",
+        "field": "m_LightmapIndex",
+        "original": 65535
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "646671367425384466",
+        "field": "m_LightmapIndexDynamic",
+        "original": 65535
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "646671367425384466",
+        "field": "m_LightmapTilingOffset",
+        "original": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "646671367425384466",
+        "field": "m_LightmapTilingOffsetDynamic",
+        "original": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3335269511196727863",
+        "field": "m_LightmapIndex",
+        "original": 65535
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3335269511196727863",
+        "field": "m_LightmapIndexDynamic",
+        "original": 65535
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3335269511196727863",
+        "field": "m_LightmapTilingOffset",
+        "original": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3335269511196727863",
+        "field": "m_LightmapTilingOffsetDynamic",
+        "original": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        }
+      }
+    ],
+    "retained_lexical_negative_zeros": [
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3630922220937306130",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3630922220937306130",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3630922220937306130",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "927479008908107794",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "927479008908107794",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "927479008908107794",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "4087570831617056786",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "4087570831617056786",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "4087570831617056786",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "6115471780150336055",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "6115471780150336055",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "6115471780150336055",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "-8382630609687651785",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "-8382630609687651785",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "-8382630609687651785",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3133599304416320055",
+        "field": "m_LocalRotation.x",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3133599304416320055",
+        "field": "m_LocalRotation.y",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      },
+      {
+        "cab": "CAB-aa9dec5b61e29e2272af47879f5ecb94",
+        "path_id": "3133599304416320055",
+        "field": "m_LocalRotation.z",
+        "lexical_scalar": "-0",
+        "original_float_bits": 2147483648
+      }
+    ],
+    "operation": "Compare every original GameObject, Transform and SpriteRenderer field and float bit, component/child order and local hierarchy pointer. Map original runtime tag 0 only to Unity editor Untagged. Guard and record the original unbaked lightmap defaults omitted from editor YAML. Original registry fields and PPtrs are independently verified by the reference-registry checker. Sprite/material external pointers retain original source identities in the source projection; subsequent Windows bindings must verify those exact objects, not names alone."
+  },
+  "hierarchy_verification_tools": [
+    {
+      "path": "scripts/prepare_unity_map12_stele_entity_export.py",
+      "sha256": "852260d702d2b528ead69cc04ad14547d85526f737d22365e829aa63f980dde0"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_water_entity_export.py",
+      "sha256": "795f41089baef7663e74c8f6491e7481ae9330a941c2f0547547fab0b802481c"
+    },
+    {
+      "path": "scripts/official_managed_reference_conversion.py",
+      "sha256": "e0e4253e07288dcd5afbf0947101c4ed1ed8bbc7278b0811f5185669ccf2a13c"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "0c4f3d08c5323e2c9e2ef708221a1ec757fdfdf6f1933e29a09896f15337375e"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_stele_playables.py",
+      "sha256": "5820f8b934aa9de687154f133abe37473cd77aff1ef8003e7a677abb3b13fa56"
+    }
+  ]
+}

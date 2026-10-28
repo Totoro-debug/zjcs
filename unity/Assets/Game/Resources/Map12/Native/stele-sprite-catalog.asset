@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject:
+    fileID: 0
+  m_PrefabInstance:
+    fileID: 0
+  m_PrefabAsset:
+    fileID: 0
+  m_GameObject:
+    fileID: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script:
+    fileID: 11500000
+    guid: 45ba6fae15565a67ab586f2fc454048e
+    type: 3
+  m_Name: stele-sprite-catalog
+  m_EditorClassIdentifier: ''
+  manifest: '871_156598'
+  packages:
+  - key: 5bedee83a339ec488fece510
+    sha256: e501ea3ae4ca450a42c62af58c99def86c6a116a9e32c9377b7423e9ee8e6ffa
+    data:
+      fileID: 4900000
+      guid: c061e7b6945751c0aad01222ddffefae
+      type: 3
+  sprites:
+  - key: cab-765698413415d811a305dc45ce7b8cd6:4106583105904624520
+    package: 5bedee83a339ec488fece510
+    assetName: __zjcs/map13/native/63b25c215a1cea3371411c94
+    originalName: ChallengeMonument_Long
+  - key: cab-765698413415d811a305dc45ce7b8cd6:358296276005043042
+    package: 5bedee83a339ec488fece510
+    assetName: __zjcs/map13/native/8ba9f4f64c0190128d23a9db
+    originalName: SoloChallenge_Long
+  renderers:
+  - sourceKey: cab-aa9dec5b61e29e2272af47879f5ecb94:646671367425384466
+    spriteKey: cab-765698413415d811a305dc45ce7b8cd6:4106583105904624520
+    kind: SpriteRenderer
+  - sourceKey: cab-aa9dec5b61e29e2272af47879f5ecb94:3335269511196727863
+    spriteKey: cab-765698413415d811a305dc45ce7b8cd6:358296276005043042
+    kind: SpriteRenderer
