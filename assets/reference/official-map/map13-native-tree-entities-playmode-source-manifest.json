@@ -1,0 +1,35 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "execution": {
+    "source_sha256": "138ddf2777520fae31413f3eeef8a1ad79a184a9c0959b1c2d0ecf82289fe640",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "entities": 2,
+    "original_objects": 340,
+    "ordered_views": 18,
+    "pooled_performances": 6,
+    "rendered_pixels": 112455,
+    "play_mode": true
+  },
+  "acceptance": {
+    "path": "unity/Assets/Game/Editor/Map13TreeEntities/OfficialMap13TreeEntityPlayAcceptance.cs",
+    "sha256": "3b0a8da1ed9cbd4f4611110bfa8bcd89ee72007e801fd2bf8248d26c09c71e13"
+  },
+  "coverage": "Complete original normal/snow tree prefab lifecycles, real ECViewDriver registration/Awake/OnEnable, all nine original views per prefab, native appearance/loop/dissolve pools, explicit diagnostic count/stage/visibility inputs, state-zero/one transitions and complete unload. Formal map interaction/reward/save/input and Windows Player remain pending.",
+  "checks": {
+    "unity_import_compile": true,
+    "root_static_guids": 73931,
+    "actual_runtime_images_viewed": true,
+    "isolated_project_tools_validate": true
+  },
+  "global_validation": {
+    "method": "Zjcs.Editor.ProjectTools.Validate",
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "exit_code": 0,
+    "source_files": 1687,
+    "source_snapshot_sha256": "75dc0f21bac0d66010a07256cd31b6c012f23af6c1d1829c64ad8e8e093e5856",
+    "scope": "Isolated full working-source compilation and global framework/combat/Map10 validation, with pinned original tree resources and Editor-only lifecycle fixture."
+  }
+}
