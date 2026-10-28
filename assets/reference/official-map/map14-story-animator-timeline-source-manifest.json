@@ -1,0 +1,108 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlAnimatorParamTrack.cs",
+      "sha256": "6eafbb3ed88c025b48d44045f14a3aad614efa6c38bfc6b79f2bd6385afc6939"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlAnimatorParamClip.cs",
+      "sha256": "bc3880873eea859023d5817eb7f2f1060ff3b9c0b232b2b7ead8d6f3c29ac5ee"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlAnimatorParamBehaviour.cs",
+      "sha256": "c4d47e31061dc20788eb9ed79764c7ecb8a72fa1a8f2a682fdbe86d3c30635fb"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-animator-runtime-source-manifest.json",
+      "sha256": "644e9c821a6fdf4e6c38d2778e8ce6f3a5e01313bec45454118e7248db3cd13d"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_animator_timeline.py",
+      "sha256": "9534ef76834ff8aa5ce0946bc5111fd5b1d4d7a7499e092269dbeeaaa2278876"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamTrack.cs",
+      "sha256": "8b5b5456118393f329a35bde951354bb80761bdfb7c41ad4fe574a925c95aa02"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamTrack.cs.meta",
+      "sha256": "d9ca5cd89333acd117c957dfc2e78de2836513d5f228bc69c99cfb4ff6177b85"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamClip.cs",
+      "sha256": "61eaa53b8b60fd41e014c75745c571aeab1439e4eca43d256be6b73125ae89fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamClip.cs.meta",
+      "sha256": "74193d5ef306ede017eebd497ee86b8957ae27d000e6e3d5ba333954de0a4416"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamBehaviour.cs",
+      "sha256": "f7f681d164f42e75bdcc491f7d3b8b9b47aa0041f17164bb633828c91d9950ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlAnimatorParamBehaviour.cs.meta",
+      "sha256": "23353c0b87e2caf2e3468b6aed2a2cedacee8371f649fe937e97927775264c04"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/Zjcs.Official.StoryAnimatorTimeline.asmdef",
+      "sha256": "fbf13fdae5ac28a71995b4c2337ba71cdc554487ad50ce5478290db09631aecf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/Zjcs.Official.StoryAnimatorTimeline.asmdef.meta",
+      "sha256": "b8ba5c39c0f943e7dfde5be219fb7fd16bc766fbea2f4faf848641ea382edb30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline.meta",
+      "sha256": "8ccb42af6d94eff14c726bb6d36f6359914fcc7fada68e7beabf739771253f4c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/OfficialMap14AnimatorTimelineAcceptance.cs",
+      "sha256": "b4932b4e47dd6802dcd90941fb7d91705d2d841183025f73bdde08a5f6f1ab2d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/OfficialMap14AnimatorTimelineAcceptance.cs.meta",
+      "sha256": "d137bda84a0f2e07751d0ce65df4936072666e361e419718601d13f0fa53de2a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/Zjcs.Editor.Map14.AnimatorTimeline.asmdef",
+      "sha256": "a5dc7abb43d232c06d87d91cd8a912e4f7df429f132314426d7ce251acda457a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/Zjcs.Editor.Map14.AnimatorTimeline.asmdef.meta",
+      "sha256": "3d884643cf551e961cb1ee5a628b3b883a40ae8de178b96a51d3b44354aa0bb4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline.meta",
+      "sha256": "3f363ab751698597ffd6a909d7ecd92731c28e848f719e9e2873a1df1a7d5b7f"
+    }
+  ],
+  "ilEvidence": {
+    "method": "TlAnimatorParamBehaviour.OnPlayableCreate",
+    "offset": "IL_0002",
+    "opcode": "call",
+    "target": "System.Void UnityEngine.Playables.PlayableBehaviour::OnPlayableCreate(UnityEngine.Playables.Playable)",
+    "reader": {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/Unity.Cecil.dll",
+      "sha256": "98ae4d35b3f91f017b1babab876d2bf4594af3d65e7e777fbd37fd1e4124f95e"
+    }
+  },
+  "operation": "Copy the original Timeline track, template cloning, hash initialization, first-frame parameter snapshot, AnimationController-before-Animator lookup, trigger/Update(0), pause restore and EndResume branch. Preserve the original base call verified from IL; only adapt namespace, diagnostic and implicit-conversion syntax.",
+  "limitations": [
+    "Isolated native Animator/Timeline dispatch verification is recorded in map-14.md. Original Animator/controller/model rendering, full entity Timeline, formal map/save flow and Windows Player remain pending."
+  ]
+}

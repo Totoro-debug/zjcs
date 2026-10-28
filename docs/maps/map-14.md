@@ -68,6 +68,8 @@
 
 - 原 `EntityBehaviour`／`EntityClip`、`EntityTalkBehaviour`／`EntityTalkAsset` 及 `EntityTrack` 已迁入 `Runtime/Official/StoryBubbleTimeline/`，保留实体绑定、模板克隆、片段时长查找、可选本地化 UTF-16 字数间隔、窗口创建／完成回调及暂停关闭。核对原 IL 的 `IL_004e call TrackAsset.CreateTrackMixer` 后恢复直接基类调用，避免照抄反编译强转造成递归。内置屏隔离 Unity 导入／编译、全工程校验和 Play Mode 通过：从原 `SuiMo_StoryShow02Timeline` 字段构造三条冒泡轨道／四个片段，使用原气泡窗与四句原文验证延后完成、实体绑定、原起止时间、打字结束、暂停关闭、间隔覆盖和未绑定实体不弹窗，实际画面已查看。根工程静态检查通过。来源 `map14-story-bubble-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_bubble_timeline.py`；验证仅覆盖冒泡轨道，原完整 Timeline 资产、虚拟相机、角色／动画／音频、正式地图／存档及 Windows Player 尚未接通。
 
+- 原 `TlAnimatorParamTrack`、`TlAnimatorParamClip` 和 `TlAnimatorParamBehaviour` 已迁入 `Runtime/Official/StoryAnimatorTimeline/`，保留哈希初始化、首帧参数快照、后续帧不重写、`AnimationController` 优先查找、触发后 `Animator.Update(0)`、暂停重入和 `EndResume` 分支；按原 `IL_0002 call PlayableBehaviour.OnPlayableCreate` 恢复直接基类调用。根工程静态检查、内置屏隔离 Unity 导入／编译、全工程校验与 Play Mode 通过，覆盖 bool／int／float 快照与恢复、重入、保留参数、控制器优先级、模板隔离及原四份 `land_02`／`float_02`／`rise`／`rise_02` 配置的实际原生 Animator／Timeline 触发。本轮使用隔离参数控制器，只证明原代码调度；原模型、控制器／动画素材、完整实体 Timeline、地图输入／存档及 Windows Player 未完成。来源 `map14-story-animator-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_timeline.py`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
