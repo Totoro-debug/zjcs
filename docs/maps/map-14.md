@@ -66,6 +66,8 @@
 
 - 原 `BubbleDialog`、`AttachToObjUI`、`TMP_TypeWriterEffect`、两份 bloom 分组及 `ButtonSound` 已按当前官方源码迁移；原气泡 prefab 的 10 层级／43 组件字段／2 张精灵已恢复为 `Resources/Map14/BubbleUI/BubbleDialog.prefab`，保留原坐标、锚点、布局、字体、颜色、引用和窗口元数据。实体投影、固定时长／逐字间隔、打断回调、队列点击／自动播放、HUD 隐藏与恢复顺序沿用原逻辑，单例服务改为显式绑定。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate`、450×800／720×1280 实际画面、四句实体 Timeline 台词、省略号像素、跟随、遮挡射线及模拟鼠标推进／关闭通过；原字体源资产保持不变。根工程静态检查通过。来源为 `map14-bubble-ui-source-manifest.json` 与 `map14-story-bubble-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_map14_bubble_ui.py`、`scripts/prepare_unity_story_bubble_runtime.py`；正式实体 Timeline、地图输入／业务／存档和 Windows Player 尚未接通，此子模块不代表地图交付完成。
 
+- 原 `EntityBehaviour`／`EntityClip`、`EntityTalkBehaviour`／`EntityTalkAsset` 及 `EntityTrack` 已迁入 `Runtime/Official/StoryBubbleTimeline/`，保留实体绑定、模板克隆、片段时长查找、可选本地化 UTF-16 字数间隔、窗口创建／完成回调及暂停关闭。核对原 IL 的 `IL_004e call TrackAsset.CreateTrackMixer` 后恢复直接基类调用，避免照抄反编译强转造成递归。内置屏隔离 Unity 导入／编译、全工程校验和 Play Mode 通过：从原 `SuiMo_StoryShow02Timeline` 字段构造三条冒泡轨道／四个片段，使用原气泡窗与四句原文验证延后完成、实体绑定、原起止时间、打字结束、暂停关闭、间隔覆盖和未绑定实体不弹窗，实际画面已查看。根工程静态检查通过。来源 `map14-story-bubble-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_bubble_timeline.py`；验证仅覆盖冒泡轨道，原完整 Timeline 资产、虚拟相机、角色／动画／音频、正式地图／存档及 Windows Player 尚未接通。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

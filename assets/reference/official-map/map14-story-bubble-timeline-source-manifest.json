@@ -1,0 +1,144 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityBehaviour.cs",
+      "sha256": "d3aa7242c61d031d05ed7a782d69ba634c7d96175ec8648cb65bf0808a12c83d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityClip.cs",
+      "sha256": "4292d37b6b54ef771d46e1f6e018c3d53e66c1bb0360bced9f2efdd1dfe8ea6d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityTalkBehaviour.cs",
+      "sha256": "d32e9258be3c19a3dc7d8a702b51127fe7b534c899d1bd66479376356c13260a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityTalkAsset.cs",
+      "sha256": "f6e54d4ba2ae4f3b29a1a11827266b92bdc87cf4c7cf6d19c14411847c4cddf6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityTrack.cs",
+      "sha256": "7caa0fc3e13a65f2c18c4eb84d1c543ab7234a4ff409226fc2f1c517bd749d2e"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-bubble-runtime-source-manifest.json",
+      "sha256": "cc3b06d6910ae9667e43fdb9daa9c460cca79155a2d2fc32c3fe5891203074a3"
+    },
+    {
+      "path": "assets/reference/official-map/map14-entity-timelines-source-manifest.json",
+      "sha256": "c44655d3240d41383bebe6fcbcd5f6eb0f360ff1cf56c8e5ba9af094b097ab8f"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_bubble_timeline.py",
+      "sha256": "a1527a59c2301290b405286c337dbb3e5d792e8e6a4e703b346f6155bc753e17"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityBehaviour.cs",
+      "sha256": "460114aea6aa1ede43351fcdf4745d0fa083fa574a3e07348e82f4d8430a6aed"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityBehaviour.cs.meta",
+      "sha256": "c4338ef9f83adb8db811b93ee2a508a9086e77e7f69fde296301211c223f4414"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityClip.cs",
+      "sha256": "7680f815d94dcde9cc222d25651a7fc41ecf2d599216883b2552a696d5c5d955"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityClip.cs.meta",
+      "sha256": "68e6d4aee7f79cee1678c4d0048e89e65234931818612ca6a19b30e1cdec0ffd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTalkBehaviour.cs",
+      "sha256": "f4752e4f0aed4b71801f79a8cadaf2cfaf5bac3222115ee25687809eb7ef73ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTalkBehaviour.cs.meta",
+      "sha256": "db0cae06815825556d084dfd34c384853f4a70d1a27bc16a9b2d70ff87d45ef6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTalkAsset.cs",
+      "sha256": "ddf1c23a904aff31fce31502dc690a5191f70805d2579e37ae4907230c279ca7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTalkAsset.cs.meta",
+      "sha256": "bd85c9cf8b21a79442ad34d56ea6d615c118b8f63ea94621a3748c3ac13075e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTrack.cs",
+      "sha256": "18e291ebe04768ad3ec5431e4c8a0c65423d9eb8303395b038480c535164364c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/EntityTrack.cs.meta",
+      "sha256": "161eb8fb83d5564dd33d006c22d381f6aa2c6210911373d849fd3d0b0505c8d6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/Zjcs.Official.StoryBubbleTimeline.asmdef",
+      "sha256": "143de2cbaa55ca296bfed823884c62aee6102be12b33a59f06dfb895fdadb67c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/Zjcs.Official.StoryBubbleTimeline.asmdef.meta",
+      "sha256": "d095a41d603cf902556b14ce5b82536010d69a6b5658b3b8302bd9a1c109d562"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline.meta",
+      "sha256": "7f2c8e66b83794019e3893ce85f666f4ac5cd3e9734d205e72def983b6aae71f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/IBubblePopupServices.cs",
+      "sha256": "a7b455ddd694e98d5ea05483e4b756a2a8bd4175f779e3f53166e54bac7530e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryBubbleTimeline/IBubblePopupServices.cs.meta",
+      "sha256": "b4df14fde038d1e812724471d8c643d3b378f56fe448d1e978cc47f03fcc8f55"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/BubbleTimeline/OfficialMap14BubbleTimelineAcceptance.cs",
+      "sha256": "bc813476253d21e70944b5c034e51a1a3285b9facfff24ed860c0c0b74d49ad2"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/BubbleTimeline/OfficialMap14BubbleTimelineAcceptance.cs.meta",
+      "sha256": "978f52846c1d4ae813d34ac387b6269eebc3c134c727247ed596946561264d9a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/BubbleTimeline/Zjcs.Editor.Map14.BubbleTimeline.asmdef",
+      "sha256": "f990a230872c144f41735fd93312f20dedac4fb93de41472bbc2b2243b5ebcf1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/BubbleTimeline/Zjcs.Editor.Map14.BubbleTimeline.asmdef.meta",
+      "sha256": "641f0ed900158ac22ebd67db6ecaa4b205e059fc0ccc177e435877cbf19e4e2c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/BubbleTimeline.meta",
+      "sha256": "682813e33052a2af6cb12e06df8ba0675ad3b648a6babae6757bc05b824d5795"
+    }
+  ],
+  "ilEvidence": {
+    "method": "EntityTrack.CreateTrackMixer",
+    "offset": "IL_004e",
+    "opcode": "call",
+    "target": "UnityEngine.Playables.Playable UnityEngine.Timeline.TrackAsset::CreateTrackMixer(UnityEngine.Playables.PlayableGraph,UnityEngine.GameObject,System.Int32)",
+    "reader": {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/Unity.Cecil.dll",
+      "sha256": "98ae4d35b3f91f017b1babab876d2bf4594af3d65e7e777fbd37fd1e4124f95e"
+    }
+  },
+  "operation": "Copy original entity binding, Timeline clip duration lookup/template clone, optional localized UTF-16 text-length interval, popup creation/completion and pause close. Explicit popup service replaces WindowManager; presentation binding replaces MyEntity. Restore verified nonvirtual base call hidden by ILSpy's cast syntax.",
+  "limitations": [
+    "Isolated native Timeline and original bubble UI verification is recorded in map-14.md. Full original Timeline asset/entity/camera/audio binding, formal map/save flow and Windows Player remain pending."
+  ]
+}
