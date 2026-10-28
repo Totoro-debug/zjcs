@@ -74,6 +74,8 @@ namespace Zjcs.Editor.Map14
                     }
                     if ((y & 7) == 0) yield return null;
                 }
+                yield return OfficialMap14SharedRootAcceptance.Verify(shared, configuration, data,
+                    expected.Properties().Select(row => int.Parse(row.Name, CultureInfo.InvariantCulture)));
             }
             // The map scope must restore the earlier settings-only loader.
             var settings = configuration.Manager.GetParser(shared.CommonType("GameSettingsParser"));

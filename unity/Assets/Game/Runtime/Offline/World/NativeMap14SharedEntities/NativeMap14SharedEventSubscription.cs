@@ -21,7 +21,11 @@ namespace Zjcs.Offline.World.NativeMap14SharedEntities
             this.dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
             if (callback == null) throw new ArgumentNullException(nameof(callback));
             if (receiverType.FullName != "Common.IGridTransformPosUpdatedEventReceiver" &&
-                receiverType.FullName != "Common.IEcEntityWorldStageComponentStateUpdateEventReceiver")
+                receiverType.FullName != "Common.IEcEntityWorldStageComponentStateUpdateEventReceiver" &&
+                receiverType.FullName != "Common.IEcContainerStartEventReceiver" &&
+                receiverType.FullName != "Common.IEcContainerStartEntityEventReceiver" &&
+                receiverType.FullName != "Common.IEcContainerRemoveEntityEventReceiver" &&
+                receiverType.FullName != "Common.IEcContainerDestroyEntityEventReceiver")
                 throw new NotSupportedException("Original application receiver is not bound: " + receiverType.FullName);
             receiver = Activator.CreateInstance(Proxy(receiverType), callback);
             var add = Operator(dispatcher.GetType(), "op_Addition", receiverType);

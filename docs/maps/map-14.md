@@ -277,6 +277,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 
 - 原全图共享数据已通过未改写的 Console 解析器接入本地 Resources：35 份原字节载荷包含地图 EC、导航、地区放置及 32 份模板／根实体文件，共 568 行模板。运行时按原生成器的 6,540 个封闭类型及 4 个开放泛型选择格式器，保留原浮点编码和 Vector3／Quaternion 编解码；原根实体含 280×280 地面。内置屏 Unity 2022.3.57f1c2／D3D11 隔离工程导入、编译及 Play Mode 已逐项核对 2,961 个实体的 22,979 个组件字段与顺序、111 区、全部 78,400 格的完整／精简地面类型及坐标往返，并检查加载器恢复和四类雕像显示回归，实际画面已查看，根工程静态检查通过。原数据加载已接通；全图实体生命周期、正式宿主、鼠标交互、玩法窗口、状态／存档、完整 ProjectTools.Validate 和 Windows Player 仍待接入。来源及输入输出哈希见[共享序列化与数据清单](../../assets/reference/official-map/map14-shared-serialization-source-manifest.json)，生成器 `scripts/prepare_unity_map14_shared_serialization.py`，运行边界 `NativeMap14SharedData`，检查入口 `OfficialMap14SharedDataAcceptance.Verify`。
 
+- 原地图根实体已接入：`NativeMap14SharedRoot` 读取未经改写的官方 `EC/container` 表，调用原 `TbContainerInfo`／ByteBuf 并要求完整消费；按原 `RootEntityClassId`、GameSettings 根编号及显式本地容器编号注册完整 9 组件根实体。普通实例创建调用未改写的 `EntityUtils → EntityHandler.InstantiateEntity`，保留原新建组件、配置引用和组件顺序；容器的启动、移除、结束、销毁与事件分发沿用原 IL。内置屏 Unity／D3D11 隔离工程导入、编译和 Play Mode 通过两轮根实体创建／启动／卸载，每轮核对全部 78,400 格已初始化掩码和区域索引，并检查全部 2,961 个放置模板创建独立组件、生命周期事件顺序、原订阅解绑及重复 Dispose；四类雕像显示回归与实际画面复核通过。此接线未生成玩家可见性、世界实体初始状态或地区进度；正式实体生成／显示、交互、存档、完整 ProjectTools.Validate 和 Player 发布仍待完成。来源和哈希见[原根实体来源清单](../../assets/reference/official-map/map14-shared-root-source-manifest.json)，生成器 `scripts/prepare_unity_map14_shared_root.py`，检查入口 `OfficialMap14SharedRootAcceptance.Verify`。
+
 ## 自定义实现
 
 共享序列化的 Windows 依赖适配：使用固定 MIT MessagePack `1.9.11` 发布包及其仓库提交 `6cbd8196e7dbe9b8810d7620f4542c3db9388753` 的 Unity 类型支持；该版本仅为平台依赖，不声称是官方原版本。依官方固定 AOT 方法修正原始单精度浮点编码，并迁入原 Vector3／Quaternion 方法，通过 GFrameCore 类型转发维持原 Console ABI；原生成格式器 IL 与地图载荷不改写。完整发布许可随本地资源交付，加载器及反射注册表作用域结束后恢复原绑定。

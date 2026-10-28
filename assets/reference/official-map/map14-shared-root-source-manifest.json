@@ -1,0 +1,222 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Invoke unchanged original EntityUtils/EntityHandler instantiation and EcContainer root lifecycle; decode unchanged official EC/container table with original TbContainerInfo/ByteBuf.",
+  "table": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_luban_ec.bundle",
+      "bundle_hash": "63332b4eacbe8aff91738c540a8a27cb",
+      "path_id": "-2794206348164856726",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/63332b4eacbe8aff91738c540a8a27cb.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 31315,
+      "bundle_sha256": "b0d9a2a1e5a7641e62bdd7a9fbc731472ba40000466e80f568f5a5613d5d6e32"
+    },
+    "original_path": "Config/Luban/EC/container.g.bytes",
+    "payload": {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot/container.g.bytes",
+      "sha256": "985d1ff83af7698bfdb43ba2de315e3eee683e6f51786f459b6f4e5a9a461eec"
+    }
+  },
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityHandler.cs",
+      "sha256": "fe35786dcc2c2f369b162cfe35b15375e77ae33383e1ac743ac824b545af45d7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityUtils.cs",
+      "sha256": "2b2d26dafea17d28732ce76d03cc7f89e47f5d74c56f9753f7ecf2a6d14563cb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntity.cs",
+      "sha256": "5548ab8a8f05def6c838388d453c585cdf3085e7e4e9465b8e39d54688f64a2c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcComponent.cs",
+      "sha256": "09b4ffd0ef96f6ed5c93217bd706a94f09a7959ee5971a1800d6d38ad33c5c19"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainer.cs",
+      "sha256": "741ffc352286627a3c847c1a2f5cd56c0a6beb48fc770d31b62ecb1fe6f68a1e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridGroundComponent.cs",
+      "sha256": "ed9dfb597d9082f4a5a6aaa2d33698f70898c7d96b688dc2c96d6247b2e1b2da"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AreaAgentComponent.cs",
+      "sha256": "461a9955a4360eb38aa55e4b031d203b7a79ca91196b2f7294218109ef3cd9b5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AreaAgentComponentInfo.cs",
+      "sha256": "f2f382f66458ba8f658f8a1d2b874befdab3ef26f026b22e6e7312ac90a7b473"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapComponent.cs",
+      "sha256": "11731963587895e58b221a6552207db85290d67c7b467999bf43ad5927706a6b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldComponent.cs",
+      "sha256": "4f46f41a7137a8ea46d7e7ec49f2e2c917597227f49e4864d4c1fce70f02416d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridVisibilityAgentComponent.cs",
+      "sha256": "01bcbe7c1c267aaed0c4ad619f02315f9a5756404908ca8fb938414118804165"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridVisibilityAgentHandle.cs",
+      "sha256": "09a5ed44ea023c9a4054673e43731be6943e8477045460d5bd019f946eaf3bac"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ContainerInfo.cs",
+      "sha256": "5281a831581b5c3b0d1ba731b02eb8f9a0633e5bd051e8f4dd5ec202a10969bc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TbContainerInfo.cs",
+      "sha256": "e132b35a0f8ed0ef957531cd06a315bd226c4984000054189d648eee65acfa2e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ContainerInfoParser.cs",
+      "sha256": "d912be423cbbcc99c4f8dd28273f891a7c392fca34b5048cef8bd033b1bdb539"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerStartEventReceiver.cs",
+      "sha256": "0380057b3d24abc8f6f046b2509e240efaff2759d011332c66d265227b4f5ff3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerStartEntityEventReceiver.cs",
+      "sha256": "8601ce68e0a422abc493978740a774ed8919bbf755dda12e570f8f32d0451b31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerRemoveEntityEventReceiver.cs",
+      "sha256": "4b19180bb4cd6a7a466f20fc8b702514e3aaac6a35c21bf70d790d2063c70622"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerDestroyEntityEventReceiver.cs",
+      "sha256": "1d444f9287965e5efd446cb02b4ec27116b9c006102f124aea9a87ea97baab30"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEventDelegate.cs",
+      "sha256": "8add828b82a9cf4099e055bd08a34cae8138e7b720be2831d49e9abe00568c11"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEntityEventDelegate.cs",
+      "sha256": "abbf3c11aad778fb2120877c69e7644f65ccb8481ba2ed562a7ee1672b771038"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerRemoveEntityEventDelegate.cs",
+      "sha256": "9cfae8e3aa0fb8b093b5d5b720f8b9d89e2ef799ad2cc008f5f69c77f646f278"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerDestroyEntityEventDelegate.cs",
+      "sha256": "4bfe3a4f347a3a59d247f5fae85800f6c543759e2ec4b7f0d0dd5e0e58db7e3f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EventDelegateBase.cs",
+      "sha256": "bb2e44f1fc80ce7dc668c298b9872153e4ccde9dc9797033188ff9b9c09da34b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EventDelegateBasicBase.cs",
+      "sha256": "f8d7e8a53676d173e388610b01808138196ad3a8e6eca3ea6b94b3dae278a4c8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/ProfilerScope.cs",
+      "sha256": "d357f61335e927777028e17170c80871f30e7bc38735c1fa79b36af1a3d722de"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Luban.dll",
+      "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_shared_root.py",
+      "sha256": "d2d0ed0e85af1d234ea3657eccc918bc072b15f160acf1c95217d7770f0331d6"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources.meta",
+      "sha256": "11595b680e2270f587930fbd90ef7327767f7e9ce9895aec327448ab55d5ab31"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14.meta",
+      "sha256": "669262256a7c5b55c83affe054038bebc8552fdf95f57e629516204d1ce7a88e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot.meta",
+      "sha256": "126e974a26cc27368ef64359ae5765b4a336676f9b7a4e1b9b3c4993663d63a4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot/container-binding.json",
+      "sha256": "89e9bbe4b25192e58492b568fc605afbdc0f0f23ae245c23f3fdd75c0d6a0f88"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot/container-binding.json.meta",
+      "sha256": "6493f7fb5e53626997a43a09e60fd6d1301374550024b139fc91bed5a851774c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot/container.g.bytes",
+      "sha256": "985d1ff83af7698bfdb43ba2de315e3eee683e6f51786f459b6f4e5a9a461eec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot/Resources/Map14/SharedRoot/container.g.bytes.meta",
+      "sha256": "dc5b398f4faca8365c5e1b28aa20090d285ce6c6a8a3ba020d03ef0bf15c3fcf"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRoot.meta",
+      "sha256": "823fa1cf7b740d6fbc656c594778c5c0cba6a7d525b0e68d389a5d997602b627"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs",
+      "sha256": "4687ab82ca573e52e7b55456dc6e917ba941eb79e22191fa995dd048f12e4ac1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs.meta",
+      "sha256": "edca006647a7dc342b876ed31b214d12f5732a789d445938dc86230cc9f1e7c0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14SharedRootAcceptance.cs",
+      "sha256": "acf59454247a7e9f1f672aba56625b369893b8a1b4120b15441b84a65c36272e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14SharedRootAcceptance.cs.meta",
+      "sha256": "0391e59b8f9b22e03d73e8a5027b2bb38b545b23032ebccfff884792cea9033e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14SharedDataAcceptance.cs",
+      "sha256": "68066f200a6b3e6160e39dec0f2483ce6f87a91e877f17ff17675c59505dfcf4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
+      "sha256": "287601b078264a8b64ad1bd5fd78ef4d0ed2e56b6764e6911fb13d993bdfc2af"
+    }
+  ],
+  "validation": {
+    "entry": "OfficialMap14SharedRootAcceptance.Verify",
+    "graphical_play_mode": true,
+    "root_components": 9,
+    "lifecycle_passes": 2,
+    "cells_per_pass": 78400,
+    "fresh_placements": 2961,
+    "checks": [
+      "Original container/root lookup",
+      "Fresh original component identity, order and shared info binding",
+      "Initialized masks and area indices against original lite data",
+      "Startup/removal/destruction ordering and receiver teardown",
+      "Idempotent disposal"
+    ]
+  },
+  "limitations": [
+    "Runtime root lifecycle and fresh component instantiation do not define initial world entities, player visibility, region progression, saves or the formal map view."
+  ]
+}

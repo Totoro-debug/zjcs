@@ -73,6 +73,38 @@
       "sha256": "18a60013f8982ffbd3067de2cbdad4ae83ca1f398132b0836320f8d47bbd21b0"
     },
     {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerStartEventReceiver.cs",
+      "sha256": "0380057b3d24abc8f6f046b2509e240efaff2759d011332c66d265227b4f5ff3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerStartEntityEventReceiver.cs",
+      "sha256": "8601ce68e0a422abc493978740a774ed8919bbf755dda12e570f8f32d0451b31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerRemoveEntityEventReceiver.cs",
+      "sha256": "4b19180bb4cd6a7a466f20fc8b702514e3aaac6a35c21bf70d790d2063c70622"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerDestroyEntityEventReceiver.cs",
+      "sha256": "1d444f9287965e5efd446cb02b4ec27116b9c006102f124aea9a87ea97baab30"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEventDelegate.cs",
+      "sha256": "8add828b82a9cf4099e055bd08a34cae8138e7b720be2831d49e9abe00568c11"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEntityEventDelegate.cs",
+      "sha256": "abbf3c11aad778fb2120877c69e7644f65ccb8481ba2ed562a7ee1672b771038"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerRemoveEntityEventDelegate.cs",
+      "sha256": "9cfae8e3aa0fb8b093b5d5b720f8b9d89e2ef799ad2cc008f5f69c77f646f278"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerDestroyEntityEventDelegate.cs",
+      "sha256": "4bfe3a4f347a3a59d247f5fae85800f6c543759e2ec4b7f0d0dd5e0e58db7e3f"
+    },
+    {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/UtilsHandlerBinder.cs",
       "sha256": "fbaed264cec52eba448b0b22ac1446d0a36c60fc9834b125bebe742d525ac586"
     }
@@ -80,7 +112,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
-      "sha256": "b8fdfb196824b769d01f6ed3a1a5a403736de69aa4f1c0954e69439b89074271"
+      "sha256": "287601b078264a8b64ad1bd5fd78ef4d0ed2e56b6764e6911fb13d993bdfc2af"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs.meta",
@@ -118,14 +150,14 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_views.py",
-      "sha256": "4bb7117a78587a61974ac5b912644c760f139e58af5b32b079419b08ca2f0d9a"
+      "sha256": "86b7209871248f3e7e4808e8485d0a8f8cbfdeeaa735b6c21e2b6dc67159585e"
     }
   ],
   "validation": {
     "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14HeroStatueAcceptance.cs",
-    "sha256": "c767068d30cf1859a101a8b22cf946867fd63d3efea709cbe227d98ffa9b9869"
+    "sha256": "a911f2d230a8aa6ec1252488c0353c3b2cad9332f1fa9b99ed2d4b3003af661d"
   },
-  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement only two original void receiver interfaces at runtime and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. No shared rule/dispatch iteration is reimplemented.",
+  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement six selected original void receiver interfaces at runtime (grid, stage and four container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. No shared rule/dispatch iteration is reimplemented.",
   "limitations": [
     "Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.",
     "Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration."

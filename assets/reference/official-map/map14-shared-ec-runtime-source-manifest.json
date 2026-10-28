@@ -100,32 +100,32 @@
   ],
   "logging_calls": [
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogInformation(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Info(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Info(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogInformation(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogDebug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Debug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Debug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogDebug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogWarning(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Warn(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Warn(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogWarning(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogTrace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Trace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Trace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogTrace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLog(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Log(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Log(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLog(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     }
   ],
   "config_contract": {
@@ -137,7 +137,7 @@
   },
   "serialization_extension": {
     "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
-    "sha256": "516b7ad9d29f0b1109156fac6a947aed0e324e513304925e4f8445389981ea2b"
+    "sha256": "3dcff8ad82b193fdd90d631518d775ab6ab0ae23b0f964b6a659d2d16a6a413a"
   },
   "tools": [
     {
@@ -192,7 +192,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
-      "sha256": "b8fdfb196824b769d01f6ed3a1a5a403736de69aa4f1c0954e69439b89074271"
+      "sha256": "287601b078264a8b64ad1bd5fd78ef4d0ed2e56b6764e6911fb13d993bdfc2af"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs.meta",
@@ -205,6 +205,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedPrefabs.cs.meta",
       "sha256": "03f61e82e129f8f6db9f190a9baadcda614e0c81c82d11e95a3d1ec06ec27797"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs",
+      "sha256": "4687ab82ca573e52e7b55456dc6e917ba941eb79e22191fa995dd048f12e4ac1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs.meta",
+      "sha256": "edca006647a7dc342b876ed31b214d12f5732a789d445938dc86230cc9f1e7c0"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef",
