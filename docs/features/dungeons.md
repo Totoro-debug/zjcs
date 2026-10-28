@@ -42,6 +42,8 @@
 
 机神山匹配两处 UIMesh 已恢复原82顶点／240索引 Mesh、两份原扭曲材质与五张原贴图，并复用来源对象哈希相同的 Windows `UI/EffectDistort`。原 Mesh 缓冲、材质字段、四个 GLES 变体及完整纹理 mip 已逐项核对；原 `UIMesh`／`UIMeshUtils` 的 CanvasRenderer 提交与材质属性更新已迁移，资源按原路径显式加载。来源为 `assets/reference/official-map/map12-matching-mesh-source-manifest.json`。来源与绑定复现、三项独立 C# 编译通过；全工程静态检查通过（72,572 GUID）。原材质／网格和实际画面夹具尚未运行，完整私人副本流程仍未验收。
 
+机神山私人详情的难度标签已恢复原 TabGroup／五个 TabItem／五个 TabAnimatorTransition 序列化字段，并接通当前配置的普通、困难两档显示、前置难度锁定提示、互斥选择和详情／评级范围刷新。入口仍执行已确认的121/50本地路线；展示切换不写存档或公共次数。来源见 `assets/reference/official-map/map12-private-difficulty-source-manifest.json`，复现入口为 `prepare_unity_map12_private_difficulty.py`。来源复现、三项独立 C# 编译与静态检查通过；点击与动画夹具已加入但自动运行验收暂停，原个人最好评级／排行／红点、奖励说明与预览仍未完成。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求及实际采用的行为。

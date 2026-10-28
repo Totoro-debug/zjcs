@@ -140,6 +140,8 @@ namespace Zjcs.Editor
             yield return new WaitForSeconds(dialog.GetComponent<WorldPopupWindow>().mShowClip.length + .05f);
             IEnumerator matchingAnimation = VerifyPrivateMatchingAnimation(dialog, output, maskSlots.GetProgressPath(slot));
             while (matchingAnimation.MoveNext()) yield return matchingAnimation.Current;
+            IEnumerator difficultyInput = VerifyPrivateDifficultyInput(dialog, maskSlots.GetProgressPath(slot), output);
+            while (difficultyInput.MoveNext()) yield return difficultyInput.Current;
             yield return new WaitForEndOfFrame();
             ScreenCapture.CaptureScreenshot(Path.Combine(output, "iron-mount-private-dungeon.png"));
             var buttons = dialog.GetComponentsInChildren<Button>(true);

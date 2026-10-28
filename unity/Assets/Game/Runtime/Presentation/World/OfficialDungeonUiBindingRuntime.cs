@@ -9,7 +9,7 @@ using Zjcs.Official.WorldUI;
 
 namespace Zjcs.Presentation.World
 {
-    internal static class OfficialDungeonUiBindingRuntime
+    internal static partial class OfficialDungeonUiBindingRuntime
     {
         [Serializable] private sealed class Document { public string manifest; public Prefab[] prefabs; public RouteStyles routeStyles; }
         [Serializable] private sealed class Prefab

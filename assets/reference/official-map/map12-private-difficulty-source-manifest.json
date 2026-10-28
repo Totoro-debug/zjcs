@@ -1,0 +1,195 @@
+{
+  "code_sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/DailyDungeonDifficultyContent.cs",
+      "sha256": "a53f3d7285d59eb8fc01a95ad36024fbab7b0ac373a370f970ecec79b76e7259"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/DailyDungeonDialog.cs",
+      "sha256": "80e25ec6a43a77c9e41499f033f3c5157e852102f77aa4772524d651c8e8e370"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/DailyDungeonUtils.cs",
+      "sha256": "3ca85e866570e2ffda05af5c3dc165ffca18af2ae7bad6bdf5e6f30c69a53280"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/DailyDungeonDifficulty.cs",
+      "sha256": "4dd0d86ee4569eb20f0f1bbdb068c3354ef3490a9535b95afcf7c1d345bf3bfd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "1b6de15f2b3a90a5a6ba1920c8475af10bc783141fa7bccd8a14492ac935f6b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UnityEngine.UI.Ext/TabItem.cs",
+      "sha256": "525db3d561d426ab99f37481e875e004ea47b664857d2dea0f2aa47d08636bee"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UnityEngine.UI.Ext/TabGroup.cs",
+      "sha256": "d6fab19bb5f166f670e8ad7ee0c6673ea025b1e20d47d59edeb28d858f2a48f2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UnityEngine.UI.Ext/TabAnimatorTransition.cs",
+      "sha256": "91f2412f3e35a2907368eab884d9fc1944d90822db9c67556e094873677993e6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UnityEngine.UI.Ext/TabTransition.cs",
+      "sha256": "e2fa4b4e71203863268fdcd442d2356bab90a3085e2f521db57c78a3b9178750"
+    }
+  ],
+  "display_source": {
+    "path": "unity/Assets/Official/World/Map/12/Source/templates.json",
+    "sha256": "fe5c8ece6925a1eb80dc1bfea8da8064398337fd44b147788a2d1ffa12c32f4e"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_map12_private_difficulty.py",
+    "sha256": "4ed7239cef22547220f34e6ae0ade6bead22df9c86fc612203dad932469c2b5c"
+  },
+  "manifest": "871_156598",
+  "native_input": {
+    "conversion": "dungeon-ui-ugui-tmp-v1",
+    "guid": "4f377db282325f4f9708468923e0f485",
+    "official_guid": "ba1ac57045450da4e8b338fe1cce5982",
+    "path": "unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonDialogPrivateMap.prefab",
+    "sha256": "588b407eb45ba55163184754bda6dbfb95c09b418f83b10a40c419d7907af345",
+    "source": "Prefabs/UI/DailyDungeon/DailyDungeonDialogPrivateMap.prefab",
+    "source_sha256": "2ab574318c3226a08af98c354bb6574b17aff47778670901ea0beafd06fa3755"
+  },
+  "operation": "Restore all original fields of five TabItems, their five TabAnimatorTransitions and the TabGroup; remap only script GUIDs and internal PPtrs by unchanged hierarchy/component order. Retain original native Animator controllers and clips. Export original difficulty/state/lock-button references for the local business adapter; runtime input/render acceptance remains pending.",
+  "original_components": [
+    {
+      "path_id": -4775396387029096221,
+      "raw_sha256": "84fbe646e12f7fc0fe8540a9854e65d93853cbde985382be59e528bea6c63e8a",
+      "type": "DailyDungeonDifficultyContent"
+    },
+    {
+      "path_id": -8745427516617824029,
+      "raw_sha256": "ee62e60a0d1c778345c7b3460fdbe8648d729c4d9968e54229118764a4fb1d8b",
+      "type": "TabGroup"
+    },
+    {
+      "path_id": 2331556608234186979,
+      "raw_sha256": "d6f79529f94b2c4ba21bc68fb0619e17d46b1c2dee0bf244b3a053f0e76e3b60",
+      "type": "TabItem"
+    },
+    {
+      "path_id": 3207750395264788707,
+      "raw_sha256": "514c948361a28ac9235ff6c913a6891860dc34dcf10506473489dd993299ec1c",
+      "type": "TabAnimatorTransition"
+    },
+    {
+      "path_id": 8125492053969234147,
+      "raw_sha256": "52d91f7fb65e2e125abe0ec619eba91bda763bceb0dcd89b1726125bb9a6dab7",
+      "type": "TabItem"
+    },
+    {
+      "path_id": 3054103602440923363,
+      "raw_sha256": "067d62e1cadbff0fbe4ffcb128f14056487238d3911e653674cea0bc475fb1d7",
+      "type": "TabAnimatorTransition"
+    },
+    {
+      "path_id": -6581828972067985181,
+      "raw_sha256": "742e34bc728ca03a6119906c394ce97dcd8338e515113349c321a45631d83dcb",
+      "type": "TabItem"
+    },
+    {
+      "path_id": -9044491295285679901,
+      "raw_sha256": "0a8b5885f83e066f388a989a3558d0c232c92978f7919bc125d8b8f531ea7141",
+      "type": "TabAnimatorTransition"
+    },
+    {
+      "path_id": 8321024279972243683,
+      "raw_sha256": "9bc871f09ef895fe56d4d0e951d7a0c89505ead5e3247a7e6762af2cc6b37354",
+      "type": "TabItem"
+    },
+    {
+      "path_id": -2321766235934070557,
+      "raw_sha256": "a2d2bf52f6df900715558dc329aeb645606554729d5ea6cfa07069d8801bd45f",
+      "type": "TabAnimatorTransition"
+    },
+    {
+      "path_id": -5576666002462447389,
+      "raw_sha256": "cd96cc23d5c012ffdfcd572d907ed78632bf838e24df582c993973b26524052f",
+      "type": "TabItem"
+    },
+    {
+      "path_id": 7425031135750744291,
+      "raw_sha256": "672253596ab9aec764a8ec49e452afc75789645ae363ed49c82c14fdd19d2ecb",
+      "type": "TabAnimatorTransition"
+    }
+  ],
+  "original_native_input": {
+    "bytes": 851338,
+    "guid": "ba1ac57045450da4e8b338fe1cce5982",
+    "meta_sha256": "03289aeadd8ba3aebdbbac98fb4f93927938c4d65eee43d52dbd0e4895cc0c6d",
+    "path": "unity/Assets/Official/Dungeons/Prefabs/UI/DailyDungeon/DailyDungeonDialogPrivateMap.prefab",
+    "sha256": "2ab574318c3226a08af98c354bb6574b17aff47778670901ea0beafd06fa3755",
+    "source": "Prefabs/UI/DailyDungeon/DailyDungeonDialogPrivateMap.prefab"
+  },
+  "original_prefab": {
+    "bundle": "defaultpackage_assets_prefabs_ui_dailydungeon.bundle",
+    "bundle_hash": "1e21f7d170ead460b4df9499e94b49df",
+    "bundle_sha256": "45134a83b372998156db5f81d4008c95d81f6c89d2b6b0059738ad02fc8adb47",
+    "bundle_size": 807989,
+    "manifest": "871_156598",
+    "origin": "official_cdn",
+    "path_id": "-4085529811871635229",
+    "source_manifest": "854_156383",
+    "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/1e21f7d170ead460b4df9499e94b49df.bundle"
+  },
+  "outputs": [
+    {
+      "meta_sha256": "6d8219c8e3a85f283653a24aad4de5a954a17ede6f8a9daf2886d02c68ab00ee",
+      "path": "unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonDialogPrivateMap.prefab",
+      "sha256": "59da503aeed10469577ab7fa006ec351aaaef63d08cb0fb1ded4b6a6d54acbb2"
+    },
+    {
+      "meta_sha256": "e7d6e67944c45b55de4d0ac2140edfc1e3b9c0ca49757ba13074b526dbb1e581",
+      "path": "unity/Assets/StreamingAssets/Dungeons/UI/map12-private-difficulty.json",
+      "sha256": "1113ea1971c103e82f35c655a848adda0abfcfc01d9467c6bc092ed1424c493d"
+    }
+  ],
+  "reused_ports": [
+    {
+      "canonical_lf_sha256": "94193dffaef1ffa1c416a53c229a5d07c9266a447b426f71f0e5fb772ff0f80e",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabItem.cs"
+    },
+    {
+      "canonical_lf_sha256": "5216b3822697780a8eeaeb556fd4f76a5cb6416c62267bbcd4b80f91b398aec1",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabGroup.cs"
+    },
+    {
+      "canonical_lf_sha256": "97255c9c6f16e502f5be165082e93bde8702cda33b9d4cf55b4d26accd7fbc9d",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabAnimatorTransition.cs"
+    },
+    {
+      "canonical_lf_sha256": "021a43eb080121029a8c42ef6de0a6fbd4c5b327cecff1fb97989629b8cd1f85",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTabTransition.cs"
+    }
+  ],
+  "runtime_adapter": {
+    "canonical_lf_sha256": "b860f6e74f7e2a24ee32a1b38e0a25247a245fcb63a5bd4d5dddba38b4890bc7",
+    "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonPrivateDifficultyController.cs",
+    "pending": [
+      "Original personal-best/ranking/red-dot refresh and reward preview are separate unfinished business controls.",
+      "Play Mode pointer, Animator, lock-tip rendering and unchanged-save checks have not run while automatic acceptance is paused."
+    ],
+    "ported_methods": [
+      "InitContent (tab refresh/selection order)",
+      "RefreshTabItem",
+      "IsShowTabItem (selected display has no tab conditions)",
+      "OnDifficultyTabGroupValueChanged (detail callback)",
+      "OnClickLockTipBtn"
+    ]
+  },
+  "schema_adapters": [
+    {
+      "path": "D:\\Desktop\\zjcs\\unity\\Library\\ScriptAssemblies\\UnityEngine.UI.dll",
+      "sha256": "d1d860cd806bd987afdb996705defcb9515e008ca9b8d563a907383add8b9111"
+    },
+    {
+      "path": "D:\\Tool\\Unity\\Editor\\Data\\NetStandard\\ref\\2.1.0\\netstandard.dll",
+      "sha256": "79a49049c360a3ff282e747c311fcd567834efde564a96689872564164756e84"
+    }
+  ]
+}

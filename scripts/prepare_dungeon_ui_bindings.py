@@ -781,6 +781,9 @@ def route_settings(apk, schemas, sprites, prefabs):
     private_keys = ["ui_daily_dungeon_item_title_without_difficulty_" + str(display["dungeonId"]),
                     "ui_daily_dungeon_dialog_reward_title_without_difficulty"]
     private_keys.extend(row["key"] for row in display["difficulties"])
+    private_keys.append("ui_daily_dungeon_difficulty_lock_tip_text")
+    private_keys.extend("ui_daily_dungeon_item_title_" + str(display["dungeonId"]) + "_" + row["name"]
+                        for row in display["difficulties"])
     private_keys.extend("ui_daily_dungeon_dialog_desc_content_" + str(display["dungeonId"]) + "_" + row["name"]
                         for row in display["difficulties"])
     keys = sorted(set(grade_keys + private_keys) | {entry["key"] for prefab in prefabs for entry in prefab["localizations"] if entry["key"]})
@@ -799,6 +802,17 @@ def native_route_dependencies():
     records = {row["path"]: row for row in source["outputs"] + source["runtime_prefabs"]}
     records.update({row["shared_asset"]: dict(row, path=row["shared_asset"])
                     for row in source["shared_bindings"]})
+    difficulty_path = ROOT / "assets/reference/official-map/map12-private-difficulty-source-manifest.json"
+    difficulty_receipt = None
+    if difficulty_path.exists():
+        difficulty_receipt = json.loads(difficulty_path.read_bytes())
+        original = difficulty_receipt["native_input"]
+        if difficulty_receipt["manifest"] != VERSION or original != records[original["path"]]:
+            raise ValueError("Private difficulty successor differs from the original native conversion")
+        successor, = [row for row in difficulty_receipt["outputs"] if row["path"] == original["path"]]
+        if sha256((ROOT / successor["path"]).read_bytes()) != successor["sha256"]:
+            raise ValueError("Private difficulty native successor changed")
+        records[successor["path"]] = dict(records[successor["path"]], sha256=successor["sha256"])
     by_guid = {row["guid"]: path for path, row in records.items()}
     pending = ["unity/Assets/Game/Resources/Dungeons/UI/" + name + ".prefab" for name in (
         "DailyDungeonDialogPrivateMap", "DailyDungeonBigMapDialog", "DailyDungeonBigMapRoomItem", "DailyDungeonGradeItem")]
@@ -821,8 +835,12 @@ def native_route_dependencies():
             if guid not in by_guid:
                 raise ValueError("Private route native material/animation dependency is unresolved: " + guid)
             pending.append(by_guid[guid])
-    return dict(source_receipt=dict(path=source_path.relative_to(ROOT).as_posix(), sha256=sha256(source_path.read_bytes())),
+    result = dict(source_receipt=dict(path=source_path.relative_to(ROOT).as_posix(), sha256=sha256(source_path.read_bytes())),
         assets=[selected[path] for path in sorted(selected)])
+    if difficulty_receipt:
+        result["private_difficulty_receipt"] = dict(path=difficulty_path.relative_to(ROOT).as_posix(),
+                                                    sha256=sha256(difficulty_path.read_bytes()))
+    return result
 
 
 def build():

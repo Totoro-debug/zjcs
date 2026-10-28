@@ -7930,9 +7930,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1099118695303065}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbbc79af816783f0de8c04f2716d658d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 7025e6658f4d59c69dbe84a5c559859e, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_AllowSwitchOff: 0
+  mTabItems:
+  - {fileID: 114057666396558467}
+  - {fileID: 114992571384066502}
+  - {fileID: 114417625065123525}
+  - {fileID: 114710268039719040}
+  - {fileID: 114277416570569478}
+  m_ResetTab: {fileID: 114417625065123525}
 --- !u!224 &224056435115414594
 RectTransform:
   serializedVersion: 2
@@ -7966,9 +7974,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1243736805655561}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 007a6be5f2f9beeca6e6b7f4c1286656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 40e873e3119e5372aa62f9679d2a0522, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    m_HighlightedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_PressedColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 1.0
+    m_SelectedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_DisabledColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 0.501960813999176
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  graphic: {fileID: 0}
+  m_Group: {fileID: 114031355914570132}
+  m_IgnoreClickIfIsOn: 1
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 1
+  tabTransition: 1
+  m_TabTransitionScript: {fileID: 114667785438668446}
 --- !u!114 &114459598911568433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7990,9 +8056,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1243736805655561}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71113a81ea9e74b3e4e005be42f2ffe2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 900de1791ca05358a2e96647f00d0506, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  Anim: {fileID: 95554240831246011}
+  ToggleOn: ToggleOn
+  ToggleOff: ToggleOff
+  InstantStartTime: 1.0
 --- !u!95 &95554240831246011
 Animator:
   serializedVersion: 5
@@ -9104,9 +9174,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1642988549198181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 007a6be5f2f9beeca6e6b7f4c1286656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 40e873e3119e5372aa62f9679d2a0522, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    m_HighlightedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_PressedColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 1.0
+    m_SelectedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_DisabledColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 0.501960813999176
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  graphic: {fileID: 0}
+  m_Group: {fileID: 114031355914570132}
+  m_IgnoreClickIfIsOn: 1
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
+  tabTransition: 1
+  m_TabTransitionScript: {fileID: 114610208554618962}
 --- !u!114 &114070205081729383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9128,9 +9256,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1642988549198181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71113a81ea9e74b3e4e005be42f2ffe2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 900de1791ca05358a2e96647f00d0506, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  Anim: {fileID: 95135074601103973}
+  ToggleOn: ToggleOn
+  ToggleOff: ToggleOff
+  InstantStartTime: 1.0
 --- !u!95 &95135074601103973
 Animator:
   serializedVersion: 5
@@ -10242,9 +10374,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1291844617409189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 007a6be5f2f9beeca6e6b7f4c1286656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 40e873e3119e5372aa62f9679d2a0522, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    m_HighlightedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_PressedColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 1.0
+    m_SelectedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_DisabledColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 0.501960813999176
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  graphic: {fileID: 0}
+  m_Group: {fileID: 114031355914570132}
+  m_IgnoreClickIfIsOn: 1
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
+  tabTransition: 1
+  m_TabTransitionScript: {fileID: 114024855046230793}
 --- !u!114 &114837661440150219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10266,9 +10456,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1291844617409189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71113a81ea9e74b3e4e005be42f2ffe2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 900de1791ca05358a2e96647f00d0506, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  Anim: {fileID: 95935484392440261}
+  ToggleOn: ToggleOn
+  ToggleOff: ToggleOff
+  InstantStartTime: 1.0
 --- !u!95 &95935484392440261
 Animator:
   serializedVersion: 5
@@ -11380,9 +11574,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743393880019028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 007a6be5f2f9beeca6e6b7f4c1286656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 40e873e3119e5372aa62f9679d2a0522, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    m_HighlightedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_PressedColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 1.0
+    m_SelectedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_DisabledColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 0.501960813999176
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  graphic: {fileID: 0}
+  m_Group: {fileID: 114031355914570132}
+  m_IgnoreClickIfIsOn: 1
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
+  tabTransition: 1
+  m_TabTransitionScript: {fileID: 114518992898468572}
 --- !u!114 &114137338894172083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11404,9 +11656,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743393880019028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71113a81ea9e74b3e4e005be42f2ffe2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 900de1791ca05358a2e96647f00d0506, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  Anim: {fileID: 95752286656310646}
+  ToggleOn: ToggleOn
+  ToggleOff: ToggleOff
+  InstantStartTime: 1.0
 --- !u!95 &95752286656310646
 Animator:
   serializedVersion: 5
@@ -12518,9 +12774,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208575754630950}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 007a6be5f2f9beeca6e6b7f4c1286656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 40e873e3119e5372aa62f9679d2a0522, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    m_HighlightedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_PressedColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 1.0
+    m_SelectedColor:
+      r: 0.9607843160629272
+      g: 0.9607843160629272
+      b: 0.9607843160629272
+      a: 1.0
+    m_DisabledColor:
+      r: 0.7843137383460999
+      g: 0.7843137383460999
+      b: 0.7843137383460999
+      a: 0.501960813999176
+    m_ColorMultiplier: 1.0
+    m_FadeDuration: 0.10000000149011612
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  graphic: {fileID: 0}
+  m_Group: {fileID: 114031355914570132}
+  m_IgnoreClickIfIsOn: 1
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
+  tabTransition: 1
+  m_TabTransitionScript: {fileID: 114709741138840507}
 --- !u!114 &114173730186695914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12542,9 +12856,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208575754630950}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71113a81ea9e74b3e4e005be42f2ffe2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Script: {fileID: 11500000, guid: 900de1791ca05358a2e96647f00d0506, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: null
+  Anim: {fileID: 95641457242302125}
+  ToggleOn: ToggleOn
+  ToggleOff: ToggleOff
+  InstantStartTime: 1.0
 --- !u!95 &95641457242302125
 Animator:
   serializedVersion: 5

@@ -718,3 +718,13 @@ assets/reference/official-map/map13-native-skeleton-model*-source-manifest.json 
 unity/Assets/Game/Runtime/Official/Character/NativeSkillPreviewDye.shader -text whitespace=cr-at-eol
 assets/reference/skill-ui/unity-icon-source-manifest.json -text whitespace=cr-at-eol
 assets/reference/skill-quality-text/source-manifest.json -text whitespace=cr-at-eol
+
+# Map12 private difficulty native fields and provenance retain LF bytes.
+scripts/prepare_unity_map12_private_difficulty.py text eol=lf
+unity/Assets/Game/Resources/Dungeons/UI/DailyDungeonDialogPrivateMap.prefab text eol=lf
+unity/Assets/StreamingAssets/Dungeons/UI/map12-private-difficulty.json* text eol=lf
+unity/Assets/Game/Runtime/Presentation/World/OfficialDungeonPrivateDifficultyController.cs* text eol=lf
+assets/reference/official-map/map12-private-difficulty-source-manifest.json text eol=lf
+unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.PrivateDifficulty.cs* text eol=lf
+unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json text eol=lf
+assets/reference/dungeon-ui/prefab-binding-source-manifest.json text eol=lf

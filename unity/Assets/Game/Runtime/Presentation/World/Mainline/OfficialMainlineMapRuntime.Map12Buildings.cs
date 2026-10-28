@@ -127,10 +127,15 @@ namespace Zjcs.Presentation.World
                 var display = map12PrivateDungeonSession.FindDungeon(displayId);
                 int difficulty = display.difficulties.Where(value => map12PrivateDungeonSession.IsUnlocked(displayId, value.difficulty))
                     .Select(value => value.difficulty).DefaultIfEmpty(display.difficulties.Min(value => value.difficulty)).Max();
-                var displayMap = map12PrivateDungeonSession.FindMap(display.difficulties.Single(value => value.difficulty == difficulty).mapGroupId);
-                var gradeRows = displayMap.gradeRows.Where(value => value.difficulty == difficulty).ToArray();
-                OfficialDungeonUiBindingRuntime.RefreshPrivateDungeonDetails(map12PrivateDungeonDialog, displayId, difficulty,
-                    gradeRows.Min(value => value.grade), gradeRows.Max(value => value.grade));
+                GameObject window = map12PrivateDungeonDialog;
+                OfficialDungeonUiBindingRuntime.InitializePrivateDifficulty(window, map12PrivateDungeonSession, difficulty,
+                    selected =>
+                    {
+                        var displayMap = map12PrivateDungeonSession.FindMap(display.difficulties.Single(value => value.difficulty == selected).mapGroupId);
+                        var gradeRows = displayMap.gradeRows.Where(value => value.difficulty == selected).ToArray();
+                        OfficialDungeonUiBindingRuntime.RefreshPrivateDungeonDetails(window, displayId, selected,
+                            gradeRows.Min(value => value.grade), gradeRows.Max(value => value.grade));
+                    }, hud.ShowOfficialNotice);
                 Button battle = map12PrivateDungeonDialog.transform.Find("BgDialog3/Content/DailyDungeonDetailContent/Content/NormalGo/UnlockGo/BtnContent/BattleBtn")
                     ?.GetComponent<Button>();
                 if (battle == null) battle = FindNamedTransform(map12PrivateDungeonDialog.transform, "BattleBtn")?.GetComponent<Button>();

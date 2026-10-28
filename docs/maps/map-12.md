@@ -58,6 +58,8 @@ Water2 已按固定来源的57个原 `MeshRenderer` 名称绑定，运行时沿�
 
 匹配两处 UIMesh 现显式绑定原 `Cylinder001`（82顶点／240索引）、`GameMatch_Circle3`／`GameMatch_Circle2` 和五张原贴图。`prepare_unity_map12_matching_meshes.py` 从当前 APK 读取实际引用，保留原顶点／UV／索引字节及全部 Mesh 字段，按已有原生序列化模板生成 Mesh；五张 ASTC 纹理均保留原尺寸、唯一 mip、sRGB 解码、滤波和包裹参数，转为原生 RGBA32。原 `UI/EffectDistort` 对象哈希与已有 Windows 转换相同，四种原 GLES 变体逐字节核对后显式绑定。`WorldUiMesh`／`WorldUiMeshUtils` 迁移原 PreRender 提交、运行时材质实例、逐帧 MaterialPropertyBlock 和非零值写入顺序；沿原层级复用两份 MeshRenderer，不改原变换。来源见[匹配网格与材质](../../assets/reference/official-map/map12-matching-mesh-source-manifest.json)。来源／绑定无覆盖复现与三项独立 C# 编译通过；全工程静态检查通过（72,572 GUID）。CanvasRenderer 几何／UV／索引／材质和画面夹具已补齐，自动运行验收仍暂停；Windows 导入、实际扭曲／遮罩和完整私人路线仍待验证。
 
+机神山私人窗口的难度标签已接回原业务：按所选配置只显示普通／困难，保留原五个 TabItem、TabGroup 的原列表顺序与重置引用、五个 TabAnimatorTransition 及全部 Selectable 字段；原 Animator controller／clip 不变。`OfficialDungeonPrivateDifficultyController` 迁移原 `RefreshTabItem`、互斥选择回调和前一难度锁定提示，切换后按原语言键、地图组和评级范围刷新详情；未通关前一难度时使用原按钮遮挡并提示，不启动私人路线、不修改次数或存档。原对象、代码、原生输入、指针重映射及输出哈希见[难度标签来源](../../assets/reference/official-map/map12-private-difficulty-source-manifest.json)，由 `prepare_unity_map12_private_difficulty.py` 复现。原个人最好评级、排行、红点、奖励预览仍是单独缺项。来源复现、三个独立 C# 程序集编译及静态检查通过；原锁定提示、普通／困难往返点击、Animator 与存档不变夹具已加入，自动运行验收仍暂停，尚未执行实际输入与画面验证。
+
 Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要求逻辑标签“山壁电梯”。该标签在当前官方地图逻辑配置中绑定实体3501，升降台胜利事务现与原奖励、内部完成标志原子写入该官方标签；加载旧的内部完成标志时也会补齐主线标签。 实际升降台胜利验收确认任务1215从0/1变为1/1，重开角色档案后标签、任务进度和奖励仍恰好各写入一次。
 
 原生场景转换输入由 `prepare_unity_map12_native.py` 先查 APK，再按当前871索引读取缓存并补齐93个包的 CAB 依赖。复用已验证的原生 schema 恢复器，恢复4160个组件并逐对象核对21416个原始载荷字节不变，另独立重读全部字段；保留原 Unity 版本、Android目标、CAB身份及引用。转换缓存用于后续原生地形／场景／Water资产恢复，正式运行绑定与实际验证范围见下文。
