@@ -19,18 +19,34 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlAnimatorParamBehaviour.cs",
       "sha256": "c4d47e31061dc20788eb9ed79764c7ecb8a72fa1a8f2a682fdbe86d3c30635fb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlPlayerAnimatorParamTrack.cs",
+      "sha256": "f509b3bbe734633c4e1e2ed2ebd379568f5bb1e70e197109345d83652a16cce2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlPlayerAnimatorParamClip.cs",
+      "sha256": "297ac8c9c19b341d1a612c2f7c16c91775fb3112ebea9dca0c57f993420b08dc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TlPlayerAnimatorParamBehaviour.cs",
+      "sha256": "ea4f2b77e178766f6923a5e8e56f19a2656eee6380d1fb423f1fb2f57d2f6307"
     }
   ],
   "dependencies": [
     {
       "path": "assets/reference/official-map/map14-story-animator-runtime-source-manifest.json",
       "sha256": "644e9c821a6fdf4e6c38d2778e8ce6f3a5e01313bec45454118e7248db3cd13d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/native-story-playable-components.json",
+      "sha256": "9de91c1be43bfa30b408c1693e353a314adcbd23db5ce813cb3b7ff2430b0c54"
     }
   ],
   "tools": [
     {
       "path": "scripts/prepare_unity_story_animator_timeline.py",
-      "sha256": "9534ef76834ff8aa5ce0946bc5111fd5b1d4d7a7499e092269dbeeaaa2278876"
+      "sha256": "231ec450bfaac352845d25a5a50186b6bef5a25be51aa3f3c452c7f2e895ea17"
     }
   ],
   "outputs": [
@@ -59,6 +75,38 @@
       "sha256": "23353c0b87e2caf2e3468b6aed2a2cedacee8371f649fe937e97927775264c04"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamTrack.cs",
+      "sha256": "e06b7781b9d9c203154407da5a6591cba7d5f912a3ab48e8aa600b99033b6e70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamTrack.cs.meta",
+      "sha256": "cb66d33d596629dbc5316eb9a36466ad21e3daed2d3dd8864a59baa5432b2d5a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamClip.cs",
+      "sha256": "68a54e81a0b056cd291cf771536840fb2b3b6a8127a5e6a9ed59642972089d34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamClip.cs.meta",
+      "sha256": "959eaf4b1830002a2536982d5f3836c28b60d2adb21a4da666096ec82778260d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamBehaviour.cs",
+      "sha256": "2641553318ccad96d96c896b416991d0f52a419f1fc6f987d914d8826d8e17bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/TlPlayerAnimatorParamBehaviour.cs.meta",
+      "sha256": "6bf51d42d6b172d9c4d2cd70eec6bd4305923397976d9da6f56328ee2c2846de"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/PlayerAnimatorTimelineServices.cs",
+      "sha256": "c47f17c5e48c52a714f2a6715ea5c9c3c369c26016f5fa8dc53da47a84d0138a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/PlayerAnimatorTimelineServices.cs.meta",
+      "sha256": "845f1a753e575049704943da99fdb10059fc7d4a1ce01320bffb69850ce0536d"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/StoryAnimatorTimeline/Zjcs.Official.StoryAnimatorTimeline.asmdef",
       "sha256": "fbf13fdae5ac28a71995b4c2337ba71cdc554487ad50ce5478290db09631aecf"
     },
@@ -72,7 +120,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/OfficialMap14AnimatorTimelineAcceptance.cs",
-      "sha256": "b4932b4e47dd6802dcd90941fb7d91705d2d841183025f73bdde08a5f6f1ab2d"
+      "sha256": "8b828cd129de326c3d41500172cb330b649bd74013004d651ac21650925bd3e8"
     },
     {
       "path": "unity/Assets/Game/Editor/Map14/AnimatorTimeline/OfficialMap14AnimatorTimelineAcceptance.cs.meta",
@@ -101,7 +149,7 @@
       "sha256": "98ae4d35b3f91f017b1babab876d2bf4594af3d65e7e777fbd37fd1e4124f95e"
     }
   },
-  "operation": "Copy the original Timeline track, template cloning, hash initialization, first-frame parameter snapshot, AnimationController-before-Animator lookup, trigger/Update(0), pause restore and EndResume branch. Preserve the original base call verified from IL; only adapt namespace, diagnostic and implicit-conversion syntax.",
+  "operation": "Copy six original entity/player Animator Timeline classes, template cloning, hash initialization, first-frame snapshot, controller lookup, trigger/Update(0), pause restore and EndResume. The player variant ignores playerData, obtains the current player entity through an explicit dependency-injection replacement, requires its AnimationController and applies the optional clip override before returning its Animator. Preserve the original base call verified from IL; adapt namespace, diagnostic and implicit-conversion syntax.",
   "limitations": [
     "Isolated native Animator/Timeline dispatch verification is recorded in map-14.md. Original Animator/controller/model rendering, full entity Timeline, formal map/save flow and Windows Player remain pending."
   ]

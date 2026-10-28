@@ -70,6 +70,8 @@
 
 - 原 `TlAnimatorParamTrack`、`TlAnimatorParamClip` 和 `TlAnimatorParamBehaviour` 已迁入 `Runtime/Official/StoryAnimatorTimeline/`，保留哈希初始化、首帧参数快照、后续帧不重写、`AnimationController` 优先查找、触发后 `Animator.Update(0)`、暂停重入和 `EndResume` 分支；按原 `IL_0002 call PlayableBehaviour.OnPlayableCreate` 恢复直接基类调用。根工程静态检查、内置屏隔离 Unity 导入／编译、全工程校验与 Play Mode 通过，覆盖 bool／int／float 快照与恢复、重入、保留参数、控制器优先级、模板隔离及原四份 `land_02`／`float_02`／`rise`／`rise_02` 配置的实际原生 Animator／Timeline 触发。本轮使用隔离参数控制器，只证明原代码调度；原模型、控制器／动画素材、完整实体 Timeline、地图输入／存档及 Windows Player 未完成。来源 `map14-story-animator-timeline-source-manifest.json`，恢复器 `scripts/prepare_unity_story_animator_timeline.py`。
 
+- 原 `TlPlayerAnimatorParamTrack`、`TlPlayerAnimatorParamClip` 和 `TlPlayerAnimatorParamBehaviour` 已迁入同一官方运行时模块，保留忽略 `playerData`、读取当前玩家实体、只取其 `AnimationController`、先执行可选 clip 替换再返回 Animator 的顺序；依赖注入改为显式当前玩家服务。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 通过，核对六份原类绑定、玩家／控制器缺失不回退、替换条件，以及从原 CAB `5d4c2c5d1454464f2497d6b3e36e10f9`／PathID `-3612460611401424567` 读取参数后，无场景绑定 Timeline 实际触发 `affirmative`、不影响旁侧 Animator。验证使用隔离参数控制器，只证明轨道执行；原玩家模型、动画素材、完整演出、地图存档和 Windows Player 仍未完成。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

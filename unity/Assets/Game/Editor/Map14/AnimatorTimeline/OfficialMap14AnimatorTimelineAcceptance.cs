@@ -79,7 +79,7 @@ namespace Zjcs.Editor.Map14
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Map14 original Animator Timeline Play Mode passed: native track/clip/behaviour bindings, first-frame parameter snapshot, pause/re-entry, EndResume, controller lookup priority, template isolation and four original trigger configurations. Original controller/model rendering and full entity Timeline/map/save/release remain pending.");
+                Debug.Log("Map14 original Animator Timeline Play Mode passed: six native class bindings, parameter snapshot/restore, controller priority, template isolation, original entity triggers, current-player-only lookup, optional clip override and unbound player Timeline affirmative trigger. Original controller/model rendering and full entity Timeline/map/save/release remain pending.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -92,7 +92,7 @@ namespace Zjcs.Editor.Map14
             native.AddParameter("flag",AnimatorControllerParameterType.Bool);
             native.AddParameter("index",AnimatorControllerParameterType.Int);
             native.AddParameter("value",AnimatorControllerParameterType.Float);
-            foreach(string key in new[]{"land_02","float_02","rise","rise_02"})
+            foreach(string key in new[]{"land_02","float_02","rise","rise_02","affirmative"})
             {
                 native.AddParameter(key,AnimatorControllerParameterType.Trigger);
                 var state=machine.AddState(key);var transition=idle.AddTransition(state);
@@ -104,7 +104,8 @@ namespace Zjcs.Editor.Map14
         {Require(a.GetBool("flag")==b && a.GetInteger("index")==i && Mathf.Abs(a.GetFloat("value")-f)<.00001f,message);}
         private static IEnumerator Steps()
         {
-            foreach(var type in new[]{typeof(TlAnimatorParamBehaviour),typeof(TlAnimatorParamClip),typeof(TlAnimatorParamTrack)})
+            foreach(var type in new[]{typeof(TlAnimatorParamBehaviour),typeof(TlAnimatorParamClip),typeof(TlAnimatorParamTrack),
+                typeof(TlPlayerAnimatorParamBehaviour),typeof(TlPlayerAnimatorParamClip),typeof(TlPlayerAnimatorParamTrack)})
             {
                 var script=AssetDatabase.LoadAssetAtPath<MonoScript>("Assets/Game/Runtime/Official/StoryAnimatorTimeline/"+type.Name+".cs");
                 Require(script && script.GetClass()==type,"original MonoScript binding "+type.Name);
@@ -154,7 +155,70 @@ namespace Zjcs.Editor.Map14
                 Require(animator.GetCurrentAnimatorStateInfo(0).IsName(value.TriggerKey),"original native Timeline trigger "+value.TriggerKey);
                 director.time=.7;director.Evaluate();director.Stop();UnityEngine.Object.Destroy(director);UnityEngine.Object.Destroy(timeline);yield return null;
             }
+            yield return PlayerSteps(native,root,animator);
             UnityEngine.Object.Destroy(root);UnityEngine.Object.Destroy(preferred.gameObject);UnityEngine.Object.Destroy(native);yield return null;
+        }
+        private sealed class PlayerServices:IPlayerAnimatorTimelineServices
+        {public GameObject PlayerEntity{get;set;}}
+        private sealed class PlayerLookup:TlPlayerAnimatorParamBehaviour
+        {public Animator Resolve(object value){return GetAnimator(value);}}
+        private static IEnumerator PlayerSteps(AnimatorController native,GameObject decoy,Animator decoyAnimator)
+        {
+            var old=PlayerAnimatorTimelineServices.Current;var services=new PlayerServices();
+            var player=new GameObject("Original current-player lookup probe");
+            var sourceClip=new AnimationClip{name="Original player override probe"};
+            sourceClip.SetCurve("",typeof(Transform),"m_LocalPosition.x",AnimationCurve.Linear(0,0,1,1));
+            var replacement=new AnimationClip{name="Replacement player override probe"};
+            replacement.SetCurve("",typeof(Transform),"m_LocalPosition.x",AnimationCurve.Linear(0,0,1,2));
+            var idle=native.layers[0].stateMachine.states.First(s=>s.state.name=="Idle").state;
+            idle.motion=sourceClip;
+            var animator=player.AddComponent<Animator>();animator.runtimeAnimatorController=native;animator.Update(0);
+            var controller=player.AddComponent<AnimationController>();controller.myAnimator=animator;
+            controller.NotCreateGraph=true;controller.CreateOverrideController=true;controller.Init();
+            try
+            {
+                PlayerAnimatorTimelineServices.Current=services;
+                var lookup=new PlayerLookup{OriginClipName=sourceClip.name,OverrideClip=replacement};
+                Require(!lookup.Resolve(decoy),"missing current player does not fall back to playerData");
+                services.PlayerEntity=decoy;
+                Require(!lookup.Resolve(player),"current player without AnimationController does not fall back to direct Animator");
+                services.PlayerEntity=player;
+                Require(lookup.Resolve(decoy)==animator,"playerData is ignored in favour of current player controller");
+                var overrides=(AnimatorOverrideController)controller.RuntimeAnimatorController;
+                Require(overrides[sourceClip.name]==replacement,"original optional clip override is applied before returning Animator");
+                lookup.OverrideClip=null;lookup.Resolve(decoy);
+                Require(overrides[sourceClip.name]==replacement,"null override leaves current clip unchanged");
+                overrides[sourceClip.name]=sourceClip;lookup.OverrideClip=replacement;lookup.OriginClipName="";lookup.Resolve(decoy);
+                Require(overrides[sourceClip.name]==sourceClip,"empty original name skips override");
+                var data=(Dictionary<string,object>)OfficialEquipmentJson.Parse(File.ReadAllText("Assets/Official/World/Map/14/Source/native-story-playable-components.json"),true);
+                var rows=((List<object>)data["components"]).Cast<Dictionary<string,object>>();
+                var configs=rows.Where(o=>(string)o["type"]=="TlPlayerAnimatorParamClip").ToArray();
+                Require(configs.Length==1 && (string)configs[0]["cab"]=="CAB-5d4c2c5d1454464f2497d6b3e36e10f9"
+                    && (string)configs[0]["path_id"]=="-3612460611401424567","original SuiMo player clip identity");
+                var config=(Dictionary<string,object>)((Dictionary<string,object>)configs[0]["fields"])["Template"];
+                var timeline=ScriptableObject.CreateInstance<TimelineAsset>();var track=timeline.CreateTrack<TlPlayerAnimatorParamTrack>();
+                var clip=track.CreateClip<TlPlayerAnimatorParamClip>();clip.start=.1;clip.duration=.5;
+                var template=((TlPlayerAnimatorParamClip)clip.asset).Template;
+                template.EndResume=Convert.ToBoolean(config["EndResume"]);template.BoolKey=(string)config["BoolKey"];
+                template.BoolValue=Convert.ToBoolean(config["BoolValue"]);template.IntKey=(string)config["IntKey"];
+                template.IntValue=Convert.ToInt32(config["IntValue"]);template.FloatKey=(string)config["FloatKey"];
+                template.FloatValue=Convert.ToSingle(config["FloatValue"]);template.TriggerKey=(string)config["TriggerKey"];
+                template.OriginClipName=(string)config["OriginClipName"];
+                Require(Convert.ToInt64(((Dictionary<string,object>)config["OverrideClip"])["m_PathID"])==0,"original player clip has no override asset");
+                animator.Play("Idle",0,0);animator.Update(0);decoyAnimator.Play("Idle",0,0);decoyAnimator.Update(0);
+                var director=player.AddComponent<PlayableDirector>();director.timeUpdateMode=DirectorUpdateMode.Manual;director.playableAsset=timeline;
+                Require(director.GetGenericBinding(track)==null,"player track has no scene binding");
+                director.Play();director.time=.2;director.Evaluate();yield return null;
+                Require(animator.GetCurrentAnimatorStateInfo(0).IsName("affirmative"),"unbound player Timeline triggers current player affirmative");
+                Require(decoyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle"),"player Timeline leaves unrelated Animator unchanged");
+                director.Stop();UnityEngine.Object.Destroy(timeline);
+            }
+            finally
+            {
+                PlayerAnimatorTimelineServices.Current=old;UnityEngine.Object.Destroy(player);
+                UnityEngine.Object.Destroy(sourceClip);UnityEngine.Object.Destroy(replacement);idle.motion=null;
+            }
+            yield return null;
         }
         private sealed class Runner:MonoBehaviour{}
     }
