@@ -22,6 +22,8 @@ namespace Zjcs.Offline.ProfessionUI
         private readonly HashSet<int> boneSet = new HashSet<int>(), constraintSet = new HashSet<int>();
         public string Name { get; }
         public int SlotCount => slotCount;
+        public int BoneCount => boneCount;
+        public int ConstraintCount => constraintCount;
         public int AttachmentCount => attachments.Count;
         public IEnumerable<Entry> Entries
         {

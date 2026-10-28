@@ -37,8 +37,9 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业原生骨骼数据 | [固定原数据、无损容器与显式加载](profession-ui/skeleton-data-source-manifest.json)；男女骨骼、图集区域、全部动画／事件／约束／附件及逐字节输入输出 SHA256；未使用 Spine runtime 或姿态烘焙，运行边界见[职业功能页](../../docs/features/professions.md) |
 | 职业骨骼继承与原曲线 | [独立复数参考、真实皮肤和运行时绑定](profession-ui/world-inheritance-source-manifest.json)；男女待机原曲线与约束前变换，保留原数据；物理、混合与角色显示边界见[职业功能页](../../docs/features/professions.md) |
 | 职业待机变换约束 | [原配置／动画默认值与独立几何](profession-ui/idle-transform-source-manifest.json)；男女待机 IK 后的绝对世界变换和主武器挂点，输入输出哈希及未完成边界见[职业功能页](../../docs/features/professions.md) |
-| 职业角色核心图集 | [原占位映射、AssetTable GUID 与 GPU mip](profession-ui/character-textures-source-manifest.json)；男女战士／法师和所选头发的 6 页、17 张原贴图及显式离线目录；范围见[职业功能页](../../docs/features/professions.md) |
+| 职业角色核心图集 | [原占位映射、AssetTable GUID 与 GPU mip](profession-ui/character-textures-source-manifest.json)；原版完整默认外观链所需页面及保留的诊断页，共 15 组页绑定、35 张原贴图；范围见[职业功能页](../../docs/features/professions.md) |
 | 职业实际动画接线 | [实际打包插槽／顺序／IK 与独立参考](profession-ui/runtime-timelines-source-manifest.json)；原数据直接供给运行时，保留边界、空附件、有符号偏移和 IK 默认值；边界见[职业功能页](../../docs/features/professions.md) |
+| 职业原生外观对象 | [原应用皮肤合成、实际骨骼／附件及 GPU 诊断](profession-ui/native-appearance-graph-source-manifest.json)；原版默认脸部／头发／肤色与染色接线、96 组独立世界姿态参考及四张原贴图角色诊断；边界见[职业功能页](../../docs/features/professions.md) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

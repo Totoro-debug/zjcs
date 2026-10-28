@@ -53,7 +53,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(ProfessionValidationWorkspace.Fixture("character-textures-validation.json")));
             var catalog = Resources.Load<ProfessionNativeTextureCatalog>("ProfessionUI/character-textures");
-            Require(catalog && catalog.Count == fixture.pages.Length && fixture.pages.Length == 6, "actual local resource catalog and six source page bindings");
+            Require(catalog && catalog.Count == fixture.pages.Length && fixture.pages.Length >= 6, "actual local resource catalog and verified selected source page bindings");
             Require(SystemInfo.supportsAsyncGPUReadback, "actual graphics device readback");
             long totalBytes = 0; int levels = 0;
             foreach (var expected in fixture.textures)

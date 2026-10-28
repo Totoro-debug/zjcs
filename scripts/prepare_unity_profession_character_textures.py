@@ -42,6 +42,16 @@ def build():
     attachment_proof_path = ROOT / 'assets/reference/profession-ui/native-attachments-source-manifest.json'
     attachment_proof = json.loads(attachment_proof_path.read_bytes())
     if attachment_proof['manifest'] != apk.version: raise ValueError('Verified attachment version changed')
+    resolved_path = CACHE / 'typed/native-preview-appearance.json'
+    resolved = json.loads(resolved_path.read_bytes())['previews']
+    if {(r['sex'], r['profession']) for r in resolved} != {('male', 1), ('male', 10), ('female', 1), ('female', 10)}:
+        raise ValueError('Original resolved core preview coverage changed')
+    resolved_inputs = [ROOT / 'unity/Assets/Official/ProfessionUI/Portrait/AppearanceConfig.asset',
+                       ROOT / 'unity/Assets/Game/Resources/ProfessionUI/appearance-tables.json',
+                       ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreview.cs',
+                       ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs',
+                       ROOT / 'unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs',
+                       ROOT / 'unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeAppearanceGraphValidation.cs']
     inputs, models, selections, pages, textures, exported = [], [], [], [], [], {}
 
     def export(obj, role):
@@ -72,6 +82,12 @@ def build():
         target = ROOT / 'unity/Assets/Official/ProfessionUI/CharacterTextures' / (texture.m_Name + '.' + suffix + '.texture2d.asset')
         target.parent.mkdir(parents=True, exist_ok=True)
         guid = uuid.uuid5(uuid.NAMESPACE_URL, 'zjcs/profession/native-texture/' + obj.assets_file.name + ':' + str(obj.path_id)).hex
+        # Male/female loaders contain distinct objects with the same display
+        # name. Keep a deterministic source-identity suffix for that collision;
+        # never merge them by name or overwrite the previous object's asset.
+        target_meta = target.with_name(target.name + '.meta')
+        if target.exists() and target_meta.exists() and re.search(r'(?m)^guid: ([0-9a-f]{32})$', target_meta.read_text())[1] != guid:
+            target = target.with_name(texture.m_Name + '.' + guid[:12] + '.' + suffix + '.texture2d.asset')
         text = '%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!28 &2800000\n' + yaml.dump({'Texture2D': native}, Dumper=Dumper, sort_keys=False, allow_unicode=True, width=1000000)
         # Existing payloads belong to the already verified attachment export.
         # Require exact bytes before reuse; never overwrite a changed payload.
@@ -100,6 +116,8 @@ def build():
         source = json.loads(source_path.read_bytes()); regions = {r['name']: r for r in atlas_regions(atlas_path.read_text(encoding='utf-8'))}
         gender = 'M' if sex == 'male' else 'F'
         names = ['default', f'body_100_{gender}_01', f'body_200_{gender}_01', 'hair_G_01' if sex == 'male' else 'hair_F_01']
+        names = list(dict.fromkeys(names + [name for r in resolved if r['sex'] == sex for name in r['skins']]))
+        if set(names) - {s['name'] for s in source['skins']}: raise ValueError('Resolved original skin not present in actual source')
         required = set()
         for skin in source['skins']:
             if skin['name'] not in names: continue
@@ -142,7 +160,7 @@ def build():
     fixture = CACHE / 'typed/character-textures-validation.json'
     fixture.write_text(json.dumps(dict(pages=[dict(sex=r['sex'], page=r['page'], main_guid=r['targetTextureReference_guid'], dye_guid=r['dyeTextureReference_guid']) for r in pages],
         textures=[dict(path=r['output']['path'].removeprefix('unity/'), guid=r['guid'], width=r['original_fields']['m_Width'], height=r['original_fields']['m_Height'], mip_count=r['original_fields']['m_MipCount'], texture_format=r['target_format'], settings=r['original_fields']['m_TextureSettings'], mips=r['mips']) for r in textures]), ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
-    result = dict(format=1, manifest=apk.version, inputs=inputs, baseline_attachments=record(attachment_proof_path), models=models,
+    result = dict(format=1, manifest=apk.version, resolved_preview=record(resolved_path), resolved_preview_inputs=[record(p) for p in resolved_inputs], inputs=inputs, baseline_attachments=record(attachment_proof_path), models=models,
                   selections=selections, pages=[dict(sex=r['sex'], page=r['page'], main_guid=r['targetTextureReference_guid'], dye_guid=r['dyeTextureReference_guid'],
                     placeholder=r['placeholder']['output'], main=r['targetTextureReference']['output'], dye=r['dyeTextureReference']['output'] if r['dyeTextureReference'] else None) for r in pages],
                   textures=textures, asset_table_sha256=hashlib.sha256(manifest_bytes).hexdigest(), schema=schema_proof,
@@ -152,7 +170,7 @@ def build():
                   generator=record(Path(__file__)), decoder_source=record(ROOT / 'scripts/prepare_unity_map13_native_scene.py'), fixture=record(fixture),
                   decoder=dict(package='astc_encoder_py', version='0.1.12', binaries=[record(p) for p in sorted(Path(astc_encoder.__file__).parent.rglob('*.pyd'))]),
                   operation='APK-first current-version core skin attachment pages resolve through actual original high-resolution placeholder mappings and AssetTable GUIDs. Preserve original placeholders and decoded main/dye mip payloads, color space and samplers as native Unity Texture2D assets; explicit local catalog references include original resource GUIDs. No PNG re-compression, alternate art or baked actor.',
-                  limitations=['Only default, core warrior/mage clothing and the two selected original hair skins are covered. Other outfits, parts and profession-rank visuals require their actual original pages.',
+                  limitations=['Covers original resolved male/female default warrior/mage core skins including face, ethnic skin and hair, plus retained diagnostic clothing/hair pages. Separate weapons/parts, other outfits and profession-rank visuals require their actual original pages.',
                                'Texture resource binding is not physics, native actor/page rendering or Windows Player validation; payloads are not claimed in a complete asset snapshot.'],
                   validated_scope='Pending Unity import/compile, actual Play Mode catalog and exact GPU mip validation.')
     (ROOT / 'assets/reference/profession-ui/character-textures-source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')

@@ -1,0 +1,125 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "prerequisites": [
+    {
+      "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+      "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+    },
+    {
+      "path": "assets/reference/profession-ui/runtime-timelines-source-manifest.json",
+      "sha256": "0e511225eda42066e37d16fe3943d8df27190cc1d752567ee83d721407f9c6c8"
+    },
+    {
+      "path": "assets/reference/profession-ui/character-textures-source-manifest.json",
+      "sha256": "a900e2592fe9cc81c09dbbb6397cf8b00a7a7e47ce78202ffaa6c7f23efa755a"
+    },
+    {
+      "path": "assets/reference/profession-ui/idle-transform-source-manifest.json",
+      "sha256": "619aa6834aa39ccbae3a597608ef047c4d4a6a44af99218ec7ee56af61efee0f"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-transform-validation.json",
+    "sha256": "573b7a7a46a12f2bcbb5fdf7a975ae2aef7e500f82a00c844f943346170a5107"
+  },
+  "resolved_preview": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-preview-appearance.json",
+    "sha256": "c679840f5e1525b2f945c19145de2a16838be898702f05a8dbbd770033142b2d"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+    "sha256": "09edba566ed1114c5fbb56b31c409fe14464067a7b4e0ac7bdedac12a987e6a3"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs.meta",
+    "sha256": "c66bb8dede110b60bdd01de35c3b1ece86979ca4bbf6f566352166ecee3e846e"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs",
+      "sha256": "09edba566ed1114c5fbb56b31c409fe14464067a7b4e0ac7bdedac12a987e6a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeAppearanceSkeleton.cs.meta",
+      "sha256": "c66bb8dede110b60bdd01de35c3b1ece86979ca4bbf6f566352166ecee3e846e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs",
+      "sha256": "0aa8796a326c7cf308f3d9ab91429d5de09b1c7aa1d43caa11e381910d9122d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkin.cs.meta",
+      "sha256": "f8699201d5e991d9b0110cd0aa0cf9649403539ea244b6cdc6fc737850984a23"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkinSlots.cs",
+      "sha256": "666869a75bbd215541593e8c5f5a83f660915e0d0f416e27f1ea618bd326264f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkinSlots.cs.meta",
+      "sha256": "27828ff2e7edf91486e96858ca4b486184a2d6f856c1e0eb8deab6e0c62e81ba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs",
+      "sha256": "a414c122efd2f9a7a7ee4e11af4de74dc4107f9aa7bd90efafca5ab3ea9a970f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeMeshBatches.cs.meta",
+      "sha256": "722a22bd6ee1a95be3786b8783a58bc7f9be1a00b1cc1ea5de24cf3757968d54"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeAppearanceGraphValidation.cs",
+      "sha256": "9b378b45e0b58979c2af6c2228df0911298678cc59a9066497a2a3d0e3f08925"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeAppearanceGraphValidation.cs.meta",
+      "sha256": "2bdc8c3e58dd02cee6d788ed66afcec101ba1717ab272d8db106f027230b834e"
+    }
+  ],
+  "application": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSpine.cs",
+      "sha256": "69a08b3112f32e4b57b574e2dcafd68474aff7f91352e28e1c42f435a45ddc62"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSpineBindings.cs",
+      "sha256": "c79baef7286b3fa103eed910b0ad7a22dd50457879886cbe9d93d5f7012b39a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePartBindings.cs",
+      "sha256": "8b6016c6a2fb9fb4e0c0a6a40b8bb369729d327844ee22e84630d3c81b18a71a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSkinClipBindings.cs",
+      "sha256": "ec9f9b47a9d8c56e3d2cb91bab0df553ac7536fa2a4938e32dc4e361f88edc74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearancePreview.cs",
+      "sha256": "1e111965f1be67574c6a63def18771951093ac026f7500471eafeccf9ae532b1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceResolver.cs",
+      "sha256": "986becf66387d4c54f312a203a77faf59a865125ab4ae2048c0e10d671ccb358"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceCharacter.cs",
+      "sha256": "dc4a212b52f40146b63e34a4307fa95bbd104702689e8f8e39a65ab823622cf4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMaterialUtils.cs",
+      "sha256": "af40ab40ab062d7ae01821fca6bce03e3c17fa1e6db08df9e07e3c8c2b891338"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_appearance_graph.py",
+    "sha256": "a1e98315137adb566b9dc3b63813516c7a30b7705e5d326272ba153fd029af3c"
+  },
+  "operation": "Bind migrated original application skin composition/setup/cache methods to actual independent native bone, slot, skin and attachment objects. Keep source attachment identities/default fallback and shared draw-order slots. Actual packaged scalar/discrete/IK/transform stages feed the explicitly named pre-physics sampler. Original default builder, local snapshot, profession preview and AppearanceCharacter produce complete base/facial/hair skins and dye offsets for four native GPU diagnostics; original AppearanceSpine.SetDye applies their actual channel values. Batch geometry uses real selected-skin attachments and source textures.",
+  "limitations": [
+    "This is the pre-physics native object graph. It does not freeze, bake or substitute unimplemented physical motion.",
+    "The validation asset identity marker and derived appearance owner exercise application methods; production skeleton asset/resource loading and SkeletonGraphic remain unbound.",
+    "Physics, mixed animation, live followers/parts, full original native profession page/input/save and Windows Player remain required. Diagnostic renders are not full-page or original SDK pose references."
+  ],
+  "validated_scope": "Actual Direct3D Play Mode passes original combined-skin object reuse/events and actual source attachment/default fallback/draw-order/bounding identity. 96 independently verified pre-physics frames, 9,768 world matrices, maximum scalar error 0.0006952286 within existing tolerance; 48,576 generated batch vertices. Four complete original-resolver default male/female warrior/mage core skins sampled at 0, .5, 1 and 2 seconds; actual original channel dye values applied and four GPU diagnostics visually inspected. Unity compile/global validation, root static 74,329 GUIDs and frozen static 73,774 GUIDs pass. Diagnostic view/asset identity is not production graphic, weapons/parts, physics/mixing, full original profession page/input/save or Windows Player."
+}
