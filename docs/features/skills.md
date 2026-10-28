@@ -36,6 +36,8 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 ## 自定义实现
 
+伤害测试的公共结算适配已通过规则验证：StageType 43 的怪物伤害在护盾结算前固定为 1，无限生命保留 HP 并累计完整伤害，设置可随战斗检查点恢复；关闭选项或进入普通关卡恢复普通结算。入口为 `Runtime/Offline/Combat/FightDamageTestRules.cs`，验证为 `scripts/test_skill_damage_test.ps1`；普通战斗 97 组公式及规则回归亦已通过。参数页、实际战斗和结算窗口仍在接入及 Play Mode 验证中。
+
 以下为已确认的单机处理要求，尚未代表完整 Unity 流程已经接入或验收。
 
 Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 UI 单位宽度对应约 137 UI 单位顶部留白，随窗口宽度缩放；这是桌面显示适配参数。原 `SafeArea` 的边界计算、PaddingTop／PaddingBottom、DisableTopAdapt／DisableBottomAdapt 与技能父级绑定保持官方数据，不修改内部槽位、方案或列表坐标。模糊遮罩恢复 APK 原 RawImage UV，并按 Windows 图形接口的纹理方向适配截图采样；不改变原 ScreenBlur 算法。

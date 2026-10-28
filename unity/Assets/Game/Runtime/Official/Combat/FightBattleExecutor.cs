@@ -49,7 +49,7 @@ namespace Zjcs.Combat.Official
             if (settlement == null) throw new ArgumentNullException(nameof(settlement));
             if (checkpoint.Units.Count == 0) throw new ArgumentException("Fight roster is empty.", nameof(checkpoint));
 
-            hitExecutor = new FightBattleHitExecutor(formula, settlement);
+            hitExecutor = new FightBattleHitExecutor(formula, settlement, checkpoint.DamageTest);
             foreach (FightBattleUnitState unit in checkpoint.Units)
             {
                 ApplyMonsterInfo(unit);
@@ -912,6 +912,7 @@ namespace Zjcs.Combat.Official
             if (skill == null || actor == null) return null;
             if (skill.CostType == 1 && skill.SkillCost > 0)
             {
+                if (checkpoint.DamageTest != null && checkpoint.DamageTest.UnlimitedHp(checkpoint.StageType, actor)) return null;
                 long beforeHp = actor.Hp;
                 actor.Hp = Math.Min(actor.MaxHp, Math.Max(0L, actor.Hp - skill.SkillCost));
                 if (actor.Hp == beforeHp) return null;

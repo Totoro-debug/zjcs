@@ -18,11 +18,14 @@ namespace Zjcs.Combat.Official
     {
         private readonly FightDamageFormula formula;
         private readonly FightDamageSettlement settlement;
+        private readonly FightDamageTestRules damageTest;
 
-        public FightBattleHitExecutor(FightDamageFormula formula, FightDamageSettlement settlement)
+        public FightBattleHitExecutor(FightDamageFormula formula, FightDamageSettlement settlement,
+            FightDamageTestRules damageTest = null)
         {
             this.formula = formula ?? throw new ArgumentNullException(nameof(formula));
             this.settlement = settlement ?? throw new ArgumentNullException(nameof(settlement));
+            this.damageTest = damageTest;
         }
 
         public FightBattleHitResult Apply(FightRandomStream random, int damageId,
@@ -80,10 +83,12 @@ namespace Zjcs.Combat.Official
                 direct = FightDamageFalloff.Apply(random, actor, target, skill, hit,
                     direct, processedFalloffStatuses);
                 direct = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, direct, formula);
+                if (damageTest != null) direct = damageTest.Damage(stageType, actor, target, direct);
                 long absorbed = FightBattleShieldRuntime.AbsorbDamage(random, target, hit,
                     direct, out result.ShieldDamage, result.TriggeredStatusSkills);
                 result.Formula = new FightDamageFormulaResult { Damage = absorbed, AbsoluteDamage = direct };
-                result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, absorbed);
+                result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, absorbed)
+                    : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, absorbed);
             }
             else
             {
@@ -138,10 +143,12 @@ namespace Zjcs.Combat.Official
                         processedFalloffStatuses);
                 if (hit.DamageType != 0 && !result.Type.Blinding && !result.Type.Dodge && !result.Type.Immunity)
                     damage = FightStatusCreatorDamageBoostRuntime.BeforeShield(actor, target, damage, formula);
+                if (damageTest != null) damage = damageTest.Damage(stageType, actor, target, damage);
                 damage = FightBattleShieldRuntime.AbsorbDamage(random, target, hit, damage,
                     out result.ShieldDamage, result.TriggeredStatusSkills);
                 result.Formula.Damage = damage;
-                result.Settlement = settlement.Apply(damageId, sourceEntity, targetEntity, damage);
+                result.Settlement = damageTest == null ? settlement.Apply(damageId, sourceEntity, targetEntity, damage)
+                    : damageTest.Settle(settlement, stageType, damageId, sourceEntity, targetEntity, target, damage);
             }
 
             target.Hp = targetEntity.Hp;

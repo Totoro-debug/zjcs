@@ -53,6 +53,14 @@ namespace Zjcs.Combat.Official
 
         public FightDamageEvent Apply(int damageId, FightEntityState source, FightEntityState target,
             long damageValue)
+            => ApplyCore(damageId, source, target, damageValue, false);
+
+        // Offline damage testing records the full hit while preserving monster HP.
+        internal FightDamageEvent ApplyPreservingHp(int damageId, FightEntityState source,
+            FightEntityState target, long damageValue) => ApplyCore(damageId, source, target, damageValue, true);
+
+        private FightDamageEvent ApplyCore(int damageId, FightEntityState source, FightEntityState target,
+            long damageValue, bool preserveHp)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
@@ -65,7 +73,8 @@ namespace Zjcs.Combat.Official
             else if (damageValue > 0)
                 nextHp = Math.Min(target.MaxHp, previousHp + damageValue);
 
-            long realDamage = nextHp - previousHp;
+            long realDamage = preserveHp ? damageValue : nextHp - previousHp;
+            if (preserveHp) nextHp = previousHp;
             bool killed = previousHp > 0 && nextHp <= 0;
             target.SetHp(nextHp);
 

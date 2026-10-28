@@ -717,6 +717,7 @@ namespace Zjcs.Combat.Official
         public FightTurnQueueState Timeline = new FightTurnQueueState();
         public FightBattleOutcome Outcome = new FightBattleOutcome();
         public FightBattleResultRules ResultRules;
+        public FightDamageTestRules DamageTest;
         // Local session persistence; absent fields in older saves retain legacy resume behavior.
         public bool PreparationPending;
         public double PreparationSecondsRemaining;
