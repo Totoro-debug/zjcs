@@ -1,0 +1,62 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/vertex-geometry-validation.json",
+    "sha256": "41eef68c2c4eb3509db1b7156b8cf2fc04f5a2265049efc101630216d448740a"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_vertex_geometry.py",
+    "sha256": "8f3e5ca8752a3ba0dcf58171defca0813b2fccfa6332e5a3203a5fbff5706815"
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeVertexAttachment.cs",
+      "sha256": "9a908c81273ad6f3e63d90537cf78ba3f903065b582cf6825c8e15fedc4ec3ea"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeVertexAttachment.cs.meta",
+      "sha256": "a0beac32707193b92752def79eead791374dc3a3cdbda0b0ffd843c67cb9acfc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeVertexGeometryValidation.cs",
+      "sha256": "b2ea8bde8a563c868fc98b83650335226a56818595db5ec8d6ef7b95639bdde7"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeVertexGeometryValidation.cs.meta",
+      "sha256": "5b04fe3bf921be07d5116ce7166ce4c84b10196ec08f2e9a54c5c3aacc896ded"
+    }
+  ],
+  "counts": {
+    "attachments": 11747,
+    "vertices": 165433,
+    "influences": 264312,
+    "weighted": 11535,
+    "unweighted": 212,
+    "mesh": 11716,
+    "boundingbox": 25,
+    "clipping": 6
+  },
+  "format_references": [
+    "https://esotericsoftware.com/spine-json-format#Vertices"
+  ],
+  "operation": "Independent affine linear blend of verified source bone-local vertices in original influence order, without weight normalization. Supports weighted meshes, bounding boxes and clipping vertices and unweighted slot-bone vertices. Outputs source units; original SkeletonDataAsset scale is applied by the eventual renderer. No skeleton SDK code or pose baking is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: all 11747 source mesh/bounding-box/clipping attachments, 165433 vertices and 264312 influences match independently generated double-precision affine references, maximum absolute coordinate difference 0.000366210938 within 0.0004 + 0.000007 * abs(expected). Synthetic translated, rotated, sheared and reflected matrices, original non-normalized weight sums, slot-bone vertices, zero-weight inactive influences, ownership and invalid layouts pass. These matrices are synthetic and are not official animation poses.",
+  "limitations": [
+    "Deform timelines, regions, atlas UVs, attachment resolution, original constraints, production rendering and full profession UI remain outside this stage."
+  ]
+}

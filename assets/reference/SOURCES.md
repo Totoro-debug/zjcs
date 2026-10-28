@@ -469,6 +469,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业插槽／绘制顺序：独立适配器保留 setup 骨骼、颜色／暗色、混合模式及原附件离散键。按公开数据格式将转换 JSON 的 32 位 varint 位值恢复为有符号偏移，`4294967290` 对应 `-6`，原输入未改写。来源／格式参考／代码／夹具哈希见 `profession-ui/slot-pose-source-manifest.json`。隔离 Play Mode 核对 252 个槽、54 条时间线、84 个附件键、4 个绘制顺序键、109 个样本及 27,468 项精确检查，关键帧边界、空附件、未启用骨骼、顺序和输入隔离检查通过。未接通皮肤、动画混合或角色渲染。
 
+职业加权顶点：原 871 男女骨骼中的全部 11,747 个网格／包围框／裁剪附件、165,433 个顶点和 264,312 个骨骼影响由独立仿射适配器读取，原权重及影响顺序不变，不读取骨骼 SDK 实现。隔离 Play Mode 与独立双精度参考逐坐标比较，最大差 `0.000366210938`，容差 `0.0004 + 0.000007 × abs(expected)`；所有权、非法输入及未启用骨骼分支通过。来源、输入输出哈希与限制见 `profession-ui/vertex-geometry-source-manifest.json`。参考矩阵是合成几何输入，不代表原动作或生产角色渲染。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

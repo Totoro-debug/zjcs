@@ -78,6 +78,7 @@ def build():
         texture_loader=file_record(ROOT / "assets/reference/profession-ui/texture-loader-source-manifest.json"),
         skin_clip=file_record(ROOT / "assets/reference/profession-ui/skin-clip-source-manifest.json"),
         slot_pose=file_record(ROOT / "assets/reference/profession-ui/slot-pose-source-manifest.json"),
+        vertex_geometry=file_record(ROOT / "assets/reference/profession-ui/vertex-geometry-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
         bone_pose=file_record(ROOT / "assets/reference/profession-ui/bone-pose-source-manifest.json"),
         native_ik=file_record(ROOT / "assets/reference/profession-ui/native-ik-source-manifest.json"),
