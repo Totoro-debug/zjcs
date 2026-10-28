@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国原实体奖励截留 | [奖励截留来源清单](official-map/map14-entity-award-hook-source-manifest.json)：完整原组件、原奖励管理器 IL、原消息身份与历史处理／延迟展示顺序及来源哈希；验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原世界实体触摸输入 | [输入来源清单](official-map/map14-world-input-source-manifest.json)：原输入分支与调用顺序、原共享实体／玩家交互／网格查询、重定向身份及来源哈希；实际验证边界见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原实体根客户端组件 | [组件来源清单](official-map/map14-client-components-source-manifest.json)：八个原客户端组件、原共享组件／配置身份与查询、奖励原对象／列表引用及来源哈希；四类雕像模板绑定范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原客户端实体索引 | [索引来源清单](official-map/map14-entity-index-source-manifest.json)：固定 871 原索引处理器、3860 目录／9604 编号的原文本、原 JSON 解码入口及 LiteDB 5.0.20 平台依赖哈希／许可；运行范围见[龙之国](../../docs/maps/map-14.md) |

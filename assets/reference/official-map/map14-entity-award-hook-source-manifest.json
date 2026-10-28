@@ -1,0 +1,128 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityAwardItemHook.cs",
+      "sha256": "23155440f3c0e2be8ac887460a93cd7c42040ff81a0e828e6473ec9c380f6923"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/AwardManager.cs",
+      "sha256": "d3f8e5b1f75be0a02829eb656651edb758e540355e46ec12602391868b9c4a57"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerAwardMsg.cs",
+      "sha256": "97e8ebe2842550619d655285fcb5597a6f803c6bd8d6cae408f29691111dcd44"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AsMapEntity.cs",
+      "sha256": "e4f7af6564dd6879816e71b609f20850fb61eb1de0a288c9c61098763726bf3d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/AwardSourceData.cs",
+      "sha256": "96de09973cf1d83afb0cfaa66d06ac23b32550bf1717314c026ed27fcac193fa"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_entity_award_hook.py",
+      "sha256": "abfcca92ceaf580d3dcf811293b3711f8dcb50946f9294d58c5a284cb968aca9"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardHandlerPriority.cs",
+      "sha256": "950d29ff4bd1a4c4dfa5c9133ccdf046a4d683ba0f4e7cf8c4e37dbf5675b99f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardHandlerPriority.cs.meta",
+      "sha256": "9caeb0142dc6a9b83880272f9938a0352eb8d46d004ceb7591053cdaa61fb704"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardHookBindings.cs",
+      "sha256": "d8d71ae556047df85c35ad5157f51a16bc8f058c584d5cd0b37a0d5961f2759e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardHookBindings.cs.meta",
+      "sha256": "0ec0941126294484308eecc4ed5d62f069220210926a7766978972a70bbd23b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardItemHook.cs",
+      "sha256": "39674a9e0c37ec01e40f5829d95e1f87fd21bc246e7c8bf0d12a881dce22ced2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/EntityAwardItemHook.cs.meta",
+      "sha256": "24285e379b0da5eee04a72f52827299d1610aca33c137ffbf20be1c181f6b789"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/Zjcs.Official.EntityAwardHook.asmdef",
+      "sha256": "4e8ffd0e82dd6a6327a99c2c86b1f023dd270821a739bff2f0a8c8c5181d6461"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook/Zjcs.Official.EntityAwardHook.asmdef.meta",
+      "sha256": "b0656607438fa9429a5e0cdb8bcd8cc13fab5081297db3451ff73ac231f9c3c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityAwardHook.meta",
+      "sha256": "9cd17cb1eaf93b51f561d686b64ba34b2a3d5fa429053f78cbb30f0357d05dab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook/NativeMap14EntityAwardManager.cs",
+      "sha256": "dda22339743cd57f5af038712f6840e1071fbaca3c14ebf8109832b19789c766"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook/NativeMap14EntityAwardManager.cs.meta",
+      "sha256": "6f3e8bd803681dd17ad5866f562d732a174ae0e0743b8399b896a55e6c8563c1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook/Zjcs.Offline.World.NativeMap14EntityAwardHook.asmdef",
+      "sha256": "b8bb076142307ce14a462e781e46f724ab4e306cb432dd542ffc403ffb249728"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook/Zjcs.Offline.World.NativeMap14EntityAwardHook.asmdef.meta",
+      "sha256": "fa1371d9f63f07d37af3d4b34f764df5a5dc37993ecb6be52fca93f3786a41d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityAwardHook.meta",
+      "sha256": "676d56189755b38676fa8eb66b5e28466c39ad0bda15c03b25c61d77dbdd662b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityAwardHook/OfficialMap14EntityAwardHookAcceptance.cs",
+      "sha256": "0c403ad482d932b0b557712524b7b5f53f894bffac89f50f67487645cde08053"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityAwardHook/OfficialMap14EntityAwardHookAcceptance.cs.meta",
+      "sha256": "6902e2a06b745190dda7615a82d0e1df194e2ae89571d3116dfd877a34a35e25"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityAwardHook/Zjcs.Editor.Map14.EntityAwardHook.asmdef",
+      "sha256": "1bab6026450bd9066c53cb2e1da0bcf8f60356c973133ca2e5a90c53c7b46d62"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityAwardHook/Zjcs.Editor.Map14.EntityAwardHook.asmdef.meta",
+      "sha256": "cb88aec5e0d1f2369dafab6f3895f3f00795f4454ceb3657a69eec95f0f37c83"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityAwardHook.meta",
+      "sha256": "5f21723aa76d26370c26b594939f97edfca32ce629f633560d8094399b74154d"
+    }
+  ],
+  "operation": "Copy complete original EntityAwardItemHook and priority enum. Explicit local injection supplies the unchanged Console AwardManager; preserve native message/source identities, original handler ordering/history processing and deferred replay. Do not apply or synthesize player rewards.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14EntityAwardHookAcceptance.Run",
+    "graphicalPlayMode": true
+  },
+  "limitations": [
+    "Formal award/player/inventory/window services, original root prefab binding, pointer/UI/save and Windows Player remain required. Hook tests consume original messages and original manager IL, not server reward generation."
+  ]
+}
