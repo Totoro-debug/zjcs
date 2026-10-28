@@ -107,8 +107,8 @@ def record_stele_ui_sources():
         metadata = path.with_name(path.name + ".meta")
         if not metadata.exists():
             write_texture_meta(path)
-            # Final native Sprite settings are applied by ImportSprites, after
-            # runtime acceptance resumes. Keep stable source metadata meanwhile.
+            # Final native Sprite settings are applied by ImportSprites.
+            # Keep stable source metadata until explicit native import.
             metadata.write_text("\n".join(line.rstrip() for line in metadata.read_text(encoding="utf8").splitlines()) + "\n", encoding="utf8", newline="\n")
         reward_ids = {r["ClassId"] for r in steles["Items"]}
         reward_sprites = {item[field] for item in data["itemIcons"] if item["itemId"] in reward_ids
@@ -133,6 +133,7 @@ def record_stele_ui_sources():
         "unity/Assets/Game/Runtime/Presentation/World/OfficialMap11UiData.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Stage.cs", "unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs",
         "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs",
+        "unity/Assets/Game/Runtime/Presentation/World/OfficialMap12SteleRewardView.cs",
         "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs",
         "unity/Assets/Game/Editor/OfficialMap11UiTools.Confirm.cs",
         "unity/Assets/Game/Runtime/Official/WorldUI/WorldInitializedUI.cs",
@@ -144,14 +145,14 @@ def record_stele_ui_sources():
     inputs = [steles_path, ROOT / "assets/reference/official-map/map12-steles-source-manifest.json",
               ui_root / "source-manifest.json", ROOT / "unity/Assets/Official/World/Map/12/Source/ui-prefabs-source-manifest.json"]
     receipt = dict(manifest=data["manifest"], mapClassId=12,
-        operation="Decode four original native prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Windows native import and runtime integration are pending.",
+        operation="Decode four original prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Native Windows assets are recorded separately.",
         inputs=[record(p) for p in inputs], originalCode=[record(p) for p in originals], adapters=[record(p) for p in adapters],
         prefabs={key: ui_manifest["source"]["prefabs"][key] for key in keys},
         outputs=[record(ui_path)] + [record(p) for p in sorted(set(sprites))],
         counts=dict(panels=len(data["panels"]), sprites=len(data["sprites"]), rewardItems=50, stateReferences=len(refs)),
-        limitations=["Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
-            "NPC team binding, map window entry, native ConfirmDialog runtime verification, hyperlink handling, UI audio/text effects and complete reward rendering remain pending.",
-            "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."])
+        limitations=["This source receipt alone does not prove native Windows import or runtime behavior; native assets are recorded separately.",
+            "NPC team binding, map window entry, item detail windows, hyperlink handling and UI audio/text effects remain pending.",
+            "The two-size seven-placement simulated-input fixture verifies the original window, fixed reward icons and confirmation flow; actual map teams and battles require separate verification."])
     target = ROOT / "assets/reference/official-map/map12-stele-ui-source-manifest.json"
     write(target, encode(receipt))
     print("Map12 stele UI source closure verified: 72 panels, 50 reward item icons, three exact Int64 managed references.", flush=True)

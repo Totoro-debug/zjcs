@@ -32,18 +32,23 @@ namespace Zjcs.Editor
                 view.PopupWindow.Show();
             }
             Init("确认");
+            // Let UIBase.Start schedule the original frame-end text initialization
+            // before waiting for the popup animation to finish.
+            yield return null;
             yield return new WaitForSecondsRealtime(.6f);
             yield return new WaitForEndOfFrame();
             SteleRequire(view.TitleText.myKey == "confirmation" && view.ConfirmText.myKey == "confirm"
                 && view.CancelText.myKey == "cancel" && !view.HintGo.activeSelf,
                 "Confirmation initialization changed its original keys or hint visibility.");
             SteleRequire(view.ContentText.IsSingleLine
+                && view.ContentText.mTmp.text == "确认"
                 && view.ContentText.mTmp.alignment == view.ContentText.mSingleLineAlignment,
                 "Single-line confirmation alignment changed.");
             view.SetCustomWidthBtn();
             SteleRequire(view.CancelBtnLayoutElement.preferredWidth == view.CancelBtnCustomWidth,
                 "Original confirmation custom cancel width was lost.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(output, width + "-stele-confirm-single.png"));
+            yield return new WaitForEndOfFrame();
+            CaptureSteleUiFrame(Path.Combine(output, width + "-stele-confirm-single.png"));
             SimulateUiClick(view.ConfirmBtn, camera);
             SteleRequire(events.SequenceEqual(new[] { "confirm", "close" }), "Confirm invoked cancel or changed callback/close order.");
             events.Clear();
@@ -55,7 +60,7 @@ namespace Zjcs.Editor
                 && view.ContentText.mTmp.alignment == view.ContentText.mMultiLineAlignment
                 && view.HintText.GetComponent<TextMeshProUGUI>().alignment == view.ContentText.mTmp.alignment,
                 "Multi-line confirmation or visible hint alignment changed.");
-            ScreenCapture.CaptureScreenshot(Path.Combine(output, width + "-stele-confirm-multi.png"));
+            CaptureSteleUiFrame(Path.Combine(output, width + "-stele-confirm-multi.png"));
             SimulateUiClick(view.CancelBtn, camera);
             SteleRequire(events.SequenceEqual(new[] { "cancel", "close" }), "Cancel callback ran twice on disable.");
             events.Clear();
@@ -88,6 +93,9 @@ namespace Zjcs.Editor
             SteleRequire(locked.mLockTimeDefault == 10, "The original prefab lock default changed.");
             view.SetConfirmBtnLock(.3f);
             SteleRequire(mask.activeSelf && timerText.gameObject.activeSelf, "Timed confirmation lock was not shown.");
+            // A newly enabled Graphic has depth -1 until its first render.
+            // Exercise the displayed mask through the same raycaster as a player click.
+            yield return new WaitForEndOfFrame();
             Canvas.ForceUpdateCanvases();
             var rect = (RectTransform)view.ConfirmBtn.targetGraphic.transform;
             var pointer = new PointerEventData(EventSystem.current)

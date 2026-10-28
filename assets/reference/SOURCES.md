@@ -49,3 +49,5 @@ python -B scripts/fetch_official_assets.py --extract '<bundle 名称正则>'
 原始包、工具及缓存不进入 Windows 运行目录。Android → Windows 的恢复、脚本／shader／插件适配和目标平台检查见[素材管理](../../docs/asset-management.md#android-资源迁移到-windows)。
 
 Map13 原剧情 prefab Windows 转换与 NPC 序列：固定 871_156598 的 278 个 bundle／3,904 个组件／8,927 个对象，恢复 1 个原托管引用表后逐对象核对 15 份 prefab 的 418 个 GameObject、418 个 Transform、152 个脚本组件、1,676 处指针及 7,864 项值；8 份 NPC 原生序列、8 个原脚本绑定与显式 GUID 目录已接入。输入、工具、对象身份、源字段、转换／交付哈希及 Unity 2022.3.57f1c2 D3D11 参数／显隐／重播验证见 `map13-native-story-playable-input-source-manifest.json`、`map13-native-story-playable-export-source-manifest.json`、`map13-story-playable-hierarchy-source-manifest.json`、`map13-native-npc-story-playables-source-manifest.json`。本机会话转换缓存位于 `output/validation/`，运行载荷位于 `Assets/Official/World/Map/13/NativeNpcStoryPlayables/`；不包含导出 C# 空壳、Spine runtime 或替代图像，未生成完整素材快照。实际 NPC 画面、可听声音、完整剧情／地图输入存档及 Windows Player 仍未完成。
+
+山之国战斗碑来源：[原始规则与物品](official-map/map12-steles-source-manifest.json) · [原窗口转换](official-map/map12-stele-ui-source-manifest.json) · [Windows 原生绑定](official-map/map12-ui-native-source-manifest.json)。

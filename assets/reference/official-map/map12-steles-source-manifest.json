@@ -2,19 +2,23 @@
   "adapters": [
     {
       "path": "scripts/prepare_unity_map12_steles.py",
-      "sha256": "5cc24c1ce84768b7a4224082a3065117c97acf435d6d333fabaad3588b2ce9b5"
+      "sha256": "0bade4c113450a834335f06f41dd45fb3643e91bd552ebbf6e80dfd14116adbc"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Steles.cs",
-      "sha256": "803460d7b6a718a2ad38dd7156da1944f4213460f9fb23479de9156ea6702423"
+      "sha256": "86d1a3d79930a58e94bde857e482f155947c6d4cd52614bec3c2640252aefb1c"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Steles.cs",
       "sha256": "f198b244815221fb4a4c372eac76347fb42caae34a002d857c80548d697e0b25"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap12SteleRewardView.cs",
+      "sha256": "6d9ce3abb22a6058b6e316c196ea8e603fb767dd32447f499b9f5553d986644b"
+    },
+    {
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Steles.cs",
-      "sha256": "72d5b66d43ab425543bc5b5c9463a989f29fd4460ed1054f74eb205f3fa4561a"
+      "sha256": "7abc70ec67d3fb3a1020fffcf9bd558d6d14f53abd2db77f77f45b6f6dfc096e"
     }
   ],
   "assemblies": {
@@ -206,11 +210,27 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
       "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/ItemComparerBase.cs",
+      "sha256": "ef161394145f5f18bb8f85cf6499ce493a5480b078c83a0da7063833488706fb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AwardUtils.cs",
+      "sha256": "caf09dc647c3abe0054fcc1886d5979272bd6b3027b884ad5c102f76ef414eac"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerItemManagerExt.cs",
+      "sha256": "1ebcf8aeaee499afc7700ead7791c0156d24624cc0e9cf9d3ebac37a4c506356"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ItemIcon.cs",
+      "sha256": "767aecf58005653613080af4d23138cb9209c4abed97db2744e0ec64962db774"
     }
   ],
   "limitations": [
-    "Dedicated native BattleSteleWorldStageDialog and NPC-team input still require migration and runtime acceptance.",
-    "Runtime acceptance is paused by the user; this receipt does not prove Play Mode or Player behavior."
+    "Native BattleSteleWorldStageDialog has separate two-size input verification; formal map/NPC-team binding remains pending.",
+    "This source receipt does not prove actual reward rendering, real battles, save recovery or Windows Player behavior."
   ],
   "manifest": "871_156598",
   "mapClassId": 12,
@@ -252,7 +272,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json",
-      "sha256": "77957658a9ae12d24594feef3219b1cb64ac4aaf9b54dcbcc0d1da672b639b3a"
+      "sha256": "4e7a120c7db870a3af53c0a0676ae2493eef6882b18b8809c0a582c769f05ec0"
     },
     {
       "path": "unity/Assets/Official/World/Map/12/Source/stele-operations.json",

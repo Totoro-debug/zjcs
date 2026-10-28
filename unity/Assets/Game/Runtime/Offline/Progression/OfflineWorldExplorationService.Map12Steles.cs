@@ -23,6 +23,20 @@ namespace Zjcs.Offline.Progression
         public OfficialMap12Stele[] Steles;
         public OfficialExploreRewardRule[] RewardRules;
         public int[] EmptyRewardRuleIds;
+        public OfficialMap12SteleRewardItem[] Items;
+        public OfficialMap12SteleRewardSettings RewardPreviewSettings;
+    }
+
+    [Serializable] public sealed class OfficialMap12SteleRewardItem
+    {
+        public int ClassId, ItemType, Quality;
+        public bool CanDropWhenExist;
+    }
+
+    [Serializable] public sealed class OfficialMap12SteleRewardSettings
+    {
+        public int PlayerExpItemId;
+        public int[] IgnoreShowAwardId;
     }
 
     public sealed class OfficialMap12SteleCatalog
@@ -36,6 +50,13 @@ namespace Zjcs.Offline.Progression
                 || Data.RewardRules?.Length != 52 || Data.TeamMaxPlayer != 4
                 || Data.EmptyRewardRuleIds == null || !Data.EmptyRewardRuleIds.SequenceEqual(new[] { 1850, 1853 }))
                 throw new InvalidDataException("Original Map12 stele rules are incomplete.");
+            if (Data.Items?.Length != 50 || Data.Items.Select(v => v.ClassId).Distinct().Count() != 50
+                || !Data.Items.Select(v => v.ClassId).OrderBy(v => v)
+                    .SequenceEqual(Data.RewardRules.Select(v => v.IdList[0]).Distinct().OrderBy(v => v))
+                || Data.RewardPreviewSettings == null || Data.RewardPreviewSettings.PlayerExpItemId <= 0
+                || Data.RewardPreviewSettings.IgnoreShowAwardId == null
+                || Data.Items.Any(v => !v.CanDropWhenExist || v.ItemType != 1 && v.ItemType != 302 && v.ItemType != 412))
+                throw new InvalidDataException("Original Map12 stele item/filter closure changed.");
             // JsonUtility materializes JSON null reference fields. Retain the
             // original unconditional rule rather than testing an empty condition.
             var raw = Object(Zjcs.Offline.Equipment.OfficialEquipmentJson.Parse(json));

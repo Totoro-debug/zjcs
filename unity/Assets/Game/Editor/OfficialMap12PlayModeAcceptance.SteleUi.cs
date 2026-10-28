@@ -14,7 +14,25 @@ namespace Zjcs.Editor
 {
     public static partial class OfficialMap12PlayModeAcceptance
     {
+        public static void ImportAndRunSteleUi()
+        {
+            try
+            {
+                OfficialMap11UiTools.ImportForMap(12, new[] {
+                    "BattleSteleWorldStageDialog", "6650_DialogIcon", "6655_DialogIcon", "ConfirmDialog"
+                });
+                RunSteleUi();
+            }
+            catch (Exception error) { Debug.LogException(error); UnityEditor.EditorApplication.Exit(1); }
+        }
+
         public static void RunSteleUi() => RunCore(false, false, verifySteleUi: true);
+
+        public static void RunSteleRulesAndUi()
+        {
+            try { RunSteleRuleChecks(); RunSteleUi(); }
+            catch (Exception error) { Debug.LogException(error); UnityEditor.EditorApplication.Exit(1); }
+        }
 
         private static IEnumerator VerifySteleUiSteps()
         {
@@ -60,6 +78,7 @@ namespace Zjcs.Editor
                         if (view == null) throw new InvalidDataException("Original stele script bindings are missing.");
                         var events = new List<string>();
                         Action confirm = null, fight = null;
+                        Transform rewardSlot = null;
                         int members = 3;
                         bool hasTeam = false;
                         var context = new WorldStageUiContext
@@ -67,7 +86,13 @@ namespace Zjcs.Editor
                             NameKey = "stage_" + stele.StageId + "_name", DescriptionKey = null,
                             DialogIconPrefab = Resources.Load<GameObject>("Map12/UI/" + stele.EntityClassId + "_DialogIcon"),
                             Background = assets.mapBackground, Level = stele.RegionLevel,
-                            ShowRewardPreview = slot => events.Add("reward"),
+                            ShowRewardPreview = slot =>
+                            {
+                                events.Add("reward");
+                                rewardSlot = slot;
+                                OfficialMap12SteleRewardView.Populate(slot, steles, stele, assets, "Map12/UI/",
+                                    key => Text(data, key), id => events.Add("item:" + id));
+                            },
                             StartStage = index => events.Add("start:" + index), Close = () => events.Add("close"),
                             BattleStele = new WorldBattleSteleContext
                             {
@@ -97,7 +122,8 @@ namespace Zjcs.Editor
                             SteleRequire(view.mRankSuppressionText.gameObject.activeInHierarchy == suppressed, "Rank suppression visibility changed.");
                         }
                         yield return new WaitForEndOfFrame();
-                        ScreenCapture.CaptureScreenshot(Path.Combine(output, width + "-stele-" + stele.PlacementId + ".png"));
+                        CaptureSteleUiFrame(Path.Combine(output, width + "-stele-" + stele.PlacementId + ".png"));
+                        VerifySteleRewards(stele, rewardSlot, assets, camera, events);
                         events.Clear();
                         if (stele.SupportTeam)
                         {
@@ -132,7 +158,43 @@ namespace Zjcs.Editor
                 }
             }
             finally { WorldMultiLanguageText.Localize = previousLanguage; UnityEngine.Object.Destroy(camera.gameObject); }
-            Debug.Log("Map12 stele UI simulated input passed at two portrait sizes for all seven placements. The native confirmation callbacks, alignment and lock mask also passed. Real NPC teams, reward rendering and map battles remain separate.");
+            Debug.Log("Map12 stele UI simulated input passed at two portrait sizes for all seven placements, including original reward sprites, quality frames, counts, refresh and item click dispatch. The native confirmation callbacks, alignment and lock mask also passed. Real item detail windows, NPC teams and map battles remain separate.");
+        }
+
+        private static void VerifySteleRewards(OfficialMap12Stele stele, Transform slot, OfficialMap11UiAssets assets,
+            Camera camera, List<string> events)
+        {
+            // Golden values from the selected original condition branches, not
+            // from the renderer or its runtime reward evaluator.
+            int[] ids = stele.PlacementId switch
+            {
+                1813 or 2530 => new[] { 2, 9203 },
+                3013 or 5519 => new[] { 110, 9219 },
+                6406 or 6614 => new[] { 2, 9205 },
+                8320 => new[] { 110, 9220 },
+                _ => throw new InvalidDataException("Unverified stele reward placement.")
+            };
+            string[] counts = ids[0] == 2 ? new[] { "120", "1" } : new[] { "3", "2" };
+            var icons = slot.GetComponentsInChildren<WorldItemIcon>(false);
+            SteleRequire(icons.Length == ids.Length, "Stele refresh duplicated or lost original reward icons.");
+            events.Clear();
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var icon = icons[i];
+                SteleRequire(icon.Icon.sprite == assets.Item(ids[i]) && icon.QualityImg.sprite == assets.ItemQuality(ids[i])
+                    && icon.myTextGo.activeSelf && icon.myText.text == counts[i],
+                    "Stele reward order, original sprite/quality frame or fixed count changed.");
+                SimulateUiClick(icon.GetComponent<Button>(), camera);
+            }
+            SteleRequire(events.SequenceEqual(ids.Select(id => "item:" + id)),
+                "Original item buttons lost simulated pointer dispatch or retained stale listeners.");
+        }
+
+        private static void CaptureSteleUiFrame(string path)
+        {
+            Texture2D frame = ScreenCapture.CaptureScreenshotAsTexture();
+            try { File.WriteAllBytes(path, frame.EncodeToPNG()); }
+            finally { UnityEngine.Object.Destroy(frame); }
         }
     }
 }

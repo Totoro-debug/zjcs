@@ -158,9 +158,15 @@ def build(update=False):
     packages = [v for v in table('random_reward', 'TbRandomRewardInfo') if v['Id'] in item_ids]
     if len(items) != len(item_ids) or any(v['IsCanAutoExpend'] for v in packages):
         raise ValueError('Stele fixed item closure requires automatic package expansion')
+    # AwardUtils has extra filters for appearance, score and friendship types.
+    # None applies to this exact fixed-drop closure; do not silently extend it.
+    if any(v['ItemType'] not in (1, 302, 412) or not v['CanDropWhenExist'] for v in items):
+        raise ValueError('Stele reward preview requires another original item/filter adapter')
     payload = dict(manifest=apk.version, mapClassId=12, TeamMaxPlayer=modes[0]['TeamMaxPlayer'],
         RecommendCombatRatingIndex=recommend_index, Steles=sorted(steles, key=lambda v: v['PlacementId']),
-        RewardRules=rules, Items=items, EmptyRewardRuleIds=empty)
+        RewardRules=rules, Items=items, EmptyRewardRuleIds=empty,
+        RewardPreviewSettings=dict(PlayerExpItemId=settings['PlayerExpItemId'],
+            IgnoreShowAwardId=settings['IgnoreShowAwardId']))
     candidates = {OUTPUT: encode(payload), NATIVE: encode(dict(manifest=apk.version, Displays=operations))}
     for path, raw in candidates.items():
         if path.exists() and path.read_bytes() != raw and not update:
@@ -174,10 +180,13 @@ def build(update=False):
     originals += ['common-source/Common/' + n + '.cs' for n in ('StageBehStageBattleSteleComponent',
         'StageConPlayerPeriodicityInteractionComponent', 'MapPeriodicityInteractionInfoParser',
         'StagePartInfoBattleStele', 'WorldEntityLevelComponent', 'RewardRuleInfoParser', 'FormulaHandler')]
+    originals += ['common-source/ItemComparerBase.cs', 'client-source/AwardUtils.cs',
+        'common-source/Common/PlayerItemManagerExt.cs', 'client-source/ItemIcon.cs']
     inputs += [record(code / name) for name in originals]
     adapters = [ROOT / p for p in ('scripts/prepare_unity_map12_steles.py',
         'unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Steles.cs',
         'unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Steles.cs',
+        'unity/Assets/Game/Runtime/Presentation/World/OfficialMap12SteleRewardView.cs',
         'unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Steles.cs')]
     proof = dict(manifest=apk.version, mapClassId=12, inputs=inputs, assemblies={
         name: record(code / 'managed/decoded' / name) for name in ('Assembly-CSharp.dll', 'Console.dll')},
@@ -187,8 +196,8 @@ def build(update=False):
         emptyRewardRuleIds=empty,
         emptyRuleBehavior='Selected complete reward table lacks these IDs; original RewardRuleInfoParser.Get returns null, so no invented reward is added.',
         offlinePolicy='User confirmed stele entity level/rank inherit its own region; original monster +7 and formation offsets; existing confirmed map reward rules.',
-        limitations=['Dedicated native BattleSteleWorldStageDialog and NPC-team input still require migration and runtime acceptance.',
-            'Runtime acceptance is paused by the user; this receipt does not prove Play Mode or Player behavior.'])
+        limitations=['Native BattleSteleWorldStageDialog has separate two-size input verification; formal map/NPC-team binding remains pending.',
+            'This source receipt does not prove actual reward rendering, real battles, save recovery or Windows Player behavior.'])
     raw = encode(proof)
     if RECEIPT.exists() and RECEIPT.read_bytes() != raw and not update:
         raise ValueError('Stele source receipt differs; inspect before --update')

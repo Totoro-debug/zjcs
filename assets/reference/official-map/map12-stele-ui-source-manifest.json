@@ -1,9 +1,9 @@
 {
   "adapters": [
     {
-      "bytes": 14572,
+      "bytes": 14644,
       "path": "scripts/prepare_unity_map12_ui.py",
-      "sha256": "cc6ab9daebd1802ce40a35055e70916ea6d05de53f0af6f72360b2fcb9b26443"
+      "sha256": "0f1113f2d0cb5cf3c4a500593526322bcb347ac54e32b9fa0f1bd5d06a022134"
     },
     {
       "bytes": 72953,
@@ -56,14 +56,19 @@
       "sha256": "50a82464aaf10333fd690c5b06de4a4323348c5ab00d78cfba4ffb4399fe3b1e"
     },
     {
-      "bytes": 10259,
+      "bytes": 13458,
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs",
-      "sha256": "02600400b60965fb4f01258e916c662457c25a6c466ad80d27431bacdf225c11"
+      "sha256": "d16dbc558778194165e9eb84e963092005259c546ee11e510872552662b3923b"
     },
     {
-      "bytes": 7122,
+      "bytes": 2758,
+      "path": "unity/Assets/Game/Runtime/Presentation/World/OfficialMap12SteleRewardView.cs",
+      "sha256": "6d9ce3abb22a6058b6e316c196ea8e603fb767dd32447f499b9f5553d986644b"
+    },
+    {
+      "bytes": 7601,
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.ConfirmUi.cs",
-      "sha256": "49d23346df13daf3392e8da203dbf40c7657d078a6d4d8e5092d21d601ab1fbc"
+      "sha256": "9e9d1ac4e0cff9e6ab2337b81c0066e1adee6143c927aa9c81a7df4a1b35758d"
     },
     {
       "bytes": 4446,
@@ -109,14 +114,14 @@
   },
   "inputs": [
     {
-      "bytes": 67308,
+      "bytes": 67432,
       "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json",
-      "sha256": "77957658a9ae12d24594feef3219b1cb64ac4aaf9b54dcbcc0d1da672b639b3a"
+      "sha256": "4e7a120c7db870a3af53c0a0676ae2493eef6882b18b8809c0a582c769f05ec0"
     },
     {
-      "bytes": 12152,
+      "bytes": 13177,
       "path": "assets/reference/official-map/map12-steles-source-manifest.json",
-      "sha256": "8e7fa248727199c313039620e6759aae974583b1a0df9b0b04bc28a764f73b75"
+      "sha256": "dd089d92082ead638447de4090b1cbca037b841c84132886e3ede68809fd2781"
     },
     {
       "bytes": 2068214,
@@ -130,13 +135,13 @@
     }
   ],
   "limitations": [
-    "Native Windows prefabs/catalog still require explicit Unity import; this receipt records source conversion only.",
-    "NPC team binding, map window entry, native ConfirmDialog runtime verification, hyperlink handling, UI audio/text effects and complete reward rendering remain pending.",
-    "The two-size seven-placement simulated-input fixture is authored and not executed while automatic runtime acceptance is paused."
+    "This source receipt alone does not prove native Windows import or runtime behavior; native assets are recorded separately.",
+    "NPC team binding, map window entry, item detail windows, hyperlink handling and UI audio/text effects remain pending.",
+    "The two-size seven-placement simulated-input fixture verifies the original window, fixed reward icons and confirmation flow; actual map teams and battles require separate verification."
   ],
   "manifest": "871_156598",
   "mapClassId": 12,
-  "operation": "Decode four original native prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Windows native import and runtime integration are pending.",
+  "operation": "Decode four original prefab dependencies, preserve signed Int64 managed references and original UI methods, and retain all 50 original reward item icons. Native Windows assets are recorded separately.",
   "originalCode": [
     {
       "bytes": 7201,
@@ -231,9 +236,9 @@
       "sha256": "17334a6f2d6aa37aa2b4a0980163776d613b7cab159138674ba4759fe4360775"
     },
     {
-      "bytes": 493,
+      "bytes": 2621,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ChallengeMonumenticon_For-17334a6f2d.png.meta",
-      "sha256": "3b337dee9b464c73c88570f73896881b48d87982f506bd691123504dab98d4d8"
+      "sha256": "0c2ffb052793b1515970d8f967936ffc6f70cb56b0cf521c26b6a71d34d45f30"
     },
     {
       "bytes": 115742,
@@ -241,9 +246,9 @@
       "sha256": "6fab0d93abc102b584e13c3e1c606d39dcbae54daf92f34965c11d0af125cfa4"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Assault1-6fab0d93ab.png.meta",
-      "sha256": "55c202dcf223f15bf2a43ccc826289552c1cea92939697bfc864b590ead8fcb1"
+      "sha256": "c9980a251e75bc23ee554ae5937b0d4d120a0b0497b115aaf39f481a2390357d"
     },
     {
       "bytes": 266211,
@@ -251,9 +256,9 @@
       "sha256": "3b6f595ac18f6340106a93dad198a8fe87b704d19ff81168111e6710ee9e208c"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_BattleStele-3b6f595ac1.png.meta",
-      "sha256": "0afe69077580aab418e927a9e9b7fe7dd377aac79330cbdce9986719b59399a9"
+      "sha256": "71579d2a8865c4d375fb343ccf4c193b1f8fefc35392aa40f00e1cbcd37c7565"
     },
     {
       "bytes": 14200,
@@ -261,9 +266,9 @@
       "sha256": "7e14ad5a289abf9e2b81207007b9e4d4ef1a09731730e07fd36731f53f46eef5"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Claw-7e14ad5a28.png.meta",
-      "sha256": "8f3d286579af447c2bfd7fae1c038e12faa7e9dac7a25dc987d3be9ab24d5422"
+      "sha256": "02df8a5d4f0dab2e1a5ddace7cbb2caf29c13a2cb230e91d757a72e93cbdb20b"
     },
     {
       "bytes": 629,
@@ -311,9 +316,9 @@
       "sha256": "9d9be6a566f60025b0e590ae632337372eda660c4a6b9c2245fc8853c623ce6c"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_Prompt-9d9be6a566.png.meta",
-      "sha256": "17ad970a633ca92dfb5467b8a65e5561f9ea2aa3c0bfc1252d4373f86d2f68d1"
+      "sha256": "5bb7ad77c4e4fbcf4507d2cb14ab91b05d2ec480bab1022f697f25c542a01a33"
     },
     {
       "bytes": 4372,
@@ -441,9 +446,9 @@
       "sha256": "1676ff1043232a0f59f54078ceb0fc9172212089498cbd27db3a51cf7ccdb70d"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_blue_5-1676ff1043.png.meta",
-      "sha256": "3110f9fc6bda75186e33fce7f96f8ec2fa741fdd46ae1aabb888cbf08bd94456"
+      "sha256": "3c12efbc4b8e0251ec60f2f391d5185f588e6ace2c1da240c9f6c19c597536ca"
     },
     {
       "bytes": 36066,
@@ -451,9 +456,9 @@
       "sha256": "c8ad5c6fc89a1cc9ed526e4b349de44717290a4f0a937bd826d17598082ff1b7"
     },
     {
-      "bytes": 493,
+      "bytes": 2623,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/itembox_white_5-c8ad5c6fc8.png.meta",
-      "sha256": "177c6b21be0721e0afd0940f1fbf8f4a00ccd944f355d0e30bc586e4d1f45080"
+      "sha256": "3e851cd23c2ff4e5ec6097910960fd38540741b5da1a9fbdfde3b43d021499a9"
     },
     {
       "bytes": 38646,
@@ -471,9 +476,9 @@
       "sha256": "6336d77662e3554a362b58ae81abc11bb778bf0e5a450b34443e34a212c610fa"
     },
     {
-      "bytes": 493,
+      "bytes": 2621,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallenge_For-6336d77662.png.meta",
-      "sha256": "f122f14589f6e92feb5408465e9c63d89c1c123d8f0f285669ea37b542c485fb"
+      "sha256": "c589125c1cdb9f42e7db5e8fd2044db8dffac00b1a30df0a12b2569b7d120a73"
     },
     {
       "bytes": 11175,
@@ -481,9 +486,9 @@
       "sha256": "0d904e418c24eb80294652635c72c4e5d273dae9ffa1e4fc57d004710a30a37e"
     },
     {
-      "bytes": 493,
+      "bytes": 2621,
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/SoloChallengeicon_For-0d904e418c.png.meta",
-      "sha256": "dc0096a8103e2a3e4c24ffb89ebc663eb48a2afb22f1910cbc9e8319596e54a5"
+      "sha256": "855356ab9acb7447078516f4e46df3c3379bdc86bee7e5088b0e35cd18a3f18f"
     }
   ],
   "prefabs": {

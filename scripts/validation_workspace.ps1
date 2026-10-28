@@ -8,9 +8,25 @@ function Assert-ZjcsValidationTree([string]$Path) {
     if ($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
         throw "Validation cleanup refuses a junction or symbolic link: $Path"
     }
-    if ($item.PSIsContainer) {
-        foreach ($child in Get-ChildItem -LiteralPath $Path -Force -ErrorAction Stop) {
-            Assert-ZjcsValidationTree $child.FullName
+    if (-not $item.PSIsContainer) { return }
+    $directories = [System.Collections.Generic.Stack[System.IO.DirectoryInfo]]::new()
+    $directories.Push([System.IO.DirectoryInfo]::new($item.FullName))
+    while ($directories.Count -gt 0) {
+        $directory = $directories.Pop()
+        $directory.Refresh()
+        if ($directory.Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+            throw "Validation cleanup refuses a junction or symbolic link: $($directory.FullName)"
+        }
+        foreach ($child in $directory.EnumerateFileSystemInfos()) {
+            # Inspect every entry, including hidden files, without invoking the
+            # PowerShell provider and recursive function again for each file.
+            $attributes = $child.Attributes
+            if ($attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+                throw "Validation cleanup refuses a junction or symbolic link: $($child.FullName)"
+            }
+            if ($attributes -band [System.IO.FileAttributes]::Directory) {
+                $directories.Push([System.IO.DirectoryInfo]$child)
+            }
         }
     }
 }
