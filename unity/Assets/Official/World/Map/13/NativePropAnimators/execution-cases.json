@@ -1,0 +1,3725 @@
+{
+  "entries": [
+    {
+      "key": "8207f89e18be965c4ab847e2",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8207f89e18be965c4ab847e2.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "3c4bcb2dc06fb402254c2ffa",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3c4bcb2dc06fb402254c2ffa.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "024d4b9125423166df3cb033",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/024d4b9125423166df3cb033.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "f1ad3c86c20082df8983ac9a",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_4_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/f1ad3c86c20082df8983ac9a.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "f8745fadd112f87bd2ce0918",
+      "kind": "AnimatorController",
+      "name": "map_yunLiuXuanWo_C_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/f8745fadd112f87bd2ce0918.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "1a32ffa3827e7ec9a27fc1d8",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "1a32ffa3827e7ec9a27fc1d8",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1a32ffa3827e7ec9a27fc1d8.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666667461395264,
+      "loop": true
+    },
+    {
+      "key": "3ed890e2452941dc43dcf4a9",
+      "kind": "AnimationClip",
+      "name": "open_01",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3ed890e2452941dc43dcf4a9.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.30000001192092896,
+      "loop": false
+    },
+    {
+      "key": "abbdd63caa3864215d45c8be",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/abbdd63caa3864215d45c8be.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "fd26fd10e5a84dfa9e9f263e",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/fd26fd10e5a84dfa9e9f263e.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "d4ddab9f1eff9ba51403b1ef",
+      "kind": "AnimatorController",
+      "name": "map_baoXiang_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/d4ddab9f1eff9ba51403b1ef.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "abbdd63caa3864215d45c8be",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_01",
+          "hash": 1731586686,
+          "clip_key": "3ed890e2452941dc43dcf4a9",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "fd26fd10e5a84dfa9e9f263e",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 4
+        },
+        {
+          "name": "opened",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "opened",
+              "mode": 1,
+              "threshold": 0.0
+            },
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 2,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            },
+            {
+              "name": "opened",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "1232afa3699cc3b8144fc4b2",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_1_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/1232afa3699cc3b8144fc4b2.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "ec8a3e3014a7529ed97f0440",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "8cab5a42db2b929f4de08a67",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "a38d1052c6b39f48fa42d8a7",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.8125,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "a38d1052c6b39f48fa42d8a7",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a38d1052c6b39f48fa42d8a7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "8cab5a42db2b929f4de08a67",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8cab5a42db2b929f4de08a67.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.6666669845581055,
+      "loop": false
+    },
+    {
+      "key": "ec8a3e3014a7529ed97f0440",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/ec8a3e3014a7529ed97f0440.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "1bfad783046fe4e71aca0efd",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1bfad783046fe4e71aca0efd.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "a66c4a520c701db68d81ddb0",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a66c4a520c701db68d81ddb0.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 4.0,
+      "loop": false
+    },
+    {
+      "key": "4d1c5158080bdf758ff7f07f",
+      "kind": "AnimatorController",
+      "name": "map_fangJianBei_C_1_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/4d1c5158080bdf758ff7f07f.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "95bfd124fb61440797170eff",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/95bfd124fb61440797170eff.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": false
+    },
+    {
+      "key": "fcc0193f1004ee343faec9fa",
+      "kind": "AnimationClip",
+      "name": "A_2_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/fcc0193f1004ee343faec9fa.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "a056c2dcabf3cb5a24f46275",
+      "kind": "AnimationClip",
+      "name": "C_7_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a056c2dcabf3cb5a24f46275.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "7b39e528be1923868761fa61",
+      "kind": "AnimationClip",
+      "name": "B_6_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7b39e528be1923868761fa61.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "2bf6e10ab9e1bb96e4319ef8",
+      "kind": "AnimationClip",
+      "name": "B_5_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/2bf6e10ab9e1bb96e4319ef8.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "9fb2afa2a663606293a1f166",
+      "kind": "AnimationClip",
+      "name": "B_5_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/9fb2afa2a663606293a1f166.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "e43d1552a34bee71eb95bb6d",
+      "kind": "AnimationClip",
+      "name": "A_2_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/e43d1552a34bee71eb95bb6d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "3baa87985ed73b6136a960d0",
+      "kind": "AnimationClip",
+      "name": "C_10_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3baa87985ed73b6136a960d0.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "25b1ec38ec25303c92b8dc45",
+      "kind": "AnimationClip",
+      "name": "A_3_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/25b1ec38ec25303c92b8dc45.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "bfd1f73631c9a53ffb8bf05f",
+      "kind": "AnimationClip",
+      "name": "C_7_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/bfd1f73631c9a53ffb8bf05f.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "95199f211a7491f0c2f169af",
+      "kind": "AnimationClip",
+      "name": "A_2_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/95199f211a7491f0c2f169af.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "7f8fc7bcacf1c42097c441a5",
+      "kind": "AnimationClip",
+      "name": "C_8_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7f8fc7bcacf1c42097c441a5.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "3e314910608e3bc152d094c7",
+      "kind": "AnimationClip",
+      "name": "A_1_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3e314910608e3bc152d094c7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "da71ca99b522512a67e3e799",
+      "kind": "AnimatorController",
+      "name": "map_mingYunShuTeng_Controller test",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/da71ca99b522512a67e3e799.controller",
+      "states": [
+        {
+          "name": "C_10_loop",
+          "hash": 1085160014,
+          "clip_key": "d8f33ad078e402708c353f84",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "C_10_start",
+          "hash": 1229850432,
+          "clip_key": "c22b1aa0835eeb83ccddcf6b",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Start_1",
+          "type": 9
+        },
+        {
+          "name": "Start_2",
+          "type": 9
+        },
+        {
+          "name": "Start_3",
+          "type": 9
+        },
+        {
+          "name": "Start_4",
+          "type": 9
+        },
+        {
+          "name": "Start_5",
+          "type": 9
+        },
+        {
+          "name": "Start_6",
+          "type": 9
+        },
+        {
+          "name": "Start_7",
+          "type": 9
+        },
+        {
+          "name": "Start_8",
+          "type": 9
+        },
+        {
+          "name": "Start_9",
+          "type": 9
+        },
+        {
+          "name": "Start_10",
+          "type": 9
+        },
+        {
+          "name": "Loop_1",
+          "type": 9
+        },
+        {
+          "name": "Loop_2",
+          "type": 9
+        },
+        {
+          "name": "Loop_3",
+          "type": 9
+        },
+        {
+          "name": "Loop_4",
+          "type": 9
+        },
+        {
+          "name": "Loop_5",
+          "type": 9
+        },
+        {
+          "name": "Loop_6",
+          "type": 9
+        },
+        {
+          "name": "Loop_7",
+          "type": 9
+        },
+        {
+          "name": "Loop_8",
+          "type": 9
+        },
+        {
+          "name": "Loop_9",
+          "type": 9
+        },
+        {
+          "name": "Loop_10",
+          "type": 9
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_10",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "4faf96468d51c6f02ae85e3b",
+      "kind": "AnimationClip",
+      "name": "C_8_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/4faf96468d51c6f02ae85e3b.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "d0ead819b68f7506b8976e08",
+      "kind": "AnimationClip",
+      "name": "C_9_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/d0ead819b68f7506b8976e08.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "f1d55320f7fddcdf308b81af",
+      "kind": "AnimationClip",
+      "name": "C_7_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/f1d55320f7fddcdf308b81af.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "1cfbfeb1698778f723dabff1",
+      "kind": "AnimationClip",
+      "name": "C_8_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1cfbfeb1698778f723dabff1.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "f994e004f46aba57e143f752",
+      "kind": "AnimationClip",
+      "name": "B_4_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/f994e004f46aba57e143f752.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "5704b78be65cb8617cd8ef30",
+      "kind": "AnimationClip",
+      "name": "B_6_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/5704b78be65cb8617cd8ef30.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "150748ab063d2f8c3c738086",
+      "kind": "AnimationClip",
+      "name": "A_1_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/150748ab063d2f8c3c738086.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "e014634834a53522d71642a7",
+      "kind": "AnimationClip",
+      "name": "A_1_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/e014634834a53522d71642a7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "036362a52573a171e490aa3a",
+      "kind": "AnimationClip",
+      "name": "A_3_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/036362a52573a171e490aa3a.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "56307cb49044fc28013e57b6",
+      "kind": "AnimationClip",
+      "name": "B_6_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/56307cb49044fc28013e57b6.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "a8d7a1b2ec310ed2ca8e6d4e",
+      "kind": "AnimationClip",
+      "name": "C_8_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a8d7a1b2ec310ed2ca8e6d4e.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "5b1e327a007f5ef2f4240435",
+      "kind": "AnimationClip",
+      "name": "C_9_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/5b1e327a007f5ef2f4240435.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "1b8e0407a3904612ac3e25e5",
+      "kind": "AnimationClip",
+      "name": "A_3_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1b8e0407a3904612ac3e25e5.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "21668a11e7734ae8475d32d2",
+      "kind": "AnimationClip",
+      "name": "B_4_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/21668a11e7734ae8475d32d2.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "1fa2317a7981d84a9cc5b8c3",
+      "kind": "AnimationClip",
+      "name": "C_7_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1fa2317a7981d84a9cc5b8c3.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "c22b1aa0835eeb83ccddcf6b",
+      "kind": "AnimationClip",
+      "name": "C_10_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/c22b1aa0835eeb83ccddcf6b.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.5000001192092896,
+      "loop": false
+    },
+    {
+      "key": "0ddeba3056f687b94977fdab",
+      "kind": "AnimationClip",
+      "name": "C_9_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/0ddeba3056f687b94977fdab.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "d8f33ad078e402708c353f84",
+      "kind": "AnimationClip",
+      "name": "C_10_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/d8f33ad078e402708c353f84.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "9e1319b7945a5852c6d508ea",
+      "kind": "AnimationClip",
+      "name": "A_2_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/9e1319b7945a5852c6d508ea.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "d5f1e2e46df7493e1b1711c2",
+      "kind": "AnimationClip",
+      "name": "B_6_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/d5f1e2e46df7493e1b1711c2.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "55df3c0f8b3076666f343ddb",
+      "kind": "AnimationClip",
+      "name": "C_9_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/55df3c0f8b3076666f343ddb.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "e0e314a21d45bf498e81e3ee",
+      "kind": "AnimationClip",
+      "name": "B_5_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/e0e314a21d45bf498e81e3ee.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "5ad1639cd46ad80b35588fef",
+      "kind": "AnimatorController",
+      "name": "map_mingYunShuTeng_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/5ad1639cd46ad80b35588fef.controller",
+      "states": [
+        {
+          "name": "EmptyState",
+          "hash": 1027228177,
+          "clip_key": "",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "A_1_start",
+          "hash": 4109997885,
+          "clip_key": "e014634834a53522d71642a7",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "A_1_loop",
+          "hash": 1254906814,
+          "clip_key": "4eee4f11738c93b7097660f7",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "A_2_start",
+          "hash": 3306261920,
+          "clip_key": "95199f211a7491f0c2f169af",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "A_2_loop",
+          "hash": 3428329744,
+          "clip_key": "fcc0193f1004ee343faec9fa",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "A_3_loop",
+          "hash": 117766837,
+          "clip_key": "ffcb1c6304e389860641db5a",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "A_3_start",
+          "hash": 1667663380,
+          "clip_key": "036362a52573a171e490aa3a",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "B_4_start",
+          "hash": 2672591967,
+          "clip_key": "f994e004f46aba57e143f752",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "B_4_loop",
+          "hash": 2492386798,
+          "clip_key": "c47764e692c7ccfa91523fc2",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "B_5_start",
+          "hash": 960204779,
+          "clip_key": "9fb2afa2a663606293a1f166",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "B_5_loop",
+          "hash": 1607605835,
+          "clip_key": "e0e314a21d45bf498e81e3ee",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "B_6_start",
+          "hash": 148084086,
+          "clip_key": "5704b78be65cb8617cd8ef30",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "B_6_loop",
+          "hash": 3645271269,
+          "clip_key": "d5f1e2e46df7493e1b1711c2",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "C_7_start",
+          "hash": 3118434945,
+          "clip_key": "1fa2317a7981d84a9cc5b8c3",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "C_7_loop",
+          "hash": 3736125406,
+          "clip_key": "a056c2dcabf3cb5a24f46275",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "C_8_start",
+          "hash": 1335360104,
+          "clip_key": "a8d7a1b2ec310ed2ca8e6d4e",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "C_8_loop",
+          "hash": 803605771,
+          "clip_key": "4faf96468d51c6f02ae85e3b",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "C_9_start",
+          "hash": 3923833308,
+          "clip_key": "d0ead819b68f7506b8976e08",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "C_9_loop",
+          "hash": 3837451950,
+          "clip_key": "5b1e327a007f5ef2f4240435",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "C_10_start",
+          "hash": 1229850432,
+          "clip_key": "eb58d0f983a53425c7ca938d",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "C_10_loop",
+          "hash": 1085160014,
+          "clip_key": "3baa87985ed73b6136a960d0",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Start_1",
+          "type": 9
+        },
+        {
+          "name": "Start_2",
+          "type": 9
+        },
+        {
+          "name": "Start_3",
+          "type": 9
+        },
+        {
+          "name": "Start_4",
+          "type": 9
+        },
+        {
+          "name": "Start_5",
+          "type": 9
+        },
+        {
+          "name": "Start_6",
+          "type": 9
+        },
+        {
+          "name": "Start_7",
+          "type": 9
+        },
+        {
+          "name": "Start_8",
+          "type": 9
+        },
+        {
+          "name": "Start_9",
+          "type": 9
+        },
+        {
+          "name": "Start_10",
+          "type": 9
+        },
+        {
+          "name": "Loop_1",
+          "type": 9
+        },
+        {
+          "name": "Loop_2",
+          "type": 9
+        },
+        {
+          "name": "Loop_3",
+          "type": 9
+        },
+        {
+          "name": "Loop_4",
+          "type": 9
+        },
+        {
+          "name": "Loop_5",
+          "type": 9
+        },
+        {
+          "name": "Loop_6",
+          "type": 9
+        },
+        {
+          "name": "Loop_7",
+          "type": 9
+        },
+        {
+          "name": "Loop_8",
+          "type": 9
+        },
+        {
+          "name": "Loop_9",
+          "type": 9
+        },
+        {
+          "name": "Loop_10",
+          "type": 9
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_1",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_1",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 3,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_2",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 4,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_2",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 6,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_3",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 5,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_3",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 7,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_4",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 8,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_4",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 9,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_5",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 10,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_5",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 12,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_6",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 11,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_6",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 13,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_7",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 14,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_7",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 15,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_8",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 16,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_8",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 17,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_9",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 18,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_9",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 19,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Start_10",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 20,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "Loop_10",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 3,
+          "destination": 4,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 6,
+          "destination": 5,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 7,
+          "destination": 8,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 9,
+          "destination": 10,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 11,
+          "destination": 12,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 13,
+          "destination": 14,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 15,
+          "destination": 16,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 17,
+          "destination": 18,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 19,
+          "destination": 20,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "c47764e692c7ccfa91523fc2",
+      "kind": "AnimationClip",
+      "name": "B_4_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/c47764e692c7ccfa91523fc2.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "eb58d0f983a53425c7ca938d",
+      "kind": "AnimationClip",
+      "name": "C_10_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/eb58d0f983a53425c7ca938d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.5000001192092896,
+      "loop": false
+    },
+    {
+      "key": "ecba34852bf645d6687a77cb",
+      "kind": "AnimationClip",
+      "name": "B_5_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/ecba34852bf645d6687a77cb.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "095e860836da570090a5fcd9",
+      "kind": "AnimationClip",
+      "name": "B_4_start",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/095e860836da570090a5fcd9.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "4eee4f11738c93b7097660f7",
+      "kind": "AnimationClip",
+      "name": "A_1_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/4eee4f11738c93b7097660f7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "78fae9522c89338e967f7bf1",
+      "kind": "AnimationClip",
+      "name": "RONGjie",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/78fae9522c89338e967f7bf1.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.0,
+      "loop": false
+    },
+    {
+      "key": "ffcb1c6304e389860641db5a",
+      "kind": "AnimationClip",
+      "name": "A_3_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/ffcb1c6304e389860641db5a.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": true
+    },
+    {
+      "key": "381ed837fdcc18a4b6512766",
+      "kind": "AnimatorController",
+      "name": "map_huanLingTongZhong_C_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/381ed837fdcc18a4b6512766.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "2508d242efc96bb7ed0027bc",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "ee835477dd4318b10c638bf6",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "cede320b0a2ef5f240633c33",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "open",
+          "type": 4
+        },
+        {
+          "name": "close",
+          "type": 4
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": [
+            {
+              "name": "open",
+              "mode": 1,
+              "threshold": 0.0
+            },
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.11999999731779099,
+          "fixed_duration": true,
+          "exit_time": 0.925000011920929,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "cede320b0a2ef5f240633c33",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/cede320b0a2ef5f240633c33.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 3.3333334922790527,
+      "loop": true
+    },
+    {
+      "key": "2508d242efc96bb7ed0027bc",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/2508d242efc96bb7ed0027bc.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 3.3333334922790527,
+      "loop": true
+    },
+    {
+      "key": "ee835477dd4318b10c638bf6",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/ee835477dd4318b10c638bf6.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 3.3333334922790527,
+      "loop": false
+    },
+    {
+      "key": "2754fb4d2411ffb113b8c8a9",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/2754fb4d2411ffb113b8c8a9.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "b7406272d34fdce5193c209a",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/b7406272d34fdce5193c209a.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "7b2c87ebec1e5064483398e0",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_4_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/7b2c87ebec1e5064483398e0.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "5c1f3f628a44740cd10ed87c",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/5c1f3f628a44740cd10ed87c.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "23cf78291aea0e8fc095e012",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/23cf78291aea0e8fc095e012.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 8.0,
+      "loop": true
+    },
+    {
+      "key": "6cab70f2c0e5fb0dc185bc6b",
+      "kind": "AnimatorController",
+      "name": "map_fish_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/6cab70f2c0e5fb0dc185bc6b.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "23cf78291aea0e8fc095e012",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "318a8724cc484f266db25dc0",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/318a8724cc484f266db25dc0.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "691084ed90e8828e9c61de07",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/691084ed90e8828e9c61de07.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.000000476837158,
+      "loop": false
+    },
+    {
+      "key": "c7e42ef65e618149f50f7b38",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/c7e42ef65e618149f50f7b38.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "c8feb82473ddc37aeaed6118",
+      "kind": "AnimatorController",
+      "name": "map_zhanLiZhiZhu_C_1_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/c8feb82473ddc37aeaed6118.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "318a8724cc484f266db25dc0",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "691084ed90e8828e9c61de07",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "c7e42ef65e618149f50f7b38",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "baeb6e55fe023eb3b772276e",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/baeb6e55fe023eb3b772276e.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "a564a5f6c90ca6481fb5d6f4",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a564a5f6c90ca6481fb5d6f4.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "593b18eea2167ae4e1a092a0",
+      "kind": "AnimatorController",
+      "name": "map_baoXiang_03_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/593b18eea2167ae4e1a092a0.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "a564a5f6c90ca6481fb5d6f4",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_01",
+          "hash": 1731586686,
+          "clip_key": "b51c5d1c2698e38a1b5e5449",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "baeb6e55fe023eb3b772276e",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 4
+        },
+        {
+          "name": "opened",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "opened",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 2,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            },
+            {
+              "name": "opened",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "b51c5d1c2698e38a1b5e5449",
+      "kind": "AnimationClip",
+      "name": "open_01",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/b51c5d1c2698e38a1b5e5449.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.30000001192092896,
+      "loop": false
+    },
+    {
+      "key": "8e9e7876e854b40efd7b08c6",
+      "kind": "AnimationClip",
+      "name": "Before",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8e9e7876e854b40efd7b08c6.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "key": "3b38dcf72f58f6d87728d4e7",
+      "kind": "AnimationClip",
+      "name": "Idle",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3b38dcf72f58f6d87728d4e7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.5,
+      "loop": true
+    },
+    {
+      "key": "1460f8d4ffe346e192088ef8",
+      "kind": "AnimatorController",
+      "name": "map_haiZhiGongYiJi_C_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/1460f8d4ffe346e192088ef8.controller",
+      "states": [
+        {
+          "name": "idle",
+          "hash": 4116442951,
+          "clip_key": "ae89a385f9f839573f9594c7",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "move",
+          "hash": 3326176554,
+          "clip_key": "baa479cce10029bda63eb4d1",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "idle 0",
+          "hash": 2097796481,
+          "clip_key": "ae89a385f9f839573f9594c7",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 9.958352088928223,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.9750000238418579,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 10.002018928527832,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "7a1be1f9f0d703b709c635be",
+      "kind": "AnimationClip",
+      "name": "Move",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7a1be1f9f0d703b709c635be.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 8.0,
+      "loop": false
+    },
+    {
+      "key": "baa479cce10029bda63eb4d1",
+      "kind": "AnimationClip",
+      "name": "move",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/baa479cce10029bda63eb4d1.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 10.000000953674316,
+      "loop": false
+    },
+    {
+      "key": "ae89a385f9f839573f9594c7",
+      "kind": "AnimationClip",
+      "name": "idle",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/ae89a385f9f839573f9594c7.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 10.000000953674316,
+      "loop": false
+    },
+    {
+      "key": "9af7cf0806b4b068a149db55",
+      "kind": "AnimatorController",
+      "name": "Movement",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/9af7cf0806b4b068a149db55.controller",
+      "states": [
+        {
+          "name": "Before",
+          "hash": 3701798619,
+          "clip_key": "8e9e7876e854b40efd7b08c6",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "Move",
+          "hash": 1718862356,
+          "clip_key": "7a1be1f9f0d703b709c635be",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "Idle",
+          "hash": 1432961145,
+          "clip_key": "3b38dcf72f58f6d87728d4e7",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.5,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "7605a81483308c3f21f47492",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7605a81483308c3f21f47492.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "91a5c10f67d9b3f58596cd49",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/91a5c10f67d9b3f58596cd49.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "96e0181580bac3e0788413b6",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/96e0181580bac3e0788413b6.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.6666669845581055,
+      "loop": false
+    },
+    {
+      "key": "2035044ea82835c826766305",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_3_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/2035044ea82835c826766305.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "7605a81483308c3f21f47492",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "91a5c10f67d9b3f58596cd49",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "96e0181580bac3e0788413b6",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.8125,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 2,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "5c38d1a27655c3aa027c3871",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/5c38d1a27655c3aa027c3871.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": true
+    },
+    {
+      "key": "12f4e880f8b8948e68cea3a3",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/12f4e880f8b8948e68cea3a3.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": true
+    },
+    {
+      "key": "0670f672a82c1c4dbdfa4c83",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/0670f672a82c1c4dbdfa4c83.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.000000476837158,
+      "loop": false
+    },
+    {
+      "key": "c3eb4ca39add4e0f464ef8f5",
+      "kind": "AnimatorController",
+      "name": "map_yuanShuiShenShe_Men_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/c3eb4ca39add4e0f464ef8f5.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "5c38d1a27655c3aa027c3871",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "12f4e880f8b8948e68cea3a3",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "0670f672a82c1c4dbdfa4c83",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 9
+        },
+        {
+          "name": "openloop",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 2,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "0e708c769cb6c3d4e054ed44",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/0e708c769cb6c3d4e054ed44.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "e264f4ff6232aaac851617fe",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/e264f4ff6232aaac851617fe.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.6666666865348816,
+      "loop": false
+    },
+    {
+      "key": "68e51615ef12167f74116e26",
+      "kind": "AnimatorController",
+      "name": "map_zhanLiZhiZhu_C_2_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/68e51615ef12167f74116e26.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "55f50b2841118801ac20104b",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/55f50b2841118801ac20104b.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "e115ba9c698532326efb0717",
+      "kind": "AnimatorController",
+      "name": "map_yunLiuXuanWo_C_02_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/e115ba9c698532326efb0717.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "a8c90c80db52811c69a304db",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "a8c90c80db52811c69a304db",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a8c90c80db52811c69a304db.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666667461395264,
+      "loop": true
+    },
+    {
+      "key": "ba8edd27ca888ac75552eb96",
+      "kind": "AnimatorController",
+      "name": "map_fangJianBei_C_2_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/ba8edd27ca888ac75552eb96.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "f5b56857c9d3bd9daafa8f26",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/f5b56857c9d3bd9daafa8f26.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "866a8bf3aa61e008ef004ab6",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/866a8bf3aa61e008ef004ab6.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.0,
+      "loop": false
+    },
+    {
+      "key": "1163828c54482497236d84c0",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1163828c54482497236d84c0.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 4.0,
+      "loop": false
+    },
+    {
+      "key": "c9fa0c49386055ac431df45b",
+      "kind": "AnimatorController",
+      "name": "map_baoXiang_04_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/c9fa0c49386055ac431df45b.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "a2971aa0dddb75ee6d111d14",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "2f203672b72d85e653329e8d",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_01",
+          "hash": 1731586686,
+          "clip_key": "fe3260cb2167006a5c7c7a61",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 4
+        },
+        {
+          "name": "opened",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "opened",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            },
+            {
+              "name": "opened",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 2,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "fe3260cb2167006a5c7c7a61",
+      "kind": "AnimationClip",
+      "name": "open_01",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/fe3260cb2167006a5c7c7a61.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.30000001192092896,
+      "loop": false
+    },
+    {
+      "key": "a2971aa0dddb75ee6d111d14",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a2971aa0dddb75ee6d111d14.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "2f203672b72d85e653329e8d",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/2f203672b72d85e653329e8d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "9a16d2bf0a8bc4c91790e4f5",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/9a16d2bf0a8bc4c91790e4f5.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "8e3e8ad05520246ffe6cf0f8",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8e3e8ad05520246ffe6cf0f8.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.000000476837158,
+      "loop": false
+    },
+    {
+      "key": "2d1060289898e669a7de9093",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/2d1060289898e669a7de9093.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "5e3a5bd6856e868130c6684e",
+      "kind": "AnimatorController",
+      "name": "map_zhanLiZhiZhu_C_1_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/5e3a5bd6856e868130c6684e.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "2d1060289898e669a7de9093",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "8e3e8ad05520246ffe6cf0f8",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "9a16d2bf0a8bc4c91790e4f5",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 4
+        },
+        {
+          "name": "openloop",
+          "type": 9
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.8125,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "3e351645618f877b58a31dcf",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_1_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/3e351645618f877b58a31dcf.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "a90765414e80eead59377bca",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "62c21b8b6cb528dbf4ca09ef",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "aba0c0ecff5a47e4196fb2dc",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.8125,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "62c21b8b6cb528dbf4ca09ef",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/62c21b8b6cb528dbf4ca09ef.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.6666669845581055,
+      "loop": false
+    },
+    {
+      "key": "aba0c0ecff5a47e4196fb2dc",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/aba0c0ecff5a47e4196fb2dc.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "a90765414e80eead59377bca",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a90765414e80eead59377bca.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "c69403d4c8624e58eb281544",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/c69403d4c8624e58eb281544.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": true
+    },
+    {
+      "key": "3cc0056ad43dd26d69900825",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3cc0056ad43dd26d69900825.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": true
+    },
+    {
+      "key": "7698e8fc1c259b4fb990a82a",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7698e8fc1c259b4fb990a82a.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 3.1666667461395264,
+      "loop": false
+    },
+    {
+      "key": "a7ca2c1b78d36974b6eeedfa",
+      "kind": "AnimatorController",
+      "name": "map_huangQuanGe_C_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/a7ca2c1b78d36974b6eeedfa.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "c69403d4c8624e58eb281544",
+          "speed": 1.0,
+          "loop": true
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "7698e8fc1c259b4fb990a82a",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "3cc0056ad43dd26d69900825",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "close",
+          "type": 4
+        },
+        {
+          "name": "open",
+          "type": 4
+        },
+        {
+          "name": "active",
+          "type": 9
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "open",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": -1,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "close",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.0,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "a7afaa73cfd919c8b4db9ef0",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/a7afaa73cfd919c8b4db9ef0.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666667461395264,
+      "loop": true
+    },
+    {
+      "key": "082bc7e164cc3d9cd97540bc",
+      "kind": "AnimatorController",
+      "name": "map_yuanShuiShenShe_Piaodai_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/082bc7e164cc3d9cd97540bc.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "a7afaa73cfd919c8b4db9ef0",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "df679bdf766ce0d935126ce5",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/df679bdf766ce0d935126ce5.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "205c22a1f956c159e324d5b3",
+      "kind": "AnimatorController",
+      "name": "map_baoXiang_02_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/205c22a1f956c159e324d5b3.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "df679bdf766ce0d935126ce5",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_01",
+          "hash": 1731586686,
+          "clip_key": "67f110d4a6ab9cfe37927929",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "b0d346295ed109c9271a25c3",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "active",
+          "type": 4
+        },
+        {
+          "name": "opened",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.25,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "opened",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        },
+        {
+          "source": 2,
+          "destination": 0,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.24992495775222778,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 2,
+              "threshold": 0.0
+            },
+            {
+              "name": "opened",
+              "mode": 2,
+              "threshold": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "b0d346295ed109c9271a25c3",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/b0d346295ed109c9271a25c3.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.3333333432674408,
+      "loop": false
+    },
+    {
+      "key": "67f110d4a6ab9cfe37927929",
+      "kind": "AnimationClip",
+      "name": "open_01",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/67f110d4a6ab9cfe37927929.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.30000001192092896,
+      "loop": false
+    },
+    {
+      "key": "0983242cbaee8d0e15531e7f",
+      "kind": "AnimatorController",
+      "name": "map_zhanLiZhiZhu_C_2_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/0983242cbaee8d0e15531e7f.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    },
+    {
+      "key": "3e1d233401dd0b4a94a2bc5e",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/3e1d233401dd0b4a94a2bc5e.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.666700005531311,
+      "loop": false
+    },
+    {
+      "key": "678e89d98f06ce9661873069",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/678e89d98f06ce9661873069.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.333299994468689,
+      "loop": false
+    },
+    {
+      "key": "1508ffca10680d70a776b0b2",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/1508ffca10680d70a776b0b2.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.333299994468689,
+      "loop": false
+    },
+    {
+      "key": "e3e7b7a6e39a4e28a093351f",
+      "kind": "AnimationClip",
+      "name": "loop2",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/e3e7b7a6e39a4e28a093351f.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666667461395264,
+      "loop": true
+    },
+    {
+      "key": "8c52701a1b8e03df60202768",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8c52701a1b8e03df60202768.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666667461395264,
+      "loop": true
+    },
+    {
+      "key": "7ec1c63f6384a8fb7af1f090",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7ec1c63f6384a8fb7af1f090.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666998863220215,
+      "loop": true
+    },
+    {
+      "key": "7caee290116ac91c7f46ed09",
+      "kind": "AnimatorController",
+      "name": "map_yuanShuiShenShe_denglong_01_Controller 1",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/7caee290116ac91c7f46ed09.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "9ddd521b161bc594fb360a09",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active1",
+          "type": 4
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "key": "0a25cac901648015a95c051e",
+      "kind": "AnimationClip",
+      "name": "loop2",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/0a25cac901648015a95c051e.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666998863220215,
+      "loop": true
+    },
+    {
+      "key": "7a1b8887a750ee8cf28ffd7d",
+      "kind": "AnimationClip",
+      "name": "loop2",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/7a1b8887a750ee8cf28ffd7d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666998863220215,
+      "loop": true
+    },
+    {
+      "key": "5b61518bff2d2852f9ef316f",
+      "kind": "AnimatorController",
+      "name": "map_yuanShuiShenShe_denglong_01_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/5b61518bff2d2852f9ef316f.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "8c52701a1b8e03df60202768",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "key": "2ee3804c1f203bcb7b0839da",
+      "kind": "AnimatorController",
+      "name": "map_yuanShuiShenShe_denglong_01_Controller 2",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/2ee3804c1f203bcb7b0839da.controller",
+      "states": [
+        {
+          "name": "loop",
+          "hash": 2283816892,
+          "clip_key": "7ec1c63f6384a8fb7af1f090",
+          "speed": 1.0,
+          "loop": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active2",
+          "type": 4
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "key": "9ddd521b161bc594fb360a09",
+      "kind": "AnimationClip",
+      "name": "loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/9ddd521b161bc594fb360a09.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 2.6666998863220215,
+      "loop": true
+    },
+    {
+      "key": "97207c03b9020c132f3fac3d",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/97207c03b9020c132f3fac3d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 5.6666669845581055,
+      "loop": false
+    },
+    {
+      "key": "66c59d328385b5814c82f6b5",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/66c59d328385b5814c82f6b5.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "330e8d523c462d0278ac8844",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/330e8d523c462d0278ac8844.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "868fe8b15c0ca7c749b1312c",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_3_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/868fe8b15c0ca7c749b1312c.controller",
+      "states": [
+        {
+          "name": "close_loop",
+          "hash": 3791809062,
+          "clip_key": "330e8d523c462d0278ac8844",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open",
+          "hash": 2366626294,
+          "clip_key": "97207c03b9020c132f3fac3d",
+          "speed": 1.0,
+          "loop": false
+        },
+        {
+          "name": "open_loop",
+          "hash": 3844316960,
+          "clip_key": "66c59d328385b5814c82f6b5",
+          "speed": 1.0,
+          "loop": false
+        }
+      ],
+      "parameters": [
+        {
+          "name": "openloop",
+          "type": 9
+        },
+        {
+          "name": "active",
+          "type": 4
+        }
+      ],
+      "transitions": [
+        {
+          "source": -1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.75,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "openloop",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 0,
+          "destination": 1,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 0.8124952912330627,
+          "has_exit_time": false,
+          "conditions": [
+            {
+              "name": "active",
+              "mode": 1,
+              "threshold": 0.0
+            }
+          ]
+        },
+        {
+          "source": 1,
+          "destination": 2,
+          "duration": 0.0,
+          "fixed_duration": true,
+          "exit_time": 1.0,
+          "has_exit_time": true,
+          "conditions": []
+        }
+      ]
+    },
+    {
+      "key": "375339374c5550d650dc9406",
+      "kind": "AnimationClip",
+      "name": "open_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/375339374c5550d650dc9406.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "dbe6af3b55542787baba651d",
+      "kind": "AnimationClip",
+      "name": "open",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/dbe6af3b55542787baba651d.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 0.0,
+      "loop": false
+    },
+    {
+      "key": "8da3f54895d03f200e5d7c13",
+      "kind": "AnimationClip",
+      "name": "close_loop",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/clips/8da3f54895d03f200e5d7c13.anim",
+      "states": [],
+      "parameters": [],
+      "transitions": [],
+      "duration": 1.3333333730697632,
+      "loop": false
+    },
+    {
+      "key": "0bfa178ad727bf4ec73ceda3",
+      "kind": "AnimatorController",
+      "name": "map_yaoShiMen_C_2_Controller",
+      "asset_path": "assets/official/world/map/13/nativepropanimators/controllers/0bfa178ad727bf4ec73ceda3.controller",
+      "states": [],
+      "parameters": [],
+      "transitions": []
+    }
+  ],
+  "models": [
+    {
+      "name": "map_yaoShiMen_C_4_SkeletonData",
+      "cab": "CAB-045546f31c63514fe4cd0ee02690dbcb",
+      "path_id": "5459167750811570200",
+      "controller_key": "f1ad3c86c20082df8983ac9a"
+    },
+    {
+      "name": "map_yunLiuXuanWo_C_01_SkeletonData",
+      "cab": "CAB-14081866a21f289d850ae7a04ec5fe87",
+      "path_id": "-9054793360393193036",
+      "controller_key": "f8745fadd112f87bd2ce0918"
+    },
+    {
+      "name": "map_baoXiang_01_SkeletonData",
+      "cab": "CAB-1459ea81a9c46f791d23980752a1d57a",
+      "path_id": "-5196610300547952226",
+      "controller_key": "d4ddab9f1eff9ba51403b1ef"
+    },
+    {
+      "name": "map_yaoShiMen_C_1_SkeletonData",
+      "cab": "CAB-1573f6cd412b98a51f6d5d8c6a5ee820",
+      "path_id": "4985606685798004124",
+      "controller_key": "1232afa3699cc3b8144fc4b2"
+    },
+    {
+      "name": "map_fangJianBei_C_1_SkeletonData",
+      "cab": "CAB-172a2eadab52b7e73edcf6caba65a924",
+      "path_id": "-2240445586770001264",
+      "controller_key": "4d1c5158080bdf758ff7f07f"
+    },
+    {
+      "name": "map_mingYunShuTeng_SkeletonData",
+      "cab": "CAB-1d34eb08f907c5e6793c5a36cb6eed44",
+      "path_id": "5883297620768713244",
+      "controller_key": "5ad1639cd46ad80b35588fef"
+    },
+    {
+      "name": "map_huanLingTongZhong_C_SkeletonData",
+      "cab": "CAB-30c595a4723079f87a53e6e7162aa459",
+      "path_id": "5783472504351275166",
+      "controller_key": "381ed837fdcc18a4b6512766"
+    },
+    {
+      "name": "map_yaoShiMen_C_4_SkeletonData",
+      "cab": "CAB-31820429f66345520acf9e6c9a982ad6",
+      "path_id": "1899257761841640829",
+      "controller_key": "7b2c87ebec1e5064483398e0"
+    },
+    {
+      "name": "map_fish_01_SkeletonData",
+      "cab": "CAB-38d5bc11bcbe2995f9a5db64ac4664d7",
+      "path_id": "-6901534864533162018",
+      "controller_key": "6cab70f2c0e5fb0dc185bc6b"
+    },
+    {
+      "name": "map_zhanLiZhiZhu_C_1_SkeletonData",
+      "cab": "CAB-3dd53952b70cd9d15952397cd6764ca6",
+      "path_id": "1769741265207477914",
+      "controller_key": "c8feb82473ddc37aeaed6118"
+    },
+    {
+      "name": "map_baoXiang_03_SkeletonData",
+      "cab": "CAB-7a9bc2a5fe5eca8f9cb337cbf2864b63",
+      "path_id": "-772696507678361346",
+      "controller_key": "593b18eea2167ae4e1a092a0"
+    },
+    {
+      "name": "map_haiZhiGongYiJi_C_SkeletonData",
+      "cab": "CAB-7b02e1fa288cd8a1787e8ef0693ce5a7",
+      "path_id": "1753523400863986478",
+      "controller_key": "1460f8d4ffe346e192088ef8"
+    },
+    {
+      "name": "map_yaoShiMen_C_3_SkeletonData",
+      "cab": "CAB-80513b841272a6290c70981599db408f",
+      "path_id": "-7961214934747277015",
+      "controller_key": "2035044ea82835c826766305"
+    },
+    {
+      "name": "map_yuanShuiShenShe_Men_01_SkeletonData",
+      "cab": "CAB-86c603a00eb97b3d7d9953db0005cdab",
+      "path_id": "-9086809856923212002",
+      "controller_key": "c3eb4ca39add4e0f464ef8f5"
+    },
+    {
+      "name": "map_zhanLiZhiZhu_C_2_SkeletonData",
+      "cab": "CAB-9878a9ad9e208519f2a9a12847b35c22",
+      "path_id": "-693939395354206115",
+      "controller_key": "68e51615ef12167f74116e26"
+    },
+    {
+      "name": "map_yunLiuXuanWo_C_02_SkeletonData",
+      "cab": "CAB-9c7635f2134add4542bf0a07053ef9d7",
+      "path_id": "471297497748931844",
+      "controller_key": "e115ba9c698532326efb0717"
+    },
+    {
+      "name": "map_fangJianBei_C_2_SkeletonData",
+      "cab": "CAB-a4921c734569381496b958087887c893",
+      "path_id": "-4626843127569937476",
+      "controller_key": "ba8edd27ca888ac75552eb96"
+    },
+    {
+      "name": "map_baoXiang_04_SkeletonData",
+      "cab": "CAB-aa759bb362f958b601e0982a63d2a387",
+      "path_id": "-1214379280799784828",
+      "controller_key": "c9fa0c49386055ac431df45b"
+    },
+    {
+      "name": "map_zhanLiZhiZhu_C_1_SkeletonData",
+      "cab": "CAB-ad4bfe7e1eefea506452cb78aeb0bf31",
+      "path_id": "1680164728585745433",
+      "controller_key": "5e3a5bd6856e868130c6684e"
+    },
+    {
+      "name": "map_yaoShiMen_C_1_SkeletonData",
+      "cab": "CAB-b00d90696766310b1c2bdb9c3cb0b76f",
+      "path_id": "5915655602251762106",
+      "controller_key": "3e351645618f877b58a31dcf"
+    },
+    {
+      "name": "map_huangQuanGe_C_SkeletonData",
+      "cab": "CAB-b80a5534e03052422a5172ab3899e590",
+      "path_id": "-2117474411482936326",
+      "controller_key": "a7ca2c1b78d36974b6eeedfa"
+    },
+    {
+      "name": "map_yuanShuiShenShe_Piaodai_01_SkeletonData",
+      "cab": "CAB-c7548b9a0ea40cde274e23891f93b3d0",
+      "path_id": "-4202187979843183075",
+      "controller_key": "082bc7e164cc3d9cd97540bc"
+    },
+    {
+      "name": "map_baoXiang_02_SkeletonData",
+      "cab": "CAB-e3572ed564a206e769d29d969e5563b0",
+      "path_id": "-6550414021708048938",
+      "controller_key": "205c22a1f956c159e324d5b3"
+    },
+    {
+      "name": "map_zhanLiZhiZhu_C_2_SkeletonData",
+      "cab": "CAB-e453c881babcaa7ff562cb47cdb7fa79",
+      "path_id": "-7825513303557390174",
+      "controller_key": "0983242cbaee8d0e15531e7f"
+    },
+    {
+      "name": "map_yuanShuiShenShe_denglong_01_SkeletonData",
+      "cab": "CAB-ea16b58a8c1ed763e3ba4d02b08a76a7",
+      "path_id": "-6810771514927061054",
+      "controller_key": "5b61518bff2d2852f9ef316f"
+    },
+    {
+      "name": "map_yaoShiMen_C_3_SkeletonData",
+      "cab": "CAB-f3162d91fe3cd4f6ee0892cd68b3fbc6",
+      "path_id": "-8625072813172722074",
+      "controller_key": "868fe8b15c0ca7c749b1312c"
+    },
+    {
+      "name": "map_yaoShiMen_C_2_SkeletonData",
+      "cab": "CAB-f5bff3cb8d891977b2b66772868aae68",
+      "path_id": "-3686203980618263650",
+      "controller_key": "0bfa178ad727bf4ec73ceda3"
+    }
+  ]
+}

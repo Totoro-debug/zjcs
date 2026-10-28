@@ -728,3 +728,12 @@ assets/reference/official-map/map12-private-difficulty-source-manifest.json text
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.PrivateDifficulty.cs* text eol=lf
 unity/Assets/StreamingAssets/Dungeons/UI/official-bindings.json text eol=lf
 assets/reference/dungeon-ui/prefab-binding-source-manifest.json text eol=lf
+
+# Map13 original native prop animator assets and hash-pinned validation.
+scripts/prepare_unity_map13_prop_animators.py text eol=lf
+scripts/verify_map13_prop_animators.py text eol=lf
+unity/Assets/Official/World/Map/13/NativePropAnimators.meta -text
+unity/Assets/Official/World/Map/13/NativePropAnimators/** -text whitespace=cr-at-eol,-blank-at-eol
+unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13AnimatorLibrary.cs* text eol=lf
+unity/Assets/Game/Editor/Map13Skeletons/OfficialMap13AnimatorAcceptance.cs* text eol=lf
+assets/reference/official-map/map13-native-prop-animators*-source-manifest.json text eol=lf
