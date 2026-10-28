@@ -31,6 +31,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         private readonly NativeMap14SharedConfiguration configuration;
         private readonly Func<bool> lowMemoryForbidden;
         private readonly INativeMap14ClientMovement movement;
+        private readonly Action<NativeMap14SharedViewEntity> bindComponents;
         private readonly Dictionary<object, NativeMap14SharedViewEntity> views = new Dictionary<object, NativeMap14SharedViewEntity>(IdentityComparer.Instance);
         private readonly List<IDisposable> subscriptions = new List<IDisposable>();
         private bool disposed;
@@ -57,7 +58,8 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
         }
         public NativeMap14ClientEntityState(NativeMap14SharedAssemblies shared, NativeMap14SharedRoot root,
             NativeMap14SharedData data, NativeMap14SharedConfiguration configuration, long mainPlayerId,
-            Func<bool> lowMemoryForbidden, INativeMap14ClientMovement movement = null)
+            Func<bool> lowMemoryForbidden, INativeMap14ClientMovement movement = null,
+            Action<NativeMap14SharedViewEntity> bindComponents = null)
         {
             this.shared = shared ?? throw new ArgumentNullException(nameof(shared));
             this.root = root ?? throw new ArgumentNullException(nameof(root));
@@ -65,6 +67,7 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.lowMemoryForbidden = lowMemoryForbidden ?? throw new ArgumentNullException(nameof(lowMemoryForbidden));
             this.movement = movement;
+            this.bindComponents = bindComponents;
             MainPlayerId = mainPlayerId;
         }
         public NativeMap14SharedViewEntity Wrap(object entity)
@@ -74,6 +77,8 @@ namespace Zjcs.Offline.World.NativeMap14ClientEntities
             if (!views.TryGetValue(entity, out var view))
             {
                 view = new NativeMap14SharedViewEntity(shared, entity); views.Add(entity, view);
+                try { bindComponents?.Invoke(view); }
+                catch { views.Remove(entity); view.Dispose(); throw; }
             }
             return view;
         }

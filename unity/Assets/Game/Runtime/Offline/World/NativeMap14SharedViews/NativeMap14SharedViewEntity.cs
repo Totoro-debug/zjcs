@@ -44,10 +44,22 @@ namespace Zjcs.Offline.World.NativeMap14SharedViews
         {
             if (Grid is T grid) return grid;
             if (Stage is T stage) return stage;
+            if (componentViews.TryGetValue(typeof(T), out var component)) return (T)component;
             return default;
         }
 
-        public void Dispose() => Grid?.Dispose();
+        private readonly Dictionary<Type, object> componentViews = new Dictionary<Type, object>();
+        public void BindAdditionalComponent<T>(T component) where T : class
+        {
+            if (component == null) throw new ArgumentNullException(nameof(component));
+            if (componentViews.TryGetValue(typeof(T), out var previous))
+            {
+                if (!ReferenceEquals(previous, component)) throw new InvalidOperationException("Original component projection is already bound.");
+                return;
+            }
+            componentViews.Add(typeof(T), component);
+        }
+        public void Dispose() { Grid?.Dispose(); componentViews.Clear(); }
         private object Component(string type) => Invoke(Original, "GetComponent", new[] { typeof(Type) }, assemblies.CommonType(type));
         private object Position(Pos2d pos) => Activator.CreateInstance(assemblies.CommonType("Pos2d"), pos.X, pos.Y);
         private static Pos2d Position(object pos) => new Pos2d((int)Get(pos, "X"), (int)Get(pos, "Y"));

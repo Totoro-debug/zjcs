@@ -1042,3 +1042,16 @@ unity/Assets/Official/World/Map/13/NativeMiniMapRegions.meta text eol=lf
 unity/Assets/Official/World/Map/13/NativeMiniMapRegions/** text eol=lf
 unity/Assets/Official/World/Map/13/Source/MiniMapShaders.meta text eol=lf
 unity/Assets/Official/World/Map/13/Source/MiniMapShaders/** text eol=lf
+# Preserve original client component and native binding receipt bytes.
+scripts/prepare_unity_map14_client_components.py text eol=lf
+assets/reference/official-map/map14-client-components-source-manifest.json text eol=lf
+assets/reference/official-map/map14-client-entity-state-source-manifest.json text eol=lf
+assets/reference/official-map/map14-shared-view-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/EntityClientComponents/** -text
+unity/Assets/Game/Runtime/Official/EntityClientComponents.meta -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents/** -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientComponents.meta -text
+unity/Assets/Game/Editor/Map14/ClientComponents/** -text
+unity/Assets/Game/Editor/Map14/ClientComponents.meta -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs text eol=lf
+unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs text eol=lf
