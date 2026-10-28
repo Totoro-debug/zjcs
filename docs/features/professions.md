@@ -25,7 +25,12 @@
 `RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源的闭包为 871 个资产、84 种脚本，断开 GUID 为 0，仍有 20 种运行脚本待接入。
 
 
-音效触发字段已按 APK 原始组件恢复。转换工具曾把 8 个 `AkEvent.triggerList` 的原始值 `-320808462` 写成无效的十六进制字符串；现以原始整数的小端字节重新写入，并逐个保留原层级、事件引用及其余字段。原生 `AkTriggerHandler.OnEnable` 的指令核实该值为启用触发。`ButtonSound`、`UIClickSound`、`PopupWindowSound` 及实际使用的 `AkEvent` 启用／Start、事件引用和单参数 `Post` 路径已迁入；动作、回调等本页未使用分支显式保留为未接入范围。隔离 Unity 导入验证 8 组触发列表、原生事件 ID／名称／GUID、自身发声对象及原序列化播放 ID，核对无效引用返回零和有效请求传递／保存返回 ID 的顺序。该探针只证明原生字段与请求契约，尚未实现 Windows 声音播放，也没有完成界面输入验收。来源见[音效字段与代码](../../assets/reference/profession-ui/audio-source-manifest.json)。
+音效触发字段已按 APK 原始组件恢复。转换工具曾把 8 个 `AkEvent.triggerList` 的原始值 `-320808462` 写成无效的十六进制字符串；现以原始整数的小端字节重新写入，并逐个保留原层级、事件引用及其余字段。原生 `AkTriggerHandler.OnEnable` 的指令核实该值为启用触发。`ButtonSound`、`UIClickSound`、`PopupWindowSound` 及实际使用的 `AkEvent` 启用／Start、事件引用和单参数 `Post` 路径已迁入；动作、回调等本页未使用分支显式保留为未接入范围。隔离 Unity 导入验证 8 组触发列表、原生事件 ID／名称／GUID、自身发声对象及原序列化播放 ID，核对无效引用返回零和有效请求传递／保存返回 ID 的顺序。该探针只证明原生字段与请求契约，该字段探针没有覆盖声音播放或界面输入；Windows 播放适配另见下述验证。来源见[音效字段与代码](../../assets/reference/profession-ui/audio-source-manifest.json)。
+
+五个原始职业声音事件 `Main_Tag`、`Main_Upgrade`、`Main_Cursor_Fail`、`Main_Cursor_Back`、`Main_Cursor_Normal` 已从原生 SDK 引用追踪到当前版本的 `EventBankMapping`，核实原事件／动作／声音／媒体 ID；`minimum.pck` 与 `ui_sfx_01.pck` 使用 APK 中哈希相符的实际载荷，映射使用当前云端已下载的哈希校验载荷。原 Wwise Vorbis 经 wwiser／vgmstream 转成五份本地 PCM WAV，禁用自动音量提升，分别保留原 −6／−8／−16 dB 增益、声道、采样率和时长；Windows AudioImporter 使用 PCM，不归一化、不重采样、不再次有损压缩。资源及显式事件目录位于 `Assets/Official/ProfessionAudio/`，本地播放桥位于 `Runtime/Offline/ProfessionUI/`，没有替换原 UI 控件。
+
+`ProfessionAudioPlaybackValidation.Run` 已在隔离 Unity 的实际 Play Mode 核对五份 AudioClip 的全部 PCM 采样、采样率／声道／帧数及显式绑定，再通过原事件包装向 Windows 播放桥发出五个声音请求，逐项观察真实 AudioSource 的样本推进与 AudioListener 非零输出。验证在正式进入 Play Mode 并等待实际游戏帧后开始，五项播放全部通过。此范围只完成声音载荷和平台播放，正式职业窗口生命周期及本地设置混音仍未连接，也不替代职业界面鼠标操作验收。处理与哈希见[Windows 音频来源](../../assets/reference/profession-ui/windows-audio-source-manifest.json)；未生成完整素材快照。
+
 
 转换输入工具允许显式选择隔离 Unity 工程的实际 TMP／UGUI／URP 编译程序集作为类型元数据输入，逐项记录来源与 SHA256；默认仍使用主工程。本次刷新后 357 个 bundle 的转换输入字节与上次完全一致，复用既有导出，再按来源恢复事件数组，没有绕过哈希校验。
 

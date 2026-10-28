@@ -417,7 +417,9 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 奖励包中的 `GachaOneRewardGo` 按实际反编译字段顺序恢复序列化 schema，保留原 `StateSwitcher<bool>` 配置／owner 与 Wwise Event 字段；严格解码覆盖整个包，不以跳过组件解决失败。原生 YAML 校验器已修正 YAML 1.1 将对象名 `On`／`Off` 误解为布尔值的问题，同时保持打包数组的原始数字词法；独立回归测试及全部新增原生注册表／引用比对通过。
 
-职业音效组件与原生触发数组恢复见 `assets/reference/profession-ui/audio-source-manifest.json`。8 个原始启用触发值经 IL2CPP 指令和 Unity 实际导入复核，6 个作用域内事件脚本保留原调用顺序；Windows 音频主机、AkGameObj 及完整界面运行仍未完成。隔离工程类型元数据输入有逐项哈希记录，357 个 bundle 输入与既有转换字节一致。
+职业音效组件与原生触发数组恢复见 `assets/reference/profession-ui/audio-source-manifest.json`。8 个原始启用触发值经 IL2CPP 指令和 Unity 实际导入复核，6 个作用域内事件脚本保留原调用顺序；Windows 播放适配另见下述范围，AkGameObj 及完整界面运行仍未完成。隔离工程类型元数据输入有逐项哈希记录，357 个 bundle 输入与既有转换字节一致。
+
+五个原始职业声音事件的当前映射、APK PCK／BNK／WEM 哈希、原始声音链、增益、PCM 输出及 Windows 显式绑定见 `assets/reference/profession-ui/windows-audio-source-manifest.json`。五份 AudioClip 的全部导入采样与解码 PCM 相同，实际 Play Mode 的 AudioSource 样本推进及监听器非零输出均通过；正式职业窗口接线与设置混音仍待完成。素材载荷在 `unity/Assets/Official/ProfessionAudio/`，平台适配在 `Runtime/Offline/ProfessionUI/`，没有生成完整素材快照。
 
 ## 技能首页与安装流程复核
 

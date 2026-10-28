@@ -230,6 +230,10 @@
     "path": "assets/reference/profession-ui/audio-source-manifest.json",
     "sha256": "7be57c6fdc08d6b4a318066452b3a71656bdfa6426e5fab337deaacb467aadd9"
   },
+  "windows_audio": {
+    "path": "assets/reference/profession-ui/windows-audio-source-manifest.json",
+    "sha256": "71076018e619fc06f630818eb7b62c7bf364f63b42f872d58e7dd52f6a25a4ec"
+  },
   "rule_adapter": {
     "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
     "sha256": "82564b3617e65d38c12b499c431be396cc626def96e59cc1461226903c576344"
@@ -244,7 +248,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "1476573982057bceae90c5da841144da7d10a3e56be0a72631b71c6f79ecb9d1"
+    "sha256": "df6c7995a4f589b4f049f03e5b15ca32ca7a6a64715673c455f8d19b278c4318"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
