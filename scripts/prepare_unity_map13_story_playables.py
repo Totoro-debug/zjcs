@@ -65,6 +65,17 @@ def build(unity_project=None):
     if receipt["manifest"] != VERSION or expected.get(source_path(SOURCE)) != sha(SOURCE.read_bytes()):
         raise ValueError("Map13 story extraction does not match its pinned source receipt")
     stories = json.loads(SOURCE.read_bytes())
+    dependencies_path = SOURCE.with_name("story-dependencies.json")
+    dependencies_receipt_path = ROOT / "assets/reference/official-map/map13-story-dependencies-source-manifest.json"
+    dependencies = json.loads(dependencies_path.read_bytes())
+    dependencies_receipt = json.loads(dependencies_receipt_path.read_bytes())
+    dependency_outputs = {row["path"]: row["sha256"] for row in dependencies_receipt["outputs"]}
+    if dependencies.get("manifest") != VERSION or dependencies.get("mapClassId") != 13 \
+            or dependency_outputs.get(source_path(dependencies_path)) != sha(dependencies_path.read_bytes()):
+        raise ValueError("Map13 shared story performance selections differ from their source receipt")
+    if set(stories) & set(dependencies["graphs"]):
+        raise ValueError("Duplicate original Map13 story identity")
+    stories.update(dependencies["graphs"])
     requested = set(selections(stories))
     apk = Apk.current()
     if apk.version != VERSION:
@@ -139,7 +150,8 @@ def build(unity_project=None):
                   components=sum(item["type"] != "GameObject" for item in objects.values()))
     write(RECEIPT, encode(dict(manifest=VERSION, mapClassId=13,
         operation="Decode original story playable prefab hierarchy and full component serialization; native import, external dependency closure and live performance remain pending.",
-        inputs=[record(SOURCE), record(SOURCE_RECEIPT), record(Path(__file__).resolve()),
+        inputs=[record(SOURCE), record(SOURCE_RECEIPT), record(dependencies_path),
+                record(dependencies_receipt_path), record(Path(__file__).resolve()),
                 record(ROOT / "scripts/map13_native_schemas.py"),
                 record(ROOT / "scripts/map13_entity_native_schemas.py"),
                 record(ROOT / "scripts/official_unity_schema.py")],

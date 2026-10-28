@@ -1,6 +1,7 @@
 """Prepare exact original Map13 story performance CAB closure for native conversion."""
 import argparse
 import json
+import os
 from pathlib import Path
 
 from official_apk import Apk, ROOT
@@ -11,7 +12,7 @@ from prepare_unity_map13_water_entity_inputs import hydrate
 from prepare_unity_map13_sources import encode, meta, sha, source_path, write
 
 VERSION = "871_156598"
-CACHE = ROOT / ".tools/map13-story-playable-native-cache-871_156598"
+CACHE = Path(os.environ.get("ZJCS_VALIDATION_DIR", ROOT / "output/validation/unconfigured")) / "map13-story-playable-native"
 SOURCE = ROOT / "unity/Assets/Official/World/Map/13/Source/story-playables.json"
 SOURCE_RECEIPT = ROOT / "assets/reference/official-map/map13-story-playables-source-manifest.json"
 OUTPUT = ROOT / "unity/Assets/Official/World/Map/13/Source/native-story-playable-components.json"
@@ -23,6 +24,8 @@ def record(path):
 
 
 def build(unity_project=None):
+    if not os.environ.get("ZJCS_VALIDATION_DIR"):
+        raise ValueError("Set ZJCS_VALIDATION_DIR to an owned GUID validation workspace before converting story assets")
     receipt = json.loads(SOURCE_RECEIPT.read_bytes())
     expected = {r["path"]: r["sha256"] for r in receipt["outputs"]}
     if receipt["manifest"] != VERSION or expected.get(source_path(SOURCE)) != sha(SOURCE.read_bytes()):

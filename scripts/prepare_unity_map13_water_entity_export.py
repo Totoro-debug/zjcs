@@ -7,6 +7,7 @@ from collections import Counter
 from pathlib import Path
 import argparse
 import json
+import os
 import re
 import shutil
 import socket
@@ -29,6 +30,14 @@ EXPORTED = CACHE / "export/ExportedProject/Assets"
 DESTINATION = CACHE / "restored"
 PROOF = ROOT / "assets/reference/official-map/map13-native-water-entity-export-source-manifest.json"
 GUID = re.compile(r"(?m)^guid: ([a-f0-9]{32})$")
+
+
+def native_io_path(path):
+    """Use Windows extended paths for I/O while preserving receipt identities."""
+    path = Path(path).resolve()
+    if os.name == "nt" and not str(path).startswith("\\\\?\\"):
+        return Path("\\\\?\\" + str(path))
+    return path
 
 
 def convert(cache=CACHE):
@@ -143,7 +152,7 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
         originals[key] = record, obj
     index = {}
     for path in exported.rglob("*.meta"):
-        match = GUID.search(path.read_text(encoding="utf8"))
+        match = GUID.search(native_io_path(path).read_text(encoding="utf8"))
         if match:
             if match[1] in index:
                 raise ValueError("Duplicate water export GUID")
@@ -152,7 +161,7 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
 
     def read_documents(path):
         if path not in cache:
-            cache[path] = documents(path.read_text(encoding="utf8"))
+            cache[path] = documents(native_io_path(path).read_text(encoding="utf8"))
         return cache[path]
 
     def exported_identity(path, file_id):
@@ -220,7 +229,7 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
 
     outputs, checked = [], set()
     for path in sorted(path for path in exported.rglob("*") if path.suffix in (".prefab", ".asset")):
-        raw = path.read_bytes()
+        raw = native_io_path(path).read_bytes()
         text = raw.decode("utf8")
         if "Map13OriginalOrder:" not in text:
             continue
@@ -253,10 +262,10 @@ def build(receipt_path=RECEIPT, component_path=OUTPUT, roots=ROOT_BUNDLES,
         if len(orders) != sum("references" in value for _, value in restored_docs.values()):
             raise ValueError("Not every exported registry was restored")
         target = destination / path.relative_to(exported)
-        write(target, restored.encode())
-        write(Path(str(target) + ".meta"), Path(str(path) + ".meta").read_bytes())
+        write(native_io_path(target), restored.encode())
+        write(native_io_path(Path(str(target) + ".meta")), native_io_path(Path(str(path) + ".meta")).read_bytes())
         outputs.append(dict(input=source_path(path), input_sha256=sha(raw),
-                            path=source_path(target), sha256=sha(target.read_bytes()),
+                            path=source_path(target), sha256=sha(native_io_path(target).read_bytes()),
                             registries=len(orders)))
     if checked != set(originals) or (expected_counts is not None and
             (counts["registries"], len(outputs)) != expected_counts):

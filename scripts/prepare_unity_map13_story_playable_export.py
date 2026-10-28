@@ -6,9 +6,12 @@ from official_apk import ROOT
 from prepare_unity_map13_story_playable_inputs import CACHE, OUTPUT, RECEIPT
 from prepare_unity_map13_water_entity_export import build, convert
 import json
+import os
 
 
 if __name__ == "__main__":
+    if not os.environ.get("ZJCS_VALIDATION_DIR"):
+        raise ValueError("Set ZJCS_VALIDATION_DIR to an owned GUID validation workspace before exporting story assets")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--convert", action="store_true")
     if parser.parse_args().convert:
