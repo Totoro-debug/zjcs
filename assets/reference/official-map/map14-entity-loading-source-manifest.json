@@ -1,0 +1,232 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.dll",
+      "sha256": "2b2bed9a863049192ab828f305f8ad36e0f72fd673d7624ffe2078d0fb81795e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/GameObjectPoolEmbed.cs",
+      "sha256": "4b9bf8bd72bd2e4492271f5b69dfc60eeb4023acfa51718ba27aa28337bcf482"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/TTLGameObjectPool.cs",
+      "sha256": "29e00f1d22052652148ee9bda61818a9bbec8d730ab9f4fe2ab35d4bf6b175b6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-source/TTLGameObjectPoolCollection.cs",
+      "sha256": "eddfab58a1bd465e0c9a8e76f718dc84a314b5a8681b9ba48fd99f8115a79a56"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework.Collections/SortedValueDictionary.cs",
+      "sha256": "4aa2a9d4370b531500f0a8c92a5555bcfd21594fb4516b61cd9840e805d41784"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IEntityLoadHandler.cs",
+      "sha256": "831e87b6665feb55bfb89d7a1877cb4889b6eecb9ff59c632c2dab0f326f1dfe"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyEntityLoadHandler.cs",
+      "sha256": "26593bfd66e44dffdc24492d01e4491c60eb979707b6cb70e1d462570286d624"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyEntityIndexHandler.cs",
+      "sha256": "2b6b6f8ef2068ee648d99f1ead860463d386285dba1b8ba03143778c9ff31de5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/IResourceLoader.cs",
+      "sha256": "a2f4d655cc4a575a6e3da01b1320647c1f7804769ebd6452fce60efe14789c74"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/IApplicationService.cs",
+      "sha256": "4b93db629d3761218a2c6f8f3d4bbcf7b4c03c1c2bfd05023c05bc7042e1ce14"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapEntityFunctionDisableInfoParser.cs",
+      "sha256": "8e2585c2481df3116b352b793aa0aeb10e04246a2e1fc0ade168b8ce2d4d8e6f"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_entity_loading.py",
+      "sha256": "5c41f780cef2282aaf91bdcbe0821111b7ca2c61d14fcb75f4a2fdb5cbf354d5"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "GameObjectPoolEmbed",
+      "diagnosticBlocks": 2
+    },
+    {
+      "source": "TTLGameObjectPool",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "TTLGameObjectPoolCollection",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "SortedValueDictionary",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IEntityLoadHandler",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyEntityLoadHandler",
+      "diagnosticBlocks": 10
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/GameObjectPoolEmbed.cs",
+      "sha256": "13383eb3281973425421a1d3a372f619974555b846f168cb518c48769611d6be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/GameObjectPoolEmbed.cs.meta",
+      "sha256": "889679e93bd8825c6f9cfa1a78710f9b2c3bbd5f89fa1e846c86ff120e2938e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/TTLGameObjectPool.cs",
+      "sha256": "79aced8b9143974fae1e075c7f1362230448d78275a6db5fe6d8a1b7288af998"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/TTLGameObjectPool.cs.meta",
+      "sha256": "46c2c1133a92a2dbb0c6f82a5b13fe4af87ec7ad8899b4c49a8593f69c7aed7b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/TTLGameObjectPoolCollection.cs",
+      "sha256": "b82142f4a0b50713821b2802bf406480e2b84e3512219dd9d8f4677505c46104"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/TTLGameObjectPoolCollection.cs.meta",
+      "sha256": "93f86a8e483a1767d4f8b7906c654dd1f13a78a1285c5f2f7f8db9fa9f1e3bc6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/SortedValueDictionary.cs",
+      "sha256": "bf737420f278850b34de2ae46853d40862a31900a0e8e6675a0685bbfd4e0b5a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/SortedValueDictionary.cs.meta",
+      "sha256": "1ab13aa162adb3f05f3b1c17d50ebe5e27a3f6911358fdfe86b951ee23919387"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/IEntityLoadHandler.cs",
+      "sha256": "a372574ac57afdc438a84b2ecca5f9bc009493ceaa6102c0b25444bb4cccf576"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/IEntityLoadHandler.cs.meta",
+      "sha256": "51d62fee0321d8baa86b1ed7c5f219af11545aa04795edf08a33715410c365c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/MyEntityLoadHandler.cs",
+      "sha256": "bb59e3d8f374547dd7191a39c545b51f5d28766b5360f8bdcd33f4e92f424ec1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/MyEntityLoadHandler.cs.meta",
+      "sha256": "fd8fe8b573118042976405ec9ed5e3559f85b568436854f03f7ba3933eeffd40"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/EntityLoadingBindings.cs",
+      "sha256": "2056ac3d8294570e95dc72670ae82644dd54bbf03a03b59fb49e6f527c232607"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/EntityLoadingBindings.cs.meta",
+      "sha256": "48ae16eacbdfda03c0ee42bbdfd6d63a73c2dc0e2d1b4d4d61f79faeefda0f0c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/Zjcs.Official.EntityLoading.asmdef",
+      "sha256": "b754a9feeb83564e01d97a11176329fd6098d24bf91f0f00c0f2b06d0e3181c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/Zjcs.Official.EntityLoading.asmdef.meta",
+      "sha256": "81df15dd822f1149c12622a03ac89563f22e5d968d5823ba9c672ff9b45e880c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading.meta",
+      "sha256": "55cf1a80d52e8a176032b90d9bd992a6669b5f5dcededc4cbe47669b04ef6cf4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityLoading/OfficialMap14EntityLoadingAcceptance.cs",
+      "sha256": "82bfaf66b4aca79a169b5f5da5425e8fc3af11bcc98edbda134e5a4d616a035c"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityLoading/OfficialMap14EntityLoadingAcceptance.cs.meta",
+      "sha256": "408c5786d3c3c4c87e55c94fb0f966791c626249b73bc42a07d88ab7644f7c48"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityLoading/Zjcs.Editor.Map14.EntityLoading.asmdef",
+      "sha256": "ecf67a6373f3a1607daa3598a4faa19178d1563cb5a98747a1d3ed4cc78b2902"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityLoading/Zjcs.Editor.Map14.EntityLoading.asmdef.meta",
+      "sha256": "124910ddd9a7c2aba17683cbff53f58e7aa2422093ad01ee6eeea670b58cbf6e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityLoading.meta",
+      "sha256": "946c05def757b8dd12ca264fe739aa4e59bbde8157aced0444f57c7083177104"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/GameObjectPoolBase.cs",
+      "sha256": "2bcac91bfe9a39fc667467e4f0c1628c9ec0fdadc164093df3f15eba23f3096e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayableManager/StoryPlayableInstantiation.cs",
+      "sha256": "65e86b0fa7db017a5f3f56244fe8556d535248e7ce7ee80fdc1267957c6227c9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/IGameObjectPoolItem.cs",
+      "sha256": "fdc4d1b70a3cda89615fe37e900937c81444aac5c5cf257a27f9790f38555c30"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ProfilerScope.cs",
+      "sha256": "c9345a7c893b078562d8dc2343c355afc7f05fa2f0ba048ffe2bd15f8bdd09aa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/EcEntityIdentifier.cs",
+      "sha256": "c6be9758d9c43f4b8cbffe1ffdd5f45a0cf0a6a36a0dcbcf7888cc0e59a6e0f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+      "sha256": "c01b13c7c1680320889d887e875f36cd1e613f606d58b82bf444c27319ba0245"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViews/ECViewEntityBinding.cs",
+      "sha256": "3c3ab3a7438ed872a2ffee316604635f28e61561939f89fa50fa87e5e3e4ad00"
+    }
+  ],
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14EntityLoadingAcceptance.Run",
+    "graphicalPlayMode": true,
+    "visualRegression": "Original four-statue prefab lifecycle and three actual rendered frames",
+    "checks": [
+      "Out-of-order asynchronous and reentrant request FIFO",
+      "Pending/ready prefab component lookup and resource coalescing",
+      "Root-first and entity-id sorted initial loading",
+      "Removed-before-load immediate end and null callback",
+      "Embedded object reset/rebind, return position and activity",
+      "Original sixty-second TTL and expiry",
+      "Queued/in-use retention and unused resource release on low memory",
+      "Late completion after disposal, subscription and resource disposal",
+      "Creation and destruction with pooling disabled"
+    ]
+  },
+  "operation": "Copy the original complete MyEntityLoadHandler, IEntityLoadHandler, embedded pool, TTL pool, collection and sorted expiry dictionary. Preserve FIFO completion, root-first/entity-id initial load, delayed removed-entity recovery, original pool settings/60 second TTL, low-memory retention, callback order and original collection disposal behavior. Explicit host interfaces consume original entity/settings/resource/low-memory facts and scene injection. Adapt C# 12 construction and ILSpy generic artifacts; supply the original two-second R3 interval through an owned platform scheduler.",
+  "limitations": [
+    "The formal native entity catalog, client container, shared entity projection, scheduler and local resource provider must be bound by the map host. No initial map entity, server visibility or save rule is invented."
+  ]
+}
