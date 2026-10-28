@@ -1,0 +1,331 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyContainer.cs",
+      "sha256": "744693c441dc12be8675e705ed1d8292f36911e6e46ef4fd21ad61c6929be836"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyClientEntityHandler.cs",
+      "sha256": "bccf5b027a81c03fa5a66a272fb38bd27ef9ea75394701b0d79f7714774ab7ad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyClientStoryNPCEntityHandler.cs",
+      "sha256": "0cdacd327ab9a2916ad4b9f3d3b064829e162e62f397b88bd459492527579353"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyContainerHandler.cs",
+      "sha256": "e4f00f4fd811c59338fe6b4965e80d71d629d07b06e1427c3a442c9b616397bf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyMapEntityLoadHandler.cs",
+      "sha256": "4fcc97cd3fed66c21c8f6126214c207f625372728b5f2e32b83db4f7d1821849"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyContainerAddEntityEventDelegate.cs",
+      "sha256": "82b5a47cd96e382af4edbccbb0bc124d01833c4394bf0cf158b865e4af0625a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyContainerAddEntityEventReceiver.cs",
+      "sha256": "6196d4b02b3f2985746bdfaeab9eac9ef89b17539a28192f87c3ea44861c9fd3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyContainerRemoveEntityEventDelegate.cs",
+      "sha256": "2c1e8e68ff5a481419a2d564086cc2e89b5f2158db35b2268b57e7c54b2842a1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyContainerRemoveEntityEventReceiver.cs",
+      "sha256": "f00a8aa52eeb3fe2e2ecf69d423c936d30dc431db42dc76cfadc443576d13e33"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyContainerPrepareReplaceEntityEventDelegate.cs",
+      "sha256": "c6fefad211d2523608a111cc7c90df711e31dfae780515a35ae32e74dc37ea31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyContainerPrepareReplaceEntityEventReceiver.cs",
+      "sha256": "9d5014e99bbc02e7089b3e3c023e0a0efa79bcf6b56d0c49c1ba1a85a67d9cff"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyContainerReplaceEntityEventDelegate.cs",
+      "sha256": "f7238abbf12d402ecd17ef64d9568cdb44708b770da40d694b4ee0df2dd5974d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyContainerReplaceEntityEventReceiver.cs",
+      "sha256": "f15bd356d5656222f867c56bc7634038c182ed65e57996623e748eb875f63268"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_entity_containers.py",
+      "sha256": "c69a6f554e850639415b2474b20418af95cbe35aaf019c1ccd902df6eaaa4c38"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "MyContainer.cs",
+      "diagnosticBlocks": 2
+    },
+    {
+      "source": "MyClientEntityHandler.cs",
+      "diagnosticBlocks": 3
+    },
+    {
+      "source": "MyClientStoryNPCEntityHandler.cs",
+      "diagnosticBlocks": 4
+    },
+    {
+      "source": "IMyContainerHandler.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IMyMapEntityLoadHandler.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyContainerAddEntityEventDelegate.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IMyContainerAddEntityEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyContainerRemoveEntityEventDelegate.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IMyContainerRemoveEntityEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyContainerPrepareReplaceEntityEventDelegate.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IMyContainerPrepareReplaceEntityEventReceiver.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "MyContainerReplaceEntityEventDelegate.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "IMyContainerReplaceEntityEventReceiver.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainer.cs",
+      "sha256": "c9a543f5962b1bc38a297f12dfce339363baa36a16d8f58ee1c58f84465d4b31"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainer.cs.meta",
+      "sha256": "b487be65d413a518df3fb27f236b7534f44482705cd12fb426a2b6629a5ede74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyClientEntityHandler.cs",
+      "sha256": "af364345172aee59bc4e74d5f79339e4bc20b6874081d92f0595e541bdfcea96"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyClientEntityHandler.cs.meta",
+      "sha256": "2695b48023cc5f6ab63ecf0c1b224da58ff9500ed0165ecacb678dabf2310612"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyClientStoryNPCEntityHandler.cs",
+      "sha256": "5d7a04a9db4967f7f3996dff22d3070ab5aa13f95cdfe206fbeef64e9a11d709"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyClientStoryNPCEntityHandler.cs.meta",
+      "sha256": "8dec99e817ecd0526874c25cd1a835504af4c515012b1a26bcc336bd113be6c2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerHandler.cs",
+      "sha256": "c9e7b199b925a2c3474b660f95fe42bb5e3f217a66116084c4567ebf37446b81"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerHandler.cs.meta",
+      "sha256": "5504736fb643b03dfb6d16a34c5bb414fa4228659190489c6484d8331e49796a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyMapEntityLoadHandler.cs",
+      "sha256": "af3933e451bc7fd4e24cc52d642a4468ba74dc8a2e870a90a41e3c5795894976"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyMapEntityLoadHandler.cs.meta",
+      "sha256": "8b88b5cfe7d8a6535bd9eab4440c95b7c9e31dd1e3ef1157ef27a8e92f3eccce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerAddEntityEventDelegate.cs",
+      "sha256": "836151eb21957774c66f6df103ff19b15c2d3075b43f59917a9de92d6025a213"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerAddEntityEventDelegate.cs.meta",
+      "sha256": "d8228b00517b4dcb38204fd23867125ca43ab934eb775c348828999c4b91c8cc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerAddEntityEventReceiver.cs",
+      "sha256": "bbcb8fda3530621ee67ea039c20c535d3c85d4f03baa61814c116460d12df808"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerAddEntityEventReceiver.cs.meta",
+      "sha256": "8c9850f346c1d2ceb9bc999cae244aecdb9a470a33096f349ce95744c3d2386d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerRemoveEntityEventDelegate.cs",
+      "sha256": "817307267a0239b45a8d9b27ff6edabdadb775a0afb8f97dc09553da68af2be8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerRemoveEntityEventDelegate.cs.meta",
+      "sha256": "05f535745475da8427437c36e24b88d9d172f4392c75803c305ed5e7d8fe37d0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerRemoveEntityEventReceiver.cs",
+      "sha256": "41605cc3efaa7f4261603b5c36a60b0b4e81d006ba0fe0edbcde149135af4940"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerRemoveEntityEventReceiver.cs.meta",
+      "sha256": "4e15f430fb91b662cc64bdda4e9b71ae095274893f71447aa92c66f299c9329b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerPrepareReplaceEntityEventDelegate.cs",
+      "sha256": "1de444ae6ad5908bb196261a4a441fa5efadf2496f76cbd2d81afa3a9437c551"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerPrepareReplaceEntityEventDelegate.cs.meta",
+      "sha256": "5a03a9c08c93243811e8ef4cddfa81ae65ff99d7912319f919604d317fe625b5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerPrepareReplaceEntityEventReceiver.cs",
+      "sha256": "c59963cbd1c3430dce6dd762cc74ddbc69805b80bb9f98d26e4a462a7d8c92bb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerPrepareReplaceEntityEventReceiver.cs.meta",
+      "sha256": "2decb80163ab1252c2f28271d2db3b0b86b8fd1326012224d5ca3bb46789932c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerReplaceEntityEventDelegate.cs",
+      "sha256": "205c949eaca17f1e2d28fd672241a960cf72d23ef25957bcd9dfc1171bd49cdc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/MyContainerReplaceEntityEventDelegate.cs.meta",
+      "sha256": "15f9d6e8e6391b8a2e057ab74fa3beda6ea8cacdf4af80e3cb8607876dac7642"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerReplaceEntityEventReceiver.cs",
+      "sha256": "786d7f6e29ea50bcb7869f1f38a146dbff4da4efc5190ab0db6192c88c63d02f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/IMyContainerReplaceEntityEventReceiver.cs.meta",
+      "sha256": "9fd3826da4de1e98d1455484d94c15912e63af27a1eddf3159ce1eed5d515a3e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/EntityContainerBindings.cs",
+      "sha256": "c1856fdf35f1747dd0577447c479e173fa5a3deb58ac9864eb1147c1d429a9ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/EntityContainerBindings.cs.meta",
+      "sha256": "db6636d9fea4b71a30b9dda00e7985e9c0ac7dc990c52feecb5b24633a11c2e9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/Zjcs.Official.EntityContainers.asmdef",
+      "sha256": "9becba542807402d24840122cc80dcac734e66d159aff6bc8dbe31f2efbd68e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/Zjcs.Official.EntityContainers.asmdef.meta",
+      "sha256": "6a1a1f53aea22b4c6ec384ac292dcd1ee861a04c8820c4dad63ba2f4c4c725c3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers.meta",
+      "sha256": "1a71b44bbb44337711a519e08b697076a5b1b874bcce406d35719b9601ce3916"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityContainers/OfficialMap14EntityContainerAcceptance.cs",
+      "sha256": "ddd3aa59236c2636185e3a66ec3db19b253879eb7948e99f4c562d1390bce8bd"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityContainers/OfficialMap14EntityContainerAcceptance.cs.meta",
+      "sha256": "1a563a79176d0d4916aba9b4aa84c10f3541eb5d79734b6149579612717d2cce"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityContainers/Zjcs.Editor.Map14.EntityContainers.asmdef",
+      "sha256": "d753bddcd63346728fc624953f6fa8aa2ccb218479dce33b7f5e2ed680e29975"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityContainers/Zjcs.Editor.Map14.EntityContainers.asmdef.meta",
+      "sha256": "6376122224604aaa30dc353c6aea57c4c7284f6768b2a018bd49c872ede28af0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityContainers.meta",
+      "sha256": "657bc8030f883b1eaad489d67d26f74c8bfacc2f64f54863f12e42d310407286"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/MyEntity.cs",
+      "sha256": "c01b13c7c1680320889d887e875f36cd1e613f606d58b82bf444c27319ba0245"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLifecycle/EntityLifecycleBindings.cs",
+      "sha256": "34fc2c54ff1e7808661554b6b36e630635e2a157e2093db1f289cbde6653c88c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/IEntityLoadHandler.cs",
+      "sha256": "a372574ac57afdc438a84b2ecca5f9bc009493ceaa6102c0b25444bb4cccf576"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/MyEntityLoadHandler.cs",
+      "sha256": "bb59e3d8f374547dd7191a39c545b51f5d28766b5360f8bdcd33f4e92f424ec1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/EntityLoadingBindings.cs",
+      "sha256": "2056ac3d8294570e95dc72670ae82644dd54bbf03a03b59fb49e6f527c232607"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipData.cs",
+      "sha256": "6e5d03b9eefcede1ec0194b6464e69812ada4b81a954091ecc6e47936a8680da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipType.cs",
+      "sha256": "0f483888f08aa5735bcf98057314752fbc90f9d44512dad3fb0ef85122567de6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityVisibilityViews/EcEntitySourceType.cs",
+      "sha256": "be531bfd45843bd6c507074bd5a2ab3e7e6a7a7346f843e7d82f55f609eec5b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/IEventReceiver.cs",
+      "sha256": "bf6472e29d85067098ee047f402c865388094df9415fda8fda6050e5a5c6a146"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13EntityEvents/EventDelegateBasicBase.cs",
+      "sha256": "35c990e871496ce73b7e20ac17510e9262176a9187c30e0fbc3660cd5b3ce0f2"
+    }
+  ],
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14EntityContainerAcceptance.Run",
+    "graphicalPlayMode": true,
+    "checks": [
+      "Four subscription and teardown order",
+      "Root/group registration and start-before-add events",
+      "Prepare/replace dictionary identity and event order",
+      "Deferred fade then end/remove/event/unload order",
+      "Negative client identifiers and source ownership/grid assignment",
+      "Story NPC uniqueness and removal callbacks",
+      "Immediate and bulk removal",
+      "Original entity loader and four-statue display regression"
+    ],
+    "boundary": "Container event and state services are explicit fixture inputs. Native shared event/data adapter, movement, formal world input/UI/save and Player are not covered."
+  },
+  "operation": "Copy the complete original client container and both client entity handlers with four original event receiver/delegate pairs. Preserve registration, component start, fade/end/remove/unload order, shared start/destroy/prepare/replace subscription order, replacement dictionary identity, negative client identifiers and story NPC uniqueness. Explicit shared-state/movement/ownership services adapt existing native entity data, without implementing world/server rules.",
+  "limitations": [
+    "Formal shared entity projection, native prefab loader, movement and client container map-host binding remain required."
+  ]
+}
