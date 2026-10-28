@@ -1,0 +1,131 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Profession.cs",
+        "sha256": "01c1fedcaeb1cbb24c8c64ef8e1a3dba4159050e41e29ba3d7ba0b3aad550017"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Profession.cs",
+        "sha256": "df3f891fa4ad1d742d329d9ef76887b218e2be983689118085d9c5c9473388d5"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/Profession.cs.meta",
+        "sha256": "822e9631456dce02228549b8082d2313fa171d9979dae3dad6a99d5b8741eb4c"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/CharacterPartPoolEntry.cs",
+        "sha256": "8a53ce6dec648c879e0c2ea5fa56521c9760bf9a4d7d21ba89e857291f91a9f2"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPartPoolEntry.cs",
+        "sha256": "2ccc2997374f75f26d80900dcc72d0a92edf55b1ada97608b3f822f42586c732"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/CharacterPartPoolEntry.cs.meta",
+        "sha256": "7e1810535bde07856e652de543941b3096fdc1a618ded235d60c3c1dac81cd33"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/ICharacterPartEntryProvider.cs",
+        "sha256": "91219c9f08bcff763c74a1ffc1febe51078fb31249bbb2e1f21015d15b092069"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPartEntryProvider.cs",
+        "sha256": "fe98446a7142bb88979e238af365daa9eca18a3021c733256de66a066de8f8f3"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ICharacterPartEntryProvider.cs.meta",
+        "sha256": "401244a56cda19aaf689e3ab32a1d70781af2e25402b74c3ce8327ae770c5e5a"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem/PlayerWeapon.cs",
+        "sha256": "e5339d14f6a6047246c0d3ac6a379132f539809c8e4a0f7d49feadee9818ffd9"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerWeapon.cs",
+        "sha256": "be40cd146a4644cc69826cb5579bc030484880895411dad88325231254f026d5"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerWeapon.cs.meta",
+        "sha256": "315ab88f374c01df3919d80ba26343407fe3b72d7d3bf3a2eba453ecacc1aae8"
+      }
+    },
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceAnimUtils.cs",
+        "sha256": "32b704601acfdd112d8d289ef4082fa51fb5e7e0dd78281a76a1b56ebd1748c3"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionWeaponAnimationNames.cs",
+        "sha256": "8ca8576aed964067c3219d1f4fc0b960d30381400c3dcd06f6ff80fdf3a9c303"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionWeaponAnimationNames.cs.meta",
+        "sha256": "798893e4f3605acf1289db758a3111cda46850f483a34bec5edd42f7de67d4fa"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_player_weapon.py",
+    "sha256": "ecdb1d24e6da0e1df3b2c21b5a04a4cb8f09ca91c091106a55374583dc593b7a"
+  },
+  "additional_source": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceUtils.cs",
+      "sha256": "f44c5bd234aedd06e9f7845b8b1eaf66963a81675b8eb5b204ca4e2c8189c109"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerWeaponBindings.cs",
+      "sha256": "1ecb109e637ea0779a8ff84f4bdfd1cdb7651410fd84cc1e97ae201702391136"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerWeaponBindings.cs.meta",
+      "sha256": "6552f1206b77bb8aa8a4f7ddb4426a1c347f45713cf108789c4460000a691f34"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerWeaponValidation.cs",
+      "sha256": "8942858fe5482b257e47ce1488a58669cbb111c35331307a3274dfd65a4ca10e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerWeaponValidation.cs.meta",
+      "sha256": "753f77bb893d1196381a8de17aee56a3a106ee137bffc91f5e159bb11f5b8841"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/player-appearance-source-manifest.json",
+      "sha256": "fce9cbf0304c537a5b536973e3ad5591303a3bd0ce428d171b4c56fdb267fdbe"
+    }
+  ],
+  "operation": "Migrate every original PlayerWeapon, CharacterPartPoolEntry and ICharacterPartEntryProvider method plus the complete profession enum. Scope application animation utilities to their exact weapon-name and profession-ID formatting methods. Adapt original serialized skeleton references to Components and their consumed operations to the independent native skeleton boundary; preserve field names, layout values, cached identity, direction fallback, prebound behavior, pool flags, callback rethrow/outer catch order and release state. Asset handles retain the existing native resource operation boundary. No skeleton SDK implementation is used.",
+  "validated_scope": "Isolated Unity 2022.3.57f1c2 Play Mode passed: prebound world precedence and UI-only paths, standalone UI/world pool flags, inactive-child lookup, exact local transform reset, release/rent/callback/animation order, cached skin and repeated prebound SetSkin behavior, callback logging/rethrow/outer-catch then direction playback, invalid/destroyed rental state, missing component fallback, left/right/base-profession/skin names, source entry validity, captured/default scale and 20-second lifetime. GameObjects and native skeleton/resource/pool endpoints are fixtures. Production weapon prefabs, native skeletons, part pool and full profession page remain unbound.",
+  "limitations": [
+    "Application-layer migration only; it creates no substitute weapon art, character layout or skeleton renderer. Production pool/resources, source weapon model geometry/animation, full UI input/save and Player release require integration."
+  ]
+}

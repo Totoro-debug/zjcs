@@ -88,6 +88,7 @@ def build():
         native_clipping=file_record(ROOT / "assets/reference/profession-ui/native-clipping-source-manifest.json"),
         mesh_batches=file_record(ROOT / "assets/reference/profession-ui/mesh-batches-source-manifest.json"),
         player_appearance=file_record(ROOT / "assets/reference/profession-ui/player-appearance-source-manifest.json"),
+        player_weapon=file_record(ROOT / "assets/reference/profession-ui/player-weapon-source-manifest.json"),
         appearance_ui=file_record(ROOT / "assets/reference/profession-ui/appearance-ui-source-manifest.json"),
         offscreen_player=file_record(ROOT / "assets/reference/profession-ui/offscreen-player-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
