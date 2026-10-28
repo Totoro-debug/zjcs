@@ -292,6 +292,10 @@ prepare_profession_playable.py 从 PlayerWorldProfessionUpgradeConfig.asset 的�
 
 原默认武器字段恢复：按当前版本完整解码 `game_settings` 和九行 `equip_type`，提取原初始剑／杖皮肤 `35000`／`36000`、职业皮肤类型顺序及装备位置。迁入原 `AppearanceDataEx.SetInitialWeaponSkin`／`SetProfessionDefaultSkin`／`SetSkinById` 的条件、皮肤合法性检查、移除与 dirty 事件顺序，保留原装备位置列表中的重复项。现有本地外观结构省略了非基础武器类别，职业只读投影现用这些原方法推导候选值，仅追加缺失的非 `BaseSkin` 类别；不覆盖已有值，不补造未初始化角色，不写用户存档，装备缺失与显式零仍不同。隔离 Direct3D Play Mode 已核对男女 62 组职业默认值、剑／杖／无类型／其他初始分支、事件时序及原外观／预览与原子刷新回归；原角色应用／原生网格的 96 组姿态和四张核心外观 GPU 诊断图回归通过并已查看；全局校验通过，仓库 74,608 个 GUID、隔离工程 73,792 个 GUID 静态检查通过。完整武器图形、正式页面、交互／存档与 Player 尚未完成。来源见[原默认武器皮肤及只读恢复](../../assets/reference/profession-ui/skin-defaults-source-manifest.json)。
 
+原剑／杖资源与程序：从 APK 中当前版本核实的 bundle 提取默认剑／杖的独立和集成 UI 共四个原层级，保存全部节点、组件字段、挂点、局部变换及源身份；层级元数据尚未代替原生 prefab 接线。共用模型完整保留 364 个骨骼、17 个插槽、399 个皮肤、六段内置动作、一个 IK、一个变换及 222 个物理约束；默认两种皮肤没有活动约束，仅对该已核实分支求值，其他活动约束明确拒绝。按原 `AppearanceUILite` 的高分辨率加载器恢复两张实际主图及两张占位纹理，保留原采样和 mip；原 `Spine/SkeletonGraphicHeightClip` 的实际 GLES 程序已转换到 Windows，未使用导出的 dummy shader。独立资源入口为 `Resources/ProfessionUI/weapon-resources`，保存原路径／GUID、模型、图集页、纹理和材质绑定，未转换图集页明确报错。
+
+默认武器 Direct3D Play Mode 已核对 96 组倒序采样动画姿态和 1,536 个独立世界矩阵，最大标量差 `0.00004577637`；四个 GPU mip 哈希、共 1,021,792 字节与源数据一致，原 shader 的 16 个变体／32 个 Windows D3D 阶段通过编译，实际剑／杖 GPU 图已查看。源武器平移在 `t=3.2` 暴露 Unity 加权曲线求值约 `0.00413` 的差异；现保留原控制点与 Unity 加权键表示，对单调三次曲线直接用双精度反解时间，不重采样或烘焙；原 1,171 条角色曲线的 19,537 个独立样本回归通过，最大绝对差 `0.0000152587891`。角色应用／原生网格的 96 组姿态和四张核心外观 GPU 诊断图也已回归通过并查看。Unity 编译／全局校验通过，仓库 74,856 个 GUID、隔离工程 73,826 个 GUID 静态检查通过。原武器 prefab、正式 `SkeletonGraphic`／`AppearanceUILite`、部件池、混合／角色物理、完整页面交互／存档和 Windows 发布仍待完成；未声明完整素材备份。来源见[原剑／杖模型、贴图及程序](../../assets/reference/profession-ui/weapon-resources-source-manifest.json)。
+
 ## 自定义实现
 
 本地外观会话将原网络玩家／序列化副本替换为已选角色存档的只读投影和深副本；本地结构遗漏的武器类别仅在该投影中按原默认设置方法补齐；原肖像缓存的修改标记使用会话内单调递增的 UTC ticks，不写回存档或作为玩法时间。存档没有整身外观 ID 和过期集合的对应字段，本作用域不推导其规则。

@@ -278,6 +278,10 @@
     "path": "assets/reference/profession-ui/skin-defaults-source-manifest.json",
     "sha256": "5bc0307cb634871e98df41103709bed6eb72dcbca608def841621a7f84d07d70"
   },
+  "weapon_resources": {
+    "path": "assets/reference/profession-ui/weapon-resources-source-manifest.json",
+    "sha256": "9a2d177ef72a167f8e41ce0a8f7dc0ca3467754458c466bd65e39d39b3f1542d"
+  },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
     "sha256": "58e2e246bd0c4c66915b8fd78873c0d274bcd45adb4e04a5e64e0db101b5715e"
@@ -468,7 +472,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "21818aa6cd48684d6e2fba2a94cf13f5b36ea47a2940c47d536ce1a4a10c46d8"
+    "sha256": "c80df5472e7d4a96fca91f65b8d71c874873dd69c667d97685e119753d0d0533"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

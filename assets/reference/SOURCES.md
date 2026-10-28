@@ -48,6 +48,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业原角色资源 | [原路径／GUID、模型元数据及分离动画 SO](profession-ui/character-resources-source-manifest.json)；四个本地原资源入口、原字符串池／动画查找与真实角色资源加载；无对应数据的原初始动作及边界见[职业功能页](../../docs/features/professions.md) |
 | 职业实际原生挂点 | [原跟随组件与实际骨骼／插槽视图](profession-ui/native-followers-source-manifest.json)；原数据缩放、附件／顺序身份、UI 与场景挂点及零深度分支；验证与缺项见[职业功能页](../../docs/features/professions.md) |
 | 职业原默认武器皮肤 | [原初始武器／职业默认皮肤与配置](profession-ui/skin-defaults-source-manifest.json)；完整解码当前配置、原皮肤验证／移除／事件顺序及本地只读快照缺字段恢复；验证与缺项见[职业功能页](../../docs/features/professions.md) |
+| 职业原剑杖资源 | [原默认剑／杖资源与可执行 shader](profession-ui/weapon-resources-source-manifest.json)；四个原 UI 层级、完整共享模型与图集、实际高分辨率纹理、原高度裁剪程序及精确曲线采样；验证与缺项见[职业功能页](../../docs/features/professions.md) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

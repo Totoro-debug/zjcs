@@ -65,7 +65,7 @@ namespace Zjcs.Offline.ProfessionUI
                     throw new InvalidDataException("Unknown native skeleton data format.");
                 string manifest = ReadString(reader), sex = ReadString(reader);
                 float scale = reader.ReadSingle();
-                if (manifest != "871_156598" || sex != "male" && sex != "female" || !(scale > 0) || float.IsInfinity(scale))
+                if (manifest != "871_156598" || sex != "male" && sex != "female" && sex != "primary-weapon" || !(scale > 0) || float.IsInfinity(scale))
                     throw new InvalidDataException("Original skeleton source identity/scale differs.");
                 string skeleton = ReadBlock(reader, out string skeletonHash);
                 string atlas = ReadBlock(reader, out string atlasHash);

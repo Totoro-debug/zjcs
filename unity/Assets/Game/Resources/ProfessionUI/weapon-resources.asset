@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Name: Original default weapon source resources
+  m_EditorClassIdentifier: ''
+  m_Script: {fileID: 11500000, guid: 5c214d3ac58d5d5b8535f5dfc9cb55bb, type: 3}
+  model: {fileID: 11400000, guid: 30d616f5018350a78d3857f11307bede, type: 2}
+  pages:
+  - Name: pWeapon_100_007
+    MainGuid: 2a3208b3271b1b546b871106ff54e1cb
+    DyeGuid: ''
+    Placeholder: {fileID: 2800000, guid: 1356c95f4e345df4b7d87f0300d57c9c, type: 2}
+    Main: {fileID: 2800000, guid: 2b60d482d18f5b9abd1776c5f267508a, type: 2}
+    Dye: {fileID: 0}
+    Material: {fileID: 2100000, guid: 77b6a9bf212456e6b3ab01933effecc7, type: 2}
+  - Name: pWeapon_200_007
+    MainGuid: be77a027edc034a4db61009b0d20de54
+    DyeGuid: ''
+    Placeholder: {fileID: 2800000, guid: 01974e61d06d5ade9d1475bbd8f84898, type: 2}
+    Main: {fileID: 2800000, guid: 1348f48cf2065c3fb369cfc52ce69f57, type: 2}
+    Dye: {fileID: 0}
+    Material: {fileID: 2100000, guid: cda972017e5350a4b31e520e9a91e4cf, type: 2}
+  prefabs:
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_100_G_007/pWeapon_100_G_007_UI.prefab
+    Guid: d6aac343b6cea884196f2f8ea9a0bc09
+    Hierarchy: {fileID: 4900000, guid: 1deaf6400cca5a83adf2f0337afa57ea, type: 3}
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_100_G_007/pWeapon_100_G_007_UI_Integrated.prefab
+    Guid: f74376e9be4bbde488c8999697f6a39d
+    Hierarchy: {fileID: 4900000, guid: fc39646d3aa35d7d87537559d7d02f13, type: 3}
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_200_G_007/pWeapon_200_G_007_UI.prefab
+    Guid: 61c468c09a795e949b23ef7236f2c349
+    Hierarchy: {fileID: 4900000, guid: 06bee58109b35ea798d6caa3d29a0473, type: 3}
+  - Path: Assets/Prefabs/Appearance/PlayerPart/pWeapon_200_G_007/pWeapon_200_G_007_UI_Integrated.prefab
+    Guid: 40d249d5a2686af4c9908908d67223cb
+    Hierarchy: {fileID: 4900000, guid: 36ea53af088c560081f04049836b9672, type: 3}

@@ -75,6 +75,7 @@ def build():
         character_resources=file_record(ROOT / "assets/reference/profession-ui/character-resources-source-manifest.json"),
         native_followers=file_record(ROOT / "assets/reference/profession-ui/native-followers-source-manifest.json"),
         skin_defaults=file_record(ROOT / "assets/reference/profession-ui/skin-defaults-source-manifest.json"),
+        weapon_resources=file_record(ROOT / "assets/reference/profession-ui/weapon-resources-source-manifest.json"),
         image_resources=file_record(ROOT / "assets/reference/profession-ui/image-resource-source-manifest.json"),
         item_components=file_record(ROOT / "assets/reference/profession-ui/item-components-source-manifest.json"),
         item_pools=file_record(ROOT / "assets/reference/profession-ui/item-pools-source-manifest.json"),

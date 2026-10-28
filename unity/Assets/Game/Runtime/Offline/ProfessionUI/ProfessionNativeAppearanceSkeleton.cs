@@ -130,6 +130,22 @@ namespace Zjcs.Offline.ProfessionUI
             ProfessionNativeIdleTransform.Apply(Pose, ProfessionNativeIdleTransform.Bind(Source, animation, time, SkinConstraints));
         }
 
+        // The two original default weapon skins have no active constraints.
+        // Refuse constrained parts rather than silently displaying a setup pose.
+        public void EvaluateUnmixedWeaponAnimation(string animation, float time)
+        {
+            if (Source.Sex != "primary-weapon") throw new NotSupportedException("Expected the original primary weapon model.");
+            if (float.IsNaN(time) || float.IsInfinity(time)) throw new ArgumentException("Original weapon time must be finite.");
+            for (int i = 0; i < Source.Constraints.Count; i++)
+                if (!(Source.Constraints[i].Fields.TryGetValue("skin", out var required) && (bool)required) || SkinConstraints.Contains(i))
+                    throw new NotSupportedException("Restore active original weapon constraint: " + Source.Constraints[i].Name);
+            foreach (var section in Source.GetAnimation(animation))
+                if (section.Key != "bones") throw new NotSupportedException("Restore additional original weapon timeline: " + section.Key);
+            if (!boneClips.TryGetValue(animation, out var tracks))
+            { tracks = Source.CreateBoneTracks(animation); boneClips.Add(animation, tracks); }
+            Pose.Apply(tracks, time); SlotPose.Reset(); attachments.ResetSlots();
+        }
+
         public ProfessionNativeMeshBatches.Slot[] CreateDrawSlots(IReadOnlyList<int> breaksAfter = null)
         {
             var result = new ProfessionNativeMeshBatches.Slot[slots.Length];
