@@ -1,0 +1,59 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/source-manifest.json",
+      "sha256": "e670cdd902d9c8426b9b161abeec6577da0934e7ad8f6d0e56c9d8de87f71b13"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/source-manifest.json",
+      "sha256": "e67172b6f722421ea23c56ee230f98e2cf41231d4b6cf4878f9486e58a870c2d"
+    }
+  ],
+  "curves": {
+    "path": "assets/reference/profession-ui/native-curves-source-manifest.json",
+    "sha256": "007f22f0dd2be5eb07b831a7a7722f00836c03d28bfe2ff0c0f700a791d2bf77"
+  },
+  "curve_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-curves-validation.json",
+    "sha256": "91867830eac5351a56459206ec6f33ac3233a2bdfdd873673938737c7d5aaa79"
+  },
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+    "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+    "sha256": "64253b99bdb7bed6bb440e5d5cb44dda74adeaddf8b26f6a27f53378ba8b82de"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs.meta",
+    "sha256": "028d2ee0033d09b65a5feec9b6e98495b7c577f80e0ac54794c7c4cc489b9fe3"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeBonePoseValidation.cs",
+    "sha256": "9fba67906ed8c3a7ec06578474a1e2e056701af7b6fe06b16a2a6a6bb0b0f086"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeBonePoseValidation.cs.meta",
+    "sha256": "846b62e53aa5eef3d22758c22b8cc9780534e2c7abaff28e78f2d7ecddfc2d8b"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_bone_pose.py",
+    "sha256": "d5874b9cdfdfc6c4576a9145ca56f97c1f1a956d82142f8abe65ba0944f7ddcf"
+  },
+  "operation": "Independent Unity affine/local-pose adapter. Bind all six original scalar bone timelines to setup transforms without any SDK runtime, pose baking, character prefab creation or alternate art. Skin-required activation includes selected bone ancestors. Only normal and translation-only world inheritance are implemented; selective rotation/scale/reflection modes fail explicitly.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 3542 original bones, 1171 source curves, 48 local poses and 425108 scalar checks; maximum absolute local difference 0.00006389618 within 0.0004 + 0.000007 * abs(expected). Synthetic normal affine matrices match native Unity transforms; translation-only inheritance, shear, skin-required activation and ancestors, source ownership, invalid input and explicit unsupported inheritance checks pass. No original full world pose, constraints or character rendering is covered.",
+  "limitations": [
+    "No character rendering or constraints are implemented here. Selective inheritance, IK, transform/physics constraints, original native renderer and full profession page remain required."
+  ]
+}

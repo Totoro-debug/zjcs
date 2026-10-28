@@ -75,6 +75,7 @@ def build():
         portrait_manager=file_record(ROOT / "assets/reference/profession-ui/portrait-manager-source-manifest.json"),
         appearance_config=file_record(ROOT / "assets/reference/profession-ui/appearance-config-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
+        bone_pose=file_record(ROOT / "assets/reference/profession-ui/bone-pose-source-manifest.json"),
         photographer=file_record(ROOT / "assets/reference/profession-ui/photographer-source-manifest.json"),
         portrait_studio=file_record(ROOT / "assets/reference/profession-ui/portrait-studio-source-manifest.json"),
         item_resources=file_record(ROOT / "assets/reference/profession-ui/item-resources-source-manifest.json"),
