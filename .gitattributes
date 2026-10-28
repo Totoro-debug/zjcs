@@ -677,3 +677,18 @@ unity/Assets/Game/Resources/Map13/Native/native-entity-textures-catalog.asset* t
 assets/reference/official-map/map13-native-entity-textures*-source-manifest.json text eol=lf
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching/** -text
 unity/Assets/Official/World/Map/12/Resources/Map12/Matching.meta -text
+
+# Map13 exact native material fields, shader platform proof and bindings.
+scripts/prepare_unity_map13_entity_material_shaders.py text eol=lf
+scripts/prepare_unity_map13_entity_materials_native.py text eol=lf
+unity/Assets/Game/Editor/Map13EntityMaterials* text eol=lf
+unity/Assets/Game/Editor/Map13EntityMaterials/** text eol=lf
+unity/Assets/Official/World/Map/13/NativeEntityMaterials* text eol=lf
+unity/Assets/Official/World/Map/13/NativeEntityMaterials/** text eol=lf
+unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders* text eol=lf
+unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/** text eol=lf
+unity/Assets/Official/World/Map/13/Source/native-entity-material-bindings.json* text eol=lf
+unity/Assets/Game/Resources/Map13/Native/native-entity-materials-catalog.asset* text eol=lf
+assets/reference/official-map/map13-entity-material-shaders-source-manifest.json text eol=lf
+assets/reference/official-map/map13-native-entity-materials-native-source-manifest.json text eol=lf
+assets/reference/official-map/map13-native-entity-materials-binding-source-manifest.json text eol=lf

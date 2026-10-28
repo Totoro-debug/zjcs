@@ -1,0 +1,546 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "input_receipt": {
+    "path": "assets/reference/official-map/map13-native-entity-input-source-manifest.json",
+    "sha256": "84af81d7ab5e1c37bca41d10e52aae236dd5d981cdb08005a03a11ceb28ee747"
+  },
+  "material_source": {
+    "path": "unity/Assets/Official/World/Map/13/Source/native-entity-materials.json",
+    "sha256": "9dbc9758a23f579b13c682e598d417cdee03292d6c5c18653aeb1de35cd9a809"
+  },
+  "material_receipt": {
+    "path": "assets/reference/official-map/map13-native-entity-materials-source-manifest.json",
+    "sha256": "1a821eb4c0f8106bb3e6c76de65c90024dbe893e762c9f4ab4b19018715c4e0f"
+  },
+  "native_engine": {
+    "path": "D:\\Tool\\Unity\\Editor\\Data\\Resources\\unity default resources",
+    "sha256": "b4cdaec669b2c9196a9c53c0bd221181027ce876456209a25945d06d0ca36851",
+    "unity_version": "2022.3.57f1c2"
+  },
+  "native_bindings": {
+    "path": ".tools/map13-entity-native-cache-871_156598/native-material-template-source.json",
+    "sha256": "4c57da6ba9aabca11fe7e184b6567a38f216f285c4ee56ec56602a860e4467d4"
+  },
+  "inputs": [
+    {
+      "original": {
+        "cab": "unity default resources",
+        "path_id": "10101",
+        "name": "GUI/Text Shader",
+        "payload_sha256": "d85b9760b677ddd70bc34eb11aca07f72419733babfc73f9bde805fea5ce1ec1",
+        "input": "unity default resources",
+        "subshader_passes": [
+          1
+        ]
+      },
+      "windows_payload_sha256": "83930ac85b9cd33c7a110fa520af924a5458b9575e7ebbf2ebc993b7cd7c889f",
+      "binding": {
+        "original_name": "GUI/Text Shader",
+        "native_name": "GUI/Text Shader",
+        "asset_path": "Library/unity default resources",
+        "guid": "0000000000000000e000000000000000",
+        "file_id": 10101
+      },
+      "backend_metadata_adaptations": [
+        {
+          "field": "m_SubShaders[0].m_Passes[0].m_NameIndices",
+          "original": [],
+          "windows": [
+            [
+              "_MainTex",
+              0
+            ]
+          ],
+          "meaning": "Windows backend texture-name index; same _MainTex property, sampler and program use"
+        }
+      ],
+      "programs": [
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [],
+          "original_index": 3,
+          "windows_index": 3,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-3-apk.glsl.txt",
+              "sha256": "43b6807ea873e4b8e6673d84ae2edbaaad40596d002f1085ee2a4f20cae88243",
+              "meta_sha256": "d3893e33be711d443f55891d8ebac6ddf1e4ec8fe934d49762748b178f832085"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-3-windows.glsl.txt",
+              "sha256": "7b91654471cf7412e2af81491204505233d4aa6a312dfc5e4ca79798f14bc8e5",
+              "meta_sha256": "36f6a95d47364756fb93a502467c8f953ccd86cb9680504b385d8846c3ca22e1"
+            }
+          },
+          "desktop_sample_precision_widening": true,
+          "compared_source_sha256": "8129640b5cb43c76a0762cca83be78876b532dad708454eaa41bcbfe973f0c32"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "UNITY_SINGLE_PASS_STEREO"
+          ],
+          "original_index": 4,
+          "windows_index": 4,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-4-apk.glsl.txt",
+              "sha256": "6f5e341efde2c7516616d0030fb218444a07674ed809d50a51719823f85291dd",
+              "meta_sha256": "d513f9be114957bde431e0cac3ffae750e1a8d835a393162acf2f3e98e06fb51"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-4-windows.glsl.txt",
+              "sha256": "1c07937b1c1f3940f8ef6a9aed6e0adf7bee6efe014ef7495d1ac1a33b0b3264",
+              "meta_sha256": "1b4835118f5b16f9d1536a0cfb7f2cd4c01c12231aa47fae9d7854dc2bf4e20b"
+            }
+          },
+          "desktop_sample_precision_widening": true,
+          "compared_source_sha256": "15b2a6ec7808285c1741494adf2c35cf921c355b6c154c61cc329bb4feebb090"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "STEREO_INSTANCING_ON"
+          ],
+          "original_index": 5,
+          "windows_index": 5,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-5-apk.glsl.txt",
+              "sha256": "1d0a83f7f8a8487120b9e122726cf2b83802e3978167ec9f5885df3d22db9e25",
+              "meta_sha256": "3766ea90f887566140bbec611c0b3e83434ea1e54ef0eb2801376c410b95af6e"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-5-windows.glsl.txt",
+              "sha256": "82f4228e4100ff97614913076fd6afcd810433d98e87a08554611c9e3501c177",
+              "meta_sha256": "c994ecbca5163bd9519740b60b5db6e7e3099fb80dd719e6a6d29b036483935d"
+            }
+          },
+          "desktop_sample_precision_widening": true,
+          "compared_source_sha256": "65c34450406bb2ef901f83f1e41603b4a2150df3d784d0eef07d40d9e4c8eded"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "STEREO_MULTIVIEW_ON"
+          ],
+          "original_index": 6,
+          "windows_index": 6,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-6-apk.glsl.txt",
+              "sha256": "41336ffb7937b02e0f528f61e3387ddc7ac5571ce55159a05204b822268ba995",
+              "meta_sha256": "27af369ff527a28b73f00f2d04f2574dd586227f8b00f667fffd946c4fc2cb7e"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-6-windows.glsl.txt",
+              "sha256": "2d3f3adc1f423fc427a0eedd0078eb53cfc82f5f466ca2a28ae0d236270c8eca",
+              "meta_sha256": "20371dde0a11c5a74aa79f1b1fc3fc1ec1eefe89b807ca43eb78186c6060f307"
+            }
+          },
+          "desktop_sample_precision_widening": true,
+          "compared_source_sha256": "6a4423aa7be478a0b50db047fd18efeb69393907d08307fb04fff790477de068"
+        }
+      ]
+    },
+    {
+      "original": {
+        "cab": "unity default resources",
+        "path_id": "10755",
+        "name": "Hidden/FrameDebuggerRenderTargetDisplay",
+        "payload_sha256": "f080b35daf4ebc5349f6f1b3aba78b8578d6b2c6261dd7509271e61a2f1ab3f8",
+        "input": "unity default resources",
+        "subshader_passes": [
+          1
+        ]
+      },
+      "windows_payload_sha256": "0beb62ec46642e971848e79613fa9d312d9611b49147a10bb179a050316fe41f",
+      "binding": {
+        "original_name": "Hidden/FrameDebuggerRenderTargetDisplay",
+        "native_name": "Hidden/FrameDebuggerRenderTargetDisplay",
+        "asset_path": "Library/unity default resources",
+        "guid": "0000000000000000e000000000000000",
+        "file_id": 10755
+      },
+      "backend_metadata_adaptations": [],
+      "programs": [
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [],
+          "original_index": 5,
+          "windows_index": 5,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-5-apk.glsl.txt",
+              "sha256": "d7b803bbbe6168830a7e17bf16ea3d84b31ec87440bfc8791dbc9053e322ebc9",
+              "meta_sha256": "95ccc27256d83b9417601062bc1afde0405b541e7eb78590abb43450fb1b8cf5"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-5-windows.glsl.txt",
+              "sha256": "d7b803bbbe6168830a7e17bf16ea3d84b31ec87440bfc8791dbc9053e322ebc9",
+              "meta_sha256": "5052c7ba3a18ca8ff6ed04c72c5c120bc31eca8b932be8c592922b01bf28acd6"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "d7b803bbbe6168830a7e17bf16ea3d84b31ec87440bfc8791dbc9053e322ebc9"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_2"
+          ],
+          "original_index": 6,
+          "windows_index": 6,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-6-apk.glsl.txt",
+              "sha256": "8f044b9d589156fe3945458649ebd16bcaecc8adcfcc9407f92953762b21d4cd",
+              "meta_sha256": "c05c2d8d65692c5d17fbaed958e1b32e59120d87700412bcd2b5cf01f7e61d44"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-6-windows.glsl.txt",
+              "sha256": "8f044b9d589156fe3945458649ebd16bcaecc8adcfcc9407f92953762b21d4cd",
+              "meta_sha256": "4c4a687f7f862ade3963a394d4d76bc8ffff786f6fbe45bd5244e5d99be7c590"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "8f044b9d589156fe3945458649ebd16bcaecc8adcfcc9407f92953762b21d4cd"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_4"
+          ],
+          "original_index": 7,
+          "windows_index": 7,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-7-apk.glsl.txt",
+              "sha256": "3e7e4ff19d7bcaddf65476afc231578578da525bd449527ce607c701b84c8d0c",
+              "meta_sha256": "6428435394e31c3a46b3426db995502703baa27accf05a3bda1c64476c86fb60"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-7-windows.glsl.txt",
+              "sha256": "3e7e4ff19d7bcaddf65476afc231578578da525bd449527ce607c701b84c8d0c",
+              "meta_sha256": "f9210c07dcbb4bb01590a9a0a4a95d93b25ed387dde7646aafc0c2c019c9a679"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "3e7e4ff19d7bcaddf65476afc231578578da525bd449527ce607c701b84c8d0c"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_8"
+          ],
+          "original_index": 8,
+          "windows_index": 8,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-8-apk.glsl.txt",
+              "sha256": "bbb3a43830676c88dd103f2e8c19cb9c265240e9dbb537b169cd4c7254ac5834",
+              "meta_sha256": "0a0dc46ae0d8f4c22937ac278e293f808974e83df5a12c380ec7e11ab0d0b772"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-8-windows.glsl.txt",
+              "sha256": "bbb3a43830676c88dd103f2e8c19cb9c265240e9dbb537b169cd4c7254ac5834",
+              "meta_sha256": "39abc734d8daec2fea89552845889591c101486d9c6f20ba5e47c8a7a28647b4"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "bbb3a43830676c88dd103f2e8c19cb9c265240e9dbb537b169cd4c7254ac5834"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_TEX2DARRAY"
+          ],
+          "original_index": 9,
+          "windows_index": 9,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-9-apk.glsl.txt",
+              "sha256": "245d0ca2eac9beae54609d1e8da282d94e3c49bff528e513974c946a6cc75bcd",
+              "meta_sha256": "0cbbe51c8098ce78cb0f6d5fccaaee8fc441369187b7c493d65ab148c24dc763"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-9-windows.glsl.txt",
+              "sha256": "d58631faadaef27b392a09206b3b857c67e1ff06dcfbb6d8d88fb580a28f4a67",
+              "meta_sha256": "7a5615e34e44ff8ce7d1f5251dc0ee1b56a988a93deaa1179044577478b6e57f"
+            }
+          },
+          "desktop_sample_precision_widening": true,
+          "compared_source_sha256": "d58631faadaef27b392a09206b3b857c67e1ff06dcfbb6d8d88fb580a28f4a67"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_2",
+            "_TEX2DARRAY"
+          ],
+          "original_index": 10,
+          "windows_index": 10,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-10-apk.glsl.txt",
+              "sha256": "546a32e4c375042700974d9167ed0c05d32932f3b9a83654155db3dfbaae7b79",
+              "meta_sha256": "20909b6230fc453a6263ca86f73850591232da624e00c1203d0590f7806672d1"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-10-windows.glsl.txt",
+              "sha256": "546a32e4c375042700974d9167ed0c05d32932f3b9a83654155db3dfbaae7b79",
+              "meta_sha256": "d1d22b68d23efec8c604942c93c83acb64ae21fea728627d82af9a9f565630ea"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "546a32e4c375042700974d9167ed0c05d32932f3b9a83654155db3dfbaae7b79"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_4",
+            "_TEX2DARRAY"
+          ],
+          "original_index": 11,
+          "windows_index": 11,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-11-apk.glsl.txt",
+              "sha256": "e407de39939150fcd50fa66db16a75107a6d5b1fbcab3703a807411aed99beba",
+              "meta_sha256": "ccdc3f55362ba045a1c8a739e0cf06cb16c08a36aad9428ee67e26fcc53d5825"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-11-windows.glsl.txt",
+              "sha256": "e407de39939150fcd50fa66db16a75107a6d5b1fbcab3703a807411aed99beba",
+              "meta_sha256": "99bfb6fb7d6c20843111466582d3e8846fd3866ff7adc5762bda6deb1da1c680"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "e407de39939150fcd50fa66db16a75107a6d5b1fbcab3703a807411aed99beba"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_MSAA_8",
+            "_TEX2DARRAY"
+          ],
+          "original_index": 12,
+          "windows_index": 12,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-12-apk.glsl.txt",
+              "sha256": "42c9902c9352f3ca598e3791091dcb66500a4a6cc21f592b42f10a2a025b7ef6",
+              "meta_sha256": "ba1ea2c02583e82d5b6f007d3dc457556fdfa49d02fe6fb506bb8b81f05f3952"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-12-windows.glsl.txt",
+              "sha256": "42c9902c9352f3ca598e3791091dcb66500a4a6cc21f592b42f10a2a025b7ef6",
+              "meta_sha256": "fd3259b2d5398916e2488c094ed449b0200ced6fabb5f725049fef8668aa2dc2"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "42c9902c9352f3ca598e3791091dcb66500a4a6cc21f592b42f10a2a025b7ef6"
+        },
+        {
+          "subshader": 0,
+          "pass_index": 0,
+          "keywords": [
+            "_CUBEMAP"
+          ],
+          "original_index": 13,
+          "windows_index": 13,
+          "sources": {
+            "apk": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-13-apk.glsl.txt",
+              "sha256": "ebbaa763c3459253a5b204655a00ff6a584b67d4966b258df949fa90576fc142",
+              "meta_sha256": "9926af4949d641e3f7e159ce202063bf4a5988e5c029be87ff5bdac4d734c461"
+            },
+            "windows": {
+              "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-13-windows.glsl.txt",
+              "sha256": "ebbaa763c3459253a5b204655a00ff6a584b67d4966b258df949fa90576fc142",
+              "meta_sha256": "685c9c87ea509db37b7e3bb2cc9a0ac7804e65387fb095ada9967d6515e7814c"
+            }
+          },
+          "desktop_sample_precision_widening": false,
+          "compared_source_sha256": "ebbaa763c3459253a5b204655a00ff6a584b67d4966b258df949fa90576fc142"
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-3-apk.glsl.txt",
+      "sha256": "43b6807ea873e4b8e6673d84ae2edbaaad40596d002f1085ee2a4f20cae88243",
+      "meta_sha256": "d3893e33be711d443f55891d8ebac6ddf1e4ec8fe934d49762748b178f832085"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-3-windows.glsl.txt",
+      "sha256": "7b91654471cf7412e2af81491204505233d4aa6a312dfc5e4ca79798f14bc8e5",
+      "meta_sha256": "36f6a95d47364756fb93a502467c8f953ccd86cb9680504b385d8846c3ca22e1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-4-apk.glsl.txt",
+      "sha256": "6f5e341efde2c7516616d0030fb218444a07674ed809d50a51719823f85291dd",
+      "meta_sha256": "d513f9be114957bde431e0cac3ffae750e1a8d835a393162acf2f3e98e06fb51"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-4-windows.glsl.txt",
+      "sha256": "1c07937b1c1f3940f8ef6a9aed6e0adf7bee6efe014ef7495d1ac1a33b0b3264",
+      "meta_sha256": "1b4835118f5b16f9d1536a0cfb7f2cd4c01c12231aa47fae9d7854dc2bf4e20b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-5-apk.glsl.txt",
+      "sha256": "1d0a83f7f8a8487120b9e122726cf2b83802e3978167ec9f5885df3d22db9e25",
+      "meta_sha256": "3766ea90f887566140bbec611c0b3e83434ea1e54ef0eb2801376c410b95af6e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-5-windows.glsl.txt",
+      "sha256": "82f4228e4100ff97614913076fd6afcd810433d98e87a08554611c9e3501c177",
+      "meta_sha256": "c994ecbca5163bd9519740b60b5db6e7e3099fb80dd719e6a6d29b036483935d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-6-apk.glsl.txt",
+      "sha256": "41336ffb7937b02e0f528f61e3387ddc7ac5571ce55159a05204b822268ba995",
+      "meta_sha256": "27af369ff527a28b73f00f2d04f2574dd586227f8b00f667fffd946c4fc2cb7e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-6-windows.glsl.txt",
+      "sha256": "2d3f3adc1f423fc427a0eedd0078eb53cfc82f5f466ca2a28ae0d236270c8eca",
+      "meta_sha256": "20371dde0a11c5a74aa79f1b1fc3fc1ec1eefe89b807ca43eb78186c6060f307"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10101-state.json",
+      "sha256": "81e3d92577b6eecbd2041efeb23c76b83fb6f297570f60e59b6d6bfbfa9e3d9a",
+      "meta_sha256": "7ede150eb2bbcd821c7109b9b1313918b30bc51d9c42e478f23c684e6a7f382f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-5-apk.glsl.txt",
+      "sha256": "d7b803bbbe6168830a7e17bf16ea3d84b31ec87440bfc8791dbc9053e322ebc9",
+      "meta_sha256": "95ccc27256d83b9417601062bc1afde0405b541e7eb78590abb43450fb1b8cf5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-5-windows.glsl.txt",
+      "sha256": "d7b803bbbe6168830a7e17bf16ea3d84b31ec87440bfc8791dbc9053e322ebc9",
+      "meta_sha256": "5052c7ba3a18ca8ff6ed04c72c5c120bc31eca8b932be8c592922b01bf28acd6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-6-apk.glsl.txt",
+      "sha256": "8f044b9d589156fe3945458649ebd16bcaecc8adcfcc9407f92953762b21d4cd",
+      "meta_sha256": "c05c2d8d65692c5d17fbaed958e1b32e59120d87700412bcd2b5cf01f7e61d44"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-6-windows.glsl.txt",
+      "sha256": "8f044b9d589156fe3945458649ebd16bcaecc8adcfcc9407f92953762b21d4cd",
+      "meta_sha256": "4c4a687f7f862ade3963a394d4d76bc8ffff786f6fbe45bd5244e5d99be7c590"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-7-apk.glsl.txt",
+      "sha256": "3e7e4ff19d7bcaddf65476afc231578578da525bd449527ce607c701b84c8d0c",
+      "meta_sha256": "6428435394e31c3a46b3426db995502703baa27accf05a3bda1c64476c86fb60"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-7-windows.glsl.txt",
+      "sha256": "3e7e4ff19d7bcaddf65476afc231578578da525bd449527ce607c701b84c8d0c",
+      "meta_sha256": "f9210c07dcbb4bb01590a9a0a4a95d93b25ed387dde7646aafc0c2c019c9a679"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-8-apk.glsl.txt",
+      "sha256": "bbb3a43830676c88dd103f2e8c19cb9c265240e9dbb537b169cd4c7254ac5834",
+      "meta_sha256": "0a0dc46ae0d8f4c22937ac278e293f808974e83df5a12c380ec7e11ab0d0b772"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-8-windows.glsl.txt",
+      "sha256": "bbb3a43830676c88dd103f2e8c19cb9c265240e9dbb537b169cd4c7254ac5834",
+      "meta_sha256": "39abc734d8daec2fea89552845889591c101486d9c6f20ba5e47c8a7a28647b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-9-apk.glsl.txt",
+      "sha256": "245d0ca2eac9beae54609d1e8da282d94e3c49bff528e513974c946a6cc75bcd",
+      "meta_sha256": "0cbbe51c8098ce78cb0f6d5fccaaee8fc441369187b7c493d65ab148c24dc763"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-9-windows.glsl.txt",
+      "sha256": "d58631faadaef27b392a09206b3b857c67e1ff06dcfbb6d8d88fb580a28f4a67",
+      "meta_sha256": "7a5615e34e44ff8ce7d1f5251dc0ee1b56a988a93deaa1179044577478b6e57f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-10-apk.glsl.txt",
+      "sha256": "546a32e4c375042700974d9167ed0c05d32932f3b9a83654155db3dfbaae7b79",
+      "meta_sha256": "20909b6230fc453a6263ca86f73850591232da624e00c1203d0590f7806672d1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-10-windows.glsl.txt",
+      "sha256": "546a32e4c375042700974d9167ed0c05d32932f3b9a83654155db3dfbaae7b79",
+      "meta_sha256": "d1d22b68d23efec8c604942c93c83acb64ae21fea728627d82af9a9f565630ea"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-11-apk.glsl.txt",
+      "sha256": "e407de39939150fcd50fa66db16a75107a6d5b1fbcab3703a807411aed99beba",
+      "meta_sha256": "ccdc3f55362ba045a1c8a739e0cf06cb16c08a36aad9428ee67e26fcc53d5825"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-11-windows.glsl.txt",
+      "sha256": "e407de39939150fcd50fa66db16a75107a6d5b1fbcab3703a807411aed99beba",
+      "meta_sha256": "99bfb6fb7d6c20843111466582d3e8846fd3866ff7adc5762bda6deb1da1c680"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-12-apk.glsl.txt",
+      "sha256": "42c9902c9352f3ca598e3791091dcb66500a4a6cc21f592b42f10a2a025b7ef6",
+      "meta_sha256": "ba1ea2c02583e82d5b6f007d3dc457556fdfa49d02fe6fb506bb8b81f05f3952"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-12-windows.glsl.txt",
+      "sha256": "42c9902c9352f3ca598e3791091dcb66500a4a6cc21f592b42f10a2a025b7ef6",
+      "meta_sha256": "fd3259b2d5398916e2488c094ed449b0200ced6fabb5f725049fef8668aa2dc2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-13-apk.glsl.txt",
+      "sha256": "ebbaa763c3459253a5b204655a00ff6a584b67d4966b258df949fa90576fc142",
+      "meta_sha256": "9926af4949d641e3f7e159ce202063bf4a5988e5c029be87ff5bdac4d734c461"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-13-windows.glsl.txt",
+      "sha256": "ebbaa763c3459253a5b204655a00ff6a584b67d4966b258df949fa90576fc142",
+      "meta_sha256": "685c9c87ea509db37b7e3bb2cc9a0ac7804e65387fb095ada9967d6515e7814c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/EntityMaterialShaders/10755-state.json",
+      "sha256": "ae37ca60299e36bbb9fb89e540082d3c47066a557a8b2c488cac3deada8fec2c",
+      "meta_sha256": "78cea07074da252398527184f115912a2187954f194a4284ff396f5eb4d977bc"
+    }
+  ],
+  "desktop_sample_precision_cases": 5,
+  "precision_reference": "https://docs.unity3d.com/2022.3/Documentation/Manual/SL-Use16BitPrecisionInShaders.html",
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map13_entity_material_shaders.py",
+      "sha256": "939576d6701f6378d1c235b5078686277bc8b12ef6155f800e3b0b1d284e6f58"
+    },
+    {
+      "path": "scripts/official_engine_shader_equivalence.py",
+      "sha256": "70d697c4bf17412b1fe39b1714dde3b7882dcd6ce514f4a8151773bf0a07031e"
+    },
+    {
+      "path": "scripts/official_platform_shader_programs.py",
+      "sha256": "69ca0253ed0e7cdcc38f6480fb0c5d562199c92f7e27253befea88f41970551f"
+    }
+  ],
+  "operation": "Verify both APK engine shader objects, all original properties and render state, all 13 GLES profiles and explicit Windows builtin GUID/file IDs. Eight programs match after safe output-only framebuffer-fetch normalization. Five match after only exact sample-temporary precision widening/register coalescing at a verified instruction pair. Record the one _MainTex backend name-index addition. This preserves ordered math with Unity's documented desktop float precision; it does not assert identical Android mediump rounding.",
+  "limitations": [
+    "Unity Windows import and actual GPU output remain required; source comparison does not execute XR or MSAA variants."
+  ]
+}
