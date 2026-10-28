@@ -72,9 +72,11 @@ namespace Zjcs.Editor.Map14
             var catalog=Resources.Load<NativeMap14EntitySpriteCatalog>("Map14/Native/entity-sprite-catalog");
             var sharedCatalog=Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
             using(var shared=new NativeMap14SharedAssemblies(sharedCatalog))
+            using(var configuration=new NativeMap14SharedConfiguration(shared))
             using(var entityUtilities=new NativeMap14SharedEntityUtilities(shared))
             using(var sprites=new NativeMap14EntitySpriteLibrary(catalog))
             {
+                yield return OfficialMap14SharedConfigAcceptance.Verify(configuration,shared);
                 var displayCatalog=Resources.Load<NativeMap14DisplayCatalog>("Map14/Native/map-display-catalog");Require(displayCatalog&&displayCatalog.selectors.Length==1253&&displayCatalog.displays.Length==4,"original display catalog row/address coverage differs");services.Catalog=displayCatalog;services.Root=scope.transform;
                 services.DisplayFactory=new NativeMap14DisplayInstantiation(staging.transform,services,new MapClientVisibilitySupporterFactory{MapRootManagerProxy=services},sprites,services.InjectMono);
                 var memory=new Zjcs.Official.StoryPlayables.GAction();var displayManager=new MapDisplayManager{MapRootManagerProxy=services,ResourceLoader=displayCatalog,ServiceProvider=services,Queries=services,LowMemory=memory};displayManager.Initialize();
@@ -159,19 +161,20 @@ namespace Zjcs.Editor.Map14
             public override T GetComponent<T>(){object value=typeof(T)==typeof(ECEntityTipDotSourceData)?Tip:typeof(T)==typeof(Visibility.Map13VisibilityData)?VisibilityData:null;return value!=null?(T)value:Shared.GetComponent<T>();}
         }
         private sealed class TipSource:ECEntityTipDotSourceData{public DataInput Owner;public EntityOwnershipData Value;public override ECViewEntityData Entity=>Owner;public override EntityOwnershipData Ownership=>Value;}
-        // Only the fixture supplies root/caches because global Parsers are not
-        // initialized here. Original entity/component methods remain unchanged.
+        // The fixture supplies the ground dimensions. Original AddEntity,
+        // Parsers.GameSettings, RootEntity and grid-ground resolution run unchanged.
         private static object SharedFixtureHost(NativeMap14SharedAssemblies shared)
         {
             Func<string,object> create=name=>Activator.CreateInstance(shared.CommonType(name));
             var container=create("EcContainer");var root=create("EcEntity");var ground=create("GridGroundComponent");var info=create("GridGroundComponentInfo");
             NativeMap14SharedPrefabs.Set(info,"Size",Activator.CreateInstance(shared.CommonType("Pos2d"),16,16));NativeMap14SharedPrefabs.Set(info,"OriginPos",new Vector3(-5,-2,0));NativeMap14SharedPrefabs.Call(info,"Init");NativeMap14SharedPrefabs.Set(ground,"_Info",info);
-            SharedCall(root,"AddComponent",new[]{shared.CommonType("EcComponent")},ground);container.GetType().GetField("mRootEntity",BindingFlags.NonPublic|BindingFlags.Instance).SetValue(container,root);NativeMap14SharedPrefabs.Set(root,"Container",container);NativeMap14SharedPrefabs.Call(root,"Awake");return container;
+            NativeMap14SharedPrefabs.Set(container,"Id",14L);var settings=shared.Shared.GetType("Parsers",true).GetProperty("GameSettings").GetValue(null);int rootId=(int)NativeMap14SharedPrefabs.Get(settings,"RootEntityId");NativeMap14SharedPrefabs.Set(root,"Id",Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"),14L,rootId));
+            SharedCall(root,"AddComponent",new[]{shared.CommonType("EcComponent")},ground);Require((bool)SharedCall(container,"AddEntity",new[]{shared.CommonType("EcEntity")},root),"original root registration failed");Require(ReferenceEquals(container.GetType().GetProperty("RootEntity").GetValue(container),root),"original settings/root lookup differs");NativeMap14SharedPrefabs.Call(root,"Awake");return container;
         }
         private static object SharedFixtureEntity(NativeMap14SharedAssemblies shared,NativeMap14SharedPrefabs prefabs,object container,int classId,int index)
         {
-            var entity=prefabs.CreateClientPrefab(classId);NativeMap14SharedPrefabs.Set(entity,"Id",Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"),14L,classId));NativeMap14SharedPrefabs.Set(entity,"Container",container);
-            var grid=SharedCall(entity,"GetComponent",new[]{typeof(Type)},shared.CommonType("GridTransformComponent"));var root=container.GetType().GetField("mRootEntity",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(container);var ground=SharedCall(root,"GetComponent",new[]{typeof(Type)},shared.CommonType("GridGroundComponent"));grid.GetType().GetField("mGridGround",BindingFlags.NonPublic|BindingFlags.Instance).SetValue(grid,ground);
+            var entity=prefabs.CreateClientPrefab(classId);NativeMap14SharedPrefabs.Set(entity,"Id",Activator.CreateInstance(shared.CommonType("EcEntityIdentifier"),14L,classId));Require((bool)SharedCall(container,"AddEntity",new[]{shared.CommonType("EcEntity")},entity),"original statue registration failed");
+            var grid=SharedCall(entity,"GetComponent",new[]{typeof(Type)},shared.CommonType("GridTransformComponent"));
             NativeMap14SharedPrefabs.Set(grid,"Pos",Activator.CreateInstance(shared.CommonType("Pos2d"),index%2==0?3:7,index<2?7:3));NativeMap14SharedPrefabs.Call(entity,"Awake");NativeMap14SharedPrefabs.Call(entity,"Start");return entity;
         }
         private static void SharedUpdateState(NativeMap14SharedAssemblies shared,DataInput data,int state){SharedCall(data.Stage.Original,"UpdateState",new[]{typeof(int),shared.CommonType("MySerializable")},state,null);VerifySharedStage(data);}
