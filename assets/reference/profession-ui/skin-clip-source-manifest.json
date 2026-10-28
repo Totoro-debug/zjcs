@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceSkinClip.cs",
+        "sha256": "5f1c541d5729c6d54358a77a3515e0a89f434e2afc62652dc0ba5eb987777ca7"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkinClip.cs",
+        "sha256": "991363d3cc0254b9f179958f20a45ebbe728ecdf80f9fe85265b44922dee6b10"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSkinClip.cs.meta",
+        "sha256": "cca5e512de287ebb779fefa73ff4ace3cd9fe6c05b19d0655b8567c948f108e7"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_skin_clip.py",
+    "sha256": "a31a1e86eaae9eddb5932ea785a5262ac89280a23ab8d34c70f0507c3a153bb9"
+  },
+  "native_binding_closure": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/skin-clip-binding-closure.json",
+    "sha256": "240e9305a71a88f1a708a3a7b8b61a1a9a75768695827a84368cdc9811b4128c"
+  },
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSkinClipBindings.cs",
+      "sha256": "ec9f9b47a9d8c56e3d2cb91bab0df553ac7536fa2a4938e32dc4e361f88edc74"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSkinClipBindings.cs.meta",
+      "sha256": "f67b2598fe58a6f192cedb268b7f4b7aa33297d2daf0da2e253f3c58927d67e9"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceSkinClipValidation.cs",
+      "sha256": "968f6863aff42529902d57c01bcffcd19c03b21926bab01e1da3763f94c7f924"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceSkinClipValidation.cs.meta",
+      "sha256": "8d3c52af834e2fee2662d8d26188dc0848c422be1d789bd3cbc1bcc64b0a5a29"
+    }
+  ],
+  "operation": "Copy every original AppearanceSkinClip method, serialized field and execution order. Keep four-vertex checks, transform/mesh scale, cross-product reorder, reflection orientation, all five shader lines, canvas material matching and skin/mesh event lifecycle. Adapt character/appearance/skeleton/graphic access to explicit interfaces and repair decompiled vector conversions; no skeleton SDK implementation is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode: original line/diagonal coefficients, mesh scale, reflected/nonuniform transformed endpoints and concave reorder; canvas material-or-main-texture matching, all-renderer reset before skin refresh, skin/mesh subscription lifecycle, absent skin/material/skeleton/slot/attachment branches and original invalid vertex-count error pass. Actual GPU output with the existing original translated UI shader clips the square center while retaining its blue exterior; PNG viewed. Skeleton and weighted vertices are fixtures, not a source character or complete profession-page validation.",
+  "limitations": [
+    "Production original character, native weighted bounding-box computation and skeleton/graphic events remain unbound. This component restoration does not complete character animation, skin rendering or the profession UI."
+  ]
+}

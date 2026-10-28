@@ -433,7 +433,7 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 原物品 UI 生命周期、附件和配置 12 类迁入的来源与输出哈希见 `profession-ui/item-components-source-manifest.json`。原配置 HintTip 的 GUID 经当前 AssetTable 解析到 APK 中的 CenterHintContent 原 prefab；6 个原生资产及 5 类脚本、1 个 Windows shader 的显式加载绑定见 `profession-ui/item-resources-source-manifest.json`。原附件管理器、附件池、两级通用池、销毁监听和非泛型 GAction 六类的源代码、适配边界及输出哈希见 `profession-ui/item-pools-source-manifest.json`；保留原 FIFO、回调／父节点／显隐顺序、反向缩减、GUID 句柄与低内存释放。实际 Play Mode 验证原附件同实例重借、低内存释放后销毁并重建、管理器退订事件和原字体 GPU 渲染，画面已查看。应用级内存策略、弹窗内容和正式职业界面鼠标流程仍待完成。新增资源未生成完整备份快照。
 
-原 ItemIcon、四个消费枚举、原品质／附件配置、本地目录、33 个原生资产及其哈希分别见 `profession-ui/item-icon-source-manifest.json`、`item-configs-source-manifest.json` 和 `item-catalog-source-manifest.json`。原公共／品质图集、遮罩和字体图集绕过 PNG 再压缩，恢复原生 Texture2D，保留 GUID、fileID、mip 与采样；原 Alpha8／RGBA32 或 ASTC 解码 RGBA 的每个 mip 均通过 GPU 字节 SHA256 核对，来源见 `native-textures-source-manifest.json`。原字体服务及两个原始 TTF 的 Windows 导入与完整配置字典绑定见 `font-service-source-manifest.json`；保留原 TMP 材质／字形参数，不迁移 Android 流式缓存。实际 Play Mode 以正式本地目录渲染四种奖励，确认官方字体字形、品质与清理状态，并以模拟鼠标经过原 ItemIcon 监听派发详情请求；运行画面已查看。此验证不包含详情弹窗内容和完整职业界面，不代表功能发布。当前动态主面板闭包 881 个资产、87 类脚本、8 类托管引用、7 个 shader、0 断开 GUID，尚有 13 类运行组件及服务待迁入。未生成完整素材快照。
+原 ItemIcon、四个消费枚举、原品质／附件配置、本地目录、33 个原生资产及其哈希分别见 `profession-ui/item-icon-source-manifest.json`、`item-configs-source-manifest.json` 和 `item-catalog-source-manifest.json`。原公共／品质图集、遮罩和字体图集绕过 PNG 再压缩，恢复原生 Texture2D，保留 GUID、fileID、mip 与采样；原 Alpha8／RGBA32 或 ASTC 解码 RGBA 的每个 mip 均通过 GPU 字节 SHA256 核对，来源见 `native-textures-source-manifest.json`。原字体服务及两个原始 TTF 的 Windows 导入与完整配置字典绑定见 `font-service-source-manifest.json`；保留原 TMP 材质／字形参数，不迁移 Android 流式缓存。实际 Play Mode 以正式本地目录渲染四种奖励，确认官方字体字形、品质与清理状态，并以模拟鼠标经过原 ItemIcon 监听派发详情请求；运行画面已查看。此验证不包含详情弹窗内容和完整职业界面，不代表功能发布。当前动态主面板闭包 881 个资产、87 类脚本、8 类托管引用、7 个 shader、0 断开 GUID，尚有 12 类运行组件及服务待迁入。未生成完整素材快照。
 
 原顶部栏处理器、栏位、管理器接口与货币数据／枚举七类的原始代码、适配边界、三个原生组件的空货币列表及输出哈希见 `profession-ui/auxiliary-source-manifest.json`。原百科入口、完整 wiki 表、CN 地区筛选、原字段与输出哈希见 `profession-ui/wiki-source-manifest.json`；当前四条 US 配置经原 CN 筛选后无职业条目，入口按原条件隐藏。隔离 Play Mode 控件测试已验证栏位复位、窗口启停、停止计数、百科短路顺序、模拟鼠标重复启停后单次派发、原 SDK 参数及消息／上报／通知顺序。测试画面是控件夹具，未将其作为职业界面；完整货币服务、职业窗口布局、外观和 Player 运行仍待接入。原配置载荷位于 `unity/Assets/Official/ProfessionUI/Config/`，未生成完整素材快照。
 
@@ -461,7 +461,9 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业外观材质：原 `AppearanceMaterialUtils` 全部方法按源码迁入，Mask 参数仅适配为 Component，保留染色缓存／最大通道、原重置顺序、效果关键字、Stencil 和父 Mask 遍历。来源／代码／验证哈希见 `profession-ui/appearance-materials-source-manifest.json`。隔离 Direct3D Play Mode 检查原字段与分支，并使用已有官方转换 UI shader 实际绘制和查看透明背景蓝色网格；材质列表保留原透明裁剪关键字，未为它新增编译变体。此为材质夹具，真实角色和职业页仍待接线。
 
-职业皮肤与贴图加载链：从当前官方应用和框架源码完整迁入 14 个类型，保留原代理／请求状态、回调与释放、引用计数、帧龄及原失败分支；包加载及图集材质通过显式接口连接，不移植骨骼 SDK。来源与全部输入／输出／代码哈希见 `profession-ui/texture-loader-source-manifest.json`。隔离 Play Mode 的资源／图集夹具检查通过；原配置资产及正式角色资源服务尚未安装。主面板闭包重查为 881 个资源、87 类脚本，13 类脚本待迁、0 个缺失 GUID，不代表页面完成。
+职业皮肤与贴图加载链：从当前官方应用和框架源码完整迁入 14 个类型，保留原代理／请求状态、回调与释放、引用计数、帧龄及原失败分支；包加载及图集材质通过显式接口连接，不移植骨骼 SDK。来源与全部输入／输出／代码哈希见 `profession-ui/texture-loader-source-manifest.json`。隔离 Play Mode 的资源／图集夹具检查通过；原配置资产及正式角色资源服务尚未安装。主面板闭包重查为 881 个资源、87 类脚本，12 类脚本待迁、0 个缺失 GUID，不代表页面完成。
+
+职业头发／头饰裁剪：原 `AppearanceSkinClip` 全部方法、字段与事件顺序迁入，骨骼及边界顶点通过显式接口接入；来源、代码、闭包及验证哈希见 `profession-ui/skin-clip-source-manifest.json`。隔离 Direct3D Play Mode 核对四边／对角线系数、MeshScale、镜像／变换、凹四边形重排、CanvasRenderer 材质匹配／重置和事件／失败分支；实际官方 shader 测试图显示中心被裁去、外围保留，已查看。夹具不证明真实角色加权边界或页面已完成。
 
 ## 技能首页与安装流程复核
 

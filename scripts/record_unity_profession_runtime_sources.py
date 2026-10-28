@@ -76,6 +76,7 @@ def build():
         appearance_config=file_record(ROOT / "assets/reference/profession-ui/appearance-config-source-manifest.json"),
         appearance_materials=file_record(ROOT / "assets/reference/profession-ui/appearance-materials-source-manifest.json"),
         texture_loader=file_record(ROOT / "assets/reference/profession-ui/texture-loader-source-manifest.json"),
+        skin_clip=file_record(ROOT / "assets/reference/profession-ui/skin-clip-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
         bone_pose=file_record(ROOT / "assets/reference/profession-ui/bone-pose-source-manifest.json"),
         native_ik=file_record(ROOT / "assets/reference/profession-ui/native-ik-source-manifest.json"),
