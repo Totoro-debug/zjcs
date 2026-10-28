@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+      "sha256": "638ff30a18115eb0e7351928dc2e721b8261cbafa9f30319219cc72580fe6eb9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+      "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/native-ik-validation.json",
+    "sha256": "a570b0e72bed7974cccee16e5a9689f09f9e6a08e428de4fcf36416ab024ca99"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_native_ik.py",
+    "sha256": "9546837c5086617b4e57df24ea2862f319167d2dee968818cc6b893eee9db454"
+  },
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIk.cs",
+      "sha256": "cb5a6d326dcfdeb825ff3640af395729ea4a63ba7e6389c1c32b558838792af9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIk.cs.meta",
+      "sha256": "037efb7b2e8264ec9d2fae755bcee810511149490ebf6a39a61cffa979251ef7"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeIkValidation.cs",
+      "sha256": "c3da9807da89594bea44ff5d3503d03c696d6a59c059cdf3d255878c2f3d4dcf"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionNativeIkValidation.cs.meta",
+      "sha256": "61efef4fd5678a2f0a0c887404b920ad11ff77bdba44940779a562dcb09078e5"
+    }
+  ],
+  "constraints_per_skeleton": 8,
+  "cases": 384,
+  "operation": "Independent single-joint aiming and law-of-cosines two-joint geometry for verified unit-scale, unsheared idle chains. Recover original setup, constant idle mix/bend keys and order; generate independent circle-intersection angle references. No skeleton SDK source or runtime is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: 384 source geometry cases, 192 pairs, 192 single-joint aims and 188 zero-mix branches; maximum circular angle difference 0.0000305175781 degrees within 0.0002 degrees. Independent circle-intersection angles, reachable/clamped endpoints, bend direction, fractional mixes, reflected target coordinates and explicit invalid/degenerate input rejection pass. No source SDK world pose, live character or profession UI is validated.",
+  "limitations": [
+    "The solver is not yet bound to the native character pose/renderer. General scale/shear, compression/stretch/softness, coincident targets and other animations are not covered. The generated source-chain geometry is not an original SDK pose or visual reference."
+  ]
+}

@@ -453,6 +453,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业角色骨骼姿态：独立 `ProfessionNativeBonePose` 使用 Unity 矩阵与已验证的原加权曲线，不使用动画 SDK 或烘焙姿态。原男女共 3,542 根骨骼、六组待机的 1,171 条曲线，在隔离 Play Mode 以 48 个局部姿态完成 425,108 项标量检查，最大局部绝对差 `0.00006389618`；普通仿射矩阵对照原生 Unity Transform，仅平移、剪切、皮肤骨骼／祖先启用及异常检查通过。来源与代码／夹具哈希见 `profession-ui/bone-pose-source-manifest.json`。完整世界姿态、选择性继承、IK／变换／物理约束、角色网格及职业页仍未完成，没有角色画面或 Player 发布结论。
 
+职业待机 IK：独立 `ProfessionNativeIk` 从原男女骨骼数据核对各八条约束和六组待机的常量混合／弯曲键，仅实现这些动作使用的单位缩放、无剪切分支；不使用 SDK 实现。来源与代码／夹具哈希见 `profession-ui/native-ik-source-manifest.json`。隔离 Play Mode 核对 384 个几何用例，以独立圆交点解作参考，最大圆周角差 `0.0000305175781°`，并检查端点／弯曲／零与分数混合及显式异常。求解器尚未接入真实骨骼姿态，完整约束、角色渲染及职业页待完成，没有原 SDK 世界姿态或 Player 验证结论。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。
