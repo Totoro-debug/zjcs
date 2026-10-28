@@ -158,6 +158,9 @@ namespace Zjcs.Editor
                         "Original permission images lost their native Sprite references: on=" + onImage.sprite + "; off=" + offImage.sprite
                         + "; imported=" + string.Join(",", AssetDatabase.LoadAllAssetsAtPath("Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Nor-2bb9ad0ab5.png")
                             .Select(asset => asset.GetType().Name + ":" + GlobalObjectId.GetGlobalObjectIdSlow(asset))));
+                    SteleRequire(AssetDatabase.GetAssetPath(onImage.sprite).EndsWith(".sprite.asset", StringComparison.Ordinal)
+                        && AssetDatabase.GetAssetPath(offImage.sprite).EndsWith(".sprite.asset", StringComparison.Ordinal),
+                        "Original permission images must retain the official native Sprite geometry.");
                     var localized = root.GetComponentInChildren<WorldMultiLanguageText>(true);
                     var font = localized.GetComponent<TMP_Text>();
                     SteleRequire(view != null && toggle != null && localized != null && font.font == chinese,

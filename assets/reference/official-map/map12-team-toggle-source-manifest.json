@@ -2,7 +2,7 @@
   "adapters": [
     {
       "path": "scripts/prepare_unity_map12_team_toggle.py",
-      "sha256": "a7e0320afc4c8a8787046d1bde36be7fa4a8d3c06c679a37ef896e65f58f55fb"
+      "sha256": "8fd34efad00c3508951f44505f73ad78a6a669be863ca494198bd0146bf39a69"
     }
   ],
   "dependencies": [
@@ -17,9 +17,21 @@
       "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0"
     },
     {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:5262215441426734615",
+      "nativeGeometry": true,
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset",
+      "sha256": "2f87584d75788c0a16810d73da3cd091a6c43210e83dbdc5f583202f55ddc3ac"
+    },
+    {
       "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-1985464818016463037",
       "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Nor-2bb9ad0ab5.png",
       "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e"
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-1985464818016463037",
+      "nativeGeometry": true,
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset",
+      "sha256": "55f3a63005ddbaf1fa86ffed8fa88e54b8068706ea01ba2c8bd13e11a539778f"
     }
   ],
   "format": 1,
@@ -43,6 +55,10 @@
     {
       "path": "assets/reference/official-map/localization-source-manifest.json",
       "sha256": "e9b7a5d75c61f340ba6e75a8a58335c1535be7e66564a2b5628e6d1d8af9ba04"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-target-sprite-geometry.json",
+      "sha256": "18c8c415d406f7c3de313fcd49b039007223d1ce6c458694d623ceecfad40034"
     }
   ],
   "languageInputs": [
@@ -95,7 +111,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Map12/Team/AllowMemberInviteToggle.prefab",
-      "sha256": "a23ee6542fbbb0f6453fa2b66d7d5f0ad893e777271ecb63e2d46414ab864213"
+      "sha256": "834b0a46f34e00c0722f4e07ecca14ec6a5022de4b2cdf8ca72c21c102251348"
     },
     {
       "path": "unity/Assets/Game/Resources/Map12/Team/texts.json",
@@ -182,7 +198,7 @@
   "validation": [
     {
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs",
-      "sha256": "1063a2180c78e9e60a2f887934f2f2958dcef10196716c7c882537d65afb7ec8"
+      "sha256": "bcf4dc3f35415e84bbbdba6082a954aa904f944a847364383ffb0ea01589e103"
     },
     {
       "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs.meta",

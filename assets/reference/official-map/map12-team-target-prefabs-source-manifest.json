@@ -1,0 +1,977 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_target_prefabs.py",
+      "sha256": "4bfab2a8e1fc1370d8e58c05e1e962ee69d42815fa1c7c5d23d6d254040e9b0c"
+    }
+  ],
+  "coverage": [
+    {
+      "name": "TeamPanelTarget",
+      "nodes": 20,
+      "objects": 95
+    },
+    {
+      "name": "TeamPanelTargetItem",
+      "nodes": 13,
+      "objects": 55
+    },
+    {
+      "name": "TeamPanelTargetSubItem",
+      "nodes": 6,
+      "objects": 27
+    }
+  ],
+  "dependencies": [
+    {
+      "identity": "CAB-7fa3e4d733d06b0df9889be9fe60604a:-656463066948925728",
+      "name": "ImgBg_TargetGo",
+      "nativeGuid": "3a6e8d43317a77f9b3a09fd20297413a",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.png",
+      "sha256": "697dfab50cae385ddace77a53b13a9b9ed1a39f1002619b682c5817d9cd855ca",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 39.0,
+          "y": 0.0,
+          "z": 38.0
+        },
+        "pivot": {
+          "x": 38.5,
+          "y": 32.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 64.0,
+          "width": 77.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.38499999046325684,
+            "y": 0.3199999928474426
+          },
+          {
+            "x": 0.38499999046325684,
+            "y": 0.3199999928474426
+          },
+          {
+            "x": -0.38499999046325684,
+            "y": -0.3199999928474426
+          },
+          {
+            "x": 0.38499999046325684,
+            "y": -0.3199999928474426
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-7fa3e4d733d06b0df9889be9fe60604a:1273835629995371793",
+      "name": "Imgfillet_32",
+      "nativeGuid": "6d1efa52ccd3509d55de89388c3f31b9",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.png",
+      "sha256": "4b5618fb467cc43bce7e4320cd701399749c033d0ca6b2bfb371e33e50901ae0",
+      "spriteGeometry": {
+        "border": {
+          "w": 32.0,
+          "x": 38.0,
+          "y": 32.0,
+          "z": 38.0
+        },
+        "pivot": {
+          "x": 39.0,
+          "y": 33.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 66.0,
+          "width": 78.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.38999998569488525,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": 0.38999998569488525,
+            "y": 0.33000001311302185
+          },
+          {
+            "x": -0.38999998569488525,
+            "y": -0.33000001311302185
+          },
+          {
+            "x": 0.38999998569488525,
+            "y": -0.33000001311302185
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-7fa3e4d733d06b0df9889be9fe60604a:6684626020852184040",
+      "name": "ImgBg_TargetGo_Panel",
+      "nativeGuid": "e11a6fd56bffd30a7f252160ce152f39",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.png",
+      "sha256": "6404166c58ea06c296f78d30de8f46e552b302d4c48a28caaa19be6c5b5ed288",
+      "spriteGeometry": {
+        "border": {
+          "w": 53.0,
+          "x": 55.0,
+          "y": 53.0,
+          "z": 55.0
+        },
+        "pivot": {
+          "x": 55.0,
+          "y": 53.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 106.0,
+          "width": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.550000011920929,
+            "y": 0.5299999713897705
+          },
+          {
+            "x": 0.550000011920929,
+            "y": 0.5299999713897705
+          },
+          {
+            "x": -0.550000011920929,
+            "y": -0.5299999713897705
+          },
+          {
+            "x": 0.550000011920929,
+            "y": -0.5299999713897705
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-7fa3e4d733d06b0df9889be9fe60604a:7145729243750086681",
+      "name": "ImgBg_TargetGo_Panel_Son",
+      "nativeGuid": "f4782b061f6d2be045af03713e10a250",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.png",
+      "sha256": "26adb50f7cd63d750f8c334415e1c463949c558245542928f3a8e100f726c4e3",
+      "spriteGeometry": {
+        "border": {
+          "w": 12.0,
+          "x": 18.0,
+          "y": 19.0,
+          "z": 18.0
+        },
+        "pivot": {
+          "x": 19.0,
+          "y": 15.5
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 31.0,
+          "width": 38.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.1899999976158142,
+            "y": 0.1550000011920929
+          },
+          {
+            "x": 0.1899999976158142,
+            "y": 0.1550000011920929
+          },
+          {
+            "x": -0.1899999976158142,
+            "y": -0.1550000011920929
+          },
+          {
+            "x": 0.1899999976158142,
+            "y": -0.1550000011920929
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-8ede2c00df79c3aff9bab2859b047085:-5460037067207621918",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sounds/Main_Cursor_Success.wav",
+      "sha256": "c85f4a79d5b11f4804cadb835758a344bfd0f322acb222dd1f35eb12cc28e847"
+    },
+    {
+      "identity": "CAB-8ede2c00df79c3aff9bab2859b047085:5924382417553736613",
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e"
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-1985464818016463037",
+      "name": "BtnCheck_Nor",
+      "nativeGuid": "9e730892f7213e05e9bf9fb24c805fc0",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Nor-2bb9ad0ab5.png",
+      "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "pivot": {
+          "x": 24.0,
+          "y": 24.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 48.0,
+          "width": 48.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          5,
+          4,
+          1,
+          3,
+          1,
+          4,
+          0,
+          1,
+          3,
+          2,
+          1,
+          0
+        ],
+        "vertices": [
+          {
+            "x": 0.2199999988079071,
+            "y": 0.23999999463558197
+          },
+          {
+            "x": 0.23999999463558197,
+            "y": -0.23999999463558197
+          },
+          {
+            "x": 0.23999999463558197,
+            "y": 0.23000000417232513
+          },
+          {
+            "x": -0.2199999988079071,
+            "y": 0.23999999463558197
+          },
+          {
+            "x": -0.23999999463558197,
+            "y": 0.18000000715255737
+          },
+          {
+            "x": -0.23999999463558197,
+            "y": -0.23999999463558197
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-275994116814867042",
+      "name": "ImgLine",
+      "nativeGuid": "7019b338f5d1000cbce49bf367b76925",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgLine-3dc3678e90.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgLine-273bb8cd8c.png",
+      "sha256": "273bb8cd8ce1cb9a6a292b842bc7b2383bb185a08ac8c0dd88c08a3e90cb46f4",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "pivot": {
+          "x": 207.5,
+          "y": 21.5
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 43.0,
+          "width": 415.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          5,
+          4,
+          1,
+          3,
+          1,
+          4,
+          0,
+          1,
+          3,
+          2,
+          1,
+          0
+        ],
+        "vertices": [
+          {
+            "x": -1.7649999856948853,
+            "y": 0.2150000035762787
+          },
+          {
+            "x": 2.075000047683716,
+            "y": -0.2150000035762787
+          },
+          {
+            "x": 2.075000047683716,
+            "y": 0.2150000035762787
+          },
+          {
+            "x": -1.975000023841858,
+            "y": 0.1850000023841858
+          },
+          {
+            "x": -2.075000047683716,
+            "y": 0.08500000089406967
+          },
+          {
+            "x": -2.075000047683716,
+            "y": -0.2150000035762787
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-4098904705157139906",
+      "name": "ImgBg_CountText",
+      "nativeGuid": "c096591c403f03d00f2c583c16d9bd47",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_CountText-43bcc7f5cb.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/ImgBg_CountText-31498f0e88.png",
+      "sha256": "31498f0e8895dce861cf88210bb81c26ac96ed09df5556edc6614418fc574f71",
+      "spriteGeometry": {
+        "border": {
+          "w": 18.0,
+          "x": 26.0,
+          "y": 18.0,
+          "z": 26.0
+        },
+        "pivot": {
+          "x": 27.5,
+          "y": 19.5
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 39.0,
+          "width": 55.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.2750000059604645,
+            "y": 0.19499999284744263
+          },
+          {
+            "x": 0.2750000059604645,
+            "y": 0.19499999284744263
+          },
+          {
+            "x": -0.2750000059604645,
+            "y": -0.19499999284744263
+          },
+          {
+            "x": 0.2750000059604645,
+            "y": -0.19499999284744263
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-6201727972171027686",
+      "name": "C_none",
+      "nativeGuid": "3cd68f646a1705906ac5b7ab3481ba0b",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/C_none-fa3e084e40.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/C_none-d73d644cfd.png",
+      "sha256": "d73d644cfd6ed4f7f4f28801217e9712825adf277bf39eb37543dc5d932423b4",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "pivot": {
+          "x": 8.0,
+          "y": 8.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 16.0,
+          "width": 16.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.07999999821186066,
+            "y": 0.07999999821186066
+          },
+          {
+            "x": 0.07999999821186066,
+            "y": 0.07999999821186066
+          },
+          {
+            "x": -0.07999999821186066,
+            "y": -0.07999999821186066
+          },
+          {
+            "x": 0.07999999821186066,
+            "y": -0.07999999821186066
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:5262215441426734615",
+      "name": "BtnCheck_Sel",
+      "nativeGuid": "1133a359553bf6120b8664c6ed0215d0",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Sel-4f63d09337.png",
+      "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "pivot": {
+          "x": 24.0,
+          "y": 24.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 48.0,
+          "width": 48.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          5,
+          4,
+          1,
+          3,
+          1,
+          4,
+          0,
+          1,
+          3,
+          2,
+          1,
+          0
+        ],
+        "vertices": [
+          {
+            "x": 0.2199999988079071,
+            "y": 0.23999999463558197
+          },
+          {
+            "x": 0.23999999463558197,
+            "y": -0.23999999463558197
+          },
+          {
+            "x": 0.23999999463558197,
+            "y": 0.23000000417232513
+          },
+          {
+            "x": -0.2199999988079071,
+            "y": 0.23999999463558197
+          },
+          {
+            "x": -0.23999999463558197,
+            "y": 0.18000000715255737
+          },
+          {
+            "x": -0.23999999463558197,
+            "y": -0.23999999463558197
+          }
+        ]
+      }
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:7644751697196712385",
+      "name": "ImgArrow",
+      "nativeGuid": "f7c8de0443fe28a0bf39d23939c1fe85",
+      "nativeSpritePath": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.sprite.asset",
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.png",
+      "sha256": "69cefe65a80e156f0a34bdf3bce5f1fb168a3aabf54534242063c84aeba6e264",
+      "spriteGeometry": {
+        "border": {
+          "w": 0.0,
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "pivot": {
+          "x": 19.0,
+          "y": 11.0
+        },
+        "ppu": 100.0,
+        "rect": {
+          "height": 22.0,
+          "width": 38.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "triangles": [
+          0,
+          1,
+          2,
+          2,
+          1,
+          3
+        ],
+        "vertices": [
+          {
+            "x": -0.1899999976158142,
+            "y": 0.10999999940395355
+          },
+          {
+            "x": 0.1899999976158142,
+            "y": 0.10999999940395355
+          },
+          {
+            "x": -0.1899999976158142,
+            "y": -0.10999999940395355
+          },
+          {
+            "x": 0.1899999976158142,
+            "y": -0.10999999940395355
+          }
+        ]
+      }
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-ui-prefabs.json",
+      "sha256": "4d73f1cb130d5943025f5b6d68e9bf8b8c2c1ac9782cfa992b9bd71db26bd7ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-ui-prefabs.json",
+      "sha256": "ef54582f790fcfe364e1105da388dbd6707bfac0a2c9a7954efd681662090aaa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/map12-ui.json",
+      "sha256": "f49ca87709fb2f908748c48daf83639ec1aad005b7bf4243ca372e9cc1d91040"
+    },
+    {
+      "path": "assets/reference/official-map/map12-ui-audio-source-manifest.json",
+      "sha256": "78047a1dc9c2463ecd1aa5e388307056cfb405c17f360f8d4ecf31220e0ab1ae"
+    },
+    {
+      "path": "assets/reference/official-map/map12-team-target-audio-source-manifest.json",
+      "sha256": "0f517431cc3959829b74fafe5e4a813498028ce41d68b02465e781a1fdbfc684"
+    },
+    {
+      "path": "assets/reference/official-map/localization-source-manifest.json",
+      "sha256": "e9b7a5d75c61f340ba6e75a8a58335c1535be7e66564a2b5628e6d1d8af9ba04"
+    },
+    {
+      "path": "assets/reference/official-map/map12-team-font-source-manifest.json",
+      "sha256": "0ff3dbd677f33d5c62b7f4dcc574266ff5ff4de67dc4c90a600835f334b81dfa"
+    },
+    {
+      "path": "assets/reference/official-map/map12-team-chinese-font-source-manifest.json",
+      "sha256": "d5ecf43407b6b4c7b98956461922f3e3501a19f08adfa78f3a1913da236d0a77"
+    }
+  ],
+  "languageInputs": {
+    "wwisebnk_assets_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "entries": 100081,
+      "sha256": "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8",
+      "source": {
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle_hash": "9a0b6ab8c5136050fd005ead8f567863",
+        "origin": "apk_zip",
+        "path": "assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile"
+      }
+    },
+    "wwisebnk_assets_launch_config_binary_language_zh_cn_text_g_bytes.rawfile": {
+      "entries": 108,
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "source": {
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle_hash": "a373f2acc39aeb5c4560f1456879b997",
+        "origin": "apk_zip",
+        "path": "assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile"
+      }
+    }
+  },
+  "limitations": [
+    "Formal full TeamPanel/local NPC/battle/save integration remains pending.",
+    "The standalone original preview root still contains its target-header format literal {0}; the real TeamPanel target-text binding is pending. No replacement header was drawn."
+  ],
+  "localizationImplementation": {
+    "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/Framework/LocalizationTextService.cs",
+    "sha256": "50baa188520901708fd5f5927092c3c7a7c470e7a983453d0c2dd6195d8e56fe"
+  },
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "nativeSpriteImporter": {
+    "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamSpriteImport.cs",
+    "sha256": "ca144006698a70f9038316f622bf8f4121ac95797bb206c28a96f4853ea71359"
+  },
+  "nativeSpriteProof": {
+    "path": "assets/reference/official-map/map12-team-target-sprites-source-manifest.json",
+    "sha256": "907c2b143a5e5e98f7e841d3dd29bf8d9fcbb2b713c812ce547da4b9e1085f70"
+  },
+  "operation": "Keep the full original three native prefab hierarchies, transforms, component order, fields and managed state references. Remap real Windows scripts, exact decoded original sprite pixels and import settings, serialized fonts/materials, original Wwise click PCM and cross-prefab references. Native Sprite assets retain original vertices, triangle order, rects, pivots, borders and PPU; verified decoded original pixels supply the unrotated texture. Sprite references remain native type 2.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.png",
+      "sha256": "6404166c58ea06c296f78d30de8f46e552b302d4c48a28caaa19be6c5b5ed288"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.png.meta",
+      "sha256": "c54320da74187ed15120e7120953040853480edb143c688935b5b250b5b8bcad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites.meta",
+      "sha256": "9ebddd9ba101eac2e7ad80e231322b62f10813308e6b6f4ba8fc9e048326ed29"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.png",
+      "sha256": "4b5618fb467cc43bce7e4320cd701399749c033d0ca6b2bfb371e33e50901ae0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.png.meta",
+      "sha256": "6d2fe339cec65447fb44997f91fb1d160232a8dfaa9369f57ec1d3301c5a84af"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.png",
+      "sha256": "697dfab50cae385ddace77a53b13a9b9ed1a39f1002619b682c5817d9cd855ca"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.png.meta",
+      "sha256": "8e69a03abe08a15fdbfd4f65cb91b4367cc77304b89caecaa12492b0de48de85"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.png",
+      "sha256": "69cefe65a80e156f0a34bdf3bce5f1fb168a3aabf54534242063c84aeba6e264"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.png.meta",
+      "sha256": "f4af79ec496154dcc4a35673ff47ec0d31accc1d44d250803c17256da98601b7"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTarget.prefab",
+      "sha256": "33e48e275e9fb802192b6c270c25e2d92a44033c9d5184e77d61422a3c7e7761"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTarget.prefab.meta",
+      "sha256": "7011879c1b1de9266e20089f19c6c20a6f23880be8965b20cd6be47bb7f64d9f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.png",
+      "sha256": "26adb50f7cd63d750f8c334415e1c463949c558245542928f3a8e100f726c4e3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.png.meta",
+      "sha256": "7cda2bc29f47f18454ee7d70bf551941ad21470b4298df26d213d9ffcb0ab2b8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTargetItem.prefab",
+      "sha256": "4546bcbdc7df3bebbe010f355251ee516226fb17317dfbbb7308e9000124deb4"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTargetItem.prefab.meta",
+      "sha256": "3b763060a2f49d8b774325646dee78b677ae14f34031ef141984d62724f7ef65"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTargetSubItem.prefab",
+      "sha256": "f0c163244fcfafc4537f331e58dd5a28a97d11dbab161b3557d48f21830fa829"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/TeamPanelTargetSubItem.prefab.meta",
+      "sha256": "278fd0440e6829402a39cb0d402f0e72cdd3c1460eb36e9c60ec9cd63bad4199"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/target-texts.json",
+      "sha256": "8a1e96f80a52e2a6a8bc1a0b68051a6b62cb300b2fa375e85725781ec4e7560f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/target-texts.json.meta",
+      "sha256": "863d75e6326c114caac5d414d005fe05c78b7fbbdcb69abc701d0c9886cb7a29"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-target-sprite-geometry.json",
+      "sha256": "18c8c415d406f7c3de313fcd49b039007223d1ce6c458694d623ceecfad40034"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-target-sprite-geometry.json.meta",
+      "sha256": "2dc9fc45818a20b071356ca941053eb939d862d37a3fde693d8839c334ad6312"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.sprite.asset",
+      "sha256": "e7484c7b02a197a010d7572658688c0fdd0d5fbfea8b10a9c79b759d63758889"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.sprite.asset.meta",
+      "sha256": "73129d43e08cd3ee8fd431dd546a8c633042d912f53cb14ba9fd466b58006086"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgLine-3dc3678e90.sprite.asset",
+      "sha256": "78601169a5ff8a79c3919a221d1a2db3183fac95e55a1174a200deea6a17831c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgLine-3dc3678e90.sprite.asset.meta",
+      "sha256": "b84a9ff2f2c3c0f4d9677effb883a8e5160b1e7eda9b992012cd261752d9e6c8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.sprite.asset",
+      "sha256": "8dd635cc6b04f3b131efad4d19388cd0d2e150e59a35989bcb7d6e8f6ba8ab2a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.sprite.asset.meta",
+      "sha256": "36369cc1056354732cd792378ce5071ab74b7ea05917bba04fec9b75f6d92eb1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.sprite.asset",
+      "sha256": "485b8349eda5f33b07b5888e21ae96ca46ffbef118b47d949e43fc68d944313a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.sprite.asset.meta",
+      "sha256": "d3aad0507680481ad8581a8d01f15ccb99f30e63d53ea71dccd4046dcc2d96c2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/C_none-fa3e084e40.sprite.asset",
+      "sha256": "249aaccb31e76d4b44a8cf2bbfd36f072316f13b0098db132168a3dca80e79d9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/C_none-fa3e084e40.sprite.asset.meta",
+      "sha256": "6a1442835e274930571dbab232edeb9f90a8f8206db50eaaeee1830c6b76d646"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.sprite.asset",
+      "sha256": "8602ea136a488cb5a8597ebe2f767c0e560e5c0e1f618932fa14e7e3225e538d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.sprite.asset.meta",
+      "sha256": "7727a7c5389e27f640263724a70048b55bee19560b0c87cb25d39c965dc89d24"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_CountText-43bcc7f5cb.sprite.asset",
+      "sha256": "ba2e46c604113dc869b5a58434f98d091e51f575522a8511b253d04c6f8d825b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_CountText-43bcc7f5cb.sprite.asset.meta",
+      "sha256": "c71c736c31a3fdae5c72c9416efe1d11165a3b76b019660ebce469add574a065"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset",
+      "sha256": "55f3a63005ddbaf1fa86ffed8fa88e54b8068706ea01ba2c8bd13e11a539778f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset.meta",
+      "sha256": "4a115ba93a351ef6e0065776bd6aeb15e6247266df667ea1d31bfe1d5e8d29be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset",
+      "sha256": "2f87584d75788c0a16810d73da3cd091a6c43210e83dbdc5f583202f55ddc3ac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset.meta",
+      "sha256": "4331518085a62adaa7c046244fb2f6b0761e071eb2788ad75d6c753e0f01bdf9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.sprite.asset",
+      "sha256": "f04699aa2c6956053f40a2f870694354c37e195a95d816374b3704e79ba06fe2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.sprite.asset.meta",
+      "sha256": "b3a62b1d9745864111d73f8801712c728977feaac529f2197a5bd250164d62b6"
+    }
+  ],
+  "pendingNativeSprites": [],
+  "scriptBindings": [
+    {
+      "meta_sha256": "e0206e2f91719f5c462d3975621de510f269a14d6a3d9eacd00d086326933b9a",
+      "original": "ButtonSound",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldButtonSound.cs",
+      "sha256": "7f036dd701cc8f2ecdf9d45c6a14669b2863bb6a80a47bd1ee9efce04838c58e"
+    },
+    {
+      "meta_sha256": "fb436547241cc3a70722f699a4f85a04a65b6b5b2b564f35f2c9e783cd698ecb",
+      "original": "LayoutElementClamper",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldLayoutElementClamper.cs",
+      "sha256": "0cf04a96943389b5476172ec6b0b2313463faa8f3b285195838eb1261a5d8dc4"
+    },
+    {
+      "meta_sha256": "9b6313b210620a3a489c255f76ed3aeedbd9ef64ff913c4f49dbef54f7de3396",
+      "original": "MirrorImage",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/MirrorImage.cs",
+      "sha256": "34f9be3cf447552b0c60c076fd3c67af1d28b7b6f1ad6bdda235d7e374534645"
+    },
+    {
+      "meta_sha256": "7ed1134651547e890d2f9e96b7e5293aedb5736713dd8eb8cab39d952b2d06e7",
+      "original": "MultiLanguageText",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad"
+    },
+    {
+      "meta_sha256": "5e7d19cee4ab59b784b51609205c2de4b78365584e30f1b8128de85bf5aab8e4",
+      "original": "NoDrawingRayCast",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+      "sha256": "23f45a9becd801a57e6d40a7a6d53d569564cd3fa7715de3f36bab3db0c4c99d"
+    },
+    {
+      "meta_sha256": "8aad5ead563199de195eacfec6308f5e55c9e7555472d234a6755ca44ef1e6fe",
+      "original": "PreviewTool",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldPreviewTool.cs",
+      "sha256": "f05f6f9d6856814596e572e56f5dbe56ee31ab76d6b18a6965dd68b0b0b7f1cb"
+    },
+    {
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd",
+      "original": "TMPro.TextMeshProUGUI",
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425"
+    },
+    {
+      "meta_sha256": "89cb4ed3f7d1e7198e35e49a6852124a0b9fb97d8f994a952eb35f03c51dc9c4",
+      "original": "TeamPanelTarget",
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTarget.cs",
+      "sha256": "0186d81d3e725c6985882f406c03074e884e2ea8c7eaa9030ae83810dcd72e70"
+    },
+    {
+      "meta_sha256": "a7d15aa52a49b5c0c35f3e54163843fb3074cde0142f79fe51c00d666df3edc7",
+      "original": "TeamPanelTargetItem",
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetItem.cs",
+      "sha256": "61221722a318f2660d4e2edc158f715347baba3d00489b90fa35e7ea4aec1180"
+    },
+    {
+      "meta_sha256": "60a6363e6ba19b46816326b3ed5e29d15328fb0126323480a09bffb7ff7cc5c0",
+      "original": "TeamPanelTargetSubItem",
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetSubItem.cs",
+      "sha256": "fbf983cc7bd6eddf441787035a63bce73795d3552186a6df33e5ec26efd86065"
+    },
+    {
+      "meta_sha256": "8f0da7df905d159a3598fbc63dee8f5ad2bfd60a38fe733a71aa4f05ba53f6ab",
+      "original": "UGUIJszx.HorizontalLayoutGroupJSZX",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/HorizontalLayoutGroupJSZX.cs",
+      "sha256": "3488e11e99414146709ace8186607876e55e1a5b63b0d64c52365ddbe0a07c78"
+    },
+    {
+      "meta_sha256": "4430ccd81a742991bc19d4d0d230d7cc8e3c928673e3d98ba1d944f27a673415",
+      "original": "UnityEngine.UI.Button",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs",
+      "sha256": "e8f00d2c3b759c08408c97c75084e065a2a539662783b7f5835fae5d937e9e26"
+    },
+    {
+      "meta_sha256": "0fedd1ac89e603605d4632d8b992eeb450e1b0a82dcf16dc3fd9d4bb5acee9f7",
+      "original": "UnityEngine.UI.ContentSizeFitter",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/ContentSizeFitter.cs",
+      "sha256": "a6b30a3b6e697524ce16f07e1807e870faf8d0c3e8c43004474eb5b8bb3c887b"
+    },
+    {
+      "meta_sha256": "bd85d59c1e6f2343419e25903d6ef60a7d4c39a491696cc04d1feb6865fd24b7",
+      "original": "UnityEngine.UI.GraphicRaycaster",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/GraphicRaycaster.cs",
+      "sha256": "a7c7eadb563eece18edc99969a570b2421ac7fee0fd39b02ccafa4a8ddd2eee2"
+    },
+    {
+      "meta_sha256": "6056786a4f956f0ecf2c9a50b877b43200f97b28e1f2d97aceef2e38c453a3a9",
+      "original": "UnityEngine.UI.HorizontalLayoutGroup",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/HorizontalLayoutGroup.cs",
+      "sha256": "60c993b71761a9b431b8321f58ef397a100cd0f7febcf4d82c3e82e30b58459b"
+    },
+    {
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066",
+      "original": "UnityEngine.UI.Image",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502"
+    },
+    {
+      "meta_sha256": "10054a60194f0eb3ad44e4448e6a985b477e5d3421055976067aaefaafdf7653",
+      "original": "UnityEngine.UI.LayoutElement",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+      "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732"
+    },
+    {
+      "meta_sha256": "bc64a6ac2fb2ba78b9093564f028ca145929afe31b0e752ab489334134a08b91",
+      "original": "UnityEngine.UI.RectMask2D",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/RectMask2D.cs",
+      "sha256": "9433b86119e688f9e413190ce2d6b3b0155d9f5e6d4770b59076cb45e6fb2b80"
+    },
+    {
+      "meta_sha256": "c1355876695aacc1b89f0a9ac7e01e68b7983be8fc07467b23cf51280ac20e3a",
+      "original": "UnityEngine.UI.ScrollRect",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/ScrollRect.cs",
+      "sha256": "1e576cf5927c3aa8e55184154e0aa807f038407769a9e88cae3f5915b9935228"
+    },
+    {
+      "meta_sha256": "9d257813a1280923de2cd30de064f0f4487036b6f80435b97caca6776d0f47cb",
+      "original": "UnityEngine.UI.VerticalLayoutGroup",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/VerticalLayoutGroup.cs",
+      "sha256": "55ec0610da9479b4752008b23990fe486df9df4ff78958f92027edf86906d035"
+    }
+  ],
+  "unchangedKeyFallbacks": [
+    "{0}"
+  ]
+}

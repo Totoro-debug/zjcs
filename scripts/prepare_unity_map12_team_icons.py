@@ -34,7 +34,11 @@ def build(write=False):
     if len(status_rows) != 3 or any(r['fields']['myIconStatus'] != {'m_FileID': 0, 'm_PathID': 0} for r in status_rows):
         raise ValueError('Recheck original team portrait status dependencies')
     directory = ROOT / 'unity/Assets/Game/Runtime/Official/TeamUI'
-    output_files = sorted(directory.glob('*')) + [directory.with_name(directory.name + '.meta')]
+    names = ('TeamIconServices.cs', 'TeamPlayerIcon.cs', 'TeamPlayerIconOther.cs',
+             'TeamMemberIcon.cs', 'TeamNpcIconUI.cs', 'Zjcs.Official.TeamUI.asmdef')
+    output_files = sorted([directory / name for name in names] +
+                          [directory / (name + '.meta') for name in names])
+    output_files.append(directory.with_name(directory.name + '.meta'))
     if len(output_files) != 13 or any(not p.is_file() for p in output_files):
         raise ValueError('Recheck maintained team portrait port coverage')
     original = [record(code / 'client-source' / (name + '.cs')) for name in

@@ -1,0 +1,122 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_targets.py",
+      "sha256": "aef03b956966129e35222c93eb21c5e9a6bd967a414f4d632a0d4cbb4ebad470"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    }
+  ],
+  "limitations": [
+    "Real native prefab bindings, parser/localization services and formal map host remain pending.",
+    "TeamTargetData is the consumed Common.ITeamTarget projection; it does not implement transport, server checks, or unrelated gameplay target types. The host supplies the original delegate comparator when that catalog is exposed."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Mechanically migrate the three original target UI components. Reuse original UIBase, object pools, localized text and state switchers. Bind parser/localization/error boundaries through ITeamTargetServices. Preserve dictionary insertion display order despite the separately sorted Catalogs list, delegate-only comparator, folding, pooled item lifecycle, selected-key equality and confirmation callback clearing. Preserve BattleStele stage/group value identity and inherited catalog-only UI key.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanelTarget.cs",
+      "sha256": "fecbe2cb2b1049231576964e37d86ec48f240a1477325bbaa2d8f21249d94fe4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanelTargetItem.cs",
+      "sha256": "5a112c245e74d02c31f08b276700aee5939e5f639f5f21fb4084a7a6518f2877"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamPanelTargetSubItem.cs",
+      "sha256": "bf7fbdba87b054ed1d36a5f45c7cfe246e57b18c4720581151683ded197b955e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamTargetDelegateTaskCompare.cs",
+      "sha256": "b91fedd8e700bf0e126ad73a999feccb238cccfd6b3e60a8d0cdb2ca881338f1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ITeamTarget.cs",
+      "sha256": "69a4d6cda1658b8414c4321619bd1f7256293cb68acc2726f25f9db92d65071a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TeamTargetBattleStele.cs",
+      "sha256": "a047e36b23559bc67bbe6cb851e65675b3a62e4bc6badf1463f15fd0624899f0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/LanguageUtils.cs",
+      "sha256": "1b6de15f2b3a90a5a6ba1920c8475af10bc783141fa7bccd8a14492ac935f6b7"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTarget.cs",
+      "sha256": "0186d81d3e725c6985882f406c03074e884e2ea8c7eaa9030ae83810dcd72e70"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTarget.cs.meta",
+      "sha256": "89cb4ed3f7d1e7198e35e49a6852124a0b9fb97d8f994a952eb35f03c51dc9c4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetItem.cs",
+      "sha256": "61221722a318f2660d4e2edc158f715347baba3d00489b90fa35e7ea4aec1180"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetItem.cs.meta",
+      "sha256": "a7d15aa52a49b5c0c35f3e54163843fb3074cde0142f79fe51c00d666df3edc7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetSubItem.cs",
+      "sha256": "fbf983cc7bd6eddf441787035a63bce73795d3552186a6df33e5ec26efd86065"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPanelTargetSubItem.cs.meta",
+      "sha256": "60a6363e6ba19b46816326b3ed5e29d15328fb0126323480a09bffb7ff7cc5c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamTargetServices.cs",
+      "sha256": "816d04e9d1839d2dba3ab6762f37bdc615e363c37913b15b2bec7710e863c6ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamTargetServices.cs.meta",
+      "sha256": "d55c380d02fc800aaffaec05cb030a31167fbbea8cd5c614c66407e9b6b27e50"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamSteleTargetData.cs",
+      "sha256": "e469a920ab3f87d813368fd160d8ccb44d0da9b3917d0fc01daed4847fe9c106"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamSteleTargetData.cs.meta",
+      "sha256": "73ae57e554e3859040db516a609afdbcf80115429e1935478fb6b24ade67079a"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamTargets.cs",
+      "sha256": "40490948241f37b976a644ddddf1d52806a937d4d61716c149247e72775642b5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamTargets.cs.meta",
+      "sha256": "cf697cb8f92adfd30d532f5c81b5254b05f1532e64170929daea062d86fa771b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamSpriteImport.cs",
+      "sha256": "ca144006698a70f9038316f622bf8f4121ac95797bb206c28a96f4853ea71359"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamSpriteImport.cs.meta",
+      "sha256": "40198f52f5b3df9ca6cc7e3dc46df0e326fb80d107fcf0c4a39641576f7f9a4b"
+    }
+  ]
+}

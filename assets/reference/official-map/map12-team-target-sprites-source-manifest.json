@@ -1,0 +1,116 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_target_sprites.py",
+      "sha256": "dab4b7803d52b9ebb3084a2c92ac70855466843df500640dab653f61f914a0ab"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-target-sprite-geometry.json",
+      "sha256": "18c8c415d406f7c3de313fcd49b039007223d1ce6c458694d623ceecfad40034"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-target-sprite-templates.json",
+      "sha256": "471f3ca7ef376214d29b3e552e30801251cc4a8ad9d360bb745e885748ee65fa"
+    }
+  ],
+  "limitations": [
+    "Formal full TeamPanel/local NPC/battle/save integration remains pending."
+  ],
+  "manifest": "871_156598",
+  "operation": "Preserve exact official vertex positions and triangle order in Unity-generated native Sprite serialization carriers, including both render-data copies. Preserve original rect/pivot/border/PPU and decoded original texture. Rebase UV coordinates onto the verified unrotated logical Sprite image; retain aligned native position and UV streams. Runtime acceptance checks the imported native data.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.sprite.asset",
+      "sha256": "485b8349eda5f33b07b5888e21ae96ca46ffbef118b47d949e43fc68d944313a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo-5be374afe0.sprite.asset.meta",
+      "sha256": "d3aad0507680481ad8581a8d01f15ccb99f30e63d53ea71dccd4046dcc2d96c2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.sprite.asset",
+      "sha256": "8dd635cc6b04f3b131efad4d19388cd0d2e150e59a35989bcb7d6e8f6ba8ab2a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/Imgfillet_32-63c27ef6fd.sprite.asset.meta",
+      "sha256": "36369cc1056354732cd792378ce5071ab74b7ea05917bba04fec9b75f6d92eb1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.sprite.asset",
+      "sha256": "e7484c7b02a197a010d7572658688c0fdd0d5fbfea8b10a9c79b759d63758889"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel-ab8eccddf3.sprite.asset.meta",
+      "sha256": "73129d43e08cd3ee8fd431dd546a8c633042d912f53cb14ba9fd466b58006086"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.sprite.asset",
+      "sha256": "f04699aa2c6956053f40a2f870694354c37e195a95d816374b3704e79ba06fe2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_TargetGo_Panel_Son-a4530d9e6c.sprite.asset.meta",
+      "sha256": "b3a62b1d9745864111d73f8801712c728977feaac529f2197a5bd250164d62b6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset",
+      "sha256": "55f3a63005ddbaf1fa86ffed8fa88e54b8068706ea01ba2c8bd13e11a539778f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Nor-3b5c5a72eb.sprite.asset.meta",
+      "sha256": "4a115ba93a351ef6e0065776bd6aeb15e6247266df667ea1d31bfe1d5e8d29be"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgLine-3dc3678e90.sprite.asset",
+      "sha256": "78601169a5ff8a79c3919a221d1a2db3183fac95e55a1174a200deea6a17831c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgLine-3dc3678e90.sprite.asset.meta",
+      "sha256": "b84a9ff2f2c3c0f4d9677effb883a8e5160b1e7eda9b992012cd261752d9e6c8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_CountText-43bcc7f5cb.sprite.asset",
+      "sha256": "ba2e46c604113dc869b5a58434f98d091e51f575522a8511b253d04c6f8d825b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgBg_CountText-43bcc7f5cb.sprite.asset.meta",
+      "sha256": "c71c736c31a3fdae5c72c9416efe1d11165a3b76b019660ebce469add574a065"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/C_none-fa3e084e40.sprite.asset",
+      "sha256": "249aaccb31e76d4b44a8cf2bbfd36f072316f13b0098db132168a3dca80e79d9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/C_none-fa3e084e40.sprite.asset.meta",
+      "sha256": "6a1442835e274930571dbab232edeb9f90a8f8206db50eaaeee1830c6b76d646"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset",
+      "sha256": "2f87584d75788c0a16810d73da3cd091a6c43210e83dbdc5f583202f55ddc3ac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/BtnCheck_Sel-cbe9e7c698.sprite.asset.meta",
+      "sha256": "4331518085a62adaa7c046244fb2f6b0761e071eb2788ad75d6c753e0f01bdf9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.sprite.asset",
+      "sha256": "8602ea136a488cb5a8597ebe2f767c0e560e5c0e1f618932fa14e7e3225e538d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/Sprites/ImgArrow-c6743d23bd.sprite.asset.meta",
+      "sha256": "7727a7c5389e27f640263724a70048b55bee19560b0c87cb25d39c965dc89d24"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamTargets.cs",
+      "sha256": "40490948241f37b976a644ddddf1d52806a937d4d61716c149247e72775642b5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamSpriteImport.cs",
+      "sha256": "ca144006698a70f9038316f622bf8f4121ac95797bb206c28a96f4853ea71359"
+    }
+  ]
+}

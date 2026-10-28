@@ -87,6 +87,8 @@ def build(write=False):
 
     ui_path = ROOT / 'unity/Assets/Official/World/Map/12/UI/map12-ui.json'
     ui = json.loads(ui_path.read_bytes())
+    geometry_path = ROOT / 'unity/Assets/Official/World/Map/12/Source/team-target-sprite-geometry.json'
+    geometry = {row['identity']: row for row in json.loads(geometry_path.read_bytes())['sprites']}
     font_receipt_path = ROOT / 'assets/reference/official-map/map12-team-chinese-font-source-manifest.json'
     font_receipt = json.loads(font_receipt_path.read_bytes())
     for r in font_receipt['outputs']:
@@ -116,8 +118,14 @@ def build(write=False):
                 raise ValueError('Original permission sprite dimensions/settings differ')
             if entry['pivot'] != [sprite.m_Pivot.x * expected.width, sprite.m_Pivot.y * expected.height]:
                 raise ValueError('Original permission sprite pivot differs')
-            redirects[fields['m_Sprite']['guid']] = guid(path.with_name(path.name + '.meta'))
+            native_path = ROOT / 'unity' / geometry[reference['identity']]['path']
+            native_guid = guid(native_path.with_name(native_path.name + '.meta'))
+            if native_guid != geometry[reference['identity']]['guid']:
+                raise ValueError('Original permission Sprite mesh binding differs')
+            redirects[fields['m_Sprite']['guid']] = native_guid
             dependencies.append(dict(identity=reference['identity'], path=source_path(path), sha256=entry['sha256']))
+            dependencies.append(dict(identity=reference['identity'], path=source_path(native_path),
+                                     sha256=sha(native_path.read_bytes()), nativeGeometry=True))
         elif row['scriptType'] == 'TMPro.TextMeshProUGUI':
             for field, target, kind in (('m_fontAsset', font_path, 'font'), ('m_sharedMaterial', mat_path, 'material')):
                 obj, reference = external(row['fields'][field])
@@ -144,13 +152,6 @@ def build(write=False):
         if key not in selected:
             continue
         block = re.sub(r'guid: ([a-f0-9]{32})', lambda m: 'guid: ' + redirects.get(m[1], m[1]), block)
-        if key in binding and binding[key].get('scriptType') == 'UnityEngine.UI.Image':
-            # Native .asset Sprites use type 2; the same original pixels are now
-            # a TextureImporter Sprite subasset and require importer type 3.
-            block, count = re.subn(r'(?m)^(  m_Sprite: \{fileID: 21300000, guid: [a-f0-9]{32}, )type: 2\}$',
-                                  r'\g<1>type: 3}', block)
-            if count != 1:
-                raise ValueError('Original permission Sprite importer reference shape differs')
         if key == transforms[root]:
             block, count = re.subn(r'(?m)^  m_Father: \{fileID: -?\d+\}$', '  m_Father: {fileID: 0}', block)
             if count != 1:
@@ -232,7 +233,7 @@ def build(write=False):
         return dict(path=source_path(path), sha256=sha(path.read_bytes()))
 
     proof = dict(format=1, manifest=apk.version, mapClassId=12,
-        inputs=[record(p) for p in (ORIGINAL, NATIVE, font_receipt_path, ui_path, language_path)],
+        inputs=[record(p) for p in (ORIGINAL, NATIVE, font_receipt_path, ui_path, language_path, geometry_path)],
         dependencies=dependencies, languageInputs=language,
         scriptBindings=[dict(original=name, path=source_path(path), sha256=sha(path.read_bytes()),
                              meta_sha256=sha(path.with_name(path.name + '.meta').read_bytes())) for name, path in scripts.items()],
