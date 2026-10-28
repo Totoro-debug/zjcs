@@ -1,0 +1,120 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachPosCfg.cs",
+      "sha256": "313f41de59199aa6d02fd283a6a9e14e1066e160b0973cd6668ecf3032989fb1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachPosRotCfg.cs",
+      "sha256": "2fbcc29c99fd945cab2edf6ce0a4dda3c69396a5bb9b979dd4f6fb794d1b731d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EAttachTo.cs",
+      "sha256": "e18009f7b5e1f20f8c2a1685d9c0cbc33a6bbd1419eda1432ea9c54e9c7c0929"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyPlayableAttachToBone.cs",
+      "sha256": "578ff6a34498753d569c75642f339e1e569d503d51bcdb00523d2d5648f44e30"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Direction.cs",
+      "sha256": "49b1383e892381fbff9077b8fb04337cddce0f096e425217030923985bd4c16b"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_attachment_transform_runtime.py",
+      "sha256": "dfc0e5278f14ec4c836854548ff3c2374c3186975edc9fde4f3996155ec27708"
+    },
+    {
+      "path": "scripts/prepare_unity_story_attachment_runtime.py",
+      "sha256": "07bfc231b4d3cacb3380a53abf60da2d3e4530f9fc029621a36c361dee6db6ce"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-attachment-runtime-source-manifest.json",
+      "sha256": "4bba5977f844b39d354f6963e8af61388ecaf7e9fba7d7c4737b80bb05b10f27"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosCfg.cs",
+      "sha256": "b7645127922829db678f5ebb6c181267d3854c5d2203536844aea5026420e758"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosCfg.cs.meta",
+      "sha256": "dc5dd879d0c304d402b402c42194e62c4c9454398891641a5d6b3285c869bce9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosRotCfg.cs",
+      "sha256": "d19b11b8e8e7d8bf011411d205c3af9be8b32fa67db5b3c93023876d1cd7a0d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachPosRotCfg.cs.meta",
+      "sha256": "118d55b484948511629e7353b5e2be2774f16df3b21842cc0e3a0608a1674fab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/EAttachTo.cs",
+      "sha256": "27befa1160817e21c74260c68ab6857c0c53ea2ec94fecec48be9fba57a6a6e6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/EAttachTo.cs.meta",
+      "sha256": "57ba83ba2ead5672b4bfcf3528bf15a75ccec1c2d7a1ec776223a3d443ef2c56"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs",
+      "sha256": "d8e5dbe7c3310350efaa0c9c4be07a302f755d691dfde9057c96f6d313786cfb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableAttachToBone.cs.meta",
+      "sha256": "d85eb4e12b42839ecfda1958402fac7941468c87f3f4121720148955272d9798"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Direction.cs",
+      "sha256": "b07c997009246faea2cda58c3eb52f0a6e4269bce1a0fc0e6ac324ff5c27737e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Direction.cs.meta",
+      "sha256": "27abb3a4e090d199d178e17c4c97f7b0c793f9e6f0fe84e5d0ea1318d654654a"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "AttachPosCfg.cs",
+      "unityTryGetComponentOutCalls": 1
+    },
+    {
+      "source": "AttachPosRotCfg.cs",
+      "unityTryGetComponentOutCalls": 1
+    },
+    {
+      "source": "EAttachTo.cs",
+      "unityTryGetComponentOutCalls": 0
+    },
+    {
+      "source": "MyPlayableAttachToBone.cs",
+      "unityTryGetComponentOutCalls": 0
+    },
+    {
+      "source": "Direction.cs",
+      "unityTryGetComponentOutCalls": 0
+    }
+  ],
+  "operation": "Copy original AttachPosCfg, AttachPosRotCfg, EAttachTo, Common.Direction and MyPlayableAttachToBone. Preserve source/target/skill/damage selection, missing-bone root fallback, original direction/offset/rotation/scale formulas, parent restoration, show/hide following, fade and state mutex branches. Adapt namespaces and Unity out argument syntax only.",
+  "limitations": [
+    "Original actor named-transform/skeleton binding, full playable prefab closure, formal story/map/save and Windows Player remain required."
+  ]
+}

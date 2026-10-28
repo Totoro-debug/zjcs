@@ -1,0 +1,225 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-story-playable-hierarchy-source-manifest.json",
+      "sha256": "77da58bc35d55659e31eedf8de7f17a522ed6c758be7e696319b64832ca26061"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-playables.json",
+      "sha256": "8aa401716a98ac6f153603fe57a5adf01e30d51c48478507c57011f26052207f"
+    }
+  ],
+  "templates": [
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab",
+      "sha256": "902a855f81e7f50b3a0d5e6a0cf889e4af4f03e77fbcd3536f66da70d909da8f"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab.meta",
+      "sha256": "bb4a2e68742856c55b460980163ee47a6e3782d9e64b380f9873b644541961bb"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab",
+      "sha256": "987c3f4f20e633232316e605fea60bd0391255ae60ed9def2ceaddea77ba2d8c"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab.meta",
+      "sha256": "cb1175fb1ddc245132125667f76fc419d75fee8a5af6068dacd0f188d8ba1e8a"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/3B2AFE45-F2C0-4BDA-85FB-6F8224B6DBA0.asset",
+      "sha256": "593e7fdf73646cf5c1ebe092a8411445bfab9303f4581e3610de26b7dbb1c3a0"
+    },
+    {
+      "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Wwise/ScriptableObjects/Event/3B2AFE45-F2C0-4BDA-85FB-6F8224B6DBA0.asset.meta",
+      "sha256": "436d7fa422496d542455b128cd449bf0f80181583a337282f65e409ef67e2de6"
+    }
+  ],
+  "scripts": [
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/ApplyBySource.cs",
+        "sha256": "72e8bdc47f09a3ebad62f8f9a702d9249ef29c44eb68e1aa72aee49743eb56ce"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs",
+        "sha256": "9d741f962881f9e20f10787a4a192d0f2c3dad39fd568d85599bd65c55a477a5"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/ApplyBySource.cs.meta",
+        "sha256": "0de6d5dbdac81a17982f7c68790b459a8d7889bb7e2db4e057724e1cc3df9474"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/MyPlayableActiveBone.cs",
+        "sha256": "491d248116bcee529952795e2faccefa2521720e816c6a37b78865e784255674"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+        "sha256": "38a36147fb5eb9038a276f1e89036c1070084bba4645d5a1c6500d6e6e9474cb"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+        "sha256": "844f05083e186ee5cf33e501ebfbbf72823a20983319c7a3df7d1fca6c3db8ae"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/GameFramework.Runtime/GameFramework/MyPlayableSequence.cs",
+        "sha256": "7d7f577336020f15e7d94bee4e39f3a4d479e982624ddba12084ad48121ba76c"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs",
+        "sha256": "1369a92abaf77eb0edcc3559fd9152910b676797e944639478fa27bd01a9ed29"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/MyPlayableSequence.cs.meta",
+        "sha256": "fded68a502ae384ab61ed9f4a137ab3ecb7d4c325901380d7973d5f408c60f94"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/AK.Wwise.Unity.API.WwiseTypes/WwiseEventReference.cs",
+        "sha256": "d2dc131afb47559192cd6aa47b910844268d06e45d833224b2d0aa8236ab7e67"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+        "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs.meta",
+        "sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+      }
+    },
+    {
+      "original": {
+        "path": ".tools/source-packages/conversion-cache/871_156598/map14-story-playables/export/ExportedProject/Assets/Scripts/Assembly-CSharp/MyPlayableSound.cs",
+        "sha256": "43101ee1a3abdcec8e17d4ab2408bd4bad1bc76738d118822ff882b1b95f965f"
+      },
+      "target": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+        "sha256": "e9ae6b8c026dd2bb036d96f8da21c7cadb6f9578c6dabc9ee5e0287590023b61"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+        "sha256": "f8cfcbb872083b2bd405a0feee76137e05c725e732e57ac822336f6564ba7e97"
+      }
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_npc_visibility_playables.py",
+      "sha256": "40ce05f57abcdda27dd18a2d6b3c990dad7db93fbd106e5da8d69e5e2d4c460b"
+    }
+  ],
+  "prefabs": [
+    {
+      "guid": "861c890ded796394a82cc519daf31d5e",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab"
+    },
+    {
+      "guid": "d2ba623f311ea224e811e7b6b130ef4a",
+      "officialPath": "Assets/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab",
+      "nativePath": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab"
+    }
+  ],
+  "counts": {
+    "prefabs": 2,
+    "nativeFiles": 3,
+    "scriptBindings": 5
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcVisibilityPlayables/OfficialMap14NpcVisibilityPlayableAcceptance.cs",
+      "sha256": "d3b2ea26f72f9ef48186ff690ddbbc368be54362a7ba83b0caf1afe2afc66e71"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcVisibilityPlayables/OfficialMap14NpcVisibilityPlayableAcceptance.cs.meta",
+      "sha256": "8ae1335686c0810cf5c6716bab4e2d2b3c7195eb3caab568b9331ad670f650e0"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcVisibilityPlayables/Zjcs.Editor.Map14.NpcVisibilityPlayables.asmdef",
+      "sha256": "dbdbfef0612ad070cdad897d7e91a2cd1c7580c04d0b7ddaad1313ea1809b859"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcVisibilityPlayables/Zjcs.Editor.Map14.NpcVisibilityPlayables.asmdef.meta",
+      "sha256": "05114445d7c1d2519bc18c20071577dc24de8b74a57a80c761beb80bec0c9e28"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/NpcVisibilityPlayables.meta",
+      "sha256": "31ea4ca149fce68b093f827a8d52c43acb54f9715da5438a9a1c62dc630b030a"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-npc-visibility-playables-catalog.asset",
+      "sha256": "60822806b8cf9472e09ec4d4f84eb6d14b56757738f459d73da89e0a426c2e6f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/native-npc-visibility-playables-catalog.asset.meta",
+      "sha256": "3d50c516a15352fa5f435189d2246797768efe24de098f2c7d743aa48c65c49e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab",
+      "sha256": "40394766c3e69644a4e2482265d6a21fbc438c377870a94465e11ce3bc1fc0e9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_active.prefab.meta",
+      "sha256": "f7ff22dfc691917b9b64a98e1d41e8109ab95a80d74f130ce1b0883fd08a0cbd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab",
+      "sha256": "1a8bb0af04bbf06764a8f2d6e3d9dc4dc99df5494f0f01acec59581dfa785c91"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story/playable_npc_hide.prefab.meta",
+      "sha256": "968cc11c3aebf9fd0cb75ea36b8da351cb674486a06e0f5a2ffdc26d0eedec9f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage/Story.meta",
+      "sha256": "e793abbeb5b12ee78df3f3ea5196590ed3898ba3d4ce150efeb21d3b331b3362"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables/DisplayPackage.meta",
+      "sha256": "1dd1bed424df22c0aef451ca72a56292e17bd38540fb5bc34b0ed9e3c97d48fa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs/Playables.meta",
+      "sha256": "9c778078c7ad85789f74781b1b479b5e2eaf2311fef211ac56c930c5022709a3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Prefabs.meta",
+      "sha256": "a77fed46287c8f8f60145216c66518382da35e1489d606acbd676fce4c53e474"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Wwise/ScriptableObjects/Event/3B2AFE45-F2C0-4BDA-85FB-6F8224B6DBA0.asset",
+      "sha256": "d691a7ad9bd9a9f54bf62c6058b84ae2f3ab6f08283e00beac408dbf7386957e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Wwise/ScriptableObjects/Event/3B2AFE45-F2C0-4BDA-85FB-6F8224B6DBA0.asset.meta",
+      "sha256": "23dbad0e0c77fd605982662813a864d3aaa1143e4e2e96c4a056e056f00ed5c2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Wwise/ScriptableObjects/Event.meta",
+      "sha256": "d8eecc15afc394a7f8ec670684bc0c0e5d916d66ca81e4c5f8b8d0ccf82f7625"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Wwise/ScriptableObjects.meta",
+      "sha256": "7ab26726794d60b723ca8e402ea0ea313de2bfc2bc7a06488aae54469172db4a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables/Wwise.meta",
+      "sha256": "c20a073901ea3880a7ebf0bab2d04455bc8b7befa9356dc7c223a13abd4569ee"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/NativeNpcVisibilityPlayables.meta",
+      "sha256": "067c30c0fedc042bbaa6e6076d11077a1e8ac5cd1cd602702b0383db9ac29f5e"
+    }
+  ],
+  "operation": "Restore the two source-verified original hide and active NPC visibility playable prefabs and the original sound-event reference. Preserve the original GameObjects, transforms, component order, sequence references, root/bone visibility, sound event, duration, restoration flags and local IDs. Remap only script/prefab GUIDs to migrated original classes; bind original asset GUIDs explicitly.",
+  "limitations": [
+    "Original NPC skeleton/controller/animation appearance, formal story dispatch, map/save and Windows Player integration remain required. Native asset/parameter validation scope is recorded in map-14.md."
+  ]
+}

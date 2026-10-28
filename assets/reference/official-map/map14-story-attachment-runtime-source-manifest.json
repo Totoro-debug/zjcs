@@ -1,0 +1,92 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AttachAgent.cs",
+      "sha256": "5cb97759a33d2a7f81736445c630f776826fa8684ad167dedf2216f1f8dda915"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyPlayableActiveBone.cs",
+      "sha256": "94006137403e0bf190a24c5efab4bc8563bb6229afc21b360eba90ffe22edcde"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/Utils.cs",
+      "sha256": "0f98dda3a96a80253d3c1262a79dcdcccea23d69a24bff41796890d029a3ed3d"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_attachment_runtime.py",
+      "sha256": "07bfc231b4d3cacb3380a53abf60da2d3e4530f9fc029621a36c361dee6db6ce"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs",
+      "sha256": "3e350ecb7ef285d12eca47f4767dcf0231a0511822e90550f31a459494c57700"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachAgent.cs.meta",
+      "sha256": "65b7319f818099c31e20b767a00dcd017a69c728f2e5226bca7118fdc0e54411"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs",
+      "sha256": "38a36147fb5eb9038a276f1e89036c1070084bba4645d5a1c6500d6e6e9474cb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/MyPlayableActiveBone.cs.meta",
+      "sha256": "844f05083e186ee5cf33e501ebfbbf72823a20983319c7a3df7d1fca6c3db8ae"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachmentRegistryUtils.cs",
+      "sha256": "a39b3ae9bdfb0ac3033052654bf375c3844a90f79f066581c57ce0ae51782480"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/AttachmentRegistryUtils.cs.meta",
+      "sha256": "c43a417171215e1005a4114a81db68460c1977743ca207b08f918eb89a8be3b4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Zjcs.Official.StoryAttachment.asmdef",
+      "sha256": "1f4274d7c8990323783f32d9820db8e48650172fe2707195bbc3affb68e1ff6b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment/Zjcs.Official.StoryAttachment.asmdef.meta",
+      "sha256": "cbfe728e3a2ab3a25e640ef0daa275c35ccfa3a634ee5f3a7d3ea54e66401b55"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryAttachment.meta",
+      "sha256": "93a2cf7cac432442ed94fa54768cb5ad0639e53ae0cb3dcb2f691626d57e88a5"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "AttachAgent",
+      "diagnosticBlocks": 3,
+      "utilityClassQualification": true
+    },
+    {
+      "source": "MyPlayableActiveBone",
+      "diagnosticBlocks": 0,
+      "utilityClassQualification": false
+    }
+  ],
+  "operation": "Copy original application AttachAgent, MyPlayableActiveBone and two original Common.Utils methods. Preserve named-transform lookup/registration, initial active-state refcounts, increment/decrement order, root visibility, stop restoration and original duration. Adapt namespace and diagnostics only; no animation SDK implementation is used.",
+  "limitations": [
+    "Original actor transform binding, skeleton animation/rendering, full story/map/save and Windows Player remain separate required work."
+  ]
+}
