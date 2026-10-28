@@ -1,0 +1,230 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageView.cs",
+      "sha256": "2a796819c975254e9c1ef9c6cd0201a4176dcea8a11b57d5c22bcc872b377881"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageStateCfg.cs",
+      "sha256": "5a4e1b779d8a03b69aae5ab31758ada550f58acacdd97c1abc73efe91b0477c3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECWorldStageStateCfgBaseProvider.cs",
+      "sha256": "ab57b98be28f768de0ca730d6adc186448b89267b3c621ae545cd7555e1f0c59"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageCfgNormalProvider.cs",
+      "sha256": "080fe1af826f6fa94777aa115af0b44b86677e5ba14ade9dbb720baba4bd2447"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageStateCfgBaseProviderItemData.cs",
+      "sha256": "8dd0cb1afc9de61c883bbb1c1f68b1d7c0d8dad1e108a4633f8dc1d9fdc02411"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECWorldStageInteractionOperation.cs",
+      "sha256": "347b5118dadc2d7dd536555609f5880a0cb77fab70e7d0b1660c5b55db79da69"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageInteractionOperationItemData.cs",
+      "sha256": "8789de294c4536a6cc9a973cd928fd8f8fed73a218962f053f81c68d6d001a20"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/EntityWorldStageUpdateEventMessage.cs",
+      "sha256": "c140bbaf07c2b322c6516f5ced09e13faaffef3b926b6e5e02167e38c3ec7f4b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IEcEntityBufferEventHandleModule.cs",
+      "sha256": "7292cacb5838913d5a2b6d88cc060cfcc937e06b5215e80c8ae4aa046cc0adca"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IEcEntityBufferEventContext.cs",
+      "sha256": "f200b1e6a6079d2b7eb513d12776af2ac7ca0af7d04c85b6691a6f9243e152aa"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECPlayableWorldStageHandler.cs",
+      "sha256": "4f2e1211a02e4d9fe228933c525242fbaf4f04ea59382be213f32b6ef92dd901"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/IMyEntityReplaceEventReceiver.cs",
+      "sha256": "9eb10f564dd331af1e580aae5ba39b585c8fa56e1d1ff29fa5ba2dcca595584c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageComponentType.cs",
+      "sha256": "448099cdf9898543f3837eedca74f9ce991e02440ed0e5bc2b03034d88ee448d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyWorldStage.cs",
+      "sha256": "9aab7850ff249a91188f262c44a56dd3dd96e4fcf59e52aaae5e2fc9711e3085"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_world_stage_views.py",
+      "sha256": "09ba34f7371152037d9685e81f262c5761b59cc7b4bcc8a508fd3dab69c4c96f"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/OfficialStageStateInfo.cs",
+      "sha256": "6d97f219bf4be3ee14c7db56d95ab01fb581f05eb1aeb354a00485d40877cac5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
+      "sha256": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageView.cs",
+      "sha256": "c2a4be50d186f13e85bfaaaae60dfe360e440a05501190340e1758a000658a77"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageView.cs.meta",
+      "sha256": "46fdef918442e78418e4e0400b300026ef1d3493512b2814ee4b5aeb58a6ed84"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/WorldStageStateCfg.cs",
+      "sha256": "aaba41eb913b5a55904d52628d1b2f36ffd63d14d8fa67a2697a474abfab2f51"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/WorldStageStateCfg.cs.meta",
+      "sha256": "6ce3a21637d92184a75f5f9c3e9279db5e83bf125fe3d865d8976b6f0f76a836"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IECWorldStageStateCfgBaseProvider.cs",
+      "sha256": "16fbbe1bef461782bef7e996bd7181970103370b2d34234fb9bb18d0450a645d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IECWorldStageStateCfgBaseProvider.cs.meta",
+      "sha256": "a4a85af07774f575ec3b7c5283399319279b40a2af59c2cd35dee3581e2fe547"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageCfgNormalProvider.cs",
+      "sha256": "1edf51cc13d416abf24f7eb2a2a9a70feaa05f46eb396b920c7e6825cc9f5f2b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageCfgNormalProvider.cs.meta",
+      "sha256": "3fcf29b16538f77bd9200f4a4fb976f271b078c30842708ab99ab3d0fde54641"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageStateCfgBaseProviderItemData.cs",
+      "sha256": "77873ad7f1132f9c4534f1bceabe05042535dfb12bb49a30b04cbf6d3df0b210"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageStateCfgBaseProviderItemData.cs.meta",
+      "sha256": "783aadc4745e747ab07e958c4c86b5d14fbe123339ce1e635b61aa25bc0c2104"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IECWorldStageInteractionOperation.cs",
+      "sha256": "d719dd122e4bf85d11bc0c89a52930564a65bf2b07ac2de3a157f5ca2ca5fa9b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IECWorldStageInteractionOperation.cs.meta",
+      "sha256": "dba7a269795ec205b93bd4520c2e35de2baf3535bfb749e9e67cd994f4dfca26"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageInteractionOperationItemData.cs",
+      "sha256": "463da834af37720e85d66f8d187aee9a9fe0d044049b32dfd0e3eebdd13c7dd8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageInteractionOperationItemData.cs.meta",
+      "sha256": "e938bee924c1492f171f72094108320c0648842617ee7dbb710de53c4ce01dfc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/EntityWorldStageUpdateEventMessage.cs",
+      "sha256": "6f112458b854802cc01a7ee1a6b723f10572f0e3cef3763ca588e4be397278e1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/EntityWorldStageUpdateEventMessage.cs.meta",
+      "sha256": "9be7c8b02764ee9b0f7934ec452ae250c7878b26c3af14ee61657aa58bfa03dd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IEcEntityBufferEventHandleModule.cs",
+      "sha256": "e68501cd41a3a5c71cbe53fad58437c9921ddeb3c3581a3aa5ead8ac52143562"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IEcEntityBufferEventHandleModule.cs.meta",
+      "sha256": "2f26b742bcc3cbb09e5c141c22e92fa1efe8ce48dc194330e45a251fc7220490"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IEcEntityBufferEventContext.cs",
+      "sha256": "ca1c6b6d18d80466ae44f167daf0bd7ca75b45135909e104aab77025589a8bb9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IEcEntityBufferEventContext.cs.meta",
+      "sha256": "1846f49cd5c11cc50dc89744f03b8ee3b908f5477f3b909d10247e623a343d94"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECPlayableWorldStageHandler.cs",
+      "sha256": "1cbbb3026ce81d5db8b92d9290e646736c07e664ee3c746c59f77c0adc646e65"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECPlayableWorldStageHandler.cs.meta",
+      "sha256": "a0a24ef5c2cc23a78f330af13c4d74339e0e8b1e15fb477524242e4bc0521371"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IMyEntityReplaceEventReceiver.cs",
+      "sha256": "ba6c08f48af23f03f47d6213c252472a304cbc496951558c85aff44a548af6f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/IMyEntityReplaceEventReceiver.cs.meta",
+      "sha256": "ed6cbb736bf61ea85bc97a04334dfe7098197eaee9a419163164998bc13dc929"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/StageComponentType.cs",
+      "sha256": "e7dd65512546b34f99c1403bd98a8ed21d34abd9ae63300f0d656fdf3e1f29f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/StageComponentType.cs.meta",
+      "sha256": "d02bfd2d42c70bc18c1d27e7721f1e95b77a97e3fa86e754d76cc4e3d8fd2e5b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs",
+      "sha256": "681085c6357315cc1ce7151fa97c9dddd70e5aaa80080a0f5b6e642d1d5e5663"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/LegacyWorldStageStateCfg.cs.meta",
+      "sha256": "7f3aea9b3ebeadd2c705c1684898ee4602a8bce8ba3a1b2541ce86e81fdbfda6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageStateData.cs",
+      "sha256": "18e753dca0e9fbe0709ff586749d40093fc18af643b9c4c03996551783e1fd3c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/ECWorldStageStateData.cs.meta",
+      "sha256": "b0d1bcff98e848c663f51139669f353126b5a0a47e59b6b87de7ea98f4573583"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/Zjcs.Official.EntityWorldStages.asmdef",
+      "sha256": "b01cc1b5bae975a6815dbed61f86c38aeef33565b6c7680bde25f0c4a52456ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages/Zjcs.Official.EntityWorldStages.asmdef.meta",
+      "sha256": "57e78b1570094ea5685d1b9062b9e52910d0c9d356fcb1bc4116803a6910e190"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldStages.meta",
+      "sha256": "ce94407fa205391eba95c8fa3faf761d13d35d72f7825d7359f327dd4049310b"
+    }
+  ],
+  "operation": "Copy complete original ECWorldStageView, normal configuration provider, operation/provider/event contracts, original StageComponentType values, legacy configuration declaration and ECPlayableWorldStageHandler. Preserve replacement/init/subscription and disposal/unsubscribe/provider-release order, switcher-before-event, configuration lookups, legacy projection, start/loop transition, forced visibility, callback detach-before-stop and map-destroy stop/detach branches. Shared-component state queries and entity replacement/event publication remain required host surfaces; opaque MySerializable event payload is forwarded as object without interpreting or changing it.",
+  "limitations": [
+    "Shared state queries, replacement and buffered-event publication are required host inputs. Concrete interaction operations, original managed-reference entity prefabs, formal map/input/save and Windows Player remain required. Focused Play Mode fixtures do not establish complete project compilation or formal gameplay integration."
+  ]
+}

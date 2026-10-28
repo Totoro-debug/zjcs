@@ -330,3 +330,5 @@ Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追
 实体视图生命周期和可见性源码位于 `Runtime/Official/EntityViews/`，对应 23 份原源码、程序集和输出哈希见 `assets/reference/official-map/map14-entity-view-runtime-source-manifest.json`。保留原 −1 执行顺序和显式宿主边界；正式实体 prefab 接线及 Windows Player 待完成。分项运行及当前全工程复核限制见[龙之国](maps/map-14.md)；本批未新增图像载荷或完整素材快照。
 
 实体剧情支持视图与处理器基类迁入 `Runtime/Official/EntityViewPlayables/`；4 份原源码、依赖关系与哈希见 `assets/reference/official-map/map14-entity-playable-views-source-manifest.json`。原生演出资源通过现有目录显式加载，验证程序集必须包括 prefab 动态加载的 StorySounds 和 StoryAnimation。原加法混合 FX 不一定写入 Alpha，运行画面核对使用 RGB。运行及接线缺项见[龙之国](maps/map-14.md)；本批没有新增素材载荷或生成完整快照。
+
+原 EC 世界关卡视图、状态配置／事件／操作接口和状态演出处理器位于 `Runtime/Official/EntityWorldStages/`；来源与哈希见 `assets/reference/official-map/map14-entity-world-stage-views-source-manifest.json`。复用既有原状态切换器与显式原生素材目录；宿主查询／事件边界和正式 prefab 接线仍须完成。四类英雄雕像原对象图采用旧 MyWorldStage 链，不能用此 EC 分项代替。运行范围及缺项见[龙之国](maps/map-14.md)；本批未新增素材载荷或生成完整快照。

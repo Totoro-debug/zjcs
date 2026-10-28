@@ -96,6 +96,8 @@
 
 - 原 `ECPlayableSupporterView`、`IECPlayableSupporter`、`ECPlayableBaseHandler` 与处理器数据共 4 份应用源码已迁入 `Runtime/Official/EntityViewPlayables/`。保留原父实体作为 Source、静态／新实体标记、淡入与客户端可见性门槛、出现结束再进入循环和处理器显示的顺序、泛型处理器操作、隐藏时先解绑回调再请求立即停止、卸载释放处理器及移除淡入淡出订阅。原立即 Stop 由后续播放器帧处理完成，未改为同步完成。静态元数据检查、生成器复跑和原程序集／源码／依赖／输出哈希核对通过；内置屏 Unity 显式程序集隔离导入、编译与 Play Mode 通过，使用原混沌出现 prefab、真实原对象池／播放器／淡入淡出／雕像 Sprite，核对出现转循环、2 个对象复用、109 个原生粒子峰值及实际 RGB 运行画面、3 次原音频事件派发、显隐与重播、配置音频触发偏移、静态实体、淡入淡出门槛、卸载后的回调清理。音频宿主仅记录事件，未验证实际声音；实体／桥接及状态处理器是隔离输入。本轮明确未执行完整 ProjectTools.Validate；正式状态处理器、managed-reference 实体 prefab、地图交互与存档、Windows Player 和发布仍未完成。来源：`map14-entity-playable-views-source-manifest.json`。
 
+- 原 `ECWorldStageView`、普通状态配置提供器、配置／交互／事件接口与数据、替换事件接收器、完整 StageComponentType 数值及 `ECPlayableWorldStageHandler` 共 13 份源码，加上原 `MyWorldStage.StageStateCfg` 声明已迁入 `Runtime/Official/EntityWorldStages/`。保留替换事件注册→初始化显示→缓冲事件订阅、先切换显示再转发原组件／前状态／载荷、旧配置临时对象复用、卸载时先释放订阅再注销替换事件和释放配置、起始／循环演出切换、强制可见及地图销毁时停止／解除引用的原分支。共享状态查询和替换／缓冲事件发布为必须提供的宿主边界，事件载荷作为 object 原样转发，不编造状态转换、交互或奖励规则。生成器复跑、源码／依赖／输出哈希及静态元数据检查通过；内置屏 Unity 显式程序集隔离编译与 Play Mode 通过，使用原状态切换器、雕像 Sprite、原出现 prefab 和真实播放器／对象池，实际查看状态显示与粒子画面，并验证配置边界、查询／旧配置转发、事件顺序、替换刷新、起始转循环及强制显示恢复、普通状态停止、地图销毁抑制停止／解绑、卸载后订阅清理和配置操作释放顺序。实体／状态／事件为隔离输入，本轮未执行完整 ProjectTools.Validate，正式规则、交互操作、实体 prefab、地图输入与存档、Windows Player 和发布仍未完成。此分项不替代四类 6570–6573 英雄雕像的旧 `MyWorldStage` 组件链；原对象图已核实它们采用该旧组件链。来源：`map14-entity-world-stage-views-source-manifest.json`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
