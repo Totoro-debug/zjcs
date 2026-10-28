@@ -1,0 +1,558 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Decode original story playable prefab hierarchy and full component serialization; native import, external dependency closure and live performance remain pending.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/stories.json",
+      "sha256": "d318d0a4ba0b8bbd2abf4b196e9c3ecb8dc5c394d866c72b27a436a63703ca2e",
+      "bytes": 1550869
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e",
+      "bytes": 1110205
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-dependencies.json",
+      "sha256": "7cd1c81c5b4fb190ef26ebab1d9fedfa9bfa6602200bb6a11049f1c3866d0d6e",
+      "bytes": 349396
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-dependencies-source-manifest.json",
+      "sha256": "b937fcb8e2a2aeee9ea1e6328d8735f200fcd0e1ce18af62d122e453f9b9330c",
+      "bytes": 632507
+    },
+    {
+      "path": "scripts/prepare_unity_map14_story_playables.py",
+      "sha256": "d523083c2f1c977789e8b3cfe4e0451a17b424d51433244b37b0b4a690656334",
+      "bytes": 8889
+    },
+    {
+      "path": "scripts/map13_native_schemas.py",
+      "sha256": "ba0848822dc95a81b47aa6fe7453c61b9e826be5203014edb3fb42e682269ac1",
+      "bytes": 13811
+    },
+    {
+      "path": "scripts/map13_entity_native_schemas.py",
+      "sha256": "c3c50c15804002c538b3fe028f5d63b8901aff64af1390a3300e71a8cac0dc4f",
+      "bytes": 22295
+    },
+    {
+      "path": "scripts/map14_entity_native_schemas.py",
+      "sha256": "1e93d64981c0274ff8825aa6d0c3397626680821183073ca6648cd3f1584ae54",
+      "bytes": 4902
+    },
+    {
+      "path": "scripts/official_unity_schema.py",
+      "sha256": "5ec21a2e168115e596dfeac36ace6a786f08e2d05eb56e7b9760c6a3ccb15e58",
+      "bytes": 8718
+    }
+  ],
+  "manifests": {
+    "apk_sha256": "77a94a9d0c8710a9e8a3b7145551efc49d3bbd29f0471b8d215bd4798b6c2081",
+    "selected_sha256": "0df9cba67811eb7465f62c8ffae64278566f4273cf5326b7e4e1a440f3324ed5"
+  },
+  "registry_source": {
+    "bundle": "defaultpackage_assets_scriptableconfig_modules_story.bundle",
+    "bundle_hash": "baa7f4cc03886126c33376430869910f",
+    "path_id": "-3194777040592680104",
+    "origin": "apk_zip",
+    "manifest": "871_156598",
+    "apk_manifest": "854_156383",
+    "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+    "apk_entry": "assets/yoo/DefaultPackage/baa7f4cc03886126c33376430869910f.bundle",
+    "raw_size": 5418,
+    "raw_sha256": "53cefe69d5e551559d1bed2bfd6db96c61c455632d33251aed3bb8f80ef4c4ee"
+  },
+  "schemaReferences": [
+    {
+      "path": "D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll",
+      "sha256": "79a49049c360a3ff282e747c311fcd567834efde564a96689872564164756e84",
+      "bytes": 1556344
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/Unity.Cecil.dll",
+      "sha256": "98ae4d35b3f91f017b1babab876d2bf4594af3d65e7e777fbd37fd1e4124f95e",
+      "bytes": 350720
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/Unity.Cecil.Mdb.dll",
+      "sha256": "9321b8813bbe23978527089d27fa066315148180f52c8944c5c13457fb2bea2e",
+      "bytes": 44544
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/Unity.Cecil.Pdb.dll",
+      "sha256": "3b882407fa066e4a89289a216721be3ecc1c8f6706ce371df7485d1b39cd67af",
+      "bytes": 88064
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll",
+      "sha256": "53ad801790376f9d7b31b36b972505c4dbb36503836a973060da6c86a3be6c92",
+      "bytes": 9824768
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.DeviceSimulatorModule.dll",
+      "sha256": "dda4c861402c99bdff46884ee7590a229f1fb9edf0f40146310ec31665fa4d3e",
+      "bytes": 105472
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.DiagnosticsModule.dll",
+      "sha256": "731cacbc401e729f8a34f8097fd098ea7639176506c1050441c7a70ff58d3609",
+      "bytes": 26112
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.dll",
+      "sha256": "e166e66c09ccf14c41d14ce985e18a13c9a6bc63806d414f205468aafb82266c",
+      "bytes": 218624
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.EditorToolbarModule.dll",
+      "sha256": "2753b9cb3bd4001cb4e238c8738fe8185831c0c65aab8392d41cdefc83f722f4",
+      "bytes": 56832
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.GraphViewModule.dll",
+      "sha256": "baaa8416ddbc56b65f0c49d81f1101bd88987091cdedfce94c27339b41db2242",
+      "bytes": 252928
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.PresetsUIModule.dll",
+      "sha256": "9eb88e11b359023d4ad4524179ba617ae9f0beec3367bd8eb587b1d4cdb599c1",
+      "bytes": 36352
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.QuickSearchModule.dll",
+      "sha256": "593b598f3f8d293d6dc6fd690e74dc712701c172cf55fc9515ea8efa2d0c9a6b",
+      "bytes": 1572352
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.SceneTemplateModule.dll",
+      "sha256": "b87a9ad7a9ccefb43c7629747aed56d5eb23427632209500d029f3b449bb814b",
+      "bytes": 148480
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.SceneViewModule.dll",
+      "sha256": "1bad3e5d3f9d819f40e7bdda9aa49a6ffc51ecb3de5584c47bbedb67d12c8fce",
+      "bytes": 49152
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.TextCoreFontEngineModule.dll",
+      "sha256": "54d620ec3485c0f6783279f6a9fe6bae3d447b4595c48f1dadbf4001a1daa02c",
+      "bytes": 15360
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.TextCoreTextEngineModule.dll",
+      "sha256": "08946eb48f006c5676e5013084cdd884a427fc53fa2e879b636378fa6d01dee1",
+      "bytes": 196608
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.UIBuilderModule.dll",
+      "sha256": "af97b58c81a9fa913877f95972ac3ea47246dd0ca4ea29ddcb50cff03101f073",
+      "bytes": 667648
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsModule.dll",
+      "sha256": "7abb15a7dff38c4c74eef1e285e4c89a219825ee7419d48fa10ef2d9c832b223",
+      "bytes": 372224
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsSamplesModule.dll",
+      "sha256": "f5f5ada68622ea48a43734fc0b5c98f11c74fe606b42857e0acc7e8634e4352e",
+      "bytes": 56320
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll",
+      "sha256": "a1ef26b0e4e6febcb5fbd735dd768f0dff2db3c022827adfed9e24e085cd096b",
+      "bytes": 233472
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll",
+      "sha256": "15dbaeff3352aecc03739205252dc92651e31f9dbd481094e5ac286900a96264",
+      "bytes": 14848
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll",
+      "sha256": "1946ff965493efd41a1f62f40a98ea2cf03766b9ee1091b65a0551b91957fa63",
+      "bytes": 54272
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AndroidJNIModule.dll",
+      "sha256": "158738f1ee22a419344c01d9f5970ccfd9a4c7b03e5c51b6c4090ffee2cf4547",
+      "bytes": 86016
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AnimationModule.dll",
+      "sha256": "cf17f69e1f7d4c41a88630706667f4d853407a138fb6f680146de7434056712f",
+      "bytes": 161792
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ARModule.dll",
+      "sha256": "8cb2f131052e76176bd0738352ea3422013fde25613c591580c3ddfacc785bc7",
+      "bytes": 12800
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AssetBundleModule.dll",
+      "sha256": "c3ad5d35bd169b551cf8bae8b08d48cadc32c3467798813bd941e9b8437a679b",
+      "bytes": 25088
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AudioModule.dll",
+      "sha256": "20ad45d908d1273cf88bcfc67fed666156fdfabc1d9ab81f26176266bfbab3df",
+      "bytes": 66048
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClothModule.dll",
+      "sha256": "dee445bfb9e2b498ab172c43b0d75b742c5a5dc440ec6692a6cddc56896d8c57",
+      "bytes": 17408
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll",
+      "sha256": "a59f3967369aa0b8af5b3ccb98f0ede5b5ba8ec0439d588466f825cfa091da2a",
+      "bytes": 12800
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll",
+      "sha256": "8f097ddcf858591094c9d59df05ccb4e51cd43118e002377078d2a75338435e9",
+      "bytes": 14848
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ContentLoadModule.dll",
+      "sha256": "025a0f2748a65150f6efaac25f1ca961e9cec589a1e0a692046fda1b97455519",
+      "bytes": 18944
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll",
+      "sha256": "c377cb806a56bfee01a3294f48280087ea80f52214c61df1e390aab9b08bd28f",
+      "bytes": 1538048
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CrashReportingModule.dll",
+      "sha256": "1e21314511b4efadd62ffb778a300e2f08c0647096e0ddedd0bdc5f6eda9d624",
+      "bytes": 12800
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.DirectorModule.dll",
+      "sha256": "269771cf194b066a209704a421556e324c980d7f8b4d46926d65f9fb0e6f8989",
+      "bytes": 16384
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll",
+      "sha256": "a31fd24d0f1a09a6aa7409f9eb2cdda2d21cf731c6137efb2edbb377a348a5f8",
+      "bytes": 121344
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.DSPGraphModule.dll",
+      "sha256": "bc474f6fab80fe30bcedf83ab974f32c5d164dd65ca9aa35a514125076d347fb",
+      "bytes": 20992
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.GameCenterModule.dll",
+      "sha256": "e20ea58ec920a56aa14f5b589430462f9266ee3e33f975bfbf89dc0227d0327b",
+      "bytes": 40960
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.GIModule.dll",
+      "sha256": "b6fd086444360846cdd7071de042eda22bf4d069687ed2487d9e139c556addd9",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.GridModule.dll",
+      "sha256": "342476ba59ef2a867aca071ce6c9c5a2ab6c9af986f468d92857008e152c625a",
+      "bytes": 16384
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.HotReloadModule.dll",
+      "sha256": "9ac178a7d8b3a2fec382dd977bfee8c48f00af1657c8dd7dcc5141f1c6e161e0",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ImageConversionModule.dll",
+      "sha256": "828891e08afba16fe3e6e50e2a11059efbb80ebd2bd4e95aa6cb56fe706a4b68",
+      "bytes": 16384
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.IMGUIModule.dll",
+      "sha256": "e564f654c757a6128fc879dee94f96da48313d7d29e51059bd53ec99aa839d27",
+      "bytes": 185856
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.InputLegacyModule.dll",
+      "sha256": "9839636ab635c90742a43476a4f833f6a14209b4bc218d0efbdf1f9e34a60753",
+      "bytes": 31232
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.InputModule.dll",
+      "sha256": "a57bd35b33d41dc23e48775e335a0688491fb2df75bcc2724e4f442a05f0778d",
+      "bytes": 15360
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.JSONSerializeModule.dll",
+      "sha256": "78f2871b2b0dad059e3bad71b6605a9b4ab190e01e176b391c3f866048468079",
+      "bytes": 13824
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.LocalizationModule.dll",
+      "sha256": "ddc1d8d39ed18f7376a1b009e9000e72c11c88e9a25cdb1de4e9c73d3f91c57a",
+      "bytes": 12800
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.NVIDIAModule.dll",
+      "sha256": "d8d781aafa280b912f922f02c8e56c79854a6729ac9c3d52c1f4799b8927c21e",
+      "bytes": 25600
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ParticleSystemModule.dll",
+      "sha256": "25a987232401d849f44b222bf1cea404ae0365eb77eef6c9e4e460a36e1dba16",
+      "bytes": 156672
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.PerformanceReportingModule.dll",
+      "sha256": "3e511ca064d464b18a23b1372023263f79326efd71c3a282d5d5bd34e2d12389",
+      "bytes": 12288
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.Physics2DModule.dll",
+      "sha256": "125f1717e7014a11add7d476c8e7aa75b5340bc0f6e5a03b62dcef0c8f0d47a2",
+      "bytes": 133120
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsModule.dll",
+      "sha256": "48651b77bfdae625d1b5b376b51978d487c2a29386db649ace938cf0607be210",
+      "bytes": 130560
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ProfilerModule.dll",
+      "sha256": "ed41daac8acea6c76f35cecadf620444dc46d2b71b4f9ee4c66f066b680d526b",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.PropertiesModule.dll",
+      "sha256": "11d5a2277dda65d89ddf7ef1eb667e345d76488f934230ee9898e602fb7dcde6",
+      "bytes": 146432
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll",
+      "sha256": "9ae2ca0638ab0df03b25b477071985222c60a96a335c12fbc98ef6bb61c70564",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ScreenCaptureModule.dll",
+      "sha256": "05e6508d16401252da9dda2261fbf2881141ce00759c0d37eae329516d7def9a",
+      "bytes": 12800
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SharedInternalsModule.dll",
+      "sha256": "cbc8a624b2f0aafa502f68f7cdeec8f52ed12305a90f5e994be5399168538826",
+      "bytes": 24064
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteMaskModule.dll",
+      "sha256": "3204e920813ad735fa153137f9126a7a9a4833627377c1193fe50064621f0f49",
+      "bytes": 13312
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteShapeModule.dll",
+      "sha256": "5db3035e11352bd9a00bdf056ab1ea6faaeba4e0df0b1f53b7fe7f545c591e78",
+      "bytes": 17920
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.StreamingModule.dll",
+      "sha256": "36ec86aeee10fe1fc5530e0d702b19ec1648bc35c35bc48205c61b6a882e7001",
+      "bytes": 12288
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SubstanceModule.dll",
+      "sha256": "b559a7b97e8499d3d084f6b40ed94ce524faababc38e2be4cf34221d9433a592",
+      "bytes": 16384
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SubsystemsModule.dll",
+      "sha256": "2a0fd0e143aa986b830bd9874833a8808d2887dd2ace969bffa46fcc2366dfcc",
+      "bytes": 26112
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainModule.dll",
+      "sha256": "c27e4ae28c6d386d206e322446323b1e7f607ad71a4de0ebadf8124b7bd1c0dd",
+      "bytes": 93184
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainPhysicsModule.dll",
+      "sha256": "c1e63f91aacd4892e5ad2fcbc0986ba0a1d10fd043c3cb5baad5ccaf5bd793a1",
+      "bytes": 12288
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TextCoreFontEngineModule.dll",
+      "sha256": "c19fc87c4fe5204a1a0e5f55981e9a5a0c026da105afd71233075eb48c15148c",
+      "bytes": 67584
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TextCoreTextEngineModule.dll",
+      "sha256": "815c2e015063ace319184543e86878bc0d54b3706a682a63dd1248e7fe2a56dd",
+      "bytes": 242688
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TextRenderingModule.dll",
+      "sha256": "d7b7f77984af98113ba84ff4c8562ea8e22cfcd06a8e1c1482fa9a61d41bdf80",
+      "bytes": 31232
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TilemapModule.dll",
+      "sha256": "1faa8a361755ebf81a0c94d0b8dca3ee5b86644e01b9d4ffec7a0dfdfac4c184",
+      "bytes": 40960
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.TLSModule.dll",
+      "sha256": "454e3768511f467b3c457286ecf5c9b701e33e2f0f6ab4f4e4710529f0a8bb11",
+      "bytes": 18432
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UIElementsModule.dll",
+      "sha256": "73e9478215f0e119d7ab94e19a25d3d55134c028f8412960fdc61c19ec3f679b",
+      "bytes": 1547776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UIModule.dll",
+      "sha256": "1b333ae40fca988b755cd33e6d3fb517a2d2082286b7cbf7e18cabe26e401eb0",
+      "bytes": 29184
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UmbraModule.dll",
+      "sha256": "5b488a294b17a14d25ebc6a4f156be57781a9e3d1f8325d79340e40c8546c228",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsCommonModule.dll",
+      "sha256": "839b4f5eba8b857d3f3ec7306b2071601ac3351a4a00b6b3f6aea9f2a59def8f",
+      "bytes": 12288
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsModule.dll",
+      "sha256": "98e197069aef8bc0f99b8d4396898fd811d6070bb0a16a0926af09033693afe2",
+      "bytes": 35840
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityConnectModule.dll",
+      "sha256": "14df003d36e40566f44de47db0e618a06fd6a20b4457f361f4d1ef79442c8e96",
+      "bytes": 13312
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityCurlModule.dll",
+      "sha256": "6769f50dc8e5801b0dbbbdcd3d326ae2557d30f0bab6beb1fe0a3bc6d47db8bd",
+      "bytes": 13312
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityTestProtocolModule.dll",
+      "sha256": "df8f2058f948e276c6af320926a1eb63acea79f6df6521a5398b50c6a58f037c",
+      "bytes": 11776
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAssetBundleModule.dll",
+      "sha256": "0d8c860beef917f85a2434c730343482b494331a49672c1bf907799a90fbab16",
+      "bytes": 14848
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAudioModule.dll",
+      "sha256": "69902c261929cb01e511180dafd06753b254ffd13b9024bbd8e742dcd36aaf4f",
+      "bytes": 14336
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestModule.dll",
+      "sha256": "43a63a57be735e5c5d87eeb77b99dc714bcda7ee0a3ae06c8c22cc7469d37d0d",
+      "bytes": 50176
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestTextureModule.dll",
+      "sha256": "c5e6e0c13a202f25245eafe5d7a1eb3aa7b7d6c39d69bd7ddceb17b13c08021a",
+      "bytes": 13312
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestWWWModule.dll",
+      "sha256": "d0017b581f0946d6f0a934c84c34c990446fcc796428be1f968bb72ceaeb40a5",
+      "bytes": 23040
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VehiclesModule.dll",
+      "sha256": "e8ab65b99f52e1572348c62b494904e29d1a68f47120673d42e270d99a37e0c5",
+      "bytes": 15872
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VFXModule.dll",
+      "sha256": "542e746de5764d07d98f744161ee261dcb96e13279a571ca7ec829b5b5d1b926",
+      "bytes": 50176
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll",
+      "sha256": "8fbd14f3e932c8b36d3c3037ac7ad5b577a68151a48babe165574205ead8b5a2",
+      "bytes": 33280
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VirtualTexturingModule.dll",
+      "sha256": "fffd1901bc1344c574e8ee91ce95c0c156547f3c8e8e897961dcbc1cad5690fe",
+      "bytes": 27136
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VRModule.dll",
+      "sha256": "65c36b7b51edc69653b119e4eca28b1e2475b97a409a7a00f4bcef0f8a4f6efb",
+      "bytes": 18432
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll",
+      "sha256": "a44942c92b56c7ca9ca964f216a6069d2470c3fa97b72b2e94ee15ec891edde6",
+      "bytes": 12288
+    },
+    {
+      "path": "D:/Tool/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll",
+      "sha256": "d1043df43371f138a0e891d7d903e8f294ac7b2fb2af328bf22a33def4373673",
+      "bytes": 62464
+    },
+    {
+      "path": ".tools/map14-handin-validation/unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll",
+      "sha256": "1b408cf2049757b1c79c80708c5f5b035ab88f55e62b7bbc5cf313d5684210bb",
+      "bytes": 398336
+    },
+    {
+      "path": ".tools/map14-handin-validation/unity/Library/ScriptAssemblies/UnityEngine.UI.dll",
+      "sha256": "d1189c87c08d8835786b927b7bacedb964072a66ff28d54277cc5961235ede98",
+      "bytes": 256512
+    },
+    {
+      "path": ".tools/map14-handin-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll",
+      "sha256": "63d1b43346326ba02e63642829cd2d4362daf9695fc7d3a74b19d449aa720590",
+      "bytes": 586240
+    },
+    {
+      "path": ".tools/map14-handin-validation/unity/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll",
+      "sha256": "30bd7f32c92a254d0ca5e39a95ecc38c746d2cf5f663c607ec8aa6a40863a3d9",
+      "bytes": 821760
+    },
+    {
+      "path": "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/mscorlib.dll",
+      "sha256": "11ac114c43ecf6996bef58ba3c99fba3693a4560a84eeadde54d193060dc626c",
+      "bytes": 5445432
+    },
+    {
+      "path": "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/System.Core.dll",
+      "sha256": "8b898bed54ae8cc61f9c58cc3eb062724f8357d2bdda338b5d363654ecff333d",
+      "bytes": 1551104
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-playables.json",
+      "sha256": "8aa401716a98ac6f153603fe57a5adf01e30d51c48478507c57011f26052207f",
+      "bytes": 30294171
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/story-playables.json.meta",
+      "sha256": "cf81f4c0369b4f29fa1cea22e8b2a7927035ff3f52d03f788bf08096c6a2ef94",
+      "bytes": 155
+    }
+  ],
+  "counts": {
+    "prefabs": 16,
+    "aliases": 4,
+    "hierarchyObjects": 2190,
+    "components": 1569
+  }
+}

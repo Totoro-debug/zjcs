@@ -60,3 +60,5 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 - 地图体力怪物的实际战斗完整操作和冷读回归、铁矿／时之砂地图点击、奖励粒子及全部原生材质；不能仅以服务事务检查替代运行验证。
 - Map11原日夜专属场景装饰、局部灯光和小地图未探索遮罩；区域地表阴影与原渐退已接通，但 `ActiveRegionTilemapDisplayHelper`／`ActiveRegionTileMapDisplayHandler` 及其他地图原载荷仍待接入。
 - 小地图的公共地区资源提供器、其余地图实体图标与详情、未完成的官方表现和各图完整路线；共享底层不自动完成单张地图。
+
+共享原演出核心见 `Runtime/Official/StoryPlayables/` 与 `scripts/prepare_unity_story_playable_runtime.py`：原 `MyPlayable` 状态机、双阶段中心、序列、触发器、有序容器与粒子淡入淡出保留；离线显式注入及调用方帧阶段替代原服务注册。隔离 Unity 完整校验、Play Mode 调度／状态／异常恢复及 3 项迁移回归通过，视觉和输入未覆盖；正式宿主、原 prefab、动画／骨骼、Timeline、相机和音频仍待绑定。来源与验证范围见[龙之国](../maps/map-14.md)，不据此开放完整地图。
