@@ -77,6 +77,7 @@ namespace Zjcs.Editor.Map14
             using(var sprites=new NativeMap14EntitySpriteLibrary(catalog))
             {
                 yield return OfficialMap14SharedConfigAcceptance.Verify(configuration,shared);
+                yield return OfficialMap14SharedDataAcceptance.Verify(shared,configuration);
                 var displayCatalog=Resources.Load<NativeMap14DisplayCatalog>("Map14/Native/map-display-catalog");Require(displayCatalog&&displayCatalog.selectors.Length==1253&&displayCatalog.displays.Length==4,"original display catalog row/address coverage differs");services.Catalog=displayCatalog;services.Root=scope.transform;
                 services.DisplayFactory=new NativeMap14DisplayInstantiation(staging.transform,services,new MapClientVisibilitySupporterFactory{MapRootManagerProxy=services},sprites,services.InjectMono);
                 var memory=new Zjcs.Official.StoryPlayables.GAction();var displayManager=new MapDisplayManager{MapRootManagerProxy=services,ResourceLoader=displayCatalog,ServiceProvider=services,Queries=services,LowMemory=memory};displayManager.Initialize();

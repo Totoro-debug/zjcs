@@ -1,0 +1,1299 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "operation": "Preserve original Console IL and generated formatter choices; forward the shared MessagePack ABI to a pinned publisher dependency with native raw-single encoding and original raw Vector3/Quaternion codecs; bind unchanged local map records.",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    },
+    {
+      "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+      "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    }
+  ],
+  "package": {
+    "url": "https://api.nuget.org/v3-flatcontainer/messagepack/1.9.11/messagepack.1.9.11.nupkg",
+    "sha256": "f2d84de1f3a3f5422c7b5f75ad97f71f8722254b943c12b11fbcf4589956863f",
+    "repository_commit": "6cbd8196e7dbe9b8810d7620f4542c3db9388753",
+    "original_dll": {
+      "path": ".tools/nuget-cache/map14-shared-ec/MessagePack.dll",
+      "sha256": "2cbc39d4f213df8fdd222188c4db7ee5cb914112c6a762ae90acf0530dd8cc1e"
+    },
+    "converted_dll": {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll",
+      "sha256": "b0bd31eaebe859d95699f34d0ccbb1aa2f30e691d6e201c3ac548e3a9db49193"
+    },
+    "sources": [
+      {
+        "url": "https://api.github.com/repos/MessagePack-CSharp/MessagePack-CSharp/contents/src/MessagePack.UnityShims/Formatters.cs?ref=6cbd8196e7dbe9b8810d7620f4542c3db9388753",
+        "path": ".tools/nuget-cache/map14-shared-ec/PublisherFormatters.cs",
+        "sha256": "a958cacc77b636316b22d823b6a524e3db006c4ba4afa0eec3fbf425b91bb351"
+      },
+      {
+        "url": "https://api.github.com/repos/MessagePack-CSharp/MessagePack-CSharp/contents/src/MessagePack.UnityShims/UnityResolver.cs?ref=6cbd8196e7dbe9b8810d7620f4542c3db9388753",
+        "path": ".tools/nuget-cache/map14-shared-ec/PublisherUnityResolver.cs",
+        "sha256": "b43a04797edea68279da22818348d15d09d8667ed89af7be4005c630ff19614e"
+      }
+    ]
+  },
+  "native_types": {
+    "MessagePack.MessagePackBinary": [
+      {
+        "index": 308355,
+        "name": "WriteSingle",
+        "address": 269987588,
+        "length": 276,
+        "sha256": "460ebcdea91be59ba02a02828ddfde4cdd0e31d447fc953637b64acbb8451333"
+      },
+      {
+        "index": 308356,
+        "name": "ReadSingle",
+        "address": 269987864,
+        "length": 256,
+        "sha256": "b2fc8f9b802820e88a477e930d4e60daffbe1096c6b6daf4addcecca6d363938"
+      },
+      {
+        "index": 308428,
+        "name": "WriteSingle",
+        "address": 270015544,
+        "length": 172,
+        "sha256": "266d22c427e41512d57640fa5113c21ddef735094d3ae1bc37d7deaae6c50b04"
+      },
+      {
+        "index": 308429,
+        "name": "ReadSingle",
+        "address": 270015716,
+        "length": 116,
+        "sha256": "5390b03366f83e047e28ebc130939a4b4813620da239e9fdfa46b6662a9b1215"
+      }
+    ],
+    "MessagePack.Unity.Vector2Formatter": [
+      {
+        "index": 308533,
+        "name": "Serialize",
+        "address": 270036504,
+        "length": 272,
+        "sha256": "fb9fda3e079af7e9e01a1e2b7ee16cc79126bb0c184338cf708ced3d98fe82b5"
+      },
+      {
+        "index": 308534,
+        "name": "Deserialize",
+        "address": 270036776,
+        "length": 476,
+        "sha256": "e345d816795bd579e5937d0cdb6ef43b9f8efa5bf1509e2faffe82dcc95916d8"
+      },
+      {
+        "index": 308535,
+        "name": ".ctor",
+        "address": 270037252,
+        "length": 8,
+        "sha256": "ce395856f9eef28509c899ef4af11f820d78a532a943a910eee7ef78b68bcc1e"
+      }
+    ],
+    "MessagePack.Unity.Vector3Formatter": [
+      {
+        "index": 308536,
+        "name": "Serialize",
+        "address": 270037260,
+        "length": 200,
+        "sha256": "99de767c66b053dff2bf51a47800ec92e25a1466e7d9cafed2fd1db5eea6e955"
+      },
+      {
+        "index": 308537,
+        "name": "Deserialize",
+        "address": 270037460,
+        "length": 340,
+        "sha256": "7b2cb68849e35671ced8b5fce1a6964d884cefb619edec99d9dd7e5d53675912"
+      },
+      {
+        "index": 308538,
+        "name": ".ctor",
+        "address": 270037800,
+        "length": 8,
+        "sha256": "f97e1260b74585bf7c8440b9fff04f3063f0b3c75f4820c7e94536b5bc07a343"
+      }
+    ],
+    "MessagePack.Unity.Vector4Formatter": [
+      {
+        "index": 308539,
+        "name": "Serialize",
+        "address": 270037808,
+        "length": 336,
+        "sha256": "425ce3a21b6d20f7d430d0ac572c5ef7e61ff4e030880f1bd765eb97d8113c3e"
+      },
+      {
+        "index": 308540,
+        "name": "Deserialize",
+        "address": 270038144,
+        "length": 628,
+        "sha256": "66256d1a1ea5989dda703f9d677b2d45fa3b5d5f8db2981f945eda4d97133830"
+      },
+      {
+        "index": 308541,
+        "name": ".ctor",
+        "address": 270038772,
+        "length": 8,
+        "sha256": "4a9daec6a52f1ef4d1a8d4e3fc21dcf489c1210abeb822e26ba477855950bb00"
+      }
+    ],
+    "MessagePack.Unity.QuaternionFormatter": [
+      {
+        "index": 308542,
+        "name": "Serialize",
+        "address": 270038780,
+        "length": 224,
+        "sha256": "74e2323e5ec31903369055fe19e116824ad9bd28427289d96185f6c2f2572d8d"
+      },
+      {
+        "index": 308543,
+        "name": "Deserialize",
+        "address": 270039004,
+        "length": 412,
+        "sha256": "d9b1cf1e355c761b357e3ffe6811957e6a9477495d10ccc0cde0870c1f867e30"
+      },
+      {
+        "index": 308544,
+        "name": ".ctor",
+        "address": 270039416,
+        "length": 8,
+        "sha256": "1c5186e843638ebfe3be537b1fa6a34c8ef67b2de74e1578618192dee70d7b3b"
+      }
+    ],
+    "MessagePack.Unity.ColorFormatter": [
+      {
+        "index": 308545,
+        "name": "Serialize",
+        "address": 270039424,
+        "length": 336,
+        "sha256": "429d43d74d86040566ad5365ea4e8426d4806db01c2963d87e5cb5342ebf259d"
+      },
+      {
+        "index": 308546,
+        "name": "Deserialize",
+        "address": 270039760,
+        "length": 628,
+        "sha256": "75806f6d5c1f4d628f47ab18e879d9e2207858ee0b70ed65cfe830429e2ee58f"
+      },
+      {
+        "index": 308547,
+        "name": ".ctor",
+        "address": 270040388,
+        "length": 8,
+        "sha256": "fe48d0c97f24dd4c36f312018a357e2a4c98c6f1440d0a775a3a31ef870117b7"
+      }
+    ],
+    "MessagePack.Unity.BoundsFormatter": [
+      {
+        "index": 308548,
+        "name": "Serialize",
+        "address": 270040396,
+        "length": 568,
+        "sha256": "5e4c759fc8d506ebd76a01b83b5bdec7e8022fd82fc5659892ecc2b2761457c1"
+      },
+      {
+        "index": 308549,
+        "name": "Deserialize",
+        "address": 270040964,
+        "length": 824,
+        "sha256": "a3983ec34dc99dc037a4dcbfc1d0821815eb293265a295ddf748885d5412bde7"
+      },
+      {
+        "index": 308550,
+        "name": ".ctor",
+        "address": 270041788,
+        "length": 8,
+        "sha256": "5b24d4f0109c1634146fcf4957451d16a4497e6a00f07dfb2aa76435b0bea8b2"
+      }
+    ],
+    "MessagePack.Unity.RectFormatter": [
+      {
+        "index": 308551,
+        "name": "Serialize",
+        "address": 270041796,
+        "length": 336,
+        "sha256": "0593022d514a9c910a06573a554bd6794055eb9e24d0db1bf2f3201b20b8ad13"
+      },
+      {
+        "index": 308552,
+        "name": "Deserialize",
+        "address": 270042132,
+        "length": 628,
+        "sha256": "bcbf117181e75f38a44ec0f8b9302e4c721240c1bef06ec2bf1d860a061bdd19"
+      },
+      {
+        "index": 308553,
+        "name": ".ctor",
+        "address": 270042760,
+        "length": 8,
+        "sha256": "5dd05921ec45219073b916b0d2eb222f36171e99922f71b8c2aca05874be09f9"
+      }
+    ],
+    "MessagePack.Decoders.Float32Single": [
+      {
+        "index": 308836,
+        "name": ".ctor",
+        "address": 270142164,
+        "length": 8,
+        "sha256": "b004c0763aac7121c65036e527f001f808de438e57a8c67117421ee4fe776f39"
+      },
+      {
+        "index": 308837,
+        "name": "Read",
+        "address": 270142172,
+        "length": 40,
+        "sha256": "44995e08daa018d7aea618a10b474bd842a3fe5103b9252aaaf620c694fa32a6"
+      },
+      {
+        "index": 308838,
+        "name": ".cctor",
+        "address": 270142212,
+        "length": 104,
+        "sha256": "ea267a8b5f39c6d99e1e62c3ddfd50f3ec992c8b8c74cf836b23e576cfee7446"
+      }
+    ],
+    "MessagePack.Decoders.Float64Double": [
+      {
+        "index": 308876,
+        "name": ".ctor",
+        "address": 270146348,
+        "length": 8,
+        "sha256": "e8c0d707ffd04f4bc9fcf177d738d461863723b5a85e1db3f66277b54a74e743"
+      },
+      {
+        "index": 308877,
+        "name": "Read",
+        "address": 270146356,
+        "length": 44,
+        "sha256": "062909314867eb1f5c7da3ee02c0f1a7a1bddf50a4c20c2d936708d4baed24dc"
+      },
+      {
+        "index": 308878,
+        "name": ".cctor",
+        "address": 270146400,
+        "length": 104,
+        "sha256": "6a16c91ee0f8901cd2877550898b342a3a012e64b02ec7ee8bfbee80bd7722b3"
+      }
+    ]
+  },
+  "assemblies": [
+    {
+      "Name": "GFrameCore",
+      "ModuleId": "a5b9c960-f710-b17e-4315-2137a8a01de2",
+      "Identity": "GFrameCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Name": "MessagePack",
+      "ModuleId": "2a010fad-973f-85d2-de09-31c7b7b38f4a",
+      "Identity": "MessagePack, Version=1.9.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be"
+    }
+  ],
+  "source_records": [
+    {
+      "OriginalPath": "Config/EC/map_14.g.bytes",
+      "Resource": "Map14/SharedSerialization/map_14.g",
+      "Sha256": "adc9eacc4569772b5df415d9c7909301fe0fccb9275ee1328a1f54cbec1cb08b",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "9179065640072932140",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/map_14.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/MapRootEntityLite/14.g.bytes",
+      "Resource": "Map14/SharedSerialization/14.g",
+      "Sha256": "ca976d874301354925448b040560f73d3bac99107ba5a18bbb3b087105348dce",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec_maprootentitylite.bundle",
+        "bundle_hash": "ceaed08eb1982ad5be7f21408db01cdd",
+        "path_id": "-3280583208536231634",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/ceaed08eb1982ad5be7f21408db01cdd.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 385608,
+        "bundle_sha256": "5cd9e3208e399189a392d8697a2fe9fba91cb82ee4a0f4ff641a18866fd75c74"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/14.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/MapInfoWrap/mapinfowrap_14.g.bytes",
+      "Resource": "Map14/SharedSerialization/mapinfowrap_14.g",
+      "Sha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e",
+      "source": {
+        "bundle": "defaultpackage_assets_config_mapinfowrap.bundle",
+        "bundle_hash": "21b302b950500540521be7b4c56724e1",
+        "path_id": "-124714658192460972",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/21b302b950500540521be7b4c56724e1.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 589102,
+        "bundle_sha256": "4ba0537d17d552ba2fbc71ef8d4c01ad36a678a034de4e63a3a538311951f0d8"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/mapinfowrap_14.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionCommon_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionCommon_part1.g",
+      "Sha256": "214b5d1ef9d9560d1d2d6fb0fd7aeccb2fa9723a01fe7c0e4506ae407758976c",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "4068547299595439122",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionCommon_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldBuilding_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldBuilding_part1.g",
+      "Sha256": "13a98253a3aa0d8271d8734aea27ef4e3e815b64e40052b301a9f13c4833a135",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "1818463115982819942",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldBuilding_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldBuilding_part2.g",
+      "Sha256": "47fe913d9b0f7927e60bdd0d86632fa64764b42f860a6ed3d049c9f6451925bc",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7385472968570791637",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldCommon_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldCommon_part1.g",
+      "Sha256": "ad83230ea82a6563d9c0732c3d809dc52094778259f9d3f8384f4c02f647a2c1",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7640940246651829685",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldCommon_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldInteraction_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldInteraction_part1.g",
+      "Sha256": "640c638afd9255d9b7fa4d425cc30275394715feb70278e0145f6cac8ed30dac",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "8023088705784028539",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldInteraction_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldMonsterChest_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldMonsterChest_part1.g",
+      "Sha256": "27dc912fdb8ae516416762a7cc2662a3097870813dd73cb15acfe4101440ba83",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "2857964272608396728",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldMonsterChest_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldPuzzle_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldPuzzle_part1.g",
+      "Sha256": "154f16acad8958c66eb90728486ae86c6eb1582d104108bf45b93cd34efc6dec",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "4371650514851877862",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldPuzzle_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/ActionWorldSpecial_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/ActionWorldSpecial_part2.g",
+      "Sha256": "85688c134eeede3f6e52ba8dbb8f64962080f096f7ea7242d36552389d309604",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-2815592630988158780",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldSpecial_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/MapRoot_14.g.bytes",
+      "Resource": "Map14/SharedSerialization/MapRoot_14.g",
+      "Sha256": "56c2ae414097ac46bba1a6f21c8aa4f11d0b3ae495651b2b66f313899eeae4c6",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "6109873365809870966",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/MapRoot_14.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part1.g",
+      "Sha256": "1a0bda024209a390eb6961100d04c94dd07d1ba0c117bffab2b6ccea2487cc90",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-2943392327713193183",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part3.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part3.g",
+      "Sha256": "e02bd7eb37729a88d282d2d02fe4595c17cc81328196d3f96998bdd564a6e4d4",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-6786213077824187719",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part3.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part4.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part4.g",
+      "Sha256": "6e894dc7b237dd32037902191eed30128f8bbc2fdfc7534a8f989cabfb53d0f5",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7567379689493840623",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part4.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part5.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part5.g",
+      "Sha256": "71c83fa9d9692ff5c436a341e675a5fe338be5b7dbc789bc732985c93736ebc2",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-7582579799236183721",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part5.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part6.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part6.g",
+      "Sha256": "9b39c32b7ad8c35b29b3a8c0944b5424a72252b6ba806b6c1088528b80065d87",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "3167905198582015011",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part6.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part7.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part7.g",
+      "Sha256": "9b340fb48e0df383c2568c602f6b56d4547eebe4a5cee6c9cb1985503aea3e6d",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7358013402307554860",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part7.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBonus_part8.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBonus_part8.g",
+      "Sha256": "1915b80d82348313673c5bc2a7cc8d75ec905952552f92d8929eea6797ed37b1",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "6245420361773387736",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part8.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBuilding_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBuilding_part1.g",
+      "Sha256": "0aa5f5e357e6f238ce833e91b971b6ff3deb211e6de1844ab0e1740eab72477f",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7047277663431825796",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBuilding_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBuilding_part2.g",
+      "Sha256": "2bffd4564f4f4d42d20470374588d471d5f6877c3eb4e6cee035f122f68905b2",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-5930839352768412906",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBuilding_part4.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBuilding_part4.g",
+      "Sha256": "1931e6568282aed4e133c1509089cca6cf410bbc13ca7637d4fa166cd6639079",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "3567124344905647812",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part4.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBuilding_part5.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBuilding_part5.g",
+      "Sha256": "6fb90a4bb9bbe313a31937172a51a27d57c698710482a5c82c0371727e125a75",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "3511498547737333368",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part5.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldBuilding_part6.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldBuilding_part6.g",
+      "Sha256": "2528bba63f6875977710279f20b816d1b1bf0cf6d0e91a08d866a6ca2fed0003",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-5334638726794891598",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part6.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldDoor_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldDoor_part1.g",
+      "Sha256": "4cae4408addd31e335ea6cf2006d0548de844b08b5b280ac167067a59004fa5c",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-5606185184062333412",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldDoor_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldDoor_part2.g",
+      "Sha256": "6f731e23623e6e538c6754dff8b7db737ddd2d7e4710a1f28ec9969b0c5a2135",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "7202336938635550233",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldGamePlay_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldGamePlay_part1.g",
+      "Sha256": "7bfbd7fd2e4904641434b1bb9dd6d44abef35936300e1fd36a5d3ffa9296abbe",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-6623476057574369433",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldGamePlay_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldGamePlay_part2.g",
+      "Sha256": "557c863d0c2357fe331801ee3cd2ab55bc0aa88b30b960f077c14ae8924a35fe",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "1759904189348156360",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldGamePlay_part3.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldGamePlay_part3.g",
+      "Sha256": "04027347152e9b4bda096b2040d0506ef85e448d68a4901de45fc8324aa20501",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "5826680201636334695",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part3.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldGamePlay_part4.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldGamePlay_part4.g",
+      "Sha256": "083923e922b1b63aa66df7430b0375506331f9150eedad4163c2ec29eaaf2b9e",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-2175376292073780116",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part4.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldGamePlay_part5.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldGamePlay_part5.g",
+      "Sha256": "4609379f7d25dc63c853c2b41ec97f6be53ef7b68b0c09db1d009de22c59efac",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "795485824688205706",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part5.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldMapCharacter_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldMapCharacter_part1.g",
+      "Sha256": "8d2c0e2294aee8123f2711296e5e2b37003591b23e04dc1e1e621ba9a1afe477",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-1343037827240865653",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMapCharacter_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldMonster_part1.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldMonster_part1.g",
+      "Sha256": "a2346df6ee7a9f7efd0be29b48f73745be008132a4de569868b1006d4e25a26b",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-5441854967693767294",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part1.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldMonster_part2.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldMonster_part2.g",
+      "Sha256": "6af918553d78a19e8239c7011b5dbe9f7b02a6185ea526e20c7820e0d0d6aba9",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "5034385222677653451",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part2.g.bytes"
+    },
+    {
+      "OriginalPath": "Config/EC/WorldNPC_part3.g.bytes",
+      "Resource": "Map14/SharedSerialization/WorldNPC_part3.g",
+      "Sha256": "0d8d71d464992419e0baea44678ad924d5cb80e9ab517e4fca68d61d8e390a00",
+      "source": {
+        "bundle": "defaultpackage_assets_config_ec.bundle",
+        "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+        "path_id": "-507276851688412472",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+        "manifest": "871_156598",
+        "bundle_size": 6898815,
+        "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+      },
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldNPC_part3.g.bytes"
+    }
+  ],
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14HeroStatueAcceptance.Run",
+    "shared_data": "OfficialMap14SharedDataAcceptance.Verify",
+    "placements": 2961,
+    "components": 22979,
+    "regions": 111,
+    "template_files": 32,
+    "template_rows": 568,
+    "ground_cells": 78400,
+    "scope": "Isolated graphical Unity Play Mode; source fields/order, exact full/lite ground types and coordinate round trips, loader restoration, and four original statue display regression."
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_shared_serialization.py",
+      "sha256": "cb1a5f6f3f7c54533a53ea9a4b5c3f5f763c196a63d0dd2fbdc27754e5d92595"
+    },
+    {
+      "path": "scripts/prepare_unity_shared_messagepack.ps1",
+      "sha256": "8dac7fd11ea914e5d6ae3954a5aed0b9a638906bb7d275ed4f7bba856dc61e92"
+    },
+    {
+      "path": "scripts/read_official_shared_serialization_native.py",
+      "sha256": "dd721b43b4d2f90d8de314328d12734dd07f2e2b5fa853f1cf45b24549d5c981"
+    },
+    {
+      "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
+      "sha256": "a3c4db8bcd72a317e8e852c571f12266871980aae8f195e45127a09743dff044"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14HeroStatueAcceptance.cs",
+      "sha256": "a911f2d230a8aa6ec1252488c0353c3b2cad9332f1fa9b99ed2d4b3003af661d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14SharedDataAcceptance.cs",
+      "sha256": "1955596f6d9c60dc7f536f9052b70523992da819c469b46018dc972856c0a27e"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14SharedDataAcceptance.cs.meta",
+      "sha256": "1558b6be27c3294c8a885c833046bd41b626f5c2defa9a7d25be82079541bcb2"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+      "sha256": "b64951b1e55d9b90f627d25bf36dd96aa944e462560ca9e8bd7df0b81a763cfe"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/NativeRawUnityFormatters.cs",
+      "sha256": "9b5063a34f361d5441d3e3eb95beb032d3d8fc3595d69e92e305e15e8ac283f1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/NativeRawUnityFormatters.cs.meta",
+      "sha256": "40524fcb1676bfd50f6d4b9b610a51c66fce1e5d5b305ed8a68b83b0f52b9bcb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/NativeSharedFormatterResolver.cs",
+      "sha256": "dad6bf92ddc776020b58f9fc8f37c853b20eb5023ae6782a5b7ee61a57dfb00f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/NativeSharedFormatterResolver.cs.meta",
+      "sha256": "783ea40da139f0007196fe00bb6f2dde87a65cca40b436019606d12ff8c0bc10"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/PublisherFormatters.cs",
+      "sha256": "e189bcefa849bb8987d7c7c2ea68264152b9c3f66654620ce445f2f5b869ad2a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/PublisherFormatters.cs.meta",
+      "sha256": "40ce9c113f5b3c566824d78fa5c08c08065b92af74fb4ec6964dedae8afc5d54"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/PublisherUnityResolver.cs",
+      "sha256": "cdcdfa2eb5ea618aa6fedddcbfdcb77250662addfc17a6ebec60e4fa40d32844"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/PublisherUnityResolver.cs.meta",
+      "sha256": "f514d365430804320b1979e7b7d32a6fc62c51bfb8071a0e4c55125d3202d8f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/Zjcs.Official.SharedSerialization.asmdef",
+      "sha256": "3fafc88d09d7b1733323864a33cc6fc93171a1fa4ace566e9c226419d0cd8895"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization/Zjcs.Official.SharedSerialization.asmdef.meta",
+      "sha256": "0a576c6e880bcd1ced56f6adc20d364ba8fa236517437df3faa237c2282d5ff0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedSerialization.meta",
+      "sha256": "e4c897b04834271d94041bbc143fa2958b38abb881a3bd6cba31b72bb22b33fa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
+      "sha256": "42ce615ad6417ad7d8290ca17c9eb1d720d9123da87939e899c78e0e57efa808"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs.meta",
+      "sha256": "21b600bb08e9c1ff0232bd7201ec9473d8ae508dfdc65fffb09a0984d63ed9b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef",
+      "sha256": "afa6ec73809de4c867f2b8efd9a4fa11f519b003e403d9e74e3f11a07829327d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes",
+      "sha256": "5c70676db44ccece73cc86da5c3a8ad4e3bc14184dc380997571d205d606c66c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll",
+      "sha256": "b0bd31eaebe859d95699f34d0ccbb1aa2f30e691d6e201c3ac548e3a9db49193"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/MessagePack.dll.meta",
+      "sha256": "f5683ccb894eb506690c99502a70a2d4a05d7c9ec026156630bb79635a2430ba"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/14.g.bytes",
+      "sha256": "ca976d874301354925448b040560f73d3bac99107ba5a18bbb3b087105348dce"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/14.g.bytes.meta",
+      "sha256": "52eaf8cce9a091b774f4a9ec7c482876edd9d3e5acb46ba480a659b25411e8b3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionCommon_part1.g.bytes",
+      "sha256": "214b5d1ef9d9560d1d2d6fb0fd7aeccb2fa9723a01fe7c0e4506ae407758976c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionCommon_part1.g.bytes.meta",
+      "sha256": "49154a09921f13470d52e892fae4c50d4c727311de9d5537d47cd414edfedcd1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part1.g.bytes",
+      "sha256": "13a98253a3aa0d8271d8734aea27ef4e3e815b64e40052b301a9f13c4833a135"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part1.g.bytes.meta",
+      "sha256": "9191bf9747ae609f51960fdd4121a61b235364bf16ba840a9eac9d3559ea5bf7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part2.g.bytes",
+      "sha256": "47fe913d9b0f7927e60bdd0d86632fa64764b42f860a6ed3d049c9f6451925bc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldBuilding_part2.g.bytes.meta",
+      "sha256": "9c13ed21d54ac415483dd08b9250d1abf31d94c2a1c7e5534940b05b1e0b55b1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldCommon_part1.g.bytes",
+      "sha256": "ad83230ea82a6563d9c0732c3d809dc52094778259f9d3f8384f4c02f647a2c1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldCommon_part1.g.bytes.meta",
+      "sha256": "6541aa5399407783d4ffb016699b9e9766db226b54c456b2e3803b97ba27e481"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldInteraction_part1.g.bytes",
+      "sha256": "640c638afd9255d9b7fa4d425cc30275394715feb70278e0145f6cac8ed30dac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldInteraction_part1.g.bytes.meta",
+      "sha256": "6266bbe9bb45c3a6f1fd8b06adf95b90f35d8d013ff572bc1b399d0163fd02f7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldMonsterChest_part1.g.bytes",
+      "sha256": "27dc912fdb8ae516416762a7cc2662a3097870813dd73cb15acfe4101440ba83"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldMonsterChest_part1.g.bytes.meta",
+      "sha256": "db9eecc11e922ee4c30c5fefd5b20776f608edf1039f402216a0fe19640b5289"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldPuzzle_part1.g.bytes",
+      "sha256": "154f16acad8958c66eb90728486ae86c6eb1582d104108bf45b93cd34efc6dec"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldPuzzle_part1.g.bytes.meta",
+      "sha256": "9133c504dd0270a78ac72077b91ff6f7926939664c05a3ff70377ac1e2479013"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldSpecial_part2.g.bytes",
+      "sha256": "85688c134eeede3f6e52ba8dbb8f64962080f096f7ea7242d36552389d309604"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/ActionWorldSpecial_part2.g.bytes.meta",
+      "sha256": "a5cffb40c3a67c4f526290864779543d7879182f861f5f2d04c1e3f6bd32caa9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/catalog.json",
+      "sha256": "017f6306a5b3a541e51503861f25eb82fc01a0ba2edfee4c821a18d59ecd2ca6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/catalog.json.meta",
+      "sha256": "226df7009e66ed6f297347158c7e183f400e44db6622826bcc5452a4ab7fb5ea"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/formatter-map.json",
+      "sha256": "5e41edc6f6e8bf34bb5d79564c2d8931abda9a9e0d753f926d4414471185399c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/formatter-map.json.meta",
+      "sha256": "68f1ad8548905524643e6ca150e56ea78498312d4600b6ff83e0ab5dcb01d4d7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/map_14.g.bytes",
+      "sha256": "adc9eacc4569772b5df415d9c7909301fe0fccb9275ee1328a1f54cbec1cb08b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/map_14.g.bytes.meta",
+      "sha256": "9abb6114b65a5d9dd07486745f3ad6c0e9ba966e751231c79af6706b65388a25"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/mapinfowrap_14.g.bytes",
+      "sha256": "f42e9f4d9a6d8f130241bcfb155469fbfb52dec567e2cfc0cae316f3dfab780e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/mapinfowrap_14.g.bytes.meta",
+      "sha256": "8246411da0abc1ff89630787bc0d8e34ce5e6b3788ef12413da1ba616c34b0fe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/MapRoot_14.g.bytes",
+      "sha256": "56c2ae414097ac46bba1a6f21c8aa4f11d0b3ae495651b2b66f313899eeae4c6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/MapRoot_14.g.bytes.meta",
+      "sha256": "185c7ef0556b212cd0cad9440572a4f0607b83faa923149f674f368750cf26d6"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/MessagePack-LICENSE.txt",
+      "sha256": "52fb602bef9112c214fc822fe6075f6c10bfc67bf7ec8da62322c2b692883d13"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/MessagePack-LICENSE.txt.meta",
+      "sha256": "c64a1733369826a276d2f8eb545edb448e2fc48ad86f98d624b575c777226e1a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part1.g.bytes",
+      "sha256": "1a0bda024209a390eb6961100d04c94dd07d1ba0c117bffab2b6ccea2487cc90"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part1.g.bytes.meta",
+      "sha256": "bc1b1efec8820d991a4a1b5f9641a6311a42080d5732473c2924e78c8819524c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part3.g.bytes",
+      "sha256": "e02bd7eb37729a88d282d2d02fe4595c17cc81328196d3f96998bdd564a6e4d4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part3.g.bytes.meta",
+      "sha256": "b3663a8a6cf2892f3ce11ecf3a35c11b0469b7e9ad5e54b1b1e42640198f8c24"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part4.g.bytes",
+      "sha256": "6e894dc7b237dd32037902191eed30128f8bbc2fdfc7534a8f989cabfb53d0f5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part4.g.bytes.meta",
+      "sha256": "e6fa91489bdb9279db1dacc85ea1479f6361d209c89861b24fd2ee3daaec16c4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part5.g.bytes",
+      "sha256": "71c83fa9d9692ff5c436a341e675a5fe338be5b7dbc789bc732985c93736ebc2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part5.g.bytes.meta",
+      "sha256": "5e2b70008b71c60fc9f26cda2a3175fc87438f0851d7d1d58cae03033cddabf7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part6.g.bytes",
+      "sha256": "9b39c32b7ad8c35b29b3a8c0944b5424a72252b6ba806b6c1088528b80065d87"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part6.g.bytes.meta",
+      "sha256": "f3f4b38db50351ce50e518d2cbf154b3138f6656262270521d94c2ede6dc56ee"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part7.g.bytes",
+      "sha256": "9b340fb48e0df383c2568c602f6b56d4547eebe4a5cee6c9cb1985503aea3e6d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part7.g.bytes.meta",
+      "sha256": "e05076ef7c1bdd3fc53ef24f6548da71b5e696bc2300ccb2b92eb8d07232226b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part8.g.bytes",
+      "sha256": "1915b80d82348313673c5bc2a7cc8d75ec905952552f92d8929eea6797ed37b1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBonus_part8.g.bytes.meta",
+      "sha256": "63be0e686569f88185832ef67aef7f42fcf60f1594867f8df282f6d9ce3f1c3d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part1.g.bytes",
+      "sha256": "0aa5f5e357e6f238ce833e91b971b6ff3deb211e6de1844ab0e1740eab72477f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part1.g.bytes.meta",
+      "sha256": "17722b584a6f763db206ba2bd1b1343fa7b6332b05edbb2c4b38bf0dae38eef9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part2.g.bytes",
+      "sha256": "2bffd4564f4f4d42d20470374588d471d5f6877c3eb4e6cee035f122f68905b2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part2.g.bytes.meta",
+      "sha256": "64d800e6348987038cde86ef242348905ff477dbcacc4e4379997df1039e84e8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part4.g.bytes",
+      "sha256": "1931e6568282aed4e133c1509089cca6cf410bbc13ca7637d4fa166cd6639079"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part4.g.bytes.meta",
+      "sha256": "a650272805fb36e47e271317848e50c4a63ea719f196671c714fb1ffa9958fef"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part5.g.bytes",
+      "sha256": "6fb90a4bb9bbe313a31937172a51a27d57c698710482a5c82c0371727e125a75"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part5.g.bytes.meta",
+      "sha256": "a72da32eb29154d17e08d56072cd88fbb6f083d6712a8b9d506dbc7616bfde3e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part6.g.bytes",
+      "sha256": "2528bba63f6875977710279f20b816d1b1bf0cf6d0e91a08d866a6ca2fed0003"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldBuilding_part6.g.bytes.meta",
+      "sha256": "f15d6952db2c7846e156ed9a8ce86d63aafdd5d8c7e40bb0366680ae4a8f2937"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part1.g.bytes",
+      "sha256": "4cae4408addd31e335ea6cf2006d0548de844b08b5b280ac167067a59004fa5c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part1.g.bytes.meta",
+      "sha256": "d13f30ea4ff4112f73cd5f1f7a7d005d5e29bab9438f643f8404d42244283c85"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part2.g.bytes",
+      "sha256": "6f731e23623e6e538c6754dff8b7db737ddd2d7e4710a1f28ec9969b0c5a2135"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldDoor_part2.g.bytes.meta",
+      "sha256": "548bcf59f0bd957bf380b15268d6ced7cd7298150d05c72c57fea790277c2123"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part1.g.bytes",
+      "sha256": "7bfbd7fd2e4904641434b1bb9dd6d44abef35936300e1fd36a5d3ffa9296abbe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part1.g.bytes.meta",
+      "sha256": "171f632ed5a74259b66e141f1c40ecab02912699b2ca9863753124df9e0d6aaa"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part2.g.bytes",
+      "sha256": "557c863d0c2357fe331801ee3cd2ab55bc0aa88b30b960f077c14ae8924a35fe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part2.g.bytes.meta",
+      "sha256": "3cca25ad6710aa687e73e8ed1699cdcbf088b638b4077865322e4475b506414e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part3.g.bytes",
+      "sha256": "04027347152e9b4bda096b2040d0506ef85e448d68a4901de45fc8324aa20501"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part3.g.bytes.meta",
+      "sha256": "012b192256f8e9e66d8a38447c9d5636f2561dc5790cde782910a14f24b7b3e1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part4.g.bytes",
+      "sha256": "083923e922b1b63aa66df7430b0375506331f9150eedad4163c2ec29eaaf2b9e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part4.g.bytes.meta",
+      "sha256": "1d566614d7056205ee0e5a3738c80ee0318cca526cebe8f1a77ff7a0d84323cb"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part5.g.bytes",
+      "sha256": "4609379f7d25dc63c853c2b41ec97f6be53ef7b68b0c09db1d009de22c59efac"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldGamePlay_part5.g.bytes.meta",
+      "sha256": "3d2b96e063d0e021685455efff0e3e2d077b549d98a1de2b889c60310c75d35c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMapCharacter_part1.g.bytes",
+      "sha256": "8d2c0e2294aee8123f2711296e5e2b37003591b23e04dc1e1e621ba9a1afe477"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMapCharacter_part1.g.bytes.meta",
+      "sha256": "e6124bbfe35a6bc341298616c14e289bd51efe47086d5e756bce66e854642186"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part1.g.bytes",
+      "sha256": "a2346df6ee7a9f7efd0be29b48f73745be008132a4de569868b1006d4e25a26b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part1.g.bytes.meta",
+      "sha256": "cebd0e67601c6c37e259ac035c2e838420c836ecaacfb350d7c34bf0aea2472b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part2.g.bytes",
+      "sha256": "6af918553d78a19e8239c7011b5dbe9f7b02a6185ea526e20c7820e0d0d6aba9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldMonster_part2.g.bytes.meta",
+      "sha256": "bac3da06eb38c86157c4b42bae52f90dbca703c598233a5016264f32f69219d2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldNPC_part3.g.bytes",
+      "sha256": "0d8d71d464992419e0baea44678ad924d5cb80e9ab517e4fca68d61d8e390a00"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization/WorldNPC_part3.g.bytes.meta",
+      "sha256": "9878ceff1663c091f063ca39e2d5b4b2f86f59c43cb333b1cfb34bb38e112c9e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14/SharedSerialization.meta",
+      "sha256": "e4949e0ec4b3269d8bef60c2c2f29044188383e65af850e824e1cb80a1fbd0d1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources/Map14.meta",
+      "sha256": "a7f2d727232ad22fe3bc6d2a7b5d5ecd48ea5f3fe78e995bd3c53d4bd242d8ef"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization/Resources.meta",
+      "sha256": "5f10be804d7188186540e170ad9e53ead0b8c1ef2d159ff989c016269560850a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedSerialization.meta",
+      "sha256": "11f400751dc97e243032969be057af1f962edfe28db6c1266997343e7177b6a4"
+    }
+  ],
+  "limitations": [
+    "This binding restores shared data loading only; full serializers, map lifecycle, gameplay, UI, state/save and Player integration remain to be verified."
+  ]
+}

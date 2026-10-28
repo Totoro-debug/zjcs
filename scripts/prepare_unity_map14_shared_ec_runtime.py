@@ -116,7 +116,10 @@ def config_contract(metadata):
     source = '// Complete original marker interface from APK metadata.\nnamespace GConfig\n{\n    public interface IConfig { }\n}\n'
     write(CONFIG/'IConfig.cs',source.encode())
     asmdef = CONFIG/'Config.asmdef'
-    write(asmdef,encode(dict(name='Config',rootNamespace='GConfig',references=[],autoReferenced=False,noEngineReferences=True)))
+    # The later native Config port extends this original marker assembly.
+    # Preserve its committed engine/API binding when rebuilding the EC inputs.
+    if not (CONFIG/'ConfigManager.cs').exists():
+        write(asmdef,encode(dict(name='Config',rootNamespace='GConfig',references=[],autoReferenced=False,noEngineReferences=True)))
     for path in [CONFIG,asmdef,CONFIG/'IConfig.cs']: runtime_meta(path)
     return dict(type='GConfig.IConfig',type_index=row['index'],method_count=0,field_count=0,interface_count=0)
 
@@ -146,10 +149,18 @@ def build():
                     '-Destination',str(output),'-IdentitySeed',sha(metadata_path.read_bytes())+sha(originals[0].read_bytes())],check=True)
     contract = json.loads((output/'contracts.json').read_text(encoding='utf-8-sig'))
     bindings = []
+    extension_path = ROOT/'assets/reference/official-map/map14-shared-serialization-source-manifest.json'
+    extension = json.loads(extension_path.read_bytes()) if extension_path.exists() else None
     for module in contract['modules']:
         folder = CODE/'managed/decoded' if module['origin']=='original' else CACHE if module['origin']=='package' else output
         target = ASSETS / (module['name']+'.bytes')
-        write(target,(folder/module['file']).read_bytes())
+        if module['name'] == 'GFrameCore' and extension is not None:
+            expected = next(row['sha256'] for row in extension['outputs'] if row['path'] == target.relative_to(ROOT).as_posix())
+            if not target.exists() or sha(target.read_bytes()) != expected:
+                raise ValueError('Current shared serialization extension differs from its source record')
+            module['moduleId'] = next(row['ModuleId'] for row in extension['assemblies'] if row['Name'] == 'GFrameCore')
+        else:
+            write(target,(folder/module['file']).read_bytes())
         guid = meta(target)
         bindings.append(dict(Name=module['name'],guid=guid,Sha256=sha(target.read_bytes()),ModuleId=module['moduleId']))
     source = ROOT/'unity/Assets/Official/World/Map/14/Source/templates.json'
@@ -171,8 +182,12 @@ def build():
     write(prefab_asset,encode(dict(Entities=entities)))
     prefab_guid = meta(prefab_asset)
     asmdef = RUNTIME/'Zjcs.Offline.World.NativeMap14SharedEntities.asmdef'
-    write(asmdef,encode(dict(name='Zjcs.Offline.World.NativeMap14SharedEntities',rootNamespace='Zjcs.Offline.World.NativeMap14SharedEntities',references=['Config'],autoReferenced=False)))
-    for path in [RUNTIME,asmdef,*RUNTIME.glob('*.cs')]: runtime_meta(path)
+    if not asmdef.exists():
+        write(asmdef,encode(dict(name='Zjcs.Offline.World.NativeMap14SharedEntities',rootNamespace='Zjcs.Offline.World.NativeMap14SharedEntities',references=['Config'],autoReferenced=False)))
+    for path in [RUNTIME,asmdef,*RUNTIME.glob('*.cs')]:
+        # Later modules own their already imported GUIDs. Generate only absent
+        # metadata; the project checker validates the complete GUID registry.
+        if not Path(str(path)+'.meta').exists(): runtime_meta(path)
     script_guid = hashlib.md5(('zjcs-official:Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs').encode()).hexdigest()
     catalog = RESOURCES/'shared-assembly-catalog.asset'
     text = '%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\nMonoBehaviour:\n  m_ObjectHideFlags: 0\n  m_CorrespondingSourceObject: {fileID: 0}\n  m_PrefabInstance: {fileID: 0}\n  m_PrefabAsset: {fileID: 0}\n  m_GameObject: {fileID: 0}\n  m_Enabled: 1\n  m_EditorHideFlags: 0\n  m_Script: {fileID: 11500000, guid: '+script_guid+', type: 3}\n  m_Name: shared-assembly-catalog\n  m_EditorClassIdentifier: \n  Assemblies:\n'
@@ -190,10 +205,11 @@ def build():
         inputs=[record(p) for p in [manifest_path,metadata_path,source,source_receipt,formatter,*sources]],
         contract=dict(type='GFrameCore.IGSerializable',type_index=interface['index'],method='System.UInt16 GetOpCode()',method_index=definition[9]),
         packages=package_sources,logging_calls=contract['loggingCalls'],config_contract=config_abi,
+        serialization_extension=record(extension_path) if extension is not None else None,
         tools=[record(Path(__file__).resolve()),record(ROOT/'scripts/prepare_unity_shared_ec_contracts.ps1')],outputs=[record(p) for p in outputs],
         validation=record(ROOT/'unity/Assets/Game/Editor/Map14/SharedEntities/OfficialMap14SharedEcAcceptance.cs'),
         operation='Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.',
-        limitations=['Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The supplied GFrameCore contract covers only IGSerializable, not its full original assembly. Logging catch paths and all public APIs of Console are not validated.'])))
+        limitations=['Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The GFrameCore marker and separately recorded serialization extension do not supply its full original assembly. Logging catch paths and all public APIs of Console are not validated.'])))
     print('Local original shared EC payload: 7 assemblies, 4 source client prefabs / 44 components.')
 
 

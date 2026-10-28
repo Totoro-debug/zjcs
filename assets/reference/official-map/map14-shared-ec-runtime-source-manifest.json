@@ -100,32 +100,32 @@
   ],
   "logging_calls": [
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Info(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogInformation(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogInformation(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Info(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Debug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogDebug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogDebug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Debug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Warn(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogWarning(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogWarning(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Warn(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Trace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogTrace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogTrace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Trace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     },
     {
-      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Log(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
-      "target": "System.Void ZLogger.ZLoggerExtensions::ZLog(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLog(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Log(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
     }
   ],
   "config_contract": {
@@ -135,10 +135,14 @@
     "field_count": 0,
     "interface_count": 0
   },
+  "serialization_extension": {
+    "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
+    "sha256": "516b7ad9d29f0b1109156fac6a947aed0e324e513304925e4f8445389981ea2b"
+  },
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
-      "sha256": "9b6c5be271f5591c3b6ca97fec30b33c77762e604039fc033923066df99afd31"
+      "sha256": "a3c4db8bcd72a317e8e852c571f12266871980aae8f195e45127a09743dff044"
     },
     {
       "path": "scripts/prepare_unity_shared_ec_contracts.ps1",
@@ -163,6 +167,38 @@
       "sha256": "325104c03abafe560d869ef56225241d1f944e6915d0b68f4f64f620a3d9e21c"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedConfiguration.cs",
+      "sha256": "1a3d4f21012c532b8d94fa732abf7d4b9b9d22108e9b6904524a4e0ebab7e989"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedConfiguration.cs.meta",
+      "sha256": "78324814a70488d535d4f433e0910f05371a14ae273333cf38750c81cd6e4bd1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
+      "sha256": "42ce615ad6417ad7d8290ca17c9eb1d720d9123da87939e899c78e0e57efa808"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs.meta",
+      "sha256": "21b600bb08e9c1ff0232bd7201ec9473d8ae508dfdc65fffb09a0984d63ed9b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEntityUtilities.cs",
+      "sha256": "b2bb077ec673eac2f1c969f7266c24555da867b4ae51ba7c21dd6dbe72d0042f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEntityUtilities.cs.meta",
+      "sha256": "287aff01ff3c8c5b08fcc8324473367af65cc1d282797a3dabcc3d2a3bd00bca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
+      "sha256": "b8fdfb196824b769d01f6ed3a1a5a403736de69aa4f1c0954e69439b89074271"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs.meta",
+      "sha256": "fe288d15baeba3cd688e153eda8a6d29dbcb0c5f5b70deb8cf1aafc0aeae74bb"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedPrefabs.cs",
       "sha256": "674f11779589fc400714fb122ddc42ee88ef258f2762f8a803f9b5512802964d"
     },
@@ -172,7 +208,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef",
-      "sha256": "3cecb1a0f14aabc42255c7a5012187e119dde4209bceaaac079db8a7bb7cf997"
+      "sha256": "afa6ec73809de4c867f2b8efd9a4fa11f519b003e403d9e74e3f11a07829327d"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef.meta",
@@ -196,7 +232,7 @@
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes",
-      "sha256": "d5eb832771e1965991f7079c7bceea4a1797b8b679ad21464334f7faefb61f1c"
+      "sha256": "5c70676db44ccece73cc86da5c3a8ad4e3bc14184dc380997571d205d606c66c"
     },
     {
       "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes.meta",
@@ -259,12 +295,108 @@
       "sha256": "5a046b526bd24c31a59ce8f5908b42fe456d33522d7edd0eb64dee9ae725f8b9"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogCache.cs",
+      "sha256": "25c8f785aa170bedd2ebd5106af74331a637e97fc6c81b8b722ef274b243c8d9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogCache.cs.meta",
+      "sha256": "6c622e8bb3754579f096adacc4be860b025f058d9f5a8e64871f871e0170de75"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogChildParseJob.cs",
+      "sha256": "42fe5f68c75a3631a734757483745fa9c1f2997fb7cbd33b490932f282cae92a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogChildParseJob.cs.meta",
+      "sha256": "0325f4d981f39a6d0a7fdfd0a4d457593b825a141bf2de032c90dea7558c8801"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogConfigAttribute.cs",
+      "sha256": "a1af8e1dff59c485faeac9e6e0406d9b91497e71182d7e114a28c225c39b6e4b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogConfigAttribute.cs.meta",
+      "sha256": "85e8472b9534daddec578b36cdb558ee26f2dc8b22cc4fea41ee6c839014b1d2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogParser.cs",
+      "sha256": "f177900b9a72913418ba1b622f99d898c48fdd1056ab53ec7ce8bdb4a8e4a527"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/CatalogParser.cs.meta",
+      "sha256": "9c96905fdf65383b84cde36ba9b7014cd621a0233c57d20d1074a455484b2315"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/SharedConfig/Config.asmdef",
-      "sha256": "2db2e2bd206dd8e7637303426d40baca39bb53548d6fdb846104db5c86e0b8eb"
+      "sha256": "c8b5b230fb73da4cde855b29e9ffccf94d139f8a5244a7465c38610aa7ab70fa"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/SharedConfig/Config.asmdef.meta",
       "sha256": "529e37bcba154c80a8b07b0ca761c1a5150416e91e9dc25a224d93ae71f1c8ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigAttribute.cs",
+      "sha256": "4ffbbb923b378bdef24ca2703a257a05674e4356405e651f23af0de026a88d68"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigAttribute.cs.meta",
+      "sha256": "6adbd655f86eb680e1c978b70646e99f104b45fbad6d883a64d1e10b7420adf0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigBatchRequest.cs",
+      "sha256": "d6aad2c30b68d2cba5c9aeb128d51030af46a12e8f12ee2a935f9455cd81cc58"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigBatchRequest.cs.meta",
+      "sha256": "422a2f58e0befe3945f7807816a71b162a9e976e80079bccf12ef96f3253fa33"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.cs",
+      "sha256": "b588809247e1d8e2cca8b66c9c232115f06b54ea232cb80ebefa1c6c6310001f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.cs.meta",
+      "sha256": "bf99308c85e913830d323a75af5b5d16693711e7ca7b084c52f2a13eadbecb60"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Initialize.cs",
+      "sha256": "07edb2b32dd956a5fe869dd11f2deed592fed4db5d09a6fc0b00017d376e62b2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Initialize.cs.meta",
+      "sha256": "cf60e859d9cfc221b2b8593dd70e805ed5fad5719d8bbe8c5c0a148a27f1f158"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Jobs.cs",
+      "sha256": "523c38fed80ff1c33cebd9aa0877e05b1dfe6c3514e977725255c223b1d18423"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigManager.Jobs.cs.meta",
+      "sha256": "9cca4531e5375c850b4bd0ad7ee0db5f9155a5d24de2e9ea86b42828993d71a0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigParseJob.cs",
+      "sha256": "1898513c3c930247f9850126320f8e80d0d90869c432e860b6ae9f592fa67a5c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigParseJob.cs.meta",
+      "sha256": "aae9ad44a947656d495d67b76dac9829e36da63590bda673f940a72433f1bc6d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigRequest.cs",
+      "sha256": "724ac4123f09ac52b89ff65dc11442f1549becfa32a482ddd45e35e54f6d0d17"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ConfigRequest.cs.meta",
+      "sha256": "1151d29b39aec6b89adca8c2886ec1d979d3b01d428d1b719e0351ffe19a7503"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/FileLoader.cs",
+      "sha256": "79faf59fa4ece84408095476baac2cc0ec53d2901a6baaed1e62edbd8e8d1411"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/FileLoader.cs.meta",
+      "sha256": "ed396201e6b121c5748e0b61fbdd35ab385e9b6d36ce925100dce45b3f2c4b02"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IConfig.cs",
@@ -273,6 +405,62 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IConfig.cs.meta",
       "sha256": "1ed9d43261f9696512e935f0fff39ba39d9b9470189f81c9a42ccd8dfa30aae9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IFileLoader.cs",
+      "sha256": "e897d1adc355b58c3417b40b35463b721b556bf93ffeacf94bc418180a1d1b34"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IFileLoader.cs.meta",
+      "sha256": "4e5fc25de1873b35faf25377892c183ff9efa8f7a1c4247cd28bf0c2985b88a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonHelper.cs",
+      "sha256": "8d7c29d4916e75003b8db2ab0cd5adf9a3954e036881ff2b28a798c5c77026d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonHelper.cs.meta",
+      "sha256": "6a7f1d1edfe049fd4479210f7ba78bd1c003db4607d17078437c3f8f3c0fb81c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonParser.cs",
+      "sha256": "81dbd8f8dcf013d997211577c338d0d8a226e62250c3abd427d56c5f783075c5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/JsonParser.cs.meta",
+      "sha256": "5b3bdd3c6fe1cad812ac2305b089fdc9efccadba51a150c6e00207976fe5e0ca"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ParserBase.cs",
+      "sha256": "0bcb6a117e1ce8bddf59a6a4df00c4cd1ebff15a4fdf98bdaab1977d2cec8ac0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ParserBase.cs.meta",
+      "sha256": "88cfc47d6077c3045e3f10bb6dc46042d3ea55c2052bd55dcd07afee07bdc625"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/RawParser.cs",
+      "sha256": "3a9f2a3536d9f68a9f740bcf34846c7140991c02df831473b328b519978dda13"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/RawParser.cs.meta",
+      "sha256": "ff90b344ceb861d544bf88bcd172a698943999606842531e13d6cb73e56ec60f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ResourceManager.cs",
+      "sha256": "1ecb8253a996f61e4100b49779bae296b6170d3587e273cef2e89235f8a77e93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ResourceManager.cs.meta",
+      "sha256": "f79f65f2f40d5f653632fdec448cf4d8cef0562c9f4a7ec2db1b52bf373d1a93"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ThreadPool.cs",
+      "sha256": "a40f84d27ecbae5eefb48240ab67bab0061688b82dbe5482077318b3f1bb20bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/ThreadPool.cs.meta",
+      "sha256": "74687ea120ff25e46faf732c664c7ff7a11106a571c73ebae07919a752af78bb"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities.meta",
@@ -284,7 +472,7 @@
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
-      "sha256": "fe261f1e0bebb7794024fac4b4e8b5d2c7781f21972e36708647b8f3b74aea55"
+      "sha256": "b64951b1e55d9b90f627d25bf36dd96aa944e462560ca9e8bd7df0b81a763cfe"
     },
     {
       "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset.meta",
@@ -301,6 +489,6 @@
   },
   "operation": "Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.",
   "limitations": [
-    "Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The supplied GFrameCore contract covers only IGSerializable, not its full original assembly. Logging catch paths and all public APIs of Console are not validated."
+    "Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The GFrameCore marker and separately recorded serialization extension do not supply its full original assembly. Logging catch paths and all public APIs of Console are not validated."
   ]
 }

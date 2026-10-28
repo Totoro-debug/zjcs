@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国共享序列化与原地图数据 | [共享序列化来源清单](official-map/map14-shared-serialization-source-manifest.json)：固定 871 AOT 方法、未改写的 Console 格式器与 35 份原载荷、固定 MIT MessagePack 发布包／源码、转换依赖及输入输出 SHA256；适配与验证边界见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国共享配置与根实体查询 | [共享配置来源清单](official-map/map14-shared-config-source-manifest.json)：固定 871 Config AOT 方法／元数据、原 Console／Launch、Luban 表 bundle／对象及输入输出 SHA256；实现、单机绑定和验证边界见[龙之国](../../docs/maps/map-14.md) |
 | 当前职业外观表与解析 | [七张原表](profession-ui/appearance-tables-source-manifest.json)、[原应用解析与显式加载](profession-ui/appearance-resolver-source-manifest.json)；`871_156598`，包含输入对象、完整字节消费、输出与处理工具 SHA256；运行与接线边界见[职业功能页](../../docs/features/professions.md) |
 | 职业音频对象 | [原 APK 方法、三个实例与 Windows 绑定](profession-ui/sound-objects-source-manifest.json)；保留注册／位置／销毁次序，限定原无 Collider／默认监听器配置；PCM 输入与输出见[音效来源](profession-ui/windows-audio-source-manifest.json) |
