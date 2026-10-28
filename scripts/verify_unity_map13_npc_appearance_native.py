@@ -1,0 +1,146 @@
+"""Check the original native NPC appearance particle/renderer fields."""
+from collections import Counter
+import copy
+import json
+from pathlib import Path
+
+from official_apk import ROOT
+from official_native_yaml_verification import documents,element,unpack_array,float_bits
+from verify_unity_map13_story_playable_hierarchy import shape
+import re
+from collections import OrderedDict
+from official_apk import ROOT
+import UnityPy
+from prepare_unity_bundle_inputs import serialized_files
+from prepare_unity_map13_sources import sha, encode, source_path, write
+from prepare_unity_map13_story_playable_inputs import CACHE, RECEIPT as INPUT_RECEIPT
+from prepare_unity_map13_water_entity_export import native_io_path
+EXPORTED=CACHE/"export/ExportedProject/Assets"
+GUID=re.compile(r"(?m)^guid: ([a-f0-9]{32})$")
+NAMES={"playable_npc_appear","playable_npc_disappear","playable_FeiLe_appear","playable_FeiLe_disappear"}
+PROOF=ROOT/"assets/reference/official-map/map13-native-npc-appearance-fields-source-manifest.json"
+
+def record(path):return dict(path=source_path(path),sha256=sha(native_io_path(path).read_bytes()))
+
+class Originals:
+    def __init__(self):
+        receipt=json.loads(INPUT_RECEIPT.read_bytes())
+        if receipt["manifest"]!="871_156598" or receipt["mapClassId"]!=13:raise ValueError("Wrong Map13 native input selection")
+        self.files={r["serialized_file"].casefold():r for r in receipt["serialized_files"]}
+        self.inputs={r["name"]:r for r in receipt["inputs"]}
+        self.loaded=OrderedDict()
+    def reader(self,cab,path_id):
+        cab=cab.casefold()
+        if cab not in self.loaded:
+            entry=self.inputs[self.files[cab]["source"]];raw=(CACHE/"inputs"/entry["output"]).read_bytes()
+            if sha(raw)!=entry["converter_input_sha256"]:raise ValueError("Map13 native input changed")
+            env=UnityPy.load(raw)
+            self.loaded[cab]=next(f for b in env.files.values() for f in serialized_files(b) if f.name.casefold()==cab)
+            if len(self.loaded)>12:self.loaded.popitem(last=False)
+        self.loaded.move_to_end(cab)
+        return self.loaded[cab].objects[int(path_id)]
+
+
+def verify():
+    source=Originals();counts=Counter();used=set();parsed={};observed={}
+    components=json.loads((ROOT/"unity/Assets/Official/World/Map/13/Source/native-story-playable-components.json").read_bytes())
+    component_types={(r["cab"].casefold(),r["path_id"]):r["type"].rsplit(".",1)[-1] for r in components["components"]}
+    proof=json.loads((ROOT/"assets/reference/official-map/map13-story-playable-hierarchy-source-manifest.json").read_bytes())
+    bindings={r["source"]:(ROOT/r["path"],r["fileId"]) for r in proof["bindings"]}
+    index={GUID.search(native_io_path(p).read_text(encoding="utf8"))[1]:p.with_suffix("") for p in EXPORTED.rglob("*.meta")}
+    def docs(path):
+        used.add(path)
+        if path not in parsed:parsed[path]=documents(native_io_path(path).read_text(encoding="utf8"))
+        return parsed[path]
+    def compare(left,right,schema,owner,path,label):
+        if isinstance(left,dict) and set(left)=={"m_FileID","m_PathID"}:
+            counts["pointers"]+=1
+            if not left["m_PathID"]:
+                if right["fileID"]!=0:raise ValueError("Original null pointer changed: "+label)
+                return
+            cab=owner.split(":")[0]
+            if left["m_FileID"]:cab=source.files[cab]["externals"][left["m_FileID"]-1].replace("\\","/").split("/")[-1].casefold()
+            identity=cab+":"+str(left["m_PathID"])
+            target=index[right["guid"]] if right.get("guid") else path
+            if identity in bindings:
+                if (target,right["fileID"])!=bindings[identity]:raise ValueError("Original component pointer changed: "+label)
+            else:
+                obj=source.reader(cab,left["m_PathID"]);kind,fields=docs(target)[right["fileID"]]
+                if obj.type.name!=kind or obj.peek_name()!=fields.get("m_Name"):raise ValueError("Original native dependency changed: "+label)
+                converted_identity=(target,right["fileID"])
+                if identity in observed:
+                    if observed[identity]!=converted_identity:raise ValueError("Original dependency identity changed across references: "+label)
+                    return
+                observed[identity]=converted_identity
+                if kind=="MonoBehaviour":
+                    script=index[fields["m_Script"]["guid"]]
+                    if script.stem!=component_types[cab,str(left["m_PathID"])]:raise ValueError("Original Timeline MonoScript type changed: "+label)
+                    counts["timelineScriptBindings"]+=1
+                if kind in ("Mesh","MonoBehaviour"):
+                    tree=shape(obj.serialized_type.node)
+                    for key,value in obj.read_typetree(check_read=True).items():
+                        if key=="m_Script":continue
+                        compare(value,fields[key],tree["children"][key],identity,target,kind+"."+key)
+            return
+        if isinstance(left,dict):
+            for key,value in left.items():
+                if key not in right:raise ValueError("Original native field is missing: "+label+"."+key)
+                actual=right[key]
+                if isinstance(value,bytes) and key=="m_DataSize" and "_typelessdata" in right:
+                    if actual!=len(value):raise ValueError("Original native data size changed: "+label)
+                    actual=right["_typelessdata"]
+                compare(value,actual,schema["children"][key],owner,path,label+"."+key)
+        elif isinstance(left,tuple) and schema["type"]=="pair":
+            if len(left)!=2:raise ValueError("Original native map pair width changed")
+            if len(right)==1 and "first" not in right and "key" not in right:
+                name,value=next(iter(right.items()));right={"first":name,"second":value}
+            for i,key in enumerate(("first","second")):
+                target=("key","value")[i] if key not in right else key
+                if target not in right:raise ValueError("Inspect original pair schema: "+label+" "+repr(right))
+                compare(left[i],right[target],schema["children"][key],owner,path,label+"."+key)
+        elif isinstance(left,(list,tuple)):
+            if not isinstance(right,list):
+                packed_schema=schema
+                if element(schema)["type"]=="unsigned int":
+                    packed_schema=copy.deepcopy(schema);element(packed_schema)["type"]="UInt32"
+                right=unpack_array(right,packed_schema,len(left))
+            if len(left)!=len(right):raise ValueError("Original native array count changed: "+label)
+            for i,(a,b) in enumerate(zip(left,right)):compare(a,b,element(schema),owner,path,label+"["+str(i)+"]")
+        elif isinstance(left,float):
+            actual=float(getattr(right,"scalar",right))
+            if float_bits(left,schema)!=float_bits(actual,schema):raise ValueError("Original native float bits changed: "+label+" "+repr(left)+" -> "+repr(right))
+        elif isinstance(left,bytes):
+            if left.hex()!=("" if right is None else str(right)):raise ValueError("Original native packed bytes changed: "+label)
+        elif isinstance(left,str) and schema["type"] in ("string","PropertyName"):
+            if left!=("" if right is None else str(right)):raise ValueError("Original native string changed: "+label)
+        elif left!=("" if right is None and left=="" else right):raise ValueError("Original native scalar changed: "+label+" "+repr(left)+" -> "+repr(right))
+        counts["values"]+=1
+    roots={p for p in EXPORTED.rglob("*.prefab") if p.stem in NAMES}
+    if len(roots)!=4:raise ValueError("Original NPC appearance prefab inventory differs")
+    for binding in proof["bindings"]:
+        path=ROOT/binding["path"]
+        if path not in roots or binding["type"] not in ("ParticleSystem","ParticleSystemRenderer","TrailRenderer","Animator","PlayableDirector"):continue
+        obj=source.reader(*binding["source"].split(":"));fields=obj.read_typetree(check_read=True)
+        tree=shape(obj.serialized_type.node);kind,actual=docs(path)[binding["fileId"]]
+        if obj.type.name!=kind:raise ValueError("Original native component type changed")
+        lightmap_defaults=dict(m_LightmapIndex=65535,m_LightmapIndexDynamic=65535,
+            m_LightmapTilingOffset=dict(x=1.,y=1.,z=0.,w=0.),m_LightmapTilingOffsetDynamic=dict(x=1.,y=1.,z=0.,w=0.))
+        for key,value in fields.items():
+            if key not in actual and key in lightmap_defaults and kind in ("ParticleSystemRenderer","TrailRenderer"):
+                if value!=lightmap_defaults[key]:raise ValueError("Original runtime lightmap field requires explicit restoration")
+                counts["runtimeLightmapDefaults"]+=1
+                continue
+            compare(value,actual[key],tree["children"][key],binding["source"],path,kind+"."+key)
+        counts[kind]+=1
+    print("Original NPC appearance native fields:",dict(counts),flush=True)
+    result=dict(manifest="871_156598",mapClassId=13,counts=dict(counts),
+        inputs=[record(INPUT_RECEIPT),record(ROOT/"assets/reference/official-map/map13-story-playable-hierarchy-source-manifest.json")],
+        tools=[record(Path(__file__)),record(ROOT/"scripts/official_native_yaml_verification.py")],
+        outputs=[record(p) for p in sorted(used)],
+        references=[dict(source=identity,path=source_path(target),fileId=int(file_id)) for identity,(target,file_id) in sorted(observed.items())],
+        operation="Verify original Map13 native particles, renderers, animator, external mesh payloads and sound-reference assets against hash-verified converted input type trees. Preserve exact source float bits, arrays, maps, native bytes, resolved CAB/path IDs and component pointers. Missing editor lightmap descriptors must be exact original runtime defaults and are checked live.")
+    write(PROOF,encode(result))
+    return result
+
+
+if __name__=="__main__":verify()

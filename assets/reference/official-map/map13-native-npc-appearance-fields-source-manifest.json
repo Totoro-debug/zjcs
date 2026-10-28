@@ -1,0 +1,296 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "counts": {
+    "pointers": 902,
+    "values": 94949,
+    "runtimeLightmapDefaults": 176,
+    "ParticleSystemRenderer": 44,
+    "ParticleSystem": 37,
+    "Animator": 1
+  },
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map13-native-story-playable-input-source-manifest.json",
+      "sha256": "aeb3aad05e286361462ffc08c2c5642a355572793f029520e6b4013e8d13e90c"
+    },
+    {
+      "path": "assets/reference/official-map/map13-story-playable-hierarchy-source-manifest.json",
+      "sha256": "59d6d55896bf78e7f0448001757666347a971b10736de1cfedcbae41711b2091"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/verify_unity_map13_npc_appearance_native.py",
+      "sha256": "3e739f36927977813f3e6880e288a292ce79c17197c7c9484bfefc94d7dc312c"
+    },
+    {
+      "path": "scripts/official_native_yaml_verification.py",
+      "sha256": "d7027e10c3fc96f910f169eb0cb4b45942d0cf6ef532fa8ba96efa9dedfbba7b"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/DJS/Fx_Glow_DJS_001_3_NB_3.mat",
+      "sha256": "86c007115ab05f6272eda8c9a6f96fbc34bcace7c8cda1bbd7f35668b0aa175a"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_0609_Jy_2_NB_5_B.mat",
+      "sha256": "4ab4d4f1ecbd94b5233fb4790936b8dedba574bbed8896a6c3ab7ec1f279965c"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_0612_Jy.mat",
+      "sha256": "f8a58a7f8b86d2a6ffaa33eadce636ab59780ec845c99d5bd1cb49e613539c96"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_0003_5.mat",
+      "sha256": "57c7100120b890571d5bfdf91eb0eed23c006099962207ed6c39091bb13ac206"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_0003_6_NB_8.mat",
+      "sha256": "a00f1a3e56a48ea60a056fdb26fb973e5263dbe46adbc5052bd7f05d5c0e50f3"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_2_NB_8.mat",
+      "sha256": "a083d03487c39da970582ac2a903ee7af80c54ffe3098abd3dfa1206a82409f1"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_22.mat",
+      "sha256": "e72af644d101df45778ae4c57634f3d0ce053bd3842dbb4b140418db5fd804d7"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_104_NB_5.mat",
+      "sha256": "95d50fef49c0cc65a60cfcb7fe740aaeae5bc76039c1a23fba546b0aa699d67f"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_196_NB_5.mat",
+      "sha256": "668de82560e2698ef4a6af6e3fac3f94fb1aff5b0f062ed13e0a619d12efc09f"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_1.mat",
+      "sha256": "1215a76deace963e00d1cc13d481bf028ea27d69a0961bc5adcdf48b0dc29b20"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_3.mat",
+      "sha256": "6e8783f8ebc211ceea2c93f4c88682e2b745aeba45e526b4ee35162b6a3958d9"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_3_NB_3.mat",
+      "sha256": "de0c6c481368497144fb390295a109af3f41ea792181361e87b25523a0665e99"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangYun_60.mat",
+      "sha256": "b904eec14e9db8053b28bd43d3e9495fe7e9cf9deb5ef43676e3e47d95663ab7"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Huo_11_1_NB_5.mat",
+      "sha256": "f6e09f9f5a80418f6acdd99a8803cc87d5df1a89302bbee4c39b02e062f77148"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Huo_11_1_NB_5_B.mat",
+      "sha256": "214981a95a2723f10cdfa65553052f777119b60596c1968315a12405b8c6b02e"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Mask_0005_3_NB_8_B.mat",
+      "sha256": "5422728fcb4d85255b1650e70979402e70ed4fe4c7aab3ccb174a56c13f16184"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Mask_05_C 1_NB_5_B.mat",
+      "sha256": "d8cd2d11a9a4c6768c285b3839aa46307a6f7ac6f31649c7af47754d8d5a5e79"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_QiLang_126_NB_8_B.mat",
+      "sha256": "41feb470ecc8451348cedca0e47bfb77e9cb5f6b1495d590221c41b966228432"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0001 1_NB_8.mat",
+      "sha256": "c2d397d4921a244edf5e01b392f80353a075a5baec2450303719d8ae769fe61e"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0001.mat",
+      "sha256": "b3be106229a90e15ff31cbb886cdfc28c0bb2dd357137bd16b7118e77ff09613"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0006F 1.mat",
+      "sha256": "7884e507b7d6705f2d0fe7d5a6b3d0e30ea14579e97c3d76166513356812a340"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0006F 1_NB_8.mat",
+      "sha256": "734242078d96383ee7d0aeedc66775c3c6b09bb0ce81f68445cfa97a2ed020ae"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Tuowei_128_1 1_NB_3_B.mat",
+      "sha256": "37d3509d5eea919c16fa9768c489e84a11b256f6372168093a9c34dbcda84af5"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_81.mat",
+      "sha256": "b503930279b9614596e91ce7975a237a029bbc8762beb8b1d942d0d074212f7b"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Cylinder001.asset",
+      "sha256": "ebaa4e175f71fce73e3cafe6a73fca92ae35a0abf7c6aa9f11bf5ad2ee540405"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Helix01.asset",
+      "sha256": "ee6bb5360bb8efe09c469fd7f434a30c7a35db2fc3a6c9356fd0c15a5783cec9"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Plane01.asset",
+      "sha256": "4804a0d5faf99fc8c78fe419337fdef73f60df3e507e698c63db3e55a7f81bcf"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_FeiLe_appear.prefab",
+      "sha256": "5b43068a8781798daf0911c8f374cb52881d305ea49ce82e31fa7265cf041ee3"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_FeiLe_disappear.prefab",
+      "sha256": "d37546da53fa0372dc14b8fc45eae4defcf4c61315a80b130b2e68fc5265ed0a"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_appear.prefab",
+      "sha256": "a66a3bb7825703a3f30a8f8c9fbb3be3230f097107b9f8b20e4953410710501f"
+    },
+    {
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Prefabs/Playables/DisplayPackage/Story/NPCAnimator/playable_npc_disappear.prefab",
+      "sha256": "00d20e44254bc5e716d06000678c60bee6809cf8b3ac903d4a486893350e795c"
+    }
+  ],
+  "references": [
+    {
+      "source": "cab-0293ba5cfc2486cc7d244964b4ec650c:-8938008650529513604",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Huo_11_1_NB_5_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:-5140505925673581326",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Mask_05_C 1_NB_5_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:4491477914247246962",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Mask_0005_3_NB_8_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:6710307332802228265",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_1.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-0fa53c7e76d6bbcdabedb7e70b604eb7:8132547579015209459",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_QiLang_126_NB_8_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-12048b3d329293291cf2b415ff45aac0:7124562974119593989",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangYun_60.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-22cda6048adb9bdc803e67a0c2ead247:-7110664402999874182",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_3_NB_3.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-24a504c646ee325f10dc3bc25efb1278:-474862018916045495",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Yan_81.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-322ec57feed76ce92c543161e5c1e144:6161837345503615178",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_196_NB_5.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-3f0745fee3ae31287b8d84ffd10e09db:-1407053110077288220",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0001 1_NB_8.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-58b7ad59853fc466b1d336a3722c5356:-5555193328368527501",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_22.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-60cef8f6e9fe6fd38ae6e3b0901dad67:3350657721254414277",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_0003_5.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-7b43974939419bb5ed630f02fef610be:-6009889887122643782",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_0609_Jy_2_NB_5_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-7b43974939419bb5ed630f02fef610be:-7733725505097252596",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Tuowei_128_1 1_NB_3_B.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-85984ed569a105e95aef634cf07f1144:7740575344759720108",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Helix01.asset",
+      "fileId": 4300000
+    },
+    {
+      "source": "cab-9835090e096bcfe77c6189d449e884cc:-8631541273954145400",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Huo_11_1_NB_5.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-9835090e096bcfe77c6189d449e884cc:7471120486113644531",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0006F 1_NB_8.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-a353e279bc9eab47c799fe5d40fc12f7:4465371380288434782",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/DJS/Fx_Glow_DJS_001_3_NB_3.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-acc3b3b396ba7840fe113a303e91fc8a:-4749387427849380699",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Cylinder001.asset",
+      "fileId": 4300000
+    },
+    {
+      "source": "cab-aea353584f0497ade2148105c63849b5:3405415219815800369",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/models/Plane01.asset",
+      "fileId": 4300000
+    },
+    {
+      "source": "cab-b064ed53c8b161ce62a07bfb429a431a:2499401343910126137",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_59_3.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-b869d600a339006eb7cffcac92361aff:4493201609772812816",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0006F 1.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-c5c065c3d4ed073172d4db12f58130cd:2434221005107564198",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_12_2_NB_8.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-eb2c39b32e243df10d5584004e38b366:-5434389461741503630",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_Glow_0612_Jy.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-f7735d0f3fda78206f5ecc30aab190e7:2410436149487172191",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_SanGuang_0001.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-fa965bd0a1ec8590e89aae541241c52f:2590472129811656802",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangDian_0003_6_NB_8.mat",
+      "fileId": 2100000
+    },
+    {
+      "source": "cab-fbac07e15af177553a18c8d04654aa78:-7370081226024680773",
+      "path": "output/validation/map13-fullcompile-dc10812e160c4327bfae16f2facccf49/map13-story-playable-native/export/ExportedProject/Assets/Effect/Materials/Fx_GuangQuan_104_NB_5.mat",
+      "fileId": 2100000
+    }
+  ],
+  "operation": "Verify original Map13 native particles, renderers, animator, external mesh payloads and sound-reference assets against hash-verified converted input type trees. Preserve exact source float bits, arrays, maps, native bytes, resolved CAB/path IDs and component pointers. Missing editor lightmap descriptors must be exact original runtime defaults and are checked live."
+}

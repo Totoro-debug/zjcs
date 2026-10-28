@@ -4,7 +4,7 @@
   "dependencies": [
     {
       "path": "assets/reference/official-map/map13-story-playable-hierarchy-source-manifest.json",
-      "sha256": "cd6adb8f28625100aa0409858962bcf4d5a3423a5f29126447740c01acd1ee2c"
+      "sha256": "59d6d55896bf78e7f0448001757666347a971b10736de1cfedcbae41711b2091"
     },
     {
       "path": "unity/Assets/Official/World/Map/13/Source/story-playables.json",
@@ -254,6 +254,26 @@
   },
   "outputs": [
     {
+      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/OfficialMap13NpcStoryPlayableAcceptance.cs",
+      "sha256": "55b017f98a8f82ddec7e6d35a69a2f7437e4bbbfa0d5fbf31d971bdf595e7ca4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/OfficialMap13NpcStoryPlayableAcceptance.cs.meta",
+      "sha256": "1f3b67870030f460f076b7792a3c5c43b365e132953abccd3e8328917020b213"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/Zjcs.Editor.Map13.NpcStoryPlayables.asmdef",
+      "sha256": "2eb410e2e98fb44968816fcf074eec58c1cb3a2ec50d73256e47cef3f6c19073"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/Zjcs.Editor.Map13.NpcStoryPlayables.asmdef.meta",
+      "sha256": "adbc7d6583888e2e68aa34d177e1cb79f50272cad528ab057c5228e06775c8c3"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables.meta",
+      "sha256": "bd3b4c7b1ebe66d4c7725eaedfeb1bd60a1429588e14fabf8f740132371a0185"
+    },
+    {
       "path": "unity/Assets/Game/Resources/Map13/Native/native-npc-story-playables-catalog.asset",
       "sha256": "b30d60ce2c0a7bf581b98a255b41975171256f9549b32c6cf536bab1e3bc414b"
     },
@@ -368,26 +388,6 @@
     {
       "path": "unity/Assets/Official/World/Map/13/NativeNpcStoryPlayables.meta",
       "sha256": "bf5ea5416ea1afe3fc817775f3021b06adbdfde182f3248874b015457547b250"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables.meta",
-      "sha256": "bd3b4c7b1ebe66d4c7725eaedfeb1bd60a1429588e14fabf8f740132371a0185"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/OfficialMap13NpcStoryPlayableAcceptance.cs",
-      "sha256": "55b017f98a8f82ddec7e6d35a69a2f7437e4bbbfa0d5fbf31d971bdf595e7ca4"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/OfficialMap13NpcStoryPlayableAcceptance.cs.meta",
-      "sha256": "1f3b67870030f460f076b7792a3c5c43b365e132953abccd3e8328917020b213"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/Zjcs.Editor.Map13.NpcStoryPlayables.asmdef",
-      "sha256": "2eb410e2e98fb44968816fcf074eec58c1cb3a2ec50d73256e47cef3f6c19073"
-    },
-    {
-      "path": "unity/Assets/Game/Editor/Map13NpcStoryPlayables/Zjcs.Editor.Map13.NpcStoryPlayables.asmdef.meta",
-      "sha256": "adbc7d6583888e2e68aa34d177e1cb79f50272cad528ab057c5228e06775c8c3"
     }
   ],
   "operation": "Restore eight source-verified original Map13 NPC animation, visibility and source fading playable prefabs and their original sound-event reference. Preserve the original GameObjects, transforms, component order, sequence references, root/bone visibility, sound event, duration, restoration flags and local IDs. Remap only script/prefab GUIDs to migrated original classes; bind original asset GUIDs explicitly.",

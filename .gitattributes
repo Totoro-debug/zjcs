@@ -985,3 +985,15 @@ unity/Assets/Game/Editor/Map13NpcStoryPlayables/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/native-npc-story-playables-catalog.asset* text eol=lf
 unity/Assets/Game/Resources/Map13/Entities* text eol=lf
 unity/Assets/Game/Resources/Map13/Entities/** text eol=lf
+
+# Map13 shared original NPC appearance bindings and reproducible converter bytes.
+scripts/prepare_unity_map13_npc_appearance_bindings.py text eol=lf
+scripts/verify_unity_map13_npc_appearance_native.py text eol=lf
+scripts/prepare_unity_map13_story_playables.py text eol=lf
+scripts/prepare_unity_map13_story_playable_inputs.py text eol=lf
+scripts/prepare_unity_map13_story_playable_export.py text eol=lf
+scripts/prepare_unity_map13_water_entity_export.py text eol=lf
+unity/Assets/Game/Editor/Map13NpcAppearancePlayables.meta text eol=lf
+unity/Assets/Game/Editor/Map13NpcAppearancePlayables/** text eol=lf
+unity/Assets/Game/Resources/Map13/Native/native-npc-appearance-playables-catalog.asset* text eol=lf
+scripts/official_native_yaml_verification.py text eol=lf
