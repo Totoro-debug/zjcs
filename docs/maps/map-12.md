@@ -149,6 +149,8 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 `OfficialMainlineMapRuntime.Map12SteleEntities` 在原实体目录初始化前装配地图内原生显示工厂，七座碑实例使用已绑定原 prefab，网格更新回到原 `ECGridTransformView`，退出时先释放所属原演出池／精灵句柄。个人周期数同时读取地图完成组与角色档案的原子结算标记；档案已提交而地图未写入时立即按已完成显示，地图恢复后仍计一次。原 `WorldStageComponent.IsActive`／`MiniMapPrivateMarkManager.CreateEntityIconCheck`／`MiniMapEntityMark.EntityActive` 表明标记跟随公共状态及 CompleteState；所选模板只含公共状态0、AutoNextState=false、DestroyOnEnd=false，七点位在已核对剧情载荷中均无独立逻辑标签，个人一次完成不设置公共状态1。因此战后保留原碑体，原可用循环／结束演出读取个人周期，原小地图图标继续读取公共状态，不把个人领奖标记当作实体销毁或公共完成。该适配限于地图12的6650／6655原218类型；其他实体仍沿用各自状态消费。现有交互层继续处理入口，原生视图的专用弹窗操作上下文仍待接通。主地图及42项依赖源码独立编译、追加存档间隙／无关组／恢复不重复计数夹具的独立编译通过；全工程静态元数据检查通过（73650个 GUID）；夹具未执行，真实地图模拟输入、演出／遮挡、战后标记及冷启动画面继续待验，自动运行验收保持暂停。
 
+战斗碑原组队入口已核对为 `TeamPanelHelper → TeamPanel → TeamInvitePanel.InviteType.Player → NPC 页`，没有初始化 Robot 邀请面板的玩法次数配置。已从 APK 中的原队伍 bundle 提取本图所需10份预制体：队伍页／队员项／操作菜单、队员图标、目标列表三级项及邀请页／玩家项／标签项；共645个节点、2914个序列化对象、1105个脚本载荷、89种完整组件结构。原 GameObject／组件／子节点顺序、RectTransform／Transform 全字段、TMP、Spine 外观、布局和有符号64位引用完整保留；3104个实际引用逐一解析，171份传递 CAB 输入按选定来源核对（161份 APK、10份已下载云端资源）。复用同一 APK 的共享原元数据描述器并核对所选871程序集，未采用其他地图配置，也未生成替代 UI 或 Spine runtime。源为 `Source/team-ui-prefabs.json`，入口为 `scripts/prepare_unity_map12_team_sources.py`；Windows 原生 prefab／图像与脚本绑定、队伍／邀请服务、站位及实际输入／画面／存档仍待接通，不把完整字段解码视为可游玩窗口。自动运行验收保持暂停，新增载荷尚未进入完整素材快照。输入、逐对象哈希、组件结构证明及输出见[原队伍界面来源](../../assets/reference/official-map/map12-team-ui-source-manifest.json)。默认只读复现逐字节一致，全工程静态元数据检查通过（73911个 GUID）。
+
 ### 依据与代码定位
 
 - [当前程序集、配置、剧情与模板来源](../../assets/reference/official-map/map12-source-manifest.json)、[资源转换与哈希](../../assets/reference/official-map/map12-unity-source-manifest.json)。

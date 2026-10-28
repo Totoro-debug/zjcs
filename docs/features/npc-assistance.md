@@ -22,6 +22,8 @@
 
 山之国战斗碑的原 `TeamInviteNpc` 使用独立 Team 候选链：`GetNpcs(MapExploreBoss)` 排除探索首领，再按 `IsFightAssist` 和原遇见／助战条件筛选，当前配置共有95名候选，包括具有正式战斗数据的9名导师和1名商人。新增 `TeamInviteNpcClassIds`／`CanInviteTeamNpc`／`CreateTeamInviteUnit` 供该原组队链使用；上述既有伙伴 API 的85名范围保留。95名资格、10名额外角色实际属性／技能装配及伙伴结果一致性已通过独立规则检查；窗口／地图队伍、站位、模型、次数和实际战斗尚未接线，范围与原代码哈希见[山之国](../maps/map-12.md)。
 
+战斗碑组队调用 `TeamPanelHelper` 的普通 Player 邀请页，再切换 NPC 标签；该入口没有初始化 `TeamInviteRobotPanel` 的 `RobotInvitePlayType`，因此这里不能套用日常助战的 All=10 配置。原 Team 页及邀请依赖的10份 prefab／645节点／1105个脚本载荷已完整解码并核对引用，尚未转换／绑定为可用的 Windows 队伍窗口；本地队伍、站位与真实战斗仍待接通，见[山之国](../maps/map-12.md)。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表对应玩法流程已经接入或验收。

@@ -2,6 +2,8 @@
 
 [返回文档索引](../../docs/README.md)
 
+山之国战斗碑原 Team 界面依赖已按 APK 优先、选定871云端补充顺序核对：10份原 prefab、645节点、2914个序列化对象、1105个完整脚本载荷及3104个实际引用，171份 CAB 输入均有原字节哈希。复用已证明的同 APK 原生元数据描述，保留 TMP／外观／布局全字段、节点／组件顺序和64位指针；这是解码源，Windows 原生资源／脚本绑定与队伍运行接线尚未完成。输入、组件结构证明、原代码和输出见[原队伍界面来源](official-map/map12-team-ui-source-manifest.json)，入口为 `scripts/prepare_unity_map12_team_sources.py`；新增载荷未进入完整素材快照。默认只读复现逐字节一致，全工程静态元数据检查通过（73911个 GUID）。
+
 山之国七战斗碑的原 `BattleSteleWorldStageDialog`／StageUI／UIBase、目标身份及等级／战力规则，已按选定871程序集和配置恢复窗口本地服务绑定与三类队伍事件生命周期。六个源码程序集编译、七点位独立数据规则和静态元数据检查通过；尚未完成原生窗口导入、正式地图宿主／队伍接线和运行验收。原输入、程序集、依赖及适配哈希见[窗口数据与队伍事件](official-map/map12-stele-context-source-manifest.json)，复现入口为 `scripts/prepare_unity_map12_stele_context.py`、`scripts/test_map12_stele_context.ps1`。
 
 山之国原 Team NPC 候选：已按 `NpcInfoParser.GetNpcs(ignoreType)` 的排除语义、`NpcInfo.IsFightAssist` 与 `NpcUtils.IsNpcAssistLimit` 核对95名候选。显式 Team 目录／资格／战斗单位 API 共用原属性和技能装配；95名条件与遇见门槛、10名额外候选单位及伙伴入口一致性检查通过，Unity 引用编译通过。正式窗口、地图队伍、次数事务、模型及战斗未接线。六张现有打包配置逐项匹配当前构造证明；输入、原代码／程序集及适配输出见[战斗碑 NPC 来源](official-map/map12-stele-npcs-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。
