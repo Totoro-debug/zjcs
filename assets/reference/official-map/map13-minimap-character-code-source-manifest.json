@@ -1,0 +1,103 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapCharacterManager.cs",
+      "sha256": "acd3664d7da5850410b4c56bc36380bc20ddb723103e8884e71d057fe1f4acde"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter/MiniMapCharacterManager.cs",
+      "sha256": "9170114c4a4d5557ebbf6db74e6630717187798120b93d01a6f72e3ff6b792e5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter/MiniMapCharacterContext.cs",
+      "sha256": "f55bfb15105d024ea244918de0500858312ab50003befdca7e264a42e17388c0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapCharacter/Zjcs.Official.World.Map13MiniMapCharacter.asmdef",
+      "sha256": "3237dacd9ca8c33d620e93d517df463c11a8e48b442fb94d1ada8600b19ac290"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapMasks/MiniMapManagerBase.cs",
+      "sha256": "4573d28d1b291def90dcc4063bf0db36153d554b72c82506e7f3a40125cce956"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MapMeCharacterUIBase.cs",
+      "sha256": "3299a8e60901f31ec9a3a194df844637857cde6408e268f63eff0fcd56d8917a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapView/MiniMapViewInputs.cs",
+      "sha256": "9a8caf767b29d91d018110ac0c2c2cc758089333d268d91bbb2abf88738044c5"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_character.py",
+    "sha256": "c32466893f7c28c401f5c59430c210834599cf2ad48e118f9c96ecb60bfa7881",
+    "worktree_sha256": "c32466893f7c28c401f5c59430c210834599cf2ad48e118f9c96ecb60bfa7881",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy the complete original MiniMapCharacterManager including its URP render hook, shader tags, culling, sorting, command-buffer order, full-screen state, fixed render-target allocation/aspect, player local-position updates and camera recentering. Replace injected map and controller component reads with explicit read-only ports; repair only decompiled out/implicit cast syntax. Preserve original render-target lifetime and null/destroyed-object checks.",
+  "limitations": [
+    "Native original character marker/camera prefab bindings, actual local map/controller ports, Play Mode rendering/movement/full-screen checks, formal input/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "playmode": {
+      "original_objects": 19,
+      "sprites": 2,
+      "rendered_pixels": 647,
+      "position_cases": 16,
+      "animation_curves": 8,
+      "native_camera": true,
+      "native_animation": true,
+      "original_fixed_texture": true,
+      "original_fullscreen_gate": true,
+      "main_camera_gate": true,
+      "controller_replacement": true,
+      "destroyed_move_agent": true,
+      "reentry": true,
+      "subscriptions": true,
+      "original_texture_lifetime": true
+    },
+    "entry": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapCharacterAcceptance.cs",
+      "sha256": "5e645fbbbb8fa5ec435602ac3cd2c7a5de15d7f74dd6850f62789aa70d4be8fa"
+    },
+    "log_sha256": "5711b80811a72cfe3e72eb359885ce3f6e0830844fd4ee4e4beb1d866dd722da",
+    "rules_sha256": "21baa95ea6193c634bee84533b0241727cedbc724ce24f182902be1466a9aafb",
+    "screenshot": {
+      "sha256": "64b3e65e3c0045a7f08c702acfe75def319b79a7262efeb8fe80754c2f646615",
+      "width": 256,
+      "height": 256,
+      "viewed": true
+    },
+    "input_scope": "Native original prefab and exact URP render hook. Actual original MyGridTransform.GetPosition and controlled read-only world/movement presence ports. No formal map mouse/save or Player completion claim.",
+    "checks": {
+      "unity_import_compile": true,
+      "project_tools_validate": {
+        "exit_code": 0,
+        "log_sha256": "98b3c1c7f0c6c320d4aa6af1480bfff4c620a021f14a73d726c3cb9c0e94b02b"
+      },
+      "root_metadata": {
+        "passed": false,
+        "log_sha256": "deb1830b9d4cc2707c67b8250b2097c49594c4ce845f8c265acdc78a61ca0586",
+        "errors": [
+          "ProfessionUI ItemQuality atlas duplicate GUID",
+          "ProfessionUI ImgMask duplicate GUID"
+        ],
+        "scope": "Shared changes outside this Map13 module retained intact."
+      },
+      "isolated_metadata": {
+        "passed": true,
+        "guids": 35643,
+        "log_sha256": "e391f2ee58ca1795e2ed282e3aa5ef5b0bfac6fec68626d2e793e52b83314f7f"
+      }
+    }
+  }
+}
