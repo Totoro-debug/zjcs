@@ -4,7 +4,6 @@ using System.Collections.Generic;
 // Explicit consumed entity/map interfaces for the original shared component.
 // These declarations provide no movement, body, camp, ownership or map rules.
 public abstract class VisibilitySerializable { public abstract ushort GetOpCode(); }
-public abstract class VisibilityComponentInfo { }
 public interface IVisibilitySerializationCallbacks { void OnBeforeSerialize(); void OnAfterDeserialize(); }
 
 public abstract class VisibilityComponentSource<T> : VisibilitySerializable

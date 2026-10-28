@@ -45,6 +45,7 @@ def build():
         write(path, ('\n'.join(line.rstrip() for line in text.splitlines()) + '\n').encode())
         meta(path, 'MonoImporter'); outputs.extend([path, Path(str(path) + '.meta')])
 
+    emit('VisibilityComponentInfo', source('EcComponentInfo'))
     for name in ['MapGroundGridBoolData', 'MapActivedRegionGridInfo', 'GridVisibilityAgentComponentInfo']:
         emit(name, source(name))
     text = source('MapActivedRegionGridInfoEnumerator')
@@ -96,6 +97,17 @@ def build():
     selected = selected.replace('public List', 'public static List').replace('public IEnumerable', 'public static IEnumerable').replace('MyMath.', 'VisibilityRangeMath.')
     emit('VisibilityRangeQuery', 'using System.Collections.Generic;\nusing System.Linq;\npublic static class VisibilityRangeQuery\n{\n' + selected + '\n}\n')
 
+    for name in ['GridTransformComponentInfo', 'GridTransformComponentBodyPosInfo', 'GridTransformComponentBodyCrossBlockedInfo']:
+        emit(name, source(name))
+    transform = source('GridTransformComponent')
+    selected = '\n'.join(method(transform, signature) for signature in [
+        'public static Pos2d CalcLocalToWorldPos(', 'public static Pos2d CalcLocalToWorldDir('])
+    selected += '\n' + method(source('MyMath'), 'public static Vector2 Rotate(')
+    selected = selected.replace('MyMath.Rotate(', 'Rotate(')
+    selected, changes = logging_adapter(selected)
+    adaptations.append(dict(source='GridTransformComponent/MyMath',selected='Original body coordinate and rotation queries',logger_blocks=changes))
+    emit('VisibilityBodyGeometry', 'using System;\nusing UnityEngine;\npublic static class VisibilityBodyGeometry\n{\n'+selected+'\n}\n')
+
     boundaries = ROOT / 'scripts/fixtures/map13_grid_visibility_boundaries.cs'
     inputs.append(boundaries); emit('VisibilitySourceBoundaries', boundaries.read_text(encoding='utf-8-sig'))
     asm = DEST / (NS + '.asmdef')
@@ -117,12 +129,31 @@ def build():
     character = json.loads(templates.read_bytes())[str(nav['character'])]['WorldMapCharacterComponent']
     write(DATA, encode(dict(manifest=apk.version,mapClassId=13,size=nav['size'],origin=nav['origin'],viewRange=character['ViewRange'],regions=rows)))
     meta(DATA, 'TextScriptImporter'); outputs.extend([DATA,Path(str(DATA)+'.meta')])
+    entity_source = navigation.with_name('entities.json'); inputs.append(entity_source)
+    original_entities = json.loads(entity_source.read_bytes())
+    original_templates = json.loads(templates.read_bytes())
+    body_templates = []
+    for identity, value in original_templates.items():
+        if 'GridTransformComponent' not in value: continue
+        info = dict(value['GridTransformComponent'])
+        info['RealCenter'] = dict(x=info['RealCenter'][0], y=info['RealCenter'][1])
+        body_templates.append(dict(classId=int(identity),body=info))
+    body_entities = []
+    for identity, value in original_entities.items():
+        transform = value.get('LoGridTransformComponent')
+        if transform is None: continue
+        body_entities.append(dict(placementId=int(identity),classId=value['LoEntityComponent']['SpanwInfo']['ClassId'],
+            transform=transform,campMembers=value.get('LoEntityCampComponent',{}).get('CampMonsterEntities'),
+            campOwner=value.get('LoEntityCampMonsterComponent',{}).get('CampLoEntityId',0)))
+    body_data = DATA.with_name('grid-entities.json')
+    write(body_data, encode(dict(manifest=apk.version,mapClassId=13,templates=body_templates,entities=body_entities)))
+    meta(body_data,'TextScriptImporter'); outputs.extend([body_data,Path(str(body_data)+'.meta')])
     inputs.extend(formats.sources.values())
     write(PROOF, encode(dict(manifest=apk.version,mapClassId=13,
-        method='Copy complete original shared grid visibility component/handle, bit-array data and codec, event dispatch specializations, original region activation enumerator and original range queries. Adapt namespace, serialization attributes, diagnostic loggers and explicit consumed entity/map interfaces; no server reward or display/UI replacement.',
-        coverage='Original rule/component migration and explicit consumption contracts. Formal local entity/container/ground/camp inputs, map scene integration, save and Play Mode/Player verification remain pending.',
+        method='Copy complete original shared grid visibility component/handle, bit-array data and codec, event dispatch specializations, original region activation enumerator, GridTransform body information/cache classes and original range/rotation queries. Restore all source placement transforms and camp links. Adapt namespace, serialization attributes, diagnostic loggers and explicit consumed entity/map interfaces; no server reward or display/UI replacement.',
+        coverage='Original rule/component migration and explicit consumption contracts, with all 148 original grid body templates and 2690 placement transforms. Runtime integration and verification scope are recorded separately; this source receipt alone does not establish formal scene or Player completion.',
         official_config=dict(apk.provenance(obj),payload_sha256=sha(raw),object_sha256=sha(obj.get_raw_data()),payload_bytes=len(raw)),
-        regions=len(rows),activated_grid_entries=sum(len(r['RegionActivedGrids'] or []) for r in rows),extended_grid_entries=sum(len(r['RegionExtendVisiableGrids'] or []) for r in rows),
+        regions=len(rows),body_templates=len(body_templates),placements=len(body_entities),activated_grid_entries=sum(len(r['RegionActivedGrids'] or []) for r in rows),extended_grid_entries=sum(len(r['RegionExtendVisiableGrids'] or []) for r in rows),
         inputs=[record(p) for p in sorted(set(inputs))],outputs=[record(p) for p in sorted(set(outputs))],
         assemblies=[record(assembly)],adaptations=adaptations,tools=[record(Path(__file__).resolve())])))
     print('Restored original visibility code and',len(rows),'region activation grid lists',flush=True)

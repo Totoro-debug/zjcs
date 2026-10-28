@@ -1,8 +1,8 @@
 {
   "manifest": "871_156598",
   "mapClassId": 13,
-  "method": "Copy complete original shared grid visibility component/handle, bit-array data and codec, event dispatch specializations, original region activation enumerator and original range queries. Adapt namespace, serialization attributes, diagnostic loggers and explicit consumed entity/map interfaces; no server reward or display/UI replacement.",
-  "coverage": "Original rule/component migration and explicit consumption contracts. Formal local entity/container/ground/camp inputs, map scene integration, save and Play Mode/Player verification remain pending.",
+  "method": "Copy complete original shared grid visibility component/handle, bit-array data and codec, event dispatch specializations, original region activation enumerator, GridTransform body information/cache classes and original range/rotation queries. Restore all source placement transforms and camp links. Adapt namespace, serialization attributes, diagnostic loggers and explicit consumed entity/map interfaces; no server reward or display/UI replacement.",
+  "coverage": "Original rule/component migration and explicit consumption contracts, with all 148 original grid body templates and 2690 placement transforms. Runtime integration and verification scope are recorded separately; this source receipt alone does not establish formal scene or Player completion.",
   "official_config": {
     "bundle": "defaultpackage_assets_config_ec_mapregionactiveunlockposinfo.bundle",
     "bundle_hash": "1f87ce4660a85c84b398379001f7908b",
@@ -17,9 +17,15 @@
     "payload_bytes": 153261
   },
   "regions": 106,
+  "body_templates": 148,
+  "placements": 2690,
   "activated_grid_entries": 30947,
   "extended_grid_entries": 9580,
   "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcComponentInfo.cs",
+      "sha256": "e485732f1c6f6a3aa012d9370f1e81fc7568fda1a03fed393f04febcd5c6824f"
+    },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEntityEventDelegate.cs",
       "sha256": "abbf3c11aad778fb2120877c69e7644f65ccb8481ba2ed562a7ee1672b771038"
@@ -27,6 +33,22 @@
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityHandler.cs",
       "sha256": "fe35786dcc2c2f369b162cfe35b15375e77ae33383e1ac743ac824b545af45d7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponentBodyCrossBlockedInfo.cs",
+      "sha256": "220e5c92121c56cb4f1279ba2cd1d7905819fe4193ff590a808f5b85b61b13e1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponentBodyPosInfo.cs",
+      "sha256": "89d577d69ada54d9dd25c015cf831dc905227a04dd3d63ee5be2a0cbde57b0e8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponentInfo.cs",
+      "sha256": "7aa393429e451d3e1b9a579e768ed1242067925e9fb3e866746f08098b3b853d"
     },
     {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformPosUpdatedEventDelegate.cs",
@@ -86,7 +108,11 @@
     },
     {
       "path": "scripts/fixtures/map13_grid_visibility_boundaries.cs",
-      "sha256": "e34ea786d0a557d3ebe9fb3beaabe65e9f7d332b75b1f1847f6ecdb49f746711"
+      "sha256": "a72005293f85e4186966b0dd516afd42ed7d9b1565dff9f6afb5d186cb761410"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/entities.json",
+      "sha256": "1ec56a3113040b117e1d547490df59a88ff8f8634013a703381c4c49867b8dde"
     },
     {
       "path": "unity/Assets/Official/World/Map/13/Source/navigation.json",
@@ -105,6 +131,30 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/EcContainerStartEntityEventDelegate.cs.meta",
       "sha256": "b0f5881fe3ab6cf801ac6399bbb2633d822facbad2ae707ec59bde6172aa3f99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentBodyCrossBlockedInfo.cs",
+      "sha256": "13cc5d90ab1cac4cf8def2019774955509eb876e733db46ca763160d3a79c46d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentBodyCrossBlockedInfo.cs.meta",
+      "sha256": "d631ec714a76fa942ec46f63e3ecea4b39241252a3eb4f714ffdd7130b968130"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentBodyPosInfo.cs",
+      "sha256": "8d39d5d3de5bfa86db3e653fc52fff3017b2de3402d9019765cf555c8a96d064"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentBodyPosInfo.cs.meta",
+      "sha256": "3d2afc57517edb9de2518b647a3bcdb3d9a9d58fd88311f1837ce85f9498a4cf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentInfo.cs",
+      "sha256": "cde25dbf4a632b5e4db45b9b1afd183804168972d9123c823836969b7884dd5d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformComponentInfo.cs.meta",
+      "sha256": "a8109240f3f55ed7d5c9c46d57b59118bac50c51b2ceb500fcab625955c50732"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/GridTransformPosUpdatedEventDelegate.cs",
@@ -187,6 +237,22 @@
       "sha256": "16872bdc4d522f38e8ca63d2e28cc3f9b02f6c7a3fcb72c5a7f002707c581441"
     },
     {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityBodyGeometry.cs",
+      "sha256": "b7d4823da22668162a1c98da5a5f2b8ba6daad78b1ddbdecd67f99d136910d01"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityBodyGeometry.cs.meta",
+      "sha256": "c2d55e94069ef592f7ad7d8836195e9201fb1dfe8825c1c62dacaffadf167e99"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityComponentInfo.cs",
+      "sha256": "00e56b3d330108a054ca6376572b530441668ec22a99a925886fa4cfea8f8fe1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityComponentInfo.cs.meta",
+      "sha256": "8145a501e8ba2cb8e437ed772c3a976482ad2f40128b514d1fabb72b0994d488"
+    },
+    {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilityRangeMath.cs",
       "sha256": "fea9e66912201fb7421546e3482a03e718aeafea42eb63a52e9d8357e3ddaa56"
     },
@@ -204,7 +270,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilitySourceBoundaries.cs",
-      "sha256": "3585012386fa0f732b6ab0dddb445eb622164e4b55e970a7edb93e79ee2d6554"
+      "sha256": "91207d46b3a4a429f0adf43d0dc72dce2b824d50f9c86cb0ed05fc2ca58ed923"
     },
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility/VisibilitySourceBoundaries.cs.meta",
@@ -221,6 +287,14 @@
     {
       "path": "unity/Assets/Game/Runtime/Official/World/Map13GridVisibility.meta",
       "sha256": "f90969919bb48b4c01a116406f37f93668140af82ed3847accc60d7e6732aea4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json",
+      "sha256": "528f292710130158812d93843d8220b7ba8481f8da6b14436fa5045ee473be02"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/grid-entities.json.meta",
+      "sha256": "2d83ed1e00a0024a11d8a2b3dc528dc6f72e07206b631066bc93c5b6e459af8f"
     },
     {
       "path": "unity/Assets/Official/World/Map/13/Resources/Map13/grid-visibility.json",
@@ -262,12 +336,65 @@
       "source": "MyMath",
       "selected": "Original range cache constructor, GetInDistancePosList, GetLoopOutPosList, GetLoopOutList",
       "logger_blocks": 2
+    },
+    {
+      "source": "GridTransformComponent/MyMath",
+      "selected": "Original body coordinate and rotation queries",
+      "logger_blocks": 1
     }
   ],
   "tools": [
     {
       "path": "scripts/prepare_unity_map13_grid_visibility.py",
-      "sha256": "1d7ff05cd61fd7923de60a0663bb46149f37191f97e4f968afcfb18fd03ebcaf"
+      "sha256": "615698b12d2e442ace8e7e2e63de0e32e8bbd6cebea759d9becc54a6391da296"
     }
-  ]
+  ],
+  "local_boundary": {
+    "method": "Supply original grid component with the complete 148 body templates, 2690 placement transforms and original camp links. Clone each mutable body-range cache per placement; dispatch original player move/start events and retain the original compression codec.",
+    "inputs": [
+      {
+        "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility.meta",
+        "sha256": "888939e60455805a75b1f3a955f77e24caa18dd7567f83b93899042852de6678"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/OfflineMap13GridVisibility.cs",
+        "sha256": "023a003609012913ae2bb500b7e6f5d631163905e1a06bb8bb3f3f4aa7988ede"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/OfflineMap13GridVisibility.cs.meta",
+        "sha256": "52bb4bcc5badc20b2f9d3541f72cc1b02e278b3778d11c9527b070d2026c6222"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/Zjcs.Offline.World.NativeMap13GridVisibility.asmdef",
+        "sha256": "5d392dd37f7cef22512de3fae8da9b9dfc0818ebff7be140ab6c146acb8dcb9e"
+      },
+      {
+        "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13GridVisibility/Zjcs.Offline.World.NativeMap13GridVisibility.asmdef.meta",
+        "sha256": "974fcc6bd91be239bdf09db80a00e50e86b40de22a919b68b646e0e5695631ed"
+      }
+    ],
+    "verification_entry": {
+      "path": "unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13LocalVisibilityAcceptance.cs",
+      "sha256": "31303a083cc8d53ed0f68674453135bd39cb031df167d79edcfd814b4334ca9b"
+    }
+  },
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "backend": "Direct3D11",
+    "internal_display_hardware": "BOE0CD1",
+    "entry": "Zjcs.Editor.Map13GridVisibility.OfficialMap13LocalVisibilityAcceptance.Run",
+    "log_sha256": "6c7eb64512f785d29ab28c90eb7baed770fc7b82935e3b6d6f703170a40ee6b4",
+    "body_templates": 148,
+    "placements": 2690,
+    "initial_cells": 72,
+    "moved_cells": 82,
+    "activated_regions": 106,
+    "roundtrip_cells": 57600,
+    "exact_compressed_bytes": true,
+    "invalid_dimension_rejected": true,
+    "scope": "Rule/local component boundary only. Formal map rendering, simulated pointer and Player are not established by this entry.",
+    "project_tools_validate": true,
+    "project_tools_log_sha256": "1ffc432d94fd8a0b0a19005ad216af4fe457368a4fd3a398f74694e734e773e0",
+    "root_static_metadata_guids": 74231
+  }
 }

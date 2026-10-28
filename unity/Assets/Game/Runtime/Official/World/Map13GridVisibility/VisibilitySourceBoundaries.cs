@@ -10,7 +10,6 @@ using System.Collections.Generic;
 namespace Zjcs.Official.World.Map13GridVisibility
 {
 public abstract class VisibilitySerializable { public abstract ushort GetOpCode(); }
-public abstract class VisibilityComponentInfo { }
 public interface IVisibilitySerializationCallbacks { void OnBeforeSerialize(); void OnAfterDeserialize(); }
 
 public abstract class VisibilityComponentSource<T> : VisibilitySerializable
