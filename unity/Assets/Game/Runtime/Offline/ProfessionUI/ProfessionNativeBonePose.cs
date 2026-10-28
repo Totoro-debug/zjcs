@@ -132,10 +132,44 @@ namespace Zjcs.Offline.ProfessionUI
                 basis = Axes(rotation[i], b.shearX, b.shearY, scale[i]);
             else if (b.inherit == 0)
                 basis = parent * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
+            else if (b.inherit == 2)
+            {
+                // The current female core sleeve chains have orthogonal parent
+                // axes of equal length. Removing rotation and reflection has an
+                // unambiguous result here: retain only their common magnitude.
+                // General nonuniform/sheared parents require a separate binding.
+                var x = new Vector2(parent.m00, parent.m10);
+                var y = new Vector2(parent.m01, parent.m11);
+                float tolerance = .00002f * Mathf.Max(x.sqrMagnitude, y.sqrMagnitude);
+                if (Mathf.Abs(x.sqrMagnitude - y.sqrMagnitude) > tolerance || Mathf.Abs(Vector2.Dot(x, y)) > tolerance)
+                    throw new NotSupportedException("Nonuniform original no-rotation inheritance is unbound: " + b.name);
+                float magnitude = x.magnitude;
+                basis = Matrix4x4.Scale(new Vector3(magnitude, magnitude, 1)) * Axes(rotation[i], b.shearX, b.shearY, scale[i]);
+            }
+            else if (b.inherit == 3)
+                basis = WithoutParentScale(parent, rotation[i], new Vector2(b.shearX, b.shearY), scale[i]);
             else
-                throw new NotSupportedException("The original selective rotation/scale/reflection inheritance needs its own verified native binding.");
+                throw new NotSupportedException("Original selective inheritance is unbound: " + b.name + "/" + b.inherit);
             basis.m03 = origin.x; basis.m13 = origin.y; world[i] = basis; ready[i] = true;
             return basis;
+        }
+
+
+        private static Matrix4x4 WithoutParentScale(Matrix4x4 parent, float rotation, Vector2 shear, Vector2 scale)
+        {
+            // Reuse this repository's independent planar construction: normalize
+            // the transformed local direction, retain the parent's determinant
+            // sign, then apply local shear/scale in that orthonormal frame.
+            Vector2 Direction(float degrees) => new Vector2(Mathf.Cos(degrees * Mathf.Deg2Rad), Mathf.Sin(degrees * Mathf.Deg2Rad));
+            Vector2 u = parent.MultiplyVector(Direction(rotation));
+            float length = u.magnitude; u = length > 1e-7f ? u / length : Vector2.zero;
+            float reflection = parent.m00 * parent.m11 - parent.m01 * parent.m10 < 0 ? -1 : 1;
+            Vector2 v = new Vector2(-u.y, u.x) * reflection;
+            Vector2 a = Direction(shear.x) * scale.x, b = Direction(90 + shear.y) * scale.y;
+            Vector2 x = u * a.x + v * a.y, y = u * b.x + v * b.y;
+            Matrix4x4 matrix = Matrix4x4.identity;
+            matrix.m00 = x.x; matrix.m10 = x.y; matrix.m01 = y.x; matrix.m11 = y.y;
+            return matrix;
         }
 
 

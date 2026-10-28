@@ -169,6 +169,44 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeBonePose CreateBonePose() => new ProfessionNativeBonePose(bones);
         public ProfessionNativeSlotPose CreateSlotPose(ProfessionNativeBonePose pose) => new ProfessionNativeSlotPose(slots, pose);
         public IReadOnlyDictionary<string, object> GetAnimation(string name) => Object(animations[name]);
+        public ProfessionNativeBonePose.Track[] CreateBoneTracks(string animationName)
+        {
+            var result = new List<ProfessionNativeBonePose.Track>();
+            foreach (var bone in OptionalObject(Object(animations[animationName]), "bones"))
+                foreach (var channel in Object(bone.Value))
+                {
+                    string[] axes; int firstChannel;
+                    switch (channel.Key)
+                    {
+                        case "rotate": axes = new[] { "value" }; firstChannel = 0; break;
+                        case "translate": axes = new[] { "x", "y" }; firstChannel = 1; break;
+                        case "scale": axes = new[] { "x", "y" }; firstChannel = 3; break;
+                        default: throw new NotSupportedException("Restore additional original bone timeline: " + channel.Key);
+                    }
+                    var original = Array(channel.Value);
+                    for (int axis = 0; axis < axes.Length; axis++)
+                    {
+                        var keys = new ProfessionNativeCurve.Key[original.Count];
+                        for (int i = 0; i < keys.Length; i++)
+                        {
+                            var row = Object(original[i]);
+                            row.TryGetValue("curve", out object interpolation);
+                            int mode = interpolation == null ? 0 : interpolation is List<object> ? 2 : (string)interpolation == "stepped" ? 1 : -1;
+                            if (mode < 0) throw new InvalidDataException("Unknown original bone curve interpolation.");
+                            var controls = Vector4.zero;
+                            if (mode == 2)
+                            {
+                                var handles = Array(interpolation);
+                                if (handles.Count != axes.Length * 4) throw new InvalidDataException("Original bone curve handle count differs.");
+                                for (int j = 0; j < 4; j++) controls[j] = Convert.ToSingle(handles[axis * 4 + j], CultureInfo.InvariantCulture);
+                            }
+                            keys[i] = new ProfessionNativeCurve.Key { time = Number(row, "time"), value = Number(row, axes[axis], channel.Key == "scale" ? 1 : 0), mode = mode, controls = controls };
+                        }
+                        result.Add(new ProfessionNativeBonePose.Track(boneIndices[bone.Key], firstChannel + axis, new ProfessionNativeCurve(keys)));
+                    }
+                }
+            return result.ToArray();
+        }
         public int FindBone(string name) => boneIndices.TryGetValue(name, out int value) ? value : -1;
         public int FindSlot(string name) => slotIndices.TryGetValue(name, out int value) ? value : -1;
 

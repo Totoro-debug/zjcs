@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/male/skeleton.json",
+      "sha256": "21bc0198abc44620e65f308c6acb9a78f3ed9d6feb1d2558acdc72ba76dd3e15"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/profession-ui/skeletons/female/skeleton.json",
+      "sha256": "eb1c26d31879c9832bd3d88a75cfe057d8712eddfe08e5dd85fc9208d8a666ed"
+    }
+  ],
+  "baseline_pose_adapter": {
+    "path": "assets/reference/profession-ui/bone-pose-source-manifest.json",
+    "sha256": "6a685085b9bcabcb8e3f482c6d8b23d8431a19a90918f4caf6e8b1b90612a684"
+  },
+  "original_local_fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/bone-pose-validation.json",
+    "sha256": "efa174c5f6be38aae1058ff9267a11c7726331cf33560722fac4de0a29697c0e"
+  },
+  "fixture": {
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/world-inheritance-validation.json",
+    "sha256": "a871488a5156977e3483d1a26b47028eb44158f88121805de83d3cfdcaba712d"
+  },
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeBonePose.cs",
+    "sha256": "6381bb93e2ef6823e7e8eb3130a6e7d56cc8fb79fd554aeaac41299590999575"
+  },
+  "reader": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
+    "sha256": "2120c228534871674551b75d478fd7eea2a18df6fa6f1162070b5471a9ceabf5"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionWorldInheritanceValidation.cs",
+    "sha256": "5806c66699d026c58fb78e1a3e711c5871e05a4aff51e3a590e0c0bf2cbbd48b"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionWorldInheritanceValidation.cs.meta",
+    "sha256": "bc1a0cce81f853e7fe0c6713533f1ef78ada2fb0a15c192b8f18faf3242fff05"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_world_inheritance.py",
+    "sha256": "5c1e2a12ade0486d8a16a04c3940553e2df77ab967ebc4e761e86ecbc1c9f6a8"
+  },
+  "independent_reuse": {
+    "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap13Skeletons/NativeMap13SkeletonView.cs",
+    "sha256": "710b015420890c4dbd27790a4b9aaa4397a1d66ccd6e8a4a35b4c1962e659034"
+  },
+  "references": [
+    "https://esotericsoftware.com/spine-bones#Transform-inheritance"
+  ],
+  "scope": "Native world hierarchy before constraints: normal, translation-only, no-scale retaining parent direction/reflection, and no-rotation/reflection for conformal (equal-length orthogonal) parent axes. Bind actual packaged idle bone timelines through the existing independent Unity curves. Nonuniform/sheared no-rotation parents and mode 4 remain explicit gaps.",
+  "reference_method": "Independent double-precision complex-plane transforms; source local poses from the verified independent Bezier inversion fixture. No SDK pose, runtime implementation or baked animation is used.",
+  "counts": {
+    "source_cases": 6,
+    "frames": 144,
+    "synthetic": 40
+  },
+  "limitations": [
+    "Transform/physics constraints, mixed animation and full character rendering are not evaluated here.",
+    "Source world references are pre-constraint mathematical references, not original game or SDK frame captures."
+  ],
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D actual Play Mode: 509584 scalar comparisons, maximum absolute difference 0.000381469727 within 0.0004 + 0.000007 * abs(expected). All 48 source local poses from actual packaged tracks, 144 pre-constraint world frames and 40 independent synthetic cases pass. Skin activation covers both source skeletons, original warrior/mage clothing, female core sleeves and map leaves. Nonuniform/sheared no-rotation parents and mode 4 explicitly reject. Unity import/compile and ProjectTools.Validate pass; frozen project 73733 GUIDs and current project 74239 GUIDs pass static metadata checks. No constraints, mixed animation, actor raster, page input, save or Windows Player validation."
+}
