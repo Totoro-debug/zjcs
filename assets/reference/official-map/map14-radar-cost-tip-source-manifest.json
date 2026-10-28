@@ -1,0 +1,138 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapControllerEntityRadarTipStageCost.cs",
+      "sha256": "c30820d0bc7f0abf8a6055ea73e8ca49bc6620f0c430a172b99f03d81c3a6358"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/StageUtils.cs",
+      "sha256": "3d9707021c42770e70c7f0ea904e3b1e9aec6d8d6607dcdcd278acf6ca41c24e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldStageComponent.cs",
+      "sha256": "2f17ef2e71858d2ad8e5333951a83fe6e59c8188cdd4793b1d10d4a67b890266"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageBehaviourComponent.cs",
+      "sha256": "f77faf88caf996292a05a411de34c06840306755184edb683234ed4aa71c6bb8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntitySourceComponent.cs",
+      "sha256": "da6ea11504efe0f6ca6ab7ae861846212c23277d8d099ba86ef83556bbbaffa3"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadar/MapControllerEntityRadarTipBase.cs",
+      "sha256": "4771367103884805d3802f582cb22bdfff8f86e46819c6e155b3baede95984cd"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityWorldInput/WorldEntityInputBindings.cs",
+      "sha256": "9d017f519cc584785632cb10dbc085136f92a6812f11bda6e83dcee25fb93cee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeLabelUI/MultiLanguageText.cs",
+      "sha256": "cee26fc59b7993ff48217c32c76c4f9de8072599bdd0e2a9f3121fe5a138234c"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_radar_cost_tip.py",
+      "sha256": "208ab69cf6d5d4672983835e0de136678ec78f905ed2f05b8bda3db4390380df"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/MapControllerEntityRadarTipStageCost.cs",
+      "sha256": "7f0b1821ee4914bfabed581292a6792fdf49798c489a32fe67dca17c398227f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/MapControllerEntityRadarTipStageCost.cs.meta",
+      "sha256": "57c665f566fc07f2fb557cca207cb0282d7ca4f939ab4e93182e9a96922efb7d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/RadarCostBindings.cs",
+      "sha256": "ada2367f5b0c644605d78b422b790afe6faf264f6f8ab867828e3b57a690d5ab"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/RadarCostBindings.cs.meta",
+      "sha256": "82ca555da029110008ac73adb23085e69161465e2b359c57c9b58264379159a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/Zjcs.Official.EntityRadarCost.asmdef",
+      "sha256": "e0be05282e390f161b18fb297268fce295408c820543466191b6801a48e59e53"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost/Zjcs.Official.EntityRadarCost.asmdef.meta",
+      "sha256": "a4f17b82e1d1a4941cf84c6bebb0ef73a29f6599374563d122ff9ca42bdfbc97"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityRadarCost.meta",
+      "sha256": "1b277d68f5ef574e04e7cc60f3f979afe75914280a6b4b1635c4f233ea730be6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost/NativeMap14RadarStageCostQueries.cs",
+      "sha256": "132bd9e77d5c26d1d4b15c51d638e27820d97f19db306b5905736cff3e654d4d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost/NativeMap14RadarStageCostQueries.cs.meta",
+      "sha256": "2159b2b5660808771a78c3598cff938a993d424f8f7d9b50c5a26ade13438638"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost/Zjcs.Offline.World.NativeMap14RadarCost.asmdef",
+      "sha256": "c6865f6bac0860e941aaf7f7a922f439d5e6753e296c0d209f6087a9f4eededa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost/Zjcs.Offline.World.NativeMap14RadarCost.asmdef.meta",
+      "sha256": "5095a4f04f7acea7cb840bd41d8db558601b1926bd4c29abe8d66f272e96d248"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14RadarCost.meta",
+      "sha256": "6256aa2959382fdeda3bf0f3406af5cd21158fc3189db5402f90fef0dd1f7892"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCost/OfficialMap14RadarCostAcceptance.cs",
+      "sha256": "ef6b955ed70dba0597d24f8222d73cde1afec3caeaad67e0a80539e013740654"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCost/OfficialMap14RadarCostAcceptance.cs.meta",
+      "sha256": "d119be97a85eee431077f9bfc403d5cf5559c22db155720c84a300de327791b9"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCost/Zjcs.Editor.Map14.RadarCost.asmdef",
+      "sha256": "227727bb0d7314141a69f47b3260a9feeeea1e8d81fbc66b31f00adb27cb88bc"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCost/Zjcs.Editor.Map14.RadarCost.asmdef.meta",
+      "sha256": "6f734fd2e85b0536c86ed2d452c099a674a753a2cc0bfbc31a8e7f7e514f04d1"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/RadarCost.meta",
+      "sha256": "94ec453e6124d6c305926bc0d56139fa85f74d99b6c3bce76dc0c466187a1d87"
+    }
+  ],
+  "operation": "Copy full original cost radar tip; inject original item icon/local sprite/text services. Adapt both consumed client StageUtils.GetStageCost overloads to reflection over unchanged Console stage/source/behaviour/formula objects, preserving null/type/empty branches, original mutable cost dictionary and status query order. No cost deduction or server rule is added.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14RadarCostAcceptance.Run",
+    "graphicalPlayMode": true
+  },
+  "limitations": [
+    "Original StageCostTip prefab payload and formal map/HUD/player/input/save/Windows Player still require binding and verification."
+  ]
+}

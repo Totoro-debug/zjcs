@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国原雷达费用提示 | [费用提示来源清单](official-map/map14-radar-cost-tip-source-manifest.json)：原提示完整实现、原客户端费用查询及 Console 行为／来源过滤调用与输入输出哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原雷达组合提示 | [组合提示来源清单](official-map/map14-radar-combined-tip-source-manifest.json)：完整原组件、原异步状态机恢复及 UniTask 外部依赖哈希；实际验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原实体雷达核心 | [雷达核心来源清单](official-map/map14-entity-radar-source-manifest.json)：原扫描／提示生命周期、网格与移除事件、APK 实例命名及输入输出哈希；验证范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原实体奖励截留 | [奖励截留来源清单](official-map/map14-entity-award-hook-source-manifest.json)：完整原组件、原奖励管理器 IL、原消息身份与历史处理／延迟展示顺序及来源哈希；验证范围见[龙之国](../../docs/maps/map-14.md) |
