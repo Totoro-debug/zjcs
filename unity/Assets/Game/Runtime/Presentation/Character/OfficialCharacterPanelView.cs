@@ -63,6 +63,8 @@ namespace Zjcs.Presentation.Character
     [Serializable]
     internal sealed class OfficialCharacterPanelImage
     {
+        public int mirror_type = -1;
+        public bool reversed;
         public OfficialCharacterPanelSprite sprite;
         public float[] color;
         public int type;
@@ -297,6 +299,18 @@ namespace Zjcs.Presentation.Character
             pageRoot.offsetMin = Vector2.zero;
             pageRoot.offsetMax = Vector2.zero;
             IndexPrefabNodes(instance.transform, string.Empty);
+            var skillLayout = CharacterModelPackage.AsObject(OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI");
+            CharacterSafeArea.Restore(instance.transform, CharacterScreenPath, skillLayout);
+            var fonts = CharacterModelPackage.AsObject(skillLayout["character_fonts"], "original character fonts");
+            TMP_FontAsset originalCjkFont = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
+            foreach (var entry in fonts)
+            {
+                var font = CharacterModelPackage.AsObject(entry.Value, "original font");
+                if (Convert.ToString(font["name"]) != "FZY4K SDF - dynamic") continue;
+                if (originalCjkFont == null) throw new InvalidOperationException("The original FZY4K font is missing.");
+                if (nodes.TryGetValue(entry.Key, out RectTransform node) && node.GetComponent<TMP_Text>() is TMP_Text text)
+                    text.font = originalCjkFont;
+            }
             Destroy(staging);
         }
 
@@ -672,7 +686,14 @@ namespace Zjcs.Presentation.Character
                 Debug.LogWarning("Official skill rules are unavailable.");
                 return;
             }
-            skillPanel.Open(transform);
+            var skillLayout = CharacterModelPackage.AsObject(OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI");
+            var header = CharacterModelPackage.AsObject(skillLayout["shared_header"], "shared header");
+            var bindings = CharacterModelPackage.AsObject(header["character_bindings"], "character bindings");
+            var character = CharacterModelPackage.AsObject(bindings["CharacterPanel"], "CharacterPanel");
+            string parentPath = Convert.ToString(character["mCharacterPanelSkillPanelParent"]);
+            RectTransform slot = Node(parentPath);
+            if (slot == null) throw new InvalidOperationException("The original character skill panel slot is missing.");
+            skillPanel.Open(slot);
             SetSkillPageState(true);
             if (petEquipmentView != null)
                 petEquipmentView.ShowPlan(progression.Player.Skills.SelectedPlan);

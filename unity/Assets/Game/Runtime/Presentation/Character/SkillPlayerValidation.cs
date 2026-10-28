@@ -127,6 +127,19 @@ namespace Zjcs.Presentation.Character
             Click(ButtonContaining("ActiveSkillTab"));
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame(); Capture("skills-equipped");
+            Click(ButtonContaining("SkillListItem_"));
+            yield return new WaitForSecondsRealtime(.7f);
+            Click(ButtonNamed("CollectionBtn"));
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能"),
+                "The original Player skill collection message is absent.");
+            yield return new WaitForEndOfFrame(); Capture("skills-collection-message");
+            yield return new WaitForSecondsRealtime(.6f);
+            Button mask = FindObjectsOfType<Button>().First(value => value.name == "BlurMask" && value.isActiveAndEnabled);
+            Click(mask, new Vector2(8f, Screen.height * .5f));
+            yield return null;
+            Require(panel.IsOpen && !FindObjectsOfType<Button>().Any(value => value.name == "CollectionBtn" && value.isActiveAndEnabled),
+                "The original Player popup outside click did not close its detail window.");
             Click(ButtonNamed("AchievementTabGroupItem_11"));
             yield return new WaitForSecondsRealtime(.4f);
             Click(ButtonNamed("ReceiveBtn"));
@@ -182,12 +195,12 @@ namespace Zjcs.Presentation.Character
             }
             throw new InvalidOperationException("No unobstructed Player button matches the original control.");
         }
-        private static void Click(Button control)
+        private static void Click(Button control, Vector2? screenPosition = null)
         {
             Canvas.ForceUpdateCanvases();
             RectTransform rect = (RectTransform)control.transform;
             var pointer = new PointerEventData(EventSystem.current) { button = PointerEventData.InputButton.Left,
-                position = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)) };
+                position = screenPosition ?? RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)) };
             var hits = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointer, hits);
             Require(hits.Count > 0 && (hits[0].gameObject == control.gameObject || hits[0].gameObject.transform.IsChildOf(control.transform)),

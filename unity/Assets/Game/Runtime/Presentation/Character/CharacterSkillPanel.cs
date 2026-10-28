@@ -18,7 +18,7 @@ namespace Zjcs.Presentation.Character
     /// Original <c>CharacterPanelSkillContent</c>: three skill plans, four battle-skill and four
     /// secret-skill slots, the skill list tabs and installing/replacing/removing a skill.
     /// </summary>
-    public sealed class CharacterSkillPanel : MonoBehaviour
+    public sealed partial class CharacterSkillPanel : MonoBehaviour
     {
         private sealed class SkillAnimationTrack
         {
@@ -132,6 +132,7 @@ namespace Zjcs.Presentation.Character
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             factory.Build(CharacterPanelNodeFactory.ReadRoot(screen), rect, nodes, buttons);
+            CharacterSafeArea.Restore(nodes["/CharacterPanelSkillPanel"], "/CharacterPanelSkillPanel", skillUiTemplates);
             Dictionary<string, object> skillPanelLayout = CharacterModelPackage.AsObject(
                 skillUiTemplates["character_skills"], "character_skills");
             PlayOfficialLayoutAnimations("character_skills", skillPanelLayout, nodes,
@@ -143,6 +144,10 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            if (messageRoutine != null) StopCoroutine(messageRoutine);
+            messageRoutine = null;
+            if (systemMessage != null) Destroy(systemMessage);
+            systemMessage = null;
             CloseUpgradeConfirmation();
             if (recommendDialog != null) Destroy(recommendDialog);
             recommendDialog = null;
@@ -1138,9 +1143,23 @@ namespace Zjcs.Presentation.Character
             Dictionary<string, RectTransform> resultNodes,
             Button closeButton, Button skipButton)
         {
+            var mask = owner.GetComponent<OfficialSkillPopupMask>();
+            while (mask != null && !mask.IsReady)
+            {
+                if (owner == null || resultDialog != owner) yield break;
+                yield return null;
+            }
+            var template = CharacterModelPackage.AsObject(skillUiTemplates["skill_batch_notify"], "batch result");
+            var root = CharacterModelPackage.AsObject(template["root"], "batch result root");
+            var sequence = FindOriginalComponent(root, "ListItemShowSequence");
+            float interval = Convert.ToSingle(sequence["mShowInterval"], CultureInfo.InvariantCulture);
+            float delay = OriginalAnimationEventTime(root, "ShowItems")
+                + Convert.ToSingle(sequence["mFirstShowDelay"], CultureInfo.InvariantCulture);
+            float remaining = delay - (mask == null ? 0f : Time.unscaledTime - mask.ShownAtUnscaled);
+            if (remaining > 0) yield return new WaitForSecondsRealtime(remaining);
             foreach (CanvasGroup row in rows)
             {
-                yield return new WaitForSecondsRealtime(0.06f);
+                yield return new WaitForSecondsRealtime(interval);
                 if (owner == null || resultDialog != owner) yield break;
                 if (row != null) row.alpha = 1f;
             }
@@ -1148,6 +1167,36 @@ namespace Zjcs.Presentation.Character
             batchReveal = null;
             if (skipButton != null) skipButton.gameObject.SetActive(false);
             if (closeButton != null) closeButton.gameObject.SetActive(true);
+        }
+
+        private static Dictionary<string, object> FindOriginalComponent(Dictionary<string, object> node, string name)
+        {
+            if (node.TryGetValue("original_bindings", out object raw)
+                && CharacterModelPackage.AsObject(raw, "original bindings").TryGetValue(name, out object value))
+                return CharacterModelPackage.AsObject(value, name);
+            foreach (object child in (List<object>)node["children"])
+            {
+                var found = FindOriginalComponent(CharacterModelPackage.AsObject(child, "original node"), name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        private static float OriginalAnimationEventTime(Dictionary<string, object> node, string method)
+        {
+            if (node.TryGetValue("animations", out object raw))
+                foreach (object animation in (List<object>)raw)
+                {
+                    var clip = CharacterModelPackage.AsObject(animation, "original animation");
+                    if (!clip.TryGetValue("events", out object events)) continue;
+                    foreach (object entry in (List<object>)events)
+                    {
+                        var item = CharacterModelPackage.AsObject(entry, "animation event");
+                        if (CharacterPanelNodeFactory.String(item, "method") == method)
+                            return CharacterPanelNodeFactory.Number(item, "time", 0f);
+                    }
+                }
+            throw new InvalidOperationException("Original animation event is unavailable: " + method);
         }
 
         private static void ScrollSkillResultsToEnd(Dictionary<string, RectTransform> nodes)
@@ -1334,7 +1383,25 @@ namespace Zjcs.Presentation.Character
             dialogNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
             dialogButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
             factory.Build(CharacterPanelNodeFactory.ReadRoot(template), root, dialogNodes, dialogButtons);
-            PlayOfficialLayoutAnimations(layoutKey, template, dialogNodes);
+            var sourceRoot = CharacterPanelNodeFactory.ReadRoot(template);
+            CharacterSafeArea.Restore(dialogNodes[sourceRoot.path], sourceRoot.path, skillUiTemplates);
+            var source = CharacterModelPackage.AsObject(template["root"], "dialog root");
+            var localNodes = dialogNodes;
+            if (source.TryGetValue("original_bindings", out object rawBindings)
+                && CharacterModelPackage.AsObject(rawBindings, "dialog bindings").TryGetValue("PopupWindow", out object rawPopup))
+            {
+                var popup = CharacterModelPackage.AsObject(rawPopup, "PopupWindow");
+                int maskType = Convert.ToInt32(popup["mMaskType"], CultureInfo.InvariantCulture);
+                if (maskType != 0)
+                {
+                    var mask = dialog.AddComponent<OfficialSkillPopupMask>();
+                    mask.Show(skillUiTemplates, maskType,
+                        Convert.ToInt32(popup["mCloseByClickMask"], CultureInfo.InvariantCulture) != 0,
+                        () => HandleEscape(), () => PlayOfficialLayoutAnimations(layoutKey, template, localNodes));
+                    return dialog;
+                }
+            }
+            PlayOfficialLayoutAnimations(layoutKey, template, localNodes);
             return dialog;
         }
 
@@ -1992,6 +2059,8 @@ namespace Zjcs.Presentation.Character
             ProgressionResult result = progression.ToggleSkillFavorite(skillId);
             LastMessage = result.Message ?? result.Status.ToString();
             if (!result.IsApplied) return;
+            ShowOriginalSystemMessage(progression.Player.Skills.FavoriteSkills.Contains(skillId)
+                ? "ui_tip_skill_collect" : "ui_tip_skill_uncollect");
             Refresh();
             Changed?.Invoke();
         }

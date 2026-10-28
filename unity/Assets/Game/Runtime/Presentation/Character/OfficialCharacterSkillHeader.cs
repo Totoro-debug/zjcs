@@ -51,6 +51,7 @@ namespace Zjcs.Presentation.Character
             hud.transform.localScale = Vector3.one;
             Stretch((RectTransform)hud.transform);
             Stretch((RectTransform)hud.transform.Find("Content/Content"));
+            CharacterSafeArea.Restore(hud.transform, "/WorldCanvas", skillLayout);
             hud.SetActive(true);
             TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
             foreach (TMP_Text text in hud.GetComponentsInChildren<TMP_Text>(true))

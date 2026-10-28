@@ -93,10 +93,18 @@ def restore():
     text_schemas = ScriptSchemas()
     text_schemas.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
     text_schemas.generator.load_local_dll_folder("D:/Tool/Unity/Editor/Data/Managed/UnityEngine")
+    ui_schema_folder = Path("D:/Tool/Unity/Editor/Data/Resources/PackageManager/ProjectTemplates/libcache/com.unity.template.2d-7.0.3/ScriptAssemblies")
+    for name in ("UnityEngine.UI.dll", "Unity.TextMeshPro.dll"):
+        candidate = ROOT / "unity/Library/ScriptAssemblies" / name
+        if not candidate.is_file():
+            candidate = ui_schema_folder / name
+        text_schemas.generator.load_dll(candidate.read_bytes())
     text_schemas.generator.load_local_dll_folder(str(ROOT / "unity/Library/ScriptAssemblies"))
     for framework in ("D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll", "D:/Tool/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.5/mscorlib.dll"):
         text_schemas.generator.load_dll(Path(framework).read_bytes())
     text_sources = {}
+    safe_sources = {}
+    character_fonts = {}
     def layout_nodes(node):
         yield node
         for child in node.get("children", []):
@@ -121,6 +129,30 @@ def restore():
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
                 text_sources[path] = {"source": reader.apk.provenance(component), "style": {key: value for key, value in text.items() if key != "value"}}
+    # Preserve SafeArea flags separately from the prefab's editor-time rectangle.
+    for source in (character_source, skill_source):
+        for node in reader.walk(reader.object(source["bundle"], source["path_id"]).read()):
+            path = node_path(node)
+            for entry in node.m_Component:
+                component = entry.component.deref()
+                if component.type.name != "MonoBehaviour":
+                    continue
+                name = component.read(check_read=False).m_Script.read().m_ClassName
+                if name == "SafeArea":
+                    fields = reader.schemas.read(component)
+                    safe_sources[path] = {"source": reader.apk.provenance(component),
+                        "fields": {key: fields[key] for key in ("PaddingTop", "PaddingBottom", "DisableTopAdapt", "DisableBottomAdapt")}}
+                elif name == "TextMeshProUGUI" and source is character_source:
+                    fields = text_schemas.read(component)
+                    font = PPtr(**fields["m_fontAsset"], assetsfile=component.assets_file).deref()
+                    character_fonts[path] = {"name": font.read(check_read=False).m_Name,
+                        "source": reader.apk.provenance(component), "font_source": reader.apk.provenance(font)}
+    from prepare_skill_system_messages import restore_system_message
+    data["system_message"], message_uris = restore_system_message(reader, text_schemas, city)
+    uris.update(message_uris)
+    safe_sources.update(data["system_message"]["safe_area_bindings"])
+    data["character_fonts"] = character_fonts
+    data["safe_area_bindings"] = safe_sources
     data["text_style_inputs"] = text_sources
     gift_path = "/CharacterPanelSkillPanel/Content/AchievementPanelWithTypes"
     gift_bindings = {}
@@ -163,7 +195,8 @@ def restore():
     entries = dict(struct.unpack_from("<Qi", raw, 4 + i * 12) for i in range(count))
     texts = {}
     for key in ("ui_achievement_title_CostItem_42200", "ui_achievement_content_CostItem_42200",
-                "ui_achievement_title_SkillScoreCount", "ui_achievement_content_SkillScoreCount"):
+                "ui_achievement_title_SkillScoreCount", "ui_achievement_content_SkillScoreCount",
+                "ui_tip_skill_collect", "ui_tip_skill_uncollect", "ui_item_not_enough", "SkillPanel.PleaseEquipeSkill"):
         position = offset_start + entries[xxhash.xxh64_intdigest(key.encode("utf-8"))]
         size = struct.unpack_from("<H", raw, position)[0]
         texts[key] = raw[position + 2:position + 2 + size].decode("utf-8")
@@ -195,8 +228,42 @@ def restore():
     walk(data["item_empty"]["root"])
     walk(data["item"]["root"])
     world_source = shared_manifest["source"]["prefabs"]["WorldCanvas"]
+    world_prefab = reader.object(world_source["bundle"], world_source["path_id"]).read()
+    original_mask = next(node for node in reader.walk(world_prefab)
+        if node_path(node) == "/WorldCanvas/Content/Popup/BlurMask")
+    mask_fields = reader.component_fields(world_source["bundle"], original_mask.object_reader.path_id,
+        ("WindowBlurMask",))["WindowBlurMask"]
+    assert mask_fields["mMaskType"] == 3
+    data["popup_mask"] = {"fields": mask_fields, "source": reader.apk.provenance(original_mask.object_reader),
+        "prefab_resource": "Map11/UI/WorldCanvas", "prefab_path": "Content/Popup/BlurMask",
+        "blur_material": "World/Mainline/ScreenBlur"}
+    data["popup_masks"] = {}
+    for name, class_name, mask_type in (("Mask", "WindowMask", 1), ("invisableMask", "WindowMask", 2), ("BlurMask", "WindowBlurMask", 3)):
+        mask_node = next(node for node in reader.walk(world_prefab)
+            if node_path(node) == "/WorldCanvas/Content/Popup/" + name)
+        fields = reader.component_fields(world_source["bundle"], mask_node.object_reader.path_id, (class_name,))[class_name]
+        assert fields["mMaskType"] == mask_type
+        data["popup_masks"][str(mask_type)] = {"fields": fields, "source": reader.apk.provenance(mask_node.object_reader),
+            "prefab_resource": "Map11/UI/WorldCanvas", "prefab_path": "Content/Popup/" + name,
+            "blur_material": "World/Mainline/ScreenBlur"}
+    for entry in original_mask.m_Component:
+        component = entry.component.deref()
+        if component.type.name != "MonoBehaviour" or component.read(check_read=False).m_Script.read().m_ClassName != "RawImage":
+            continue
+        raw = component.get_raw_data()
+        uv = list(struct.unpack_from("<ffff", raw, len(raw) - 16))
+        assert uv[2] > 0 and uv[3] > 0
+        data["popup_masks"]["3"]["raw_image"] = {"m_UVRect": uv,
+            "source": reader.apk.provenance(component), "source_sha256": hashlib.sha256(raw).hexdigest()}
+    assert "raw_image" in data["popup_masks"]["3"]
     header_components = {}
     for node in reader.walk(reader.object(world_source["bundle"], world_source["path_id"]).read()):
+        for entry in node.m_Component:
+            component = entry.component.deref()
+            if component.type.name == "MonoBehaviour" and component.read(check_read=False).m_Script.read().m_ClassName == "SafeArea":
+                fields = reader.schemas.read(component)
+                safe_sources[node_path(node)] = {"source": reader.apk.provenance(component),
+                    "fields": {key: fields[key] for key in ("PaddingTop", "PaddingBottom", "DisableTopAdapt", "DisableBottomAdapt")}}
         from prepare_character_prop_bindings import node_path
         path = node_path(node)
         if not path.startswith(player_path + "/"):
@@ -244,11 +311,12 @@ def restore():
     receipt = {"manifest": "854_156383", "bundle": bundle, "bundle_hash": apk.index[bundle],
                "components": records, "threshold": threshold, "empty_prefab": data["item_empty"]["source"],
                "shared_header": data["shared_header"], "character_followers": followers,
+               "safe_area_bindings": safe_sources, "character_fonts": character_fonts, "system_message": data["system_message"], "popup_mask": data["popup_mask"], "popup_masks": data["popup_masks"],
                "gift_bindings": gift_bindings, "gift_language_input": data["gift_language_input"], "text_style_inputs": text_sources,
                "rules_input": "assets/official/rules.json", "rules_input_sha256": digest(rules_path),
                "ui_input": "assets/official/ui.json", "ui_input_sha256": digest(ui_path),
                "resources": {uri: city["resources"][uri] for uri in sorted(uris)},
-               "operation": "Copy original empty icon prefab; read SkillStarInfo threshold and StarMiniInfo Quality-to-Sprite PPtrs; copy verified decoded sprites."}
+               "operation": "Recover pinned original skill UI, shared header, safe areas, fonts, system message, popup masks and icon bindings; copy verified decoded sprites."}
     receipt_path = ROOT / "assets/reference/skill-ui/unity-icon-source-manifest.json"
     receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     manifest["icon_bindings_source"] = {"path": receipt_path.relative_to(ROOT).as_posix(), "sha256": digest(receipt_path)}

@@ -20,13 +20,14 @@ namespace Zjcs.Editor.Skills
         private const string RootKey = "Zjcs.Skills.Acceptance.Root";
         private const string SlotKey = "Zjcs.Skills.Acceptance.Slot";
         private const string ResultKey = "Zjcs.Skills.Acceptance.Passed";
+        private const string ExitKey = "Zjcs.Skills.Acceptance.ExitPending";
         private static bool started;
         private static bool reloadLocked;
         private static Exception runtimeFailure;
         [InitializeOnLoadMethod]
         private static void AutoRunInWindowedEditor()
         {
-            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") != "1" || Application.isBatchMode || EditorApplication.isPlayingOrWillChangePlaymode)
+            if (SessionState.GetBool(ExitKey, false) || Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") != "1" || Application.isBatchMode || EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
             EditorApplication.update -= AutoRunTick;
             EditorApplication.update += AutoRunTick;
@@ -96,6 +97,12 @@ namespace Zjcs.Editor.Skills
         [InitializeOnLoadMethod]
         private static void RestoreAfterDomainReload()
         {
+            if (SessionState.GetBool(ExitKey, false))
+            {
+                EditorApplication.update -= ExitWhenReady;
+                EditorApplication.update += ExitWhenReady;
+                return;
+            }
             if (!SessionState.GetBool(ActiveKey, false))
                 return;
             EditorApplication.update -= OnUpdate;
@@ -153,6 +160,7 @@ namespace Zjcs.Editor.Skills
 
         private static IEnumerator Scenario()
         {
+            while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
             yield return null;
             foreach (Canvas existing in UnityEngine.Object.FindObjectsOfType<Canvas>(true))
                 existing.gameObject.SetActive(false);
@@ -198,7 +206,7 @@ namespace Zjcs.Editor.Skills
             Canvas canvas = canvasObject.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.overrideSorting = true;
-            canvas.sortingOrder = 32000;
+            canvas.sortingOrder = 0;
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080f, 1920f);
@@ -409,14 +417,28 @@ namespace Zjcs.Editor.Skills
             int favoriteSkillId = int.Parse(detailButton.name.Substring("SkillListItem_".Length));
             Button favoriteButton = FindButton("CollectionBtn");
             Require(favoriteButton != null, "The official skill detail collection button is missing.");
-            yield return null;
+            yield return new WaitForSecondsRealtime(.4f);
             SimulatePointerClick(favoriteButton);
             Require(progression.Player.Skills.FavoriteSkills.Contains(favoriteSkillId), "The official skill detail collection control did not update the favorite state: " + panel.LastMessage);
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(UnityEngine.Object.FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能" && value.isActiveAndEnabled),
+                "The original favorite system message did not render.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetTempPath(), "zjcs-skills-system-message.png"));
             Require(UnityEngine.Object.FindObjectsOfType<RectTransform>(true).Any(value => value.name == "CharacterPanelSkillListSeparator" && value.gameObject.activeInHierarchy), "Favoriting a skill did not restore the official separator between collected and uncollected skills.");
             Require(panel.IsOpen, "Collecting a skill closed the full skill page.");
             Require(favoriteButton != null && favoriteButton.gameObject.activeInHierarchy,
                 "Collecting a skill unexpectedly closed its original detail dialog.");
-            panel.HandleEscape();
+            yield return new WaitForSecondsRealtime(.6f);
+            Button outsideMask = UnityEngine.Object.FindObjectsOfType<Button>().First(value => value.name == "BlurMask");
+            Canvas maskCanvas = outsideMask.GetComponent<Canvas>();
+            Canvas detailCanvas = favoriteButton.GetComponentInParent<Canvas>();
+            Require(maskCanvas.overrideSorting && maskCanvas.sortingOrder == detailCanvas.sortingOrder - 1,
+                "The original popup mask is not sorted immediately below its window.");
+            SimulatePointerClick(outsideMask);
+            yield return null;
+            Require(!UnityEngine.Object.FindObjectsOfType<Text>().Any(value => value.name == "DetailText" && value.isActiveAndEnabled),
+                "An outside pointer click did not close the original skill detail popup.");
+            Require(panel.IsOpen, "Closing the skill detail by its original mask also closed the skills page.");
             OfflineSkillPlan dragPlan = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan];
             int firstActive = Array.FindIndex(dragPlan.ActiveSkills, value => value > 0);
             int secondActive = Array.FindIndex(dragPlan.ActiveSkills, firstActive + 1, value => value > 0);
@@ -467,7 +489,7 @@ namespace Zjcs.Editor.Skills
             RectTransform currentActiveSlot = currentActiveGroup.Cast<Transform>().OfType<RectTransform>()
                 .First(value => value.name.StartsWith("SkillContentPanelSkillGroupItem", StringComparison.Ordinal));
             SimulatePointerClick(currentActiveSlot.Find("Slot").GetComponent<Button>());
-            yield return null;
+            yield return new WaitForSecondsRealtime(.4f);
             SimulatePointerClick(FindButton("UpgradeBtn"));
             yield return null;
             SimulatePointerClick(FindButton("SkillPromotePanelLevelUpTabGroupItem_11"));
@@ -512,7 +534,7 @@ namespace Zjcs.Editor.Skills
             SimulatePointerClick(promotionRowButton);
             Button skillUpgradeButton = FindButton("UpgradeBtn");
             Require(skillUpgradeButton != null && skillUpgradeButton.isActiveAndEnabled, "The official skill detail rank promotion action is missing.");
-            yield return null;
+            yield return new WaitForSecondsRealtime(.4f);
             SimulatePointerClick(skillUpgradeButton);
             Button rankUpgradeButton = UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name == "UseItemBtn" && value.transform.parent != null && value.transform.parent.parent != null && value.transform.parent.parent.name == "RankUpContent");
             Require(rankUpgradeButton != null && rankUpgradeButton.interactable, "The official rank promotion button is missing or disabled.");
@@ -572,6 +594,7 @@ namespace Zjcs.Editor.Skills
             Require(batchDialog != null, "Batch promotion did not open its official result dialog.");
             bool batchChanged = progression.Player.Skills.Skills.Any(value => value != null && ranksBeforeBatch.TryGetValue(value.ClassId, out int oldRank) && value.Rank > oldRank);
             Require(batchChanged, "Batch promotion did not change any owned skill rank.");
+            yield return new WaitForSecondsRealtime(.4f);
             Button skipBatch = FindButton("SkipBtn");
             if (skipBatch != null && skipBatch.isActiveAndEnabled)
             {
@@ -579,7 +602,7 @@ namespace Zjcs.Editor.Skills
                 SimulatePointerClick(skipBatch);
                 Button closeBatch = FindButton("CloseObj");
                 Require(closeBatch != null && closeBatch.gameObject.activeInHierarchy, "Skipping the batch result animation did not reveal its close control.");
-                yield return null;
+                yield return new WaitForSecondsRealtime(1.4f);
                 SimulatePointerClick(closeBatch);
             }
 
@@ -803,6 +826,7 @@ namespace Zjcs.Editor.Skills
             EditorApplication.update -= OnUpdate;
             SessionState.SetBool(ActiveKey, false);
             SessionState.SetBool(ResultKey, passed);
+            SessionState.SetBool(ExitKey, Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1");
             if (reloadLocked) { reloadLocked = false; EditorApplication.UnlockReloadAssemblies(); }
             EditorApplication.isPlaying = false;
         }
@@ -819,10 +843,21 @@ namespace Zjcs.Editor.Skills
             SessionState.SetBool(ActiveKey, false);
             if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_AUTORUN") == "1")
             {
-                bool passed = SessionState.GetBool(ResultKey, false);
-                SessionState.SetBool(ResultKey, false);
-                EditorApplication.delayCall += () => EditorApplication.Exit(passed ? 0 : 1);
+                EditorApplication.update -= ExitWhenReady;
+                EditorApplication.update += ExitWhenReady;
             }
+        }
+
+        private static void ExitWhenReady()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
+            EditorApplication.update -= ExitWhenReady;
+            string root = SessionState.GetString(RootKey, string.Empty);
+            if (Directory.Exists(root)) Directory.Delete(root, true);
+            bool passed = SessionState.GetBool(ResultKey, false);
+            SessionState.SetBool(ExitKey, false);
+            SessionState.SetBool(ResultKey, false);
+            EditorApplication.Exit(passed ? 0 : 1);
         }
 
         private sealed class Runner : MonoBehaviour

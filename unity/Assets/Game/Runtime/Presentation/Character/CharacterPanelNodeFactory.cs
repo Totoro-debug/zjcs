@@ -94,7 +94,13 @@ namespace Zjcs.Presentation.Character
 
             if (source.image != null)
             {
-                Image image = instance.AddComponent<Image>();
+                Image image = source.image.mirror_type < 0 ? instance.AddComponent<Image>()
+                    : instance.AddComponent<Zjcs.Official.WorldUI.MirrorImage>();
+                if (image is Zjcs.Official.WorldUI.MirrorImage mirror)
+                {
+                    mirror.MirrorStyle = (Zjcs.Official.WorldUI.MirrorImage.MirrorType)source.image.mirror_type;
+                    mirror.Reversed = source.image.reversed;
+                }
                 image.sprite = source.image.sprite == null ? null : assets.FindSprite(source.image.sprite.file);
                 if (image.sprite == null && source.image.sprite != null)
                     image.sprite = assets.FindSkillAppearanceSprite(source.image.sprite.file);
@@ -214,6 +220,8 @@ namespace Zjcs.Presentation.Character
                 node.image = new OfficialCharacterPanelImage
                 {
                     color = Floats(image, "color"),
+                    mirror_type = (int)Number(image, "mirror_type", -1),
+                    reversed = Boolean(image, "reversed", false),
                     type = (int)Number(image, "type", 0),
                     preserve_aspect = Boolean(image, "preserve_aspect", false),
                     sprite = image.TryGetValue("sprite", out object spriteRaw)
