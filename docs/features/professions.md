@@ -42,6 +42,8 @@
 
 原 `AppearanceMaterialUtils` 全部材质操作已迁入：保留染色通道 ID 缓存／最大通道、贴图／染色／光照与头发裁剪重置、四个效果关键字、Stencil 与透明裁剪字段，以及启用父 Mask 查找和根排序 Canvas 的模板深度。`Clear` 只清最大通道、不清缓存和已有材质值，按原行为保留。Mask 参数适配为 Component，原方法只访问其 Transform，不依赖骨骼 SDK。隔离 Direct3D Play Mode 检查这些分支，并以已有官方转换的 UI shader 实际绘制、读回和查看透明背景蓝色测试网格；未新增 shader 变体。原转换程序未声明 `UNITY_UI_ALPHACLIP`，Unity 将其保留在材质关键字列表，`IsKeywordEnabled` 仍返回 false；验证区分这两个状态，未改写原方法。测试不覆盖真实角色几何、皮肤裁剪、动画或完整页面。来源见[原外观材质操作](../../assets/reference/profession-ui/appearance-materials-source-manifest.json)。
 
+原皮肤配置、资源代理、贴图引用／句柄／请求、分辨率枚举及按需加载器共 14 个应用类型已迁入，保留原方法和状态顺序。YooAsset 操作及图集材质访问改由显式本地接口提供；原两个序列化资源指针保留为 ScriptableObject，未使用或移植骨骼 SDK 实现。隔离 Play Mode 检查同步代理复用／等待／释放、原 `LoadAsync` 的同步加载及回调队列、失败释放、主图／染色图状态、空结果完成、占位图索引与恢复、引用计数及基于帧龄／强制回收。首次请求只回调而不写回替代引用、染色图非空但材质为空时的原异常、原两个未实现查询及字典重复键后的部分状态，均按源码保留并验证。资源和图集为验证夹具，正式贴图／图集／骨骼资源服务和原配置资产未安装。主面板 881 个资源、87 类脚本的闭包重查后，剩余 13 类脚本、0 个缺失 GUID；类型可绑定不代表运行服务已就绪。来源见[原皮肤与贴图加载链](../../assets/reference/profession-ui/texture-loader-source-manifest.json)。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
@@ -62,7 +64,7 @@
 原 `FontAssetFontService` 已迁入，保留延迟加载配置、源字体已绑定判断、句柄保留、反射绑定、按名称释放及销毁顺序；两个原始 TTF 以 Windows 动态 Font 交付，原 JSON 字典在打包时解析为等值本地配置，运行时核对原 JSON 后交回原服务。未迁移 Android 流式缓存路径，也未声称完成多语言字体服务。隔离 Unity 的实际 Play Mode 使用正式本地图标／字体目录渲染四种奖励，逐项核对原品质背景、文字和字体归属，模拟鼠标按下／抬起进入原 `ItemIcon` 详情调用入口，清理后核对监听解除和控件状态；四项通过，实际运行画面已查看。附件提示也使用原字体重跑。测试中的统一数字 300 只验证控件，正式馈赠数量仍由成就配置决定。此处没有验证详情弹窗内容、完整馈赠列表或职业主页面。字体来源见[字体服务](../../assets/reference/profession-ui/font-service-source-manifest.json)。
 
 
-`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 15 种运行脚本待接入。
+`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 13 种运行脚本待接入。
 
 原 `TopBarHandler`、`TopBarItem`、管理器接口、货币数据及枚举等七类已迁入，保留空列表判断、父节点与矩形复位、窗口显示／隐藏订阅、停止数量更新及回收顺序；外部货币控件通过原代码消费的 Component／方法接口接入。主面板闭包内三个原始顶部栏的两份货币列表均为空，原分支不会借出栏位。隔离 Play Mode 控件测试验证空列表、更新、窗口事件和重复启停；非空货币栏的完整 prefab／服务仍待迁移。来源见[顶部栏](../../assets/reference/profession-ui/auxiliary-source-manifest.json)。
 
