@@ -129,6 +129,7 @@ namespace Zjcs.Presentation.Character
             yield return new WaitForEndOfFrame(); Capture("skills-equipped");
             Click(ButtonContaining("SkillListItem_"));
             yield return new WaitForSecondsRealtime(.7f);
+            yield return new WaitForEndOfFrame(); Capture("skills-detail");
             Click(ButtonNamed("CollectionBtn"));
             yield return new WaitForSecondsRealtime(.3f);
             Require(FindObjectsOfType<Text>().Any(value => value.text == "已置顶该技能"),
@@ -178,11 +179,12 @@ namespace Zjcs.Presentation.Character
             Application.Quit(0);
         }
 
-        private static Button ButtonNamed(string name) => FindPointerTarget(value => value.name == name);
-        private static Button ButtonContaining(string name) => FindPointerTarget(value => value.name.Contains(name));
-        private static Button FindPointerTarget(Func<Button, bool> matches)
+        private static Button ButtonNamed(string name) => FindPointerTarget(value => value.name == name, name);
+        private static Button ButtonContaining(string name) => FindPointerTarget(value => value.name.Contains(name), name);
+        private static Button FindPointerTarget(Func<Button, bool> matches, string description)
         {
             Canvas.ForceUpdateCanvases();
+            var blocked = new List<string>();
             foreach (Button control in FindObjectsOfType<Button>().Where(value => matches(value) && value.isActiveAndEnabled))
             {
                 RectTransform rect = (RectTransform)control.transform;
@@ -192,8 +194,10 @@ namespace Zjcs.Presentation.Character
                 EventSystem.current.RaycastAll(pointer, hits);
                 if (hits.Count > 0 && (hits[0].gameObject == control.gameObject
                     || hits[0].gameObject.transform.IsChildOf(control.transform))) return control;
+                blocked.Add(control.name + " at " + pointer.position + " hit "
+                    + (hits.Count == 0 ? "<none>" : hits[0].gameObject.name + " in " + hits[0].module));
             }
-            throw new InvalidOperationException("No unobstructed Player button matches the original control.");
+            throw new InvalidOperationException("No unobstructed Player button matches " + description + ": " + string.Join("; ", blocked));
         }
         private static void Click(Button control, Vector2? screenPosition = null)
         {

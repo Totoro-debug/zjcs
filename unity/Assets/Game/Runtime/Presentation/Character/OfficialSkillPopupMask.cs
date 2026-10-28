@@ -31,6 +31,11 @@ namespace Zjcs.Presentation.Character
             if (windowRaycaster == null) windowRaycaster = gameObject.AddComponent<GraphicRaycaster>();
             previousCanvas = windowCanvas.enabled; previousRaycaster = windowRaycaster.enabled;
             Canvas parent = transform.parent.GetComponentInParent<Canvas>().rootCanvas;
+            // TMP may have built its mesh before this sorting canvas was added.
+            // Preserve the vertex channels TMP enables on its original canvas.
+            windowCanvas.additionalShaderChannels = parent.additionalShaderChannels
+                | AdditionalCanvasShaderChannels.TexCoord1
+                | AdditionalCanvasShaderChannels.Normal | AdditionalCanvasShaderChannels.Tangent;
             int order = parent.sortingOrder;
             foreach (Canvas child in parent.GetComponentsInChildren<Canvas>())
                 if (child != windowCanvas && child.overrideSorting && child.name != "OfficialSkillSystemMessage") order = Math.Max(order, child.sortingOrder);

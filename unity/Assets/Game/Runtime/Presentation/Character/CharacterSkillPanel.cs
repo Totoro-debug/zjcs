@@ -1643,11 +1643,14 @@ namespace Zjcs.Presentation.Character
         {
             var template = CharacterModelPackage.AsObject(skillUiTemplates[layoutKey], layoutKey);
             var root = CharacterModelPackage.AsObject(template["root"], layoutKey + " root");
-            if (!root.TryGetValue("original_bindings", out object rawBindings)) return;
-            var bindings = CharacterModelPackage.AsObject(rawBindings, "official component bindings");
-            if (!bindings.TryGetValue(component, out object rawComponent)) return;
-            var data = CharacterModelPackage.AsObject(rawComponent, component);
-            if (!data.TryGetValue(field, out object rawSwitcher) || !data.TryGetValue("references", out object rawReferences)) return;
+            var data = FindOriginalComponent(root, component);
+            if (data == null || !data.TryGetValue("references", out object rawReferences)) return;
+            object rawSwitcher = data;
+            foreach (string key in field.Split('.'))
+            {
+                var owner = CharacterModelPackage.AsObject(rawSwitcher, "official state owner");
+                if (!owner.TryGetValue(key, out rawSwitcher)) return;
+            }
             var switcher = CharacterModelPackage.AsObject(rawSwitcher, field);
             var references = CharacterModelPackage.AsObject(rawReferences, "managed references");
             if (!(switcher["mStateConfigs"] is List<object> configs) || !(references["RefIds"] is List<object> refs)) return;
@@ -1658,6 +1661,24 @@ namespace Zjcs.Presentation.Character
             {
                 if (!ids.Contains(Convert.ToString(reference["rid"], CultureInfo.InvariantCulture))) continue;
                 var config = CharacterModelPackage.AsObject(reference["data"], "state configuration");
+                if (config.TryGetValue("mStateColorData", out object rawColors))
+                {
+                    var colors = CharacterModelPackage.AsObject(rawColors, "original state colors");
+                    foreach (var colorConfig in ((List<object>)colors["GraphicConfigs"]).OfType<Dictionary<string, object>>())
+                    {
+                        var dictionary = CharacterModelPackage.AsObject(colorConfig["Color"], "state color dictionary");
+                        var colorEntry = ((List<object>)dictionary["mSerializeBuffer"]).OfType<Dictionary<string, object>>()
+                            .FirstOrDefault(value => Convert.ToInt32(CharacterModelPackage.AsObject(value["Key"], "state color key")["mValue"]) == state);
+                        if (colorEntry == null) continue;
+                        Color color = OriginalDetailColor(colorEntry["Value"]);
+                        foreach (string path in ((List<object>)colorConfig["Graphics"]).Select(Convert.ToString))
+                            if (layoutNodes.TryGetValue(path, out RectTransform target))
+                            {
+                                Graphic graphic = target.GetComponent<Graphic>();
+                                if (graphic != null) graphic.color = color;
+                            }
+                    }
+                }
                 if (!config.TryGetValue("mStateGameObjectData", out object rawGo)) continue;
                 var go = CharacterModelPackage.AsObject(rawGo, "state game objects");
                 foreach (var entry in ((List<object>)go["GoConfig"]).OfType<Dictionary<string, object>>())
@@ -1698,37 +1719,11 @@ namespace Zjcs.Presentation.Character
             CloseSkillDetail();
             detailDialog = BuildOfficialDialog("skill_panel_detail", out var dialogNodes, out var dialogButtons);
             Text name = DialogNode(dialogNodes, "NameText")?.GetComponent<Text>();
-            Text level = DialogNode(dialogNodes, "LevelText")?.GetComponent<Text>();
             Text rank = DialogNode(dialogNodes, "Count")?.GetComponent<Text>();
-            Text detail = DialogNode(dialogNodes, "DetailText")?.GetComponent<Text>();
-            Text quality = DialogNode(dialogNodes, "QualityText")?.GetComponent<Text>();
-            int qualityLevel = Quality(skillId);
-            ApplyQualityGradient(quality, qualityLevel, 45f);
             int ownedRank = OfflineSkillProgression.OwnedRank(progression.Player.Skills, skillId);
             SetTextValue(name, SkillName(skillId));
             SetTextValue(rank, ownedRank.ToString(CultureInfo.InvariantCulture));
-            OfflineSkillRankCost nextCost = definition.RankCosts?.FirstOrDefault(value => value.CurrentRank == ownedRank);
-            if (detail != null)
-            {
-                long pieces = progression.Player.Inventory.Where(value => value != null
-                    && value.ItemId == definition.PieceItemId).Sum(value => value.Count);
-                detail.text = (definition.ItemType == ActiveSkillItemType ? "战技" : "秘法")
-                    + "\n等阶 " + ownedRank.ToString(CultureInfo.InvariantCulture) + "/"
-                    + definition.MaximumRank.ToString(CultureInfo.InvariantCulture)
-                    + "\n碎片 " + pieces.ToString("N0", CultureInfo.InvariantCulture)
-                    + (nextCost == null ? "\n已达最高等阶。" : "\n下一阶消耗：" + string.Join("、",
-                        nextCost.Items.Select(item => ItemName(item.ItemId) + " ×"
-                            + item.Count.ToString("N0", CultureInfo.InvariantCulture))));
-            }
-            int[] equippedSlots = definition.ItemType == ActiveSkillItemType
-                ? progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].ActiveSkills
-                : progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].PassiveSkills;
-            int equippedSlot = Array.IndexOf(equippedSlots, skillId);
-            int currentLevel = equippedSlot < 0 ? 0 : progression.SkillProgression.SlotLevel(
-                progression.Player.Skills, definition.ItemType, equippedSlot,
-                progression.SkillContext().CurrentSeasonId);
-            SetTextValue(level, currentLevel <= 0 ? string.Empty
-                : "Lv" + currentLevel.ToString(CultureInfo.InvariantCulture));
+            BindOriginalSkillDetail(skillId, dialogNodes);
             Transform iconSlot = DialogNode(dialogNodes, "ItemIconSkill") ?? DialogNode(dialogNodes, "IconSlot");
             if (iconSlot != null) BuildSkillIcon(skillId, iconSlot, "OfficialSkillIcon");
 

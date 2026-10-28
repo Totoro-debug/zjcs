@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zjcs.Offline.Progression;
@@ -117,7 +118,9 @@ namespace Zjcs.Presentation.Character
                 image.preserveAspect = source.image.preserve_aspect;
                 image.raycastTarget = HasScript(source, "Button") || source.button || HasScript(source, "TabItem");
             }
-            if (source.text != null && CharacterPanelNodeFactory.UiFont != null)
+            if (source.text != null && source.text.native_tmp)
+                BuildNativeText(instance, source.text);
+            else if (source.text != null && CharacterPanelNodeFactory.UiFont != null)
             {
                 Text text = null;
                 try
@@ -237,6 +240,11 @@ namespace Zjcs.Presentation.Character
                     value = String(text, "value"),
                     color = Floats(text, "color"),
                     font_size = Number(text, "font_size", 16f),
+                    native_tmp = Boolean(text, "native_tmp", false),
+                    font_style = (int)Number(text, "font_style", 0f),
+                    character_spacing = Number(text, "character_spacing", 0f),
+                    word_spacing = Number(text, "word_spacing", 0f),
+                    line_spacing = Number(text, "line_spacing", 0f),
                     auto_size = Boolean(text, "auto_size", false),
                     font_size_min = Number(text, "font_size_min", 1f),
                     font_size_max = Number(text, "font_size_max", 100f),
@@ -411,6 +419,32 @@ namespace Zjcs.Presentation.Character
         {
             return values == null || values.Length < 4
                 ? fallback : new Color(values[0], values[1], values[2], values[3]);
+        }
+
+        private static void BuildNativeText(GameObject instance, OfficialCharacterPanelText source)
+        {
+            var font = instance.AddComponent<OfficialSkillFontLease>().Acquire(
+                Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault().NativeUiFont);
+            if (font == null) throw new InvalidOperationException("Original skill detail CJK font is missing.");
+            var text = instance.AddComponent<TextMeshProUGUI>();
+            text.font = font;
+            text.fontSize = source.font_size;
+            text.fontStyle = (FontStyles)source.font_style;
+            text.color = ColorValue(source.color, Color.white);
+            text.alignment = (TextAlignmentOptions)(source.horizontal | source.vertical);
+            text.enableWordWrapping = source.word_wrap;
+            text.overflowMode = (TextOverflowModes)source.overflow;
+            text.enableAutoSizing = source.auto_size;
+            text.fontSizeMin = source.font_size_min;
+            text.fontSizeMax = source.font_size_max;
+            text.characterSpacing = source.character_spacing;
+            text.wordSpacing = source.word_spacing;
+            text.lineSpacing = source.line_spacing;
+            if (source.margin != null && source.margin.Length == 4)
+                text.margin = new Vector4(source.margin[0], source.margin[1], source.margin[2], source.margin[3]);
+            text.richText = true;
+            text.raycastTarget = false;
+            text.text = source.value ?? string.Empty;
         }
 
         private static TextAnchor TextAlignment(int horizontal, int vertical)

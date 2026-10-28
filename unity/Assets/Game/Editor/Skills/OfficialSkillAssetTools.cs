@@ -87,6 +87,15 @@ namespace Zjcs.Editor.Skills
                 field.objectReferenceValue = payloads[i];
             }
             SerializedProperty spriteArray = serialized.FindProperty("sprites");
+            var nativeFont = AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(
+                "Assets/Official/Skills/NativeText/FZY4K-Dynamic.asset");
+            if (nativeFont == null) throw new BuildFailedException("Verified original FZY4K font is missing.");
+            serialized.FindProperty("nativeUiFont").objectReferenceValue = nativeFont;
+            var nativeCharacterShader = AssetDatabase.LoadAssetAtPath<Shader>(
+                "Assets/Game/Runtime/Official/Character/NativeSkillPreviewDye.shader");
+            if (nativeCharacterShader == null || !nativeCharacterShader.isSupported)
+                throw new BuildFailedException("Original skill character preview shader did not compile.");
+            serialized.FindProperty("nativeCharacterShader").objectReferenceValue = nativeCharacterShader;
             spriteArray.arraySize = sprites.Count;
             for (int i = 0; i < sprites.Count; i++)
             {

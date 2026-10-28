@@ -53,7 +53,7 @@ namespace Zjcs.Presentation.Character
             Stretch((RectTransform)hud.transform.Find("Content/Content"));
             CharacterSafeArea.Restore(hud.transform, "/WorldCanvas", skillLayout);
             hud.SetActive(true);
-            TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Combat/FZY4K-Dynamic");
+            TMP_FontAsset font = gameObject.AddComponent<OfficialSkillFontLease>().Acquire(skillCatalog.NativeUiFont);
             foreach (TMP_Text text in hud.GetComponentsInChildren<TMP_Text>(true))
             {
                 if (font != null) text.font = font;
@@ -136,7 +136,8 @@ namespace Zjcs.Presentation.Character
                 if (bindings.TryGetValue("AspectRatioFitter", out object rawAspect))
                 {
                     var aspect = CharacterModelPackage.AsObject(rawAspect, "original HUD aspect ratio");
-                    var fitter = target.GetComponent<AspectRatioFitter>() ?? target.gameObject.AddComponent<AspectRatioFitter>();
+                    var fitter = target.GetComponent<AspectRatioFitter>();
+                    if (fitter == null) fitter = target.gameObject.AddComponent<AspectRatioFitter>();
                     fitter.aspectMode = (AspectRatioFitter.AspectMode)Convert.ToInt32(aspect["m_AspectMode"], CultureInfo.InvariantCulture);
                     fitter.aspectRatio = Convert.ToSingle(aspect["m_AspectRatio"], CultureInfo.InvariantCulture);
                 }
@@ -146,6 +147,25 @@ namespace Zjcs.Presentation.Character
                     var uv = (List<object>)image["m_UVRect"];
                     target.GetComponent<RawImage>().uvRect = new Rect(Convert.ToSingle(uv[0]), Convert.ToSingle(uv[1]),
                         Convert.ToSingle(uv[2]), Convert.ToSingle(uv[3]));
+                }
+                if (bindings.TryGetValue("TMPEffect", out object rawEffect))
+                {
+                    var fields = CharacterModelPackage.AsObject(rawEffect, "original HUD text effect");
+                    var effect = target.gameObject.AddComponent<TMPEffect>();
+                    foreach (var field in typeof(TMPEffect).GetFields(System.Reflection.BindingFlags.Public
+                        | System.Reflection.BindingFlags.Instance))
+                    {
+                        if (!fields.TryGetValue(field.Name, out object value)) continue;
+                        if (field.FieldType == typeof(bool)) field.SetValue(effect, Convert.ToBoolean(value));
+                        else if (field.FieldType == typeof(float)) field.SetValue(effect, Convert.ToSingle(value));
+                        else if (field.FieldType == typeof(Color))
+                        {
+                            var c = CharacterModelPackage.AsObject(value, "original text effect color");
+                            field.SetValue(effect, new Color(Convert.ToSingle(c["r"]), Convert.ToSingle(c["g"]),
+                                Convert.ToSingle(c["b"]), Convert.ToSingle(c["a"])));
+                        }
+                    }
+                    effect.SetupEffect(true);
                 }
             }
         }
@@ -158,6 +178,7 @@ namespace Zjcs.Presentation.Character
             foreach (object type in (List<object>)settings["mExcludeSkinTypes"])
                 appearance.SkinByType.Remove(Convert.ToInt32(type, CultureInfo.InvariantCulture));
             GameObject model = CharacterCreationNativeModelFactory.CreatePreviewModel(slotId, savesRoot, appearance);
+            OfficialSkillPreviewMaterials.Bind(model, OfficialSkillAssetCatalog.LoadDefault().NativeCharacterShader);
             try
             {
                 var photography = new CharacterPortraitPhotography

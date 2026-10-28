@@ -61,6 +61,18 @@ def restore():
         qualities[str(quality)] = matches[0]
     data["skill_star_settings"] = {"threshold": threshold, "quality_sprites": qualities}
     uris = set(qualities.values())
+    detail_backgrounds = {}
+    for quality in ("None", "White", "Blue", "Purple", "Orange", "Gold", "Red", "Rainbow"):
+        name = "Img" + quality + "_PopUps"
+        matches = [uri for uri, record in city["resources"].items()
+                   if record.get("object") == name and uri.startswith("res://assets/official/sprites/")]
+        if quality == "None" and not matches:
+            continue
+        assert len(matches) == 1, (name, matches)
+        detail_backgrounds[quality] = matches[0]
+        uris.add(matches[0])
+    detail_backgrounds.setdefault("None", detail_backgrounds["White"])
+    data["detail_quality_backgrounds"] = detail_backgrounds
     rules_path = ROOT / "assets/official/rules.json"
     assert digest(rules_path) == city["data_sha256"]["rules.json"]
     rules = json.loads(rules_path.read_text(encoding="utf-8"))
@@ -71,6 +83,10 @@ def restore():
     from prepare_character_prop_bindings import BindingReader
     reader = BindingReader()
     reader.apk = apk
+    from prepare_skill_detail_data import restore as restore_detail_data
+    data["detail_data"] = restore_detail_data(reader, rules, ui, city)
+    uris.update(row["icon"] for row in data["detail_data"]["professions"].values())
+    data["skill_tag"] = ui["pet_skill_tag"]
     character = reader.component_fields("defaultpackage_assets_prefabs_ui_character.bundle",
         -6326212988873864872, ("CharacterPanel", "PlayerWithPetContent"))
     from prepare_character_prop_bindings import node_path
@@ -99,9 +115,11 @@ def restore():
         if not candidate.is_file():
             candidate = ui_schema_folder / name
         text_schemas.generator.load_dll(candidate.read_bytes())
-    text_schemas.generator.load_local_dll_folder(str(ROOT / "unity/Library/ScriptAssemblies"))
     for framework in ("D:/Tool/Unity/Editor/Data/NetStandard/ref/2.1.0/netstandard.dll", "D:/Tool/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.5/mscorlib.dll"):
         text_schemas.generator.load_dll(Path(framework).read_bytes())
+    text_schemas.generator.load_dll((ROOT / ".tools/source-packages/official-code/managed/decoded/LoopScrollRect.Runtime.dll").read_bytes())
+    from prepare_skill_detail_data import restore_grid
+    restore_grid(reader, text_schemas, data)
     text_sources = {}
     safe_sources = {}
     character_fonts = {}
@@ -128,6 +146,11 @@ def restore():
                     font_size_min=fields["m_fontSizeMin"], font_size_max=fields["m_fontSizeMax"],
                     word_wrap=bool(fields["m_enableWordWrapping"]), overflow=fields["m_overflowMode"],
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
+                text.update(native_tmp=path.startswith("/SkillPanelSkillDetailDialog/") and
+                    ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText")),
+                    font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
+                    word_spacing=fields["m_wordSpacing"], line_spacing=fields["m_lineSpacing"],
+                    margin=[fields["m_margin"][key] for key in ("x", "y", "z", "w")])
                 text_sources[path] = {"source": reader.apk.provenance(component), "style": {key: value for key, value in text.items() if key != "value"}}
     # Preserve SafeArea flags separately from the prefab's editor-time rectangle.
     for source in (character_source, skill_source):
@@ -227,6 +250,8 @@ def restore():
             walk(child)
     walk(data["item_empty"]["root"])
     walk(data["item"]["root"])
+    walk(data["skill_tag"]["root"])
+    walk(data["skill_range_item"]["root"])
     world_source = shared_manifest["source"]["prefabs"]["WorldCanvas"]
     world_prefab = reader.object(world_source["bundle"], world_source["path_id"]).read()
     original_mask = next(node for node in reader.walk(world_prefab)
@@ -273,7 +298,7 @@ def restore():
             if component.type.name != "MonoBehaviour":
                 continue
             name = component.read(check_read=False).m_Script.read().m_ClassName
-            if name not in ("AspectRatioFitter", "RawImage", "GraphicCapsuleMeshClipper"):
+            if name not in ("AspectRatioFitter", "RawImage", "GraphicCapsuleMeshClipper", "TMPEffect"):
                 continue
             raw = component.get_raw_data()
             if name == "RawImage":
@@ -288,7 +313,15 @@ def restore():
             header_components.setdefault(path, {})[name] = {key: value for key, value in fields.items()
                 if key not in ("m_GameObject", "m_Script", "m_Name")}
     data["shared_header"]["components"] = header_components
+    from prepare_skill_native_text import restore as restore_native_text
+    native_text = restore_native_text(reader)
+    from prepare_skill_character_shader import restore as restore_character_shader
+    native_text["character_shader"] = restore_character_shader(reader)
+    data["native_text"] = native_text
     files = {row["path"]: row for row in manifest["files"]}
+    for row in native_text["font"]["outputs"]:
+        path = (ROOT / row["path"]).relative_to(ROOT / "unity").as_posix()
+        files[path] = {"path": path, "bytes": (ROOT / row["path"]).stat().st_size, "sha256": row["sha256"]}
     template = next((module / "Art/sprites").glob("*.png.meta")).read_text(encoding="utf-8")
     for uri in sorted(uris):
         relative = uri.removeprefix("res://assets/official/")
@@ -311,6 +344,8 @@ def restore():
     receipt = {"manifest": "854_156383", "bundle": bundle, "bundle_hash": apk.index[bundle],
                "components": records, "threshold": threshold, "empty_prefab": data["item_empty"]["source"],
                "shared_header": data["shared_header"], "character_followers": followers,
+               "native_text": native_text,
+               "detail_data_inputs": data["detail_data"]["inputs"],
                "safe_area_bindings": safe_sources, "character_fonts": character_fonts, "system_message": data["system_message"], "popup_mask": data["popup_mask"], "popup_masks": data["popup_masks"],
                "gift_bindings": gift_bindings, "gift_language_input": data["gift_language_input"], "text_style_inputs": text_sources,
                "rules_input": "assets/official/rules.json", "rules_input_sha256": digest(rules_path),

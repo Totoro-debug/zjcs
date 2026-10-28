@@ -158,6 +158,23 @@ namespace Zjcs.Editor.Skills
             }
         }
 
+        private static void ValidateOriginalDetailProperties(OfflineCharacterProgressionService progression)
+        {
+            Type type = typeof(CharacterSkillPanel).Assembly.GetType("Zjcs.Presentation.Character.OfficialSkillDetailProperties", true);
+            object provider = Activator.CreateInstance(type, new object[] { progression.Catalog,
+                Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault() });
+            MethodInfo calculate = type.GetMethod("Calculate");
+            int count = 0;
+            foreach (var skill in progression.SkillRules.Skills)
+            {
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 1, 1 });
+                calculate.Invoke(provider, new object[] { skill.ClassId, 1, 20, 2 });
+                count++;
+            }
+            Require(count == 394, "Original detail property validation omitted skills: " + count);
+            Debug.Log("[Skills] All 394 original skill property previews calculated at two progression states.");
+        }
+
         private static IEnumerator Scenario()
         {
             while (GameObject.Find("OfficialSaveSelectionPanel") == null) yield return null;
@@ -187,6 +204,7 @@ namespace Zjcs.Editor.Skills
                 "Wardrobe initialization failed: " + wardrobe.Message);
             OfficialSkillRecommendationSet recommendations = assets.LoadSkillRecommendations();
             progression.AttachSkillRules(assets.LoadSkillRules(), recommendations.recommendations);
+            ValidateOriginalDetailProperties(progression);
             OfflineSkillPlayerContext skillContext = progression.SkillContext();
             foreach (OfficialSkillRecommendation recommendation in recommendations.recommendations.Where(value => value != null && skillContext.CurrentProfessionChain.Contains(value.Profession)))
             {
@@ -413,7 +431,8 @@ namespace Zjcs.Editor.Skills
             Require(detailButton != null, "The skill list detail button is missing after slot selection.");
             yield return null;
             SimulatePointerClick(detailButton);
-            Require(UnityEngine.Object.FindObjectsOfType<Text>(true).Any(value => value.name == "DetailText" && value.isActiveAndEnabled), "The skill detail dialog did not render after a simulated pointer click.");
+            Require(UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>(true).Any(value => value.name == "FuncDetailText" && value.isActiveAndEnabled
+                && !value.text.Contains("{0}")), "The original skill function description did not render after a simulated pointer click.");
             int favoriteSkillId = int.Parse(detailButton.name.Substring("SkillListItem_".Length));
             Button favoriteButton = FindButton("CollectionBtn");
             Require(favoriteButton != null, "The official skill detail collection button is missing.");
@@ -436,7 +455,7 @@ namespace Zjcs.Editor.Skills
                 "The original popup mask is not sorted immediately below its window.");
             SimulatePointerClick(outsideMask);
             yield return null;
-            Require(!UnityEngine.Object.FindObjectsOfType<Text>().Any(value => value.name == "DetailText" && value.isActiveAndEnabled),
+            Require(!UnityEngine.Object.FindObjectsOfType<TMPro.TMP_Text>().Any(value => value.name == "FuncDetailText" && value.isActiveAndEnabled),
                 "An outside pointer click did not close the original skill detail popup.");
             Require(panel.IsOpen, "Closing the skill detail by its original mask also closed the skills page.");
             OfflineSkillPlan dragPlan = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan];
@@ -594,17 +613,29 @@ namespace Zjcs.Editor.Skills
             Require(batchDialog != null, "Batch promotion did not open its official result dialog.");
             bool batchChanged = progression.Player.Skills.Skills.Any(value => value != null && ranksBeforeBatch.TryGetValue(value.ClassId, out int oldRank) && value.Rank > oldRank);
             Require(batchChanged, "Batch promotion did not change any owned skill rank.");
-            yield return new WaitForSecondsRealtime(.4f);
+            yield return new WaitForSecondsRealtime(1f);
+            float batchReadyDeadline = Time.realtimeSinceStartup + 5f;
+            while (Time.realtimeSinceStartup < batchReadyDeadline
+                && !(FindButton("SkipBtn")?.isActiveAndEnabled ?? false)
+                && !(FindButton("CloseObj")?.isActiveAndEnabled ?? false)) yield return null;
             Button skipBatch = FindButton("SkipBtn");
             if (skipBatch != null && skipBatch.isActiveAndEnabled)
             {
-                yield return null;
                 SimulatePointerClick(skipBatch);
                 Button closeBatch = FindButton("CloseObj");
                 Require(closeBatch != null && closeBatch.gameObject.activeInHierarchy, "Skipping the batch result animation did not reveal its close control.");
                 yield return new WaitForSecondsRealtime(1.4f);
                 SimulatePointerClick(closeBatch);
             }
+            else
+            {
+                Button closeBatch = FindButton("CloseObj");
+                Require(closeBatch != null && closeBatch.isActiveAndEnabled, "The batch result did not finish preparing its controls.");
+                yield return new WaitForSecondsRealtime(1.4f);
+                SimulatePointerClick(closeBatch);
+            }
+            yield return null;
+            Require(batchDialog == null || !batchDialog.gameObject.activeInHierarchy, "The batch result remained open after clicking its close control.");
 
             OfflineSkillDefinition skill = progression.SkillDefinition(10000);
             Require(skill != null && skill.PieceItemId == 12000, "Official skill or piece rule is unavailable.");
@@ -631,7 +662,8 @@ namespace Zjcs.Editor.Skills
 
         private static Button FindButton(string name)
         {
-            return UnityEngine.Object.FindObjectsOfType<Button>(true).FirstOrDefault(value => value.name == name);
+            return UnityEngine.Object.FindObjectsOfType<Button>(true).Where(value => value.name == name)
+                .OrderByDescending(value => value.isActiveAndEnabled).FirstOrDefault();
         }
 
         private static Button FindButtonContaining(string name)

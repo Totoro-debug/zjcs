@@ -15,6 +15,7 @@ namespace Zjcs.Presentation.Skills
         public OfficialSkillGradientColorKey[] colors;
         public OfficialSkillGradientAlphaKey[] alphas;
         public OfficialSkillGradientComponent[] components;
+        public Color[] normalColors;
 
         public static OfficialSkillQualityGradientData Parse(string json)
         {

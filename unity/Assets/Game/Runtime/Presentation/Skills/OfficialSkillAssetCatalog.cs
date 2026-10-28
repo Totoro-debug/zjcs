@@ -1,6 +1,7 @@
 using System;
 using Zjcs.Offline.Skills;
 using UnityEngine;
+using TMPro;
 
 namespace Zjcs.Presentation.Skills
 {
@@ -24,6 +25,8 @@ namespace Zjcs.Presentation.Skills
         [SerializeField] private TextAsset fidelityTexts;
         [SerializeField] private TextAsset sourceManifest;
         [SerializeField] private TextAsset qualityGradient;
+        [SerializeField] private TMP_FontAsset nativeUiFont;
+        [SerializeField] private Shader nativeCharacterShader;
         [SerializeField] private OfficialSkillSpriteBinding[] sprites = Array.Empty<OfficialSkillSpriteBinding>();
 
         public TextAsset SkillRecommendations => skillRecommendations;
@@ -34,6 +37,8 @@ namespace Zjcs.Presentation.Skills
         public TextAsset FidelityTexts => fidelityTexts;
         public TextAsset SourceManifest => sourceManifest;
         public TextAsset QualityGradient => qualityGradient;
+        public TMP_FontAsset NativeUiFont => nativeUiFont;
+        public Shader NativeCharacterShader => nativeCharacterShader;
 
         public static OfficialSkillAssetCatalog LoadDefault()
         {

@@ -713,3 +713,8 @@ unity/Assets/Official/World/Map/13/NativeSkeletonModels/** text eol=lf
 unity/Assets/Game/Resources/Map13/Native/Skeletons* -text whitespace=cr-at-eol,-blank-at-eol
 unity/Assets/Game/Resources/Map13/Native/Skeletons/** -text whitespace=cr-at-eol,-blank-at-eol
 assets/reference/official-map/map13-native-skeleton-model*-source-manifest.json text eol=lf
+
+# Skill native preview and source receipts retain their recorded output bytes.
+unity/Assets/Game/Runtime/Official/Character/NativeSkillPreviewDye.shader -text whitespace=cr-at-eol
+assets/reference/skill-ui/unity-icon-source-manifest.json -text whitespace=cr-at-eol
+assets/reference/skill-quality-text/source-manifest.json -text whitespace=cr-at-eol

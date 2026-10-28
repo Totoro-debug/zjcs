@@ -443,6 +443,7 @@ namespace Zjcs.Presentation.Character
             nativeModel = CharacterCreationNativeModelFactory.CreatePreviewModel(characterSlotId, savesRoot,
                 previewAppearance ?? progression.ResolveAppearance());
             nativeModel.name = "CharacterPageNativeModel";
+            if (originalPreviewShader != null) OfficialSkillPreviewMaterials.Bind(nativeModel, originalPreviewShader);
             nativeModel.transform.SetParent(nativeWorldRoot.transform, false);
             nativeModel.transform.localPosition = Vector3.zero;
             nativeModel.transform.localRotation = Quaternion.identity;
@@ -455,6 +456,14 @@ namespace Zjcs.Presentation.Character
             if (!PlayNativeAnimation(currentNativeAnimation))
                 throw new InvalidOperationException("The official character model does not contain animation " + currentNativeAnimation);
             FitNativeCamera();
+        }
+
+        private Shader originalPreviewShader;
+
+        public void UseOriginalPreviewShader(Shader shader)
+        {
+            originalPreviewShader = shader;
+            if (nativeModel != null) OfficialSkillPreviewMaterials.Bind(nativeModel, shader);
         }
 
         private void EnsureNativePreview()

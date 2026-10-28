@@ -91,6 +91,9 @@ namespace Zjcs.Presentation.Character
         public bool word_wrap = true;
         public int overflow;
         public float[] margin;
+        public bool native_tmp;
+        public int font_style;
+        public float character_spacing, word_spacing, line_spacing;
     }
 
     [Serializable]
@@ -865,6 +868,8 @@ namespace Zjcs.Presentation.Character
             characterModel = mount.GetComponent<CharacterModelPreview>();
             if (characterModel == null) characterModel = mount.gameObject.AddComponent<CharacterModelPreview>();
             characterModel.Initialize(progression, null, characterSlotId, characterSavesRoot);
+            characterModel.UseOriginalPreviewShader(
+                Zjcs.Presentation.Skills.OfficialSkillAssetCatalog.LoadDefault().NativeCharacterShader);
             characterModel.InitializeOriginalFollowers(assets.SkillUiLayouts, nodes);
             Component name = FindText("CharacterName") ?? FindText("PlayerName") ?? FindText("NameText");
             SetText(name, progression.Player.CharacterName);
