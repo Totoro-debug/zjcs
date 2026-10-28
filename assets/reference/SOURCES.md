@@ -86,3 +86,5 @@ Map13 原剧情演出请求边界：`map13-story-playable-requests-source-manife
 泽之国原小地图视野：`prepare_unity_map13_minimap_view.py` 逐类复用四份原视野处理器，调用已迁移的完整原 `MyGridTransform`，仅替换命名空间及消费接口。原输入／输出哈希、483 格有序视野、25 组边界、角色切换／释放 Play Mode 与编译检查见 [视野来源](official-map/map13-minimap-view-code-source-manifest.json)。正式小地图、输入存档及 Player 尚未完成；无新增图像素材或完整快照。
 
 泽之国原小地图地区：`prepare_unity_map13_minimap_regions.py` 从已核验的官方 40 包闭包恢复 106 个地区 Tilemap、7,577 条原记录、12 种 Tile 和两张原 ASTC 纹理；原编译遮罩程序转换为 4 个 Windows 变体，保留原透明／遮罩分支，替换导出器的非原实现占位。输入输出／逐 mip 哈希、显式原生绑定、Play Mode 与 8 个 Windows 着色阶段及已查看的公开／未公开画面见 [地区来源](official-map/map13-native-minimap-regions-source-manifest.json)。正式完整小地图与 Player 尚未完成，未生成完整素材快照。
+
+泽之国小地图原地区管理：`prepare_unity_map13_minimap_region_manager.py` 逐类迁移原玩家 UI 初始化和地区加载／遮罩管理器，保留反序遍历、原边界／GUID、10 秒回收与取消时序，复用原 UIBase、AssetGuidProxy 和 MapRegionStatus；完整输入输出哈希及实际等待、角色生命周期和资源释放 Play Mode 见 [地区管理来源](official-map/map13-minimap-region-manager-code-source-manifest.json)。正式根组件、本地状态接线及 Player 尚未完成，无新增素材或完整快照。

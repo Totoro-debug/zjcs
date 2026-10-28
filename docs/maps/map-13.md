@@ -152,6 +152,8 @@ Map13 正式实体／谜题／剧情空间输入：`prepare_unity_map13_entity_c
 
 ## 完整还原部分
 
+泽之国小地图原地区管理器：完整迁移 `MapMeCharacterUIBase` 与 `MiniMapPrivateRegionMaskManager`，复用原 UI 生命周期、GUID 代理与地区状态枚举；保留 106 个地区的原反序遍历、按视野加载、公开状态 Z 切换、对象复用、资源句柄寿命、10 秒延迟回收／重置和原 LateUpdate 等待顺序。Play Mode 使用全部原地区边界／GUID 和原生地区 prefab，实际等待验证计时重置、只回收隐藏对象、角色空值／重新进入、其他地图不订阅当前玩家状态，以及销毁取消任务并释放全部 5 个已加载句柄；运行错误为零，Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项为管理器核心；正式小地图根组件及本地状态接线、完整输入存档和 Windows Player 仍待完成。见 [原地区管理器代码与验证](../../assets/reference/official-map/map13-minimap-region-manager-code-source-manifest.json)。
+
 泽之国原小地图地区资源：106 份原 Tilemap prefab 的完整资源闭包已恢复，保留 7,577 条图块记录、12 份原 Tile、原 Sprite 网格及材质状态；两张官方 ASTC 纹理按原色彩空间和采样参数无翻转转换为原生 RGBA32。原 `Sprites/MaskableTilemap` 的四组 GPU 程序机械转换为 Windows 着色器，保留未公开区域混色、透明混合、像素对齐和外部 alpha 分支，未使用导出器占位 shader。隔离 Play Mode 验证全部地区导入／显式引用、图块身份／数量与两张纹理，8 个 Windows GPU 阶段均编译通过；已查看全部地区公开／未公开两张实际渲染画面，无运行错误，`ProjectTools.Validate` 通过。此项为地区资源与着色器；正式小地图根组件、区域状态加载、标记、输入存档及 Windows Player 仍待完成。见 [原地区资源与验证](../../assets/reference/official-map/map13-native-minimap-regions-source-manifest.json)；未生成完整素材快照。
 
 泽之国原小地图视野模块：完整迁移四份原视野处理器，保留矩形重叠的含边界判定、半径向上取整、X 优先的格子顺序、原身体偏移裁剪和控制器订阅顺序；复用原 `MyGridTransform`。隔离 Play Mode 已验证 483 个有序可见格、25 组矩形边界、真实原格子事件、同格不更新、角色替换／空角色／重新进入及释放时取消订阅；无运行错误，Unity 编译、`ProjectTools.Validate` 和元数据检查通过。此项为视野核心；正式相机／小地图根组件、区域标记、完整输入存档与 Windows Player 仍待接通。见 [原视野代码与验证](../../assets/reference/official-map/map13-minimap-view-code-source-manifest.json)。

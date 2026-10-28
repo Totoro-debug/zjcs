@@ -1,0 +1,88 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapMeCharacterUIBase.cs",
+      "sha256": "158f022010adcbf032fab2d356c334c8d18257c377492a1a56176ef6838d740f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapPrivateRegionMaskManager.cs",
+      "sha256": "f90ed2e24a6a44566b054324e7ab268694ead5ec4ce5c5bb9d106c7e82e207b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapRegionStatus.cs",
+      "sha256": "807d90a76bb87aaf9c9f3c0b4e6b9aa0a6e816c266af237836b6956ff810f3d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeTerrain/Common/MapRegionStatus.cs",
+      "sha256": "7d1c7e1733a27f8e97cc2662ee4b21d7e16db2933590f0f9ac9d718187bf8d41"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MapMeCharacterUIBase.cs",
+      "sha256": "3299a8e60901f31ec9a3a194df844637857cde6408e268f63eff0fcd56d8917a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MiniMapPrivateRegionMaskManager.cs",
+      "sha256": "6fc7f2d638c1429deb65fcf4da7b1a407bc7f18307c9042bfb530fd4850544ac"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MiniMapRegionContext.cs",
+      "sha256": "260dcb9fc1019e822e18de9366fc1c1335f6d16979238dcdbd74f89f88a7dcba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/Zjcs.Official.World.Map13MiniMapRegions.asmdef",
+      "sha256": "90e6bc55fcbb499bae4cfaba033e5e74561f53acc3c1a9ab50ac5fb331a5e8e8"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_region_manager.py",
+    "sha256": "3d3fd18ee6d677b05b6bb7654c3b5cb4a405b4639275bb09a2bfb57daa925eea",
+    "worktree_sha256": "3d3fd18ee6d677b05b6bb7654c3b5cb4a405b4639275bb09a2bfb57daa925eea",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy the complete original MapMeCharacterUIBase and MiniMapPrivateRegionMaskManager. Preserve serialized fields, initialization/controller subscriptions, region-public Z switching, reverse region traversal, original GUID loading/lease lifetime, inactive-cache reuse, exact ten-second cancellation/reset and LateUpdate await timing. Express the original compiler-generated async state machine as equivalent async C#; replace only namespaces and consumed MiniMap/session/resource interfaces. Reuse original UIBase and AssetGuidProxy.",
+  "limitations": [
+    "Manager core only; full original MiniMap and authoritative local status/resource/controller binding, formal input/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "a758ca4ba00ff5c7b7ad96b7f0f47cefb8ea457c8eb54460301d40d7b79ab16e",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "regions": 106,
+        "initial_loads": 3,
+        "final_loads": 5,
+        "disposed_leases": 5,
+        "original_reverse_load_order": true,
+        "original_public_z": true,
+        "cache_reuse": true,
+        "ten_second_delay": true,
+        "delay_reset": true,
+        "active_preserved": true,
+        "controller_reentry": true,
+        "other_map_unsubscribed": true,
+        "cancel_on_destroy": true
+      },
+      "runtime_errors": 0
+    },
+    "project_validation": {
+      "log_sha256": "553dd37d397c5d6764e92abef624caeac9f306bc39e68c8b49e1c4be139ca88b",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "guid_count": 74668,
+      "passed": true
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapRegionManagerAcceptance.cs",
+      "sha256": "04032cef7963145ecf7745abce5373887874d01fc6bca4a43ae85897f539971c"
+    },
+    "formal_minimap": false,
+    "windows_player": false
+  }
+}
