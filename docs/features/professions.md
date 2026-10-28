@@ -40,6 +40,8 @@
 
 `ProfessionNativeIdleIk` 按原顺序将八条约束接到局部骨骼姿态；世界变换按所需祖先延迟计算，每次旋转使后续缓存失效，未实现的选择性继承仍显式拒绝。隔离 Play Mode 核对六组动作的 48 个姿态、576 个最终旋转和 960 个世界矩阵；与独立几何参考的最大圆周角差为 `0.00020724535°`，满足 `0.0004°` 容差，世界值最大绝对差 `0.00008010864`，满足 `0.001 + 0.000007 × abs(expected)`。原顺序、零混合、父子缓存失效和不支持链的失败检查通过。此处未使用 SDK 实现或姿态参考，不代表完整原世界姿态、物理／变换约束、角色渲染和页面验收。来源见[待机 IK 姿态绑定](../../assets/reference/profession-ui/idle-ik-source-manifest.json)。
 
+原 `AppearanceMaterialUtils` 全部材质操作已迁入：保留染色通道 ID 缓存／最大通道、贴图／染色／光照与头发裁剪重置、四个效果关键字、Stencil 与透明裁剪字段，以及启用父 Mask 查找和根排序 Canvas 的模板深度。`Clear` 只清最大通道、不清缓存和已有材质值，按原行为保留。Mask 参数适配为 Component，原方法只访问其 Transform，不依赖骨骼 SDK。隔离 Direct3D Play Mode 检查这些分支，并以已有官方转换的 UI shader 实际绘制、读回和查看透明背景蓝色测试网格；未新增 shader 变体。原转换程序未声明 `UNITY_UI_ALPHACLIP`，Unity 将其保留在材质关键字列表，`IsKeywordEnabled` 仍返回 false；验证区分这两个状态，未改写原方法。测试不覆盖真实角色几何、皮肤裁剪、动画或完整页面。来源见[原外观材质操作](../../assets/reference/profession-ui/appearance-materials-source-manifest.json)。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。

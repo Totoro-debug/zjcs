@@ -457,6 +457,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业待机 IK 姿态绑定：`ProfessionNativeIdleIk` 按原约束顺序更新局部旋转，延迟计算所需世界祖先并在旋转后使缓存失效；来源／夹具／输出哈希见 `profession-ui/idle-ik-source-manifest.json`。隔离 Play Mode 的 48 个源姿态、576 个最终旋转和 960 个世界矩阵通过独立几何参考比对，最大圆周角差 `0.00020724535°`、世界值最大绝对差 `0.00008010864`；零混合、顺序及失败分支通过。尚未覆盖原 SDK 完整姿态、变换／物理约束、真实角色或职业页。
 
+职业外观材质：原 `AppearanceMaterialUtils` 全部方法按源码迁入，Mask 参数仅适配为 Component，保留染色缓存／最大通道、原重置顺序、效果关键字、Stencil 和父 Mask 遍历。来源／代码／验证哈希见 `profession-ui/appearance-materials-source-manifest.json`。隔离 Direct3D Play Mode 检查原字段与分支，并使用已有官方转换 UI shader 实际绘制和查看透明背景蓝色网格；材质列表保留原透明裁剪关键字，未为它新增编译变体。此为材质夹具，真实角色和职业页仍待接线。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

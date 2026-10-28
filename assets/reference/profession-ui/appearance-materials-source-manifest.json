@@ -1,0 +1,47 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceMaterialUtils.cs",
+        "sha256": "2487b93fc686202795a73e7e521ba2caeac6ee531cf6ca92c1d5d41e26c4bcaa"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMaterialUtils.cs",
+        "sha256": "af40ab40ab062d7ae01821fca6bce03e3c17fa1e6db08df9e07e3c8c2b891338"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceMaterialUtils.cs.meta",
+        "sha256": "606bbd55125776a9e195c1103db650ce8667efded7bd993f3507e909917cfa8c"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_appearance_materials.py",
+    "sha256": "b710003c56e9aaf7d682325d7ead11510e621e2b0621f4b81d9d015289a0e31d"
+  },
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceMaterialValidation.cs",
+      "sha256": "59ef8cba292547bf4489c6ee2beca87a3d3f4296cfe8150c9841836874ff5a1d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceMaterialValidation.cs.meta",
+      "sha256": "cbb323c459af06b595fda12fd5bc2a17b50603deabe202d55774f53098d915bc"
+    }
+  ],
+  "operation": "Copy all original material property IDs, dye-channel cache and maximum, resets, four effect keywords, stencil/alpha-clip and Unity mask traversal. Repair decompiled Vector3 conversion and out syntax. The mask parameter becomes Component because the original accesses only its transform; no skeleton SDK is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode: original dye-channel cache/maximum/Clear semantics; main/dye texture, light/hair and four effect keyword resets; all stencil fields and cast-to-int alpha-clip cases; enabled parent mask traversal and sort-override stencil depth pass. An actual GPU draw with the existing original translated UI shader has an opaque blue center and transparent corners; output PNG viewed. The translated source programs do not declare UNITY_UI_ALPHACLIP: Unity retains that operation in shaderKeywords while IsKeywordEnabled returns false. No new shader variants are introduced.",
+  "limitations": [
+    "The original appearance components and production character renderer are not bound. Material fixtures do not validate original actor geometry, animation, skin clipping or the complete profession UI."
+  ]
+}
