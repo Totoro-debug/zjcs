@@ -1,0 +1,124 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECPlayableSupporterView.cs",
+      "sha256": "61adb3723b78b03e17b62f075f842ec8e0aca9715f9ce8eee20b0fd00a3f8049"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IECPlayableSupporter.cs",
+      "sha256": "69589c21178b7c8c8164489295b0f6c39a945f890be213ac1d89dedb5b654bb2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECPlayableBaseHandler.cs",
+      "sha256": "20fc142decb89e0a2e1a8c617f69a976ec4bb2f7e711aca1558dfa6bd7606003"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECPlayableBaseHandlerData.cs",
+      "sha256": "6b0e6fced31f8d1be3882dc3f32d61cb144333c7eb821b52c6dd3c6e9dc9ac93"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-entity-view-runtime-source-manifest.json",
+      "sha256": "dbd5cec204b6654c4dc841b21f651185d1b9ebe33786acfcfc110b8120531479"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-playable-manager-source-manifest.json",
+      "sha256": "8c4551d8976083685c9c0cea1669c8098efd00298aa78f5b48522beb9c7603ed"
+    },
+    {
+      "path": "assets/reference/official-map/map14-story-source-fade-runtime-source-manifest.json",
+      "sha256": "3fcb4982da73845387156f0898ec27776f236750e80410bdd2d4b2726d4c1c03"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_playable_views.py",
+      "sha256": "35b8f145446a7d6ec7c3664df72bd433bd3bda72d284ccf63167a4fc4c6a8d9a"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableSupporterView.cs",
+      "sha256": "8543e9cb46966fd27008c4499b498f19b9f3817968a327ae33aed07ed129953b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableSupporterView.cs.meta",
+      "sha256": "a3fbb97ebaef35499f00488e81ad04b0123266ce0e9ece7ddc5a6bb4af3d3514"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/IECPlayableSupporter.cs",
+      "sha256": "163f7b8bac13400fa0328da10d93e7ed5e07b48674c45d61a5187d5d006b0359"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/IECPlayableSupporter.cs.meta",
+      "sha256": "ca21a3634e67f99daa8fcc216c516c1ce58bf3bac9b79f4db308da15190fcda3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandler.cs",
+      "sha256": "37d226b4b20324308579e80c6e67450b2a02e8dc19d45e97478bbc401fc0520d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandler.cs.meta",
+      "sha256": "895893493361e8d757e5a91a9a31f0edacad85b8002760b92907ee68d54d1667"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandlerData.cs",
+      "sha256": "bedf4a0251b7c35caadd2cbf156c87985ee1e9417eb3c9bed1e3b9d6bb558bcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/ECPlayableBaseHandlerData.cs.meta",
+      "sha256": "1d3efbb6894559e13235fed6525aaa85df4a1bdc4426dd3d1868ebe1bc20b909"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/Zjcs.Official.EntityViewPlayables.asmdef",
+      "sha256": "f602a9cb393d2d444902eb2e0104dd50accf236e65fe6aa5de1893c4804129af"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables/Zjcs.Official.EntityViewPlayables.asmdef.meta",
+      "sha256": "465c790c2be968e35abd0bd9d5af7968d130f6aa7cb35f0a31d6799c08cebab6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityViewPlayables.meta",
+      "sha256": "f37614fa4b7ab4feadc4f82e63c080becebd66a97565c58e45105138e113736d"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "client-source/ECPlayableSupporterView.cs",
+      "diagnosticBlocks": 1
+    },
+    {
+      "source": "client-source/IECPlayableSupporter.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ECPlayableBaseHandler.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ECPlayableBaseHandlerData.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "operation": "Copy original entity playable-support view, supporter interface and base handler/data. Preserve fade/visibility gates, source-parent binding, new/static state, appear-to-loop transition, handler traversal/null diagnostics, callback subscription/unsubscription, immediate stop ordering and release. Only namespace, entity type consumption boundary, logging and explicit DI properties are adapted.",
+  "limitations": [
+    "Concrete world-stage/periodic/state handlers, native managed-reference prefab binding, formal entity/map/input/save and Windows Player integration remain required."
+  ]
+}
