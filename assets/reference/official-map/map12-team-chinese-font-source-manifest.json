@@ -1,0 +1,204 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_font.py",
+      "sha256": "3ab04b87e635466af06a1eaaf209d9d3b01b2260cfabe74c0458f279dfbf96e4"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_native_scene.py",
+      "sha256": "64548e5dc5cf77322f20ecf0f6f8627f4ee85aff2d724036e7fead73b90382b1"
+    }
+  ],
+  "atlas": {
+    "format": 1,
+    "height": 2048,
+    "mipCount": 1,
+    "sha256": "9c606b4672d8d9551548cf74215eda08d32a8c65f6abbcc0bf6bf6a6a1da80bf",
+    "width": 2048
+  },
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeWater/Shaders/WorldText.shader",
+      "sha256": "b29a0d136e54e7072b0064278c3902166467b7ae1a4af400530e7049ea88eab6"
+    },
+    {
+      "path": "assets/reference/official-map/map13-text-shader-source-manifest.json",
+      "sha256": "682dfc6167ea6f2c5d435eb03682170e21820c14c4cb26d303bfe94e085402a9"
+    },
+    {
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_FontAsset.cs.meta",
+      "sha256": "788d1b900702d38deac8b40940ddb3f065752ee2a1bbb9714dc2a63c6b669e12"
+    }
+  ],
+  "exportedInputs": [
+    {
+      "file": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset",
+      "sha256": "6c7b03b18fe3ac0293a72c2da1d1994a1f6732420daf1f80a63ea2c7ea56baad"
+    },
+    {
+      "file": "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat",
+      "sha256": "fd5cbcd382657b7d60cc6e078733097af8fb19da49bb29475eff622fa86c724c"
+    }
+  ],
+  "fontName": "FZY4K SDF - dynamic",
+  "format": 1,
+  "inputs": [
+    {
+      "object_sha256": "993fe9f48bba80bc3f729c6cfabf269fdf7b91ac69fb2d013625ee8ac8a68031",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-1054575886599457342",
+        "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434",
+        "raw_size": 409901
+      }
+    },
+    {
+      "object_sha256": "57b7f2adeb457a8f4f3b3842127ac1bdf497f87992d883bbfee812a4525383be",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "8668477128756491714",
+        "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434",
+        "raw_size": 409901
+      }
+    },
+    {
+      "object_sha256": "5100748872e5a73c20864292b0f19fb862964e3c2c50785768804056276fd4d8",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/bf62732f37a5a423ddbac02681e054a4.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_assets_fonts_&_materials.bundle",
+        "bundle_hash": "bf62732f37a5a423ddbac02681e054a4",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "3935595767026349506",
+        "raw_sha256": "ebee921d1efee60b02445c5d09faebdef159fdd6c7284658d2c05cf9e3826434",
+        "raw_size": 409901
+      }
+    },
+    {
+      "object_sha256": "f70d78156bff31e78d485a8c5b107d9e27dcc3f48adb2cf78ca0e3c5f8972d52",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/f4e7267dbaeaf4aecd4b9fcc9d89e789.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_fonts_fzy4k.bundle",
+        "bundle_hash": "f4e7267dbaeaf4aecd4b9fcc9d89e789",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "-4610972457973430565",
+        "raw_sha256": "e45a57a0a87ca207d3526accb7ad93546a5a2d014e285ac1180a24eb98f9624a",
+        "raw_size": 7244199
+      }
+    },
+    {
+      "object_sha256": "251cbb88a3b9c3aac8f893a1e468582b82f5de7ccf5fa684858cb40f75f3fff5",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/6337290371bee9c6f8e3522d04e03398.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fzy4k.bundle",
+        "bundle_hash": "6337290371bee9c6f8e3522d04e03398",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "4586391827901168691",
+        "raw_sha256": "3da36712ce086258d1898c6b099fcea1ae33bb46f450cfb61811834dffe42695",
+        "raw_size": 7243892
+      }
+    },
+    {
+      "object_sha256": "bb346460c9200a1bab8421812ed0071e832bd67dda00e390f21c27f532b132ef",
+      "source": {
+        "apk_entry": "assets/yoo/DefaultPackage/21b128d62ad3efaa58f4f7fc04aa979f.bundle",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle": "defaultpackage_assets_textmesh_pro_rawfonts_fontassetfontconfig.bundle",
+        "bundle_hash": "21b128d62ad3efaa58f4f7fc04aa979f",
+        "manifest": "871_156598",
+        "origin": "apk_zip",
+        "path_id": "6242301411135133937",
+        "raw_sha256": "7a34d3bf237df94442a7e5681b52e83c2785228c1f6a54560a2d27e4f9338ceb",
+        "raw_size": 945
+      }
+    },
+    {
+      "object_sha256": "6815fb43a64533673219bdc19ecea4d39ae9b821c85ad9f5556efcabfbd032e9",
+      "source": {
+        "bundle": "defaultpackage_unityshaders.bundle",
+        "bundle_hash": "b44cadacfabd37f97ebaf88173e3e2a1",
+        "bundle_sha256": "2183d28b18f8b5f2d1f8f3cc2995749570b80fdbe41a39a2680f8b1350f31108",
+        "bundle_size": 853119,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-4286560471751938018",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/b44cadacfabd37f97ebaf88173e3e2a1.bundle"
+      }
+    }
+  ],
+  "limitations": [
+    "Actual team window binding, complete custom TMP compatibility and runtime rendering remain pending."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Retain original team serialized font, metrics, style/spacing, empty initial glyph tables, Alpha8 atlas bytes and original custom TMP material. Recover identical TTF/raw bytes and verify the official MD5/length. Bind the original source Font and the shared mechanically translated Windows TMP shader. This is the original serialized font; Chinese language selection remains the original separate FZY4K font service rule.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.asset",
+      "sha256": "b983e10a01555ba03d7c8c2c29d9d6de8882e4efe2a9f38bfa76e8a1d6419bfc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.asset.meta",
+      "sha256": "2d9a7543841f1ade65087c1fe8a2bb27d96c217aa4100e485010366d4c83836c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.mat",
+      "sha256": "4672d6942b4eb38f1505c895ffd788873eb57f0f62b1eddf40820725d51dc8f9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic.mat.meta",
+      "sha256": "c70f19f964b5b554baf7f776729bd867ad4bebf7dcb88451c06eb42fcf00fa1f"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic-Atlas.texture.asset",
+      "sha256": "1e74c3dad775fc85fc5c27f7c75efd31d6ed113475af63fd0eecd644f77b21a5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K-Dynamic-Atlas.texture.asset.meta",
+      "sha256": "4c6b3635dad73cff5490ad05358d2d1791b4877fd81f42d146872aa356e74ce1"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K.ttf",
+      "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team/FZY4K.ttf.meta",
+      "sha256": "46efa8b77b991f806ca1cb2f31c2017ea2073739ec49dab0956e69e80282a1a9"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/Team.meta",
+      "sha256": "f68c1be965bf6753b86de2a5f568f6f599e7f428dabd08de552409cdf5ad2915"
+    }
+  ],
+  "serializationTemplate": {
+    "gitBlob": "46e746601727c9a28172909e4aa082032c8a1561",
+    "path": "unity/Assets/Official/World/Map/13/NativeText/FZY4K-Dynamic-Atlas.texture.asset",
+    "sha256": "1e74c3dad775fc85fc5c27f7c75efd31d6ed113475af63fd0eecd644f77b21a5"
+  },
+  "sourceFont": {
+    "bytes": 10017464,
+    "md5": "11a2dd2b22891535ec398a00c33ab4e1",
+    "sha256": "90023872dffe6a58503de655bd0631bf3334ce3b6b72cc75a6625b685c94c386"
+  }
+}

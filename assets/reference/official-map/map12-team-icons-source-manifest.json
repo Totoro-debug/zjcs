@@ -1,0 +1,200 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_icons.py",
+      "sha256": "491b0631c0e436fe08c27654fe661c0e650f5a60940532e5189e336072343a41"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "editorAssembly": {
+    "normalization": "Parse JSON; sort object keys and unordered assembly references; compact UTF-8 JSON.",
+    "path": "unity/Assets/Game/Editor/Zjcs.Editor.asmdef",
+    "semantic_sha256": "5eda182589bd14138694d3d4c2ac3972faf7bf57c2517106416677dbdd71f23b"
+  },
+  "format": 1,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-ui-prefabs.json",
+      "sha256": "4d73f1cb130d5943025f5b6d68e9bf8b8c2c1ac9782cfa992b9bd71db26bd7ad"
+    }
+  ],
+  "limitations": [
+    "Full native team prefab binding, real player/NPC info services, roster/formation persistence and formal map battle remain pending.",
+    "The three original status pointers are null. ITeamIconStatus is a consumed manager/component contract, not a replacement serialized component or an implementation of PlayerIconStatus.",
+    "NpcIconUI parser/combat-rating and resource services must be bound before its real native window is usable; isolated component tests do not establish full-window visuals."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Migrate PlayerIcon/PlayerIconOther, NpcIconUI and TeamMemberIcon using the existing original UIBase, PlayerIconMe and PlayerInfoUI ports. Preserve serialized field names, generic NPC member branch, initialization/enable order, async first/latest requests, nine-second update boundary, cancellation, portrait-click guards, brief-info await, online/default-online flags and matching event lifetime. Supply manager, data and resource boundaries through local interfaces.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIcon.cs",
+      "sha256": "92e8d8cfb9ce3f1407b22b590fe96d69c18038b84acd32972d8044a16fe62c25"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconOther.cs",
+      "sha256": "3501e95fc3365531cdd41109594285cf5587148899e259459c3ba90026c212ea"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerIconMe.cs",
+      "sha256": "906d4192a420ae943e7ed09f77d7373b0ba65a1b4f1c947e4b9211f92d513cad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/PlayerInfoUI.cs",
+      "sha256": "69bd9ce64a612bc52536e57503f623b54cf1ed98ace54b52aa336c611d8cd90e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/NpcIconUI.cs",
+      "sha256": "aff01db0d91b8c2c6f8d3513c91dca4e8c662a8ef79f90f9b6787b9d92c65e60"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamMemberIcon.cs",
+      "sha256": "19c335575c2b5a8b25aa89660bd370ede355e5dfb4fd9622c433cc63b0d0348b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIBase.cs",
+      "sha256": "fd029496b78172ec9e9e0710366106bcdaf493c1270dfff6311d1c79400abc61"
+    }
+  ],
+  "originalStatusReferences": [
+    {
+      "field": "myIconStatus",
+      "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:-2791481221063732618",
+      "value": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      }
+    },
+    {
+      "field": "myIconStatus",
+      "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:3944352294989786450",
+      "value": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      }
+    },
+    {
+      "field": "myIconStatus",
+      "identity": "CAB-28ab96f4ace3ae4850b84f8e25b35e6f:4511562683696551154",
+      "value": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamIconServices.cs",
+      "sha256": "6ac2c50c80e5d3e078528df30a1ac433572e8a1a23581cfb842d934b6a85589e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamIconServices.cs.meta",
+      "sha256": "4d686da56f22323f4ddc4589b241847af2f80b0bac7916aa95e4fe3057cb2520"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamMemberIcon.cs",
+      "sha256": "f1d0cd81b3481015c80c5493396a8b9d46328ddf64f9090cf8115039aa2f2cd0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamMemberIcon.cs.meta",
+      "sha256": "f94afe84cca5c1d7460a5b866f8b3c15b89a23178c98aec365f98bde13126839"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamNpcIconUI.cs",
+      "sha256": "8fcee1ac07e84313713bc826cc87c628a7a0b0a4ceee1e4bcbb45dfa4950bd2a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamNpcIconUI.cs.meta",
+      "sha256": "ef1afee496d538c03adb5e1cacc1dd878a7e137a9d9cf2cb0e589626c6fba788"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIcon.cs",
+      "sha256": "cdf5d51c34982fdb30ef5eda199309a82b3568f128cd7b42a59c197b4ed045d3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIcon.cs.meta",
+      "sha256": "d6cdd3c1579e4827674c06c0dae2c7626341a544f31751b6cb8addab744f2fc7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIconOther.cs",
+      "sha256": "1dc1cf1fe37c3cab408783f3384cf910e5deff47a74cedb7aa33082e15288196"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamPlayerIconOther.cs.meta",
+      "sha256": "9e039c9a201759255cbba4a1e56fee33e2df6b2b896cb833b8e87359ca5218a6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/Zjcs.Official.TeamUI.asmdef",
+      "sha256": "55088cdaa2f67f0585d17689c27f973226412c60a8a0cc5d6f20cfc8a91b27a1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/Zjcs.Official.TeamUI.asmdef.meta",
+      "sha256": "537a924f1fe975e4f904ed7aa633e5c098bec76f88a360768e7d1297dabce961"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI.meta",
+      "sha256": "258a8ed0990f8910d2fc26a4aac263ae94a159c136d48736d493cd9082dfb496"
+    }
+  ],
+  "sharedPorts": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIBase.cs",
+      "sha256": "71904439a92bd0bbe189a95f9a7213defc9bd3d9283c8279fa1fc0b9d09b87d8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoUI.cs",
+      "sha256": "f615b718bf0c94f79212401feb9589a6350a538f4018ae4248e720d2fec3f21a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerIconMe.cs",
+      "sha256": "2c52fb866696a75494f66f01601d0325011bff619c06de44d3f2a88c6d70e53e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PlayerInfoData.cs",
+      "sha256": "bb76039f9c8c2b0f92922fe653b8dc5986aebef5b3ee95d78571e519eb349fe7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionPlayerInfoBindings.cs",
+      "sha256": "3464b51bf40955579437499b91f5e6a347ab0191476631530c41f941ae24726a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionImageResourceBridge.cs",
+      "sha256": "acdb7d8a803632b80a5dc4140676980e2fb1e9b596a155ba6b704cf4632dd412"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldStateSwitcher.cs",
+      "sha256": "e2fd20a63aa5e3b82ab98ec3d17cc8c973c3558bb0b2083ef54a2bf80188a2dc"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamIcons.cs",
+      "sha256": "2750a7893901f8f98d0803374454e58b74bdfb6d29508cdeaffc0ecd22b5458a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamIcons.cs.meta",
+      "sha256": "164864511b3b57fd6ea97e7e548b452688eee42f1dcee2d97f4285447a8ee85d"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs",
+      "sha256": "1063a2180c78e9e60a2f887934f2f2958dcef10196716c7c882537d65afb7ec8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionPlayerInfoValidation.cs",
+      "sha256": "23d62b1fe472c69c65577e35809b985e2225404d9f75b96d07f1325ea83a8112"
+    }
+  ]
+}

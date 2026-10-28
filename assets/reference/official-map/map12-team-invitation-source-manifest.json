@@ -1,0 +1,109 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_invitation.py",
+      "sha256": "1f0d12d8036fbc9c7079ce9bd6cf74d49e637d5319203c813edb710f9ad116f1"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "codeManifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "format": 1,
+  "limitations": [
+    "The actor projection contains only the fields consumed by these ports; it does not replace the complete official ActorTargetData/PlayerNpcTargetDataWrap implementation.",
+    "Original team prefab binding, local team services, roster persistence and formal map battle flow remain pending. Rule checks and compilation do not establish a playable team window.",
+    "No multiplayer, invitation counters, reward changes or alternate UI are introduced."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "operation": "Recover TeamInviter async branches and AllowMemberInviteToggle directly from selected official code. Substitute local service interfaces and Task for the RPC/UniTask boundary; retain signed Int64 identity, check order, leader short-circuit, await, error-code consumption, the ignored RPC bool, original message keys/arguments, target limit tips, event lifetime and Toggle notifications.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviter.cs",
+      "sha256": "04c16bd1e27a5b68993e23e0b1d9ea908246e5f0c2aec1956b708ea19e496bde"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/InviterBase.cs",
+      "sha256": "503ca15dcc271d8b5fa915cd1099c3020eee62871a6e7bae10e1a26bd734ae09"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamUtils.cs",
+      "sha256": "0ab87dbbccfe85ac0e42740724f7a5abfe2dbdce43bbe3f299304d5b2f65fc38"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/AllowMemberInviteToggle.cs",
+      "sha256": "66937f3f7e35292380b8535e184b921615e064adc2b32b7efa9e930ccfefd231"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ActorTargetData.cs",
+      "sha256": "7d7b25e3301ea51575ddcc03981db340e3570946d68a9a7f6b993ae309d756e8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcTargetData.cs",
+      "sha256": "8dd82f3532fc35e2016cc794ca1a5ac44cf0bf8f252a201ed7145080d76ceab7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerPlayTeamAction.cs",
+      "sha256": "67ce18b285dbbe0461a8d9432be13db8957025886cc7466b1a0f268abd7ec693"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldInviterBase.cs",
+      "sha256": "650003d4300d8864752f400f1e47f43c178ca4b4fdf68b4ccfed3268a3cca52e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldInviterBase.cs.meta",
+      "sha256": "6ea418aed27c8fe50abcba04b40ed5529b2e9ddac43b1093403794fbf4333255"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTeamInviter.cs",
+      "sha256": "987dedde6cd6386956223309a5488bc78f67b28d0b02d42a4fe5674be8f7b003"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldTeamInviter.cs.meta",
+      "sha256": "43a55fbb2b2fdda3852ccf07476666d955d261854c69d9bd580dde4da9e604c4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldAllowMemberInviteToggle.cs",
+      "sha256": "d221f31a4ca9e96bd58deb30a4b1d6cb6a48f5cb86c17a4b7c46fe615f990e95"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldAllowMemberInviteToggle.cs.meta",
+      "sha256": "06a44d93f09dc8be1698caa56c368eebdd2ddb283b3d1d2368c4aa73afcf4bdc"
+    }
+  ],
+  "ruleChecks": [
+    {
+      "path": "scripts/fixtures/map12_stele_context_harness.cs",
+      "sha256": "14fa4e49313c505c577573a7728348b1283085e2749c9c6ed197177f267ae684"
+    },
+    {
+      "path": "scripts/test_map12_stele_context.py",
+      "sha256": "7f6ab4e8959113d2e7bbbf89ebff6692e36f561aa8a4ecaf32089d75397943b5"
+    },
+    {
+      "path": "scripts/test_map12_stele_context.ps1",
+      "sha256": "67c9ea720f63127aa57d2c0a31b33de1d510fa13edbdb71785a9ddcc680845c8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs",
+      "sha256": "1063a2180c78e9e60a2f887934f2f2958dcef10196716c7c882537d65afb7ec8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs.meta",
+      "sha256": "35942ca8b12f4413980ce127024d82b3933387a354db7b9c2f55388a582d67cc"
+    }
+  ]
+}

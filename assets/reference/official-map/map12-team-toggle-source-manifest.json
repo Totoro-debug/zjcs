@@ -1,0 +1,192 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_team_toggle.py",
+      "sha256": "a7e0320afc4c8a8787046d1bde36be7fa4a8d3c06c679a37ef896e65f58f55fb"
+    }
+  ],
+  "dependencies": [
+    {
+      "identity": "CAB-8ede2c00df79c3aff9bab2859b047085:5924382417553736613",
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/PopupSound/Main_Cursor_Normal.wav",
+      "sha256": "5924b1dbe481566a9b0dc0d40ef24c5e01dadc53a6dd88f178de0ca1bfcc759e"
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:5262215441426734615",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Sel-4f63d09337.png",
+      "sha256": "4f63d0933791a38a6037d7dc6ec2647f5fc29cf21cddd6f7d5c19319c3e874d0"
+    },
+    {
+      "identity": "CAB-b162472e6e43e3e3d8cef5582d2f004d:-1985464818016463037",
+      "path": "unity/Assets/Official/World/Map/12/UI/Sprites/BtnCheck_Nor-2bb9ad0ab5.png",
+      "sha256": "2bb9ad0ab5fa6fb827cf6481e5aefec71bf79d692ba6fe4c34fce221e2f5c66e"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-ui-prefabs.json",
+      "sha256": "4d73f1cb130d5943025f5b6d68e9bf8b8c2c1ac9782cfa992b9bd71db26bd7ad"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/native-team-ui-prefabs.json",
+      "sha256": "ef54582f790fcfe364e1105da388dbd6707bfac0a2c9a7954efd681662090aaa"
+    },
+    {
+      "path": "assets/reference/official-map/map12-team-chinese-font-source-manifest.json",
+      "sha256": "d5ecf43407b6b4c7b98956461922f3e3501a19f08adfa78f3a1913da236d0a77"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/UI/map12-ui.json",
+      "sha256": "f49ca87709fb2f908748c48daf83639ec1aad005b7bf4243ca372e9cc1d91040"
+    },
+    {
+      "path": "assets/reference/official-map/localization-source-manifest.json",
+      "sha256": "e9b7a5d75c61f340ba6e75a8a58335c1535be7e66564a2b5628e6d1d8af9ba04"
+    }
+  ],
+  "languageInputs": [
+    {
+      "entries": 108,
+      "sha256": "a068ee47db184c96c8923172a104ed90b37f72e2b4adb5d73211d894d7ec9001",
+      "source": {
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle_hash": "a373f2acc39aeb5c4560f1456879b997",
+        "origin": "apk_zip",
+        "path": "assets/yoo/WwiseBnk/a373f2acc39aeb5c4560f1456879b997.rawfile"
+      }
+    },
+    {
+      "entries": 100081,
+      "sha256": "738069eafacd7fe33aae970aa5edacd76f48ed02acdd07ededad1c4a499b93b8",
+      "source": {
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "bundle_hash": "9a0b6ab8c5136050fd005ead8f567863",
+        "origin": "apk_zip",
+        "path": "assets/yoo/WwiseBnk/9a0b6ab8c5136050fd005ead8f567863.rawfile"
+      }
+    }
+  ],
+  "limitations": [
+    "This binds the original permission widget only; the complete TeamPanel, invitation list, NPC roster services, battle flow and persistence remain pending. Runtime validation is separate."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "nodes": 6,
+  "operation": "Extract the exact original TeamPanel permission subtree. Retain original object IDs, component order, Transform/RectTransform fields and typography. Detach only its root parent for prefab installation; explicitly bind actual Windows script ports, the exact original serialized font, original pixel-identical sprites and decoded click PCM. Retain original language key and text.",
+  "originalCode": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIClickSound.cs",
+      "sha256": "3a895b1e6a137a4be2e9b3ef54951c4b39a6ac29aa52749343a9514bd3929975"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIToggleObject.cs",
+      "sha256": "f022c13fe487d29ed46d584722c8526d47488fed8be6d96773a109e6ebfd9a36"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIToggleStatusBase.cs",
+      "sha256": "3909960d6a42e75197a5b76faa3cd7b375dc5a2e6486b1425697b3605fa97ecb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/MultiLanguageText.cs",
+      "sha256": "3229b04b116900b276a925e0ec9186717dbbf4cb91470b4758a4f514f216e963"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/AllowMemberInviteToggle.prefab",
+      "sha256": "a23ee6542fbbb0f6453fa2b66d7d5f0ad893e777271ecb63e2d46414ab864213"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/texts.json",
+      "sha256": "bca81a3499580d6bd9335999a8de740deb025c6c95a17602f29171e2849a7abc"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-toggle-layout-context.json",
+      "sha256": "966c685a06f578f384d151ad778523720db0e1d70259fff2adb63e9e997d11b0"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/AllowMemberInviteToggle.prefab.meta",
+      "sha256": "9e04653ca211ad16877fd625c11b2a30f2b8a257c19fc30fadfbbe87c2cfc6ff"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team/texts.json.meta",
+      "sha256": "83e1b578aafb40db64f2fea5a60e9e427439a3b7604fd06e67270a1e97fe13b5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/team-toggle-layout-context.json.meta",
+      "sha256": "8e5d9dd64884fe901abf886ee563709a1a0ca6890d0b5dea95b415998bc61eda"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map12/Team.meta",
+      "sha256": "eb1bdb1361c22677c552a4a29ac3ac40c4bd272286d935880d538aa25a7668ca"
+    }
+  ],
+  "scriptBindings": [
+    {
+      "meta_sha256": "06a44d93f09dc8be1698caa56c368eebdd2ddb283b3d1d2368c4aa73afcf4bdc",
+      "original": "AllowMemberInviteToggle",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldAllowMemberInviteToggle.cs",
+      "sha256": "d221f31a4ca9e96bd58deb30a4b1d6cb6a48f5cb86c17a4b7c46fe615f990e95"
+    },
+    {
+      "meta_sha256": "7ed1134651547e890d2f9e96b7e5293aedb5736713dd8eb8cab39d952b2d06e7",
+      "original": "MultiLanguageText",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad"
+    },
+    {
+      "meta_sha256": "9a77e994f2ba8a3a41cdb0b6b8edf2476a4125588f32cb4dc367080de2e4784b",
+      "original": "UIClickSound",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldUiClickSound.cs",
+      "sha256": "ca86540da9440eccb917e83f96be6439bfa643beec49f8a86c414346e734caef"
+    },
+    {
+      "meta_sha256": "5e7d19cee4ab59b784b51609205c2de4b78365584e30f1b8128de85bf5aab8e4",
+      "original": "NoDrawingRayCast",
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/NoDrawingRayCast.cs",
+      "sha256": "23f45a9becd801a57e6d40a7a6d53d569564cd3fa7715de3f36bab3db0c4c99d"
+    },
+    {
+      "meta_sha256": "1de7c8743ab07d949141889cfd45ca58a5edf83ee2dc2d7fa278e1405a59884a",
+      "original": "UIToggleObject",
+      "path": "unity/Assets/Game/Runtime/Official/SkillsUI/UIToggleObject.cs",
+      "sha256": "efc8401f20cfbf3014e6bfa11b625c4d7fb2df10519a898eba58060f25f53a94"
+    },
+    {
+      "meta_sha256": "72bce650a1d76dddfeaf21a14ec42199abc3b6050c86d682d9b07276e4cf2e9b",
+      "original": "UnityEngine.UI.Toggle",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Toggle.cs",
+      "sha256": "83fba5c173bc5b694df5a36ac46a16bf65bef5f119b1f1c835e59cf2cbdd2a69"
+    },
+    {
+      "meta_sha256": "5d5268c445723f854020175a8fdfe91d4ca7fbc62f360438d4224a3ecca32066",
+      "original": "UnityEngine.UI.Image",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs",
+      "sha256": "351dd72516d240f5722c55f72f8e95a0a92cf71e83358bbc922eee47bdb78502"
+    },
+    {
+      "meta_sha256": "10054a60194f0eb3ad44e4448e6a985b477e5d3421055976067aaefaafdf7653",
+      "original": "UnityEngine.UI.LayoutElement",
+      "path": "unity/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/LayoutElement.cs",
+      "sha256": "c6e88f6d086a6dfc4111a03024ea1279d6d2c6b755e0a5df50f64dfa06edd732"
+    },
+    {
+      "meta_sha256": "dabd328cbb3096519a4356686931a62663f4c934771d9525260ca4d6972620fd",
+      "original": "TMPro.TextMeshProUGUI",
+      "path": "unity/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TextMeshProUGUI.cs",
+      "sha256": "f25b03386b3b6eaef0f6f164ae0230b74f09ea53145fdf8bcb6d4a01786af425"
+    }
+  ],
+  "serializedObjects": 28,
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs",
+      "sha256": "1063a2180c78e9e60a2f887934f2f2958dcef10196716c7c882537d65afb7ec8"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.TeamControls.cs.meta",
+      "sha256": "35942ca8b12f4413980ce127024d82b3933387a354db7b9c2f55388a582d67cc"
+    }
+  ]
+}

@@ -180,6 +180,10 @@ Map12主线任务1165～1270沿用官方顺序、前置和奖励；其中1215要
 
 原队伍邀请的 `PlayerPlayTeamAction` 现直接复用所选 Common 原实现，与开战检查共用原互斥表，不把组队动作当成开战动作。独立 C# 9 编译及规则夹具已检查聊天／梦境舞会／匹配完成时阻止邀请、等待匹配退出、取消退出、成功退出及退出房间后新增硬互斥；正式邀请窗口、具体退出处理器与本地队伍服务尚未接线，未执行 Unity 运行验收。六个受影响源码程序集编译、七点位窗口数据规则及全工程静态元数据检查（74007个 GUID）通过。来源仍记入上述原玩法状态清单。
 
+原 `TeamInviter` 的邀请分支已迁入 `WorldTeamInviter`：保留“人数已满→队长／成员邀请权限→等待操作返回→按错误码提示”的顺序、NPC／玩家两条原语言消息及目标限制提示；不以 RPC 的布尔返回值替代错误码，不改变64位目标标识。`WorldAllowMemberInviteToggle` 保留原字段、启停监听、至少3人的显示条件及回调纠正 Toggle 时再次触发事件的行为。独立规则检查与六个受影响源码程序集编译通过，覆盖权限短路、异步完成前无成功提示、错误分支和异常传播。原权限开关的6节点／28对象现保留原序列化参数并绑定实际脚本、原图片／中文字体／文字和点击音效。Unity 原生导入／全工程验证及 DX12 Play Mode 两种竖屏尺寸（450×800、720×1280）通过，模拟射线点击检查异步响应、回调纠正及监听生命周期；四张运行截图已查看，勾选／空圈画面均正常。原生 `.asset` Sprite 转为 PNG 导入子资源时显式切换引用类型，避免空 Sprite 白块；测试只补齐原两级父布局。此为独立控件验收，完整队伍窗口、本地服务、名单／站位存档和地图实战尚未接通；控件来源见[原权限开关](../../assets/reference/official-map/map12-team-toggle-source-manifest.json)。来源见[原邀请动作](../../assets/reference/official-map/map12-team-invitation-source-manifest.json)、[原队伍字体](../../assets/reference/official-map/map12-team-font-source-manifest.json)及[原中文字体](../../assets/reference/official-map/map12-team-chinese-font-source-manifest.json)。
+
+原 `PlayerIcon`／`PlayerIconOther`／`TeamMemberIcon` 及独立 `NpcIconUI` 已迁入 `Zjcs.Official.TeamUI`，共用已有原 `UIBase`、`PlayerIconMe` 和 `PlayerInfoUI`。保留 NPC 走通用 Player 图标分支、64位目标身份、首读／9秒后 latest 刷新、异步详情等待、在线标记默认值、取消与事件生命周期；原三处状态图标引用均为空，未制造替代组件。已实际运行的隔离工程通过静态元数据检查（74171个 GUID）、Unity 全工程导入／编译／验证及 DX12 Play Mode 组件生命周期检查，另核对 NPC 图标的配置／区域阶位读取顺序、职业显隐、同步资源加载顺序和每次启停／复用的资源释放。此处使用隔离服务夹具；完整原窗口、真实 NPC 数据与模型绑定、队伍／站位存档和地图实战仍未完成。依据见[原队伍头像与队员栏](../../assets/reference/official-map/map12-team-icons-source-manifest.json)。
+
 ### 已迁移代码与局部资源
 
 以下为局部代码／资源接入，完整流程仍受本页缺项限制。

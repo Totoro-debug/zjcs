@@ -68,3 +68,5 @@ Map13 四份 NPC 出现／消失原生演出复用：固定 871_156598，独立�
 Map13 原剧情演出请求边界：`map13-story-playable-requests-source-manifest.json` 固定原 `PlayPlayableNode.cs`、`GetEntityBaseNode.cs`、`XNode/Node.cs`／`NodePort.cs`、原图及 12 份原生演出来源。直接使用迁移原请求、原管理器／中心／FIFO 池；保留 `-1` 原时长、完整 GUID／标志和 XNode 精确分组端口语义，未把 55 个编号端口合并成原图未连接的 58 个分组端口。内置屏 Unity 2022.3.57f1c2 D3D11 实播 29 请求、55 输入、20 等待、两处前置停止并查看原地形上的多演员特效画面，来源记录日志／画面哈希、声音事件 ID 和清理结果。演员为隔离参数／挂点对象，正式 EC／NPC 原动画、实际音频、完整剧情与 Windows Player 仍未完成；无新增替代美术／Spine runtime，未生成完整素材快照。
 
 泽之国视野本地边界补齐原 148 份身体模板、2,690 份放置变换、108 份营地成员列表与 478 份所属营地记录；原坐标旋转、身体范围缓存及共享组件执行顺序保持，离线适配只提供本地状态、事件与存档输入。`scripts/prepare_unity_map13_grid_visibility.py` 记录全部原代码／配置及输出哈希，`OfflineMap13GridVisibility` 在内置屏 D3D11 编辑器核对 106 地区、57,600 格恢复和原压缩字节，见[视野来源](official-map/map13-grid-visibility-source-manifest.json)。该项不代表完整地图实体、输入或 Windows 发布完成，无新增图像素材。
+
+山之国原队伍来源：[邀请动作](official-map/map12-team-invitation-source-manifest.json) · [原权限控件](official-map/map12-team-toggle-source-manifest.json) · [原序列化字体](official-map/map12-team-font-source-manifest.json) · [原中文字体](official-map/map12-team-chinese-font-source-manifest.json) · [原头像与队员栏](official-map/map12-team-icons-source-manifest.json)。
