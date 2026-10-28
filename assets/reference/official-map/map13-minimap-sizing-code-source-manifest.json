@@ -1,0 +1,112 @@
+{
+  "format": 1,
+  "mapClassId": 13,
+  "manifest": "871_156598",
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapKeepSizeHandler.cs",
+      "sha256": "22a2de51b0d0de33966db8fb88c82adb31e908646e3c1ab2dde047afbabfc3bb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MiniMapKeepSizeObj.cs",
+      "sha256": "0028cdafdb0f4bc236603a67cdad20da281e4dd639a97c14e5b5775895d2bc8a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MinimapKeepSizeObjHelper.cs",
+      "sha256": "ae677d95db59ae9aa927f7f648b96cb3082b793f02568c282c7b8331897b5920"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMap/MiniMapDiagnostic.cs",
+      "sha256": "c1ab49bd0de276372963702d023c327efd5f181b7de3c44a4fa586fb5be38449"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/MiniMapKeepSizeHandler.cs",
+      "sha256": "89e036fe2ff24b2a4e6bca1d08ef9aa766068fa4d3b1c319c4ab6a5b094f6eb9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/MiniMapKeepSizeObj.cs",
+      "sha256": "a17687361b4f2e52abe2af30d18f6cc344a853f23bac3fe4907afb1079f8921d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/MinimapKeepSizeObjHelper.cs",
+      "sha256": "8552018952a66a5a75e02276372a580176362fd25ad8105a8e4a431757a55e0d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/MiniMapSizingContext.cs",
+      "sha256": "3666aeef852c0baacdeded9cd0e7d078c8dcf42b82976bf669949bf29541974f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/MiniMapSizingDiagnostic.cs",
+      "sha256": "430d00feac094536941ffe955745bf6a37b6dbe2cc4d1edfd3cc6eff62796fcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapSizing/Zjcs.Official.World.Map13MiniMapSizing.asmdef",
+      "sha256": "8373be3ffba72f343228500de1fd6364c65111447ba76394d34025b3303a8f29"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/Map13MiniMapRegions/MiniMapRegionContext.cs",
+      "sha256": "260dcb9fc1019e822e18de9366fc1c1335f6d16979238dcdbd74f89f88a7dcba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/UIBase.cs",
+      "sha256": "0a4740857df7bab6b99a325aedd0451290e99cff0bd9337136eed8c096cb7707"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/World/NativeMap13Labels/GAction.cs",
+      "sha256": "50ecf738bd049ab440cc0a46a8d776a078c2d6192f6fd9ecf56ff51eaa6b2b64"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StoryPlayables/GAction.cs",
+      "sha256": "eb46f37f6a5dd7550dd5fc088ff1e3ca18c9ddb14f6a3ce7b154abd09978c4a0"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_map13_minimap_sizing.py",
+    "sha256": "1b3f15262fe7a0a8ad6396da4070954aadcb81778a736af28eb762bcfeb6382f",
+    "worktree_sha256": "1b3f15262fe7a0a8ad6396da4070954aadcb81778a736af28eb762bcfeb6382f",
+    "normalization": "Repository LF text; original executed worktree bytes recorded separately"
+  },
+  "operation": "Copy complete original MiniMapKeepSizeHandler, MiniMapKeepSizeObj and MinimapKeepSizeObjHelper. Preserve exact zoom-threshold formula, uniform replacement scale, original default-scale restoration on hide, strict ratio/threshold guards, event order, subscriptions and lifecycle. Reuse complete original UIBase and GAction classes. Qualify namespaces, remove editor-only Rename annotation and replace only consumed MiniMap root/DI and disposable/logging backends; the required context is the base of the actual original root.",
+  "limitations": [
+    "Original root and native prefab binding, actual formal minimap input/save and Windows Player remain required."
+  ],
+  "local_validation": {
+    "editor": "2022.3.57f1c2",
+    "play_mode": {
+      "log_sha256": "67938341097abc9438ea8c73502f13cc334aa1b6c873406fac80e178caa479a6",
+      "result": {
+        "editor": "2022.3.57f1c2",
+        "thresholds": 4,
+        "formula_cases": 20,
+        "helper_cases": 28,
+        "wrapper_cases": 2,
+        "ordered_events": 61,
+        "full_original_classes": true,
+        "exact_thresholds": true,
+        "ratio_guards": true,
+        "original_uniform_scale": true,
+        "hide_restores_default": true,
+        "unsubscribe": true,
+        "reentry": true
+      },
+      "runtime_errors": 0
+    },
+    "project_validation": {
+      "log_sha256": "0f0466032fe0d09b600f2a8a51b17de9e532c15f54d8a3a0bf0373a20cfed8e1",
+      "exit_code": 0
+    },
+    "static_metadata": {
+      "passed": true,
+      "guid_count": 75876
+    },
+    "validation_source": {
+      "path": "unity/Assets/Game/Editor/Map13MiniMap/OfficialMap13MiniMapSizingAcceptance.cs",
+      "sha256": "ee769bc761f144d8fd3ab3c4b0c00ba000eb84dd02d327698acfd5ebfc987429"
+    },
+    "scope": "Original code and actual Transform/event lifecycle only; formal native root/prefab binding, visual/input/save and Windows Player remain required."
+  }
+}
