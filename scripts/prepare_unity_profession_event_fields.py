@@ -52,7 +52,15 @@ def restore(proof_path):
             continue
         relative = path.relative_to(exported)
         target = destination / relative
-        text = (target if target.exists() else path).read_text(encoding="utf-8")
+        key = target.relative_to(ROOT).as_posix()
+        # A previous conversion may have left a non-registry event prefab here.
+        # Only the current verification receipt can authorize restored input.
+        if key in outputs:
+            if sha(target.read_bytes()) != outputs[key]['sha256'] or sha(raw) != outputs[key]['input_sha256']:
+                raise ValueError('Current restored event input changed: ' + key)
+            text = target.read_text(encoding='utf-8')
+        else:
+            text = path.read_text(encoding='utf-8')
         docs = documents(text)
         def go_identity(file_id):
             fields = docs[file_id][1]
@@ -100,7 +108,6 @@ def restore(proof_path):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding="utf-8")
         target.with_name(target.name + ".meta").write_bytes(path.with_name(path.name + ".meta").read_bytes())
-        key = target.relative_to(ROOT).as_posix()
         output = outputs.get(key, dict(input=path.relative_to(ROOT).as_posix(), input_sha256=sha(raw), path=key, registries=0))
         output["sha256"] = sha(target.read_bytes())
         outputs[key] = output
@@ -110,7 +117,7 @@ def restore(proof_path):
             if list(struct.unpack("<" + "i" * len(record["original_values"]), bytes.fromhex(str(actual)))) != record["original_values"]:
                 raise ValueError("Restored event trigger bytes differ from original source")
     if checked != set(originals):
-        raise ValueError("Not every original profession event trigger was restored")
+        raise ValueError("Not every original profession event trigger was restored: " + repr(sorted(set(originals) - checked)))
     native = NativeMethods(ROOT / ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
         ROOT / ".tools/source-packages/official-code/global-metadata.dat")
     address, method_index = native.by_name["AkTriggerHandler.OnEnable"]

@@ -1,0 +1,59 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "identities": {
+    "Prefabs/UI/Item/Attachments/CenterHintContent.prefab": "c13ce4882b782384ebc0e20362bca4b1",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic.asset": "66657f3ffe66d19408ff3def3018fe50",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF Material_0.mat": "e24c9512a238d2b489d041be2d069c7d",
+    "Image/UI/Common/Common_Atlas/ImgItemTipBg.asset": "deda51f843cf83f42b90782f237444b8",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Red.asset": "35ce04ac496cc024ba72eefc6196ae7a",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Gold.asset": "ad0170c0ed3ba284f9385f88780253a9",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Multicolour.asset": "4f601a61f0e063d4eb1d0c9020751448",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Blue.asset": "d7aaa6d5fa28eba41b73af9c6e65a05b",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Purple.asset": "970553cd948a9a54abd0441235c9020f",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_White.asset": "39129950bb379b74daf36b23b4785971",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Orange.asset": "6bd3e7b0786f85046ae1fee404461bdd",
+    "Prefabs/UI/Item/ItemIconDefault.prefab": "b1eb400eced13f448b4a9750d2b53f6d",
+    "Image/UI/Common/Common_Atlas/ItemPiece2.asset": "eb5146db9257c594d9594c908b50091c",
+    "Image/UI/Common/Common_Atlas/ImgItemIcon_NumBg.asset": "6b53e1b4c24373f4292c1dbf0272861f",
+    "Image/UI/Common/Common_Atlas/C_none.asset": "d91fcd8ce5228b443a3478a28f5b3d5a",
+    "Image/UI/ItemQuality/ItemQuality_Atlas/ImgQuality_Shadow.asset": "772d1920c7c04d545a640ba0d92ba70a",
+    "Image/UI/Common/Mask/ImgMask.asset": "217a496cf2bfb1d4883a7f68327a497a",
+    "Wwise/ScriptableObjects/Event/ED37F1E2-92F1-446F-B68B-92DB8BAEF7A3.asset": "650914f161bbbfa4c86a28939dcb2d8d",
+    "Image/UI/Common/Common_Atlas/ImgBg_CountText.asset": "7d8a947396001744094dae9df13d5400",
+    "Texture2D/sactx-0-2048x2048-ASTC 6x6-Common_Atlas-7a2befb3.png": "340cb31d4cc94f442b8185ef1bc1c3b8",
+    "Texture2D/sactx-0-1024x512-ASTC 6x6-ItemQuality_Atlas-748d1aea.png": "b2f30c1dce166874095f1c6304aeede5",
+    "TextMesh Pro/Assets/Fonts & Materials/FZY4K SDF - dynamic Atlas.png": "044798c4214f0a74086efa374c7cdd17",
+    "Image/UI/Common/Mask/ImgMask.png": "9025b22dc6c4de64b99a00fd9dcde05d"
+  },
+  "sources": [
+    {
+      "commit": "7d4e846accd019b1ebf761bfa48ec130a41acad9",
+      "path": "assets/reference/profession-ui/item-catalog-source-manifest.json",
+      "sha256": "73355bc917d1d1eb65ddf75699ab7be886de8dfc9b0eec91907c4cc9e0a6a236"
+    },
+    {
+      "commit": "7d4e846accd019b1ebf761bfa48ec130a41acad9",
+      "path": "assets/reference/profession-ui/item-resources-source-manifest.json",
+      "sha256": "f74218d94f688f5d7d2b6575f554d2a9af5c0738d4b9ac5ba97213759e5b03c6"
+    },
+    {
+      "commit": "7d4e846accd019b1ebf761bfa48ec130a41acad9",
+      "path": "assets/reference/profession-ui/native-textures-source-manifest.json",
+      "sha256": "fe3c136c2e4e7d2cc0dff4bde7ff567edceb597697eb66ca8132d18943a9902e"
+    },
+    {
+      "commit": "7d4e846accd019b1ebf761bfa48ec130a41acad9",
+      "path": "assets/reference/profession-ui/fonts-source-manifest.json",
+      "sha256": "43f9d5aabeb203cd3fe042b3324da6b0738fc5ac3a2e620b9898963373a439bd"
+    }
+  ],
+  "operation": "Retain published native Unity asset identities when rebuilding conversion caches. Other export identities derive from version and relative path. These are editor identifiers, not original gameplay data.",
+  "embedded_references": [
+    {
+      "asset": "TextMesh Pro/Assets/Fonts & Materials/MPLUSRounded1c-Medium SDF.asset",
+      "pattern": "m_AtlasTextures:\\r?\\n  - \\{fileID: 2800000, guid: ([0-9a-f]{32}), type: 3\\}",
+      "guid": "56c5f5bb57059c240871beea1bbc41ef"
+    }
+  ]
+}

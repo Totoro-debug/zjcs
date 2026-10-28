@@ -38,8 +38,7 @@ namespace Zjcs.Editor.ProfessionUI
         }
         public static void Run()
         {
-            string project = Directory.GetParent(Application.dataPath).FullName;
-            string fixturePath = Path.GetFullPath(Path.Combine(project, "../../profession-native-ui/871_156598/typed/reward-sprite-native-fixture.json"));
+            string fixturePath = ProfessionValidationWorkspace.Fixture("reward-sprite-native-fixture.json");
             var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(fixturePath));
             try
             {

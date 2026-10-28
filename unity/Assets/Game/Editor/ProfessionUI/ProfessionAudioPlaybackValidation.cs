@@ -37,7 +37,7 @@ namespace Zjcs.Editor.ProfessionUI
             };
         }
         private static string Project => Directory.GetParent(Application.dataPath).FullName;
-        private static string Repository => Path.GetFullPath(Path.Combine(Project, "../../.."));
+        private static string Repository => ProfessionValidationWorkspace.Repository;
         private static string AssetPath(Expected expected) => expected.clip.Substring("unity/".Length);
         private static void Require(bool value, string message)
         {
@@ -45,7 +45,7 @@ namespace Zjcs.Editor.ProfessionUI
         }
         public static void Run()
         {
-            Require(Project.Replace('\\', '/').Contains("/.tools/profession-ui-validation/unity"), "isolated validation project");
+            ProfessionValidationWorkspace.AssertIsolatedProject();
             try
             {
                 proof = LoadProof();

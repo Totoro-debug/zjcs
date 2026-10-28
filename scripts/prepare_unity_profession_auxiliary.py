@@ -22,7 +22,7 @@ def write(name, text):
 
 
 def build():
-    cache = ROOT / ".tools/profession-native-ui/871_156598/typed"
+    cache = ROOT / ".tools/source-packages/current/871_156598/profession-ui/typed"
     plan = json.loads((cache / "native-bindings-main-dynamic.json").read_text(encoding="utf-8"))
     script_meta = cache / "export/ExportedProject/Assets/Scripts/Assembly-CSharp/TopBarHandler.cs.meta"
     script_guid = re.search(r"(?m)^guid: ([0-9a-f]{32})$", script_meta.read_text(encoding="utf-8"))[1]

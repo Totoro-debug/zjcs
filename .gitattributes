@@ -749,3 +749,10 @@ unity/Assets/Game/Runtime/Official/WorldUI/WorldStateMultiLanguagesConfig.cs* te
 unity/Assets/Game/Editor/OfficialMap11UiTools.Steles.cs* text eol=lf
 unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.SteleUi.cs* text eol=lf
 assets/reference/official-map/map12-stele-ui-source-manifest.json text eol=lf
+
+# Profession source fingerprints retain exact bytes across checkout.
+unity/Assets/Game/Runtime/Official/ProfessionUI/** -text -eol
+unity/Assets/Game/Runtime/Offline/ProfessionUI/** -text -eol
+unity/Assets/Game/Editor/ProfessionUI/** -text -eol
+assets/reference/profession-ui/** -text -eol
+scripts/*profession*.py -text -eol

@@ -124,7 +124,7 @@ namespace Zjcs.Editor.ProfessionUI
         private static Func<string, string> previousLanguage;
         private static bool ready, initialized;
         private static int index, phase, changedFrame;
-        private static string Repository => Path.GetFullPath(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "../../.."));
+        private static string Repository => ProfessionValidationWorkspace.Repository;
         static ProfessionItemIconValidation()
         {
             EditorApplication.update += Update;
@@ -134,7 +134,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             try
             {
-            Require(Application.dataPath.Replace('\\', '/').Contains("/.tools/profession-ui-validation/unity/"), "isolated project");
+            ProfessionValidationWorkspace.AssertIsolatedProject();
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             ProfessionNativeTextureValidation.Run();
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -181,10 +181,10 @@ namespace Zjcs.Editor.ProfessionUI
         private static void Initialize()
         {
             initialized = true;
-            fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Repository, ".tools/profession-native-ui/871_156598/typed/item-icon-fixture.json")));
+            fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(Repository, ".tools/source-packages/current/871_156598/profession-ui/typed/item-icon-fixture.json")));
             Require(fixture.items.Length == 4, "four actual source reward definitions");
             var catalog = Object.Instantiate(AssetDatabase.LoadAssetAtPath<OfflineProfessionImageCatalog>(fixture.catalog));
-            var fontFixture = JsonUtility.FromJson<FontFixture>(File.ReadAllText(Path.Combine(Repository, ".tools/profession-native-ui/871_156598/typed/font-service-fixture.json")));
+            var fontFixture = JsonUtility.FromJson<FontFixture>(File.ReadAllText(Path.Combine(Repository, ".tools/source-packages/current/871_156598/profession-ui/typed/font-service-fixture.json")));
             var fontEntries = catalog.Entries.ToList();
             var fontCatalog = AssetDatabase.LoadAssetAtPath<OfflineProfessionImageCatalog>(fontFixture.resource_catalog);
             fontEntries.AddRange(fontCatalog.Entries);
@@ -239,7 +239,7 @@ namespace Zjcs.Editor.ProfessionUI
             Canvas.ForceUpdateCanvases(); camera.Render(); var previous = RenderTexture.active; RenderTexture.active = target;
             var texture = new Texture2D(512, 512, TextureFormat.RGBA32, false, true); texture.ReadPixels(new Rect(0, 0, 512, 512), 0, 0); texture.Apply(); RenderTexture.active = previous;
             Require(texture.GetPixels32().Count(p => p.a > 0) > 100, "original reward icon renders on GPU");
-            File.WriteAllBytes(Path.Combine(Repository, "output/profession-ui-native-20261028/item-icon-" + fixture.items[index].info.ClassId + ".png"), texture.EncodeToPNG()); Object.Destroy(texture);
+            File.WriteAllBytes(ProfessionValidationWorkspace.Output("item-icon-" + fixture.items[index].info.ClassId + ".png"), texture.EncodeToPNG()); Object.Destroy(texture);
             var rect = (RectTransform)icon.transform; mouse.Point = RectTransformUtility.WorldToScreenPoint(camera, rect.TransformPoint(rect.rect.center));
             var hits = new List<RaycastResult>(); events.RaycastAll(new PointerEventData(events) { position = mouse.Point }, hits);
             Debug.Log("Original item pointer=" + mouse.Point + ", screen=" + Screen.width + "x" + Screen.height + ", camera=" + camera.pixelRect + ", hits=" + string.Join(",", hits.Select(h => h.gameObject.name)) + ", graphics=" + string.Join(",", icon.GetComponentsInChildren<Graphic>(true).Select(g => g.name + ":" + g.raycastTarget + ":" + g.isActiveAndEnabled)));

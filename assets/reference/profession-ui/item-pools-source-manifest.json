@@ -101,7 +101,7 @@
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionItemAttachmentValidation.cs",
-    "sha256": "aa8dd0c30f5a9f0c32bb24836b104d6e4bf580b74ecb01bd9d00d81781203b56"
+    "sha256": "a8a3171954cf3c20f0de444b82d54d3fba308471fec074b4e1cd6b87192683c1"
   },
   "operation": "Retain original FIFO pool, reset/clear callbacks, inactive pool roots, create/borrow/return order, reverse shrink traversal, low-memory release, config first-match lookup, retained GUID resource handles and disposal order. Port non-generic GAction linked observers/version/reentrancy, original destroy listener and constructor forwarding; replace logging, resource/config/application and scene-injection boundaries with explicit consumed adapters. Newly created pool root has no listener, so direct AddComponent is equivalent to source GetOrAddComponent.",
   "limitations": [

@@ -92,7 +92,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             try
             {
-                Require(Application.dataPath.Replace('\\', '/').Contains("/.tools/profession-ui-validation/unity/"), "isolated project");
+                ProfessionValidationWorkspace.AssertIsolatedProject();
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
                 Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
                 Application.runInBackground = true;
@@ -205,8 +205,7 @@ namespace Zjcs.Editor.ProfessionUI
             camera.Render(); var previous = RenderTexture.active; RenderTexture.active = target;
             var pixels = new Texture2D(512, 512, TextureFormat.RGBA32, false, true); pixels.ReadPixels(new Rect(0, 0, 512, 512), 0, 0); pixels.Apply(); RenderTexture.active = previous;
             Require(pixels.GetPixels32().Count(p => p.r > 100) > 100, "control fixture is actually rendered at the pointer target");
-            string repository = Path.GetFullPath(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "../../.."));
-            File.WriteAllBytes(Path.Combine(repository, "output/profession-ui-native-20261028/auxiliary-control-fixture.png"), pixels.EncodeToPNG()); Object.Destroy(pixels);
+            File.WriteAllBytes(ProfessionValidationWorkspace.Output("auxiliary-control-fixture.png"), pixels.EncodeToPNG()); Object.Destroy(pixels);
         }
         private static void Require(bool condition, string message) { if (!condition) throw new InvalidOperationException("Profession auxiliary: " + message); }
         private static void Finish(int code)

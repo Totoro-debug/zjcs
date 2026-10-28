@@ -3,7 +3,7 @@
   "manifest": "871_156598",
   "native_export": {
     "path": "assets/reference/profession-ui/native-export-source-manifest.json",
-    "sha256": "c6b53ac5d81cbe7152a0116fec1ebf00a76eb2acb8638d0bec55b1ad0349784b"
+    "sha256": "8001aef15b75a6995b66a7e1d4081b4d7a5f5e3fb38fdafb399c502bf12dd382"
   },
   "native_inputs": [
     {
@@ -113,11 +113,11 @@
   ],
   "generator": {
     "path": "scripts/prepare_unity_profession_audio_sources.py",
-    "sha256": "d16aebefda9482cdab29c8047a704263296f6291ce6a1b477234993460f34308"
+    "sha256": "4a4df7c4f8b361f69b1e0f0f6bb715951d340a0db4c274674e0af21027583717"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionEventFieldValidation.cs",
-    "sha256": "51b9426e4140fa0874e8399b9116fedade67b07a150c13ad117e83a2338e0353"
+    "sha256": "d2f0579e108acd4f2d4b385d353dd12110684cb1155eb9d92f8224c35efd9c46"
   },
   "scope": "Original serialized event references and source UI click/popup dispatch; source AkEvent enable/start trigger, emitter selection and simple Post path. All eight typed source components have actions/callbacks disabled. Unsupported triggers/actions/callbacks fail explicitly. SDK simple Post validates the native object reference, posts its actual ID and preserves the returned playing ID.",
   "limitations": [

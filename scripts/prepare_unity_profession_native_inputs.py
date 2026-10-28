@@ -13,7 +13,7 @@ from map13_entity_native_schemas import install
 from prepare_unity_bundle_inputs import collect, read_source, serialized_files
 from prepare_unity_map13_water_entity_inputs import hydrate
 
-CACHE = ROOT / '.tools/profession-native-ui/871_156598'
+CACHE = ROOT / '.tools/source-packages/current/871_156598/profession-ui'
 BUNDLE = 'defaultpackage_assets_prefabs_ui_profession.bundle'
 ITEM_BUNDLE = 'defaultpackage_assets_prefabs_ui_item.bundle'
 RULE_DIALOG_BUNDLE = 'defaultpackage_assets_prefabs_ui_ruledialog.bundle'

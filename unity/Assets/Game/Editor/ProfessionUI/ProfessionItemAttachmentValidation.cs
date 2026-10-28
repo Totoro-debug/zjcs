@@ -51,7 +51,7 @@ namespace Zjcs.Editor.ProfessionUI
         {
             try
             {
-            Require(Application.dataPath.Replace('\\', '/').Contains("/.tools/profession-ui-validation/unity/"), "isolated project");
+            ProfessionValidationWorkspace.AssertIsolatedProject();
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
             Require(prefab != null, "original prefab native import");
@@ -93,8 +93,7 @@ namespace Zjcs.Editor.ProfessionUI
                 pixels.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); pixels.Apply();
                 RenderTexture.active = previous;
                 Require(pixels.GetPixels32().Count(pixel => pixel.a > 0) > 100, "original attachment actually renders on GPU");
-                string repository = Path.GetFullPath(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "../../.."));
-                File.WriteAllBytes(Path.Combine(repository, "output/profession-ui-native-20261028/item-hint-native.png"), pixels.EncodeToPNG());
+                File.WriteAllBytes(ProfessionValidationWorkspace.Output("item-hint-native.png"), pixels.EncodeToPNG());
                 Object.Destroy(pixels);
                 if (phase == 0)
                 {

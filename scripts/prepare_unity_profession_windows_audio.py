@@ -16,7 +16,7 @@ from prepare_character_creation_opening_audio import parse_pck, read_field
 from prepare_unity_profession_native_inputs import CACHE
 from verify_current_audio_sources import mapping
 
-WORK = ROOT / ".tools/profession-native-ui/audio"
+WORK = ROOT / ".tools/source-packages/current/871_156598/profession-ui/audio"
 OUTPUT = ROOT / "unity/Assets/Official/ProfessionAudio"
 PROOF = ROOT / "assets/reference/profession-ui/windows-audio-source-manifest.json"
 WWISER = ROOT / ".tools/wwiser/wwiser.py"

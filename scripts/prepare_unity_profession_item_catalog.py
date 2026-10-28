@@ -15,7 +15,11 @@ def record(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path))
 
 
-def build():
+def build(unity_project=None):
+    project = (unity_project or ROOT / 'unity').resolve()
+    if project != (ROOT / 'unity').resolve():
+        from validation_workspace import require_temporary_unity_project
+        require_temporary_unity_project(project)
     runtime = ROOT / "unity/Assets/Game/Runtime/Offline/ProfessionUI"
     for name in ("OfflineProfessionImageCatalog", "OfflineProfessionImageResourceLoader"):
         path = runtime / (name + ".cs.meta")
@@ -31,7 +35,7 @@ def build():
         raise ValueError("Mixed original item source versions")
     installed = {row["native_relative_path"]: row for row in native["outputs"]}
     for row in native["outputs"]:
-        target = ROOT / "unity" / row["installed_path"]
+        target = project / row["installed_path"]
         if sha(target) != row["sha256"] or sha(target.with_name(target.name + ".meta")) != row["meta_sha256"]:
             raise ValueError("Installed original ItemIcon resource differs: " + str(target))
     entries, bindings, items = [], [], []
@@ -70,7 +74,9 @@ def build():
     target.write_text("%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!114 &11400000\n" + body, encoding="utf-8", newline="\n")
     meta = target.with_name(target.name + ".meta")
     meta.write_text("fileFormatVersion: 2\nguid: " + hashlib.md5(b"zjcs:profession:item-image-catalog").hexdigest() + "\nNativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: 11400000\n", encoding="utf-8")
-    result = dict(format=1, manifest=apk.version, dynamic_sources=record(dynamic_path), item_configs=record(configs_path),
+    result = dict(format=1, manifest=apk.version,
+        verified_project_kind='source' if project == (ROOT / 'unity').resolve() else 'isolated-validation',
+        dynamic_sources=record(dynamic_path), item_configs=record(configs_path),
         bindings=bindings, catalog=record(target), catalog_meta=record(meta), folder_meta=record(folder_meta),
         runtime=[record(runtime / (name + suffix)) for name in ("OfflineProfessionImageCatalog", "OfflineProfessionImageResourceLoader") for suffix in (".cs", ".cs.meta")],
         native_installation=native,
@@ -91,4 +97,7 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--unity-project', type=Path)
+    build(parser.parse_args().unity_project)

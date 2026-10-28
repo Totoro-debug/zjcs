@@ -75,9 +75,7 @@ namespace Zjcs.Editor.ProfessionUI
             try
             {
                 AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-                string project = Directory.GetParent(Application.dataPath).FullName;
-                string fixturePath = Path.GetFullPath(Path.Combine(project,
-                    "../../profession-native-ui/871_156598/typed/reward-sprite-native-fixture.json"));
+                string fixturePath = ProfessionValidationWorkspace.Fixture("reward-sprite-native-fixture.json");
                 var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(fixturePath));
                 Sprite a = AssetDatabase.LoadAssetAtPath<Sprite>(fixture.items[0].path);
                 Sprite b = AssetDatabase.LoadAssetAtPath<Sprite>(fixture.items[1].path);

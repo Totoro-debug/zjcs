@@ -112,8 +112,8 @@
   "native_components": [
     {
       "prefab": {
-        "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
-        "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231"
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359"
       },
       "relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
       "component_header": "--- !u!114 &114851516945401423",
@@ -128,8 +128,8 @@
     },
     {
       "prefab": {
-        "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
-        "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231"
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359"
       },
       "relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
       "component_header": "--- !u!114 &114750864809144439",
@@ -144,8 +144,8 @@
     },
     {
       "prefab": {
-        "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
-        "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231"
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359"
       },
       "relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
       "component_header": "--- !u!114 &114373510683845777",
@@ -160,16 +160,16 @@
     }
   ],
   "native_script_metadata": {
-    "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TopBarHandler.cs.meta",
-    "sha256": "f9cf1261950ea0bbdca93f940aa53bcffc1e4e7b6756f267f63a1530a2b75585"
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Scripts/Assembly-CSharp/TopBarHandler.cs.meta",
+    "sha256": "157e31bdac0e84392c9cb9a75fae9c5fee10ff867e95f245ef5f944297730d92"
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_auxiliary.py",
-    "sha256": "bc9815747d31772bd0d27aa9c4e270a6864ad350c7fe8f18908852676fc34b3e"
+    "sha256": "7d9f526b643703c04e375202f3b1e0d7d3241622b1fdb3c2a4013a281347643a"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAuxiliaryValidation.cs",
-    "sha256": "02cd6a60520d5ccea30ba0a906225a03cffaccb070459a71ac43d7279811f6dc"
+    "sha256": "dc5c396f273fdd85fb0968b930e3abc759ae771fc63b30ea7dc76074350a78f6"
   },
   "operation": "Copy original top-bar handler/item, manager interface, currency data/provider and complete PlayerItemType enum. Preserve empty-list guard, native slot parenting/rect reset, popup subscriptions, activation flags, stop-count propagation and ordered updates. Replace DI with explicit binding and adapt only the consumed external currency-item Component/SetStopUpdateCount API; no replacement UI is constructed.",
   "limitations": [

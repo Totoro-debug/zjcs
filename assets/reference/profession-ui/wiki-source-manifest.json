@@ -18,8 +18,8 @@
   "native_components": [
     {
       "prefab": {
-        "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
-        "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231"
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "sha256": "2b9c8184afc97e07e03b8c3cec373858d2e51fe117968a7b1ec5ac3ff572c359"
       },
       "relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
       "component_header": "--- !u!114 &114453693399945115",
@@ -32,8 +32,8 @@
     }
   ],
   "native_script_metadata": {
-    "path": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WikiEntry.cs.meta",
-    "sha256": "58f75dbdb661f2501b8841e2b6603d89ffc0795ff93f0b7ae9544574d803e05c"
+    "path": ".tools/source-packages/current/871_156598/profession-ui/typed/export/ExportedProject/Assets/Scripts/Assembly-CSharp/WikiEntry.cs.meta",
+    "sha256": "8dba1c9ae94835ea9f6b299dd02282c9df6c227860ed34b7ef910f68e0a72908"
   },
   "parser": {
     "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WikiInfoParser.cs",
@@ -119,11 +119,11 @@
   },
   "generator": {
     "path": "scripts/prepare_unity_profession_wiki.py",
-    "sha256": "b6aba752259adb17ea517e44772989b523da6f2edde97357dffd3052e9098d6e"
+    "sha256": "0d444762508fd6958e24d70f8375864520d2b4d073912dc93ece235bb0866645"
   },
   "validation": {
     "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAuxiliaryValidation.cs",
-    "sha256": "02cd6a60520d5ccea30ba0a906225a03cffaccb070459a71ac43d7279811f6dc"
+    "sha256": "dc5c396f273fdd85fb0968b930e3abc759ae771fc63b30ea7dc76074350a78f6"
   },
   "operation": "Retain original WikiEntry fields, enable subscription/disable disposal, server/player/config/condition guard order, URL/message branches, SDK arguments, report metadata and click event order. Port the generated Goto state machine to C# async Task with explicit consumed service boundaries. Decode the complete selected Luban wiki table and preserve the original CN-only, first-entry region filter. The four current rows are US-only, so Profession has no CN configuration and its original IsLimit hides the entry; no new offline disable rule is added.",
   "limitations": [

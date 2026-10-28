@@ -67,7 +67,7 @@ def build():
     if any(x in text for x in ("GZLogger", "ZLogger", "UniTask", "DisposableBag", "[Inject]", "MeManager", "Parsers.Instance")):
         raise ValueError("Unresolved WikiEntry dependency")
     port = write("WikiEntry", "namespace Zjcs.Official.ProfessionUI\n{\nusing System;\nusing System.Collections.Generic;\nusing System.Threading.Tasks;\nusing UnityEngine;\nusing UnityEngine.UI;\npublic class WikiEntry : MonoBehaviour\n{\n" + text + "\n}\n")
-    cache = ROOT / ".tools/profession-native-ui/871_156598/typed"
+    cache = ROOT / ".tools/source-packages/current/871_156598/profession-ui/typed"
     plan = json.loads((cache / "native-bindings-main-dynamic.json").read_text(encoding="utf-8"))
     native_script = cache / "export/ExportedProject/Assets/Scripts/Assembly-CSharp/WikiEntry.cs.meta"
     native_guid = re.search(r"(?m)^guid: ([0-9a-f]{32})$", native_script.read_text(encoding="utf-8"))[1]

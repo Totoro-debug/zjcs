@@ -14,6 +14,10 @@ def record(path):
 
 
 def build(unity_project=None):
+    project = (unity_project or ROOT / 'unity').resolve()
+    if project != (ROOT / 'unity').resolve():
+        from validation_workspace import require_temporary_unity_project
+        require_temporary_unity_project(project)
     apk = Apk.current()
     if apk.version != "871_156598":
         raise ValueError("Wrong original item source version")
@@ -32,13 +36,14 @@ def build(unity_project=None):
     installed_path = CACHE / "typed/installed-item-hint.json"
     installed = json.loads(installed_path.read_bytes())
     for row in installed["outputs"]:
-        path = ROOT / "unity" / row["installed_path"]
+        path = project / row["installed_path"]
         if record(path)["sha256"] != row["sha256"] or record(path.with_name(path.name + ".meta"))["sha256"] != row["meta_sha256"]:
             raise ValueError("Installed original item hint changed: " + str(path))
     for row in installed["folder_metadata"]:
-        if record(ROOT / "unity" / row["path"])["sha256"] != row["sha256"]:
+        if record(project / row["path"])["sha256"] != row["sha256"]:
             raise ValueError("Native item folder metadata changed")
     result = dict(format=1, manifest=apk.version,
+        verified_project_kind='source' if project == (ROOT / 'unity').resolve() else 'isolated-validation',
         configuration=dict(source=apk.provenance(config), payload_sha256=hashlib.sha256(config.get_raw_data()).hexdigest(), fields=fields),
         original_asset=asset, source=apk.provenance(native), payload_sha256=hashlib.sha256(native.get_raw_data()).hexdigest(),
         original_icon_source=record(code / "client-source/ItemIcon.cs"),

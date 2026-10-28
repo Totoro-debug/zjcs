@@ -69,6 +69,7 @@ def build():
         item_pools=file_record(ROOT / "assets/reference/profession-ui/item-pools-source-manifest.json"),
         auxiliary=file_record(ROOT / "assets/reference/profession-ui/auxiliary-source-manifest.json"),
         wiki=file_record(ROOT / "assets/reference/profession-ui/wiki-source-manifest.json"),
+        portrait_lifecycle=file_record(ROOT / "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json"),
         item_resources=file_record(ROOT / "assets/reference/profession-ui/item-resources-source-manifest.json"),
         item_icon=file_record(ROOT / "assets/reference/profession-ui/item-icon-source-manifest.json"),
         item_configs=file_record(ROOT / "assets/reference/profession-ui/item-configs-source-manifest.json"),

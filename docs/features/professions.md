@@ -16,7 +16,9 @@
 
 主页面立绘按原 `ProfessionSettings` 的 GUID 从官方 Sprite 提取，38 个职业的男女映射复用 12 张原图片，保留 alpha、PPU、pivot、border；原 `ImageLocator` 的原生尺寸及锚点修正代码已迁移。职业总览、雷达、职业树的五种状态与条件分组，以及馈赠的原面板控制代码已迁入 `Runtime/Official/ProfessionUI/`。关闭、倒计时、导师入口和剧情节点登记通过服务接口连接本地运行环境；服务和原生 prefab 接线仍未完成。不能把旧节点投影界面算作原生 prefab 迁移完成。
 
-两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 16 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
+原 `ProfessionCharacterPortrait`、`CharacterPortraitBase`、请求器、缓存、纹理对／池及两个接口共 8 个类型已迁入，保留请求键、原始回调次序、60 秒过期、订阅占用、后进先出复用、每桶每次仅缩减一个纹理及低内存清理行为。MessagePipe 的取消对象按官方原生指令恢复为先取消再释放；管理器与低内存事件使用显式绑定，外观数据在此边界按原对象引用传递。隔离 Unity 的实际 Play Mode 验证 GPU 纹理读回／字节重载、请求替换、禁用取消与通知顺序、重启用订阅和缓存／池生命周期，通过并检查测试纹理画面。测试纹理仅用于读回验证；真实角色拍摄、持久化、外观动画和原生页面仍未接通。来源见[肖像生命周期](../../assets/reference/profession-ui/portrait-lifecycle-source-manifest.json)。
+
+两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
 
@@ -36,7 +38,7 @@
 原 `FontAssetFontService` 已迁入，保留延迟加载配置、源字体已绑定判断、句柄保留、反射绑定、按名称释放及销毁顺序；两个原始 TTF 以 Windows 动态 Font 交付，原 JSON 字典在打包时解析为等值本地配置，运行时核对原 JSON 后交回原服务。未迁移 Android 流式缓存路径，也未声称完成多语言字体服务。隔离 Unity 的实际 Play Mode 使用正式本地图标／字体目录渲染四种奖励，逐项核对原品质背景、文字和字体归属，模拟鼠标按下／抬起进入原 `ItemIcon` 详情调用入口，清理后核对监听解除和控件状态；四项通过，实际运行画面已查看。附件提示也使用原字体重跑。测试中的统一数字 300 只验证控件，正式馈赠数量仍由成就配置决定。此处没有验证详情弹窗内容、完整馈赠列表或职业主页面。字体来源见[字体服务](../../assets/reference/profession-ui/font-service-source-manifest.json)。
 
 
-`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 16 种运行脚本待接入。
+`RuleDialog` 的全部设置重载、原列表复用、行激活及 `UIUtils` 的变换复位顺序和 `TipInfo` 的图文设置代码已迁入；原规则解析器结果通过本地接口提供，实际说明弹窗仍待接线。已核对并复用原 `BgDialogElement`、`ItemProgress` 的现有迁移组件，以及从原生代码恢复的 `TMPEffect`，未用空脚本消除原 prefab 引用。包含上述动态资源及物品配置的闭包为 881 个资产、87 种脚本，断开 GUID 为 0，仍有 15 种运行脚本待接入。
 
 原 `TopBarHandler`、`TopBarItem`、管理器接口、货币数据及枚举等七类已迁入，保留空列表判断、父节点与矩形复位、窗口显示／隐藏订阅、停止数量更新及回收顺序；外部货币控件通过原代码消费的 Component／方法接口接入。主面板闭包内三个原始顶部栏的两份货币列表均为空，原分支不会借出栏位。隔离 Play Mode 控件测试验证空列表、更新、窗口事件和重复启停；非空货币栏的完整 prefab／服务仍待迁移。来源见[顶部栏](../../assets/reference/profession-ui/auxiliary-source-manifest.json)。
 
@@ -49,6 +51,8 @@
 
 `ProfessionAudioPlaybackValidation.Run` 已在隔离 Unity 的实际 Play Mode 核对五份 AudioClip 的全部 PCM 采样、采样率／声道／帧数及显式绑定，再通过原事件包装向 Windows 播放桥发出五个声音请求，逐项观察真实 AudioSource 的样本推进与 AudioListener 非零输出。验证在正式进入 Play Mode 并等待实际游戏帧后开始，五项播放全部通过。此范围只完成声音载荷和平台播放，正式职业窗口生命周期及本地设置混音仍未连接，也不替代职业界面鼠标操作验收。处理与哈希见[Windows 音频来源](../../assets/reference/profession-ui/windows-audio-source-manifest.json)；未生成完整素材快照。
 
+
+职业代码、工具和来源凭据在 Git 中保留原始字节，避免检出时的换行转换破坏已记录哈希。职业转换缓存使用 `.tools/source-packages/current/871_156598/profession-ui/`；验证工程、日志和隔离数据使用 `output/validation/professions-<GUID>/`，通过 `ZJCS_VALIDATION_DIR`／`ZJCS_REPOSITORY_ROOT` 显式定位并检查会话标记。重建转换缓存时保留已接入资源的 Unity GUID，其余按所选版本和原导出相对路径固定标识；先一致重写引用，再核对原层级、托管注册表、对象身份、浮点位值和事件数组。重复恢复不改变本轮已核实的 1525 项输入／输出资产哈希。原 GUID 对照见[转换资源标识](../../assets/reference/profession-ui/native-guid-identities.json)。
 
 转换输入工具允许显式选择隔离 Unity 工程的实际 TMP／UGUI／URP 编译程序集作为类型元数据输入，逐项记录来源与 SHA256；默认仍使用主工程。本次刷新后 357 个 bundle 的转换输入字节与上次完全一致，复用既有导出，再按来源恢复事件数组，没有绕过哈希校验。
 

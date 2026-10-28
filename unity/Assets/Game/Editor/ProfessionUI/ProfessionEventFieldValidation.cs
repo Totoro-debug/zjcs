@@ -32,9 +32,7 @@ namespace Zjcs.Editor.ProfessionUI
         }
         public static void Run()
         {
-            string project = Directory.GetParent(Application.dataPath).FullName;
-            string fixturePath = Path.GetFullPath(Path.Combine(project,
-                "../../profession-native-ui/871_156598/typed/event-native-fixture.json"));
+            string fixturePath = ProfessionValidationWorkspace.Fixture("event-native-fixture.json");
             var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(fixturePath));
             var previous = OfficialWwiseEvent.Host;
             try

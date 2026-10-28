@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / '.tools/unitypy-work'))
 from prepare_unity_profession_native_inputs import CACHE, BUNDLE
 from prepare_unity_map13_water_entity_export import build as verify_export, convert
 from prepare_unity_profession_event_fields import restore as restore_event_fields
+from profession_native_guids import restore as restore_guids
 
 
 def build(run_converter=False):
@@ -24,12 +25,16 @@ def build(run_converter=False):
         raise ValueError('Profession native input coverage changed; inspect the original prefab inventory.')
     if run_converter:
         convert(cache)
+    identities = restore_guids(cache / 'export/ExportedProject/Assets')
     proof = ROOT / 'assets/reference/profession-ui/native-export-source-manifest.json'
     verify_export(receipt_path=receipt, component_path=receipt,
                   roots=source.get("roots", [BUNDLE]), cache_root=cache, proof_path=proof,
                   expected_counts=None, entry_path=Path(__file__),
                   map_class_id=None, subject='profession UI')
     restore_event_fields(proof)
+    result = json.loads(proof.read_bytes())
+    result['native_identities'] = identities
+    proof.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     compact = {key: value for key, value in source.items()
                if key not in ('components', 'managed_reference_unions')}
     compact['component_count'] = len(source['components'])

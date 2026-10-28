@@ -17,8 +17,9 @@ namespace Zjcs.Editor.ProfessionUI
         { public string path; public int width, height, mip_count, texture_format; public Sampler settings; public Mip[] mips; }
         public static void Run()
         {
-            var root = Path.GetFullPath(Path.Combine(Directory.GetParent(Application.dataPath).FullName, "../../.."));
-            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(root, ".tools/profession-native-ui/871_156598/typed/native-textures-fixture.json")));
+            ProfessionValidationWorkspace.AssertIsolatedProject();
+            var root = ProfessionValidationWorkspace.Repository;
+            var fixture = JsonUtility.FromJson<Fixture>(File.ReadAllText(Path.Combine(root, ".tools/source-packages/current/871_156598/profession-ui/typed/native-textures-fixture.json")));
             Require(fixture.textures.Length == 4 && SystemInfo.supportsAsyncGPUReadback, "four native textures and GPU readback support");
             foreach (var e in fixture.textures)
             {
