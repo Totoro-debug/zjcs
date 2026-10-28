@@ -413,9 +413,11 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 `prepare_unity_profession_dynamic_sources.py` 从所选版本的原始成就、物品和规则提示 TextAsset 完全解码三张 Luban 表，记录全部构造器／字节哈希；只将职业组 10、四种奖励定义和 `ProfessionLevelInfo` 条目与旧打包投影逐项核对，不把整份历史配置标成当前版本。原 `ItemIconManager` 的 ID 覆盖与 `IconConfigPool` 类型覆盖／默认分支确认四种奖励均选择 APK 中的 `ItemIconDefault`；`RuleDialog` 也按原调用取回。来源、实际 prefab／Sprite 对象、资源地址、转换和加载闭包见 [dynamic-resources-source-manifest.json](profession-ui/dynamic-resources-source-manifest.json)。`RuleDialog`、`TipInfo` 代码已迁入并通过隔离 Unity 编译，规则数据接口与实际弹窗调用仍待连接。现有 `BgDialogElement`、`ItemProgress` 及原生代码恢复的 `TMPEffect` 经来源／输出哈希核对后复用。
 
-单张奖励图标的导出 PNG importer pivot 与原 Sprite 不符，`prepare_unity_profession_reward_sprites.py` 改为恢复 4 个原生 Sprite 的原矩形、pivot、PPU、border、顶点／索引字节、UV 变换、渲染键和纹理引用；4 张原 ASTC 纹理用既有解码器按原颜色空间／UNORM8 逐 mip 解码成原生 RGBA32 Texture2D，保留原采样和可读标记，不二次压缩。隔离 Unity 实际导入后验证全部几何、UV、纹理设置，以及 4 张纹理 GPU 读回像素的 SHA256，全部通过；尚未验证职业列表中的实际画面和鼠标交互。加入服务动态资源后的闭包为 871 个资产、84 种脚本，尚有 25 种脚本待迁移，断开 GUID 为 0。没有构建或发布职业可执行版本。
+单张奖励图标的导出 PNG importer pivot 与原 Sprite 不符，`prepare_unity_profession_reward_sprites.py` 改为恢复 4 个原生 Sprite 的原矩形、pivot、PPU、border、顶点／索引字节、UV 变换、渲染键和纹理引用；4 张原 ASTC 纹理用既有解码器按原颜色空间／UNORM8 逐 mip 解码成原生 RGBA32 Texture2D，保留原采样和可读标记，不二次压缩。隔离 Unity 实际导入后验证全部几何、UV、纹理设置，以及 4 张纹理 GPU 读回像素的 SHA256，全部通过；尚未验证职业列表中的实际画面和鼠标交互。加入服务动态资源后的闭包为 871 个资产、84 种脚本，尚有 20 种脚本待迁移，断开 GUID 为 0。没有构建或发布职业可执行版本。
 
 奖励包中的 `GachaOneRewardGo` 按实际反编译字段顺序恢复序列化 schema，保留原 `StateSwitcher<bool>` 配置／owner 与 Wwise Event 字段；严格解码覆盖整个包，不以跳过组件解决失败。原生 YAML 校验器已修正 YAML 1.1 将对象名 `On`／`Off` 误解为布尔值的问题，同时保持打包数组的原始数字词法；独立回归测试及全部新增原生注册表／引用比对通过。
+
+职业音效组件与原生触发数组恢复见 `assets/reference/profession-ui/audio-source-manifest.json`。8 个原始启用触发值经 IL2CPP 指令和 Unity 实际导入复核，6 个作用域内事件脚本保留原调用顺序；Windows 音频主机、AkGameObj 及完整界面运行仍未完成。隔离工程类型元数据输入有逐项哈希记录，357 个 bundle 输入与既有转换字节一致。
 
 ## 技能首页与安装流程复核
 

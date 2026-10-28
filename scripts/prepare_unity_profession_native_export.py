@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / '.tools/unitypy-work'))
 from prepare_unity_profession_native_inputs import CACHE, BUNDLE
 from prepare_unity_map13_water_entity_export import build as verify_export, convert
+from prepare_unity_profession_event_fields import restore as restore_event_fields
 
 
 def build(run_converter=False):
@@ -28,6 +29,7 @@ def build(run_converter=False):
                   roots=source.get("roots", [BUNDLE]), cache_root=cache, proof_path=proof,
                   expected_counts=None, entry_path=Path(__file__),
                   map_class_id=None, subject='profession UI')
+    restore_event_fields(proof)
     compact = {key: value for key, value in source.items()
                if key not in ('components', 'managed_reference_unions')}
     compact['component_count'] = len(source['components'])

@@ -21,12 +21,12 @@ def record(path):
     return dict(path=path.relative_to(ROOT).as_posix(), sha256=sha(path))
 
 
-def build():
+def build(unity_project=None):
     apk = Apk.current()
     if apk.version != "871_156598":
         raise ValueError("Profession dynamic source version differs")
     code = ROOT / ".tools/source-packages/current/871_156598/official-code"
-    schemas = NativeSchemas(code)
+    schemas = NativeSchemas(code, unity_project=unity_project)
     config = apk.asset("defaultpackage_assets_scriptableconfig_modules_itemicon.bundle", "/ItemIconManagerConfig.asset")
     tree = schemas.default.tree("Assembly-CSharp", "ItemIconManagerConfig")
     fields = config.read_typetree(nodes=tree)
@@ -129,6 +129,7 @@ def build():
             interpreter=record(ROOT / "scripts/official_tables.py"), scope="All three tables fully decoded; only the group-10 achievement rows, its four item definitions and ProfessionLevelInfo rule-tip key selection are compared with the existing packaged projections."),
         rule_tip=dict(rows=rule_rows, packaged_projection=record(profession_data)),
         rules=record(rules_path), achievement_ids=[row["Id"] for row in achievements],
+        schema_reference_inputs=[record(path) if path.is_relative_to(ROOT) else dict(path=str(path), sha256=sha(path)) for path in schemas.reference_inputs],
         icon_manager_config=dict(source=apk.provenance(config), payload_sha256=hashlib.sha256(config.get_raw_data()).hexdigest(),
             fields=fields, default_prefab=apk.provenance(prefab)),
         official_sources=[record(code / name) for name in (
@@ -153,4 +154,7 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--unity-project", type=Path, help="Unity project providing actual compiled TMP/UGUI metadata")
+    build(parser.parse_args().unity_project)

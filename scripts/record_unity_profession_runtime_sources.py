@@ -62,6 +62,7 @@ def build():
         tipdot=file_record(ROOT / "assets/reference/profession-ui/tipdot-source-manifest.json"),
         shaders=file_record(ROOT / "assets/reference/profession-ui/shader-bindings-source-manifest.json"),
         dynamic_resources=file_record(ROOT / "assets/reference/profession-ui/dynamic-resources-source-manifest.json"),
+        audio=file_record(ROOT / "assets/reference/profession-ui/audio-source-manifest.json"),
         rule_adapter=file_record(ROOT / "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs"),
         rule_instantiation_source=file_record(CODE / "client-source/UIUtils.cs"),
         validation=file_record(ROOT / "unity/Assets/Game/Editor/ProfessionUI/ProfessionProgressionValidation.cs"),

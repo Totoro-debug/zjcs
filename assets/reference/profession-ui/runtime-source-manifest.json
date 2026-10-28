@@ -216,7 +216,7 @@
   },
   "tipdot": {
     "path": "assets/reference/profession-ui/tipdot-source-manifest.json",
-    "sha256": "a1638136fe35ebcb409669cb4945c188c8f337b678c6150aa0192189bcb15d7b"
+    "sha256": "3f8ced2b8f9cb0babe7dbad35e494dc3672be34adbae7ff46b7f674c28e14f09"
   },
   "shaders": {
     "path": "assets/reference/profession-ui/shader-bindings-source-manifest.json",
@@ -224,7 +224,11 @@
   },
   "dynamic_resources": {
     "path": "assets/reference/profession-ui/dynamic-resources-source-manifest.json",
-    "sha256": "30e363b5d2e0c00de23548f58e8d641ef83c0bfdd486cfe454f4f606b04b85b4"
+    "sha256": "0f2d120857578acf902b0764e454bf91ff9646f2918dbb85769208b1fca3ae50"
+  },
+  "audio": {
+    "path": "assets/reference/profession-ui/audio-source-manifest.json",
+    "sha256": "7be57c6fdc08d6b4a318066452b3a71656bdfa6426e5fab337deaacb467aadd9"
   },
   "rule_adapter": {
     "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionRuleTipData.cs",
@@ -240,7 +244,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "2780964a1971f83d731aeba87e11eb0b58a1d51b8461ff8dea174896cef8db02"
+    "sha256": "1476573982057bceae90c5da841144da7d10a3e56be0a72631b71c6f79ecb9d1"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

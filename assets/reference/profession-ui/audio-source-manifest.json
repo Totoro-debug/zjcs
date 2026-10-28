@@ -1,0 +1,127 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "native_export": {
+    "path": "assets/reference/profession-ui/native-export-source-manifest.json",
+    "sha256": "c6b53ac5d81cbe7152a0116fec1ebf00a76eb2acb8638d0bec55b1ad0349784b"
+  },
+  "native_inputs": [
+    {
+      "path": ".tools/source-packages/commerce-native/libil2cpp-restored.bin",
+      "sha256": "8e49906e085ba3819c4b47fd3bd12dcdd594ff0fcc75d418a87ac35a4566305b"
+    },
+    {
+      "path": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    }
+  ],
+  "methods": [
+    {
+      "method": "AK.Wwise.BaseType.get_Id",
+      "metadata_index": 343688,
+      "address": "0x7926664",
+      "byte_count": 68,
+      "sha256": "9cf05e3057aea55d6536ee8d6b88543d3cd8e8c65c93c7df765573665ac7bccd"
+    },
+    {
+      "method": "AK.Wwise.BaseType.IsValid",
+      "metadata_index": 343690,
+      "address": "0x792642c",
+      "byte_count": 116,
+      "sha256": "bec32299bb6c607e3e7d4c2e7c044f11ea41ddcaa06795f7fb46fb351d2346ef"
+    },
+    {
+      "method": "AkEvent.HandleEvent",
+      "metadata_index": 334172,
+      "address": "0x794b10c",
+      "byte_count": 564,
+      "sha256": "617f094b3dd8a7998522ceca0e90d813cce36e9d5bbab474b28eabdb5cfc9b78"
+    },
+    {
+      "method": "AkEvent.Start",
+      "metadata_index": 334170,
+      "address": "0x794a9a4",
+      "byte_count": 176,
+      "sha256": "34447358c6e53a9de84b0d6fadbbd9ac9fca21499a8359a1b9a25984e97c82c2"
+    },
+    {
+      "method": "AkTriggerHandler.Start",
+      "metadata_index": 334453,
+      "address": "0x794cbfc",
+      "byte_count": 124,
+      "sha256": "24cb299ad2cd03e402a743c90240aabbf15d24e09db12f090ed2b136b2a0d20b"
+    },
+    {
+      "method": "AkTriggerHandler.OnEnable",
+      "metadata_index": 334456,
+      "address": "0x794a788",
+      "byte_count": 124,
+      "sha256": "a26b9e90f28f96ea6d5422d4d068388796c3c68035bf0115ce6be9f9ec40e619"
+    },
+    {
+      "method": "AK.Wwise.Event.Post(GameObject)",
+      "address": "0x7926b20",
+      "byte_count": 148,
+      "sha256": "06ec9352a8eacb016e660100f79368dd4b7b8725fd930dc6e10f5686abf102a5"
+    }
+  ],
+  "managed_sources": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/ButtonSound.cs",
+      "sha256": "25c466a171758877aefabd0c2f61337d6534bfb198c4a21dcf0538f3945830a0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/UIClickSound.cs",
+      "sha256": "3a895b1e6a137a4be2e9b3ef54951c4b39a6ac29aa52749343a9514bd3929975"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/framework-firstpass-source/PopupWindowSound.cs",
+      "sha256": "3a90a0108932895b5e9e01b51a7c5ade33efadb8892d088fe10bbb1450ed7e95"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+      "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942",
+      "meta_sha256": "f393e1af77160cb98a16b745897e728620a26cafe5e3033cf0c2d23196a428e3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs",
+      "sha256": "6257c3af05fc9bdd62ea40dfebe0fdbad3ad754bd2583a7099f83ee2dbf8db1b",
+      "meta_sha256": "8bdbf07cb6d194eaa7c6c871500ed4c0d32377a86198b4e8a47550eb6fceb2e4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AkEvent.cs",
+      "sha256": "c012ab14aed9230bcf768bf06abf02c71a5335fa3cf3bed4374a9f919bd3d694",
+      "meta_sha256": "0602224978b4230f77463e940af4e49e0af160211780ec17d67938c061970678"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ButtonSound.cs",
+      "sha256": "08e3639c3a38223b87931ed364c22a62205719bf4155db6a3312bf0d9e315437",
+      "meta_sha256": "333142ef760c3b4036e1cfc5a8a25114a6ff2716ca7d2bc5fcbc76e3875e32b2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/UIClickSound.cs",
+      "sha256": "5e460e8158f9f9a033cbbf48cbd78c806f03ddce8edf3a5e16c5bcedd659af60",
+      "meta_sha256": "25f235fd858a0ed2bee3d28973598c5465164602084a358aa45ef45837e15ebf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/PopupWindowSound.cs",
+      "sha256": "1aa92bdb50ef36abe24fe6caca7990457f46eba556921ee0663fe7a456175b28",
+      "meta_sha256": "89aa8c5eb2881e5d657ceb26a2ce2920c7113406d1845a4416599a8e647bbf32"
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_audio_sources.py",
+    "sha256": "d16aebefda9482cdab29c8047a704263296f6291ce6a1b477234993460f34308"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionEventFieldValidation.cs",
+    "sha256": "51b9426e4140fa0874e8399b9116fedade67b07a150c13ad117e83a2338e0353"
+  },
+  "scope": "Original serialized event references and source UI click/popup dispatch; source AkEvent enable/start trigger, emitter selection and simple Post path. All eight typed source components have actions/callbacks disabled. Unsupported triggers/actions/callbacks fail explicitly. SDK simple Post validates the native object reference, posts its actual ID and preserves the returned playing ID.",
+  "limitations": [
+    "The Windows sound-bank playback host, mixer/media bindings and AkGameObj adapter remain unconnected.",
+    "Native event-field import and direct Post contract validation are separate from profession Play Mode UI/mouse/rendering acceptance."
+  ]
+}

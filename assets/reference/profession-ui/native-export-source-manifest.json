@@ -3,7 +3,7 @@
   "manifest": "871_156598",
   "input_receipt": {
     "path": ".tools/profession-native-ui/871_156598/typed/inputs/source-manifest.json",
-    "sha256": "d1fd55646bbf2da5bed1ebf1b1f9f7b2837137e1505ebd6f27cb037f83af70b1"
+    "sha256": "8a9fd135e37069d94ca03887e29ed4a4d649a5049bf765f49544cd06cad10739"
   },
   "tool": {
     "path": ".tools/profession-native-ui/871_156598/typed/runner/AssetRipper.GUI.Free.exe",
@@ -16,7 +16,7 @@
   },
   "entry": {
     "path": "scripts/prepare_unity_profession_native_export.py",
-    "sha256": "68a96ce193a1c4ce980893d7252b7521f41e07d2966706528e2622c29015c9ca"
+    "sha256": "ebe7bce9dd148172ec49f5507ed0d1cff80557811a0783f180133c3984dc0db1"
   },
   "verification_library": {
     "path": "scripts/official_native_yaml_verification.py",
@@ -29,9 +29,25 @@
     "native_pointers": 12734,
     "registries": 1853,
     "reference_records": 3377,
-    "packed_arrays": 1665
+    "packed_arrays": 1665,
+    "event_trigger_components": 8,
+    "event_trigger_values": 8
   },
   "outputs": [
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Effect/prefabs/Ui/Eff_Ui_Pray_FlyStar.prefab",
+      "input_sha256": "7bd5bf0168432e7e30ec11cf144887628dee1ef0f69d362ad4435a6b4683dc49",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Effect/prefabs/Ui/Eff_Ui_Pray_FlyStar.prefab",
+      "registries": 0,
+      "sha256": "588f8debfdc952233c23eea07596fe7fbf52f5f9c9e65a87567a06d4cf98f5f6"
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Effect/prefabs/Ui/Eff_ui_Upgrade.prefab",
+      "input_sha256": "661c33c844ab05c34ce1a35fe5d19df7c0473c54a3ca197b1cc01047cb0f9a75",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/Effect/prefabs/Ui/Eff_ui_Upgrade.prefab",
+      "registries": 0,
+      "sha256": "4e0f1174c889d67b4272026455fb8d294d0f8e9ce18dd905eff4e3a59999d401"
+    },
     {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Item/Common/ItemIconProgress.prefab",
       "input_sha256": "fb3b765cae8359a858d5129012285a410dd485f8803c9a4a2a62ae87f23697d8",
@@ -302,7 +318,7 @@
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
       "input_sha256": "b51f32c3ecfb51303d8005f1b21121378348c376519d367a604ade4e6d8a73c6",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
-      "sha256": "1808ef0bd2366c3145a2b128e47e3f3990beb6a63b445a17c5c131f56e9208a7",
+      "sha256": "d699740791491854404751758f0bd33caa58dfe3404ad60c9f81e5fcadfcd231",
       "registries": 147
     },
     {
@@ -379,14 +395,14 @@
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionConvertPropItem.prefab",
       "input_sha256": "b19ed6465976758604a1fa8062330d5eb26680dae8b63dd35e68dcc2b2128cb5",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionConvertPropItem.prefab",
-      "sha256": "e1307802193efebc80a404805bac8e8792fc679c0b365367cc551e8e11e23b1c",
+      "sha256": "fd9c0a14f63bc4e69cb59158de9f59572d8e69cab6598950a805a350a138510d",
       "registries": 2
     },
     {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPanel.prefab",
       "input_sha256": "b6df6f0856fb3b25c9e2c10d865112aa7b2293796c9d4964a765b1ec135a60b8",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPanel.prefab",
-      "sha256": "9e043a892881f2350929e024ee7c0ea33d3db0d7fbdd735dcb9599782007a335",
+      "sha256": "ae83964e2ac2d1e92310432ab1d577b95c084f5d1211d21d045b279e0c37c444",
       "registries": 13
     },
     {
@@ -400,14 +416,14 @@
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPropItem.prefab",
       "input_sha256": "3ef3d53f7273ace09cc3641ce515adba9f65dd174fae81db02803200d3d232ad",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPropItem.prefab",
-      "sha256": "2c6af20fc6f87b88b9b376e9674480e1aeacb562cbf9d2c8520aa2691433ca94",
+      "sha256": "2515185db0ae0d63fa4fbd8fd6a8ed7ef500a44ff0206ec00cfbb367275fc923",
       "registries": 1
     },
     {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionPropRadar.prefab",
       "input_sha256": "ace7cfadc51ae789610278f834739374beaf77b47402eef143f947d68b2054ba",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionPropRadar.prefab",
-      "sha256": "4c4a08bdd9c260192585ba6fae1f05e110b0b71005ce8b27d8a15dade75349d7",
+      "sha256": "e74fc5721ce796069224bae69be657de0ee73427c6151ce228d29899e45fd82d",
       "registries": 5
     },
     {
@@ -442,7 +458,7 @@
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
       "input_sha256": "2606d79d746b24ac42451921814ee405f31fd9b70f33d6889499e0fb3e244287",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
-      "sha256": "34fa7dd58476f1fef5607e5ea1d22c75a4928594306e5ab79b2c81383edd3548",
+      "sha256": "dcbb6923ae589bbc0840997832a15e77a155df83fb3472662f0b6ef3e494740c",
       "registries": 1
     },
     {
@@ -450,258 +466,6 @@
       "input_sha256": "10d0b34330f117b7a8a3a17558656348c14fb5488d9ec7c61646b2d2d599d174",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/Prefabs/UI/Rule/RulePropItem.prefab",
       "sha256": "4c71a38a10d7c9cd61065c1ea9333a800c6c78090359cf404dd45cd47157cc67",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_10__State_是否有新礼包.asset",
-      "input_sha256": "39bc9005fc82bdb2e53ad8aac2b7d3d1332d19221ddaf7ab949c015b22c2be50",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_10__State_是否有新礼包.asset",
-      "sha256": "244a79765911bb49c19665de47e328acb2451bfc36441a9132e2d645aaf836dc",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_11__State_是否有免费的奖励礼包.asset",
-      "input_sha256": "50bded348c4a9acfc96dd571e48360be6b43bb19b4d39907318a602d03245606",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_11__State_是否有免费的奖励礼包.asset",
-      "sha256": "58e364c849981c14e4751e47026bc43a0286aa0ca8c1d0dde47f987beaf5545b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_BattleRoyaleEntry面板蓝点.asset",
-      "input_sha256": "9899b6e75a413bc1406241d86a9a5e06cb37011798efaf139baa6f2d5b5cdfd2",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_BattleRoyaleEntry面板蓝点.asset",
-      "sha256": "1966234fdcf6d05885d5ec877527e82fdff1337fbb148f43ca99d02b52fd0a86",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_七日任务活动是否有提示.asset",
-      "input_sha256": "770eb745ef4b122f61bf26c4b4a47a25a1055a1a26f1fe5f6642f754f6136b09",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_七日任务活动是否有提示.asset",
-      "sha256": "5954a32a736104f1a03ed9724346c2c1159e98eb36e79be8f2478dae550cfa20",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_徽章活动是否有红点.asset",
-      "input_sha256": "9b27ebe02db03b81229bf2028470fd441bb1a968f34133d2f38b000c452ec16e",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_徽章活动是否有红点.asset",
-      "sha256": "f5fbedeaf2292419c9e608cfff42dd6423d32c6b172f538b7d055e182c15fe56",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_成长基金红点.asset",
-      "input_sha256": "3b2e37a316eecf498dc454244720887d8eb182018d866d31ca0fb6014f416734",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_成长基金红点.asset",
-      "sha256": "1b629b48c7950d42a8e5e8b9065786a93c05fb813bc2719519eb7d9a6921688d",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_战令活动是否有提示.asset",
-      "input_sha256": "8093f8c92fa5fde1b94cf8ff4dc1abcb85a66fc2d3841f8e07dd3236f3031b86",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_战令活动是否有提示.asset",
-      "sha256": "27d89b1bead594ceea8911628893229859cead584d05846c03c2aa7d3da34c28",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_活动任务红点.asset",
-      "input_sha256": "7836e7014d6815c638ae144f0b1864fad6f3d309fb5268c81baf4adb0a911ed0",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_活动任务红点.asset",
-      "sha256": "0e4581efc4bb7471e1b0ae21346e5cbe078e1f6f8f5bd151e3247515ba8ceb4f",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_秘宝大作战是否有提示.asset",
-      "input_sha256": "b6822d73364d250cffc7b255ade1533a54d8dd796114a2be66e075758a4f433d",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_秘宝大作战是否有提示.asset",
-      "sha256": "01fd95c21d5d71326dfc3a74415b03439bcf7252d02e2b6bea514dfe80c6a0e0",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务.asset",
-      "input_sha256": "5ee30ad5f8ea3ee105044a8c8296ecb8fe2bcc1211b0bae344a4bbd654563b6b",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务.asset",
-      "sha256": "e7ccba7615f4e19ac78febca219bb470dcad5c6b312f29d6ed58b2e5f20a28d2",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务阶段红点.asset",
-      "input_sha256": "79d76937da9260d82163739cff1326ade1e372c36d7176ded9e60dea1b91681b",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务阶段红点.asset",
-      "sha256": "de353ec2014f5b3cc262b6cb33a53d3c5bacd985f05666cce772d97b63df6434",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_限时礼包是否有提示.asset",
-      "input_sha256": "284747e655373f0e8ccf817114a462a7b4b88efb33a0f87f91b18159ef533be2",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_限时礼包是否有提示.asset",
-      "sha256": "f243830e87c44195c1b803c1d4b74372a730a5f98d8e1d6c9624a77f09c7b34a",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_TipDotLimitTimeGiftHasTipConditionNode.asset",
-      "input_sha256": "043d7e701ad4eecbacb04a84dd8cd0d20583ec63d6ea6138975a6d5cbd3c3906",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_TipDotLimitTimeGiftHasTipConditionNode.asset",
-      "sha256": "c4d17940ff42608eddf21d9297336d24ce15541b06fb0c1d445bd1734d1a619e",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查七日任务活动是否有提示.asset",
-      "input_sha256": "42c0f6a9bcb236ad2628a15172978ddea5f9373646d293611ba6272b8b2b084a",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查七日任务活动是否有提示.asset",
-      "sha256": "2c8f196d913b2ab8ff7c792b7ddc025fe4279644f5d44a34c2d01b20ae13b37a",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查战令活动是否有提示.asset",
-      "input_sha256": "6793786b274f69d9b05fb9d81225d64a8170d112fc96b4bfd12a34e4c5013bf7",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查战令活动是否有提示.asset",
-      "sha256": "72b302fd97b47a6a4a743912a998f38ce0b85bb2712c407b447627221a76e5ff",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查是否有可解锁徽章.asset",
-      "input_sha256": "5457afd6749282dd1d106be47b0ffd7389d0c86bd0b230e4a3eb652a177bd7d9",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查是否有可解锁徽章.asset",
-      "sha256": "8d87569cef9cbd3ebedc10a38c9785ca4677649bc9e5a5b1d24e681b1a1437db",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查每周额外奖励且友情币未达上限且今天没赢过奖励.asset",
-      "input_sha256": "ba88c51759dccfc9e2a96bdcb1cfa1051ed7c6514a0f31965c4036da8fa1d4cd",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查每周额外奖励且友情币未达上限且今天没赢过奖励.asset",
-      "sha256": "26b373d648e02d87c55f25b969bd3764e6f1fadaa8ce2adba37541e664d7cd3b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查活动任务是否有提示.asset",
-      "input_sha256": "6f9c98902047423512fec80c7f65867474ba53194e21397d7d47e0457568d151",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查活动任务是否有提示.asset",
-      "sha256": "1096c1f76b8bbc2a27cf14b3be08c7a9151cfefe82c30fa089e9f5badddfe1b0",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查联动拼图任务是否有提示.asset",
-      "input_sha256": "e99250c4e01e3d1872e6f5f517bfa167b2f147ca9a158bad2674e608670846e4",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查联动拼图任务是否有提示.asset",
-      "sha256": "5a8e412955f9b6794824f1e7f152dc72cd1efb2635765c27543b2299aa11e1aa",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_是否可领取奖励.asset",
-      "input_sha256": "d4fc4c57e2a4c484e1bea2226358191cd475d304bf6bd1abb6288e39344bd28e",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_是否可领取奖励.asset",
-      "sha256": "6c35e7bb2ff31f7832bbd67866d6a53688dd3a2399800ebc68c24aed4bfbc5ed",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_联动拼图阶段动态节点.asset",
-      "input_sha256": "ee77d4e616d085fa4ce8b4795d8e8c590061f61dfa6d3a12f78d341809ccde4a",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_联动拼图阶段动态节点.asset",
-      "sha256": "591c6e285cb8ad91eb63368252d6f08c69fce3655c6f13d1a383119be4a0b40d",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_获取能力切页是否有提示.asset",
-      "input_sha256": "fe98bd63348c9f14c84b2e24b324ec4215da1bffbeaa2aa1a419666bb51f3ca6",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_获取能力切页是否有提示.asset",
-      "sha256": "4eac5ff96fbe8ccabfc837de3f3aa6f3ff43b32f3849b9de88c1dd8e2612e605",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_战令活动是否有红点提示.asset",
-      "input_sha256": "3dad063e94a9703916ee687d33f0b34fc356a2b4b883786086c5b10df8995acc",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_战令活动是否有红点提示.asset",
-      "sha256": "c6de09afa8e30db1ce0043bee3e4d3dc0d46ebc3f0634d506ad339372483b83b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_每日提醒.asset",
-      "input_sha256": "1cad859b6d98562155207fa211486ced1c4887af76d9d56994a13daab83fb95f",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_每日提醒.asset",
-      "sha256": "483205152ef45b1442a86f171f4d8b391f9199e9cf7c444be39ca91a57248534",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_活动礼包切页是否有提示.asset",
-      "input_sha256": "ca682a4bc03ad8897e7d2b5f8497f96208e4632c7aa23c494e3a1b60f9b9d826",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_活动礼包切页是否有提示.asset",
-      "sha256": "2d67db1789c9bc5884edc5a745208a2873b3e52399901a32c2debbb3447c00f2",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查任务类型是否有提示.asset",
-      "input_sha256": "8bcb8982146650071648d41748d2a893a47059a6691fe6dcef6b8b1a3f3198a4",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查任务类型是否有提示.asset",
-      "sha256": "7cfea8dfae5d8d7afabdf91c4cd9c0f3143c0efbd0e9b784b61e0a30af23041a",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查战令活动是否有提示.asset",
-      "input_sha256": "60844d6c894e26af605774107d856c1b6b65d3cee2faef528d2aeb5b7d7c8801",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查战令活动是否有提示.asset",
-      "sha256": "aa1bf1599fe6eb36e471d5b1c6c45f9d84d8b4dcfb6c709a6f76245c5e01122b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查活动任务是否有每日提示.asset",
-      "input_sha256": "b3902c48aa138a19042c0c0e860c671e6582b8b781a8c4611b21cb3af51a94ac",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查活动任务是否有每日提示.asset",
-      "sha256": "72662628b39720a33369372057c949c2ff77a8e68eb71c10664efce657533962",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__Cnd_是否有任务可以提交.asset",
-      "input_sha256": "0c4f262845a44dcb827c5b0572ace432d8c218e0835068469256342e53c80f74",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__Cnd_是否有任务可以提交.asset",
-      "sha256": "4ff99bcb124047aaafe6ed79f550fd701d8253ceda23d0d6e9b4859980c6b124",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_PlayerBattleRoyaleContent挑战按钮提示.asset",
-      "input_sha256": "4036290a95e640b8ffc7079490bba890d9540f60e06af26ae33bdfb4ddd6a18d",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_PlayerBattleRoyaleContent挑战按钮提示.asset",
-      "sha256": "ce35c3674ceb984eb8714227a2b48a3a3c0fc2f9d73bf5cbd06ee0c14b67cde3",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_战令活动是否有新提示.asset",
-      "input_sha256": "b94cbe4a35aa29fcd4874eee85f18335cf9559a0bae9790230f7b9030f6cbc15",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_战令活动是否有新提示.asset",
-      "sha256": "d9f6fef42f41a3b56b6c9870d5c819f9fb8456f8d12f6f246260b3a85e66b10c",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_活动任务红点带每日红点.asset",
-      "input_sha256": "a31605a7b4b87f709c998ccdee23603b20645b6c23968dbc50d0a2f95901da36",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_活动任务红点带每日红点.asset",
-      "sha256": "5905bb4a1fa14e22d9740bbdc444cdd6b37115f599c53b55c777333be1ec2f83",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_6__Cnd_检查是否有新的礼包.asset",
-      "input_sha256": "128246a4c738853ad9413cc86e05756f4b51f954a2bd6890bd26a14233581e7c",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_6__Cnd_检查是否有新的礼包.asset",
-      "sha256": "ec03eb8b3932cc73aa632c0d4a2d053b292ef3812e8e803bf2236895ff716ae3",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_7__Cnd_检查是否有免费奖励.asset",
-      "input_sha256": "64b9465822b89aae9823b0d2b438b7248520b03867577749aca488acdac46af2",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_7__Cnd_检查是否有免费奖励.asset",
-      "sha256": "16d6e4831be23a118155f638afd12282beb3c31fc8526841eb2a8510163a2354",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_8__State_是否有任务可以提交.asset",
-      "input_sha256": "8a2098d2ff801da0cec125e434c913d0641b8af1eec2ada5433b7e940523e09d",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_8__State_是否有任务可以提交.asset",
-      "sha256": "eca24e884f5904b08e19b51a16af76720a5c40a67e05d0e2fb3a88dbe6d4f45b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_9__State_是否有任务可以领奖.asset",
-      "input_sha256": "e7fab36d702c882fada0b560a5977b76d72d4d5445ff7200c8f97f3491f8feef",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_9__State_是否有任务可以领奖.asset",
-      "sha256": "289538d66cbd63f5f422bf6a86af0d17d3fb27cf1e29e28a4c3498be1fd06283",
       "registries": 1
     },
     {
@@ -2714,6 +2478,55 @@
       "registries": 1
     },
     {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_检查功能是否解锁.asset",
+      "input_sha256": "8afc548c26e1eca5c5e59f45d8253577b6124ac37f48312dac1417baaa01b7c9",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_检查功能是否解锁.asset",
+      "sha256": "69da7a084fded1c5ee5af6680e714777486acecbc4e098b8b9932ba7c39f7d3c",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_账号绑定.asset",
+      "input_sha256": "5b6c0784403f1d34d58de6446771beefee58067af7bdd42df39813a13ecd5218",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_账号绑定.asset",
+      "sha256": "2324f0b3d9daf7643297c97342beef476355c27328d002b592ec88c6114cbc10",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__State_绑定手机号.asset",
+      "input_sha256": "ae84e561593b1675ad3ed3e5e208333155fdd6e24823355a238089b423085938",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__State_绑定手机号.asset",
+      "sha256": "ce130f9ae3705d3dd0b3cf15512e9878c6cf8702373ea228b16c803bf17ed479",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__Cnd_手机号绑定.asset",
+      "input_sha256": "c4e7464313feee860ca49f90c1b05d7271c0da69f00842519f652a5fc17e4ca3",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__Cnd_手机号绑定.asset",
+      "sha256": "76523775cf84937471739b1bb77dc8a224bf86936f85849adfd1a0ad881b6898",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_企微建联是否有提示.asset",
+      "input_sha256": "59dd49f96b2c09df34fc0357f57c14be52b7db5a09bb2cb45948afcaa866cda6",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_企微建联是否有提示.asset",
+      "sha256": "fc2465e9c8adcd3f03f9053fec56d2b59d94722b493595ca41c1fb55292a2f0f",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_账号绑定是否有提示.asset",
+      "input_sha256": "455539151e3932e8095c8678e135d49c318094ad208b8ef53fbc00a29d7af9c5",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_账号绑定是否有提示.asset",
+      "sha256": "4d26e961b337d5dc9d23d157dc9ac2196c5443d103064c2ec8fe176c3252c4f7",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_3__Cnd_企微建联.asset",
+      "input_sha256": "b5e86b4db379c72e54472921a241a46b085c48d523874967fbfaec49d9c7c7af",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_3__Cnd_企微建联.asset",
+      "sha256": "3df2641afb2ae7fec62c81b9ff1a8d5fc79f4be3de13b8a7ed57b9fcb360e2df",
+      "registries": 1
+    },
+    {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkageActivity/_1__State_活动组红点.asset",
       "input_sha256": "66e46d830a7095132a4ab1c2646f46849c83916d015e0f6aedb44aa41a7fa634",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkageActivity/_1__State_活动组红点.asset",
@@ -2830,55 +2643,6 @@
       "input_sha256": "31bf9713c4d2741de544736069163ee000fb6a265a8c0726b1f13443d08d4aaa",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkagePayGift/_5__Cnd_是否有免费奖励可领取.asset",
       "sha256": "648b95fd6ff86d1388ede4b875cef24e25b461166797cb57b0c01601898a7742",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_检查功能是否解锁.asset",
-      "input_sha256": "8afc548c26e1eca5c5e59f45d8253577b6124ac37f48312dac1417baaa01b7c9",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_检查功能是否解锁.asset",
-      "sha256": "69da7a084fded1c5ee5af6680e714777486acecbc4e098b8b9932ba7c39f7d3c",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_账号绑定.asset",
-      "input_sha256": "5b6c0784403f1d34d58de6446771beefee58067af7bdd42df39813a13ecd5218",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__Cnd_账号绑定.asset",
-      "sha256": "2324f0b3d9daf7643297c97342beef476355c27328d002b592ec88c6114cbc10",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__State_绑定手机号.asset",
-      "input_sha256": "ae84e561593b1675ad3ed3e5e208333155fdd6e24823355a238089b423085938",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_1__State_绑定手机号.asset",
-      "sha256": "ce130f9ae3705d3dd0b3cf15512e9878c6cf8702373ea228b16c803bf17ed479",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__Cnd_手机号绑定.asset",
-      "input_sha256": "c4e7464313feee860ca49f90c1b05d7271c0da69f00842519f652a5fc17e4ca3",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__Cnd_手机号绑定.asset",
-      "sha256": "76523775cf84937471739b1bb77dc8a224bf86936f85849adfd1a0ad881b6898",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_企微建联是否有提示.asset",
-      "input_sha256": "59dd49f96b2c09df34fc0357f57c14be52b7db5a09bb2cb45948afcaa866cda6",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_企微建联是否有提示.asset",
-      "sha256": "fc2465e9c8adcd3f03f9053fec56d2b59d94722b493595ca41c1fb55292a2f0f",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_账号绑定是否有提示.asset",
-      "input_sha256": "455539151e3932e8095c8678e135d49c318094ad208b8ef53fbc00a29d7af9c5",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_2__State_账号绑定是否有提示.asset",
-      "sha256": "4d26e961b337d5dc9d23d157dc9ac2196c5443d103064c2ec8fe176c3252c4f7",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_3__Cnd_企微建联.asset",
-      "input_sha256": "b5e86b4db379c72e54472921a241a46b085c48d523874967fbfaec49d9c7c7af",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/LinkEnterpriseWX/_3__Cnd_企微建联.asset",
-      "sha256": "3df2641afb2ae7fec62c81b9ff1a8d5fc79f4be3de13b8a7ed57b9fcb360e2df",
       "registries": 1
     },
     {
@@ -3204,6 +2968,13 @@
       "registries": 1
     },
     {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点A.asset",
+      "input_sha256": "c3599d3962446b93e36725814baaf388de8d340ef2556f8a47dea21b593d7154",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点A.asset",
+      "sha256": "9efa2c3d6d65a3b252a6b21f4e33ed43d97a13822f7993b66c0362ca440f128b",
+      "registries": 1
+    },
+    {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点_0.asset",
       "input_sha256": "5f5da7bd732366a8d62527a18b2a66d0fa921b41bda320e54320510d38dabbe8",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点_0.asset",
@@ -3236,13 +3007,6 @@
       "input_sha256": "6382cfd6bcfb6f7f55d49d5fa5da2a5e2f80785f42422f65ea40a21c1581ca9e",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点_4.asset",
       "sha256": "4c2e98c587b0f6d7df613417d7f1f096f96d642e20a8d3ee343960de9cf82bff",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点A.asset",
-      "input_sha256": "c3599d3962446b93e36725814baaf388de8d340ef2556f8a47dea21b593d7154",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/SuQing/_4__State_链接幻装礼包节点A.asset",
-      "sha256": "9efa2c3d6d65a3b252a6b21f4e33ed43d97a13822f7993b66c0362ca440f128b",
       "registries": 1
     },
     {
@@ -3516,6 +3280,258 @@
       "input_sha256": "5846d7f2831fd774b7b3fadfc12fd0664ac933a07681c90e5681bb9ad7c03df4",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/VegetableDog/_9__State_活动抽奖五抽.asset",
       "sha256": "29a8ee836209237fae7b863db676427a64b95002b0842a3573367fb1016a7a3a",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_10__State_是否有新礼包.asset",
+      "input_sha256": "39bc9005fc82bdb2e53ad8aac2b7d3d1332d19221ddaf7ab949c015b22c2be50",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_10__State_是否有新礼包.asset",
+      "sha256": "244a79765911bb49c19665de47e328acb2451bfc36441a9132e2d645aaf836dc",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_11__State_是否有免费的奖励礼包.asset",
+      "input_sha256": "50bded348c4a9acfc96dd571e48360be6b43bb19b4d39907318a602d03245606",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_11__State_是否有免费的奖励礼包.asset",
+      "sha256": "58e364c849981c14e4751e47026bc43a0286aa0ca8c1d0dde47f987beaf5545b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_BattleRoyaleEntry面板蓝点.asset",
+      "input_sha256": "9899b6e75a413bc1406241d86a9a5e06cb37011798efaf139baa6f2d5b5cdfd2",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_BattleRoyaleEntry面板蓝点.asset",
+      "sha256": "1966234fdcf6d05885d5ec877527e82fdff1337fbb148f43ca99d02b52fd0a86",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_七日任务活动是否有提示.asset",
+      "input_sha256": "770eb745ef4b122f61bf26c4b4a47a25a1055a1a26f1fe5f6642f754f6136b09",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_七日任务活动是否有提示.asset",
+      "sha256": "5954a32a736104f1a03ed9724346c2c1159e98eb36e79be8f2478dae550cfa20",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_徽章活动是否有红点.asset",
+      "input_sha256": "9b27ebe02db03b81229bf2028470fd441bb1a968f34133d2f38b000c452ec16e",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_徽章活动是否有红点.asset",
+      "sha256": "f5fbedeaf2292419c9e608cfff42dd6423d32c6b172f538b7d055e182c15fe56",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_成长基金红点.asset",
+      "input_sha256": "3b2e37a316eecf498dc454244720887d8eb182018d866d31ca0fb6014f416734",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_成长基金红点.asset",
+      "sha256": "1b629b48c7950d42a8e5e8b9065786a93c05fb813bc2719519eb7d9a6921688d",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_战令活动是否有提示.asset",
+      "input_sha256": "8093f8c92fa5fde1b94cf8ff4dc1abcb85a66fc2d3841f8e07dd3236f3031b86",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_战令活动是否有提示.asset",
+      "sha256": "27d89b1bead594ceea8911628893229859cead584d05846c03c2aa7d3da34c28",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_活动任务红点.asset",
+      "input_sha256": "7836e7014d6815c638ae144f0b1864fad6f3d309fb5268c81baf4adb0a911ed0",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_活动任务红点.asset",
+      "sha256": "0e4581efc4bb7471e1b0ae21346e5cbe078e1f6f8f5bd151e3247515ba8ceb4f",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_秘宝大作战是否有提示.asset",
+      "input_sha256": "b6822d73364d250cffc7b255ade1533a54d8dd796114a2be66e075758a4f433d",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_秘宝大作战是否有提示.asset",
+      "sha256": "01fd95c21d5d71326dfc3a74415b03439bcf7252d02e2b6bea514dfe80c6a0e0",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务.asset",
+      "input_sha256": "5ee30ad5f8ea3ee105044a8c8296ecb8fe2bcc1211b0bae344a4bbd654563b6b",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务.asset",
+      "sha256": "e7ccba7615f4e19ac78febca219bb470dcad5c6b312f29d6ed58b2e5f20a28d2",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务阶段红点.asset",
+      "input_sha256": "79d76937da9260d82163739cff1326ade1e372c36d7176ded9e60dea1b91681b",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_联动拼图任务阶段红点.asset",
+      "sha256": "de353ec2014f5b3cc262b6cb33a53d3c5bacd985f05666cce772d97b63df6434",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_限时礼包是否有提示.asset",
+      "input_sha256": "284747e655373f0e8ccf817114a462a7b4b88efb33a0f87f91b18159ef533be2",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_1__State_限时礼包是否有提示.asset",
+      "sha256": "f243830e87c44195c1b803c1d4b74372a730a5f98d8e1d6c9624a77f09c7b34a",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_TipDotLimitTimeGiftHasTipConditionNode.asset",
+      "input_sha256": "043d7e701ad4eecbacb04a84dd8cd0d20583ec63d6ea6138975a6d5cbd3c3906",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_TipDotLimitTimeGiftHasTipConditionNode.asset",
+      "sha256": "c4d17940ff42608eddf21d9297336d24ce15541b06fb0c1d445bd1734d1a619e",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查七日任务活动是否有提示.asset",
+      "input_sha256": "42c0f6a9bcb236ad2628a15172978ddea5f9373646d293611ba6272b8b2b084a",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查七日任务活动是否有提示.asset",
+      "sha256": "2c8f196d913b2ab8ff7c792b7ddc025fe4279644f5d44a34c2d01b20ae13b37a",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查战令活动是否有提示.asset",
+      "input_sha256": "6793786b274f69d9b05fb9d81225d64a8170d112fc96b4bfd12a34e4c5013bf7",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查战令活动是否有提示.asset",
+      "sha256": "72b302fd97b47a6a4a743912a998f38ce0b85bb2712c407b447627221a76e5ff",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查是否有可解锁徽章.asset",
+      "input_sha256": "5457afd6749282dd1d106be47b0ffd7389d0c86bd0b230e4a3eb652a177bd7d9",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查是否有可解锁徽章.asset",
+      "sha256": "8d87569cef9cbd3ebedc10a38c9785ca4677649bc9e5a5b1d24e681b1a1437db",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查每周额外奖励且友情币未达上限且今天没赢过奖励.asset",
+      "input_sha256": "ba88c51759dccfc9e2a96bdcb1cfa1051ed7c6514a0f31965c4036da8fa1d4cd",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查每周额外奖励且友情币未达上限且今天没赢过奖励.asset",
+      "sha256": "26b373d648e02d87c55f25b969bd3764e6f1fadaa8ce2adba37541e664d7cd3b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查活动任务是否有提示.asset",
+      "input_sha256": "6f9c98902047423512fec80c7f65867474ba53194e21397d7d47e0457568d151",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查活动任务是否有提示.asset",
+      "sha256": "1096c1f76b8bbc2a27cf14b3be08c7a9151cfefe82c30fa089e9f5badddfe1b0",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查联动拼图任务是否有提示.asset",
+      "input_sha256": "e99250c4e01e3d1872e6f5f517bfa167b2f147ca9a158bad2674e608670846e4",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__Cnd_检查联动拼图任务是否有提示.asset",
+      "sha256": "5a8e412955f9b6794824f1e7f152dc72cd1efb2635765c27543b2299aa11e1aa",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_是否可领取奖励.asset",
+      "input_sha256": "d4fc4c57e2a4c484e1bea2226358191cd475d304bf6bd1abb6288e39344bd28e",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_是否可领取奖励.asset",
+      "sha256": "6c35e7bb2ff31f7832bbd67866d6a53688dd3a2399800ebc68c24aed4bfbc5ed",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_联动拼图阶段动态节点.asset",
+      "input_sha256": "ee77d4e616d085fa4ce8b4795d8e8c590061f61dfa6d3a12f78d341809ccde4a",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_联动拼图阶段动态节点.asset",
+      "sha256": "591c6e285cb8ad91eb63368252d6f08c69fce3655c6f13d1a383119be4a0b40d",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_获取能力切页是否有提示.asset",
+      "input_sha256": "fe98bd63348c9f14c84b2e24b324ec4215da1bffbeaa2aa1a419666bb51f3ca6",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_2__State_获取能力切页是否有提示.asset",
+      "sha256": "4eac5ff96fbe8ccabfc837de3f3aa6f3ff43b32f3849b9de88c1dd8e2612e605",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_战令活动是否有红点提示.asset",
+      "input_sha256": "3dad063e94a9703916ee687d33f0b34fc356a2b4b883786086c5b10df8995acc",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_战令活动是否有红点提示.asset",
+      "sha256": "c6de09afa8e30db1ce0043bee3e4d3dc0d46ebc3f0634d506ad339372483b83b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_每日提醒.asset",
+      "input_sha256": "1cad859b6d98562155207fa211486ced1c4887af76d9d56994a13daab83fb95f",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_每日提醒.asset",
+      "sha256": "483205152ef45b1442a86f171f4d8b391f9199e9cf7c444be39ca91a57248534",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_活动礼包切页是否有提示.asset",
+      "input_sha256": "ca682a4bc03ad8897e7d2b5f8497f96208e4632c7aa23c494e3a1b60f9b9d826",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_3__State_活动礼包切页是否有提示.asset",
+      "sha256": "2d67db1789c9bc5884edc5a745208a2873b3e52399901a32c2debbb3447c00f2",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查任务类型是否有提示.asset",
+      "input_sha256": "8bcb8982146650071648d41748d2a893a47059a6691fe6dcef6b8b1a3f3198a4",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查任务类型是否有提示.asset",
+      "sha256": "7cfea8dfae5d8d7afabdf91c4cd9c0f3143c0efbd0e9b784b61e0a30af23041a",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查战令活动是否有提示.asset",
+      "input_sha256": "60844d6c894e26af605774107d856c1b6b65d3cee2faef528d2aeb5b7d7c8801",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查战令活动是否有提示.asset",
+      "sha256": "aa1bf1599fe6eb36e471d5b1c6c45f9d84d8b4dcfb6c709a6f76245c5e01122b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查活动任务是否有每日提示.asset",
+      "input_sha256": "b3902c48aa138a19042c0c0e860c671e6582b8b781a8c4611b21cb3af51a94ac",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_4__Cnd_检查活动任务是否有每日提示.asset",
+      "sha256": "72662628b39720a33369372057c949c2ff77a8e68eb71c10664efce657533962",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__Cnd_是否有任务可以提交.asset",
+      "input_sha256": "0c4f262845a44dcb827c5b0572ace432d8c218e0835068469256342e53c80f74",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__Cnd_是否有任务可以提交.asset",
+      "sha256": "4ff99bcb124047aaafe6ed79f550fd701d8253ceda23d0d6e9b4859980c6b124",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_PlayerBattleRoyaleContent挑战按钮提示.asset",
+      "input_sha256": "4036290a95e640b8ffc7079490bba890d9540f60e06af26ae33bdfb4ddd6a18d",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_PlayerBattleRoyaleContent挑战按钮提示.asset",
+      "sha256": "ce35c3674ceb984eb8714227a2b48a3a3c0fc2f9d73bf5cbd06ee0c14b67cde3",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_战令活动是否有新提示.asset",
+      "input_sha256": "b94cbe4a35aa29fcd4874eee85f18335cf9559a0bae9790230f7b9030f6cbc15",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_战令活动是否有新提示.asset",
+      "sha256": "d9f6fef42f41a3b56b6c9870d5c819f9fb8456f8d12f6f246260b3a85e66b10c",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_活动任务红点带每日红点.asset",
+      "input_sha256": "a31605a7b4b87f709c998ccdee23603b20645b6c23968dbc50d0a2f95901da36",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_5__State_活动任务红点带每日红点.asset",
+      "sha256": "5905bb4a1fa14e22d9740bbdc444cdd6b37115f599c53b55c777333be1ec2f83",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_6__Cnd_检查是否有新的礼包.asset",
+      "input_sha256": "128246a4c738853ad9413cc86e05756f4b51f954a2bd6890bd26a14233581e7c",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_6__Cnd_检查是否有新的礼包.asset",
+      "sha256": "ec03eb8b3932cc73aa632c0d4a2d053b292ef3812e8e803bf2236895ff716ae3",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_7__Cnd_检查是否有免费奖励.asset",
+      "input_sha256": "64b9465822b89aae9823b0d2b438b7248520b03867577749aca488acdac46af2",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_7__Cnd_检查是否有免费奖励.asset",
+      "sha256": "16d6e4831be23a118155f638afd12282beb3c31fc8526841eb2a8510163a2354",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_8__State_是否有任务可以提交.asset",
+      "input_sha256": "8a2098d2ff801da0cec125e434c913d0641b8af1eec2ada5433b7e940523e09d",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_8__State_是否有任务可以提交.asset",
+      "sha256": "eca24e884f5904b08e19b51a16af76720a5c40a67e05d0e2fb3a88dbe6d4f45b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Activity/_9__State_是否有任务可以领奖.asset",
+      "input_sha256": "e7fab36d702c882fada0b560a5977b76d72d4d5445ff7200c8f97f3491f8feef",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Activity/_9__State_是否有任务可以领奖.asset",
+      "sha256": "289538d66cbd63f5f422bf6a86af0d17d3fb27cf1e29e28a4c3498be1fd06283",
       "registries": 1
     },
     {
@@ -8510,69 +8526,6 @@
       "registries": 1
     },
     {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_1__State_笔记模块是否有提示.asset",
-      "input_sha256": "1a88470848e75af3a76edb36a2010c911e0c2c9de6a782bf649367dbf7e9963f",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_1__State_笔记模块是否有提示.asset",
-      "sha256": "71bcdd86de56e2a93d840b6616518fd1c8b865fefbb081136dc900962a1a4baf",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_2__State_日常副本是否有提示.asset",
-      "input_sha256": "768a80b5197a7558c8891889cad499decc4098a233b106064660b220e8a24acc",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_2__State_日常副本是否有提示.asset",
-      "sha256": "55fc95570ae71bc59bae8096caaddf54a6caa779d8019db01c1ea64e4629116b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_3__State_幻想阶梯是否有提示.asset",
-      "input_sha256": "b3f5668a5130d357a4e6f9803184d81b83794a7fb8b66b04959d7550e9ea9029",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_3__State_幻想阶梯是否有提示.asset",
-      "sha256": "452691467ea9d5c93a8303775e239574863766b007edf5ae81b4523b5f60597f",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_4__State_地图探索是否有提示.asset",
-      "input_sha256": "29d352d5ae587d5972420fed67ce83960a0b7edfbf792dc19b79c40ffdce2397",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_4__State_地图探索是否有提示.asset",
-      "sha256": "4011bf71117d3154bf335403fa44f8dc9bb0e1407036a1e5a870641bfc27ba2c",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_5__State_素材秘境是否有提示.asset",
-      "input_sha256": "fcbdb6c5f87eb88c154be3fbdcb4a43b8f4dde622450ff7ca27c71fc4bc6cf93",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_5__State_素材秘境是否有提示.asset",
-      "sha256": "201227bf1bac15425d6a2d1f0dbf96fdecaec3f57691fdf84a9ebe1b8f07792b",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_6__State_每日活动是否有提示.asset",
-      "input_sha256": "01b2fe65a6280518fea35791faf055166c98278528d466841d7aeb57f4a30e84",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_6__State_每日活动是否有提示.asset",
-      "sha256": "925b5cb939bff54f58f497ab073e3730579010b571ff30f6c1f91a81afe503ad",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_7__State_周常活动是否有提示.asset",
-      "input_sha256": "5c65e5beffd0a7fb8b477102293ad0b6ba837aa9e88537c01376cf7ab27a342a",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_7__State_周常活动是否有提示.asset",
-      "sha256": "0df55f9c89f4f2f996b585a01a3c7e9f26a786e7ed5c5e3d92600be5e5e8de23",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_8__State_竞技是否有提示.asset",
-      "input_sha256": "d48e4207ef93952bc4125cede73d0e2b5befdcc58758a8c59c6b5930d871731d",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_8__State_竞技是否有提示.asset",
-      "sha256": "fa944945012323408fb073e2be4436494470472412181489c325988b0a2fec5c",
-      "registries": 1
-    },
-    {
-      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_9__State_羁绊冒险是否有提示.asset",
-      "input_sha256": "d16c03a82877d4184cfe95b21f9ce570ecd7155d74724500141e30814d5f33b9",
-      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_9__State_羁绊冒险是否有提示.asset",
-      "sha256": "81e6210d48e19e92608fc7409e529bf64468899f2c7f0804316b70dbb565a9d5",
-      "registries": 1
-    },
-    {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/ArenaArea/_10__Cnd_检查指定类型的功能是否是新解锁.asset",
       "input_sha256": "4463153f648078babd4295358ee49fdf2d058e8389528367cd86424c0e625f87",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/ArenaArea/_10__Cnd_检查指定类型的功能是否是新解锁.asset",
@@ -9868,6 +9821,69 @@
       "registries": 1
     },
     {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_1__State_笔记模块是否有提示.asset",
+      "input_sha256": "1a88470848e75af3a76edb36a2010c911e0c2c9de6a782bf649367dbf7e9963f",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_1__State_笔记模块是否有提示.asset",
+      "sha256": "71bcdd86de56e2a93d840b6616518fd1c8b865fefbb081136dc900962a1a4baf",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_2__State_日常副本是否有提示.asset",
+      "input_sha256": "768a80b5197a7558c8891889cad499decc4098a233b106064660b220e8a24acc",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_2__State_日常副本是否有提示.asset",
+      "sha256": "55fc95570ae71bc59bae8096caaddf54a6caa779d8019db01c1ea64e4629116b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_3__State_幻想阶梯是否有提示.asset",
+      "input_sha256": "b3f5668a5130d357a4e6f9803184d81b83794a7fb8b66b04959d7550e9ea9029",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_3__State_幻想阶梯是否有提示.asset",
+      "sha256": "452691467ea9d5c93a8303775e239574863766b007edf5ae81b4523b5f60597f",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_4__State_地图探索是否有提示.asset",
+      "input_sha256": "29d352d5ae587d5972420fed67ce83960a0b7edfbf792dc19b79c40ffdce2397",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_4__State_地图探索是否有提示.asset",
+      "sha256": "4011bf71117d3154bf335403fa44f8dc9bb0e1407036a1e5a870641bfc27ba2c",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_5__State_素材秘境是否有提示.asset",
+      "input_sha256": "fcbdb6c5f87eb88c154be3fbdcb4a43b8f4dde622450ff7ca27c71fc4bc6cf93",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_5__State_素材秘境是否有提示.asset",
+      "sha256": "201227bf1bac15425d6a2d1f0dbf96fdecaec3f57691fdf84a9ebe1b8f07792b",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_6__State_每日活动是否有提示.asset",
+      "input_sha256": "01b2fe65a6280518fea35791faf055166c98278528d466841d7aeb57f4a30e84",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_6__State_每日活动是否有提示.asset",
+      "sha256": "925b5cb939bff54f58f497ab073e3730579010b571ff30f6c1f91a81afe503ad",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_7__State_周常活动是否有提示.asset",
+      "input_sha256": "5c65e5beffd0a7fb8b477102293ad0b6ba837aa9e88537c01376cf7ab27a342a",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_7__State_周常活动是否有提示.asset",
+      "sha256": "0df55f9c89f4f2f996b585a01a3c7e9f26a786e7ed5c5e3d92600be5e5e8de23",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_8__State_竞技是否有提示.asset",
+      "input_sha256": "d48e4207ef93952bc4125cede73d0e2b5befdcc58758a8c59c6b5930d871731d",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_8__State_竞技是否有提示.asset",
+      "sha256": "fa944945012323408fb073e2be4436494470472412181489c325988b0a2fec5c",
+      "registries": 1
+    },
+    {
+      "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Note/_9__State_羁绊冒险是否有提示.asset",
+      "input_sha256": "d16c03a82877d4184cfe95b21f9ce570ecd7155d74724500141e30814d5f33b9",
+      "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Note/_9__State_羁绊冒险是否有提示.asset",
+      "sha256": "81e6210d48e19e92608fc7409e529bf64468899f2c7f0804316b70dbb565a9d5",
+      "registries": 1
+    },
+    {
       "input": ".tools/profession-native-ui/871_156598/typed/export/ExportedProject/Assets/ScriptableConfig/TipDotGraphAssets/Pet/_10__Cnd_宠物是否可以提升能力.asset",
       "input_sha256": "d480372be99a66ab2d14a262d68b039cb60382bdfa7d400c1694595ea2272e39",
       "path": ".tools/profession-native-ui/871_156598/typed/restored/ScriptableConfig/TipDotGraphAssets/Pet/_10__Cnd_宠物是否可以提升能力.asset",
@@ -10698,5 +10714,158 @@
   "limitations": [
     "Cache conversion only. Original runtime migration, explicit assembly/script binding, Windows shaders/import, Play Mode interaction and saves are not implemented by this step."
   ],
-  "subject": "profession UI"
+  "subject": "profession UI",
+  "event_trigger_restoration": {
+    "records": [
+      {
+        "cab": "CAB-c8311043e5b881931560f3e1382bbcce",
+        "path_id": "-644228341040598571",
+        "payload_sha256": "6dc2ecaf38ed2ae1b4309641c6f4fc682c8481a57c9bb98df07cfbb4b3267871",
+        "hierarchy": "Eff_Ui_Pray_FlyStar/sfx",
+        "native_relative_path": "Effect/prefabs/Ui/Eff_Ui_Pray_FlyStar.prefab",
+        "file_id": 114621510681728303,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0ec",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-2538855a8b209d16a9e30f95648a0b6a",
+        "path_id": "8154120743742657511",
+        "payload_sha256": "e881a88a3782b801235d3fed2ffb7a95e84bdb4a7e15c5678d3272c7962c1b64",
+        "hierarchy": "Eff_ui_Upgrade/sfx",
+        "native_relative_path": "Effect/prefabs/Ui/Eff_ui_Upgrade.prefab",
+        "file_id": 114371939378208658,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0ec",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "-1313560781412792181",
+        "payload_sha256": "7e91a36041ce76a3ec45ee93733019c6c2f2c21df9a743cd5526aa7aaf7981be",
+        "hierarchy": "CharacterPanelProfessionPanel/BgPanel/Content/MiddleGo/ProfessionContent/PropRadarGo/PropSlot/ProfessionPropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/CharacterPanelProfessionPanel.prefab",
+        "file_id": 114230477853232628,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "-5883199773855609511",
+        "payload_sha256": "8315f11dfd84f2dcd7f79f9938473d3cafbf9d4c62101293ac4e6148ba34a875",
+        "hierarchy": "ProfessionConvertPropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/ProfessionConvertPropItem.prefab",
+        "file_id": 114799762105739359,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "-3646772282450441683",
+        "payload_sha256": "fd673bad3b3fc4640bc8736579b02f5fb453f55d55362f8682ffaa4aab0437c7",
+        "hierarchy": "ProfessionPanel/BgPanel/Content/MiddleGo/Content/InfoGo/FeatureGo/PropRadarGo/PropSlot/ProfessionPropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/ProfessionPanel.prefab",
+        "file_id": 114493949256727870,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "7554211979751132216",
+        "payload_sha256": "954751bab1dbc21fd9724e0bfb551e07293061641a0436f689cbfbba6ba45221",
+        "hierarchy": "ProfessionPropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/ProfessionPropItem.prefab",
+        "file_id": 114107629493147155,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "-431585893010336516",
+        "payload_sha256": "304cd9cc85a159fd2b98f35fe9b74fae8d5f64cc19487e47cf8f264a6a640e6b",
+        "hierarchy": "ProfessionPropRadar/PropSlot/ProfessionPropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/ProfessionPropRadar.prefab",
+        "file_id": 114824317463469755,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      },
+      {
+        "cab": "CAB-5ddd6e8d347eaf56265467e8d24cc8a9",
+        "path_id": "2351052779977028961",
+        "payload_sha256": "f403260333375edf7b5ec1550f5560901e717d56683a0e571431d337f4aae01d",
+        "hierarchy": "ProfessionUpgradePropItem/Effect_ui_Upgrade/sfx",
+        "native_relative_path": "Prefabs/UI/Profession/ProfessionUpgradePropItem.prefab",
+        "file_id": 114919942235722503,
+        "original_values": [
+          -320808462
+        ],
+        "exported_scalar": "f2d9e0.c",
+        "restored_hex": "f2d9e0ec",
+        "use_other_object": false,
+        "enable_action": false,
+        "use_callbacks": false,
+        "callback_count": 0
+      }
+    ],
+    "native_enable_handler": {
+      "method": "AkTriggerHandler.OnEnable",
+      "metadata_index": 334456,
+      "address": "0x794a788",
+      "byte_count": 124,
+      "sha256": "a26b9e90f28f96ea6d5422d4d068388796c3c68035bf0115ce6be9f9ec40e619",
+      "trigger_id": -320808462
+    },
+    "generator": {
+      "path": "scripts/prepare_unity_profession_event_fields.py",
+      "sha256": "12c2b1d7243ecc44946019f616d0320e1bbd8a12f69d5991254278a24c94141c"
+    },
+    "scope": "Restore only original int-list bytes on all eight source-identified AkEvent components; preserve all other prefab text and registry restoration. Windows playback and callback/action support are separate."
+  }
 }

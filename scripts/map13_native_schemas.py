@@ -170,7 +170,8 @@ def spine_tree(schemas, name):
 
 
 class NativeSchemas:
-    def __init__(self, code):
+    def __init__(self, code, *, unity_project=None):
+        self.unity_project = Path(unity_project) if unity_project is not None else ROOT / "unity"
         self.default = ScriptSchemas(code_root=code)
         self.native = ScriptSchemas.__new__(ScriptSchemas)
         self.native.generator = TypeTreeGenerator("2022.3.57f1", generator="AssetsTools")
@@ -182,7 +183,7 @@ class NativeSchemas:
                 self.native.generator.load_dll(path.read_bytes())
                 self.reference_inputs.append(path)
         for name in ["Unity.TextMeshPro", "UnityEngine.UI"]:
-            path = ROOT / "unity/Library/ScriptAssemblies" / (name + ".dll")
+            path = self.unity_project / "Library/ScriptAssemblies" / (name + ".dll")
             self.native.generator.load_dll(path.read_bytes())
             self.reference_inputs.append(path)
         self.native.generator.load_local_dll_folder(str(code / "managed/decoded"))

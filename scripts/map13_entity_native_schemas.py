@@ -163,7 +163,7 @@ def install(schemas, code):
         raise ValueError("Inspect original SkeletonGraphic field types")
     original_tree = schemas.default.tree
     for module in ("Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"):
-        path = ROOT / "unity/Library/ScriptAssemblies" / (module + ".dll")
+        path = getattr(schemas, "unity_project", ROOT / "unity") / "Library/ScriptAssemblies" / (module + ".dll")
         schemas.native.generator.load_dll(path.read_bytes())
         schemas.reference_inputs.append(path)
     for module in ("mscorlib", "System.Core"):

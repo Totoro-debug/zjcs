@@ -22,7 +22,7 @@ ROOT_BUNDLES = [BUNDLE, ITEM_BUNDLE, RULE_DIALOG_BUNDLE,
     'defaultpackage_assets_image_itemicon_other_common_noatlas.bundle']
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
-def build():
+def build(unity_project=None):
     apk = Apk.current()
     if apk.version != '871_156598' or apk.index[BUNDLE] != '66728446397356c9e2febcd2ebf9f057':
         raise ValueError('Profession prefab version/bundle identity differs from the verified official source.')
@@ -57,7 +57,7 @@ def build():
         root = apk.asset(RULE_DIALOG_BUNDLE, relative)
         dynamic_seeds.append(dict(path='Prefabs/UI/RuleDialog' + relative, source=apk.provenance(root),
             payload_sha256=digest(root.get_raw_data())))
-    schemas = NativeSchemas(ROOT / '.tools/source-packages/current/871_156598/official-code')
+    schemas = NativeSchemas(ROOT / '.tools/source-packages/current/871_156598/official-code', unity_project=unity_project)
     original_generator = schemas.default.generator
     schemas.default.tree('Unity.TextMeshPro', 'TMPro.TMPEffect')
     schemas.default.tree('Unity.TextMeshPro', 'TMPColorGradient')
@@ -181,6 +181,7 @@ def build():
     tools.extend(ROOT / record['path'] for record in schema_proof['client_sources'])
     tools.extend(ROOT / schema_proof[key]['path'] for key in ('image', 'metadata'))
     tools.append(code_manifest)
+    tools.extend(schemas.reference_inputs)
     result = dict(format=1, manifest=apk.version, root=BUNDLE, roots=ROOT_BUNDLES, dynamic_prefab_seeds=dynamic_seeds,
                   selected_reward_script_types=[dict(cab=cab, script_type_index=index) for cab,index in sorted(reward_script_types)], inputs=inputs, components=fields,
                   converted_objects=changes, managed_reference_unions=unions,
@@ -191,4 +192,7 @@ def build():
     (dest / 'source-manifest.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Prepared typed profession UI inputs:', len(inputs), 'bundles', len(fields), 'components', flush=True)
 if __name__ == '__main__':
-    build()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--unity-project', type=Path, help='Unity project providing actual compiled TMP/UGUI metadata')
+    build(parser.parse_args().unity_project)
