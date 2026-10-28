@@ -1021,3 +1021,14 @@ unity/Assets/Game/Editor/Map13MiniMap/** text eol=lf
 unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource.meta text eol=lf
 unity/Assets/Official/World/Map/13/Source/NativeMiniMapSource/** text eol=lf
 unity/Assets/Official/World/Map/13/Source/minimap-mask-patterns.json* text eol=lf
+# Preserve original entity index, platform payload and source receipt bytes.
+scripts/prepare_unity_map14_entity_index.py text eol=lf
+assets/reference/official-map/map14-entity-index-source-manifest.json text eol=lf
+unity/Assets/Game/Runtime/Official/EntityIndex/** -text
+unity/Assets/Game/Runtime/Official/EntityIndex.meta -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading/** -text
+unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading.meta -text
+unity/Assets/Game/Editor/Map14/EntityIndex/** -text
+unity/Assets/Game/Editor/Map14/EntityIndex.meta -text
+unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/** -text
+unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading.meta -text

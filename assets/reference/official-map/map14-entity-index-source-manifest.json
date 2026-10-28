@@ -1,0 +1,192 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Launch.dll",
+      "sha256": "68dcdbe26255391564719e0942f0a614a83b15ff6793263233563c635dd9161c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/Common/MyEntityIndexHandler.cs",
+      "sha256": "9d571925a2cbed3f9be0ccb16b1926ab4885aa6603f61f771aaea123ad0c3471"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/Common/ConfigConst.cs",
+      "sha256": "a12c1392935686b7c10288db4e335e8f7718305a8c74bb6e25b89d39558a7e5f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IMyEntityIndexHandler.cs",
+      "sha256": "2b6b6f8ef2068ee648d99f1ead860463d386285dba1b8ba03143778c9ff31de5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/CsvUtils.cs",
+      "sha256": "dd2a36ac71b1618f9a888d4191ef333f3ba24740403d48c0e20a90a1a7c77a91"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/JsonUtils.cs",
+      "sha256": "34d9fe6f186ff3f116ade46b7ff77289ff94ab0fc3d12b140a3ee2ae0d41838c"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_entity_index.py",
+      "sha256": "f3fd67ad4d573f9640a5a6eabd2841a741384af14d48bc6bd7e61e8efebe5913"
+    }
+  ],
+  "payload": {
+    "source": {
+      "bundle": "defaultpackage_assets_config_ec.bundle",
+      "bundle_hash": "c585d80616c0bc2c74568ace0488c05f",
+      "path_id": "7349830744708744641",
+      "origin": "official_cdn",
+      "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/c585d80616c0bc2c74568ace0488c05f.bundle",
+      "manifest": "871_156598",
+      "bundle_size": 6898815,
+      "bundle_sha256": "efd70e71516d5eaa50a8fe7634d8df8fab6f4b734e74d960d3ff075f7eb90595"
+    },
+    "object_sha256": "77bbe92e83b0c86c64884212e516d5ab420a1a11254b75994ba16754d60efdb8",
+    "text_sha256": "2722684bb204e944d40a6e91229657f5199699f08871dff065c8571f4eb4833a",
+    "directories": 3860,
+    "identifiers": 9604
+  },
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/EntityIndexBindings.cs",
+      "sha256": "d8960dd93b0fa727de50b7a37d2355109b2dc8006ca8d8b0e819d939c468dd07"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/EntityIndexBindings.cs.meta",
+      "sha256": "1c954565adec1b354a33dfd695d4c50f877e966eabda403cb7d48c8571e6ffba"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/MyEntityIndexHandler.cs",
+      "sha256": "7d3e21a2c8d4b5e4a38ed40821b663cdda8168f97dc060406a955eedbc99815e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/MyEntityIndexHandler.cs.meta",
+      "sha256": "56c814e4c194846953b84e1633ca07f414223c301a73ca06a484d76373be5068"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/Zjcs.Official.EntityIndex.asmdef",
+      "sha256": "f36273d64c948cfb3fa1f18a9fca497fabb4b46836f2b88313e2996a2beac66f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex/Zjcs.Official.EntityIndex.asmdef.meta",
+      "sha256": "a59b22d69b30c235a2edbe606d848c32739832563fadc03a84bab44483f8f08d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityIndex.meta",
+      "sha256": "09482323a5ce4ee950eecc6372a34d652490f9a50fb1288bf57c13e796ab082e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading/NativeMap14EntityIndexContext.cs",
+      "sha256": "dcb2a72e9034cdd7b50b20873efc4412aadc8c16877918e5d09e6e7ce1416fe5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading/NativeMap14EntityIndexContext.cs.meta",
+      "sha256": "d7e752fc9d3354eb9057e79a2271797f41ffa80af636f6c51939035c0fd9e8b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading/Zjcs.Offline.World.NativeMap14EntityLoading.asmdef",
+      "sha256": "58b179e9c24324070f44497a15d8b7a2c335fd819e2a2c4cab760696fd321de7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading/Zjcs.Offline.World.NativeMap14EntityLoading.asmdef.meta",
+      "sha256": "03c461a90fb47016c1059e34edcfd38710ffc8350582db5cd63e2360b8959694"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14EntityLoading.meta",
+      "sha256": "08c69666a0950c6d6aa503b66c15fba83c99d3493174137c2ada51e5cf52182a"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityIndex/OfficialMap14EntityIndexAcceptance.cs",
+      "sha256": "002a1b40f0fc0c68708fc164ba67efc61083bb683bdf12e309ecaf97fa48a664"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityIndex/OfficialMap14EntityIndexAcceptance.cs.meta",
+      "sha256": "a14d65ab86e5e4467714746aaec1302a527f050b70a85a32adcde2bf0ef116a6"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityIndex/Zjcs.Editor.Map14.EntityIndex.asmdef",
+      "sha256": "bf8b032ab78db0bd1a96c39ccffb6953ec5609f8140e60d88110a003385d7821"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityIndex/Zjcs.Editor.Map14.EntityIndex.asmdef.meta",
+      "sha256": "9ad5a91b555e28e364ab3b16a2a9c147815146af44580a5b8ae2d01682b1ad99"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/EntityIndex.meta",
+      "sha256": "f2f49f048d601868b795ba36a2fdac311732dd8ff5eb79b7b65d56cf82295e16"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/index.g.txt",
+      "sha256": "2722684bb204e944d40a6e91229657f5199699f08871dff065c8571f4eb4833a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/index.g.txt.meta",
+      "sha256": "763d139e2454879688cbcd0d5cec1e1933482e7c0171a35827cc434204a4da44"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/index-binding.json",
+      "sha256": "0e0b0232895822b85070b8bfa111909283b6f722287dd0892c3f7469933fc495"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/index-binding.json.meta",
+      "sha256": "80557e46c88743597792fdb47cb5dea8d6de8ed1dfe61bd9ef6afe8570822a9b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/LiteDB.bytes",
+      "sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/LiteDB.bytes.meta",
+      "sha256": "2664f9b2f12584abc46e4bf25b3de068514de5041c90606521b6a65e4fe67cc2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/LiteDB-license.txt",
+      "sha256": "0f077c548c9f6f6181d59a6dc1ddca08f35968a9b38b7f45932932b0cb082081"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading/LiteDB-license.txt.meta",
+      "sha256": "2477373b051c22230fd54caf9d6aac24fe458902f3dc6e5f56b7ef23d506aee3"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Resources/Map14/EntityLoading.meta",
+      "sha256": "cb47a06b31ace8619f5cbd5234de8b50491600dbb33142196e6eb5cb1d217ae0"
+    }
+  ],
+  "platformDependency": {
+    "name": "LiteDB",
+    "version": "5.0.20",
+    "url": "https://api.nuget.org/v3-flatcontainer/litedb/5.0.20/litedb.5.0.20.nupkg",
+    "package_sha256": "5fa8d0e820a5acb7e408201c88be6de1191ac61888c677d476062eaf9025b566",
+    "framework": "netstandard2.0",
+    "dll_sha256": "cb20227a771e862fe98301d1407a2eaab26b032e54c1c429c1a8fbed6d1d4c7e",
+    "moduleId": "b132ccd6-5c02-42e0-a5e3-839c6502d6c3",
+    "license_entry": "LICENSE",
+    "purpose": "Original JsonUtils static initialization requires the original referenced LiteDB ABI. This pinned public MIT package is a platform dependency, not an extracted original game assembly or a new save implementation."
+  },
+  "operation": "Copy the complete original MyEntityIndexHandler with exact directory inversion, duplicate handling, static path cache and original path formatting. Replace scene-scope lifetime hooks with explicit Initialize/Dispose and bind local text loading through its original path; unchanged original Console JsonUtils.FromJson decodes the selected unchanged APK-first index. CsvUtils.WrapCsvPath is identity in this source. No fallback directory mapping or invented entity address is supplied.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14EntityIndexAcceptance.Run",
+    "graphicalPlayMode": true,
+    "checks": [
+      "All selected index directories, identifiers and exact native paths",
+      "Original static path cache and disposal/reinitialization",
+      "Native shared state, client container/loading and four-statue regression"
+    ]
+  },
+  "limitations": [
+    "Native prefab catalog and dependency injection, complete entity components, formal map host and Windows Player remain required."
+  ]
+}

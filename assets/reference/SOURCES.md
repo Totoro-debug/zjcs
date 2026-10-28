@@ -27,6 +27,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 当前来源切换与转换链 | `assets/reference/official-map/current-*-source-manifest.json`、`assets/reference/character-creation/current-*-source-manifest.json` |
 | 客户端／共享代码来源 | [官方程序集与反编译目录](../../.tools/source-packages/official-code/) 与各模块源码来源清单 |
 | 模块资源来源 | 本目录各模块的 `source-manifest.json`、`*-source-manifest.json` 及所属功能／地图页中的入口 |
+| 龙之国原客户端实体索引 | [索引来源清单](official-map/map14-entity-index-source-manifest.json)：固定 871 原索引处理器、3860 目录／9604 编号的原文本、原 JSON 解码入口及 LiteDB 5.0.20 平台依赖哈希／许可；运行范围见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原共享容器事件与实体状态边界 | [共享状态来源清单](official-map/map14-client-entity-state-source-manifest.json)：固定 871 原容器／实体／组件调用、四路原事件分发、稳定投影身份与输入输出哈希；运行检查及后续接入见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原客户端容器与剧情 NPC 处理器 | [容器来源清单](official-map/map14-entity-containers-source-manifest.json)：固定 871 官方客户端容器、两类客户端实体处理器、四组原事件、复用生命周期及输入输出哈希；原共享状态消费边界与运行检查见[龙之国](../../docs/maps/map-14.md) |
 | 龙之国原实体加载器与 TTL 对象池 | [实体加载来源清单](official-map/map14-entity-loading-source-manifest.json)：固定 871 原客户端／Framework 源码与程序集、复用的生命周期／基础池、显式平台消费边界及输入输出哈希；运行与验证边界见[龙之国](../../docs/maps/map-14.md) |
