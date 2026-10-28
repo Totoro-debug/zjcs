@@ -2050,3 +2050,5 @@ Map13 原世界进度渲染：`scripts/prepare_unity_map13_entity_rendering.py` 
 龙之国原旧版世界关卡客户端代码：`map14-legacy-world-stage-source-manifest.json` 核验当前官方 Assembly-CSharp／Console 程序集、完整 `MyWorldStage`、所消费的 `MyComponent` 成员与原配置依赖及输出哈希。仅适配命名空间、反编译运算符、显式注入及必需状态／可见性／实体查找输入，保留原分支与执行顺序；四类原显示资源已核实，正式 prefab 与业务接入继续迁移。
 
 龙之国实体变换视图：`map14-entity-transform-views-source-manifest.json` 记录当前官方程序集、完整原 Animator／挂点／变换／网格视图、Z 工具、位置事件接口、原方向旋转方法及复用依赖和输出哈希。共享状态／网格坐标查询与移动代理为显式必需输入，保留原数值／顺序／分支；Unity 托管引用往返、原生 Sprite／Animator 与分项运行验证已通过，正式原雕像 prefab 和业务继续接入。
+
+龙之国四类英雄雕像显示：`map14-native-hero-statues-source-manifest.json` 记录原显示 prefab、状态特效、控制器／动画、网格、显式脚本／托管类型／材质指针和 16 个原 Sprite CAB／对象 ID 绑定；输入依据当前 APK／871 云端已验证闭包，102 个原生组件坐标／旋转／缩放及渲染字段追加 float32 位和值核对。原提示点／所有权消费代码及窗口操作完整来源分别见 `map14-entity-tipdot-views-source-manifest.json`、`map14-entity-stage-operations-source-manifest.json`。原生导入／编译和隔离带画面 Play Mode 通过，完整地图业务与 Player 尚未完成；本次素材未声称进入完整快照。

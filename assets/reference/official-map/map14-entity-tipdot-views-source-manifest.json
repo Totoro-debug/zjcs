@@ -1,0 +1,184 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECTipdotLinkerView.cs",
+      "sha256": "8331b4cd60c3f357b478b98e8d6191d22b00e927d447e37807fb1290e455ff6e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEntityTipDotNodeLinker.cs",
+      "sha256": "6440fc4d7173f3b83ad4ab73cf5f9a262b4c0b224ac70f7ba16430dca76cf17b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapEntityNodeInstanceInfo.cs",
+      "sha256": "2495aabfe41602e78be9e9cd334b15d8d8f0b15c83af9e699dcea095f31809aa"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityOwnershipData.cs",
+      "sha256": "8d10287843b387975675dc02b4cf11067913a0b7970f13d4f4158689003df5e1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityOwnershipType.cs",
+      "sha256": "93659ecf4bc312691af9a75cc14029a4a48bff5250a9451c72557e8ab55ed48a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MapMyEntityUtils.cs",
+      "sha256": "5ed2968def9060bdfe54d0deb73dee1bbb67da3a35ed950573ebc109ac02e8b0"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_tipdot_views.py",
+      "sha256": "8ff41c295f1805d05dabf625b1755c5df3196fbfd4f3b870d0dc058ad2ea74fe"
+    },
+    {
+      "path": "scripts/prepare_unity_entity_transform_views.py",
+      "sha256": "1d4db285676b91fbfeb5776d48b22e2b6fdd822945c8113f453bfb3daae04502"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/BaseNodeInstanceInfo.cs",
+      "sha256": "82182eae1d41faca780f6b8d9be9ac91e85708e24067320b6582fbfdbc4932f6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotNodeKey.cs",
+      "sha256": "1953095d7d062339198ec3bbd52cc6b61d8ad3bcf07c207668285fb339ed4c32"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/TipDotStateInfo.cs",
+      "sha256": "76fae28aa890d8169ae95f1ed2c9d0dee8fbda104e8b424c4d9feb6ba5a472d5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/IProfessionTipDotSystem.cs",
+      "sha256": "b0b90aa999c755972f67607b871d182f13dfc2ffc148020de278740e9d550cfa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AssetGuidProxy.cs",
+      "sha256": "ab021a30876fae404d4f3320fb451cbd5a4a2e36b7a24989bf8101e980cf81a3"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/WorldMultiLanguageText.cs",
+      "sha256": "490825671794bffc638d37170ab39c2e1523cd8bbfdb016cf4bf4e0966ea63ad"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/ECTipdotLinkerView.cs",
+      "sha256": "05943bccb8ff7c36c60cab6c3f209c0c40a3a5dfc298de86c32203fafe4160d1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/ECTipdotLinkerView.cs.meta",
+      "sha256": "f551bda1c92a374c833d8a8839c8581abc74005df94effa5a8fa02c770902fe7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityTipDotNodeLinker.cs",
+      "sha256": "bc6fe3b0e3e4357619a404633d697fddafc0b00aea7a346f341bd8796ece0baa"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityTipDotNodeLinker.cs.meta",
+      "sha256": "4d774b248753777472cf94272f5a1d3c1d9c760b090129528aa98b40ffb9b6a2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityNodeInstanceInfo.cs",
+      "sha256": "0d65b324a84aec46b7dbae8058918e0bea5bc0a564a0893893a93f86d96d1772"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/MapEntityNodeInstanceInfo.cs.meta",
+      "sha256": "677d35a28cb92914f7507c70126be43ca9a8a67a5635ca85ba2bef13d897dcee"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipData.cs",
+      "sha256": "6e5d03b9eefcede1ec0194b6464e69812ada4b81a954091ecc6e47936a8680da"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipData.cs.meta",
+      "sha256": "81921b2e271e92f6afc6db36cd8790d8a1cb8f30be596bc8e7853477eaca40d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipType.cs",
+      "sha256": "0f483888f08aa5735bcf98057314752fbc90f9d44512dad3fb0ef85122567de6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityOwnershipType.cs.meta",
+      "sha256": "edb74fc253c33ce16bdafade847697d78552ff708b40d7b7138885d094fcb3b7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityTipDotOwnership.cs",
+      "sha256": "c7e97d9b8122d28810ccfcac805a7b72d507a66a78e7423071ccec1e8b668fc8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityTipDotOwnership.cs.meta",
+      "sha256": "8c7aad4909f25bfff68b4b01acc2967251e9f8fd5ae693e602c2481e527fba6e"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityTipDotBindings.cs",
+      "sha256": "ae2b6652c5c4c9de0d18476fb63ad8e1ddcdada0dad32ebdcc6ca1d0560776c8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/EntityTipDotBindings.cs.meta",
+      "sha256": "ff809a2836a5dcb724f024daf09f676408422392f19490d99fca5288058c891d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/Zjcs.Official.EntityTipDotViews.asmdef",
+      "sha256": "00b95bdbcc4eba257bb6c8a493c9055dc418c2760678e15a93fe3c6705022e59"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews/Zjcs.Official.EntityTipDotViews.asmdef.meta",
+      "sha256": "6b728ca747382f1048b6f480b5ee3713d7f3195fc5dbce98ea0b2e7dd1beb3f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityTipDotViews.meta",
+      "sha256": "ea949e9a491f74e0e2e85ec9390e280a4fe8924c05028268d5b31e4a374904df"
+    }
+  ],
+  "adaptations": [
+    {
+      "output": "ECTipdotLinkerView.cs",
+      "diagnosticBlocks": 1
+    },
+    {
+      "output": "MapEntityTipDotNodeLinker.cs",
+      "diagnosticBlocks": 2
+    },
+    {
+      "output": "MapEntityNodeInstanceInfo.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "EntityOwnershipData.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "EntityOwnershipType.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "output": "EntityTipDotOwnership.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "operation": "Copy complete original ECTipdotLinkerView, MapEntityTipDotNodeLinker, MapEntityNodeInstanceInfo and ownership data/enum; select complete EntityShowTipForMe ownership gate. Preserve leader/ownership short-circuit order, null/map/graph gates, class-and-position instance identity, link/unlink and show subscriptions, number overflow strictly above 99, lazy prefab load/instantiate/release, original field and callback order. Reuse original ported tip-dot contracts, key/state and localization component. Replace singleton entity/map/config queries and GUID resource instantiation with explicit required hosts; ownership opcode remains 40340.",
+  "limitations": [
+    "Concrete tip-dot graph computation, original map/config/entity query and resource hosts, native entity prefab bindings, formal map/input/save and Windows Player remain required."
+  ]
+}

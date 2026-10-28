@@ -1,0 +1,232 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Launch.dll",
+      "sha256": "68dcdbe26255391564719e0942f0a614a83b15ff6793263233563c635dd9161c"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageInteractionOperationBase.cs",
+      "sha256": "33afc082b4933eb62b91baf736c32ed93fc5e2b8ad17748c9678ccb9018d1700"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageInteractionOperationWindow.cs",
+      "sha256": "12c68fdd7e508c487427b6d2eedadc955e7004bc8569bc04b5bf880e8b23b50a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageInteractionOperationWindowClickData.cs",
+      "sha256": "c5a9f45828c827388809049bffcc79a0475edff6ff4347194923f20d3e30fdda"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageInteractionOperationWindowClickType.cs",
+      "sha256": "fc6b89903fbce947b0341350f0a462cd9cd577d070fdfbd14505e8c79e32cee9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IWorldStageInteractionOperationWindowHandlerBase.cs",
+      "sha256": "0e6edb1a2863604e56491dca9933c85fc23d8128ebc5f5d041552682291d4d0e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/IWorldStageUiBase.cs",
+      "sha256": "649409db4117a8ed4aa7e5a09d3a8df89f9c38ab0c4ff6d06f851900c307a227"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageUiClickData.cs",
+      "sha256": "52cb79154d370f0ce11ccaac6568996582d0a8d09046cae132ce10cb82b88567"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldStageOperationWindowClickUI.cs",
+      "sha256": "dba61855d3e8974c471dad9949031890ee554f2b2fa213a72d36812341eb5ee7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/SDKEventPanelId.cs",
+      "sha256": "f2b4a91d3503d8bdc70729319dfef7a6d937b59d416ab894bb3668d2641afd14"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/launch-source/SDKEventPanelSource.cs",
+      "sha256": "c08b450ecb6752e31b45c64a1ee3c5a293c82885f707bc8d8ed5a928dd3e1eb1"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_entity_stage_operations.py",
+      "sha256": "20b885b368d28306c5345eaa756947024519a4c0dd220e1b0f49d30a0d4da029"
+    },
+    {
+      "path": "scripts/prepare_unity_story_playable_runtime.py",
+      "sha256": "8901da0cedbce77ece9f81c2e2c35f4bbefb20f0f48f3fb26f32bc60afcfd2c0"
+    },
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "assets/reference/official-map/map14-entity-world-stage-views-source-manifest.json",
+      "sha256": "a96c9fbf0e0c47236eac17e594b57107190dc5c757047d6d284cac2626556b04"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/WorldUI/StageDialog.cs",
+      "sha256": "c6f1df0187ae45609f32c92a989451659e0a8571e90f05139bc1c694bf7b7c1c"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/ECWorldStageInteractionOperationBase.cs",
+      "sha256": "109e39bd8bdb99229aedad6dd485ad370be671e1e901ae30716da43f2ef127e2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/ECWorldStageInteractionOperationBase.cs.meta",
+      "sha256": "29ce27f785acaf306552c398a0d73c1dd16391c6e58b2018398262de682470fc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/ECWorldStageInteractionOperationWindow.cs",
+      "sha256": "902f7f70c8a2c9f1602300244383702288a2fad780babaf1ac8769c138d5b8d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/ECWorldStageInteractionOperationWindow.cs.meta",
+      "sha256": "d81b5cd328bc5ab0748a25d4f426c4501dd4ccdf262de008b02b1971ec9f0a0d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageInteractionOperationWindowClickData.cs",
+      "sha256": "936ed8e18b2b93c1d3e35facec4d35fa19d9f79127836c9c9e0e361f5674dcc9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageInteractionOperationWindowClickData.cs.meta",
+      "sha256": "3ee545e324bf1190e2da5fc4f43be80b2d4091614502b8f3845b9a7229adeacb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageInteractionOperationWindowClickType.cs",
+      "sha256": "67d883fc1fcb424946ecd9f2daff7e2cdea075a48cd473f3a1453d534740fdcf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageInteractionOperationWindowClickType.cs.meta",
+      "sha256": "bff410389a0592c19e4394f50c8e72e3db88edf4157a6d2d6e09c638c567cf00"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/IWorldStageInteractionOperationWindowHandlerBase.cs",
+      "sha256": "ccb1105619c37da90a7bef474130b8e5d0b5c2c09e2431adbba37da6c3324a05"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/IWorldStageInteractionOperationWindowHandlerBase.cs.meta",
+      "sha256": "3486bacf6852e813ce1cc2c8f618dc8ea720831ab27d285138c3ebc2408b4af7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/IWorldStageUiBase.cs",
+      "sha256": "b7f586b5b0b804077b77568bba23d4a3f8843187d2f8e874da7a14097d412b84"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/IWorldStageUiBase.cs.meta",
+      "sha256": "5ac8f0238f22533c7133a4fd0fc8da673bdb335bcffcd8dae521ed284543d4b8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageUiClickData.cs",
+      "sha256": "d6cc32b053f971cb6c80df2487bd22d0cb713a7fc34a036a30921ab60764b97a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageUiClickData.cs.meta",
+      "sha256": "de2997fe8bd3b3f072ea98435228bad42d25bacaeb051c75e231c387205aa363"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageOperationWindowClickUi.cs",
+      "sha256": "eb470ac8cb5d5457a0aef73aea15c9e217632e2b7e4cfd42a45876ef54e7f028"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageOperationWindowClickUi.cs.meta",
+      "sha256": "1cc9b457a28cd992e24c855ec51e4f5cad1c3889bcbe5e25736b0239137ca3e7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/SDKEventPanelId.cs",
+      "sha256": "290f0605710a00f938a5bdfca894685dc6054914cf31b4ac8c703957d97922f7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/SDKEventPanelId.cs.meta",
+      "sha256": "7e324d434c2e6535a48531517da07b516ae27375dbcb7ac7dbe62294a6cb15ec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/SDKEventPanelSource.cs",
+      "sha256": "379c4af2b5bf9601515a5436566007b08186ff3169e1f30e9560d724cf74203b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/SDKEventPanelSource.cs.meta",
+      "sha256": "94e7fb7edc408da93d5456b3defe1476610277b78b68defe52ac5d4bcee8f631"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageOperationBindings.cs",
+      "sha256": "b9ce908cf5333950ab701e6e7b82ca76a310aebdf1fee4c5e091ba8381f4f595"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/WorldStageOperationBindings.cs.meta",
+      "sha256": "480bc090adec8cd004530f0764e25f8ed741b5a0c5993fcf4fcf257f8af21016"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/Zjcs.Official.EntityStageOperations.asmdef",
+      "sha256": "31a3a819c6527ba63ad3396cd51cbe0af6cff6354b2eb5f166b732e94327c3f1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations/Zjcs.Official.EntityStageOperations.asmdef.meta",
+      "sha256": "fac16b8d80d5e24f44db0ac267ea19e8a23996132dfec05c2c7066672088190a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityStageOperations.meta",
+      "sha256": "0b2fc4486bb0cc15e3145e20df20f7f3882708984593e7c7637c468ff76144ca"
+    }
+  ],
+  "adaptations": [
+    {
+      "source": "client-source/ECWorldStageInteractionOperationBase.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/ECWorldStageInteractionOperationWindow.cs",
+      "diagnosticBlocks": 1
+    },
+    {
+      "source": "client-source/WorldStageInteractionOperationWindowClickData.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/WorldStageInteractionOperationWindowClickType.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IWorldStageInteractionOperationWindowHandlerBase.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/IWorldStageUiBase.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/WorldStageUiClickData.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "client-source/WorldStageOperationWindowClickUI.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "launch-source/SDKEventPanelId.cs",
+      "diagnosticBlocks": 0
+    },
+    {
+      "source": "launch-source/SDKEventPanelSource.cs",
+      "diagnosticBlocks": 0
+    }
+  ],
+  "operation": "Copy original operation base, window operation, nested operation click records/enums, window handler/UI interfaces, actual native click component/struct and complete launch panel ID/source enums. Restore DoPopupWindow from MoveNext with input hook acquired before try, original reporting split, await, initialized/result checks, StageDialog before click initialization, catch and finally lease disposal. Keep ordered first-match click, recursive operation query/release and activity-gated application-scope StartStage. Replace window singleton/UI shared-state consumption with required explicit hosts; opaque stage/condition payloads pass unchanged. Preserve original click-data struct and foreach semantics.",
+  "limitations": [
+    "Concrete local stage interaction, original window/resource/context hosts, native prefab script bindings, formal map/input/save and Windows Player remain required."
+  ]
+}
