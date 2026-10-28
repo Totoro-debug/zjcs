@@ -311,6 +311,11 @@ namespace Zjcs.Editor.Skills
             File.WriteAllBytes(Path.Combine(ValidationDirectory, "zjcs-skills-head.png"), headTexture.EncodeToPNG());
             ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "zjcs-skills-opening.png"));
             yield return null;
+            if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_ATTACHMENTS_ONLY") == "1") {
+                yield return ValidateListAttachments(session, progression, panel);
+                Finish(true, null);
+                yield break;
+            }
             var planInput = characterView.GetComponentsInChildren<TMPro.TMP_InputField>(true).Single(value => value.name == "SkillPlanName");
             Require(planInput.characterLimit == 0 && planInput.interactable, "Original TMP plan input settings were not restored.");
             string originalPlanName = progression.Player.Skills.Plans[progression.Player.Skills.SelectedPlan].Name;
@@ -864,6 +869,56 @@ namespace Zjcs.Editor.Skills
             if (ownsEventSystem)
                 UnityEngine.Object.Destroy(eventSystem);
             Finish(true, null);
+        }
+
+        private static IEnumerator ValidateListAttachments(OfflineMainlineProgressSession session,
+            OfflineCharacterProgressionService progression, CharacterSkillPanel panel)
+        {
+            Transform Row(int id) => UnityEngine.Object.FindObjectsOfType<Transform>()
+                .Single(value => value.name == "SkillListItem_" + id);
+            bool Attachment(int id, int type) => Row(id).GetComponentsInChildren<Transform>()
+                .Any(value => value.name == "OriginalSkillAttachment_" + type);
+            Require(!progression.IsNewSessionItem(10015) && !Attachment(10015, 4),
+                "An existing login skill incorrectly received a new-item mark.");
+            Require(Attachment(10000, 13) && Attachment(10000, 8), "Mergeable pieces lost their original center hint or merge red dot.");
+            Require(Row(10000).GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("合成")),
+                "The original merge hint did not use its Chinese localization.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-merge-attachment.png"));
+            yield return null;
+            SimulatePointerClick(Row(10000).GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            SimulatePointerClick(FindButton("MergeBtn"));
+            yield return new WaitForSecondsRealtime(.3f);
+            Require(progression.IsNewSessionItem(10000) && Attachment(10000, 4) && !Attachment(10000, 13),
+                "Merging through the original dialog did not replace the hint with a transient new-skill mark.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-new-attachment.png"));
+            yield return null;
+            SimulatePointerClick(Row(10000).GetComponent<Button>());
+            yield return new WaitForSecondsRealtime(.6f);
+            Require(!progression.IsNewSessionItem(10000) && !Attachment(10000, 4),
+                "Opening a newly acquired skill did not clear its mark.");
+            SimulatePointerClick(FindButton("BlurMask"));
+            yield return new WaitForSecondsRealtime(.3f);
+            int mismatch = progression.SkillRules.Skills.First(value => value.ItemType == 100
+                && !OfflineSkillProgression.IsAvailableFor(value, progression.SkillContext())).ClassId;
+            Require(session.ApplyCharacterMutation(player => {
+                player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = mismatch, Rank = 1 });
+                var piece = player.Inventory.SingleOrDefault(value => value.ItemId == 12000);
+                if (piece != null) piece.Count = 0;
+            }, "skills-attachments-mismatch").IsApplied, "Could not prepare the incompatible skill fixture.");
+            panel.ReloadProfile();
+            yield return null;
+            var all = UnityEngine.Object.FindObjectsOfType<Toggle>().Single(value => value.name == "ShowAll");
+            if (!all.isOn) SimulatePointerClick(all);
+            yield return null;
+            FindVisibleOwnedSkillRowButton("SkillListItem", progression, mismatch, out _);
+            Require(Attachment(mismatch, 10) && Attachment(mismatch, 4),
+                "The incompatible newly acquired skill lost an original attachment.");
+            Require(Row(mismatch).GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("职业")),
+                "The original profession warning was not localized.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(ValidationDirectory, "skills-list-profession-attachment.png"));
+            yield return null;
+            Debug.Log("[Skills attachments] Original merge hint, merge red dot, acquired mark, click-to-clear and profession mismatch passed through simulated input.");
         }
 
         private static IEnumerator ValidateHomeDamageTest(string slot, string root)

@@ -36,15 +36,19 @@
 
 ## 完整还原部分
 
+技能列表附件已按原 `ItemIconAttachmentConfig` 的层级顺序恢复：`CenterHintContent`（点击合成）、`ProfessionMismatch`（职业不符）、`NewMark` 和 `RedDotContent` 均使用原 prefab、字体及组件字段。红点沿 `RedDotMultiItem` 组合原升阶、装配及合成条件；原行项目是否考虑职业、碎片列表不挂这些附件等分支保持客户端配置。装配附件属于技能皮肤页的原附件类型 12，不额外叠加到原列表。新获得标记按原 `ItemNewMarkManager` 的零数量到正数量、正数量到零数量分支更新，点击技能、刷新列表或关闭技能列表时移除上次列表涉及的标记（包括视口外项目），当前玩家会话共享，重新登录清空；不写入主档案。规则测试、带画面 Play Mode 及 675×1463 独立 Windows Player 已通过，模拟合成、点击新技能、全部开关、过滤后返回和滚动显示职业不符项目，并实际查看附件截图。同帧重复的数据投影不会提前消费尚未显示的新技能标记；刷新停止旧列表惯性并恢复首项。
+
+伤害测试结算恢复原 `map/win_01`／`map/injuried_idle` 骨骼动画，不再仅切换空 Animator 状态。复用项目独立原生骨骼、曲线、IK、插槽及绘制顺序求值器，沿原骨骼顺序变换官方附件网格；表情附件来自 `AppearanceConfig` 的 UI 附加皮肤 `performFace`／`map_01`，补齐创建角色专用 bake 未包含的眼睛和嘴部附件。源骨骼、图集及纹理沿用已核验的 `871_156598` 人物资源，UI 动作名称与附加皮肤配置仍取固定 APK `854_156383`，不混改原始哈希。男女角色真实伤害测试的胜利动作与受伤动作的独立网格探针已通过带画面 Play Mode 检查，独立 Windows Player 的真实胜利流程与受伤探针也已通过并查看截图；受伤动作探针只证明对应渲染，不代替实际失败战斗流程。
+
 方案名称已恢复原 `TMP_InputField`（对象 `5229620140741382476`，原始 580 字节 SHA-256 `12c6afe0debddb1e9a5bd164cc495b7f1f0ede5acc182a01872a6bd0728d104c`），保留原文字视口、字体、32 px 字号、颜色、光标与单行配置，不再添加旧 InputField 或透明替代图像。官方 TMP 分支额外序列化的 `m_EncodingType` 根据 APK 元数据恢复，严格检查完整对象字节。名称校验直接迁移 `Common.CJK` 与 `FormulaHandler.CheckSkillPlanNameLegal`：当前区域配置上限 12 计数单位，中日韩文字及原扩展区计 2，按原 StringInfo 文本元素计数；空名称、超长、`#<>`、半角／全角空格分别保留原错误分支，不执行 Trim。保留旧版本已接受的名称，空名称恢复“方案一”至“方案七”。单机没有在线 ContentCustom 禁用标志，原禁用遮罩保持隐藏；其原用途是禁用时重置名称，并非编辑入口。纯规则测试和带画面 Play Mode 均已通过，实际点击输入框、模拟 Ctrl+A 与逐字键盘输入、点击切换方案、检查成功／拒绝提示及硬盘主档案重读，覆盖六个中文字符、七个中文字符、含空格名称及十二个英文字母；另有表情计数和旧名称兼容规则测试。已查看实际运行截图。
 
 固定 APK 的 `GameSettings.SkillPlanMaxCount=7` 已恢复；旧单机档案的三套方案原样保留，并补入原文名称的方案四至方案七，不改变已选方案、装配、幻兽及共享槽位等级。方案下方按原 `Scrollbar` 的 Handle、20% 尺寸、颜色、方向与不可交互状态恢复，步数与 `CharacterPanelSkillPlan.RefreshView` 一样使用七档。`scripts/test_skill_plans.ps1` 已通过旧档案保留、重复规范化、异常数组拒绝及第七方案选择检查；七套方案的模拟点击循环、首尾回绕及进度条位置已通过 Play Mode 与 675×1463 独立 Windows Player 回归，并核对实际画面。
 
 Unity 已新增离线技能档案与规则服务 [OfflineSkillProfile.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProfile.cs)、[OfflineSkillProgression.cs](../../unity/Assets/Game/Runtime/Offline/Skills/OfflineSkillProgression.cs)。模型保存七套方案、主动／被动槽位、基础等级、按赛季分开的祝福等级、技能阶位与道具数量；服务提供方案切换／改名、技能安装／替换／卸下、单槽及一键培养、单技能及批量升阶。培养和升阶在档案副本核算费用后提交。
 
-固定 APK `854_156383` 的 394 个主动／被动技能、职业链、阶位累计差额、槽位培养、人物等级限制及材料已由 [prepare_unity_skill_runtime.py](../../scripts/prepare_unity_skill_runtime.py) 按三个来源清单校验并整理为 Unity 可解析的服务 DTO。固定 APK `item` 表确实缺少 18 个由 `Formula.GetPieceIdBySkillId` 计算出的碎片条目；另 190 条有效技能／碎片配对具有相同的稳定字段关系：碎片名为技能名加“碎片”，RawIcon 沿用技能 RawIcon，碎片类型为 111、Rank 为 -1、Quality 为 1。运行时 [OfficialCharacterAssetCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs) 仅对缺失且能映射至职业技能条目的碎片 ID 按此官方记录规律生成展示元数据；`OfficialSkillAssetTools.Validate` 校验 18 个目标 ID 的映射。该派生不声称缺失 `item` 原始行已从服务器配置取得。当前 `871_156598` 资源清单含技能图标图集，但未包含 `item` 规则表。[OfficialCharacterAssetCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs) 同时载入技能培养规则和 `skill-ui.json`；[OfficialSkillAssetTools.cs](../../unity/Assets/Game/Editor/Skills/OfficialSkillAssetTools.cs) 提供技能载荷导入绑定与哈希校验入口。官方 UI 层级和 269 张布局引用图像已整理至 `unity/Assets/Official/Skills/`，包括人物技能页与培养布局及原始 RectTransform 参数。
+固定 APK `854_156383` 的 394 个主动／被动技能、职业链、阶位累计差额、槽位培养、人物等级限制及材料已由 [prepare_unity_skill_runtime.py](../../scripts/prepare_unity_skill_runtime.py) 按三个来源清单校验并整理为 Unity 可解析的服务 DTO。固定 APK `item` 表确实缺少 18 个由 `Formula.GetPieceIdBySkillId` 计算出的碎片条目；另 190 条有效技能／碎片配对具有相同的稳定字段关系：碎片名为技能名加“碎片”，RawIcon 沿用技能 RawIcon，碎片类型为 111、Rank 为 -1、Quality 为 1。运行时 [OfficialCharacterAssetCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs) 仅对缺失且能映射至职业技能条目的碎片 ID 按此官方记录规律生成展示元数据；`OfficialSkillAssetTools.Validate` 校验 18 个目标 ID 的映射。该派生不声称缺失 `item` 原始行已从服务器配置取得。当前 `871_156598` 资源清单含技能图标图集，但未包含 `item` 规则表。[OfficialCharacterAssetCatalog.cs](../../unity/Assets/Game/Runtime/Offline/Progression/OfficialCharacterAssetCatalog.cs) 同时载入技能培养规则和 `skill-ui.json`；[OfficialSkillAssetTools.cs](../../unity/Assets/Game/Editor/Skills/OfficialSkillAssetTools.cs) 提供技能载荷导入绑定与哈希校验入口。官方 UI 层级和 270 张布局引用图像已整理至 `unity/Assets/Official/Skills/`，包括人物技能页与培养布局及原始 RectTransform 参数。
 
-人物主存档中的 `OfflinePlayerProfile.Skills` 由 `OfflineMainlineProgressSession` 校验和保存，`OfflineCharacterProgressionService` 在角色事务内同步技能材料与背包。人物页入口由 `OfficialCharacterPanelView.OpenSkillPanel()` 打开 `CharacterSkillPanel`。该面板已连接方案选择／改名、收藏、技能列表、安装／卸下、拖拽交换、推荐、碎片详情、合成确认、单技能升阶、升阶结果及批量升阶结果。技能页通过 `skill-ui.json` 中的 `character_skills` 完整 prefab 构建，嵌套列表和详情／培养／结果弹窗使用各自的官方模板；技能列表使用官方自适应横排与分类分隔符，碎片列表使用官方 160 px 网格项目。底部“技能／馈赠”页签按 `CharacterPanelSkillPanel` 的 SkillContent／Achievement 状态切换。打开技能面板时保留人物预览与背景，按官方 `CharacterPanel_Skill` 动画切换资料区和模型锚点；关闭时按 `CharacterPanel_SkillSwitchmain` 恢复。UI 字体从官方资源初始化；资源不可用时改用系统中文字体和 Unity 内置字体回退，避免字体查找递归。编辑器校验工具绑定技能载荷、官方图集、官方布局、槽位升级动画和音效，并按 `source-manifest.json` 校验文件哈希。`Zjcs/Validate/Official Skills Assets` 已校验 394 条技能规则、6 组品质渐变、来源哈希、18 个派生碎片映射和 269 个技能 UI 精灵。技能规则载荷与固定 APK 来源重算结果一致（394 条）；静态工程检查通过（74,056 GUID）；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和整屏 Play Mode 检查通过。Play Mode 用隔离档案和 EventSystem 首次命中校验，模拟人物技能入口、方案、推荐应用、战技／秘法／碎片、全部、收藏、槽位拖动、培养和单次／批量升阶，并检查材料不足回滚、档案重载及返回资料页。头像像素检查和实际截图已执行；合成与部分失败分支仍含服务直接调用，不能代替相应端到端点击检查。Windows Player 已重建并通过实际运行验证，范围见下文。
+人物主存档中的 `OfflinePlayerProfile.Skills` 由 `OfflineMainlineProgressSession` 校验和保存，`OfflineCharacterProgressionService` 在角色事务内同步技能材料与背包。人物页入口由 `OfficialCharacterPanelView.OpenSkillPanel()` 打开 `CharacterSkillPanel`。该面板已连接方案选择／改名、收藏、技能列表、安装／卸下、拖拽交换、推荐、碎片详情、合成确认、单技能升阶、升阶结果及批量升阶结果。技能页通过 `skill-ui.json` 中的 `character_skills` 完整 prefab 构建，嵌套列表和详情／培养／结果弹窗使用各自的官方模板；技能列表使用官方自适应横排与分类分隔符，碎片列表使用官方 160 px 网格项目。底部“技能／馈赠”页签按 `CharacterPanelSkillPanel` 的 SkillContent／Achievement 状态切换。打开技能面板时保留人物预览与背景，按官方 `CharacterPanel_Skill` 动画切换资料区和模型锚点；关闭时按 `CharacterPanel_SkillSwitchmain` 恢复。UI 字体从官方资源初始化；资源不可用时改用系统中文字体和 Unity 内置字体回退，避免字体查找递归。编辑器校验工具绑定技能载荷、官方图集、官方布局、槽位升级动画和音效，并按 `source-manifest.json` 校验文件哈希。`Zjcs/Validate/Official Skills Assets` 已校验 394 条技能规则、6 组品质渐变、来源哈希、18 个派生碎片映射和 270 个技能 UI 精灵。技能规则载荷与固定 APK 来源重算结果一致（394 条）；静态工程检查通过；Unity 导入／编译、`Zjcs.Editor.ProjectTools.Validate` 和整屏 Play Mode 检查通过。Play Mode 用隔离档案和 EventSystem 首次命中校验，模拟人物技能入口、方案、推荐应用、战技／秘法／碎片、全部、收藏、槽位拖动、培养和单次／批量升阶，并检查材料不足回滚、档案重载及返回资料页。头像像素检查和实际截图已执行；合成与部分失败分支仍含服务直接调用，不能代替相应端到端点击检查。Windows Player 已重建并通过实际运行验证，范围见下文。
 
 技能槽使用官方 `item_skill` 和 `item_empty`，不额外添加培养按钮；点击已装备槽位进入官方技能详情，再由详情培养入口操作。图标替换时恢复原颜色，空槽使用原灰色加号精灵，槽位等级使用“级”。九宫格图像恢复导出记录的原 Sprite border。星级按 `skill_rank` 的 Quality／RankAddition 显示，数字星阈值 4 与品质星图映射由原 `SkillStarInfo`、`StarMiniInfo` 组件提取，来源凭据见 `assets/reference/skill-ui/unity-icon-source-manifest.json`；可用 `scripts/prepare_unity_skill_icons.py` 重建。
 
@@ -60,13 +64,15 @@ Editor 程序集显式引用 `Zjcs.Presentation.Character`，以供技能 Play M
 
 技能详情已恢复固定 APK 的原生 FZY4K TMP 字体、材质和初始 Alpha8 字体图集，修复弹窗 Canvas 缺少 UV1 通道造成的方块文字；字体、材质与动态图集按窗口克隆，技能页独立副本保留原始初始图集，避免 Windows 构建清空共享字体。品质背景、普通品质文字色、星级空星、战技／秘法背景状态、技能等级及祝福显示条件按原组件恢复。`OfficialSkillDetailProperties` 迁移 `PropConfigUtils.CalcSkillViewProps` 与 `SkillPanelPropPanel.Sort` 的主动、被动、状态及召唤属性展示规则；全部 394 个技能在两组等级／阶位条件下的 788 次计算已通过 Play Mode。标签取自原 `SkillTagItem` 和 `ESkillTag`，职业图标沿用 `ProfessionBaseInfoParser.PostParse` 的归属及前置职业链；范围图从 APK `SkillItemRangeInfos.g.bytes` 恢复 1,365 条数据，保留原格子 prefab、五类颜色、间隔和行列顺序，当前可用主动技能均具有有效范围数据。新增标签、范围、属性、收藏、弹窗外部关闭与整屏培养／升阶／馈赠／存档流程已通过模拟点击 Play Mode 回归并查看实际画面； Windows Player 重建验证仍待执行。
 
-人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。运行截图确认面部／头发的白色三角残片已消失。技能模块目前显式绑定 269 张官方 UI 精灵，`prepare_skill_extra_ui.py` 恢复 17 组附属原 prefab 与脚本字段；`prepare_skill_auxiliary_code.py` 直接适配原切换、滚动和布局代码，战报网格复用 `Official/WorldUI` 中使用非等距间隔的原 `GridLayoutGroupJSZX`，不以自定网格替换。转换与原对象哈希、字体隔离方式见 `assets/reference/skill-ui/unity-icon-source-manifest.json`，重建入口增加 `prepare_skill_native_text.py`、`prepare_skill_character_shader.py` 和 `prepare_skill_detail_data.py`。
+人物预览和头像改用经原始对象 SHA-256 核验一致的官方 `Universal Render Pipeline/Spine/SkeletonDye-2D` shader 转换结果，保留 544 组原 GPU 程序、透明度截断、染色及渲染状态；仅适配桌面预览相机的 pass 选择。运行截图确认面部／头发的白色三角残片已消失。技能模块目前显式绑定 270 张官方 UI 精灵，`prepare_skill_extra_ui.py` 恢复附属原 prefab 与脚本字段；`prepare_skill_auxiliary_code.py` 直接适配原切换、滚动和布局代码，战报网格复用 `Official/WorldUI` 中使用非等距间隔的原 `GridLayoutGroupJSZX`，不以自定网格替换。转换与原对象哈希、字体隔离方式见 `assets/reference/skill-ui/unity-icon-source-manifest.json`，重建入口增加 `prepare_skill_native_text.py`、`prepare_skill_character_shader.py` 和 `prepare_skill_detail_data.py`。
 
 ## 自定义实现
 
 Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 UI 单位宽度对应约 137 UI 单位顶部留白，随窗口宽度缩放；这是桌面显示适配参数。原 `SafeArea` 的边界计算、PaddingTop／PaddingBottom、DisableTopAdapt／DisableBottomAdapt 与技能父级绑定保持官方数据，不修改内部槽位、方案或列表坐标。模糊遮罩恢复 APK 原 RawImage UV，并按 Windows 图形接口的纹理方向适配截图采样；不改变原 ScreenBlur 算法。
 
 用户已确认伤害测试的单机规则：使用已迁移的本地战斗配置计算怪物属性，按原参数页勾选项应用怪物固定伤害 1／无限生命。这部分属于缺少服务器实现后的单机差异；原五组怪物、难度、回合数及勾选参数已连接本地 StageType 43 战斗，保留原 40 级开放条件。
+
+用户已确认幻兽能量的单机时序：战斗开始使用原初始能量；幻兽自己的回合开始恢复原配置能量；主人实际生命损失累计满最大生命的 1% 时恢复原配置能量，护盾吸收不计；达到阈值后在主人行动结束时按原技能配置实体化并扣除阈值。实体技能、属性及持续时间继续使用原配置。APK 中 `FightRolePetTransferEntityComponent`／`FightRolePetEnergyModification` 只消费服务器能量结果，原配置 `NaturalRecoverEnergy=50`、`MasterLoseHpRecoverEnergy=6`、`MasterLoseHpTrigerRecover≈0.01` 已核对；上述时序是用户确认的单机差异，参战接入尚未完成。
 
 伤害测试的公共结算适配已通过规则验证：StageType 43 的怪物伤害在护盾结算前固定为 1，无限生命保留 HP 并累计完整伤害，设置可随战斗检查点恢复；关闭选项或进入普通关卡恢复普通结算。入口为 `Runtime/Offline/Combat/FightDamageTestRules.cs`，验证为 `scripts/test_skill_damage_test.ps1`；普通战斗 97 组公式及规则回归亦已通过。参数页、实际战斗、结算、玩家／技能统计页及返回设置已经在带画面的 Play Mode 中通过模拟点击；战报列标题、头像绑定、原 Image 启用标志、遮罩图像显隐及主页输入遮挡已修正并实际查看画面。头像 UV 的 Unity Rect 字段映射已通过实际绑定器的失败／成功回归及 Play Mode 截图检查。主页 shader 使用显式绑定；`OfficialSkillRuntimeShaderBuild` 在构建依赖收集前登记官方 URP，保留运行时切换所需变体，并在构建后恢复编辑器设置，Player 在首场景前恢复启动管线。存档选择与技能模糊流程在 finally 恢复活动渲染目标。独立 Player 已在 675×1463 客户区通过伤害测试、玩家／技能统计与快照详情的模拟输入，并查看实际非黑帧画面；按最新不保存战报的方案调整后，Play Mode 与独立 Windows Player 的模拟点击复测均已通过，已查看头像和隐藏分享按钮后的实际画面。主页展开／收起入口恢复原控制器默认的 `FunctionEntrysUI_Folded` 零时长动画，避免两个按钮同时命中。验证启动工具补上 Player 窗口识别，在内置屏按命令行客户端尺寸显示窗口并保持不抢前台，避免隐藏黑帧与占位矩形改变竖屏尺寸。验证同时检查 PNG 非空与参考竖屏比例，避免隐藏黑帧或错误窗口尺寸冒充画面通过。
 
@@ -82,10 +88,12 @@ Windows 竖屏显示适配按用户参考画面保留顶部安全留白：1080 U
 
 ## 尚未实现
 
-- 技能项目的职业不适用、新获得、已装备和合成提示附件仍需逐项核对。
+- 培养页实际截图仍可见标题 TMP 标记、顶部槽位图标、费用区域及进阶通知的模板残留；单次升级／进阶与存档逻辑已通过模拟输入，原组件的完整显示与切换绑定仍需恢复。
 
-- 馈赠原道具详情已接入并通过 Play Mode；家具及单人公会来源导航仍需连接对应模块，不能视为全部来源已可达。
-- 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算原动作仍待完成。当前已验证范围已发布。
+- 技能列表附件已通过 Play Mode，独立 Windows Player 的新增附件流程仍待验证。
+
+- 馈赠原道具详情已接入并通过 Play Mode；当前奖励涉及的单人公会种植、钓鱼、养殖来源（类型 22／23／24，对应道具 1530／1540／1550）尚未连接 Unity 目的界面，不能视为全部来源已可达。
+- 伤害测试参数、真实战斗、结算统计已通过 Play Mode 与独立 Windows Player；最新仅内存查看方案亦已通过；结算动作及附加表情已通过 Play Mode 与独立 Windows Player，正式目录更新与运行验证仍待完成。
 - 通用弹窗的原遮罩／点击外部关闭和系统消息已通过 Play Mode 与 Windows Player 验证；详情规则说明、技能皮肤替换／视频预览、词条窗口已迁移并通过 Play Mode；召唤物／幻兽超链接、完整来源跳转仍需补齐；已移除手写后备详情和培养布局及技能底部自定义状态文字，不能视为这些公共表现已补齐。
 
 ### 实现范围

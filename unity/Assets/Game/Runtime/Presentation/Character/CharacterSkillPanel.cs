@@ -113,6 +113,7 @@ namespace Zjcs.Presentation.Character
             infoTemplate = CharacterModelPackage.AsObject(screens["character_props"], "character_props");
             skillUiTemplates = CharacterModelPackage.AsObject(
                 OfficialEquipmentJson.Parse(assets.SkillUiLayouts.text), "skill UI layouts");
+            listItemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["skill_list_item"], "original skill list item");
             itemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_skill"], "official skill icon");
             emptyItemTemplate = CharacterModelPackage.AsObject(skillUiTemplates["item_empty"], "official empty skill icon");
             screen = CharacterModelPackage.AsObject(
@@ -148,6 +149,7 @@ namespace Zjcs.Presentation.Character
 
         public void Close()
         {
+            ClearOriginalListNewMarks();
             CloseAuxiliary();
             if (messageRoutine != null) StopCoroutine(messageRoutine);
             messageRoutine = null;
@@ -333,6 +335,7 @@ namespace Zjcs.Presentation.Character
 
         private void SetBottomPageState(bool showSkills)
         {
+            if (!showSkills) ClearOriginalListNewMarks();
             PlayerHeaderVisibilityChanged?.Invoke(showSkills);
             if (skillContentRoot != null) skillContentRoot.gameObject.SetActive(showSkills);
             if (achievementContentRoot != null) achievementContentRoot.gameObject.SetActive(!showSkills);
@@ -590,6 +593,7 @@ namespace Zjcs.Presentation.Character
 
         private void RefreshList()
         {
+            ClearOriginalListNewMarks(onlyPresented: true);
             ShowSkillList(listType == PieceItemType);
             foreach (GameObject row in listRows)
                 if (row != null)
@@ -738,6 +742,7 @@ namespace Zjcs.Presentation.Character
                 item.sizeDelta = new Vector2(155f, 155f);
                 Transform mount = FindDeep(item, "Anchor") ?? item;
                 GameObject icon = BuildSkillIcon(owned.ContainsKey(skillId) ? skillId : SkillPieceId(skillId), mount, "SkillIcon");
+                ConfigureOriginalListAttachments(icon, skillId, owned.ContainsKey(skillId));
                 if (owned.ContainsKey(skillId)) {
                     // CharacterPanelSkillListPanelItem.RefreshSkillIcon uses the
                     // minimum of all eight slot levels, independent of this row.
@@ -762,7 +767,7 @@ namespace Zjcs.Presentation.Character
                 else target.raycastTarget = true;
                 Button button = item.GetComponent<Button>() ?? item.gameObject.AddComponent<Button>();
                 button.targetGraphic = target;
-                if (owned.ContainsKey(skillId)) button.onClick.AddListener(() => OpenSkillDetail(skillId));
+                if (owned.ContainsKey(skillId)) button.onClick.AddListener(() => { MarkOriginalListSkillSeen(icon, skillId); OpenSkillDetail(skillId); });
                 else button.onClick.AddListener(() => OpenMergeConfirm(skillId));
             }
             return row.gameObject;
@@ -774,7 +779,17 @@ namespace Zjcs.Presentation.Character
             LayoutRebuilder.ForceRebuildLayoutImmediate(content);
             Canvas.ForceUpdateCanvases();
             ScrollRect scroll = list.GetComponent<ScrollRect>();
-            if (scroll != null) scroll.verticalNormalizedPosition = 1f;
+            if (scroll != null)
+            {
+                // Original GroupedAdaptiveRowLoopScroll.Refill starts at cell 0.
+                // Stop the previous list's inertia before resetting its offset.
+                scroll.StopMovement();
+                Vector2 position = content.anchoredPosition;
+                position.y = 0f;
+                content.anchoredPosition = position;
+                Canvas.ForceUpdateCanvases();
+                scroll.verticalNormalizedPosition = 1f;
+            }
         }
 
         private bool HasPiece(int pieceItemId)
@@ -811,6 +826,7 @@ namespace Zjcs.Presentation.Character
                 .ThenBy(value => value.ItemId).ToList();
             foreach (OfflineItemStack stack in pieces)
             {
+                originalListedNewMarkItems.Add(stack.ItemId);
                 var rowNodes = new Dictionary<string, RectTransform>(StringComparer.Ordinal);
                 var rowButtons = new Dictionary<string, Button>(StringComparer.Ordinal);
                 RectTransform row = factory.Build(CharacterPanelNodeFactory.ReadRoot(

@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $skillRoot = Join-Path $PSScriptRoot '../unity/Assets/Game/Runtime/Offline/Skills'
-$skillSources = @('OfflineSkillProfile.cs', 'OfflineSkillProgression.cs', 'OfficialSkillAchievementRules.cs') | ForEach-Object { Join-Path $skillRoot $_ }
+$skillSources = @('OfflineSkillProfile.cs', 'OfflineSkillProgression.cs', 'OfficialSkillAchievementRules.cs', 'OfflineSkillItemNewMarks.cs') | ForEach-Object { Join-Path $skillRoot $_ }
 $skillSources += Get-ChildItem (Join-Path $PSScriptRoot '../unity/Assets/Game/Runtime/Official/SkillRules') -Filter '*.cs' | ForEach-Object FullName
 Add-Type -Path $skillSources
 function Assert-Plan($value, $message) { if (-not $value) { throw $message } }
@@ -42,3 +42,26 @@ $fresh.Plans[6].Name = ''
 [Zjcs.Offline.Skills.OfflineSkillProgression]::Normalize($fresh)
 Assert-Plan ($fresh.Plans[6].Name -eq '方案七') 'Blank names must recover the original Chinese default.'
 Write-Output 'Official skill plan CJK name checks passed.'
+
+$marks = [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-a')
+Assert-Plan (-not $marks.IsNewItem(10014)) 'Existing login items must not be marked new.'
+$marks.OnItemCountUpdate(10014, 0, 1)
+Assert-Plan $marks.IsNewItem(10014) 'A newly acquired skill must be marked new.'
+Assert-Plan ([object]::ReferenceEquals($marks, [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-a'))) 'Opening another view of the current player must retain session marks.'
+$marks.RemoveNewItem(10014)
+$marks.OnItemCountUpdate(10014, 1, 2)
+Assert-Plan (-not $marks.IsNewItem(10014)) 'Viewed skills must not become new when their count increases.'
+$marks.OnItemCountUpdate(12014, 0, 10)
+$marks.OnItemCountUpdate(12014, 10, 0)
+Assert-Plan (-not $marks.IsNewItem(12014)) 'Consuming all new pieces must remove their mark.'
+[void][Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-b')
+$second = [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-b')
+$second.OnItemCountUpdate(10014, 0, 1)
+[void][Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-a')
+Assert-Plan (-not [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-b').IsNewItem(10014)) 'Changing the logged-in player must reset transient marks.'
+$logout = [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-b')
+$logout.OnItemCountUpdate(10014, 0, 1)
+[Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::EndPlayerSession()
+Assert-Plan (-not $logout.IsNewItem(10014)) 'Logging out must clear marks in retained views.'
+Assert-Plan (-not [Zjcs.Offline.Skills.OfflineSkillItemNewMarks]::SelectPlayer('isolated-player-b').IsNewItem(10014)) 'Logging into the same slot again must start without old marks.'
+Write-Output 'Official transient skill item new-mark checks passed.'

@@ -279,6 +279,7 @@ namespace Zjcs.Offline.Progression
             this.savePath = savePath;
             this.catalog = catalog;
             this.demonBattleClearedLayer = demonBattleClearedLayer;
+            itemNewMarks = OfflineSkillItemNewMarks.SelectPlayer(Path.GetFullPath(savePath));
             Save = save;
             ReadStatus = readStatus;
         }
@@ -950,6 +951,7 @@ namespace Zjcs.Offline.Progression
         {
             string json = JsonUtility.ToJson(next, true);
             LocalJsonSaveFile.Write(savePath, json, IsValidSaveJson);
+            UpdateSessionItemMarks(Save.Player, next.Player);
             Save = next;
             return result;
         }

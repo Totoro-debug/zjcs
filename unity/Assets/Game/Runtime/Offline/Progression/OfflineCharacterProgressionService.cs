@@ -41,6 +41,8 @@ namespace Zjcs.Offline.Progression
         }
 
         public OfflinePlayerProgress Player => session.Save.Player;
+        public bool IsNewSessionItem(int itemId) => session.IsNewSessionItem(itemId);
+        public void RemoveNewSessionItem(int itemId) => session.RemoveNewSessionItem(itemId);
         public OfficialCharacterCatalog Catalog => catalog;
 
         public ProgressionResult ClaimSkillAchievements(int group)

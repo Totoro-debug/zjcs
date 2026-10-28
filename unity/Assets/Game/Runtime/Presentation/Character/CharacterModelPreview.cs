@@ -555,6 +555,19 @@ namespace Zjcs.Presentation.Character
             return true;
         }
 
+        private string[] nativeResultAppendSkins;
+        public void PlayOriginalResultAnimation(string animationName, IEnumerable<string> appendSkins = null)
+        {
+            if (nativeModel == null || nativeAnimator == null)
+                throw new InvalidOperationException("The original result character has not been initialized.");
+            nativeAnimator.enabled = false;
+            var pose = nativeModel.GetComponent<OfficialSkillResultNativePose>()
+                ?? nativeModel.AddComponent<OfficialSkillResultNativePose>();
+            if (appendSkins != null) nativeResultAppendSkins = appendSkins.ToArray();
+            pose.Initialize(progression.Player.Wardrobe.Sex == 1 ? "female" : "male", animationName, nativeResultAppendSkins);
+            FitNativeCamera();
+        }
+
         private bool HasNativeAnimation(string animationName)
         {
             return nativeAnimator != null && nativeAnimator.runtimeAnimatorController != null

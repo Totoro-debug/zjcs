@@ -31,6 +31,7 @@ namespace Zjcs.Presentation.CharacterCreation
             public Renderer Source;
             public Mesh Mesh;
             public string Name;
+            public string Skin, Slot, Attachment;
             public Vector2[] Uvs;
             public Color[] Colors;
             public MeshRenderer Renderer;
@@ -44,12 +45,33 @@ namespace Zjcs.Presentation.CharacterCreation
         private readonly List<Draw> draws = new List<Draw>();
         private Transform[] bones;
         private bool initialized;
+        private Body sourceBody;
+        private readonly List<Material> appendMaterials = new List<Material>();
+        public IReadOnlyList<string> OriginalBoneNames => Array.ConvertAll(bones, value => value.name);
+        private Func<int, Matrix4x4> originalPoseWorld;
+        private Func<string, string, string, bool> originalPoseVisible;
+        private Func<string, int> originalPoseOrder;
+
+        // A directly evaluated original skeleton supplies affine matrices,
+        // attachment switches and draw order without decomposing shear into
+        // Unity Transform rotations/scales or changing the atlas geometry.
+        public void BindOriginalPose(Func<int, Matrix4x4> boneWorld,
+            Func<string, string, string, bool> visible, Func<string, int> order)
+        {
+            originalPoseWorld = boneWorld ?? throw new ArgumentNullException(nameof(boneWorld));
+            originalPoseVisible = visible ?? throw new ArgumentNullException(nameof(visible));
+            originalPoseOrder = order ?? throw new ArgumentNullException(nameof(order));
+            foreach (var draw in draws)
+                if (draw.Renderer != null) draw.Renderer.transform.SetParent(transform, false);
+            LateUpdate();
+        }
 
         public void Initialize(string sex)
         {
             if (initialized) throw new InvalidOperationException("Native geometry is already initialized.");
             Load();
             Body body = Array.Find(payload.sexes, value => value.sex == sex);
+            sourceBody = body;
             if (body == null) throw new InvalidOperationException("Native attachment source is missing: " + sex);
             var wantedBones = new HashSet<string>(body.bones, StringComparer.Ordinal);
             var byName = new Dictionary<string, Transform>(StringComparer.Ordinal);
@@ -108,6 +130,7 @@ namespace Zjcs.Presentation.CharacterCreation
                     ? MeshVertices(attachment, uv.Length)
                     : RegionVertices(attachment, uv, region);
                 var draw = new Draw { Source = source, Vertices = vertices,
+                    Skin = attachment.skin, Slot = attachment.slot, Attachment = attachment.attachment,
                     Name = "[" + attachment.slot + "] " + attachment.attachment,
                     Uvs = uv, Colors = original != null ? original.colors : null,
                     Positions = new Vector3[vertices.Length], PreviousForceOff = source.forceRenderingOff,
@@ -216,17 +239,59 @@ namespace Zjcs.Presentation.CharacterCreation
 
         public void RefreshForCapture() => LateUpdate();
 
+        public void EnsureOriginalAppendSkins(IEnumerable<string> skins, Func<string, Texture2D> texture, Func<string, Color> slotColor)
+        {
+            var wanted = new HashSet<string>(skins, StringComparer.Ordinal);
+            var regions = new Dictionary<string, Region>(StringComparer.Ordinal);
+            foreach (var region in sourceBody.regions) regions.Add(region.name, region);
+            var present = new HashSet<string>(StringComparer.Ordinal);
+            var materials = new Dictionary<string, Material>(StringComparer.Ordinal);
+            foreach (var draw in draws) {
+                present.Add(draw.Skin + "\n" + draw.Slot + "\n" + draw.Attachment);
+                var material = draw.Source.sharedMaterial;
+                if (material != null && material.mainTexture != null)
+                    materials[material.mainTexture.name] = material;
+            }
+            foreach (var attachment in sourceBody.attachments) {
+                if (!wanted.Contains(attachment.skin) || present.Contains(attachment.skin + "\n" + attachment.slot + "\n" + attachment.attachment)) continue;
+                Region region = regions[attachment.path];
+                if (!materials.TryGetValue(region.page, out var material)) {
+                    material = new Material(draws[0].Source.sharedMaterial) { name = region.page + " original append skin" };
+                    material.mainTexture = texture(region.page) ?? throw new InvalidOperationException("Original append texture is unavailable: " + region.page);
+                    material.SetTexture("_DyeTex", Texture2D.blackTexture);
+                    appendMaterials.Add(material); materials.Add(region.page, material);
+                }
+                var source = new GameObject("__skin__" + attachment.skin, typeof(MeshRenderer));
+                source.transform.SetParent(transform, false); source.layer = gameObject.layer;
+                var renderer = source.GetComponent<MeshRenderer>(); renderer.sharedMaterial = material;
+                renderer.forceRenderingOff = true;
+                Vector2[] uvs = AttachmentUvs(attachment, region);
+                var vertices = attachment.kind == "mesh" ? MeshVertices(attachment, uvs.Length) : RegionVertices(attachment, uvs, region);
+                var colors = new Color[vertices.Length];
+                for (int vertex = 0; vertex < colors.Length; vertex++) colors[vertex] = slotColor(attachment.slot);
+                draws.Add(new Draw { Source = renderer, Skin = attachment.skin, Slot = attachment.slot, Attachment = attachment.attachment,
+                    Name = "[" + attachment.slot + "] " + attachment.attachment, Uvs = uvs, Colors = colors,
+                    Vertices = vertices, Positions = new Vector3[vertices.Length],
+                    Triangles = attachment.kind == "mesh" ? attachment.triangles : new[] { 0, 1, 2, 2, 3, 0 } });
+            }
+        }
+
         private void LateUpdate()
         {
             if (!initialized) return;
             foreach (Draw draw in draws)
             {
-                if (draw.Source == null || !draw.Source.gameObject.activeInHierarchy) continue;
+                if (draw.Source == null) continue;
+                bool visible = originalPoseWorld == null ? draw.Source.gameObject.activeInHierarchy
+                    : draw.Source.gameObject.activeSelf && originalPoseVisible(draw.Skin, draw.Slot, draw.Attachment);
+                if (!visible) { if (draw.Renderer != null) draw.Renderer.enabled = false; continue; }
                 if (draw.Renderer == null) CreateDraw(draw);
+                if (originalPoseWorld != null && draw.Renderer.transform.parent != transform)
+                    draw.Renderer.transform.SetParent(transform, false);
                 draw.Renderer.enabled = draw.Source.enabled && !draw.PreviousForceOff;
                 if (!draw.Renderer.enabled) continue;
                 draw.Renderer.sortingLayerID = draw.Source.sortingLayerID;
-                draw.Renderer.sortingOrder = draw.Source.sortingOrder;
+                draw.Renderer.sortingOrder = originalPoseOrder == null ? draw.Source.sortingOrder : originalPoseOrder(draw.Slot);
                 draw.Source.GetPropertyBlock(draw.Properties);
                 draw.Renderer.SetPropertyBlock(draw.Properties);
                 Matrix4x4 toLocal = draw.Renderer.transform.worldToLocalMatrix;
@@ -234,7 +299,8 @@ namespace Zjcs.Presentation.CharacterCreation
                 {
                     Vector3 world = Vector3.zero;
                     foreach (Influence influence in draw.Vertices[vertex])
-                        world += bones[influence.Bone].TransformPoint(influence.Position) * influence.Weight;
+                        world += (originalPoseWorld == null ? bones[influence.Bone].TransformPoint(influence.Position)
+                            : originalPoseWorld(influence.Bone).MultiplyPoint3x4(influence.Position)) * influence.Weight;
                     draw.Positions[vertex] = toLocal.MultiplyPoint3x4(world);
                 }
                 draw.Mesh.vertices = draw.Positions;
@@ -262,6 +328,9 @@ namespace Zjcs.Presentation.CharacterCreation
 
         private void OnDestroy()
         {
+            foreach (var material in appendMaterials) {
+                if (Application.isPlaying) Destroy(material); else DestroyImmediate(material);
+            }
             foreach (Draw draw in draws)
             {
                 if (draw.Source != null) draw.Source.forceRenderingOff = draw.PreviousForceOff;

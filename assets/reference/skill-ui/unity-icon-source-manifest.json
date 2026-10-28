@@ -3326,6 +3326,159 @@
       "path_id": "-7086099097527302108",
       "prefab": "Assets/Prefabs/UI/Record/FightRecordInfoItem.prefab"
     },
+    "skill_list_attachments": {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_modules_itemicon.bundle",
+        "bundle_hash": "deb62f0aeab7b6bd805b13e93c0b8a17",
+        "path_id": "-3854814468619348498",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/deb62f0aeab7b6bd805b13e93c0b8a17.bundle",
+        "raw_size": 3038,
+        "raw_sha256": "ce17e8da16e785966278bba4eb20c4cbcb88aafeb7d3d50ac4c3d04ad2f8a894"
+      },
+      "sha256": "ddf0c422ce274701e5f9e4e551d4cdcdb1b87f535609053ca9086b53aba7bde7",
+      "templates": [
+        {
+          "type": 13,
+          "layer": 5,
+          "guid": "d019ea2d9f143514ebc8c30f545dca16",
+          "asset_path": "Assets/Prefabs/UI/Item/Attachments/CenterHintContent.prefab",
+          "template": "skill_attachment_13",
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+            "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+            "path_id": "355555552372825465",
+            "prefab": "Assets/Prefabs/UI/Item/Attachments/CenterHintContent.prefab"
+          }
+        },
+        {
+          "type": 10,
+          "layer": 11,
+          "guid": "9413ace1015735b4e83e22b86a14fc06",
+          "asset_path": "Assets/Prefabs/UI/Item/Attachments/ProfessionMismatch.prefab",
+          "template": "skill_attachment_10",
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+            "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+            "path_id": "6662321266153568966",
+            "prefab": "Assets/Prefabs/UI/Item/Attachments/ProfessionMismatch.prefab"
+          }
+        },
+        {
+          "type": 4,
+          "layer": 14,
+          "guid": "a9eae97dc7bee564badd522eb14d331b",
+          "asset_path": "Assets/Prefabs/UI/Item/Attachments/NewMark.prefab",
+          "template": "skill_attachment_4",
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+            "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+            "path_id": "-1494943894748375523",
+            "prefab": "Assets/Prefabs/UI/Item/Attachments/NewMark.prefab"
+          }
+        },
+        {
+          "type": 8,
+          "layer": 20,
+          "guid": "d1921c3d056560741b7f1ee80de565d1",
+          "asset_path": "Assets/Prefabs/UI/Item/Attachments/RedDotContent.prefab",
+          "template": "skill_attachment_8",
+          "source": {
+            "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+            "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+            "path_id": "2352328165731843124",
+            "prefab": "Assets/Prefabs/UI/Item/Attachments/RedDotContent.prefab"
+          }
+        }
+      ]
+    },
+    "result_append_skins": {
+      "source": {
+        "bundle": "defaultpackage_assets_scriptableconfig_modules_appearance.bundle",
+        "bundle_hash": "2719b9183d3296a439780b070ce4743c",
+        "path_id": "2273363462957757819",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/2719b9183d3296a439780b070ce4743c.bundle",
+        "raw_size": 30231,
+        "raw_sha256": "355c83b77a342a0883c3fa63e6d553fe248fe1049364791e0a33acf6f99c72a1"
+      },
+      "sha256": "5a7777f6f0f392653f4dc6eec0b6be03cd2e37e00b7f072b46ae54bceca2fb6c",
+      "append_type": 1
+    },
+    "skill_list_code": [
+      {
+        "source": ".tools/source-packages/official-code/client-source/CharacterPanelSkillListPanelItem.cs",
+        "sha256": "d5ee59931bbded4d44845d793b470e40e849b9b5348872ff0c5391fc28da819a"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/CharacterPanelSkillListPanelItemNewMark.cs",
+        "sha256": "6a303cacb574fa0013db796d2dc49b398ee211ab542703508632dafc53c18490"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/ItemNewMarkManager.cs",
+        "sha256": "b9b35056f4564023bf293c4239606db512789cc4ff5c29795bff3811b9fce45e"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/SkillPanelRedDotItem.cs",
+        "sha256": "dbaab0ab6d51c8ded1246a0327e523f3fbc39771ef1a981d7fea953187fa0c63"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/SkillPanelCanRankUpRedDotItem.cs",
+        "sha256": "63c285097224fb6553484f35ff45dcf57ae5b642340d76bdcea4b820c0a37f1c"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/SkillPanelCanPromoteRedDotItemBase.cs",
+        "sha256": "f1e1d66c9fc7f03e134d7c40e8676c19f431bcd4dabe5e5a0b98d6e4c751bed0"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/SkillCanMergeRedDotItem.cs",
+        "sha256": "a4abaea385232c2a45913dff16b3e24f67c87cca29a36bcbcb4456e1cd6aa342"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/ItemIconAttachmentRedDotHandler.cs",
+        "sha256": "d378f3eceff9701aff8ba88600100828fc674da3e809b9dedc094821e383e3e0"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/ItemIconAttachmentHint.cs",
+        "sha256": "06126f5bc55a1e47c82c233332745a6f5bbbdd462550ea49dfea429b1d958167"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/ItemIconSkill.cs",
+        "sha256": "bc296b9b30ba608351d4d4e8dcfb07613738cca815db15dbc682a7b6b66f0941"
+      },
+      {
+        "source": ".tools/source-packages/official-code/client-source/RedDotMultiItem.cs",
+        "sha256": "94e489742013a0a1a3d7c22f5c65c11f0c8d23d73384e86411de13e5d1bdc02c"
+      }
+    ],
+    "plan_input_schema": {
+      "source": ".tools/source-packages/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4",
+      "class": "TMPro.TMP_InputField",
+      "field": "m_EncodingType",
+      "type": "EncodingType:Int32"
+    },
+    "plan_input": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
+        "bundle_hash": "3cf170a685b29b8aa194eade334f439b",
+        "path_id": "5229620140741382476",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/3cf170a685b29b8aa194eade334f439b.bundle",
+        "raw_size": 710862,
+        "raw_sha256": "8a88c5ae332eb2e1ee419064a6c4421ed6efee16dacee501e2f21f9e4fcbfe97"
+      },
+      "sha256": "12c6afe0debddb1e9a5bd164cc495b7f1f0ede5acc182a01872a6bd0728d104c"
+    },
     "plan_scrollbar": {
       "source": {
         "bundle": "defaultpackage_assets_prefabs_ui_character.bundle",
@@ -3476,7 +3629,33 @@
     "rank_enum": {
       "path": ".tools/source-packages/official-code/common-source/Common/Rank.cs",
       "sha256": "1a91cda306404d54e85e4c2731748da101aca3cf14e9ade5871dffb5e83ce3b6"
-    }
+    },
+    "plan_name_rules": [
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/CJK.cs",
+        "sha256": "afd15ce009aefeb323c4be456c6802f2d44d30b6112afcc1e7e44820866d42b3"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/Formula.cs",
+        "sha256": "ab9fbc796367c78a25d18941bb58fab29e654ccc08228cc248b3422f21436b76"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/FormulaHandler.cs",
+        "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+      },
+      {
+        "path": ".tools/source-packages/official-code/common-source/Common/ErrCode.cs",
+        "sha256": "59fb6a9452ef0d0ed3d73752154eaf56b6250e4024b0973f5b97a30d796768fc"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/CharacterPanelSkillPlan.cs",
+        "sha256": "6343e9a67a336b32dd5c2640e9f5200881b90d2e36da832d7c47b6925c66c1f0"
+      },
+      {
+        "path": ".tools/source-packages/official-code/client-source/ContentModerationClickMask.cs",
+        "sha256": "2a206961017aac7d994dbf19e24422ec04b2454cb83958219592531c29452d66"
+      }
+    ]
   },
   "auxiliary_sprites": {
     "res://assets/official/sprites/skill_aux_61ce7c6c2329c5e6d7c1f3d203725e4bba463ab6ee232a2970e759ece959c549.png": {
@@ -7510,7 +7689,7 @@
         "auto_size": false,
         "font_size_min": 20.0,
         "font_size_max": 34.0,
-        "native_tmp": false,
+        "native_tmp": true,
         "font_style": 0,
         "character_spacing": 0.0,
         "word_spacing": 0.0,
@@ -28756,7 +28935,7 @@
         "font_size_max": 34.0,
         "word_wrap": false,
         "overflow": 0,
-        "native_tmp": false,
+        "native_tmp": true,
         "font_style": 0,
         "character_spacing": 0.0,
         "word_spacing": 0.0,
@@ -38621,6 +38800,135 @@
         "word_spacing": 0.0,
         "line_spacing": 0.0
       }
+    },
+    "/CenterHintContent/CenterHintGo/Text": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+        "path_id": "-7319391679463121543",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/414cf104c6bdea9eddf3a365b4d345e2.bundle",
+        "raw_size": 273242,
+        "raw_sha256": "2b0ba5ecb52f74267b1ec16e7488c9c953728649ee37bdd31003ae1099e2a042"
+      },
+      "style": {
+        "font_asset_name": "FZY4K SDF - dynamic",
+        "color": [
+          0.9882352948188782,
+          1.0,
+          0.5960784554481506,
+          1.0
+        ],
+        "font_size": 34.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 34.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      }
+    },
+    "/ProfessionMismatch/Text": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+        "path_id": "-1746173092275602746",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/414cf104c6bdea9eddf3a365b4d345e2.bundle",
+        "raw_size": 273242,
+        "raw_sha256": "2b0ba5ecb52f74267b1ec16e7488c9c953728649ee37bdd31003ae1099e2a042"
+      },
+      "style": {
+        "font_asset_name": "MPLUSRounded1c-Medium SDF",
+        "color": [
+          0.8549020290374756,
+          0.3176470696926117,
+          0.3137255012989044,
+          1.0
+        ],
+        "font_size": 34.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 18.0,
+        "font_size_max": 34.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": -26.0
+      }
+    },
+    "/NewMark/NewMark/Text": {
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_ui_item.bundle",
+        "bundle_hash": "414cf104c6bdea9eddf3a365b4d345e2",
+        "path_id": "3591662677094585885",
+        "origin": "apk_zip",
+        "manifest": "854_156383",
+        "apk_manifest": "854_156383",
+        "apk_sha256": "ea17b42477a2ee097837753cb96c2b71f6926c2fbc673bbff547a52707fcc0b9",
+        "apk_entry": "assets/yoo/DefaultPackage/414cf104c6bdea9eddf3a365b4d345e2.bundle",
+        "raw_size": 273242,
+        "raw_sha256": "2b0ba5ecb52f74267b1ec16e7488c9c953728649ee37bdd31003ae1099e2a042"
+      },
+      "style": {
+        "font_asset_name": "FZY4K SDF - dynamic",
+        "color": [
+          0.9254902005195618,
+          1.0,
+          0.4745098054409027,
+          1.0
+        ],
+        "font_size": 24.0,
+        "horizontal": 2,
+        "vertical": 512,
+        "overflow": 0,
+        "word_wrap": false,
+        "margin": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "enabled": true,
+        "auto_size": true,
+        "font_size_min": 16.0,
+        "font_size_max": 24.0,
+        "native_tmp": true,
+        "font_style": 0,
+        "character_spacing": 0.0,
+        "word_spacing": 0.0,
+        "line_spacing": 0.0
+      }
     }
   },
   "rules_input": "assets/official/rules.json",
@@ -39589,6 +39897,14 @@
       "object": "ImgItemSelect",
       "operation": "Unity Sprite decode, atlas crop and unpack rotation",
       "sha256": "de48b6abe9e4805b08cc1e54bbc6425b793a4c4239ab73340f0d78af203d68c3"
+    },
+    "res://assets/official/sprites/ImgItemTipBg-219b4fb11a.png": {
+      "bundle": "defaultpackage_assets_image_ui_common.bundle",
+      "bundle_hash": "56625bf3a050a757882ec6e93d9fdeaa",
+      "path_id": "9107272776411977980",
+      "object": "ImgItemTipBg",
+      "operation": "Unity Sprite decode, atlas crop and unpack rotation",
+      "sha256": "ac615f7615e8b878c4866c6f4999f1f77f578d87bc9551ad484b8950b36e3dce"
     },
     "res://assets/official/sprites/ImgItem_CombatRating-e67301a9fd.png": {
       "bundle": "defaultpackage_assets_image_ui_common.bundle",

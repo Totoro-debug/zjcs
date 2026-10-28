@@ -72,6 +72,9 @@ def build():
         prefab = ROOT / ('unity/Assets/Official/CharacterCreation/Recovered/NativeCharacterData/'
                          'Baked/Preview/CharacterCreation_' + sex.title() + '.prefab')
         skins = set(re.findall(r'^  m_Name: __skin__(.+)$', prefab.read_text('utf8'), re.M))
+        # Original AppearanceConfig UI append skins are not wardrobe options,
+        # so the creation-only bake intentionally does not contain them.
+        skins.update(('performFace', 'map_01'))
         slots = {slot['name']: slot for slot in skeleton['slots']}
         bones = {bone['name']: i for i, bone in enumerate(skeleton['bones'])}
         objects = apk.objects('appearanceassets_character_model_' + sex + '_1')

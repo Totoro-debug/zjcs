@@ -125,6 +125,10 @@ namespace Zjcs.Presentation.Home
         {
             var fixture = OfflineMainlineProgressSession.OpenCharacter(new ProfileSlotCatalog(root), slot);
             Require(fixture.ApplyCharacterMutation(player => {
+                if (Environment.GetEnvironmentVariable("ZJCS_SKILLS_VALIDATE_FEMALE") == "1" && player.Wardrobe.Sex != 1) {
+                    player.Wardrobe.Sex = 1;
+                    player.Wardrobe.BaseSkins.Clear();
+                }
                 player.Level = 40;
                 var catalog = OfficialCharacterAssetCatalog.LoadDefault().Load();
                 player.Experience = catalog.CumulativeLevelExperience[40];
@@ -136,6 +140,8 @@ namespace Zjcs.Presentation.Home
             }, "skills-home-damage-level").IsApplied, "Could not persist the damage-test opening level.");
             var fixtureAssets = OfficialCharacterAssetCatalog.LoadDefault();
             var fixtureProgression = new OfflineCharacterProgressionService(fixture, fixtureAssets.Load());
+            Require(fixtureProgression.InitializeWardrobe("skills-home-damage-appearance").IsApplied,
+                "Could not initialize the damage-test fixture's appearance.");
             fixtureProgression.AttachSkillRules(fixtureAssets.LoadSkillRules(), fixtureAssets.LoadSkillRecommendations().recommendations);
             fixtureProgression.EquipSkill(10014, 0);
             Require(fixtureProgression.WearSkillSkin(39503, "skills-home-damage-skin").IsApplied,
@@ -198,6 +204,44 @@ namespace Zjcs.Presentation.Home
             ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-result.png"));
             yield return null;
             Transform result = UnityEngine.Object.FindObjectsOfType<Transform>().First(value => value.name == "damage_test_result");
+            var resultPose = FindObjectsOfType<Zjcs.Presentation.Character.OfficialSkillResultNativePose>().Single();
+            Require(resultPose.AnimationName == "map/win_01", "The completed damage test did not bind its original victory animation.");
+            var meshes = resultPose.GetComponentsInChildren<MeshFilter>().Where(value => value.sharedMesh != null
+                && value.GetComponent<Renderer>() is Renderer renderer && renderer.enabled && !renderer.forceRenderingOff).ToArray();
+            Require(meshes.Length > 0, "The original result pose has no rendered native attachment meshes.");
+            var firstVertices = meshes.Select(value => value.sharedMesh.vertices).ToArray();
+            yield return new WaitForSecondsRealtime(.37f);
+            double movement = 0;
+            for (int mesh = 0; mesh < meshes.Length; mesh++) {
+                Vector3[] nextVertices = meshes[mesh].sharedMesh.vertices;
+                for (int vertex = 0; vertex < nextVertices.Length; vertex++) movement += Vector3.Distance(firstVertices[mesh][vertex], nextVertices[vertex]);
+            }
+            Require(movement > .001, "The original result animation is only a state name; its rendered mesh did not move.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-result-animated.png"));
+            yield return null;
+            // The actual battle above verifies the victory branch through input.
+            // Probe the other original clip on the same rendered appearance as
+            // a separate geometry check, then restore the real battle result.
+            var resultPreview = result.GetComponentsInChildren<Zjcs.Presentation.Character.CharacterModelPreview>().Single();
+            resultPreview.PlayOriginalResultAnimation("map/injuried_idle");
+            yield return new WaitForSecondsRealtime(.2f);
+            meshes = resultPose.GetComponentsInChildren<MeshFilter>().Where(value => value.sharedMesh != null
+                && value.GetComponent<Renderer>() is Renderer renderer && renderer.enabled && !renderer.forceRenderingOff).ToArray();
+            firstVertices = meshes.Select(value => value.sharedMesh.vertices).ToArray();
+            yield return new WaitForSecondsRealtime(.37f);
+            movement = 0;
+            for (int mesh = 0; mesh < meshes.Length; mesh++) {
+                Vector3[] nextVertices = meshes[mesh].sharedMesh.vertices;
+                for (int vertex = 0; vertex < nextVertices.Length; vertex++) movement += Vector3.Distance(firstVertices[mesh][vertex], nextVertices[vertex]);
+            }
+            Require(meshes.Length > 0 && movement > .001, "The original injured result clip has no moving rendered geometry.");
+            Require(meshes.Any(value => value.sharedMesh.name.Contains("eye_biaoqing_B"))
+                && meshes.Any(value => value.sharedMesh.name.Contains("mouth_biaoqing_C")),
+                "The original injured result lost its performFace eye or mouth attachment.");
+            ScreenCapture.CaptureScreenshot(Path.Combine(outputDirectory, "skills-damage-injured-pose-probe.png"));
+            yield return null;
+            resultPreview.PlayOriginalResultAnimation("map/win_01");
+            yield return null;
             Require(result.GetComponentsInChildren<TMPro.TMP_Text>().Any(value => value.text.Contains("测试完成")),
                 "The native damage-test result did not render its completion title.");
             Require(inventory.SequenceEqual(home.Profile.Save.Player.Inventory.OrderBy(value => value.ItemId)

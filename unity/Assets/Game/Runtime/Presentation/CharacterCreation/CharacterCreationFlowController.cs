@@ -159,6 +159,7 @@ namespace Zjcs.Presentation.CharacterCreation
         private void ShowSlots(string message = null)
         {
             if (!PersistDraft()) return;
+            Zjcs.Offline.Progression.OfflineMainlineProgressSession.EndPlayerSession();
             DisposeFirstStoryHome();
             ClearScreen();
             canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080, 1920);

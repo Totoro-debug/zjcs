@@ -102,7 +102,10 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "FightEndReportPanel", "FightEndReportPlayerTabView", "FightEndReportSkillTabView",
                     "FightEndReportPanelTabItem", "FightEndReportSkillTabItem", "TabGroup", "TabItem",
                     "LocalFightRecordPanel", "LocalFightRecordInfoItem", "FightRecordInfoItem",
-                    "FightRecordDownloadPlayButton", "TMP_InputField", "ContentModerationClickMask"))
+                    "FightRecordDownloadPlayButton", "TMP_InputField", "ContentModerationClickMask",
+                    "CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark",
+                    "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillCanMergeRedDotItem",
+                    "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "RedDotMultiItem"))
     for node in reader.walk(pointer.read()):
         row = by_path[node_path(node)]
         for entry in node.m_Component:
@@ -117,6 +120,14 @@ def recover_prefab(reader, text_schemas, bundle, prefab_name, city):
                     "HorizontalLayoutGroupJSZX", "VerticalLayoutGroupJSZX", "GridLayoutGroupJSZX", "AspectRatioFitter", "Slider") else reader.schemas.read(obj)
                 row.setdefault("original_bindings", {})[name] = {key: convert(value, obj) for key, value in fields.items()
                     if key not in ("m_GameObject", "m_Enabled", "m_Script", "m_Name")}
+                if name == "ItemIconAttachmentRedDotHandler":
+                    for raw, converted in zip(fields["mAttachmentDatas"], row["original_bindings"][name]["mAttachmentDatas"]):
+                        reference = PPtr(**raw["RedDotItem"], assetsfile=obj.assets_file).deref().read(check_read=False)
+                        converted["RedDotClass"] = reference.m_Script.read().m_ClassName
+                elif name == "RedDotMultiItem":
+                    row["original_bindings"][name]["myItemClasses"] = [
+                        PPtr(**value, assetsfile=obj.assets_file).deref().read(check_read=False).m_Script.read().m_ClassName
+                        for value in fields["myItems"]]
             elif obj.type.name == "VideoPlayer":
                 fields = obj.read_typetree()
                 row.setdefault("original_bindings", {})["VideoPlayer"] = {key: convert(value, obj) for key, value in fields.items()
@@ -200,11 +211,46 @@ def restore(reader, schemas, data, city, rules):
         data[key], extracted = recover_prefab(reader, schemas, bundle, prefab, city)
         sprites.update(extracted)
         inputs[key] = data[key]["source"]
+    # Resolve attachment GUIDs through the pinned APK manifest and preserve the
+    # config's array order, which is the original sibling/layer order.
+    from official_manifest import read_asset_manifest
+    attachment_object = reader.apk.asset("scriptableconfig_modules_itemicon", "/ItemIconAttachmentConfig.asset")
+    attachment_config = reader.schemas.read(attachment_object)
+    manifest_assets = read_asset_manifest(reader.apk.archive.read(
+        "assets/yoo/DefaultPackage/PackageManifest_DefaultPackage_854_156383.v3.bytes"))
+    attachments = []
+    for layer, row in enumerate(attachment_config["Templates"]):
+        kind = int(row["Type"])
+        if kind not in (4, 8, 10, 13):
+            continue
+        asset = next(value for value in manifest_assets if value["guid"] == row["GuidProxy"]["mAssetGuid"])
+        key = "skill_attachment_" + str(kind)
+        data[key], extracted = recover_prefab(reader, schemas, asset["bundle"], Path(asset["path"]).stem, city)
+        sprites.update(extracted)
+        attachments.append({"type": kind, "layer": layer, "guid": asset["guid"],
+                            "asset_path": asset["path"], "template": key, "source": data[key]["source"]})
+    assert {row["type"] for row in attachments} == {4, 8, 10, 13}
+    data["skill_list_attachments"] = attachments
+    inputs["skill_list_attachments"] = {"source": reader.apk.provenance(attachment_object),
+        "sha256": hashlib.sha256(attachment_object.get_raw_data()).hexdigest(), "templates": attachments}
+    appearance_object = reader.apk.asset("scriptableconfig_modules_appearance", "/AppearanceConfig.asset")
+    appearance_fields = reader.schemas.read(appearance_object)
+    data["result_append_skins"] = next(row["mAppendSkins"] for row in appearance_fields["mAppendSkinConfigs"]
+        if row["mAppendSkinType"] == 1)  # Original AppendSkinType.UI.
+    inputs["result_append_skins"] = {"source": reader.apk.provenance(appearance_object),
+        "sha256": hashlib.sha256(appearance_object.get_raw_data()).hexdigest(), "append_type": 1}
+    inputs["skill_list_code"] = []
+    for name in ("CharacterPanelSkillListPanelItem", "CharacterPanelSkillListPanelItemNewMark", "ItemNewMarkManager",
+                 "SkillPanelRedDotItem", "SkillPanelCanRankUpRedDotItem", "SkillPanelCanPromoteRedDotItemBase",
+                 "SkillCanMergeRedDotItem", "ItemIconAttachmentRedDotHandler", "ItemIconAttachmentHint", "ItemIconSkill", "RedDotMultiItem"):
+        path = ROOT / ".tools/source-packages/official-code/client-source" / (name + ".cs")
+        inputs["skill_list_code"].append({"source": path.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     def walk(node):
         yield node
         for child in node.get("children", []):
             yield from walk(child)
-    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote", "character_skills"):
+    for key in ("skill_panel_detail", "skill_plain_detail", "skill_promote", "character_skills", "skill_list_item", "skill_piece_list_item"):
         source = data[key]["source"]
         original = reader.object(source["bundle"], source["path_id"])
         template, extracted = recover_prefab(reader, schemas, source["bundle"], original.read().m_Name, city)

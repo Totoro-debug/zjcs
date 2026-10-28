@@ -59,8 +59,8 @@ namespace Zjcs.Presentation.Character
             preview.Initialize(progression, null, profileSlotId, profileSavesRoot);
             preview.UseOriginalPreviewShader(skillAssets.NativeCharacterShader);
             string animation = Convert.ToString(binding[won || request.EnableMonsterUnlimitHp ? "mWinAnimationName" : "mLoseAnimationName"]);
-            if (!preview.PlayNativeAnimation(animation))
-                throw new InvalidOperationException("Original damage-test result animation is unavailable: " + animation);
+            preview.PlayOriginalResultAnimation(animation,
+                ((System.Collections.Generic.List<object>)skillUiTemplates["result_append_skins"]).Select(Convert.ToString));
             Bound("mTestAgainButton").GetComponent<Button>().onClick.AddListener(() => { CloseAuxiliary(); again(); });
             Bound("mSettingButton").GetComponent<Button>().onClick.AddListener(() => { CloseAuxiliary(); settings(); OpenOriginalDamageTest(); });
             Bound("mLeaveGameBtn").GetComponent<Button>().onClick.AddListener(() => { CloseAuxiliary(); leave(); });

@@ -5,7 +5,7 @@
     {
       "skeleton": {
         "path": ".tools/source-packages/current/871_156598/native-geometry-skeletons/male/source-manifest.json",
-        "sha256": "9f296780da25f268109c79faa375ed192823e5215f99518bb72d1f5b5bc17107"
+        "sha256": "e670cdd902d9c8426b9b161abeec6577da0934e7ad8f6d0e56c9d8de87f71b13"
       },
       "atlas": {
         "bundle": "defaultpackage_assets_appearanceassets_character_model_male_1.bundle",
@@ -26,7 +26,7 @@
     {
       "skeleton": {
         "path": ".tools/source-packages/current/871_156598/native-geometry-skeletons/female/source-manifest.json",
-        "sha256": "823a93231cce4d0dc72415879f60e6c45b392c65daabbcc13d05ce8bb3d8f2bc"
+        "sha256": "e67172b6f722421ea23c56ee230f98e2cf41231d4b6cf4878f9486e58a870c2d"
       },
       "atlas": {
         "bundle": "defaultpackage_assets_appearanceassets_character_model_female_1.bundle",
@@ -52,26 +52,26 @@
     "https://esotericsoftware.com/spine-atlas-format"
   ],
   "scope": "Official attachment bone-local coordinates, weights, region transforms and atlas packing. Existing native Animator clips are retained, not regenerated or attributed to this converter.",
-  "generator_sha256": "cf62f215a6664f2ffe8f3801c603d38b18bbe0dcfa9ded59ec92303d2ab0bbcf",
+  "generator_sha256": "495ca231d89cfc0f04d3244fd554c018a6b35f7c25694a455c0e085e8ce427f6",
   "output": "unity/Assets/Game/Resources/CharacterCreation/native-character-geometry.json",
-  "output_sha256": "c67dc6b5d8c1af6d1895a569445cee87c533ae84c7ae05485b4330a7d36ce6e0",
+  "output_sha256": "f89b70cc6ac61e471b160612fdf409e9f5a70903a2ee16d5d913064d762357ee",
   "runtime_bindings": [
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Character/CharacterNativeAttachmentGeometry.cs",
-      "sha256": "5a62bf69c4db191043d5e89983d3061049b783c7a7448962b99f18eab32f0103"
+      "sha256": "d99a86f7cd9b0ee38048fb178f4350e5a496e3c67b30fb9edb2b5c3cf3388e07"
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/Character/CharacterCreationNativeModelFactory.cs",
-      "sha256": "f2c172c1caae08fb0efab7684fa94745d246fa50b1f50780a2b36969febb6248"
+      "sha256": "adc5653e995bdc217f5ec184c4ff82831fb727f08b289d3072a7819802a7377d"
     }
   ],
   "counts": {
     "male": {
-      "attachments": 654,
+      "attachments": 722,
       "atlas_regions": 9692
     },
     "female": {
-      "attachments": 706,
+      "attachments": 774,
       "atlas_regions": 10113
     }
   }

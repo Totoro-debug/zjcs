@@ -159,7 +159,7 @@ def restore():
                     horizontal=fields["m_HorizontalAlignment"], vertical=fields["m_VerticalAlignment"])
                 text.update(native_tmp=("/SkillScheme/SkillPlanName/" in path) or (path.startswith(("/SkillPanelSkillDetailDialog/", "/SkillDetailDialog/")) and
                     ("/DetailContent/" in path or path.endswith("/LevelGo/LevelText"))) or any(path.startswith("/" + prefix + "/")
-                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem")),
+                    for prefix in ("StageDamageTestPanel", "StageLevelCellItem", "StageSetToggleItem", "ToggleText", "DropdownItem", "SkillSkinReplaceDialog", "PlayVideoDialog", "GameEndPanelDamageTest", "ItemDetailDialog", "ItemSourceItem", "PopTipMutilDesc", "TipInfo2", "PopTipEntry", "EntryDetailItem", "FightEndReportPanel", "LocalFightRecordPanel", "FightRecordInfoItem", "NewMark", "ProfessionMismatch", "CenterHintContent")),
                     font_style=fields["m_fontStyle"], character_spacing=fields["m_characterSpacing"],
                     word_spacing=fields["m_wordSpacing"], line_spacing=fields["m_lineSpacing"],
                     margin=[fields["m_margin"][key] for key in ("x", "y", "z", "w")])
@@ -239,7 +239,8 @@ def restore():
         "ui_blessing_skill_level_tip_0", "ui_blessing_skill_level_tip_1", "ui_blessing_skill_level_tip_3",
         "ui_dmagae_test_time_out", "ui_dmagae_test_complete", "ui_battle_win_text", "ui_battle_lose_text",
         "ui_skill_stage_monsterhp_text_label", "ui_skill_stage_monsterhurt_text_label",
-        "ui_skill_stage_monsterhurt_text_normal", "ui_skill_stage_monsterhp_text_endless", "ui_skill_stage_monsterhurt_text_one"}
+        "ui_skill_stage_monsterhurt_text_normal", "ui_skill_stage_monsterhp_text_endless", "ui_skill_stage_monsterhurt_text_one",
+        "ui_ItemIconSkillPiece_text1"}
     for template in data.values():
         if not isinstance(template, dict) or "root" not in template:
             continue

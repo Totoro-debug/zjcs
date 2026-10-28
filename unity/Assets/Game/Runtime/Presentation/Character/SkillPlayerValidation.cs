@@ -13,7 +13,7 @@ using Zjcs.Offline.State;
 namespace Zjcs.Presentation.Character
 {
     // Explicit Windows Player diagnostic; its fresh profile stays under a unique temporary directory.
-    public sealed class SkillPlayerValidation : MonoBehaviour
+    public sealed partial class SkillPlayerValidation : MonoBehaviour
     {
         private string output, saveRoot;
         private Exception runtimeFailure;
@@ -45,6 +45,8 @@ namespace Zjcs.Presentation.Character
 
         private IEnumerator Guard(IEnumerator routine)
         {
+            var pending = new Stack<IEnumerator>();
+            pending.Push(routine);
             while (true)
             {
                 object next;
@@ -52,8 +54,11 @@ namespace Zjcs.Presentation.Character
                 {
                     Require(Time.realtimeSinceStartup < deadline, "Skills Player verification timed out.");
                     if (runtimeFailure != null) throw runtimeFailure;
-                    if (!routine.MoveNext()) yield break;
-                    next = routine.Current;
+                    if (pending.Count == 0) yield break;
+                    var current = pending.Peek();
+                    if (!current.MoveNext()) { pending.Pop(); continue; }
+                    next = current.Current;
+                    if (next is IEnumerator nested) { pending.Push(nested); continue; }
                 }
                 catch (Exception error)
                 {
@@ -100,7 +105,9 @@ namespace Zjcs.Presentation.Character
             {
                 if (id != 10000 && OfflineSkillProgression.IsAvailableFor(progression.SkillDefinition(id), context)
                     && !progression.Player.Skills.Skills.Any(value => value.ClassId == id))
-                    progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = id, Rank = 1 });
+                    progression.Player.Skills.Skills.Add(new OfflineOwnedSkill { ClassId = id,
+                        Rank = progression.SkillDefinition(id).RankCosts.Select(value => value.CurrentRank)
+                            .DefaultIfEmpty(progression.SkillDefinition(id).MaximumRank).Min() });
             }
             var panel = page.GetComponentInChildren<CharacterSkillPanel>(true);
             yield return null;
@@ -108,6 +115,7 @@ namespace Zjcs.Presentation.Character
             Require(panel.IsOpen, "The Player skill entry did not open its full original panel.");
             yield return new WaitForSecondsRealtime(.8f);
             yield return new WaitForEndOfFrame(); Capture("skills-opening");
+            yield return ValidateListAttachments(progression, panel);
             Click(ButtonNamed("SkillListItem_10015"));
             yield return new WaitForSecondsRealtime(.7f);
             var linkedText = FindObjectsOfType<TMPro.TMP_Text>().First(value => value.name == "FuncDetailText" && value.isActiveAndEnabled);
@@ -197,10 +205,13 @@ namespace Zjcs.Presentation.Character
             yield return new WaitForSecondsRealtime(.4f);
             yield return new WaitForEndOfFrame(); Capture("skills-quality-gifts");
             long qualityRewardBefore = progression.Player.Inventory.Where(value => value.ItemId == 100).Sum(value => value.Count);
+            var qualityClaims = new OfficialSkillAchievementRules(progression.SkillRules).CanClaim(progression.Player.Skills, 9,
+                new HashSet<string>(progression.Player.AppliedCharacterEventIds, StringComparer.Ordinal));
+            long qualityReward = qualityClaims.SelectMany(value => value.Rewards).Where(value => value.ItemId == 100).Sum(value => value.Count);
             Click(ButtonNamed("ReceiveBtn"));
             yield return null;
-            Require(progression.Player.Inventory.Where(value => value.ItemId == 100).Sum(value => value.Count) == qualityRewardBefore + 1
-                && progression.Player.AppliedCharacterEventIds.Contains("skill-achievement:9:0"),
+            Require(qualityClaims.Count > 0 && progression.Player.Inventory.Where(value => value.ItemId == 100).Sum(value => value.Count) == qualityRewardBefore + qualityReward
+                && qualityClaims.All(value => progression.Player.AppliedCharacterEventIds.Contains(value.EventId)),
                 "The Windows Player quality gift did not credit and record its original reward.");
             Click(ButtonNamed("CharacterPanelSkillDetailPanelSkillTabGroupItem_11"));
             yield return new WaitForSecondsRealtime(.4f);
@@ -212,6 +223,7 @@ namespace Zjcs.Presentation.Character
                 && reopened.Save.Player.AppliedCharacterEventIds.Contains("skill-achievement:33:0")
                 && reopened.Save.Player.Inventory.Where(value => value.ItemId == 41300).Sum(value => value.Count) == 60,
                 "The Windows Player skill gift spend counter, reward or claim receipt did not survive reload.");
+            yield return ValidateCultivationAndInput(progression, panel, slots, slot);
             Click(ButtonNamed("CloseBtn_dark"));
             Require(!panel.IsOpen, "The Player skill return button did not restore the character page.");
             yield return new WaitForSecondsRealtime(.4f);
