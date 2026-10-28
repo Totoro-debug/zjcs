@@ -1,0 +1,205 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-data/tables.json",
+      "sha256": "55ec788b259e5da48c515290ddd2a499388c40b39f739ea457625d724e4835bb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/table-proof-source-manifest.json",
+      "sha256": "801a66eff692373d912b56afcda3566076fe9baffa2197da3d2dd3b925dc820f"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/DailyChallenges/npc-assistance-rules.json",
+      "sha256": "9a5e3c4821cceb2eae2be7bfc3bda2ba406a02432b467c437c377c7ece71274e"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/DailyChallenges/npc-assistance-rules-source-manifest.json",
+      "sha256": "df7676ac1766b06f625434e5124732a554f86805d7ef8bd482e845b3a0e1a5f6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcInfoParser.cs",
+      "sha256": "2323757139ca2742d3a563e983439feaefd03136d71a0b3094583a7c9d6e7eee"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcInfo.cs",
+      "sha256": "387c584e748963f1870e9861fee043e68fcc741cf52409fcdeffe294007c6a8d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcType.cs",
+      "sha256": "87a7df90779dae2db4f942969ae790b3cb3b7dfa81239ddefb03501241e47d6b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcFightData.cs",
+      "sha256": "f244861fd8f60e8acb6d4665e2c5d7194bfdeca19bf46ea5f81a709207539f7e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcLevelDetailInfoParser.cs",
+      "sha256": "1c7d00ac761e1512803374f09cb2446671043b899a6a8d8cb47e6fc78fa98b84"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcTargetData.cs",
+      "sha256": "8dd82f3532fc35e2016cc794ca1a5ac44cf0bf8f252a201ed7145080d76ceab7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/TeamTargetBattleStele.cs",
+      "sha256": "a047e36b23559bc67bbe6cb851e65675b3a62e4bc6badf1463f15fd0624899f0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteNpc.cs",
+      "sha256": "23d553672d663e455c4eeb5459ab595d97641bbe896b7c2489da504781dacac6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/NpcUtils.cs",
+      "sha256": "3facdd294e81233a2b97cf156ebbdf1cada31539c75bcb175e8cbb6059ecedd1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BattleSteleWorldStageDialog.cs",
+      "sha256": "ef598748bd3cebd2378f10cad13eb2f439209d6a065dfe18d9625e08be3a30de"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "originalSelector": "NpcType != MapExploreBoss && FightEntityId > 0 && level detail exists",
+  "candidateNpcClassIds": [
+    8401,
+    8402,
+    8404,
+    8406,
+    8408,
+    8409,
+    8411,
+    10109,
+    10110,
+    10111,
+    10112,
+    10113,
+    10114,
+    8421,
+    8422,
+    8423,
+    8424,
+    8427,
+    10206,
+    8438,
+    8439,
+    8440,
+    8441,
+    8442,
+    8451,
+    8452,
+    8453,
+    8454,
+    8455,
+    10408,
+    10409,
+    10410,
+    10411,
+    10412,
+    10501,
+    10502,
+    10503,
+    10504,
+    10505,
+    10506,
+    10507,
+    10601,
+    10602,
+    10603,
+    10604,
+    10605,
+    10606,
+    10607,
+    10608,
+    10701,
+    10702,
+    10703,
+    10704,
+    10705,
+    10706,
+    10707,
+    10708,
+    10801,
+    10802,
+    10803,
+    10804,
+    10805,
+    10806,
+    11001,
+    11002,
+    11003,
+    11004,
+    11005,
+    11006,
+    11007,
+    11008,
+    11009,
+    11010,
+    11011,
+    11012,
+    11013,
+    11014,
+    11015,
+    11016,
+    11017,
+    11018,
+    11019,
+    11020,
+    11021,
+    11022,
+    11033,
+    11024,
+    11025,
+    11026,
+    11027,
+    11038,
+    11039,
+    11040,
+    11041,
+    11042
+  ],
+  "additionalNpcClassIds": [
+    8404,
+    8411,
+    8423,
+    8441,
+    8442,
+    8452,
+    10502,
+    10505,
+    10705,
+    10801
+  ],
+  "requiresEncounter": 92,
+  "eligibility": "Apply original IsOnlyMeetCanAssist and AssistCondition before inviting.",
+  "adaptation": "Explicit team API reuses existing official properties, level ranges and skill assembly; existing companion API remains scoped to its 85 candidates.",
+  "scope": "Candidate eligibility and battle-unit API only; no UI, map team, counts or settlement wiring.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/Combat/FightOfficialNpcAssistanceCatalog.cs",
+      "sha256": "e54ede6fa4b1daa5186e84f87d9b476c013da104f3b72c8991538dec24a68d61"
+    },
+    {
+      "path": "scripts/fixtures/map12_stele_npc_harness.cs",
+      "sha256": "48d435ebfa977340b695823b9c1b0ca23943d116024bc9f5ab973fc2ce2adff1"
+    },
+    {
+      "path": "scripts/test_map12_stele_npcs.ps1",
+      "sha256": "9cb8b6abbc7db69db6ab80e41ffef4308d0b8a31e75cd7bae0e69bc361eb4480"
+    },
+    {
+      "path": "scripts/prepare_unity_map12_stele_npcs.py",
+      "sha256": "1b50940a852c48320a76a5b3b55ae9312cc54b191aedd3593dc99f719edee5f1"
+    }
+  ]
+}

@@ -85,6 +85,26 @@ namespace Zjcs.Combat.Official
                 .Select(row => Int(row, "Id")).OrderBy(id => id).ToArray();
         }
 
+        // TeamInviteNpc calls GetNpcs(MapExploreBoss), whose argument is an
+        // EXCLUDED type. NpcInfo.IsFightAssist then checks entity + level data.
+        // Preserve source order; the original invitation panel sorts afterwards.
+        public IReadOnlyList<int> TeamInviteNpcClassIds()
+        {
+            return npcs.Values.Where(row => Int(row, "NpcType") != 2
+                    && Int(row, "FightEntityId") > 0
+                    && levelDetails.ContainsKey(Int(row, "Id")))
+                .Select(row => Int(row, "Id")).ToArray();
+        }
+
+        public bool CanInviteTeamNpc(int npcClassId, bool encountered, bool meetsAssistCondition)
+        {
+            if (!npcs.TryGetValue(npcClassId, out Dictionary<string, object> npc)
+                || Int(npc, "NpcType") == 2 || Int(npc, "FightEntityId") <= 0
+                || !levelDetails.ContainsKey(npcClassId) || !meetsAssistCondition)
+                return false;
+            return !Bool(npc, "IsOnlyMeetCanAssist") || encountered;
+        }
+
         public string NpcNameKey(int npcClassId) => RequiredNpc(npcClassId, "NameKey");
 
         public string NpcIconPath(int npcClassId) => RequiredNpc(npcClassId, "Icon");
@@ -187,10 +207,22 @@ namespace Zjcs.Combat.Official
         public FightBattleUnitState CreateUnit(int unitId, int masterId, int level, int rank,
             int subRank, int x, int y, int moveMask, int npcClassId)
         {
+            return CreateNpcUnit(unitId, masterId, level, rank, subRank, x, y, moveMask, npcClassId, false);
+        }
+
+        public FightBattleUnitState CreateTeamInviteUnit(int unitId, int masterId, int level, int rank,
+            int subRank, int x, int y, int moveMask, int npcClassId)
+        {
+            return CreateNpcUnit(unitId, masterId, level, rank, subRank, x, y, moveMask, npcClassId, true);
+        }
+
+        private FightBattleUnitState CreateNpcUnit(int unitId, int masterId, int level, int rank,
+            int subRank, int x, int y, int moveMask, int npcClassId, bool teamInvite)
+        {
             if (unitId <= 0 || masterId <= 0 || level <= 0 || rank < 0 || subRank < 0
                 || moveMask <= 0 || npcClassId <= 0)
                 throw new ArgumentOutOfRangeException(nameof(unitId), "Official NPC battle unit inputs are invalid.");
-            if (!CanInviteNpc(npcClassId, true, true))
+            if (!(teamInvite ? CanInviteTeamNpc(npcClassId, true, true) : CanInviteNpc(npcClassId, true, true)))
                 throw new InvalidOperationException("NPC is not configured as an assist combatant: " + npcClassId);
 
             Dictionary<string, object> detail = ResolveLevelDetail(npcClassId, rank, level,

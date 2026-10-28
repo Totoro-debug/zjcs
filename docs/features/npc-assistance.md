@@ -20,6 +20,8 @@
 - `HomeHudView.DailyChallenges.OpenDailyChallengeAssist` 与 `OpenDailyDungeonAssist` 使用官方 `TeamInvitePanel`／`TeamInvitePanelRobotItem` 资源显示候选并保存选择。日常副本与每日挑战共用 `RobotInvitePlayType.All`（10），选择按活动／房间分别保存；战斗开始时重核助战条件、单 NPC 次数和人数上限，`DailyDungeonBattleRunner.BuildCheckpoint` 调用 `CreateUnit` 并为伙伴寻找未占用的可行走格。普通副本 checkpoint 与助战快照一起恢复，启动失败回滚次数，战斗结束清除活动快照。
 - 官方通用 Team 邀请窗口与 RobotItem 已转换到 `unity/Assets/Game/Resources/Dungeons/UI/`，Windows 加载入口为上述 picker；该资源转换本身不代表其余玩法已接入。
 
+山之国战斗碑的原 `TeamInviteNpc` 使用独立 Team 候选链：`GetNpcs(MapExploreBoss)` 排除探索首领，再按 `IsFightAssist` 和原遇见／助战条件筛选，当前配置共有95名候选，包括具有正式战斗数据的9名导师和1名商人。新增 `TeamInviteNpcClassIds`／`CanInviteTeamNpc`／`CreateTeamInviteUnit` 供该原组队链使用；上述既有伙伴 API 的85名范围保留。95名资格、10名额外角色实际属性／技能装配及伙伴结果一致性已通过独立规则检查；窗口／地图队伍、站位、模型、次数和实际战斗尚未接线，范围与原代码哈希见[山之国](../maps/map-12.md)。
+
 ## 自定义实现
 
 以下为已确认的单机处理要求，尚未代表对应玩法流程已经接入或验收。
