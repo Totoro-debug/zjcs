@@ -20,7 +20,9 @@ namespace Zjcs.Presentation.World
         [Serializable] private sealed class PopupBinding
         { public string path; public string[] objects; public bool enabled, closeByClickMask; public int maskType; public PopupClipBinding[] clips; public PopupMaskBinding mask; public PopupSoundBinding sound; }
         [Serializable] private sealed class PopupSoundBinding
-        { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; }
+        { public string path; public string[] objects; public bool enabled; public PopupSoundEventBinding show, hide; public PopupClickSoundBinding[] clicks; }
+        [Serializable] private sealed class PopupClickSoundBinding
+        { public string type, path; public string[] objects; public bool enabled; public PopupSoundEventBinding @event; }
         [Serializable] private sealed class PopupSoundEventBinding
         { public string name, resource; public uint id; }
         [Serializable] private sealed class PopupMaskBinding
@@ -161,6 +163,26 @@ namespace Zjcs.Presentation.World
                 throw new InvalidDataException("Original private popup close sound is missing: " + sound.hide.resource);
             soundSource.Post = postSound;
             soundSource.enabled = sound.enabled;
+            if (sound.clicks == null || sound.clicks.Length != 19)
+                throw new InvalidDataException("Original private UI click sound bindings are incomplete.");
+            foreach (PopupClickSoundBinding click in sound.clicks)
+            {
+                GameObject node = Find(root.transform, click.path, click.objects).gameObject;
+                AudioClip clip = Resources.Load<AudioClip>(click.@event.resource);
+                if (clip == null || clip.name != click.@event.name)
+                    throw new InvalidDataException("Original private click sound is missing: " + click.@event.resource);
+                if (click.type == "UIClickSound")
+                {
+                    var listener = node.GetComponent<WorldUiClickSound>() ?? node.AddComponent<WorldUiClickSound>();
+                    listener.AkEvent = clip; listener.Post = postSound; listener.enabled = click.enabled;
+                }
+                else if (click.type == "ButtonSound")
+                {
+                    var listener = node.GetComponent<WorldButtonSound>() ?? node.AddComponent<WorldButtonSound>();
+                    listener.ClickEvent = clip; listener.Post = postSound; listener.enabled = click.enabled;
+                }
+                else throw new InvalidDataException("Unsupported original private click sound component: " + click.type);
+            }
         }
 
         public static void Apply(GameObject root, string prefabName, Action<AudioClip, GameObject> postSound = null)

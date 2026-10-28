@@ -196,20 +196,19 @@ def private_popup_sound_binding(apk, schemas, root):
         raise ValueError("Original private PopupWindowSound is missing or ambiguous")
     obj, indices, names = matches[0]
     fields = schemas.read(obj)
-    def event(field):
-        value = fields[field]
+    def event(owner, value):
         if value["idInternal"] or value["valueGuidInternal"]:
             raise ValueError("Unverified direct Wwise event identity")
         pointer = value["WwiseObjectReference"]
         if not pointer["m_PathID"]:
             return None
-        reference = PPtr(**pointer, assetsfile=obj.assets_file).deref()
+        reference = PPtr(**pointer, assetsfile=owner.assets_file).deref()
         if reference.type.name != "MonoBehaviour" or reference.read(check_read=False).m_Script.read().m_ClassName != "WwiseEventReference":
             raise ValueError("Original popup sound reference is not a Wwise event")
         data = schemas.read(reference)
         return dict(name=data["objectName"], id=data["id"], guid=data["guid"],
                     source=apk.provenance(reference), object_raw_sha256=sha256(reference.get_raw_data()))
-    show, hide = event("ShowSound"), event("HideSound")
+    show, hide = event(obj, fields["ShowSound"]), event(obj, fields["HideSound"])
     if show is not None or hide["name"] != "Main_Cursor_Back" or hide["id"] != 3686182067:
         raise ValueError("Original private popup sound configuration changed")
     receipt_path = ROOT / "assets/reference/commerce-components/audio-source-manifest.json"
@@ -247,6 +246,63 @@ def private_popup_sound_binding(apk, schemas, root):
     folder_guid = hashlib.sha256(b"zjcs-map12-private-popup-sound-folder").hexdigest()[:32]
     output_data = [(target, payload), (target.with_name(target.name + ".meta"), importer.encode("utf8")),
                    (folder_meta, ("fileFormatVersion: 2\nguid: " + folder_guid + "\nfolderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n").encode("ascii"))]
+    click_bindings = []
+    for click_go, click_indices, click_names, _ in relative_transform_path(root):
+        for click_pair in click_go.m_Component:
+            click_obj = click_pair.component.deref()
+            if click_obj.type.name != "MonoBehaviour":
+                continue
+            click_type = click_obj.read(check_read=False).m_Script.read().m_ClassName
+            if click_type not in ("UIClickSound", "ButtonSound"):
+                continue
+            click_fields = schemas.read(click_obj)
+            click_event = event(click_obj, click_fields["AkEvent" if click_type == "UIClickSound" else "ClickEvent"])
+            expected_events = {"Main_Tag": 680474747, "Main_Cursor_Normal": 3772241779, "Main_Cursor_Fail": 2458796094}
+            if click_event is None or expected_events.get(click_event["name"]) != click_event["id"]:
+                raise ValueError("Unverified private click sound event")
+            click_bindings.append(dict(type=click_type, path="/".join(map(str, click_indices)), objects=list(click_names),
+                enabled=bool(click_fields["m_Enabled"]), event=click_event,
+                source=apk.provenance(click_obj), object_raw_sha256=sha256(click_obj.get_raw_data())))
+    if sum(row["type"] == "UIClickSound" for row in click_bindings) != 5 or sum(row["type"] == "ButtonSound" for row in click_bindings) != 14:
+        raise ValueError("Original private click sound component set changed")
+    fail_receipt_path = ROOT / "assets/reference/bingo-activity/audio/source-manifest.json"
+    fail_receipt = json.loads(fail_receipt_path.read_bytes())
+    verified_banks = {Path(row["path"]).name: row["sha256"] for row in banks}
+    for key, previous in fail_receipt["packages"].items():
+        if verified_banks.get(key) != previous["sha256"]:
+            raise ValueError("Original failure sound bank is not current-equivalent")
+    clip_records = {}
+    for event_name in sorted({row["event"]["name"] for row in click_bindings}):
+        if event_name == "Main_Cursor_Fail":
+            clip_uri, clip_record = next((uri, row) for uri, row in fail_receipt["resources"].items()
+                if uri.endswith("/f279174fd04ed416fccc485f.ogg"))
+            if clip_record["loop"] or clip_record["sha256"] != "92eddaa9785f7d655d468865c5e4f3b9cf30efb8d37a823d41f1ec9c5a3c1074":
+                raise ValueError("Original private failure sound conversion differs")
+            importer_source = native.with_name(native.name + ".meta")
+            clip_receipt_path = fail_receipt_path
+        else:
+            clip_uri, clip_record = next((uri, row) for uri, row in receipt["resources"].items() if row["event"] == event_name)
+            clip_native = ROOT / "unity/Assets/Official/Commerce/Art/audio" / Path(clip_uri).name
+            if clip_native.read_bytes() != (ROOT / clip_uri.removeprefix("res://")).read_bytes():
+                raise ValueError("Original private click native audio changed")
+            importer_source = clip_native.with_name(clip_native.name + ".meta")
+            clip_receipt_path = receipt_path
+        clip_source = ROOT / clip_uri.removeprefix("res://")
+        clip_payload = clip_source.read_bytes()
+        if sha256(clip_payload) != clip_record["sha256"]:
+            raise ValueError("Original private click audio hash differs")
+        clip_target = folder / (event_name + ".ogg")
+        clip_importer_raw = importer_source.read_bytes()
+        clip_guid = hashlib.sha256(("zjcs-map12-private-ui-sound:" + event_name).encode()).hexdigest()[:32]
+        clip_importer = re.sub(r"(?m)^guid: [0-9a-f]{32}$", "guid: " + clip_guid, clip_importer_raw.decode("utf8").replace("\r\n", "\n"))
+        clip_importer = "\n".join(line.rstrip() for line in clip_importer.splitlines()) + "\n"
+        output_data.extend([(clip_target, clip_payload), (clip_target.with_name(clip_target.name + ".meta"), clip_importer.encode("utf8"))])
+        clip_records[event_name] = dict(resource="Map12/PopupSound/" + event_name, file_sha256=sha256(clip_payload),
+            input=dict(path=clip_source.relative_to(ROOT).as_posix(), sha256=sha256(clip_payload),
+                importer_path=importer_source.relative_to(ROOT).as_posix(), importer_sha256=sha256(clip_importer_raw)),
+            conversion=clip_record, audio_source_receipt=dict(path=clip_receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(clip_receipt_path.read_bytes())))
+    for row in click_bindings:
+        row["event"].update(clip_records[row["event"]["name"]])
     outputs = []
     for path, data in output_data:
         previous = path.read_bytes() if path.exists() else None
@@ -261,7 +317,7 @@ def private_popup_sound_binding(apk, schemas, root):
     return dict(path="/".join(map(str, indices)), objects=list(names), enabled=bool(fields["m_Enabled"]),
                 show=show, hide=hide, source=apk.provenance(obj), object_raw_sha256=sha256(obj.get_raw_data()),
                 banks=banks, audio_source_receipt=dict(path=receipt_path.relative_to(ROOT).as_posix(), sha256=sha256(receipt_path.read_bytes())),
-                native_audio_input=dict(path=native.relative_to(ROOT).as_posix(), sha256=sha256(payload),
+                clicks=click_bindings, native_audio_input=dict(path=native.relative_to(ROOT).as_posix(), sha256=sha256(payload),
                     meta_sha256=sha256(native.with_name(native.name + ".meta").read_bytes())), native_outputs=outputs)
 
 
@@ -796,7 +852,7 @@ def build():
     code_paths = ["client-source/DailyDungeonBigMapDialog.cs", "client-source/DailyDungeonRoomItem.cs",
         "client-source/DailyDungeonBigMapRoomItem.cs", "client-source/DailyDungeonSettings.cs", "client-source/DailyDungeonDetailContent.cs", "client-source/DailyDungeonUnlockContent.cs", "client-source/LayoutElementClamper.cs", "client-source/DailyDungeonDialog.cs", "client-source/DailyDungeonUtils.cs",
         "common-source/Common/DailyDungeonDifficulty.cs",
-        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/PopupWindowSound.cs", "framework-firstpass-source/WindowMaskType.cs", "framework-firstpass-source/WindowMaskBase.cs", "framework-firstpass-source/WindowBlurMask.cs", "framework-firstpass-source/BlurManager.cs", "framework-firstpass-source/ScreenBlurPass.cs", "framework-firstpass-source/Framework.UI/WindowContainer.cs", "client-source/DailyDungeonGradeItem.cs",
+        "common-source/Common/DailyDungeonMapGroupInfoParser.cs", "framework-firstpass-source/SafeArea.cs", "framework-firstpass-source/PopupWindow.cs", "framework-firstpass-source/PopupWindowSound.cs", "framework-firstpass-source/UIClickSound.cs", "framework-firstpass-source/ButtonSound.cs", "framework-firstpass-source/WindowMaskType.cs", "framework-firstpass-source/WindowMaskBase.cs", "framework-firstpass-source/WindowBlurMask.cs", "framework-firstpass-source/BlurManager.cs", "framework-firstpass-source/ScreenBlurPass.cs", "framework-firstpass-source/Framework.UI/WindowContainer.cs", "client-source/DailyDungeonGradeItem.cs",
         "client-source/DailyDungeonBigMapDialogGradeGrid.cs", "common-source/Common/LanguageUtils.cs",
         "common-source/Common/BattleResultGradeType.cs", "framework-firstpass-source/MultiLanguageText.cs",
         "framework-source/StateGameObjectConfig.cs", "framework-source/StateGameObjectData.cs",

@@ -83,6 +83,13 @@ namespace Zjcs.Editor
             if (popupSound.ShowSound != null || popupSound.HideSound == null || popupSound.HideSound.name != "Main_Cursor_Back"
                 || popupSound.Post == null || !popupSound.enabled)
                 throw new InvalidDataException("Original private popup sound/null-open reference was not restored.");
+            var tagSounds = dialog.GetComponentsInChildren<WorldUiClickSound>(true);
+            var buttonSounds = dialog.GetComponentsInChildren<WorldButtonSound>(true);
+            if (tagSounds.Length != 5 || tagSounds.Any(sound => sound.AkEvent == null || sound.AkEvent.name != "Main_Tag" || sound.Post == null)
+                || buttonSounds.Length != 14 || buttonSounds.Count(sound => sound.ClickEvent != null && sound.ClickEvent.name == "Main_Cursor_Normal") != 12
+                || buttonSounds.Count(sound => sound.ClickEvent != null && sound.ClickEvent.name == "Main_Cursor_Fail") != 2
+                || buttonSounds.Any(sound => sound.Post == null))
+                throw new InvalidDataException("Original private tag/normal/failure sound bindings were not restored.");
             int closeSoundPosts = 0;
             Action<AudioClip, GameObject> postSound = popupSound.Post;
             popupSound.Post = (clip, emitter) => { closeSoundPosts++; postSound(clip, emitter); };
@@ -142,7 +149,13 @@ namespace Zjcs.Editor
             if (File.Exists(dailySave)) throw new InvalidDataException("New isolated profile unexpectedly has daily dungeon state.");
             byte[] profileBefore = File.ReadAllBytes(slots.GetProgressPath(slot));
             yield return new WaitForEndOfFrame();
+            var battleSound = battle.GetComponent<WorldButtonSound>();
+            int battleSoundPosts = 0;
+            Action<AudioClip, GameObject> postBattleSound = battleSound == null ? null : battleSound.Post;
+            if (postBattleSound == null) throw new InvalidDataException("Original private BattleBtn sound is not bound.");
+            battleSound.Post = (clip, emitter) => { battleSoundPosts++; postBattleSound(clip, emitter); };
             SimulateUiClick(battle, battle.GetComponentInParent<Canvas>().worldCamera);
+            if (battleSoundPosts != 1) throw new InvalidDataException("Original private BattleBtn pointer did not emit exactly one normal sound.");
             deadline = Time.realtimeSinceStartup + 12f;
             GameObject route = null;
             while (route == null && Time.realtimeSinceStartup < deadline)
