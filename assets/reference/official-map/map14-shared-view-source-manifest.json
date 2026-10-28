@@ -89,6 +89,14 @@
       "sha256": "1d444f9287965e5efd446cb02b4ec27116b9c006102f124aea9a87ea97baab30"
     },
     {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerPrepareReplaceEntityEventReceiver.cs",
+      "sha256": "623a31e64b162dc58ebdfeb33f60ef4fc1dae701fef625493d08e0eb65003c9f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerReplaceEntityEventReceiver.cs",
+      "sha256": "991e3a8a1eb862521231e62ad58a59a88945a63f9a168c093994e4f6d09c7c4f"
+    },
+    {
       "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEventDelegate.cs",
       "sha256": "8add828b82a9cf4099e055bd08a34cae8138e7b720be2831d49e9abe00568c11"
     },
@@ -105,6 +113,14 @@
       "sha256": "4bfe3a4f347a3a59d247f5fae85800f6c543759e2ec4b7f0d0dd5e0e58db7e3f"
     },
     {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerPrepareReplaceEntityEventDelegate.cs",
+      "sha256": "48cf2ab828ea73077a5889623ef6f3f1ab952dcb881c4701e327e257357a81b6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerReplaceEntityEventDelegate.cs",
+      "sha256": "b4ba7955698bede943d068c0afc26cf5499ee616abaf679c03cf1264a99b2bcd"
+    },
+    {
       "path": ".tools/source-packages/current/871_156598/official-code/client-source/UtilsHandlerBinder.cs",
       "sha256": "fbaed264cec52eba448b0b22ac1446d0a36c60fc9834b125bebe742d525ac586"
     }
@@ -112,7 +128,7 @@
   "outputs": [
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
-      "sha256": "287601b078264a8b64ad1bd5fd78ef4d0ed2e56b6764e6911fb13d993bdfc2af"
+      "sha256": "136e18e0c01e0a31a4e682450379e58bda71ce42caade780efa9c65e180368bc"
     },
     {
       "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs.meta",
@@ -150,14 +166,14 @@
   "tools": [
     {
       "path": "scripts/prepare_unity_map14_shared_views.py",
-      "sha256": "86b7209871248f3e7e4808e8485d0a8f8cbfdeeaa735b6c21e2b6dc67159585e"
+      "sha256": "9c75d46aadc0ba604110e986c7e8726ef853e17a001d439babaaf690e6bad64c"
     }
   ],
   "validation": {
     "path": "unity/Assets/Game/Editor/Map14/HeroStatues/OfficialMap14HeroStatueAcceptance.cs",
     "sha256": "a911f2d230a8aa6ec1252488c0353c3b2cad9332f1fa9b99ed2d4b3003af661d"
   },
-  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement six selected original void receiver interfaces at runtime (grid, stage and four container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. No shared rule/dispatch iteration is reimplemented.",
+  "operation": "Bind original EntityUtils to original EntityHandler without replacing an existing handler and release only the owned binding. Read original EcEntity identity, grid/info, original coordinate conversions, stage state/config/index/activity through unchanged Console IL. Implement eight selected original void receiver interfaces at runtime (grid, stage and six container lifecycle receivers) and register/unregister with original delegate operators; forward original argument identities and previous values to migrated display consumers. No shared rule/dispatch iteration is reimplemented.",
   "limitations": [
     "Stage Select remains null in original shared client data; the legacy display DTO int slot is not a shared selector rule.",
     "Entity creation/state restoration, global parser/container host, redirects to another entity, visibility handlers, tip graph, actual UI, saves and Player require further integration."

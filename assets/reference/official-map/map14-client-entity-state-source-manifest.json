@@ -1,0 +1,178 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainer.cs",
+      "sha256": "741ffc352286627a3c847c1a2f5cd56c0a6beb48fc770d31b62ecb1fe6f68a1e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntity.cs",
+      "sha256": "5548ab8a8f05def6c838388d453c585cdf3085e7e4e9465b8e39d54688f64a2c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntityIdentifier.cs",
+      "sha256": "ed2123080f09943ef1fb12f407a5fc46a6f25cb789dca71ceb342914fd109896"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntitySourceComponent.cs",
+      "sha256": "da6ea11504efe0f6ca6ab7ae861846212c23277d8d099ba86ef83556bbbaffa3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityOwnershipData.cs",
+      "sha256": "8d10287843b387975675dc02b4cf11067913a0b7970f13d4f4158689003df5e1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EntityUtils.cs",
+      "sha256": "2b2d26dafea17d28732ce76d03cc7f89e47f5d74c56f9753f7ecf2a6d14563cb"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyContainer.cs",
+      "sha256": "744693c441dc12be8675e705ed1d8292f36911e6e46ef4fd21ad61c6929be836"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyClientEntityHandler.cs",
+      "sha256": "bccf5b027a81c03fa5a66a272fb38bd27ef9ea75394701b0d79f7714774ab7ad"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyClientStoryNPCEntityHandler.cs",
+      "sha256": "0cdacd327ab9a2916ad4b9f3d3b064829e162e62f397b88bd459492527579353"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerStartEntityEventDelegate.cs",
+      "sha256": "abbf3c11aad778fb2120877c69e7644f65ccb8481ba2ed562a7ee1672b771038"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerStartEntityEventReceiver.cs",
+      "sha256": "8601ce68e0a422abc493978740a774ed8919bbf755dda12e570f8f32d0451b31"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerDestroyEntityEventDelegate.cs",
+      "sha256": "4bfe3a4f347a3a59d247f5fae85800f6c543759e2ec4b7f0d0dd5e0e58db7e3f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerDestroyEntityEventReceiver.cs",
+      "sha256": "1d444f9287965e5efd446cb02b4ec27116b9c006102f124aea9a87ea97baab30"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerPrepareReplaceEntityEventDelegate.cs",
+      "sha256": "48cf2ab828ea73077a5889623ef6f3f1ab952dcb881c4701e327e257357a81b6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerPrepareReplaceEntityEventReceiver.cs",
+      "sha256": "623a31e64b162dc58ebdfeb33f60ef4fc1dae701fef625493d08e0eb65003c9f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcContainerReplaceEntityEventDelegate.cs",
+      "sha256": "b4ba7955698bede943d068c0afc26cf5499ee616abaf679c03cf1264a99b2bcd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/IEcContainerReplaceEntityEventReceiver.cs",
+      "sha256": "991e3a8a1eb862521231e62ad58a59a88945a63f9a168c093994e4f6d09c7c4f"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_client_entity_state.py",
+      "sha256": "e301cdcb3505dd4530e7aad1dec1b020ad9673048b253f369934814c0b562500"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedEventSubscription.cs",
+      "sha256": "136e18e0c01e0a31a4e682450379e58bda71ce42caade780efa9c65e180368bc"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedRoot.cs",
+      "sha256": "4687ab82ca573e52e7b55456dc6e917ba941eb79e22191fa995dd048f12e4ac1"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedData.cs",
+      "sha256": "42ce615ad6417ad7d8290ca17c9eb1d720d9123da87939e899c78e0e57efa808"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedViews/NativeMap14SharedViewEntity.cs",
+      "sha256": "e2adbc2ea146ca1cedf1048d529c180b2f34cec4e501b9feaf134514142d8515"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityContainers/EntityContainerBindings.cs",
+      "sha256": "c1856fdf35f1747dd0577447c479e173fa5a3deb58ac9864eb1147c1d429a9ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/EntityLoading/EntityLoadingBindings.cs",
+      "sha256": "2056ac3d8294570e95dc72670ae82644dd54bbf03a03b59fb49e6f527c232607"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs",
+      "sha256": "500abec2f9f504918c57a90eb35c0ceb780dc7f89ada9b16f3032a732c87d793"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/NativeMap14ClientEntityState.cs.meta",
+      "sha256": "4bd8d2206bf34c148a1e8d4a4b72bec18af75c5d129f8f50e593643288705f2b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/Zjcs.Offline.World.NativeMap14ClientEntities.asmdef",
+      "sha256": "57d8d4c29fffcb4991fa300bbf2a848709cf64df5d72d4ed78843cc28c15e616"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities/Zjcs.Offline.World.NativeMap14ClientEntities.asmdef.meta",
+      "sha256": "57aebe397546f023fdd5ecc3a2e8d5a9fe1bdfddf685ef3af679a2dd6edbb6f5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14ClientEntities.meta",
+      "sha256": "9f5bd0babcbc54f3bc809c0a62ad2f05a0346e6bfc33dddbeffbf6d40982c83b"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientEntities/OfficialMap14ClientEntityStateAcceptance.cs",
+      "sha256": "9249daf7e522caf83e31359294cde527b09d6052dc75bf3a119a6494b84a6293"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientEntities/OfficialMap14ClientEntityStateAcceptance.cs.meta",
+      "sha256": "813812ff3e67004a1edca71ee5baba39d32500242f0166b95534096f6658a251"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientEntities/Zjcs.Editor.Map14.ClientEntities.asmdef",
+      "sha256": "f652a9ea73de4675e6bfa212be17652c298b98aec6e3e00f2d5df44895566748"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientEntities/Zjcs.Editor.Map14.ClientEntities.asmdef.meta",
+      "sha256": "2fca78c7be2a6526be2aa4d49bca022c29c9c77a8691a9f3cbd35e492941c8c4"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map14/ClientEntities.meta",
+      "sha256": "46c6599ce50bd75d77059dee41ba7e52a3003903ef81070f70c901fac9a40938"
+    }
+  ],
+  "operation": "Bind the unchanged original Console container, entity instantiation and mutable state to original migrated client container interfaces. Keep one reference-identity wrapper per original entity across identifier replacement. Subscribe through the original four dispatchers, preserving original event ordering and boxed original identifier values. Require an explicit low-memory policy and movement implementation; supply no server world state.",
+  "validation": {
+    "entry": "Zjcs.Editor.Map14.OfficialMap14ClientEntityStateAcceptance.Run",
+    "graphicalPlayMode": true,
+    "checks": [
+      "Original container add/prepare/replace/remove methods and callback order",
+      "Stable entity projection and dictionary identity across identifier replacement",
+      "Original prefab instantiation and source/ownership/grid writes",
+      "Native subscription disposal",
+      "Original client container/loading/four-statue regression"
+    ]
+  },
+  "limitations": [
+    "Movement is an explicit unbound service.",
+    "Formal native world population, prefab loader and map-host binding, pointer/UI/save, full ProjectTools.Validate and Windows Player remain required."
+  ]
+}

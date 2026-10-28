@@ -157,7 +157,7 @@ Animator 参数 Timeline 恢复：`scripts/prepare_unity_story_animator_timeline
 
 依据：`map14-native-hero-statues-source-manifest.json`。
 
-Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式绑定的 Console IL，以原 EventDelegateBasicBase 的加减运算注册／移除接收器；动态类型仅实现两个原应用接收接口并原样转发参数，不实现共享事件遍历或网格／阶段规则。EntityUtils 按原 UtilsHandlerBinder 初始化原 EntityHandler，坐标换算直接执行原方法。运行时仍只加载本地字节；Unity Mono／Direct3D11 的四类雕像显示 Play Mode 已验证，Windows Player 与正式配置／窗口／存档宿主尚未验证。
+Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式绑定的 Console IL，以原 EventDelegateBasicBase 的加减运算注册／移除接收器；动态类型仅适配明确列出的原应用接收接口并原样转发参数，不实现共享事件遍历或网格／阶段规则。EntityUtils 按原 UtilsHandlerBinder 初始化原 EntityHandler，坐标换算直接执行原方法。运行时仍只加载本地字节；Unity Mono／Direct3D11 的四类雕像显示 Play Mode 已验证，Windows Player 与正式配置／窗口／存档宿主尚未验证。
 
 ## 完整还原部分
 
@@ -282,6 +282,8 @@ Map14 原共享实体显示适配通过 `NativeMap14SharedViews` 消费已显式
 - 原实体加载器及 TTL 对象池已迁入：完整复用 MyEntityLoadHandler、IEntityLoadHandler、GameObjectPoolEmbed、TTLGameObjectPool、TTLGameObjectPoolCollection 和 SortedValueDictionary，保留根实体优先、按编号初始加载、异步完成后的请求队列、回调重入、已移除实体立即结束与空回调、60 秒池期限、低内存保留排队／在用类别及原 Dispose 顺序。GameObjectPoolBase 和生命周期继续复用已有原实现；本地接口显式消费资源句柄、原配置／实体状态、场景实例化、低内存通知和两秒定时器，未补造服务器状态。内置屏 Unity 2022.3.57f1c2／D3D11 隔离工程导入、编译和 Play Mode 通过上述队列与生命周期分支、待定／已加载 prefab 查询、对象复用／重绑、过期销毁、禁用池及销毁后的迟到回调；四类雕像显示回归通过，三张实际画面已查看，根工程静态检查通过。原始输入、复用依赖、适配与输出哈希见[实体加载来源清单](../../assets/reference/official-map/map14-entity-loading-source-manifest.json)，生成器 scripts/prepare_unity_map14_entity_loading.py，运行目录 Runtime/Official/EntityLoading，检查入口 OfficialMap14EntityLoadingAcceptance.Run。正式客户端容器、完整实体目录、原共享实体投影和本地平台服务仍待接入，地图交互、存档、完整 ProjectTools.Validate 和 Windows Player 未据此验证。
 
 - 原客户端容器及两类客户端实体处理器已迁入：完整迁移 MyContainer、MyClientEntityHandler、MyClientStoryNPCEntityHandler、两个处理接口及四组原事件接收器／代理，共 13 份源文件。保留根实体登记、类别索引、组件启动后发送新增事件、替换时先移除旧编号再回插同一对象，以及 End／淡出／Remove／事件／卸载顺序；客户端实体递减负编号、剧情 NPC 唯一性、归属／网格赋值及创建回调顺序均保留。共享容器和可变组件通过显式消费接口提供，沿用原生命周期和事件分发器，未写入初始地图或服务器规则。内置屏 Unity 2022.3.57f1c2／D3D11 隔离工程导入、编译及 Play Mode 通过四路订阅／解除顺序、根与类别查询、替换字典身份、淡出等待、客户端／剧情 NPC 编号与防重建、立即／批量移除和销毁；原实体加载器及四类雕像显示回归通过，三张实际画面已查看，根工程静态检查通过。来源、依赖与输入输出哈希见[客户端容器来源清单](../../assets/reference/official-map/map14-entity-containers-source-manifest.json)，生成器 scripts/prepare_unity_map14_entity_containers.py，运行目录 Runtime/Official/EntityContainers，检查入口 OfficialMap14EntityContainerAcceptance.Run。此项使用显式夹具事件和状态；原共享事件／实体数据适配、完整原生实体加载、移动组件、正式宿主、交互、存档、完整 ProjectTools.Validate 和 Windows Player 仍待接通。
+
+- 原共享容器与客户端实体状态已接通类型边界：NativeMap14ClientEntityState 将原 Console 容器的启动、销毁、预替换与替换事件转给原客户端消费接口，借用原数据中心、实体实例化与可变组件，按原对象引用缓存投影，替换编号后保留同一投影身份。编号、容器、来源、归属、网格位置及网格根查询均读写原实体／组件；低内存禁用条件和移动组件仍要求显式宿主服务，未添加地图初始状态或服务器规则。内置屏 Unity 2022.3.57f1c2／D3D11 隔离工程导入、编译与 Play Mode 已通过原 EcContainer 的 AddEntity／PrepareReplaceEntity／ReplaceEntity／RemoveEntityImmediate 调用、四路原代理回调顺序、替换前后字典与投影身份、原雕像模板实例化及组件写回、订阅解除和重复销毁；既有原客户端容器、加载器及四类雕像显示回归通过，三张实际画面已查看，根工程静态检查通过。来源及输入输出哈希见[原共享实体状态来源清单](../../assets/reference/official-map/map14-client-entity-state-source-manifest.json)，生成器 scripts/prepare_unity_map14_client_entity_state.py，运行目录 Runtime/Offline/World/NativeMap14ClientEntities，检查入口 OfficialMap14ClientEntityStateAcceptance.Run。原客户端容器与该边界的正式场景装配、完整原生实体 prefab 加载、移动、地图人口／可见状态、交互、存档、完整 ProjectTools.Validate 和 Windows Player 尚待完成。
 
 ## 自定义实现
 
