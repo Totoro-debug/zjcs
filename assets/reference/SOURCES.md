@@ -42,6 +42,7 @@ APK 与热更新版本分别记录。原输入、转换产物及其前后哈希�
 | 职业角色核心图集 | [原占位映射、AssetTable GUID 与 GPU mip](profession-ui/character-textures-source-manifest.json)；原版完整默认外观链所需页面及保留的诊断页，共 15 组页绑定、35 张原贴图；范围见[职业功能页](../../docs/features/professions.md) |
 | 职业实际动画接线 | [实际打包插槽／顺序／IK 与独立参考](profession-ui/runtime-timelines-source-manifest.json)；原数据直接供给运行时，保留边界、空附件、有符号偏移和 IK 默认值；边界见[职业功能页](../../docs/features/professions.md) |
 | 职业原生外观对象 | [原应用皮肤合成、实际骨骼／附件及 GPU 诊断](profession-ui/native-appearance-graph-source-manifest.json)；原版默认脸部／头发／肤色与染色接线、96 组独立世界姿态参考及四张原贴图角色诊断；边界见[职业功能页](../../docs/features/professions.md) |
+| 职业原角色资源 | [原路径／GUID、模型元数据及分离动画 SO](profession-ui/character-resources-source-manifest.json)；四个本地原资源入口、原字符串池／动画查找与真实角色资源加载；无对应数据的原初始动作及边界见[职业功能页](../../docs/features/professions.md) |
 | 历史输入与非运行参考 | [LEGACY_SOURCES.md](LEGACY_SOURCES.md)；历史版本证据保留原身份 |
 | 转换素材备份 | `asset-pack/layout.json`、`asset-pack/lock.json`；实际覆盖以已生成并校验的归档为准 |
 

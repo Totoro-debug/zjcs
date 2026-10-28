@@ -72,6 +72,7 @@ def build():
         character_textures=file_record(ROOT / "assets/reference/profession-ui/character-textures-source-manifest.json"),
         runtime_timelines=file_record(ROOT / "assets/reference/profession-ui/runtime-timelines-source-manifest.json"),
         native_appearance_graph=file_record(ROOT / "assets/reference/profession-ui/native-appearance-graph-source-manifest.json"),
+        character_resources=file_record(ROOT / "assets/reference/profession-ui/character-resources-source-manifest.json"),
         image_resources=file_record(ROOT / "assets/reference/profession-ui/image-resource-source-manifest.json"),
         item_components=file_record(ROOT / "assets/reference/profession-ui/item-components-source-manifest.json"),
         item_pools=file_record(ROOT / "assets/reference/profession-ui/item-pools-source-manifest.json"),

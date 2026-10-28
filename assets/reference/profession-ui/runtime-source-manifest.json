@@ -206,7 +206,7 @@
   "local_service": {
     "runtime": {
       "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineCharacterProgressionService.cs",
-      "sha256": "9b3292f5216f407c77ee89d109a2df33f0dbf98b53ca4c0f60c230d5c36f17e4"
+      "sha256": "8bfbd0ddcd897555f1e5a9357cb5fa5c3ae8e3128cd2524a5316aac0b246c7a4"
     },
     "scope": "Profession level reads, group-10 reward transaction and source-based non-mutating profession appearance preview only.",
     "appearance_sources": {
@@ -265,6 +265,10 @@
   "native_appearance_graph": {
     "path": "assets/reference/profession-ui/native-appearance-graph-source-manifest.json",
     "sha256": "d24567136d8f23da8c6fc486d0770ee1aeaa785df9f44ec03e579d9e1f359df5"
+  },
+  "character_resources": {
+    "path": "assets/reference/profession-ui/character-resources-source-manifest.json",
+    "sha256": "0fede6890e318829f3b47057cdb781f643dbe9a54cfacbab77084af24b8c52b8"
   },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
@@ -456,7 +460,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "8e88152e7b574553fbd9e6d08b27d0fd29e9b7781f4c113caaad74999f07f48c"
+    "sha256": "b3488f949b5ee6590ae81ee302c48d758494d1b500fd7e5c1332c3a1b2f166ca"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",
