@@ -2,6 +2,8 @@
 
 [返回文档索引](../../docs/README.md)
 
+山之国战斗碑原玩法状态门槛：`prepare_unity_player_play.py` 复用选定 `871_156598` 的 Common 参数／互斥表，仅转换命名空间与三处 C# 主构造语法；`PlayerPlayStateModule` 按原异步状态机恢复取消、重新检查、10轮边界和开战回调顺序，以本地接口替代玩家／关卡解析器／退出处理器／语言广播。独立规则测试及 Unity 引用编译通过，正式状态服务和窗口接线、Unity 运行及发布未完成；自动运行验收暂停。20份原代码、两份程序集、生成／测试适配和35项输出哈希见[原玩法状态来源](official-map/map12-player-play-source-manifest.json)，范围见[山之国](../../docs/maps/map-12.md)。
+
 泽之国 UI 使用当前 871_156598 的 APK／已下载官方资源及原客户端字段，恢复 68 份 UI prefab 的完整组件来源、931 张 Sprite 和 Map13 原生层级导入。来源入口为 `scripts/prepare_unity_map13_ui.py`、`prepare_unity_map13_ui_native_sources.py` 与 `assets/reference/official-map/map13-native-ui-components-source-manifest.json`；输入框新增字段由原 APK 类型／属性注册核对，来源对象、转换脚本和输出分别记录 SHA256。两种竖屏尺寸的女神窗口模拟点击／动画、原节点类型／坐标和运行时错误检查已通过并查看实际画面；80 组原粒子与 32 个 Coffee 组件已完成原材质／完整 mip／网格绑定和双尺寸原 URP 播放检查，17 张贴图的 112 层 mip 已经 GPU 回读逐字节核对；组件夹具显式打开特效状态并停止界面动画，正式业务触发时机仍待验证。输入、逐字段核对和绑定输出分别见 [粒子输入](official-map/map13-native-ui-particle-input-source-manifest.json)、[原参数核对](official-map/map13-native-ui-particle-export-source-manifest.json)和[素材绑定](official-map/map13-native-ui-particle-assets-source-manifest.json)。声音、动态头像与正式地图业务仍待绑定，未宣称整图或 Windows Player 已完成。详见[泽之国](../../docs/maps/map-13.md)。
 
 泽之国原生地图显示宿主复用已有地形、环境、地区标签、语言和字体来源及显式资源目录，新增 `Presentation/World/NativeMap13/` 仅提供本地状态／资源服务接线，未替换原 prefab。内置屏隔离 Play Mode 已验证三个地区的按位置加载、原文字网格、公开状态／光照演出和资源释放，并查看实际公／私图画面；测试工程带入项目 TMP Resources 配置。正式主线入口、交互、存档和 Windows Player 仍待完成，范围见[泽之国](../../docs/maps/map-13.md)。
