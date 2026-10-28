@@ -1,0 +1,956 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "prefabs": [
+    {
+      "entityClassId": 6650,
+      "field": "mCanInteractionPlayable",
+      "name": "multistele_loop_playable",
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-6160978803773559141",
+      "source": {
+        "bundle": "defaultpackage_share_03ce017337f6b663bd88db2ec0a05b55.bundle",
+        "bundle_hash": "d30ae13439e55ac44400a4e04326be2b",
+        "path_id": "-6160978803773559141",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d30ae13439e55ac44400a4e04326be2b.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 61222,
+        "bundle_sha256": "f6454ef3406df085a40fd314d5fccf95f043fbdc4a7e92f0e7920fb6ee31426d"
+      },
+      "object_raw_sha256": "87e8629898342c5344e8d4dac18940c4c7ed5dc4c999675c5b388e49242ea7db"
+    },
+    {
+      "entityClassId": 6650,
+      "field": "mEndInteractionPlayable",
+      "name": "multistele_dis_playable",
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "7080318833739824495",
+      "source": {
+        "bundle": "defaultpackage_share_03ce017337f6b663bd88db2ec0a05b55.bundle",
+        "bundle_hash": "d30ae13439e55ac44400a4e04326be2b",
+        "path_id": "7080318833739824495",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d30ae13439e55ac44400a4e04326be2b.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 61222,
+        "bundle_sha256": "f6454ef3406df085a40fd314d5fccf95f043fbdc4a7e92f0e7920fb6ee31426d"
+      },
+      "object_raw_sha256": "0970d803872656ac36875b4042391187a14e92069c7a8e35daf9f4ad8bc6b069"
+    },
+    {
+      "entityClassId": 6655,
+      "field": "mCanInteractionPlayable",
+      "name": "singlestele_loop_playable",
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-5194250875956297176",
+      "source": {
+        "bundle": "defaultpackage_share_03ce017337f6b663bd88db2ec0a05b55.bundle",
+        "bundle_hash": "d30ae13439e55ac44400a4e04326be2b",
+        "path_id": "-5194250875956297176",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d30ae13439e55ac44400a4e04326be2b.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 61222,
+        "bundle_sha256": "f6454ef3406df085a40fd314d5fccf95f043fbdc4a7e92f0e7920fb6ee31426d"
+      },
+      "object_raw_sha256": "787f13a7cd2bd00f5254d8a3b5ac96e98cafd32d5c9d9c210395976016adfd4a"
+    },
+    {
+      "entityClassId": 6655,
+      "field": "mEndInteractionPlayable",
+      "name": "singlestele_dis_playable",
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-3387268642415751169",
+      "source": {
+        "bundle": "defaultpackage_share_03ce017337f6b663bd88db2ec0a05b55.bundle",
+        "bundle_hash": "d30ae13439e55ac44400a4e04326be2b",
+        "path_id": "-3387268642415751169",
+        "origin": "official_cdn",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/d30ae13439e55ac44400a4e04326be2b.bundle",
+        "manifest": "871_156598",
+        "source_manifest": "854_156383",
+        "bundle_size": 61222,
+        "bundle_sha256": "f6454ef3406df085a40fd314d5fccf95f043fbdc4a7e92f0e7920fb6ee31426d"
+      },
+      "object_raw_sha256": "0f93a1cfddafb266ed7dea2d0e52dfea30e03c54859f92d6d1da2ce9622f99aa"
+    }
+  ],
+  "components": [
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-8195664506203361637",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "54c67791bfa6e827520659d712ca00500f4953aa56c93ebfd62dd173d3e48f4b",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5793745289343422821
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-6963771709031711377",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "abb28fc8f2a9b47c9c6eae680b63656218ef2f0deb7634d14dd93fa049d2b669",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1711282301115499153
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-6288545556520173016",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "fb0f299303b8269b895806ad3d47719a5e8f6ce7e86405c38788f93242db884b",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6813879277072481752
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-5523763107120414168",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "b20906b0e0d531bc111e771f80b2e2ecce666fe900916e3731075421d807ab22",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -287510897223335384
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 6754010386562220584
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": -0.013000000268220901,
+            "y": 0.07750000059604645,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 0.8999999761581421
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": -1.0,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-4508916789504180881",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "8b03cb6b08fa4c380b7bf7f922a8e851b17544a2dbd5f760ee65c0c1f59b936b",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3817703171258514799
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": -5409577275670069905
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": 0.010999999940395355,
+            "y": -0.2770000100135803,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 1.0
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": 1.850000023841858,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-3580111977962734225",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.MyPlayableSequence",
+      "payload_sha256": "1b325bd5f304cae3807dfefd8d1faa978e4482a16f91f95d173838459e7c760c",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 7080318833739824495
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -4508916789504180881
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-3419962493558960129",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "c3473b30ec3d9e3017e999a3e0bcba198323f3bda4fbecb15f680216c645f20e",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4668544158501416961
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": -2314947911219392513
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": -0.010999999940395355,
+            "y": 0.014000000432133675,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 0.800000011920929
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": 1.850000023841858,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-2254723466713083905",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "e4020d8a889d9dfa5337f7ba4c6ca68290f07cd78c9c8582d712211d8afd69a4",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -4668544158501416961
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-1583539610371117413",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "af9799540ce925cab9195cbbce28e476ed509b0bd3c2adc0eef3f1bc6c4b2a98",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8235083217414541669
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-1339256587895176664",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "580119e7416bcd2310930f8b5d8cbfcc06c08553958608fa615a094b64d57989",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -287510897223335384
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-540600947959353701",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "dbb0246e4d27f0a5f7182a03473d2ff376726ca656b3f74cf2e280df6d157405",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8235083217414541669
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 2408707823479336603
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": 0.010999999940395355,
+            "y": -0.2770000100135803,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 1.0
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": -1.0,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "-417646808729038849",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "aa18f76e7573f7a022682fde939db63e2d6131fc3e6fc8c99672ed6af4e857dd",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 6362382101281656831
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 5859816178282811391
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": -0.013000000268220901,
+            "y": 0.07750000059604645,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 0.8999999761581421
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": 1.850000023841858,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "1529011921975488155",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "e8128c0f34a900badf286cf2e375ea63a9a70f2b56943debbd6a755b9d5b0d74",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5793745289343422821
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 6294638618490613403
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": 0.010999999940395355,
+            "y": -0.2770000100135803,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 1.0
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": -1.0,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "2617066249027321199",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "4b3c01e33361c9443782bf50921d4f8e1144c637f4e026b268b0c9dbdbe3004f",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -1711282301115499153
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 2110334319183199599
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": 0.010999999940395355,
+            "y": -0.2770000100135803,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 1.0
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": 1.850000023841858,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "4747396557080735387",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.MyPlayableSequence",
+      "payload_sha256": "d1550698ada0fabe7964052c5b91bb7629201acc892995eca8bdcd6fc931d667",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6160978803773559141
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": 1529011921975488155
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "5343473229252590959",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "0387415ad2edfa91d4844a552ddc6c6daa1649dfd8166c39425d332a2382a8bf",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 3817703171258514799
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "6034796028572880895",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.ApplyEnableOnPlay",
+      "payload_sha256": "f87e978825973b6ddb1f4e0417ed684c4238371c027f5f57d380c823ea685f6b",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": 6362382101281656831
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 6388509206121812930
+        },
+        "m_Name": ""
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "7094845597472083967",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.MyPlayableSequence",
+      "payload_sha256": "411d2a03583534bdfb3fbf660cc8339c312d2db29a5aa3a70d5e839a3b7c9bf0",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -3387268642415751169
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -417646808729038849
+            }
+          }
+        ]
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "7280305952565559848",
+      "assembly": "Assembly-CSharp",
+      "type": "MyPlayableAttachToBone",
+      "payload_sha256": "5481aaf8bd443cae0fd27ebaeb8847403046262f1d374f63b3c4ac71259dd645",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -6813879277072481752
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8329834839090446214
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": -442845898724015576
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myAttach": {
+          "AttachTo": 0,
+          "myBoneName": "CommonEffectSlot",
+          "myOffset": {
+            "x": -0.010999999940395355,
+            "y": 0.014000000432133675,
+            "z": 0.0
+          },
+          "myRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+          },
+          "myScale": 0.800000011920929
+        },
+        "IsFollowShowHideNode": 0,
+        "myDuration": -1.0,
+        "mIsOpenStateMutex": 0,
+        "mStateMutexUniqueId": "",
+        "mMutexAction": 2
+      }
+    },
+    {
+      "cab": "CAB-bc32cc1ae2f7f6b821e4855fcb47278e",
+      "path_id": "7954108721655448104",
+      "assembly": "GameFramework.Runtime",
+      "type": "GameFramework.MyPlayableSequence",
+      "payload_sha256": "387a34697705d42c7ddc80b7cd0c82ea0e22cd83fc2cf9161e90a4b5e17299dc",
+      "fields": {
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -5194250875956297176
+        },
+        "m_Enabled": 1,
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": -8433484863279068627
+        },
+        "m_Name": "",
+        "Prefab": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "mySource": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myTarget": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myApplyComponent": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "myEndDestroy": 1,
+        "DestroyOnRemove": 1,
+        "mySpeed": 1.0,
+        "myFadeInDuration": 0.0,
+        "myFadeOutDuration": 0.0,
+        "myTriggerList": [],
+        "myFadeoutTrigerList": [],
+        "myEndTrigerList": [],
+        "myPlayables": [
+          {
+            "myTime": 0.0,
+            "myPlayable": {
+              "m_FileID": 0,
+              "m_PathID": -5523763107120414168
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
