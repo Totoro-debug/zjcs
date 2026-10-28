@@ -356,6 +356,7 @@ namespace Zjcs.Presentation.World
 
             int nextUnitId = 2;
             bool mountLift = mapClassId == 12 && entity?.PlacementId == 3501 && stage.Id == 102;
+            var stele = FindMap12Stele(entity);
             OfficialMap12Building building = null;
             (int level, int subRank) buildingLevel = default;
             if (mountLift)
@@ -370,12 +371,13 @@ namespace Zjcs.Presentation.World
                 foreach (Map10RuntimeMonster source in sourceWave.Units)
                 {
                     int monsterLevel = mountLift ? Mathf.RoundToInt(buildingLevel.level + building.StageLevelAdd + source.LevelOffset)
+                        : stele != null ? Mathf.RoundToInt(stele.RegionLevel + source.LevelOffset)
                         : stage.AwardUsePlayerLevelAndSubRank
                         ? Mathf.RoundToInt(progression.Player.Level + source.LevelOffset)
                         : Mathf.RoundToInt(source.Level);
-                    int monsterSubRank = mountLift ? buildingLevel.subRank : stage.AwardUsePlayerLevelAndSubRank
+                    int monsterSubRank = mountLift ? buildingLevel.subRank : stele != null ? stele.RegionSubRank : stage.AwardUsePlayerLevelAndSubRank
                         ? progression.Player.SubRank : source.SubRank;
-                    Dictionary<int, long> properties = mountLift || stage.AwardUsePlayerLevelAndSubRank
+                    Dictionary<int, long> properties = mountLift || stele != null || stage.AwardUsePlayerLevelAndSubRank
                         ? new Dictionary<int, long>(combatCatalog.CalculateMonsterProps(source.MonsterId,
                             source.MonsterGroupNo, monsterLevel, monsterSubRank))
                         : source.Properties.ToDictionary(value => value.Id, value => value.Value);
@@ -584,6 +586,7 @@ namespace Zjcs.Presentation.World
             }
             bool won = outcome != null && outcome.Won;
             if (!SettleMap12MountLiftBattle(entity, checkpoint.StageId, won)) return;
+            if (!SettleMap12SteleBattle(entity, checkpoint.StageId, won)) return;
             stamina.FinishStaminaBattle(entity, won);
             if (entity != null)
             {
@@ -617,8 +620,10 @@ namespace Zjcs.Presentation.World
                 }
                 if (won)
                 {
-                    string winReceipt = MapReceiptPrefix + slotId + ":stage-win:" + checkpoint.StageId + ":"
-                        + localSave.battleResults.Length;
+                    string winReceipt = FindMap12Stele(entity) != null
+                        ? OfficialMap12SteleCatalog.WinReceipt(entity.PlacementId)
+                        : MapReceiptPrefix + slotId + ":stage-win:" + checkpoint.StageId + ":"
+                            + localSave.battleResults.Length;
                     ProgressionResult win = progressionSave.RecordStageWin(checkpoint.StageId, winReceipt);
                     if (win.Status == ProgressionResultStatus.InvalidState)
                         throw new InvalidOperationException(win.Message);

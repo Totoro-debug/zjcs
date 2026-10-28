@@ -1,0 +1,262 @@
+{
+  "adapters": [
+    {
+      "path": "scripts/prepare_unity_map12_steles.py",
+      "sha256": "5cc24c1ce84768b7a4224082a3065117c97acf435d6d333fabaad3588b2ce9b5"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/Progression/OfflineWorldExplorationService.Map12Steles.cs",
+      "sha256": "1ce1c3584861dc8dd02190f945bae108be66cb7df7ec813e1ac8b589fe3619be"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Presentation/World/Mainline/OfficialMainlineMapRuntime.Map12Steles.cs",
+      "sha256": "f198b244815221fb4a4c372eac76347fb42caae34a002d857c80548d697e0b25"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/OfficialMap12PlayModeAcceptance.Steles.cs",
+      "sha256": "f5e7a8efadb05c3a8759c9116e77647bd9f41e8c9634a39555c02b2f4e65e001"
+    }
+  ],
+  "assemblies": {
+    "Assembly-CSharp.dll": {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    "Console.dll": {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  },
+  "emptyRewardRuleIds": [
+    1850,
+    1853
+  ],
+  "emptyRuleBehavior": "Selected complete reward table lacks these IDs; original RewardRuleInfoParser.Get returns null, so no invented reward is added.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map12-source-manifest.json",
+      "sha256": "2ab3d830767e5d157b3f689e93679a1716a3c44e0dbc07af36622df90f747eda"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/tables.json",
+      "sha256": "885bb1d57aa0bcb6e63352df48d974b333d1990bfe088efb5d5c3c3cb7a54653"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/entities.json",
+      "sha256": "aea214a11f02f23b522ecc7b99a58ac4a53bad3de758f801bdbbd711263190db"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/templates.json",
+      "sha256": "fe5c8ece6925a1eb80dc1bfea8da8064398337fd44b147788a2d1ffa12c32f4e"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-entities.json",
+      "sha256": "939556a5cecfa92d7fd50518ee59d6473da51030f477089ff7d53c38e559894a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/map12-battles.json",
+      "sha256": "07b5b481782651fedeea0e5d862728c9b254cb5f7c89187c91d233477668e33e"
+    },
+    {
+      "sha256": "bb036852e797177f2a845865136dcd30657a2defe8b3899d414b8764ff7eb1ee",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "7169546492845704538",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "reward_rule"
+    },
+    {
+      "sha256": "613e4f36d3216f520fe0c88e2a6886e29f8708dd30eb16cfd4cdfdef55962173",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-1310591482892603796",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "stage"
+    },
+    {
+      "sha256": "34aa50255e338873f47935e76713eaf22b8e2a5d11fc0683befaed739858b61d",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "5102655057011860899",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "stage_battle_stele"
+    },
+    {
+      "sha256": "bcde5ee7fbccd70a7e2dc1cd8bd359f03f6451ac25e91efbe03debe784a1cdc0",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-1712766129476874355",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "game_play_mode"
+    },
+    {
+      "sha256": "07b8e9400e89722fa35ee8d6ac9ff693f00b24cdfd8da2ad91589673989c347e",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-3869022733471997335",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "game_settings"
+    },
+    {
+      "sha256": "bccacf510a0124703ffc77776014d07cdce575ea92317008595d10c2cec03034",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "3644532119292667704",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "item"
+    },
+    {
+      "sha256": "2c25816ee2fa3a1490224514e55b6daa3cc19d248e9167fc59024820d502e69a",
+      "source": {
+        "bundle": "defaultpackage_assets_config_luban.bundle",
+        "bundle_hash": "e04fddc7c66a3ec739276f0e0a270715",
+        "bundle_sha256": "c48baf0dc6d594a11444db97ad55918727c2cd3f3b91a3e8ce5e9e503f448619",
+        "bundle_size": 2143410,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "3530266630744679519",
+        "url": "https://zhangjcsdl.leiting.com/patch/202610211330871/Android/DefaultPackage/e04fddc7c66a3ec739276f0e0a270715.bundle"
+      },
+      "table": "random_reward"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/BattleSteleWorldStageDialog.cs",
+      "sha256": "ef598748bd3cebd2378f10cad13eb2f439209d6a065dfe18d9625e08be3a30de"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WorldSteleStageInput.cs",
+      "sha256": "c9e1cf7c3debe90b7e014668c10608d87c34cc2f2c126e4883be69fc90d748b7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageView.cs",
+      "sha256": "2a796819c975254e9c1ef9c6cd0201a4176dcea8a11b57d5c22bcc872b377881"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageCfgNormalProvider.cs",
+      "sha256": "080fe1af826f6fa94777aa115af0b44b86677e5ba14ade9dbb720baba4bd2447"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ECWorldStageInteractionOperationWindow.cs",
+      "sha256": "12c68fdd7e508c487427b6d2eedadc955e7004bc8569bc04b5bf880e8b23b50a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/UILogicUtils.cs",
+      "sha256": "8e3c7c41dc1aada79b7f6caa949847ebf35a8b3845ddcfdae2c6df02767e370f"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageBehStageBattleSteleComponent.cs",
+      "sha256": "3825ca80536acdb3551eaea2e04aab49db282cb2cb8ad9b50a7a4452d2d1bedd"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StageConPlayerPeriodicityInteractionComponent.cs",
+      "sha256": "1b237a5860c8f6a5f16c7c0a889c705f019f060e1d219859d0230e29f447b75b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/MapPeriodicityInteractionInfoParser.cs",
+      "sha256": "2a881190c695688d6a8caf772833ad99ebab8e559a93351c89a67383d545c4f3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/StagePartInfoBattleStele.cs",
+      "sha256": "5768b58c75e3d752644b04efa65b17bb65ce2a193892fa7b08672f7d4b9084ff"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldEntityLevelComponent.cs",
+      "sha256": "24093c29a3a98da73ae69bb8705fe314a5281886868b8b3603b1501513b02775"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/RewardRuleInfoParser.cs",
+      "sha256": "bea03202bc2f5a4c661789548d7bef5f3b3a98a0d8881c9b2d6dd78092ef474d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/FormulaHandler.cs",
+      "sha256": "1c9d25ef741f342b419a85f53ed3287a7c86a7397847a6170176a62276fbce98"
+    }
+  ],
+  "limitations": [
+    "Dedicated native BattleSteleWorldStageDialog and NPC-team input still require migration and runtime acceptance.",
+    "Runtime acceptance is paused by the user; this receipt does not prove Play Mode or Player behavior."
+  ],
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "nativeSources": [
+    {
+      "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldgameplay.bundle",
+      "bundle_hash": "343d906c6e2db5185ad209de8da02b8c",
+      "bundle_sha256": "5b7e591e6bceb7ee03dae3e883817e86d29f042aad1a47174e4cad8b7fc0bbe4",
+      "bundle_size": 39012,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path_id": "1426876232665358354",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/343d906c6e2db5185ad209de8da02b8c.bundle"
+    },
+    {
+      "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldgameplay.bundle",
+      "bundle_hash": "343d906c6e2db5185ad209de8da02b8c",
+      "bundle_sha256": "5b7e591e6bceb7ee03dae3e883817e86d29f042aad1a47174e4cad8b7fc0bbe4",
+      "bundle_size": 39012,
+      "manifest": "871_156598",
+      "origin": "official_cdn",
+      "path_id": "-497571002071623113",
+      "source_manifest": "854_156383",
+      "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/343d906c6e2db5185ad209de8da02b8c.bundle"
+    }
+  ],
+  "offlinePolicy": "User confirmed stele entity level/rank inherit its own region; original monster +7 and formation offsets; existing confirmed map reward rules.",
+  "outputMetadata": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json.meta",
+      "sha256": "3f3cbc4bfb2429b9a187a9bf75897443b4a9be3eeabc7e2768e47d9125d19fcd"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/stele-operations.json.meta",
+      "sha256": "362e92bcb5225b047f3675e8704a8bce4caff4257e897ad220059022403bfa97"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/12/Resources/Map12/steles.json",
+      "sha256": "77957658a9ae12d24594feef3219b1cb64ac4aaf9b54dcbcc0d1da672b639b3a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/12/Source/stele-operations.json",
+      "sha256": "03c76a66b7e06eb8d23683ece9273ee2ec6b4180a6000774303f054f54a0a495"
+    }
+  ]
+}

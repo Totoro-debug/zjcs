@@ -46,6 +46,7 @@ namespace Zjcs.Presentation.World
             localSave.nativeDialogAwardReceipts ??= Array.Empty<string>();
             localSave.battleResults ??= Array.Empty<Map10RuntimeBattleResult>();
             RecoverMap12ChestCompletions();
+            RecoverMap12SteleCompletions();
         }
 
         private void SaveLocalProgress()

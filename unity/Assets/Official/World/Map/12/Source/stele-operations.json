@@ -1,0 +1,391 @@
+{
+  "Displays": [
+    {
+      "EntityClassId": 6650,
+      "fields": {
+        "mECViews": [
+          {
+            "rid": 2599924046228357142
+          },
+          {
+            "rid": 2599924546008252449
+          },
+          {
+            "rid": 8887979446731014200
+          },
+          {
+            "rid": 1172014892527648768
+          }
+        ],
+        "m_Enabled": 1,
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -8618333079236681710
+        },
+        "m_Name": "",
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "EntityIcon": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "StageSwitcher": {
+                  "mOwner": {
+                    "m_FileID": 0,
+                    "m_PathID": -8618333079236681710
+                  },
+                  "mStateConfigs": []
+                },
+                "mCanInteractAfterMove": 1,
+                "mWorldStageCfgProviderData": {
+                  "ECWorldStageCfgProvider": {
+                    "rid": 1172014892527648771
+                  }
+                }
+              },
+              "rid": 1172014892527648768,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mStateCfgs": [
+                  {
+                    "InteractionOperation": {
+                      "InteractionOperation": {
+                        "rid": 1172014892527648772
+                      }
+                    },
+                    "myLoopPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "myStartPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "myUIName": ""
+                  }
+                ]
+              },
+              "rid": 1172014892527648771,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageCfgNormalProvider",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mClickDatas": [],
+                "mIsReport": 0,
+                "mSDKEventPanelId": 0,
+                "mWindowName": "WorldMap/BattleSteleWorldStageDialog"
+              },
+              "rid": 1172014892527648772,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageInteractionOperationWindow",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mCanInteractionPlayable": {
+                  "m_FileID": 24,
+                  "m_PathID": -6160978803773559141
+                },
+                "mEndInteractionPlayable": {
+                  "m_FileID": 24,
+                  "m_PathID": 7080318833739824495
+                }
+              },
+              "rid": 2599924046228357142,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECPeriodicityInteractionStateView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "Configs": {
+                  "Values": [
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": -7841569761566892014
+                      },
+                      "BoneName": "6650_12_view"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 3630922220937306130
+                      },
+                      "BoneName": "Model"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 927479008908107794
+                      },
+                      "BoneName": "Statues"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 4087570831617056786
+                      },
+                      "BoneName": "CommonEffectSlot"
+                    }
+                  ]
+                }
+              },
+              "rid": 2599924546008252449,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECAttachAgentView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mClientOverrideEntityDimensionBounds": [],
+                "mFlipTransform": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mOffsetZ": 0.0,
+                "mOffsetZPerX": 0.0010000000474974513,
+                "mSetZ": 1,
+                "mUpdatePosImmediately": 0
+              },
+              "rid": 8887979446731014200,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECGridTransformView",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldgameplay.bundle",
+        "bundle_hash": "343d906c6e2db5185ad209de8da02b8c",
+        "bundle_sha256": "5b7e591e6bceb7ee03dae3e883817e86d29f042aad1a47174e4cad8b7fc0bbe4",
+        "bundle_size": 39012,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "1426876232665358354",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/343d906c6e2db5185ad209de8da02b8c.bundle"
+      }
+    },
+    {
+      "EntityClassId": 6655,
+      "fields": {
+        "mECViews": [
+          {
+            "rid": 2599924046228357142
+          },
+          {
+            "rid": 2599924546008252450
+          },
+          {
+            "rid": 8887979446731014202
+          },
+          {
+            "rid": 5802968684805488943
+          }
+        ],
+        "m_Enabled": 1,
+        "m_GameObject": {
+          "m_FileID": 0,
+          "m_PathID": -2656386750380352969
+        },
+        "m_Name": "",
+        "m_Script": {
+          "m_FileID": 0,
+          "m_PathID": 2491674463829926342
+        },
+        "references": {
+          "RefIds": [
+            {
+              "data": {
+                "mCanInteractionPlayable": {
+                  "m_FileID": 24,
+                  "m_PathID": -5194250875956297176
+                },
+                "mEndInteractionPlayable": {
+                  "m_FileID": 24,
+                  "m_PathID": -3387268642415751169
+                }
+              },
+              "rid": 2599924046228357142,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECPeriodicityInteractionStateView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "Configs": {
+                  "Values": [
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 5984784128636705335
+                      },
+                      "BoneName": "6655_12_view"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 6115471780150336055
+                      },
+                      "BoneName": "Model"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": -8382630609687651785
+                      },
+                      "BoneName": "Statues"
+                    },
+                    {
+                      "Bone": {
+                        "m_FileID": 0,
+                        "m_PathID": 3133599304416320055
+                      },
+                      "BoneName": "CommonEffectSlot"
+                    }
+                  ]
+                }
+              },
+              "rid": 2599924546008252450,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECAttachAgentView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "EntityIcon": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "StageSwitcher": {
+                  "mOwner": {
+                    "m_FileID": 0,
+                    "m_PathID": -2656386750380352969
+                  },
+                  "mStateConfigs": []
+                },
+                "mCanInteractAfterMove": 1,
+                "mWorldStageCfgProviderData": {
+                  "ECWorldStageCfgProvider": {
+                    "rid": 5802968684805488945
+                  }
+                }
+              },
+              "rid": 5802968684805488943,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageView",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mStateCfgs": [
+                  {
+                    "InteractionOperation": {
+                      "InteractionOperation": {
+                        "rid": 5802968684805488946
+                      }
+                    },
+                    "myLoopPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "myStartPlayable": {
+                      "m_FileID": 0,
+                      "m_PathID": 0
+                    },
+                    "myUIName": ""
+                  }
+                ]
+              },
+              "rid": 5802968684805488945,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageCfgNormalProvider",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mClickDatas": [],
+                "mIsReport": 0,
+                "mSDKEventPanelId": 0,
+                "mWindowName": "WorldMap/BattleSteleWorldStageDialog"
+              },
+              "rid": 5802968684805488946,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECWorldStageInteractionOperationWindow",
+                "ns": ""
+              }
+            },
+            {
+              "data": {
+                "mClientOverrideEntityDimensionBounds": [],
+                "mFlipTransform": {
+                  "m_FileID": 0,
+                  "m_PathID": 0
+                },
+                "mOffsetZ": 0.0,
+                "mOffsetZPerX": 0.0010000000474974513,
+                "mSetZ": 1,
+                "mUpdatePosImmediately": 0
+              },
+              "rid": 8887979446731014202,
+              "type": {
+                "asm": "Assembly-CSharp",
+                "class": "ECGridTransformView",
+                "ns": ""
+              }
+            }
+          ],
+          "version": 2
+        }
+      },
+      "source": {
+        "bundle": "defaultpackage_assets_prefabs_map_map_12_entitydisplays_worldgameplay.bundle",
+        "bundle_hash": "343d906c6e2db5185ad209de8da02b8c",
+        "bundle_sha256": "5b7e591e6bceb7ee03dae3e883817e86d29f042aad1a47174e4cad8b7fc0bbe4",
+        "bundle_size": 39012,
+        "manifest": "871_156598",
+        "origin": "official_cdn",
+        "path_id": "-497571002071623113",
+        "source_manifest": "854_156383",
+        "url": "https://zhangjcsdl.leiting.com/patch/202609271456857/Android/DefaultPackage/343d906c6e2db5185ad209de8da02b8c.bundle"
+      }
+    }
+  ],
+  "manifest": "871_156598"
+}
