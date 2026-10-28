@@ -24,7 +24,12 @@ namespace Zjcs.Editor.Map14
         {
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_AUTOMATION", "1");
             Environment.SetEnvironmentVariable("ZJCS_BATTLE_INPUT_SIMULATED", "1");
-            Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
+            if (Environment.GetEnvironmentVariable("ZJCS_ISOLATED_NATIVE_MAP14_HOST") == "1")
+                Debug.Log("Explicit native Map14 host assembly isolation; full ProjectTools.Validate is not executed.");
+            else Type.GetType("Zjcs.Editor.ProjectTools, Zjcs.Editor", true).GetMethod("Validate").Invoke(null, null);
+            if (!SortingLayer.IsValid(540003499) || !SortingLayer.IsValid(1182434123) ||
+                !SortingLayer.IsValid(unchecked((int)3372647923)))
+                throw new InvalidDataException("The native map check requires the original Ground/Object/Cloud sorting layers from ProjectSettings/TagManager.asset.");
             SessionState.SetInt(Key + ".color", (int)PlayerSettings.colorSpace);
             PlayerSettings.colorSpace = ColorSpace.Linear;
             SessionState.SetBool(Key, true);
@@ -73,7 +78,7 @@ namespace Zjcs.Editor.Map14
             if (errors == 0)
             {
                 SessionState.SetInt(Key + ".result", 0);
-                Debug.Log("Map14 production native host Play Mode passed: original terrain/environment/labels mounted together, initial position loading, live region state refresh, render captures, disposal and remount. Map interactions, progression saves, entities and Player release are not covered.");
+                Debug.Log("Map14 production native host Play Mode passed: original terrain/environment/labels and original shared nine-component root mounted together, initial position loading, live region state refresh, render captures, interrupted loading, disposal, binding restoration and remount. Map interactions, progression saves, world entity spawning and Player release are not covered.");
             }
             EditorApplication.isPlaying = false;
         }
@@ -87,10 +92,13 @@ namespace Zjcs.Editor.Map14
             var target = new RenderTexture(432, 768, 24, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             target.Create(); camera.targetTexture = target;
             var state = new State();
+            var originalBindings = SharedBindings();
+            int originalManagers = UnityEngine.Object.FindObjectsByType<GConfig.ConfigManager>(FindObjectsSortMode.None).Length;
             // Official default entry placement 101: grid (247,115), origin (-134.5,-134.5).
             state.Position = new Vector3(112.5f, -19.5f, 0);
             camera.transform.position = state.Position + new Vector3(0, 0, -100);
-            string output = Path.GetFullPath(Path.Combine(Application.dataPath, "../../.tools/map14-native-host-screens"));
+            string output = Environment.GetEnvironmentVariable("ZJCS_VALIDATION_DIR") ??
+                throw new InvalidOperationException("Set the owned validation directory before running the native host check.");
             Directory.CreateDirectory(output);
             OfficialMap14NativeWorldView view = OfficialMap14NativeWorldView.Create(null, camera, state);
             yield return WaitForHost(view, state.Position);
@@ -108,8 +116,10 @@ namespace Zjcs.Editor.Map14
             camera.transform.position = state.Position + new Vector3(0, 0, -100);
             yield return WaitForHost(view, state.Position);
             Capture(camera, target, Path.Combine(output, "central-public.png"));
+            var originalRoot = view.SharedRoot.Root;
             view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
             yield return null; yield return null;
+            RequireSharedCleanup(view, originalRoot, originalBindings, originalManagers);
             if (GraphicsSettings.defaultRenderPipeline != pipeline || QualitySettings.renderPipeline != quality)
                 throw new InvalidDataException("Map14 host did not restore previous pipelines.");
             if (camera.GetComponent<UniversalAdditionalCameraData>() != null)
@@ -117,8 +127,17 @@ namespace Zjcs.Editor.Map14
             view = OfficialMap14NativeWorldView.Create(null, camera, state);
             yield return WaitForHost(view, state.Position);
             Capture(camera, target, Path.Combine(output, "central-remount.png"));
+            originalRoot = view.SharedRoot.Root;
             view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
             yield return null; yield return null;
+            RequireSharedCleanup(view, originalRoot, originalBindings, originalManagers);
+            view = OfficialMap14NativeWorldView.Create(null, camera, state);
+            yield return null;
+            if (view.IsReady || view.SharedRoot != null)
+                throw new InvalidDataException("Interrupted-loading check did not interrupt shared map loading.");
+            view.Dispose(); UnityEngine.Object.Destroy(view.gameObject);
+            yield return null; yield return null;
+            RequireSharedCleanup(view, null, originalBindings, originalManagers);
             camera.targetTexture = null; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(cameraObject);
             if (errors != 0) throw new InvalidDataException("Map14 original host logged errors during its lifecycle.");
         }
@@ -129,6 +148,9 @@ namespace Zjcs.Editor.Map14
                 yield return null;
             if (!view.IsReady || !view.GroundRoot.PartitionController.Loader.IsPosReady(position))
                 throw new InvalidDataException("Map14 production host did not load its current position.");
+            if (view.SharedRoot == null || !(bool)view.SharedRoot.Root.GetType().GetField("Started").GetValue(view.SharedRoot.Root) ||
+                ((IList)view.SharedRoot.Root.GetType().GetField("ComponentList").GetValue(view.SharedRoot.Root)).Count != 9)
+                throw new InvalidDataException("Map14 production host did not start its complete original shared root.");
             for (int i = 0; i < 12; i++) yield return null;
             if (!view.GetComponentsInChildren<Renderer>().Any(renderer => renderer.enabled))
                 throw new InvalidDataException("Map14 host has no active original renderers.");
@@ -139,9 +161,28 @@ namespace Zjcs.Editor.Map14
             var texture = new Texture2D(target.width, target.height, TextureFormat.RGBA32, false, true);
             texture.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); texture.Apply();
             RenderTexture.active = previous;
+            File.WriteAllBytes(path, texture.EncodeToPNG());
             if (texture.GetPixels32().Select(color => color.r + 256 * color.g + 65536 * color.b).Distinct().Take(32).Count() < 32)
                 throw new InvalidDataException("Map14 world capture contains no rendered scene detail.");
-            File.WriteAllBytes(path, texture.EncodeToPNG()); UnityEngine.Object.Destroy(texture);
+            UnityEngine.Object.Destroy(texture);
+        }
+        private static object[] SharedBindings()
+        {
+            var console = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == "Console");
+            var serializer = Type.GetType("MessagePack.MessagePackSerializer, MessagePack", true);
+            return new[] { console?.GetType("Parsers", true).GetField("Instance").GetValue(null),
+                GConfig.FileLoader.sFileLoader, serializer.GetProperty("DefaultResolver").GetValue(null) };
+        }
+        private static void RequireSharedCleanup(OfficialMap14NativeWorldView view, object root, object[] expected, int managers)
+        {
+            var actual = SharedBindings();
+            if (!actual.Zip(expected, ReferenceEquals).All(value => value) ||
+                UnityEngine.Object.FindObjectsByType<GConfig.ConfigManager>(FindObjectsSortMode.None).Length != managers)
+                throw new InvalidDataException("Map14 host did not restore its original shared bindings and configuration lifetime.");
+            if (root != null && !(bool)root.GetType().GetField("Ended").GetValue(root))
+                throw new InvalidDataException("Map14 host did not end its original shared root.");
+            if (view != null && (view.SharedRoot != null || view.IsReady))
+                throw new InvalidDataException("Map14 disposed host still publishes a ready shared root.");
         }
         private sealed class State : IMap14NativeWorldState
         {

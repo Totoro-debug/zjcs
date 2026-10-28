@@ -11,6 +11,8 @@ using Zjcs.Offline.World.NativeEnvironment;
 using Zjcs.Offline.World.NativeMap13;
 using Zjcs.Offline.World.NativeMap14Labels;
 using Zjcs.Offline.World.NativePartition;
+using Zjcs.Offline.World.NativeMap14SharedEntities;
+using GConfig;
 using Zjcs.Official.World.NativeEnvironment;
 using Zjcs.Official.World.NativeMap14Labels;
 using Zjcs.Official.World.NativeLabelUI;
@@ -38,6 +40,7 @@ namespace Zjcs.Presentation.World.NativeMap14
     {
         public MapGroundRoot GroundRoot { get; private set; }
         public bool IsReady { get; private set; }
+        public NativeMap14SharedRoot SharedRoot { get; private set; }
 
         private NativeMap13AssetCatalog catalog;
         private Map14WorldEnvironment environment;
@@ -45,6 +48,9 @@ namespace Zjcs.Presentation.World.NativeMap14
         private RenderPipelineAsset previousPipeline, previousQuality;
         private bool pipelineBound, disposed;
         private UniversalAdditionalCameraData addedCameraData;
+        private NativeMap14SharedAssemblies sharedAssemblies;
+        private NativeMap14SharedConfiguration sharedConfiguration;
+        private NativeMap14SharedData sharedData;
 
         public static OfficialMap14NativeWorldView Create(Transform parent, Camera camera, IMap14NativeWorldState state)
         {
@@ -161,6 +167,21 @@ namespace Zjcs.Presentation.World.NativeMap14
 
         private IEnumerator LoadInitialPosition()
         {
+            var sharedCatalog = Resources.Load<NativeMap14SharedAssemblyCatalog>("Map14/Native/shared-assembly-catalog");
+            sharedAssemblies = new NativeMap14SharedAssemblies(sharedCatalog);
+            sharedConfiguration = new NativeMap14SharedConfiguration(sharedAssemblies);
+            sharedData = new NativeMap14SharedData(sharedAssemblies, sharedConfiguration);
+            // Finish each local synchronous parser job before yielding. An
+            // interrupted map load therefore leaves no outstanding config job.
+            var load = sharedData.LoadAll(false);
+            while (load.MoveNext())
+            {
+                if (load.Current is ConfigRequest request)
+                    sharedConfiguration.Manager.Wait(new[] { request });
+                yield return load.Current;
+            }
+            SharedRoot = new NativeMap14SharedRoot(sharedAssemblies, sharedConfiguration, sharedData, 14);
+            SharedRoot.Start();
             yield return GroundRoot.PartitionController.LoadByPlayerPos();
             IsReady = GroundRoot.PartitionController.Loader.IsPosReady(environment.PlayerWorldPosition);
         }
@@ -182,7 +203,35 @@ namespace Zjcs.Presentation.World.NativeMap14
         {
             if (disposed) return;
             disposed = true;
+            IsReady = false;
             StopAllCoroutines();
+            try { ReleaseSharedRoot(); }
+            finally { ReleaseWorldView(); }
+        }
+
+        private void ReleaseSharedRoot()
+        {
+            try { SharedRoot?.Dispose(); }
+            finally
+            {
+                SharedRoot = null;
+                try { sharedData?.Dispose(); }
+                finally
+                {
+                    sharedData = null;
+                    try { sharedConfiguration?.Dispose(); }
+                    finally
+                    {
+                        sharedConfiguration = null;
+                        sharedAssemblies?.Dispose();
+                        sharedAssemblies = null;
+                    }
+                }
+            }
+        }
+
+        private void ReleaseWorldView()
+        {
             if (GroundRoot)
             {
                 if (gameObject.activeInHierarchy)

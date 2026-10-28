@@ -2,8 +2,13 @@
   "format": 1,
   "mapClassId": 14,
   "manifest": "871_156598",
-  "operation": "Bind the existing original Map14 terrain, scene, environment and world-label resources to one runtime host; restore original three-coordinate origin validation and host cleanup. The runtime host does not enable the mainline map entry.",
+  "operation": "Bind original Map14 terrain, scene, environment, world labels and the original shared nine-component root to one runtime host. Load unchanged local shared map records, complete synchronous parser jobs before each yield, start the original root, and restore shared bindings during normal or interrupted disposal. The runtime host does not enable the mainline map entry.",
   "inputs": [
+    {
+      "path": "unity/ProjectSettings/TagManager.asset",
+      "sha256": "16fe6dfd6b07f8c0795e661509ec1fe0c31d2fdd917047efcf07fa44e4b3d5a9",
+      "hashLineEndings": "LF"
+    },
     {
       "path": "assets/reference/official-map/map14-native-terrain-binding-source-manifest.json",
       "sha256": "a715cb93cd7de57a6bf8293cfedd79d74c4bdb910710ba577d932fe71e9f7d3c"
@@ -75,6 +80,22 @@
     {
       "path": "assets/reference/official-map/map13-native-text-font-source-manifest.json",
       "sha256": "61d7a8dd4f21485b4a7b9cb4c02801ed396e886060ad21466d4fd25b9a4af2a5"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-config-source-manifest.json",
+      "sha256": "1f3296833ae477f487d24db4af0bc5971b6727a43a5faf2ebc07c1928fa8c288"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-serialization-source-manifest.json",
+      "sha256": "3dcff8ad82b193fdd90d631518d775ab6ab0ae23b0f964b6a659d2d16a6a413a"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-root-source-manifest.json",
+      "sha256": "8f5686665b9b2df4c475ebf137661c9f788c7175162606999f5f20228f878907"
+    },
+    {
+      "path": "assets/reference/official-map/map14-shared-ec-runtime-source-manifest.json",
+      "sha256": "29b6932d1dc5776580ea7d36c6808e7048d8446ab49cadfdab3b61bc5a25f8be"
     }
   ],
   "outputs": [
@@ -85,7 +106,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/OfficialMap14NativeWorldView.cs",
-      "sha256": "10a9e29011ab185e4b541e9fd4ab142eb82f50179987bf716ffeb7ea8e6ed465",
+      "sha256": "d3246dbf4dacda9a8e6b073568e0fbbb535e01a3c5f8b87fce57267c2499ac28",
       "hashLineEndings": "LF"
     },
     {
@@ -95,7 +116,7 @@
     },
     {
       "path": "unity/Assets/Game/Runtime/Presentation/World/NativeMap14/Zjcs.Presentation.World.NativeMap14.asmdef",
-      "sha256": "654d4aab7d05039aeed34a650eb4855ed679038aa5be4378f84bad4f54a646d3",
+      "sha256": "cb705fcf51cd17315438632fe65f2213f26c4573a562a91cd911e5ec24b51b73",
       "hashLineEndings": "LF"
     },
     {
@@ -110,7 +131,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map14/WorldHost/OfficialMap14NativeHostAcceptance.cs",
-      "sha256": "34b57a41f01f1bc1ba963105f52cb0a3032e78fdd23c3ac168ebcd75912406b8",
+      "sha256": "fa3f4d0ca7318d853c175a23531cb1136c3d82c77eeecc885ed368cd573ce494",
       "hashLineEndings": "LF"
     },
     {
@@ -120,7 +141,7 @@
     },
     {
       "path": "unity/Assets/Game/Editor/Map14/WorldHost/Zjcs.Editor.Map14.WorldHost.asmdef",
-      "sha256": "f83d06e149a7a8853f5041c8a99e5d36fb5f7290291e434180969df1a1784fbe",
+      "sha256": "1972550e439e0fa17dbf5976e6f52422f20fa36532d2dd899971e480cbfa27e5",
       "hashLineEndings": "LF"
     },
     {
@@ -131,7 +152,7 @@
   ],
   "generator": {
     "path": "scripts/record_unity_map14_native_host.py",
-    "sha256": "b4daa21f63ddc614787922f5288ae6818a92d5d9b8d76dbeea559cf7d8039ee8",
+    "sha256": "ad61e18835777708d90be9524f420aec189f6a8192cb99eafd53e42e7d91c805",
     "hashLineEndings": "LF"
   },
   "counts": {
@@ -139,14 +160,18 @@
     "terrainCatalog": 241,
     "sceneCatalog": 242,
     "environmentCatalog": 389,
-    "labelCatalog": 97
+    "labelCatalog": 97,
+    "sharedRootComponents": 9
   },
   "verificationMethod": "Zjcs.Editor.Map14.OfficialMap14NativeHostAcceptance.Run",
   "verificationScope": [
     "original default-entry rendering",
+    "original shared root startup",
     "live fixture region state refresh",
     "camera movement and partition loading",
     "dispose and remount",
+    "interrupted shared map loading",
+    "shared singleton, loader, resolver and configuration lifetime restoration",
     "pipeline and added camera component cleanup"
   ],
   "remaining": [

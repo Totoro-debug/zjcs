@@ -57,7 +57,7 @@ Map14 当前版战斗数据按已校验的 871 源收据与当前程序集重新
 
 Map14 辉／残影来源解码：`scripts/prepare_unity_map14_fightother_sources.py` 先核对官方 APK，再按当前 `871_156598` 清单解析 FightOther 4651／4652 的原 prefab、`SkeletonDataAsset`、组合皮肤、HSV、Animator／Controller；`map14-fightother-source-manifest.json` 记录原对象与 schema、生成器及缓存输出哈希。原 NPC 骨骼与全部拆分动画使用固定 MIT 格式读取器解码，不使用 Spine runtime；皮肤骨骼和约束成员已补全，辉／残影分别保留 54／58 条物理约束。源缓存位于 `.tools/source-packages/current/871_156598/skeletons/npc_middle_model/`，尚未作为运行时模型或素材快照交付。
 
-Map14 统一原生宿主：`scripts/record_unity_map14_native_host.py` 核对原生地形／场景／环境／标签四份导入回执及实际目录、官方三维原点数据和共享原配置；来源与加载绑定见 `map14-native-host-source-manifest.json`。验证包含入口与跨位置加载、fixture 私有／公共状态刷新、卸载和重新挂载；正式地图入口、实体交互、进度存档及 Player 发布仍未覆盖。
+Map14 统一原生宿主：`OfficialMap14NativeWorldView` 将原生地形／场景／环境／标签与原共享容器根实体共同接入，读取 35 份本地原数据后启动完整 9 组件根实体，再开放就绪状态。每次让出加载协程前完成对应同步解析任务；正常卸载和加载中断均停止协程、结束根实体并恢复解析器、加载器、序列化器、配置管理器和渲染管线绑定。内置屏 Unity 2022.3.57f1c2／D3D11 隔离工程导入、编译及 Play Mode 已通过原入口、fixture 私有／公共状态刷新、跨位置分区加载、卸载重进、加载中断和全局绑定恢复，四张实际画面已查看，根工程静态检查通过。验证要求仓库的官方 Ground／Object／Cloud 排序层，入口已增加显式检查，避免隔离工程使用 Unity 默认排序层导致黑屏。来源、显式加载和输入输出哈希见[宿主来源清单](../../assets/reference/official-map/map14-native-host-source-manifest.json)，生成器 `scripts/record_unity_map14_native_host.py`，检查入口 `OfficialMap14NativeHostAcceptance.Run`。正式地图入口、实体生成与交互、真实地区进度、存档、完整 ProjectTools.Validate 和 Windows Player 仍未完成。
 
 - 龙之国通用 UI：`scripts/prepare_unity_map14_ui.py` 严格使用当前 `871_156598`、按 APK 优先解析原 prefab 与共享支持界面，恢复 68 个面板／956 张精灵。`scripts/record_unity_map14_ui.py` 记录本地 `Resources/Map14/UI/` 原生输出、源投影、精灵导入参数及转换代码哈希；来源为 `assets/reference/official-map/map14-ui-binding-source-manifest.json`。资源未生成完整素材快照，正式业务、粒子／音频与 Windows Player 仍待完成。
 

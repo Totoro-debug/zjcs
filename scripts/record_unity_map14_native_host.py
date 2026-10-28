@@ -26,7 +26,7 @@ def record(path, line_endings=None):
 
 
 def build():
-    inputs = []
+    inputs = [record(ROOT / "unity/ProjectSettings/TagManager.asset", "LF")]
     for name in ("terrain", "scene", "environment-scene", "region-labels"):
         path = ROOT / ("assets/reference/official-map/map14-native-" + name + "-binding-source-manifest.json")
         source = json.loads(path.read_bytes())
@@ -50,6 +50,15 @@ def build():
     inputs.extend((record(shared), record(Path(str(shared) + ".meta"))))
     for name in ("map14-label-components-code-source-manifest.json", "map13-native-text-font-source-manifest.json"):
         inputs.append(record(ROOT / "assets/reference/official-map" / name))
+    for name in ("config", "serialization", "root", "ec-runtime"):
+        path = ROOT / ("assets/reference/official-map/map14-shared-" + name + "-source-manifest.json")
+        source = json.loads(path.read_bytes())
+        if source["mapClassId"] != 14 or source["manifest"] != "871_156598":
+            raise ValueError("Map14 shared root source version differs: " + name)
+        for output in source["outputs"]:
+            if record(ROOT / output["path"])["sha256"] != output["sha256"]:
+                raise ValueError("Map14 shared root binding changed: " + output["path"])
+        inputs.append(record(path))
     outputs = []
     for folder in (RUNTIME, EDITOR):
         outputs.append(record(Path(str(folder) + ".meta"), "LF"))
@@ -57,11 +66,11 @@ def build():
             if path.is_file():
                 outputs.append(record(path, "LF"))
     receipt = dict(format=1, mapClassId=14, manifest="871_156598",
-                   operation="Bind the existing original Map14 terrain, scene, environment and world-label resources to one runtime host; restore original three-coordinate origin validation and host cleanup. The runtime host does not enable the mainline map entry.",
+                   operation="Bind original Map14 terrain, scene, environment, world labels and the original shared nine-component root to one runtime host. Load unchanged local shared map records, complete synchronous parser jobs before each yield, start the original root, and restore shared bindings during normal or interrupted disposal. The runtime host does not enable the mainline map entry.",
                    inputs=inputs, outputs=outputs, generator=record(Path(__file__).resolve(), "LF"),
-                   counts=dict(regions=111, terrainCatalog=241, sceneCatalog=242, environmentCatalog=389, labelCatalog=97),
+                   counts=dict(regions=111, terrainCatalog=241, sceneCatalog=242, environmentCatalog=389, labelCatalog=97, sharedRootComponents=9),
                    verificationMethod="Zjcs.Editor.Map14.OfficialMap14NativeHostAcceptance.Run",
-                   verificationScope=["original default-entry rendering", "live fixture region state refresh", "camera movement and partition loading", "dispose and remount", "pipeline and added camera component cleanup"],
+                   verificationScope=["original default-entry rendering", "original shared root startup", "live fixture region state refresh", "camera movement and partition loading", "dispose and remount", "interrupted shared map loading", "shared singleton, loader, resolver and configuration lifetime restoration", "pipeline and added camera component cleanup"],
                    remaining=["mainline entry", "real map state and saves", "map entities", "pointer interaction", "Windows Player release"])
     RECEIPT.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print("Recorded Map14 native host: " + str(len(inputs)) + " inputs and " + str(len(outputs)) + " code/metadata outputs")
