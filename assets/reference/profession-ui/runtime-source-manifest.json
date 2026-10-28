@@ -244,7 +244,7 @@
   },
   "skeleton_data": {
     "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
-    "sha256": "cb19b214c1103931fd71ff77764351ab92e2dcdf312cc2823d23811059d00d3e"
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
   },
   "world_inheritance": {
     "path": "assets/reference/profession-ui/world-inheritance-source-manifest.json",
@@ -257,6 +257,10 @@
   "character_textures": {
     "path": "assets/reference/profession-ui/character-textures-source-manifest.json",
     "sha256": "601f70b18e589336b7a0b60676b505e3aaa131cdd3314e2ec470949d921f8dc7"
+  },
+  "runtime_timelines": {
+    "path": "assets/reference/profession-ui/runtime-timelines-source-manifest.json",
+    "sha256": "0e511225eda42066e37d16fe3943d8df27190cc1d752567ee83d721407f9c6c8"
   },
   "image_resources": {
     "path": "assets/reference/profession-ui/image-resource-source-manifest.json",
@@ -448,7 +452,7 @@
   },
   "recorder": {
     "path": "scripts/record_unity_profession_runtime_sources.py",
-    "sha256": "c8c7c36253b3c748b8d505e1bfba0491d4e0b35515c2262073e372b3c1dac79c"
+    "sha256": "536eb77cc8be412b3bb030474db30cd06ae62203b7ee2785ab2250d5e3f22b10"
   },
   "limitations": [
     "Native prefab runtime scripts and dynamic resource bindings remain incomplete; these ports are not exercised in the profession Play Mode UI flow.",

@@ -169,6 +169,83 @@ namespace Zjcs.Offline.ProfessionUI
         public ProfessionNativeBonePose CreateBonePose() => new ProfessionNativeBonePose(bones);
         public ProfessionNativeSlotPose CreateSlotPose(ProfessionNativeBonePose pose) => new ProfessionNativeSlotPose(slots, pose);
         public IReadOnlyDictionary<string, object> GetAnimation(string name) => Object(animations[name]);
+        public ProfessionNativeSlotPose.Clip CreateSlotClip(string animationName)
+        {
+            var animation = Object(animations[animationName]);
+            var tracks = new List<ProfessionNativeSlotPose.AttachmentTrack>();
+            foreach (var slot in OptionalObject(animation, "slots"))
+                foreach (var channel in Object(slot.Value))
+                {
+                    if (channel.Key != "attachment") throw new NotSupportedException("Restore additional original slot timeline: " + channel.Key);
+                    tracks.Add(new ProfessionNativeSlotPose.AttachmentTrack { slot = slotIndices[slot.Key], keys = Array(channel.Value).Select(v =>
+                    {
+                        var row = Object(v);
+                        return new ProfessionNativeSlotPose.AttachmentKey { time = Number(row, "time"), name = Text(row, "name", null) };
+                    }).ToArray() });
+                }
+            var order = new List<ProfessionNativeSlotPose.DrawOrderKey>();
+            foreach (var value in OptionalArray(animation, "drawOrder"))
+            {
+                var row = Object(value); var offsets = OptionalArray(row, "offsets");
+                var result = Enumerable.Repeat(-1, slots.Length).ToArray(); var unchanged = new List<int>();
+                int sourceIndex = 0;
+                foreach (var offsetValue in offsets)
+                {
+                    var offset = Object(offsetValue); int slot = slotIndices[Text(offset, "slot")];
+                    if (slot < sourceIndex) throw new InvalidDataException("Original draw offsets are out of source slot order.");
+                    while (sourceIndex < slot) unchanged.Add(sourceIndex++);
+                    // The format projection retains the unsigned varint bytes.
+                    // Convert its 32-bit two's-complement value explicitly.
+                    long raw = Convert.ToInt64(offset["offset"], CultureInfo.InvariantCulture);
+                    if (raw < int.MinValue || raw > uint.MaxValue) throw new InvalidDataException("Original draw offset is outside 32 bits.");
+                    int destination = sourceIndex + unchecked((int)raw);
+                    if (destination < 0 || destination >= slots.Length || result[destination] != -1)
+                        throw new InvalidDataException("Original draw offset is outside or overlaps the slot order.");
+                    result[destination] = sourceIndex++;
+                }
+                while (sourceIndex < slots.Length) unchanged.Add(sourceIndex++);
+                int next = 0;
+                for (int i = 0; i < result.Length; i++) if (result[i] == -1) result[i] = unchanged[next++];
+                order.Add(new ProfessionNativeSlotPose.DrawOrderKey { time = Number(row, "time"), slots = result });
+            }
+            return new ProfessionNativeSlotPose.Clip(slots.Length, tracks.ToArray(), order.ToArray());
+        }
+
+        public ProfessionNativeIdleIk.Constraint[] CreateIdleIk(string animationName, float time)
+        {
+            if (animationName != "home/idle_01" && animationName != "100/idle_01" && animationName != "200/idle_01")
+                throw new NotSupportedException("Verify additional original IK animation: " + animationName);
+            if (float.IsNaN(time) || float.IsInfinity(time)) throw new ArgumentException("Original IK time must be finite.");
+            var animation = OptionalObject(Object(animations[animationName]), "ik"); var result = new List<ProfessionNativeIdleIk.Constraint>();
+            var boneRows = Array(source["bones"]);
+            foreach (var definition in Constraints)
+            {
+                if (definition.Kind != "ik") continue;
+                var row = definition.Fields;
+                if (Boolean(row, "skin")) throw new NotSupportedException("Verify original skin-required IK binding: " + definition.Name);
+                var chain = Array(row["bones"]).Select(v => boneIndices[(string)v]).ToArray();
+                if (chain.Length < 1 || chain.Length > 2) throw new NotSupportedException("Verify original IK chain length.");
+                float mix = Number(row, "mix", 1), softness = Number(row, "softness");
+                bool bend = Boolean(row, "bendPositive", true), stretch = Boolean(row, "stretch"), compress = Boolean(row, "compress");
+                if (animation.TryGetValue(definition.Name, out var value))
+                {
+                    var keys = Array(value);
+                    if (keys.Count != 1) throw new NotSupportedException("Verify nonconstant original idle IK timeline: " + definition.Name);
+                    var key = Object(keys[0]);
+                    if (time >= Number(key, "time"))
+                    {
+                        mix = Number(key, "mix", 1); softness = Number(key, "softness");
+                        bend = Boolean(key, "bendPositive", true); stretch = Boolean(key, "stretch"); compress = Boolean(key, "compress");
+                    }
+                }
+                if (mix != 0 && (softness != 0 || stretch || compress))
+                    throw new NotSupportedException("Verify original soft/stretch/compress IK branch: " + definition.Name);
+                result.Add(new ProfessionNativeIdleIk.Constraint { name = definition.Name, order = (int)Number(row, "order"),
+                    bones = chain, target = boneIndices[Text(row, "target")], mix = mix, bendPositive = bend,
+                    childLength = chain.Length == 2 ? Number(Object(boneRows[chain[1]]), "length") : 0 });
+            }
+            return result.OrderBy(c => c.order).ToArray();
+        }
         public ProfessionNativeBonePose.Track[] CreateBoneTracks(string animationName)
         {
             var result = new List<ProfessionNativeBonePose.Track>();
@@ -243,9 +320,9 @@ namespace Zjcs.Offline.ProfessionUI
         private static List<object> Array(object value) => value as List<object> ?? throw new InvalidDataException("Expected an original data array.");
         private static IEnumerable<object> OptionalArray(Dictionary<string, object> value, string key) => value.TryGetValue(key, out var row) ? Array(row) : Enumerable.Empty<object>();
         private static Dictionary<string, object> OptionalObject(Dictionary<string, object> value, string key) => value.TryGetValue(key, out var row) ? Object(row) : new Dictionary<string, object>();
-        private static string Text(Dictionary<string, object> value, string key, string fallback = null) => value.TryGetValue(key, out var row) ? (string)row : fallback;
-        private static float Number(Dictionary<string, object> value, string key, float fallback = 0) => value.TryGetValue(key, out var row) ? Convert.ToSingle(row, CultureInfo.InvariantCulture) : fallback;
-        private static bool Boolean(Dictionary<string, object> value, string key) => value.TryGetValue(key, out var row) && (bool)row;
+        private static string Text(IReadOnlyDictionary<string, object> value, string key, string fallback = null) => value.TryGetValue(key, out var row) ? (string)row : fallback;
+        private static float Number(IReadOnlyDictionary<string, object> value, string key, float fallback = 0) => value.TryGetValue(key, out var row) ? Convert.ToSingle(row, CultureInfo.InvariantCulture) : fallback;
+        private static bool Boolean(IReadOnlyDictionary<string, object> value, string key, bool fallback = false) => value.TryGetValue(key, out var row) ? (bool)row : fallback;
         private static int Int(object value) => Convert.ToInt32(value, CultureInfo.InvariantCulture);
         private static float[] Floats(object value) => Array(value).Select(row => Convert.ToSingle(row, CultureInfo.InvariantCulture)).ToArray();
         private static Color32 Color(string value)

@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "packaged_data": {
+    "path": "assets/reference/profession-ui/skeleton-data-source-manifest.json",
+    "sha256": "5e97038f987d2760cfa49ceaab182d52fac67ae29b43681a4b6ad612e2fdcd34"
+  },
+  "independent_references": [
+    {
+      "source": {
+        "path": "assets/reference/profession-ui/slot-pose-source-manifest.json",
+        "sha256": "69e53f2ffb4576d63d664ddafbab9a6bc98d1d7f80e5a64e05ef242eb69195fb"
+      },
+      "fixture": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/slot-pose-validation.json",
+        "sha256": "c2bc64a5ac4e80c7e32441ad00c5a951b9c46393f9d7de41ebceb114470d28d3"
+      }
+    },
+    {
+      "source": {
+        "path": "assets/reference/profession-ui/idle-ik-source-manifest.json",
+        "sha256": "994d9e35475e5e618a284d71db5fe242fe958cab01e2c27ea72a4c2b080914b8"
+      },
+      "fixture": {
+        "path": ".tools/source-packages/current/871_156598/profession-ui/typed/idle-ik-validation.json",
+        "sha256": "304564bfc57e56fb54b8d7d6aa5a7fc9eeff8176320aedcd193ea28174fd5565"
+      }
+    }
+  ],
+  "runtime": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs",
+    "sha256": "d69331c36ab458d276fc67158c8c1d21e0ec348aa2490162bb56d114f47a0bd6"
+  },
+  "runtime_meta": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSkeletonData.cs.meta",
+    "sha256": "338a07265b6762a1bd4d963aaae5e4e29246a8d1a627c23c348187051fea6743"
+  },
+  "validation": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionRuntimeTimelineValidation.cs",
+    "sha256": "5aea1c69de63b299b2e5d4b781c60b105e104d81adfe4c31c8b13b9b62f8bc88"
+  },
+  "validation_meta": {
+    "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionRuntimeTimelineValidation.cs.meta",
+    "sha256": "f6cf8260c4303d834dd9bc92c1944490c417fa9c7d630cee1697577aa4bc6976"
+  },
+  "ik_solver": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeIdleIk.cs",
+    "sha256": "9e2ea2f896a25d6ffe257d137f22a59706ebf133c2c0e820c100b948dfa68578"
+  },
+  "slot_state": {
+    "path": "unity/Assets/Game/Runtime/Offline/ProfessionUI/ProfessionNativeSlotPose.cs",
+    "sha256": "cc0d1b4ea9b5261726679f80fb4023d2fce7d2ab5313ff7fa5e9a94990188070"
+  },
+  "generator": {
+    "path": "scripts/prepare_unity_profession_runtime_timelines.py",
+    "sha256": "9963d3c1b9591c668efcc4d4e868a2c97d68446886b316f3e80d6945ba5fd983"
+  },
+  "operation": "Construct discrete slot attachment/draw-order clips and constant idle IK states directly from the actual lossless packaged source. Preserve source key/slot order, null clears, signed 32-bit offsets and stable untouched slots. Bind IK setup and animation defaults separately, preserve original order, child length and bend/mix. Independent source-data/circle-intersection fixtures supply expected values only.",
+  "limitations": [
+    "Only unmixed attachment/draw-order timelines and the six verified constant idle IK branches are bound here. Other slot channels, skin-required IK, nonconstant IK and active softness/stretch/compress explicitly reject.",
+    "No animation mixing, physical constraints, actor/page input/rendering or Windows Player validation."
+  ],
+  "validated_scope": "Unity 2022.3.57f1c2 actual Direct3D Play Mode: 27468 exact slot/attachment/draw-order checks over all 109 source key-boundary/backward samples; 2688 exact IK state comparisons and 48 post-IK frames pass. Maximum circular angle difference 0.00020724535 degrees within 0.0004; maximum world difference 0.00008010864 within 0.001 + 0.000007 * abs(expected). Runtime inputs come exclusively from actual packaged skeleton data. Verified references supply expected values only. Null clears/blinks, source key order, signed negative-six weapon offset, stable untouched slots and constant IK mix/bend defaults pass. Full data/skin/all-attachment geometry Play Mode regression and ProjectTools.Validate pass. Frozen/current static metadata checks: 73754/74281 GUIDs. Physics, mixed animation, original SDK pose, actor/page and Windows Player are not validated."
+}
