@@ -136,10 +136,53 @@ public static class PlayerPlayHarness
         Require(failed && s.Events.Count == 0, "Failed exit propagates and never starts callback");
     }
 
+    private static async Task CheckTeamInvitationGate()
+    {
+        var action = new PlayerPlayTeamAction();
+        var s = new Services();
+        var gate = new PlayerPlayStateModule(s);
+        Require(action.Type == PlayerPlayActionType.Team &&
+            action.Param is PlayerPlayActionNoneParam, "Original team action uses NoneParam");
+        Require(await gate.TryDoAction(action), "Team invitation can proceed with no active state");
+        s.States.Add(Chat());
+        Require(!await gate.TryDoAction(action) &&
+            string.Join(",", s.Events) == "notify:ui_play_state_hard_mutex",
+            "Chat blocks team invitation before the invite operation");
+        s.Events.Clear(); s.States.Clear();
+        s.States.Add(new State { Type = PlayerPlayStateType.DreamDance,
+            Param = new PlayerPlayActionNoneParam() });
+        Require(!await gate.TryDoAction(action), "Dream dance blocks team invitation");
+        s.Events.Clear(); s.States.Clear(); s.States.Add(Match(true));
+        Require(!await gate.TryDoAction(action), "Completed matchmaking blocks team invitation");
+        s.Events.Clear(); s.States.Clear(); s.States.Add(Match());
+        var pending = new TaskCompletionSource<bool>();
+        s.Factory = state => new Handle(state, () => { s.Events.Add("exit-match"); return pending.Task; });
+        Task<bool> operation = gate.TryDoAction(action);
+        Require(!operation.IsCompleted && string.Join(",", s.Events) == "exit-match",
+            "Team invitation awaits the original matchmaking exit");
+        pending.SetResult(false);
+        Require(!await operation, "Cancelling matchmaking exit cancels team invitation");
+        s.Events.Clear(); s.Factory = state => new Handle(state, () => {
+            s.Events.Add("exit-match"); s.States.Clear(); return Task.FromResult(true);
+        });
+        Require(await gate.TryDoAction(action) && string.Join(",", s.Events) == "exit-match",
+            "Team invitation is allowed only after successful matchmaking exit");
+        s.Events.Clear(); s.States.Add(new State { Type = PlayerPlayStateType.Room,
+            Param = new PlayerPlayActionNoneParam() });
+        s.Factory = state => new Handle(state, () => {
+            s.Events.Add("exit-room"); s.States.Clear(); s.States.Add(Chat());
+            return Task.FromResult(true);
+        });
+        Require(!await gate.TryDoAction(action) &&
+            string.Join(",", s.Events) == "exit-room,notify:specific",
+            "Team invitation rechecks newly introduced hard state after room exit");
+    }
+
     public static int Main()
     {
         CheckFlagsAndMutex(); CheckGate().GetAwaiter().GetResult();
-        Console.WriteLine("Player-play rules passed: stage flags, mutex priority, async cancellation, recheck, ten-loop limit and callback order.");
+        CheckTeamInvitationGate().GetAwaiter().GetResult();
+        Console.WriteLine("Player-play rules passed: stage flags, fight/team mutex priority, async cancellation, recheck, ten-loop limit and callback order.");
         return 0;
     }
 }

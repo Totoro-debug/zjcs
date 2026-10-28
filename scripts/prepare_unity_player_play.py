@@ -14,7 +14,7 @@ NAMES = (
     'PlayerPlayActionType', 'PlayerPlayStateType', 'PlayerPlayStateMutexType',
     'PlayerPlayActionNoneParam', 'PlayerPlayFightStateParam',
     'PlayerPlayMatchStateParam', 'PlayerPlayRoomMatchStateParam',
-    'PlayerPlayConfig', 'PlayerPlayStateMutexConfig', 'GameFastType',
+    'PlayerPlayConfig', 'PlayerPlayStateMutexConfig', 'GameFastType', 'PlayerPlayTeamAction',
 )
 
 
