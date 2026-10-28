@@ -1,0 +1,23 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "source_sha256": "88b96f9cf992fabed477439d62735b5004b343621929f14bf15eee4095363f8a",
+  "execution": {
+    "editor": "2022.3.57f1c2",
+    "regions": 106,
+    "region_entries": 40527,
+    "roundtrip_cells": 57600,
+    "owner_sight_cells": 72,
+    "shared_component_lifecycle": true
+  },
+  "acceptance": {
+    "path": "unity/Assets/Game/Editor/Map13GridVisibility/OfficialMap13GridVisibilityAcceptance.cs",
+    "sha256": "65774f361c71156cd2d325db74fe199e84d5e62b091fa7de27fb591239d250a1"
+  },
+  "checks": {
+    "unity_compile": true,
+    "root_static_guids": 73965,
+    "isolated_project_tools_validate": true
+  },
+  "coverage": "Original rule/component execution with explicit diagnostic entity/map inputs. Exact RLE golden bytes, original header-only all-visible branch, all 106 activation-list orders, owner sight, movement, body/camp filtering, character-removal then component-end lifecycle, and all 57,600 saved cells. Formal scene/input/save-file integration and Windows Player remain pending."
+}

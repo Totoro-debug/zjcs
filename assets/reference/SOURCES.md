@@ -2075,3 +2075,5 @@ Map13 完整原藤蔓实体：`scripts/prepare_unity_map13_tree_entities.py` 以
 
 龙之国原根可见性：`map14-entity-root-visibility-source-manifest.json` 记录完整 MyVisibility／MyVisibilityGrid、同版本原可见性依赖及原程序集哈希。原 MapClientVisibilitySupporter 驱动四类雕像隐藏／恢复、请求重建与结束解绑已在带画面隔离运行中验证；正式共享处理器、地图条件、淡出桥及 Player 继续绑定。
 
+
+Map13 原格子可见性：`scripts/prepare_unity_map13_grid_visibility.py` 直接迁移原共享组件／处理器、位图／RLE、事件分发及范围查询；先查 APK，再从所选版本已校验云端包提取 `MapRegionActiveUnlockPosInfo/13.g.bytes`，完整解码 106 地区、40,527 条原激活／扩展格子。保留原头部解码分支和所有事件／筛选顺序，仅适配显式消费接口、序列化属性、命名空间和诊断日志。规则执行涵盖精确字节、角色视野、实体／营地分支、移除／结束生命周期及 57,600 格往返；Unity 编译、隔离全局校验及静态检查通过。完整哈希见 `official-map/map13-grid-visibility-source-manifest.json` 与 `official-map/map13-grid-visibility-rules-source-manifest.json`。正式场景／存档／输入和 Player 待接入，见[泽之国](../../docs/maps/map-13.md)。
