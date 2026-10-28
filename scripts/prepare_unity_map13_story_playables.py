@@ -5,6 +5,7 @@ prefabs with a duration-only playback implementation or claim a playable map.
 """
 from __future__ import annotations
 
+import argparse
 import base64
 import json
 from pathlib import Path
@@ -58,7 +59,7 @@ def serializable(value):
     return value
 
 
-def build():
+def build(unity_project=None):
     receipt = json.loads(SOURCE_RECEIPT.read_bytes())
     expected = {item["path"]: item["sha256"] for item in receipt["outputs"]}
     if receipt["manifest"] != VERSION or expected.get(source_path(SOURCE)) != sha(SOURCE.read_bytes()):
@@ -69,7 +70,7 @@ def build():
     if apk.version != VERSION:
         raise ValueError("Map13 story performance version differs from the selected source")
     code = ROOT / ".tools/source-packages/current" / VERSION / "official-code"
-    schemas = NativeSchemas(code)
+    schemas = NativeSchemas(code, unity_project=unity_project)
     schema_proof = install(schemas, code)
     registry_bundle = "defaultpackage_assets_scriptableconfig_modules_story.bundle"
     registry = apk.asset(registry_bundle, "/StoryPlayableRegisterConfig.asset")
@@ -150,4 +151,7 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--unity-project", type=Path, help="Use matching pinned Unity reference DLLs from an isolated import")
+    args = parser.parse_args()
+    build(args.unity_project)

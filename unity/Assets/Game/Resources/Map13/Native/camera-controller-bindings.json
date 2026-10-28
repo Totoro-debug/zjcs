@@ -1,0 +1,59 @@
+{
+  "manifest": "871_156598",
+  "records": [
+    {
+      "path": "/WorldCamera/controller",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:5755081812735138809",
+      "type": "OrthographicCameraResolutionAdaptor",
+      "fieldsJson": "{\"mAdapterPriority\":1,\"mySafeArea\":{\"m_Center\":{\"x\":0.0,\"y\":0.0,\"z\":0.0},\"m_Extent\":{\"x\":3.5,\"y\":6.2220001220703125,\"z\":0.0}}}"
+    },
+    {
+      "path": "/WorldCamera/controller",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:-2656529219108103175",
+      "type": "CameraControlBrain",
+      "fieldsJson": "{\"MonoProxy\":{\"VirCamera\":{\"m_FileID\":0,\"m_PathID\":5197439703030602745},\"CameraFollow\":{\"m_FileID\":0,\"m_PathID\":5316348186395843577},\"DragController\":{\"m_FileID\":0,\"m_PathID\":7502090647325416441},\"ResolutionAdaptor\":{\"m_FileID\":0,\"m_PathID\":5755081812735138809},\"CameraControlEnv\":1},\"mInitType\":0}"
+    },
+    {
+      "path": "/WorldCamera/controller/freeVCam",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:5197439703030602745",
+      "type": "Cinemachine.CinemachineVirtualCamera",
+      "fieldsJson": "{\"m_ExcludedPropertiesInInspector\":[\"m_Script\"],\"m_LockStageInInspector\":[],\"m_StreamingVersion\":20170927,\"m_Priority\":10,\"m_StandbyUpdate\":2,\"m_Lens\":{\"FieldOfView\":70.22666931152344,\"OrthographicSize\":6.222222328186035,\"NearClipPlane\":0.30000001192092896,\"FarClipPlane\":500.0,\"Dutch\":0.0,\"ModeOverride\":0,\"LensShift\":{\"x\":0.0,\"y\":0.0},\"GateFit\":2,\"FocusDistance\":10.0,\"m_SensorSize\":{\"x\":1.0,\"y\":1.0}},\"m_Transitions\":{\"m_BlendHint\":0,\"m_InheritPosition\":0,\"m_OnCameraLive\":{\"m_PersistentCalls\":{\"m_Calls\":[]}}},\"m_LegacyBlendHint\":0}"
+    },
+    {
+      "path": "/WorldCamera/controller/freeVCam",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:7502090647325416441",
+      "type": "IgnoreUIDragController",
+      "fieldsJson": "{\"Data\":{\"Horizontal\":true,\"Vertical\":true,\"MyMovementType\":1,\"Sensitive\":1.0,\"Elasticity\":0.10000000149011612,\"RubberOverFactor\":0.550000011920929,\"Inertia\":true,\"DecelerationRate\":0.03999999910593033,\"Target\":{\"m_FileID\":0,\"m_PathID\":5316348186395843577},\"TargetBounds\":{\"m_Center\":{\"x\":0.0,\"y\":0.0,\"z\":0.0},\"m_Extent\":{\"x\":5.71999979019165,\"y\":6.21999979019165,\"z\":0.0}},\"UseMultipleRectangleBorders\":false,\"RectangleBounds\":[],\"BorderBounds\":{\"m_Center\":{\"x\":11.5,\"y\":12.0,\"z\":0.0},\"m_Extent\":{\"x\":12.5,\"y\":17.0,\"z\":0.0}},\"LimitSize\":{\"x\":2.0,\"y\":2.0},\"UpdateMode\":0,\"DragUpdateMode\":0}}"
+    },
+    {
+      "path": "/WorldCamera/controller/freeVCam/cm",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:8672920488617548793",
+      "type": "Cinemachine.CinemachineTransposer",
+      "fieldsJson": "{\"m_BindingMode\":1,\"m_FollowOffset\":{\"x\":0.0,\"y\":0.0,\"z\":-250.0},\"m_XDamping\":0.20000000298023224,\"m_YDamping\":0.20000000298023224,\"m_ZDamping\":0.20000000298023224,\"m_AngularDampingMode\":0,\"m_PitchDamping\":0.0,\"m_YawDamping\":0.0,\"m_RollDamping\":0.0,\"m_AngularDamping\":0.0}"
+    },
+    {
+      "path": "/WorldCamera/controller/followVCam",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:319015902165638137",
+      "type": "Cinemachine.CinemachineVirtualCamera",
+      "fieldsJson": "{\"m_ExcludedPropertiesInInspector\":[\"m_Script\"],\"m_LockStageInInspector\":[],\"m_StreamingVersion\":20170927,\"m_Priority\":10,\"m_StandbyUpdate\":2,\"m_Lens\":{\"FieldOfView\":61.563331604003906,\"OrthographicSize\":6.222221851348877,\"NearClipPlane\":0.30000001192092896,\"FarClipPlane\":500.0,\"Dutch\":0.0,\"ModeOverride\":0,\"LensShift\":{\"x\":0.0,\"y\":0.0},\"GateFit\":2,\"FocusDistance\":10.0,\"m_SensorSize\":{\"x\":1.0,\"y\":1.0}},\"m_Transitions\":{\"m_BlendHint\":0,\"m_InheritPosition\":0,\"m_OnCameraLive\":{\"m_PersistentCalls\":{\"m_Calls\":[]}}},\"m_LegacyBlendHint\":0}"
+    },
+    {
+      "path": "/WorldCamera/controller/followVCam",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:7844319888436665337",
+      "type": "OrthographicCameraResolutionAdaptor",
+      "fieldsJson": "{\"mAdapterPriority\":1,\"mySafeArea\":{\"m_Center\":{\"x\":0.0,\"y\":0.0,\"z\":0.0},\"m_Extent\":{\"x\":3.5,\"y\":6.2220001220703125,\"z\":0.0}}}"
+    },
+    {
+      "path": "/WorldCamera/controller/followVCam/cm",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:-954328074522289159",
+      "type": "Cinemachine.CinemachineTransposer",
+      "fieldsJson": "{\"m_BindingMode\":4,\"m_FollowOffset\":{\"x\":0.0,\"y\":0.0,\"z\":-18.0},\"m_XDamping\":0.20000000298023224,\"m_YDamping\":0.20000000298023224,\"m_ZDamping\":0.20000000298023224,\"m_AngularDampingMode\":0,\"m_PitchDamping\":0.0,\"m_YawDamping\":0.0,\"m_RollDamping\":0.0,\"m_AngularDamping\":0.0}"
+    },
+    {
+      "path": "/WorldCamera/Main Camera",
+      "identity": "cab-23bef326149fbeb0f636881d59f9eecc:4972782642182659065",
+      "type": "Cinemachine.CinemachineBrain",
+      "fieldsJson": "{\"m_ShowDebugText\":false,\"m_ShowCameraFrustum\":true,\"m_IgnoreTimeScale\":false,\"m_UpdateMethod\":1,\"m_BlendUpdateMethod\":1,\"m_DefaultBlend\":{\"m_Style\":1,\"m_Time\":2.0,\"m_CustomCurve\":{\"m_Curve\":[],\"m_PreInfinity\":2,\"m_PostInfinity\":2,\"m_RotationOrder\":4}},\"m_CameraCutEvent\":{\"m_PersistentCalls\":{\"m_Calls\":[]}},\"m_CameraActivatedEvent\":{\"m_PersistentCalls\":{\"m_Calls\":[]}}}"
+    }
+  ]
+}

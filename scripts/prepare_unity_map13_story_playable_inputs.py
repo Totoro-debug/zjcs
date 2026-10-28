@@ -1,4 +1,5 @@
 """Prepare exact original Map13 story performance CAB closure for native conversion."""
+import argparse
 import json
 from pathlib import Path
 
@@ -21,7 +22,7 @@ def record(path):
     return dict(path=source_path(path), sha256=sha(path.read_bytes()))
 
 
-def build():
+def build(unity_project=None):
     receipt = json.loads(SOURCE_RECEIPT.read_bytes())
     expected = {r["path"]: r["sha256"] for r in receipt["outputs"]}
     if receipt["manifest"] != VERSION or expected.get(source_path(SOURCE)) != sha(SOURCE.read_bytes()):
@@ -52,7 +53,7 @@ def build():
         if sha(path.read_bytes()) != entry["decoded_sha256"]:
             raise ValueError("Changed original assembly: " + name)
         assemblies.append(record(path))
-    schemas = NativeSchemas(code)
+    schemas = NativeSchemas(code, unity_project=unity_project)
     proof = install(schemas, code)
     inputs, components, changes, unions, errors, count = [], [], [], [], [], 0
     for name in sorted(apk.loaded):
@@ -98,4 +99,7 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--unity-project", type=Path, help="Use matching pinned Unity reference DLLs from an isolated import")
+    args = parser.parse_args()
+    build(args.unity_project)

@@ -1,0 +1,91 @@
+{
+  "StorySettings": {
+    "StorySoftViewSizeMax": 30.0,
+    "StoryZoomViewSizeMax": 30.0
+  },
+  "DanceSettings": {
+    "DanceSoftViewSizeMax": 10.0,
+    "DanceZoomViewSizeMax": 10.0
+  },
+  "WorldCameraControlSetting": {
+    "BaseSetting": {
+      "DefaultFollowDamping": {
+        "x": 0.20000000298023224,
+        "y": 0.20000000298023224
+      },
+      "ZoomFactor": 1.0,
+      "EditorZoomFactor": 0.5,
+      "ViewCloseLimitFactor": 2.0,
+      "ViewLeaveLimitFactor": 1.0,
+      "ViewZoomCloseLimitFactor": 3.0,
+      "ViewZoomLeaveLimitFactor": 0.699999988079071,
+      "GmViewCloseLimitFactor": 10.0,
+      "GmViewLeaveLimitFactor": 0.10000000149011612,
+      "ViewOverCloseLimitResetSpeed": 1.0,
+      "ViewOverLeaveLimitResetSpeed": 2.0,
+      "DefaultGridViewSize": 7.0
+    },
+    "ComplexSetting": {
+      "FollowDamping": {
+        "x": 0.20000000298023224,
+        "y": 0.20000000298023224
+      },
+      "ViewMoveRangePadding": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "ElasticitySpace": {
+        "x": 2.0,
+        "y": 2.0
+      },
+      "ViewSafeAreaPaddingY": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "AllowViewMissTarget": false,
+      "ViewChaseSpeed": {
+        "x": 2.0,
+        "y": 2.0
+      }
+    },
+    "LookAheadSettings": {
+      "Distance": 1.5
+    }
+  },
+  "HomeCameraControlSetting": {
+    "BaseSetting": {
+      "DefaultFollowDamping": {
+        "x": 0.20000000298023224,
+        "y": 0.20000000298023224
+      },
+      "ZoomFactor": 0.0,
+      "EditorZoomFactor": 0.5,
+      "ViewCloseLimitFactor": 5.0,
+      "ViewLeaveLimitFactor": 0.10000000149011612,
+      "ViewZoomCloseLimitFactor": 3.0,
+      "ViewZoomLeaveLimitFactor": 0.699999988079071,
+      "GmViewCloseLimitFactor": 10.0,
+      "GmViewLeaveLimitFactor": 0.10000000149011612,
+      "ViewOverCloseLimitResetSpeed": 1.0,
+      "ViewOverLeaveLimitResetSpeed": 2.0
+    }
+  },
+  "GameCameraControlSetting": {
+    "BaseSetting": {
+      "DefaultFollowDamping": {
+        "x": 0.20000000298023224,
+        "y": 0.20000000298023224
+      },
+      "ZoomFactor": 1.0,
+      "EditorZoomFactor": 0.5,
+      "ViewCloseLimitFactor": 0.699999988079071,
+      "ViewLeaveLimitFactor": 2.0,
+      "ViewZoomCloseLimitFactor": 2.0,
+      "ViewZoomLeaveLimitFactor": 0.699999988079071,
+      "GmViewCloseLimitFactor": 10.0,
+      "GmViewLeaveLimitFactor": 0.10000000149011612,
+      "ViewOverCloseLimitResetSpeed": 0.0,
+      "ViewOverLeaveLimitResetSpeed": 0.0
+    }
+  }
+}
