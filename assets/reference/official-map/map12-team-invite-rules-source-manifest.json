@@ -1,0 +1,185 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 12,
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PropType.cs",
+      "sha256": "265a81dbeab87b90e3a1c1423884610ed43ea9b535e488e20de0e0c41f9831b0"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/ComparerOrderType.cs",
+      "sha256": "cd176dba5fc1b8e2b8d8db020ee7c06db9c316ebec5d256020c76a81517c31fc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteComparerType.cs",
+      "sha256": "1f0161ba8644cdaf076f31c60f76c249e5f186117f598ab71c2964350abaaf39"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteSubPanelBase.cs",
+      "sha256": "ecb7269d111e05fced9a315c6b3385284be7029a79b39c17cfb8acbfaeaa0441"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteComparer.cs",
+      "sha256": "9f887b07617b789ec23cb471f103d727b6f334904fa954283bc457c5439a447a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteComparerBase.cs",
+      "sha256": "ab9d553463ededc6d73f75e6f2e350258f5220bddf1896065eb07bdf78b3b9cc"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInvitePlayerComparer.cs",
+      "sha256": "6cd560dd14d22b1dfd39414f62c713ecd2743c6138bc19304cb2d7dbca7d3fa1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInvitePlayerPanel.cs",
+      "sha256": "0be4a76e34e24029e1bd9b66671202c98840d948574a226b25d15d7084050102"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteNpc.cs",
+      "sha256": "23d553672d663e455c4eeb5459ab595d97641bbe896b7c2489da504781dacac6"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/NpcUtils.cs",
+      "sha256": "3facdd294e81233a2b97cf156ebbdf1cada31539c75bcb175e8cbb6059ecedd1"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/ITeamInvitePlayer.cs",
+      "sha256": "4c16da727ba9416fbb5f21ea806c068247d40ee5dd8f5d03db98d0323878cdc2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/TeamInviteSortTypeUtils.cs",
+      "sha256": "a3ffa488f355353cd6772b2188f6116159d419ebab5b33f154fd9749b6d5d500"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/TeamInvitePlayerInfoData.cs",
+      "sha256": "77192f5854e6075330a91d0bbe680f26b69714fa3a7cf331bbc35b4ac7a853b4"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/NpcTargetData.cs",
+      "sha256": "8dd82f3532fc35e2016cc794ca1a5ac44cf0bf8f252a201ed7145080d76ceab7"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/ActorTargetData.cs",
+      "sha256": "7d7b25e3301ea51575ddcc03981db340e3570946d68a9a7f6b993ae309d756e8"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/PlayerNpcDataWrap.cs",
+      "sha256": "43f73f3d2654dc14f0c8c4e11cdde157dcc7be6dfc2b98ca274ddf61d7fa64c5"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    }
+  ],
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    }
+  ],
+  "adaptation": "Original NPC provider async body, sort enum, comparer scores and unchanged priority lists. Manager/parser/RPC calls are injected; Task replaces UniTask. No server quotas are introduced.",
+  "scope": "Rule ports only. Native invitation prefab and actual profile/team bindings remain pending.",
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/PropType.cs",
+      "sha256": "26136786e5a6bfa54004c2e3c21c2d81aa54e6acea84af690878c8d66977e9a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/PropType.cs.meta",
+      "sha256": "7bf364fb96cb6d3854a8b5fc330ea1bfe0216a1a97e2c0fecc9ac86c5911e456"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/ComparerOrderType.cs",
+      "sha256": "8c115950c10b84cf4448ea62495c0aaafe0301ed45902ac6f82971e4488023f7"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/ComparerOrderType.cs.meta",
+      "sha256": "de640a7447445fb6fcaeffe097101474048b04483d632a4b55076caf621aa439"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparerType.cs",
+      "sha256": "5175fd0f5830a9300f9eda5cf3c37aba9f7d77e43b75283a4f45ee88c9b3b231"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparerType.cs.meta",
+      "sha256": "0de25d07b2c36d2c7d94720ba7a4dbb6890bcc853d9840d4421f195f440738bf"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteSubPanelBase.cs",
+      "sha256": "7357b2afdfc7326b0cd60e9a220c892d2d8fd2bce1a1bd85e49fff184530774f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteSubPanelBase.cs.meta",
+      "sha256": "d4362abf970f7794ae4abd04b202d32fd8ff453d3b75ec2d4198d9192cdfd55f"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparer.cs",
+      "sha256": "ffb5fb6896b7bd6c6df604fc75acb4faef556084ddf19c4be1664454822672eb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparer.cs.meta",
+      "sha256": "6b01faaf70f2811dfce02d739b6a41ee626350759988ee1556d0e60d53f29cb6"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparerBase.cs",
+      "sha256": "15e6afe7b45e4cc0ceb9e0a92ab00c727254ea9a13fb61ff65a53f59a00111d4"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteComparerBase.cs.meta",
+      "sha256": "853fe6917ebb4d1c817b11ea88c19b1773c416676744719553d80b7abbb45045"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerComparer.cs",
+      "sha256": "effca2f388f34528173d254f3b2fe9dbce262becfb1372253d51ec8cf81571ce"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerComparer.cs.meta",
+      "sha256": "4f0830f71c54ec22a13a3f7d1a3848d9960a2773c6d1331c2def25e5656af8f8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerPanel.cs",
+      "sha256": "225b82ff8ae4bece6fb96ea3cc68559b9770ded69837bb18a41328ddd486128c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInvitePlayerPanel.cs.meta",
+      "sha256": "50e0b5b398d798b78942b0de78bf2a4a5b6888e8e73e57c1ffa80af695933302"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteNpc.cs",
+      "sha256": "0486096314a2024bcd370efd0c8d2b009db936c5dc968626f850a291253c1329"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteNpc.cs.meta",
+      "sha256": "2c66b8be1713fa944deff43772f8203699df524b75e11689c4e90560b66ab198"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteServices.cs",
+      "sha256": "81b9422d03ee56c5dd4a63a4ca42ad779c9afe3862bd97acbee4794d4c4ab9a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/TeamUI/TeamInviteServices.cs.meta",
+      "sha256": "cfe00b5791e1d59d85b53e599347323085ec8ccceccf4ba4bb81b908df7956d1"
+    },
+    {
+      "path": "scripts/fixtures/map12_team_invite_rules_harness.cs",
+      "sha256": "e9ae2aed8c4c106afaae96a81df5ec1e1ed8ebd01e9fde4026d811db45822044"
+    },
+    {
+      "path": "scripts/test_map12_team_invite_rules.py",
+      "sha256": "984bf21e1adc6ef020aac2b480c92b2151f60d996df3b7a49c4fb425d84bf84d"
+    },
+    {
+      "path": "scripts/test_map12_team_invite_rules.ps1",
+      "sha256": "e0f012f4a9c33d87db1db9e2969b6d41975d234a29b54cf1ae525a394e34b72b"
+    }
+  ],
+  "script": {
+    "path": "scripts/prepare_unity_map12_team_invite_rules.py",
+    "sha256": "f2037700c424e8bb8f16ceeabe5ad12267a2b8216efa4fb0bb83342fba5c548d"
+  }
+}

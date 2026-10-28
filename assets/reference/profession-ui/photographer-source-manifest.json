@@ -103,7 +103,7 @@
   },
   "texture_lifecycle": {
     "path": "assets/reference/profession-ui/portrait-lifecycle-source-manifest.json",
-    "sha256": "41b56be3c7fa90d936293015a461c62ed68e287509d854a11754565a54f7506f"
+    "sha256": "f6141a11589ffa7bb08e059a00a686888ea32eda4cfc535500ef754950eaaaa2"
   },
   "operation": "Copy original camera/RenderTexture/CommandBuffer/material-submesh capture, builder caching, texture-pool readback, exception boundaries and release order. Port the complete original particle-provider and descending world-Z comparer, plus the two original renderer collectors. Adapt appearance/studio-builder/separator/part-handler access to explicit interfaces for the independent native backend; no skeleton runtime is used and no placeholder character component is installed.",
   "validated_scope": "Unity 2022.3.57f1c2 Direct3D Play Mode: real GPU capture at original 260x310 and 100x120 dimensions, transparent background and last non-null submesh material, camera parameters, builder caching, original call/release order and three expected setup failures; renderer/separator/part/particle collection, original provider cache and color mask. Actual output viewed. Geometry, appearance and renderer graph are fixtures; no real character or full profession-page validation.",
