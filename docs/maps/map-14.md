@@ -88,6 +88,8 @@
 
 - 两类原剧情播放节点 `PlayPlayableNode`／`PlayPlayableForGameObjectNode`、`StoryPlayable` 回调包装器、原选择器及枚举已迁入；另迁入 `StoryHandleProxy` 的播放、管理器绑定／解绑和预定义资源查询四个原方法。按原 MoveNext 恢复 DoRun 后计数、播放后订阅 OnStop、可选等待、PlayerLoopTiming 8／取消令牌／cancelImmediately=false、20 秒 scaled timeout，再返回原 ClientRunNode 的 OK；保留实体节点超时 OK 与 GameObject 节点继承 SafeEnd 的差异。保留动态索引源／目标端口、强制可见与原世界动作停／启、时长覆盖、跳过／转跳过、剧情结束开关及选择器 Load／UnLoad 分支。图执行器生命周期、实际 EC 视图和资源代理为显式绑定边界，未用空基类冒充完整官方图／服务器执行器。内置屏 Unity 导入／编译、全工程校验及隔离 Play Mode 通过：两份原混沌特效分别绑定相反源／目标，只有两份实际停止后才继续；验证重复实体不去重的可见／停启顺序、资源按原顺序释放、非等待继续、跳过后下一帧停止、正时长覆盖、取消、20 秒缩放时钟超时、None／Custom／PreDefine／缺失选择、双代理卸载分支，以及原注册器驱动的 StoryPlayable 单次完成回调。已查看两份原特效同时显示在原地图的实际画面。来源为 `map14-story-playable-requests-source-manifest.json`，代码入口为 `Runtime/Official/StoryPlayableRequests/`；正式主线宿主仍未接线，原角色、实际音频／DSP、地图／存档和 Windows Player 尚未完成。
 
+- Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追出 36,116 个可达对象、86,093 条原生指针及 966 条可达动态纹理绑定；全量输入仍为 117,858 个对象，不依赖已清理的临时转换缓存。新增原生 Sprite 资源库保留 1,294 个 Sprite／Atlas 对象的原始载荷字节，显式绑定 337 张 Sprite 和 1,055 个 SpriteRenderer／SpriteMask（含 2 个原空字段）。76 个 Windows 图像包保留原图集、几何、轴心、采样和内部引用；混合包只提取独立图像闭包，原实体／效果对象继续保留于来源图。原 `Sprites-Default` 按当前 APK 字段与已核验的原 GLES→Windows shader 恢复，没有使用替代材质。内置屏 Unity 2022.3.57f1c2 导入／编译、`ProjectTools.Validate` 和 Direct3D11 Play Mode 通过：498 张纹理的 520 个 mip 精确 GPU 回读、全部 Sprite 顶点／三角形／PPU／rect／pivot、逐项组件绑定及原材质显示均已检查，六张实际画面已查看。运行入口为 `Runtime/Offline/World/NativeMap14EntityAssets/` 与 `Map14/Native/entity-sprite-catalog`；来源为 `map14-native-entity-object-graph-source-manifest.json`、`map14-native-entity-sprites-source-manifest.json`。本项为资源及绑定分项，尚未恢复完整实体 prefab 生命周期、地图鼠标交互、存档或 Windows Player。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。
