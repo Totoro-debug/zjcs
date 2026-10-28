@@ -2085,3 +2085,6 @@ Map13 完整原藤蔓实体：`scripts/prepare_unity_map13_tree_entities.py` 以
 
 
 Map13 原格子可见性：`scripts/prepare_unity_map13_grid_visibility.py` 直接迁移原共享组件／处理器、位图／RLE、事件分发及范围查询；先查 APK，再从所选版本已校验云端包提取 `MapRegionActiveUnlockPosInfo/13.g.bytes`，完整解码 106 地区、40,527 条原激活／扩展格子。保留原头部解码分支和所有事件／筛选顺序，仅适配显式消费接口、序列化属性、命名空间和诊断日志。规则执行涵盖精确字节、角色视野、实体／营地分支、移除／结束生命周期及 57,600 格往返；Unity 编译、隔离全局校验及静态检查通过。完整哈希见 `official-map/map13-grid-visibility-source-manifest.json` 与 `official-map/map13-grid-visibility-rules-source-manifest.json`。正式场景／存档／输入和 Player 待接入，见[泽之国](../../docs/maps/map-13.md)。
+
+龙之国原共享 EC：`map14-shared-ec-runtime-source-manifest.json` 记录未修改的 Console／Luban／Framework.FirstPass.Runtime、APK 元数据接口、固定 SHA-512 的 Microsoft.Extensions.Logging.Abstractions 8.0.0／ZLogger 2.5.10 与出版者许可、七组日志 ABI 和四类原雕像配置。原 DLL 以本地 TextAsset 显式绑定，加载检查 SHA-256／MVID；四种雕像共 44 份原组件的真实网格和生命周期已通过隔离 Play Mode。源码位于 `Runtime/Offline/World/NativeMap14SharedEntities/`，完整标记接口位于 `Runtime/Official/SharedConfig/`；正式显示／地图状态／输入／存档及 Player 尚待绑定，完整 AOT 依赖未恢复，本批未生成完整素材快照。
+

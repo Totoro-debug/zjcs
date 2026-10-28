@@ -1,0 +1,306 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Console.dll",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Luban.dll",
+      "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Framework.FirstPass.Runtime.dll",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+      "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/global-metadata.dat",
+      "sha256": "58884b94b56ef35665f44d3f186fce8b8c854cf3bab0a74e4733a18b6a9175b4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/Source/templates.json",
+      "sha256": "0c4c5ad2cf9a3fa54ce290993e85a5bc8c81b390bfaee3a723f2a7e18396d824"
+    },
+    {
+      "path": "assets/reference/official-map/map14-source-manifest.json",
+      "sha256": "04a160772dd26a9d367858ab8e9eac6a82f1886d02248d27a0d403804d5c8a2e"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/MessagePack.Formatters.Common/SubStageStateInfoFormatter.cs",
+      "sha256": "b2ffee67a835a7318d24c4c4fb2cf0e244cb7336b234fd6909b287a6997473cf"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcEntity.cs",
+      "sha256": "5548ab8a8f05def6c838388d453c585cdf3085e7e4e9465b8e39d54688f64a2c"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcComponent.cs",
+      "sha256": "09b4ffd0ef96f6ed5c93217bd706a94f09a7959ee5971a1800d6d38ad33c5c19"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/EcDataCenterParser.cs",
+      "sha256": "d52842a6e7e362aa47c2de3255d73037a099da4801dabe6dd965ac6d42a8dfc3"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponent.cs",
+      "sha256": "6317a98b45782f004e871886effb70264ad7cb708b6d8665933970c1dd7160e9"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/GridTransformComponentInfo.cs",
+      "sha256": "7aa393429e451d3e1b9a579e768ed1242067925e9fb3e866746f08098b3b853d"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/WorldStageComponent.cs",
+      "sha256": "2f17ef2e71858d2ad8e5333951a83fe6e59c8188cdd4793b1d10d4a67b890266"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/common-source/Common/SubStageStateInfo.cs",
+      "sha256": "2f6c64dadcdc4483469f9fbeaf0bfc4c843930ee0daa36cfdba509a9a7ab4880"
+    }
+  ],
+  "contract": {
+    "type": "GFrameCore.IGSerializable",
+    "type_index": 52028,
+    "method": "System.UInt16 GetOpCode()",
+    "method_index": 310061
+  },
+  "packages": [
+    {
+      "name": "Microsoft.Extensions.Logging.Abstractions",
+      "version": "8.0.0",
+      "url": "https://api.nuget.org/v3-flatcontainer/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg",
+      "package_sha512": "UKCt2W0w2QWA+44ColzqCqFfTSJ0Qnm1rP4YzIVot0QCqgYtXbE8xYh6CL/STgfLyIsvwQ7o7sLDft87zaf4pw==",
+      "dll_sha256": "e899e37dfc2dd433807c205e764c32ea34bb95da083e189d7615947dd16c51e8",
+      "framework": "netstandard2.0",
+      "license_entries": [
+        "LICENSE.TXT"
+      ],
+      "license_source": null
+    },
+    {
+      "name": "ZLogger",
+      "version": "2.5.10",
+      "url": "https://api.nuget.org/v3-flatcontainer/zlogger/2.5.10/zlogger.2.5.10.nupkg",
+      "package_sha512": "/1DqUYTMuXic6DqCSS70FsMPgxpqGsXwxhG4UxPwOBIzjHCMUcvYgn20+YLi+s/Y9RgsL+Pw1+fUtD7pj5bGgg==",
+      "dll_sha256": "149f3ae932cbd19a24f0597ce9ff8688e0fbf8070aab2d892c241e92defda5af",
+      "framework": "netstandard2.1",
+      "license_entries": [],
+      "license_source": {
+        "url": "https://raw.githubusercontent.com/Cysharp/ZLogger/ac885aa1e6588d28aaf6b523682a591e97ed9ba5/LICENSE",
+        "sha256": "f3e6cffb78d6d94fa37fd26ada7294c3284b6b89940b5645f93ed24cdd5b36b0"
+      }
+    }
+  ],
+  "logging_calls": [
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Info(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogInformation(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerInformationInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Debug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogDebug(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerDebugInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Warn(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogWarning(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerWarningInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Error(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogError(Microsoft.Extensions.Logging.ILogger,System.Exception,ZLogger.ZLoggerErrorInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Trace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLogTrace(Microsoft.Extensions.Logging.ILogger,ZLogger.ZLoggerTraceInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    },
+    {
+      "source": "System.Void GFrameCore.Extensions.ZLogger.GZLoggerExtensions::Log(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)",
+      "target": "System.Void ZLogger.ZLoggerExtensions::ZLog(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Logging.LogLevel,ZLogger.ZLoggerInterpolatedStringHandler&,System.Object,System.String,System.String,System.Int32)"
+    }
+  ],
+  "config_contract": {
+    "type": "GConfig.IConfig",
+    "type_index": 54859,
+    "method_count": 0,
+    "field_count": 0,
+    "interface_count": 0
+  },
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_map14_shared_ec_runtime.py",
+      "sha256": "9b6c5be271f5591c3b6ca97fec30b33c77762e604039fc033923066df99afd31"
+    },
+    {
+      "path": "scripts/prepare_unity_shared_ec_contracts.ps1",
+      "sha256": "335faf77118609794d2f4b8976c6e23935ca562cda6fb5576f2440720a629f32"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs",
+      "sha256": "6bbdfd69b9aac9cca92ad08e071ef7253045a338d5e1ee0e04eb4756b51356f0"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblies.cs.meta",
+      "sha256": "4010d056a43834b636d61a3444187f550c738c9fc9a909a0065bc0f7dd17e62a"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs",
+      "sha256": "80341f0a082ec04df54ca4cae64d8c347f97853c3252ea60562cd854ce785831"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedAssemblyCatalog.cs.meta",
+      "sha256": "325104c03abafe560d869ef56225241d1f944e6915d0b68f4f64f620a3d9e21c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedPrefabs.cs",
+      "sha256": "674f11779589fc400714fb122ddc42ee88ef258f2762f8a803f9b5512802964d"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/NativeMap14SharedPrefabs.cs.meta",
+      "sha256": "03f61e82e129f8f6db9f190a9baadcda614e0c81c82d11e95a3d1ec06ec27797"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef",
+      "sha256": "3cecb1a0f14aabc42255c7a5012187e119dde4209bceaaac079db8a7bb7cf997"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities/Zjcs.Offline.World.NativeMap14SharedEntities.asmdef.meta",
+      "sha256": "40472fc193f7e2dd8321911a36b9b3a1e6ea9c49c816f62b8f843370c400c416"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes",
+      "sha256": "0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Console.bytes.meta",
+      "sha256": "ee9ee62fa3cdbaa6296c53e7e59f1e602160b63e4f2eaf72d88b7ec662705557"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes",
+      "sha256": "fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Framework.FirstPass.Runtime.bytes.meta",
+      "sha256": "0cd83c301caab46fa603ff95f2c85f01b59bb7567140339680ad036f7f03c98a"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes",
+      "sha256": "d5eb832771e1965991f7079c7bceea4a1797b8b679ad21464334f7faefb61f1c"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.bytes.meta",
+      "sha256": "1036ffccf8866d96c3ff3c390fb46a11091c09b2f99e2a6a279fc62f39776a3d"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.Extensions.ZLogger.bytes",
+      "sha256": "6b874f480e0f2bd7067a4980d25f2baebe882c67398c1dc2056e64bcfe59a077"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/GFrameCore.Extensions.ZLogger.bytes.meta",
+      "sha256": "5030bbec6cc7669d43e19418077208729db79544782fb7d735c7797362672396"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json",
+      "sha256": "777977c2fbe09c6f252a928faca6aac9ffd438a9278018f784c360af836506a4"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/hero-shared-prefabs.json.meta",
+      "sha256": "d7657da6f05f9aa817ab946955579c7683b0510a9a0e64586233c4b2ccc45958"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Luban.bytes",
+      "sha256": "de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Luban.bytes.meta",
+      "sha256": "991fcc9e7e753ffd62fd391791a5d6652d281beeec862d5d488d99f0875173d5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.Abstractions-license-0.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.Abstractions-license-0.txt.meta",
+      "sha256": "0abfa3357d20aa909cc0504a43d1d9c239d2774cc44320fa7e5e2eaaa8a98982"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.Abstractions.bytes",
+      "sha256": "e899e37dfc2dd433807c205e764c32ea34bb95da083e189d7615947dd16c51e8"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/Microsoft.Extensions.Logging.Abstractions.bytes.meta",
+      "sha256": "7e7d0e60d8a29db15b5aef1ed9dfa71ce086b721b55be52ff3e17ee94ff07ad5"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/ZLogger-license.txt",
+      "sha256": "f3e6cffb78d6d94fa37fd26ada7294c3284b6b89940b5645f93ed24cdd5b36b0"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/ZLogger-license.txt.meta",
+      "sha256": "42cd5fd6389fdf265fd255c0763726445b03711634e5757bf2ee4a871c5d2cca"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/ZLogger.bytes",
+      "sha256": "149f3ae932cbd19a24f0597ce9ff8688e0fbf8070aab2d892c241e92defda5af"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime/ZLogger.bytes.meta",
+      "sha256": "5a046b526bd24c31a59ce8f5908b42fe456d33522d7edd0eb64dee9ae725f8b9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/Config.asmdef",
+      "sha256": "2db2e2bd206dd8e7637303426d40baca39bb53548d6fdb846104db5c86e0b8eb"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/Config.asmdef.meta",
+      "sha256": "529e37bcba154c80a8b07b0ca761c1a5150416e91e9dc25a224d93ae71f1c8ff"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IConfig.cs",
+      "sha256": "defeadbee41faab6b75b53da5a3c2aeb132c9fb34f2fb25b7752c497496f5460"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig/IConfig.cs.meta",
+      "sha256": "1ed9d43261f9696512e935f0fff39ba39d9b9470189f81c9a42ccd8dfa30aae9"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Offline/World/NativeMap14SharedEntities.meta",
+      "sha256": "7d7acde7a2c34911408a5c709b1f1f8d25af8625cb301e4a7e476701288ba597"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/14/SharedRuntime.meta",
+      "sha256": "fda4d07cca2d63a0de70573b541b5ddffd792522ee2a5a0ef4a25f3652dcd1f8"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset",
+      "sha256": "fe261f1e0bebb7794024fac4b4e8b5d2c7781f21972e36708647b8f3b74aea55"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map14/Native/shared-assembly-catalog.asset.meta",
+      "sha256": "1fcc1a6c6557564884381dbade481bb99fe5c915ad85fb8eea866171b8997554"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/SharedConfig.meta",
+      "sha256": "9fd43bb7f6653a96723c12bd84ecfa507827494ffa625b25ccaae177f8a6d03b"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map14/SharedEntities/OfficialMap14SharedEcAcceptance.cs",
+    "sha256": "f42ef32710b3db039e80440fd8fad0c910008841fe8b1c3617ff667fcd8b8a13"
+  },
+  "operation": "Ship unchanged original Console/Luban/Framework.FirstPass.Runtime IL as explicitly bound local TextAssets. Recover the complete GConfig.IConfig marker and exact IGSerializable ABI from APK metadata; forward seven application logging signatures to pinned public ZLogger APIs. Original ContainerInfo and all other table/shared class methods remain in Console IL. Restore the four original 11-component client prefabs in original order and initialize original info using source field data. SubStageStateInfo.Select follows its original generated client formatter, which consumes without assignment. No server entity state, reward or save rules are supplied.",
+  "limitations": [
+    "Additional AOT dependencies, full serializers, formal view/input/state/save integration and Windows Player remain required. The supplied GFrameCore contract covers only IGSerializable, not its full original assembly. Logging catch paths and all public APIs of Console are not validated."
+  ]
+}

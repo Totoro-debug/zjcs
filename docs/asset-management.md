@@ -345,3 +345,5 @@ Map14 的 416 个原实体 prefab 根已从 APK／所选云端原字节直接追
 
 原根可见性由 `python -B scripts/prepare_unity_entity_root_visibility.py` 迁入 `Runtime/Official/EntityRootVisibility/`，复用当前版 `World/Map13EntityVisibilityViews/` 的原标志、更新事件与处理器接口；宿主必须显式绑定工厂及共享状态。Map14 雕像原显示没有 ECVisibleControlerNormalView，原默认可见性逻辑直接控制显示根的全部子节点；不应通过禁用 ECViewDriver 根替代原行为。来源见 `map14-entity-root-visibility-source-manifest.json`。
 
+原共享 EC 通过 `python -B scripts/prepare_unity_map14_shared_ec_runtime.py` 复建。原 DLL 保存在 `Assets/Official/World/Map/14/SharedRuntime/`，由 `Map14/Native/shared-assembly-catalog` 逐项绑定，运行时仅加载本地校验字节，不作为 Android bundle 或普通 Unity 插件导入。原 Console 的应用类型身份经检查，不包含 Spine 命名空间下的 SDK 实现；工具只检查程序集类型与公开日志 ABI，不读取动画 SDK 方法。GConfig.IConfig 是 APK 中完整无成员接口；生成的 GFrameCore 仅提供已核验的 IGSerializable 接口，不代表完整 GFrameCore。日志 ABI 在构建素材时由 Unity 自带 Cecil 生成，固定 NuGet 包、许可及哈希随来源记录；运行时不下载依赖。共享 prefab 恢复器保留原组件顺序和字段，调用原 Info.Init；完整序列化、正式地图宿主及 Player 仍待接通。
+

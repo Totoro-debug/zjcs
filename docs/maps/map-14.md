@@ -110,6 +110,8 @@
 
 - 原 `MyVisibility` 两层泛型类及 `MyVisibilityGrid` 已完整迁入 `Runtime/Official/EntityRootVisibility/`，复用同版本原可见性标志、状态更新委托、处理器／工厂接口和 EC 视图；共享可见性数据仍由宿主显式绑定。保留启动标志、已有 EC 视图的跳过分支、淡入淡出订阅、先清理再重建处理器、全部处理器联合判断、仅变化时发布可见性／淡入／事件与结束解绑顺序。四类雕像已在原实体生命周期和原 MapClientVisibilitySupporter 中运行，内置屏 Play Mode 通过原默认子节点隐藏／恢复、请求移除／重建、结束退还处理器、显示回收复用及低内存释放，三张实际画面已查看。当前测试使用隔离可见性处理器，未覆盖正式地图可见性条件、根实体淡入桥及 EC 视图跳过分支的业务绑定；正式点击／UI／存档／Player 仍待接通。恢复入口为 `scripts/prepare_unity_entity_root_visibility.py`，来源 `map14-entity-root-visibility-source-manifest.json`。
 
+- 原共享 EC 程序集已通过 `scripts/prepare_unity_map14_shared_ec_runtime.py` 接入：当前 871 的 Console／Luban／Framework.FirstPass.Runtime 保持原 DLL 字节，七个本地载荷按哈希与模块标识显式绑定；补齐 APK 元数据中的完整 GConfig.IConfig 标记接口及 IGSerializable 的 GetOpCode 接口，七组应用日志调用逐参转到固定版本的 Microsoft 日志／ZLogger。原容器、配置表类及共享规则方法继续直接执行原 IL，没有另外实现占格、阶段或组件生命周期规则。四种雕像的 44 个原共享组件按原配置次序恢复并执行原 Info.Init；SubStageStateInfo.Select 保留原生成反序列化器读取后不赋值的行为。内置屏 Unity 2022.3.57f1c2 导入／编译及隔离 Play Mode 通过原组件归属、两格体型、三态查询／切换、Awake／Start／End／Destroy、真实网格占位的注册／移动／移除和再次进入不重复加载程序集。测试使用独立 4×4 原网格及显式根／地面缓存，未初始化正式全局配置解析器；这是共享逻辑分项，没有模拟地图点击、显示画面、实际窗口、存档或 Player 验收，也未执行完整工程 ProjectTools.Validate。GFrameCore／Config 的其余原 AOT API、正式地图宿主及本地持久状态继续恢复。来源 `map14-shared-ec-runtime-source-manifest.json`，运行入口 `OfficialMap14SharedEcAcceptance.Run`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

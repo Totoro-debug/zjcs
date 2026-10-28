@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ea21300c2b4ae6241464048649b49f, type: 3}
+  m_Name: shared-assembly-catalog
+  m_EditorClassIdentifier: 
+  Assemblies:
+  - Name: Console
+    Data: {fileID: 4900000, guid: e876abf780349ca3926c08f6782f2d16, type: 3}
+    Sha256: 0ac0102db6f31c88da07a2ddec32b1937fe69391347f9770ff854edaa63d0397
+    ModuleId: 00786404-401e-459e-8a69-c76aa2a18151
+  - Name: Luban
+    Data: {fileID: 4900000, guid: fe69ae5ba5bb7fde669ff73007002307, type: 3}
+    Sha256: de6598af27d573ba225e3d60c57a07034552b2a2b8f399fdead46b0c22b393b2
+    ModuleId: 19f265d3-52f9-4320-980f-f0fdc35992e1
+  - Name: Framework.FirstPass.Runtime
+    Data: {fileID: 4900000, guid: c99403f864cff3801a4f217886e25e64, type: 3}
+    Sha256: fe49d4ce3611fbd7f9a2fe73fdd0986253b9f44517eb1044e717d901dd2caabe
+    ModuleId: ced27c5d-1d0c-4018-87e1-eac7c2a675d5
+  - Name: Microsoft.Extensions.Logging.Abstractions
+    Data: {fileID: 4900000, guid: 3f93ea19280030e095947ad54614d82c, type: 3}
+    Sha256: e899e37dfc2dd433807c205e764c32ea34bb95da083e189d7615947dd16c51e8
+    ModuleId: 5f591c74-c7fe-413b-91b5-87d6135ea5df
+  - Name: ZLogger
+    Data: {fileID: 4900000, guid: e745d6d11344bc60446e375439d3f506, type: 3}
+    Sha256: 149f3ae932cbd19a24f0597ce9ff8688e0fbf8070aab2d892c241e92defda5af
+    ModuleId: a8894818-d2ee-475a-8b33-95b94b7a5e5a
+  - Name: GFrameCore
+    Data: {fileID: 4900000, guid: 737dba07bca3019cf430c9d86656d9e4, type: 3}
+    Sha256: d5eb832771e1965991f7079c7bceea4a1797b8b679ad21464334f7faefb61f1c
+    ModuleId: b82e9244-be6d-7b17-0bff-e0063b01ce77
+  - Name: GFrameCore.Extensions.ZLogger
+    Data: {fileID: 4900000, guid: fdb90d99bfe4097bc985e4f6e43567a6, type: 3}
+    Sha256: 6b874f480e0f2bd7067a4980d25f2baebe882c67398c1dc2056e64bcfe59a077
+    ModuleId: 49cb129f-1d48-d7cd-c01a-7c5ab6bec063
+  Prefabs: {fileID: 4900000, guid: 69d5c05813fbc4bd39395f27da13ed37, type: 3}
+  PrefabsSha256: 777977c2fbe09c6f252a928faca6aac9ffd438a9278018f784c360af836506a4
