@@ -441,6 +441,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 肖像调度和详细请求分别见 `profession-ui/portrait-manager-source-manifest.json`、`profession-ui/portrait-details-source-manifest.json`。前者迁入原管理器并恢复两个 UniTask 状态机，后者复制原参数、外观哈希、详细请求和缓存有效性四个方法，只读访问原外观字段。保留同帧排队处理、关联取消对象先释放再重读、磁盘读取／选择性写入、十秒清理及第四次池缩减、首个同名皮肤哈希优先和按正权重异或。隔离 Play Mode 通过真实 GPU 纹理／磁盘数据及上述调度、取消、失败、订阅保护和强制清理时钟验证，测试纹理画面已查看；原 studio prefab、完整外观与后台服务的正式绑定未完成，拍摄及外观对象夹具不属于交付素材或角色替代。
 
+原 APK `defaultpackage_assets_scriptableconfig_modules_appearance.bundle`（清单 MD5 `2719b9183d3296a439780b070ce4743c`、包内原始 SHA256 `355c83b77a342a0883c3fa63e6d553fe248fe1049364791e0a33acf6f99c72a1`）中的 `AppearanceConfig.asset` 已直接恢复为 Windows 原生 ScriptableObject，迁入完整十个原游戏配置类型，仅适配命名空间及配置注册属性。13 类皮肤、四组附加皮肤、三个动画挂点组、男女覆盖、1,742 条有符号哈希与 466 条路径保留原顺序和值；未使用云端素材。来源及输入／输出哈希见 `profession-ui/appearance-config-source-manifest.json`。实际 Play Mode 核对所有字段和原查询、延迟缓存、重复键、哈希增删分支，通过；这不证明真实角色渲染或完整职业页面。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

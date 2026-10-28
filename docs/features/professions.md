@@ -26,6 +26,8 @@
 
 隔离 Play Mode 通过原哈希、空的未选皮肤、同帧队列、拍摄前外观重读、原持久化器真实磁盘复用、选择性写盘、取消／无令牌／拍摄失败分支、原加载／禁用资源及销毁取消验证。夹具推进私有清理时钟，核对订阅保护、过期后移除和第四次清理仅释放一个纹理，没有等待四十秒；实际 GPU 红色测试纹理已查看。此处的拍摄器和外观对象均为验证夹具，正式原 studio prefab、玩家外观对象、皮肤表和游戏后台服务尚未绑定，不能据此声称真实角色或职业界面已完成。来源见[肖像调度](../../assets/reference/profession-ui/portrait-manager-source-manifest.json)与[原哈希方法](../../assets/reference/profession-ui/portrait-details-source-manifest.json)。
 
+原 `AppearanceConfig` 及其九个值类型／枚举已完整迁入；配置直接取自 APK，保留 13 类皮肤及基础／可设置标记、四组附加皮肤、三个挂点动画组、男女覆盖 ID、1,742 条有符号 64 位皮肤哈希和 466 条骨骼路径。隔离 Unity 导入和实际 Play Mode 逐项核对全部字段、查询返回的原列表／实例、延迟字典、重复键异常及异常后部分缓存、哈希追加不去重／排序与反向删除，均通过；变更测试只修改克隆，不写入正式配置。此配置不包含渲染器，真实角色、studio 和完整职业页接线仍未完成。来源见[外观配置](../../assets/reference/profession-ui/appearance-config-source-manifest.json)，代码入口为 `AppearanceConfig.cs`，资源入口为 `Assets/Official/ProfessionUI/Portrait/AppearanceConfig.asset`。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 15 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。
