@@ -72,6 +72,8 @@
 
 - 原 `TlPlayerAnimatorParamTrack`、`TlPlayerAnimatorParamClip` 和 `TlPlayerAnimatorParamBehaviour` 已迁入同一官方运行时模块，保留忽略 `playerData`、读取当前玩家实体、只取其 `AnimationController`、先执行可选 clip 替换再返回 Animator 的顺序；依赖注入改为显式当前玩家服务。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 与 Play Mode 通过，核对六份原类绑定、玩家／控制器缺失不回退、替换条件，以及从原 CAB `5d4c2c5d1454464f2497d6b3e36e10f9`／PathID `-3612460611401424567` 读取参数后，无场景绑定 Timeline 实际触发 `affirmative`、不影响旁侧 Animator。验证使用隔离参数控制器，只证明轨道执行；原玩家模型、动画素材、完整演出、地图存档和 Windows Player 仍未完成。
 
+- 原 `SuiMo_StoryShow.prefab` 的首段镜头／特效演出已恢复为原生 Unity 资产：19 个节点、5.5 秒固定时长 Timeline 的八条原轨道、Cinemachine 镜头、两份原动画、原网格与事件引用，16 个脚本引用改绑迁移原类／已安装原生包；`Resources/Map14/Native/native-suimo-performance-catalog` 显式绑定原资源路径。十份材质中五份复用既有精确 CAB／PathID 转换，五份新增；新增一张 64×64 纹理及全部七级 mip，保留原 shader、属性、采样设置、混合和队列。原 9 个粒子系统、12 个粒子渲染器、2 条拖尾、2 个 Animator 和导演组件完成 23,790 个序列化值／319 个指针及 16 份 Timeline 原脚本绑定核对；原编辑器 YAML 不存储的 56 项光照贴图默认字段另经运行属性核对，三个原空材质槽保持为空。内置屏隔离 Unity 编译、全工程校验与 Play Mode 通过，新增 mip 的 GPU 字节哈希全部一致，已实际查看原地图环境上的六个演出帧；原镜头与粒子执行、事件 `Map_Entity_Activate_6304_3` 派发及当前玩家 `affirmative` 参数触发已验证。两条原非激活分支拖尾保留配置与绑定，实际未生成轨迹。声音测试仅验证原事件派发，玩家仍为隔离参数控制器；原玩家模型／动画、声音播放、主线触发、正式地图输入／存档与 Windows Player 尚未完成。恢复脚本 `scripts/prepare_unity_map14_suimo_performance.py`、字段核对 `scripts/verify_unity_map14_suimo_native.py`，来源 `map14-suimo-native-performance-source-manifest.json`。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

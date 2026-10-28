@@ -10,7 +10,7 @@ from prepare_unity_map13_water_entity_inputs import hydrate
 from prepare_unity_map13_sources import encode, meta, sha, source_path, write
 
 VERSION = "871_156598"
-CACHE = ROOT / ".tools/map14-story-playable-native-cache-871_156598"
+CACHE = ROOT / ".tools/source-packages/conversion-cache/871_156598/map14-story-playables"
 SOURCE = ROOT / "unity/Assets/Official/World/Map/14/Source/story-playables.json"
 SOURCE_RECEIPT = ROOT / "assets/reference/official-map/map14-story-playables-source-manifest.json"
 OUTPUT = ROOT / "unity/Assets/Official/World/Map/14/Source/native-story-playable-components.json"
