@@ -81,6 +81,7 @@ def build():
         vertex_geometry=file_record(ROOT / "assets/reference/profession-ui/vertex-geometry-source-manifest.json"),
         atlas_geometry=file_record(ROOT / "assets/reference/profession-ui/atlas-geometry-source-manifest.json"),
         appearance_character=file_record(ROOT / "assets/reference/profession-ui/appearance-character-source-manifest.json"),
+        appearance_spine=file_record(ROOT / "assets/reference/profession-ui/appearance-spine-source-manifest.json"),
         native_curves=file_record(ROOT / "assets/reference/profession-ui/native-curves-source-manifest.json"),
         bone_pose=file_record(ROOT / "assets/reference/profession-ui/bone-pose-source-manifest.json"),
         native_ik=file_record(ROOT / "assets/reference/profession-ui/native-ik-source-manifest.json"),

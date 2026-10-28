@@ -475,6 +475,8 @@ ScoreRewardUI.RefreshReward 从下一档 AchievementInfo.Reward 构造图标，�
 
 职业角色外观生命周期：从当前 Assembly-CSharp 与 Console 程序集迁入完整角色组件、运行数据／HSV／接口／性别类型及三个原地址方法；输入、端口、边界、验证器和闭包哈希见 `profession-ui/appearance-character-source-manifest.json`。隔离 Play Mode 核对加载／释放、皮肤／部件／染色顺序和原错误分支通过，原覆盖旧 split 句柄行为未改写。主面板闭包剩 11 类运行组件、无缺失 GUID；正式资源和骨骼服务未接入，不能视为完整职业页面。
 
+职业组合皮肤与骨骼调用：完整迁入官方应用层 `AppearanceSpine`，保留组合皮肤复用／清理、原皮肤顺序、同／异皮肤的槽位处理、setup／事件顺序、HSV、原失败分支和选择性卸载；骨骼 SDK 行为通过明确接口接入。源码、程序集、依赖端口、接口及 Play Mode 验证器哈希见 `profession-ui/appearance-spine-source-manifest.json`。隔离组件验证通过；实际原生皮肤／骨骼数据后端、约束、角色渲染和完整职业页未覆盖。
+
 ## 技能首页与安装流程复核
 
 2026-10-13：复核固定版本 `854_156383` 的 `CharacterPanelSkillPanel`、`SkillPanelSkillDetailDialog`、`SkillRecommendDialog`、`SkillRecommendDialogItem`、`SkillTabGroupItem`，以及客户端 `CharacterPanelSkillContent.BeginPrepareEquip / RefreshEquipedSkill` 和 `SkillPanelSkillDetailDialog.RefreshBtn`。原有实现未给七个空技能槽生成 `ItemIconEmpty`，将“推荐”误接为祈愿，并使用通用 `SkillDetailDialogPanel`；安装时直接追加技能，无法选择位置或替换满槽。

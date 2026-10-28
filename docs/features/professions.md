@@ -54,6 +54,8 @@
 
 原 `AppearanceCharacter` 全部方法及序列化字段、`AppearanceRuntimeData`、`HsvChange`、外观接口与原性别枚举已迁入；角色路径复用原地址工具的三个方法。资源／部件通过显式接口连接，骨骼资产仅在边界改为 ScriptableObject 引用。隔离 Play Mode 检查原资源加载／结果读取／释放顺序、相同资源引用、原性别枚举和路径、先释放再检查有效性、皮肤过滤／排序／附加项重复、部件路由、染色值复制与单通道缓存、空值／无效分支和销毁。原代码重复加载时会覆盖旧 split 句柄而不提前释放，该行为按源代码保留；不自行添加资源状态变化。验证使用资源／外观／部件夹具，正式角色数据、部件服务和真实骨骼后端仍待接入。来源见[原角色外观生命周期](../../assets/reference/profession-ui/appearance-character-source-manifest.json)。
 
+原应用层 `AppearanceSpine` 全部方法和序列化字段已迁入，按原顺序清空／复用组合皮肤、依次加入存在的皮肤，保留名称重复和后项覆盖。首次切换与相同皮肤重设使用原两条分支；重设只替换原 setup 名称能查到的非空附件，随后更新缓存、复位 setup 并通知。初始化的空值／同对象／不同对象分支、事件异常捕获、HSV 材质写入、配置失败和部分／完整释放顺序均在隔离 Play Mode 检查通过。骨骼资产改为 ScriptableObject 引用，皮肤／插槽／骨骼行为由显式接口提供；验证端点为夹具，原生数据后端和真实角色渲染尚未接通，未移植骨骼 SDK。来源见[原组合皮肤与骨骼调用](../../assets/reference/profession-ui/appearance-spine-source-manifest.json)。
+
 两份原始字体由官方 `FontAssetFontConfig` 的路径、长度和 MD5 取回。原 `MPLUSRounded1c-Medium Atlas` 是 0×0、无像素载荷的动态 Alpha8 图集，已恢复并验证原生导入。当前含动态物品／配置的主面板依赖检查覆盖 881 个资产、87 种脚本、8 种托管类型和 7 个 shader，断开 GUID 为 0；尚有 11 种运行组件及相关服务未接入，主要是外观预览、离屏角色渲染、玩家信息和音频对象，不能视为原生职业界面已经可运行。
 
 馈赠使用的 `ItemIconDefault`、总职业等级说明使用的 `RuleDialog` 及四种奖励 Sprite 已从 APK 的实际对象取回，并记录调用、配置、CAB、对象 ID 和原始哈希。当前版本的成就、物品及规则提示三张 Luban 表已完全解码；组 10 的十条成就配置、四种奖励物品定义及 `ProfessionLevelInfo` 的标题／三条说明与现有打包配置相符。原图标管理器的 ID 覆盖、类型覆盖、默认图标选择顺序已核对，这四种奖励均使用原 `ItemIconDefault`，没有改用手写图标控件。

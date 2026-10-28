@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "code_manifest": {
+    "path": ".tools/source-packages/current/871_156598/code-manifest.json",
+    "sha256": "3bb73048120020e8c28d912550cb9eb3277bb8b899216976173ec29c1902ca5e"
+  },
+  "assembly": {
+    "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+    "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+  },
+  "ports": [
+    {
+      "source": {
+        "path": ".tools/source-packages/current/871_156598/official-code/client-source/AppearanceSystem.Runtime/AppearanceSpine.cs",
+        "sha256": "f31562342bba5bb18875d310a83e324678084c4f40ae1521652a34907c7ece18"
+      },
+      "runtime": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSpine.cs",
+        "sha256": "69a08b3112f32e4b57b574e2dcafd68474aff7f91352e28e1c42f435a45ddc62"
+      },
+      "meta": {
+        "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/AppearanceSpine.cs.meta",
+        "sha256": "8caf4a4a92b5d2aa752f9fb180eeb99dc66cb2d7f826ee782ac88c5e8444b6f4"
+      }
+    }
+  ],
+  "generator": {
+    "path": "scripts/prepare_unity_profession_appearance_spine.py",
+    "sha256": "b0921be56ed7fe6ee347e8d20ab139cb41cd1498f9ecb4b634823a35c389bda1"
+  },
+  "dependencies": [
+    {
+      "path": "assets/reference/profession-ui/appearance-character-source-manifest.json",
+      "sha256": "3570feee08f737bb21a78f691aba46c436bcb89c24e7870c06ab5dd8aaf5b411"
+    },
+    {
+      "path": "assets/reference/profession-ui/appearance-materials-source-manifest.json",
+      "sha256": "ee34c631174791b0446228856965bcb838e5775890c94eb9b7fedac4dbaff45d"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSpineBindings.cs",
+      "sha256": "c79baef7286b3fa103eed910b0ad7a22dd50457879886cbe9d93d5f7012b39a8"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/ProfessionAppearanceSpineBindings.cs.meta",
+      "sha256": "d755012f4675884feca48d341e1eb9e18350a214f50f8a8687f7c9f6090ad39a"
+    }
+  ],
+  "validation": [
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceSpineValidation.cs",
+      "sha256": "58e8df7dea9a787d72d9fadd0b444776cb75f75cdb0e6c069cbf9d89c9d7f251"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/ProfessionUI/ProfessionAppearanceSpineValidation.cs.meta",
+      "sha256": "40bd8cd4c15c2b697a9d1a3b51297b3472e982e1c1f6e60665b768eb1070a765"
+    }
+  ],
+  "operation": "Copy every original AppearanceSpine application method and serialized field. Preserve ordered skin composition, reuse/clear of the combined skin, missing-skin filtering, new versus same skin branches, setup-pose/event order, event exception handling, material/HSV calls and selective unload. Adapt skeleton data/skin/slot operations to explicit interfaces and native asset references to ScriptableObject. No skeleton SDK implementation is used.",
+  "validated_scope": "Unity 2022.3.57f1c2 Play Mode: original ordered combined-skin reuse/clear/merge, missing-skin filtering, new versus same skin slot branches, setup/event order and caught multicast subscriber exception pass. Exact source HSV values reach the original translated material shader; config/material failure branches, null/same/different asset initialization, selective clear/cache/setup/unload, null skeleton/data/component branches and destruction pass. Skin/skeleton endpoints are fixtures; no SDK pose, production character render or full profession-page validation is claimed.",
+  "limitations": [
+    "Native renderer, asset/skin graph, animation constraints and full profession-page interactions remain required."
+  ]
+}
