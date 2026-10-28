@@ -14,6 +14,53 @@
 - `assets/reference/` 只保存来源记录和必要参照。运行时素材必须由 Unity 工程打包并随游戏交付。
 - 原始 AssetBundle 与编译 shader 不默认视为 Windows 可用资源；须恢复、转换、绑定并验证目标平台表现。
 
+## 验证临时产物与空间回收
+
+测试编译输出、隔离 Unity 工程及其 `Library`、临时 Windows Player、日志、截图和测试存档统一写入仓库 `output/validation/<模块>-<GUID>/`（本机为 `D:/Desktop/zjcs/output/validation/`）；`.tools/` 继续保存官方输入、工具、复用的转换缓存与素材快照。正式游戏仍发布到 `D:/Desktop/杖剑传说/`。这项调整不改变游戏功能的完成状态。
+
+PowerShell 统一入口为 [`validation_workspace.ps1`](../scripts/validation_workspace.ps1)：
+
+```powershell
+. ./scripts/validation_workspace.ps1
+$work = New-ZjcsValidationWorkspace -Name map14
+$env:ZJCS_VALIDATION_DIR = $work
+$env:ZJCS_REPOSITORY_ROOT = (Get-Location).Path
+try {
+    # 临时工程放在 $work/unity，Player 放在 $work/player。
+    # 点源仓库 scripts/unity_internal_display.ps1 后，
+    # 用 Start-UnityOnInternalDisplay 启动窗口并等待退出。
+    # 在此完成模拟输入、实际查看截图，并将结论写回所属功能／地图页。
+} finally {
+    Remove-Item Env:ZJCS_VALIDATION_DIR -ErrorAction SilentlyContinue
+    Remove-Item Env:ZJCS_REPOSITORY_ROOT -ErrorAction SilentlyContinue
+    Remove-ZjcsValidationWorkspace -Path $work
+}
+```
+
+同一 PowerShell 调用内完成的验证可使用 `Invoke-ZjcsValidation -Name map14 -ScriptBlock { param($work) ... }`，自动设置并恢复以上环境变量，在成功或异常退出时清理。外部程序必须等待结束并显式检查退出码；不要在回调中使用 `exit`，也不要在进程仍运行时清理。跨工具调用需要保留截图时，使用 `New` 创建并在核对画面、写回结论后使用 `Remove`。清理工具只接受本仓库标记的单个会话目录，拒绝 `output/validation/` 根目录、仓库目录、目录链接、其他存活会话及仍被 Editor／Player 命令行使用的目录；不会全局扫描删除旧会话。进程崩溃或文件锁可能留下目录，停止占用后按明确路径重试。
+
+Python 使用 [`validation_workspace.py`](../scripts/validation_workspace.py) 的 `temporary_validation_directory(prefix)`，退出上下文时自动删除；优先使用 `ZJCS_VALIDATION_DIR`，未设置时在仓库 `output/validation/` 下新建独立目录。职业成就、技能成就、副本 UI 路径测试已采用此入口；职业奖励、音频字段、提示点探针只接受此临时范围内的隔离 Unity 工程，不再强制写入 `.tools`。
+
+历史 Editor 验证代码仍有硬编码 `.tools` 输出及相对仓库定位。后续运行这些入口前必须适配本次输出参数／环境变量与实际仓库路径，不可直接复制旧命令继续生成 `.tools` 验证工程。`output/` 内的临时工程同样必须使用内置屏启动工具。输出目录不是审批豁免：本机已实际验证本次工具的创建及删除，其他会话若仍被审批策略拒绝，应报告具体操作和原因，不改用其他删除方式绕过。
+
+空间核对采用不跟随 junction 的文件逻辑大小，`.tools` 合计约 **140.84 GiB**。以下旧验证缓存可以在对应 Unity 退出后重建，不属于官方输入或用户存档：
+
+| 可重建缓存 | 逻辑大小 |
+| --- | ---: |
+| `.tools/skills-ui-local-validation/unity/Library/` | 14.56 GiB |
+| `.tools/profession-ui-validation/unity/Library/` | 8.22 GiB |
+| `.tools/map14-handin-validation/unity/Library/` | 8.22 GiB |
+| `.tools/map13-ui-validation/unity/Library/` | 4.40 GiB |
+| 合计 | **35.40 GiB** |
+
+四个隔离工程整体约68.60 GiB；其中 `Assets` 是验证副本，但须先确认独有修复、探针及绑定已经同步，才能清理整个工程。部分素材与正式工程使用硬链接，删除副本不能按文件大小等量计算释放空间。上述表格同样不是已释放空间的声明；本次仅识别旧目录，不批量删除其他会话产物。
+
+`.tools/official-android-probe/x86_64-30_r16.zip`（1.34 GiB）与 `emulator-windows_x64-16428233.zip`（0.42 GiB）是安装归档；已存在对应 revision 16 系统镜像及 build 16428233 模拟器安装，通常运行不再需要这两份 ZIP，删除后离线重装需重新取得归档。`.tools/assetripper-1.3.14/temp/` 约2.25 GiB 中仍有脚本读取的原生导出输入，不可仅凭 `temp` 名称整目录清理。
+
+必须保留当前APK、CDN缓存、反编译代码、来源凭据、按哈希保存的历史转换输入和当前素材快照。`.tools/asset-packs/zjcs-assets-871_156598-9e78e198ee78b575.zip` 约17.17 GiB，是 `asset-pack/lock.json` 指定的备份，不当作临时构建删除。模拟器 `avd/zjcs-official-probe.avd/` 已明确保留官方完整下载数据，也不是普通测试残留；其 `userdata-qemu.img` 逻辑16 GiB、实际分配约0.14 GiB，不能声称删除可释放16 GiB。来源保留依据见 [SOURCES.md](../assets/reference/SOURCES.md)。
+
+本次目录工具已通过真实成功／失败清理、环境变量恢复、越界及 junction 拒绝检查；三个迁移后的规则测试已执行通过。此范围不涉及游戏载荷、UI 或绑定，不计为新的 Play Mode／Windows 发布验证。
+
 ## 官方来源与转换
 
 当前默认输入由根目录 `official-source.json` 选择：保留的 APK 为 `854_156383`，唯一保留的云端缓存为 `871_156598`（资源目录 `202610211330871`）。按所选清单优先读取 APK 内同哈希文件，再读该版本已校验的 CDN 缓存；保留真实版本、URL、bundle / 对象名及输入输出哈希。`854_156383` 的云端缓存及 `864_156496` 的185个同名补充包已按用户要求移入 Windows 回收站，历史来源记录保留，不能将新版文件改名冒充旧版。

@@ -11,6 +11,7 @@ import yaml
 from official_apk import ROOT
 from prepare_unity_profession_native_inputs import CACHE
 from prepare_unity_profession_native_bindings import GUID, META_GUID, MANAGED, sha, guid
+from validation_workspace import require_temporary_unity_project
 
 
 def build(project):
@@ -98,7 +99,5 @@ if __name__ == "__main__":
     parser.add_argument("--project", type=Path, required=True)
     args = parser.parse_args()
     project = args.project.resolve()
-    allowed = (ROOT / ".tools/profession-ui-validation/unity").resolve()
-    if project != allowed or not (project / "ProjectSettings/ProjectVersion.txt").exists():
-        raise ValueError("Native graph fixture only writes to this session's isolated Unity project")
+    project = require_temporary_unity_project(project)
     build(project)

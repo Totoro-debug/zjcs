@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-import tempfile
+from validation_workspace import temporary_validation_directory
 from test_profession_achievements import managed
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,10 +23,8 @@ def main():
     version, parent = max(versions, key=lambda pair: tuple(map(int, pair[0].split("."))))
     runtime = Path(parent) / version
     editor = Path("D:/Tool/Unity/Editor/Data")
-    with tempfile.TemporaryDirectory(prefix="dungeon-ui-path-tests-", dir=ROOT / ".tools") as temporary:
+    with temporary_validation_directory("dungeon-ui-path-tests-") as temporary:
         work = Path(temporary).resolve()
-        if not work.is_relative_to((ROOT / ".tools").resolve()):
-            raise ValueError("The temporary compiler workspace must remain under the repository tools directory.")
         harness = work / "Paths.cs"
         harness.write_text(fixture.replace("/* ACTUAL_FIND_METHOD */", source[start:end]), encoding="utf8")
         output = work / "Paths.dll"

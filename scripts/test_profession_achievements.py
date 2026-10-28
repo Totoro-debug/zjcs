@@ -1,7 +1,7 @@
 """Compile the C# achievement migration and exercise original-config boundary fixtures."""
 from pathlib import Path
 import subprocess
-import tempfile
+from validation_workspace import temporary_validation_directory
 import shutil
 import json
 import re
@@ -17,8 +17,7 @@ def managed(path):
     return bool(struct.unpack_from('<I', raw, directories + 14 * 8)[0])
 
 def main():
-    cache = ROOT / '.tools'
-    with tempfile.TemporaryDirectory(prefix='profession-achievement-tests-', dir=cache) as temporary:
+    with temporary_validation_directory('profession-achievement-tests-') as temporary:
         work = Path(temporary)
         sources = [ROOT / 'unity/Assets/Game/Runtime/Offline/Progression/OfficialProfessionAchievementRules.cs',
                    ROOT / 'scripts/fixtures/profession_achievements_harness.cs']

@@ -9,6 +9,7 @@ from official_native_yaml_verification import documents
 from prepare_unity_profession_native_inputs import CACHE
 from prepare_unity_profession_native_bindings import guid
 from read_official_native import NativeMethods
+from validation_workspace import require_temporary_unity_project
 
 
 def sha(path):
@@ -61,8 +62,7 @@ def build(project=None):
 
 
 def prepare_probe(project, events, exported):
-    if project == (ROOT / "unity").resolve() or not project.is_relative_to(ROOT / ".tools"):
-        raise ValueError("Use an isolated Unity project under .tools")
+    project = require_temporary_unity_project(project)
     dest = project / "Assets/ProfessionEventFieldProbe"
     if dest.exists():
         raise ValueError("An existing native event probe is not overwritten")

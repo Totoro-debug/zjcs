@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import shutil
 from prepare_unity_profession_native_inputs import ROOT, CACHE
+from validation_workspace import require_temporary_unity_project
 
 
 def sha(path):
@@ -12,11 +13,7 @@ def sha(path):
 
 
 def build(project):
-    project = project.resolve()
-    if project == (ROOT / "unity").resolve() or not project.is_relative_to(ROOT / ".tools"):
-        raise ValueError("Use an isolated Unity project under this repository's .tools directory")
-    if not (project / "ProjectSettings/ProjectVersion.txt").is_file():
-        raise ValueError("The isolated Unity project is missing")
+    project = require_temporary_unity_project(project)
     dest = project / "Assets/ProfessionDynamicResourcesProbe"
     if dest.exists():
         raise ValueError("Existing import probe is not overwritten")

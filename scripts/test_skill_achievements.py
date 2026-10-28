@@ -4,14 +4,14 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-import tempfile
+from validation_workspace import temporary_validation_directory
 from test_profession_achievements import managed
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
-    with tempfile.TemporaryDirectory(prefix="skill-achievement-tests-", dir=ROOT / ".tools") as temporary:
+    with temporary_validation_directory("skill-achievement-tests-") as temporary:
         work = Path(temporary)
         dotnet = shutil.which("dotnet")
         if not dotnet:
