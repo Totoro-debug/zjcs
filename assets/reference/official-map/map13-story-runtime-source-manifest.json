@@ -44,16 +44,36 @@
       "sha256": "d2244e946dd2e860381f67570bc3495d73efa790e1b783faf6841194d9d9580d"
     },
     {
+      "path": "unity/Assets/Official/World/Map/13/Source/entities.json",
+      "bytes": 2955473,
+      "sha256": "1ec56a3113040b117e1d547490df59a88ff8f8634013a703381c4c49867b8dde"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/Entities/catalog.json",
+      "bytes": 2102650,
+      "sha256": "15961c3328a1c7a91bf211e6f927f21ca63c98df8f080168c8df751c2d4ebe27"
+    },
+    {
+      "path": "assets/reference/official-map/map13-entity-catalog-source-manifest.json",
+      "bytes": 1224,
+      "sha256": "f6ffb50a9eb6d23d13beca8cffef67721a6cbd9ed8904608f7d0c482041104e7"
+    },
+    {
+      "path": "scripts/map13_puzzle_rules.py",
+      "bytes": 5687,
+      "sha256": "8d521db91374425608dc17e5de977133b327c66754866a8480206881eb8db84e"
+    },
+    {
       "path": "scripts/prepare_unity_map13_story_runtime.py",
-      "bytes": 20049,
-      "sha256": "83e3a2cfcede892f9637abec8e3eccc47c9af8c062becc1fdf613c2afa691823"
+      "bytes": 21385,
+      "sha256": "5a90eefa8f60d2641938eef470a87e48f65a49ce7680c738a7cacc77af732a08"
     }
   ],
   "outputs": [
     {
       "path": "unity/Assets/Game/Resources/Map13/stories.json",
-      "bytes": 5262173,
-      "sha256": "a111a7424dac29763bef90ff5f33c70f5186f67ca6500f315a162fd77521c5f8"
+      "bytes": 11030013,
+      "sha256": "fe44788a6f42bd88b58732f0cf3a7b8346fd8e5ace7697e493d74c7eb2a7c699"
     },
     {
       "path": "unity/Assets/Game/Resources/Map13/stories.json.meta",
@@ -77,6 +97,8 @@
     "mapTalkConditions": 23,
     "entityTemplates": 165,
     "mainlineTasks": 20,
+    "puzzleRules": 2690,
+    "puzzleTerminals": 11,
     "quickBuys": 1,
     "requiredAccessConditions": 13
   },

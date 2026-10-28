@@ -7,6 +7,8 @@ import json
 import re
 from pathlib import Path
 
+from map13_puzzle_rules import puzzle_rules
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "unity/Assets/Official/World/Map/13/Source"
@@ -256,6 +258,20 @@ def build() -> dict:
     if set(templates) & set(dependencies["entityTemplates"]): raise ValueError("Duplicate original EC template identity")
     templates.update(dependencies["entityTemplates"])
     inputs.update(dependencies=dependencies_path, dependenciesReceipt=dependencies_receipt, templates=templates_path)
+    placements_path = SOURCE / "entities.json"
+    if sha(placements_path.read_bytes()) != expected[placements_path.name]:
+        raise ValueError("Pinned Map13 puzzle placement components changed")
+    placements = read_json(placements_path)
+    catalog_path = ROOT / "unity/Assets/Game/Resources/Map13/Entities/catalog.json"
+    catalog_receipt_path = ROOT / "assets/reference/official-map/map13-entity-catalog-source-manifest.json"
+    catalog_receipt = read_json(catalog_receipt_path)
+    if catalog_receipt["manifest"] != VERSION or catalog_receipt["output"]["sha256"] != sha(catalog_path.read_bytes()):
+        raise ValueError("Map13 puzzle catalog differs from its source receipt")
+    rules = puzzle_rules({"EntityComponents": [{"EntityId": int(key), "Json": json.dumps(value)}
+                                               for key, value in placements.items()]},
+                         read_json(catalog_path), templates, tables["EC/entity_grid_mover"])
+    inputs.update(placements=placements_path, catalog=catalog_path, catalogReceipt=catalog_receipt_path,
+                  puzzleConverter=ROOT / "scripts/map13_puzzle_rules.py")
     story_rows = {row["StoryName"]: row for row in tables["story"]
                   if row.get("ResPath", "").startswith("Map13Story/") or row["StoryName"] in dependencies["graphs"]}
     missing_graphs = set(story_rows) - set(graphs)
@@ -343,6 +359,7 @@ def build() -> dict:
             {"Type": name, "Json": json.dumps(fields, ensure_ascii=False, separators=(",", ":"))}
             for name, fields in value.items()]} for key, value in sorted(templates.items(), key=lambda p: int(p[0]))],
         "quickBuys": dependencies["quickBuys"],
+        "puzzleRules": rules,
         "mainlineTasks": mainline_tasks(tables["task"], 13),
     }
     write_json(OUTPUT, runtime)
@@ -362,6 +379,7 @@ def build() -> dict:
                    "fixedRewards": len(fixed_rows), "handInItems": len(hand_in_rows),
                    "mapTalkEntries": len(runtime["mapTalkEntries"]), "mapTalkConditions": len(runtime["mapTalkConditions"]),
                    "entityTemplates": len(runtime["entityTemplates"]), "mainlineTasks": len(runtime["mainlineTasks"]),
+                   "puzzleRules": len(rules), "puzzleTerminals": sum(bool(row["TerminalJson"]) for row in rules),
                    "quickBuys": len(runtime["quickBuys"]), "requiredAccessConditions": len(access_condition_ids)},
         "pendingRuntimeBindings": ["official playables", "native dialog UI", "puzzle and witch runtime result bindings"],
     }

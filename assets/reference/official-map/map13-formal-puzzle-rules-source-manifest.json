@@ -1,0 +1,39 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "method": "Zjcs.Editor.Map13Mainline.OfficialMap13MainlinePlayAcceptance.RunRules",
+  "exit_code": 0,
+  "coverage": "Actual Unity rule execution: all 2690 placements, six step-grid and five road-switch terminals, original entry state, numeric lock dictionary and all serialized puzzle states cold restore. This method does not exercise formal map rendering or input.",
+  "inputs": [
+    {
+      "path": "assets/reference/official-map/map13-entity-catalog-source-manifest.json",
+      "bytes": 1224,
+      "sha256": "f6ffb50a9eb6d23d13beca8cffef67721a6cbd9ed8904608f7d0c482041104e7"
+    },
+    {
+      "path": "assets/reference/official-map/map13-story-runtime-source-manifest.json",
+      "bytes": 3753,
+      "sha256": "fcfe4068adc433e42408f5809bf446fea062db7637f896d5ef90410e8706c59d"
+    },
+    {
+      "path": "assets/reference/official-map/map13-story-spatial-source-manifest.json",
+      "bytes": 2560,
+      "sha256": "d87700974439dcf37334f2fdba6c82a3b0c4988c4a0f6b111c264e0c75d4d1b5"
+    },
+    {
+      "path": "unity/Assets/Game/Editor/Map13Mainline/OfficialMap13MainlinePlayAcceptance.cs",
+      "bytes": 13155,
+      "sha256": "d433c16300fe52a448f25717b52dadc85e790d54179b6f9e8241cbe777754d7e"
+    }
+  ],
+  "execution": {
+    "log_sha256": "be21bb4ecf3d38bf415c910f6fabc38a18963bb7daff537d8e7577724f6192f5",
+    "saved_state_sha256": "a149af191069795cd29cce49713a0d7a5f7cb31e0b38a093a814460b460c68fc",
+    "project_tools_log_sha256": "e9990d424b0c5646321241d8ed1ee25279816d0d0406b9d271a3aff8ae7df13b"
+  },
+  "checks": {
+    "unity_compile": true,
+    "root_static_guids": 74056,
+    "project_tools_validate": true
+  }
+}

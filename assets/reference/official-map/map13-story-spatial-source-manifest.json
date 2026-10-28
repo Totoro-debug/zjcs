@@ -1,0 +1,84 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "operation": "Resolve original prefab root components, StoryTalk bits and root registrations; reuse version-matched shared StorySettings.",
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-object-graph.json",
+      "bytes": 19909852,
+      "sha256": "18f89ebe23f05d61849a699f980948603fdfcd055df04fb19ae770617b5fe813"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-entity-object-graph-source-manifest.json",
+      "bytes": 333421,
+      "sha256": "d4bb1d441da3ef4321235d88f2f4091674bfff00e89126315ec75b49f935b6f7"
+    },
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/native-entity-components.json",
+      "bytes": 37704675,
+      "sha256": "8e555c849c373c923fcaa87cfd16b06e1caebe8b65614648130958cdd7b55eb3"
+    },
+    {
+      "path": "assets/reference/official-map/map13-native-entity-input-source-manifest.json",
+      "bytes": 22970500,
+      "sha256": "84af81d7ab5e1c37bca41d10e52aae236dd5d981cdb08005a03a11ceb28ee747"
+    },
+    {
+      "path": "unity/Assets/Game/Resources/Map13/stories.json",
+      "bytes": 11030013,
+      "sha256": "fe44788a6f42bd88b58732f0cf3a7b8346fd8e5ace7697e493d74c7eb2a7c699"
+    },
+    {
+      "path": "assets/reference/official-map/map13-story-runtime-source-manifest.json",
+      "bytes": 3753,
+      "sha256": "fcfe4068adc433e42408f5809bf446fea062db7637f896d5ef90410e8706c59d"
+    },
+    {
+      "path": "assets/reference/official-map/map12-dialogue-source-manifest.json",
+      "bytes": 134701,
+      "sha256": "92fea23a453cace9ac23d4b727e27182dd42a8ef00da22299b6ca399b18cb3db"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_story_spatial.py",
+      "bytes": 6709,
+      "sha256": "a47edf76c791c9a4ea39514256a82e0b8d47fb4bde44f564fa140a9eafa468f1"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Resources/Map13/story-spatial.json",
+      "bytes": 13467,
+      "sha256": "2894054ec3628b9e3a8485f9f9d303d42dcd1a10f76a24cd1918d67c8ffda559"
+    }
+  ],
+  "counts": {
+    "entities": 150,
+    "registerKeys": 6
+  },
+  "foreignMapSubgraphs": {
+    "WorldTreeDungeonActive": [
+      11
+    ],
+    "IronMountDungeonActive": [
+      12
+    ],
+    "FengMoXiaDungeonActive": [
+      14
+    ],
+    "JiangJunLingDungeonActive": [
+      14
+    ],
+    "QingYunGuanDungeonActive": [
+      14
+    ],
+    "GuJianChengDungeonActive": [
+      14
+    ],
+    "YunHaiXianZhouDungeonActive": [
+      14
+    ]
+  },
+  "requiredLocalRegisterKeys": [
+    "HuangQuanGe"
+  ]
+}

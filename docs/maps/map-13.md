@@ -12,6 +12,8 @@
 
 ## 完整还原部分
 
+- 正式入口所需实体规则已从所选版本原放置组件补齐：2,690 个初始状态／激活标记、锁参数（含数字实体键）、奖励、换图、周期交互及战斗关卡绑定，替换早期目录中的空字段；11 个原谜题终端（6 走格子、5 机巧改道）及全部依赖保留原配置顺序。原 prefab 闭包的 150 组 StoryTalk 标签／剧情根注册及同版本 StorySettings 已生成明确绑定。入口为 `prepare_unity_map13_entity_catalog.py`、`map13_puzzle_rules.py`、`prepare_unity_map13_story_runtime.py` 与 `prepare_unity_map13_story_spatial.py`；来源见 `map13-entity-catalog`、`map13-story-runtime`、`map13-story-spatial` 三份来源清单。Unity 实际规则执行已通过全部实体状态、两类终端数量、原数字键锁和 2,690 份状态冷读；编译、ProjectTools.Validate 与 74,056 GUID 静态检查通过，执行哈希见 `map13-formal-puzzle-rules-source-manifest.json`。正式入口已定位到尚未绑定的剧情演出，完整交互、画面和 Player 验证继续进行；目录的空模型记录不代表原实体表现已接通。
+
 - 原格子可见性组件、实体／营地解锁处理器、位图、压缩算法、激活格子枚举及原视野查询已迁移；恢复官方 106 地区的 40,527 条激活／扩展格子配置，角色视野半径保持 5。原压缩字节、只有头部时解码为全部可见的原分支、所有地区枚举顺序、角色所有权筛选、移动视野、实体／营地同地区过滤及先移除角色再结束组件的原订阅生命周期通过规则执行，57,600 格逐格存档往返一致；Unity 编译、隔离完整工程 ProjectTools.Validate 和 73,965 个 GUID 静态检查通过。入口为 `prepare_unity_map13_grid_visibility.py`、`Runtime/Official/World/Map13GridVisibility` 与 `OfficialMap13GridVisibilityAcceptance`，配置为 `Map13/grid-visibility`，来源／执行哈希见两份 `map13-grid-visibility*-source-manifest.json`。此项采用明确的实体／地图诊断输入；正式场景、输入、本地存档文件与 Player 集成仍待完成。
 
 - 普通／雪地藤蔓的完整原实体 prefab 已恢复并接入原 ECViewDriver：保留 340 个原对象、18 个按原序列配置的视图、原托管引用 RID、原 UI／寿命条、Sprite／材质及出生／循环／消散 prefab 引用；共享原类仅增加具体可序列化身份，全部字段和生命周期方法继续继承原实现。内置屏 Direct3D11 Play Mode 实际执行两种完整实体的 Awake／OnEnable／注册、出生结束转阶段循环、4 个苹果显示、显隐停止／恢复、阶段 0／1 切换、2.83 秒消散移除及全部事件／淡出回调解绑，创建 6 份原池化演出；四张运行画面已查看，共 112,455 个非背景像素。执行前后核对全部来源与实际加载资源哈希；Unity 导入／编译、完整代码隔离工程 ProjectTools.Validate 与 73,931 个 GUID 静态检查通过。入口为 `prepare_unity_map13_tree_entities.py`、`NativeMap13TreeEntityBinding` 和 `OfficialMap13TreeEntityPlayAcceptance`，资源为 `Map13/Native/TreeEntities`，来源／执行哈希见两份 `map13-native-tree-entities*-source-manifest.json`。本项使用明确的诊断状态输入；正式地图状态／奖励、鼠标交互／存档与 Windows Player 仍待完成，本批素材未进入完整快照。
@@ -98,6 +100,8 @@
 - 同源隔离工程在内置屏、原 Linear／ 下，经原分区控制器和异步本地句柄实际加载全部 200 地形块及 271 份场景 prefab，没有筛除标签；106 地区灯注册、17 个分区飘带、105 组地区说明、630 个原文字组件全部接通。公开／私有测试状态、延迟地图初始化、等级／战力变化、全部原颜色、阈值相等、进度取消订阅／重启、语言与字体实例绑定、节点显隐、场景隐藏／恢复、完整移除及订阅释放通过。可选进度文本使用实例夹具补查，再恢复原引用；原世界 prefab 的进度列表为空。原 PartitionData 和打包字体／图集未变，中心标签与神社的实际画面已查看。主工程 导入／编译、全局 `Zjcs.Editor.ProjectTools.Validate` 与静态检查通过。场景测试没有正式玩家／地图状态、模拟鼠标、音频或存档，不构成完整游戏功能。
 
 ## 自定义实现
+
+已确认的跟随者单机方案：`AddNpcFollowerNode` 按节点配置将 8402／8440／8441／8442 去重写入持久化跟随者列表，`RemovePlayerNpcFollowerAllNode` 清空。对应官方实体、原跟随队列的显示绑定及正式地图存档验证尚未完成。
 
 官方 `WorldConveyanceComponent.FireTrigger()` 没有服务器移动实现，水位执行也缺少服务端逻辑；已核对客户端载人实现、`LoWorldConveyanceComponent.OffsetPath`、`StageResultElevatorStateUpdateComponent` 和 `StageDatas`。用户已允许并在独立规则模块实现：每次沿原配置顺序前进一段，末端后沿原路径逐段反向返回；载人保留原偏移，路径被阻挡则本次不移动；水位按原 `StageDatas` 顺序执行，不发奖励。
 

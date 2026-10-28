@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "manifest": "871_156598",
+  "mapClassId": 13,
+  "source": {
+    "path": "unity/Assets/Official/World/Map/13/map13.json",
+    "sha256": "08200254758f6744a09c82fe871145f76f98ba590b9b59e4ca8c87e047ef98da",
+    "entityCount": 2690
+  },
+  "inputs": [
+    {
+      "path": "unity/Assets/Official/World/Map/13/Source/entities.json",
+      "sha256": "1ec56a3113040b117e1d547490df59a88ff8f8634013a703381c4c49867b8dde"
+    },
+    {
+      "path": "assets/reference/official-map/map13-source-manifest.json",
+      "sha256": "3399a7eeafb70e1999b11c186575fbc8277f534f7020b0a887d4401b59e74114"
+    },
+    {
+      "path": "scripts/prepare_unity_map13_entity_catalog.py",
+      "sha256": "64293b3e17098d29fc1a8869afd950d7435cbfd06e23d9bf007a0fae05b71a3c"
+    },
+    {
+      "path": "scripts/prepare_unity_map10_entities.py",
+      "sha256": "b8c7527e56a86f84e6ae9a8d7ce95ce6b329426fc3066b9ecfd325cec1d583cb"
+    }
+  ],
+  "output": {
+    "path": "unity/Assets/Game/Resources/Map13/Entities/catalog.json",
+    "sha256": "15961c3328a1c7a91bf211e6f927f21ca63c98df8f080168c8df751c2d4ebe27",
+    "entityCount": 2690
+  },
+  "limitations": [
+    "Native prefab rendering is bound separately by the Map13 native entity host."
+  ]
+}
