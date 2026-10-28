@@ -58,6 +58,8 @@
 - `chapter_5_main_36_17` 并非缺少官方语音：原 `CallDragon` 设置“龙国圣兽地台”状态后，由 `SuiMo_StoryShow02Timeline` 在 5.5166667／7.7333333 秒触发 `_17_1`／`_17_2`，并显示 `bubble_dialog_16_0`／`16_1`。已恢复全部 5 份实体 Timeline、原轨道／片段字段和 4 条气泡配置／中文；不把两段语音拼接为直接对白，也不以静音代替。六项实体 Timeline 音频连同原演出共 17 项引用、24 个顺序动作，保留 400／1000／1700／5000 毫秒延迟及对象静音／取消静音动作；流式预取片段与完整 WEM 分别记录。
 - 音频来源解析 5 项回归、根工程静态检查（68,630 个 GUID）、隔离 Unity 导入／编译及 `ProjectTools.Validate` 通过。内置屏带画面 Play Mode 对全部 418 个素材逐采样比较原 PCM、核对导入参数并执行实际 AudioSource／监听器输出，全部通过。本次只验证素材与设备播放；正式对白／Timeline 调用、原总线 DSP／RTPC、气泡窗和实体绑定、地图输入／存档及 Windows Player 尚未完成。恢复入口为 `scripts/prepare_unity_map14_audio.py`、`prepare_unity_map14_dialogue_audio.py`、`prepare_unity_map14_playable_audio.py`、`prepare_unity_map14_entity_timelines.py`；来源为 Map14 audio／dialogue-audio／playable-audio／entity-timelines 四份清单。
 
+- 原 `MyPlayableSound`、`MyPlayableTimeLine` 及三份 Wwise Timeline 代码已迁入 `Runtime/Official/StorySounds/`，复用已核对官方 SDK 简单 Post 的事件 ID／Playing ID 桥接。保留 `Time - deltaTime` 循环边界、跨大帧只补一次、目标为空回退自身、停止／重用顺序；Timeline 源绑定优先于目标绑定、手动时钟使用缩放 delta，仅 None 外推采用有限时长，原音频片段暂停／结束不额外发送停止事件。内置屏隔离 Unity 导入／编译、`ProjectTools.Validate` 及 Play Mode 的原组件绑定、循环／暂停／重用和两段咒文实际 Timeline 调度通过。来源为 `map14-story-sound-runtime-source-manifest.json`，恢复器为 `scripts/prepare_unity_story_sound_runtime.py`；本轮记录原事件调度，未接通音频总线 DSP／RTPC、完整原生 Timeline／气泡／地图流程或存档，也未发布完整功能。
+
 ## 自定义实现
 
 原演出核心以显式中心注入及调用方提供两个原帧阶段替代 DI／R3 注册；日志接入 Unity，移除只用于 Inspector／MessagePack 的属性。调度、数值、状态和回调顺序保留，正式宿主的生命周期接入仍待验证。

@@ -1,0 +1,118 @@
+{
+  "manifest": "871_156598",
+  "mapClassId": 14,
+  "assemblies": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/Assembly-CSharp.dll",
+      "sha256": "bc8613cf2198de5566b0f0ff2aace15ae799cbd9a08df9e2d5a70317c261b29a"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/managed/decoded/GameFramework.Runtime.dll",
+      "sha256": "6ca97373f53a249575525a5df2ca0c261a455c0b5ddd312db8b08087a3afe1dd"
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/MyPlayableSound.cs",
+      "sha256": "f58057d9ca971d45618279659b27e0fd508c685065af7b3476a95d566ce788ca"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WwiseEventPlayableAsset.cs",
+      "sha256": "f6fee3c048ee31c83355412f487c3d79c8b9a3dfd06b3d381423e3e551af4eef"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WwiseEventPlayableBehaviour.cs",
+      "sha256": "888f3480921da61e2b618643dcfd892824eb493ccef826d8bcdf9988cae8e32b"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/client-source/WwiseEventTrack.cs",
+      "sha256": "ef0df37c86d8adabbf415d634500eb32450327c69aed96bdf196d56ecd700554"
+    },
+    {
+      "path": ".tools/source-packages/current/871_156598/official-code/gameframework-csharp9-source/GameFramework/MyPlayableTimeLine.cs",
+      "sha256": "d81809a260dfeb3e241f24e4441d1ae08302fc1f4e30fd2803609797c4541fbf"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/OfficialWwiseEvent.cs",
+      "sha256": "6257c3af05fc9bdd62ea40dfebe0fdbad3ad754bd2583a7099f83ee2dbf8db1b"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/ProfessionUI/WwiseEventReference.cs",
+      "sha256": "7c7b698a69a8d3eb424dc94a32ab91b7364ca923979f89be53d405ee5f6d9942"
+    },
+    {
+      "path": "assets/reference/profession-ui/audio-source-manifest.json",
+      "sha256": "7be57c6fdc08d6b4a318066452b3a71656bdfa6426e5fab337deaacb467aadd9"
+    }
+  ],
+  "tools": [
+    {
+      "path": "scripts/prepare_unity_story_sound_runtime.py",
+      "sha256": "7c9e2f9f102b8dd9b832b01bccd73d89748f04a252ca1a4d984dc33f7ed5cbcf"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs",
+      "sha256": "e9ae6b8c026dd2bb036d96f8da21c7cadb6f9578c6dabc9ee5e0287590023b61"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableSound.cs.meta",
+      "sha256": "f8cfcbb872083b2bd405a0feee76137e05c725e732e57ac822336f6564ba7e97"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventPlayableAsset.cs",
+      "sha256": "915917089792af05408c0054fb95cef863591fc07e548c30eb51a399faac5d87"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventPlayableAsset.cs.meta",
+      "sha256": "7a737b3e0ddb8373c0e5399706249e0d49c75cfb8947273f743a2bef179ff616"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventPlayableBehaviour.cs",
+      "sha256": "d1c9ef42095359e07de11b7f353b30828c031bfc8850c8534888901d21ab0ea2"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventPlayableBehaviour.cs.meta",
+      "sha256": "caf3c99ec9c9e656412fa45a6bf04e2ed3a175a36fd434ce67535c8ace11b94c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventTrack.cs",
+      "sha256": "641413e0f9d887a0294941abedea9710ae2536c7f12b7b5fbdf194afc6103352"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/WwiseEventTrack.cs.meta",
+      "sha256": "9127c7949ea2768ad1f81011364b93f8962a4441b71e45fc80ebed8e205d8397"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableTimeLine.cs",
+      "sha256": "4cc7e127c488e5ee0b89ceb1778265654dc2f2b49168fce8ec3c7c2c74ffe7ec"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/MyPlayableTimeLine.cs.meta",
+      "sha256": "8b8c61e77914f16260df965ae3ba01a49a8c1a17d1f31b2cba2db0b522bfdc8c"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/Zjcs.Official.StorySounds.asmdef",
+      "sha256": "790a4956ec6ffd452d2c151fe92361536c757c2943631d04d2ee5ba4fd975e72"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds/Zjcs.Official.StorySounds.asmdef.meta",
+      "sha256": "7c0897e4d3553f896b5a65a7a4ac74092cab875ac9da3944aaecf3682cb7e964"
+    },
+    {
+      "path": "unity/Assets/Game/Runtime/Official/StorySounds.meta",
+      "sha256": "f094321bb97e8887555a3a14ab85346fd9357814d97595146f621f2163113e4d"
+    }
+  ],
+  "validation": {
+    "path": "unity/Assets/Game/Editor/Map14/StorySounds/OfficialMap14StorySoundAcceptance.cs",
+    "sha256": "8719b98e9d66d8b2d86f1db2d788e1f1ec0fc8a7bc83c945bde45fadf4fa35c7"
+  },
+  "operation": "Copy original MyPlayableSound lifecycle/loop boundary, MyPlayableTimeLine source/target/manual-clock/stop lifecycle and Wwise Timeline Play callback/asset/track. Reuse the existing official SDK simple Post bridge; preserve target fallback, event ID and returned playing ID. Adapt namespace, diagnostic logging and ILSpy implicit-operator syntax only.",
+  "limitations": [
+    "This migrates event dispatch, not sound-bank DSP/RTPC or the Windows mixer host. Native original prefab and formal map bindings remain pending."
+  ]
+}

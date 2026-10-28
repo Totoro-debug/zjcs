@@ -64,3 +64,5 @@ Map11区域阴影已通过编译、`ProjectTools.Validate`、图形 Play Mode �
 共享原演出核心见 `Runtime/Official/StoryPlayables/` 与 `scripts/prepare_unity_story_playable_runtime.py`：原 `MyPlayable` 状态机、双阶段中心、序列、触发器、有序容器与粒子淡入淡出保留；离线显式注入及调用方帧阶段替代原服务注册。隔离 Unity 完整校验、Play Mode 调度／状态／异常恢复及 3 项迁移回归通过，视觉和输入未覆盖；正式宿主、原 prefab、动画／骨骼、Timeline、相机和音频仍待绑定。来源与验证范围见[龙之国](../maps/map-14.md)，不据此开放完整地图。
 
 龙之国 BGM、直接对白与原剧情／实体 Timeline 音频的当前来源、延迟／静音动作和验证范围见[龙之国](../maps/map-14.md)。418 个 PCM 素材已在内置屏 Play Mode 逐采样比较并实际输出，原实体 Timeline 的分段咒文语音及四条气泡已定位；正式事件宿主、总线 DSP／RTPC、气泡界面和完整剧情接线仍待实现，不能据此认定主线模块已完成。
+
+共享原声音及 Timeline 驱动已恢复至 `Runtime/Official/StorySounds/`：保留官方循环、停止、事件目标和手动时钟绑定；内置屏隔离 Play Mode 调度验证通过。原事件 ID 桥接复用官方 SDK Post，完整原声总线 DSP／RTPC、原演出 prefab／气泡与正式剧情入口仍待接通，范围见[龙之国](../maps/map-14.md)。
